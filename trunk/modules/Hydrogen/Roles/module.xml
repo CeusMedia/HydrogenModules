@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>Roles</title>
+	<description>Basic role support and management</description>
+	<links>
+		<class>Controller/Manage/Role.php5</class>
+		<class>Model/Role.php5</class>
+		<class>Model/Role/Right.php5</class>
+		<class>View/Role.php5</class>
+		<locale>de/manage/role.ini</locale>
+		<template>manage/role/add.php</template>
+		<template>manage/role/edit.php</template>
+		<template>manage/role/index.php</template>
+	</links>
+</module>
+

@@ -1,0 +1,73 @@
+
+.controller-user.action-edit .column-control {
+	float: right;
+	width: 40%;
+	}
+.controller-user.action-edit .column-main {
+	margin-right: 42%;
+	}
+
+
+
+
+.user-status {
+	background-repeat: no-repeat;
+	background-position: 4px 1px;
+	padding-left: 1.8em;
+	}
+input.user-status {
+	background-position: 6px 4px;
+	}
+.user-status.status1 {
+	color: darkgreen;
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/accept.png);
+	}
+.user-status.status0 {
+	font-weight: normal;
+	font-style: italic;
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/star.png);
+	}
+.user-status.status-1 {
+	font-weight: normal;
+	font-style: italic;
+	color: red;
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/lock.png);
+	}
+.user-status.status-2 {
+	font-weight: normal;
+	color: darkred;
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/delete.png);
+	}
+
+
+.user-activity {
+	background-repeat: no-repeat;
+	background-position: 4px 1px;
+	padding-left: 1.8em;
+	}
+input.user-activity {
+	background-position: 6px 4px;
+	}
+.user-activity.activity0 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_offline.png);
+	opacity: 0.8;
+	}
+.user-activity.activity1 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	}
+.user-activity.activity2 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_busy.png);
+	}
+.user-activity.activity3 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_away.png);
+	}
+.user-activity.activity4 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	}
+.user-activity.activity5 {
+	background-image: url(///icons.ceusmedia.de/famfamfam/silk/star.png);
+	}
+
+.controller-user #content dl dt {
+	width: 150px;
+	}
