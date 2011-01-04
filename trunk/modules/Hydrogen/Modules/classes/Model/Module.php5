@@ -32,7 +32,13 @@ class Model_Module{
 		$fileName	= $this->pathConfig.'modules.list';
 		if( file_exists( $fileName ) )
 			foreach( File_Reader::loadArray( $fileName ) as $moduleId ){
-				$available[$moduleId]->type	= self::TYPE_LINK;
+				if( !array_key_exists( $moduleId, $available ) ){
+					$available[$moduleId]	= $this->readXml( 'config/modules/'.$moduleId.'.xml' );
+					$available[$moduleId]->type	= self::TYPE_CUSTOM;
+					$available[$moduleId]->versionInstalled	= $available[$moduleId]->version;
+				}
+				else
+					$available[$moduleId]->type	= self::TYPE_LINK;
 				$list[$moduleId]	= $available[$moduleId];
 			}
 		ksort( $list );
@@ -46,10 +52,11 @@ class Model_Module{
 		foreach( $index as $entry ){
 			$id		= basename( $entry->getPath() );
 			$obj	= $this->readXml( $entry->getPathname() );
-			$obj->path			= $entry->getPath();
-			$obj->file			= $entry->getPathname();
-			$obj->type			= self::TYPE_SOURCE;
-			$obj->id			= $id;
+			$obj->path	= $entry->getPath();
+			$obj->file	= $entry->getPathname();
+			$obj->type	= self::TYPE_SOURCE;
+			$obj->id	= $id;
+			$obj->versionAvailable	= $obj->version;
 			$list[$id]	= $obj;
 		}
 //		$this->cache	= $list;
@@ -69,15 +76,20 @@ class Model_Module{
 	protected function readXml( $fileName ){
 		$xml	= XML_ElementReader::readFile( $fileName );
 		$obj	= new stdClass();
-		$obj->title	= (string) $xml->title;
-		$obj->description	= (string) $xml->description;
-		$obj->links			= new stdClass();
+		$obj->title				= (string) $xml->title;
+		$obj->description		= (string) $xml->description;
+		$obj->links				= new stdClass();
 		$obj->links->classes	= array();
 		$obj->links->locales	= array();
 		$obj->links->templates	= array();
 		$obj->links->styles		= array();
 		$obj->links->scripts	= array();
 		$obj->links->images		= array();
+		$obj->config			= array();
+		$obj->version			= (string) $xml->version;
+		$obj->versionAvailable	= NULL;
+		$obj->versionInstalled	= NULL;
+		$obj->sql				= array();
 		foreach( $xml->links->class as $link )
 			$obj->links->classes[]	= (string) $link;
 		foreach( $xml->links->locale as $link )
@@ -92,6 +104,8 @@ class Model_Module{
 			$obj->links->images[]	= (string) $link;
 		foreach( $xml->config as $pair )
 			$obj->config[$pair->getAttribute( 'name' )]	= (string) $pair;
+		foreach( $xml->sql as $sql )
+			$obj->sql[$sql->getAttribute( 'on' )]	= (string) $sql;
 		return $obj;
 	}
 }
