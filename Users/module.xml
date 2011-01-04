@@ -3,7 +3,7 @@
 	<title>Users</title>
 	<description>Basic user support and management.</description>
 	<version>0.2</version>
-	<links>
+	<files>
 		<class>Controller/Manage/User.php5</class>
 		<class>Model/User.php5</class>
 		<class>View/Manage/User.php5</class>
@@ -14,6 +14,12 @@
 		<template>manage/user/index.filter.php</template>
 		<template>manage/user/index.list.php</template>
 		<style>site.user.css</style>
-	</links>
+	</files>
+	<sql on="install"><![CDATA[
+]]>
+	</sql>
+	<sql on="uninstall"><![CDATA[
+]]>
+	</sql>
 </module>
 
