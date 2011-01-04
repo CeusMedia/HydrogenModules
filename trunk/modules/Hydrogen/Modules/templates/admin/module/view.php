@@ -1,49 +1,49 @@
 <?php
 
 $classes	= '-';
-if( $module->links->classes ){
+if( $module->files->classes ){
 	$classes	= array();
-	foreach( $module->links->classes as $item )
+	foreach( $module->files->classes as $item )
 		$classes[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
 }
 
 $locales	= '-';
-if( $module->links->locales ){
+if( $module->files->locales ){
 	$locales	= array();
-	foreach( $module->links->locales as $item )
+	foreach( $module->files->locales as $item )
 		$locales[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$locales		= UI_HTML_Elements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
 }
 
 $templates	= '-';
-if( $module->links->templates ){
+if( $module->files->templates ){
 	$templates	= array();
-	foreach( $module->links->templates as $item )
+	foreach( $module->files->templates as $item )
 		$templates[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$templates	= UI_HTML_Elements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
 }
 
 $styles	= '-';
-if( $module->links->styles ){
+if( $module->files->styles ){
 	$styles	= array();
-	foreach( $module->links->styles as $item )
+	foreach( $module->files->styles as $item )
 		$styles[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$styles		= UI_HTML_Elements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
 }
 
 $scripts	= '-';
-if( $module->links->scripts ){
+if( $module->files->scripts ){
 	$scripts	= array();
-	foreach( $module->links->scripts as $item )
+	foreach( $module->files->scripts as $item )
 		$scripts[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$scripts		= UI_HTML_Elements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
 }
 
 $images	= '-';
-if( $module->links->images ){
+if( $module->files->images ){
 	$images	= array();
-	foreach( $module->links->images as $item )
+	foreach( $module->files->images as $item )
 		$images[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$images		= UI_HTML_Elements::unorderedList( $images, 1, array( 'class' => 'images' ) );
 }
@@ -60,7 +60,7 @@ $sql	= '-';
 if( $module->sql ){
 	$sql	= array();
 	foreach( $module->sql as $type => $content )
-		$sql[]	= UI_HTML_Tag::create( 'dt', $type ).UI_HTML_Tag::create( 'dd', UI_HTML_SQL::highlight( $content ) );
+		$sql[]	= UI_HTML_Tag::create( 'dt', $type ).UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'xmp', trim( $content ) ) );
 	$sql	= UI_HTML_Tag::create( 'dl', join( $sql ) );
 }
 

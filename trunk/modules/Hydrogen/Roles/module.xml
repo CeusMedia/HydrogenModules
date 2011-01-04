@@ -3,7 +3,7 @@
 	<title>Roles</title>
 	<description>Basic role support and management</description>
 	<version>0.2</version>
-	<links>
+	<files>
 		<class>Controller/Manage/Role.php5</class>
 		<class>Model/Role.php5</class>
 		<class>Model/Role/Right.php5</class>
@@ -12,6 +12,43 @@
 		<template>manage/role/add.php</template>
 		<template>manage/role/edit.php</template>
 		<template>manage/role/index.php</template>
-	</links>
+	</files>
+	<sql on="install"><![CDATA[
+DROP TABLE IF EXISTS `hydrogen_roles`;
+CREATE TABLE IF NOT EXISTS `hydrogen_roles` (
+  `roleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `access` tinyint(1) unsigned NOT NULL,
+  `register` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`roleId`),
+  KEY `access` (`access`,`register`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `hydrogen_roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
+(1, 128, 0, 'Entwickler', '', '1294083736', '0'),
+(2, 128, 0, 'Administrator', '', '1294083928', '0'),
+(3, 64, 0, 'Manager', '', '1294083948', '0'),
+(4, 64, 64, 'Benutzer', '', '1294083995', '0'),
+(5, 64, 128, 'Gast', '', '1294084004', '0');
+
+DROP TABLE IF EXISTS `hydrogen_role_rights`;
+CREATE TABLE IF NOT EXISTS `hydrogen_role_rights` (
+  `roleRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `roleId` int(11) unsigned NOT NULL,
+  `controller` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`roleRightId`),
+  KEY `roleId` (`roleId`,`controller`,`action`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]>
+	</sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `hydrogen_roles`;
+]]>
+	</sql>
 </module>
 

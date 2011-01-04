@@ -78,30 +78,30 @@ class Model_Module{
 		$obj	= new stdClass();
 		$obj->title				= (string) $xml->title;
 		$obj->description		= (string) $xml->description;
-		$obj->links				= new stdClass();
-		$obj->links->classes	= array();
-		$obj->links->locales	= array();
-		$obj->links->templates	= array();
-		$obj->links->styles		= array();
-		$obj->links->scripts	= array();
-		$obj->links->images		= array();
+		$obj->files				= new stdClass();
+		$obj->files->classes	= array();
+		$obj->files->locales	= array();
+		$obj->files->templates	= array();
+		$obj->files->styles		= array();
+		$obj->files->scripts	= array();
+		$obj->files->images		= array();
 		$obj->config			= array();
 		$obj->version			= (string) $xml->version;
 		$obj->versionAvailable	= NULL;
 		$obj->versionInstalled	= NULL;
 		$obj->sql				= array();
-		foreach( $xml->links->class as $link )
-			$obj->links->classes[]	= (string) $link;
-		foreach( $xml->links->locale as $link )
-			$obj->links->locales[]	= (string) $link;
-		foreach( $xml->links->template as $link )
-			$obj->links->templates[]	= (string) $link;
-		foreach( $xml->links->style as $link )
-			$obj->links->styles[]	= (string) $link;
-		foreach( $xml->links->script as $link )
-			$obj->links->scripts[]	= (string) $link;
-		foreach( $xml->links->image as $link )
-			$obj->links->images[]	= (string) $link;
+		foreach( $xml->files->class as $link )
+			$obj->files->classes[]	= (string) $link;
+		foreach( $xml->files->locale as $link )
+			$obj->files->locales[]	= (string) $link;
+		foreach( $xml->files->template as $link )
+			$obj->files->templates[]	= (string) $link;
+		foreach( $xml->files->style as $link )
+			$obj->files->styles[]	= (string) $link;
+		foreach( $xml->files->script as $link )
+			$obj->files->scripts[]	= (string) $link;
+		foreach( $xml->files->image as $link )
+			$obj->files->images[]	= (string) $link;
 		foreach( $xml->config as $pair )
 			$obj->config[$pair->getAttribute( 'name' )]	= (string) $pair;
 		foreach( $xml->sql as $sql )
