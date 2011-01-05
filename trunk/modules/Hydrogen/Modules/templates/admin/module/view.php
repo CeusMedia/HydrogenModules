@@ -65,7 +65,7 @@ if( $module->sql ){
 }
 
 $disabled			= $module->type == 3 ? '' : 'disabled';
-$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/install/'.$module->id, 'installieren', 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
+$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/link/'.$module->id, 'einbinden', 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
 $buttonCopy			= UI_HTML_Elements::LinkButton( './admin/module/copy/'.$module->id, 'kopieren', 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
 $disabled			= $module->type == 3 ? 'disabled' : '';
 $buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/uninstall/'.$module->id, 'deinstallieren', 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );

@@ -26,6 +26,11 @@ class Model_Module{
 		return NULL;
 	}
 
+	public function getPath( $moduleId = NULL ){
+		if( $moduleId )
+			return $this->pathRepos.$moduleId.'/';
+		return $this->pathRepos;
+	}
 	public function getInstalled(){
 		$available	= $this->getAvailable();
 		$list		= array();
