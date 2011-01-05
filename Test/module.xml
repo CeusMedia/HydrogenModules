@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<module>
+	<title>Test</title>
+	<description>Test Module.</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Test.php5</class>
+		<class>View/Test.php5</class>
+		<template>test/index.php</template>
+<!--		<locale>de/test</locale>
+		<style>site.test.css</style>
+		<script></script>
+		<image>__testImage__</image>-->
+	</files>
+<!--	<sql on="install">SELECT *;</sql>
+	<sql on="uninstall">SELECT *;</sql>-->
+</module>
+
