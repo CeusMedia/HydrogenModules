@@ -12,8 +12,8 @@ div.ladder ul.ladder li:last-child {
 	border-bottom: 1px solid #BBB;
 	}
 div.ladder ul.ladder li.active {
-	-moz-border-radius-topleft: 0.5em;
-	-moz-border-radius-bottomleft: 0.5em;
+	-moz-border-radius: 0.5em 0em 0em 0.5em;
+	border-radius: 0.5em 0em 0em 0.5em;
 	}
 div.ladder ul.ladder li.active:last-child {
 	border-bottom: 1px solid gray;
@@ -28,4 +28,5 @@ div.ladder ul.ladder li.active span {
 div.ladder .ladderContent {
 	padding: 1em 2em;
 	-moz-border-radius: 1em;
+	border-radius: 1em;
 	}

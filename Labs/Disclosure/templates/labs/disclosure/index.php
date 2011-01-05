@@ -1,20 +1,19 @@
 <?php
+
 $script	= '
 $(document).ready(function(){
+//	$("#tabs-disclosure").tabs();
 	$("#controllers").cmLadder();
 });
 ';
 
-$html	= '
-<h2>Labor</h2>
-';
-
-$ext	= 'php5';
-
-$classes	= array();
+$ext		= 'php5';
 $path		= 'classes/Controller/';
 $path		= realpath( $path );
-$index		= new File_RecursiveRegexFilter( $path, '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U' );
+$regexClass	= '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U';
+
+$classes	= array();
+$index		= new File_RecursiveRegexFilter( $path, $regexClass );
 foreach( $index as $entry ){
 	$fileName	= preg_replace( '@^'.$path.'/(.+)\.'.$ext.'$@', '\\1', $entry->getPathname() );
 	$className	= 'Controller_'.str_replace( '/', '_', $fileName );
@@ -47,11 +46,11 @@ foreach( $classes as $className => $classReflection ){
 	$methods	= '<b>Actions</b>'.UI_HTML_Elements::unorderedList( $methods );
 	$ladder->addStep( preg_replace( '/^Controller_/', '', $className ), $methods );
 }
-$html	.= '<h3>Controllers & Actions</h3>'.$ladder->buildHtml();
 
-$this->env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.js' );
 $this->env->page->js->addScript( $script );
-$this->env->page->css->addUrl( $config->get( 'path.themes' ).'custom/css/all/site.labs.info.css' );
-$this->env->page->css->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.css' );
-return $html;
+
+return '
+<h2>Labor</h2>
+<h3>Controllers & Actions</h3>
+'.$ladder->buildHtml();
 ?>

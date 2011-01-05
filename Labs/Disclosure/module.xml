@@ -9,6 +9,7 @@
 		<class>Controller/Labs/Disclosure.php5</class>
 		<class>View/Labs/Disclosure.php5</class>
 		<template>labs/disclosure/index.php</template>
+		<style>site.labs.disclosure.css</style>
 	</files>
 </module>
 
