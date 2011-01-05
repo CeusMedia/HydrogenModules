@@ -7,9 +7,11 @@ class View_Labs_Disclosure extends CMF_Hydrogen_View{
 		$pathJs		= $config['path.js'];
 		$pathTheme	= $config['path.themes'].$config['layout.theme'].'/';
 
-	//	$page->js->addUrl( $pathJs.'labs.js' );
+		$page->js->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.js' );
+		$page->css->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.css' );
+		$page->addThemeStyle( 'site.labs.disclosure.css' );
 
-		$page->addStyleSheet( $config['path.themes'].'custom/css/site.labs.info.css' );
+	//	$page->js->addScript( $script );
 	}
 }
 ?>
