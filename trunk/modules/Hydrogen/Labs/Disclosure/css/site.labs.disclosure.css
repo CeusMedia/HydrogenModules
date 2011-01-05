@@ -1,0 +1,31 @@
+
+div.ladder ul.ladder {
+	margin-top: 1em;
+	}
+div.ladder ul.ladder li {
+	border-width: 1px 0px 0px 1px;
+	border-style: solid;
+	border-color: #CCC;
+	background-color: #E7E7E7;
+	}
+div.ladder ul.ladder li:last-child {
+	border-bottom: 1px solid #BBB;
+	}
+div.ladder ul.ladder li.active {
+	-moz-border-radius-topleft: 0.5em;
+	-moz-border-radius-bottomleft: 0.5em;
+	}
+div.ladder ul.ladder li.active:last-child {
+	border-bottom: 1px solid gray;
+	}
+
+div.ladder ul.ladder li span {
+	font-weight: normal;
+	}
+div.ladder ul.ladder li.active span {
+	font-weight: bold;
+	}
+div.ladder .ladderContent {
+	padding: 1em 2em;
+	-moz-border-radius: 1em;
+	}
