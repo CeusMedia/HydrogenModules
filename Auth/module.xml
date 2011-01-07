@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Authentication</title>
+	<description>Module for authentication against local database using the Users module.</description>
+	<version>0.1</version>
+	<requires>
+		<module>Users</module>
+		<module>Roles</module>
+	</requires>
+	<files>
+		<class>Controller/Auth.php5</class>
+		<class>View/Auth.php5</class>
+		<template>auth/login.php</template>
+		<locale>de/auth.ini</locale>
+		<locale>de/html/auth.login.info.html</locale>
+		<locale>en/auth.ini</locale>
+		<locale>en/html/auth.login.info.html</locale>
+	</files>
+</module>
+

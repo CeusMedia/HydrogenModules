@@ -1,0 +1,62 @@
+
+
+.controller-admin-module dl.resources>dd>ul,
+.controller-admin-module dl.resources>dd>ul, li {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+.controller-admin-module dl.resources>dd>ul>li {
+	margin: 0px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.controller-admin-module dl.resources>dd>ul.classes>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/page_white_php.png);
+	}
+.controller-admin-module dl.resources>dd>ul.locales>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/page_white_world.png);
+	}
+.controller-admin-module dl.resources>dd>ul.templates>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/html.png);
+	}
+.controller-admin-module dl.resources>dd>ul.scripts>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/script.png);
+	}
+.controller-admin-module dl.resources>dd>ul.styles>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/css.png);
+	}
+.controller-admin-module dl.resources>dd>ul.images>li {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/image.png);
+	}
+
+
+
+.controller-admin-module.action-index legend {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/plugin.png);
+	background-repeat: no-repeat;
+	background-position: 7px 7px;
+	padding-left: 28px;
+	}
+.controller-admin-module .module-type.type-0 {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/plugin_add.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.controller-admin-module .module-type.type-1 {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/plugin_edit.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.controller-admin-module .module-type.type-2 {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/plugin.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.controller-admin-module .module-type.type-3 {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/plugin_disabled.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+
