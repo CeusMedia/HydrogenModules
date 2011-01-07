@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>Test: Table</title>
+	<description>Test Database Table Module.</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Test/Table.php5</class>
+		<class>Model/Test/Table.php5</class>
+		<class>View/Test/Table.php5</class>
+		<template>test/table/add.php</template>
+		<template>test/table/edit.php</template>
+		<template>test/table/index.php</template>
+		<locale>de/test/table.ini</locale>
+		<script>Test.Table.js</script>
+	</files>
+	<sql on="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>test_table`;
+CREATE TABLE IF NOT EXISTS `<%prefix%>test_table` (
+  `testId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`testId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+]]></sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>test_table`;
+]]></sql>
+</module>
+
