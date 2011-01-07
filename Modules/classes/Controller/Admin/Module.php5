@@ -169,7 +169,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			return FALSE;
 		}
 		if( !symlink( $pathNameIn, $fileOut ) ){
-			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'".' );
+			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
 			return FALSE;
 		}
 		return TRUE;
