@@ -1,120 +1,20 @@
 <?php
 class Controller_Admin_Module extends CMF_Hydrogen_Controller{
-	public function index(){
-		$model	= new Model_Module( $this->env );
-		$this->addData( 'modules', $model->getAll() );
-		$this->addData( 'modulesAvailable', $model->getAvailable() );
-		$this->addData( 'modulesInstalled', $model->getInstalled() );
-		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
-	}
 
-	public function view( $moduleId ){
-		$model	= new Model_Module( $this->env );
-		$this->addData( 'module', $model->get( $moduleId ) );
-	}
-
-	public function link( $moduleId, $thenViewModule = NULL ){
-		$config	= $this->env->getConfig();
-		$model	= new Model_Module( $this->env );
-		$path	= $model->getPath( $moduleId );
-		$module	= $model->get( $moduleId );
-		
-		remark( 'moduleId: '.$moduleId );
-//		print_m( $module );
-		foreach( $module->files->classes as $class )
-			$this->linkModuleFile( $moduleId, $class, 'classes/' );
-		foreach( $module->files->templates as $template )
-			$this->linkModuleFile( $moduleId, $template, $config->get( 'path.templates' ) );
-		foreach( $module->files->locales as $locale )
-			$this->linkModuleFile( $moduleId, $locale, $config->get( 'path.locales' ) );
-		foreach( $module->files->scripts as $script )
-			$this->linkModuleFile( $moduleId, $script, $config->get( 'path.javascripts' ) );
-
-		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
-		foreach( $module->files->styles as $style )
-			$this->linkModuleFile( $moduleId, $style, $pathTheme );
-
-		remark( 'link( '.$module->file.', config/modules/'.$moduleId.'.xml);');
-		if( file_exists( $path.'config.ini' ) )
-			remark( 'copy( '.$path.'config.ini, config/modules/'.$moduleId.'.ini);');
-		if( $thenViewModule )
-			$this->redirect( 'admin/module', 'view', array( $moduleId ) );
-		else
-			$this->redirect( 'admin/module' );
-	}
+	const INSTALL_TYPE_UNKNOWN	= 0;
+	const INSTALL_TYPE_LINK		= 1;
+	const INSTALL_TYPE_COPY		= 2;
 
 	public function copy( $moduleId ){
-		$config	= $this->env->getConfig();
-		$model	= new Model_Module( $this->env );
-		$path	= $model->getPath( $moduleId );
-		$module	= $model->get( $moduleId );
-
-		remark( 'moduleId: '.$moduleId );
-//		print_m( $module );
-		foreach( $module->files->classes as $class )
-			$this->copyModuleFile( $moduleId, $class, 'classes/' );
-		foreach( $module->files->templates as $template )
-			$this->copyModuleFile( $moduleId, $template, $config->get( 'path.templates' ) );
-		foreach( $module->files->locales as $locale )
-			$this->copyModuleFile( $moduleId, $locale, $config->get( 'path.locales' ) );
-		foreach( $module->files->scripts as $script )
-			$this->copyModuleFile( $moduleId, $script, $config->get( 'path.javascripts' ) );
-
-		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
-		foreach( $module->files->styles as $style )
-			$this->copyModuleFile( $moduleId, $style, $pathTheme );
-
-		remark( 'copy( '.$module->file.', config/modules/'.$moduleId.'.xml);');
-		if( file_exists( $path.'config.ini' ) )
-			remark( 'copy( '.$path.'config.ini, config/modules/'.$moduleId.'.ini);');
-		if( $thenViewModule )
-			$this->redirect( 'admin/module', 'view', array( $moduleId ) );
+		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
+			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
 		else
-			$this->redirect( 'admin/module' );
-	}
-
-	public function uninstallModule( $moduleId ){
-		$config	= $this->env->getConfig();
-		$model	= new Model_Module( $this->env );
-		$path	= $model->getPath( $moduleId );
-		$module	= $model->get( $moduleId );
-
-		remark( 'moduleId: '.$moduleId );
-//		print_m( $module );
-		foreach( $module->files->classes as $class )
-			$this->unlinkModuleFile( $moduleId, $class, 'classes/' );
-		foreach( $module->files->templates as $template )
-			$this->unlinkModuleFile( $moduleId, $template, $config->get( 'path.templates' ) );
-		foreach( $module->files->locales as $locale )
-			$this->unlinkModuleFile( $moduleId, $locale, $config->get( 'path.locales' ) );
-		foreach( $module->files->scripts as $script )
-			$this->unlinkModuleFile( $moduleId, $script, $config->get( 'path.javascripts' ) );
-
-		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
-		foreach( $module->files->styles as $style )
-			$this->copyModuleFile( $moduleId, $style, $pathTheme );
-
-		remark( 'unlink( config/modules/'.$moduleId.'.xml);');
-		remark( 'unlink( config/modules/'.$moduleId.'.ini);');
-		$this->redirect( 'admin/module', 'view', array( $moduleId ) );
-	}
-
-	protected function unlinkModuleFile( $moduleId, $fileName, $path )
-	{
-		$fileName	= $path.$fileName;
-		if( file_exists( $fileName ) )
-			unlink( $fileName );
-	}
-
-	protected function linkModuleFile( $moduleId, $fileName, $path ){
-		$fileSource	= './modules/'.$moduleId.'/'.$path.$fileName;
-		$fileTarget	= $path.$fileName;
-		self::createPath( dirname( $fileTarget ) );
-		remark( 'link('.$fileSource.','.$fileTarget.');' );
+			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
 	protected function copyModuleFile( $moduleId, $fileName, $path ){
-		$fileSource	= './modules/'.$moduleId.'/'.$path.$fileName;
+		$fileSource	= './modules/'.str_replace( '_', '/', $moduleId ).'/'.$path.$fileName;
 		$fileTarget	= $path.$fileName;
 		self::createPath( dirname( $fileTarget ) );
 		remark( 'copy('.$fileSource.','.$fileTarget.');' );
@@ -126,16 +26,210 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	 *	@param		string		$path				Path to create
 	 *	@return		void
 	 */
-	protected static function createPath( $path )
-	{
+	protected static function createPath( $path ){
 		$dirname	= dirname( $path );
 		if( file_exists( $path ) && is_dir( $path ) )
 			return;
 		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
 		if( $dirname != "./" && !$hasParent )
 			self::createPath( $dirname );
-		remark( 'createPath('.$path.');' );
-	//	return mkdir( $path );
+		return mkdir( $path, 02770, TRUE );
+	}
+
+	protected function executeSql( $sql ){
+		$lines	= explode( "\n", trim( $sql ) );
+		$cmds	= array();
+		$buffer	= array();
+		if( !$this->env->has( 'dbc' ) )
+			return;
+		$prefix	= $this->env->config->get( 'database.prefix' );
+		while( $line = array_shift( $lines ) ){
+			if( !trim( $line ) )
+				continue;
+			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			if( preg_match( '/;$/', trim( $line ) ) )
+			{
+				$cmds[]	= join( "\n", $buffer );
+				$buffer	= array();
+			}
+			if( !count( $lines ) && $buffer )
+				$cmds[]	= join( "\n", $buffer ).';';
+		}
+		$state	= NULL;
+		foreach( $cmds as $command ){
+			if( $state !== FALSE ){
+				try{
+					$this->env->dbc->exec( $command );
+					$state	= TRUE;
+				}
+				catch( Exception $e )
+				{
+					$state	= FALSE;
+					$this->env->messenger->noteFailure( $e->getMessage() );
+				}
+			}
+		}
+		return $state;
+	}
+
+	public function index(){
+		$model	= new Model_Module( $this->env );
+		$this->addData( 'modules', $model->getAll() );
+//		$this->addData( 'modulesAvailable', $model->getAvailable() );
+//		$this->addData( 'modulesInstalled', $model->getInstalled() );
+//		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
+	}
+
+	public function installModule( $moduleId, $installType = 0, $verbose = NULL ){
+		$config		= $this->env->getConfig();
+		$model		= new Model_Module( $this->env );
+		$module		= $model->get( $moduleId );
+		$pathModule	= $model->getPath( $moduleId );
+		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
+		$filesLink	= array();
+		$filesCopy	= array();
+		switch( $installType ){
+			case self::INSTALL_TYPE_LINK:
+				$array	= 'filesLink'; break;
+			case self::INSTALL_TYPE_COPY:
+				$array	= 'filesCopy'; break;
+			default:
+				throw new InvalidArgumentException( 'Unknown installation type' );
+		}
+		foreach( $module->files->classes as $class )
+			${$array}['classes/'.$class]	= 'classes/'.$class;
+		foreach( $module->files->templates as $template )
+			${$array}['templates/'.$template]	= $config->get( 'path.templates' ).$template;
+		foreach( $module->files->locales as $locale )
+			${$array}['locales/'.$locale]	= $config->get( 'path.locales' ).$locale;
+		foreach( $module->files->scripts as $script )
+			${$array}['js/'.$script]	= $config->get( 'path.javascripts' ).$script;
+		foreach( $module->files->styles as $style )
+			${$array}['css/'.$style]	= $pathTheme.$style;
+		${$array}['module.xml']	= 'config/modules/'.$moduleId.'.xml';
+		if( file_exists( $pathModule.'config.ini' ) )
+			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
+
+		$state		= NULL;
+		$listDone	= array();
+		foreach( array( 'filesLink', 'filesCopy' ) as $type )
+			foreach( $$type as $fileIn => $fileOut )
+				if( $state !== FALSE )
+					if( ( $state = $this->linkModuleFile( $moduleId, $fileIn, $fileOut ) ) )
+						$listDone[]	= $fileOut;
+
+		if( $state !== FALSE )
+			if( !empty( $module->sql['install'] ) )
+				$state = $this->executeSql( $module->sql['install'] );
+		if( $state === FALSE )
+			foreach( $listDone as $fileName )
+				@unlink( $fileName );
+		else if( $verbose ){
+			$list	= '<ul><li>'.join( '</li><li>', $listDone ).'</li></ul>';
+			$this->env->messenger->noteNotice( 'Installed: '.$list );
+		}
+		return $state !== FALSE;
+	}
+
+	public function link( $moduleId ){
+		if( $this->installModule( $moduleId, self::INSTALL_TYPE_LINK ) )
+			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
+		else
+			$this->env->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
+		$this->redirect( 'admin/module', 'view', array( $moduleId ) );
+//		$this->restart( './admin/module/view/'.$moduleId );
+	}
+
+	protected function linkModuleFile( $moduleId, $fileIn, $fileOut ){
+		$fileIn		= './modules/'.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$pathNameIn	= realpath( $fileIn );
+		if( !$pathNameIn ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			return FALSE;
+		}
+		if( !file_exists( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			return FALSE;
+		}
+		if( !is_readable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			return FALSE;
+		}
+		if( !is_executable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not executable.' );
+			return FALSE;
+		}
+		$pathOut	= dirname( $fileOut );
+		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
+			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			return FALSE;
+		}
+		if( file_exists( $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			return FALSE;
+		}
+		if( !symlink( $pathNameIn, $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'".' );
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	public function uninstall( $moduleId, $verbose = TRUE ){
+		$config		= $this->env->getConfig();
+		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
+		$model		= new Model_Module( $this->env );
+		$module		= $model->get( $moduleId );
+
+		$files	= array();
+#		try{
+			foreach( $module->files->classes as $class )
+				$files[]	= 'classes/'.$class;
+			foreach( $module->files->templates as $template )
+				$files[]	= $config->get( 'path.templates' ).$template;
+			foreach( $module->files->locales as $locale )
+				$files[]	= $config->get( 'path.locales' ).$locale;
+			foreach( $module->files->scripts as $script )
+				$files[]	= $config->get( 'path.javascripts' ).$script;
+			foreach( $module->files->styles as $style )
+				$files[]	= $pathTheme.$style;
+
+			$files[]	= 'config/modules/'.$moduleId.'.xml';
+			if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
+				$files[]	= 'config/modules/'.$moduleId.'.ini';
+
+			$state	= NULL;
+			foreach( $files as $file )
+				$state = @unlink( $file );
+			if( !empty( $module->sql['uninstall'] ) )
+				$this->executeSql( $module->sql['uninstall'] );
+			if( $state )
+				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+			else
+				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+#		}
+#		catch( Exception $e ){
+#			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+#		}
+		$this->restart( './admin/module/view/'.$moduleId );
+	}
+
+	protected function unlinkModuleFile( $moduleId, $fileName, $path )
+	{
+		$fileName	= $path.$fileName;
+		if( file_exists( $fileName ) ){
+			if( @unlink( $fileName ) )
+				$this->env->messenger->noteSuccess( 'Removed "'.$fileName.'".' );
+			else
+				$this->env->messenger->noteFailure( 'Removal failed for "'.$fileName.'".' );
+		}
+	}
+
+	public function view( $moduleId ){
+		$model	= new Model_Module( $this->env );
+		$this->addData( 'module', $model->get( $moduleId ) );
+		$model	= new Model_Module( $this->env );
+		$module	= $model->get( $moduleId );
 	}
 }
 ?>

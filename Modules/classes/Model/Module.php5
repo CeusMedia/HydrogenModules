@@ -9,7 +9,7 @@ class Model_Module{
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->pathRepos	= './modules/';
-		$this->pathConfig	= $env->config->get( 'path.config' );
+		$this->pathConfig	= 'config/modules/';
 		$this->cache		= array();
 	}
 
@@ -28,43 +28,63 @@ class Model_Module{
 
 	public function getPath( $moduleId = NULL ){
 		if( $moduleId )
-			return $this->pathRepos.$moduleId.'/';
+			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
 		return $this->pathRepos;
 	}
 	public function getInstalled(){
 		$available	= $this->getAvailable();
 		$list		= array();
-		$fileName	= $this->pathConfig.'modules.list';
-		if( file_exists( $fileName ) )
-			foreach( File_Reader::loadArray( $fileName ) as $moduleId ){
-				if( !array_key_exists( $moduleId, $available ) ){
-					$available[$moduleId]	= $this->readXml( 'config/modules/'.$moduleId.'.xml' );
-					$available[$moduleId]->type	= self::TYPE_CUSTOM;
-					$available[$moduleId]->versionInstalled	= $available[$moduleId]->version;
+
+		$index	= new File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
+		foreach( $index as $entry )
+		{
+
+			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
+			try{
+				if( !array_key_exists( $id, $available ) ){
+					$available[$id]	= $this->readXml( $entry->getPathname() );
+					$available[$id]->versionInstalled	= $available[$id]->version;
+					$available[$id]->type	= self::TYPE_CUSTOM;
 				}
-				else
-					$available[$moduleId]->type	= self::TYPE_LINK;
-				$list[$moduleId]	= $available[$moduleId];
+				else if( is_link( 'config/modules/'.$id.'.xml' ) )
+					$available[$id]->type	= self::TYPE_LINK;
+				else{
+					$available[$id]	= $this->readXml( $entry->getPathname() );
+					$available[$id]->versionInstalled	= $available[$id]->version;
+					$available[$id]->type	= self::TYPE_COPY;
+				}
+				$list[$id]	= $available[$id];
 			}
+			catch( Exception $e ){
+				$this->env->messenger->noteFailure( 'XML of Module "'.$id.'" is broken.' );
+			}
+
+		}
 		ksort( $list );
 		return $list;
 	}
 	public function getAvailable(){
-//		if( $this->cache )
-//			return $this->cache;
+		if( $this->cache )
+			return $this->cache;
 		$list	= array();
 		$index	= new File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
 		foreach( $index as $entry ){
-			$id		= basename( $entry->getPath() );
-			$obj	= $this->readXml( $entry->getPathname() );
-			$obj->path	= $entry->getPath();
-			$obj->file	= $entry->getPathname();
-			$obj->type	= self::TYPE_SOURCE;
-			$obj->id	= $id;
-			$obj->versionAvailable	= $obj->version;
-			$list[$id]	= $obj;
+			$id		= preg_replace( '@^'.$this->pathRepos.'@', '', $entry->getPath() );
+			$id		= str_replace( '/', '_', $id );
+			try{
+				$obj	= $this->readXml( $entry->getPathname() );
+				$obj->path	= $entry->getPath();
+				$obj->file	= $entry->getPathname();
+				$obj->type	= self::TYPE_SOURCE;
+				$obj->id	= $id;
+				$obj->versionAvailable	= $obj->version;
+				$list[$id]	= $obj;
+			}
+			catch( Exception $e ){
+				$this->env->messenger->noteFailure( 'a: XML of Module "'.$id.'" is broken.' );
+			}
 		}
-//		$this->cache	= $list;
+		$this->cache	= $list;
 		ksort( $list );
 		return $list;
 	}
@@ -79,7 +99,7 @@ class Model_Module{
 	}
 
 	protected function readXml( $fileName ){
-		$xml	= XML_ElementReader::readFile( $fileName );
+		$xml	= @XML_ElementReader::readFile( $fileName );
 		$obj	= new stdClass();
 		$obj->title				= (string) $xml->title;
 		$obj->description		= (string) $xml->description;
