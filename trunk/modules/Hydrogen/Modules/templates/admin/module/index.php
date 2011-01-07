@@ -25,7 +25,7 @@ $listAll	= '<table class="modules available">'.$heads.join( $list ).'</table>';
 
 
 /*  --  AVAILABLE  --  */
-$list	= array();
+/*$list	= array();
 foreach( $modulesAvailable as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module available',
@@ -36,10 +36,10 @@ foreach( $modulesAvailable as $moduleId => $module ){
 	$list[]	= '<li class="module available">'.$link.'</li>';
 }
 $listAvailable	= '<ul class="modules available">'.join( $list ).'</ul>';
-
+*/
 
 /*  --  INSTALLED  --  */
-$list	= array();
+/*$list	= array();
 foreach( $modulesInstalled as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module installed',
@@ -50,10 +50,10 @@ foreach( $modulesInstalled as $moduleId => $module ){
 	$list[]	= '<li class="module installed">'.$link.'</li>';
 }
 $listInstalled	= '<ul class="modules installed">'.join( $list ).'</ul>';
-
+*/
 
 /*  --  NOT INSTALLED  --  */
-$list	= array();
+/*$list	= array();
 foreach( $modulesNotInstalled as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module',
@@ -64,6 +64,7 @@ foreach( $modulesNotInstalled as $moduleId => $module ){
 	$list[]	= '<li class="module">'.$link.'</li>';
 }
 $listNotInstalled	= '<ul class="modules">'.join( $list ).'</ul>';
+*/
 
 return '
 <div>
@@ -73,10 +74,10 @@ return '
 	'.$listAll.'
 	</fieldset>
 <!--	<h3>Verfügbar</h3>
-	'.$listAvailable.'
+	'./*$listAvailable.*/'
 	<h3>Installiert</h3>
-	'.$listInstalled.'
+	'./*$listInstalled.*/'
 	<h3>Nicht installiert</h3>
-	'.$listNotInstalled.'-->
+	'./*$listNotInstalled.*/'-->
 </div>';
 ?>
