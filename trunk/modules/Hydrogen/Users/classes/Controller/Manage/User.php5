@@ -75,7 +75,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		if( $this->env->getRequest()->getMethod() == 'POST' )
 		{
 			$user		= $modelUser->get( $userId );
-			$data		= $this->env->request->getAllFromSource( 'POST' );
+			$data		= $this->env->request->getAllFromSource( 'POST' )->getAll();
 			$data['modifiedAt']	= time();
 			$result		= $modelUser->edit( $userId, $data );
 		}
