@@ -74,7 +74,7 @@ UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module' ).'});' );
 $this->env->page->js->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/min.js' );
-$this->env->page->css->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/css/smoothness.css' );
+$this->env->page->css->theme->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/css/smoothness.css' );
 
 
 $contentGeneral	= '
