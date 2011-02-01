@@ -8,15 +8,15 @@
 		<class>Model/Project.php5</class>
 		<class>View/Admin/Project.php5</class>
 		<locale>de/admin/project.ini</locale>
-<!--		<template>admin/project/add.php</template>
-		<template>admin/project/edit.php</template>-->
+		<template>admin/project/add.php</template>
+		<template>admin/project/edit.php</template>
 		<template>admin/project/index.php</template>
 	</files>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `hydrogen_projects`;
 CREATE TABLE IF NOT EXISTS `hydrogen_projects` (
   `projectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `status` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) NOT NULL,

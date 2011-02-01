@@ -5,78 +5,97 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
+		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
+
 		$title			= $request->get( 'title' );
+		$description		= $request->get( 'description' );
+		$status			= $request->get( 'status' );
 		$model			= new Model_Project( $this->env );
 		if( $request->get( 'doAdd' ) )
 		{
 			if( empty( $title ) )
-				$messenger->noteError( 'Title is missing.' );
+				$messenger->noteError( $words['add']['msgErrorTitleEmpty'] );
 			else
 			{
 				if( $model->getAll( array( 'title' => $title ) ) )
-					$messenger->noteError( 'Already exists: '.$label );
+					$messenger->noteError( $words['add']['msgErrorTitleNotUnique'], $title );
 				else
 				{
 					$data	= array(
 						'title'		=> $title,
-						'timestamp'	=> time(),
+						'description'	=> $description,
+						'status'	=> $status,
+						'createdAt'	=> time(),
 					);
 					$model->add( $data );
-					$messenger->noteSuccess( 'Added: '.$title );
-					$this->restart( 'test/table' );
+					$messenger->noteSuccess( $words['add']['msgSuccess'], $title );
+					$this->restart( 'admin/project' );
 				}
 			}
 		}
-		$this->view->setData( array( 'title' => $title ) );
+		$this->view->addData( 'title', $title );
+		$this->view->addData( 'description', $description );
+		$this->view->addData( 'status', $status );
 	}
 
-	public function delete( $projectId )
+	public function remove( $projectId )
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
+		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
+
 		$model			= new Model_Project( $this->env );
-		$data			= $model->get( $projectId );
-		if( !$data )
-		{
-			$messenger->noteError( 'Invalid ID: '.$projectId );
-			return $this->redirect( 'test' );
+		$project		= $model->get( $projectId );
+		if( !$project ){
+			$messenger->noteError( $words['remove']['msgErrorInvalidId'] );
+			$this->restart( './admin/project' );
 		}
 		$model->remove( $projectId );
-		$messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( 'test/table' );
+		$messenger->noteSuccess( $words['remove']['msgSuccess'], $project->title );
+		$this->restart( './admin/project' );
 	}
 
 	public function edit( $projectId )
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
+		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
+
 		$title			= $request->get( 'title' );
+		$description		= $request->get( 'description' );
+		$status			= $request->get( 'status' );
 		$model			= new Model_Project( $this->env );
+		$project		= $model->get( $projectId );
+		if( !$project ){
+			$messenger->noteError( $words['edit']['msgErrorInvalidId'] );
+			$this->restart( './admin/project' );
+		}
 
 		if( $request->get( 'doEdit' ) )
 		{
 			if( empty( $title ) )
-				$messenger->noteError( 'Title is missing.' );
+				$messenger->noteError( $words['edit']['msgErrorTitleEmpty'] );
 			else
 			{
 				if( $model->getAll( array( 'title' => $title, 'projectId' => '!='.$projectId ) ) )
-					$messenger->noteError( 'Already exists: '.$title );
+					$messenger->noteError( $words['edit']['msgErrorTitleNotUnique'], $title );
 				else
 				{
 					$data	= array(
 						'title'		=> $title,
-						'timestamp'	=> time(),
+						'description'	=> $description,
+						'status'	=> $status,
+						'modifiedAt'	=> time(),
 					);
-					$model->edit( $projectId, $data );
-					$messenger->noteSuccess( 'Updated: '.$title );
-					$this->restart( 'test/table' );
+					$messenger->noteSuccess( $words['edit']['msgSuccess'], $title );
+					$this->restart( './admin/project' );
 				}
 			}
 		}
 		$this->view->setData(
 			array(
-				'projectId'	=> $projectId,
-				'project'	=> $model->get( $projectId ),
+				'projectId'	=> $project->projectId,
+				'project'	=> $project,
 			)
 		);
 	}
