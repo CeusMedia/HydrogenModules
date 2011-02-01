@@ -65,10 +65,11 @@ if( $module->sql ){
 }
 
 $disabled			= $module->type == 3 ? '' : 'disabled';
-$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/link/'.$module->id, 'einbinden', 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
-$buttonCopy			= UI_HTML_Elements::LinkButton( './admin/module/copy/'.$module->id, 'kopieren', 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
+$buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/', $words['view']['buttonCancel'], 'button cancel' );
+$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
+$buttonCopy			= UI_HTML_Elements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
 $disabled			= $module->type == 3 ? 'disabled' : '';
-$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/uninstall/'.$module->id, 'deinstallieren', 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 
 UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();
@@ -79,45 +80,46 @@ $this->env->page->css->theme->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/c
 
 $contentGeneral	= '
 <dl>
-	<dt>Title</dt>
+	<dt>'.$words['view']['title'].'</dt>
 	<dd>'.$module->title.'</dd>
-	<dt>Description</dt>
+	<dt>'.$words['view']['description'].'</dt>
 	<dd>'.$module->description.'</dd>
-	<dt>Type</dt>
+	<dt>'.$words['view']['type'].'</dt>
 	<dd><span class="module-type type-'.$module->type.'">'.$words['types'][$module->type].'</span></dd>
 </dl>
 <div class="clearfix"></div>
 <div class="buttonbar">
+	'.$buttonCancel.'
 	'.$buttonInstall.'
 	'.$buttonCopy.'
 	'.$buttonUninstall.'
 </div>';
-$tabs->addTab( 'General', $contentGeneral );
+$tabs->addTab( $words['view']['tabGeneral'], $contentGeneral );
 
 $contentResources	= '
 <dl class="resources">
-	<dt>Classes</dt>
+	<dt>'.$words['view']['resourceClasses'].'</dt>
 	<dd>'.$classes.'</dd>
-	<dt>Locales</dt>
+	<dt>'.$words['view']['resourceLocales'].'</dt>
 	<dd>'.$locales.'</dd>
-	<dt>Templates</dt>
+	<dt>'.$words['view']['resourceTemplates'].'</dt>
 	<dd>'.$templates.'</dd>
-	<dt>Styles</dt>
+	<dt>'.$words['view']['resourceStyles'].'</dt>
 	<dd>'.$styles.'</dd>
-	<dt>Scripts</dt>
+	<dt>'.$words['view']['resourceScripts'].'</dt>
 	<dd>'.$scripts.'</dd>
-	<dt>Images</dt>
+	<dt>'.$words['view']['resourceImages'].'</dt>
 	<dd>'.$images.'</dd>
 </dl>
 <div class="clearfix"></div>
 ';
-$tabs->addTab( 'Resources', $contentResources );
+$tabs->addTab( $words['view']['tabResources'], $contentResources );
 
 $contentConfig	= $config.'<div class="clearfix"></div>';
-$tabs->addTab( 'Configuration', $contentConfig );
+$tabs->addTab( $words['view']['tabConfiguration'], $contentConfig );
 
 $contentDatabase	= $sql.'<div class="clearfix"></div>';
-$tabs->addTab( 'Database', $contentDatabase );
+$tabs->addTab( $words['view']['tabDatabase'], $contentDatabase );
 
 
 return '
