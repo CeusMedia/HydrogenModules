@@ -1,6 +1,6 @@
 <?php
 
-$buttonAdd 		= UI_HTML_Elements::LinkButton( './admin/project/add', 'add project', 'button add' );
+$buttonAdd 		= UI_HTML_Elements::LinkButton( './admin/project/add', $words['index']['buttonAdd'], 'button add' );
 
 /*  --  PROJECT TABLE  --  */
 $list	= array();
@@ -8,14 +8,14 @@ foreach( $projects as $projectId => $project ){
 	$attributes	= array(
 		'class'		=> 'project available',
 		'title'		=> $project->description,
-		'href'		=> './admin/project/view/'.$projectId
+		'href'		=> './admin/project/edit/'.$project->projectId
 	);
 	$link		= UI_HTML_Tag::create( 'a', $project->title, $attributes );
-	$type		= '<span class="project-status status-'.$project->type.'">'.$words['status'][(int) $project->status].'</span>';
+	$type		= '<span class="project-status status-'.$project->status.'">'.$words['status'][(int) $project->status].'</span>';
 	$class		= 'project available status-'.$project->status;
-	$version	= $project->version;
-	$version	= '<span class="project-version">'.$version.'</span>';
-	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
+//	$version	= $project->version;
+//	$version	= '<span class="project-version">'.$version.'</span>';
+	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'/*.$version*/.'</td></tr>';
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headStatus'], $words['index']['headVersion'] );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
