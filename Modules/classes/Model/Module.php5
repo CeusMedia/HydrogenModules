@@ -53,6 +53,7 @@ class Model_Module{
 					$available[$id]->versionInstalled	= $available[$id]->version;
 					$available[$id]->type	= self::TYPE_COPY;
 				}
+				$available[$id]->id	= $id;
 				$list[$id]	= $available[$id];
 			}
 			catch( Exception $e ){

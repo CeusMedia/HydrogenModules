@@ -64,7 +64,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/role/edit/'.$roleId );
 	}
 
-	public function edit( $roleId ) {
+	public function edit( $roleId = NULL ) {
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
 

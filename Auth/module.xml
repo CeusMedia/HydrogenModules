@@ -16,5 +16,6 @@
 		<locale>en/auth.ini</locale>
 		<locale>en/html/auth.login.info.html</locale>
 	</files>
+	<config name="strict">TRUE</config>
 </module>
 

@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `hydrogen_role_rights` (
 	</sql>
 	<sql on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `hydrogen_roles`;
+DROP TABLE IF EXISTS `hydrogen_role_rights`;
 ]]>
 	</sql>
 </module>
