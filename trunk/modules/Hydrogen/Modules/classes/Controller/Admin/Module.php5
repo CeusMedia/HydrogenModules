@@ -13,11 +13,36 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
-	protected function copyModuleFile( $moduleId, $fileName, $path ){
-		$fileSource	= './modules/'.str_replace( '_', '/', $moduleId ).'/'.$path.$fileName;
-		$fileTarget	= $path.$fileName;
-		self::createPath( dirname( $fileTarget ) );
-		remark( 'copy('.$fileSource.','.$fileTarget.');' );
+	protected function copyModuleFile( $moduleId, $fileIn, $fileOut ){
+		$pathModules	= $this->getModulesPath();
+		$fileIn			= $pathModules.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$pathNameIn		= realpath( $fileIn );
+		if( !$pathNameIn ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			return FALSE;
+		}
+		if( !file_exists( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			return FALSE;
+		}
+		if( !is_readable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			return FALSE;
+		}
+		$pathOut	= dirname( $fileOut );
+		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
+			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			return FALSE;
+		}
+		if( file_exists( $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			return FALSE;
+		}
+		if( !copy( $pathNameIn, $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 	/**
@@ -72,6 +97,14 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		return $state;
 	}
 
+	protected function getModulesPath(){
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'module.modules.path' );
+		if( $path )
+			return $path;
+		throw new RuntimeException( 'No module path defined in module configuration' );
+	}
+
 	public function index(){
 		$model	= new Model_Module( $this->env );
 		$this->addData( 'modules', $model->getAll() );
@@ -106,17 +139,24 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			${$array}['js/'.$script]	= $config->get( 'path.javascripts' ).$script;
 		foreach( $module->files->styles as $style )
 			${$array}['css/'.$style]	= $pathTheme.$style;
-		${$array}['module.xml']	= 'config/modules/'.$moduleId.'.xml';
+		$filesCopy['module.xml']	= 'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $pathModule.'config.ini' ) )
 			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
 
 		$state		= NULL;
 		$listDone	= array();
-		foreach( array( 'filesLink', 'filesCopy' ) as $type )
-			foreach( $$type as $fileIn => $fileOut )
-				if( $state !== FALSE )
-					if( ( $state = $this->linkModuleFile( $moduleId, $fileIn, $fileOut ) ) )
+		foreach( array( 'filesLink', 'filesCopy' ) as $type ){
+			foreach( $$type as $fileIn => $fileOut ){
+				if( $state !== FALSE ){
+					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
+						$state	= $this->linkModuleFile( $moduleId, $fileIn, $fileOut );
+					else
+						$state	= $this->copyModuleFile( $moduleId, $fileIn, $fileOut );
+					if( $state )
 						$listDone[]	= $fileOut;
+				}
+			}
+		}
 
 		if( $state !== FALSE )
 			if( !empty( $module->sql['install'] ) )
@@ -136,12 +176,12 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
 		else
 			$this->env->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
-		$this->redirect( 'admin/module', 'view', array( $moduleId ) );
-//		$this->restart( './admin/module/view/'.$moduleId );
+		$this->restart( './admin/module/view/'.$moduleId );
 	}
-
+	
 	protected function linkModuleFile( $moduleId, $fileIn, $fileOut ){
-		$fileIn		= './modules/'.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$path		= $this->getModulesPath();
+		$fileIn		= $path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$pathNameIn	= realpath( $fileIn );
 		if( !$pathNameIn ){
 			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
@@ -228,8 +268,6 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	public function view( $moduleId ){
 		$model	= new Model_Module( $this->env );
 		$this->addData( 'module', $model->get( $moduleId ) );
-		$model	= new Model_Module( $this->env );
-		$module	= $model->get( $moduleId );
 	}
 }
 ?>
