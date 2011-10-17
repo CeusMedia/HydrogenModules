@@ -84,6 +84,10 @@ $contentGeneral	= '
 	<dd>'.$module->title.'</dd>
 	<dt>'.$words['view']['description'].'</dt>
 	<dd>'.$module->description.'</dd>
+	<dt>'.$words['view']['versionAvailable'].'</dt>
+	<dd>'.$module->versionAvailable.'</dd>
+	<dt>'.$words['view']['versionInstalled'].'</dt>
+	<dd>'.$module->versionInstalled.'</dd>
 	<dt>'.$words['view']['type'].'</dt>
 	<dd><span class="module-type type-'.$module->type.'">'.$words['types'][$module->type].'</span></dd>
 </dl>

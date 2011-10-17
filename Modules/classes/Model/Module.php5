@@ -14,9 +14,26 @@ class Model_Module{
 	}
 
 	public function getAll(){
-		$list	= array_merge( $this->getAvailable(), $this->getInstalled() );
-		ksort( $list );
-		return $list;
+		$globalModules	= $this->getAvailable();
+		$localModules	= $this->getInstalled( $globalModules );
+		foreach( $localModules as $moduleId => $module ){
+			switch( $module->type ){
+				case self::TYPE_LINK:
+					$localModules[$moduleId]->version			= $module->versionAvailable;
+					$localModules[$moduleId]->versionInstalled	= $module->versionAvailable;
+					break;
+				case self::TYPE_COPY:
+					$localModules[$moduleId]->versionInstalled	= $module->version;
+					$localModules[$moduleId]->versionAvailable	= $globalModules[$moduleId]->version;
+					break;
+				case self::TYPE_CUSTOM:
+					break;
+				default:
+					$localModules[$moduleId]	= $globalModules[$moduleId];
+			}
+		}
+		ksort( $localModules );
+		return $localModules;
 	}
 
 	public function get( $moduleId ){
@@ -31,30 +48,29 @@ class Model_Module{
 			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
 		return $this->pathRepos;
 	}
-	public function getInstalled(){
-		$available	= $this->getAvailable();
-		$list		= array();
-
+	
+	
+	
+	public function getInstalled( $globalModules ){
+		$list	= array();
 		$index	= new File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
 		{
-
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			try{
-				if( !array_key_exists( $id, $available ) ){
-					$available[$id]	= $this->readXml( $entry->getPathname() );
-					$available[$id]->versionInstalled	= $available[$id]->version;
-					$available[$id]->type	= self::TYPE_CUSTOM;
+				$type	= self::TYPE_CUSTOM;
+				if( array_key_exists( $id, $globalModules ) ){
+					if( is_link( 'config/modules/'.$id.'.xml' ) ){
+						$list[$id]			= $globalModules[$id];
+						$list[$id]->type	= self::TYPE_LINK;
+						continue;
+					}
+					$type	= self::TYPE_COPY;
 				}
-				else if( is_link( 'config/modules/'.$id.'.xml' ) )
-					$available[$id]->type	= self::TYPE_LINK;
-				else{
-					$available[$id]	= $this->readXml( $entry->getPathname() );
-					$available[$id]->versionInstalled	= $available[$id]->version;
-					$available[$id]->type	= self::TYPE_COPY;
-				}
-				$available[$id]->id	= $id;
-				$list[$id]	= $available[$id];
+				$list[$id]			= $this->readXml( $entry->getPathname() );
+				$list[$id]->type	= $type;
+				$list[$id]->versionInstalled	= $list[$id]->version;
+				$list[$id]->id		= $id;
 			}
 			catch( Exception $e ){
 				$this->env->messenger->noteFailure( 'XML of Module "'.$id.'" is broken.' );
@@ -90,7 +106,9 @@ class Model_Module{
 		return $list;
 	}
 	public function getNotInstalled(){
-		return array_diff_key( $this->getAvailable(), $this->getInstalled() );
+		$globalModules	= $this->getAvailable();
+		$localModules	= $this->getInstalled( $globalModules );
+		return array_diff_key( $globalModules, $localModules );
 	}
 
 	public function install( $moduleId ){
