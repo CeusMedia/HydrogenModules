@@ -108,10 +108,10 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	public function index(){
 		$model	= new Model_Module( $this->env );
 		$this->addData( 'modules', $model->getAll() );
-//		$this->addData( 'modulesAvailable', $model->getAvailable() );
-//		$this->addData( 'modulesInstalled', $model->getInstalled() );
-//		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
-	}
+/*		$this->addData( 'modulesAvailable', $model->getAvailable() );
+		$this->addData( 'modulesInstalled', $model->getInstalled() );
+		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
+*/	}
 
 	public function installModule( $moduleId, $installType = 0, $verbose = NULL ){
 		$config		= $this->env->getConfig();
@@ -121,7 +121,9 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
 		$filesLink	= array();
 		$filesCopy	= array();
+		
 		switch( $installType ){
+			
 			case self::INSTALL_TYPE_LINK:
 				$array	= 'filesLink'; break;
 			case self::INSTALL_TYPE_COPY:
@@ -159,8 +161,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		}
 
 		if( $state !== FALSE )
-			if( !empty( $module->sql['install'] ) )
-				$state = $this->executeSql( $module->sql['install'] );
+			if( !empty( $module->sql['install'] ) ){
+				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
+				$sql	= UI_Template::renderString( $module->sql['install'], $data );
+				$state = $this->executeSql( $sql );
+			}
 		if( $state === FALSE )
 			foreach( $listDone as $fileName )
 				@unlink( $fileName );
@@ -241,8 +246,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			$state	= NULL;
 			foreach( $files as $file )
 				$state = @unlink( $file );
-			if( !empty( $module->sql['uninstall'] ) )
-				$this->executeSql( $module->sql['uninstall'] );
+			if( !empty( $module->sql['uninstall'] ) ){
+				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
+				$sql	= UI_Template::renderString( $module->sql['uninstall'], $data );
+				$this->executeSql( $sql );
+			}
 			if( $state )
 				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
 			else

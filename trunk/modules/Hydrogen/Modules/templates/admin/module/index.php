@@ -13,15 +13,18 @@ foreach( $modules as $moduleId => $module ){
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
 	$version	= $module->version;
-	if( $module->versionInstalled && $module->versionAvailable && $module->versionInstalled != $module->versionAvailable )
-		$version	= $module->versionInstalled.' / '.$version;
+	if( $module->versionInstalled && $module->versionAvailable && $module->versionInstalled != $module->versionAvailable ){
+		if( $module->versionInstalled < $module->versionAvailable )
+			$version	= $module->versionInstalled.' <small>(verfügbar: '.$module->versionAvailable.')</small>';
+		else
+			$version	= $module->versionInstalled.' / '.$module->versionAvailable;
+	}
 	$version	= '<span class="module-version">'.$version.'</span>';
 	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion'] );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
 $listAll	= '<table class="modules available">'.$heads.join( $list ).'</table>';
-
 
 
 /*  --  AVAILABLE  --  */

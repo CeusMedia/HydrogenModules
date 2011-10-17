@@ -2,6 +2,7 @@
 <module>
 	<title>Roles</title>
 	<description>Basic role support and management</description>
+	<depend on="module">Users</depend>
 	<version>0.2</version>
 	<files>
 		<class>Controller/Manage/Role.php5</class>
