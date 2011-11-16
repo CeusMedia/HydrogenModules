@@ -16,24 +16,25 @@ class Model_Module{
 	public function getAll(){
 		$globalModules	= $this->getAvailable();
 		$localModules	= $this->getInstalled( $globalModules );
+		$list			= $globalModules;
 		foreach( $localModules as $moduleId => $module ){
+			if( !array_key_exists( $moduleId, $list ) )
+				$list[$moduleId]	= $module;
 			switch( $module->type ){
 				case self::TYPE_LINK:
-					$localModules[$moduleId]->version			= $module->versionAvailable;
-					$localModules[$moduleId]->versionInstalled	= $module->versionAvailable;
+					$list[$moduleId]->version			= $module->versionAvailable;
+					$list[$moduleId]->versionInstalled	= $module->versionAvailable;
 					break;
 				case self::TYPE_COPY:
-					$localModules[$moduleId]->versionInstalled	= $module->version;
-					$localModules[$moduleId]->versionAvailable	= $globalModules[$moduleId]->version;
+					$list[$moduleId]->versionInstalled	= $module->version;
+					$list[$moduleId]->versionAvailable	= $globalModules[$moduleId]->version;
 					break;
 				case self::TYPE_CUSTOM:
 					break;
-				default:
-					$localModules[$moduleId]	= $globalModules[$moduleId];
 			}
 		}
-		ksort( $localModules );
-		return $localModules;
+		ksort( $list );
+		return $list;
 	}
 
 	public function get( $moduleId ){
