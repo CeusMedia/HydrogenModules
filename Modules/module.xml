@@ -13,10 +13,10 @@
 		<template>admin/module/view.php</template>
 	</files>
 	<config name="path">./modules/</config>
-	<sql on="install"><![CDATA[
+	<sql on="install" type="*"><![CDATA[
 ]]>
 	</sql>
-	<sql on="uninstall"><![CDATA[
+	<sql on="uninstall" type="*"><![CDATA[
 ]]>
 	</sql>
 </module>

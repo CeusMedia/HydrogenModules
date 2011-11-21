@@ -49,10 +49,10 @@ return '
 		<legend class="roles">'.$words['index']['legend'].' <small>('.count( $roles ).')</small></legend>
 		<table id="roles">
 			<colgroup>
-				<col width="65%"/>
+				<col width="50%"/>
 				<col width="10%"/>
+				<col width="25%"/>
 				<col width="15%"/>
-				<col width="10%"/>
 			</colgroup>
 			'.$rows.'
 		</table>

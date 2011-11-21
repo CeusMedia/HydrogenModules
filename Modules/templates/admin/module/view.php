@@ -1,5 +1,6 @@
 <?php
 
+
 $classes	= '-';
 if( $module->files->classes ){
 	$classes	= array();
@@ -7,6 +8,9 @@ if( $module->files->classes ){
 		$classes[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
 }
+
+$classes	= xmp( View_Helper_Diff::htmlDiff( file_get_contents( 'config.ini.inc' ), file_get_contents( 'config.ini.inc.dist' ) ) );
+die( $classes );
 
 $locales	= '-';
 if( $module->files->locales ){
@@ -64,19 +68,19 @@ if( $module->sql ){
 	$sql	= UI_HTML_Tag::create( 'dl', join( $sql ) );
 }
 
-$disabled			= $module->type == 3 ? '' : 'disabled';
+$disabled			= $module->type == 4 ? '' : 'disabled';
 $buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/', $words['view']['buttonCancel'], 'button cancel' );
 $buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
 $buttonCopy			= UI_HTML_Elements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
-$disabled			= $module->type == 3 ? 'disabled' : '';
+$disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 
 UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module' ).'});' );
-$this->env->page->js->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/min.js' );
+/*$this->env->page->js->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/min.js' );
 $this->env->page->css->theme->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/css/smoothness.css' );
-
+*/
 
 $contentGeneral	= '
 <dl>

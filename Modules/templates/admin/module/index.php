@@ -24,7 +24,7 @@ foreach( $modules as $moduleId => $module ){
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion'] );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
-$listAll	= '<table class="modules available">'.$heads.join( $list ).'</table>';
+$listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 
 
 /*  --  AVAILABLE  --  */

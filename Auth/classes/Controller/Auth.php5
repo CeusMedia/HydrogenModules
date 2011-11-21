@@ -3,8 +3,13 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function login(){
 		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
+		
+		if( $session->has( 'userId' ) )
+			return $this->redirect( 'auth', 'loginInside' );
+
 		$username	= $request->get( 'username' );
 		$password	= $request->get( 'password' );
 		if( $request->has( 'login' ) ) {
@@ -18,8 +23,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				$user	= array_shift( $result );
 				$message	= $words['login']['msgSuccess'];
 				$messenger->noteSuccess( $message );
-				$this->env->getSession()->set( 'userId', $user->userId );
-				$this->env->getSession()->set( 'roleId', $user->roleId );
+				$session->set( 'userId', $user->userId );
+				$session->set( 'roleId', $user->roleId );
 				$this->restart( './' );
 			}
 			else {
@@ -30,15 +35,23 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->addData( 'data', array( 'username' => $username ) );
 	}
 
-	public function logout(){
+	public function logout( $redirectController = NULL, $redirectAction = NULL ){
+		$session	= $this->env->getSession();
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		$message	= $words['logout']['msgSuccess'];
-		if( $this->env->getSession()->remove( 'userId' ) ){
+		if( $session->remove( 'userId' ) ){
 			$this->env->getMessenger()->noteSuccess( $message );
-			$this->env->getSession()->remove( 'userId' );
-			$this->env->getSession()->remove( 'roleId' );
+			$session->remove( 'userId' );
+			$session->remove( 'roleId' );
 		}
-		$this->restart( './' );
+		$redirectTo	= '';
+		if( $redirectController && $redirectAction )
+			$redirectTo	= $redirectController.'/'.$redirectAction;
+		else if( $redirectController )
+			$redirectTo	= $redirectController;
+		$this->restart( './'.$redirectTo );
 	}
+
+	public function loginInside(){}
 }
 ?>

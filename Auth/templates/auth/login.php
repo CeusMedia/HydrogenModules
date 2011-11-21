@@ -1,7 +1,13 @@
 <?php
-$content	= $this->loadContentFile( 'html/auth.login.info.html' );
+
+$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth.login.' );
+$heading	= empty( $words['login']['heading'] ) ? "" : UI_HTML_Tag::create( 'h2', $words['login']['heading'] );
+
 return '
-<div style="float: left; width: 200px; margin-right: 20px">
+'.$heading.'
+<div class="auth-login-text-top">'.$text['top'].'</div>
+<div class="auth-login-text-info">'.$text['info'].'</div>
+<div class="auth-login-form">
 	<form name="editUser" action="./auth/login" method="post">
 		<fieldset>
 			<legend>'.$words['login']['legend'].'</legend>
@@ -21,11 +27,6 @@ return '
 		</fieldset>
 	</form>
 </div>
-<div style="float: left; width: 770px">
-		<fieldset>
-			<legend class="info">'.$words['login-info']['legend'].'</legend>
-			'.$content.'
-		</fieldset>
-</div>
+<div class="auth-login-text-bottom">'.$text['bottom'].'</div>
 ';
 ?>

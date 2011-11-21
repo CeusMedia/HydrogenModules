@@ -14,9 +14,9 @@
 		<template>manage/role/edit.php</template>
 		<template>manage/role/index.php</template>
 	</files>
-	<sql on="install"><![CDATA[
-DROP TABLE IF EXISTS `hydrogen_roles`;
-CREATE TABLE IF NOT EXISTS `hydrogen_roles` (
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
   `roleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `access` tinyint(1) unsigned NOT NULL,
   `register` tinyint(1) unsigned NOT NULL,
@@ -28,15 +28,15 @@ CREATE TABLE IF NOT EXISTS `hydrogen_roles` (
   KEY `access` (`access`,`register`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `hydrogen_roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
+INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
 (1, 128, 0, 'Entwickler', '', '1294083736', '0'),
 (2, 128, 0, 'Administrator', '', '1294083928', '0'),
 (3, 64, 0, 'Manager', '', '1294083948', '0'),
 (4, 64, 64, 'Benutzer', '', '1294083995', '0'),
 (5, 64, 128, 'Gast', '', '1294084004', '0');
 
-DROP TABLE IF EXISTS `hydrogen_role_rights`;
-CREATE TABLE IF NOT EXISTS `hydrogen_role_rights` (
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
   `roleRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `roleId` int(11) unsigned NOT NULL,
   `controller` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
@@ -47,9 +47,37 @@ CREATE TABLE IF NOT EXISTS `hydrogen_role_rights` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]>
 	</sql>
-	<sql on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `hydrogen_roles`;
-DROP TABLE IF EXISTS `hydrogen_role_rights`;
+	<sql on="install" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>roles";
+CREATE TABLE "<%?prefix%>roles" (
+	"roleId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
+	"access" INTEGER NOT NULL  DEFAULT 0,
+	"register" INTEGER NOT NULL  DEFAULT 0,
+	"title" VARCHAR NOT NULL ,
+	"description" TEXT NOT NULL ,
+	"createdAt" NUMERIC NOT NULL ,
+	"modifiedAt" NUMERIC NOT NULL
+);
+
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (1, 128, 0, 'Entwickler', '', '1294083736', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (2, 128, 0, 'Administrator', '', '1294083928', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (3, 64, 0, 'Manager', '', '1294083948', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (4, 64, 64, 'Benutzer', '', '1294083995', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (5, 64, 128, 'Gast', '', '1294084004', '0');
+
+DROP TABLE IF EXISTS "<%?prefix%>role_rights";
+CREATE TABLE "<%?prefix%>role_rights" (
+	"roleRightId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
+	"roleId" INTEGER NOT NULL ,
+	"controller" VARCHAR NOT NULL ,
+	"action" VARCHAR,
+	"timestamp" NUMERIC NOT NULL
+);
+]]>
+	</sql>
+	<sql on="uninstall" type="*"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
 ]]>
 	</sql>
 </module>
