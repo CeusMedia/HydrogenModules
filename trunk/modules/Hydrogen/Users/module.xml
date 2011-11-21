@@ -19,7 +19,7 @@
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-CREATE TABLE IF NOT EXISTS `hydrogen_users` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `roleId` int(11) unsigned DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `hydrogen_users` (
 ]]>
 	</sql>
 	<sql on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `hydrogen_users`;
+DROP TABLE IF EXISTS `<%?prefix%>users`;
 ]]>
 	</sql>
 </module>

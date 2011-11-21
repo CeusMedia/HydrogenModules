@@ -160,12 +160,18 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			}
 		}
 
-		if( $state !== FALSE )
-			if( !empty( $module->sql['install'] ) ){
-				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
-				$sql	= UI_Template::renderString( $module->sql['install'], $data );
+		//  --  SQL  --  //
+		if( $state !== FALSE ){
+			$driver	= $this->env->dbc->getDriver();
+			$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
+			$sql	= "";
+			if( $driver && !empty( $module->sql['install@'.$driver] ) )
+				$sql	= UI_Template::renderString( $module->sql['install@'.$driver], $data );
+			else if( !empty( $module->sql['install@*'] ) )
+				$sql	= UI_Template::renderString( $module->sql['install@*'], $data );
+			if( $sql )
 				$state = $this->executeSql( $sql );
-			}
+		}
 		if( $state === FALSE )
 			foreach( $listDone as $fileName )
 				@unlink( $fileName );
@@ -228,6 +234,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 
 		$files	= array();
 #		try{
+			//  --  FILES  --  //
 			foreach( $module->files->classes as $class )
 				$files[]	= 'classes/'.$class;
 			foreach( $module->files->templates as $template )
@@ -239,6 +246,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			foreach( $module->files->styles as $style )
 				$files[]	= $pathTheme.$style;
 
+			//  --  CONFIG  --  //
 			$files[]	= 'config/modules/'.$moduleId.'.xml';
 			if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
 				$files[]	= 'config/modules/'.$moduleId.'.ini';
@@ -246,11 +254,20 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			$state	= NULL;
 			foreach( $files as $file )
 				$state = @unlink( $file );
-			if( !empty( $module->sql['uninstall'] ) ){
+
+			if( $state !== FALSE ){
+				//  --  SQL  --  //
+				$driver	= $this->env->dbc->getDriver();
 				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
-				$sql	= UI_Template::renderString( $module->sql['uninstall'], $data );
-				$this->executeSql( $sql );
+				$sql	= "";
+				if( $driver && !empty( $module->sql['uninstall'.$driver] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall'.$driver], $data );
+				else if( !empty( $module->sql['uninstall*'] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall*'], $data );
+				if( $sql )
+					$state = $this->executeSql( $sql );
 			}
+			
 			if( $state )
 				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
 			else

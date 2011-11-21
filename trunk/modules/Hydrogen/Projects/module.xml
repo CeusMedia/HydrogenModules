@@ -13,8 +13,8 @@
 		<template>admin/project/index.php</template>
 	</files>
 	<sql on="install"><![CDATA[
-DROP TABLE IF EXISTS `hydrogen_projects`;
-CREATE TABLE IF NOT EXISTS `hydrogen_projects` (
+DROP TABLE IF EXISTS `<%?prefix%>projects`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
   `projectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) NOT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `hydrogen_projects` (
 ]]>
 	</sql>
 	<sql on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `hydrogen_projects`;
+DROP TABLE IF EXISTS `<%?prefix%>projects`;
 ]]>
 	</sql>
 </module>

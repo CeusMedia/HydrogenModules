@@ -1,14 +1,15 @@
 <?php
 class Model_Module{
 
-	const TYPE_CUSTOM	= 0;
-	const TYPE_COPY		= 1;
-	const TYPE_LINK		= 2;
-	const TYPE_SOURCE	= 3;
+	const TYPE_UNKNOWN	= 0;
+	const TYPE_CUSTOM	= 1;
+	const TYPE_COPY		= 2;
+	const TYPE_LINK		= 3;
+	const TYPE_SOURCE	= 4;
 
 	public function __construct( $env ){
-		$this->env		= $env;
-		$this->pathRepos	= './modules/';
+		$this->env			= $env;
+		$this->pathRepos	= $env->config->get( 'module.modules.path' );
 		$this->pathConfig	= 'config/modules/';
 		$this->cache		= array();
 	}
@@ -20,18 +21,23 @@ class Model_Module{
 		foreach( $localModules as $moduleId => $module ){
 			if( !array_key_exists( $moduleId, $list ) )
 				$list[$moduleId]	= $module;
+			else if( $module->type != self::TYPE_LINK )
+				$module->type	= self::TYPE_COPY;
 			switch( $module->type ){
 				case self::TYPE_LINK:
-					$list[$moduleId]->version			= $module->versionAvailable;
-					$list[$moduleId]->versionInstalled	= $module->versionAvailable;
+					$module->versionAvailable	= $module->version;
+					$module->versionInstalled	= $module->version;
 					break;
 				case self::TYPE_COPY:
-					$list[$moduleId]->versionInstalled	= $module->version;
-					$list[$moduleId]->versionAvailable	= $globalModules[$moduleId]->version;
+					$module->versionInstalled	= $module->version;
+					$module->versionAvailable	= $globalModules[$moduleId]->version;
 					break;
 				case self::TYPE_CUSTOM:
+					$module->version			= $module->versionInstalled;
+					$module->versionAvailable	= NULL;
 					break;
 			}
+			$list[$moduleId]	= $module;
 		}
 		ksort( $list );
 		return $list;
@@ -49,38 +55,31 @@ class Model_Module{
 			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
 		return $this->pathRepos;
 	}
-	
-	
-	
-	public function getInstalled( $globalModules ){
+
+	public function getInstalled(){
 		$list	= array();
 		$index	= new File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
 		{
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			try{
-				$type	= self::TYPE_CUSTOM;
-				if( array_key_exists( $id, $globalModules ) ){
-					if( is_link( 'config/modules/'.$id.'.xml' ) ){
-						$list[$id]			= $globalModules[$id];
-						$list[$id]->type	= self::TYPE_LINK;
-						continue;
-					}
-					$type	= self::TYPE_COPY;
-				}
-				$list[$id]			= $this->readXml( $entry->getPathname() );
-				$list[$id]->type	= $type;
-				$list[$id]->versionInstalled	= $list[$id]->version;
-				$list[$id]->id		= $id;
+				$module	= $this->readXml( $entry->getPathname() );
 			}
 			catch( Exception $e ){
 				$this->env->messenger->noteFailure( 'XML of Module "'.$id.'" is broken.' );
 			}
-
+			$module->type	= self::TYPE_CUSTOM;
+			if( is_link( 'config/modules/'.$id.'.xml' ) ){
+				$module->type	= self::TYPE_LINK;
+			}
+			$module->id		= $id;
+			$module->versionInstalled	= $module->version;
+			$list[$id]		= $module;
 		}
 		ksort( $list );
 		return $list;
 	}
+
 	public function getAvailable(){
 		if( $this->cache )
 			return $this->cache;
@@ -149,8 +148,14 @@ class Model_Module{
 			$obj->files->images[]	= (string) $link;
 		foreach( $xml->config as $pair )
 			$obj->config[$pair->getAttribute( 'name' )]	= (string) $pair;
-		foreach( $xml->sql as $sql )
-			$obj->sql[$sql->getAttribute( 'on' )]	= (string) $sql;
+		foreach( $xml->sql as $sql ){
+			$event	= $sql->getAttribute( 'on' );
+			$type	= $sql->hasAttribute( 'type' ) ? $sql->getAttribute( 'type' ) : '*';
+			foreach( explode( ',', $type ) as $type ){
+				$key	= $event.'@'.$type;
+				$obj->sql[$key]	= (string) $sql;
+			}
+		}
 		return $obj;
 	}
 }
