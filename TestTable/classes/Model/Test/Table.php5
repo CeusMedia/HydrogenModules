@@ -2,7 +2,7 @@
 class Model_Test_Table extends CMF_Hydrogen_Model
 {
 	protected $name			= 'test_table';
-	protected $fields		= array(
+	protected $columns		= array(
 		'testId',
 		'title',
 		'timestamp',

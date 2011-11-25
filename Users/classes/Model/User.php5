@@ -19,7 +19,7 @@
 class Model_User extends CMF_Hydrogen_Model {
 
 	protected $name		= 'users';
-	protected $fields	= array(
+	protected $columns	= array(
 		'userId',
 		'roleId',
 		'roomId',

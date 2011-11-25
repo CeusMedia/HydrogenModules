@@ -19,7 +19,7 @@
 class Model_Role_Right extends CMF_Hydrogen_Model {
 
 	protected $name		= 'role_rights';
-	protected $fields	= array(
+	protected $columns	= array(
 		'roleRightId',
 		'roleId',
 		'controller',
