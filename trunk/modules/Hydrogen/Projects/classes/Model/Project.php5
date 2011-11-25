@@ -19,7 +19,7 @@
 class Model_Project extends CMF_Hydrogen_Model {
 
 	protected $name		= 'projects';
-	protected $fields	= array(
+	protected $columns	= array(
 		'projectId',
 		'status',
 		'title',

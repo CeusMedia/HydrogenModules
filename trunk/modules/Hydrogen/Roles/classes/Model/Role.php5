@@ -28,7 +28,7 @@ class Model_Role extends CMF_Hydrogen_Model {
 	const REGISTER_DEFAULT	= 128;
 
 	protected $name		= 'roles';
-	protected $fields	= array(
+	protected $columns	= array(
 		'roleId',
 		'access',
 		'register',
