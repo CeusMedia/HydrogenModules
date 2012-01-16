@@ -1,0 +1,114 @@
+#bug-details .bug-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+#bug-details .bug-content {}
+
+
+.bug-progress {
+	padding: 1px 4px;
+	}
+.bug-progress.progress-0 {
+	background-color: #FF7F7F;
+	}
+.bug-progress.progress-25 {
+	background-color: #FFBF7F;
+	}
+.bug-progress.progress-50 {
+	background-color: #FFFF7F;
+	}
+.bug-progress.progress-75 {
+	background-color: #BFFF7F;
+	}
+.bug-progress.progress-100 {
+	background-color: #7FFF7F;
+	}
+.bug-note-date {
+	font-size: 0.8em;
+	}
+	
+.bug-severity {
+	padding: 1px 4px;
+	}
+.bug-severity.severity-0 {
+	}
+.bug-severity.severity-1 {
+	background-color: #FF7F7F;
+	}
+.bug-severity.severity-2 {
+	background-color: #FFFF7F;
+	}
+.bug-severity.severity-3 {
+	background-color: #7FFF7F;
+	}
+.bug-severity.severity-4 {
+	background-color: #BFFF7F;
+	}
+.bug-severity.severity-5 {
+	background-color: #7FFF7F;
+	}
+	
+.bug-priority {
+	padding: 1px 4px;
+	}
+.bug-priority.priority-0 {
+	}
+.bug-priority.priority-1 {
+	background-color: #FF7F7F;
+	}
+.bug-priority.priority-2 {
+	background-color: #FFBF7F;
+	}
+.bug-priority.priority-3 {
+	background-color: #FFFF7F;
+	}
+.bug-priority.priority-4 {
+	background-color: #BFFF7F;
+	}
+.bug-priority.priority-5 {
+	background-color: #7FFF7F;
+	}
+
+.bug-status {
+	padding: 1px 4px;
+	}
+.bug-status.status-0 {
+	border: 1px dotted gray;
+	}
+.bug-status.status-1 {
+	background-color: #FF7F7F;
+	}
+.bug-status.status-2 {
+	background-color: #FFBF7F;
+	}
+.bug-status.status-3 {
+	background-color: #FFFF7F;
+	}
+.bug-status.status-4 {
+	background-color: #7FFF7F;
+	}
+.bug-status.status-5 {
+	background-color: #FFBFFF;
+	}
+.bug-status.status-6 {
+	background-color: #BFBFBF;
+	}
+
+	
+.bug-type {
+	padding: 1px 4px;
+	}
+.bug-type.type-0 {
+	background-color: #FF7F7F;
+	}
+.bug-type.type-1 {
+	background-color: #7FFF7F;
+	}
+.bug-type.type-2 {
+	background-color: #FFBFFF;
+	}
+
+	
+#bug-list a.bug-title {
+	font-weight: bold;
+	}

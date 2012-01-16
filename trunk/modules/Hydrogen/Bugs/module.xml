@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<module>
+	<title>Bugs</title>
+	<description>Bug management</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Bug.php5</class>
+		<class>Model/Bug.php5</class>
+		<class>Model/Bug/Note.php5</class>
+		<class>Model/Bug/Change.php5</class>
+		<class>View/Bug.php5</class>
+		<locale>de/bug.ini</locale>
+		<template>bug/add.php</template>
+		<template>bug/edit.php</template>
+		<template>bug/edit.info.php</template>
+		<template>bug/edit.changes.php</template>
+		<template>bug/edit.emerge.php</template>
+		<template>bug/index.php</template>
+		<template>bug/index.filter.php</template>
+		<template>bug/index.list.php</template>
+		<style>site.bug.css</style>
+	</files>
+	<sql on="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bugs`;
+CREATE TABLE IF NOT EXISTS `chat_bugs` (
+  `bugId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `reporterId` int(11) unsigned NOT NULL,
+  `managerId` int(11) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `severity` tinyint(1) unsigned NOT NULL,
+  `priority` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `progress` decimal(3,0) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bugId`),
+  KEY `repoorterId` (`reporterId`),
+  KEY `managerId` (`managerId`),
+  KEY `type` (`type`),
+  KEY `severity` (`severity`),
+  KEY `priority` (`priority`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `<%?prefix%>bug_changes`;
+CREATE TABLE IF NOT EXISTS `chat_bug_changes` (
+  `bugChangeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `bugId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `noteId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `from` text COLLATE utf8_unicode_ci,
+  `to` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`bugChangeId`),
+  KEY `bugId` (`bugId`),
+  KEY `userId` (`userId`),
+  KEY `noteId` (`noteId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `<%?prefix%>bug_notes`;
+CREATE TABLE IF NOT EXISTS `chat_bug_notes` (
+  `bugNoteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `bugId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `note` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`bugNoteId`),
+  KEY `bugId` (`bugId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+]]>
+	</sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bugs`;
+DROP TABLE IF EXISTS `<%?prefix%>bug_changes`;
+DROP TABLE IF EXISTS `<%?prefix%>bug_notes`;
+]]>
+	</sql>
+</module>
+
