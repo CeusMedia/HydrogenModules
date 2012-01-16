@@ -1,5 +1,5 @@
 <?php
-class Controller_Labs_Bug extends Controller_Abstract{
+class Controller_Bug extends CMF_Hydrogen_Controller{
 
 	const CHANGE_DETAILS		= 1;
 	const CHANGE_MANAGER		= 2;
@@ -42,26 +42,29 @@ class Controller_Labs_Bug extends Controller_Abstract{
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
 				$bugId	= $model->add( $data );
+			var_dump( $bugId );
+			die("1");
 				if( $bugId )
-					$this->restart( './labs/bug/edit/'.$bugId );
+					$this->restart( './bug/edit/'.$bugId );
 			}
 		}
 	}
 
-	protected function noteChange( $bugId, $noteId, $type, $from, $to ){
-		$model		= new Model_Bug_Change( $this->env );
-		$data	= array(
-			'bugId'		=> $bugId,
-			'userId'	=> $this->env->getSession()->get( 'userId' ),
-			'noteId'	=> $noteId,
-			'type'		=> $type,
-			'from'		=> $from,
-			'to'		=> $to,
-			'timestamp'	=> time(),
-		);
-		return $model->add( $data );
+	protected function compactFilterInput( $input ){
+		if( is_string( $input ) )
+			if( strlen( $input ) )
+				return $input;
+		if( !is_array( $input ) )
+			return NULL;
+		foreach( $input as $nr => $chunk ){
+			$chunk	= $this->compactFilterInput( $chunk );
+			if( is_string( $chunk ) && strlen( $chunk ) || is_array( $chunk ) && count( $chunk ) )
+				continue;
+			unset( $input[$nr] );
+		}
+		return $input;
 	}
-	
+
 	public function emerge( $bugId ){
 		$request	= $this->env->request;
 		$modelBug		= new Model_Bug( $this->env );
@@ -107,7 +110,7 @@ class Controller_Labs_Bug extends Controller_Abstract{
 			else
 				$this->env->getMessenger()->noteError( 'Keine Veränderungen vorgenommen.' );
 		}
-		$this->restart( './labs/bug/edit/'.$bugId );
+		$this->restart( './bug/edit/'.$bugId );
 	}
 	
 	public function edit( $bugId ){
@@ -134,7 +137,7 @@ class Controller_Labs_Bug extends Controller_Abstract{
 				'content'	=> $request->get( 'content' ),
 			);
 			$modelBug->edit( $bugId, $data );
-//			$this->restart( './labs/statement' );
+//			$this->restart( './statement' );
 		}
 		$bug			= $modelBug->get( $bugId );
 
@@ -176,7 +179,7 @@ class Controller_Labs_Bug extends Controller_Abstract{
 						$session->set( 'filter-bug-'.$filter, $value );
 				}
 		}
-		$this->restart( './labs/bug' );
+		$this->restart( './bug' );
 	}
 
 	public function index(){
@@ -215,6 +218,20 @@ class Controller_Labs_Bug extends Controller_Abstract{
 			$users[$user->userId]	= $user;
 
 		$this->addData( 'users', $users );
+	}
+
+	protected function noteChange( $bugId, $noteId, $type, $from, $to ){
+		$model		= new Model_Bug_Change( $this->env );
+		$data	= array(
+			'bugId'		=> $bugId,
+			'userId'	=> $this->env->getSession()->get( 'userId' ),
+			'noteId'	=> $noteId,
+			'type'		=> $type,
+			'from'		=> $from,
+			'to'		=> $to,
+			'timestamp'	=> time(),
+		);
+		return $model->add( $data );
 	}
 }
 ?>

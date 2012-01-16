@@ -1,6 +1,6 @@
 <?php
-$filter	= require_once 'templates/labs/bug/index.filter.php';
-$list	= require_once 'templates/labs/bug/index.list.php';
+$filter	= require_once 'templates/bug/index.filter.php';
+$list	= require_once 'templates/bug/index.list.php';
 
 return '
 <div>
