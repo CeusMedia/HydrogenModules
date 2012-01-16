@@ -18,6 +18,10 @@ foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus['_selected']	= $this->env->getRequest()->get( 'status' );
 
+$optProject	= array( '' => '- alle -' );
+foreach( $projects as $project )
+	$optProject[$project->projectId]	= $project->title;
+$optProject['_selected']	= $this->env->getRequest()->get( 'projectId' );
 
 
 
@@ -35,6 +39,10 @@ $main	= '
 		<div style="float: left; width: 30%; margin-right: 3%">
 				<label for="status">'.$words['add']['labelSeverity'].'</label><br/>
 				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'm' ).'
+		</div>
+		<div style="float: left; width: 30%; margin-right: 3%">
+				<label for="projectId">'.$words['add']['labelProject'].'</label><br/>
+				'.UI_HTML_Elements::Select( 'projectId', $optProject, 'm' ).'
 		</div>
 		<div style="clear: left"></div>
 		<br/>

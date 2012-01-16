@@ -43,34 +43,19 @@ foreach( $bug->notes as $note ){
 		$change	= UI_HTML_Tag::create( 'dd', $change );
 		$noteChanges[]	= $labelType.$change;	
 	}
+
+	$user	= '-';
+	if( $note->userId ){
+		$user	= UI_HTML_Elements::Link( './user/edit/'.$note->userId, $note->user->username );
+		$user	= UI_HTML_Tag::create( 'span', $user, array( 'class' => 'role role'.$note->user->roleId ) );
+	}
+
 //	$noteChanges	= UI_HTML_Tag::create( 'dl', join( $noteChanges ) );
 	$content	= '
-<style>
-#bug-change-list-note {
-	float: left;
-	width: 58%;
-	margin-right: 2%;
-	}
-#bug-change-list-changes {
-	float: left;
-	width: 38%;
-	margin-right: 2%;
-	}
-#bug-change-list-changes dl dt {
-	width: 100px;
-	}
-</style>
-
 <div id="bug-change-list-changes">
-	<dl>
+	<dl class="clearfloat">
 		<dt>Bearbeiter</dt>
-		<dd>
-			<span class="role role'.$note->user->roleId.'">
-				<a href="./user/edit/'.$note->user->userId.'">
-					'.$note->user->username.'
-				</a>
-			</span>
-		</dd>
+		<dd>'.$user.'</dd>
 		<dt>Zeitpunkt</dt>
 		<dd>
 			<span class="bug-note-date">'.date( 'd.m.Y H:i:s', $note->timestamp ).'</span>
@@ -81,7 +66,7 @@ foreach( $bug->notes as $note ){
 <div id="bug-change-list-note">
 	<div class="bug-note-content">'.( $note->note ? $note->note : '<em><small>Kein Kommentar.</small></em>' ).'</div>
 </div>
-<hr style="clear: left"/>
+<div style="clear: left"></div>
 ';
 	
 	

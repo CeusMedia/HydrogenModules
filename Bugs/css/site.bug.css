@@ -23,9 +23,6 @@
 .bug-progress.progress-100 {
 	background-color: #7FFF7F;
 	}
-.bug-note-date {
-	font-size: 0.8em;
-	}
 	
 .bug-severity {
 	padding: 1px 4px;
@@ -111,4 +108,35 @@
 	
 #bug-list a.bug-title {
 	font-weight: bold;
+	}
+
+	
+#bug-change-list-note {
+	float: left;
+	width: 57%;
+	margin-right: 2%;
+	}
+#bug-change-list-changes {
+	clear: left;
+	float: left;
+	width: 38%;
+	margin-right: 2%;
+	border-right: 1px solid #DFDFDF;
+	}
+#bug-change-list-changes dl dt {
+	width: 90px;
+}
+#bug-change-list-changes dl dd {
+	margin-left: 0px;
+	}
+
+li.bug-note {
+	clear: left;
+	margin-top: 5px;
+	border-top: 1px solid #DFDFDF;
+	padding: 5px 0px 0px 0px;
+	}
+	
+.bug-note-date {
+	font-size: 0.8em;
 	}
