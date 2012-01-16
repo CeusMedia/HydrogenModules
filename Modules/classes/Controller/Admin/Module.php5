@@ -68,7 +68,8 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		if( !$this->env->has( 'dbc' ) )
 			return;
 		$prefix	= $this->env->config->get( 'database.prefix' );
-		while( $line = array_shift( $lines ) ){
+		while( count( $lines ) ){
+			$line = array_shift( $lines );
 			if( !trim( $line ) )
 				continue;
 			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
@@ -82,6 +83,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		}
 		$state	= NULL;
 		foreach( $cmds as $command ){
+			error_log( nl2br( $command )."\n", 3, 'a.log' );
 			if( $state !== FALSE ){
 				try{
 					$this->env->dbc->exec( $command );
@@ -140,7 +142,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		foreach( $module->files->scripts as $script )
 			${$array}['js/'.$script]	= $config->get( 'path.javascripts' ).$script;
 		foreach( $module->files->styles as $style )
-			${$array}['css/'.$style]	= $pathTheme.$style;
+			${$array}['css/'.$style]	= $pathTheme.'css/'.$style;
 		$filesCopy['module.xml']	= 'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $pathModule.'config.ini' ) )
 			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
@@ -163,14 +165,10 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		//  --  SQL  --  //
 		if( $state !== FALSE ){
 			$driver	= $this->env->dbc->getDriver();
-			$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
-			$sql	= "";
 			if( $driver && !empty( $module->sql['install@'.$driver] ) )
-				$sql	= UI_Template::renderString( $module->sql['install@'.$driver], $data );
+				$state	= $this->executeSql( $module->sql['install@'.$driver] );
 			else if( !empty( $module->sql['install@*'] ) )
-				$sql	= UI_Template::renderString( $module->sql['install@*'], $data );
-			if( $sql )
-				$state = $this->executeSql( $sql );
+				$state	= $this->executeSql( $module->sql['install@*'] );
 		}
 		if( $state === FALSE )
 			foreach( $listDone as $fileName )
@@ -228,7 +226,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 
 	public function uninstall( $moduleId, $verbose = TRUE ){
 		$config		= $this->env->getConfig();
-		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
+		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
 		$model		= new Model_Module( $this->env );
 		$module		= $model->get( $moduleId );
 
@@ -244,7 +242,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			foreach( $module->files->scripts as $script )
 				$files[]	= $config->get( 'path.javascripts' ).$script;
 			foreach( $module->files->styles as $style )
-				$files[]	= $pathTheme.$style;
+				$files[]	= $pathTheme.'css/'.$style;
 
 			//  --  CONFIG  --  //
 			$files[]	= 'config/modules/'.$moduleId.'.xml';
@@ -260,10 +258,10 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 				$driver	= $this->env->dbc->getDriver();
 				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
 				$sql	= "";
-				if( $driver && !empty( $module->sql['uninstall'.$driver] ) )
-					$sql	= UI_Template::renderString( $module->sql['uninstall'.$driver], $data );
-				else if( !empty( $module->sql['uninstall*'] ) )
-					$sql	= UI_Template::renderString( $module->sql['uninstall*'], $data );
+				if( $driver && !empty( $module->sql['uninstall@'.$driver] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall@'.$driver], $data );
+				else if( !empty( $module->sql['uninstall@*'] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall@*'], $data );
 				if( $sql )
 					$state = $this->executeSql( $sql );
 			}
