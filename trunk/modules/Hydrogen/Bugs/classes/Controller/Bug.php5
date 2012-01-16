@@ -42,12 +42,12 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
 				$bugId	= $model->add( $data );
-			var_dump( $bugId );
-			die("1");
 				if( $bugId )
 					$this->restart( './bug/edit/'.$bugId );
 			}
 		}
+		$model	= new Model_Project( $this->env );
+		$this->addData( 'projects', $model->getAll( array( 'status' => '>0' ), array( 'title' => 'ASC' ) ) );
 	}
 
 	protected function compactFilterInput( $input ){
@@ -114,6 +114,8 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 	}
 	
 	public function edit( $bugId ){
+		
+		$logic	= new Logic_Bug( $this->env );
 		$request	= $this->env->request;
 
 		$modelBug		= new Model_Bug( $this->env );
@@ -144,15 +146,18 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		$notes		= $modelBugNote->getAllByIndex( 'bugId', $bugId, array( 'timestamp' => 'ASC' ) );
 		foreach( $notes as $nr => $note ){
 			$changes	= $modelBugChange->getAllByIndex( 'noteId', $note->bugNoteId, array( 'type' => 'ASC' ) );
-			$notes[$nr]->user	= $users[$note->userId];
+			if( $note->userId )
+				$notes[$nr]->user	= $users[$note->userId];
 			$notes[$nr]->changes	= $changes;
 			foreach( $changes as $nr => $change )
-				$changes[$nr]->user	= $users[$change->userId];
+				if( $change->userId )
+					$changes[$nr]->user	= $users[$change->userId];
 		}
 		$bug->notes		= $notes;
 		$bug->changes	= $modelBugChange->getAll( array( 'bugId' => $bugId, 'noteId' => 0 ), array( 'timestamp' => 'ASC' ) );
 
-		$bug->reporter	= $users[$bug->reporterId];
+		if( $bug->reporterId )
+			$bug->reporter	= $users[$bug->reporterId];
 		if( $bug->managerId )
 			$bug->manager	= $users[$bug->managerId];
 		$this->addData( 'bug', $bug );

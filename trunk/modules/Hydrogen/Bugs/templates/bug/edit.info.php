@@ -5,7 +5,8 @@ $changers	= array();
 $changes	= $modelBugChange->getAllByIndex( 'bugId', $bug->bugId );
 foreach( $changes as $change ){
 	if( !array_key_exists( $change->userId, $changers ) )
-		$changers[$change->userId]	= $users[$change->userId];
+		if( $change->userId )
+			$changers[$change->userId]	= $users[$change->userId];
 }
 
 foreach( $changers as $userId => $changer ){
@@ -15,8 +16,11 @@ foreach( $changers as $userId => $changer ){
 }
 $changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
 
-$reporter	= UI_HTML_Elements::Link( './user/edit/'.$bug->reporter->userId, $bug->reporter->username );
-$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$bug->reporter->roleId ) );
+$reporter	= '-';
+if( $bug->reporterId ){
+	$reporter	= UI_HTML_Elements::Link( './user/edit/'.$bug->reporter->userId, $bug->reporter->username );
+	$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$bug->reporter->roleId ) );
+}
 
 $manager	= '-';
 if( $bug->managerId ){

@@ -22,8 +22,9 @@
 	</files>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bugs`;
-CREATE TABLE IF NOT EXISTS `chat_bugs` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bugs` (
   `bugId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) unsigned NOT NULL,
   `reporterId` int(11) unsigned NOT NULL,
   `managerId` int(11) NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `chat_bugs` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>bug_changes`;
-CREATE TABLE IF NOT EXISTS `chat_bug_changes` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bug_changes` (
   `bugChangeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `bugId` int(11) unsigned NOT NULL,
   `userId` int(11) unsigned NOT NULL,
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `chat_bug_changes` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>bug_notes`;
-CREATE TABLE IF NOT EXISTS `chat_bug_notes` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bug_notes` (
   `bugNoteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `bugId` int(11) unsigned NOT NULL,
   `userId` int(11) unsigned NOT NULL,

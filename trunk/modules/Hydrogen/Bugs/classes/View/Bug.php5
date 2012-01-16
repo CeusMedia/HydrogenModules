@@ -1,9 +1,17 @@
 <?php
-class View_Labs_Bug extends CMF_Hydrogen_View{
+class View_Bug extends CMF_Hydrogen_View{
+
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+		parent::__construct( $env );
+		$this->env->getPage()->addThemeStyle( 'site.bug.css' );
+	}
+
 	public function add(){
 	}
+
 	public function edit(){
 	}
+
 	public function index(){
 	}
 

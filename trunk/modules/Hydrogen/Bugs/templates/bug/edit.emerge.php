@@ -1,8 +1,15 @@
 <?php
+
+$logic	= new Logic_Bug( $this->env );
+$states	= array();
+foreach( $words['states'] as $status => $label )
+	if( $logic->canSetStatus( $bug->bugId, $status ) )
+		$states[$status]	= $label;
+
 $optType		= $this->renderOptions( $words['types'], 'type', $bug->type, 'bug-type type-%1$d');
 $optSeverity	= $this->renderOptions( $words['severities'], 'severity', $bug->severity, 'bug-severity severity-%1$d');
 $optPriority	= $this->renderOptions( $words['priorities'], 'priority', $bug->priority, 'bug-priority priority-%1$d');
-$optStatus		= $this->renderOptions( $words['states'], 'status', $bug->status, 'bug-status status-%1$d');
+$optStatus		= $this->renderOptions( $states, 'status', $bug->status, 'bug-status status-%1$d');
 
 return '
 <fieldset>
@@ -33,6 +40,16 @@ return '
 			</ul>
 		</div>
 		<div style="float: left; width: 66%; margin-right: 3%">
+			<div style="float: left; width: 48%; margin-right: 1%">
+				<label for="type">'.$words['edit']['labelReporter'].'</label><br/>
+				'.UI_HTML_Elements::Select( 'type', $optType, 'm' ).'
+			</div>
+			<div style="float: left; width: 48%; margin-right: 1%">
+				<label for="type">'.$words['edit']['labelManager'].'</label><br/>
+				'.UI_HTML_Elements::Select( 'type', $optType, 'm' ).'
+			</div>
+			<div style="clear: left"></div>
+			<br/>		
 			<ul class="input">
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
