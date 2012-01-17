@@ -16,6 +16,12 @@
  *	@version		$Id: User.php 1605 2010-10-29 01:10:03Z christian.wuerker $
  */
 class View_Manage_User extends CMF_Hydrogen_View {
+
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+		parent::__construct( $env );
+		$this->env->getPage()->addThemeStyle( 'site.user.css' );
+	}
+
 	public function index(){
 		$words		=$this->env->getLanguage()->getWords( 'manage/user' );
 		$this->setData( $words['status'], 'states' );
@@ -23,6 +29,7 @@ class View_Manage_User extends CMF_Hydrogen_View {
 	}
 
 	public function add(){}
+
 	public function edit(){}
 }
 ?>
