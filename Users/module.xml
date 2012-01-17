@@ -15,7 +15,7 @@
 		<template>manage/user/index.list.php</template>
 		<style>site.user.css</style>
 	</files>
-	<sql on="install"><![CDATA[
+	<sql on="install" type="mysql"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -36,8 +36,30 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
 
 ]]>
 	</sql>
-	<sql on="uninstall"><![CDATA[
+	<sql on="install" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>users";
+CREATE TABLE "<%?prefix%>users" (
+	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
+	"roleId" INTEGER,
+	"status" INTEGER,
+	"username" VARCHAR,
+	"password" VARCHAR,
+	"email" VARCHAR,
+	"createdAt" DECIMAL,
+	"modifiedAt" DECIMAL,
+	"loggedAt" DECIMAL,
+	"activeAt" DECIMAL
+	);
+
+]]>
+	</sql>
+	
+	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
+]]>
+	</sql>
+	<sql on="uninstall" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>users";
 ]]>
 	</sql>
 </module>

@@ -61,6 +61,7 @@ return '
 			'.UI_HTML_Elements::Button( 'saveUser', $words['add']['buttonSave'], 'button save' ).'
 		</div>
 	</fieldset>
+	<div style="clear: both"></div>
 </form>
 ';
 ?>
