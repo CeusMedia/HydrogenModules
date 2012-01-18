@@ -22,6 +22,11 @@ class View_Manage_Role extends CMF_Hydrogen_View {
 
 	public function add() {}
 
-	public function edit() {}
+	public function edit() {
+		$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
+		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
+		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
+		$this->addData( 'acl', $this->env->getAcl() );
+	}
 }
 ?>
