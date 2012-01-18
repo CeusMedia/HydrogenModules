@@ -148,5 +148,6 @@ return '
 		</fieldset>
 	</form>
 </div>
-	';
+<div style="clear: both"></div>
+';
 ?>

@@ -31,37 +31,39 @@ foreach( $roles as $role )
 $optRole['_selected']	= @$data['roleId'];
 
 return '
-<form name="editUser" action="./manage/user/add" method="post">
-	<fieldset style="float: left; width: 42%">
-		<legend>'.$words['add']['legend'].'</legend>
-		<ul class="input">
-			<li>
-				<label for="username">'.$words['add']['labelUsername'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'username', $data['username'], 'm' ).'
-			</li>
-<!--			<li>
-				<label for="email">'.$words['add']['labelEmail'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'email', $data['email'], 'l' ).'
-			</li>-->
-			<li>
-				<label for="password">'.$words['add']['labelPassword'].'</label><br/>
-				'.UI_HTML_Elements::Password( 'password', 'm' ).'
-			</li>
-			<li>
-				<label for="status">'.$words['add']['labelStatus'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'status', $optStatus, 'm' ).'
-			</li>
-			<li>
-				<label for="roleId">'.$words['add']['labelRole'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'roleId', $optRole, 'm' ).'
-			</li>
-		</ul>
-		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/user', $words['add']['buttonCancel'], 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'saveUser', $words['add']['buttonSave'], 'button save' ).'
-		</div>
-	</fieldset>
-	<div style="clear: both"></div>
-</form>
+<div class="column-main">
+	<form name="editUser" action="./manage/user/add" method="post">
+		<fieldset>
+			<legend>'.$words['add']['legend'].'</legend>
+			<ul class="input">
+				<li>
+					<label for="username">'.$words['add']['labelUsername'].'</label><br/>
+					'.UI_HTML_Elements::Input( 'username', $data['username'], 'm' ).'
+				</li>
+	<!--			<li>
+					<label for="email">'.$words['add']['labelEmail'].'</label><br/>
+					'.UI_HTML_Elements::Input( 'email', $data['email'], 'l' ).'
+				</li>-->
+				<li>
+					<label for="password">'.$words['add']['labelPassword'].'</label><br/>
+					'.UI_HTML_Elements::Password( 'password', 'm' ).'
+				</li>
+				<li>
+					<label for="status">'.$words['add']['labelStatus'].'</label><br/>
+					'.UI_HTML_Elements::Select( 'status', $optStatus, 'm' ).'
+				</li>
+				<li>
+					<label for="roleId">'.$words['add']['labelRole'].'</label><br/>
+					'.UI_HTML_Elements::Select( 'roleId', $optRole, 'm' ).'
+				</li>
+			</ul>
+			<div class="buttonbar">
+				'.UI_HTML_Elements::LinkButton( './manage/user', $words['add']['buttonCancel'], 'button cancel' ).'
+				'.UI_HTML_Elements::Button( 'saveUser', $words['add']['buttonSave'], 'button save' ).'
+			</div>
+		</fieldset>
+		<div style="clear: both"></div>
+	</form>
+</div>
 ';
 ?>
