@@ -39,8 +39,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		if( $request->getMethod() == 'POST' ){
 			$data		= $request->getAllFromSource( 'POST' );
+			$data['password']	= md5( $data['password'] );
 			$data['created']	= time();
-
 			$modelUser	= new Model_User( $this->env );
 			$modelUser->add( $data );
 			$this->restart( './manage/user' );
@@ -76,6 +76,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		{
 			$user		= $modelUser->get( $userId );
 			$data		= $this->env->request->getAllFromSource( 'POST' )->getAll();
+			$data['password']	= md5( $data['password'] );
 			$data['modifiedAt']	= time();
 			$result		= $modelUser->edit( $userId, $data );
 		}
