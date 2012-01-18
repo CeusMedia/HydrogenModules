@@ -64,6 +64,27 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/role/edit/'.$roleId );
 	}
 
+	public function ajaxChangeRight( $roleId, $controller, $action ){
+		if( $this->env->getRequest()->isAjax() ){
+			$modelRight	= new Model_Role_Right( $this->env );
+			$indices	= array(
+				'roleId'		=> $roleId,
+				'controller'	=> str_replace( '-', '/', strtolower( $controller ) ),
+				'action'		=> $action
+			);
+			$right	= $modelRight->getByIndices( $indices );
+			if( $right )
+				$modelRight->remove( $right->roleRightId );
+			else{
+				$data	= array_merge( $indices, array( 'timestamp' => time() ) );
+				$modelRight->add( $data );
+			}
+		}
+		$right	= $modelRight->getByIndices( $indices );
+		print( json_encode( (bool) $right ) );
+		exit;
+	}
+	
 	public function edit( $roleId = NULL ) {
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
