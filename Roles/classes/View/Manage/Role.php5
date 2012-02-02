@@ -18,6 +18,11 @@
  */
 class View_Manage_Role extends CMF_Hydrogen_View {
 
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+		parent::__construct( $env );
+		$this->env->getPage()->addPrimerStyle( 'site.role.css' );
+	}
+	
 	public function index() {}
 
 	public function add() {}
