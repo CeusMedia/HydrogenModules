@@ -12,6 +12,7 @@
 		<locale>de/manage/role.ini</locale>
 		<template>manage/role/add.php</template>
 		<template>manage/role/edit.php</template>
+		<template>manage/role/edit.rights.php</template>
 		<template>manage/role/index.php</template>
 	</files>
 	<sql on="install" type="mysql"><![CDATA[
