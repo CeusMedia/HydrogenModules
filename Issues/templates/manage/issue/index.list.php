@@ -55,7 +55,7 @@ return '
 		'.join( $rows ).'
 	</table>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './manage/issue/add', 'neuer Eintrag', 'add' ).'
+		'.UI_HTML_Elements::LinkButton( './manage/issue/add', 'neuer Eintrag', 'button add' ).'
 	</div>
 </fieldset>
 ';

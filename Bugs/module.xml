@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Bugs</title>
+	<title>BugTracker</title>
 	<description>Bug management</description>
 	<version>0.1</version>
 	<files>
