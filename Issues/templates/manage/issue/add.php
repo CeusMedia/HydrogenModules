@@ -40,8 +40,8 @@ $main	= '
 		<br/>
 		<ul class="input">
 			<li>
-				<label for="title">'.$words['add']['labelTitle'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'title', $this->env->getRequest()->get( 'title' ), '' ).'
+				<label for="title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
+				'.UI_HTML_Elements::Input( 'title', $this->env->getRequest()->get( 'title' ), 'mandatory' ).'
 			</li>
 			<li>
 				<label for="content">'.$words['add']['labelContent'].'</label><br/>
