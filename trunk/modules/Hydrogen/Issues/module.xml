@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<module>
+	<title>Issues</title>
+	<description>Issue management</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Manage/Issue.php5</class>
+		<class>Model/Issue.php5</class>
+		<class>Model/Issue/Note.php5</class>
+		<class>Model/Issue/Change.php5</class>
+		<class>View/Manage/Issue.php5</class>
+		<locale>de/manage/issue.ini</locale>
+		<template>manage/issue/add.php</template>
+		<template>manage/issue/edit.php</template>
+		<template>manage/issue/edit.info.php</template>
+		<template>manage/issue/edit.changes.php</template>
+		<template>manage/issue/edit.emerge.php</template>
+		<template>manage/issue/index.php</template>
+		<template>manage/issue/index.filter.php</template>
+		<template>manage/issue/index.list.php</template>
+		<style>site.issue.css</style>
+	</files>
+	<sql on="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>issues`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (
+  `issueId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) unsigned NOT NULL,
+  `reporterId` int(11) unsigned NOT NULL,
+  `managerId` int(11) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `severity` tinyint(1) unsigned NOT NULL,
+  `priority` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `progress` decimal(3,0) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`issueId`),
+  KEY `reporterId` (`reporterId`),
+  KEY `managerId` (`managerId`),
+  KEY `type` (`type`),
+  KEY `severity` (`severity`),
+  KEY `priority` (`priority`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `<%?prefix%>issue_changes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>issue_changes` (
+  `issueChangeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `issueId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `noteId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `from` text COLLATE utf8_unicode_ci,
+  `to` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`issueChangeId`),
+  KEY `issueId` (`issueId`),
+  KEY `userId` (`userId`),
+  KEY `noteId` (`noteId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `<%?prefix%>issue_notes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>issue_notes` (
+  `issueNoteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `issueId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `note` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`issueNoteId`),
+  KEY `issueId` (`issueId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+]]>
+	</sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>issues`;
+DROP TABLE IF EXISTS `<%?prefix%>issue_changes`;
+DROP TABLE IF EXISTS `<%?prefix%>issue_notes`;
+]]>
+	</sql>
+</module>
+
