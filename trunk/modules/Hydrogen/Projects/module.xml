@@ -2,16 +2,18 @@
 <module>
 	<title>Projects</title>
 	<description>Basic project support and administration</description>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files>
 		<class>Controller/Admin/Project.php5</class>
 		<class>Model/Project.php5</class>
+		<class>Model/Project/Version.php5</class>
 		<class>View/Admin/Project.php5</class>
 		<locale>de/admin/project.ini</locale>
 		<template>admin/project/add.php</template>
 		<template>admin/project/edit.php</template>
 		<template>admin/project/index.php</template>
 	</files>
+	<link>admin/project</link>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
@@ -24,10 +26,26 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
   PRIMARY KEY (`projectId`),
   KEY `access` (`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>project_versions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>project_versions` (
+  `projectVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `version` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`projectVersionId`),
+  KEY `projectId` (`projectId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]>
 	</sql>
 	<sql on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
+DROP TABLE IF EXISTS `<%?prefix%>project_versions`;
 ]]>
 	</sql>
 </module>

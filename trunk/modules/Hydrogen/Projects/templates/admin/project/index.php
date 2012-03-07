@@ -13,9 +13,14 @@ foreach( $projects as $projectId => $project ){
 	$link		= UI_HTML_Tag::create( 'a', $project->title, $attributes );
 	$type		= '<span class="project-status status-'.$project->status.'">'.$words['status'][(int) $project->status].'</span>';
 	$class		= 'project available status-'.$project->status;
-//	$version	= $project->version;
-//	$version	= '<span class="project-version">'.$version.'</span>';
-	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'/*.$version*/.'</td></tr>';
+	$version	= '-';
+	if( $project->version ){
+		$label	= $project->version->version;
+		if( $project->version->title )
+			$label	= UI_HTML_Elements::Acronym( $label, $project->version->title );
+		$version	= '<span class="project-version">'.$label.'</span>';
+	}
+	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headStatus'], $words['index']['headVersion'] );
 $heads		= UI_HTML_Elements::TableHeads( $heads );

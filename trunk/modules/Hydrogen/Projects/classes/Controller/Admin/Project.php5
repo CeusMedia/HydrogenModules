@@ -38,21 +38,22 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 		$this->view->addData( 'status', $status );
 	}
 
-	public function remove( $projectId )
-	{
+	public function addVersion( $projectId ){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
-
-		$model			= new Model_Project( $this->env );
-		$project		= $model->get( $projectId );
-		if( !$project ){
-			$messenger->noteError( $words['remove']['msgErrorInvalidId'] );
-			$this->restart( './admin/project' );
-		}
-		$model->remove( $projectId );
-		$messenger->noteSuccess( $words['remove']['msgSuccess'], $project->title );
-		$this->restart( './admin/project' );
+		$words			= $this->getWords( 'addVersion' );
+		$model			= new Model_Project_Version( $this->env );
+		$data	= array(
+			'projectId'	=> $projectId,
+			'status'	=> $request->get( 'status' ),
+			'version'	=> $request->get( 'version' ),
+			'title'		=> $request->get( 'title' ),
+			'description'	=> $request->get( 'description' ),
+			'createdAt'	=> time(),
+		);
+		$model->add( $data );
+		$messenger->noteSuccess( $words->msgSuccess );
+		$this->restart( './admin/project/edit/'.$projectId );
 	}
 
 	public function edit( $projectId )
@@ -92,10 +93,13 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 				}
 			}
 		}
+		$modelVersion	= new Model_Project_Version( $this->env );
+		$versions	= $modelVersion->getAllByIndex( 'projectId', $project->projectId );
 		$this->view->setData(
 			array(
 				'projectId'	=> $project->projectId,
 				'project'	=> $project,
+				'versions'	=> $versions,
 			)
 		);
 	}
@@ -108,9 +112,46 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$model	= new Model_Project( $this->env );
-		$this->view->setData( array( 'projects' => $model->getAll() ) );
-#		$this->setData( $model->getAll(), 'list' );
+		$modelProject	= new Model_Project( $this->env );
+		$modelVersion	= new Model_Project_Version( $this->env );
+		$projects	= $modelProject->getAll();
+		foreach( $projects as $project ){
+			$indices	= array( 'projectId' => $project->projectId, 'status' => 1 );
+			$project->version	= $modelVersion->getByIndices( $indices );
+		}
+		$this->view->addData( 'projects', $projects );
+	}
+
+	public function remove( $projectId )
+	{
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$words			= $this->getWords( 'remove' );
+
+		$modelProject	= new Model_Project( $this->env );
+		$project		= $modelProject->get( $projectId );
+		if( !$project ){
+			$messenger->noteError( $words->msgErrorInvalidId );
+			$this->restart( './admin/project/edit/'.$projectId );
+		}
+
+		$modelVersion	= new Model_Project_Version( $this->env );
+		$modelVersion->removeByIndex( 'projectId', $projectId );
+		$modelProject->remove( $projectId );
+
+		$messenger->noteSuccess( $words->msgSuccess, $project->title );
+		$this->restart( './admin/project' );
+	}
+
+	public function removeVersion( $versionId )
+	{
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+
+		$model			= new Model_Project_Version( $this->env );
+		$version		= $model->get( $versionId );
+		$model->remove( $versionId );
+		$this->restart( './admin/project/edit/'.$version->projectId );
 	}
 }
 ?>

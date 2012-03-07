@@ -20,6 +20,7 @@
 		<template>manage/issue/index.list.php</template>
 		<style>site.issue.css</style>
 	</files>
+	<link>manage/issue</link>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (

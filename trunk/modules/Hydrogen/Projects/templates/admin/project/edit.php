@@ -1,13 +1,65 @@
 <?php
 
+$optStatus	= $words['status-version'];
+ksort( $optStatus );
+
+$panelAddVersion	= '
+	'.UI_HTML_Elements::Form( 'add_version', './admin/project/addVersion/'.$projectId ).'
+		<fieldset>
+			<legend>Version hinzufügen</legend>
+			<ul class="input">
+				<li>
+					<div class="column-left-50">
+						'.UI_HTML_Tag::create( 'label', 'Version' ).'<br/>
+						'.UI_HTML_Elements::Input( 'version', NULL, 'max' ).'
+					</div>
+					<div class="column-left-50">
+						'.UI_HTML_Tag::create( 'label', 'Status' ).'<br/>
+						'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
+					</div>
+					<div class="column-clear"></div>
+				</li>
+				<li>
+					'.UI_HTML_Tag::create( 'label', 'Titel' ).'<br/>
+					'.UI_HTML_Elements::Input( 'title', NULL ).'
+				</li>
+				<li>
+					'.UI_HTML_Tag::create( 'label', 'Beschreibung' ).'<br/>
+					'.UI_HTML_Elements::Textarea( 'description', NULL ).'
+				</li>
+			</ul>
+			<div class="buttonbar">
+				'.UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' ).'
+			</div>
+		</fieldset>
+	</form>	
+';
+
+//  --  VERSIONS  --  //
+$list	= array();
+foreach( $versions as $version ){
+	$label	= $version->version;
+	$status	= $words['status-version'][$version->status];
+	$remove	= UI_HTML_Elements::Link( './admin/project/removeVersion/'.$version->projectVersionId, 'X' );
+	if( $version->title )
+		$label	.= ': '.$version->title;
+	$list[]	= '<li>['.$remove.'] '.$label.' ('.$status.')</li>';
+}
+$listVersions	= '<ul>'.join( $list ).'</ul>';
+$panelVersions		= '
+	<fieldset>
+		<legend>Versionen</legend>
+		'.$listVersions.'
+	</fieldset>
+	<br/>
+';
+
+
 $optStatus	= $words['status'];
 krsort( $optStatus );
 $optStatus['_selected']	= $project->status;
 
-return '
-<div class="column-right-33">
-</div>
-<div class="column-left-66">
+$panelEdit	= '
 	'.UI_HTML_Tag::create( 'h2', sprintf( $words['edit']['heading'], $project->title ) ).'
 	'.UI_HTML_Elements::Form( 'edit', './admin/project/edit/'.$projectId ).'
 		<fieldset>
@@ -35,5 +87,14 @@ return '
 			</div>
 		</fieldset>
 	</form>
+';
+
+return '
+<div class="column-right-33">
+	'.$panelVersions.'
+	'.$panelAddVersion.'
+</div>
+<div class="column-left-66">
+	'.$panelEdit.'
 </div>';
 ?>
