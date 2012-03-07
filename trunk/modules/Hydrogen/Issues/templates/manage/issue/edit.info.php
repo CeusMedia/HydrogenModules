@@ -4,8 +4,9 @@ $modelIssueChange	= new Model_Issue_Change( $this->env );
 $changers	= array();
 $changes	= $modelIssueChange->getAllByIndex( 'issueId', $issue->issueId );
 foreach( $changes as $change ){
-	if( !array_key_exists( $change->userId, $changers ) )
-		$changers[$change->userId]	= $users[$change->userId];
+	if( $change->userId )
+		if( !array_key_exists( $change->userId, $changers ) )
+			$changers[$change->userId]	= $users[$change->userId];
 }
 
 foreach( $changers as $userId => $changer ){
@@ -15,8 +16,11 @@ foreach( $changers as $userId => $changer ){
 }
 $changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
 
-$reporter	= UI_HTML_Elements::Link( './user/edit/'.$issue->reporter->userId, $issue->reporter->username );
-$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
+$reporter	= '-';
+if( $issue->reporter ){
+	$reporter	= UI_HTML_Elements::Link( './user/edit/'.$issue->reporter->userId, $issue->reporter->username );
+	$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
+}
 
 $manager	= '-';
 if( $issue->managerId ){

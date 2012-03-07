@@ -44,6 +44,12 @@ foreach( $issue->notes as $note ){
 		$noteChanges[]	= $labelType.$change;	
 	}
 //	$noteChanges	= UI_HTML_Tag::create( 'dl', join( $noteChanges ) );
+	$manager	= '-';
+	if( $note->user ){
+		$manager	= '<a href="./manage/user/edit/'.$note->user->userId.'">'.$note->user->username.'</a>';
+		$manager	= '<span class="role role'.$note->user->roleId.'">'.$manager.'</span>';
+	}
+
 	$content	= '
 <style>
 #issue-change-list-note {
@@ -65,11 +71,7 @@ foreach( $issue->notes as $note ){
 	<dl>
 		<dt>Bearbeiter</dt>
 		<dd>
-			<span class="role role'.$note->user->roleId.'">
-				<a href="./manage/user/edit/'.$note->user->userId.'">
-					'.$note->user->username.'
-				</a>
-			</span>
+			'.$manager.'
 		</dd>
 		<dt>Zeitpunkt</dt>
 		<dd>
@@ -79,7 +81,7 @@ foreach( $issue->notes as $note ){
 	</dl>
 </div>
 <div id="issue-change-list-note">
-	<div class="issue-note-content">'.( $note->note ? $note->note : '<em><small>Kein Kommentar.</small></em>' ).'</div>
+	<div class="issue-note-content">'.( $note->note ? nl2br( $note->note ) : '<em><small>Kein Kommentar.</small></em>' ).'</div>
 </div>
 <hr style="clear: left"/>
 ';

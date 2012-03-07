@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_Issue extends Controller_Abstract{
+class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
 
 	const CHANGE_DETAILS		= 1;
 	const CHANGE_MANAGER		= 2;
@@ -203,7 +203,7 @@ class Controller_Manage_Issue extends Controller_Abstract{
 		$modelUser		= new Model_User( $this->env );
 
 		$issues		= $modelIssue->getAll( $filters, $orders, array( 0, $limit ) );
-		foreach( $issue as $nr => $issue ){
+		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 		}

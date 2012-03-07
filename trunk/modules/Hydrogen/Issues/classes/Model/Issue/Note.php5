@@ -20,7 +20,7 @@ class Model_Issue_Note extends CMF_Hydrogen_Model {
 
 	protected $name			= 'issue_notes';
 	protected $columns		= array(
-		'isseNoteId',
+		'issueNoteId',
 		'issueId',
 		'userId',
 		'note',
