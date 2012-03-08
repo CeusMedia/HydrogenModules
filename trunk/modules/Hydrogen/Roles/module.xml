@@ -14,6 +14,7 @@
 		<template>manage/role/edit.php</template>
 		<template>manage/role/edit.rights.php</template>
 		<template>manage/role/index.php</template>
+		<style>site.role.css</style>
 	</files>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
