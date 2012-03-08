@@ -84,10 +84,35 @@
 	}
 
 
-.column-left-50{
+
+
+#role-edit-rights {
+	}
+#role-edit-rights li {
 	float: left;
 	display: block;
-	width: 48%;
-	margin-right: 2%;
+	padding: 0px 4px;
+	margin-right: 1px;
+	font-size: 0.9em;
+	color: #3F3F3F;
+	}
+#role-edit-rights li.changable {
+	color: black;
+	cursor: pointer;
+	}
+#role-edit-rights li.changable label {
+	cursor: pointer;
+	}
+#role-edit-rights li.green {
+	background-color: #BFFFBF;
+	}
+#role-edit-rights li.green.changable {
+	background-color: #7FFF7F;
+	}
+#role-edit-rights li.red {
+	background-color: #FFBFBF;
+	}
+#role-edit-rights li.red.changable {
+	background-color: #FF7F7F;
 	}
 
