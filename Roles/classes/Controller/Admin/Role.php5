@@ -1,7 +1,7 @@
 <?php
 /**
  *	Role Controller.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
@@ -9,7 +9,7 @@
  */
 /**
  *	Role Controller.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Controller.Admin
  *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
