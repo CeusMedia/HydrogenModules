@@ -1,9 +1,9 @@
 
-.controller-user.action-edit .column-control {
+.controller-admin-user.action-edit .column-control {
 	float: right;
 	width: 40%;
 	}
-.controller-user.action-edit .column-main {
+.controller-admin-user.action-edit .column-main {
 	margin-right: 42%;
 	}
 
@@ -68,6 +68,6 @@ input.user-activity {
 	background-image: url(///icons.ceusmedia.de/famfamfam/silk/star.png);
 	}
 
-.controller-user #content dl dt {
+.controller-admin-user #content dl dt {
 	width: 150px;
 	}
