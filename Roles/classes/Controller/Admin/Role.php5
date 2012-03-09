@@ -1,22 +1,22 @@
 <?php
 /**
  *	Role Controller.
- *	@category		cmApps
- *	@package		Chat.Admin.Controller
+ *	@category		cmFrameworks.Modules.Hydrogen
+ *	@package		Roles.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Role.php 1425 2010-09-08 01:53:19Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 /**
  *	Role Controller.
- *	@category		cmApps
- *	@package		Chat.Admin.Controller
+ *	@category		cmFrameworks.Modules.Hydrogen
+ *	@package		Roles.Controller.Admin
  *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Role.php 1425 2010-09-08 01:53:19Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
-class Controller_Manage_Role extends CMF_Hydrogen_Controller {
+class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 
 	public function add() {
 		$words	= $this->env->getLanguage()->getWords( 'manage/role' );
