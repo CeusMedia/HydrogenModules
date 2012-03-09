@@ -2,7 +2,8 @@
 .role.role1,
 .role.role2,
 .role.role3,
-.role.role4 {
+.role.role4,
+.role.role5 {
 	background-repeat: no-repeat;
 	background-position: 2px 1px;
 	padding-left: 1.8em;
@@ -18,6 +19,9 @@
 	font-weight: bold;
 	}
 .role.role4 {
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/user.png);
+	}
+.role.role5 {
 	background-image: url(//icons.ceusmedia.de/famfamfam/silk/user_green.png);
 	}
 
@@ -39,60 +43,17 @@
 	background-image: url(//icons.ceusmedia.de/famfamfam/silk/world.png);
 	}
 
-
-
-
-.controller-admin-role.action-edit .column-left {
-	float: left;
-	width: 65%;
-	}
-.controller-admin-role.action-edit .column-right {
-	float: right;
-	width: 33%;
-	}
-
-.controller-admin-role.action-edit ul.right-controllers{
-	margin-left: 2em;
-	list-style-position: inside;
-	list-style-type: none;
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller{
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller>span.label{
-	font-size: 1.1em;
-	font-weight: bold;
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/chart_organisation.png);
-	background-repeat: no-repeat;
-	background-position: 0px 0px;
-	padding-left: 22px;
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions{
-	margin-left: 20px;
-	list-style-position: inside;
-	list-style-type: none;
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action{
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.label{
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/bullet_green.png);
-	background-repeat: no-repeat;
-	background-position: 0px 0px;
-	padding-left: 20px;
-	}
-.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.remove{
-	float: right;
-	}
-
-
-
-
 #role-edit-rights {
+	}
+#role-edit-rights ul {
+	padding: 0px;
+	margin: 0px;
 	}
 #role-edit-rights li {
 	float: left;
 	display: block;
 	padding: 0px 4px;
-	margin-right: 1px;
+	margin-right: 2px;
 	font-size: 0.9em;
 	color: #3F3F3F;
 	}
