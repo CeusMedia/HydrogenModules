@@ -1,7 +1,7 @@
 <?php
 
-$filter	= require_once 'templates/manage/user/index.filter.php';
-$list	= require_once 'templates/manage/user/index.list.php';
+$filter	= require_once 'templates/admin/user/index.filter.php';
+$list	= require_once 'templates/admin/user/index.list.php';
 
 $heading	= '';
 if( !empty( $words['index']['heading'] ) )

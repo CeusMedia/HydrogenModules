@@ -109,7 +109,7 @@ return '
 	</fieldset>
 </div>
 <div class="column-main">
-	<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+	<form name="editUser" action="./admin/user/edit/'.$userId.'" method="post">
 		<fieldset>
 			<legend class="edit">'.$words['edit']['legend'].'</legend>
 			<ul class="input">
@@ -135,11 +135,11 @@ return '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/user', $words['edit']['buttonCancel'], 'button cancel' ).'
+				'.UI_HTML_Elements::LinkButton( './admin/user', $words['edit']['buttonCancel'], 'button cancel' ).'
 				'.UI_HTML_Elements::Button( 'saveUser', $words['edit']['buttonSave'], 'button save' ).'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				'.UI_HTML_Elements::LinkButton(
-					'./manage/user/remove',
+					'./admin/user/remove',
 					$words['edit']['buttonRemove'],
 					'button remove',
 					$words['edit']['buttonRemoveConfirm']

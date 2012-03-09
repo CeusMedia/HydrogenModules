@@ -32,7 +32,7 @@ $optRole['_selected']	= @$data['roleId'];
 
 return '
 <div class="column-main">
-	<form name="editUser" action="./manage/user/add" method="post">
+	<form name="editUser" action="./admin/user/add" method="post">
 		<fieldset>
 			<legend>'.$words['add']['legend'].'</legend>
 			<ul class="input">
@@ -58,7 +58,7 @@ return '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/user', $words['add']['buttonCancel'], 'button cancel' ).'
+				'.UI_HTML_Elements::LinkButton( './admin/user', $words['add']['buttonCancel'], 'button cancel' ).'
 				'.UI_HTML_Elements::Button( 'saveUser', $words['add']['buttonSave'], 'button save' ).'
 			</div>
 		</fieldset>

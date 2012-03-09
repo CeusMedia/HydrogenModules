@@ -1,22 +1,22 @@
 <?php
 /**
  *	User Controller.
- *	@category		cmApps
- *	@package		Chat.Admin.Controller
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1765 2010-11-28 08:05:15Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 /**
  *	User Controller.
- *	@category		cmApps
- *	@package		Chat.Admin.Controller
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.Controller.Admin
  *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1765 2010-11-28 08:05:15Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
-class Controller_Manage_User extends CMF_Hydrogen_Controller {
+class Controller_Admin_User extends CMF_Hydrogen_Controller {
 
 	protected $filters	= array(
 		'username',
@@ -35,7 +35,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function add() {
-		$words		= $this->env->getLanguage()->getWords( 'manage/user' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/user' );
 		$request	= $this->env->getRequest();
 		if( $request->getMethod() == 'POST' ){
 			$data		= $request->getAllFromSource( 'POST' );
@@ -43,7 +43,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			$data['created']	= time();
 			$modelUser	= new Model_User( $this->env );
 			$modelUser->add( $data );
-			$this->restart( './manage/user' );
+			$this->restart( './admin/user' );
 		}
 		$modelRole	= new Model_Role( $this->env );
 		;
@@ -68,7 +68,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function edit( $userId ) {
-		$words		= $this->env->getLanguage()->getWords( 'manage/user' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/user' );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
