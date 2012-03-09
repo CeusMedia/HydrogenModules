@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 <module>
 	<title>Roles</title>
-	<description>Basic role support and management</description>
-	<depend on="module">Users</depend>
-	<version>0.2</version>
+	<description>Basic role support and administration.</description>
+	<version>0.3</version>
 	<files>
-		<class>Controller/Manage/Role.php5</class>
+		<class>Controller/Admin/Role.php5</class>
 		<class>Model/Role.php5</class>
 		<class>Model/Role/Right.php5</class>
-		<class>View/Manage/Role.php5</class>
-		<locale>de/manage/role.ini</locale>
-		<template>manage/role/add.php</template>
-		<template>manage/role/edit.php</template>
-		<template>manage/role/edit.rights.php</template>
-		<template>manage/role/index.php</template>
+		<class>View/Admin/Role.php5</class>
+		<locale>de/admin/role.ini</locale>
+		<template>admin/role/add.php</template>
+		<template>admin/role/edit.php</template>
+		<template>admin/role/edit.rights.php</template>
+		<template>admin/role/index.php</template>
 		<style>site.role.css</style>
 	</files>
+	<relations>
+		<needs type="module">Users</needs>
+		<supports type="module">Projects</supports>
+	</relations>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
