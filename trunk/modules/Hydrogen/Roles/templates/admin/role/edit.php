@@ -1,5 +1,4 @@
 <?php
-$clock	= new Alg_Time_Clock();
 $optAccess	= array();
 foreach( $words['type-access'] as $key => $label ){
 	$selected		= $key == $role->access;
@@ -16,7 +15,7 @@ foreach( $words['type-register'] as $key => $label ){
 }
 $optRegister	= join( $optRegister );
 
-$formEdit	= '
+$panelEdit	= '
 	<form name="editRole" action="./admin/role/edit/'.$roleId.'" method="post">
 		<fieldset>
 			<legend>'.$words['edit']['legend'].'</legend>
@@ -55,9 +54,8 @@ return '
 <div class="column-control">
 </div>
 <div class="column-main">
-	'.$formEdit.'
+	'.$panelEdit.'
 	'.$rights.'
-
 </div>
 <div style="clear: both"></div>
 ';
