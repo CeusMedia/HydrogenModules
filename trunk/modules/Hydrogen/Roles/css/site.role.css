@@ -42,23 +42,23 @@
 
 
 
-.controller-manage-role.action-edit .column-left {
+.controller-admin-role.action-edit .column-left {
 	float: left;
 	width: 65%;
 	}
-.controller-manage-role.action-edit .column-right {
+.controller-admin-role.action-edit .column-right {
 	float: right;
 	width: 33%;
 	}
 
-.controller-manage-role.action-edit ul.right-controllers{
+.controller-admin-role.action-edit ul.right-controllers{
 	margin-left: 2em;
 	list-style-position: inside;
 	list-style-type: none;
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller{
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller>span.label{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller>span.label{
 	font-size: 1.1em;
 	font-weight: bold;
 	background-image: url(//icons.ceusmedia.de/famfamfam/silk/chart_organisation.png);
@@ -66,20 +66,20 @@
 	background-position: 0px 0px;
 	padding-left: 22px;
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions{
 	margin-left: 20px;
 	list-style-position: inside;
 	list-style-type: none;
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action{
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.label{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.label{
 	background-image: url(//icons.ceusmedia.de/famfamfam/silk/bullet_green.png);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
 	padding-left: 20px;
 	}
-.controller-manage-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.remove{
+.controller-admin-role.action-edit ul.right-controllers>li.right-controller>ul.right-actions>li.right-action>span.remove{
 	float: right;
 	}
 
