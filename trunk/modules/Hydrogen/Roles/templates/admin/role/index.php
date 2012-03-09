@@ -26,7 +26,7 @@ foreach( $roles as $nr => $role )
 		<td><span class="role-register register'.$role->register.'">%s</span></td>
 	</tr>';
 	$label	= $role->title;
-	$url	= './manage/role/edit/'.$role->roleId;
+	$url	= './admin/role/edit/'.$role->roleId;
 	$alt	= "";#sprintf( $words['index']['alt-user'], $user->username );
 	$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
 	$link	= UI_HTML_Tag::create( 'a', $label, $attr );
@@ -57,7 +57,7 @@ return '
 			'.$rows.'
 		</table>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/role/add', $words['index']['buttonAdd'], 'button add' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/role/add', $words['index']['buttonAdd'], 'button add' ).'
 		</div>
 	</fieldset>
 </div>
@@ -71,7 +71,7 @@ foreach( $roles as $role )
 	$label	= $role->title;
 	if( trim( $role->description ) )
 		$label	= UI_HTML_Elements::Acronym( $role->title, htmlspecialchars( $role->description ) );
-	$link	= UI_HTML_Elements::Link( './manage/role/edit/'.$role->roleId, $label );
+	$link	= UI_HTML_Elements::Link( './admin/role/edit/'.$role->roleId, $label );
 	$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => 'role' ) );
 }
 $list	= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'list' ) );
@@ -80,7 +80,7 @@ return '
 	<legend>'.$words['index']['legend'].'</legend>
 	'.$list.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './manage/role/add', $words['index']['buttonNew'], 'button add' ).'
+		'.UI_HTML_Elements::LinkButton( './admin/role/add', $words['index']['buttonNew'], 'button add' ).'
 	</div>
 </fieldset>
 ';*/
