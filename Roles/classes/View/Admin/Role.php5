@@ -1,7 +1,7 @@
 <?php
 /**
  *	Role administration views.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.View.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
@@ -9,7 +9,7 @@
  */
 /**
  *	Role administration views.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.View.Admin
  *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
