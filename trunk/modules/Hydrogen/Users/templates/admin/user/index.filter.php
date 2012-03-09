@@ -52,7 +52,7 @@ $script	= '
 $this->env->page->js->addScript( $script );
 
 return '
-<form id="form_filter-users" name="filterUsers" action="./manage/user/filter" method="post">
+<form id="form_filter-users" name="filterUsers" action="./admin/user/filter" method="post">
 	<fieldset>
 		<legend class="filter">'.$words['indexFilter']['legend'].'</legend>
 		<ul class="input">
@@ -87,7 +87,7 @@ return '
 		</ul>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-			'.UI_HTML_Elements::LinkButton( './manage/user/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/user/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
 		</div>
 	</fieldset>
 </form>

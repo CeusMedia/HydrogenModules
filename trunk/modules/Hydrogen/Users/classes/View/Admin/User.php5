@@ -1,21 +1,22 @@
 <?php
 /**
  *	User View.
- *	@category		cmApps
- *	@package		Chat.Admin.View
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.View.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1605 2010-10-29 01:10:03Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 /**
  *	User View.
- *	@category		cmApps
- *	@package		Chat.Admin.View
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.View.Admin
+ *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1605 2010-10-29 01:10:03Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
-class View_Manage_User extends CMF_Hydrogen_View {
+class View_Admin_User extends CMF_Hydrogen_View {
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		parent::__construct( $env );
@@ -23,7 +24,7 @@ class View_Manage_User extends CMF_Hydrogen_View {
 	}
 
 	public function index(){
-		$words		=$this->env->getLanguage()->getWords( 'manage/user' );
+		$words		=$this->env->getLanguage()->getWords( 'admin/user' );
 		$this->setData( $words['status'], 'states' );
 		$this->setData( $words['activity'], 'activities' );
 	}

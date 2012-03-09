@@ -1,20 +1,20 @@
 <?php
 /**
  *	User Model.
- *	@category		cmApps
- *	@package		Chat.Server.Model
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1798 2010-12-04 18:55:59Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 /**
  *	User Model.
- *	@category		cmApps
- *	@package		Chat.Server.Model
+ *	@category		cmFrameworks.Hydrogen.Module
+ *	@package		Users.Model
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: User.php 1798 2010-12-04 18:55:59Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 class Model_User extends CMF_Hydrogen_Model {
 

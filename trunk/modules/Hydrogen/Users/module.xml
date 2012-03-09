@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <module>
 	<title>Users</title>
-	<description>Basic user support and management.</description>
+	<description>Basic user support and administration.</description>
 	<version>0.2</version>
 	<files>
-		<class>Controller/Manage/User.php5</class>
+		<class>Controller/Admin/User.php5</class>
 		<class>Model/User.php5</class>
-		<class>View/Manage/User.php5</class>
-		<locale>de/manage/user.ini</locale>
-		<template>manage/user/add.php</template>
-		<template>manage/user/edit.php</template>
-		<template>manage/user/index.php</template>
-		<template>manage/user/index.filter.php</template>
-		<template>manage/user/index.list.php</template>
+		<class>View/Admin/User.php5</class>
+		<locale>de/admin/user.ini</locale>
+		<template>admin/user/add.php</template>
+		<template>admin/user/edit.php</template>
+		<template>admin/user/index.php</template>
+		<template>admin/user/index.filter.php</template>
+		<template>admin/user/index.list.php</template>
 		<style>site.user.css</style>
 	</files>
 	<relations>

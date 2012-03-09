@@ -6,7 +6,7 @@ $pagination	= "";
 if( $limit && $total > $limit )
 {
 	$options	= array(
-		'uri'	=> './manage/user/index/'.$limit.'/',
+		'uri'	=> './admin/user/index/'.$limit.'/',
 		'keyRequest'	=> '',
 		'keyParam'		=> '',
 		'keyOffset'		=> '',
@@ -45,7 +45,7 @@ if( count( $users ) )
 			<td>%5$s</td>
 		</tr>';
 		$label	= $user->username;
-		$url	= './manage/user/edit/'.$user->userId;
+		$url	= './admin/user/edit/'.$user->userId;
 		$alt	= sprintf( $words['indexList']['alt-user'], $user->username );
 		$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
 		$link	= UI_HTML_Tag::create( 'a', $label, $attr );
@@ -82,7 +82,7 @@ return '
 	</table>
 	'.$pagination.'<br/>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './manage/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
+		'.UI_HTML_Elements::LinkButton( './admin/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
 	</div>
 </fieldset>
 ';
