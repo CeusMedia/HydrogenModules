@@ -1,7 +1,7 @@
 <?php
 /**
  *	Role Right Model for ACL.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Model.Admin.Role
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
@@ -9,7 +9,7 @@
  */
 /**
  *	Role Right Model for ACL.
- *	@category		cmFrameworks.Modules.Hydrogen
+ *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Model.Admin.Role
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
