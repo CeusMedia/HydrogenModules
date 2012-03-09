@@ -17,8 +17,8 @@
 	</files>
 	<relations>
 		<needs type="module">Users</needs>
-		<supports type="module">Projects</supports>
 	</relations>
+	<link>admin/role</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
