@@ -17,7 +17,7 @@ foreach( $words['type-register'] as $key => $label ){
 $optRegister	= join( $optRegister );
 
 $formEdit	= '
-	<form name="editRole" action="./manage/role/edit/'.$roleId.'" method="post">
+	<form name="editRole" action="./admin/role/edit/'.$roleId.'" method="post">
 		<fieldset>
 			<legend>'.$words['edit']['legend'].'</legend>
 			<ul class="input">
@@ -40,16 +40,16 @@ $formEdit	= '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/role', $words['edit']['buttonCancel'], 'button cancel' ).'
+				'.UI_HTML_Elements::LinkButton( './admin/role', $words['edit']['buttonCancel'], 'button cancel' ).'
 				'.UI_HTML_Elements::Button( 'saveRole', $words['edit']['buttonSave'], 'button save' ).'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
-				'.UI_HTML_Elements::LinkButton( './manage/role/remove/'.$roleId, $words['edit']['buttonRemove'], 'button remove', 'Wirklich?' ).'
+				'.UI_HTML_Elements::LinkButton( './admin/role/remove/'.$roleId, $words['edit']['buttonRemove'], 'button remove', 'Wirklich?' ).'
 			</div>
 		</fieldset>
 	</form>
 ';
 
-$rights	= $this->loadTemplateFile( 'manage/role/edit.rights.php' );
+$rights	= $this->loadTemplateFile( 'admin/role/edit.rights.php' );
 
 return '
 <div class="column-control">

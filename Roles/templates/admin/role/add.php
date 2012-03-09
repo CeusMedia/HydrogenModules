@@ -16,7 +16,7 @@ foreach( $words['type-register'] as $key => $label ){
 $optRegister	= join( $optRegister );
 
 return '
-<form name="addRole" action="./manage/role/add" method="post">
+<form name="addRole" action="./admin/role/add" method="post">
 	<fieldset>
 		<legend>'.$words['add']['legend'].'</legend>
 		<ul class="input">
@@ -39,7 +39,7 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/role', $words['edit']['buttonCancel'], 'button cancel' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/role', $words['edit']['buttonCancel'], 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'saveRole', $words['edit']['buttonSave'], 'button save' ).'
 		</div>
 	</fieldset>
