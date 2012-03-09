@@ -15,6 +15,10 @@
 		<template>manage/user/index.list.php</template>
 		<style>site.user.css</style>
 	</files>
+	<relations>
+		<needs type="module">Roles</needs>
+		<supports type="module">Projects</supports>
+	</relations>
 	<sql on="install" type="mysql"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
