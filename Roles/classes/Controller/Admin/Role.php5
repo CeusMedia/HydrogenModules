@@ -19,7 +19,7 @@
 class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 
 	public function add() {
-		$words	= $this->env->getLanguage()->getWords( 'manage/role' );
+		$words	= $this->env->getLanguage()->getWords( 'admin/role' );
 		if( $this->env->getRequest()->getMethod() == 'POST' ){
 			$data		= $this->env->getRequest()->getAllFromSource( 'POST' );
 			$title		= $data->get( 'title' );
@@ -31,7 +31,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 					$data['createdAt']	= time();
 					$roleId		= $model->add( $data );
 					if( $roleId )
-						$this->restart( './manage/role' );
+						$this->restart( './admin/role' );
 				}
 				else
 					$this->env->messenger->noteError( 'role_title_existing' );
@@ -47,7 +47,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 	}
 
 	public function addRight( $roleId ) {
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$request	= $this->env->getRequest();
 		if( $request->getMethod() == 'POST' ){
 			$controller	= $request->getFromSource( 'controller', 'POST' );
@@ -61,7 +61,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 			$modelRight	= new Model_Role_Right( $this->env );
 			$modelRight->add( $data );
 		}
-		$this->restart( './manage/role/edit/'.$roleId );
+		$this->restart( './admin/role/edit/'.$roleId );
 	}
 
 	public function ajaxChangeRight( $roleId, $controller, $action ){
@@ -89,7 +89,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
 
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$messenger	= $this->env->getMessenger();
 
 		$modelRole	= new Model_Role( $this->env );
@@ -99,7 +99,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		{
 			$data		= $this->env->getRequest()->getAllFromSource( 'POST' )->getAll();
 			$modelRole->edit( $roleId, $data );
-			$this->restart( './manage/role' );
+			$this->restart( './admin/role' );
 		}
 
 		$modelRight	= new Model_Role_Right( $this->env );
@@ -122,7 +122,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 	}
 
 	public function remove( $roleId ) {
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$messenger	= $this->env->getMessenger();
 
 		$modelRole	= new Model_Role( $this->env );
@@ -131,16 +131,16 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		if( $modelUser->getByIndex( 'roleId', $roleId ) ){
 			$messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
-			$this->restart( './manage/role/edit/'.$roleId );
+			$this->restart( './admin/role/edit/'.$roleId );
 		}
 
 		$result		= $modelRole->remove( $roleId );
 		if( $result ){
 			$messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
-			$this->restart( './manage/role' );
+			$this->restart( './admin/role' );
 		}else{
 			$messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
-			$this->restart( './manage/role/edit/'.$roleId );
+			$this->restart( './admin/role/edit/'.$roleId );
 		}
 	}
 
@@ -152,7 +152,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 			'action'		=> $action
 		);
 		$modelRight->removeByIndices( $indices );
-		$this->restart( './manage/role/edit/'.$roleId );
+		$this->restart( './admin/role/edit/'.$roleId );
 	}
 }
 ?>
