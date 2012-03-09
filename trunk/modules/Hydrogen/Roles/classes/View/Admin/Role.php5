@@ -1,33 +1,35 @@
 <?php
 /**
- *	Role View.
- *	@category		cmApps
- *	@package		Chat.Admin.View
+ *	Role administration views.
+ *	@category		cmFrameworks.Modules.Hydrogen
+ *	@package		Roles.View.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Role.php 1490 2010-10-07 08:37:18Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
 /**
- *	Role View.
- *	@category		cmApps
- *	@package		Chat.Admin.View
+ *	Role administration views.
+ *	@category		cmFrameworks.Modules.Hydrogen
+ *	@package		Roles.View.Admin
  *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Role.php 1490 2010-10-07 08:37:18Z christian.wuerker $
+ *	@copyright		2010-2012 Ceus Media
+ *	@version		$Id$
  */
-class View_Manage_Role extends CMF_Hydrogen_View {
+class View_Admin_Role extends CMF_Hydrogen_View {
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		parent::__construct( $env );
 		$this->env->getPage()->addPrimerStyle( 'site.role.css' );
 	}
 	
-	public function index() {}
+	public function index(){
+	}
 
-	public function add() {}
+	public function add(){
+	}
 
-	public function edit() {
+	public function edit(){
 		$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
 		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
