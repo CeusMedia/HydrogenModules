@@ -18,7 +18,14 @@
 	<relations>
 		<needs type="module">Roles</needs>
 	</relations>
-	<link>admin/role</link>
+	<config type="integer" name="name.length.min">3</config>										; lowest number of name characters
+	<config type="integer" name="name.length.max">17</config>										; highest number of name characters
+	<config type="string"  name="name.preg">/[a-z]/i</config>										; regular expression to match with username
+	<config type="integer" name="password.length.min">3</config>									; lowest number of password characters
+	<config type="integer" name="password.strength.min">0</config>									; highest number of password characters
+	<config type="boolean" name="email.mandatory">no</config>										; user needs a mail address on register and change
+	<config type="integer" name="status.register">1</config>										; user status to be set on register, set to 1 for "auto active"
+	<link>admin/user</link>
 	<sql on="install" type="mysql"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";

@@ -35,26 +35,47 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function add() {
-		$words		= $this->env->getLanguage()->getWords( 'admin/user' );
+		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
-		if( $request->getMethod() == 'POST' ){
-			$data		= $request->getAllFromSource( 'POST' );
-			$data['password']	= md5( $data['password'] );
-			$data['created']	= time();
-			$modelUser	= new Model_User( $this->env );
-			$modelUser->add( $data );
-			$this->restart( './admin/user' );
-		}
+		$messenger	= $this->env->getMessenger();
+		$words		= $this->getWords( 'add' );
+		$input		= $request->getAllFromSource( 'POST' );
+		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
-		;
+
+		print_m( $config->getAll() );
+		die;
+		
+		if( $request->getMethod() == 'POST' ){
+			if( empty( $input['username'] ) )
+				$messenger->noteError( $words->msgNoUsername );
+			if( empty( $input['password'] ) )
+				$messenger->noteError( $words->msgNoPassword );
+			if( empty( $input['email'] ) )
+				$messenger->noteError( $words->msgNoEmail );
+			if( !$messenger->gotError() ){
+				$userId		= $modelUser->add( array(
+					'roleId'	=> $input['roleId'],
+					'status'	=> $input['status'],
+					'username'	=> $input['username'],
+					'password'	=> md5( $input['password'] ),
+					'email'		=> $input['email'],
+					'firstname'	=> $input['firstname'],
+					'surname'	=> $input['surname'],
+					'createdAt'	=> time(),
+				) );
+				$messenger->noteSuccess( $words->msgSuccess );
+				$this->restart( './admin/user' );
+			}
+		}
+		$user		= (object) array();
+		$columns	= $modelUser->getColumns();
+		foreach( $columns as $column )
+			$user->$column	= htmlentities( $input[$column], ENT_COMPAT, 'UTF-8' );
 
 		$config		= $this->env->getConfig();
-		$this->addData( 'username', $request->get( 'username' ),'data' );
-		$this->addData( 'email', $request->get( 'email' ),'data' );
-		$this->addData( 'status', $request->get( 'status' ),'data' );
-		$this->addData( 'roleId', $request->get( 'roleId' ),'data' );
+		$this->addData( 'user', $user );
 		$this->addData( 'roles', $modelRole->getAll() );
-		$this->addData( 'words', $words );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
 	}
@@ -68,12 +89,34 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function edit( $userId ) {
-		$words		= $this->env->getLanguage()->getWords( 'admin/user' );
+		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
+		$words		= $this->getWords( 'edit' );
+		$input		= $request->getAllFromSource( 'POST' );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		if( $this->env->getRequest()->getMethod() == 'POST' )
-		{
+		if( $request->getMethod() == 'POST' ){
+			if( empty( $input['username'] ) )
+				$messenger->noteError( $words->msgNoUsername );
+			if( empty( $input['password'] ) )
+				$messenger->noteError( $words->msgNoPassword );
+			if( empty( $input['email'] ) )
+				$messenger->noteError( $words->msgNoEmail );
+			if( !$messenger->gotError() ){
+				$userId		= $modelUser->add( array(
+					'roleId'		=> $input['roleId'],
+					'status'		=> $input['status'],
+					'username'		=> $input['username'],
+					'password'		=> md5( $input['password'] ),
+					'email'			=> $input['email'],
+					'firstname'		=> $input['firstname'],
+					'surname'		=> $input['surname'],
+					'modifiedAt'	=> time(),
+				) );
+				$messenger->noteSuccess( $words->msgSuccess );
+			}
+			
 			$user		= $modelUser->get( $userId );
 			$data		= $this->env->request->getAllFromSource( 'POST' )->getAll();
 			$data['password']	= md5( $data['password'] );
@@ -87,7 +130,6 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
 		$this->addData( 'roles', $modelRole->getAll() );
-		$this->addData( 'words', $words );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
 	}
