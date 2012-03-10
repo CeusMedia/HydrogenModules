@@ -1,4 +1,4 @@
-<?php
+ <?php
 $optStatus	= array();
 foreach( $words['status'] as $key => $label )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
