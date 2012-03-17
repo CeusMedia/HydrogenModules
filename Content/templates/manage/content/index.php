@@ -40,7 +40,6 @@ $panelFile	= '
 ';
 
 return '
-<!--<h2>HTML Inhalte</h2>-->
 <div class="column-left-20">
 	'.$panelFilter.'
 	'.$panelList.'

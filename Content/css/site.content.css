@@ -1,10 +1,26 @@
-ul.content-files {
-	margin: 0px 0px 0px 10px;
+
+ul.list-html {
+	margin: 0px;
 	padding: 0px;
-/*	list-style: none;*/
-	font-size: 0.9em;
-	line-height: 1.2em;
+	list-style: none;
 	}
-ul.content-files a {
+ul.list-html li {
+	min-height: 18px;
+	padding-left: 22px;
+	background-image: url(/lib/cmIcons/famfamfam/silk/html.png);
+	background-repeat: no-repeat;
+	background-position: 1px 1px;
+	}
+ul.list-html li.not-writeable {
+	opacity: 0.5;
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock.png);
+	}
+
+ul.list-html li a {
 	text-decoration: none;
+	}
+
+ul.list-html li a span.file-ext {
+	font-size: 0.8em;
+	opacity: 0.3;
 	}

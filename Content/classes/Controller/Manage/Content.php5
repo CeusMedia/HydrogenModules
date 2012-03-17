@@ -23,18 +23,20 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 	public function onInit() {
 		parent::onInit();
 		$config		= $this->env->getConfig();
-		$this->path		= $config->get( 'module.content.path' );
+		$this->path	= $config->get( 'module.content.path' );
 		if( !$this->path ){
 			$locales	= $config->get( 'path.locales' );
 			$language	= $this->env->language->getLanguage();
-			$this->path	= $locales.$language.'/html/';
+			$this->path		= $locales.$language.'/html/';
 		}
-		$this->addData( 'pathContent', $this->path );
+		if( !file_exists( $this->path ) )
+			Folder_Editor::createFolder( $this->path );
 
 		$paths	= array();
 		$index	= Folder_RecursiveLister::getFolderList( $this->path );
 		foreach( $index as $item )
 			$paths[]	= substr( $item->getPathname(), strlen( $this->path ) );
+		$this->addData( 'pathContent', $this->path );
 		$this->addData( 'paths', $paths );
 	}
 
@@ -179,7 +181,6 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 
 	protected function loadFileTree(){
 		$files	= new File_RecursiveRegexFilter( $this->path, '/\.html$/' );
-		$this->addData( 'path', $this->path );
 		$this->addData( 'files', $files );
 	}
 
