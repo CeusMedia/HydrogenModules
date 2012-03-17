@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Content</title>
+	<description>Basic content management for HTML files.</description>
+	<version>0.1</version>
+	<category>Management</category>
+	<files>
+		<class>Controller/Manage/Content.php5</class>
+		<class>View/Manage/Content.php5</class>
+		<locale>de/manage/content.ini</locale>
+		<template>manage/content/edit.php</template>
+		<template>manage/content/index.php</template>
+		<template>manage/content/filter.php</template>
+		<template>manage/content/list.php</template>
+		<style>site.content.css</style>
+	</files>
+	<relations/>
+	<config type="integer" name="path"></config>								; path to content files, default: empty -> path to locales + language folder
+	<link>manage/content</link>
+</module>
