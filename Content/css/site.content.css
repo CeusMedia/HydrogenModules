@@ -1,0 +1,10 @@
+ul.content-files {
+	margin: 0px 0px 0px 10px;
+	padding: 0px;
+/*	list-style: none;*/
+	font-size: 0.9em;
+	line-height: 1.2em;
+	}
+ul.content-files a {
+	text-decoration: none;
+	}
