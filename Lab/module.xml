@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>Labs</title>
+	<description>Basic labs.</description>
+	<version>0.1</version>
+	<category>Lab</category>
+	<files>
+		<class>Controller/Lab.php5</class>
+		<class>View/Lab.php5</class>
+		<locale>de/lab.ini</locale>
+		<template>lab/index.php</template>
+		<style>site.lab.css</style>
+	</files>
+	<relations/>
+	<link>lab</link>
+</module>
