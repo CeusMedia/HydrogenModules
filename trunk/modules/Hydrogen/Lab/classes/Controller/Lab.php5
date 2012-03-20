@@ -13,7 +13,7 @@
  */
 class Controller_Lab extends CMF_Hydrogen_Controller{
 
-	public function index( $arg1, $arg2, $arg3, $arg4 ){
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
 		if(func_num_args () ){
 			print_m( func_get_args() );
 		}
