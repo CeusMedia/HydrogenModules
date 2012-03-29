@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>Dev: Scaffold</title>
+	<description>Basic generator for empty classes, templates and locales.</description>
+	<version>0.1</version>
+	<category>Dev</category>
+	<files>
+		<class>Controller/Dev/Scaffold.php5</class>
+		<class>View/Dev/Scaffold.php5</class>
+		<locale>de/dev/scaffold.ini</locale>
+		<template>dev/scaffold/index.php</template>
+		<template>dev/scaffold/controller.php</template>
+		<template>dev/scaffold/model.php</template>
+		<template>dev/scaffold/view.php</template>
+		<template>dev/scaffold/logic.php</template>
+		<template>dev/scaffold/template.php</template>
+		<template>dev/scaffold/templates/controller.tmpl</template>
+		<template>dev/scaffold/templates/locale.tmpl</template>
+		<template>dev/scaffold/templates/logic.tmpl</template>
+		<template>dev/scaffold/templates/model.tmpl</template>
+		<template>dev/scaffold/templates/template.empty.tmpl</template>
+		<template>dev/scaffold/templates/template.tmpl</template>
+		<template>dev/scaffold/templates/view.tmpl</template>
+<!--		<template>dev/scaffold/locale.php</template>-->
+<!--		<template>dev/scaffold/helper.php</template>-->
+<!--		<style>site.dev.scaffold.css</style>-->
+	</files>
+	<relations/>
+	<link>dev/scaffold</link>
+</module>
