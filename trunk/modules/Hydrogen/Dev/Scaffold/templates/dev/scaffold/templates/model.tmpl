@@ -1,0 +1,29 @@
+<?php
+/**
+ *	Model.
+ *	@version		$Id$
+ */
+/**
+ *	Model.
+ *	@version		$Id$
+ *	@todo			implement
+ *	@todo			code documentation
+ */
+class Model_<%className%> extends CMF_Hydrogen_Model{
+
+	/**	@var	$name		string		Table name without prefix of database connection */
+	protected $name			= "";
+
+	/**	@var	$name		string		List of columns within table */
+	protected $columns		= array();
+
+	/**	@var	$name		string		Name of column with primary key */
+	protected $primaryKey	= "";
+
+	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
+	protected $indices		= array()
+
+	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
+	protected $fetchMode	= PDO::FETCH_OBJ;
+}
+?>
