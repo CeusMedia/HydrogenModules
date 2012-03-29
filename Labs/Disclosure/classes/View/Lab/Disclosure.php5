@@ -9,7 +9,7 @@ class View_Labs_Disclosure extends CMF_Hydrogen_View{
 
 		$page->js->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.js' );
 		$page->css->theme->addUrl( 'http://js.ceusmedia.de/jquery/cmLadder/0.2.css' );
-		$page->addThemeStyle( 'site.labs.disclosure.css' );
+		$page->addThemeStyle( 'site.lab.disclosure.css' );
 
 	//	$page->js->addScript( $script );
 	}
