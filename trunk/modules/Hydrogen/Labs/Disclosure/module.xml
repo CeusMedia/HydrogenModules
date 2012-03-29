@@ -2,14 +2,16 @@
 <module>
 	<title>Labs: Disclosure</title>
 	<description></description>
+	<category>Labs</category>
 	<version>0.1</version>
 	<requires>
 	</requires>
 	<files>
-		<class>Controller/Labs/Disclosure.php5</class>
-		<class>View/Labs/Disclosure.php5</class>
-		<template>labs/disclosure/index.php</template>
-		<style>site.labs.disclosure.css</style>
+		<class>Controller/Lab/Disclosure.php5</class>
+		<class>View/Lab/Disclosure.php5</class>
+		<template>lab/disclosure/index.php</template>
+		<style>site.lab.disclosure.css</style>
 	</files>
+	<link>lab/disclosure</link>
 </module>
 

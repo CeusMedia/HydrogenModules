@@ -1,3 +1,6 @@
 <?php
-return '[LAB::index]';
+return '<h2>Labs</h2>
+	
+
+';
 ?>
