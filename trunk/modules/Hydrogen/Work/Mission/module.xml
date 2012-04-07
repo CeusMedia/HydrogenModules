@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Missions</title>
+	<description><![CDATA[]]></description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Work/Mission.php5</class>
+		<class>Model/Mission.php5</class>
+		<class>Logic/Mission.php5</class>
+		<class>View/Work/Mission.php5</class>
+		<template>work/mission/index.php</template>
+		<template>work/mission/add.php</template>
+		<template>work/mission/edit.php</template>
+		<locale>de/work/mission.ini</locale>
+	</files>
+	<link>work/mission</link>
+</module>
