@@ -17,10 +17,12 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	/**	@var	$name		string		List of columns within table */
 	protected $columns		= array(
 		'missionId',
+		'priority',
 		'status',
 		'daysLeft',
 		'daysOverdue',
 		'content',
+		'reference',
 		'createdAt',
 		'modifiedAt',
 	);
@@ -30,6 +32,8 @@ class Model_Mission extends CMF_Hydrogen_Model{
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
 	protected $indices		= array(
+		'priority',
+		'status',
 		'daysLeft',
 		'daysOverdue',
 	);

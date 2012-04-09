@@ -11,6 +11,11 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
+		parent::__construct( $env );
+		$this->model	= new Model_Mission( $env );
+	 }
+
 	public function add(){
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -18,7 +23,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= $this->getWords( 'add' );
 
-		$model		= new Model_Mission( $this->env );
 		$content	= $request->get( 'content' );
 		$daysLeft	= $request->get( 'daysLeft' );
 		$status		= $request->get( 'status' );
@@ -29,11 +33,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'content'	=> $content,
+					'priority'	=> (int) $request->get( 'priority' ),
 					'status'	=> $status,
 					'daysLeft'	=> $daysLeft,
+					'reference'	=> $request->get( 'priority' ),
 					'createdAt'	=> time(),
 				);
-				$model->add( $data );
+				$this->model->add( $data );
 				$messenger->noteSuccess( $words->msgSuccess );
 				$this->restart( './work/mission' );
 			}
@@ -51,7 +57,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= $this->getWords( 'edit' );
 
-		$model		= new Model_Mission( $this->env );
 		$content	= $request->get( 'content' );
 		$daysLeft	= $request->get( 'daysLeft' );
 		$status		= $request->get( 'status' );
@@ -64,14 +69,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'content'		=> $content,
 					'status'		=> $status,
 					'daysLeft'		=> $daysLeft,
+					'reference'		=> $request->get( 'reference' ),
 					'modifiedAt'	=> time(),
 				);
-				$model->edit( $missionId, $data );
+				$this->model->edit( $missionId, $data );
 				$messenger->noteSuccess( $words->msgSuccess );
 				$this->restart( './work/mission' );
 			}
 		}
-		$mission	= $model->get( $missionId );
+		$mission	= $this->model->get( $missionId );
 		$this->addData( 'mission', $mission );
 	}
 
@@ -87,8 +93,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= $this->getWords( 'index' );
 
-		$model		= new Model_Mission( $this->env );
-		$missions	= $model->getAll( array( 'status' => '>=-1', array( 'daysLeft' => 'ASC', 'daysOverdue' => 'DESC' ) ) );
+		$missions	= $this->model->getAll( array( 'status' => '>=-1', array( 'daysLeft' => 'ASC', 'daysOverdue' => 'DESC' ) ) );
 		$this->addData( 'missions', $missions );
 	}
 
