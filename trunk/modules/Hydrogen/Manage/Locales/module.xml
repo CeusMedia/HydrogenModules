@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Locales</title>
+	<description><![CDATA[]]></description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Manage/Locale.php5</class>
+		<class>View/Manage/Locale.php5</class>
+		<template>manage/locale/edit.php</template>
+		<template>manage/locale/filter.php</template>
+		<template>manage/locale/index.php</template>
+		<template>manage/locale/list.php</template>
+		<locale>de/manage/locale.ini</locale>
+		<style>site.locale.css</style>
+	</files>
+	<link>manage/locale</link>
+</module>
