@@ -14,4 +14,25 @@
 		<locale>de/work/mission.ini</locale>
 	</files>
 	<link>work/mission</link>
-</module>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%prefix%>missions`;
+CREATE TABLE IF NOT EXISTS `missions` (
+  `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `priority` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `daysLeft` decimal(3,0) unsigned NOT NULL,
+  `daysOverdue` decimal(3,0) unsigned NOT NULL,
+  `content` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`missionId`),
+  KEY `daysLeft` (`daysLeft`),
+  KEY `daysOverdue` (`daysOverdue`),
+  KEY `priority` (`priority`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%prefix%>missions`;
+]]></sql>
+<relations><needs type="module">UI_Indicator</needs></relations></module>
