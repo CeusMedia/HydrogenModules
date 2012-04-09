@@ -17,5 +17,9 @@
 		<locale>en/html/auth.login.info.html</locale>
 	</files>
 	<config name="strict">TRUE</config>
+	<relations>
+		<needs type="module">Roles</needs>
+		<needs type="module">Users</needs>
+	</relations>
 </module>
 
