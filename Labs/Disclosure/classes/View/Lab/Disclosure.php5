@@ -1,5 +1,5 @@
 <?php
-class View_Labs_Disclosure extends CMF_Hydrogen_View{
+class View_Lab_Disclosure extends CMF_Hydrogen_View{
 	public function index(){
 		$config		= $this->env->getConfig();
 		$page		= $this->env->getPage();
