@@ -1,0 +1,26 @@
+
+ul.list-locale {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+ul.list-locale li {
+	min-height: 18px;
+	padding-left: 22px;
+	background-image: url(/lib/cmIcons/famfamfam/silk/page_white_world.png);
+	background-repeat: no-repeat;
+	background-position: 1px 1px;
+	}
+ul.list-locale li.not-writeable {
+	opacity: 0.5;
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock.png);
+	}
+
+ul.list-locale li a {
+	text-decoration: none;
+	}
+
+ul.list-locale li a span.file-ext {
+	font-size: 0.8em;
+	opacity: 0.3;
+	}
