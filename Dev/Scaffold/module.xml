@@ -3,7 +3,7 @@
 	<title>Dev: Scaffold</title>
 	<description>Basic generator for empty classes, templates and locales.</description>
 	<version>0.1</version>
-	<category>Dev</category>
+	<category>Development</category>
 	<files>
 		<class>Controller/Dev/Scaffold.php5</class>
 		<class>View/Dev/Scaffold.php5</class>
