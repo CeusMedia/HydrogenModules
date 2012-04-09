@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: Content</title>
+	<title>Manage: Contents</title>
 	<description>Basic content management for HTML files.</description>
 	<version>0.1</version>
 	<category>Management</category>

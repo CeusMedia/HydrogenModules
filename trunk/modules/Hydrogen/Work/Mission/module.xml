@@ -3,6 +3,7 @@
 	<title>Work: Missions</title>
 	<description><![CDATA[]]></description>
 	<version>0.1</version>
+	<category>Work</category>
 	<files>
 		<class>Controller/Work/Mission.php5</class>
 		<class>Model/Mission.php5</class>

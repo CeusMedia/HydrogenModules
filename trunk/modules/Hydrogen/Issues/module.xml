@@ -3,6 +3,7 @@
 	<title>Issues</title>
 	<description>Issue management</description>
 	<version>0.1</version>
+	<category>Development</category>
 	<files>
 		<class>Controller/Manage/Issue.php5</class>
 		<class>Model/Issue.php5</class>

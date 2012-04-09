@@ -3,6 +3,7 @@
 	<title>Manage: Locales</title>
 	<description><![CDATA[]]></description>
 	<version>0.1</version>
+	<category>Management</category>
 	<files>
 		<class>Controller/Manage/Locale.php5</class>
 		<class>View/Manage/Locale.php5</class>
