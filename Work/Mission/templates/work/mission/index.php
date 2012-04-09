@@ -13,11 +13,14 @@ $list	= array(
 	7 => array(),
 );	
 
+$indicator	= new UI_HTML_Indicator();
+
 $disabled	= array();
 foreach( $missions as $mission ){
 	$link	= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, $mission->content );
 	$days	= min( $mission->daysLeft, 7 );
-	$list[$days][]	= UI_HTML_Tag::create( 'li', $link );
+	$graph	= $indicator->build( $mission->status, 6 );
+	$list[$days][]	= UI_HTML_Tag::create( 'li', $graph.'&nbsp;'.$link );
 }
 for( $i=0; $i<=7; $i++ )
 	if( !count( $list[$i] ) )
