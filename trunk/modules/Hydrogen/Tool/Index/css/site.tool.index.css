@@ -1,0 +1,74 @@
+#layout-index {
+	position: relative;
+	}
+#layout-index #tool-index-filter {
+	position: absolute;
+	top: 0px;
+	right: 20px;
+	float: right;
+	border-width: 0px 1px 1px 1px;
+	border-style: solid;
+	border-color: #BBB;
+	background: #F7F7F7;
+	-moz-border-radius-bottomleft: 0.5em;
+	-moz-border-radius-bottomright: 0.5em;
+	padding: 0.5em 2em 0.5em 1em;
+	}
+#layout-index #tool-index-filter label {
+	float: left;
+	display: block;
+	text-align: right;
+	padding: 0em 1em;
+	font-weight: bold;
+	}
+#layout-index #tool-index-filter #clearer {
+	display: none;
+	position: absolute;
+	width: 11px;
+	height: 11px;
+	top: 10px;
+	right: 10px;
+	background-image: url(../img/clearSearch.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+	}
+
+#layout-index ul {
+	margin: 0px;
+	padding: 0px;
+	}
+#layout-index ul li {
+	float: left;
+	width: 270px;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	padding: 1.2em 1.6em;
+	list-style: none;
+	border: 1px solid #BBB;
+	background: #F7F7F7;
+	-moz-border-radius: 1em;
+	}
+#layout-index ul li a {
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 1.2em;
+	font-style: italic;
+	}
+
+#layout-index span.tags {
+	display: block;
+	font-size: 0.9em;
+	color: gray;
+	margin-top: 0.5em;
+	opacity: 0.5;
+	}
+#layout-index span.tags:hover {
+	opacity: 1;
+	}
+#layout-index span.tag {
+	color: green;
+	border-bottom: 1px dotted green;
+	}
+#layout-index span.tag:hover {
+	background: #D7F7D7;
+	}
