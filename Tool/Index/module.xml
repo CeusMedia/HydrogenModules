@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module>
+	<title>Tools: Index</title>
+	<description><![CDATA[Poster of available tools.]]></description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Tool/Index.php5</class>
+		<class>View/Tool/Index.php5</class>
+		<template>tool/index/index.php</template>
+		<script>tool.index.js</script>
+		<style>site.tool.index.css</style>
+	</files>
+	<link>tool/index</link>
+</module>
+
