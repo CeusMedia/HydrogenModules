@@ -82,6 +82,38 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'mission', $mission );
 	}
 
+	public function import(){
+		$messenger		= $this->env->getMessenger();
+		$file	= $this->env->getRequest()->get( 'serial' );
+		if( $file['error'] != 0 ){
+			$handler	= new Net_HTTP_UploadErrorHandler();
+			$messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
+		}
+		else{
+			$gz			= File_Reader::load( $file['tmp_name'] );
+			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
+			$missions	= @unserialize( $serial );
+			if( !$serial )
+				$messenger->noteError( 'Das Entpacken der Daten ist fehlgeschlagen.' );
+			else if( !$missions )
+				$messenger->noteError( 'Keine Daten enthalten.' );
+			else{
+				$model	= new Model_Mission( $this->env );
+				$model->truncate();
+				foreach( $missions as $mission )
+					$model->add( (array) $mission );
+				$messenger->noteSuccess( 'Die Daten wurden importiert.' );
+			}
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function export(){
+		$missions	= $this->model->getAll();														//  get all missions
+		$zip		= gzencode( serialize( $missions ) );											//  gzip serial of mission objects
+		Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );					//  deliver downloadable file
+	}
+	
 	public function filter(){
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
@@ -128,14 +160,23 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'missions', $missions );
 	}
 
+	public function changeDay( $missionId, $string ){
+		$string	= $this->logic->getDate( $string );
+		remark( $string );
+		$this->redirect( 'work/mission', 'index' );
+#		$this->restart( NULL, TRUE );
+	}
+	
 	public function setPriority( $missionId, $priority ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );
 		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 
 	public function setStatus( $missionId, $status ){
-		$this->model->edit( $missionId, array( 'status' => $status ) );
-		$this->restart( 'edit/'.$missionId, TRUE );
+		$this->model->edit( $missionId, array( 'status' => $status ) );								//  store new status
+		if( $status < 0 )																			//  mission aborted or done
+			$this->restart( NULL, TRUE );															//  jump to list
+		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
 	}
 }
 ?>

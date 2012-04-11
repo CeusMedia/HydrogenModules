@@ -48,7 +48,7 @@ $list	= array();
 foreach( $words['states'] as $status => $label ){
 	$attributes	= array(
 		'type'		=> 'button',
-		'onclick'	=> 'document.location.href=\'./work/mission/setStatus/'.$mission->missionId.'/'.$status.'\';',
+		'onclick'	=> 'document.location.href=\'./work/mission/setStatus/'.$mission->missionId.'/'.urlencode( $status ).'\';',
 		'disabled'	=> $mission->status == $status ? 'disabled' : NULL,
 		'class'		=> 'button',
 		'style'		=> 'width: 120px',

@@ -11,9 +11,13 @@ $optDirection	= UI_HTML_Elements::Options( $optDirection, $session->get( 'filter
 
 $iconUp		= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
 $iconDown	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
+$iconRight	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
+$iconLeft	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
+$iconEdit	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
+$iconRemove	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
 
-$buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp );
-$buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', $iconDown );
+$buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny' );
+$buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', $iconDown, 'tiny' );
 
 
 $panelFilter	= '
@@ -27,10 +31,10 @@ $panelFilter	= '
 			</li>
 			<li>
 				<label for="filter_order">'.$w->labelOrder.'</label><br/>
-				<div class="column-left-60">
+				<div class="column-left-70">
 					<select name="order" id="filter_order" class="max" onchange="this.form.submit();">'.$optOrder.'</select>
 				</div>
-				<div class="column-right-40">
+				<div class="column-right-30">
 					'.$buttonUp.$buttonDown.'
 				</div>
 				<div class="column-clear"></div>
@@ -67,7 +71,15 @@ foreach( $missions as $mission ){
 	$graph		= $indicator->build( $mission->status, 6 );
 	$priority	= $words['priorities'][$mission->priority];
 	$class		= 'row-priority priority-'.$mission->priority;
-	$line		= '<td><div style="padding: 2px;">'.$graph.'</div></td><td>'.$link.'</td><td>'.$priority.'</td><td></td>';
+	$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit, 'tiny' );
+	$buttonRemove	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/'.urlencode( '-3' ), $iconRemove, 'tiny' );
+	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny' );
+	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '+1' ), $iconRight, 'tiny' );
+	
+	if( !$days )
+		$buttonLeft	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
+	
+	$line		= '<td><div style="padding: 2px;">'.$graph.'</div></td><td>'.$link.'</td><td>'.$priority.'</td><td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>';
 	$list[$days][]	= UI_HTML_Tag::create( 'tr', $line, array( 'class' => $class ) );
 }
 
@@ -83,9 +95,8 @@ function getCount( $list, $days ){
 	if( $count )
 		return ' <small>('.$count.')</small>';
 }
-function renderTable(){}
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( "13%", "60%", "15%", "12%" );
+$colgroup	= UI_HTML_Elements::ColumnGroup( "13%", "60%", "14%", "13%" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Progress', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 	UI_HTML_Tag::create( 'div', 'Title', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
@@ -97,7 +108,7 @@ UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();
 $tabs->addTab(
 	'Heute, '.getFutureDate( 0 ).getCount( $list, 0 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ), array( 'class' => 'tablesorter' ) ),
+	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) ),
 	'tab-days-0'
 );
 $tabs->addTab(
@@ -144,31 +155,24 @@ $panelList	= '
 '.$tabs.'
 '.$buttonAdd;
 
-/*
-<script>
-$(document).ready(function(){
-	$("table").tablesorter();
-});
-</script>
-<script src="http://js.ceusmedia.de/jquery/tablesorter/2.0.5/jquery.tablesorter.min.js"></script>
-<link rel="stylesheet" href="http://js.ceusmedia.de/jquery/tablesorter/2.0.5/themes/blue/style.css"/>
- */
+
+$panelPort	= '
+	<fieldset>
+		<legend>Daten-Port</legend>
+		'.UI_HTML_Elements::LinkButton( './work/mission/export', 'exportieren', 'button export' ).'
+		<hr/>
+		<form action="./work/mission/import" method="post" enctype="multipart/form-data">
+			<input type="file" name="serial"/>'.UI_HTML_Elements::Button( 'import', 'importieren', 'button import' ).'
+		</form>
+	</fieldset>
+';
 
 $content	= '
 <script>'.$script.'</script>
-	
-
-<script>
-$(document).ready(function(){
-	$("th.sortable").bind(function(){});
-});
-</script>
-
-
-
 <h2>'.$w->heading.'</h2>
 <div class="column-left-20">
 	'.$panelFilter.'
+	'.$panelPort.'
 </div>
 <div class="column-left-80" style="font-size: 0.85em">
 	'.$panelList.'
