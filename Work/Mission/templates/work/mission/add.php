@@ -20,8 +20,8 @@ return '
 			</li>
 			<li>
 				<div class="column-left-20">
-					<label for="input_daysLeft">'.$w->labelDaysLeft.'</label><br/>
-					<input type="text" name="daysLeft" id="input_daysLeft" class="max" value="'.$mission->daysLeft.'"/>
+					<label for="input_day">'.$w->labelDay.'</label><br/>
+					<input type="text" name="day" id="input_day" class="max" value="'.$mission->day.'"/>
 				</div>
 				<div class="column-left-20">
 					<label for="input_priority">'.$w->labelPriority.'</label><br/>

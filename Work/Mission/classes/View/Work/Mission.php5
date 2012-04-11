@@ -11,7 +11,13 @@
  */
 class View_Work_Mission extends CMF_Hydrogen_View{
 
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+		$this->env	= $env;
+		$this->env->getPage()->addThemeStyle( 'site.mission.css' );
+	}
+	
 	public function add(){
+		
 	}
 
 	public function edit(){
@@ -30,6 +36,7 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 
 		//  your code now!
 		//  add a method for every action view you need
+		
 	}
 
 	public function remove(){
