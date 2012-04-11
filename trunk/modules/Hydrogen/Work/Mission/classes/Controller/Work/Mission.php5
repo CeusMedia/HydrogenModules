@@ -14,7 +14,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
 		parent::__construct( $env );
 		$this->model	= new Model_Mission( $env );
-	 }
+		$this->logic	= new Logic_Mission( $env );
+	}
 
 	public function add(){
 		$config			= $this->env->getConfig();
@@ -24,7 +25,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$words			= $this->getWords( 'add' );
 
 		$content	= $request->get( 'content' );
-		$daysLeft	= $request->get( 'daysLeft' );
+		$day		= $request->get( 'day' );
 		$status		= $request->get( 'status' );
 		
 		if( $request->get( 'add' ) ){
@@ -35,7 +36,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'content'	=> $content,
 					'priority'	=> (int) $request->get( 'priority' ),
 					'status'	=> $status,
-					'daysLeft'	=> $daysLeft,
+					'day'		=> $this->logic->getDate( $day ),
 					'reference'	=> $request->get( 'priority' ),
 					'createdAt'	=> time(),
 				);
@@ -45,7 +46,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			}
 		}
 		$mission	= array();
-		foreach( $model->getColumns() as $key )
+		foreach( $this->model->getColumns() as $key )
 			$mission[$key]	= strlen( $request->get( $key ) ) ? $request->get( $key ) : NULL;
 		$this->addData( 'mission', (object) $mission );
 	}
@@ -58,7 +59,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$words			= $this->getWords( 'edit' );
 
 		$content	= $request->get( 'content' );
-		$daysLeft	= $request->get( 'daysLeft' );
+		$day		= $request->get( 'day' );
 		$status		= $request->get( 'status' );
 		
 		if( $request->get( 'edit' ) ){
@@ -68,7 +69,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$data	= array(
 					'content'		=> $content,
 					'status'		=> $status,
-					'daysLeft'		=> $daysLeft,
+					'day'			=> $this->logic->getDate( $day ),
 					'reference'		=> $request->get( 'reference' ),
 					'modifiedAt'	=> time(),
 				);
@@ -79,6 +80,25 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 		$mission	= $this->model->get( $missionId );
 		$this->addData( 'mission', $mission );
+	}
+
+	public function filter(){
+		$request		= $this->env->getRequest();
+		$session		= $this->env->getSession();
+		if( $request->has( 'reset' ) ){
+			$session->remove( 'filter_mission_query' );
+			$session->remove( 'filter_mission_order' );
+			$session->remove( 'filter_mission_direction' );
+		}
+		else{
+			if( $request->has( 'query' ) )
+				$session->set( 'filter_mission_query', $request->get( 'query' ) );
+			if( $request->has( 'order' ) )
+				$session->set( 'filter_mission_order', $request->get( 'order' ) );
+			if( $request->has( 'direction' ) )
+				$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
+		}
+		$this->restart( '', TRUE );
 	}
 
 	/**
@@ -93,18 +113,29 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= $this->getWords( 'index' );
 
-		$missions	= $this->model->getAll( array( 'status' => '>=-1', array( 'daysLeft' => 'ASC', 'daysOverdue' => 'DESC' ) ) );
+		$direction	= $session->get( 'filter_mission_direction' );
+		$order		= $session->get( 'filter_mission_order' );
+		$query		= $session->get( 'filter_mission_query' );
+
+		$direction	= $direction ? $direction : 'ASC';
+		$order		= $order ? array( $order => $direction ) : array();
+		
+		$conditions	= array( 'status' => '>=-1' );
+		if( strlen( $query ) )
+			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+		
+		$missions	= $this->model->getAll( $conditions, $order );
 		$this->addData( 'missions', $missions );
 	}
 
-	public function filter(){
-		$request		= $this->env->getRequest();
-		$session		= $this->env->getSession();
-		if( $request->has( 'reset' ) )
-			$session->remove( 'filter_mission_query' );
-		else
-			$session->set( 'filter_mission_query', $request->get( 'query' ) );
-		$this->restart( '', TRUE );
+	public function setPriority( $missionId, $priority ){
+		$this->model->edit( $missionId, array( 'priority' => $priority ) );
+		$this->restart( 'edit/'.$missionId, TRUE );
+	}
+
+	public function setStatus( $missionId, $status ){
+		$this->model->edit( $missionId, array( 'status' => $status ) );
+		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 }
 ?>

@@ -7,7 +7,7 @@ unset( $priorities[0] );
 $optPriority	= UI_HTML_Elements::Options( $priorities, $mission->priority );
 $optStatus		= UI_HTML_Elements::Options( $words['states'], $mission->status );
 
-return '
+$panelEdit	= '
 <form action="./work/mission/edit/'.$mission->missionId.'" method="post">
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
@@ -22,8 +22,8 @@ return '
 			</li>
 			<li>
 				<div class="column-left-20">
-					<label for="input_daysLeft">'.$w->labelDaysLeft.'</label><br/>
-					<input type="text" name="daysLeft" id="input_daysLeft" class="max" value="'.$mission->daysLeft.'"/>
+					<label for="input_day">'.$w->labelDay.'</label><br/>
+					<input type="text" name="day" id="input_day" class="max" value="'.$mission->day.'"/>
 				</div>
 				<div class="column-left-20">
 					<label for="input_priority">'.$w->labelPriority.'</label><br/>
@@ -44,4 +44,58 @@ return '
 </form>
 ';
 
+$list	= array();
+foreach( $words['states'] as $status => $label ){
+	$attributes	= array(
+		'type'		=> 'button',
+		'onclick'	=> 'document.location.href=\'./work/mission/setStatus/'.$mission->missionId.'/'.$status.'\';',
+		'disabled'	=> $mission->status == $status ? 'disabled' : NULL,
+		'class'		=> 'button',
+		'style'		=> 'width: 120px',
+	);
+	$button	= UI_HTML_Tag::create( 'button', $label, $attributes );
+	$list[]	= $button;
+}
+$states	= join( '<br/>', $list );
+
+
+$priorities		= $words['priorities'];
+unset( $priorities[0] );
+$list	= array();
+foreach( $priorities as $priority => $label ){
+	$attributes	= array(
+		'type'		=> 'button',
+		'onclick'	=> 'document.location.href=\'./work/mission/setPriority/'.$mission->missionId.'/'.$priority.'\';',
+		'disabled'	=> $mission->priority == $priority ? 'disabled' : NULL,
+		'class'		=> 'button',
+		'style'		=> 'width: 120px',
+	);
+	$button	= UI_HTML_Tag::create( 'button', $label, $attributes );
+	$list[]	= $button;
+}
+$priorities	= join( '<br/>', $list );
+
+$panelStatus	= '
+<fieldset>
+	<legend>Priorität und Status</legend>
+	<div class="column-left-50">
+		<h3>Priorität</h3>
+		'.$priorities.'
+	</div>
+	<div class="column-left-50">
+		<h3>Status</h3>
+		'.$states.'
+	</div>
+</fieldset>
+';
+
+return '
+<div class="column-right-30">
+	'.$panelStatus.'
+</div>
+<div class="column-left-70">
+	'.$panelEdit.'
+</div>
+<div class="column-clear"></div>
+';
 ?>

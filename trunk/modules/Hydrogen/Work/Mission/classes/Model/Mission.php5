@@ -19,8 +19,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 		'missionId',
 		'priority',
 		'status',
-		'daysLeft',
-		'daysOverdue',
+		'day',
 		'content',
 		'reference',
 		'createdAt',
@@ -34,8 +33,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'priority',
 		'status',
-		'daysLeft',
-		'daysOverdue',
+		'day',
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */

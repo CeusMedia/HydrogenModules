@@ -13,6 +13,7 @@
 		<template>work/mission/add.php</template>
 		<template>work/mission/edit.php</template>
 		<locale>de/work/mission.ini</locale>
+		<style>site.mission.css</style>
 	</files>
 	<link>work/mission</link>
 	<sql on="install" type="mysql"><![CDATA[
