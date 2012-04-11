@@ -4,8 +4,10 @@ div.indicator span.indicator-outer {
 	display: block;
 	float: left;
 	width: 100px;
-	border: 1px solid darkgray;
 	background-color: rgb(255, 255, 255);
+	box-shadow: 1px 1px 3px rgba(0,0,0,0.33);
+	border-radius: 4px;
+	overflow: hidden;
 	}	
 div.indicator div.indicator-inner {
 	height: 12px;
