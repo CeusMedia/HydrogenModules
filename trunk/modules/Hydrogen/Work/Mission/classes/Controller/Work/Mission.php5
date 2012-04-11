@@ -158,6 +158,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		
 		$missions	= $this->model->getAll( $conditions, $order );
 		$this->addData( 'missions', $missions );
+		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
+		$this->addData( 'filterDirection', $direction );
 	}
 
 	public function changeDay( $missionId, $string ){

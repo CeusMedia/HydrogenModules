@@ -169,6 +169,54 @@ $panelPort	= '
 
 $content	= '
 <script>'.$script.'</script>
+<style>
+/*  table.sort.css  */
+table tr th.sortable {
+	cursor: pointer;
+	text-decoration: underline;
+	}
+table tr th.sortable.ordered {
+	}
+table tr th.sortable.ordered.direction-asc {
+	}
+table tr th.sortable.ordered.direction-desc {
+	}
+	
+</style>
+<script>
+function makeTableSortable(jq,options){
+	var options = $.extend({order: null, direction: "ASC"},options);
+	$("body").data("tablesort-options",options);
+	jq.find("tr th div.sortable").each(function(){
+		if($(this).data("column")){
+			$(this).removeClass("sortable").parent().addClass("sortable");
+			if($(this).data("column") == options.order){
+				$(this).parent().addClass("ordered");
+				$(this).parent().addClass("direction-"+options.direction.toLowerCase());
+			}
+			$(this).bind("click",function(){
+				var head = $(this);
+				var options = $("body").data("tablesort-options");
+				var column = head.data("column");
+				var direction = options.direction;
+				if( options.order == column )
+					direction = direction == "ASC" ? "DESC" : "ASC";
+				var url = "./work/mission/filter/?order="+column+"&direction="+direction;
+				document.location.href = url;
+			});
+		}
+	});
+}
+
+
+$(document).ready(function(){
+	makeTableSortable($("#layout-content table"),{
+		url: "./work/mission/filter/",
+		order: "'.$filterOrder.'",
+		direction: "'.$filterDirection.'",
+	});
+});
+</script>
 <h2>'.$w->heading.'</h2>
 <div class="column-left-20">
 	'.$panelFilter.'
