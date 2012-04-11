@@ -7,6 +7,7 @@
 		<class>Controller/Tool/Index.php5</class>
 		<class>View/Tool/Index.php5</class>
 		<template>tool/index/index.php</template>
+		<locale>de/tool/index.ini</locale>
 		<script>tool.index.js</script>
 		<style>site.tool.index.css</style>
 	</files>
