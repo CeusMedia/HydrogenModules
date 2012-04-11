@@ -181,7 +181,6 @@ table tr th.sortable.ordered.direction-asc {
 	}
 table tr th.sortable.ordered.direction-desc {
 	}
-	
 </style>
 <script>
 function makeTableSortable(jq,options){

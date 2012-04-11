@@ -3,6 +3,7 @@
 	<title>Tools: Index</title>
 	<description><![CDATA[Poster of available tools.]]></description>
 	<version>0.1</version>
+	<category>Tool</category>
 	<files>
 		<class>Controller/Tool/Index.php5</class>
 		<class>View/Tool/Index.php5</class>
