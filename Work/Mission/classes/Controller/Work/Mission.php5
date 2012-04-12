@@ -37,7 +37,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'priority'	=> (int) $request->get( 'priority' ),
 					'status'	=> $status,
 					'day'		=> $this->logic->getDate( $day ),
-					'reference'	=> $request->get( 'priority' ),
+					'reference'	=> $request->get( 'reference' ),
 					'createdAt'	=> time(),
 				);
 				$this->model->add( $data );

@@ -68,7 +68,7 @@ foreach( $missions as $mission ){
 	$diff		= strtotime( $mission->day ) - $today;
 	$days		= $diff / ( 24 * 60 * 60);
 	$days		= max( min( $days , 6 ), 0 );
-	$graph		= $indicator->build( $mission->status, 6 );
+	$graph		= $indicator->build( $mission->status, 4 );
 	$priority	= $words['priorities'][$mission->priority];
 	$class		= 'row-priority priority-'.$mission->priority;
 	$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit, 'tiny' );
