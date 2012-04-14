@@ -5,8 +5,8 @@
 	<category>User Interace</category>
 	<version>0.1</version>
 	<files>
-		<style source="primer">form.css</style>
-		<style source="primer">form.button.css</style>
-		<style source="primer">form.fieldset.css</style>
+		<style source="primer" load="auto">form.css</style>
+		<style source="primer" load="auto">form.button.css</style>
+		<style source="primer" load="auto">form.fieldset.css</style>
 	</files>
 </module>

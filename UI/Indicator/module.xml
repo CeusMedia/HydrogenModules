@@ -4,6 +4,6 @@
 	<description><![CDATA[CSS-Support for UI_HTML_Indicator.]]></description>
 	<version>0.1</version>
 	<files>
-		<style>indicator.css</style>
+		<style source="primer" load="auto">indicator.css</style>
 	</files>
 </module>
