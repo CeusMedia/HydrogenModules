@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Panel</title>
+	<description><![CDATA[Support for (collapsable) panels.
+	
+Attention: You need to apply the panel setup on you own, with something like
+
+code:js>$(".panel.collapsable").cmCollapsePanel();<code
+
+See [http://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel Demo] for more information.
+	]]></description>
+	<category>JavaScript</category>
+	<version>0.3</version>
+	<files>
+		<style source="scripts-lib" load="auto">jquery/cmCollapsePanel/0.3/panel.default.css</style>
+		<style source="scripts-lib" load="auto">jquery/cmCollapsePanel/0.3/panel.default.collapse.css</style>
+		<script source="lib" load="auto">jquery/cmCollapsePanel/0.3/cmCollapsePanel.js</script>
+	</files>
+</module>
