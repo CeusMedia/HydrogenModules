@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI:CSS: Reset</title>
+	<description><![CDATA[Resets CSS browser settings for a fresh start.]]></description>
+	<category>User Interace</category>
+	<version>0.1</version>
+	<files>
+		<style source="primer" top="yes">reset.css</style>
+		<style source="primer" top="yes">typography.css</style>
+	</files>
+</module>
