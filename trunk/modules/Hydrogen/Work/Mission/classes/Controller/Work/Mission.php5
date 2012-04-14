@@ -48,6 +48,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission	= array();
 		foreach( $this->model->getColumns() as $key )
 			$mission[$key]	= strlen( $request->get( $key ) ) ? $request->get( $key ) : NULL;
+		if( $mission['priority'] === NULL )
+			$mission['priority']	= 3;
+		if( $mission['status'] === NULL )
+			$mission['status']	= 0;
 		$this->addData( 'mission', (object) $mission );
 	}
 
@@ -164,9 +168,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function changeDay( $missionId, $string ){
 		$string	= $this->logic->getDate( $string );
-		remark( $string );
-		$this->redirect( 'work/mission', 'index' );
-#		$this->restart( NULL, TRUE );
+		$this->model->edit( $missionId, array( 'day' => $string ) );
+		$this->restart( NULL, TRUE );
 	}
 	
 	public function setPriority( $missionId, $priority ){

@@ -14,6 +14,7 @@
 		<template>work/mission/edit.php</template>
 		<locale>de/work/mission.ini</locale>
 		<style>site.mission.css</style>
+		<script>work.mission.js</script>
 	</files>
 	<link>work/mission</link>
 	<sql on="install" type="mysql"><![CDATA[

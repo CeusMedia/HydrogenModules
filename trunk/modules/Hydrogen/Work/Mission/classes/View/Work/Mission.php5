@@ -11,9 +11,14 @@
  */
 class View_Work_Mission extends CMF_Hydrogen_View{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env	= $env;
-		$this->env->getPage()->addThemeStyle( 'site.mission.css' );
+	public function onInit(){
+		$page	= $this->env->getPage();
+		$monthsLong		= array_values( (array) $this->getWords( 'months' ) );
+		$monthsShort	= array_values( (array) $this->getWords( 'months-short' ) );
+	
+		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
+		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'work.mission.js' );
 	}
 	
 	public function add(){
