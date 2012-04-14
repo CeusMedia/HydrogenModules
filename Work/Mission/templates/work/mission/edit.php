@@ -23,7 +23,7 @@ $panelEdit	= '
 			<li>
 				<div class="column-left-20">
 					<label for="input_day">'.$w->labelDay.'</label><br/>
-					<input type="text" name="day" id="input_day" class="max" value="'.$mission->day.'"/>
+					<input type="text" name="day" id="input_day" value="'.$mission->day.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20">
 					<label for="input_priority">'.$w->labelPriority.'</label><br/>
