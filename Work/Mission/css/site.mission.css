@@ -13,3 +13,44 @@ tr.row-priority.priority-4 {
 tr.row-priority.priority-5 {
 	background-color: rgba(0,255,0,0.20);
 	}
+
+	
+#mission-folders .panelHead {
+	font-weight: normal;
+	}
+#mission-folders .panelContent {
+	background-color: #FFF;
+	}
+#mission-folders .panelContentInner {
+	padding: 3px 6px;
+	}
+
+#mission-folders div.mission-number {
+	float: right;
+	display: block;
+	margin: 1px 1em 1px 0em;
+	padding: 0px 6px 0px 6px;
+	background-color: #999;
+	border-radius: 10px;
+	color: rgba(255,255,255,1);
+	font-weight: bold;
+	font-size: 0.8em;
+/*	margin: 2px 1em 1px 0em;
+	padding: 0px 7px 0px 6px;
+	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
+*/	
+	}
+#mission-folders div.overdue {
+	float: left;
+	display: block;
+	margin: 1px 1em 1px 0em;
+	padding: 0px 6px 0px 5px;
+	background-color: red;
+	border-radius: 10px;
+	color: rgba(255,255,255,0.8);
+	font-weight: bold;
+/*	margin: 2px 1em 1px 0em;
+	padding: 0px 7px 0px 6px;
+	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
+*/	
+	}

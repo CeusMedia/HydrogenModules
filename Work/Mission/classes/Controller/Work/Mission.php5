@@ -64,7 +64,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$content	= $request->get( 'content' );
 		$day		= $request->get( 'day' );
-		$status		= $request->get( 'status' );
 		
 		if( $request->get( 'edit' ) ){
 			if( !$content )
@@ -72,7 +71,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'content'		=> $content,
-					'status'		=> $status,
+					'priority'		=> (int) $request->get( 'priority' ),
+					'status'		=> (int) $request->get( 'status' ),
 					'day'			=> $this->logic->getDate( $day ),
 					'reference'		=> $request->get( 'reference' ),
 					'modifiedAt'	=> time(),
@@ -155,8 +155,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$direction	= $direction ? $direction : 'ASC';
 		$order		= $order ? array( $order => $direction ) : array();
+		$order['content']	= 'ASC';
 		
-		$conditions	= array( 'status' => '>=-1' );
+		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
 		if( strlen( $query ) )
 			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		
@@ -172,14 +173,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 	
-	public function setPriority( $missionId, $priority ){
+	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );
-		$this->restart( 'edit/'.$missionId, TRUE );
+		if( !$showMission )																			//  back to list
+			$this->restart( NULL, TRUE );															//  jump to list
+		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
 	}
 
-	public function setStatus( $missionId, $status ){
+	public function setStatus( $missionId, $status, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'status' => $status ) );								//  store new status
-		if( $status < 0 )																			//  mission aborted or done
+		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
 	}
