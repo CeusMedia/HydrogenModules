@@ -9,12 +9,13 @@
 		<class>Model/Mission.php5</class>
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
-		<template>work/mission/index.php</template>
 		<template>work/mission/add.php</template>
 		<template>work/mission/edit.php</template>
+		<template>work/mission/index.php</template>
+		<template>work/mission/index.filter.php</template>
 		<locale>de/work/mission.ini</locale>
-		<style>site.mission.css</style>
-		<script>work.mission.js</script>
+		<style load="auto">site.mission.css</style>
+		<script load="auto">work.mission.js</script>
 	</files>
 	<link>work/mission</link>
 	<sql on="install" type="mysql"><![CDATA[

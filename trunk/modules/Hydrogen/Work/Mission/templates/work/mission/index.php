@@ -1,13 +1,7 @@
 <?php
 
 $w	= (object) $words['index'];
-
-//  --  FILTER  --  //
-$optOrder	= array( '' => '' ) + $words['filter-orders'];
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $session->get( 'filter_mission_order' ) );
-
-$optDirection	= array( '' => '' ) + $words['filter-directions'];
-$optDirection	= UI_HTML_Elements::Options( $optDirection, $session->get( 'filter_mission_direction' ) );
+$panelFilter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
 
 $iconUp		= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
 $iconDown	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
@@ -15,39 +9,6 @@ $iconRight	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/
 $iconLeft	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
 $iconEdit	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
 $iconRemove	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
-
-$buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny' );
-$buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', $iconDown, 'tiny' );
-
-
-$panelFilter	= '
-<form action="./work/mission/filter" method="post">
-	<fieldset>
-		<legend>Filter</legend>
-		<ul class="input">
-			<li>
-				<label for="filter_query"><strike>'.$w->labelQuery.'</strike></label><br/>
-				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="max"/>
-			</li>
-			<li>
-				<label for="filter_order">'.$w->labelOrder.'</label><br/>
-				<div class="column-left-70">
-					<select name="order" id="filter_order" class="max" onchange="this.form.submit();">'.$optOrder.'</select>
-				</div>
-				<div class="column-right-30">
-					'.$buttonUp.$buttonDown.'
-				</div>
-				<div class="column-clear"></div>
-			</li>
-		</ul>
-		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', $w->buttonFilter, 'button filter' ).'
-			'.UI_HTML_Elements::LinkButton( './work/mission/filter?reset', $w->buttonReset, 'button reset' ).'
-		</div>
-	</fieldset>
-</form>
-';
-
 
 //  --  LIST  --  //
 $list	= array(
@@ -67,7 +28,7 @@ foreach( $missions as $mission ){
 	$link		= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, $mission->content );
 	$diff		= strtotime( $mission->day ) - $today;
 	$days		= $diff / ( 24 * 60 * 60);
-	$days		= max( min( $days , 6 ), 0 );
+	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
 	$priority	= $words['priorities'][$mission->priority];
 	$class		= 'row-priority priority-'.$mission->priority;
@@ -76,33 +37,73 @@ foreach( $missions as $mission ){
 	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny' );
 	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '+1' ), $iconRight, 'tiny' );
 	
-	if( !$days )
+	if( !$daysBound )
 		$buttonLeft	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
+	$daysOverdue	= '';
+	if( $days < 0 ){
+		$daysOverdue	= UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
+	}
 	
-	$line		= '<td><div style="padding: 2px;">'.$graph.'</div></td><td>'.$link.'</td><td>'.$priority.'</td><td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>';
-	$list[$days][]	= UI_HTML_Tag::create( 'tr', $line, array( 'class' => $class ) );
+	$line		= '<td><div style="padding: 2px;">'.$graph.'</div></td><td>'.$daysOverdue.$link.'</td><td>'.$priority.'</td><td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>';
+	$list[$daysBound][]	= UI_HTML_Tag::create( 'tr', $line, array( 'class' => $class ) );
 }
 
-for( $i=0; $i<=7; $i++ )
-	if( !count( $list[$i] ) )
-		$disabled[]	= $i;
-
-function getFutureDate( $daysInFuture = 0 ){
-	return date( "j.n.", time() + $daysInFuture * 24 * 60 * 60 );
+function getFutureDate( $daysInFuture = 0, $words = NULL ){
+	$then	= time() + $daysInFuture * 24 * 60 * 60;
+	$day	= $words ? $words['days'][date( "w", $then )].', ' : '';
+	return $day.date( "j.n.", $then );
 }
 function getCount( $list, $days ){
 	$count	= count( $list[$days] );
 	if( $count )
-		return ' <small>('.$count.')</small>';
+#		return ' <small>('.$count.')</small>';
+		return ' <div class="mission-number">'.$count.'</div>';
 }
 
 $colgroup	= UI_HTML_Elements::ColumnGroup( "13%", "60%", "14%", "13%" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
-	UI_HTML_Tag::create( 'div', 'Progress', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
-	UI_HTML_Tag::create( 'div', 'Title', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
-	UI_HTML_Tag::create( 'div', 'Priority', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
-	UI_HTML_Tag::create( 'div', 'Actions', array( 'class' => 'sortable', 'data-column' => NULL ) )
+	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
+	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
+	UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
+	UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
 ) );
+
+$folders	= array();
+$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-0', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-1', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-2', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 3, $words ).getCount( $list, 3 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-3', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 4, $words ).getCount( $list, 4 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-4', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 5, $words ).getCount( $list, 5 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-5', $table, $heading, NULL );
+
+$heading	= UI_HTML_Tag::create( 'div', '<b>Zukunft</b>, '.getFutureDate( 6 ).getCount( $list, 6 ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) );
+$folders[]	= UI_HTML_CollapsePanel::create( 'day-6', $table, $heading, NULL );
+
+$folders		= join( $folders );
+
+
+/*
+for( $i=0; $i<=7; $i++ )
+	if( !count( $list[$i] ) )
+		$disabled[]	= $i;
 
 UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();
@@ -136,23 +137,25 @@ $tabs->addTab(
 	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) ),
 	'tab-days-5'
 );
-/*$tabs->addTab(
-	getFutureDate( 6 ).getCount( $list, 6 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) ),
-	'tab-days-6'
-);*/
+#$tabs->addTab(
+#	getFutureDate( 6 ).getCount( $list, 6 ),
+#	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) ),
+#	'tab-days-6'
+#);
 $tabs->addTab(
 	'Zukunft'.getCount( $list, 6 ),
 	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) ),
 	'tab-days-7'
 );
-$script	= $tabs->buildScript( '#tabs-missions', array( 'disabled' => $disabled ) );
-$tabs	= $tabs->buildTabs( 'tabs-missions' );
+$script		= $tabs->buildScript( '#tabs-missions', array( 'disabled' => $disabled ) );
+$tabs		= $tabs->buildTabs( 'tabs-missions' );
+$folders	= '<div style="font-size: 0.85em">'.$tabs.'</div><script>'.$script.'</script>';
+ */
 
 $buttonAdd	= UI_HTML_Elements::LinkButton( './work/mission/add', $w->buttonAdd, 'button add' );
 	
 $panelList	= '
-'.$tabs.'
+'.$folders.'
 '.$buttonAdd;
 
 
@@ -168,8 +171,8 @@ $panelPort	= '
 ';
 
 $content	= '
-<script>'.$script.'</script>
 <style>
+
 /*  table.sort.css  */
 table tr th.sortable {
 	cursor: pointer;
@@ -221,7 +224,7 @@ $(document).ready(function(){
 	'.$panelFilter.'
 	'.$panelPort.'
 </div>
-<div class="column-left-80" style="font-size: 0.85em">
+<div class="column-left-80" id="mission-folders">
 	'.$panelList.'
 </div>
 <div class="column-clear"></div>';
