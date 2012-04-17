@@ -69,96 +69,48 @@ $tableHeads	= UI_HTML_Elements::TableHeads( array(
 ) );
 
 $folders	= array();
-$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-0', $table, $heading, NULL );
 
-$heading	= UI_HTML_Tag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-1', $table, $heading, NULL );
+if( count( $list[0] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-0', $table, $heading, NULL );
+}
+if( count( $list[1] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-1', $table, $heading, NULL );
+}
+if( count( $list[2] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-2', $table, $heading, NULL );
+}
+if( count( $list[3] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 3, $words ).getCount( $list, 3 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-3', $table, $heading, NULL );
+}
+if( count( $list[4] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 4, $words ).getCount( $list, 4 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-4', $table, $heading, NULL );
+}
+if( count( $list[5] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 5, $words ).getCount( $list, 5 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-5', $table, $heading, NULL );
+}
+if( count( $list[6] ) ){
+	$heading	= UI_HTML_Tag::create( 'div', 'Zukunft '.getCount( $list, 6 ) );
+	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) );
+	$folders[]	= UI_HTML_CollapsePanel::create( 'day-6', $table, $heading, NULL );
+}
 
-$heading	= UI_HTML_Tag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-2', $table, $heading, NULL );
+$panelList	= join( $folders );
 
-$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 3, $words ).getCount( $list, 3 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-3', $table, $heading, NULL );
-
-$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 4, $words ).getCount( $list, 4 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-4', $table, $heading, NULL );
-
-$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 5, $words ).getCount( $list, 5 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-5', $table, $heading, NULL );
-
-$heading	= UI_HTML_Tag::create( 'div', '<b>Zukunft</b>, '.getFutureDate( 6 ).getCount( $list, 6 ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) );
-$folders[]	= UI_HTML_CollapsePanel::create( 'day-6', $table, $heading, NULL );
-
-$folders		= join( $folders );
-
-
-/*
-for( $i=0; $i<=7; $i++ )
-	if( !count( $list[$i] ) )
-		$disabled[]	= $i;
-
-UI_HTML_Tabs::$version	= 3;
-$tabs	= new UI_HTML_Tabs();
-$tabs->addTab(
-	'Heute, '.getFutureDate( 0 ).getCount( $list, 0 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) ),
-	'tab-days-0'
-);
-$tabs->addTab(
-	'Morgen, '.getFutureDate( 1 ).getCount( $list, 1 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) ),
-	'tab-days-1'
-);
-$tabs->addTab(
-	'Übermorgen, '.getFutureDate( 2 ).getCount( $list, 2 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) ),
-	'tab-days-2'
-);
-$tabs->addTab(
-	getFutureDate( 3 ).getCount( $list, 3 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) ),
-	'tab-days-3'
-);
-$tabs->addTab(
-	getFutureDate( 4 ).getCount( $list, 4 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) ),
-	'tab-days-4'
-);
-$tabs->addTab(
-	getFutureDate( 5 ).getCount( $list, 5 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) ),
-	'tab-days-5'
-);
-#$tabs->addTab(
-#	getFutureDate( 6 ).getCount( $list, 6 ),
-#	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) ),
-#	'tab-days-6'
-#);
-$tabs->addTab(
-	'Zukunft'.getCount( $list, 6 ),
-	UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) ),
-	'tab-days-7'
-);
-$script		= $tabs->buildScript( '#tabs-missions', array( 'disabled' => $disabled ) );
-$tabs		= $tabs->buildTabs( 'tabs-missions' );
-$folders	= '<div style="font-size: 0.85em">'.$tabs.'</div><script>'.$script.'</script>';
- */
 
 $buttonAdd	= UI_HTML_Elements::LinkButton( './work/mission/add', $w->buttonAdd, 'button add' );
 	
-$panelList	= '
-'.$folders.'
-'.$buttonAdd;
-
-
 $panelPort	= '
 	<fieldset>
 		<legend>Daten-Port</legend>
@@ -224,8 +176,11 @@ $(document).ready(function(){
 	'.$panelFilter.'
 	'.$panelPort.'
 </div>
-<div class="column-left-80" id="mission-folders">
-	'.$panelList.'
+<div class="column-left-80">
+	<div id="mission-folders">
+		'.$panelList.'
+	</div>
+	'.$buttonAdd.'
 </div>
 <div class="column-clear"></div>';
 
