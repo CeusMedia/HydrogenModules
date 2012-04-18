@@ -22,6 +22,7 @@
 DROP TABLE IF EXISTS `<%prefix%>missions`;
 CREATE TABLE IF NOT EXISTS `<%prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
   `day` varchar(10) COLLATE utf8_unicode_ci NOT NULL,

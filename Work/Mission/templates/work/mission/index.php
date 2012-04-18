@@ -26,20 +26,22 @@ $disabled	= array();
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){
 	$link		= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, $mission->content );
-	$diff		= strtotime( $mission->day ) - $today;
-	$days		= $diff / ( 24 * 60 * 60);
+	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60);
 	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
+	$type		= $words['types'][$mission->type];
 	$priority	= $words['priorities'][$mission->priority];
 	$class		= 'row-priority priority-'.$mission->priority;
 	$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit, 'tiny' );
 	$buttonRemove	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/'.urlencode( '-3' ), $iconRemove, 'tiny' );
-	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny' );
-	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '+1' ), $iconRight, 'tiny' );
+	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '-1' ), $iconLeft, 'tiny' );
+	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '+1' ), $iconRight, 'tiny' );
 	
 	if( !$daysBound )
 		$buttonLeft	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
+
 	$daysOverdue	= '';
+	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
 	if( $days < 0 ){
 		$daysOverdue	= UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
 	}

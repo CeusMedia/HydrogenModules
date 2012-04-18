@@ -18,7 +18,8 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	
 		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
 		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'work.mission.js' );
+#		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'work.mission.js' );		//  is called by CMF 0.5
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'timepicker.js' );		//  @todo exclude to own module etc.
 	}
 	
 	public function add(){
