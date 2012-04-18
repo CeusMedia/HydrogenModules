@@ -11,16 +11,24 @@
  */
 class Model_Mission extends CMF_Hydrogen_Model{
 
+	const TYPE_TASK		= 0;
+	const TYPE_EVENT	= 1;
+	
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "missions";
 
 	/**	@var	$name		string		List of columns within table */
 	protected $columns		= array(
 		'missionId',
+		'type',
 		'priority',
 		'status',
-		'day',
+		'dayStart',
+		'dayEnd',
+		'timeStart',
+		'timeEnd',
 		'content',
+		'location',
 		'reference',
 		'createdAt',
 		'modifiedAt',
@@ -31,9 +39,11 @@ class Model_Mission extends CMF_Hydrogen_Model{
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
 	protected $indices		= array(
+		'type',
 		'priority',
 		'status',
-		'day',
+		'dayStart',
+		'dayEnd',
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
