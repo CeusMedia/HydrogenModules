@@ -39,6 +39,23 @@ for( $i=0; $i<=3; $i++){
 	$inputStatus[$i]	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 }
 
+if( $filterPriorities === NULL )
+	$filterPriorities	= array( 0, 1, 2, 3, 4, 5 );
+
+for( $i=0; $i<=5; $i++){
+	$attributes	= array(
+		'type'		=> 'checkbox',
+		'name'		=> 'priorities[]',
+		'value'		=> $i,
+		'id'		=> 'filter_priority_'.$i,
+		'class'		=> 'filter-priority',
+		'checked'	=> in_array( $i, $filterPriorities ) ? 'checked' : NULL,
+	);
+	if( !( count( $filterPriorities ) == 1 && $filterPriorities[0] == $i ) )
+		$attributes['onchange']	= 'this.form.submit();';
+	$inputPriority[$i]	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+}
+
 //  --  FILTER  --  //
 $optOrder	= array( '' => '' ) + $words['filter-orders'];
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $session->get( 'filter_mission_order' ) );
@@ -80,6 +97,47 @@ $panelFilter	= '
 						<label for="filter_type_1">
 							'.$inputType[1].'
 							&nbsp;Termine
+						</label>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<b><label>Prioritäten</label></b><br/>
+				<ul style="margin: 0px; padding: 0px; list-style: none">
+					<li>
+						<label for="filter_priority_0">
+							'.$inputPriority[0].'
+							&nbsp;'.$words['priorities'][0].'
+						</label>
+					</li>
+					<li>
+						<label for="filter_priority_1">
+							'.$inputPriority[1].'
+							&nbsp;'.$words['priorities'][1].'
+						</label>
+					</li>
+					<li>
+						<label for="filter_priority_2">
+							'.$inputPriority[2].'
+							&nbsp;'.$words['priorities'][2].'
+						</label>
+					</li>
+					<li>
+						<label for="filter_priority_3">
+							'.$inputPriority[3].'
+							&nbsp;'.$words['priorities'][3].'
+						</label>
+					</li>
+					<li>
+						<label for="filter_priority_4">
+							'.$inputPriority[4].'
+							&nbsp;'.$words['priorities'][4].'
+						</label>
+					</li>
+					<li>
+						<label for="filter_priority_5">
+							'.$inputPriority[5].'
+							&nbsp;'.$words['priorities'][5].'
 						</label>
 					</li>
 				</ul>
