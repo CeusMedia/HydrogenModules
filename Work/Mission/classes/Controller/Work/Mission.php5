@@ -200,6 +200,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $request->has( 'reset' ) ){
 			$session->remove( 'filter_mission_query' );
 			$session->remove( 'filter_mission_types' );
+			$session->remove( 'filter_mission_priorities' );
 			$session->remove( 'filter_mission_states' );
 			$session->remove( 'filter_mission_order' );
 			$session->remove( 'filter_mission_direction' );
@@ -209,6 +210,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$session->set( 'filter_mission_query', $request->get( 'query' ) );
 			if( $request->has( 'types' ) )
 				$session->set( 'filter_mission_types', $request->get( 'types' ) );
+			if( $request->has( 'priorities' ) )
+				$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
 			if( $request->has( 'states' ) )
 				$session->set( 'filter_mission_states', $request->get( 'states' ) );
 			if( $request->has( 'order' ) )
@@ -233,10 +236,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$query		= $session->get( 'filter_mission_query' );
 		$types		= $session->get( 'filter_mission_types' );
+		$priorities	= $session->get( 'filter_mission_priorities' );
 		$states		= $session->get( 'filter_mission_states' );
 		$direction	= $session->get( 'filter_mission_direction' );
 		$order		= $session->get( 'filter_mission_order' );
 
+		print_m( $session->getAll() );
+		
 		$direction	= $direction ? $direction : 'ASC';
 		$order		= $order ? array( $order => $direction ) : array();
 		$order['content']	= 'ASC';
@@ -244,6 +250,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
+		if( is_array( $priorities ) && count( $priorities ) )
+			$conditions['priority']	= $priorities;
 		if( !( is_array( $states ) && count( $states ) ) )
 			$states	= array( 0, 1, 2, 3 );
 		$conditions['status']	= $states;
@@ -254,6 +262,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$missions	= $this->model->getAll( $conditions, $order );
 		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
+		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
 		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
 		$this->addData( 'filterDirection', $direction );
