@@ -8,10 +8,17 @@
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
 class View_Auth extends CMF_Hydrogen_View {
+
+	public function confirm(){}
+
 	public function login() {}
 
 	public function loginInside(){
 		return $this->loadContentFile( 'html/auth.login.inside.html' );
 	}
+
+	public function password(){}
+
+	public function register(){}
 }
 ?>
