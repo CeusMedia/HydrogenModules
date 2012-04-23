@@ -11,10 +11,14 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
-		parent::__construct( $env );
-		$this->model	= new Model_Mission( $env );
-		$this->logic	= new Logic_Mission( $env );
+	protected $userMap	= array();
+	
+	protected function onInit(){
+		$this->model	= new Model_Mission( $this->env );
+		$this->logic	= new Logic_Mission( $this->env );
+		$model			= new Model_User( $this->env );
+		foreach( $model->getAll() as $user )
+			$this->userMap[$user->userId]	= $user;
 	}
 
 	public function add(){
@@ -34,6 +38,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
+					'creatorId'		=> (int) $session->get( 'userId' ),
+					'workerId'		=> (int) $request->get( 'workerId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'status'		=> $status,
@@ -59,6 +65,28 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $mission['status'] === NULL )
 			$mission['status']	= 0;
 		$this->addData( 'mission', (object) $mission );
+		$this->addData( 'users', $this->userMap );
+	}
+
+	public function changeDay( $missionId ){
+		$date		= trim( $this->env->getRequest()->get( 'date' ) );
+		$mission	= $this->model->get( $missionId );
+		if( preg_match( "/^[+-][0-9]+$/", $date ) ){
+			$day	= 24 * 60 * 60;
+			$sign	= substr( $date, 0, 1 );
+			$number	= substr( $date, 1 );
+			$date	= strtotime( $mission->dayStart );
+			$diff	= $sign == '+' ? $number * $day : -$number * $day;
+			$date	= date( 'Y-m-d', strtotime( $mission->dayStart ) + $diff );
+		}
+		$data		= array( 'dayStart' => $date );
+		if( $mission->dayEnd ){
+			if( !isset( $diff ) )
+				$diff	= strtotime( $date ) - strtotime( $mission->dayStart );
+			$data['dayEnd']	= date( 'Y-m-d', strtotime( $mission->dayEnd ) + $diff );
+		}
+		$this->model->edit( $missionId, $data );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function edit( $missionId ){
@@ -79,6 +107,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
+					'workerId'		=> (int) $request->get( 'workerId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'content'		=> $content,
@@ -98,12 +127,22 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 		$mission	= $this->model->get( $missionId );
 		$this->addData( 'mission', $mission );
+		$this->addData( 'users', $this->userMap );
 	}
 
 	public function export( $format = NULL ){
 		switch( $format ){
 			case 'ical':
-				$missions	= $this->model->getAll( array( 'status' => array( 0, 1, 2, 3 ) ), array( 'dayStart' => 'ASC' ) );
+				$userId	= $this->env->getSession()->get( 'userId' );
+				if( !$userId ){
+					$auth	= new BasicAuthentication( $this->env, 'Export' );
+					$userId	= $auth->authenticate();
+				}
+				$conditions	= array();
+				$conditions['status']	= array( 0, 1, 2, 3 );
+				$conditions['workerId']	= $userId;
+				
+				$missions	= $this->model->getAll( $conditions, array( 'dayStart' => 'ASC' ) );
 				$root		= new XML_DOM_Node( 'event');
 				$calendar	= new XML_DOM_Node( 'VCALENDAR' );
 				$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
@@ -166,32 +205,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
 				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
 		}
-		
-	}
-	public function import(){
-		$messenger		= $this->env->getMessenger();
-		$file	= $this->env->getRequest()->get( 'serial' );
-		if( $file['error'] != 0 ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
-			$messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
-		}
-		else{
-			$gz			= File_Reader::load( $file['tmp_name'] );
-			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
-			$missions	= @unserialize( $serial );
-			if( !$serial )
-				$messenger->noteError( 'Das Entpacken der Daten ist fehlgeschlagen.' );
-			else if( !$missions )
-				$messenger->noteError( 'Keine Daten enthalten.' );
-			else{
-				$model	= new Model_Mission( $this->env );
-				$model->truncate();
-				foreach( $missions as $mission )
-					$model->add( (array) $mission );
-				$messenger->noteSuccess( 'Die Daten wurden importiert.' );
-			}
-		}
-		$this->restart( NULL, TRUE );
 	}
 	
 	public function filter(){
@@ -222,6 +235,32 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( '', TRUE );
 	}
 
+	public function import(){
+		$messenger		= $this->env->getMessenger();
+		$file	= $this->env->getRequest()->get( 'serial' );
+		if( $file['error'] != 0 ){
+			$handler	= new Net_HTTP_UploadErrorHandler();
+			$messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
+		}
+		else{
+			$gz			= File_Reader::load( $file['tmp_name'] );
+			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
+			$missions	= @unserialize( $serial );
+			if( !$serial )
+				$messenger->noteError( 'Das Entpacken der Daten ist fehlgeschlagen.' );
+			else if( !$missions )
+				$messenger->noteError( 'Keine Daten enthalten.' );
+			else{
+				$model	= new Model_Mission( $this->env );
+				$model->truncate();
+				foreach( $missions as $mission )
+					$model->add( (array) $mission );
+				$messenger->noteSuccess( 'Die Daten wurden importiert.' );
+			}
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	/**
 	 *	Default action on this controller.
 	 *	@access		public
@@ -241,12 +280,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$direction	= $session->get( 'filter_mission_direction' );
 		$order		= $session->get( 'filter_mission_order' );
 
-		print_m( $session->getAll() );
-		
 		$direction	= $direction ? $direction : 'ASC';
 		$order		= $order ? array( $order => $direction ) : array();
 		$order['content']	= 'ASC';
-		
+
 		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
@@ -255,10 +292,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( !( is_array( $states ) && count( $states ) ) )
 			$states	= array( 0, 1, 2, 3 );
 		$conditions['status']	= $states;
-		
+
 		if( strlen( $query ) )
 			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
-		
+
 		$missions	= $this->model->getAll( $conditions, $order );
 		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
@@ -266,27 +303,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
 		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
 		$this->addData( 'filterDirection', $direction );
-	}
-
-	public function changeDay( $missionId ){
-		$date		= trim( $this->env->getRequest()->get( 'date' ) );
-		$mission	= $this->model->get( $missionId );
-		if( preg_match( "/^[+-][0-9]+$/", $date ) ){
-			$day	= 24 * 60 * 60;
-			$sign	= substr( $date, 0, 1 );
-			$number	= substr( $date, 1 );
-			$date	= strtotime( $mission->dayStart );
-			$diff	= $sign == '+' ? $number * $day : -$number * $day;
-			$date	= date( 'Y-m-d', strtotime( $mission->dayStart ) + $diff );
-		}
-		$data		= array( 'dayStart' => $date );
-		if( $mission->dayEnd ){
-			if( !isset( $diff ) )
-				$diff	= strtotime( $date ) - strtotime( $mission->dayStart );
-			$data['dayEnd']	= date( 'Y-m-d', strtotime( $mission->dayEnd ) + $diff );
-		}
-		$this->model->edit( $missionId, $data );
-		$this->restart( NULL, TRUE );
+		$this->addData( 'users', $this->userMap );
 	}
 	
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){

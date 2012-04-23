@@ -17,23 +17,33 @@
 		<style load="auto">site.mission.css</style>
 		<script load="auto">work.mission.js</script>
 	</files>
+	<relations>
+		<needs type="module">Users</needs>
+	</relations>
 	<link xml:lang="de" access="inside" path="work/mission">Aufgaben</link>
 	<link xml:lang="en" access="inside" path="work/mission">Missions</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%prefix%>missions`;
 CREATE TABLE IF NOT EXISTS `<%prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(10) unsigned NOT NULL,
+  `workerId` int(10) unsigned NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `day` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `dayStart` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `dayEnd` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `timeStart` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `timeEnd` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `content` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`missionId`),
-  KEY `daysLeft` (`day`),
-  KEY `priority` (`priority`)
+  KEY `priority` (`priority`),
+  KEY `type` (`type`),
+  KEY `creatorId` (`creatorId`,`workerId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
