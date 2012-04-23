@@ -20,6 +20,8 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	/**	@var	$name		string		List of columns within table */
 	protected $columns		= array(
 		'missionId',
+		'ownerId',
+		'workerId',
 		'type',
 		'priority',
 		'status',

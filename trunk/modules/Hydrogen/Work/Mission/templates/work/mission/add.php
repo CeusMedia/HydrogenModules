@@ -6,14 +6,23 @@ $optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
 $optPriority	= UI_HTML_Elements::Options( $words['priorities'], $mission->priority );
 $optStatus		= UI_HTML_Elements::Options( $words['states'], $mission->status );
 
+$optWorker	= array();
+foreach( $users as $user )
+	$optWorker[$user->userId]	= $user->username;
+$optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
+
 $panelAdd	= '
 <form action="./work/mission/add" method="post">
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
 		<ul class="input">
-			<li>
+			<li class="column-left-80">
 				<label for="input_content">'.$w->labelContent.'</label><br/>
 				<input type="text" name="content" id="input_content" class="max" value="'.$mission->content.'"/>
+			</li>
+			<li class="column-left-20">
+				<label for="input_content">'.$w->labelWorker.'</label><br/>
+				<select name="workerId" id="input_workerId" class="max">'.$optWorker.'</select>
 			</li>
 			<li>
 				<div class="column-left-20">
