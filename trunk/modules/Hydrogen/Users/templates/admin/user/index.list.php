@@ -64,7 +64,6 @@ if( count( $users ) )
 else
 	$rows	= '<tr><td colspan="5"><em>Nichts gefunden.</em></td></tr>';
 
-
 return '
 <fieldset>
 	<legend class="users">'.$words['indexList']['legend'].' <small>('.$total.'/'.$all.')</small></legend>
@@ -85,5 +84,6 @@ return '
 		'.UI_HTML_Elements::LinkButton( './admin/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
 	</div>
 </fieldset>
-';
+';		die( "1" );
+
 ?>
