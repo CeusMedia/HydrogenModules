@@ -19,7 +19,8 @@
 		<needs type="module">Users</needs>
 	</relations>
 	<config type="string" name="acl">CMF_Hydrogen_Environment_Resource_Acl_Database</config>
-	<link>admin/role</link>
+	<link xml:lang="de" access="inside" path="admin/role">Rollen</link>
+	<link xml:lang="en" access="inside" path="admin/role">Roles</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (

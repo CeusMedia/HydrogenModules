@@ -1,4 +1,5 @@
 <?php
+
 $filter	= $this->loadTemplateFile( 'admin/user/index.filter.php' );
 $list	= $this->loadTemplateFile( 'admin/user/index.list.php' );
 
