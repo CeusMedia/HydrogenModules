@@ -43,15 +43,12 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		print_m( $config->getAll() );
-		die;
-		
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $input['username'] ) )
 				$messenger->noteError( $words->msgNoUsername );
 			if( empty( $input['password'] ) )
 				$messenger->noteError( $words->msgNoPassword );
-			if( empty( $input['email'] ) )
+			if( $config->get( 'module.users.email.mandatory') && empty( $input['email'] ) )
 				$messenger->noteError( $words->msgNoEmail );
 			if( !$messenger->gotError() ){
 				$userId		= $modelUser->add( array(
@@ -64,7 +61,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 					'surname'	=> $input['surname'],
 					'createdAt'	=> time(),
 				) );
-				$messenger->noteSuccess( $words->msgSuccess );
+				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( './admin/user' );
 			}
 		}
@@ -89,6 +86,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function edit( $userId ) {
+		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= $this->getWords( 'edit' );
@@ -101,10 +99,10 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 				$messenger->noteError( $words->msgNoUsername );
 			if( empty( $input['password'] ) )
 				$messenger->noteError( $words->msgNoPassword );
-			if( empty( $input['email'] ) )
+			if( $config->get( 'module.users.email.mandatory') && empty( $input['email'] ) )
 				$messenger->noteError( $words->msgNoEmail );
 			if( !$messenger->gotError() ){
-				$userId		= $modelUser->add( array(
+				$userId		= $modelUser->edit( $userId, array(
 					'roleId'		=> $input['roleId'],
 					'status'		=> $input['status'],
 					'username'		=> $input['username'],
@@ -114,7 +112,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 					'surname'		=> $input['surname'],
 					'modifiedAt'	=> time(),
 				) );
-				$messenger->noteSuccess( $words->msgSuccess );
+				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			}
 			
 			$user		= $modelUser->get( $userId );
@@ -211,6 +209,20 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
 		$this->handleErrorCode( $code, $user->username );
 		$this->restart( './user/edit/'.(int) $userId );
+	}
+
+	public function remove( $userId ){
+		$messenger	= $this->env->getMessenger();
+		$words		= $this->getWords( 'remove' );
+		$model		= new Model_User( $this->env );
+		$user		= $model->get( $userId );
+		if( !$user ){
+			$messenger->noteError( $words->msgInvalidUserId );
+			$this->restart( NULL, TRUE );
+		}
+		$model->remove( $userId );
+		$messenger->noteError( $words->msgSuccess, $user->username );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>

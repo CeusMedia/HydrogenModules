@@ -139,7 +139,7 @@ return '
 				'.UI_HTML_Elements::Button( 'saveUser', $words['edit']['buttonSave'], 'button save' ).'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				'.UI_HTML_Elements::LinkButton(
-					'./admin/user/remove',
+					'./admin/user/remove/'.$userId,
 					$words['edit']['buttonRemove'],
 					'button remove',
 					$words['edit']['buttonRemoveConfirm']
