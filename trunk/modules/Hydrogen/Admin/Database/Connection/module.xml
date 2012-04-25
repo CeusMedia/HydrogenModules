@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Database: Connection</title>
+	<description><![CDATA[]]></description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Admin/Database/Connection.php5</class>
+		<class>View/Admin/Database/Connection.php5</class>
+		<template>admin/database/connection/index.php</template>
+		<locale>de/admin/database/connection.ini</locale>
+		<style load="auto">module.admin.database.connection.css</style>
+	</files>
+	<link xml:lang="de" access="inside" path="admin/database/connection">Datenbank-Verbindung</link>
+</module>

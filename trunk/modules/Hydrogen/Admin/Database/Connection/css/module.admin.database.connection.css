@@ -1,0 +1,42 @@
+body.site-admin-database-connection-index {
+	}
+
+body.site-admin-database-connection-index .database-status-1,
+body.site-admin-database-connection-index .database-status-0 {
+	background-repeat: no-repeat;
+	padding: 2px 6px 2px 26px;
+	background-position: 4px 2px;
+	}
+body.site-admin-database-connection-index .database-status-1 {
+	background-image: url(http://localhost/lib/cmIcons/famfamfam/silk/tick.png);
+	background-color: #DFFFDF;
+	border: 1px solid #9FDF9F;
+	}
+body.site-admin-database-connection-index .database-status-0 {
+	background-image: url(http://localhost/lib/cmIcons/famfamfam/silk/error.png);
+	background-color: #FFDFDF;
+	border: 1px solid #DF9F9F;
+	}
+
+	
+button.connect span {
+	display: block;
+	min-height: 16px;
+	background-repeat: no-repeat;
+	background-position: -1px 0px;
+	padding-left: 20px;
+	padding-right: 4px;
+	outline: none;
+	}
+button.connect span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/disconnect.png);
+	}
+
+legend.database {
+	background-repeat: no-repeat;
+	background-position: 7px 7px;
+	padding-left: 28px;
+	}
+legend.database {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/database.png);
+	}
