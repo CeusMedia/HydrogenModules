@@ -35,15 +35,15 @@
 		<needs type="module">Roles</needs>
 		<needs type="module">Users</needs>
 	</relations>
-	<link xml:lang="de" access="outside" path="auth/login">Login</link>
-	<link xml:lang="de" access="outside" path="auth/register">Registrieren</link>
-	<link xml:lang="de" access="outside" path="auth/confirm">Konto bestätigen</link>
-	<link xml:lang="de" access="outside" path="auth/password">Passwort</link>
-	<link xml:lang="de" access="inside" path="auth/logout" rank="99">Logout</link>
-	<link xml:lang="en" access="outside" path="auth/login">Login</link>
-	<link xml:lang="en" access="outside" path="auth/register">Rgister Account</link>
-	<link xml:lang="en" access="outside" path="auth/confirm">Confirm Account</link>
-	<link xml:lang="en" access="outside" path="auth/password">Password</link>
-	<link xml:lang="en" access="inside" path="auth/logout" rank="99">Logout</link>
+	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
+	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>
+	<link xml:lang="de" rank="12" access="outside" path="auth/register">Registrieren</link>
+	<link xml:lang="de" rank="13" access="outside" path="auth/confirm">Konto bestätigen</link>
+	<link xml:lang="de" rank="99" access="inside" path="auth/logout">Logout</link>
+	<link xml:lang="en" rank="10" access="outside" path="auth/login">Login</link>
+	<link xml:lang="en" rank="11" access="outside" path="auth/password">Password</link>
+	<link xml:lang="en" rank="12" access="outside" path="auth/register">Rgister Account</link>
+	<link xml:lang="en" rank="13" access="outside" path="auth/confirm">Confirm Account</link>
+	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
 </module>
 

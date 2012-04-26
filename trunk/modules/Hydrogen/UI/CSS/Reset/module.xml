@@ -5,7 +5,7 @@
 	<category>User Interace</category>
 	<version>0.1</version>
 	<files>
-		<style source="primer" load="auto" top="yes">reset.css</style>
 		<style source="primer" load="auto" top="yes">typography.css</style>
+		<style source="primer" load="auto" top="yes">reset.css</style>
 	</files>
 </module>
