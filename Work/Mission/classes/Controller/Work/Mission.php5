@@ -218,20 +218,20 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->remove( 'filter_mission_order' );
 			$session->remove( 'filter_mission_direction' );
 		}
-		else{
-			if( $request->has( 'query' ) )
-				$session->set( 'filter_mission_query', $request->get( 'query' ) );
-			if( $request->has( 'types' ) )
-				$session->set( 'filter_mission_types', $request->get( 'types' ) );
-			if( $request->has( 'priorities' ) )
-				$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
-			if( $request->has( 'states' ) )
-				$session->set( 'filter_mission_states', $request->get( 'states' ) );
-			if( $request->has( 'order' ) )
-				$session->set( 'filter_mission_order', $request->get( 'order' ) );
-			if( $request->has( 'direction' ) )
-				$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
-		}
+		if( $request->has( 'query' ) )
+			$session->set( 'filter_mission_query', $request->get( 'query' ) );
+		if( $request->has( 'type' ) )
+			$session->set( 'filter_mission_types', $request->get( 'types' ) );
+		if( $request->has( 'priority' ) )
+			$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
+		if( $request->has( 'status' ) )
+			$session->set( 'filter_mission_states', $request->get( 'states' ) );
+		if( $request->has( 'order' ) )
+			$session->set( 'filter_mission_order', $request->get( 'order' ) );
+		if( $request->has( 'direction' ) )
+			$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
+#			if( $request->has( 'direction' ) )
+#				$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
 		$this->restart( '', TRUE );
 	}
 
@@ -279,8 +279,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$states		= $session->get( 'filter_mission_states' );
 		$direction	= $session->get( 'filter_mission_direction' );
 		$order		= $session->get( 'filter_mission_order' );
-
+		if( !$order )
+			$this->restart( './work/mission/filter?order=priority' );
+		
 		$direction	= $direction ? $direction : 'ASC';
+		$session->set( 'filter_mission_direction', $direction );
 		$order		= $order ? array( $order => $direction ) : array();
 		$order['content']	= 'ASC';
 

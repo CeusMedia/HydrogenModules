@@ -173,10 +173,10 @@ $(document).ready(function(){
 	});
 });
 </script>
-<h2>'.$w->heading.'</h2>
+<h2><!--'.$w->heading.'--></h2>
 <div class="column-left-20">
 	'.$panelFilter.'
-	'.$panelPort.'
+<!--	'.$panelPort.'-->
 </div>
 <div class="column-left-80">
 	<div id="mission-folders">

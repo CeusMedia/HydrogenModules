@@ -2,73 +2,144 @@
 
 $w	= (object) $words['index'];
 
+//  --  FILTER: TYPES  --  //
 if( $filterTypes === NULL )
 	$filterTypes	= array(
 		Model_Mission::TYPE_TASK,
 		Model_Mission::TYPE_EVENT,
 	);
 
+$enabledTypes	= count( $filterTypes ) != 2;
+$attributes		= array(
+	'type'				=> 'checkbox',
+	'name'				=> 'type',
+	'id'				=> 'switch_type',
+	'class'				=> 'optional-trigger',
+	'onchange'			=> 'showOptionals(this);',
+	'data-animation'	=> 'slide',
+	'data-speed-show'	=> 500,
+	'data-speed-hide'	=> 300,
+	'checked'			=> $enabledTypes ? 'checked' : NULL,
+);
+$inputSwitchType	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+
+$list	= array();
 for( $i=0; $i<2; $i++){
+	$id		= 'filter_type_'.$i;
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'types[]',
 		'value'		=> $i,
-		'id'		=> 'filter_type_'.$i,
+		'id'		=> $id,
 		'class'		=> 'filter-type',
 		'checked'	=> in_array( $i, $filterTypes ) ? 'checked' : NULL,
 	);
 	if( !( count( $filterTypes ) == 1 && $filterTypes[0] == $i ) )
 		$attributes['onchange']	= 'this.form.submit();';
-	$inputType[$i]	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$label	= $words['types'][$i];
+	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label );
 }
+$attributes	= array(
+	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledTypes ? 'block' : 'none' ),
+	'class'		=> 'optional type type-true'
+);
+$optListTypes	= UI_HTML_Tag::create( 'ul', join( $list ), $attributes );
 
-if( $filterStates === NULL )
-	$filterStates	= array( 0, 1, 2, 3 );
 
-for( $i=0; $i<=3; $i++){
-	$attributes	= array(
-		'type'		=> 'checkbox',
-		'name'		=> 'states[]',
-		'value'		=> $i,
-		'id'		=> 'filter_status_'.$i,
-		'class'		=> 'filter-status',
-		'checked'	=> in_array( $i, $filterStates ) ? 'checked' : NULL,
-	);
-	if( !( count( $filterStates ) == 1 && $filterStates[0] == $i ) )
-		$attributes['onchange']	= 'this.form.submit();';
-	$inputStatus[$i]	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-}
-
+//  --  FILTER: PRIORITIES  --  //
 if( $filterPriorities === NULL )
 	$filterPriorities	= array( 0, 1, 2, 3, 4, 5 );
 
-for( $i=0; $i<=5; $i++){
+$enabledPriorities	= count( $filterPriorities ) != 6;
+$attributes			= array(
+	'type'				=> 'checkbox',
+	'name'				=> 'priority',
+	'id'				=> 'switch_priority',
+	'class'				=> 'optional-trigger',
+	'onchange'			=> 'showOptionals(this);',
+	'data-animation'	=> 'slide',
+	'data-speed-show'	=> 500,
+	'data-speed-hide'	=> 300,
+	'checked'			=> $enabledPriorities ? 'checked' : NULL,
+);
+$inputSwitchPriority	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+
+$list	= array();
+for( $i=0; $i<6; $i++){
+	$id		= 'filter_priority_'.$i;
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'priorities[]',
 		'value'		=> $i,
-		'id'		=> 'filter_priority_'.$i,
+		'id'		=> $id,
 		'class'		=> 'filter-priority',
 		'checked'	=> in_array( $i, $filterPriorities ) ? 'checked' : NULL,
 	);
 	if( !( count( $filterPriorities ) == 1 && $filterPriorities[0] == $i ) )
 		$attributes['onchange']	= 'this.form.submit();';
-	$inputPriority[$i]	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$label	= $words['priorities'][$i];
+	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label );
 }
+$attributes	= array(
+	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledPriorities ? 'block' : 'none' ),
+	'class'		=> 'optional priority priority-true'
+);
+$optListPriorities	= UI_HTML_Tag::create( 'ul', join( $list ), $attributes );
 
-//  --  FILTER  --  //
-$optOrder	= array( '' => '' ) + $words['filter-orders'];
+
+//  --  FILTER: STATES  --  //
+if( $filterStates === NULL )
+	$filterStates	= array( 0, 1, 2, 3 );
+
+$enabledStates	= count( $filterStates ) != 4;
+$attributes		= array(
+	'type'				=> 'checkbox',
+	'name'				=> 'status',
+	'id'				=> 'switch_status',
+	'class'				=> 'optional-trigger',
+	'onchange'			=> 'showOptionals(this);',
+	'data-animation'	=> 'slide',
+	'data-speed-show'	=> 500,
+	'data-speed-hide'	=> 300,
+	'checked'			=> $enabledStates ? 'checked' : NULL,
+);
+$inputSwitchStatus	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+
+$list	= array();
+for( $i=0; $i<4; $i++){
+	$id		= 'filter_status_'.$i;
+	$attributes	= array(
+		'type'		=> 'checkbox',
+		'name'		=> 'states[]',
+		'value'		=> $i,
+		'id'		=> $id,
+		'class'		=> 'filter-status',
+		'checked'	=> in_array( $i, $filterStates ) ? 'checked' : NULL,
+	);
+	if( !( count( $filterStates ) == 1 && $filterStates[0] == $i ) )
+		$attributes['onchange']	= 'this.form.submit();';
+	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$label	= $words['states'][$i];
+	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label );
+}
+$attributes	= array(
+	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledStates ? 'block' : 'none' ),
+	'class'		=> 'optional status status-true'
+);
+$optListStates	= UI_HTML_Tag::create( 'ul', join( $list ), $attributes );
+
+
+//  --  FILTER: ORDER & DIRECTION  --  //
+$optOrder	= $words['filter-orders'];
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $session->get( 'filter_mission_order' ) );
-
-$optDirection	= array( '' => '' ) + $words['filter-directions'];
-$optDirection	= UI_HTML_Elements::Options( $optDirection, $session->get( 'filter_mission_direction' ) );
 
 $iconUp		= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
 $iconDown	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
-$iconRight	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
-$iconLeft	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
-$iconEdit	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
-$iconRemove	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
 
 $disabled	= $session->get( 'filter_mission_direction' ) == 'ASC';
 $buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny', NULL, $disabled );
@@ -76,100 +147,42 @@ $buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DE
 
 
 $panelFilter	= '
-<form action="./work/mission/filter" method="post">
+<script>
+$(document).ready(function(){
+	FormMissionFilter.__init();
+});
+</script>
+<form id="form_mission_filter" action="./work/mission/filter?reset" method="post">
 	<fieldset>
 		<legend>Filter</legend>
 		<ul class="input">
 			<li>
-				<label for="filter_query"><strike>'.$w->labelQuery.'</strike></label><br/>
+				<label for="filter_query">'.$w->labelQuery.'</label><br/>
+				<div style="position: relative; display: none;" id="reset-button-container">
+					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 2px; top: 9px; cursor: pointer"/>
+				</div>
 				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="max"/>
 			</li>
 			<li>
-				<b><label>Missionstypen</label></b><br/>
-				<ul style="margin: 0px; padding: 0px; list-style: none">
-					<li>
-						<label for="filter_type_0">
-							'.$inputType[0].'
-							&nbsp;Aufgaben
-						</label>
-					</li>
-					<li>
-						<label for="filter_type_1">
-							'.$inputType[1].'
-							&nbsp;Termine
-						</label>
-					</li>
-				</ul>
+				<label for="switch_type" style="font-weight: bold">
+					'.$inputSwitchType.'
+					<span>Missionstypen</span>
+				</label><br/>
+				'.$optListTypes.'
 			</li>
 			<li>
-				<b><label>Prioritäten</label></b><br/>
-				<ul style="margin: 0px; padding: 0px; list-style: none">
-					<li>
-						<label for="filter_priority_0">
-							'.$inputPriority[0].'
-							&nbsp;'.$words['priorities'][0].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_priority_1">
-							'.$inputPriority[1].'
-							&nbsp;'.$words['priorities'][1].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_priority_2">
-							'.$inputPriority[2].'
-							&nbsp;'.$words['priorities'][2].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_priority_3">
-							'.$inputPriority[3].'
-							&nbsp;'.$words['priorities'][3].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_priority_4">
-							'.$inputPriority[4].'
-							&nbsp;'.$words['priorities'][4].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_priority_5">
-							'.$inputPriority[5].'
-							&nbsp;'.$words['priorities'][5].'
-						</label>
-					</li>
-				</ul>
+				<label for="switch_priority" style="font-weight: bold">
+					'.$inputSwitchPriority.'
+					<span>Prioritäten</span>
+				</label><br/>
+				'.$optListPriorities.'
 			</li>
 			<li>
-				<b><label>Zustände</label></b><br/>
-				<ul style="margin: 0px; padding: 0px; list-style: none">
-					<li>
-						<label for="filter_status_0">
-							'.$inputStatus[0].'
-							&nbsp;'.$words['states'][0].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_status_1">
-							'.$inputStatus[1].'
-							&nbsp;'.$words['states'][1].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_status_2">
-							'.$inputStatus[2].'
-							&nbsp;'.$words['states'][2].'
-						</label>
-					</li>
-					<li>
-						<label for="filter_status_3">
-							'.$inputStatus[3].'
-							&nbsp;'.$words['states'][3].'
-						</label>
-					</li>
-				</ul>
+				<label for="switch_status" style="font-weight: bold">
+					'.$inputSwitchStatus.'
+					<span>Zustände</span>
+				</label><br/>
+				'.$optListStates.'
 			</li>
 			<li>
 				<label for="filter_order">'.$w->labelOrder.'</label><br/>

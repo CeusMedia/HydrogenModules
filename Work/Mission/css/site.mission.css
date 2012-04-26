@@ -14,8 +14,9 @@ tr.row-priority.priority-5 {
 	background-color: rgba(0,255,0,0.20);
 	}
 
-#mission-folders {
+#mission-folders1 {
 	border: 1px solid #BFBFBF;
+	overflow: hidden;
 	}
 #mission-folders .panelHead {
 	font-weight: normal;
@@ -27,6 +28,21 @@ tr.row-priority.priority-5 {
 	padding: 3px 6px;
 	}
 
+#mission-folders .panel {
+	border: 0px solid #BFBFBF;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	overflow: hidden;
+	margin-bottom: 1em;
+	}
+
+#mission-folders .panel .panelHead {
+	border-radius: 5px;
+	overflow: hidden;
+	}
+	
+	
 #mission-folders div.mission-number {
 	float: right;
 	display: block;
