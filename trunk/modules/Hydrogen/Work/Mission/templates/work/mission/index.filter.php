@@ -145,6 +145,10 @@ $disabled	= $session->get( 'filter_mission_direction' ) == 'ASC';
 $buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny', NULL, $disabled );
 $buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', $iconDown, 'tiny', NULL, !$disabled );
 
+$wordsAccess	= array( 'owner' => 'meine', 'worker' => 'mir zugewiesen' );
+
+$optAccess	= UI_HTML_Elements::Options( $wordsAccess, $session->get( 'filter_mission_access' ) );
+
 
 $panelFilter	= '
 <script>
@@ -163,6 +167,10 @@ $(document).ready(function(){
 				</div>
 				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="max"/>
 			</li>
+<!--			<li>
+				<label for="filter_access">???</label><br/>
+				<select name="access" id="filter_access" class="max" onchange="this.form.submit();">'.$optAccess.'</select>
+			</li>-->
 			<li>
 				<label for="switch_type" style="font-weight: bold">
 					'.$inputSwitchType.'

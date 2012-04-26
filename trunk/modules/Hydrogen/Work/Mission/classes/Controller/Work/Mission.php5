@@ -38,8 +38,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
-					'creatorId'		=> (int) $session->get( 'userId' ),
-					'workerId'		=> (int) $request->get( 'workerId' ),
+					'ownerId'		=> (int) $session->get( 'userId' ),
+					'workerId'		=> (int) $session->get( 'userId' ),#$request->get( 'workerId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'status'		=> $status,
@@ -107,7 +107,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
-					'workerId'		=> (int) $request->get( 'workerId' ),
+#					'workerId'		=> (int) $request->get( 'workerId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'content'		=> $content,
@@ -211,6 +211,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
 		if( $request->has( 'reset' ) ){
+			$session->remove( 'filter_mission_access' );
 			$session->remove( 'filter_mission_query' );
 			$session->remove( 'filter_mission_types' );
 			$session->remove( 'filter_mission_priorities' );
@@ -218,6 +219,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->remove( 'filter_mission_order' );
 			$session->remove( 'filter_mission_direction' );
 		}
+		if( $request->has( 'access' ) )
+			$session->set( 'filter_mission_access', $request->get( 'access' ) );
 		if( $request->has( 'query' ) )
 			$session->set( 'filter_mission_query', $request->get( 'query' ) );
 		if( $request->has( 'type' ) )
@@ -273,6 +276,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= $this->getWords( 'index' );
 
+		$userId		= $session->get( 'userId' );
+		$access		= $session->get( 'filter_mission_access' );
 		$query		= $session->get( 'filter_mission_query' );
 		$types		= $session->get( 'filter_mission_types' );
 		$priorities	= $session->get( 'filter_mission_priorities' );
@@ -281,6 +286,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order		= $session->get( 'filter_mission_order' );
 		if( !$order )
 			$this->restart( './work/mission/filter?order=priority' );
+		if( !$access )
+			$this->restart( './work/mission/filter?access=worker' );
 		
 		$direction	= $direction ? $direction : 'ASC';
 		$session->set( 'filter_mission_direction', $direction );
@@ -288,6 +295,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order['content']	= 'ASC';
 
 		$conditions	= array();
+		if( $access == "owner" )
+			$conditions['ownerId']	= $userId;
+		else if( $access == "worker" )
+			$conditions['workerId']	= $userId;
+
+		
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
