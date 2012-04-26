@@ -16,14 +16,14 @@ $panelAdd	= '
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
 		<ul class="input">
-			<li class="column-left-80">
+			<li class="-column-left-80">
 				<label for="input_content">'.$w->labelContent.'</label><br/>
 				<input type="text" name="content" id="input_content" class="max" value="'.$mission->content.'"/>
 			</li>
-			<li class="column-left-20">
+<!--			<li class="column-left-20">
 				<label for="input_content">'.$w->labelWorker.'</label><br/>
 				<select name="workerId" id="input_workerId" class="max">'.$optWorker.'</select>
-			</li>
+			</li>-->
 			<li>
 				<div class="column-left-20">
 					<label for="input_type">'.$w->labelType.'</label><br/>
