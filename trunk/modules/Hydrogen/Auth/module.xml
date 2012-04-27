@@ -2,13 +2,11 @@
 <module>
 	<title>Authentication</title>
 	<description>Module for authentication against local database using the Users module.</description>
-	<version>0.1</version>
-	<requires>
-		<module>Users</module>
-		<module>Roles</module>
-	</requires>
+	<version>0.2</version>
 	<files>
 		<class>Controller/Auth.php5</class>
+		<class>Mail/Auth/Register.php5</class>
+<!--		<class>Mail/Auth/Password.php5</class>-->
 		<class>View/Auth.php5</class>
 		<template>auth/confirm.php</template>
 		<template>auth/login.php</template>
@@ -27,6 +25,8 @@
 		<locale>de/html/auth/register.top.html</locale>
 		<locale>de/html/auth/register.info.html</locale>
 		<locale>de/html/auth/register.bottom.html</locale>
+		<locale>de/mail/auth/register</locale>
+<!--		<locale>de/mail/auth/password</locale>-->
 		<locale>en/auth.ini</locale>
 		<locale>en/html/auth.login.info.html</locale>
 	</files>
@@ -34,6 +34,7 @@
 	<relations>
 		<needs type="module">Roles</needs>
 		<needs type="module">Users</needs>
+		<needs type="module">Mail</needs>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>

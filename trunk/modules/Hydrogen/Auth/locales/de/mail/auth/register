@@ -1,0 +1,7 @@
+Vielen Dank für ihre Registrierung.
+
+Bitte bestätigen sie ihr neues Konto mit dem Bestätigungs-Code: <%pak%>!
+
+Sie können auch einfach auf den folgenden Link klicken:
+<%config.app.base.url%>auth/confirm/?confirm_code=<%pak%>
+
