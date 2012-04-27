@@ -124,6 +124,12 @@ $panelPort	= '
 	</fieldset>
 ';
 
+$panelAdd	= '<fieldset>
+	<legend>Neuer Eintrag</legend>
+	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'neue Aufgabe', 'button add task-add' ).'
+	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'neuer Termin', 'button add event-add' ).'
+</fieldset>';
+
 $content	= '
 <style>
 
@@ -173,9 +179,9 @@ $(document).ready(function(){
 	});
 });
 </script>
-<h2><!--'.$w->heading.'--></h2>
 <div class="column-left-20">
 	'.$panelFilter.'
+	'.$panelAdd.'
 <!--	'.$panelPort.'-->
 </div>
 <div class="column-left-80">

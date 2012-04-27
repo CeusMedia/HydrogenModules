@@ -82,3 +82,16 @@ tr.row-priority.priority-5 {
 .ui-timepicker-div td { font-size: 90%; }
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
+button.event span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/date.png);
+	}
+button.event-add span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/date_add.png);
+	}
+button.task span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/script.png);
+	}
+button.task-add span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/script_add.png);
+	}
+	
