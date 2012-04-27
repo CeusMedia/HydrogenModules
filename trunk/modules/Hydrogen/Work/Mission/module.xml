@@ -20,8 +20,8 @@
 	<relations>
 		<needs type="module">Users</needs>
 	</relations>
-	<link xml:lang="de" access="inside" path="work/mission">Aufgaben</link>
-	<link xml:lang="en" access="inside" path="work/mission">Missions</link>
+	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>
+	<link xml:lang="en" access="acl" path="work/mission">Missions</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%prefix%>missions`;
 CREATE TABLE IF NOT EXISTS `<%prefix%>missions` (
