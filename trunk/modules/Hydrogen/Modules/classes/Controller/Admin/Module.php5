@@ -140,7 +140,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		foreach( $module->files->locales as $locale )
 			${$array}['locales/'.$locale]	= $config->get( 'path.locales' ).$locale;
 		foreach( $module->files->scripts as $script )
-			${$array}['js/'.$script]	= $config->get( 'path.javascripts' ).$script;
+			${$array}['js/'.$script]	= $config->get( 'path.scripts' ).$script;
 		foreach( $module->files->styles as $style )
 			${$array}['css/'.$style]	= $pathTheme.'css/'.$style;
 		$filesCopy['module.xml']	= 'config/modules/'.$moduleId.'.xml';
@@ -240,7 +240,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 			foreach( $module->files->locales as $locale )
 				$files[]	= $config->get( 'path.locales' ).$locale;
 			foreach( $module->files->scripts as $script )
-				$files[]	= $config->get( 'path.javascripts' ).$script;
+				$files[]	= $config->get( 'path.scripts' ).$script;
 			foreach( $module->files->styles as $style )
 				$files[]	= $pathTheme.'css/'.$style;
 
