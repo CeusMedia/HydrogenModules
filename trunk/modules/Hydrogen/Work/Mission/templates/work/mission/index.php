@@ -125,7 +125,7 @@ $panelPort	= '
 ';
 
 $panelAdd	= '<fieldset>
-	<legend>Neuer Eintrag</legend>
+	<legend class="icon add">Neuer Eintrag</legend>
 	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'neue Aufgabe', 'button add task-add' ).'
 	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'neuer Termin', 'button add event-add' ).'
 </fieldset>';
@@ -188,7 +188,7 @@ $(document).ready(function(){
 	<div id="mission-folders">
 		'.$panelList.'
 	</div>
-	'.$buttonAdd.'
+<!--	'.$buttonAdd.'-->
 </div>
 <div class="column-clear"></div>';
 
