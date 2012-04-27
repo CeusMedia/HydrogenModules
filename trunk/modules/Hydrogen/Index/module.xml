@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module>
+	<title>Index</title>
+	<description>Basic index page, ready for custom content and style.</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Index.php5</class>
+		<class>View/Index.php5</class>
+		<template>index/index.php</template>
+	</files>
+	<relations/>
+	<link xml:lang="de" access="public" path="index/index" link="" rank="0">Start</link>
+	<link xml:lang="en" access="public" path="index/index" link="" rank="0">Home</link>
+</module>
+
