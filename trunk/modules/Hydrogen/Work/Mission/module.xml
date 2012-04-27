@@ -23,8 +23,8 @@
 	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission">Missions</link>
 	<sql on="install" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>missions`;
-CREATE TABLE IF NOT EXISTS `<%prefix%>missions` (
+DROP TABLE IF EXISTS `<%?prefix%>missions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `creatorId` int(10) unsigned NOT NULL,
   `workerId` int(10) unsigned NOT NULL,
@@ -47,6 +47,6 @@ CREATE TABLE IF NOT EXISTS `<%prefix%>missions` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>missions`;
+DROP TABLE IF EXISTS `<%?prefix%>missions`;
 ]]></sql>
 <relations><needs type="module">UI_Indicator</needs></relations></module>

@@ -13,7 +13,7 @@
 		<template>admin/role/edit.php</template>
 		<template>admin/role/edit.rights.php</template>
 		<template>admin/role/index.php</template>
-		<style>site.role.css</style>
+		<style load="auto">site.role.css</style>
 	</files>
 	<relations>
 		<needs type="module">Users</needs>
