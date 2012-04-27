@@ -2,19 +2,23 @@
 class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function confirm(){
+		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= $this->getWords( 'confirm' );
 
 		if( $request->has( 'confirm_code' ) ){
-			$modelUser	= new Model_User( $this->env );
-			$users		= $modelUser->getAllByIndex( 'status', 0 );
+			$code			= $request->get( 'confirm_code' );
+			$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+
+			$modelUser		= new Model_User( $this->env );
+			$users			= $modelUser->getAllByIndex( 'status', 0 );
 			foreach( $users as $user ){
-				$pak	= md5( 'pak_'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
-				if( $request->get( 'confirm_code' ) == $pak ){
+				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
+				if( $code == $pak ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$messenger->noteSuccess( $words->msgSuccess );
-					$this->restart( './auth/login' );
+					$this->restart( './auth/login/'.$user->username );
 				}
 			}
 			$messenger->noteError( $words->msgInvalidCode );
@@ -54,7 +58,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		}
 		$this->addData( 'data', array( 'username' => $username ) );
 	}*/
-	public function login(){
+	public function login( $username = NULL ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
@@ -62,10 +66,10 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		
 		if( $session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'loginInside' );
-
-		$username	= $request->get( 'login_username' );
-		$password	= $request->get( 'login_password' );
+		
 		if( $request->has( 'doLogin' ) ) {
+			$username	= $request->get( 'login_username' );
+			$password	= $request->get( 'login_password' );
 			if( !trim( $username ) )
 				$messenger->noteError( $words->msgNoUsername );
 			if( !trim( $password ) )
@@ -150,6 +154,10 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function register(){
 		$config		= $this->env->getConfig();
+#		print_m( $config->getAll() );
+#		remark( CMC_VERSION );
+#		die;
+	
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
@@ -226,14 +234,15 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
 				);
-				print_m( $data );
-				die;
 				$userId		= $modelUser->add( $data );
 				$messenger->noteSuccess( $words->msgSuccess );
 				
 				if( !$status ){
-					$pak		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );						
-					$mail		= new Mail_Auth_Register( $this->env, array( 'pak' => $pak ) );
+					$pak		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
+					$data	= $input->getAll();
+					$data['pak']		= $pak;
+					$data['password']	= $password;
+					$mail		= new Mail_Auth_Register( $this->env, $data );
 					$mail->sendToAddress( $email );
 					$messenger->noteNotice( $words->msgNoticeConfirm );
 					$this->restart( './auth/confirm' );
@@ -243,7 +252,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		}
 		foreach( $input as $key => $value )
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
-		$this->addData( 'register', $data );
+		$this->addData( 'register', $input );
 	}
 }
 ?>

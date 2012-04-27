@@ -6,7 +6,7 @@ class Mail_Auth_Register extends Mail_Abstract{
 		$data['config']	= $this->env->getConfig()->getAll();
 
 		$subject		= $words['mails']['onRegister'];
-		$body			= $this->view->loadContentFile( 'mails/auth/register', $data );
+		$body			= $this->view->loadContentFile( 'mail/auth/register', $data );
 
 		$this->mail->setSubject( $subject );
 		$this->mail->addBody( new Net_Mail_Body( $body, Net_Mail_Body::TYPE_PLAIN ) );
