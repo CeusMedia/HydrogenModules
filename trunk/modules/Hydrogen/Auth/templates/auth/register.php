@@ -42,6 +42,7 @@ $panelUser	= '<fieldset>
 			<label for="input_surname" class="">'.$w->labelSurname.'</label><br/>
 			<input type="text" name="surname" id="input_surname" class="max" value="'.$request->get( 'surname' ).'"/>
 		</li>
+
 		<li class="column-clear column-left-20">
 			<label for="input_postcode" class="">'.$w->labelPostcode.'</label><br/>
 			<input type="text" name="postcode" id="input_postcode" class="max" value="'.$request->get( 'postcode' ).'"/>

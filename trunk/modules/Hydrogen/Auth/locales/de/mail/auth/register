@@ -1,7 +1,9 @@
-Vielen Dank für ihre Registrierung.
+Vielen Dank für ihre Registrierung!
 
-Bitte bestätigen sie ihr neues Konto mit dem Bestätigungs-Code: <%pak%>!
+Sie haben sich mit folgenden Zugangsdaten registriert:
+Benutzername: <%username%>
+Passwort: <%password%>
+E-Mail: <%?email%>
 
-Sie können auch einfach auf den folgenden Link klicken:
+Das Konto wird aktiviert, wenn Sie auf den folgenden Link klicken:
 <%config.app.base.url%>auth/confirm/?confirm_code=<%pak%>
-
