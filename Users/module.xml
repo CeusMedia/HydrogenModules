@@ -18,19 +18,24 @@
 	<relations>
 		<needs type="module">Roles</needs>
 	</relations>
+	<config type="integer" name="status.register">1</config>										; user status to be set on register, set to 1 for "auto active"
 	<config type="integer" name="name.length.min">3</config>										; lowest number of name characters
 	<config type="integer" name="name.length.max">17</config>										; highest number of name characters
-	<config type="string"  name="name.preg">/[a-z]/i</config>										; regular expression to match with username
+	<config type="string"  name="name.preg">/[a-z][a-z0-9_-]/i</config>								; regular expression to match with username
 	<config type="integer" name="password.length.min">3</config>									; lowest number of password characters
 	<config type="integer" name="password.strength.min">0</config>									; highest number of password characters
+	<config type="string" name="password.salt"></config>											; string to salt password with
 	<config type="boolean" name="email.mandatory">no</config>										; user needs a mail address on register and change
 	<config type="integer" name="status.register">1</config>										; user status to be set on register, set to 1 for "auto active"
+	<config type="integer" name="firstname.mandatory">no</config>									; user needs a firstname
+	<config type="integer" name="surname.mandatory">no</config>										; user needs a surname
 	<link xml:lang="de" access="acl" path="admin/user" rank="60">Benutzer</link>
 	<link xml:lang="en" access="acl" path="admin/user" rank="60">Users</link>
 	<sql on="install" type="mysql"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+DROP TABLE IF EXISTS `<%?prefix%>users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `roleId` int(11) unsigned DEFAULT NULL,
@@ -38,13 +43,27 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `gender` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `salutation` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `firstname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `surname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) NOT NULL,
   `modifiedAt` decimal(12,0) DEFAULT NULL,
   `loggedAt` decimal(12,0) DEFAULT NULL,
   `activeAt` decimal(12,0) DEFAULT NULL,
   PRIMARY KEY (`userId`),
-  KEY `roleId` (`roleId`,`status`,`email`,`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  KEY `roleId` (`roleId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`),
+  KEY `username` (`username`),
+  KEY `gender` (`gender`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 ]]>
 	</sql>
@@ -57,6 +76,16 @@ CREATE TABLE "<%?prefix%>users" (
 	"username" VARCHAR,
 	"password" VARCHAR,
 	"email" VARCHAR,
+	"gender" INTEGER,
+	"salutation" VARCHAR,
+	"firstname" VARCHAR,
+	"surname" VARCHAR,
+	"postcode" VARCHAR,
+	"city" VARCHAR,
+	"street" VARCHAR,
+	"number" VARCHAR,
+	"phone" VARCHAR,
+	"fax" VARCHAR,
 	"createdAt" DECIMAL,
 	"modifiedAt" DECIMAL,
 	"loggedAt" DECIMAL,

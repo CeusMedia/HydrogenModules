@@ -3,8 +3,6 @@
 
 $session	= $this->env->getSession();
 
-
-
 $optRole	= array( UI_HTML_Elements::Option( '', '' ) );
 foreach( array_reverse( $roles ) as $role ){
 	$selected	= $role->roleId == $session->get( 'filter-user-roleId' );
@@ -21,15 +19,6 @@ foreach( $states as $status => $label ){
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $status, $label, $selected, FALSE, $class );
 }
 $optStatus	= join( $optStatus );
-
-krsort( $activities );
-$optActivitiy	= array( UI_HTML_Elements::Option( '', '' ) );
-foreach( $activities as $activity => $label ){
-	$selected	= (string) $activity === (string) $session->get( 'filter-user-activity' );
-	$class		= 'user-activity activity'.$activity;
-	$optActivitiy[]	= UI_HTML_Elements::Option( (string) $activity, $label, $selected, FALSE, $class );
-}
-$optActivitiy	= join( $optActivitiy );
 
 $optOrder	= array( '' => '-' );
 foreach( $words['indexFilterOrders'] as $column => $label )
@@ -67,10 +56,6 @@ return '
 			<li>
 				<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
 				'.UI_HTML_Elements::Select( 'status', $optStatus, 'm', NULL, '' ).'
-			</li>
-			<li>
-				<label for="activity">'.$words['indexFilter']['labelActivity'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'activity', $optActivitiy, 'm', NULL, '' ).'
 			</li>
 			<li>
 				<label for="order">'.$words['indexFilter']['labelOrder'].'</label><br/>
