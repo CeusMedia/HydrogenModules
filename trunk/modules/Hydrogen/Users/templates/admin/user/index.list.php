@@ -1,6 +1,5 @@
 <?php
 
-
 /*  --  PAGINATION  --  */
 $pagination	= "";
 if( $limit && $total > $limit )
@@ -19,11 +18,10 @@ if( $limit && $total > $limit )
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
-if( count( $users ) )
-{
+if( count( $total ) ){
+
 	$rows	= array();
-	foreach( $users as $nr => $user )
-	{
+	foreach( $users as $nr => $user ){
 
 		$classes	= array( 'user' );
 		$classes[]	= "role role".$user->roleId;

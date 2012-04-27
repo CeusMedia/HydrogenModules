@@ -43,23 +43,60 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
+		$nameMinLength	= $config->get( 'module.users.name.length.min' );
+		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
+		$nameRegExp		= $config->get( 'module.users.name.preg' );
+		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
+		$needsEmail		= $config->get( 'module.users.email.mandatory' );
+		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
+		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
+		$needsTac		= $config->get( 'module.users.tac.mandatory' );
+		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+
+		$username	= $input->get( 'username' );
+		$password	= $input->get( 'password' );
+		$email		= $input->get( 'email' );
+	
 		if( $request->getMethod() == 'POST' ){
-			if( empty( $input['username'] ) )
+			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
-			if( empty( $input['password'] ) )
+			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
+				$messenger->noteError( $words->msgUsernameExisting, $username );
+			else if( $nameRegExp )
+				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
+					$messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
+			if( empty( $password ) )
 				$messenger->noteError( $words->msgNoPassword );
-			if( $config->get( 'module.users.email.mandatory') && empty( $input['email'] ) )
+			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
+				$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+			if( $needsEmail && empty( $email ) )
 				$messenger->noteError( $words->msgNoEmail );
+			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
+				$messenger->noteError( $words->msgEmailExisting, $email );
+
+			if( $needsFirstname && empty( $data['firstname'] ) )
+				$messenger->noteError( $words->msgNoFirstname );
+			if( $needsSurname && empty( $data['surname'] ) )
+				$messenger->noteError( $words->msgNoSurname );
+			
 			if( !$messenger->gotError() ){
 				$userId		= $modelUser->add( array(
-					'roleId'	=> $input['roleId'],
-					'status'	=> $input['status'],
-					'username'	=> $input['username'],
-					'password'	=> md5( $input['password'] ),
-					'email'		=> $input['email'],
-					'firstname'	=> $input['firstname'],
-					'surname'	=> $input['surname'],
-					'createdAt'	=> time(),
+					'roleId'		=> $input['roleId'],
+					'status'		=> $input['status'],
+					'username'		=> $username,
+					'password'		=> md5( $passwordSalt.$password ),
+					'email'			=> $email,
+					'gender'		=> $input['gender'],
+					'salutation'	=> $input['salutation'],
+					'firstname'		=> $input['firstname'],
+					'surname'		=> $input['surname'],
+					'postcode'		=> $input['postcode'],
+					'city'			=> $input['city'],
+					'street'		=> $input['street'],
+					'number'		=> $input['number'],
+					'phone'			=> $input['phone'],
+					'fax'			=> $input['fax'],
+					'createdAt'		=> time(),
 				) );
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( './admin/user' );
@@ -94,32 +131,65 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
+		$nameMinLength	= $config->get( 'module.users.name.length.min' );
+		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
+		$nameRegExp		= $config->get( 'module.users.name.preg' );
+		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
+		$needsEmail		= $config->get( 'module.users.email.mandatory' );
+		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
+		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
+		$needsTac		= $config->get( 'module.users.tac.mandatory' );
+		$status			= (int) $config->get( 'module.users.status.register' );
+		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+
+		$username	= $input->get( 'username' );
+		$password	= $input->get( 'password' );
+		$email		= $input->get( 'email' );
+		
 		if( $request->getMethod() == 'POST' ){
-			if( empty( $input['username'] ) )
+			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
-			if( empty( $input['password'] ) )
-				$messenger->noteError( $words->msgNoPassword );
+			else if( $modelUser->getByIndex( 'username', $username, 'userId' ) != $userId )			//  username is already used
+				$messenger->noteError( $words->msgUsernameExisting, $username );
+			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength )
+				$messenger->noteError( $words->msgPasswordTooShort );
 			if( $config->get( 'module.users.email.mandatory') && empty( $input['email'] ) )
 				$messenger->noteError( $words->msgNoEmail );
+
+			if( $needsEmail && empty( $email ) )
+				$messenger->noteError( $words->msgNoEmail );
+			else if( !empty( $email ) )
+				if( $modelUser->getByIndex( 'email', $email, 'userId' ) != $userId )
+					$messenger->noteError( $words->msgEmailExisting, $email );
+			
+			if( $needsFirstname && empty( $data['firstname'] ) )
+				$messenger->noteError( $words->msgNoFirstname );
+			if( $needsSurname && empty( $data['surname'] ) )
+				$messenger->noteError( $words->msgNoSurname );
+
 			if( !$messenger->gotError() ){
-				$userId		= $modelUser->edit( $userId, array(
+				$data	= array(
 					'roleId'		=> $input['roleId'],
 					'status'		=> $input['status'],
-					'username'		=> $input['username'],
-					'password'		=> md5( $input['password'] ),
-					'email'			=> $input['email'],
+					'username'		=> $username,
+					'email'			=> $email,
+					'gender'		=> $input['gender'],
+					'salutation'	=> $input['salutation'],
 					'firstname'		=> $input['firstname'],
 					'surname'		=> $input['surname'],
+					'postcode'		=> $input['postcode'],
+					'city'			=> $input['city'],
+					'street'		=> $input['street'],
+					'number'		=> $input['number'],
+					'phone'			=> $input['phone'],
+					'fax'			=> $input['fax'],
 					'modifiedAt'	=> time(),
-				) );
+				);
+				if( !empty( $password ) )
+					$data['password']	= md5( $passwordSalt.$password );
+				$modelUser->edit( $userId, $data );
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			}
-			
-			$user		= $modelUser->get( $userId );
-			$data		= $this->env->request->getAllFromSource( 'POST' )->getAll();
-			$data['password']	= md5( $data['password'] );
-			$data['modifiedAt']	= time();
-			$result		= $modelUser->edit( $userId, $data );
 		}
 		$user		= $modelUser->get( $userId );
 		$user->role	= $modelRole->get( $user->roleId );
@@ -151,7 +221,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 						$session->set( 'filter-user-'.$filter, $value );
 				}
 		}
-		$this->redirect( 'user' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index( $limit = NULL, $offset = NULL ) {

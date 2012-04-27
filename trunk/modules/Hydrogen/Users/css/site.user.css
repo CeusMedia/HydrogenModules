@@ -49,25 +49,34 @@ input.user-activity {
 	background-position: 6px 4px;
 	}
 .user-activity.activity0 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_offline.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_offline.png);
 	opacity: 0.8;
 	}
 .user-activity.activity1 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity2 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_busy.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_busy.png);
 	}
 .user-activity.activity3 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_away.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_away.png);
 	}
 .user-activity.activity4 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity5 {
-	background-image: url(///icons.ceusmedia.de/famfamfam/silk/star.png);
+	background-image: url(//icons.ceusmedia.de/famfamfam/silk/star.png);
 	}
 
 .controller-admin-user #content dl dt {
 	width: 150px;
+	}
+
+	
+legend.user-add {
+	background-image:  url(///icons.ceusmedia.de/famfamfam/silk/user_add.png);
+	}
+	
+legend.user-edit {
+	background-image:  url(///icons.ceusmedia.de/famfamfam/silk/user_edit.png);
 	}
