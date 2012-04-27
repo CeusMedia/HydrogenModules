@@ -10,7 +10,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			$modelUser	= new Model_User( $this->env );
 			$users		= $modelUser->getAllByIndex( 'status', 0 );
 			foreach( $users as $user ){
-				$pak	= md5( 'pak_'.$user->userId.'_'.$user->username );
+				$pak	= md5( 'pak_'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
 				if( $request->get( 'confirm_code' ) == $pak ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$messenger->noteSuccess( $words->msgSuccess );
@@ -83,11 +83,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						$messenger->noteError( $words->msgInvalidRole );
 					else if( $user->password !== md5( $password ) )
 						$messenger->noteError( $words->msgInvalidPassword );
-					else if( $user->status == 0 ){
+					else if( $user->status == 0 )
 						$messenger->noteError( $words->msgUserUnconfirmed );
-						$pak	= md5( 'pak_'.$user->userId.'_'.$user->username );
-//						$messenger->noteNotice( 'Bestätigungs-Code: '.$pak.' <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>' );										//  @todo: remove before going live
-					}
 					else if( $user->status == -1 )
 						$messenger->noteError( $words->msgUserLocked );
 					else if( $user->status == -2 )
@@ -152,9 +149,101 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function register(){
+		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
+		$words			= $this->getWords( 'register' );
+
+		$modelUser	= new Model_User( $this->env );
+		$modelRole	= new Model_Role( $this->env );
+
+		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
+		$rolesAllowed	= array();
+		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
+				$rolesAllowed[]	= $role->roleId;
+				
+		$input		= $request->getAllFromSource( 'post' );
+		
+		$nameMinLength	= $config->get( 'module.users.name.length.min' );
+		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
+		$nameRegExp		= $config->get( 'module.users.name.preg' );
+		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
+		$needsEmail		= $config->get( 'module.users.email.mandatory' );
+		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
+		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
+		$needsTac		= $config->get( 'module.users.tac.mandatory' );
+		$status			= (int) $config->get( 'module.users.status.register' );
+		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+
+		$roleId		= $request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;			//  use default register role if none given
+		$username	= $input->get( 'username' );
+		$password	= $input->get( 'password' );
+		$email		= $input->get( 'email' );
+	
+		$errors	= $messenger->gotError();
+		if( $request->get( 'saveUser' ) ){
+			if( !in_array( $roleId, $rolesAllowed ) )
+				$messenger->noteError( $words->msgRoleInvalid );
+			if( empty( $username ) )
+				$messenger->noteError( $words->msgNoUsername );
+			else if( $modelUser->countByIndex( 'username', $username ) )
+				$messenger->noteError( $words->msgUsernameExisting, $username );
+			else if( $nameRegExp )
+				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
+					$messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
+			if( empty( $password ) )
+				$messenger->noteError( $words->msgNoPassword );
+			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
+				$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+			if( $needsEmail && empty( $email ) )
+				$messenger->noteError( $words->msgNoEmail);
+			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
+				$messenger->noteError( $words->msgEmailExisting, $email );
+			if( $needsFirstname && empty( $input['firstname'] ) )
+				$messenger->noteError( $words->msgNoFirstname );
+			if( $needsSurname && empty( $input['surname'] ) )
+				$messenger->noteError( $words->msgNoSurname );
+			if( $needsTac &&  empty( $input['accept_tac'] ) )
+				$messenger->noteError( $words->msgTermsNotAccepted  );
+
+			if( $messenger->gotError() - $errors == 0 ){
+				$data	= array(
+					'roleId'		=> $roleId,
+					'status'		=> $status,
+					'email'			=> $email,
+					'username'		=> $username,
+					'password'		=> md5( $passwordSalt.$password ),
+					'gender'		=> $input['gender'],
+					'salutation'	=> $input['salutation'],
+					'firstname'		=> $input['firstname'],
+					'surname'		=> $input['surname'],
+					'postcode'		=> $input['postcode'],
+					'city'			=> $input['city'],
+					'street'		=> $input['street'],
+					'number'		=> $input['number'],
+					'phone'			=> $input['phone'],
+					'fax'			=> $input['fax'],
+					'createdAt'		=> time(),
+				);
+				print_m( $data );
+				die;
+				$userId		= $modelUser->add( $data );
+				$messenger->noteSuccess( $words->msgSuccess );
+				
+				if( !$status ){
+					$pak		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );						
+					$mail		= new Mail_Auth_Register( $this->env, array( 'pak' => $pak ) );
+					$mail->sendToAddress( $email );
+					$messenger->noteNotice( $words->msgNoticeConfirm );
+					$this->restart( './auth/confirm' );
+				}
+				$this->restart( './auth/login' );
+			}
+		}
+		foreach( $input as $key => $value )
+			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
+		$this->addData( 'register', $data );
 	}
 }
 ?>

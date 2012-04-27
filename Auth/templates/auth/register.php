@@ -42,8 +42,7 @@ $panelUser	= '<fieldset>
 			<label for="input_surname" class="">'.$w->labelSurname.'</label><br/>
 			<input type="text" name="surname" id="input_surname" class="max" value="'.$request->get( 'surname' ).'"/>
 		</li>
-<!--
-		<li class="column-left-15">
+		<li class="column-clear column-left-20">
 			<label for="input_postcode" class="">'.$w->labelPostcode.'</label><br/>
 			<input type="text" name="postcode" id="input_postcode" class="max" value="'.$request->get( 'postcode' ).'"/>
 		</li>
@@ -51,15 +50,15 @@ $panelUser	= '<fieldset>
 			<label for="input_city" class="">'.$w->labelCity.'</label><br/>
 			<input type="text" name="city" id="input_city" class="max" value="'.$request->get( 'city' ).'"/>
 		</li>
-		<li class="column-left-40">
+		<li class="column-left-30">
 			<label for="input_street" class="">'.$w->labelStreet.'</label><br/>
 			<input type="text" name="street" id="input_street" class="max" value="'.$request->get( 'street' ).'"/>
 		</li>
-		<li class="column-left-15">
+		<li class="column-left-20">
 			<label for="input_number" class="">'.$w->labelNumber.'</label><br/>
 			<input type="text" name="number" id="input_number" class="max" value="'.$request->get( 'number' ).'"/>
 		</li>
--->	</ul>
+	</ul>
 	<div class="buttonbar">
 		'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
 	</div>
