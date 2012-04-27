@@ -158,7 +158,7 @@ $(document).ready(function(){
 </script>
 <form id="form_mission_filter" action="./work/mission/filter?reset" method="post">
 	<fieldset>
-		<legend>Filter</legend>
+		<legend class="icon filter">Filter</legend>
 		<ul class="input">
 			<li>
 				<label for="filter_query">'.$w->labelQuery.'</label><br/>
