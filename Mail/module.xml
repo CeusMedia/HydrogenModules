@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<module>
+	<title>Mail</title>
+	<description>Enables application to send mails.</description>
+	<version>0.1</version>
+	<files>
+		<class>Mail/Abstract.php5</class>
+	</files>
+	<config name="sender.system" mandatory="yes"></config>
+	<config name="transport.type" mandatory="yes" values="SMTP,sendmail">sendmail</config>
+	<config name="transport.hostname" mandatory="transport.type:SMTP"></config>
+	<config name="transport.username" mandatory="transport.type:SMTP"></config>
+	<config name="transport.password" mandatory="transport.type:SMTP"></config>
+	<relations/>
+</module>
