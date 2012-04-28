@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Notes</title>
+	<description><![CDATA[]]></description>
+	<version>0.1</version>
+	<category>Work</category>
+	<files>
+		<class>Controller/Work/Note.php5</class>
+		<class>Model/Note.php5</class>
+		<class>Model/Note/Link.php5</class>
+		<class>Model/Note/Tag.php5</class>
+		<class>Model/Link.php5</class>
+		<class>Model/Tag.php5</class>
+		<class>Logic/Note.php5</class>
+		<class>View/Work/Note.php5</class>
+		<class>View/Helper/ContentConverter.php5</class>
+		<template>work/note/add.php</template>
+		<template>work/note/edit.php</template>
+		<template>work/note/index.php</template>
+		<template>work/note/view.php</template>
+		<locale>de/work/note.ini</locale>
+		<style load="auto">site.work.note.css</style>
+		<script load="auto">script.js</script>
+		<script load="auto">String.preg_quote.js</script>
+		<script load="auto">UI.js</script>
+	</files>
+	<relations>
+<!--		<needs type="module">Tags</needs>-->
+	</relations>
+	<link xml:lang="de" access="acl" path="work/note">Notizen</link>
+	<link xml:lang="en" access="acl" path="work/note">Notes</link>
+<!--	<sql on="install" type="mysql"><![CDATA[
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+]]></sql>-->
+</module>
