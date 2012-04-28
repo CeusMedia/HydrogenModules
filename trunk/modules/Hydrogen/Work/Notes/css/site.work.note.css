@@ -1,0 +1,231 @@
+
+span.high {
+	background-color: yellow;
+	}
+
+span.high.term-1 {
+	background-color: #70FF70;
+	}
+
+span.high.term-2 {
+	background-color: #FF7070;
+	}
+
+span.high.term-3 {
+	background-color: #7070FF;
+	}
+
+/*  --  site.notes.css  --  */
+/*  --  NOTE: ARTICLES  --  */
+ul.results {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+ul.results li.note {
+	clear: both;
+	padding-bottom: 1px;
+	margin-bottom: 5px;
+	border-bottom: 1px dotted gray;
+	min-height: 30px;
+	
+	}
+ul.results a.link {
+	margin: 0px 4px;
+	font-size: 0.8;
+	color: #005F00;
+	text-decoration: none;
+	}
+ul.results li.note .note-title {
+	font-size: 1.4em;
+	}
+ul.results li.note .note-title a {
+	text-decoration: none;
+	}
+
+
+	
+	
+/*  --  list.tags.css  --  */
+/*  --  TAGS  --  */
+ul.tags-list {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+ul.tags-list li.tag {
+	float: left;
+	margin: 0px 3px 2px 0px;
+	padding: 0px;
+	background-color: #DDD;
+	border: 1px solid #AAA;
+	border-radius: 4px;
+	}
+ul.tags-list li.tag:last-child {
+	padding: 0px;
+	}
+ul.tags-list li.tag.clickable {
+	margin: 2px 5px 5px 2px;
+	background-image: url(../img/background_button_gradient_1.png);
+	background-position: 0px 0px;
+	border-color: #CCCCCC #999999 #999999 #CCCCCC;
+	cursor: pointer;
+	overflow: hidden;
+	}
+ul.tags-list li.tag span {
+	display: block;
+	min-height: 18px;
+	padding: 1px 10px 1px 22px;
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/tag_blue.png);
+	background-position: 3px 3px;
+	background-repeat: no-repeat;
+	outline: none;
+/*	font-size: 1.1em;
+	font-weight: bold;
+*/	}
+ul.tags-list li.tag span small{
+	font-weight: normal;
+	font-size: 0.9em;
+	font-style: italic;
+	color: #666;
+	}
+
+ul.tags-list li.tag.add span,
+ul.tags-list li.tag.action-add:hover span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/tag_blue_add.png);
+	}
+ul.tags-list li.tag.remove span,
+ul.tags-list li.tag.action-remove:hover span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/tag_blue_delete.png);
+	}
+
+
+	
+/*  --  list.links.css  --  */
+/*  --  LINKS  --  */
+ul.links-list {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+ul.links-list li.link {
+	float: left;
+	margin: 0px 3px 2px 0px;
+	padding: 0px;
+	background-color: #DDD;
+	border: 1px solid #AAA;
+	border-radius: 4px;
+	}
+ul.links-list li.link:last-child {
+	padding: 0px;
+	}
+ul.links-list li.link.clickable {
+	margin: 2px 5px 5px 2px;
+	background-image: url(../img/nav_logo13.png);
+	background-position: 0px -192px;
+	border-color: #CCCCCC #999999 #999999 #CCCCCC;
+	cursor: pointer;
+	overflow: hidden;
+	}
+ul.links-list li.link span {
+	display: block;
+	min-height: 18px;
+	padding: 1px 10px 1px 22px;
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/link.png);
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
+	font-size: 1em;
+	outline: none;
+	}
+ul.links-list li.link span small{
+	font-weight: normal;
+	font-size: 0.9em;
+	font-style: italic;
+	color: #666;
+	}
+
+ul.links-list li.link span.titled {
+	font-size: 1.1em;
+	font-weight: bold;
+	}
+	
+ul.links-list li.link.add span,
+ul.links-list li.link.action-add:hover span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/link_add.png);
+	}
+ul.links-list li.link.remove span,
+ul.links-list li.link.action-remove:hover span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/link_delete.png);
+	}
+
+
+	
+	
+	
+	
+	
+
+ul.results li.note ul.tags-list {
+	margin-top: 2px;
+	float: right;
+	}
+
+a.nav-button span {
+	background-repeat: no-repeat;
+	background-position: 0px 2px;
+	padding-left: 22px;
+	padding-right: 5px;
+	}
+a.nav-button.search span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/magnifier.png);
+	}
+a.nav-button.add span {
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/comment_add.png);
+	}
+
+	
+li.item-tag-extended {
+	position: relative;
+	display: block;
+	margin: 1px;
+	padding: 3px 5px;
+	}
+li.item-tag-extended button {
+	}
+li.item-tag-extended .item-tag-label {
+	font-weight: bold;
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/tag_blue.png);
+	background-repeat: no-repeat;
+	background-position: 0px 2px;
+	padding-left: 22px;
+	padding-right: 5px;
+	}
+li.item-tag-extended .item-tag-tray {
+	position: absolute;
+	right: 0px;
+	top: 1px;
+	}
+li.item-tag-extended .item-tag-tray .number-indicator {
+	float: left;
+	display: block;
+	margin: 4px 1em 1px 0em;
+	padding: 0px 6px 0px 6px;
+	background-color: #999;
+	border-radius: 10px;
+	color: rgba(255, 255, 255, 1);
+	font-weight: bold;
+	font-size: 0.8em;
+	}
+
+
+.border-top {
+	border-top: 1px solid #DFDFDF;
+	}
+
+.border-bottom {
+	border-bottom: 1px solid #DFDFDF;
+	}
+
+legend.tag{
+	background-image: url(http://icons.ceusmedia.de/famfamfam/silk/tag_blue.png);
+	}
