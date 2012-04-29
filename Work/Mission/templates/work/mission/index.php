@@ -3,12 +3,12 @@
 $w	= (object) $words['index'];
 $panelFilter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
 
-$iconUp		= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
-$iconDown	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
-$iconRight	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
-$iconLeft	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
-$iconEdit	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
-$iconRemove	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
+$iconUp		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
+$iconDown	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
+$iconRight	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
+$iconLeft	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
+$iconEdit	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
+$iconRemove	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
 
 //  --  LIST  --  //
 $list	= array(

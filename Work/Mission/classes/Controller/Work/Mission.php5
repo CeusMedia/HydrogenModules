@@ -120,7 +120,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'reference'		=> $request->get( 'reference' ),
 					'modifiedAt'	=> time(),
 				);
-				$this->model->edit( $missionId, $data );
+				$this->model->edit( $missionId, $data, FALSE );
 				$messenger->noteSuccess( $words->msgSuccess );
 				$this->restart( './work/mission' );
 			}

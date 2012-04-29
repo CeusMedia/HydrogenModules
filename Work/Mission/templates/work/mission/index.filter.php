@@ -138,8 +138,8 @@ $optListStates	= UI_HTML_Tag::create( 'ul', join( $list ), $attributes );
 $optOrder	= $words['filter-orders'];
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $session->get( 'filter_mission_order' ) );
 
-$iconUp		= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
-$iconDown	= UI_HTML_Elements::Image( 'http://icons.ceusmedia.de/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
+$iconUp		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
+$iconDown	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
 
 $disabled	= $session->get( 'filter_mission_direction' ) == 'ASC';
 $buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny', NULL, $disabled );

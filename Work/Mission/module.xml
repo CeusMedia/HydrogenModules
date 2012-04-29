@@ -4,6 +4,8 @@
 	<description><![CDATA[]]></description>
 	<version>0.1</version>
 	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian Würker</author>
 	<files>
 		<class>Controller/Work/Mission.php5</class>
 		<class>Model/Mission.php5</class>
@@ -19,6 +21,7 @@
 	</files>
 	<relations>
 		<needs type="module">Users</needs>
+		<needs type="module">UI_Indicator</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission">Missions</link>
@@ -49,4 +52,4 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 ]]></sql>
-<relations><needs type="module">UI_Indicator</needs></relations></module>
+</module>
