@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery UI</title>
+	<description><![CDATA[jQuery User Interface]]></description>
+	<version>1.8.18</version>
+	<category>JavaScript</category>
+	<author>jQuery UI Team</author>
+	<url>http://jqueryui.com/</url>
+	<license source="http://jquery.org/license">MIT / GPL 2</license>
+	<files>
+		<script load="auto">jquery-ui.js</script>
+		<style load="auto">jquery-ui.css</style>
+		<image source="theme">smoothness/ui-bg_flat_0_aaaaaa_40x100.png</image>
+		<image source="theme">smoothness/ui-bg_flat_75_ffffff_40x100.png</image>
+		<image source="theme">smoothness/ui-bg_glass_55_fbf9ee_1x400.png</image>
+		<image source="theme">smoothness/ui-bg_glass_65_ffffff_1x400.png</image>
+		<image source="theme">smoothness/ui-bg_glass_75_dadada_1x400.png</image>
+		<image source="theme">smoothness/ui-bg_glass_75_e6e6e6_1x400.png</image>
+		<image source="theme">smoothness/ui-bg_glass_95_fef1ec_1x400.png</image>
+		<image source="theme">smoothness/ui-bg_highlight-soft_75_cccccc_1x100.png</image>
+		<image source="theme">smoothness/ui-icons_2e83ff_256x240.png</image>
+		<image source="theme">smoothness/ui-icons_222222_256x240.png</image>
+		<image source="theme">smoothness/ui-icons_454545_256x240.png</image>
+		<image source="theme">smoothness/ui-icons_888888_256x240.png</image>
+		<image source="theme">smoothness/ui-icons_cd0a0a_256x240.png</image>
+	</files>
+	<relations>
+<!--		<needs type="module">JS_jQuery</needs>-->
+	</relations>
+</module>
