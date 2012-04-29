@@ -132,7 +132,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$tags		= $session->get( 'search_tags' );
 		$query		= $session->get( 'search_term');
 
-		if( $request->has( 'filter_query' ) )
+		if( $request->has( 'filtes_query' ) )
 			$query	= trim( $request->get( 'filter_query' ) );
 
 		if( !is_array( $tags ) )
