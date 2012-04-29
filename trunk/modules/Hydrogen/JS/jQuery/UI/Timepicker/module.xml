@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery UI: Timepicker</title>
+	<description><![CDATA[jQuery UI Timepicker Addon]]></description>
+	<version>1.0.0</version>
+	<category>JavaScript</category>
+	<author site="http://trentrichardson.com">Trent Richardson</author>
+	<url title="GitHub">https://github.com/trentrichardson/jQuery-Timepicker-Addon</url>
+	<license source="http://trentrichardson.com/Impromptu/GPL-LICENSE.txt">GPL</license>
+	<license source="http://trentrichardson.com/Impromptu/MIT-LICENSE.txt">MIT</license>
+	<files>
+		<script load="auto">jquery-ui-timepicker-addon.js</script>
+		<style load="auto">jquery-ui-timepicker-addon.css</style>
+	</files>
+	<relations>
+<!--		<needs type="module">JS_jQuery_UI</needs>
+		<needs type="module">JS_jQuery</needs>-->
+	</relations>
+</module>
