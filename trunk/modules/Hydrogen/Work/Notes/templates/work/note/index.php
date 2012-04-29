@@ -3,8 +3,8 @@
 $term	= $this->env->session->get( 'search_term' );
 $tags	= $this->env->session->get( 'search_tags' );
 
-$iconAdd	= '<img src="http://icons.ceusmedia.de/famfamfam/silk/magnifier_zoom_in.png" title="zuweisen"/>';
-$iconRemove	= '<img src="http://icons.ceusmedia.de/famfamfam/silk/magnifier_zoom_out.png" title="entfernen"/>';
+$iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_in.png" title="zuweisen"/>';
+$iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_out.png" title="entfernen"/>';
 
 $not	= array();
 foreach( $tags as $tag )
