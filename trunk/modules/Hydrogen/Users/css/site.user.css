@@ -20,23 +20,23 @@ input.user-status {
 	}
 .user-status.status1 {
 	color: darkgreen;
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/accept.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/accept.png);
 	}
 .user-status.status0 {
 	font-weight: normal;
 	font-style: italic;
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/star.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/star.png);
 	}
 .user-status.status-1 {
 	font-weight: normal;
 	font-style: italic;
 	color: red;
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/lock.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/lock.png);
 	}
 .user-status.status-2 {
 	font-weight: normal;
 	color: darkred;
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/delete.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/delete.png);
 	}
 
 
@@ -49,23 +49,23 @@ input.user-activity {
 	background-position: 6px 4px;
 	}
 .user-activity.activity0 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_offline.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/status_offline.png);
 	opacity: 0.8;
 	}
 .user-activity.activity1 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity2 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_busy.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/status_busy.png);
 	}
 .user-activity.activity3 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_away.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/status_away.png);
 	}
 .user-activity.activity4 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/status_online.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity5 {
-	background-image: url(//icons.ceusmedia.de/famfamfam/silk/star.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/star.png);
 	}
 
 .controller-admin-user #content dl dt {
@@ -74,9 +74,9 @@ input.user-activity {
 
 	
 legend.user-add {
-	background-image:  url(///icons.ceusmedia.de/famfamfam/silk/user_add.png);
+	background-image:  url(///img.int1a.net/famfamfam/silk/user_add.png);
 	}
 	
 legend.user-edit {
-	background-image:  url(///icons.ceusmedia.de/famfamfam/silk/user_edit.png);
+	background-image:  url(///img.int1a.net/famfamfam/silk/user_edit.png);
 	}

@@ -16,7 +16,7 @@
 		<style>site.user.css</style>
 	</files>
 	<relations>
-		<needs type="module">Roles</needs>
+<!--		<needs type="module">Roles</needs>-->
 	</relations>
 	<config type="integer" name="status.register">1</config>										; user status to be set on register, set to 1 for "auto active"
 	<config type="integer" name="name.length.min">3</config>										; lowest number of name characters
