@@ -20,9 +20,9 @@
 		<template>work/note/view.php</template>
 		<locale>de/work/note.ini</locale>
 		<style load="auto">site.work.note.css</style>
-		<script load="auto">script.js</script>
-		<script load="auto">String.preg_quote.js</script>
-		<script load="auto">UI.js</script>
+		<style load="auto" source="lib">xmp.formats.css</style>
+		<script load="auto" source="lib">String.pregQuote.js</script>
+		<script load="auto">FormNoteFilter.js</script>
 	</files>
 	<relations>
 <!--		<needs type="module">Tags</needs>-->

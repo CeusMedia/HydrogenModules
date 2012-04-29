@@ -229,3 +229,7 @@ li.item-tag-extended .item-tag-tray .number-indicator {
 legend.tag{
 	background-image: url(http://img.int1a.net/famfamfam/silk/tag_blue.png);
 	}
+
+legend.note {
+	background-image: url(http://img.int1a.net/famfamfam/silk/comment.png);
+	}
