@@ -69,26 +69,30 @@ if( $list )
 $pagination	= new UI_HTML_Pagination( array( 'uri' => 'work/note/' ) );
 $p = $pagination->build( $notes['number'], $limit, $offset );
 
+$panelFilter	= '
+<form id="form_note_filter" action="./work/note" method="post">
+	<fieldset>
+		<legend class="icon filter">Suche</legend>
+		<ul class="input">
+			<li>
+				<label>Schlagwort</label><br/>
+				<input id="input_filter_query" tabindex="1" name="filter_query" value="'.$term.'" autocomplete="off"/>
+				<div style="clear: left"></div>
+			</li>
+			'.$tagsSearch.'
+			'.$tagsMore.'
+		</ul>
+	</fieldset>
+</form>
+';
+
 return '
 <div class="column-left-20">
-	<form action="./work/note" method="post">
-		<fieldset>
-			<legend class="filter">Suche</legend>
-			<ul class="input">
-				<li>
-					<label>Schlagwort</label><br/>
-					<input id="input-query" tabindex="1" name="q" value="'.$term.'" autocomplete="off"/>
-					<div style="clear: left"></div>
-				</li>
-				'.$tagsSearch.'
-				'.$tagsMore.'
-			</ul>
-		</fieldset>
-	</form>
+	'.$panelFilter.'
 </div>
 <div id="results" class="column-left-80">
 	<fieldset>
-		<legend class="comment">Artikel <small>'.round( $notes['time'] / 1000, 1 ).'ms</small></legend>
+		<legend class="icon note">Artikel <small>'.round( $notes['time'] / 1000, 1 ).'ms</small></legend>
 		'.$list.'
 		'.$p.'
 	</fieldset>
@@ -96,11 +100,7 @@ return '
 <script>
 var query = "'.$query.'";
 $(document).ready(function(){
-	$("li.note .note-title a").each(function(){
-	
-		console.log(UI.highlightQuery($(this).html(),query));
-		$(this).html(UI.highlightQuery($(this).html(),query));
-	})
+	FormNoteFilter.__init();
 });
 </script>
 <div style="clear: both"></div>
