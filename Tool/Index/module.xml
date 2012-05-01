@@ -3,7 +3,10 @@
 	<title>Tools: Index</title>
 	<description><![CDATA[Poster of available tools.]]></description>
 	<version>0.1</version>
-	<category>Tool</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<category>Tools</category>
 	<files>
 		<class>Controller/Tool/Index.php5</class>
 		<class>View/Tool/Index.php5</class>

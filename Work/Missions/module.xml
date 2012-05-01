@@ -20,7 +20,7 @@
 		<script load="auto">work.mission.js</script>
 	</files>
 	<relations>
-		<needs type="module">Users</needs>
+		<needs type="module">Auth</needs>
 		<needs type="module">UI_Indicator</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>

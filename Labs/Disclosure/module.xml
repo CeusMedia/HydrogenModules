@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <module>
-	<title>Labs: Disclosure</title>
+	<title>Disclosure</title>
 	<description></description>
-	<category>Labs</category>
+	<category>Development</category>
 	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<requires>
 	</requires>
 	<files>

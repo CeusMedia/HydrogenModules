@@ -2,8 +2,11 @@
 <module>
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
-	<version>0.1</version>
 	<category>Work</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Note.php5</class>
 		<class>Model/Note.php5</class>
@@ -25,6 +28,7 @@
 		<script load="auto">FormNoteFilter.js</script>
 	</files>
 	<relations>
+		<needs type="module">Auth</needs>
 <!--		<needs type="module">Tags</needs>-->
 	</relations>
 	<link xml:lang="de" access="acl" path="work/note">Notizen</link>

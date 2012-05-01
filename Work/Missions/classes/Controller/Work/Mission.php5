@@ -277,6 +277,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$words			= $this->getWords( 'index' );
 
 		$userId		= $session->get( 'userId' );
+		$roleId		= $session->get( 'roleId' );
 		$access		= $session->get( 'filter_mission_access' );
 		$query		= $session->get( 'filter_mission_query' );
 		$types		= $session->get( 'filter_mission_types' );
@@ -295,10 +296,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order['content']	= 'ASC';
 
 		$conditions	= array();
-		if( $access == "owner" )
-			$conditions['ownerId']	= $userId;
-		else if( $access == "worker" )
-			$conditions['workerId']	= $userId;
+		if( !$this->env->getAcl()->hasFullAccess( $roleId ) ){
+			if( $access == "owner" )
+				$conditions['ownerId']	= $userId;
+			else if( $access == "worker" )
+				$conditions['workerId']	= $userId;
+		}
 
 		
 		if( is_array( $types ) && count( $types ) )
