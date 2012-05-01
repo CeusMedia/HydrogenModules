@@ -9,8 +9,11 @@ code:js>$(".panel.collapsable").cmCollapsePanel();<code
 
 See [http://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel Demo] for more information.
 	]]></description>
-	<category>JavaScript</category>
+	<category>User Interace</category>
 	<version>0.3</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<style source="scripts-lib" load="auto">jquery/cmCollapsePanel/0.3/panel.default.css</style>
 		<style source="scripts-lib" load="auto">jquery/cmCollapsePanel/0.3/panel.default.collapse.css</style>

@@ -1,28 +1,23 @@
 <?xml version="1.0"?>
 <module>
-	<title>Test</title>
-	<description>Test Module.</description>
+	<title>Server</title>
+	<description><![CDATA[Manage multiple servers.]]></description>
 	<version>0.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Test.php5</class>
-		<class>View/Test.php5</class>
+<!--		<class>Controller/Admin/Server.php5</class>
+		<class>View/Admin/serverTest.php5</class>
 		<template>test/index.php</template>
-<!--		<locale>de/test</locale>
+		<locale>de/test</locale>
 		<style>site.test.css</style>
 		<script></script>
 		<image>__testImage__</image>-->
 	</files>
-	<config name="testKey1">This is a test!</config>
+<!--	<config name="testKey1">This is a test!</config>-->
 	<relations>
-		<needs>This_is_a_test</needs>
-		<needs>JS_jQuery_UI_Timepicker</needs>
 		<needs>Projects</needs>
-		<supports type="module">Work_Notes</supports>
-		<supports type="module">Work_Missions</supports>
-		<supports type="module">Manage_Blog</supports>
 	</relations>
 <!--	<sql on="install">SELECT *;</sql>
 	<sql on="uninstall">SELECT *;</sql>-->

@@ -4,6 +4,9 @@
 	<description><![CDATA[Basic styling of form elements (input, select, textarea, fieldset, button).]]></description>
 	<category>User Interace</category>
 	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<style source="primer" load="auto">form.css</style>
 		<style source="primer" load="auto">form.button.css</style>

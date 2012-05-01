@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <module>
-	<title>Admin: Database: Connection</title>
-	<description><![CDATA[]]></description>
+	<title>Database: Connection</title>
+	<description><![CDATA[Editor for database connections.]]></description>
+	<category>Administration</category>
 	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Database/Connection.php5</class>
 		<class>View/Admin/Database/Connection.php5</class>

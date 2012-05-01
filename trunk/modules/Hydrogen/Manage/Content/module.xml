@@ -2,8 +2,11 @@
 <module>
 	<title>Manage: Contents</title>
 	<description>Basic content management for HTML files.</description>
-	<version>0.1</version>
 	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Content.php5</class>
 		<class>View/Manage/Content.php5</class>
