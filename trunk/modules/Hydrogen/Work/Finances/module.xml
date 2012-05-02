@@ -10,15 +10,19 @@
 		<class>Controller/Work/Finance.php5</class>
 		<class>Controller/Work/Finance/Bank.php5</class>
 		<class>Controller/Work/Finance/Bank/Account.php5</class>
+		<class>Controller/Work/Finance/Fund.php5</class>
 		<class>Model/Finance/Bank.php5</class>
 		<class>Model/Finance/Bank/Account.php5</class>
 		<class>Model/Finance/Bank/Account/Reader/Postbank.php5</class>
 		<class>Model/Finance/Bank/Account/Reader/DKB.php5</class>
 		<class>Model/Finance/Bank/Account/Reader/DeutscheBank.php5</class>
 		<class>Model/Finance/Bank/Account/Reader/DWS.php5</class>
+		<class>Model/Finance/Fund.php5</class>
+		<class>Model/Finance/FundPrice.php5</class>
 		<class>View/Work/Finance.php5</class>
 		<class>View/Work/Finance/Bank.php5</class>
 		<class>View/Work/Finance/Bank/Account.php5</class>
+		<class>View/Work/Finance/Fund.php5</class>
 		<template>work/finance/index.php</template>
 		<template>work/finance/bank/add.php</template>
 		<template>work/finance/bank/edit.php</template>
@@ -26,9 +30,18 @@
 		<template>work/finance/bank/account/add.php</template>
 		<template>work/finance/bank/account/edit.php</template>
 		<template>work/finance/bank/account/index.php</template>
+		<template>work/finance/fund/add.php</template>
+		<template>work/finance/fund/edit.php</template>
+		<template>work/finance/fund/index.php</template>
 		<locale>de/work/finance.ini</locale>
 		<locale>de/work/finance/bank.ini</locale>
 		<locale>de/work/finance/bank/account.ini</locale>
+		<locale>de/work/finance/fund.ini</locale>
+		<locale>en/work/finance/fund.ini</locale>
+		<image source="local">fondsweb.de.ico</image>
+		<image source="local">finanzen.net.ico</image>
+<!--		<style load="auto">site.work.fund.css</style>
+		<script load="auto">work.fund.js</script>-->
 	</files>
 	<relations>
 <!--		<needs type="module"></needs>
@@ -36,11 +49,117 @@
 	<link xml:lang="de" access="acl" path="work/finance">Finanzen</link>
 	<link xml:lang="de" access="acl" path="work/finance/bank">Banken</link>
 	<link xml:lang="de" access="acl" path="work/finance/bank/account">Konten</link>
+	<link xml:lang="de" access="acl" path="work/finance/fund">Fonds</link>
 	<link xml:lang="en" access="acl" path="work/finance">Finances</link>
 	<link xml:lang="en" access="acl" path="work/finance/bank">Banks</link>
 	<link xml:lang="en" access="acl" path="work/finance/bank/account">Accounts</link>
+	<link xml:lang="en" access="acl" path="work/finance/fund">Funds</link>
+	<config type="string" name="urlView">http://www.fondsweb.de/</config>
 	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_banks` (
+  `bankId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `updatedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bankId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_bank_accounts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_bank_accounts` (
+  `bankAccountId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bankId` int(11) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `accountKey` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `value` float(10,2) NOT NULL,
+  `timestamp` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bankAccountId`),
+  KEY `type` (`type`),
+  KEY `currency` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_funds`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_funds` (
+  `fundId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `ISIN` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `pieces` float(10,4) NOT NULL,
+  `kag` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`fundId`),
+  KEY `userId` (`userId`),
+  KEY `ISIN` (`ISIN`),
+  KEY `currency` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_fund_prices`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_fund_prices` (
+  `fundPriceId` int(11) NOT NULL AUTO_INCREMENT,
+  `fundId` int(11) NOT NULL,
+  `pieces` float(10,4) unsigned NOT NULL,
+  `price` float(10,4) NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`fundPriceId`),
+  UNIQUE KEY `fundId` (`fundId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>finance_bank`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_bank_accounts`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_funds`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_fund_prices`;
 ]]></sql>
+	<data><![CDATA[
+-- phpMyAdmin SQL Dump
+-- version 3.4.5deb1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Erstellungszeit: 02. Mai 2012 um 03:43
+-- Server Version: 5.1.62
+-- PHP-Version: 5.3.6-13ubuntu3.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Datenbank: `test`
+--
+
+--
+-- Daten für Tabelle `finance_funds`
+--
+
+INSERT INTO `finance_funds` (`fundId`, `userId`, `ISIN`, `currency`, `pieces`, `kag`, `title`, `createdAt`, `modifiedAt`) VALUES
+(1, 6, 'LU0128526570', 'EUR', 76.3388, 'Franklin Templeton', 'LATIN AMERICA A', '1335902877', NULL),
+(2, 6, 'GB0030932676', 'EUR', 75.2335, 'M&G', 'GLOBAL BASICS A', '1335905171', '1335921831'),
+(3, 6, 'LU0075056555', 'EUR', 22.7054, 'BlackRock', 'WORLD MINING A2', '1335905171', NULL),
+(4, 6, 'LU0303816028', 'EUR', 160.0000, 'Fidelity Funds', 'EMEA A', '1335905191', NULL),
+(5, 6, 'LU0216467174', 'EUR', 28.4428, 'DB Platinum', 'COMMODITY EURO R1C', '1335907047', '1335921672');
+
+--
+-- Daten für Tabelle `finance_fund_prices`
+--
+
+INSERT INTO `finance_fund_prices` (`fundPriceId`, `fundId`, `pieces`, `price`, `timestamp`) VALUES
+(1, 1, 76.3388, 63.8200, '1335906750'),
+(2, 2, 75.2335, 24.2900, '1335906751'),
+(3, 3, 22.7054, 48.8700, '1335906751'),
+(4, 4, 160.0000, 13.6900, '1335906752'),
+(5, 5, 28.4428, 129.5900, '1335907849');
+	]]>	
+	</data>
 </module>
+
