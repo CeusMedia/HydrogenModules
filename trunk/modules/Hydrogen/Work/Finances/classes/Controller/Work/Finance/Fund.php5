@@ -1,10 +1,10 @@
 <?php
-class Controller_Work_Fund extends CMF_Hydrogen_Controller{
+class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;
 
-	public function onInit(){
+	protected function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
 	}
 	
@@ -12,7 +12,7 @@ class Controller_Work_Fund extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$words		= $this->getWords( 'add' );
 		$userId		= $this->env->getSession()->get( 'userId' );
-		$model		= new Model_Fund( $this->env );
+		$model		= new Model_Finance_Fund( $this->env );
 
 		if( $request->has( 'add' ) ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
@@ -47,7 +47,7 @@ class Controller_Work_Fund extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$words		= $this->getWords( 'edit' );
 		$userId		= $this->env->getSession()->get( 'userId' );
-		$model		= new Model_Fund( $this->env );
+		$model		= new Model_Finance_Fund( $this->env );
 
 		$fund		= $model->get( $fundId );
 		if( !$fund || $fund->userId != $userId ){
@@ -78,8 +78,8 @@ class Controller_Work_Fund extends CMF_Hydrogen_Controller{
 	
 	public function index(){
 		$userId		= $this->env->getSession()->get( 'userId' );
-		$modelFund	= new Model_Fund( $this->env );
-		$modelPrice	= new Model_FundPrice( $this->env );
+		$modelFund	= new Model_Finance_Fund( $this->env );
+		$modelPrice	= new Model_Finance_FundPrice( $this->env );
 		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
 		foreach( $funds as $nr => $fund ){
 			$empty	= (object) array( 'fundId' => $fund->fundId, 'price' => 0, 'timestamp' => 0 );
@@ -142,8 +142,8 @@ class Controller_Work_Fund extends CMF_Hydrogen_Controller{
 	public function requestPrices(){
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$words		= $this->getWords( 'request' );
-		$modelFund	= new Model_Fund( $this->env );
-		$modelPrice	= new Model_FundPrice( $this->env );
+		$modelFund	= new Model_Finance_Fund( $this->env );
+		$modelPrice	= new Model_Finance_FundPrice( $this->env );
 		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
 		foreach( $funds as $fund ){
 			$price	= $modelPrice->getAll(
