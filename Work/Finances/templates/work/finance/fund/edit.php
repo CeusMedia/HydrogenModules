@@ -2,7 +2,7 @@
 $w			= (object) $words['edit'];
 
 return '
-<form action="./work/fund/edit/'.$fund->fundId.'" method="post">
+<form action="./work/finance/fund/edit/'.$fund->fundId.'" method="post">
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
 		<ul class="input">
@@ -24,9 +24,9 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/fund', $w->buttonCancel, 'button icon cancel' ).'
+			'.UI_HTML_Elements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
 			'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button icon save' ).'
-			'.UI_HTML_Elements::LinkButton( './work/fund/remove/'.$fund->fundId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
+			'.UI_HTML_Elements::LinkButton( './work/finance/fund/remove/'.$fund->fundId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
 </form>
