@@ -3,7 +3,7 @@ $w				= (object) $words['add'];
 $optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $fund->currency );
 
 return '
-<form action="./work/fund/add" method="post">
+<form action="./work/finance/fund/add" method="post">
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
 		<ul class="input">
@@ -29,7 +29,7 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/fund', $w->buttonCancel, 'button icon cancel' ).'
+			'.UI_HTML_Elements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
 			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
 		</div>
 	</fieldset>

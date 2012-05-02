@@ -1,5 +1,5 @@
 <?php
-class View_Work_Fund extends CMF_Hydrogen_View{
+class View_Work_Finance_Fund extends CMF_Hydrogen_View{
 
 	public function add(){}
 	

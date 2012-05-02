@@ -36,7 +36,7 @@ tr .currency {
 	<div class="buttonbar">
 		'.UI_HTML_Elements::LinkButton( './work/finance/bank/add', 'neue Bank', 'button add' ).'
 		'.UI_HTML_Elements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/fund/add', 'neuer Fond', 'button add' ).'
+		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', 'neuer Fond', 'button add' ).'
 		'.UI_HTML_Elements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
 	</div>
 </fieldset>';

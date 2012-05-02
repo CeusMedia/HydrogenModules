@@ -19,7 +19,7 @@ foreach( $funds as $fund ){
 	$icon2	= UI_HTML_Tag::create( 'img',NULL, array( 'src' => './images/finanzen.net.ico' ) );
 	$link2	= UI_HTML_Tag::create( 'a', $icon2, array( 'href' => $urlView2.$fund->ISIN, 'class' => 'image', 'target' => '_blank' ) );
 	
-	$label	= UI_HTML_Tag::create( 'a', $fund->title, array( 'href' => './work/fund/edit/'.$fund->fundId ) );
+	$label	= UI_HTML_Tag::create( 'a', $fund->title, array( 'href' => './work/finance/fund/edit/'.$fund->fundId ) );
 	$row	= array(
 		UI_HTML_Tag::create( 'td', $label ),
 		UI_HTML_Tag::create( 'td', $fund->kag ),
@@ -61,8 +61,8 @@ table tr .currency {
 	<legend>Fonds</legend>
 '.$table.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/fund/add', $w->buttonAdd, 'button icon add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/fund/requestPrices', $w->buttonUpdate, 'button icon reload refresh' ).'
+		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', $w->buttonAdd, 'button icon add' ).'
+		'.UI_HTML_Elements::LinkButton( './work/finance/fund/requestPrices', $w->buttonUpdate, 'button icon reload refresh' ).'
 	</div>
 </fieldset>
 ';
