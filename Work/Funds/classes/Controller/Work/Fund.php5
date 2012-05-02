@@ -67,7 +67,7 @@ class Controller_Work_Fund extends CMF_Hydrogen_Controller{
 					'pieces'		=> trim( $request->get( 'pieces' ) ),
 					'modifiedAt'	=> time(),
 				);
-				$fundId	= $model->edit( $fundId, $data );
+				$model->edit( $fundId, $data );
 				$fund	= $model->get( $fundId );
 				$this->messenger->noteSuccess( $words->msgSuccess, $fund->ISIN );
 				$this->restart( NULL, TRUE );

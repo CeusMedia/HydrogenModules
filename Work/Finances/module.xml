@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Finances</title>
+	<description><![CDATA[Basic finance management.]]></description>
+	<version>0.1</version>
+	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Work/Finance.php5</class>
+		<class>Controller/Work/Finance/Bank.php5</class>
+		<class>Controller/Work/Finance/Bank/Account.php5</class>
+		<class>Model/Finance/Bank.php5</class>
+		<class>Model/Finance/Bank/Account.php5</class>
+		<class>Model/Finance/Bank/Account/Reader/Postbank.php5</class>
+		<class>Model/Finance/Bank/Account/Reader/DKB.php5</class>
+		<class>Model/Finance/Bank/Account/Reader/DeutscheBank.php5</class>
+		<class>Model/Finance/Bank/Account/Reader/DWS.php5</class>
+		<class>View/Work/Finance.php5</class>
+		<class>View/Work/Finance/Bank.php5</class>
+		<class>View/Work/Finance/Bank/Account.php5</class>
+		<template>work/finance/index.php</template>
+		<template>work/finance/bank/add.php</template>
+		<template>work/finance/bank/edit.php</template>
+		<template>work/finance/bank/index.php</template>
+		<template>work/finance/bank/account/add.php</template>
+		<template>work/finance/bank/account/edit.php</template>
+		<template>work/finance/bank/account/index.php</template>
+		<locale>de/work/finance.ini</locale>
+		<locale>de/work/finance/bank.ini</locale>
+		<locale>de/work/finance/bank/account.ini</locale>
+	</files>
+	<relations>
+<!--		<needs type="module"></needs>
+-->	</relations>
+	<link xml:lang="de" access="acl" path="work/finance">Finanzen</link>
+	<link xml:lang="de" access="acl" path="work/finance/bank">Banken</link>
+	<link xml:lang="de" access="acl" path="work/finance/bank/account">Konten</link>
+	<link xml:lang="en" access="acl" path="work/finance">Finances</link>
+	<link xml:lang="en" access="acl" path="work/finance/bank">Banks</link>
+	<link xml:lang="en" access="acl" path="work/finance/bank/account">Accounts</link>
+	<sql on="install" type="mysql"><![CDATA[
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+]]></sql>
+</module>
