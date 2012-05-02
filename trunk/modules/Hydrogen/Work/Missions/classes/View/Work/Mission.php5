@@ -11,7 +11,7 @@
  */
 class View_Work_Mission extends CMF_Hydrogen_View{
 
-	public function onInit(){
+	protected function __onInit(){
 		$page	= $this->env->getPage();
 		$monthsLong		= array_values( (array) $this->getWords( 'months' ) );
 		$monthsShort	= array_values( (array) $this->getWords( 'months-short' ) );

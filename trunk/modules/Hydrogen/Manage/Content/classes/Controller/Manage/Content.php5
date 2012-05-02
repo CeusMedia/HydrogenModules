@@ -20,8 +20,8 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 
 	protected $path;
 
-	public function onInit() {
-		parent::onInit();
+	protected function __onInit() {
+		parent::__onInit();
 		$config		= $this->env->getConfig();
 		$this->path	= $config->get( 'module.content.path' );
 		if( !$this->path ){
