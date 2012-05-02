@@ -1,6 +1,15 @@
 <?php
 class Controller_Auth extends CMF_Hydrogen_Controller {
 
+	public function ajaxIsAuthenticated(){
+		print( json_encode( $this->env->getSession()->has( 'userId' ) ) );
+		exit;
+	}
+
+	public function ajaxRefreshSession(){
+		exit;
+	}
+	
 	public function confirm(){
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
@@ -110,11 +119,14 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
+		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		$message	= $words['logout']['msgSuccess'];
 		if( $session->remove( 'userId' ) ){
 			$this->env->getMessenger()->noteSuccess( $message );
+			if( $request->has( 'autoLogout' ) )
+				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
 			$session->remove( 'userId' );
 			$session->remove( 'roleId' );
 		}
