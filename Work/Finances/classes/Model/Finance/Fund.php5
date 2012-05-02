@@ -1,7 +1,7 @@
 <?php
-class Model_Fund extends CMF_Hydrogen_Model{
+class Model_Finance_Fund extends CMF_Hydrogen_Model{
 
-	protected $name		= 'funds';
+	protected $name		= 'finance_funds';
 	protected $columns	= array(
 		'fundId',
 		'userId',

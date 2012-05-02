@@ -4,7 +4,7 @@ class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller{
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;
 
-	public function onInit(){
+	protected function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
 	}
 

@@ -60,7 +60,7 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 			'gvo'				=> 'DisplayFinancialOverview',
 			'loginTab'			=> 'iTAN',
 			'javascriptEnabled'	=> 'false',
-			'submit'			=> 'Login ausfÃ¼hren'
+			'submit'			=> 'Login ausführen'
 		);
 		return http_build_query( $data, NULL, '&' );
 	}
