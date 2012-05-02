@@ -20,8 +20,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 
 	protected $path;
 
-	public function onInit() {
-		parent::onInit();
+	protected function __onInit() {
+		parent::__onInit();
 		$config		= $this->env->getConfig();
 		$locales	= $config->get( 'path.locales' );
 		$language	= $this->env->language->getLanguage();
