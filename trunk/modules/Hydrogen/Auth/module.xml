@@ -32,8 +32,12 @@
 <!--		<locale>de/mail/auth/password</locale>-->
 		<locale>en/auth.ini</locale>
 		<locale>en/html/auth.login.info.html</locale>
+		<script load="auto">Auth.js</script>
 	</files>
-	<config name="strict">TRUE</config>
+	<config name="refreshSession.minutes">10</config>
+	<config name="autoLogout.minutes">30</config>
+	<config name="autoLogout.forward.controller"></config>
+	<config name="autoLogout.forward.action"></config>
 	<relations>
 		<needs type="module">Roles</needs>
 		<needs type="module">Users</needs>
@@ -49,5 +53,7 @@
 	<link xml:lang="en" rank="12" access="outside" path="auth/register">Rgister Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/confirm">Confirm Account</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
+	<link rank="99" access="public" path="auth/ajaxIsAuthenticated"></link>
+	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 </module>
 
