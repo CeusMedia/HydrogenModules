@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_fund_prices` (
 
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>finance_bank`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;
 DROP TABLE IF EXISTS `<%?prefix%>finance_bank_accounts`;
 DROP TABLE IF EXISTS `<%?prefix%>finance_funds`;
 DROP TABLE IF EXISTS `<%?prefix%>finance_fund_prices`;
