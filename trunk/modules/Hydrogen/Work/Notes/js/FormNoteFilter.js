@@ -4,9 +4,6 @@ var FormNoteFilter = {
 		this.form = $("#form_note_filter");
 		if(!this.form.size())
 			return false;
-		this.form.find("#input_filter_query").bind("change",function(){
-			this.form.submit();
-		});
 		if(this.form.find("#input_filter_query").val().length)
 			this.form.find("#reset-button-container").show();
 		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
@@ -14,6 +11,11 @@ var FormNoteFilter = {
 		$("li.note .note-title a").each(function(){
 			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
 		})
+
+		$("ul.tags-list-inline button.tag").bind("click",function(){
+			var action = $(this).hasClass("add") ? "addSearchTag" : "forgetTag";
+			document.location.href = "./work/note/"+action+"/"+$(this).data("tag-id");
+		});
 
 		return true;
 	},
@@ -29,10 +31,10 @@ var FormNoteFilter = {
 	},
 
 	clearQuery: function(){
-		if(!FormMissionFilter.form.size())
+		if(!FormNoteFilter.form.size())
 			return false;
-		FormMissionFilter.form.find("#filter_query").val("");
-		FormMissionFilter.form.submit();
+		FormNoteFilter.form.find("#input_filter_query").val("");
+		FormNoteFilter.form.submit();
 		return true;
 	},
 

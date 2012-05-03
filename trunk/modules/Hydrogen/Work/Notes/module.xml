@@ -20,6 +20,7 @@
 		<template>work/note/add.php</template>
 		<template>work/note/edit.php</template>
 		<template>work/note/index.php</template>
+		<template>work/note/index.filter.php</template>
 		<template>work/note/view.php</template>
 		<locale>de/work/note.ini</locale>
 		<style load="auto">site.work.note.css</style>

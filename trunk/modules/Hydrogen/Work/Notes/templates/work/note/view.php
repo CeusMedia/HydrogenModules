@@ -13,7 +13,7 @@ if( count( $note->links ) ){
 	$listLinks	= '<ul class="links-list">'.join( $list ).'</ul><div style="clear: left"></div>';
 	$panelLinks	= '
 <fieldset>
-	<legend>Links</legend>
+	<legend class="icon link">Links</legend>
 		<div class="note-links">'.$listLinks.'</div>
 </fieldset>';
 }
@@ -29,7 +29,7 @@ if( count( $note->tags ) ){
 	$listTags	= '<ul class="tags-list">'.join( $list ).'</ul><div style="clear: left"></div>';
 	$panelTags		= '
 <fieldset>
-	<legend>Tags</legend>
+	<legend class="icon tag">Tags</legend>
 	<div class="note-tags">'.$listTags.'</div>
 </fieldset>';
 }
@@ -48,10 +48,10 @@ $shortHash	= getShortHash( $note->noteId );
 $shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
 
 return '
-<div class="note-view column-left-75">
+<div class="column-left-75">
 	<form id="form_edit_note" name="edit_note" action="./work/note/edit/'.$note->noteId.'" method="post">
 		<fieldset>
-			<legend class="comment">'.htmlentities( $note->title, ENT_QUOTES ).'</legend>
+			<legend class="icon note">'.htmlentities( $note->title, ENT_QUOTES ).'</legend>
 
 			<div class="note-view-content">'.$content.'</div>
 			<div class="buttonbar">
@@ -59,13 +59,13 @@ return '
 				'.UI_HTML_Elements::LinkButton( './work/note/edit/'.$note->noteId, 'bearbeiten', 'button edit' ).'
 			</div>
 		</fieldset>
-	</div>
+	</form>
 </div>
-<div class="note-view column-right-25">
+<div class="column-left-25">
 	'.$panelTags.'
 	'.$panelLinks.'
 	<fieldset>
-		<legend>Info</legend>
+		<legend class="icon info">Info</legend>
 		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
 		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'small', TRUE ).'
 		<dl>

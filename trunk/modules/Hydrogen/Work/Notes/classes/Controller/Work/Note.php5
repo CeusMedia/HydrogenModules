@@ -74,8 +74,12 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function addTag( $noteId, $tagId = NULL ){
 		$request			= $this->env->getRequest();
 		$logic				= new Logic_Note( $this->env );
-		if( (int) $tagId < 1 )
-			$tagId	= $logic->createTag( $request->get( 'tag_content' ), FALSE );
+		if( (int) $tagId < 1 ){
+			$tag	= $request->get( 'tag_content' );
+			if( !strlen( trim( $tag ) ) )
+				$this->restart( './work/note/edit/'.$noteId );
+			$tagId	= $logic->createTag( $tag, FALSE );
+		}
 		$logic->addTagToNote( $tagId, $noteId, FALSE );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
@@ -132,7 +136,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$tags		= $session->get( 'search_tags' );
 		$query		= $session->get( 'search_term');
 
-		if( $request->has( 'filtes_query' ) )
+		if( $request->has( 'filter_query' ) )
 			$query	= trim( $request->get( 'filter_query' ) );
 
 		if( !is_array( $tags ) )
@@ -160,11 +164,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$notes	= array();
 		$offset	= (int) $request->get( 'offset' );
 		if( $query || count( $tags ) ){
-			$notes	= $logic->searchNotes( $query, $tags, $offset, 10 );
+			$notes	= $logic->searchNotes( $query, $tags, $offset, 8 );
 		}
 		else{
-			$notes	= $logic->getTopNotes( $offset, 10 );
+			$notes	= $logic->getTopNotes( $offset, 8 );
 		}
+		$modelUser	= new Model_User( $this->env );
+		foreach( $notes['list'] as $nr => $note )
+			$notes['list'][$nr]->user	= $modelUser->get( $note->userId );
 		$this->addData( 'offset', $offset );
 		$this->addData( 'limit', 10 );
 		$this->addData( 'notes', $notes );
