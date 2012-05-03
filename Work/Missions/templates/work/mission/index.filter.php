@@ -163,7 +163,7 @@ $(document).ready(function(){
 			<li>
 				<label for="filter_query">'.$w->labelQuery.'</label><br/>
 				<div style="position: relative; display: none;" id="reset-button-container">
-					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 2px; top: 9px; cursor: pointer"/>
+					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 3%; top: 9px; cursor: pointer"/>
 				</div>
 				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="max"/>
 			</li>

@@ -13,7 +13,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	protected $userMap	= array();
 	
-	protected function onInit(){
+	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
 		$this->logic	= new Logic_Mission( $this->env );
 		$model			= new Model_User( $this->env );
