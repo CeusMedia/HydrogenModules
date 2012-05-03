@@ -1,4 +1,8 @@
 <?php
+
+$w		= (object) $words['edit'];
+$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' );
+
 $iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/add.png" title="zuweisen"/>';
 $iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/delete.png" title="entfernen"/>';
 
@@ -29,7 +33,7 @@ if( $relatedTags ){
 		$tray	= '<div class="item-tag-tray">'.$count.$button.'</div>';
 		$list[]	= '<li class="item-tag-extended border-top">'.$label.$tray.'</li>';
 	}
-	$listRelatedTags	= '<h3>Vorschläge</h3><ul class="tags-list">'.join( $list ).'</ul>';
+	$listRelatedTags	= '<br/><label>Vorschläge</label><ul class="tags-list">'.join( $list ).'</ul>';
 }
 $panelTags	= '
 	<fieldset>
@@ -44,7 +48,7 @@ $panelTags	= '
 						<input type="text" name="tag_content" id="input_tag_content" class="max">
 					</div>
 					<div class="column-left-60">
-						<button type="submit" name="do" value="addArticleTag" class="button add"><span>hinzufügen</span></button>
+						'.UI_HTML_Elements::Button( 'save', $w->buttonAddTag, 'button add' ).'
 					</div>
 				</li>
 			</button>
@@ -64,47 +68,56 @@ foreach( $note->links as $link ){
 }
 $listLinks	= '<ul class="links-list">'.join( $list ).'</ul>';
 $panelLinks	= '
+<form action="./work/note/addLink/'.$note->noteId.'" method="post">
 	<fieldset>
-		<legend class="link">Links</legend>
+		<legend class="icon link">Links</legend>
 		'.$listLinks.'
-		<div style="clear: left"></div>
-		<form action="./work/note/addLink/'.$note->noteId.'" method="post">
-			<label for="input_link_url">Link-Adresse</label><br/>
-			<input type="text" name="link_url" id="input_link_url">
-			<label for="input_link_title">Link-Titel</label><br/>
-			<input type="text" name="link_title" id="input_link_title">
-			<button type="submit" name="do" value="addArticleLink" class="button add"><span>add</span></button>
-		</form>
+		<div style="clear: left"></div><br/>
+		<ul class="input">
+			<li>
+				<label for="input_link_url" class="mandatory">Link-Adresse</label><br/>
+				<input type="text" name="link_url" id="input_link_url" class="max mandatory"/>
+			</li>
+			<li>
+				<label for="input_link_title">Link-Titel</label><br/>
+				<input type="text" name="link_title" id="input_link_title" class="max"/>
+			</li>
+		</ul>
+		<div class="buttonbar">
+			'.UI_HTML_Elements::Button( 'save', $w->buttonAddLink, 'button add' ).'
+		</div>
 	</fieldset>
+</form>
 ';
 
 $panelEdit	= '
 	<form id="form_edit_note" name="edit_note" action="./work/note/edit/'.$note->noteId.'" method="post">
 		<fieldset>
-			<legend class="comment-edit">Artikel</legend>
+			<legend class="icon note-edit">'.$w->legend.'</legend>
 			<ul class="input">
-				<li>
-					<label for="input_note_title">Titel</label><br/>
-					<input type="text" name="note_title" id="input_note_title" value="'.htmlentities( $note->title, ENT_QUOTES ).'"/>
+				<li class="column-left-50">
+					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label><br/>
+					<input type="text" name="note_title" id="input_note_title" class="max mandatory" value="'.htmlentities( $note->title, ENT_QUOTES ).'"/>
 				</li>
-				<li>
-					<label for="input_note_content">Inhalt</label><br/>
-					<textarea name="note_content" id="input_note_content" rows="12">'.htmlentities( $note->content, ENT_QUOTES ).'</textarea>
+				<li class="column-clear">
+					<label for="input_note_content">'.$w->labelContent.'</label><br/>
+					<textarea name="note_content" id="input_note_content" rows="20">'.htmlentities( $note->content, ENT_QUOTES ).'</textarea>
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './work/note/view/'.$note->noteId, 'zur Ansicht', 'button cancel back left' ).'
-				<button type="submit" name="do" value="editArticle" class="button save"><span>save</span></button>
+				'.UI_HTML_Elements::LinkButton( './work/note', $w->buttonCancel, 'button cancel back left' ).'
+				'.UI_HTML_Elements::LinkButton( './work/note/view/'.$note->noteId, $w->buttonView, 'button cancel back left' ).'
+				'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' ).'
 			</div>
 		</fieldset>
 	</form>
 ';
 
 return '
-<div class="note-edit column-left-75">
+<div class="column-left-75">
 	'.$panelEdit.'
 </div>
-<div class="note-tags column-right-25">
+<div class="column-left-25">
 	'.$panelTags.'
 	'.$panelLinks.'
 </div>
