@@ -22,21 +22,25 @@ class Modules{
 	}
 
 	protected function dispatch(){
-		$accepts	= array( 'text/html' => 1 );
+		$accepts	= array( new Net_HTTP_Header_Field( 'accept', 'text/html;q=1' ) );
+#		var_dump( $accepts );
 		if( $this->request->hasHeader( 'accept' ) )
-			$accepts	= array_pop( $this->request->getHeadersByName( 'accept' ) )->getValue( TRUE );
-		foreach( array_keys( $accepts ) as $accept ){
-			switch( $accept ){
-				case 'text/html':
-					$this->response->setBody( $this->buildHTML( $this->getModuleList() ) );
-					return TRUE;
-				case 'application/json':
-				default:
-					$this->response->setBody( $this->buildJSON( $this->getModuleList() ) );
-//					$this->response->addHeaderPair( 'Content-type', $accept );
-					return TRUE;
+			$accepts	= $this->request->getHeadersByName( 'accept' );
+		foreach( $accepts as $accept ){
+			$mimeTypes	= $accept->decodeQualifiedValues( $accept->getValue() );
+			foreach( $mimeTypes as $mimeType => $quality ){
+				switch( $mimeType ){
+					case 'application/json':
+						$this->response->setBody( $this->buildJSON( $this->getModuleList() ) );
+	//					$this->response->addHeaderPair( 'Content-type', $accept );
+						return TRUE;
+					case 'text/html':
+						$this->response->setBody( $this->buildHTML( $this->getModuleList() ) );
+						return TRUE;
+				}
 			}
 		}
+		$this->response->setBody( $this->buildHTML( $this->getModuleList() ) );
 		return FALSE;
 	}
 
