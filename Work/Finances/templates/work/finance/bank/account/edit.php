@@ -8,8 +8,13 @@ foreach( $banks as $bank )
 	$optBankId[$bank->bankId]	= $bank->title;
 $optBankId	= UI_HTML_Elements::Options( $optBankId, $account->bankId );
 
-$optType	= array( 0 => 'manuell / statisch', 1 => 'automatisch / dynamisch' );
-$optType	= UI_HTML_Elements::Options( $optType, $account->type );
+
+
+
+$optType	= UI_HTML_Elements::Options( $words['types'], $account->type );
+$optScope	= UI_HTML_Elements::Options( $words['scopes'], $account->scope );
+
+$dateDue	= $account->due ? date( "d.m.Y", $account->due ) : "";
 
 return '
 <form action="./work/finance/bank/account/edit/'.$account->bankAccountId.'" method="post">
@@ -34,11 +39,27 @@ return '
 			</li>
 			<li class="column-clear column-left-10">
 				<label for="input_value">'.$w->labelValue.'</label><br/>
-				<input type="text" name="value" id="input_value" class="max" value="'.$account->value.'"/>
+				<input type="text" name="value" id="input_value" class="max" value="'.( $account->value ? $account->value : '' ).'"/>
 			</li>
 			<li class="column-left-10">
 				<label for="input_currency">'.$w->labelCurrency.'</label><br/>
 				<select type="text" name="currency" id="input_currency" class="max">'.$optCurrency.'</select/>
+			</li>
+			<li class="column-left-10">
+				<label for="input_fee">'.$w->labelFee.'</label><br/>
+				<input type="text" name="fee" id="input_fee" class="xs numeric" value="'.( $account->fee ? $account->fee : '' ).'"/>&nbsp;&euro;
+			</li>
+			<li class="column-left-10">
+				<label for="input_debit">'.$w->labelDebit.'</label><br/>
+				<input type="text" name="debit" id="input_debit" class="xs numeric" value="'.( $account->debit ? $account->debit : '' ).'"/>&nbsp;&euro;
+			<li>
+			<li class="column-left-25">
+				<label for="input_due">'.$w->labelDue.'</label><br/>
+				<input type="text" name="due" id="input_due" class="max" value="'.$dateDue.'"/>
+			</li>
+			<li class="column-left-25">
+				<label for="input_scope">'.$w->labelScope.'</label><br/>
+				<select type="text" name="scope" id="input_scope" class="max">'.$optScope.'</select/>
 			</li>
 		</ul>
 		<div class="buttonbar">

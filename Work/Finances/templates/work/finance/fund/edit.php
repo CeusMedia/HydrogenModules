@@ -1,6 +1,9 @@
 <?php
 $w			= (object) $words['edit'];
 
+$optType		= UI_HTML_Elements::Options( $words['types'], $fund->type );
+$optScope	= UI_HTML_Elements::Options( $words['scopes'], $fund->scope );
+
 return '
 <form action="./work/finance/fund/edit/'.$fund->fundId.'" method="post">
 	<fieldset>
@@ -18,9 +21,17 @@ return '
 				<label for="input_kag">'.$w->labelKag.'</label><br/>
 				<input type="text" name="kag" id="input_kag" class="max" value="'.$fund->kag.'"/>
 			</li>
-			<li class="column-left-50">
+			<li class="column-left-25">
 				<label for="input_pieces">'.$w->labelPieces.'</label><br/>
 				<input type="text" name="pieces" id="input_pieces" value="'.$fund->pieces.'"/>
+			</li>
+			<li class="column-clear column-left-20">
+				<label for="input_type">'.$w->labelType.'</label><br/>
+				<select name="type" id="input_type" class="max">'.$optType.'</select>
+			</li>
+			<li class="column-left-20">
+				<label for="input_scope">'.$w->labelScope.'</label><br/>
+				<select name="scope" id="input_scope" class="max">'.$optScope.'</select/>
 			</li>
 		</ul>
 		<div class="buttonbar">

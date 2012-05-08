@@ -23,6 +23,8 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( $words->msgNoPieces);
 			if( !$this->messenger->gotError() ){
 				$data	= array(
+					'type'			=> trim( $request->get( 'type' ) ),
+					'scope'			=> trim( $request->get( 'scope' ) ),
 					'ISIN'			=> trim( $request->get( 'ISIN' ) ),
 					'kag'			=> trim( $request->get( 'kag' ) ),
 					'title'			=> trim( $request->get( 'title' ) ),
@@ -62,6 +64,8 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( $words->msgNoPieces);
 			if( !$this->messenger->gotError() ){
 				$data	= array(
+					'type'			=> trim( $request->get( 'type' ) ),
+					'scope'			=> trim( $request->get( 'scope' ) ),
 					'kag'			=> trim( $request->get( 'kag' ) ),
 					'title'			=> trim( $request->get( 'title' ) ),
 					'pieces'		=> trim( $request->get( 'pieces' ) ),

@@ -38,8 +38,11 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 				$data	= array(
 					'bankId'		=> $request->get( 'bankId' ),
 					'type'			=> trim( $request->get( 'type' ) ),
+					'scope'			=> trim( $request->get( 'scope' ) ),
 					'currency'		=> trim( $request->get( 'currency' ) ),
 					'title'			=> trim( $request->get( 'title' ) ),
+					'fee'			=> trim( $request->get( 'fee' ) ),
+					'debit'			=> trim( $request->get( 'debit' ) ),
 					'accountKey'	=> trim( $request->get( 'accountKey' ) ),
 					'value'			=> $value,
 					'timestamp'		=> time(),
@@ -86,8 +89,11 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 				$data	= array(
 					'bankId'		=> $request->get( 'bankId' ),
 					'type'			=> trim( $request->get( 'type' ) ),
+					'scope'			=> trim( $request->get( 'scope' ) ),
 					'currency'		=> trim( $request->get( 'currency' ) ),
 					'title'			=> trim( $request->get( 'title' ) ),
+					'fee'			=> trim( $request->get( 'fee' ) ),
+					'debit'			=> trim( $request->get( 'debit' ) ),
 					'accountKey'	=> trim( $request->get( 'accountKey' ) ),
 					'value'			=> $value,
 					'timestamp'		=> time(),
