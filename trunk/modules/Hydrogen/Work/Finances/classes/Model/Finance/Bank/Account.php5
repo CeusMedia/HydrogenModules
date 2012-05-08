@@ -6,9 +6,12 @@ class Model_Finance_Bank_Account extends CMF_Hydrogen_Model {
 		'bankAccountId',
 		'bankId',
 		'type',
+		'scope',
 		'currency',
 		'accountKey',
 		'title',
+		'fee',
+		'debit',
 		'value',
 		'timestamp',
 	);

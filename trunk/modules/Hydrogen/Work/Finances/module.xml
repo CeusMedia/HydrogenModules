@@ -114,6 +114,16 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_fund_prices` (
   UNIQUE KEY `fundId` (`fundId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `fee` FLOAT( 6, 2 ) UNSIGNED NULL AFTER  `title`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `debit` FLOAT( 6, 2 ) UNSIGNED NULL AFTER  `fee`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `due` DECIMAL( 12 ) UNSIGNED NOT NULL AFTER  `debit`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `scope` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `type` ,
+ADD INDEX (  `scope` );
+ALTER TABLE  `<%?prefix%>finance_funds` ADD  `scope` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `userId` ,
+ADD INDEX (  `scope` );
+ALTER TABLE  `<%?prefix%>finance_funds` ADD  `type` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `userId` ,
+ADD INDEX (  `type` );
+
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;

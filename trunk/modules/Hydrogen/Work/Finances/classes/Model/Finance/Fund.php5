@@ -5,6 +5,8 @@ class Model_Finance_Fund extends CMF_Hydrogen_Model{
 	protected $columns	= array(
 		'fundId',
 		'userId',
+		'type',
+		'scope',
 		'ISIN',
 		'currency',
 		'pieces',
@@ -16,6 +18,8 @@ class Model_Finance_Fund extends CMF_Hydrogen_Model{
 	protected $primaryKey	= 'fundId';
 	protected $indices		= array(
 		'userId',
+		'type',
+		'scope',
 		'ISIN',
 		'currency',
 	);
