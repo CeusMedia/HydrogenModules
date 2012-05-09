@@ -44,7 +44,7 @@ class Model_Finance_Bank_Account_Reader_DKB{
 
 	protected function getPostString(){
 		$data	 = array(
-			'j_username'		=> $this->account->account,
+			'j_username'		=> $this->account->username,
 			'j_password'		=> $this->account->password,
 		);
 		return http_build_query( $data, NULL, '&' );

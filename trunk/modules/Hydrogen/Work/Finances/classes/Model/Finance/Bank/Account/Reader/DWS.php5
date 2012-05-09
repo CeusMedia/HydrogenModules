@@ -65,7 +65,7 @@ die;
 
 	protected function getPostString(){
 		$data	 = array(
-			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:txtUserID'		=> $this->account->account,
+			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:txtUserID'		=> $this->account->username,
 			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:passwordBox'	=> $this->account->password,
 			'__EVENTTARGET'			=> '_ctl0$MainPlaceHolder$mainPanel$loginPanel$btnGo$btnGoLinkButton',
 			'__EVENTARGUMENT'		=> '',

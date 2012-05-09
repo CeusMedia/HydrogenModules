@@ -11,8 +11,8 @@ return '
 		<legend>'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="column-left-20">
-				<label for="input_title" class="mandatory">'.$w->labelType.'</label><br/>
-				<select name="title" id="input_title" class="max mandatory">'.$optType.'</select>
+				<label for="input_type" class="mandatory">'.$w->labelType.'</label><br/>
+				<select name="type" id="input_type" class="max mandatory">'.$optType.'</select>
 			</li>
 			<li class="column-left-30">
 				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label><br/>

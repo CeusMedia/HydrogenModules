@@ -30,7 +30,7 @@ return '
 			</li>
 			<li class="column-left-25">
 				<label for="input_accountKey">'.$w->labelAccountKey.'</label><br/>
-				<input type="text" name="username" id="input_accountKey" class="max" value="'.$account->accountKey.'"/>
+				<input type="text" name="accountKey" id="input_accountKey" class="max" value="'.$account->accountKey.'"/>
 			</li>
 			<li class="column-clear column-left-10">
 				<label for="input_value">'.$w->labelValue.'</label><br/>

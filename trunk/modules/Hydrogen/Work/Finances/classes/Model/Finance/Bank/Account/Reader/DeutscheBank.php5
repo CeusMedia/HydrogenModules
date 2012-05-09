@@ -50,7 +50,7 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 	}
 
 	protected function getPostString(){
-		$number		= str_pad( $this->account->account, 10, 0, STR_PAD_RIGHT );
+		$number		= str_pad( $this->account->username, 10, 0, STR_PAD_RIGHT );
 		$data	 = array(
 			'branch'			=> $this->account->code,
 			'account'			=> substr( $number, 0, 7 ),
