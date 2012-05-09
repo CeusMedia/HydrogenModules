@@ -124,6 +124,11 @@ ADD INDEX (  `scope` );
 ALTER TABLE  `<%?prefix%>finance_funds` ADD  `type` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `userId` ,
 ADD INDEX (  `type` );
 
+ALTER TABLE  `<%?prefix%>finance_fund_prices` CHANGE  `fundId`  `fundId` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE  `<%?prefix%>finance_fund_prices` DROP INDEX  `fundId`;
+ALTER TABLE  `<%?prefix%>finance_fund_prices` ADD INDEX (  `fundId` );
+
+
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;

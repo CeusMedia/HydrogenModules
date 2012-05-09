@@ -14,7 +14,7 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 
 	protected function getPostString(){
 		$data	 = array(
-			'nutzername'	=> $this->bank->account,
+			'nutzername'	=> $this->bank->username,
 			'kennwort'		=> $this->bank->password,
 			'loginButton'	=> 'Anmelden',
 			'jsDisabled'	=> 'true'

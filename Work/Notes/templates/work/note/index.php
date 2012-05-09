@@ -65,5 +65,30 @@ $(document).ready(function(){
 });
 </script>
 <div style="clear: both"></div>
+
+
+
 ';
 ?>
+
+
+<html>
+	<head>
+		<script src="jquery.js"></script>
+		<script src="jquery.lightbox.js"></script>
+		<script>
+$(document).ready(function(){
+	$("#gallery a").lightbox();
+});
+
+
+$("div#gallery")
+		</script>
+	</head>
+	<body>
+		<div id="gallery">
+			<a href="large.png"><img src="small.png"></a>
+		</div>
+	</body>
+		
+</html>

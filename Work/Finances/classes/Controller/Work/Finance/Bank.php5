@@ -101,24 +101,26 @@ class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller{
 		try{
 			$clock	= new Alg_Time_Clock();
 			foreach( $banks as $bankId => $bank ){
-
 				$reader	= NULL;
 				switch( $bank->type ){
+					case 'NIBC':
+						$reader	= new Model_Finance_Bank_Account_Reader_NIBC( $bank );
+						break;
 					case 'Postbank':
-		#				@unlink( $banks->cacheFile ); 
+						@unlink( $banks->cacheFile ); 
 						$reader	= new Model_Finance_Bank_Account_Reader_Postbank( $bank );
 						break;
 		#			case 'DeutscheBank':
 		#				$reader	= new Model_Finance_Bank_Account_Reader_DeutscheBank( $account );
 		#				break;
 					case 'DKB':
-		#				@unlink( $banks->cacheFile ); 
-		#				$reader	= new Model_Finance_Bank_Account_Reader_DKB( $bank );
+						@unlink( $banks->cacheFile ); 
+						$reader	= new Model_Finance_Bank_Account_Reader_DKB( $bank );
 						break;
 		#			case 'DWS':
 		#				@unlink( $banks->cacheFile ); 
 		#				$reader	= new Model_Finance_Bank_Account_Reader_DWS( $bank );
-						break;
+		#				break;
 		#			default:
 		#				remark( 'Bank "'.$bank->type.'" wird nicht unterstützt.' );
 				}
