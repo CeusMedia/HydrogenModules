@@ -14,12 +14,12 @@ class Logic_Note{
 
 	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict= TRUE ){
 		$model		= new Model_Note_Link( $this->env );
-		$indices	= array( 'noteId' => $noteId, 'linkId' => $linkId );
-		$relation	= $model->getByIndices( $indices );
+		$conditions	= array( 'noteId' => $noteId, 'linkId' => $linkId, 'title' => $title );
+		$relation	= $model->getAll( $conditions );
 		if( $relation ){
 			if( $strict )
 				throw new InvalidArgumentException( 'link already related to note' );
-			return $relation->noteLinkId;
+			return $relation[0]->noteLinkId;
 		}
 		$data	= array(
 			'noteId'	=> (int) $noteId,
@@ -83,11 +83,12 @@ class Logic_Note{
 
 		$note->links	= array();
 		foreach( $modelNoteLink->getAllByIndex( 'noteId', $noteId ) as $relation ){
-			$link			= $modelLink->get( $relation->linkId );
-			$link->title	= $relation->title;
-			$note->links[]	= $link;
+			$link		= clone $modelLink->get( $relation->linkId );
+			$link->noteLinkId	= $relation->noteLinkId;
+			$link->title		= $relation->title;
+			$note->links[]		= $link;
 		}
-
+		
 		$note->tags	= array();
 		foreach( $modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $tag )
 			$note->tags[]	= $modelTag->get( $tag->tagId );
@@ -207,6 +208,23 @@ class Logic_Note{
 			$tagIds[$tag->tagId]	= $tag;
 		}
 		return array_values( $tagIds );
+	}
+
+	public function removeNote( $noteId ){
+		$note	= $this->getNoteData( $noteId );
+		foreach( $note->tags as $tag )
+			$this->removeTagFromNote( $tag->tagId, $noteId );
+		foreach( $note->links as $link )
+			$this->removeNoteLink( $link->noteLinkId );
+		$this->modelNote->remove( $noteId );
+	}
+
+	public function removeNoteLink( $noteLinkId ){ 
+		$modelNoteLink	= new Model_Note_Link( $this->env );
+		if( !$modelNoteLink->get( $noteLinkId ) )
+			return FALSE;
+		$modelNoteLink->remove( $noteLinkId );
+		return TRUE;
 	}
 
 	public function removeLinkFromNote( $linkId, $noteId ){ 

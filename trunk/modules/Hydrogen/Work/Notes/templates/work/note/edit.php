@@ -58,15 +58,29 @@ $panelTags	= '
 ';
 
 //  --  LINK MANAGEMENT  --  //
-$list	= array();
-foreach( $note->links as $link ){
-	$url	= './work/note/removeLink/'.$note->noteId.'/'.$link->linkId;
-	$label	= '<span class="link untitled">'.$link->url.'</span>';
-	if( $link->title )
-		$label	= '<span class="link titled"><acronym title="'.$link->url.'">'.$link->title.'</acronym></span>';
-	$list[]	= '<li class="link action-remove" onclick="document.location=\''.$url.'\';">'.$label.'</li>';
+$listLinks	= '';
+if( $note->links ){
+	$list	= array();
+	foreach( $note->links as $link ){
+		$url	= './work/note/removeLink/'.$note->noteId.'/'.$link->noteLinkId;
+		$link	= '<a href="'.$link->url.'">'.htmlentities( $link->title, ENT_QUOTES ).'</a>';
+		$label	= '<div class="item-link-label">'.$link.'</div>';
+//		$count	= '<div class="number-indicator">'.$tag->relevance.'</div>';
+		$button	= '<button type="button" class="button tiny remove" onclick="document.location=\''.$url.'\';">'.$iconRemove.'</button>';
+		$tray	= '<div class="item-link-tray">'.$button.'</div>';
+		$list[]	= '<li class="item-link-extended border-bottom">'.$label.$tray.'</li>';
+	}
+	$listLinks	= '<ul class="links-list">'.join( $list ).'</ul>';
+
+#	{
+#	$url	= './work/note/removeLink/'.$note->noteId.'/'.$link->linkId;
+#	$label	= '<span class="link untitled">'.$link->url.'</span>';
+#	if( $link->title )
+#		$label	= '<span class="link titled"><acronym title="'.$link->url.'">'.$link->title.'</acronym></span>';
+#	$list[]	= '<li class="link action-remove" onclick="document.location=\''.$url.'\';">'.$label.'</li>';
+#	}
+#	$listLinks	= '<ul class="links-list">'.join( $list ).'</ul>';
 }
-$listLinks	= '<ul class="links-list">'.join( $list ).'</ul>';
 $panelLinks	= '
 <form action="./work/note/addLink/'.$note->noteId.'" method="post">
 	<fieldset>
@@ -97,17 +111,18 @@ $panelEdit	= '
 			<ul class="input">
 				<li class="column-left-50">
 					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label><br/>
-					<input type="text" name="note_title" id="input_note_title" class="max mandatory" value="'.htmlentities( $note->title, ENT_QUOTES ).'"/>
+					<input type="text" name="note_title" id="input_note_title" class="max mandatory" value="'.htmlentities( $note->title, ENT_COMPAT, 'UTF-8' ).'"/>
 				</li>
 				<li class="column-clear">
 					<label for="input_note_content">'.$w->labelContent.'</label><br/>
-					<textarea name="note_content" id="input_note_content" rows="20">'.htmlentities( $note->content, ENT_QUOTES ).'</textarea>
+					<textarea name="note_content" id="input_note_content" rows="20">'.htmlentities( $note->content, ENT_COMPAT, 'UTF-8' ).'</textarea>
 				</li>
 			</ul>
 			<div class="buttonbar">
 				'.UI_HTML_Elements::LinkButton( './work/note', $w->buttonCancel, 'button cancel back left' ).'
 				'.UI_HTML_Elements::LinkButton( './work/note/view/'.$note->noteId, $w->buttonView, 'button cancel back left' ).'
 				'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' ).'
+				'.UI_HTML_Elements::LinkButton( './work/note/remove/'.$note->noteId, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm ).'
 			</div>
 		</fieldset>
 	</form>

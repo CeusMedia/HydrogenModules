@@ -34,8 +34,166 @@
 	</relations>
 	<link xml:lang="de" access="acl" path="work/note">Notizen</link>
 	<link xml:lang="en" access="acl" path="work/note">Notes</link>
-<!--	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>links`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>links` (
+  `linkId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `lastAssignAt` decimal(12,0) unsigned DEFAULT NULL,
+  `lastSearchAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`linkId`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>notes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
+  `noteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `numberViews` int(10) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>note_links`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>note_links` (
+  `noteLinkId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `noteId` int(11) unsigned NOT NULL,
+  `linkId` int(11) unsigned NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteLinkId`),
+  KEY `noteId` (`noteId`),
+  KEY `linkId` (`linkId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>note_tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>note_tags` (
+  `noteTagId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `noteId` int(11) unsigned NOT NULL,
+  `tagId` int(11) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteTagId`),
+  KEY `noteId` (`noteId`),
+  KEY `tagId` (`tagId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>tags` (
+  `tagId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `content` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`tagId`),
+  KEY `content` (`content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>term_log`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>term_log` (
+  `termLogId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `count` decimal(10,0) NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`termLogId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-]]></sql>-->
+DROP TABLE IF EXISTS `<%?prefix%>links`;
+DROP TABLE IF EXISTS `<%?prefix%>notes`;
+DROP TABLE IF EXISTS `<%?prefix%>note_links`;
+DROP TABLE IF EXISTS `<%?prefix%>note_tags`;
+DROP TABLE IF EXISTS `<%?prefix%>tags`;
+DROP TABLE IF EXISTS `<%?prefix%>term_log`;
+]]></sql>
 </module>
+
+
+
+
+DROP TABLE IF EXISTS `kb_articles`;
+CREATE TABLE IF NOT EXISTS `kb_articles` (
+  `articleId` int(11) unsigned NOT NULL auto_increment,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `content` text collate utf8_unicode_ci,
+  `numberViews` int(10) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY  (`articleId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `kb_article_links`;
+CREATE TABLE IF NOT EXISTS `kb_article_links` (
+  `articleLinkId` int(11) unsigned NOT NULL auto_increment,
+  `articleId` int(11) unsigned NOT NULL,
+  `linkId` int(11) unsigned NOT NULL,
+  `title` varchar(200) collate utf8_unicode_ci default NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY  (`articleLinkId`),
+  KEY `articleId` (`articleId`),
+  KEY `linkId` (`linkId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `kb_article_tags`;
+CREATE TABLE IF NOT EXISTS `kb_article_tags` (
+  `articleTagId` int(11) unsigned NOT NULL auto_increment,
+  `articleId` int(11) unsigned NOT NULL,
+  `tagId` int(11) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY  (`articleTagId`),
+  KEY `articleId` (`articleId`),
+  KEY `tagId` (`tagId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `kb_links`;
+CREATE TABLE IF NOT EXISTS `kb_links` (
+  `linkId` int(11) unsigned NOT NULL auto_increment,
+  `url` varchar(250) collate utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `lastAssignAt` decimal(12,0) unsigned default NULL,
+  `lastSearchAt` decimal(12,0) unsigned default NULL,
+  PRIMARY KEY  (`linkId`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `kb_tags`;
+CREATE TABLE IF NOT EXISTS `kb_tags` (
+  `tagId` int(11) unsigned NOT NULL auto_increment,
+  `content` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY  (`tagId`),
+  KEY `content` (`content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `kb_term_log`;
+CREATE TABLE IF NOT EXISTS `kb_term_log` (
+  `termLogId` int(11) unsigned NOT NULL auto_increment,
+  `userId` int(11) unsigned NOT NULL,
+  `count` decimal(10,0) NOT NULL,
+  `content` text collate utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY  (`termLogId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+
+
+
+
+
+
+

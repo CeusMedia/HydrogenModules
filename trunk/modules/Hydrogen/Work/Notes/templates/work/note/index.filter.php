@@ -2,8 +2,8 @@
 
 $w		= (object) $words['filter'];
 
-$term	= $this->env->session->get( 'search_term' );
-$tags	= $this->env->session->get( 'search_tags' );
+$term	= $this->env->session->get( 'filter_notes_term' );
+$tags	= $this->env->session->get( 'filter_notes_tags' );
 
 $iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_in.png" title="'.$w->buttonTagEnableAlt.'"/>';
 $iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_out.png" title="'.$w->buttonTagForgetAlt.'"/>';
@@ -31,7 +31,7 @@ if( $tags ){
 	$tagsMore	= '<li>'.$label.$tagsMore.'</li>';
 }
 
-$tags	= $session->get( 'search_tags' );
+$tags	= $session->get( 'filter_notes_tags' );
 $tagsSearch	= "";
 if( $tags ){
 	$list	= array();
@@ -51,6 +51,7 @@ $buttonAdd		= UI_HTML_Elements::LinkButton( './work/note/add', 'neue Notiz', 'bu
 
 $panelFilter	= '
 <form id="form_note_filter" action="./work/note" method="post">
+	<input type="hidden" name="offset" value="0"/>
 	<fieldset>
 		<legend class="icon filter">'.$w->legend.'</legend>
 		<ul class="input">

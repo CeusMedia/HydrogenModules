@@ -13,7 +13,7 @@ return '
 					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label><br/>
 					<input type="text" id="input_note_title" name="note_title" class="mandatory max" value="'.htmlentities( $note->title, ENT_QUOTES ).'"/>
 				</li>
-				<li>
+				<li class="column-clear">
 					<label for="input_note_content">'.$w->labelContent.'</label><br/>
 					<textarea id="input_note_content" name="note_content" class="max" rows="16"></textarea>
 				</li>
