@@ -250,7 +250,8 @@ a.nav-button.add span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/comment_add.png);
 	}
 
-	
+
+/*  --  TAG LIST: EXTENDED  --  */
 li.item-tag-extended {
 	position: relative;
 	display: block;
@@ -284,7 +285,42 @@ li.item-tag-extended .item-tag-tray .number-indicator {
 	font-size: 0.8em;
 	}
 
+/*  --  TAG LIST: EXTENDED  --  */
+li.item-link-extended {
+	position: relative;
+	display: block;
+	margin: 1px;
+	padding: 3px 5px;
+	}
+li.item-link-extended button {
+	}
+li.item-link-extended .item-link-label {
+	font-weight: bold;
+	background-image: url(http://img.int1a.net/famfamfam/silk/world.png);
+	background-repeat: no-repeat;
+	background-position: 0px 2px;
+	padding-left: 22px;
+	padding-right: 5px;
+	}
+li.item-link-extended .item-link-tray {
+	position: absolute;
+	right: 0px;
+	top: 1px;
+	}
+li.item-link-extended .item-link-tray .number-indicator {
+	float: left;
+	display: block;
+	margin: 4px 1em 1px 0em;
+	padding: 0px 6px 0px 6px;
+	background-color: #999;
+	border-radius: 10px;
+	color: rgba(255, 255, 255, 1);
+	font-weight: bold;
+	font-size: 0.8em;
+	}
 
+	
+	
 .border-top {
 	border-top: 1px solid #DFDFDF;
 	}
@@ -306,4 +342,8 @@ legend.note {
 	}
 legend.note-edit {
 	background-image: url(http://img.int1a.net/famfamfam/silk/comment_edit.png);
+	}
+
+.note-view-content p {
+	font-size: 1em;
 	}

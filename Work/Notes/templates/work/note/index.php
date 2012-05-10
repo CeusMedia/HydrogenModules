@@ -2,29 +2,29 @@
 
 $w		= (object) $words['index'];
 
-$tags	= $this->env->session->get( 'search_tags' );
+$tags	= $this->env->session->get( 'filter_notes_tags' );
 
 $indicator	= new UI_HTML_Indicator();
 
 $list	= array();
 foreach( $notes['list'] as $note ){
 	$url		= './work/note/view/'.$note->noteId;
-	$title		= '<div class="note-title"><a href="'.$url.'">'.$note->title.'</a></div>';
+	$title		= '<div class="note-title"><a href="'.$url.'">'.htmlentities( $note->title, ENT_QUOTES, 'UTF-8' ).'</a></div>';
 	$listLinks	= array();
 	foreach( $note->links as $link ){
-		$label	= $link->title ? '<acronym title="'.$link->url.'">'.$link->title.'</acronym>' : $link->url;
+		$label	= $link->title ? '<acronym title="'.$link->url.'">'.htmlentities( $link->title, ENT_QUOTES, 'UTF-8' ).'</acronym>' : $link->url;
 		$listLinks[]	= '<a class="link" href="'.$link->url.'">'.$label.'</a>';
 	}
 	$listLinks	= join( ' | ', $listLinks );
 	$listTags	= array();
 	foreach( $note->tags as $tag ){
 		$class	= in_array( $tag, $tags ) ? 'remove' : 'add';
-		$label	= UI_HTML_Tag::create( 'span', $tag->content );
+		$label	= UI_HTML_Tag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ) );
 		$button	= UI_HTML_Tag::create( 'button', $label, array( 'class' => 'button icon tiny tag '.$class, 'data-tag-id' => $tag->tagId ) );
 		$listTags[$tag->content]	= UI_HTML_Tag::create( 'li', $button );
 	}
 	ksort( $listTags );
-	$spanAuthor	= '<span class="info user role role-1 role1">'.$note->user->username.'</a></span>';
+	$spanAuthor	= '<span class="info user role role-1 role1">'.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</a></span>';
 	$timestamp	= max( $note->createdAt, $note->modifiedAt, 0 );
 	$spanDate	= $timestamp ? '<span class="info date ">'.date( 'd.m.y', $timestamp ).'</span>' : '';
 	$spanRating	= '<span class="indicator rating">'.$indicator->build( 5, 7 ).'</span>';

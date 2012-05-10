@@ -3,14 +3,16 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
 		$logic		= new Logic_Note( $this->env );
 		$model		= new Model_Note( $this->env );
 		$words		= $this->getWords( 'add' );
 		$data		= $request->getAllFromSource( 'post' )->getAll();
 
-		if( $request->get( 'do' ) ){
+		if( $request->get( 'add' ) ){
 			$data		= array(
+				'userId'	=> $session->get( 'userId' ),
 				'title'		=> $request->get( 'note_title' ),
 				'content'	=> $request->get( 'note_content' )
 			);
@@ -32,7 +34,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				if( trim( $request->get( 'link_url' ) ) ){
 					$linkId	= $logic->createLink( $url, FALSE );
 					$logic->addLinkToNote( $linkId, $noteId, $request->get( 'link_title' ) );
-#					$messenger->noteSuccess( $words->msgLinkAdded );
 				}
 				$this->restart( './work/note/edit/'.$noteId );
 			}
@@ -45,18 +46,20 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'note', $note );
 	}
 	
-	public function addLink( $noteId ){
+	public function addLink( $noteId, $tagId = NULL ){
 		$request			= $this->env->getRequest();
 		$logic				= new Logic_Note( $this->env );
 		if( (int) $tagId < 1 )
 			$linkId	= $logic->createLink( $request->get( 'link_url' ), FALSE );
 		$logic->addLinkToNote( $linkId, $noteId, $request->get( 'link_title' ), FALSE );
+		$words		= $this->getWords( 'msg' );
+		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
 	public function addSearchTag( $tagId ){
 		$session	= $this->env->getSession();
-		$tags		= $session->get( 'search_tags' );
+		$tags		= $session->get( 'filter_notes_tags' );
 		$model		= new Model_Tag( $this->env );
 		$tag		= $model->get( $tagId );
 		if( !$tag )
@@ -66,7 +69,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				if( $item->tagId == $tag->tagId )
 					$this->restart( './work/note' );
 			$tags[]	= $tag;
-			$session->set( 'search_tags', $tags );
+			$session->set( 'filter_notes_tags', $tags );
+			$session->set( 'filter_notes_offset', 0 );
 		}
 		$this->restart( './work/note' );
 	}
@@ -81,33 +85,31 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$tagId	= $logic->createTag( $tag, FALSE );
 		}
 		$logic->addTagToNote( $tagId, $noteId, FALSE );
+		$words		= $this->getWords( 'msg' );
+		$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 	
 	public function edit( $noteId ){
-		$request			= $this->env->getRequest();
-		$messenger			= $this->env->getMessenger();
-		$logic				= new Logic_Note( $this->env );
-		$words				= $this->getWords( 'edit' );
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$logic			= new Logic_Note( $this->env );
+		$words			= $this->getWords( 'edit' );
 
 		$modelNote		= new Model_Note( $this->env );
-		$note		= $modelNote->get( $noteId );
+		$note			= $modelNote->get( $noteId );
 		if( !$note ){
 			$messenger->noteError( 'Invalid Note ID');
 			$this->restart( './work/note/' );
 		}
 
-		if( $request->get( 'do' ) ){
-#			xmp( $request->get( 'note_content' ) );
-#			die;
+		if( $request->get( 'save' ) ){
 			$data		= array(
 				'title'		=> $request->get( 'note_title' ),
 				'content'	=> $request->get( 'note_content' )
 			);
 			if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( $words->msgNoTitle );
-#			if( !strlen( trim( $data['content'] ) ) )
-#				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				if( $modelNote->edit( $noteId, $data, FALSE ) )
 					$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
@@ -122,22 +124,25 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	
 	public function forgetTag( $tagId ){
 		$session	= $this->env->getSession();
-		$tags		= $session->get( 'search_tags' );
+		$tags		= $session->get( 'filter_notes_tags' );
 		foreach( $tags as $tag )
 			if( $tag->tagId != $tagId )
 				$list[]	= $tag;
-		$session->set( 'search_tags', $list );
+		$session->set( 'filter_notes_tags', $list );
+		$session->set( 'filter_notes_offset', 0 );
 		$this->restart( './work/note' );
 	}
 	
 	public function index( $page = 0 ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
-		$tags		= $session->get( 'search_tags' );
-		$query		= $session->get( 'search_term');
+		$tags		= $session->get( 'filter_notes_tags' );
+		$query		= $session->get( 'filter_notes_term');
 
 		if( $request->has( 'filter_query' ) )
 			$query	= trim( $request->get( 'filter_query' ) );
+		if( $request->has( 'offset' ) )
+			$session->set( 'filter_notes_offset', (int) $request->get( 'offset' ) );
 
 		if( !is_array( $tags ) )
 			$tags	= array();
@@ -157,12 +162,12 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$query	= implode( ' ', $parts );
 		}
 
-		$session->set( 'search_term', $query );
-		$session->set( 'search_tags', $tags );
+		$session->set( 'filter_notes_term', $query );
+		$session->set( 'filter_notes_tags', $tags );
 		
 		$logic		= new Logic_Note( $this->env );
 		$notes	= array();
-		$offset	= (int) $request->get( 'offset' );
+		$offset	= (int) $session->get( 'filter_notes_offset' );
 		if( $query || count( $tags ) ){
 			$notes	= $logic->searchNotes( $query, $tags, $offset, 8 );
 		}
@@ -188,15 +193,27 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function remove( $noteId ){
+		$logic		= new Logic_Note( $this->env );
+		$logic->removeNote( $noteId );
+		$words		= $this->getWords( 'msg' );
+		$this->env->getMessenger()->noteSuccess( $words->successNoteRemoved );
+		$this->restart( './work/note' );
+	}
+	
 	public function removeTag( $noteId, $tagId ){
 		$logic		= new Logic_Note( $this->env );
+		$words		= $this->getWords( 'msg' );
 		$logic->removeTagFromNote( $tagId, $noteId );
+		$this->env->getMessenger()->noteSuccess( $words->successNoteTagRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 	
-	public function removeLink( $noteId, $linkId ){
+	public function removeLink( $noteId, $noteLinkId ){
 		$logic		= new Logic_Note( $this->env );
-		$logic->removeLinkFromNote( $linkId, $noteId );
+		$logic->removeNoteLink( $noteLinkId );
+		$words		= $this->getWords( 'msg' );
+		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 

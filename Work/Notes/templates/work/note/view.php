@@ -5,7 +5,7 @@ if( count( $note->links ) ){
 	foreach( $note->links as $item ){
 		$label	= '<span class="link untitled">'.$item->url.'</span>';
 		if( $item->title )
-			$label	= '<span class="link titled"><acronym title="'.$item->url.'">'.$item->title.'</acronym></span>';
+			$label	= '<span class="link titled"><acronym title="'.$item->url.'">'.htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ).'</acronym></span>';
 		$url	= './work/note/link/'.$item->linkId;
 		$link	= '<a href="'.$url.'">'.$label.'</a>';
 		$list[]	= '<li class="link">'.$link.'</li>';
@@ -23,7 +23,7 @@ $panelTags	= '';
 if( count( $note->tags ) ){
 	$list	= array();
 	foreach( $note->tags as $tag ){
-		$label	= '<span class="tag">'.$tag->content.'</span>';
+		$label	= '<span class="tag">'.htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ).'</span>';
 		$list[]	= '<li class="tag">'.$label.'</li>';
 	}
 	$listTags	= '<ul class="tags-list">'.join( $list ).'</ul><div style="clear: left"></div>';
@@ -35,7 +35,7 @@ if( count( $note->tags ) ){
 }
 
 $converter	= new View_Helper_ContentConverter();
-$content	= $converter->convert( stripslashes( $note->content ) );
+$content	= $converter->convert( $note->content );
 
 function getShortHash( $noteId ){
 	$hash	= base64_encode( $noteId );
@@ -49,17 +49,13 @@ $shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
 
 return '
 <div class="column-left-75">
-	<form id="form_edit_note" name="edit_note" action="./work/note/edit/'.$note->noteId.'" method="post">
-		<fieldset>
-			<legend class="icon note">'.htmlentities( $note->title, ENT_QUOTES ).'</legend>
-
-			<div class="note-view-content">'.$content.'</div>
-			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './work/note', 'zur Liste', 'button cancel back left' ).'
-				'.UI_HTML_Elements::LinkButton( './work/note/edit/'.$note->noteId, 'bearbeiten', 'button edit' ).'
-			</div>
-		</fieldset>
-	</form>
+	<small><a href="./work/note">&laquo;&nbsp;zurück</a></small>
+	<h2>'.htmlentities( $note->title, ENT_QUOTES, 'UTF-8' ).'</h2>
+	<div class="note-view-content">'.$content.'</div>
+	<div class="buttonbar">
+		'.UI_HTML_Elements::LinkButton( './work/note', 'zur Liste', 'button cancel back left' ).'
+		'.UI_HTML_Elements::LinkButton( './work/note/edit/'.$note->noteId, 'bearbeiten', 'button edit' ).'
+	</div>
 </div>
 <div class="column-left-25">
 	'.$panelTags.'
