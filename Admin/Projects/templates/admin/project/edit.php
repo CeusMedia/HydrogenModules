@@ -1,6 +1,6 @@
 <?php
 
-$optStatus	= $words['status-version'];
+$optStatus	= $words['version-states'];
 ksort( $optStatus );
 
 $panelAddVersion	= '
@@ -39,7 +39,7 @@ $panelAddVersion	= '
 $list	= array();
 foreach( $versions as $version ){
 	$label	= $version->version;
-	$status	= $words['status-version'][$version->status];
+	$status	= $words['version-states'][$version->status];
 	$remove	= UI_HTML_Elements::Link( './admin/project/removeVersion/'.$version->projectVersionId, 'X' );
 	if( $version->title )
 		$label	.= ': '.$version->title;
@@ -55,34 +55,35 @@ $panelVersions		= '
 ';
 
 
-$optStatus	= $words['status'];
+$optStatus	= $words['states'];
 krsort( $optStatus );
 $optStatus['_selected']	= $project->status;
 
+$wf		= (object) $words['edit'];
+
 $panelEdit	= '
-	'.UI_HTML_Tag::create( 'h2', sprintf( $words['edit']['heading'], $project->title ) ).'
 	'.UI_HTML_Elements::Form( 'edit', './admin/project/edit/'.$projectId ).'
 		<fieldset>
-			<legend>'.sprintf( $words['edit']['legend'], $project->title ).'</legend>
+			<legend>'.sprintf( $wf->legend, $project->title ).'</legend>
 			<ul class="input">
-				<li>
-					'.UI_HTML_Tag::create( 'label', $words['edit']['labelTitle'], array( 'for' => 'title' ) ).'<br/>
-					'.UI_HTML_Elements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'l' ).'
+				<li class="column-left-66">
+					'.UI_HTML_Tag::create( 'label', $wf->labelTitle, array( 'for' => 'title', 'class' => 'mandatory' ) ).'<br/>
+					'.UI_HTML_Elements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'max mandatory' ).'
+				</li>
+				<li class="column-left-33">
+					'.UI_HTML_Tag::create( 'label', $wf->labelStatus, array( 'for' => 'status' ) ).'<br/>
+					'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
-					'.UI_HTML_Tag::create( 'description', $words['edit']['labelDescription'], array( 'for' => 'description' ) ).'<br/>
-					'.UI_HTML_Elements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'xl-m' ).'
-				</li>
-				<li>
-					'.UI_HTML_Tag::create( 'label', $words['edit']['labelStatus'], array( 'for' => 'status' ) ).'<br/>
-					'.UI_HTML_Elements::Select( 'status', $optStatus, 'm' ).'
+					'.UI_HTML_Tag::create( 'description', $wf->labelDescription, array( 'for' => 'description' ) ).'<br/>
+					'.UI_HTML_Elements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'max' ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './admin/project', $words['edit']['buttonCancel'], 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'doEdit', $words['edit']['buttonSave'], 'button save' ).'
+				'.UI_HTML_Elements::LinkButton( './admin/project', $wf->buttonCancel, 'button cancel' ).'
+				'.UI_HTML_Elements::Button( 'doEdit', $wf->buttonSave, 'button save' ).'
 				&nbsp;|&nbsp;
-				'.UI_HTML_Elements::LinkButton( './admin/project/remove/'.$projectId, $words['edit']['buttonRemove'], 'button remove', $words['edit']['buttonRemoveConfirm'] ).'
+				'.UI_HTML_Elements::LinkButton( './admin/project/remove/'.$projectId, $wf->buttonRemove, 'button remove', $wf->buttonRemoveConfirm ).'
 				<div class="clearfloat"></div>
 			</div>
 		</fieldset>
@@ -96,5 +97,6 @@ return '
 </div>
 <div class="column-left-66">
 	'.$panelEdit.'
-</div>';
+</div>
+<div class="column-clear"></div>';
 ?>
