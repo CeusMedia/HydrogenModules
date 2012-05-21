@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<module>
+	<title>Servers</title>
+	<description><![CDATA[Manage multiple servers.]]></description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Server.php5</class>
+		<class>Model/Server.php5</class>
+		<class>Model/Server/Project.php5</class>
+		<class>View/Admin/Server.php5</class>
+		<template>admin/server/add.php</template>
+		<template>admin/server/edit.php</template>
+		<template>admin/server/edit.project.add.php</template>
+		<template>admin/server/edit.project.list.php</template>
+		<template>admin/server/index.php</template>
+		<template>admin/server/view.php</template>
+		<locale>de/admin/server.ini</locale>
+		<style load="auto">site.admin.server.css</style>
+<!--		<script></script>-->
+	</files>
+<!--	<config name="testKey1">This is a test!</config>-->
+	<relations>
+		<needs>Admin_Projects</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="admin/server" rank="92">Server</link>
+	<link xml:lang="en" access="acl" path="admin/server" rank="92">Servers</link>
+	<sql on="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>servers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>servers` (
+  `serverId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`serverId`),
+  KEY `access` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>project_servers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>project_servers` (
+  `projectServerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) unsigned NOT NULL,
+  `serverId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `version` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`projectServerId`),
+  KEY `projectId` (`projectId`),
+  KEY `serverId` (`serverId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]>
+	</sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>servers`;
+DROP TABLE IF EXISTS `<%?prefix%>project_servers`;
+]]>
+	</sql>
+</module>
+

@@ -1,0 +1,10 @@
+legend.server {
+	background-image: url(/lib/cmIcons/tango/16/places/network-server.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/server.png);
+	}
+legend.server.add {
+	background-image: url(/lib/cmIcons/famfamfam/silk/server_add.png);
+	}
+legend.server.edit {
+	background-image: url(/lib/cmIcons/famfamfam/silk/server_edit.png);
+	}
