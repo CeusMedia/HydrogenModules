@@ -3,7 +3,7 @@ $title		= empty( $title ) ? '' : $title;
 $description	= empty( $description ) ? '' : $description;
 $description	= empty( $status ) ? '' : $status;
 
-$optStatus	= $words['status'];
+$optStatus	= $words['states'];
 krsort( $optStatus );
 $optStatus['_selected']	= $status;
 

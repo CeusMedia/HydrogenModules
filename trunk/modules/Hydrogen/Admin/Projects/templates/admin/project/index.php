@@ -11,7 +11,7 @@ foreach( $projects as $projectId => $project ){
 		'href'		=> './admin/project/edit/'.$project->projectId
 	);
 	$link		= UI_HTML_Tag::create( 'a', $project->title, $attributes );
-	$type		= '<span class="project-status status-'.$project->status.'">'.$words['status'][(int) $project->status].'</span>';
+	$type		= '<span class="project-status status-'.$project->status.'">'.$words['states'][(int) $project->status].'</span>';
 	$class		= 'project available status-'.$project->status;
 	$version	= '-';
 	if( $project->version ){

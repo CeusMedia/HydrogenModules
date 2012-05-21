@@ -3,7 +3,7 @@
 	<title>Projects</title>
 	<description>Basic project support and administration</description>
 	<category>Administration</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,8 +16,10 @@
 		<template>admin/project/add.php</template>
 		<template>admin/project/edit.php</template>
 		<template>admin/project/index.php</template>
+		<template>admin/project/edit.servers.php</template>
 	</files>
-	<link>admin/project</link>
+	<link xml:lang="de" access="acl" path="admin/project" rank="90">Projekte</link>
+	<link xml:lang="en" access="acl" path="admin/project" rank="90">Projects</link>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (

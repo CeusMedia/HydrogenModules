@@ -56,52 +56,56 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 		$this->restart( './admin/project/edit/'.$projectId );
 	}
 
+	public function ajaxGetVersions( $projectId ){
+		$modelVersion	= new Model_Project_Version( $this->env );
+		$versions		= $modelVersion->getAllByIndex( 'projectId', $projectId );
+		print( json_encode( $versions ) );
+		exit;
+	}
+
 	public function edit( $projectId )
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
+		$words			= $this->getWords( 'edit' );
 
-		$title			= $request->get( 'title' );
-		$description		= $request->get( 'description' );
-		$status			= $request->get( 'status' );
 		$model			= new Model_Project( $this->env );
 		$project		= $model->get( $projectId );
 		if( !$project ){
-			$messenger->noteError( $words['edit']['msgErrorInvalidId'] );
+			$messenger->noteError( $words->msgErrorInvalidId );
 			$this->restart( './admin/project' );
 		}
 
 		if( $request->get( 'doEdit' ) )
 		{
+			$title			= $request->get( 'title' );
 			if( empty( $title ) )
-				$messenger->noteError( $words['edit']['msgErrorTitleEmpty'] );
+				$messenger->noteError( $words->msgErrorTitleEmpty );
 			else
 			{
 				if( $model->getAll( array( 'title' => $title, 'projectId' => '!='.$projectId ) ) )
-					$messenger->noteError( $words['edit']['msgErrorTitleNotUnique'], $title );
+					$messenger->noteError( $words->msgErrorTitleNotUnique, $title );
 				else
 				{
 					$data	= array(
-						'title'		=> $title,
-						'description'	=> $description,
-						'status'	=> $status,
+						'title'			=> $title,
+						'description'	=> $request->get( 'description' ),
+						'status'		=> $request->get( 'status' ),
 						'modifiedAt'	=> time(),
 					);
-					$messenger->noteSuccess( $words['edit']['msgSuccess'], $title );
+					$messenger->noteSuccess( $words->msgSuccess, $title );
 					$this->restart( './admin/project' );
 				}
 			}
 		}
 		$modelVersion	= new Model_Project_Version( $this->env );
-		$versions	= $modelVersion->getAllByIndex( 'projectId', $project->projectId );
-		$this->view->setData(
-			array(
-				'projectId'	=> $project->projectId,
-				'project'	=> $project,
-				'versions'	=> $versions,
-			)
+		$versions		= $modelVersion->getAllByIndex( 'projectId', $project->projectId );#
+		$data			= array(
+			'projectId'	=> $project->projectId,
+			'project'	=> $project,
+			'versions'	=> $versions,
 		);
+		$this->view->setData( $data );
 	}
 
 	public function filter()
