@@ -12,11 +12,9 @@
 .role.role1,
 .role.role2 {
 	background-image: url(//img.int1a.net/famfamfam/silk/user_gray.png);
-	font-style: italic;
 	}
 .role.role3 {
 	background-image: url(//img.int1a.net/famfamfam/silk/user_suit.png);
-	font-weight: bold;
 	}
 .role.role4 {
 	background-image: url(//img.int1a.net/famfamfam/silk/user.png);

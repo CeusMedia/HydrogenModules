@@ -1,9 +1,11 @@
 <?php
+$wf		= (object) $words['index'];
+
 $heads	= array(
-	$words['index']['headTitle'],
-	$words['index']['headUsers'],
-	$words['index']['headAccess'],
-	$words['index']['headRegister']
+	$wf->headTitle,
+	$wf->headUsers,
+	$wf->headAccess,
+	$wf->headRegister
 );
 $heads	= UI_HTML_Elements::TableHeads( $heads );
 $number	= 0;
@@ -26,13 +28,16 @@ foreach( $roles as $nr => $role )
 		<td><span class="role-register register'.$role->register.'">%s</span></td>
 	</tr>';
 	$label	= $role->title;
-	$url	= './admin/role/edit/'.$role->roleId;
-	$alt	= "";#sprintf( $words['index']['alt-user'], $user->username );
-	$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
-	$link	= UI_HTML_Tag::create( 'a', $label, $attr );
+	if( $hasRightToEdit ){
+		$url	= './admin/role/edit/'.$role->roleId;
+		$alt	= "";#sprintf( $wf->alt-user'], $user->username );
+		$attr	= array( 'href' => $url, 'alt' => $alt, 'title' => $alt );
+		$label	= UI_HTML_Tag::create( 'a', $label, $attr );
+	}
+	$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $classes ) );
 	$line	= sprintf(
 		$line,
-		$link,
+		$label,
 		count( $role->users ),
 		$words['type-access'][$role->access],
 		$words['type-register'][$role->register]
@@ -46,7 +51,7 @@ return '
 <!--<h2>Rollen</h2>-->
 <div id="site-role-index">
 	<fieldset>
-		<legend class="roles">'.$words['index']['legend'].' <small>('.count( $roles ).')</small></legend>
+		<legend class="roles">'.$wf->legend.' <small>('.count( $roles ).')</small></legend>
 		<table id="roles">
 			<colgroup>
 				<col width="50%"/>
@@ -57,7 +62,7 @@ return '
 			'.$rows.'
 		</table>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/role/add', $words['index']['buttonAdd'], 'button add' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/role/add', $wf->buttonAdd, 'button add', NULL, !$hasRightToAdd ).'
 		</div>
 	</fieldset>
 </div>
@@ -77,10 +82,10 @@ foreach( $roles as $role )
 $list	= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'list' ) );
 return '
 <fieldset style="width: 300px">
-	<legend>'.$words['index']['legend'].'</legend>
+	<legend>'.$wf->legend.'</legend>
 	'.$list.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './admin/role/add', $words['index']['buttonNew'], 'button add' ).'
+		'.UI_HTML_Elements::LinkButton( './admin/role/add', $wf->buttonNew, 'button add' ).'
 	</div>
 </fieldset>
 ';*/
