@@ -119,6 +119,8 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 			$role->users	= $model->getAllByIndex( 'roleId', $role->roleId );
 		}
 		$this->addData( 'roles', $roles );
+		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'admin_role', 'add' ) );
+		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'admin_role', 'edit' ) );
 	}
 
 	public function remove( $roleId ) {
