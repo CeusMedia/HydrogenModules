@@ -14,5 +14,5 @@
 		<locale>de/admin/database/connection.ini</locale>
 		<style load="auto">module.admin.database.connection.css</style>
 	</files>
-	<link xml:lang="de" access="inside" path="admin/database/connection">Datenbank-Verbindung</link>
+	<link xml:lang="de" access="inside" path="admin/database/connection" rank="95">Datenbank-Verbindung</link>
 </module>
