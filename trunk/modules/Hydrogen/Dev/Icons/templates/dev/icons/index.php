@@ -8,6 +8,7 @@ $selected	= $this->env->getRequest()->get( 'project' );
 $projects	= array(
 	'lib/cmIcons/tango/'						=> 'Tango',
 	'lib/cmIcons/famfamfam/mini/'				=> 'famfamfam mini',
+	'lib/cmIcons/famfamfam/silk/'				=> 'famfamfam silk',
 	'lib/cmIcons/iconbase/aero/'				=> 'iconbase aero',
 	'lib/cmIcons/iconbase/docunium/'			=> 'iconbase docunium',
 	'lib/cmIcons/dryicons/classy/'				=> 'dryicons classy',
@@ -19,7 +20,7 @@ $projects	= array(
 $list	= array();
 foreach( $projects as $path => $label ){
 	$class	= $path == $selected ? 'active' : NULL;
-	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './?project='.urlencode( $path ) ) );
+	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './dev/icons/?project='.urlencode( $path ) ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 }
 $list	= UI_HTML_Tag::create( 'ul', $list );
@@ -51,8 +52,9 @@ function listFolder( $path, $uri, $skip = array() ){
 		$label		= $file->getFilename();
 		$icon		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );
 #		$label		= UI_HTML_Tag::create( 'div', $file->getFilename(), array( 'class' => 'label' ) );
-		$list[]	= UI_HTML_Tag::create( 'div', $icon, array( 'class' => 'item' ) );
+		$list[$label]	= UI_HTML_Tag::create( 'div', $icon, array( 'class' => 'item' ) );
 	}
+	ksort( $list );
 	return join( $list );
 }	
 

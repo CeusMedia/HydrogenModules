@@ -101,6 +101,22 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/content' );
 	}
 
+	protected function convertLeadingTabsToSpaces( $content ){
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^ *\t/", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^( *)\t/", "\\1 ", $lines[$nr] );
+		return implode( "\n", $lines );
+	}
+
+	protected function convertLeadingSpacesToTabs( $content ){
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^\t* /", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^(\t*) /", "\\1\t", $lines[$nr] );
+		return implode( "\n", $lines );
+	}
+
 	public function edit( $fileHash = NULL ) {
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
@@ -122,7 +138,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 
 		$newName	= $request->get( 'name' );
 		$newPath	= $request->get( 'path' );
-		$newContent	= $request->get( 'content' );
+		$newContent	= $this->convertLeadingSpacesToTabs( $request->get( 'content' ) );
 
 		if( $request->get( 'do' ) == 'save' ){
 			if( !trim( $newName ) )
@@ -169,7 +185,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$this->addData( 'filePath', $filePath );
 		$this->addData( 'fileName', basename( $filePath ) );
 		$this->addData( 'pathName', dirname( $filePath ) );
-		$this->addData( 'content', $content );
+		$this->addData( 'content', $this->convertLeadingTabsToSpaces( $content ) );
 		$this->loadFileTree();
 	}
 
