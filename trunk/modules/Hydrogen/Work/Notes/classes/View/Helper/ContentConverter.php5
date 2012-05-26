@@ -51,7 +51,7 @@ class View_Helper_ContentConverter{
 
 	public function convert( $content ){
 		$lines		= explode( "\n", $content );
-		$pattern	= "/(\r?\n)*code:?(\w+)?>(.*)<code(\r?\n)*/siU";
+		$pattern	= "/(\r?\n)+code:?(\w+)?>(.*)<code(\r?\n)+/siU";
 		$callback	= array( $this, 'replaceCodeBlocks' );
 		$content	= preg_replace_callback( $pattern, $callback, $content );
 		$content	= $this->convertLists( $content );
