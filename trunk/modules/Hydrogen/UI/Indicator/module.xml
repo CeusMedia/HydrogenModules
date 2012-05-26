@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Indicator</title>
 	<description><![CDATA[CSS-Support for UI_HTML_Indicator.]]></description>
-	<category>User Interace</category>
+	<category>User Interface</category>
 	<version>0.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>

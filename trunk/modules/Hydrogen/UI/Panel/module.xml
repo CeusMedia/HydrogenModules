@@ -9,7 +9,7 @@ code:js>$(".panel.collapsable").cmCollapsePanel();<code
 
 See [http://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel Demo] for more information.
 	]]></description>
-	<category>User Interace</category>
+	<category>User Interface</category>
 	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>

@@ -1,4 +1,31 @@
 
+
+body.site-work-note-view h1 {
+	font-size: 1.6em;
+	color: #00AFC4;
+	}
+body.site-work-note-view h2 {
+	border-bottom: 1px solid rgba(0,175,196,0.3);
+	font-size: 1.5em;
+	color: #00AFC4;
+	}
+body.site-work-note-view h3 {
+	border-bottom: 1px solid rgba(9,145,160,0.2);
+	font-size: 1.3em;
+	font-weight: normal;
+	color: #0991A0;
+	}
+body.site-work-note-view h4 {
+	border-bottom: 1px solid rgba(10,115,127,0.1);
+	font-size: 1.1em;
+	color: #0A737F;
+	}
+body.site-work-note-view h5 {
+	font-size: 1.0em;
+	color: #075A63;
+	}
+
+
 span.high {
 	background-color: yellow;
 	}

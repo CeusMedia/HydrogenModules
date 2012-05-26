@@ -2,7 +2,7 @@
 <module>
 	<title>UI:CSS: Form</title>
 	<description><![CDATA[Basic styling of form elements (input, select, textarea, fieldset, button).]]></description>
-	<category>User Interace</category>
+	<category>User Interface</category>
 	<version>0.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
