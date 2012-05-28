@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: HTML</title>
+	<description><![CDATA[
+]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<files/>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+class X extends CMF_Hydrogen_View_Helper_HTML{};
+]]></hook>
+</module>
