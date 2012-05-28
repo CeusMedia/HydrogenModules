@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Template Engines</title>
+	<description><![CDATA[Support for several template engines.
+]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<files/>
+	<relations/>
+	<config protected="yes" type="string" name="pathCache" mandatory="yes">tmp/cache/templates/</config>
+	<config protected="yes" type="string" name="pathCacheCompiled" mandatory="yes">tmp/cache/templates_c/</config>
+	<config protected="yes" type="string" name="defaultsForTemplates" mandatory="yes">PHP</config>
+	<config protected="yes" type="string" name="defaultsForContents" mandatory="yes">STE</config>
+	<config protected="yes" type="boolean" name="engine.PHP" mandatory="yes">yes</config>
+	<config protected="yes" type="boolean" name="engine.Smarty" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.Smarty.loadFile">Smarty/3.1.8/libs/Smarty.class.php</config>
+	<config protected="yes" type="boolean" name="engine.Dwoo" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.Dwoo.loadFile">dwoo/1.1.1/dwooAutoload.php</config>
+	<config protected="yes" type="boolean" name="engine.phpHaml">no</config>
+	<config protected="yes" type="string" name="engine.phpHaml.loadFile">phpHaml/1.0/includes/haml/HamlParser.class.php</config>
+	<config protected="yes" type="boolean" name="engine.PHPTAL" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.PHPTAL.loadPath">/var/www/lib/PHPTAL/trunk/classes/</config>
+	<config protected="yes" type="string" name="engine.PHPTAL.loadPrefix">php</config>
+	<config protected="yes" type="boolean" name="engine.Twig" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.Twig.loadPath">/var/www/lib/Twig/trunk/</config>
+	<config protected="yes" type="string" name="engine.Twig.loadExt">php</config>
+	<config protected="yes" type="string" name="engine.Twig.loadPrefix">Twig</config>
+	<config protected="yes" type="boolean" name="engine.STE" mandatory="yes">yes</config>
+	<config protected="yes" type="string" name="engine.STE.filter.Code">code</config>
+	<config protected="yes" type="string" name="engine.STE.filter.Strip">strip</config>
+	<config protected="yes" type="boolean" name="engine.STE.plugin.Comments">yes</config>
+	<config protected="yes" type="boolean" name="engine.STE.plugin.Files">no</config>
+	<config protected="yes" type="boolean" name="engine.STE.plugin.Includes">no</config>
+	<config protected="yes" type="boolean" name="engine.STE.plugin.Optionals">no</config>
+	<config protected="yes" type="boolean" name="engine.STE.plugin.Tidy">no</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		//  --  INIT  --  //
+		$messenger	= $context->env->getMessenger();							//  shortcut messenger
+		$config		= $module->config;											//  shortcut module configuration pairs
+		if( !class_exists( 'CMM_TEA_Factory' ) )								//  check cmModules integration
+			throw new RuntimeException( 'Template Engine Abstraction (TEA) is not available' );
+
+		//  --  GET ACTIVE TEMPLATE ENGINES  --  //
+		$engines	= array();													//  prepare empty engine map
+		$parameters	= array( 'loadFile', 'loadPath', 'loadExt' );				//  list of possible engine parameters
+		foreach( $config as $pair ){											//  iterate module configuration pairs
+			$pattern	= "/^engine\.([a-z0-9]+)$/i";							//  regular expression for finding engines
+			if( preg_match( $pattern, $pair->key ) && $pair->value ){			//  active engine found
+				$engine	= preg_replace( $pattern, '\\1', $pair->key );			//  extract engine key
+				$engines[$engine]	= array( 'active' => TRUE );				//  register engine as active
+			}
+		}
+
+		//  --  CONFIGURE TEMPLATE ENGINES  --  //
+		foreach( array_keys( $engines ) as $engine ){							//  iterate found engines
+			foreach( $parameters as $parameter ){								//  iterate list of possible parameters
+				$key	= 'engine.'.'.'.$engine.$parameter;						//  parameter key
+				if( array_key_exists( $key, $config ) )							//  found configuration pair for parameter
+					$engines[$engine][$parameter]	= $config[$key]->value;		//  register engine parameter value
+			}
+		}
+
+		//  --  CREATE TEMPLATE FACTORY  --  //
+		$context->tea	= new CMM_TEA_Factory( $engines );						//  create a template factory
+		$context->tea->setTemplatePath( '' );									//  set template to app root since templates AND content files are possible
+		$context->tea->setCachePath( $config['pathCache']->value );				//  set path to template cache
+		$context->tea->setCompilePath( $config['pathCacheCompiled']->value );	//  set path to compiled template cache
+
+		//  --  STE: CONFIGURE PLUGINS & FILTERS  --  //
+//		$messenger->noteNotice( 'TEA: STE init' );
+		if( $context->tea && $context->tea->hasEngine( 'STE' ) ){				//  TEA & template engine STE (from cmModules) must be available
+			$regexPlugin	= "/^engine\.ste\.plugin\.([a-z0-9]+)$/i";			//  regular expression to detect STE plugin
+			$regexFilter	= "/^engine\.ste\.filter.([a-z0-9]+)$/i";			//  regular expression to detect STE filter
+			foreach( $config as $pair ){										//  iterate module configuration pairs
+				if( !$pair->value )												//  if pair value is not positive
+					continue;													//  skip (for performance)
+				if( preg_match( $regexPlugin, $pair->key ) ){					//  configuration pair for STE plugin found
+					$plugin	= preg_replace( $regexPlugin, '\\1', $pair->key );	//  extract plugin name
+					$class	= 'CMM_STE_Plugin_'.ucfirst( $plugin );				//  anticipate plugin class name
+//					$messenger->noteNotice( 'TEA: STE Plugin <cite>'.$plugin.'</cite>' );
+					if( !class_exists( $class ) )								//  plugin class is NOT loadable
+						continue 0 && $messenger->noteFailure( 'TEA: STE Plugin <cite>'.$plugin.'</cite> is missing class <code>'.$class.'<code>' );
+					CMM_STE_Template::addPlugin( new $class );					//  register plugin globally on STE & skip to next pair
+				}
+				else if( preg_match( $regexFilter, $pair->key ) ){				//  configuration pair for active STE filter found
+					$filter	= preg_replace( $regexFilter, '\\1', $pair->key );	//  extract filter name
+					$class	= 'CMM_STE_Filter_'.ucfirst( $filter );				//  anticipate filter class name
+//					$messenger->noteNotice( 'TEA: STE Filter <cite>'.$filter.'</cite>' );
+					if( !class_exists( $class ) )								//  filter class is loadable
+						continue 0 && $messenger->noteFailure( 'TEA: STE Filter <cite>'.$filter.'</cite> is missing class <code>'.$class.'<code>' );
+					CMM_STE_Template::addFilter( new $class );					//  register filter globally on STE & skip to next pair
+				}
+			}
+		}
+]]></hook>
+</module>
