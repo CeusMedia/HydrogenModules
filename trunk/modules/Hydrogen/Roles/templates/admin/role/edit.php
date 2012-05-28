@@ -48,7 +48,7 @@ $panelEdit	= '
 	</form>
 ';
 
-$rights	= $this->loadTemplateFile( 'admin/role/edit.rights.php' );
+$rights	= $view->loadTemplateFile( 'admin/role/edit.rights.php' );
 
 return '
 <div class="column-control">

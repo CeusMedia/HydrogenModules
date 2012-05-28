@@ -52,7 +52,7 @@ $(document).ready(function(){
 	});
 });
 ';
-$this->env->getPage()->js->addScript( $script );
+$env->getPage()->js->addScript( $script );
 
 return '
 <fieldset id="role-edit-rights">

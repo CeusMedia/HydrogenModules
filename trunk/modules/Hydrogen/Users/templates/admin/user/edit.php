@@ -1,6 +1,6 @@
  <?php
 
-$this->env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
+$env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
 
 $script		= '
 $(document).ready(function(){
@@ -21,7 +21,7 @@ $(document).ready(function(){
 	}
 });
 ';
-$this->env->page->js->addScript( $script );
+$env->page->js->addScript( $script );
 
 $roleMap	= array();
 foreach( $roles as $role )
@@ -80,11 +80,11 @@ $panelStatus	= '
 </form>';
 
 $loggedAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
-$loggedAt		= $loggedAt->toPhrase( $this->env, TRUE );
+$loggedAt		= $loggedAt->toPhrase( $env, TRUE );
 $activeAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
-$activeAt		= $activeAt->toPhrase( $this->env, TRUE );
+$activeAt		= $activeAt->toPhrase( $env, TRUE );
 $createdAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
-$createdAt		= $createdAt->toPhrase( $this->env, TRUE );
+$createdAt		= $createdAt->toPhrase( $env, TRUE );
 
 $panelInfo	= '
 <fieldset>

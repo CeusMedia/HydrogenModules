@@ -1,7 +1,7 @@
 <?php
 $w			= (object) $words['index'];
 
-$urlView1	= $this->env->getConfig()->get( 'module.work_funds.urlView' );
+$urlView1	= $env->getConfig()->get( 'module.work_funds.urlView' );
 $urlView2	= 'http://www.finanzen.net/suchergebnis.asp?frmAktiensucheTextfeld=';
 
 $total		= 0;

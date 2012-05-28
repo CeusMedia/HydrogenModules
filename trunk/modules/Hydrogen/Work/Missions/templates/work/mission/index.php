@@ -1,7 +1,7 @@
 <?php
 
 $w	= (object) $words['index'];
-$panelFilter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
+$panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
 
 $iconUp		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
 $iconDown	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );

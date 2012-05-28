@@ -1,7 +1,7 @@
 <?php
 //  --  FILTER  --  //
 
-$session	= $this->env->getSession();
+$session	= $env->getSession();
 
 $optRole	= array( UI_HTML_Elements::Option( '', '' ) );
 foreach( array_reverse( $roles ) as $role ){
@@ -23,7 +23,7 @@ $optStatus	= join( $optStatus );
 $optOrder	= array( '' => '-' );
 foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
-$optOrder['_selected']	= $this->env->getSession()->get( 'filter-user-order' );
+$optOrder['_selected']	= $env->getSession()->get( 'filter-user-order' );
 
 $optDirection	= array( UI_HTML_Elements::Option( '', '' ) );
 foreach( $words['indexFilterDirections'] as $key => $label ){
@@ -38,7 +38,7 @@ $script	= '
 	UI.autocompleteUser("input.complete-username");
 });*/
 ';
-$this->env->page->js->addScript( $script );
+$env->page->js->addScript( $script );
 
 return '
 <form id="form_filter-users" name="filterUsers" action="./admin/user/filter" method="post">

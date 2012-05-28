@@ -1,6 +1,6 @@
 <?php
 $w		= (object) $words['confirm'];
-$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm.' );
 
 return '
 '.$text['top'].'

@@ -2,7 +2,7 @@
 
 $w	= (object) $words['login'];
 
-$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login.' );
 
 return '
 <div class="auth-login-text-top">'.$text['top'].'</div>

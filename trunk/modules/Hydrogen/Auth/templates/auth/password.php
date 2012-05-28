@@ -1,6 +1,6 @@
 <?php
 $w		= (object) $words['password'];
-$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password.' );
 
 return '
 '.$text['top'].'

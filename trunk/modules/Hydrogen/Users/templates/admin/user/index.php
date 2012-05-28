@@ -1,7 +1,7 @@
 <?php
 
-$filter	= $this->loadTemplateFile( 'admin/user/index.filter.php' );
-$list	= $this->loadTemplateFile( 'admin/user/index.list.php' );
+$filter	= $view->loadTemplateFile( 'admin/user/index.filter.php' );
+$list	= $view->loadTemplateFile( 'admin/user/index.list.php' );
 
 $heading	= '';
 if( !empty( $words['index']['heading'] ) )

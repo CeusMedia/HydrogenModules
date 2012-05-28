@@ -3,12 +3,12 @@
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $request->get( 'gender' ) );
 
 $contentTac	= "";
-if( $this->hasContent( 'auth', 'tac' ) )
-	$contentTac	= $this->loadContent( 'auth', 'tac' );
+if( $view->hasContent( 'auth', 'tac' ) )
+	$contentTac	= $view->loadContent( 'auth', 'tac' );
 
 $w		= (object) $words['register'];
 $user	= (object) $request->getAll();
-$text	= $this->populateTexts( array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' ), 'html/auth/register.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' ), 'html/auth/register.' );
 
 $panelUser	= '<fieldset>
 	<legend class="register">'.$w->legend.'</legend>
