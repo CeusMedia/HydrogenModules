@@ -66,20 +66,20 @@ $panelUser	= '<fieldset>
 </fieldset>
 ';
 
-$panelConditions	= '';/*XHTML::Fields(
-	XHTML::Legend( $w->legendFinish, 'register' ).
-	XHTML::UlClass( 'input',
-		XHTML::Li(
-			XHTML::Label( 'conditions', $w->labelTerms, '' ).XHTML::BR.
-			XHTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )		
+$panelConditions	= '';/*HTML::Fields(
+	HTML::Legend( $w->legendFinish, 'register' ).
+	HTML::UlClass( 'input',
+		HTML::Li(
+			HTML::Label( 'conditions', $w->labelTerms, '' ).HTML::BR.
+			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )		
 		).
-		XHTML::Li(
-			XHTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
-			XHTML::Label( 'accept_tac', $w->labelAccept )
+		HTML::Li(
+			HTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
+			HTML::Label( 'accept_tac', $w->labelAccept )
 		)
 	).
-	XHTML::Buttons(
-		XHTML::Button( 'saveUser', $w->buttonSave, 'button save' )
+	HTML::Buttons(
+		HTML::Button( 'saveUser', $w->buttonSave, 'button save' )
 	)
 );*/
 
