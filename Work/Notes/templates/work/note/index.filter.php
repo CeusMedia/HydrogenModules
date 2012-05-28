@@ -2,8 +2,8 @@
 
 $w		= (object) $words['filter'];
 
-$term	= $this->env->session->get( 'filter_notes_term' );
-$tags	= $this->env->session->get( 'filter_notes_tags' );
+$term	= $env->session->get( 'filter_notes_term' );
+$tags	= $env->session->get( 'filter_notes_tags' );
 
 $iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_in.png" title="'.$w->buttonTagEnableAlt.'"/>';
 $iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_out.png" title="'.$w->buttonTagForgetAlt.'"/>';
@@ -12,7 +12,7 @@ $not	= array();
 foreach( $tags as $tag )
 	$not[]	= $tag->tagId;
 
-$logic	= new Logic_Note( $this->env );
+$logic	= new Logic_Note( $env );
 $tags	= $logic->getTopTags( 3, 0, $not );
 
 $tagsMore	= "";

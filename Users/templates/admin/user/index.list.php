@@ -51,9 +51,9 @@ if( count( $total ) ){
 			$line,
 			$link,
 			$words['status'][$user->status],
-			$createdAt->toPhrase( $this->env, TRUE ),
-			$loggedAt->toPhrase( $this->env, TRUE ),
-			$activeAt->toPhrase( $this->env, TRUE )
+			$createdAt->toPhrase( $env, TRUE ),
+			$loggedAt->toPhrase( $env, TRUE ),
+			$activeAt->toPhrase( $env, TRUE )
 		);
 		$rows[]	= $line;
 	}

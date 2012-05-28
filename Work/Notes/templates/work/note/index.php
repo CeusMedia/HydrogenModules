@@ -2,7 +2,7 @@
 
 $w		= (object) $words['index'];
 
-$tags	= $this->env->session->get( 'filter_notes_tags' );
+$tags	= $env->session->get( 'filter_notes_tags' );
 
 $indicator	= new UI_HTML_Indicator();
 
@@ -42,7 +42,7 @@ $p = $pagination->build( $notes['number'], $limit, $offset );
 
 
 //  --  FILTER  --  //
-$panelFilter	= $this->loadTemplateFile( 'work/note/index.filter.php' );
+$panelFilter	= $view->loadTemplateFile( 'work/note/index.filter.php' );
 
 $iconAdd		= '<img src="http://img.int1a.net/famfamfam/silk/add.png"/>';
 $buttonAdd		= UI_HTML_Elements::LinkButton( './work/note/add', $iconAdd, 'button tiny' );

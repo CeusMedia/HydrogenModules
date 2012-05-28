@@ -1,7 +1,7 @@
 <?php
 
 $w		= (object) $words['add'];
-$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' );
 
 return '
 <div class="note-add column-left-75">

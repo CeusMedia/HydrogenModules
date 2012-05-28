@@ -1,7 +1,7 @@
 <?php
 
 $w		= (object) $words['edit'];
-$text	= $this->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' );
+$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' );
 
 $iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/add.png" title="zuweisen"/>';
 $iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/delete.png" title="entfernen"/>';

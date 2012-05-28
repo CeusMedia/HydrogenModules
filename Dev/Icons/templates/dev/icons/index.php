@@ -3,7 +3,7 @@
 $baseUri	= 'http://localhost/';
 $basePath	= '/var/www/';
 
-$selected	= $this->env->getRequest()->get( 'project' );
+$selected	= $env->getRequest()->get( 'project' );
 
 $projects	= array(
 	'lib/cmIcons/tango/'						=> 'Tango',
