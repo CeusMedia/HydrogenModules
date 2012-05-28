@@ -24,6 +24,9 @@
 		<template>manage/issue/index.list.php</template>
 		<style>site.issue.css</style>
 	</files>
+	<relations>
+		<needs type="module">Database</needs>
+	</relations>
 	<link>manage/issue</link>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;

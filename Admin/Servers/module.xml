@@ -24,7 +24,7 @@
 	</files>
 <!--	<config name="testKey1">This is a test!</config>-->
 	<relations>
-		<needs>Admin_Projects</needs>
+		<needs type="module">Admin_Projects</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="admin/server" rank="92">Server</link>
 	<link xml:lang="en" access="acl" path="admin/server" rank="92">Servers</link>

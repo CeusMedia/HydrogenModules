@@ -20,6 +20,7 @@
 		<style load="auto">site.role.css</style>
 	</files>
 	<relations>
+		<needs type="module">Database</needs>
 		<needs type="module">Users</needs>
 	</relations>
 	<config type="string" name="acl" protected="yes">CMF_Hydrogen_Environment_Resource_Acl_Database</config>

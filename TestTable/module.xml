@@ -17,6 +17,9 @@
 		<locale>de/test/table.ini</locale>
 		<script>Test.Table.js</script>
 	</files>
+	<relations>
+		<needs type="module">Database</needs>
+	</relations>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>test_table`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>test_table` (
