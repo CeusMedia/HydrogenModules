@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Database</title>
+	<description><![CDATA[Database connection support.]]></description>
+	<category>Ressource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<config protected="yes" type="string" name="access.driver" mandatory="yes">mysql</config>
+	<config protected="yes" type="string" name="access.host">localhost</config>
+	<config protected="yes" type="string" name="access.port"></config>
+	<config protected="yes" type="string" name="access.name" mandatory="yes"></config>
+	<config protected="yes" type="string" name="access.username"></config>
+	<config protected="yes" type="string" name="access.password"></config>
+	<config protected="yes" type="string" name="access.prefix"></config>
+<!--	<config protected="yes" type="string" name="access.lazy"></config>-->
+<!--	<config protected="yes" type="string" name="access.charset"></config>-->
+	<config protected="yes" type="string" name="log.statements"></config>
+	<config protected="yes" type="string" name="log.errors"></config>
+	<config protected="yes" type="string" name="option.ATTR_ERRMODE">PDO::ERRMODE_EXCEPTION</config>
+	<config protected="yes" type="boolean" name="option.ATTR_PERSISTENT">yes</config>
+	<config protected="yes" type="string" name="option.ATTR_DEFAULT_FETCH_MODE">PDO::FETCH_OBJ</config>
+	<config protected="yes" type="string" name="option.ATTR_CASE">PDO::CASE_NATURAL</config>
+	<config protected="yes" type="boolean" name="option.MYSQL_ATTR_USE_BUFFERED_QUERY">yes</config>
+	<config protected="yes" type="string" name="option.MYSQL_ATTR_INIT_COMMAND">SET NAMES 'utf8';</config>
+</module>
