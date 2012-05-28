@@ -40,8 +40,8 @@
 	<config name="autoLogout.forward.action"></config>
 	<relations>
 		<needs type="module">Roles</needs>
-		<needs type="module">Users</needs>
 		<needs type="module">Mail</needs>
+		<needs type="module">UI_Helper_HTML</needs>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>
