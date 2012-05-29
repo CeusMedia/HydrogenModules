@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: My Company</title>
+	<description>Management for company assigned to current user.</description>
+	<version>0.1</version>
+	<category>Management</category>
+<!--	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+-->	<files>
+		<class>Controller/Manage/My/Company.php5</class>
+		<class>View/Manage/My/Company.php5</class>
+		<template>manage/my/company/index.php</template>
+		<locale>de/manage/my/company.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Auth</needs>
+		<needs type="module">Manage_Company</needs>
+	</relations>
+	<link path="manage/my/company" access="acl" xml:lang="de">Mein Unternehmen</link>
+	<link path="manage/my/company" access="acl" xml:lang="en">My company</link>
+</module>
