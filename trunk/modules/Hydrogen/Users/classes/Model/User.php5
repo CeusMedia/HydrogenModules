@@ -23,6 +23,7 @@ class Model_User extends CMF_Hydrogen_Model {
 		'userId',
 		'roleId',
 		'roomId',
+		'companyId',
 		'status',
 		'email',
 		'username',
@@ -46,6 +47,7 @@ class Model_User extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		'roleId',
 		'roomId',
+		'companyId',
 		'status',
 		'username',
 		'email',
