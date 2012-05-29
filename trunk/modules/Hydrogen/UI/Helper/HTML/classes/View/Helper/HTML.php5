@@ -1,5 +1,5 @@
 <?php
-class CMF_Hydrogen_View_Helper_HTML{
+class View_Helper_HTML{
 //	public function __construct();
 }
 
