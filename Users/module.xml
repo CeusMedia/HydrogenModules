@@ -43,6 +43,8 @@ DROP TABLE IF EXISTS `<%?prefix%>users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `roleId` int(11) unsigned DEFAULT NULL,
+  `companyId` int(11) unsigned NOT NULL,
+  `roomId` int(11) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
   `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
