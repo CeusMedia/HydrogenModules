@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: My Branches</title>
+	<description>Management for own company branches.</description>
+	<version>0.1</version>
+	<category>Management</category>
+<!--	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+-->	<files>
+		<class>Controller/Manage/My/Branch.php5</class>
+		<class>View/Manage/My/Branch.php5</class>
+		<template>manage/my/branch/add.php</template>
+		<template>manage/my/branch/edit.php</template>
+		<template>manage/my/branch/index.php</template>
+		<locale>de/manage/my/branch.ini</locale>
+		<locale>de/html/manage/my/branch.edit.info.html</locale>
+	</files>
+	<relations>
+		<needs type="module">Manage_Branch</needs>
+	</relations>
+	<link path="manage/my/branch" access="acl" xml:lang="de">Meine Filialen</link>
+	<link path="manage/my/branch" access="acl" xml:lang="en">My branches</link>
+</module>
