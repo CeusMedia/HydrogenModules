@@ -5,9 +5,11 @@
 ]]></description>
 	<category>User Interface</category>
 	<version>0.1</version>
-	<files/>
+	<files>
+		<class>View/Helper/HTML.php5</class>
+	</files>
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-class X extends CMF_Hydrogen_View_Helper_HTML{};
+new View_Helper_HTML;
 ]]></hook>
 </module>
