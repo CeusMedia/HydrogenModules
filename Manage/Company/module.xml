@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Companies</title>
+	<description>Management for company accounts.</description>
+	<version>0.1</version>
+	<category>Management</category>
+<!--	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+-->	<files>
+		<class>Controller/Manage/Company.php5</class>
+		<class>View/Manage/Company.php5</class>
+		<class>Model/Company.php5</class>
+		<template>manage/company/add.php</template>
+		<template>manage/company/edit.php</template>
+		<template>manage/company/index.php</template>
+		<locale>de/manage/company.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Auth</needs>
+	</relations>
+	<link path="manage/company" access="acl" xml:lang="de">Unternehmen</link>
+	<link path="manage/company" access="acl" xml:lang="en">Companies</link>
+<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>companies` (
+  `companyId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `sector` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`companyId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+]]></sql>
+</module>
