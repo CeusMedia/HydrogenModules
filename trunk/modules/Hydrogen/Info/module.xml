@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info</title>
+	<description><![CDATA[Presents static contents.]]></description>
+	<category></category>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Info.php5</class>
+		<class>View/Info.php5</class>
+		<locale>de/html/info/404.html</locale>
+		<locale>en/html/info/404.html</locale>
+<!--		<template>info/404.php</template>-->
+		<script source="local" load="auto">site.info.js</script>
+		<style source="theme" load="auto">site.info.css</style>
+	</files>
+	<relations>
+		<supports>Manage_Content</supports>
+	</relations>
+</module>
