@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Cache</title>
+	<description>Cache contents management.</description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Admin/Cache.php5</class>
+		<class>View/Admin/Cache.php5</class>
+		<template>admin/cache/index.php</template>
+		<locale>de/admin/cache.ini</locale>
+		<locale>en/admin/cache.ini</locale>
+		<script>admin.cache.js</script>
+	</files>
+	<relations>
+		<needs type="module">Resource_Cache</needs>
+	</relations>
+	<link xml:lang="de" rank="97" access="acl" path="admin/cache">Cache</link>
+	<link xml:lang="en" rank="97" access="acl" path="admin/cache">Cache</link>
+</module>
+
