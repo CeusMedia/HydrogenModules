@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module>
+	<title>Cache</title>
+	<description><![CDATA[Cache support.]]></description>
+	<category>Ressource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<config protected="yes" type="string" name="type" mandatory="yes" values="Folder,Memcache,Memory,Noop,PDO">Noop</config>
+	<config protected="yes" type="string" name="resource"></config>
+	<config protected="yes" type="string" name="context"></config>
+	<config protected="yes" type="integer" name="expiration"></config>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>cache`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>cache` (
+  `cacheId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `context` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `value` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  `expiration` decimal(12,0) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cacheId`),
+  KEY `context` (`context`),
+  KEY `hash` (`hash`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>cache`;
+]]></sql>
+</module>
