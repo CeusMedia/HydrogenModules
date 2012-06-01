@@ -36,6 +36,25 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		$list	= array();
+		if( $this->env->has( 'cache' ) ){
+			$cache	= $this->env->getCache();
+
+		#	$module	= $env->getModules()->get( 'Database' );
+		#	$cache->set( 'timestamp', time() );
+		#	$cache->set( 'date', date( "r" ) );
+
+			foreach( $cache->index() as $key ){
+				$value	= unserialize( $cache->get( $key ) );
+				$list[]	= (object) array(
+					'key'	=> $key,
+					'value'	=> $value,
+					'type'	=> gettype( $value )
+				);
+			}
+		}
+		$this->addData( 'hasCache', $this->env->has( 'cache' ) );
+		$this->addData( 'list', $list );
 	}
 }
 ?>
