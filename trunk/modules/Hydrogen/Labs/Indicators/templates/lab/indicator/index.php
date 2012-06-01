@@ -1,7 +1,15 @@
 <?php
 
-$data	= array( 0.2, 0.5, 0.8, 1 );
-$graph	= View_EvolutionIndicator::render( $data, array( 'width' => 50, 'height' => 10 ) );
+$data	= array( 0.15, 0.5, 0.75, 1 );
+$graph	= View_EvolutionIndicator::render( $data, array( 'width' => 150, 'height' => 10 ) );
+
+
+$list	= array();
+$number	= rand( 5, 1000 );
+for( $i=0; $i<$number; $i++ )
+	$list[]	= round( rand( 25, 100 ) / 100, 2 );
+$graph2	= View_EvolutionIndicator::render( $list, array( 'width' => 150, 'height' => 10 ) );
+
 
 
 $l	= new View_RegionIndicator( 20 );
@@ -10,11 +18,34 @@ $l->addRegion( 1, '#7FFF00', '<h4>Test 2</h4>'.time() );
 $l->addRegion( 1, 'yellow', 'Test 3' );
 $l->addRegion( 1, 'orange', 'Test 4' );
 $l->addRegion( 1, 'red', 'Test 5' );
-$g	= $l->render( 50, 50 );
+$g	= $l->render( 50, 150 );
 
 return '
 <h3>Evolution Graph</h3>
-'.$graph.'
+An evolution graph is a two dimensional indicator. It shows several results (of whatever) as a line of colors.<br/>
+
+The aim is to be able to see the history 
+<br/>
+<h4>Example</h4>
+In this example we got 4 values. Imagine these values to be results of tests or something like that.<br/>
+Each test result value is a number between 0 and 1, representing the floating point number if a percentage value, like 75%.
+While 75% is represented as 0.75, other values are also added to a list (<cite>$data</cite>).<br/>
+<br/>
+<xmp class="php">$data	= array( 0.15, 0.5, 0.75, 1 );
+$conf	= array( "width" => 150, "height" => 10 );
+$graph	= View_EvolutionIndicator::render( $data, $conf );
+</xmp>
+Together with some output settings (<cite>$conf</cite>) the list of values is rendered by the <cite>Evolution Indicator View</cite>, which will return HTML markup.<br/>
+Now here is the example indicator:<br/>
+<div>'.$graph.'</div><br/>
+So this indicator shows that the test results were bad in the beginning (red, orange), got better (yellow) and finally are ok.<br/>
+<br/>
+<h4>Demo: random values</h4>
+The second example indicator shows a randomly generated list of values.<br/>
+<br/>
+<div>'.$graph2.'</div><br/>
+The indicator can diplay as much values as its width in pixels (150 pixels in this example).<br/>
+If more values are given, class <cite>Math_Extrapolation</cite> is applied to shorten the value list.<br/>
 <br/>
 <br/>
 <script>
