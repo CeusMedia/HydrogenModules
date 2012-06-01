@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Lab: Buttons</title>
+	<title>Lab: Indicators</title>
 	<description>Labs for button experiments.</description>
 	<version>0.1</version>
 	<category>Labs</category>
@@ -8,11 +8,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Lab/Button.php5</class>
-		<class>View/Lab/Button.php5</class>
-		<template>lab/button/index.php</template>
-		<style>site.lab.buttons.css</style>
+		<class>Controller/Lab/Indicator.php5</class>
+		<class>View/Lab/Indicator.php5</class>
+		<template>lab/indicator/index.php</template>
 	</files>
 	<relations/>
-	<link path="lab/button">Buttons</link>
+	<link path="lab/indicator">Indicators</link>
 </module>
