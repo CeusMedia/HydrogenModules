@@ -6,33 +6,26 @@ $imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'http://img.int1a.n
 $imgRemove	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'http://img.int1a.net/famfamfam/silk/delete.png', 'alt' => $wf->buttonRemove, 'title' => $wf->buttonRemove ) );
 
 $rows	= array();
-if( $env->has( 'cache' ) ){
-	$cache	= $env->getCache();
-
-#	$module	= $env->getModules()->get( 'Database' );
-#	$cache->set( 'timestamp', time() );
-#	$cache->set( 'date', date( "r" ) );
+if( $hasCache ){
 	
-	foreach( $cache->index() as $key ){
-		$value	= unserialize( $cache->get( $key ) );
-		$type	= gettype( $value );
-		switch( $type ){
+	foreach( $list as $item ){
+		switch( $item->type ){
 			case 'object':
-#				$value	= UI_VariableDumper::dump( $value, UI_VariableDumper::MODE_PRINT );
-				$value	= 'Instance of class <cite>'.get_class( $value ).'</cite>';
+#				$value	= UI_VariableDumper::dump( $item->value, UI_VariableDumper::MODE_PRINT );
+				$value	= 'Instance of class <cite>'.get_class( $item->value ).'</cite>';
 				break;
 			default:
-				$value	= '<input type="text" value="'.htmlentities( $value ).'" class="max"/>';
+				$value	= '<input type="text" value="'.htmlentities( $item->value ).'" class="max"/>';
 		}
 		$buttonSave		= UI_HTML_Tag::create( 'button', $imgEdit, array( 'type' => 'button', 'class' => 'button tiny edit' ) );
 		$buttonRemove	= UI_HTML_Tag::create( 'button', $imgRemove, array( 'type' => 'button', 'class' => 'button tiny remove' ) );
 		$cells	= array(
-			UI_HTML_Tag::create( 'td', $key ),
-			UI_HTML_Tag::create( 'td', $type ),
+			UI_HTML_Tag::create( 'td', $item->key ),
+			UI_HTML_Tag::create( 'td', $item->type ),
 			UI_HTML_Tag::create( 'td', $value ),
 			UI_HTML_Tag::create( 'td', $buttonSave.$buttonRemove ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( "data-key" => $key ) );
+		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( "data-key" => $item->key ) );
 	}
 }
 $columns	= UI_HTML_Elements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
