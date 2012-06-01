@@ -10,6 +10,8 @@
 	<files>
 		<class>Controller/Lab/Indicator.php5</class>
 		<class>View/Lab/Indicator.php5</class>
+		<class>View/EvolutionIndicator.php5</class>
+		<class>View/RegionIndicator.php5</class>
 		<template>lab/indicator/index.php</template>
 	</files>
 	<relations/>
