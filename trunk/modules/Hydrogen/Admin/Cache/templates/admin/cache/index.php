@@ -14,7 +14,7 @@ if( $env->has( 'cache' ) ){
 #	$cache->set( 'date', date( "r" ) );
 	
 	foreach( $cache->index() as $key ){
-		$value	= $cache->get( $key );
+		$value	= unserialize( $cache->get( $key ) );
 		$type	= gettype( $value );
 		switch( $type ){
 			case 'object':
