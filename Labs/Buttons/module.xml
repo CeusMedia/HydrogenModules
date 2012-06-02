@@ -13,6 +13,5 @@
 		<template>lab/button/index.php</template>
 		<style>site.lab.buttons.css</style>
 	</files>
-	<relations/>
-	<link path="lab/button">Buttons</link>
+	<link path="lab/button">Lab: Buttons</link>
 </module>
