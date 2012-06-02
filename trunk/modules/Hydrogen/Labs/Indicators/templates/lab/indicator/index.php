@@ -47,7 +47,6 @@ The second example indicator shows a randomly generated list of values.<br/>
 The indicator can diplay as much values as its width in pixels (150 pixels in this example).<br/>
 If more values are given, class <cite>Math_Extrapolation</cite> is applied to shorten the value list.<br/>
 <br/>
-<br/>
 <script>
 $(document).ready(function(){
 	$(".region-bar").bind("click",function(){
