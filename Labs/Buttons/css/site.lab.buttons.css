@@ -5,8 +5,8 @@ button {
 .button {
 	padding: 3px 10px;
 	background-color: #DDD;
-	background-image: url(../../images/nav_logo13.png);
-	background-position: 0px -192px;
+	background-image: url(../img/background_button_gradient_1.png);
+	background-position: 0px 0px;
 	background-repeat: repeat-x;
 	border-width: 1px;
 	border-style: solid;
@@ -22,11 +22,11 @@ button {
 	}
 .button:focus,
 .button:hover {
-	background-position: 0 -199px;
+	background-position: 0 -7px;
 	}
 .button:active {
 	border-color: #999999 #CCCCCC #CCCCCC #999999;
-	background-position: 0 -199px;
+	background-position: 0 -7px;
 	}
 .button:focus {							/*  IE */
 	outline : none;
