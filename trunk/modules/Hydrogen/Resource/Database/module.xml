@@ -7,7 +7,7 @@
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
-	<config protected="yes" type="string" name="access.driver" mandatory="yes">mysql</config>
+	<config protected="yes" type="string" name="access.driver" mandatory="yes" values="cubrid,mssql,mysql,pgsql,sqlite">mysql</config>
 	<config protected="yes" type="string" name="access.host">localhost</config>
 	<config protected="yes" type="string" name="access.port"></config>
 	<config protected="yes" type="string" name="access.name" mandatory="yes"></config>
