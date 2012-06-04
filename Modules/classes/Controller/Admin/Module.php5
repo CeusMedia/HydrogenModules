@@ -5,6 +5,10 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	const INSTALL_TYPE_LINK		= 1;
 	const INSTALL_TYPE_COPY		= 2;
 
+	/**
+	 *	@deprecated		replaced by module installer
+	 *	@todo			remove
+	 */
 	public function copy( $moduleId ){
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
 			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
@@ -115,6 +119,9 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
 */	}
 
+	/**
+	 * @deprecated	use Logic_Module::installModule instead
+	 */
 	public function installModule( $moduleId, $installType = 0, $verbose = NULL ){
 		$config		= $this->env->getConfig();
 		$model		= new Model_Module( $this->env );
@@ -180,6 +187,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		return $state !== FALSE;
 	}
 
+	/**
+	 *
+	 *	@deprecated		replaced by module installer
+	 *	@todo			remove
+	 */
 	public function link( $moduleId ){
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_LINK ) )
 			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
