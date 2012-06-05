@@ -1,0 +1,360 @@
+
+
+h3.position span {
+	color: #777;
+	font-weight: normal;
+	font-size: 0.9em;
+	}
+
+
+
+	
+a.module {
+	font-size: 1.1em;
+	line-height: 0.9em;
+	text-decoration: none;
+	padding-left: 3px;
+	}
+tr.module td small{
+	padding-left: 23px;
+	}
+
+	
+table.modules.all td div a.image img {
+	max-width: 16px;
+	max-height: 16px;
+	}
+
+
+/*  --  LIST: RELATED MODULES  --  */
+ul.relations {
+	list-style: none;
+	margin: 0px;
+	}
+ul.relations li {
+	border: 1px solid white;
+	padding: 2px 2px 1px 4px;
+	}
+ul.relations li span {
+	font-size: 1.1em
+	}
+ul.relations li.current {
+	border: 2px solid #00BF00;
+	background-color: #BFFFBF;
+	}
+
+
+/*  --  RESOURCE LIST  -- */
+dl.resources>dt {
+	clear: left;
+	}
+dl.resources>dd>ul,
+dl.resources>dd>ul li {
+	clear: left;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	height: 20px;
+	}
+dl.resources>dd>ul li a,
+dl.resources>dd>ul li span{
+	float: left;
+	display: block;
+	min-height: 20px;
+	}
+dl.resources>dd>ul li.missing {
+	background-color: #FFDDCC;
+	}
+
+.missing {
+	background-color: #FFDDCC;
+	}
+	
+
+/*  --  JQUERY UI WIDGET  --  */
+.ui-widget {
+	border: 2px solid #CFCFCF;
+	padding: 0px;
+	font-size: 1em;
+	}
+.ui-widget-content {
+	background: none;
+	overflow: auto;
+	}
+.ui-widget-header {
+	border: 0px;
+	border-bottom: 1px solid #BFBFBF;
+	border-radius: 0px;
+	background-position: 50% 30%;
+	}
+.ui-tabs-nav li a {
+	outline: 0;
+	}
+.ui-widget-header .ui-state-default,
+.ui-widget-header .ui-state-active {
+	border: 1px solid #BFBFBF;
+	background-color: #EFEFEF;
+	}	
+.ui-widget-header .ui-state-active{
+	border: 1px solid #BFBFBF;
+	background-color: #FFFFFF;
+	}
+
+	
+
+
+
+span.icon {
+	margin: 0px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+/*	height: 16px;
+	display: block;
+	float: left;
+*/	}
+span.icon.class {
+	background-image: url(http://img.int1a.net/famfamfam/silk/page_white_php.png);
+	}
+span.icon.locale {
+	background-image: url(http://img.int1a.net/famfamfam/silk/page_white_world.png);
+	}
+span.icon.template {
+	background-image: url(http://img.int1a.net/famfamfam/silk/html.png);
+	}
+span.icon.script {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	}
+span.icon.style {
+	background-image: url(http://img.int1a.net/famfamfam/silk/css.png);
+	}
+span.icon.image {
+	background-image: url(http://img.int1a.net/famfamfam/silk/image.png);
+	}
+
+span.icon.module {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	}
+span.icon.module.add {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
+	}
+span.icon.module.edit {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	}
+span.icon.module.disabled {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
+	}
+	
+span.icon.module.module-status-0 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_delete.png);
+	}
+span.icon.module.module-status-1 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	}
+span.icon.module.module-status-2 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	}
+span.icon.module.module-status-3 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_link.png);
+	}
+span.icon.module.module-status-4 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_error.png);
+	}
+	
+	
+	
+	
+legend.module,
+legend.module-add,
+legend.module-edit {
+	background-repeat: no-repeat;
+	background-position: 7px 7px;
+	padding-left: 28px;
+	}
+legend.module {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/package.png);
+	}
+legend.module-add {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/package_add.png);
+	}
+legend.module-edit {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edi.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/package_edit.png);
+	}
+
+.module-type.type-1 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-2 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-3 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-4 {
+	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+
+
+
+
+
+/*  --  MODULE OVERVIEW  --  */
+div.module-overview div.module {
+	float: left;
+	width: 210px;
+	height: 40px;
+	border:1px solid gray;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	padding: 4px 8px
+	}
+div.module-overview div.module div.module-icon{
+	margin-top: 3px;
+	}
+div.module-overview div.module div.module-icon,
+div.module-overview div.module div.module-icon img {
+	display: block;
+	float: left;
+	width: 32px;
+	height: 32px;
+	}
+div.module-overview div.module div.module-title {
+	margin-top: 5px;
+	margin-left: 40px;
+	font-size: 1.2em;
+	font-width: normal;
+	text-shadow: 0px 1px 1px white;
+	line-height: 1em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	}
+div.module-overview div.module div.module-desc {
+	margin: 0px 0px 0px 40px;
+	font-size: 0.9em;
+	text-shadow: 0px 1px 1px white;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	}
+div.module-overview fieldset {
+	border-width: 1px 0px 0px 0px;
+	border-style: dotted;
+	border-radius: 0px;
+	border-color: gray;
+	margin: 0px;
+	padding: 2px 0px;
+}
+div.module-overview fieldset legend {
+	text-align: left;
+	border-radius: 0px;
+	margin: 0px 0px 0px 10px;
+	padding: 2px 6px;
+	border: 0px;
+	font-size: 1.2em;
+	}
+
+	
+button.form-trigger,
+button.legend-form-trigger {
+	float: right;
+	}
+	
+button.form-trigger{
+	margin-top: -5px;
+	}
+button.legend-form-trigger {
+	margin-left: 1em;
+	}
+
+	
+
+ul.general-info {
+	list-style: none;
+	margin: 0px 0px 10px 0px;
+	padding: 0px;
+	}
+ul.general-info li.author,
+ul.general-info li.company,
+ul.general-info li.licence {
+	clear: both;
+	background-repeat: no-repeat;
+	background-position: 1px 2px;
+	padding: 1px 0px 1px 21px;
+	padding: 1px 0px 1px 2px;
+	border-bottom: 1px solid #ccc;
+	height: 20px;
+	}
+/*
+ul.general-info li.company {
+	background-image: url(http://img.int1a.net/famfamfam/silk/building.png);
+	}
+ul.general-info li.author {
+	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	}
+ul.general-info li.license {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	}
+*/	
+legend.icon.author{
+	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	}
+legend.icon.company{
+	background-image: url(http://img.int1a.net/famfamfam/silk/building.png);
+	}
+legend.icon.license{
+	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	}
+
+
+#form_manage_module_config input.label {
+	background-color: #F7F7F7;
+	border-color: #EFEFEF;
+	cursor: pointer;
+	}
+	
+#form_manage_module_config input.label.active-yes {
+	background-color: #EEFFEE;
+	font-style: italic;
+	}
+
+#form_manage_module_config input.label.active-no {
+	background-color: #FFEEEE;
+	font-style: italic;
+	}
+	
+select.active-yes {
+	background-color: #BBFFBB;
+	background-color: #EEFFEE;
+	background-color: #DDFFDD;
+	background-color: #CCFFCC;
+	}
+
+select.active-no {
+	background-color: #FFBBBB;
+	background-color: #FFEEEE;
+	background-color: #FFDDDD;
+	background-color: #FFCCCC;
+	}
+
+#form_manage_module_config td.cell-config-type {
+	color: gray;
+	font-size: 0.9em;
+	font-style: italic;
+	}
+
+#form_manage_module_config td.cell-config-value {
+	}
+

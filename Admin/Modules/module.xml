@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<module>
+	<title>Modules</title>
+	<description><![CDATA[Basic administration of modules.
+After providing support for module handling, this module allows you to
+- browser available modules
+- view details of available modules
+- <strike>install module to local instance</strike>
+- <strike>uninstall module form local</strike>
+This module can be extended by:
+- Module Installer
+- Module Editor
+- Module Creator
+This module needs other modules to be installed:
+- Module Sources
+- App Instances
+]]></description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Module.php5</class>
+		<class>Controller/Manage/Module/Viewer.php5</class>
+		<class>Model/Module.php5</class>
+		<class>View/Manage/Module.php5</class>
+		<class>View/Manage/Module/Viewer.php5</class>
+		<class>Logic/Module.php5</class>
+		<locale>de/manage/module.ini</locale>
+		<locale>de/manage/module/viewer.ini</locale>
+		<locale>en/manage/module.ini</locale>
+		<locale>en/manage/module/viewer.ini</locale>
+		<template>manage/module/index.filter.php</template>
+		<template>manage/module/index.php</template>
+		<script source="local" load="auto">site.manage.module.js</script>
+		<style source="theme" load="auto">site.manage.module.css</style>
+	</files>
+	<relations>
+		<needs type="module">Admin_Module_Sources</needs>
+<!--		<needs type="module">Admin_Instances</needs>-->
+	</relations>
+	<link xml:lang="de" path="manage/module" access="acl" rank="35">Module</link>
+	<link xml:lang="de" path="manage/module/viewer" access="acl" rank="35">Moduleansicht</link>
+	<link xml:lang="en" path="manage/module" access="acl" rank="36">Modules</link>
+	<link xml:lang="en" path="manage/module/viewer" access="acl" rank="36">Module Viewer</link>
+</module>
