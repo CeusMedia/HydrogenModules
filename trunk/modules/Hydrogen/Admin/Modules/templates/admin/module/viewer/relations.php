@@ -3,7 +3,7 @@ $w		= (object) $words['view'];
 
 $count	= count( $module->neededModules ) + count( $module->supportedModules );
 
-$url	= './manage/module/viewer/index/';
+$url	= './admin/module/viewer/index/';
 
 $relationsNeeded	= '-';
 if( $module->neededModules )
@@ -17,7 +17,7 @@ return '
 <div class="column-right-60">
 	<fieldset>
 		<legend>Abhängigkeiten</legend>
-		<img src="./manage/module/showRelationGraph/'.$moduleId.'"/>
+		<img src="./admin/module/showRelationGraph/'.$moduleId.'"/>
 	</fieldset>
 </div>
 <div class="column-left-40">

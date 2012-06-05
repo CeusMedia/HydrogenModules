@@ -83,12 +83,12 @@ $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 
 $disabled			= $module->type == 4 ? '' : 'disabled';
-$buttonList			= UI_HTML_Elements::LinkButton( './manage/module', $w->buttonList, 'button cancel' );
-$buttonCancel		= UI_HTML_Elements::LinkButton( './manage/module', $w->buttonCancel, 'button cancel' );
-$buttonInstall		= UI_HTML_Elements::LinkButton( './manage/module/installer/index/'.$module->id, $w->buttonInstall, 'button add', NULL, $disabled );
+$buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' );
+$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $w->buttonInstall, 'button add', NULL, $disabled );
 $disabled			= $module->type == 4 ? 'disabled' : '';
-$buttonEdit			= UI_HTML_Elements::LinkButton( './manage/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
-$buttonUninstall	= UI_HTML_Elements::LinkButton( './manage/module/viewer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
+$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/viewer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 
 return '
 <fieldset>
