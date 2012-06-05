@@ -21,27 +21,27 @@ This module needs other modules to be installed:
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Module.php5</class>
-		<class>Controller/Manage/Module/Viewer.php5</class>
+		<class>Controller/Admin/Module.php5</class>
+		<class>Controller/Admin/Module/Viewer.php5</class>
 		<class>Model/Module.php5</class>
-		<class>View/Manage/Module.php5</class>
-		<class>View/Manage/Module/Viewer.php5</class>
+		<class>View/Admin/Module.php5</class>
+		<class>View/Admin/Module/Viewer.php5</class>
 		<class>Logic/Module.php5</class>
-		<locale>de/manage/module.ini</locale>
-		<locale>de/manage/module/viewer.ini</locale>
-		<locale>en/manage/module.ini</locale>
-		<locale>en/manage/module/viewer.ini</locale>
-		<template>manage/module/index.filter.php</template>
-		<template>manage/module/index.php</template>
-		<script source="local" load="auto">site.manage.module.js</script>
-		<style source="theme" load="auto">site.manage.module.css</style>
+		<locale>de/admin/module.ini</locale>
+		<locale>de/admin/module/viewer.ini</locale>
+		<locale>en/admin/module.ini</locale>
+		<locale>en/admin/module/viewer.ini</locale>
+		<template>admin/module/index.filter.php</template>
+		<template>admin/module/index.php</template>
+		<script source="local" load="auto">site.admin.module.js</script>
+		<style source="theme" load="auto">site.admin.module.css</style>
 	</files>
 	<relations>
 		<needs type="module">Admin_Module_Sources</needs>
 <!--		<needs type="module">Admin_Instances</needs>-->
 	</relations>
-	<link xml:lang="de" path="manage/module" access="acl" rank="35">Module</link>
-	<link xml:lang="de" path="manage/module/viewer" access="acl" rank="35">Moduleansicht</link>
-	<link xml:lang="en" path="manage/module" access="acl" rank="36">Modules</link>
-	<link xml:lang="en" path="manage/module/viewer" access="acl" rank="36">Module Viewer</link>
+	<link xml:lang="de" path="admin/module" access="acl" rank="35">Module</link>
+	<link xml:lang="de" path="admin/module/viewer" access="acl" rank="35">Moduleansicht</link>
+	<link xml:lang="en" path="admin/module" access="acl" rank="36">Modules</link>
+	<link xml:lang="en" path="admin/module/viewer" access="acl" rank="36">Module Viewer</link>
 </module>

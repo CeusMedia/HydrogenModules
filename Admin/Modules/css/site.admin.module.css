@@ -319,18 +319,18 @@ legend.icon.license{
 	}
 
 
-#form_manage_module_config input.label {
+#form_admin_module_config input.label {
 	background-color: #F7F7F7;
 	border-color: #EFEFEF;
 	cursor: pointer;
 	}
 	
-#form_manage_module_config input.label.active-yes {
+#form_admin_module_config input.label.active-yes {
 	background-color: #EEFFEE;
 	font-style: italic;
 	}
 
-#form_manage_module_config input.label.active-no {
+#form_admin_module_config input.label.active-no {
 	background-color: #FFEEEE;
 	font-style: italic;
 	}
@@ -349,12 +349,12 @@ select.active-no {
 	background-color: #FFCCCC;
 	}
 
-#form_manage_module_config td.cell-config-type {
+#form_admin_module_config td.cell-config-type {
 	color: gray;
 	font-size: 0.9em;
 	font-style: italic;
 	}
 
-#form_manage_module_config td.cell-config-value {
+#form_admin_module_config td.cell-config-value {
 	}
 
