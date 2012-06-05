@@ -320,7 +320,7 @@ class Logic_Module {
 
 		if( count( $exceptions ) ){
 			foreach( $listDone as $fileName )
-				unlink( $this->env->pathApp.$fileName );
+				@unlink( $this->env->pathApp.$fileName );
 			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
 		}
 		return FALSE;

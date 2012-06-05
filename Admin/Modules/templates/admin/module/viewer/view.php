@@ -17,7 +17,7 @@ $nr			= 0;
 $disabled	= array();
 foreach( $mapTabs as $key => $tabLabel ){
 	$count		= 0;
-	$content	= require_once( 'templates/manage/module/viewer/'.$key.'.php' );
+	$content	= require_once( 'templates/admin/module/viewer/'.$key.'.php' );
 	$label		= $words['view'][$tabLabel];
 	$label		.= $count ? ' <small>('.$count.')</small>' : '';
 	if( $key != 'general' && !$count )
@@ -30,7 +30,7 @@ $options	= array( 'disabled'	=> $disabled );
 
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 
-$panelGeneral	= $this->loadTemplateFile( 'manage/module/viewer/general.php' );
+$panelGeneral	= $this->loadTemplateFile( 'admin/module/viewer/general.php' );
 
 return '
 <style>
@@ -48,7 +48,7 @@ dl.general dd {
 	<cite>'.$module->title.'</cite>
 </h3>
 <div class="nav-position" style="margin-bottom: 0.8em">
-	&laquo;&nbsp;<a href="./manage/module">Liste</a>
+	&laquo;&nbsp;<a href="./admin/module">Liste</a>
 </div>
 '.$panelGeneral.'
 '.$tabs->buildTabs( 'tabs-module' ).'
