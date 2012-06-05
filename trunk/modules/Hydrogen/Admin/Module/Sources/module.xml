@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<module>
+	<title>Module Sources</title>
+	<description><![CDATA[Editor for module sources.]]></description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Module/Source.php5</class>
+		<class>Model/ModuleSource.php5</class>
+		<class>View/Admin/Module/Source.php5</class>
+		<locale>de/admin/module/source.ini</locale>
+		<locale>de/html/admin/module/source/add.info.html</locale>
+		<locale>de/html/admin/module/source/edit.info.html</locale>
+		<locale>en/admin/module/source.ini</locale>
+		<locale>en/html/admin/module/source/add.info.html</locale>
+		<locale>en/html/admin/module/source/edit.info.html</locale>
+		<template>admin/module/source/add.php</template>
+		<template>admin/module/source/edit.php</template>
+		<template>admin/module/source/index.php</template>
+		<script source="local">site.admin.module.source.js</script>
+		<style source="theme">site.admin.module.source.css</style>
+	</files>
+	<link xml:lang="de" path="admin/module/source" access="acl" rank="93">Module-Quellen</link>
+	<link xml:lang="en" path="admin/module/source" access="acl" rank="93">Module Sources</link>
+</module>

@@ -1,0 +1,28 @@
+body.moduleAdminModuleSource input.valid {
+	background-color: #DFFFDF;
+	}
+body.moduleAdminModuleSource input.invalid {
+	background-color: #FFDFDF;
+	}
+body.moduleAdminModuleSource #panelModules-content {
+	max-height: 250px;
+	overflow: auto;
+	}
+	
+body.moduleAdminModuleSource .access-none {
+	background-color: #EFEFEF;
+	}
+body.moduleAdminModuleSource .access-readable {
+	background-color: #EFFFEF;
+	}
+body.moduleAdminModuleSource .access-writable {
+	background-color: #DFFFDF;
+	}
+body.moduleAdminModuleSource .access-executable {
+	background-color: #CFFFCF;
+	}
+
+	
+body.moduleAdminModuleSource button.refresh span {
+	background-image: url(http://img.int1a.net/famfamfam/mini/borderless/png/action_refresh_blue.png);
+	}
