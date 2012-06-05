@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<module>
+	<title>Module Editor</title>
+	<description><![CDATA[Editor for local modules.
+Building on basic module administration, this module allows you to
+- browser local or locally installed modules
+- view details of local modules
+- edit all attributes of local modules
+- uninstall local module</strike>
+- import local module to module source</strike>
+This module can be extended by:
+- Module Installer
+- Module Creator
+This module needs other modules to be installed:
+- Modules (thus Module Sources, App Instances)
+]]></description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Module/Editor.php5</class>
+		<class>View/Admin/Module/Editor.php5</class>
+		<locale>de/admin/module/editor.ini</locale>
+		<locale>en/admin/module/editor.ini</locale>
+		<template>admin/module/editor/config.php</template>
+		<template>admin/module/editor/database.php</template>
+		<template>admin/module/editor/edit.php</template>
+		<template>admin/module/editor/general.authors.php</template>
+		<template>admin/module/editor/general.companies.php</template>
+		<template>admin/module/editor/general.licenses.php</template>
+		<template>admin/module/editor/general.php</template>
+		<template>admin/module/editor/index.php</template>
+		<template>admin/module/editor/links.php</template>
+		<template>admin/module/editor/relations.php</template>
+		<template>admin/module/editor/resources.php</template>
+		<template>admin/module/editor/view.php</template>
+		<template>admin/module/editor/xml.php</template>
+	</files>
+	<relations>
+		<needs type="module">Admin_Modules</needs>
+	</relations>
+	<link xml:lang="de" path="admin/module/editor" access="acl" rank="45">Modul-Editor</link>
+	<link xml:lang="en" path="admin/module/editor" access="acl" rank="45">Module Editor</link>
+</module>
