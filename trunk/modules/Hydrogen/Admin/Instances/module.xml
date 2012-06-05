@@ -8,7 +8,12 @@
 		<class>Controller/Admin/Instance.php5</class>
 		<class>Model/Instance.php5</class>
 		<class>View/Admin/Instance.php5</class>
+		<template>admin/instance/add.php</template>
+		<template>admin/instance/edit.check.php</template>
+		<template>admin/instance/edit.database.php</template>
+		<template>admin/instance/edit.php</template>
 		<template>admin/instance/index.php</template>
+		<template>admin/instance/index.tmpl</template>
 		<locale>de/admin/instance.ini</locale>
 		<locale>en/admin/instance.ini</locale>
 	</files>

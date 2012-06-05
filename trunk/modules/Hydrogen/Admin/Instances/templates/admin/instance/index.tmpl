@@ -1,0 +1,9 @@
+<?php
+require_once 'cmClasses/<%versionCMC%>/autoload.php5';
+require_once 'cmFrameworks/<%versionCMF%>/autoload.php5';
+
+CMF_Hydrogen_Environment_Web::$configFile	= "<%configPath%><%configFile%>";
+
+$app	= new CMF_Hydrogen_Application_Web_Site();
+$app->run();
+?>
