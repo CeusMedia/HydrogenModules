@@ -1,0 +1,20 @@
+<?php
+
+$w	= (object) $words['index'];
+
+$content	= '
+<h2>'.$w->heading.'</h2>
+This page is still empty.<br/>
+<br/>
+<h3>Steps from here</h3>
+<ul>
+	<li>Edit this content in template file <cite><%tmplFile%></cite>.</li>
+	<li>For actions on this page edit <cite>Controller_<%classKey%></cite>.</li>
+	<li>For new view elements on this page edit <cite>View_<%classKey%></cite>.</li>
+	<li>There is an empty logic class (Logic_<%className%>) ready for business logic.</li>
+	<li>For permanent store you can configure the database model class <cite>Model_<%className%></cite>.</li>
+</ul>
+';
+
+return $content;
+?>
