@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Content</title>
+	<description><![CDATA[Content converter and format helper.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<files>
+		<class>View/Helper/ContentConverter.php5</class>
+	</files>
+	<relations/>
+</module>
