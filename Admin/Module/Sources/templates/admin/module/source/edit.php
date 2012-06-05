@@ -11,11 +11,11 @@ $panelEdit	= '
 		<ul class="input">
 			<li class="column-left-75">
 				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label><br/>
-				<input type="text" name="title" id="input_title" value="'.$source->title.'" class="max"/>
+				<input type="text" name="title" id="input_title" value="'.htmlentities( $source->title ).'" class="max"/>
 			</li>
 			<li class="column-left-25">
 				<label for="input_id" class="mandatory">'.$w->labelId.'</label><br/>
-				<input type="text" name="id" id="input_id" value="'.$source->id.'" class="max"/>
+				<input type="text" name="id" id="input_id" value="'.htmlentities( $source->id ).'" class="max"/>
 			</li>
 			<li class="column-left-25">
 				<label for="input_type" class="mandatory">'.$w->labelType.'</label><br/>
@@ -23,7 +23,7 @@ $panelEdit	= '
 			</li>
 			<li class="column-left-75">
 				<label for="input_path" class="mandatory">'.$w->labelPath.'</label><br/>
-				<input type="text" name="path" id="input_path" value="'.$source->path.'" class="max"/>
+				<input type="text" name="path" id="input_path" value="'.htmlentities( $source->path ).'" class="max"/>
 			</li>
 			<li class="column-clear">
 				<label for="input_active">
