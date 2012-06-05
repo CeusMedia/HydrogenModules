@@ -10,7 +10,7 @@ if( count( $module->config ) ){
 	$rows	= array();
 	foreach( $module->config as $key => $value ){
 		
-		$urlRemove	= './manage/module/editor/removeConfig/'.$moduleId.'/'.$key;
+		$urlRemove	= './admin/module/editor/removeConfig/'.$moduleId.'/'.$key;
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove', $w->buttonRemoveConfirm );
 		$class	= "";
 		if( $value->mandatory ){
@@ -74,7 +74,7 @@ $optBoolean	= UI_HTML_Elements::Options( $words['boolean-values'] );
 $wf			= (object) $words['tab-config-add'];
 
 $panelAdd	= '
-<form id="form_manage_module_config_add" action="./manage/module/editor/addConfig/'.$moduleId.'?tab=config" method="post">
+<form id="form_admin_module_config_add" action="./admin/module/editor/addConfig/'.$moduleId.'?tab=config" method="post">
 	<fieldset>
 		<legend class="icon add">'.$wf->legend.'</legend>
 		<ul class="input">
@@ -116,19 +116,19 @@ $panelAdd	= '
 </form>
 <script>
 $(document).ready(function(){
-	$("#form_manage_module_config tr td.cell-config-value :input").not(".label").hide();
-	$("#form_manage_module_config input.label").bind("focus",function(){
+	$("#form_admin_module_config tr td.cell-config-value :input").not(".label").hide();
+	$("#form_admin_module_config input.label").bind("focus",function(){
 		$(this).parent().find(":hidden").show().focus();
 		$(this).hide();
 	});
-	$("#form_manage_module_config_add #input_type").trigger("change");
+	$("#form_admin_module_config_add #input_type").trigger("change");
 	$("a.disabled").attr("href","#");
 });
 </script>
 ';
 
 $panelEdit	= '
-<form id="form_manage_module_config" action="./manage/module/editor/editConfig/'.$moduleId.'?tab=config" method="post">
+<form id="form_admin_module_config" action="./admin/module/editor/editConfig/'.$moduleId.'?tab=config" method="post">
 	'.$tableConfig.'
 </form>
 ';

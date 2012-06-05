@@ -39,8 +39,8 @@ if( $relations ){
 			$status		= 4;
 		else if( $modules[$relatedModuleId]->type == Model_Module::TYPE_SOURCE )
 			$status		= 0;
-		$link		= UI_HTML_Elements::Link( './manage/module/viewer/index/'.$relatedModuleId, $module->title );
-		$urlRemove	= './manage/module/editor/removeRelation/'.$moduleId.'/'.$module->relationType.'/'.$relatedModuleId;
+		$link		= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$relatedModuleId, $module->title );
+		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$module->relationType.'/'.$relatedModuleId;
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
 		$class	= 'icon module module-status-'.$status;
 		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
@@ -72,7 +72,7 @@ $optType	= UI_HTML_Elements::Options( $words['relation-types'] );
 $wf	= (object) $words['tab-relations-add'];
 
 $panelAdd	= '
-<form action="./manage/module/editor/addRelation/'.$moduleId.'?tab=relations" method="post">
+<form action="./admin/module/editor/addRelation/'.$moduleId.'?tab=relations" method="post">
 	<fieldset>
 		<legend class="icon add">'.$wf->legend.'</legend>
 		<ul class="input">
@@ -99,7 +99,7 @@ if( $relations ){
 	<h4>Graph der Abhängigkeiten</h4>
 	<br/>
 	<div style="overflow: auto;">
-		<img src="./manage/module/showRelationGraph/'.$moduleId.'"/>
+		<img src="./admin/module/showRelationGraph/'.$moduleId.'"/>
 	</div>
 	';
 }

@@ -8,7 +8,7 @@ if( $module->companies ){
 		$label	= $company->name;
 		if( $company->site )
 			$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $company->site ) );
-		$url	= './manage/module/editor/removeCompany/'.$moduleId.'/'.base64_encode( $company->name );
+		$url	= './admin/module/editor/removeCompany/'.$moduleId.'/'.base64_encode( $company->name );
 		$button	= UI_HTML_Elements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="company">'.$label.'<div style="float: right">'.$button.'</div></li>';
 	}
@@ -19,7 +19,7 @@ $buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger
 $hideForMore	= ' style="display: none"';
 
 $panelCompanies	= '
-<form action="./manage/module/editor/addCompany/'.$module->id.'" method="post">
+<form action="./admin/module/editor/addCompany/'.$module->id.'" method="post">
 	<fieldset>
 		<legend class="icon company">'.$wf->legend.'</legend>
 		'.$list.'

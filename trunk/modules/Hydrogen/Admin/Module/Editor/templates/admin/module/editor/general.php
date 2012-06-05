@@ -5,11 +5,11 @@ $w	= (object) $words['view'];
 
 $attributes			= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack			= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonList			= UI_HTML_Elements::LinkButton( './manage/module', $w->buttonList, 'button cancel' );
-$buttonCancel		= UI_HTML_Elements::LinkButton( './manage/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
+$buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
 $buttonSave			= UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' );
-$buttonRemove		= UI_HTML_Elements::LinkButton( './manage/module/editor/remove/'.$module->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
-$buttonExport		= UI_HTML_Elements::LinkButton( './manage/module/editor/export/'.$module->id, 'exportieren', 'button' );
+$buttonRemove		= UI_HTML_Elements::LinkButton( './admin/module/editor/remove/'.$module->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
+$buttonExport		= UI_HTML_Elements::LinkButton( './admin/module/editor/export/'.$module->id, 'exportieren', 'button' );
 $buttons			= '<div class="buttonbar">
 	'.$buttonBack.'
 <!--	'.$buttonList.'
@@ -22,7 +22,7 @@ $buttons			= '<div class="buttonbar">
 $panelEdit	= '
 <fieldset>
 	<legend>Modulbeschreibung</legend>
-	<form action="./manage/module/editor/edit/'.$moduleId.'" method="post">
+	<form action="./admin/module/editor/edit/'.$moduleId.'" method="post">
 		<ul class="input">
 			<li class="column-left-75">
 				<label for="input_edit_title" class="mandatory">'.$w->labelTitle.'</label><br/>
@@ -50,9 +50,9 @@ $panelEdit	= '
 </fieldset>
 ';
 
-$panelCompanies	= $this->loadTemplateFile( 'manage/module/editor/general.companies.php' );
-$panelAuthors	= $this->loadTemplateFile( 'manage/module/editor/general.authors.php' );
-$panelLicenses	= $this->loadTemplateFile( 'manage/module/editor/general.licenses.php' );
+$panelCompanies	= $this->loadTemplateFile( 'admin/module/editor/general.companies.php' );
+$panelAuthors	= $this->loadTemplateFile( 'admin/module/editor/general.authors.php' );
+$panelLicenses	= $this->loadTemplateFile( 'admin/module/editor/general.licenses.php' );
 
 /*$panelData	= '
 <dl>
@@ -73,7 +73,7 @@ foreach( $sources as $source ){
 $optSource	= UI_HTML_Elements::Options( $optSource, $request->get( 'source' ) );
 
 $panelCommit	= '
-<form action="./manage/module/editor/commit/'.$moduleId.'" method="post">
+<form action="./admin/module/editor/commit/'.$moduleId.'" method="post">
 	<fieldset>
 		<legend>Module zu Quelle einreichen</legend>
 		<ul class="input">
@@ -138,9 +138,9 @@ $buttonOpen	= '<button type="button" class="button iconed tiny edit form-trigger
 $image		= '<span class="hint"><small><em>Kein Bild vorhanden</em></small></span>';
 if( $module->icon )
 	$image	=  '<div style="text-align: center"><img src="'.$module->icon.'"/></div>';
-$urlRemove	= './manage/module/editor/removeIcon/'.$moduleId;
+$urlRemove	= './admin/module/editor/removeIcon/'.$moduleId;
 $panelImage	= '
-<form action="./manage/module/editor/uploadIcon/'.$moduleId.'" method="post" enctype="multipart/form-data">
+<form action="./admin/module/editor/uploadIcon/'.$moduleId.'" method="post" enctype="multipart/form-data">
 	<fieldset>
 		<legend class="icon image">Bild</legend>
 		'.$buttonOpen.'

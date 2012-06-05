@@ -8,7 +8,7 @@ if( $module->authors ){
 		$label	= $author->name;
 		if( $author->email )
 			$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => 'mailto:'.$author->email ) );
-		$url	= './manage/module/editor/removeAuthor/'.$moduleId.'/'.base64_encode( $author->name );
+		$url	= './admin/module/editor/removeAuthor/'.$moduleId.'/'.base64_encode( $author->name );
 		$button	= UI_HTML_Elements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="author">'.$label.'<div style="float: right">'.$button.'</div></li>';
 	}
@@ -19,7 +19,7 @@ $buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger
 $hideForMore	= ' style="display: none"';
 
 $panelAuthors	= '
-<form action="./manage/module/editor/addAuthor/'.$module->id.'" method="post">
+<form action="./admin/module/editor/addAuthor/'.$module->id.'" method="post">
 	<fieldset>
 		<legend class="icon author">'.$wf->legend.'</legend>
 		'.$list.'

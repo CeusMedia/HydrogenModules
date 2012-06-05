@@ -3,7 +3,7 @@ $w	= (object) $words['index'];
 $panelAdd	= '
 <fieldset>
 	<legend class="module-add">Neues lokales Module</legend>
-	<form action="./manage/module/creator" method="post">
+	<form action="./admin/module/creator" method="post">
 		<ul class="input">
 			<li class="column-right-50">
 				<label for="input_add_description">'.$w->labelDescription.'</label><br/>
@@ -45,7 +45,7 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/module', $w->buttonCancel, 'button cancel' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'create', $w->buttonCreate, 'button add' ).'
 		</div>
 	</form>

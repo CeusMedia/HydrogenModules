@@ -23,7 +23,7 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 #		print_m( $link );
 		$optAccess	= UI_HTML_Elements::Options( $optAccess, $link->access ); 
 		$panelEdit	= '
-<form id="form-module-editor-link-edit" action="./manage/module/editor/editLink/'.$moduleId.'/'.$linkNr.'" method="post">
+<form id="form-module-editor-link-edit" action="./admin/module/editor/editLink/'.$moduleId.'/'.$linkNr.'" method="post">
 	<fieldset>
 		<legend>'.$w->legendEdit.'</legend>
 		<ul class="input">
@@ -61,7 +61,7 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/module/editor/view/'.$moduleId.'?tab=links', $w->buttonCancel, 'button cancel' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'add', $w->buttonSave, 'button edit save' ).'
 		</div>
 	</fieldset>
@@ -82,8 +82,8 @@ if( $module->links ){
 		else
 			$labelLanguage	= "*";
 
-		$actions	= UI_HTML_Elements::LinkButton( './manage/module/editor/view/'.$moduleId.'?tab=links&linkNr='.$nr, '', 'button icon tiny edit' );
-		$actions	.= UI_HTML_Elements::LinkButton( './manage/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
+		$actions	= UI_HTML_Elements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links&linkNr='.$nr, '', 'button icon tiny edit' );
+		$actions	.= UI_HTML_Elements::LinkButton( './admin/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
 		
 		$row	= array(
 			UI_HTML_Tag::create( 'td', $labelLanguage ),
@@ -111,7 +111,7 @@ $optAccess	= array( '' => $words['tab-links']['optAccessUndefined'] ) + $words['
 $optAccess	= UI_HTML_Elements::Options( $optAccess ); 
 
 $panelAdd	= '
-<form id="form-module-editor-link-add" action="./manage/module/editor/addLink/'.$moduleId.'" method="post">
+<form id="form-module-editor-link-add" action="./admin/module/editor/addLink/'.$moduleId.'" method="post">
 	<fieldset>
 		<legend class="icon add">'.$w->legendAdd.'</legend>
 		<ul class="input">

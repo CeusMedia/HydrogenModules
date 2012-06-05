@@ -8,7 +8,7 @@ class Logic_Module_Creator extends Logic_Module{
 			'version'		=> $version,
 			'route'			=> $route
 		);
-		$xml	= UI_Template::render( 'templates/manage/module/creator/module.xml.tmpl', $data );
+		$xml	= UI_Template::render( 'templates/admin/module/creator/module.xml.tmpl', $data );
 		return (bool) File_Writer::save( $path.$moduleId.'.xml', $xml );
 	}
 
@@ -56,12 +56,12 @@ class Logic_Module_Creator extends Logic_Module{
 		$fileView		= $this->env->pathApp.'classes/View/'.$classPath.'.php5';
 		$fileTemplate	= $this->env->pathApp.'templates/'.$tmplFile;
 		$fileLocale		= $this->env->pathApp.'locales/'.$language.strtolower( $classPath).'.ini';
-		$codeLogic		= UI_Template::render( 'templates/manage/module/creator/logic.tmpl', $data );
-		$codeModel		= UI_Template::render( 'templates/manage/module/creator/model.tmpl', $data );
-		$codeController	= UI_Template::render( 'templates/manage/module/creator/controller.tmpl', $data );
-		$codeView		= UI_Template::render( 'templates/manage/module/creator/view.tmpl', $data );
-		$codeTemplate	= UI_Template::render( 'templates/manage/module/creator/template.tmpl', $data );
-		$codeLocal		= UI_Template::render( 'templates/manage/module/creator/locale.tmpl', $data );
+		$codeLogic		= UI_Template::render( 'templates/admin/module/creator/logic.tmpl', $data );
+		$codeModel		= UI_Template::render( 'templates/admin/module/creator/model.tmpl', $data );
+		$codeController	= UI_Template::render( 'templates/admin/module/creator/controller.tmpl', $data );
+		$codeView		= UI_Template::render( 'templates/admin/module/creator/view.tmpl', $data );
+		$codeTemplate	= UI_Template::render( 'templates/admin/module/creator/template.tmpl', $data );
+		$codeLocal		= UI_Template::render( 'templates/admin/module/creator/locale.tmpl', $data );
 	
 		$this->model->registerLocalFile( $moduleId, 'class', 'Logic/'.$className.'.php5' );
 		$this->model->registerLocalFile( $moduleId, 'class', 'Model/'.$className.'.php5' );

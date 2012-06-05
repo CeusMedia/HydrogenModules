@@ -23,7 +23,7 @@ $selected	= 0;
 $nr	= 0;
 foreach( $mapTabs as $tabKey => $tabLabel ){
 	$count		= 0;
-	$content	= $this->loadTemplateFile( 'manage/module/editor/'.$tabKey.'.php' );
+	$content	= $this->loadTemplateFile( 'admin/module/editor/'.$tabKey.'.php' );
 	$label		= $w->$tabLabel;
 	$label		.= $count ? ' <small>('.$count.')</small>' : '';
 	$selected	= ( $tab == $tabKey ) ? $nr : $selected;											//  
@@ -40,8 +40,8 @@ return '
 	<cite>'.$module->title.'</cite>
 </h3>
 <div class="nav-position" style="margin-bottom: 0.8em">
-	&laquo;&nbsp;<a href="./manage/module">Liste</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-	&laquo;&nbsp;<a href="./manage/module/viewer/index/'.$moduleId.'">Ansicht</a>
+	&laquo;&nbsp;<a href="./admin/module">Liste</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+	&laquo;&nbsp;<a href="./admin/module/viewer/index/'.$moduleId.'">Ansicht</a>
 </div>
 
 '.$tabs->buildTabs( 'tabs-module' ).'
