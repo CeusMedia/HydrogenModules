@@ -34,7 +34,7 @@ $panelAdd	= '
 </form>
 ';
 
-$panelInfo		= $this->loadContentFile( 'admin/instance/add.info.html' );
+$panelInfo		= $this->loadContentFile( 'html/admin/instance/add.info.html' );
 
 return '
 <div class="column-left-60">
