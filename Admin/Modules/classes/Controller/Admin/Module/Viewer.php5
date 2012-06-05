@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Manage_Module after cleanup
+class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
 	protected function __onInit(){
 #		$this->request		= $this->env->getRequest();
