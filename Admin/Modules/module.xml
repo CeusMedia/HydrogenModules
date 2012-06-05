@@ -33,6 +33,13 @@ This module needs other modules to be installed:
 		<locale>en/admin/module/viewer.ini</locale>
 		<template>admin/module/index.filter.php</template>
 		<template>admin/module/index.php</template>
+		<template>admin/module/viewer/config.php</template>
+		<template>admin/module/viewer/database.php</template>
+		<template>admin/module/viewer/general.php</template>
+		<template>admin/module/viewer/index.php</template>
+		<template>admin/module/viewer/relations.php</template>
+		<template>admin/module/viewer/resources.php</template>
+		<template>admin/module/viewer/view.php</template>
 		<script source="local" load="auto">site.admin.module.js</script>
 		<style source="theme" load="auto">site.admin.module.css</style>
 	</files>
