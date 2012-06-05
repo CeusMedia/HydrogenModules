@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<module>
+	<title>Token Store</title>
+	<description><![CDATA[Storage for tokens bound to client IP adresses.
+Using tokens, client applications can identify requesting clients, authenticated before. All tokens are stored in a database table, together with IP and timestamp of generation. A client can only get a token, if it knows and sends the common secret, if one is setup.
+]]></description>
+	<category>Ressource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/TokenStore.php5</class>
+		<class>Model/Token.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<config protected="yes" type="boolean" name="bind.host">yes</config>
+	<config protected="yes" type="boolean" name="bind.protocol">yes</config>
+	<config protected="yes" type="boolean" name="bind.time">yes</config>
+	<config protected="yes" type="string" name="secret">secret</config>
+	<config protected="yes" type="string" name="store">config/token.map</config>
+	<config protected="yes" type="string" name="lifetime">10</config>
+	<config protected="yes" type="string" name="salt"></config>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>tokens`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>tokens` (
+  `tokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `ip` varchar(39) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`tokenId`),
+  KEY `token` (`token`),
+  KEY `ip` (`ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>tokens`;
+]]></sql>
+</module>
