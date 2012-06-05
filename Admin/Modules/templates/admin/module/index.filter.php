@@ -72,7 +72,7 @@ if( count( $sources ) > 1 ){
 }
 
 $panelFilter	= '
-<form id="form_module_filter" action="./manage/module/filter" method="post">
+<form id="form_module_filter" action="./admin/module/filter" method="post">
 	<fieldset>
 		<legend class="filter">Filter</legend>
 		<ul class="input">
@@ -117,7 +117,7 @@ $panelFilter	= '
 		</ul>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp; 
-			'.UI_HTML_Elements::LinkButton( './manage/module/filter?reset', 'kein Filter', 'button reset' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'button reset' ).'
 		</div>
 	</fieldset>
 </form>

@@ -1,5 +1,5 @@
 <?php
-class View_Manage_Module extends CMF_Hydrogen_View{
+class View_Admin_Module extends CMF_Hydrogen_View{
 
 	public function index(){
 	}
@@ -55,7 +55,7 @@ class View_Manage_Module extends CMF_Hydrogen_View{
 	}
 
 	protected function renderRelatedModulesList( $allModules, $relatedModules, $url = NULL, $listClass = NULL ){
-		$words	= $this->env->getLanguage()->getWords( 'manage/module' );
+		$words	= $this->env->getLanguage()->getWords( 'admin/module' );
 		$list	= array();
 		foreach( $relatedModules as $relatedModuleId => $status ){
 			$alt	= $words['status-alt'][$status];

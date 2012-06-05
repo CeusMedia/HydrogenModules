@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_Module extends CMF_Hydrogen_Controller{
+class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
@@ -8,7 +8,7 @@ class Controller_Manage_Module extends CMF_Hydrogen_Controller{
 #		$this->envApp		= $this->env->getRemote();
 #		print_m( $this->envApp );
 #		die;
-		$this->env->getPage()->addThemeStyle( 'site.manage.module.css' );
+		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 	}
 
 	public function filter(){
