@@ -56,7 +56,7 @@ $(document).ready(function(){
 <div class="column-left-60">
 	'.$panelEdit.'
 	'.$panelCheck.'
-	'.$panelDatabase.'
+	'./*$panelDatabase.*/'
 </div>
 <div class="column-left-40">
 	'.$panelInfo.'
