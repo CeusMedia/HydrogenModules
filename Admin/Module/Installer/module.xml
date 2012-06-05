@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>Module Installer</title>
+	<description><![CDATA[Install modules from module sources.
+Building on basic module administration, this module allows you to install modules from any defined module source. Installing a modules with needed but not installed related modules will install these needed modules as well.
+This module can be extended by:
+- Module Editor
+- Module Creator
+This module needs other modules to be installed:
+- Modules Editor (thus Modules, Module Sources, App Instances)
+]]></description>
+	<category>Administration</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Module/Installer.php5</class>
+		<class>View/Admin/Module/Installer.php5</class>
+		<locale>de/admin/module/installer.ini</locale>
+		<locale>en/admin/module/installer.ini</locale>
+		<template>admin/module/installer/index.php</template>
+		<template>admin/module/installer/view.php</template>
+	</files>
+	<relations>
+		<needs type="module">Admin_Modules</needs>
+	</relations>
+	<link xml:lang="de" path="admin/module/installer" access="acl" rank="37">Modulinstallation</link>
+	<link xml:lang="en" path="admin/module/installer" access="acl" rank="37">Module Installer</link>
+</module>
