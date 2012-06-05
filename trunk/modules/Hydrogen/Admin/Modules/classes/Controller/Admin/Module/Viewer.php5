@@ -1,14 +1,14 @@
 <?php
-class Controller_Manage_Module_Viewer extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Manage_Module after cleanup
+class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Manage_Module after cleanup
 
 	protected function __onInit(){
 #		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Module( $this->env );
 #		$this->categories	= $this->logic->getCategories();
-		$this->env->getPage()->addThemeStyle( 'site.manage.module.css' );
-#		$this->env->getPage()->addThemeStyle( 'site.manage.module.viewer.css' );
-		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.manage.module.js' );	//  @todo	2) move to parent class after 1)
+		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
+#		$this->env->getPage()->addThemeStyle( 'site.admin.module.viewer.css' );
+		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
 	}
 
 	public function ajaxEditConfig( $moduleId, $key, $value ){
@@ -23,7 +23,7 @@ class Controller_Manage_Module_Viewer extends CMF_Hydrogen_Controller{								//
 	public function index( $moduleId = NULL ){
 #		$c	= new Alg_Time_Clock();
 		if( $moduleId )
-			return $this->redirect( 'manage/module/viewer', 'view', array( $moduleId ) );
+			return $this->redirect( 'admin/module/viewer', 'view', array( $moduleId ) );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'modules', $this->logic->model->getAll() );
@@ -45,15 +45,15 @@ class Controller_Manage_Module_Viewer extends CMF_Hydrogen_Controller{								//
 		$words	= $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )
-			$this->restart( './manage/module/editor' );
+			$this->restart( './admin/module/editor' );
 		if( $this->logic->uninstallModule( $moduleId, $verbose ) ){
 			$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
 			if( $module->type == Model_Module::TYPE_CUSTOM )
-				$this->restart( './manage/module/viewer' );
+				$this->restart( './admin/module/viewer' );
 		}
 		else
 			$this->messenger->noteError( $this->words['msg']['moduleNotUninstalled'], $module->title );
-		$this->restart( './manage/module/viewer/index/'.$moduleId );
+		$this->restart( './admin/module/viewer/index/'.$moduleId );
 	}
 
 	public function viewCode( $moduleId, $type, $fileName ){

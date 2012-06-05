@@ -1,11 +1,11 @@
 <?php
 
-$panelFilter	= $this->loadTemplateFile( 'manage/module/index.filter.php' );
+$panelFilter	= $this->loadTemplateFile( 'admin/module/index.filter.php' );
 
 $pagination	= '';
 if( $modulesTotal > $limit ){
 	$pagination	= new UI_HTML_Pagination();
-	$pagination->setOption( 'uri', './manage/module' );
+	$pagination->setOption( 'uri', './admin/module' );
 	$pagination	= $pagination->build( $modulesTotal, $limit, $offset );
 }
 
@@ -15,7 +15,7 @@ foreach( $modules as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module available',
 		'title'		=> array_shift( explode( "\n", $module->description ) ),
-		'href'		=> './manage/module/viewer/index/'.$moduleId
+		'href'		=> './admin/module/viewer/index/'.$moduleId
 	);
 	
 	$icon		= '';
