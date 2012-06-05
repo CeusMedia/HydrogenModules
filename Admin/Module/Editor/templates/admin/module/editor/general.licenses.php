@@ -8,7 +8,7 @@ if( $module->licenses ){
 		$label	= $license->label;
 		if( $license->source )
 			$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => 'mailto:'.$license->source ) );
-		$url	= './manage/module/editor/removeLicense/'.$moduleId.'/'.base64_encode( $license->label );
+		$url	= './admin/module/editor/removeLicense/'.$moduleId.'/'.base64_encode( $license->label );
 		$button	= UI_HTML_Elements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="author">'.$label.'<div style="float: right">'.$button.'</div></li>';
 	}
@@ -19,7 +19,7 @@ $buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger
 $hideForMore	= ' style="display: none"';
 
 $panelAuthors	= '
-<form action="./manage/module/editor/addLicense/'.$module->id.'" method="post">
+<form action="./admin/module/editor/addLicense/'.$module->id.'" method="post">
 	<fieldset>
 		<legend>'.$wf->legend.'</legend>
 		'.$list.'

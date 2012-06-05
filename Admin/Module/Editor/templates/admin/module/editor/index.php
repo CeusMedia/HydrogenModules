@@ -7,7 +7,7 @@ $filters		= array( 'type' => array( Model_Module::TYPE_CUSTOM, Model_Module::TYP
 $listSections	= $this->renderModuleSections( $modules, $categories, $filters );
 
 if( !$listSections )
-	$listSections	= '<em>Keine <a href="./manage/module">Module</a> installiert.</em>';
+	$listSections	= '<em>Keine <a href="./admin/module">Module</a> installiert.</em>';
 
 return '
 <h3 class="position">

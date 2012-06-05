@@ -27,7 +27,7 @@ return '
 	<xmp class="xml">'.$xmlSpaced.'</xmp>
 </div>
 <div id="xml-editor" style="display: none">
-	<form action="./manage/module/editor/saveXml/'.$moduleId.'?tab=xml" method="post">
+	<form action="./admin/module/editor/saveXml/'.$moduleId.'?tab=xml" method="post">
 		<textarea name="content" id="input_content" rows="20">'.$xml.'</textarea>
 		<div class="buttonbar">
 			<button type="button" class="button cancel" onclick="toggleXmlEditor()"><span>Ansicht</span></button>

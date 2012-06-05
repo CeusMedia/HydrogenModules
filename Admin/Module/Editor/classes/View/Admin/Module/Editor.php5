@@ -1,5 +1,5 @@
 <?php
-class View_Admin_Module_Editor extends View_Manage_Module {
+class View_Admin_Module_Editor extends View_Admin_Module {
 
 	protected function __onInit(){
 		$this->env->getLanguage()->load( 'admin/module' );

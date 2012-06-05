@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Manage_Module after cleanup
+class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
 	/**	@var	Logic_Module		$logic			Module logic instance */
 	protected $logic;
@@ -15,9 +15,9 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Module( $this->env );
 		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->env->getRemote() );
-		$this->env->getPage()->addThemeStyle( 'site.manage.module.css' );
-#		$this->env->getPage()->addThemeStyle( 'site.manage.module.editor.css' );
-		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.manage.module.js' );	//  @todo	2) move to parent class after 1)
+		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
+#		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
+		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
 	}
 
 	public function addAuthor( $moduleId ){

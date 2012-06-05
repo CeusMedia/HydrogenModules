@@ -1,6 +1,10 @@
 <?php
 class Model_ModuleSource{
 
+	/**	@var	File_INI_Editor		$file		INI editor pointing to module sources file */
+	protected $file;
+	protected $fileName;
+	
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->fileName	= 'config/modules/sources.ini';
@@ -11,6 +15,7 @@ class Model_ModuleSource{
 			chmod( $this->fileName, 0770 );
 		}
 		$this->file		= new File_INI_Editor( $this->fileName, TRUE );
+		
 	}
 
 	public function add( $data ){

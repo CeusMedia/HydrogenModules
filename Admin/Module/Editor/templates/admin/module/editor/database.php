@@ -19,7 +19,7 @@ $optEvent	= UI_HTML_Elements::Options( $words['database-events'] );
 $optType	= UI_HTML_Elements::Options( $words['database-types'] );
 
 $panelAdd	= '
-	<form action="./manage/module/editor/addSql/'.$moduleId.'?tab=database" method="post">
+	<form action="./admin/module/editor/addSql/'.$moduleId.'?tab=database" method="post">
 		<fieldset>
 			<legend class="icon add">'.$wf->legend.'</legend>
 			<ul class="input">

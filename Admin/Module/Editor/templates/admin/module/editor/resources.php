@@ -48,8 +48,8 @@ if( $module->files->classes ){
 		$class	= NULL;
 		$uri	= $pathApp.'/classes/'.$item->file;
 
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/class/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/class/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 		
@@ -76,8 +76,8 @@ if( $module->files->templates ){
 		$class	= NULL;
 		$uri	= $pathApp.$pathTemplates.$item->file;
 
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/template/'.base64_encode( $item->file );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/template/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/template/'.base64_encode( $item->file );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/template/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 		
@@ -109,8 +109,8 @@ if( $module->files->locales ){
 		$class	= NULL;
 		$uri	= $pathApp.$pathLocales.$item->file;
 
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/locale/'.base64_encode( $item->file );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/locale/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/locale/'.base64_encode( $item->file );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/locale/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 		
@@ -148,8 +148,8 @@ if( $module->files->styles ){
 			default:			$uri	.= $item->source.'/'; break;								//  ...
 		}
 		$uri	.= $item->file;
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/style/'.base64_encode( $uri );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/style/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/style/'.base64_encode( $uri );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/style/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 		
@@ -187,8 +187,8 @@ if( $module->files->scripts ){
 		}
 		$uri	.= $item->file;
 
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/script/'.base64_encode( $uri );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/script/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/script/'.base64_encode( $uri );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/script/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 		
@@ -224,8 +224,8 @@ if( $module->files->images ){
 		}
 		$uri	.= $item->file;
 
-		$urlView		= './manage/module/editor/viewCode/'.$moduleId.'/image/'.base64_encode( $uri );
-		$urlUnlink		= './manage/module/editor/removeFile/'.$moduleId.'/image/'.base64_encode( $item->file ).'?tab=resources';
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/image/'.base64_encode( $uri );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/image/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-image' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 
@@ -254,7 +254,7 @@ $optSourceImage		= UI_HTML_Elements::Options( $words['sources-image'] );
 $optLoad			= UI_HTML_Elements::Options( array( '' => 'durch Modul', 'auto' => 'automatisch' ) );
 
 $panelAdd	= '
-	<form id="form_manage_module_resource_add" action="./manage/module/editor/addFile/'.$moduleId.'?tab=resources" method="post">
+	<form id="form_admin_module_resource_add" action="./admin/module/editor/addFile/'.$moduleId.'?tab=resources" method="post">
 		<fieldset>
 			<legend>Datei hinzufügen</legend>
 			<ul class="input">
@@ -310,7 +310,7 @@ function showOptionals(elem){
 }
 
 $(document).ready(function(){
-	$("#form_manage_module_resource_add #input_type").trigger("change");
+	$("#form_admin_module_resource_add #input_type").trigger("change");
 	$("a.disabled").attr("href","#");
 });
 </script>

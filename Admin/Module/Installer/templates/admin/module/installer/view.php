@@ -9,18 +9,18 @@ $graph			= "";
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonList		= UI_HTML_Elements::LinkButton( './manage/module', $w->buttonList, 'button cancel' );
-$buttonIndex	= UI_HTML_Elements::LinkButton( './manage/module/installer', $w->buttonIndex, 'button cancel' );
-$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/module/viewer/index/'.$module->id, $w->buttonView, 'button cancel' );
+$buttonList		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonIndex	= UI_HTML_Elements::LinkButton( './admin/module/installer', $w->buttonIndex, 'button cancel' );
+$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonView, 'button cancel' );
 $buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'button add' );
 
 if( $mainModuleId ){
 	$buttonList		= '';
-	$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/module/installer/'.$mainModuleId, $w->buttonCancel, 'button cancel' );
+	$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/installer/'.$mainModuleId, $w->buttonCancel, 'button cancel' );
 	$needs	= array();
 }
 
-$url	= './manage/module/viewer/index/';
+$url	= './admin/module/viewer/index/';
 
 $relationsNeeded	= '-';
 if( $module->neededModules )
@@ -48,7 +48,7 @@ if( count( $needs ) ){
 		else
 			$listCritical[]	= $id;
 		$class	= 'icon module module-status-'.$status;
-		$link	= UI_HTML_Elements::Link( './manage/module/viewer/index/'.$id, $label );
+		$link	= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$id, $label );
 		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
 		$neededModules[]	= UI_HTML_Elements::ListItem( $label, 1 );
 	}
@@ -65,13 +65,13 @@ if( count( $needs ) ){
 	}
 	
 
-	$graph		= '<img src="./manage/module/showRelationGraph/'.$moduleId.'/needs"/>';
+	$graph		= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/needs"/>';
 	$graphNeeds	= '<fieldset><legend>Abhängigkeiten</legend>'.$graph.'</fieldset>';
 }
 
 $graphSupports	= '';
 if( $module->supportedModules ){
-	$graph	= '<img src="./manage/module/showRelationGraph/'.$moduleId.'/supports"/>';
+	$graph	= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/supports"/>';
 	$graphSupports	= '<fieldset><legend>Unterstützung</legend>'.$graph.'</fieldset>';
 }
 
@@ -115,9 +115,9 @@ $panelInfo	= '
 		<dd>'.$module->source.'</dd>
 		<dt>Version</dt>
 		<dd>'.( $module->versionAvailable ? $module->versionAvailable : '?' ).'</dd>
-		<dt>benötigte Module&nbsp;<a href="./manage/module/showRelationGraph/'.$moduleId.'/needs" class="layer-image" title="Abhängigkeiten von anderen Modulen"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
+		<dt>benötigte Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/needs" class="layer-image" title="Abhängigkeiten von anderen Modulen"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
 		<dd>'.$relationsNeeded.'</dd>
-		<dt>unterstützt Module&nbsp;<a href="./manage/module/showRelationGraph/'.$moduleId.'/supports" class="layer-image" title="Unterstützung anderer Module"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
+		<dt>unterstützt Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/supports" class="layer-image" title="Unterstützung anderer Module"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
 		<dd>'.$relationsSupported.'</dd>
 	</dl>
 	<div class="clearfix"></div>
@@ -193,17 +193,17 @@ if( $isInstallable ){
 }
 
 $positions	= array(
-	'Liste'		=> './manage/module',
-	'Übersicht'	=> './manage/module/installer',
-#	'Ansicht'	=> './manage/module/viewer/index/'.$module->id
+	'Liste'		=> './admin/module',
+	'Übersicht'	=> './admin/module/installer',
+#	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
 );
 
-$urlForm	= './manage/module/installer/install/'.$module->id;
+$urlForm	= './admin/module/installer/install/'.$module->id;
 $headingVia	= '';
 if( $mainModuleId ){
 	$urlForm	.= '/'.$mainModuleId;
 	$headingVia	= '&nbsp;<em><small>(via '.$mainModuleId.')</small></em>';
-	$positions[$mainModuleId]	= './manage/module/installer/'.$mainModuleId;
+	$positions[$mainModuleId]	= './admin/module/installer/'.$mainModuleId;
 }
 
 function renderPositions( $positions ){
