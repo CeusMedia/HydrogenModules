@@ -15,7 +15,11 @@
 		<template>admin/instance/index.php</template>
 		<template>admin/instance/index.tmpl</template>
 		<locale>de/admin/instance.ini</locale>
+		<locale>de/html/admin/instance/add.info.html</locale>
+		<locale>de/html/admin/instance/edit.info.html</locale>
 		<locale>en/admin/instance.ini</locale>
+		<locale>en/html/admin/instance/add.info.html</locale>
+		<locale>en/html/admin/instance/edit.info.html</locale>
 	</files>
 	<link xml:lang="de" path="admin/instance" access="acl" rank="82">Instanzen</link>
 	<link xml:lang="en" path="admin/instance" access="acl" rank="82">Instances</link>
