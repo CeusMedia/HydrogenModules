@@ -1,0 +1,32 @@
+<?php
+/**
+ *	Controller.
+ *	@version		$Id$
+ */
+/**
+ *	Controller.
+ *	@version		$Id$
+ *	@todo			implement
+ *	@todo			code documentation
+ */
+class Controller_<%classKey%> extends CMF_Hydrogen_Controller{
+
+	/**
+	 *	Default action on this controller.
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function index(){
+		$config			= $this->env->getConfig();
+		$session		= $this->env->getSession();
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$words			= $this->getWords( 'index' );
+
+		$messenger->noteFailure( 'Controller "<%classKey%>" is not implemented, yet.' );
+
+		//  your code now!
+		//  add a method for every action you need
+	}
+}
+?>
