@@ -350,45 +350,13 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 
 	public function viewCode( $moduleId, $type, $fileName ){
 		$fileName	= base64_decode( $fileName );
-		
-		$pathApp	= $this->env->pathApp;															//  get path to remote application
-		$config		= $this->env->getRemote()->getConfig();											//  get config object of remote application
-		
-		$pathFile	= '';
-		$xmpClass	= '';
-		switch( $type ){
-			case 'class':
-				$pathFile	= $pathApp.'classes/';
-				$xmpClass	= 'php';
-				break;
-			case 'locale':
-				$pathFile	= $pathApp.$config->get( 'path.locales');
-				$xmpClass	= 'ini';
-				break;
-			case 'script':
-				$pathFile	= '';
-				$xmpClass	= 'js';
-				break;
-			case 'style':
-				$pathFile	= '';
-				$xmpClass	= 'css';
-				break;
-			case 'template':
-				$pathFile	= $pathApp.$config->get( 'path.templates');
-				$xmpClass	= 'php';
-				break;
+		$helper		= new View_Helper_ModuleCodeViewer( $this->env, $this->logic );
+		try{
+			print( $helper->render( $moduleId, $type, $fileName ) );
 		}
-		if( !file_exists( $pathFile.$fileName ) )
-			die( 'Invalid file: '.$pathFile.$fileName );
-		$content	= File_Reader::load( $pathFile.$fileName );
-		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
-		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2><code>'.$pathFile.$fileName.'</code>'.$code;
-		$page		= new UI_HTML_PageFrame();
-		$page->addStylesheet( 'css/reset.css' );
-		$page->addStylesheet( 'css/typography.css' );
-		$page->addStylesheet( 'css/xmp.formats.css' );
-		$page->addBody( $body );
-		print( $page->build( array( 'style' => 'margin: 1em' ) ) );
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+		}
 		exit;
 	}
 }
