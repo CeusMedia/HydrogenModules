@@ -75,7 +75,7 @@ div.CodeMirror-scroll {
 </style>
 <!--<h2>'.$moduleId.' - '.$fileName.'</h2>
 <code>'.$pathFile.$fileName.'</code>-->
-<textarea id="code">'.htmlentities( $content ).'</textarea>
+<textarea id="code">'.htmlentities( $content, ENT_COMPAT, 'UTF-8' ).'</textarea>
 <script>
 var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("code"));
 </script>
@@ -83,7 +83,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("code"));
 		$page		= new UI_HTML_PageFrame();
 		$page->addStylesheet( 'css/reset.css' );
 		$page->addStylesheet( 'css/typography.css' );
-		$page->addStylesheet( 'css/xmp.formats.css' );
+#		$page->addStylesheet( 'css/xmp.formats.css' );
 		$page->addStylesheet( $pathJsLib.'CodeMirror/2.25/lib/codemirror.css' );
 		$page->addJavaScript( $pathJsLib.'CodeMirror/2.25/lib/codemirror.js' );
 		foreach( $modes as $mode )
