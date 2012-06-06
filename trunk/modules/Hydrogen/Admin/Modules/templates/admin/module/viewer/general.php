@@ -2,7 +2,7 @@
 
 $w			= (object) $words['view'];
 $sources	= array();
-$model		= new Model_Source( $this->env );
+$model		= new Model_ModuleSource( $this->env );
 foreach( $model->getAll() as $source )
 	$sources[$source->id]	= $source;
 
@@ -23,7 +23,7 @@ $list	= array();
 $source	= 'lokal';
 if( isset( $sources[$module->source] ) ){
 	$source	= $sources[$module->source];
-	$source	= UI_HTML_Tag::create( 'acronym', $module->source, array( 'title' => $source->title ) );
+	$source	= UI_HTML_Tag::create( 'acronym', $module->source, array( 'title' => htmlentities( $source->title ) ) );
 }
 $list[]	= UI_HTML_Tag::create( 'dt', $w->labelSource ).UI_HTML_Tag::create( 'dd', $source );
 

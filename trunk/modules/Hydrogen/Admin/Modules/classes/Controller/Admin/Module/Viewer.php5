@@ -38,7 +38,6 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modules', $this->logic->model->getAll() );
-		$this->addData( 'pathModule', $this->logic->model->getPath( $moduleId ) );
 	}
 
 	public function uninstall( $moduleId, $verbose = TRUE ){

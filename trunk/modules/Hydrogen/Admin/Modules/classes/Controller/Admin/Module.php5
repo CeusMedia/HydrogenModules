@@ -41,22 +41,6 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	public function ajaxAddConfig( $moduleId, $key, $value ){
 		
 	}
-	
-	public function view( $moduleId ){
-		$module		= $this->logic->model->get( $moduleId );
-		$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
-		$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
-		$this->addData( 'module', $module );
-		$this->addData( 'moduleId', $moduleId );
-		$this->addData( 'pathModule', $this->logic->model->getPath( $moduleId ) );
-	}
-
-	public function edit( $moduleId = NULL ){
-		$this->addData( 'modules', $this->logic->model->getAll() );
-/*		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
-		$this->addData( 'modulesInstalled', $this->logic->model->getInstalled() );
-		$this->addData( 'modulesNotInstalled', $this->logic->model->getNotInstalled() );
-*/	}
 
 	public function index( $moduleId = NULL ){
 		$request	= $this->env->getRequest();

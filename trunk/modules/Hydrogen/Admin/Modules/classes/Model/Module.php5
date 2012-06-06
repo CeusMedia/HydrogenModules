@@ -13,7 +13,7 @@ class Model_Module{
 	protected $modulesAvailable		= array();
 	protected $source;
 	protected $sources				= array();
-	
+
 	public function __construct( $env ){
 		$this->env			= $env;
 		$this->pathRepos	= $env->pathModules;
@@ -228,6 +228,11 @@ class Model_Module{
 	}
 
 	public function getPath( $moduleId = NULL ){
+		$module		= $this->get( $moduleId );
+		if( !$module )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+#		print_m( $module );
+#		die;
 		if( $moduleId )
 			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
 		return $this->pathRepos;
