@@ -9,6 +9,6 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<script load="auto" source="local">UI.Layer.js</script>
-		<style load="auto" source="theme">layer.css</script>
+		<style load="auto" source="theme">layer.css</style>
 	</files>
 </module>
