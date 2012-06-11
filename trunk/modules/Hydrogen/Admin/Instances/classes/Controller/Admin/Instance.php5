@@ -180,7 +180,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				if( $instanceId !== $id )
 					$this->model->changeId( $instanceId, $id );
 				$messenger->noteSuccess( 'Die Instanz wurde gespeichert.' );
-#				$this->restart( NULL, TRUE );
+				$this->restart( './admin/instance/edit/'.$id );
 			}
 		}
 		$instance		= $this->model->get( $instanceId );
