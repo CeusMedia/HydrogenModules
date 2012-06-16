@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Favorite Icon</title>
+	<description><![CDATA[]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files/>
+	<relations/>
+	<config protected="yes" type="string" name="url" mandatory="no">./images/favicon.ico</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+if( strlen( trim( $module->config['url']->value ) ) )
+	$context->addFavouriteIcon( $module->config['url']->value );
+]]></hook>
+</module>
