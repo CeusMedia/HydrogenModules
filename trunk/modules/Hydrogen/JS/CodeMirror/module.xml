@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: CodeMirror</title>
+	<description><![CDATA[]]></description>
+	<version>2.25</version>
+	<category>JavaScript</category>
+	<company site="http://codemirror.net/">codemirror.net</company>
+	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
+	<license source="http://codemirror.net/LICENSE">MIT-style</license>
+	<files>
+		<script load="auto" source="lib">CodeMirror/2.25/lib/codemirror.js</script>
+		<style load="auto" source="scripts-lib">CodeMirror/2.25/lib/codemirror.css</style>
+	</files>
+	<config name="modes" type="string">css,xml,javascript,clike,php</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$pathJsLib	= $env->getConfig()->get( 'path.js.lib' );
+		$modes		= explode( ',', $module->config['modes']->value );
+		foreach( $modes as $mode )
+			$context->js->addUrl( $pathJsLib.'CodeMirror/2.25/mode/'.$mode.'/'.$mode.'.js' );
+		$script	= '$(document).ready(function(){$("textarea.CodeMirror").each(function(){CodeMirror.fromTextArea($(this).get(0))})});';
+		$script	= UI_HTML_Tag::create( 'script', $script, array( 'type' => "text/javascript") );
+		$context->addHead( $script );
+	]]></hook>
+</module>

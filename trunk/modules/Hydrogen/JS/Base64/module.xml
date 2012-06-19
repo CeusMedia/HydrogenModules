@@ -4,7 +4,7 @@
 	<description><![CDATA[]]></description>
 	<category>JavaScript</category>
 	<version>1.0</version>
-	<source url="http://www.webtoolkit.info/javascript-base64.html">webtoolkit.info</url>
+	<source url="http://www.webtoolkit.info/javascript-base64.html">webtoolkit.info</source>
 	<company site="http://www.webtoolkit.info/">webtoolkit.info</company>
 	<license source="http://creativecommons.org/licenses/by/2.0/uk/">CC BY 2.0</license>
 	<files>
