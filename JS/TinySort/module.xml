@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: TinySort</title>
+	<description><![CDATA[jQuery plugin for sorting HTML nodes.]]></description>
+	<category>JavaScript</category>
+	<version>1.3.27</version>
+	<author site="http://tinysort.sjeiti.com/">Ron Valstar</author>
+	<files>
+		<script source="local" load="auto">tinysort-1.3.27.min.js</script>
+	</files>
+</module>
