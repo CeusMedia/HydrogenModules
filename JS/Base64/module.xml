@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Base64</title>
+	<description><![CDATA[]]></description>
+	<category>JavaScript</category>
+	<version>1.0</version>
+	<source url="http://www.webtoolkit.info/javascript-base64.html">webtoolkit.info</url>
+	<company site="http://www.webtoolkit.info/">webtoolkit.info</company>
+	<license source="http://creativecommons.org/licenses/by/2.0/uk/">CC BY 2.0</license>
+	<files>
+		<script source="local" load="auto">Base64.js</script>
+	</files>
+</module>
