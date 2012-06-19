@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI/JS: cmSelectBox</title>
+	<description><![CDATA[Replacement for HTML selects.]]></description>
+	<category>JavaScript</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script source="local" load="auto">cmSelectBox-0.1.js</script>
+		<style source="theme" load="auto">cmSelectBox-0.1.css</style>
+		<image source="theme">bg_select_arrow.png</image>
+		<image source="theme">bg_select_arrow.psd</image>
+	</files>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$options	= array();
+		$script		= '$("select.cmSelectBox").cmSelectBox('.json_encode( $options ).')';
+		$script		= '$(document).ready(function(){'.$script.'});';
+		$script		= UI_HTML_Tag::create( 'script', $script, array( 'type' => "text/javascript") );
+		$context->addHead( $script );
+	]]></hook>
+</module>
