@@ -7,7 +7,7 @@ $optStatus		= $this->renderOptions( $words['states'], 'status', $issue->status, 
 return '
 <fieldset>
 	<legend>Fehler bearbeiten</legend>
-	<form action="./manage/issue/emerge/'.$issue->issueId.'" method="post">
+	<form action="./work/issue/emerge/'.$issue->issueId.'" method="post">
 		<div style="float: left; width: 30%; margin-right: 1%">
 			<ul class="input">
 				<li>

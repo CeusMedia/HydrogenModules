@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
+class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 
 	const CHANGE_DETAILS		= 1;
 	const CHANGE_MANAGER		= 2;
@@ -43,7 +43,7 @@ class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
 			if( !$this->env->getMessenger()->gotError() ){
 				$issueId	= $model->add( $data );
 				if( $issueId )
-					$this->restart( './manage/issue/edit/'.$issueId );
+					$this->restart( './work/issue/edit/'.$issueId );
 			}
 		}
 	}
@@ -107,7 +107,7 @@ class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
 			else
 				$this->env->getMessenger()->noteError( 'Keine Veränderungen vorgenommen.' );
 		}
-		$this->restart( './manage/issue/edit/'.$issueId );
+		$this->restart( './work/issue/edit/'.$issueId );
 	}
 	
 	public function edit( $issueId ){
@@ -134,7 +134,7 @@ class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
 				'content'	=> $request->get( 'content' ),
 			);
 			$modelIssue->edit( $issueId, $data );
-//			$this->restart( './labs/statement' );
+//			$this->restart( './work/issue' );
 		}
 		$issue			= $modelIssue->get( $issueId );
 
@@ -176,7 +176,7 @@ class Controller_Manage_Issue extends CMF_Hydrogen_Controller{
 						$session->set( 'filter-issue-'.$filter, $value );
 				}
 		}
-		$this->restart( './manage/issue' );
+		$this->restart( './work/issue' );
 	}
 
 	public function index(){

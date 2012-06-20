@@ -27,7 +27,7 @@ $this->env->page->js->addScript( $script );
 $main	= '
 <fieldset>
 	<legend>Beschreibung</legend>
-	<form action="./manage/issue/add" method="post">
+	<form action="./work/issue/add" method="post">
 		<div style="float: left; width: 30%; margin-right: 3%">
 				<label for="status">'.$words['add']['labelType'].'</label><br/>
 				'.UI_HTML_Elements::Select( 'type', $optType, 'm' ).'
@@ -49,7 +49,7 @@ $main	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/issue', $words['add']['buttonCancel'], 'button cancel' ).' |
+			'.UI_HTML_Elements::LinkButton( './work/issue', $words['add']['buttonCancel'], 'button cancel' ).' |
 			'.UI_HTML_Elements::Button( 'save', $words['add']['buttonSave'], 'button save' ).'
 		</div>
 	</form>
