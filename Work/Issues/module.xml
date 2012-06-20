@@ -22,7 +22,7 @@
 		<template>work/issue/index.php</template>
 		<template>work/issue/index.filter.php</template>
 		<template>work/issue/index.list.php</template>
-		<style>site.work.issue.css</style>
+		<style source="theme" load="auto">site.work.issue.css</style>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
