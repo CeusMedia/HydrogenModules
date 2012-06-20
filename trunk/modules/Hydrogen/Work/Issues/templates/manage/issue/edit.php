@@ -39,13 +39,13 @@ $this->env->page->js->addScript( $script );
 $main	= '
 <fieldset id="issue-details">
 	<legend>Beschreibung</legend>
-	<form action="./manage/issue/edit/'.$issue->issueId.'" method="post">
+	<form action="./work/issue/edit/'.$issue->issueId.'" method="post">
 		<div class="issue-id">Eintrag #'.$issue->issueId.'</div>
 		<div id="panel-mode-0">
 			<div class="issue-title">'.$issue->title.'</div>
 			<div class="issue-content">'.nl2br( $issue->content ).'</div>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/issue', $words['edit']['buttonCancel'], 'button cancel' ).' | 
+				'.UI_HTML_Elements::LinkButton( './work/issue', $words['edit']['buttonCancel'], 'button cancel' ).' | 
 				<button type="button" id="issue-edit-trigger-mode-1" class="button edit"><span>verändern</span></button>
 			</div>
 		</div>
@@ -61,7 +61,7 @@ $main	= '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/issue', $words['edit']['buttonCancel'], 'button cancel' ).' |
+				'.UI_HTML_Elements::LinkButton( './work/issue', $words['edit']['buttonCancel'], 'button cancel' ).' |
 				<button type="button" id="issue-edit-trigger-mode-0" class="button view"><span>anzeigen</span></button>
 				'.UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button save' ).'
 			</div>
@@ -72,9 +72,9 @@ $main	= '
 
 
 
-$control	= require_once 'templates/manage/issue/edit.info.php';
-$main		.= require_once 'templates/manage/issue/edit.changes.php';
-$main		.= require_once 'templates/manage/issue/edit.emerge.php';
+$control	= require_once 'templates/work/issue/edit.info.php';
+$main		.= require_once 'templates/work/issue/edit.changes.php';
+$main		.= require_once 'templates/work/issue/edit.emerge.php';
 
 return '
 <div class="issue-edit">

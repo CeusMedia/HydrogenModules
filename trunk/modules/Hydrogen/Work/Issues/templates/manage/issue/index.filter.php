@@ -39,7 +39,7 @@ if( $mode == 1 ){
 	$optStatus		= $this->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 	
 	return '
-	<form id="form_filter-issue" name="filterIssues" action="./manage/issue/filter" method="post">
+	<form id="form_filter-issue" name="filterIssues" action="./work/issue/filter" method="post">
 		<fieldset style="position: relative">
 			<legend class="filter">'.$words['indexFilter']['legend'].'</legend>
 			<table>
@@ -102,8 +102,8 @@ if( $mode == 1 ){
 			</table>
 			<div class="buttonbar">
 				'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-				'.UI_HTML_Elements::LinkButton( './manage/issue/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
-				'.UI_HTML_Elements::LinkButton( './manage/issue/filter/mode/0', $words['indexFilter']['buttonCollapse'], 'button less' ).'
+				'.UI_HTML_Elements::LinkButton( './work/issue/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+				'.UI_HTML_Elements::LinkButton( './work/issue/filter/mode/0', $words['indexFilter']['buttonCollapse'], 'button less' ).'
 			</div>
 		</fieldset>
 	</form>
@@ -112,7 +112,7 @@ if( $mode == 1 ){
 else
 {
 	return '
-	<form id="form_filter-issues" name="filterIssues" action="./manage/issue/filter" method="post">
+	<form id="form_filter-issues" name="filterIssues" action="./work/issue/filter" method="post">
 		<fieldset style="position: relative">
 			<legend class="filter">'.$words['indexFilter']['legend'].'</legend>
 			<table>
@@ -155,8 +155,8 @@ else
 			</table>
 			<div class="buttonbar">
 				'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-				'.UI_HTML_Elements::LinkButton( './manage/issue/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
-				'.UI_HTML_Elements::LinkButton( './manage/issue/filter/mode/1', $words['indexFilter']['buttonExpand'], 'button more' ).'
+				'.UI_HTML_Elements::LinkButton( './work/issue/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+				'.UI_HTML_Elements::LinkButton( './work/issue/filter/mode/1', $words['indexFilter']['buttonExpand'], 'button more' ).'
 			</div>
 		</fieldset>
 	</form>

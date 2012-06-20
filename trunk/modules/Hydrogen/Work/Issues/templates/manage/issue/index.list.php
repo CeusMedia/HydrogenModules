@@ -16,7 +16,7 @@ foreach( $issues as $issue ){
 	$notes		= count( $issue->notes );
 	$changes	= count( $issue->changes );
 	$changes	= ( $notes || $changes ) ? ' mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)' : '';
-	$link		= UI_HTML_Elements::Link( './manage/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
+	$link		= UI_HTML_Elements::Link( './work/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
 	$type		= UI_HTML_Tag::create( 'span', $words['types'][$issue->type], array( 'class' => 'issue-type type-'.$issue->type ) );
 	$severity	= UI_HTML_Tag::create( 'span', $words['severities'][$issue->severity], array( 'class' => 'issue-severity severity-'.$issue->severity ) );
 	$priority	= UI_HTML_Tag::create( 'span', $words['priorities'][$issue->priority], array( 'class' => 'issue-priority priority-'.$issue->priority ) );
@@ -55,7 +55,7 @@ return '
 		'.join( $rows ).'
 	</table>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './manage/issue/add', 'neuer Eintrag', 'button add' ).'
+		'.UI_HTML_Elements::LinkButton( './work/issue/add', 'neuer Eintrag', 'button add' ).'
 	</div>
 </fieldset>
 ';

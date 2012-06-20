@@ -10,7 +10,7 @@ foreach( $changes as $change ){
 }
 
 foreach( $changers as $userId => $changer ){
-	$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './user/edit/'.$userId ) );
+	$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
 	$roled	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
 	$changers[$userId]	= UI_HTML_Tag::create( 'li', $roled );
 }
@@ -18,13 +18,13 @@ $changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'cl
 
 $reporter	= '-';
 if( $issue->reporter ){
-	$reporter	= UI_HTML_Elements::Link( './user/edit/'.$issue->reporter->userId, $issue->reporter->username );
+	$reporter	= UI_HTML_Elements::Link( './manage/user/edit/'.$issue->reporter->userId, $issue->reporter->username );
 	$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
 }
 
 $manager	= '-';
 if( $issue->managerId ){
-	$manager	= UI_HTML_Elements::Link( './user/edit/'.$issue->manager->userId, $issue->manager->username );
+	$manager	= UI_HTML_Elements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
 	$manager	= UI_HTML_Tag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
 }
 
