@@ -37,6 +37,8 @@ function checkFile( $uri ){
 		return FALSE;
 	}
 	else if( preg_match( "/^\//", $uri ) ){
+		if( substr( $uri, 0, strlen( getEnv( 'DOCUMENT_ROOT' ) ) ) == getEnv( 'DOCUMENT_ROOT' ) )
+			return file_exists( $uri );
 		return file_exists( getEnv( 'DOCUMENT_ROOT' ).$uri );
 	}
 	return file_exists( $uri );

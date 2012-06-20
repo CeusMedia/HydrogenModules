@@ -28,6 +28,7 @@ This module needs other modules to be installed:
 		<class>View/Admin/Module/Viewer.php5</class>
 		<class>View/Helper/ModuleCodeViewer.php5</class>
 		<class>Logic/Module.php5</class>
+		<class>Logic/Module/Relation.php5</class>
 		<locale>de/admin/module.ini</locale>
 		<locale>de/admin/module/viewer.ini</locale>
 		<locale>en/admin/module.ini</locale>

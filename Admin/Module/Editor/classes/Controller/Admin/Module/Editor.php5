@@ -123,10 +123,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 	
 	public function edit( $moduleId ){
-		remark( $moduleId );
 		$request	= $this->env->getRequest();
 		$module		= $this->logic->model->getLocalModuleXml( $moduleId, TRUE );					//  load module XML
-		
 		
 		$title			= $request->get( 'edit_title' );
 		$version		= $request->get( 'edit_version' );

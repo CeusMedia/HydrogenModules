@@ -209,7 +209,7 @@ class Logic_Module {
 		if( !$this->env->getRemote()->has( 'dbc' ) )
 			throw new RuntimeException( 'Remvote environment has no database connection' );
 		$dbc	= $this->env->getRemote()->getDatabase();
-		$prefix	= $this->env->config->get( 'database.prefix' );
+		$prefix	= $this->env->getRemote()->getConfig()->get( 'database.prefix' );					//  @todo use config of module Resource_Database instead
 		while( count( $lines ) ){
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
@@ -249,6 +249,9 @@ class Logic_Module {
 		$configApp	= $this->env->getRemote()->getConfig();
 
 		$pathTheme	= $configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
+		$pathImages	= 'images/';
+		if( $configApp->get( 'path.images' ) )
+			$pathImages	= $configApp->get( 'path.images' );
 		$filesLink	= array();
 		$filesCopy	= array();
 		
@@ -273,7 +276,12 @@ class Logic_Module {
 		foreach( $module->files->styles as $style )
 			if( empty( $style->source ) || $style->source == 'theme' )
 				${$array}['css/'.$style->file]	= $pathTheme.'css/'.$style->file;
-		//  @todo		mssing: images (Question: where to put, in themes or not?
+		foreach( $module->files->images as $image ){
+			if( empty( $image->source ) || $image->source == 'local' )
+				${$array}['img/'.$image->file]	= $pathImages.$image->file;
+			else if( $image->source == 'theme' )
+				${$array}['img/'.$image->file]	= $pathTheme.'img/'.$image->file;
+		}
 				
 		$listDone	= array();
 		$exceptions	= array();
@@ -366,6 +374,9 @@ class Logic_Module {
 	public function uninstallModule( $moduleId, $verbose = TRUE ){
 		$config		= $this->env->getConfig();
 		$pathTheme	= $this->env->pathApp.$config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
+		$pathImages	= $this->env->pathApp.'images/';
+		if( $config->get( 'path.images' ) )
+			$pathImages	= $this->env->pathApp.$config->get( 'path.images' );
 		$module		= $this->model->get( $moduleId );
 
 		$files	= array();
@@ -382,6 +393,11 @@ class Logic_Module {
 		foreach( $module->files->styles as $style )
 			if( empty( $style->source ) || $style->source == 'theme' )
 				$files[]	= $pathTheme.'css/'.$style->file;
+		foreach( $module->files->images as $image )
+			if( empty( $image->source ) || $image->source == 'local' )
+				$files[]	= $pathImages.$image->file;
+			else if( $image->source == 'theme' )
+				$files[]	= $pathTheme.'img/'.$image->file;
 
 		//  --  CONFIGURATION  --  //
 		$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';
