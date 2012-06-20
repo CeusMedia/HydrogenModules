@@ -18,6 +18,6 @@
 		<style>site.content.css</style>
 	</files>
 	<relations/>
-	<config type="integer" name="path"></config>								; path to content files, default: empty -> path to locales + language folder
-	<link>manage/content</link>
+	<config type="string" name="path"></config>								; path to content files, default: empty -> path to locales + language folder
+	<link xml:lang="de" path="manage/content">Inhalte</link>
 </module>

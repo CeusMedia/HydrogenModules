@@ -1,7 +1,7 @@
 <?php
 
-$panelFilter	= $this->loadTemplate( 'manage/content', 'filter' );
-$panelList		= $this->loadTemplate( 'manage/content', 'list' );
+$panelFilter	= $view->loadTemplate( 'manage/content', 'filter' );
+$panelList		= $view->loadTemplate( 'manage/content', 'list' );
 
 $w	= (object) $words['edit'];
 

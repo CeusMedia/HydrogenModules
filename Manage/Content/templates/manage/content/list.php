@@ -1,6 +1,6 @@
 <?php
-$files	= $this->getData( 'files' );
-$path	= $this->getData( 'pathContent' );
+$files	= $view->getData( 'files' );
+$path	= $view->getData( 'pathContent' );
 
 $w	= (object) $words['list'];
 
