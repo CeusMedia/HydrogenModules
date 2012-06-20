@@ -28,7 +28,8 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Users</needs>
 	</relations>
-	<link>manage/issue</link>
+	<link xml:lang="de" access="acl" path="work/issue">Angelegenheit</link>
+	<link xml:lang="en" access="acl" path="work/issue">Issues</link>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (
