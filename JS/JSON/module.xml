@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: JSON</title>
+	<description><![CDATA[Ensures JSON browser support.]]></description>
+	<category>JavaScript</category>
+	<version>2011-10-19</version>
+	<company site="http://json.org/">JSON.org</company>
+	<author email="douglas@crockford.com">Douglas Crockford</author>
+	<license>Public Domain</license>
+	<files>
+		<script source="local" load="auto">json2.min.js</script>
+	</files>
+</module>
