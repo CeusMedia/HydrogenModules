@@ -17,7 +17,6 @@
 		$options	= array();
 		$script		= '$("select.cmSelectBox").cmSelectBox('.json_encode( $options ).')';
 		$script		= '$(document).ready(function(){'.$script.'});';
-		$script		= UI_HTML_Tag::create( 'script', $script, array( 'type' => "text/javascript") );
-		$context->addHead( $script );
+		$context->js->addScript( $script );
 	]]></hook>
 </module>

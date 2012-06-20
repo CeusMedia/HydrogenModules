@@ -9,7 +9,7 @@
 	<license source="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<license source="http://www.gnu.org/copyleft/gpl.html">GPL</license>
 	<files>
-		<script load="auto" source="lib">jquery/wymeditor/1.0b1/jquery.wymeditor.js</script>
+		<script load="auto" source="lib">jquery/wymeditor/1.0b1/jquery.wymeditor.min.js</script>
 	</files>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$script	= '
@@ -21,7 +21,6 @@ $(document).ready(function(){
 		statusHtml: ""
 	})
 })';
-		$script	= UI_HTML_Tag::create( 'script', $script, array( 'type' => "text/javascript") );
-		$context->addHead( $script );
+		$context->js->addScript( $script );
 	]]></hook>
 </module>
