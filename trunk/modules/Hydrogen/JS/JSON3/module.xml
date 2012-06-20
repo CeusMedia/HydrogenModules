@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: JSON3</title>
+	<description><![CDATA[Ensures JSON browser support.]]></description>
+	<category>JavaScript</category>
+	<version>3.2.2</version>
+	<company site="http://bestiejs.github.com/json3/">BestieJS</company>
+	<author site="http://kitcambridge.github.com/">Kit Cambridge</author>
+	<license source="http://kit.mit-license.org/">MIT</license>
+	<files>
+		<script source="local">json3.js</script>
+		<script source="local" load="auto">json3.min.js</script>
+	</files>
+</module>
