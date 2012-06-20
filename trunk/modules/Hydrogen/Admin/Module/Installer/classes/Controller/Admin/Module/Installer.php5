@@ -29,7 +29,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
 
-		$solver	= new Solver( $this->logic );														//	calculator for module installation order
+		$solver	= new Logic_Module_Relation( $this->logic );														//	calculator for module installation order
 		$solver->loadModule( $moduleId );															//  load module and related modules
 		$order	= $solver->getOrder();																//  get calculated module installation order
 
@@ -69,7 +69,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				$mainModuleId	= $moduleId;
 		
 			if( $mainModuleId && $mainModuleId == $moduleId ){
-				$solver	= new Solver( $this->logic );												//	calculator for module installation order
+				$solver	= new Logic_Module_Relation( $this->logic );												//	calculator for module installation order
 				$solver->loadModule( $moduleId );													//  load module and related modules
 				$order	= array_keys( $solver->getOrder() );										//  get calculated module installation order
 				if( count( $order ) > 1 ){
