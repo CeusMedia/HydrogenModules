@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: JSONpath</title>
+	<description><![CDATA[JSONpath support
+
+<table>
+	<tr><th>XPath</th><th>JSONPath</th><th>Description</th></tr>
+	<tr><td>/</td><td>$</td><td>the root object/element</td></tr>
+	<tr><td>.</td><td>@</td><td>the current object/element</td></tr>
+	<tr><td>/</td><td>. or []</td><td>child operator</td></tr>
+	<tr><td>..</td><td>n/a</td><td>parent operator</td></tr>
+	<tr><td>//</td><td>..</td><td>recursive descent. JSONPath borrows this syntax from <a href="http://en.wikipedia.org/wiki/E4X">E4X</a>.</td></tr>
+	<tr><td>*</td><td>*</td><td>wildcard. All objects/elements regardless their names.</td></tr>
+	<tr><td>@</td><td>n/a</td><td>attribute access. JSON structures don't have attributes.</td></tr>
+	<tr><td>[]</td><td>[]</td><td>subscript operator. XPath uses it to iterate over element collections and for predicates. In Javascript and JSON it is the native array operator.</td></tr>
+	<tr><td>|</td><td>[,]</td><td>Union operator in XPath results in a combination of node sets. JSONPath allows alternate names or array indices as a set.</td></tr>
+	<tr><td>n/a</td><td>[start:end:step]</td><td>array slice operator borrowed from ES4.</td></tr>
+	<tr><td>[]</td><td>?()</td><td>applies a filter (script) expression.</td></tr>
+	<tr><td>n/a</td><td>()</td><td>script expression, using the underlying script engine.</td></tr>
+	<tr><td>()</td><td>n/a</td><td>grouping in Xpath</td></tr>
+</table>
+	
+	]]></description>
+	<category>JavaScript</category>
+	<version>2011-10-19</version>
+	<source url="http://goessner.net/articles/JsonPath/">goessner.net</source>
+	<author site="http://goessner.net/"><![CDATA[Stefan Gössner]]></author>
+	<license source="http://creativecommons.org/licenses/by/2.5/">CC BY 2.5</license>
+	<files>
+		<script source="local">jsonpath-0.8.5.js</script>
+		<script source="local" load="auto">jsonpath-0.8.5.min.js</script>
+	</files>
+</module>
