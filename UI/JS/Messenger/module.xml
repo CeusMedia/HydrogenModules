@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: JS: Messenger</title>
+	<description><![CDATA[
+JavaScript binding to the Hydrogen UI Messenger, which displays result messages after interaction.
+Now you can create messages while working with JavaScript. There a 4 methods callable:
+code:js>
+UI.Messenger.noteSuccess("Work done! What's next, pal?");
+<code
+code:js>
+UI.Messenger.noteNotice("Maybe you should know that ...");
+<code
+code:js>
+UI.Messenger.noteError("There was a problem with ...");
+<code
+code:js>
+UI.Messenger.noteFailure("Ouh crap! There was an unexpected error with ...");
+<code
+]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">UI.Messenger.js</script>
+	</files>
+	<relations/>
+</module>
