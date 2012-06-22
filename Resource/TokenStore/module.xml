@@ -4,7 +4,7 @@
 	<description><![CDATA[Storage for tokens bound to client IP adresses.
 Using tokens, client applications can identify requesting clients, authenticated before. All tokens are stored in a database table, together with IP and timestamp of generation. A client can only get a token, if it knows and sends the common secret, if one is setup.
 ]]></description>
-	<category>Ressource</category>
+	<category>Resource</category>
 	<version>0.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
