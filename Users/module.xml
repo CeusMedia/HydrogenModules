@@ -20,7 +20,7 @@
 		<style>site.user.css</style>
 	</files>
 	<relations>
-		<needs type="module">Database</needs>
+		<needs type="module">Resource_Database</needs>
 		<needs type="module">Roles</needs>
 	</relations>
 	<config type="integer" name="status.register" protected="yes">1</config>						; user status to be set on register, set to 1 for "auto active"
