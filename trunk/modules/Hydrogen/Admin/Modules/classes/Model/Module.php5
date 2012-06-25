@@ -10,6 +10,7 @@ class Model_Module{
 	protected $env;
 	protected $pathRepos;
 	protected $pathConfig;
+	protected $modulesAll			= array();
 	protected $modulesAvailable		= array();
 	protected $source;
 	protected $sources				= array();
@@ -47,35 +48,37 @@ class Model_Module{
 	}
 
 	public function getAll( $filters = array(), $limit = NULL, $offset = NULL ){
-		$modulesLocal	= $this->getInstalled( $this->modulesAvailable );
-		$modulesAll		= $this->modulesAvailable;
-		foreach( $modulesLocal as $moduleId => $module ){
-			if( !array_key_exists( $moduleId, $modulesAll ) ){
-				$module->source	= 'Local';
-				$modulesAll[$moduleId]	= $module;
+		if( !$this->modulesAll ){
+			$this->modulesAll		= $this->modulesAvailable;
+			foreach( $this->getInstalled( $this->modulesAvailable ) as $moduleId => $module ){
+				if( !array_key_exists( $moduleId, $this->modulesAll ) ){
+					$module->source	= 'Local';
+					$this->modulesAll[$moduleId]	= $module;
+				}
+				else{
+					$module->source	= $this->modulesAll[$moduleId]->source;
+					if( $module->type != self::TYPE_LINK )
+						$module->type	= self::TYPE_COPY;
+				}
+				switch( $module->type ){
+					case self::TYPE_LINK:
+						$module->versionAvailable	= $module->version;
+						$module->versionInstalled	= $module->version;
+						break;
+					case self::TYPE_COPY:
+						$module->versionInstalled	= $module->version;
+						$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
+						break;
+					case self::TYPE_CUSTOM:
+						$module->version			= $module->versionInstalled;
+						$module->versionAvailable	= NULL;
+						break;
+				}
+				$this->modulesAll[$moduleId]	= $module;
 			}
-			else{
-				$module->source	= $modulesAll[$moduleId]->source;
-				if( $module->type != self::TYPE_LINK )
-					$module->type	= self::TYPE_COPY;
-			}
-			switch( $module->type ){
-				case self::TYPE_LINK:
-					$module->versionAvailable	= $module->version;
-					$module->versionInstalled	= $module->version;
-					break;
-				case self::TYPE_COPY:
-					$module->versionInstalled	= $module->version;
-					$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
-					break;
-				case self::TYPE_CUSTOM:
-					$module->version			= $module->versionInstalled;
-					$module->versionAvailable	= NULL;
-					break;
-			}
-			$modulesAll[$moduleId]	= $module;
 		}
 		
+		$modulesAll	= $this->modulesAll;
 		if( $filters ){
 			foreach( $filters as $filterKey => $filterValue ){
 				foreach( $modulesAll as $moduleId => $module ){
@@ -160,7 +163,7 @@ class Model_Module{
 
 	public function getCategories(){
 		$list	= array();
-		foreach( $this->modulesAvailable as $module )
+		foreach( $this->getAll() as $module )
 			if( !empty( $module->category ) )
 				$list[]	= $module->category;
 		$list	= array_unique( $list );
