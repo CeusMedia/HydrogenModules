@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<module>
+	<title>JSON Server Browser</title>
+	<description><![CDATA[Browser for a JSON server applications.
+This module extends a JSON server application by a browser frontend with controls.
+Imagine you have installed a Hydrogen instance with a pure server application which always returns its results in JSON, just like the chat server. Opening the server URL in a browser shows you the JSON response. You need to use the server's REST API just like all other clients. If you need a user interface to request the server this can be integrated into the server application. It extends the server's JSON response by a browser view using (X)HTML + CSS + JavaScript + jQuery and allows you to:
+- have a nicer view when calling the server in a browser
+- quickly control of your server
+- take a deeper view on server responses during developement and debugging
+<b>Attention</b>: You will need to <u>secure</u> this server user interface if you face anonymous access.
+]]></description>
+	<category>Server</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<todo>implement power switch: on - show browser | off - show pure response</todo>
+	<todo>implement modes: view | control</todo>
+	<todo>implement IP access filter (define IPs in config which are allowed, block all others)</todo>
+	<files>
+		<class>Browser.php</class>
+		<template>browser.tmpl</template>
+		<script>LocalServerFrontendController.js</script>
+		<script>LocalServerFrontendController.min.js</script>
+		<script>browser.js</script>
+		<style>browser.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery_deparam</needs>
+		<needs type="module">Server_Info_Disclosure</needs>
+	</relations>
+</module>
