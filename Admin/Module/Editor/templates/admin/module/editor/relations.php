@@ -8,43 +8,37 @@ $tableRelations	= '<br/><div>'.$w->listNone.'</div><br/>';
 
 $relations	= array();
 foreach( $module->relations->needs as $relatedModuleId ){
-	if( isset( $modules[$relatedModuleId] ) ){
-		$module	= $modules[$relatedModuleId];
-		$module->relationType	= 'needs';
-	}
-	else{
-		$module	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
-		$module->relationType	= 'needs';
-	}
-	$relations[$relatedModuleId]	= $module;
+	if( isset( $modules[$relatedModuleId] ) )
+		$item	= $modules[$relatedModuleId];
+	else
+		$item	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
+	$item->relationType	= 'needs';
+	$relations[$relatedModuleId]	= $item;
 }
 foreach( $module->relations->supports as $relatedModuleId ){
-	if( isset( $modules[$relatedModuleId] ) ){
-		$module	= $modules[$relatedModuleId];
-		$module->relationType	= 'supports';
-	}
-	else{
-		$module	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
-		$module->relationType	= 'supports';
-	}
-	$relations[$relatedModuleId]	= $module;
+	if( isset( $modules[$relatedModuleId] ) )
+		$item	= $modules[$relatedModuleId];
+	else
+		$item	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
+	$item->relationType	= 'supports';
+	$relations[$relatedModuleId]	= $item;
 }
 $count	= count( $relations );
 
 if( $relations ){
 	$rows	= array();
-	foreach( $relations as $relatedModuleId => $module ){
+	foreach( $relations as $relatedModuleId => $relatedModule ){
 		$status		= 2;
 		if( !array_key_exists( $relatedModuleId, $modules ) )
 			$status		= 4;
 		else if( $modules[$relatedModuleId]->type == Model_Module::TYPE_SOURCE )
 			$status		= 0;
-		$link		= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$relatedModuleId, $module->title );
-		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$module->relationType.'/'.$relatedModuleId;
+		$link		= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$relatedModuleId, $relatedModule->title );
+		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$relatedModule->relationType.'/'.$relatedModuleId;
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
 		$class	= 'icon module module-status-'.$status;
 		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
-		$type	= $words['relation-types'][$module->relationType];
+		$type	= $words['relation-types'][$relatedModule->relationType];
 		$status	= $words['types'][$modules[$relatedModuleId]->type];
 		$rows[]	= '<tr><td>'.$type.'</td><td>'.$label.'</td><td>'.$status.'</td><td>'.$linkRemove.'</td></tr>';
 	}
@@ -91,26 +85,30 @@ $panelAdd	= '
 	</fieldset>
 </form>';
 
+$panelGraphNeeds	= '';
+if( $module->relations->needs ){
+	$panelGraphNeeds	= '
+	<h4>Abhängigkeiten</h4>
+	<img src="./admin/module/showRelationGraph/'.$moduleId.'" style="max-width: 100%"/><br/><br/>';
+}
 
-$panelGraph	= '';
-if( $relations ){
-	$panelGraph	= '
-	<br/>
-	<h4>Graph der Abhängigkeiten</h4>
-	<br/>
-	<div style="overflow: auto;">
-		<img src="./admin/module/showRelationGraph/'.$moduleId.'"/>
-	</div>
-	';
+$panelGraphSupports	= '';
+if( $module->relations->supports ){
+	$panelGraphSupports	= '
+	<h4>Unterstützung</h4>
+	<img src="./admin/module/showRelationGraph/'.$moduleId.'/supports" style="max-width: 100%"/><br/><br/>';
 }
 
 return '
 <div class="column-left-70">
 	'.$tableRelations.'
-	'.$panelGraph.'
 </div>
 <div class="column-left-30">
 	'.$panelAdd.'
+</div>
+<div class="column-clear">
+	'.$panelGraphNeeds.'
+	'.$panelGraphSupports.'
 </div>
 <div class="column-clear"></div>';
 ?>

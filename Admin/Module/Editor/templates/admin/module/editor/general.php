@@ -104,7 +104,7 @@ function getSourceInfo(elem){
 	button.prop("disabled", true);
 	if(sourceId){
 		$.ajax({
-			url: "./admin/source/ajaxReadSource/"+sourceId,
+			url: "./admin/module/source/ajaxReadSource/"+sourceId,
 			dataType: "json",
 			cache: false,
 			type: "post",

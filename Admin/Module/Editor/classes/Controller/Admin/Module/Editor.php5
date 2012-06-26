@@ -287,9 +287,14 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 			$this->messenger->noteError( "Module not installed. Redirecting to list" );
 			$this->restart( NULL, TRUE );
 		}
-		
-		$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
-		$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+
+		try{
+			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
+			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( 'Problem bei den Abhängigkeiten: '.$e->getMessage() );
+		}
 		
 		$this->addData( 'pathApp', $this->env->pathApp );
 		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
