@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: deparam</title>
+	<description><![CDATA[Extends jQuery by deparam.]]></description>
+	<category>JavaScript</category>
+	<version>0.1</version>
+	<files>
+		<script source="local">jquery.deparam.js</script>
+		<script source="local" load="auto">jquery.deparam.min.js</script>
+	</files>
+</module>
