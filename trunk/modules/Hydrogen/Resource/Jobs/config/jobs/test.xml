@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="reflect">
+		<class>Test</class>
+		<method>reflect</method>
+		<mode>test</mode>
+	</job>
+	<job id="date">
+		<class>Test</class>
+		<method>date</method>
+		<mode>test</mode>
+	</job>
+</jobs>
