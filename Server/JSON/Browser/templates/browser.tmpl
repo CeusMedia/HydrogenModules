@@ -1,0 +1,63 @@
+
+
+
+
+<h2><%config.app.name%></h2>
+<div style="float: left; width: 35em;">
+	<h3>Request</h3>
+	<form id="form_browser" action="" method="post">
+		<fieldset>
+			<ul class="input">
+				<li class="column-left-30">
+					<label>Controller</label>
+					<select name="controller" id="input_controller"><%optController%></select>
+				</li>
+				<li class="column-right-70">
+					<label>Action</label>
+					<select name="action" id="input_action"><%optAction%></select>
+				</li>
+				<li class="column-clear">
+					<label>Token</label>
+					<input name="token" id="input_token" value="<%?token%>"/>
+				</li>
+				<li>
+					<label>Arguments: <%?arguments%></label>
+					<input name="path" id="input_path" value="<%?path%>"/>
+				</li>
+			</ul>
+			<button type="submit">anfragen</button>
+			<br/>
+			<br/>
+			<ul class="input">
+				<li>
+					<label>POST Data</label>
+					<textarea name="post" id="input_post"><%?post%></textarea><br/>
+				</li>
+			</ul>
+			<button type="submit">absenden</button>
+		</fieldset>
+	</form>
+	<br/>
+	<br/>
+<!--	<h3>Response: JSON</h3>
+	<xmp class="js" style="max-height: 200px"><%?json.raw%></xmp>-->
+</div>
+<div style="margin-left: 38em;">
+	<h3>Response</h3>
+	<div id="response-data">
+		<%?data.view%>
+	</div>
+	<%?data.exception%>
+	<%?data.debug%>
+	<div id="request-data">
+		<dl>
+			<dt>Time Init</dt>
+			<dd><%?time_init%> ms</dd>
+			<dt>Time Render</dt>
+			<dd><%?time_render%> ms</dd>
+			<dt>URL</dt>
+			<dd id="data-url"><%?url%></dd>
+		</dl>
+	</div>
+</div>
+<div class="column-clear"></div>
