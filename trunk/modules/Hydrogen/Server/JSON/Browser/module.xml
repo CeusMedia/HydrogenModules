@@ -17,7 +17,7 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 	<todo>implement modes: view | control</todo>
 	<todo>implement IP access filter (define IPs in config which are allowed, block all others)</todo>
 	<files>
-		<class>Browser.php</class>
+		<class>Browser.php5</class>
 		<template>browser.tmpl</template>
 		<script>LocalServerFrontendController.js</script>
 		<script>LocalServerFrontendController.min.js</script>
