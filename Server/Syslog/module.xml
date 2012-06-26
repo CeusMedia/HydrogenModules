@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Syslog</title>
+	<description><![CDATA[Extends server by system log.
+Sends mail to developer with exception trace if a developer mail address is defined. Also allows to send mails to developer.
+This module can extend normal or server applications but will need an installed application base with mail support.]]></description>
+	<category>Server</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Survey.php</class>
+		<class>Mail/Syslog.php</class>
+		<class>Mail/Syslog/Exception.php</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+</module>
