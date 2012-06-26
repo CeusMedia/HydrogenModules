@@ -143,6 +143,8 @@ class Model_Module{
 
 	public function getAllSupportedModules( $moduleId, $uninstalledOnly = FALSE, $list = array() ){
 		$module	= $this->get( $moduleId );
+		if( !$module )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
 		foreach( $module->relations->supports as $moduleName ){
 			if( array_key_exists( $moduleName, $list ) )
 				continue;
