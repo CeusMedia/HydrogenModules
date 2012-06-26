@@ -65,13 +65,13 @@ if( count( $needs ) ){
 	}
 	
 
-	$graph		= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/needs"/>';
+	$graph		= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/needs" style="max-width: 100%"/>';
 	$graphNeeds	= '<fieldset><legend>Abhängigkeiten</legend>'.$graph.'</fieldset>';
 }
 
 $graphSupports	= '';
 if( $module->supportedModules ){
-	$graph	= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/supports"/>';
+	$graph	= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/supports" style="max-width: 100%"/>';
 	$graphSupports	= '<fieldset><legend>Unterstützung</legend>'.$graph.'</fieldset>';
 }
 
