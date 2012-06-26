@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>Jobs</title>
+	<description><![CDATA[Console based job execution.
+Besides calling your application using a browser, calling business logic on console or as cron job might be interesting to you. This can be done by creating job classes with methods which can be executed using the jobber script job.php5 followed by a job ID and optional arguments. The job runner will setup the environment of your web application providing connecting to resources and logic.
+To add jobs you need to:
+- create a job class in <cite>classes/Job/</cite> which extends class <cite>Job_Abstract</cite>
+- create a method for each job
+- create a <cite>*.xml</cite> in <cite>config/jobs/</cite>, see <cite>config/jobs/test.xml</cite> for example
+- define a job entry with a unique job ID and insert your class and method names
+Call you job like this:
+code:html>php job.php5 JOB_ID [ARG]*<code
+<b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
+]]></description>
+	<category>Resource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Jobber.php5</class>
+		<class>Job/Abstract.php5</class>
+		<class>Job/Test.php5</class>
+		<file>job.php5</file>
+		<file>config/jobs/test.xml</file>
+	</files>
+	<relations>
+		<supports type="module">Resource_Maintainer</supports>
+		<supports type="module">Resource_Mail</supports>
+	</relations>
+</module>
