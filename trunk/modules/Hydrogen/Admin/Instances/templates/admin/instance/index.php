@@ -2,19 +2,14 @@
 
 $rows	= array();
 foreach( $instances as $instance ){
-	$url	= '';
-	$todos	= NULL;
-	try{
-		$reader	= new Net_Reader( $url.'?format=json' );
-		$serial	= $reader->read();
-		if( substr( $serial, 0, 1 ) == '{' && $data = @json_decode( $serial ) )
-			$todos	= $data->todos;
-	}
-	catch( Exception $e ){}
-	
+	$url	= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
 	$link	= UI_HTML_Elements::Link( './admin/instance/edit/'.$instance->id, $instance->title );
-	$todos	= is_int( $todos ) ? UI_HTML_Tag::create( 'a', $todos, array( 'href' => $url ) ) : '';
-	$rows[$instance->title]	= '<tr data-url="http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path.'tools/Todos/"><td>'.$link.'</td><td>'.$instance->path.'</td><td>'.$todos.'</td></tr>';
+	$cells	= array(
+		UI_HTML_Tag::create( 'td', $link ),
+		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'a', $instance->path, array( 'href' => $url ) ) ),
+		UI_HTML_Tag::create( 'td', '' ),
+	);
+	$rows[$instance->title]	= '<tr data-url="'.$url.'tools/Todos/">'.join( $cells ).'</tr>';
 }
 ksort( $rows );
 

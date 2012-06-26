@@ -20,7 +20,6 @@ class Logic_Module_Relation{
 			'in'	=> array(),
 			'out'	=> array()
 		);
-			remark( "5" );
 		$needs	= array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
 		foreach( $needs as $neededModuleId ){
 			if( in_array( $neededModuleId, $this->skip ) )

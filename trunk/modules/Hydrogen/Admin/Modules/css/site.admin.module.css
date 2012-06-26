@@ -109,6 +109,7 @@ span.icon {
 	padding: 0px;
 	background-repeat: no-repeat;
 	padding-left: 20px;
+	min-height: 16px;
 /*	height: 16px;
 	display: block;
 	float: left;
