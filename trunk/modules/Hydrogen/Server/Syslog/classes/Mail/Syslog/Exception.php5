@@ -17,8 +17,10 @@ class Mail_Syslog_Exception extends Mail_Abstract{
 <h3>'.$appName.' Exception</h3>
 '.UI_HTML_Exception_View::render( $exception ).'
 ';
-		$style	= File_Reader::load( $config->get( 'path.themes' ).'css/mail.min.css' );
-		$script	= File_Reader::load( $config->get( 'path.scripts' ).'mail.min.js' );
+		$fileStyle	= File_Reader::load( $config->get( 'path.themes' ).'css/mail.min.css' );
+		$fileScript	= File_Reader::load( $config->get( 'path.scripts' ).'mail.min.js' );
+		$style	= file_exists( $fileStyle ) ? File_Reader::load( $fileStyle ): '';
+		$style	= file_exists( $fileScript ) ? File_Reader::load( $fileScript ): '';
 		
 		$page	= new UI_HTML_PageFrame();
 		$page->addHead( UI_HTML_Tag::create( 'style', $style ) );

@@ -9,9 +9,9 @@ This module can extend normal or server applications but will need an installed 
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Survey.php</class>
-		<class>Mail/Syslog.php</class>
-		<class>Mail/Syslog/Exception.php</class>
+		<class>Controller/Syslog.php5</class>
+		<class>Mail/Syslog.php5</class>
+		<class>Mail/Syslog/Exception.php5</class>
 	</files>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
