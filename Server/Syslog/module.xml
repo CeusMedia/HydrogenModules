@@ -13,6 +13,7 @@ This module can extend normal or server applications but will need an installed 
 		<class>Mail/Syslog.php5</class>
 		<class>Mail/Syslog/Exception.php5</class>
 	</files>
+	<config protected="yes" type="string" name="log.exception" info="where to log exceptions">logs/exception.log</config>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
