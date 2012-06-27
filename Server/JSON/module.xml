@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>JSON Server</title>
+	<description><![CDATA[Standalone JSON answering server application base.]]></description>
+This module installs the main classes needed to run a server application which is requested using REST and answering in JSON.
+	<category>Server</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Dispatcher.php5</class>
+		<class>Environment.php5</class>
+		<class>Server.php5</class>
+		<file>.htaccess.dist</file>
+		<file>index.php5</file>
+	</files>
+	<relations>
+		<supports type="module">Resource_TokenStore</supports>
+		<supports type="module">Server_JSON_Browser</supports>
+		<supports type="module">Server_Syslog</supports>
+<!--
+		<supports type="module">Resource_Tracker_Piwik</supports>
+-->	
+	</relations>
+</module>
