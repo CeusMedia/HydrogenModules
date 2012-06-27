@@ -217,7 +217,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 	}*/
 
 	protected function validateReferer(){
-		$refererAllowed	= trim( $this->env->config->get( 'auth.referer.allow' ) );					//  get allowed referers from config
+		$refererAllowed	= trim( $this->env->config->get( 'module.server_json.referers.only' ) );	//  get allowed referers from config
 		if( !$refererAllowed )																		//  no referers defined
 			return TRUE;																			//  so everyone can access
 
