@@ -56,6 +56,11 @@ class View_Helper_ModuleCodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 					$xmpClass	= 'php';
 					$modes		= array( 'css', 'xml', 'javascript', 'clike', 'php' );
 					break;
+				case 'file':
+					$pathFile	= '';
+					$xmpClass	= 'code';
+					$modes		= array( 'css', 'xml', 'javascript', 'clike', 'php' );
+					break;
 			}
 			if( !file_exists( $pathFile.$fileName ) )
 				throw new RuntimeException( 'Invalid file: '.$pathFile.$fileName );
