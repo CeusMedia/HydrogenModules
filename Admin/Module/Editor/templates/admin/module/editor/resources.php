@@ -248,6 +248,42 @@ if( $module->files->images ){
 	$images	= '<h4>'.$w->resourceImages.'</h4>'.$table.'<br/>';
 }
 
+//  --  TABLE: FILES  --  //
+$files	= '';
+if( $module->files->files ){
+	$rows	= array();
+	foreach( $module->files->files as $item ){
+		$count++;
+		$class		= NULL;
+		$source		= !empty( $item->source ) ? $item->source : 'local';
+#		$preload	= !empty( $item->preload ) ? $item->preload : NULL;
+		$uri		= $pathApp;
+		switch( $source ){
+			case 'url':		$uri	= ""; break;													//  absolute URL
+			case 'local':	$uri	.= ""; break;													//  file in local scripts folder
+			default:		$uri	.= ''; break;													//  ...
+		}
+		$uri	.= $item->file;
+
+		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/file/'.base64_encode( $uri );
+		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/file/'.base64_encode( $item->file ).'?tab=resources';
+		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
+		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
+
+		if( !checkFile( $uri ) ){
+			$this->env->messenger->noteError( 'Missing: '.$uri );
+			$class	= 'missing';
+			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
+		}
+		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
+		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
+	}
+	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Quelle", "Aktion" ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( array( "75%", "10%", "15%" ) );
+	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
+	$files		= '<h4>'.$w->resourceFiles.'</h4>'.$table.'<br/>';
+}
+
 
 
 $iconAdd	= UI_HTML_Tag::create( 'img', NULL, array( 'href' => '/lib/cmIcons/famfamfam/silk/add.png' ) );
@@ -256,6 +292,7 @@ $optType	= UI_HTML_Elements::Options( $words['resource-types'] );
 $optSourceScript	= UI_HTML_Elements::Options( $words['sources-script'] );
 $optSourceStyle		= UI_HTML_Elements::Options( $words['sources-style'] );
 $optSourceImage		= UI_HTML_Elements::Options( $words['sources-image'] );
+$optSourceFile		= UI_HTML_Elements::Options( $words['sources-file'] );
 $optLoad			= UI_HTML_Elements::Options( array( '' => 'durch Modul', 'auto' => 'automatisch' ) );
 
 $panelAdd	= '
@@ -283,6 +320,10 @@ $panelAdd	= '
 					<label for="input_source_image">Quelle</label><br/>
 					<select name="source_image" id="input_source_image" class="max">'.$optSourceImage.'</select>
 				</li>
+				<li class="optional type-file">
+					<label for="input_source_style">Quelle</label><br/>
+					<select name="source_file id="input_source_file" class="max">'.$optSourceFile.'</select>
+				</li>
 				<li class="optional type-script type-style">
 					<label for="input_load">Laden</label><br/>
 					<select name="load" id="input_load" class="max">'.$optLoad.'</select>
@@ -296,7 +337,7 @@ $panelAdd	= '
 ';
 
 if( $count)
-	$tableResources	= $classes.$templates.$locales.$styles.$scripts.$images;
+	$tableResources	= $classes.$templates.$locales.$styles.$scripts.$images.$files;
 
 return '
 <div class="column-left-70">

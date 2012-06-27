@@ -150,6 +150,11 @@ class Logic_Module {
 				'pathSource'	=> $config->get( 'path.scripts' ),
 				'pathTarget'	=> 'js/',
 			),
+			(object) array(
+				'resources'		=> $module->files->files,
+				'pathSource'	=> '',
+				'pathTarget'	=> '',
+			),
 		);
 
 		$list	= array();
