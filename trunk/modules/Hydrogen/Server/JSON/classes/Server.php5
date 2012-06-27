@@ -144,8 +144,11 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 
 		switch( $this->negotiateContentType() ){
 			case 'text/html':
-				$channel	= new Browser( $this->env );
-				$body		= $channel->render( $body, $headers );
+				if( $this->env->getModules()->has( 'Server_JSON_Browser' ) ){
+					$channel	= new Server_JSON_Browser( $this->env );
+					$body		= $channel->render( $body, $headers );
+					return parent::respond( $body, $headers );
+				}
 				break;
 			case 'text/json':
 				return parent::respond( $body, $headers );
