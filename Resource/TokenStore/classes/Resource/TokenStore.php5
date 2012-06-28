@@ -142,10 +142,10 @@ class Resource_TokenStore {
 	 */
 	public function validateToken( $token ) {
 		$ip		= $this->getClientIp();																//  get IP of client
-		$token	= $this->model->getByIndex( 'ip', $ip );											//  try to get a token bound to client IP
-		if( !$token )																				//  no token found for IP
+		$data	= $this->model->getByIndex( 'ip', $ip );											//  try to get a token bound to client IP
+		if( !$data )																				//  no token found for IP
 			throw new RuntimeException( 'No token registered for IP '.$ip );						//  break with exception
-		return $token === $token->token;															//  indicate validity of given token
+		return $token === $data->token;															//  indicate validity of given token
 	}
 
 	protected function verifySecret( $credentials ) {
