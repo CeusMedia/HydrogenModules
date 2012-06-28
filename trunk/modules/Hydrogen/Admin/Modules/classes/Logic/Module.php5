@@ -287,6 +287,8 @@ class Logic_Module {
 			else if( $image->source == 'theme' )
 				${$array}['img/'.$image->file]	= $pathTheme.'img/'.$image->file;
 		}
+		foreach( $module->files->files as $file )
+			${$array}[$file->file]	= $file->file;
 				
 		$listDone	= array();
 		$exceptions	= array();
@@ -385,7 +387,7 @@ class Logic_Module {
 		$module		= $this->model->get( $moduleId );
 
 		$files	= array();
-#		try{
+
 		//  --  FILES  --  //
 		foreach( $module->files->classes as $class )
 			$files[]	= $this->env->pathApp.'classes/'.$class->file;
@@ -403,6 +405,8 @@ class Logic_Module {
 				$files[]	= $pathImages.$image->file;
 			else if( $image->source == 'theme' )
 				$files[]	= $pathTheme.'img/'.$image->file;
+		foreach( $module->files->files as $file )
+			$files[]	= $file->file;
 
 		//  --  CONFIGURATION  --  //
 		$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';

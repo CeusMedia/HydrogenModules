@@ -220,7 +220,7 @@ legend.module-edit {
 /*  --  MODULE OVERVIEW  --  */
 div.module-overview div.module {
 	float: left;
-	width: 210px;
+	width: 290px;
 	height: 40px;
 	border:1px solid gray;
 	margin-right: 1em;
@@ -233,13 +233,12 @@ div.module-overview div.module div.module-icon{
 div.module-overview div.module div.module-icon,
 div.module-overview div.module div.module-icon img {
 	display: block;
-	float: left;
+	float: right;
 	width: 32px;
 	height: 32px;
 	}
 div.module-overview div.module div.module-title {
-	margin-top: 5px;
-	margin-left: 40px;
+	margin: 5px 5px 0px 5px;
 	font-size: 1.2em;
 	font-width: normal;
 	text-shadow: 0px 1px 1px white;
@@ -249,7 +248,7 @@ div.module-overview div.module div.module-title {
 	white-space: nowrap;
 	}
 div.module-overview div.module div.module-desc {
-	margin: 0px 0px 0px 40px;
+	margin: 0px 10px 0px 5px;
 	font-size: 0.9em;
 	text-shadow: 0px 1px 1px white;
 	text-overflow: ellipsis;
