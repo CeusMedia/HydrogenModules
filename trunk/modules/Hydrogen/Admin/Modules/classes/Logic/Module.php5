@@ -31,22 +31,6 @@ class Logic_Module {
 		}
 	}
 
-	/**
-	 *	Creates a Path by creating all Path Steps.
-	 *	@access		protected
-	 *	@param		string		$path				Path to create
-	 *	@return		void
-	 */
-	static protected function createPath( $path ){
-		$dirname	= dirname( $path );
-		if( file_exists( $path ) && is_dir( $path ) )
-			return;
-		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
-		if( $dirname != "./" && !$hasParent )
-			self::createPath( $dirname );
-		return mkdir( $path, 02770, TRUE );
-	}
-
 	public function getSourceFromModuleId( $moduleId ){
 		$module		= $this->getModule( $moduleId );
 		if( !$module )
@@ -57,6 +41,18 @@ class Logic_Module {
 		if( !$source )
 			throw new InvalidArgumentException( 'Module source '.$module->source.' is not existing' );
 		return $source;
+	}
+
+	public function configureLocalModule( $moduleId, $pairs ){
+		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
+		$xml	= File_Reader::load( $fileName );
+		$xml	= new XML_Element( $xml );
+		foreach( $xml->config as $nr => $node ){
+			$name	= $node->getAttribute( 'name' );
+			if( array_key_exists( $name, $pairs ) )
+				$node->setValue( $pairs[$name] );
+		}
+		return File_Writer::save( $fileName, $xml->asXml() );
 	}
 	
 	protected function copyModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
@@ -81,6 +77,22 @@ class Logic_Module {
 			throw new Exception_Logic( 'Link failed', array( $fileIn, $fileOut ), 50 );
 		chmod( $fileOut, 0770 );
 		return TRUE;
+	}
+
+	/**
+	 *	Creates a Path by creating all Path Steps.
+	 *	@access		protected
+	 *	@param		string		$path				Path to create
+	 *	@return		void
+	 */
+	static protected function createPath( $path ){
+		$dirname	= dirname( $path );
+		if( file_exists( $path ) && is_dir( $path ) )
+			return;
+		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
+		if( $dirname != "./" && !$hasParent )
+			self::createPath( $dirname );
+		return mkdir( $path, 02770, TRUE );
 	}
 
 	public function getCategories(){
@@ -214,7 +226,7 @@ class Logic_Module {
 		if( !$this->env->getRemote()->has( 'dbc' ) )
 			throw new RuntimeException( 'Remvote environment has no database connection' );
 		$dbc	= $this->env->getRemote()->getDatabase();
-		$prefix	= $this->env->getRemote()->getConfig()->get( 'database.prefix' );					//  @todo use config of module Resource_Database instead
+		$prefix	= $this->env->getRemote()->getDatabase()->getPrefix();								//  @todo use config of module Resource_Database instead
 		while( count( $lines ) ){
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
@@ -245,13 +257,12 @@ class Logic_Module {
 	}
 	
 	public function installModule( $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
-		$config		= $this->env->getConfig();
 		$messenger	= $this->env->getMessenger();
 		$request	= $this->env->getRequest();
 		$module		= $this->model->get( $moduleId );
 		$pathModule	= $this->model->getPath( $moduleId );
-		
 		$configApp	= $this->env->getRemote()->getConfig();
+		$pathApp	= $this->env->getRemote()->path;
 
 		$pathTheme	= $configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
 		$pathImages	= 'images/';
@@ -301,7 +312,7 @@ class Logic_Module {
 			foreach( $$type as $fileIn => $fileOut ){
 				$listDone[]	= $fileOut;
 				try{
-					if( $type == 'filesLink' )													//  @todo: OS check -> no links in windows <7
+					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
 						$this->linkModuleFile( $moduleId, $fileIn, $fileOut, $force );
 					else
 						$this->copyModuleFile( $moduleId, $fileIn, $fileOut, $force );
@@ -326,6 +337,8 @@ class Logic_Module {
 				}
 				//  --  CONFIGURATION  --  //
 				$this->configureLocalModule( $moduleId, $settings );								//  save given configuration values in local module
+				if( $configApp->get( 'system.cache.modules' ) )
+					@unlink( $pathApp.'config/modules.cache.serial' );
 				return TRUE;
 			}
 		}
@@ -335,23 +348,10 @@ class Logic_Module {
 
 		if( count( $exceptions ) ){
 			foreach( $listDone as $fileName )
-				@unlink( $this->env->pathApp.$fileName );
+				@unlink( $pathApp.$fileName );
 			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
 		}
 		return FALSE;
-	}
-
-
-	public function configureLocalModule( $moduleId, $pairs ){
-		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
-		$xml	= File_Reader::load( $fileName );
-		$xml	= new XML_Element( $xml );
-		foreach( $xml->config as $nr => $node ){
-			$name	= $node->getAttribute( 'name' );
-			if( array_key_exists( $name, $pairs ) )
-				$node->setValue( $pairs[$name] );
-		}
-		return File_Writer::save( $fileName, $xml->asXml() );
 	}
 
 	protected function linkModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
@@ -379,24 +379,25 @@ class Logic_Module {
 	}
 
 	public function uninstallModule( $moduleId, $verbose = TRUE ){
-		$config		= $this->env->getConfig();
-		$pathTheme	= $this->env->pathApp.$config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
-		$pathImages	= $this->env->pathApp.'images/';
-		if( $config->get( 'path.images' ) )
-			$pathImages	= $this->env->pathApp.$config->get( 'path.images' );
+		$configApp	= $this->env->getRemote()->getConfig();
+		$pathApp	= $this->env->getRemote()->path;
+		$pathTheme	= $pathApp.$configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
+		$pathImages	= $pathApp.'images/';
+		if( $configApp->get( 'path.images' ) )
+			$pathImages	= $pathApp.$configApp->get( 'path.images' );
 		$module		= $this->model->get( $moduleId );
 
 		$files	= array();
 
 		//  --  FILES  --  //
 		foreach( $module->files->classes as $class )
-			$files[]	= $this->env->pathApp.'classes/'.$class->file;
+			$files[]	= $pathApp.'classes/'.$class->file;
 		foreach( $module->files->templates as $template )
-			$files[]	= $this->env->pathApp.$config->get( 'path.templates' ).$template->file;
+			$files[]	= $pathApp.$configApp->get( 'path.templates' ).$template->file;
 		foreach( $module->files->locales as $locale )
-			$files[]	= $this->env->pathApp.$config->get( 'path.locales' ).$locale->file;
+			$files[]	= $pathApp.$configApp->get( 'path.locales' ).$locale->file;
 		foreach( $module->files->scripts as $script )
-			$files[]	= $this->env->pathApp.$config->get( 'path.scripts' ).$script->file;
+			$files[]	= $pathApp.$configApp->get( 'path.scripts' ).$script->file;
 		foreach( $module->files->styles as $style )
 			if( empty( $style->source ) || $style->source == 'theme' )
 				$files[]	= $pathTheme.'css/'.$style->file;
@@ -406,12 +407,14 @@ class Logic_Module {
 			else if( $image->source == 'theme' )
 				$files[]	= $pathTheme.'img/'.$image->file;
 		foreach( $module->files->files as $file )
-			$files[]	= $file->file;
+			$files[]	= $pathApp.$file->file;
 
 		//  --  CONFIGURATION  --  //
 		$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';
 		if( file_exists( $this->env->pathConfig.'modules/'.$moduleId.'.ini' ) )
 			$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.ini';
+		if( $configApp->get( 'system.cache.modules' ) )
+			$files[]	= $this->env->pathConfig.'modules.cache.serial';
 
 		try{
 			//  --  SQL  --  //
