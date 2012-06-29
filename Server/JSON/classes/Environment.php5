@@ -27,10 +27,11 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 	public function __construct() {
 		self::$configFile	= 'config/config.ini.inc';
 		self::$classRouter	= 'CMF_Hydrogen_Environment_Router_Recursive';
-		$this->initClock();
-		$this->initConfiguration();																	//  CONFIGURATION
+		$this->initClock();																			//  setup clock
+		$this->initConfiguration();																	//  setup configuration
 		$this->initModules();																		//  setup module support
-		$this->initDatabase();																		//  DATABASE CONNECTION
+		$this->initDatabase();																		//  setup database connection
+		$this->initCache();																			//  setup cache support
 		$this->initRequest();																		//  setup HTTP request handler
 		$this->initResponse();																		//  setup HTTP response handler
 		$this->initRouter();																		//  setup request router
