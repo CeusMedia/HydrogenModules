@@ -18,10 +18,9 @@ Using tokens, client applications can identify requesting clients, authenticated
 	</relations>
 	<config protected="yes" type="boolean" name="bind.host">yes</config>
 	<config protected="yes" type="boolean" name="bind.protocol">yes</config>
-	<config protected="yes" type="boolean" name="bind.time">yes</config>
+	<config protected="yes" type="boolean" name="bind.time">no</config>
 	<config protected="yes" type="string" name="secret">secret</config>
-	<config protected="yes" type="string" name="store">config/token.map</config>
-	<config protected="yes" type="string" name="lifetime">10</config>
+	<config protected="yes" type="string" name="lifetime">0</config>
 	<config protected="yes" type="string" name="salt"></config>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>tokens`;
