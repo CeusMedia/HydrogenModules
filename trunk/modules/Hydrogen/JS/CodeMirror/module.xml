@@ -10,6 +10,9 @@
 	<files>
 		<script load="auto" source="lib">CodeMirror/2.25/lib/codemirror.js</script>
 		<style load="auto" source="scripts-lib">CodeMirror/2.25/lib/codemirror.css</style>
+		<style load="auto" source="theme">codemirror.css</style>
+		<image source="local">bg_code_tab.png</image>
+		<image source="local">bg_code_tab.psd</image>
 	</files>
 	<config name="modes" type="string">css,xml,javascript,clike,php</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
