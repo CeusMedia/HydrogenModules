@@ -32,7 +32,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 		if( $cache )
 			$result	= $cache->set( $post->get( 'key' ), serialize( $post->get( 'value' ) ) );
 		print( json_encode( $result ) );
-		die;
+		exit;
 	}
 
 	public function ajaxRemove(){
@@ -42,7 +42,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 		if( $cache )
 			$result	= $cache->remove( $post->get( 'key' ) );
 		print( json_encode( $result ) );
-		die;
+		exit;
 	}
 
 	protected function getCache(){
