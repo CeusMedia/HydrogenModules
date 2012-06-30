@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: scrollTo</title>
+	<description><![CDATA[]]></description>
+	<version>1.4.2</version>
+	<category>JavaScript</category>
+	<author site="http://flesler.blogspot.de/" email="aflesler@gmail.com">Ariel Flesler</author>
+	<url>http://flesler.blogspot.de/2007/10/jqueryscrollto.html</url>
+	<license>Public Domain?</license>
+	<files>
+		<script load="auto">jquery.scrollTo.min.js</script>
+		<script>jquery.scrollTo.js</script>
+	</files>
+</module>
