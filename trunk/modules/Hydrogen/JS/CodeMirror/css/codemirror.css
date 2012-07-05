@@ -16,7 +16,7 @@ div.CodeMirror-scroll {
 div.CodeMirror-lines pre{
 	}
 div.CodeMirror-lines span.cm-tab{
-	background-image: url(images/bg_code_tab.png);
+	background-image: url(../img/bg_code_tab.png);
 	background-repeat: no-repeat;
 	background-position: 1px 6px;
 	}
