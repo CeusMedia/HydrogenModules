@@ -11,4 +11,8 @@
 		<script load="auto" source="local">UI.Layer.js</script>
 		<style load="auto" source="theme">layer.css</style>
 	</files>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$script	= '$(document).ready(function(){Layer.init();});';
+		$context->js->addScript( $script );
+	]]></hook>
 </module>
