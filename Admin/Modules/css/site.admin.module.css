@@ -364,3 +364,34 @@ select.active-no {
 #form_admin_module_config td.cell-config-value {
 	}
 
+
+	
+	
+#search {
+	position: absolute;
+	top: -39px;
+	right: 4px;
+	padding: 0.3em 1.25em 0.5em 1.25em;
+	border-radius: 0 0 1em 1em;
+	background-color: #EFEFEF;
+	}
+#search input#input_query{
+	width: 80px;
+	background-image: url(../img/search-magnifier.gif);
+	background-position: 1px 1px;
+	background-repeat: no-repeat;
+	padding: 2px 22px;
+	}
+#search #search-reset {
+	display: none;
+	position: absolute;
+	width: 13px;
+	height: 13px;
+	top: 0.9em;
+	right: 1.9em;
+	background-image: url(../img/clearSearch.png);
+	background-position: 1px 1px;
+	background-repeat: no-repeat;
+	border-radius: 0.6em;
+	cursor: pointer;
+	}

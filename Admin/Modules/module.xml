@@ -42,8 +42,11 @@ This module needs other modules to be installed:
 		<template>admin/module/viewer/relations.php</template>
 		<template>admin/module/viewer/resources.php</template>
 		<template>admin/module/viewer/view.php</template>
+		<script source="local" load="auto">UI.InstantFilter.js</script>
 		<script source="local" load="auto">site.admin.module.js</script>
 		<style source="theme" load="auto">site.admin.module.css</style>
+		<image source="theme">clearSearch.png</image>
+		<image source="theme">search-magnifier.gif</image>
 	</files>
 	<relations>
 		<needs type="module">Admin_Module_Sources</needs>
