@@ -8,7 +8,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->categories	= $this->logic->getCategories();
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.installer.css' );
-		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
 	}
 	
 	public function index( $moduleId = NULL, $mainModuleId = NULL ){
