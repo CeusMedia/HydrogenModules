@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Blog &raquo;Compact&laquo;]]></title>
+	<description>Simple blog with tags but without comments.</description>
+	<version>0.1</version>
+	<files>
+		<class>Controller/Blog.php5</class>
+		<class>Model/Article.php5</class>
+		<class>Model/ArticleAuthor.php5</class>
+		<class>Model/ArticleTag.php5</class>
+		<class>Model/Tag.php5</class>
+		<class>View/Blog.php5</class>
+		<class>View/Helper/Blog.php5</class>
+		<class>View/Helper/BlogContentFormat.php5</class>
+		<template>blog/add.php</template>
+		<template>blog/article.php</template>
+		<template>blog/edit.php</template>
+		<template>blog/index.php</template>
+		<template>blog/tag.php</template>
+		<style load="auto">module.blog.css</style>
+		<locale>de/blog.ini</locale>
+	</files>
+	<config name="path.images">blog/</config>
+	<config name="perPage">5</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Roles</needs>
+		<needs type="module">Users</needs>
+		<needs type="module">JS_Layer</needs>
+	</relations>
+	<link xml:lang="de" access="public" path="blog">Blog</link>
+	<link rank="99" access="public" path="blog/index"></link>
+	<link rank="99" access="public" path="blog/article"></link>
+	<link rank="99" access="public" path="blog/tag"></link>
+	<link rank="99" access="public" path="blog/thumb"></link>
+	<link rank="99" access="public" path="blog/images"></link>
+</module>
