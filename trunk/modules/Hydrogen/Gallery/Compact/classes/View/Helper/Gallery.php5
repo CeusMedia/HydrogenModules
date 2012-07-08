@@ -1,8 +1,9 @@
 <?php
 class View_Helper_Gallery{
-	static public function renderLatestGalleries( $limit ){
+	static public function renderLatestGalleries( $env, $limit ){
 		$list		= array();
-		$path		= 'contents/gallery/';
+		$config		= $env->getConfig();
+		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$index		= Folder_RecursiveLister::getFolderList( $path, '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /' );
 		foreach( $index as $folder )
 			$list[$folder->getFilename()]	= substr( $folder->getPathname(), strlen( $path ) );
