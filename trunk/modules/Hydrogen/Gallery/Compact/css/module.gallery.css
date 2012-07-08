@@ -1,0 +1,42 @@
+/*  --  GALLERY  --  */
+#gallery .label {
+	text-align: center;
+	font-size: 0.8em;
+	font-style: italic;
+	color: gray;
+	}
+#gallery .file-name {
+	text-align: center;
+	font-size: 0.8em;
+	font-style: italic;
+	color: gray;
+	}
+#gallery div.thumbnail {
+	position: relative;
+	float: left;
+	padding: 0.5em;
+	margin: 0.1em 0.5em 0.4em 0.5em;
+	border: 1px solid gray;
+	background: #FFF;
+	box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-o-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	}
+#gallery .navi-steps {
+/*	font-weight: bold;*/
+	border-bottom: 1px dotted gray;
+	padding: 4px 8px;
+/*	letter-spacing: 1px;*/
+	}
+#gallery div.thumbnail a.thickbox img.thumbnail {
+	min-width: 68px;
+	min-height: 90px;
+	max-width: 120px;
+	height: 90px;
+	display: block;
+	background-image: url(ajax-loader3.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	}
+
