@@ -1,4 +1,7 @@
 
+#layout-field {
+	position: relative;
+	}
 
 h3.position span {
 	color: #777;
@@ -369,7 +372,7 @@ select.active-no {
 	
 #search {
 	position: absolute;
-	top: -39px;
+	top: -27px;
 	right: 4px;
 	padding: 0.3em 1.25em 0.5em 1.25em;
 	border-radius: 0 0 1em 1em;
