@@ -205,7 +205,7 @@ class Logic_Module {
 
 				//  @todo	when $move = TRUE => remove database tables of module
 				
-				$messenger->noteSuccess( 'Das Module "'.$moduleId.'" wurde bei der Quelle "'.$source->id.'" eingereicht.' );
+				$messenger->noteSuccess( 'Das Module "'.$moduleId.'" wurde bei der Quelle "'.$sourceId.'" eingereicht.' );
 				$messenger->noteNotice( 'Das Module kann nun deinstalliert und aus der Quelle wieder installiert werden.' );
 				return TRUE;
 			}
