@@ -47,7 +47,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 
 			if( !$messenger->gotError() ){
 				$data['createdAt']	= time();
-				$model->add( $data );
+				$branchId			= $model->add( $data );
+				$model->extendWithGeocodes( $branchId );
 				$messenger->noteSuccess( 'Added: '.$data['title'] );
 				$this->restart( './manage/my/branch' );
 			}
@@ -162,7 +163,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 				$data['modifiedAt']	= time();
 				$modelBranch->edit( $branchId, $data );
 				$messenger->noteSuccess( 'Updated: '.$data['title'] );
-				if( !$modelBranch->get( $branchId )->x )
+#				if( !$modelBranch->get( $branchId )->x )
 					$modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( './manage/my/branch' );
 			}

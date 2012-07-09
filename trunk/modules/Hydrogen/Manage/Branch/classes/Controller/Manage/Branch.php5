@@ -158,6 +158,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 				$data['modifiedAt']	= time();
 				$modelBranch->edit( $branchId, $data );
 				$messenger->noteSuccess( 'Updated: '.$data['title'] );
+				$modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( './manage/branch' );
 			}
 		}
