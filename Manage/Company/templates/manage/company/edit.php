@@ -103,5 +103,5 @@ return //	UI_HTML_Tag::create( 'h2', $w->heading ).
 HTML::DivClass( 'column-left-66',
 	$panelEdit
 ).
-HTML::DivClass( 'column-left' );
+HTML::DivClass( 'column-clear' );
 ?>

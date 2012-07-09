@@ -6,6 +6,27 @@ $optStatus	= HTML::Options( $words['states'], $branch->status );
 $optCompany	= HTML::Options( $companies, $branch->companyId, array( 'companyId', 'title' ) ); 
 
 
+$panelMap	= '';
+if( $branch->longitude ){
+	$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
+	$geocoder->setCachePath( 'log/geocodes/' );
+	$query		= $branch->street.' '.$branch->number.', '.$branch->postcode.' '.$branch->city.', Deutschland';
+	#$addr		= $geocoder->getAddress( $query );
+	$tags		= (object) $geocoder->getGeoTags( $query );
+	$panelMap	= HTML::DivClass( 'column-clear', '
+	<div style="border: 1px solid black; float: right; width: 100%; height: 520px">
+		'.UI_HTML_Tag::create( 'div', '', array(
+			'id'	=> "map_canvas",
+			'style'	=> "width:100%; height:100%",
+			'data-longitude'	=> $branch->longitude,
+			'data-latitude'		=> $branch->latitude,
+			'data-marker-title'	=> 'Test'
+		) ).'
+	</div>
+	' );
+}
+
+
 $list	= array();
 foreach( $images as $image ){
 	$urlImage	= 'images/branches/'.$image->filename;
@@ -123,5 +144,7 @@ HTML::DivClass( 'column-left-50',
 		)
 	)
 ).
-HTML::DivClass( 'column-left' );
+HTML::DivClass( 'column-left' ).
+$panelMap.
+HTML::DivClass( 'column-clear' );
 ?>
