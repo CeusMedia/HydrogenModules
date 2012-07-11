@@ -14,7 +14,7 @@
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
-	<config name="modes" type="string">css,xml,javascript,clike,php</config>
+	<config protected="yes" name="modes" type="string">css,xml,javascript,clike,php</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJsLib	= $env->getConfig()->get( 'path.js.lib' );
 		$modes		= explode( ',', $module->config['modes']->value );
