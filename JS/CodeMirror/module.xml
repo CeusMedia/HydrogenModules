@@ -15,12 +15,28 @@
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
 	<config protected="yes" name="modes" type="string">css,xml,javascript,clike,php</config>
+	<config protected="no" name="option.lineNumbers" type="boolean">yes</config>
+	<config protected="no" name="option.lineWrapping" type="boolean">no</config>
+	<config protected="no" name="option.indentWithTabs" type="boolean">yes</config>
+	<config protected="no" name="option.indentUnit" type="integer">4</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJsLib	= $env->getConfig()->get( 'path.js.lib' );
+//		$config		= $env->getConfig()->getAll( 'module.js_codemirror.option.' );
 		$modes		= explode( ',', $module->config['modes']->value );
 		foreach( $modes as $mode )
 			$context->js->addUrl( $pathJsLib.'CodeMirror/2.25/mode/'.$mode.'/'.$mode.'.js' );
-		$script	= '$(document).ready(function(){$("textarea.CodeMirror").each(function(){CodeMirror.fromTextArea($(this).get(0))})});';
-		$context->js->addScript( $script );
+		$script	= '
+$("fieldset").each(function(){$(this).width($(this).width());});			//  fix for codemirror in fieldsets
+$("textarea.CodeMirror").each(function(){									//  iterate found text areas
+	$(this).data("codemirror", CodeMirror.fromTextArea($(this).get(0), {	//  create an instance and store it on its related textarea
+		gutter: config.module_js_codemirror_option_lineNumbers && !config.module_js_codemirror_option_lineWrapping,
+		fixedGutter: config.module_js_codemirror_option_lineNumbers && !config.module_js_codemirror_option_lineWrapping,
+		lineNumbers: config.module_js_codemirror_option_lineNumbers,
+		indentUnit: config.module_js_codemirror_option_indentUnit,
+		lineWrapping: config.module_js_codemirror_option_lineWrapping,
+		indentWithTabs: config.module_js_codemirror_option_indentWithTabs
+	}));		
+})';
+		$context->js->addScript( '$(document).ready(function(){'.$script.'});' );
 	]]></hook>
 </module>
