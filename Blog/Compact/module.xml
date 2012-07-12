@@ -14,14 +14,16 @@
 		<class>View/Helper/BlogContentFormat.php5</class>
 		<template>blog/add.php</template>
 		<template>blog/article.php</template>
+		<template>blog/author.php</template>
 		<template>blog/edit.php</template>
 		<template>blog/index.php</template>
 		<template>blog/tag.php</template>
 		<style load="auto">module.blog.css</style>
 		<locale>de/blog.ini</locale>
 	</files>
-	<config name="path.images">blog/</config>
-	<config name="perPage">5</config>
+	<config protected="yes" type="string" name="path.images">blog/</config>
+	<config protected="no" type="integer" name="perPage">10</config>
+	<config protected="no" type="boolean" name="niceURLs">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Roles</needs>
@@ -30,9 +32,9 @@
 	</relations>
 	<link xml:lang="de" access="public" path="blog">Blog</link>
 	<link rank="99" access="public" path="blog/feed"/>
-	<link rank="99" access="public" path="blog/index"></link>
-	<link rank="99" access="public" path="blog/article"></link>
-	<link rank="99" access="public" path="blog/tag"></link>
-	<link rank="99" access="public" path="blog/thumb"></link>
-	<link rank="99" access="public" path="blog/images"></link>
+	<link rank="99" access="public" path="blog/index"/>
+	<link rank="99" access="public" path="blog/article"/>
+	<link rank="99" access="public" path="blog/tag"/>
+	<link rank="99" access="public" path="blog/thumb"/>
+	<link rank="99" access="public" path="blog/images"/>
 </module>
