@@ -9,12 +9,12 @@ return '
 			<legend class="messages-new">Artikel verändern</legend>
 			<ul class="input">
 				<li>
-					<label for="title">Titel</label><br/>
-					<input type="text" name="title" id="input-title" value="'.htmlentities( $title ).'"/>
+					<label for="title" class="mandatory">Titel</label><br/>
+					<input type="text" name="title" id="input-title" class="max mandatory" value="'.htmlentities( $title ).'"/>
 				</li>
 				<li>
-					<label for="title">Titel</label><br/>
-					<textarea name="content" id="input-content" rows="20" class="max CodeMirror">'.$content.'</textarea>
+					<label for="title" class="mandatory">Inhalt</label><br/>
+					<textarea name="content" id="input-content" rows="20" class="max mandatory CodeMirror">'.$content.'</textarea>
 				</li>
 			</ul>
 			<div class="buttonbar">

@@ -25,6 +25,10 @@ body.controller-blog ul.blog-article-list li.blog-article-list-item {
 	padding: 0px;
 	margin: 0px;
 	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item {
+	padding: 0.2em 0 0.8em 0;
+	border-top: 1px dotted rgba(0,0,0,0.15);
+	}
 
 
 body.controller-blog ul.blog-article-tag-list {
@@ -70,6 +74,7 @@ body.controller-blog div.blog-article div.article-navi {
 	border-bottom: 2px solid rgba(0,0,0,0.5);
 	}
 body.controller-blog div.blog-article div.blog-article-navi {
+	clear: both;
 	margin-top: 5px;
 	padding-top: 5px;
 	border-top: 2px solid rgba(0,0,0,0.5);
@@ -85,4 +90,62 @@ body.controller-blog ul.top-tags li {
 	}
 body.controller-blog ul.top-tags li a {
 	display: block;
+	}
+
+
+body.controller-blog .blog-article-content div.block .right {
+	float: right;
+	margin: 0 0 1em 2em;
+	}
+body.controller-blog .blog-article-content div.block:after {
+	clear: both;
+	display: block;
+	height: 0;
+	visibility: hidden;
+	content: '.';
+	}
+body.controller-blog a.link-add,
+body.controller-blog a.link-edit {
+	display: inline-block;
+	margin: 0em 0 0 0.5em;
+	}
+
+	
+	
+
+	
+body.controller-blog .link-author,
+body.controller-blog .link-map,
+body.controller-blog .link-search-image,
+body.controller-blog .link-imdb,
+body.controller-blog .link-wiki,
+body.controller-blog .link-tag,
+body.controller-blog a.external {
+	background-color: rgba(255,250,240,0.5);
+	background-repeat: no-repeat;
+	background-position: 2px 1px;
+	padding: 1px 5px 1px 20px;
+	}
+
+body.controller-blog .link-map {
+	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/map.png);
+	}
+
+body.controller-blog .link-search-image {
+	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/magnifier.png);
+	}
+body.controller-blog .link-imdb {
+	background-image: url(http://i.imdb.com/favicon.ico);
+	}
+body.controller-blog .link-wiki {
+	background-image: url(http://de.wikipedia.org/favicon.ico);
+	}
+body.controller-blog .link-tag {
+	background-image: url(/lib/cmIcons/famfamfam/silk/tag_blue.png);
+	}
+body.controller-blog .link-author {
+	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	}
+body.controller-blog a.external {
+	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/link.png);
 	}

@@ -3,8 +3,8 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	/**	@var	Model_Article		$model		Article model instance */
 	protected $model;
-
-	protected $path;
+	/**	@var	boolean				$isEditor	Indicates wheter user is editor */
+	protected $isEditor;
 	
 	/**
 	 *	Constructor.
@@ -15,7 +15,9 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		parent::__construct( $env );
 		$config			= $env->getConfig();
+		$roleId			= $env->getSession()->get( 'roleId');
 		$this->model	= new Model_Article( $env );
+		$this->isEditor	= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
 	}
 
 	/**
@@ -26,37 +28,44 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	 */
 	public function add(){
 		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
+		$userId		= $this->env->getSession()->get( 'userId' );
 		if( $request->get( 'do' ) == 'save' ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
-				throw new InvalidArgumentException( 'Article title is missing' ) ;
+				$messenger->noteError( 'Der Titel des Artikels fehlt.' );
 			if( !strlen( trim( $request->get( 'content' ) ) ) )
-				throw new InvalidArgumentException( 'Article content is missing' ) ;
-			
-			$data	= array(
-				'title'			=> trim( $request->get( 'title' ) ),
-				'content'		=> trim( $request->get( 'content' ) ),
-				'createdAt'		=> time(),
-			);
-			$model	= new Model_Article( $this->env );
-			$articleId	= $model->add( $data, FALSE );
-			if( !$articleId ){
-				$this->env->getMessenger()->noteError( 'Der Artikel konnte nicht gespeichert werden.' );
-				return;
+				$messenger->noteError( 'Der Inhalt des Artikels fehlt.' );
+			if( !$messenger->gotError() ){
+				$data	= array(
+					'title'			=> trim( $request->get( 'title' ) ),
+					'content'		=> trim( $request->get( 'content' ) ),
+					'createdAt'		=> time(),
+				);
+				$model	= new Model_Article( $this->env );
+				$articleId	= $model->add( $data, FALSE );
+				if( !$articleId ){
+					$this->env->getMessenger()->noteError( 'Der Artikel konnte nicht gespeichert werden.' );
+					return;
+				}
+				$model	= new Model_ArticleAuthor( $this->env );
+				$model->add( array( 'articleId' => $articleId, 'userId' => $userId ) );
+				$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde gespeichert.' );
+				$this->restart( './blog/edit/'.$articleId );
 			}
-			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde gespeichert.' );
-			$this->restart( './blog/edit/'.$articleId );
 		}
 	}
 
 	public function addTag( $articleId ){
-		$request	= $this->env->getRequest();
+		$request		= $this->env->getRequest();
+		$modelTag		= new Model_Tag( $this->env );
+		$modelRelation	= new Model_ArticleTag( $this->env );
+
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
 
 		$tagName	= $request->get( 'tag' );
 		if( !strlen( $tagName ) )
 			$this->restart( './blog/edit/'.$articleId );
-		$modelTag	= new Model_Tag( $this->env );
 		$tag		= $modelTag->getByIndex( 'title', $tagName );
 		if( $tag ){
 			$tagId	= $tag->tagId;
@@ -65,25 +74,25 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 				'articleId'	=> $articleId,
 				'tagId'		=> $tagId,
 			);
-			if( $model->getByIndices( $indices ) )
+			if( $modelRelation->getByIndices( $indices ) )
 				$this->restart( './blog/edit/'.$articleId );
 		}
 		else{
 			$tagId	= $modelTag->add( array( 'title' => $tagName ) );
 			$number	= 0;
 		}
-		$model	= new Model_ArticleTag( $this->env );
 		$data	= array(
 			'articleId'	=> $articleId,
 			'tagId'		=> $tagId,
 		);
-		$model->add( $data );
+		$modelRelation->add( $data );
 		$modelTag->edit( $tagId, array( 'number' => ++$number ) );
 		$this->restart( './blog/edit/'.$articleId );
 	}
 
-	public function article( $articleId, $title )
-	{
+	public function article( $articleId, $title = NULL ){
+		$articleId	= preg_replace( "/^(\d+).*/", '\\1', trim( $articleId ) );
+		
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
 		$data	= array(
@@ -92,14 +101,27 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
 			'articleId'	=> rawurldecode( $articleId ),
+			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
+	}
+
+	public function author( $username = NULL ){
+		$model	= new Model_User( $this->env );
+		$user	= $model->getByIndex( 'username', $username );
+		if( !$user ){
+			$this->env->getMessenger()->noteError( 'Invalid user' );
+			$this->restart( NULL, TRUE );
+		}
+		$this->addData( 'user', $user );
 	}
 
 	public function edit( $articleId ){
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
 		$request	= $this->env->getRequest();
+		$userId		= $this->env->getSession()->get( 'userId' );
+		
 		if( $request->get( 'do' ) == 'save' ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				throw new InvalidArgumentException( 'Article title is missing' ) ;
@@ -117,6 +139,12 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 				return;
 			}
 			$model->edit( $articleId, array( 'modifiedAt' => time() ) );
+			
+			$model	= new Model_ArticleAuthor( $this->env );
+			if( !$model->count( array( 'articleId' => $articleId, 'userId' => $userId ) ) )
+				$model->add( array( 'articleId' => $articleId, 'userId' => $userId ) );
+
+			
 			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde geändert.' );
 		}
 		
@@ -130,14 +158,30 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		);
 		$this->setData( $data );
 	}
+	
+	/**
+	 *	Generates RSS Feed and returns it directly to the requesting client.
+	 *	@access		public
+	 *	@param		integer		$limit
+	 *	@param		boolean		$debug
+	 *	@return		void
+	 */
+	public function feed( $limit = 10, $debug = NULL ){
+		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
+		
+		$conditions	= array( 'status' => 1 );
+		$orders		= array( 'articleId' => 'DESC' );
+		$articles	= $this->model->getAll( $conditions, $orders, array( $limit, 0 ) );
+		$this->addData( 'articles', $articles );
+		$this->addData( 'debug', (bool) $debug );
+	}
 
-	public function index( $page = 0, $limit = NULL )
-	{
+	public function index( $page = 0, $limit = NULL ){
 		$perPage	= abs( (int) $this->env->getConfig()->get( 'module.blog_compact.perPage' ) );
 		$limit		= !is_null( $limit ) ? $limit : ( $perPage ? $perPage : 10 );
 		$offset		= $page * $limit;
 		$limits		= array( $offset, $limit );
-		$conditions	= array( 'status' => 1 );
+		$conditions	= $this->isEditor ? array() : array( 'status' => 1 );
 		$orders		= array( 'articleId' => 'DESC' );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
 		foreach( $articles as $nr => $article ){
@@ -147,7 +191,6 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		
 		$query		= 'SELECT COUNT(at.articleId) as nr, at.tagId, t.title FROM article_tags AS at, tags AS t WHERE at.tagId=t.tagId GROUP BY at.tagId ORDER BY nr DESC';
 		$topTags	= $this->env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
-		
 		$data		= array(
 			'page'		=> $page,
 			'limit'		=> $limit,
@@ -155,6 +198,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'articles'	=> $articles,
 			'number'	=> $this->model->count( $conditions ),
 			'topTags'	=> $topTags,
+			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
 	}

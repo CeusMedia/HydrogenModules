@@ -13,6 +13,8 @@ if( isset( $articleIndex[$index+1] ) )
 	$next		= $articleList[$articleIndex[$index+1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $next->title );
 	$url		= './blog/article/'.$next->articleId;
+	if( $config->get( 'niceURLs' ) )
+		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $next );
 	$linkNext	= UI_HTML_Elements::Link( $url, $label.'&nbsp;&raquo;' );
 }
 if( isset( $articleIndex[$index-1] ) )
@@ -20,19 +22,21 @@ if( isset( $articleIndex[$index-1] ) )
 	$previous	= $articleList[$articleIndex[$index-1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $previous->title );
 	$url		= './blog/article/'.$previous->articleId;
+	if( $config->get( 'niceURLs' ) )
+		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $previous );
 	$linkPrev	= UI_HTML_Elements::Link( $url, '&laquo;&nbsp;'.$label );
 }
 $title		= Alg_Text_Unicoder::convertToUnicode( $article->title );
 $text		= $this->formatContent( $article->content, $articleId );
 
-$authorList	= View_Blog::renderAuthorList( $authors );
+$authorList	= View_Blog::renderAuthorList( $authors, !TRUE );
 $tagList	= View_Blog::renderTagList( $tags );
 
 $roleId		= $this->env->getSession()->get( 'roleId');
 $canEdit	= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'edit' );
 $url		= './blog/edit/'.$article->articleId;
-$label		= '&nbsp;<small>[edit]</small>';
-$linkEdit	= $canEdit ? UI_HTML_Elements::Link( $url, $label, 'link-edit' ) : '';
+$label		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/pencil.png', 'Eintrag bearbeiten' );
+$linkEdit	= $canEdit ? UI_HTML_Elements::Link( $url, $label, 'link-edit button' ) : '';
 
 $date	= 'unbekannt';
 if( $article->createdAt )

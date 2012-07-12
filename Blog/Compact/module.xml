@@ -29,6 +29,7 @@
 		<needs type="module">JS_Layer</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="blog">Blog</link>
+	<link rank="99" access="public" path="blog/feed"/>
 	<link rank="99" access="public" path="blog/index"></link>
 	<link rank="99" access="public" path="blog/article"></link>
 	<link rank="99" access="public" path="blog/tag"></link>
