@@ -25,10 +25,10 @@ return '
 			<ul class="input">
 				<li>
 					<label for="input-title">Titel</label><br/>
-					<input type="text" name="title" id="input-title" value="'.htmlentities( $article->title ).'"/>
+					<input type="text" name="title" id="input-title" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</li>
 				<li>
-					<label for="input-title">Titel</label><br/>
+					<label for="input-title">Inhalt</label><br/>
 					<textarea name="content" id="input-content" rows="10" class="max CodeMirror">'.$article->content.'</textarea>
 				</li>
 				<li>

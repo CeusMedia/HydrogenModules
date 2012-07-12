@@ -3,11 +3,51 @@ class View_Blog extends CMF_Hydrogen_View{
 	
 	public function add(){}
 	
+	public function article(){}
+
+	public function author(){}
+	
 	public function edit(){}
 
+	public function feed(){
+		$articles	= $this->getData( 'articles' );
+		$debug		= $this->getData( 'debug' );
+		$config		= $this->env->getConfig();
+		$baseUrl	= $config->get( 'app.base.url' );
+		$channel	= array(
+			'title'			=> $config->get( 'app.name' ).': Blog-Artikel',
+			'description'	=> 'Aktuelle Blog-Artikel von iamkriss.net',
+			'link'			=> $baseUrl.'blog/'
+		);
+		$feed		= new XML_RSS_Builder();
+		$feed->setChannelData( $channel );
+		foreach( $articles as $article ){
+#			print_m( $articles );
+			$uri	= $baseUrl.'blog/article/'.$article->articleId;
+			$data	= array(
+				'title'			=> $article->title,
+				'description'	=> array_shift( explode( "\n", strip_tags( $article->content ) ) ),
+				'guid'			=> $uri,
+				'link'			=> $uri,
+			);
+			if( $config->get( 'module.blog_compact.niceURLs' ) )
+				$data['link']	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
+			$timestamp	= max( $article->createdAt, $article->modifiedAt );
+			if( $timestamp )
+				$data['pubDate']	= date( "r", (double) $timestamp );
+			$feed->addItem( $data );
+		}
+		$rss	= $feed->build( 'utf-8', '0.92' );
+		if( $debug ){
+			xmp( $rss );
+			die;
+		}
+		header( 'Content-type: application/rss+xml' );
+		print( $rss );
+		exit;
+	}
+
 	public function index(){}
-	
-	public function article(){}
 
 	public function tag(){}
 
@@ -28,12 +68,14 @@ class View_Blog extends CMF_Hydrogen_View{
 		return $content;
 	}
 
-	static public function renderAuthorList( $authors ){
+	static public function renderAuthorList( $authors, $linked = FALSE ){
 		$authorList	= array();
 		foreach( $authors as $author ){
-			$url			= './blog/author/'.urlencode( $author->username );
-			$link			= UI_HTML_Tag::create( 'a', $author->username, array( 'href' => $url, 'class' => 'link-author' ) );
-			$authorList[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-author-list-item' ) );
+			$url		= './blog/author/'.urlencode( $author->username );
+			$label		= UI_HTML_Tag::create( 'span', $author->username, array( 'class' => 'link-author' ) );
+			if( $linked )
+				$label		= UI_HTML_Tag::create( 'a', $author->username, array( 'href' => $url, 'class' => 'link-author' ) );
+			$authorList[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
 	}

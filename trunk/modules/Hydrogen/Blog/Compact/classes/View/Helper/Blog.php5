@@ -1,5 +1,15 @@
 <?php
 class View_Helper_Blog{
+
+	static public function getArticleTitleUrlLabel( $article ){
+		$cut	= array( '?', '!', ':', '.', ';', '"', "'" );
+		$label	= str_replace( $cut, '', $article->title );											//  remove inappropriate characters
+		$label	= str_replace( ' ', '-', $label );													//  replace whitespace by hyphen
+		$label	= preg_replace( '/-+/', '-', $label );												//  shorten hyphens to one
+		return urlencode( $label );																	//  return encoded URL component
+	}
+	
+	
 	static public function renderLatestArticles( $env, $limit ){
 		$list	= array();
 		$model	= new Model_Article( $env );
