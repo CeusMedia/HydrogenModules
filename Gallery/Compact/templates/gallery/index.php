@@ -8,7 +8,7 @@ foreach( $folders as $entry )
 	$link			= UI_HTML_Elements::Link( $url, $name );
 	$list[$name]	= UI_HTML_Elements::ListItem( $link );
 }
-ksort( $list );
+krsort( $list );
 $folders	= $list ? UI_HTML_Elements::unorderedList( $list ) : NULL;
 
 $list		= array();
