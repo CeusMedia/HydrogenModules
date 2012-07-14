@@ -6,9 +6,11 @@ var InstantFilter = function(selectorInput,options){
 		selectorReset: null,
 		durationFadeIn: 'fast',
 		durationFadeOut: 'fast',
+		autoFocus: false,
 		onSearch: function(instance){},
 		onReset: function(instance){}
 	};
+	
 	this.options = $.extend(defaultOptions,options);
 	this.selectorInput = selectorInput;
 	if(this.options.selectorReset){
@@ -32,6 +34,8 @@ var InstantFilter = function(selectorInput,options){
 		if($.inArray(event.keyCode,skip) >= 0)
 			return false;
 	});
+	if(this.options.autoFocus)
+		$(this.selectorInput).focus(); 
 
 	this.reset = function(){
 		if(!(this.selectorInput && $(this.selectorInput).size()))

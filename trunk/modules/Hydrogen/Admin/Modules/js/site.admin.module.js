@@ -10,7 +10,6 @@ AdminModuleInstaller = {
 };
 
 $(document).ready(function(){
-
 	new InstantFilter('div#search input#input_query',{
 		caseSense: false,
 		skipKeys: [32],
@@ -18,6 +17,7 @@ $(document).ready(function(){
 		durationFadeOut: 200,
 		selectorItems: 'div.module',
 		selectorReset: '#search #search-reset',
+		autoFocus: true,
 		onSearch: function(instance){
 			var o = instance.options;
 			$(o.selectorItems).parent().each(function(){
