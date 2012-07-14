@@ -54,10 +54,10 @@ return '
 		<legend class="roles">'.$wf->legend.' <small>('.count( $roles ).')</small></legend>
 		<table id="roles">
 			<colgroup>
-				<col width="50%"/>
+				<col width="45%"/>
 				<col width="10%"/>
 				<col width="25%"/>
-				<col width="15%"/>
+				<col width="20%"/>
 			</colgroup>
 			'.$rows.'
 		</table>

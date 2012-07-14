@@ -54,7 +54,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 			$action		= $request->getFromSource( 'action', 'POST' );
 			$data		= array(
 				'roleId'		=> $roleId,
-				'controller'	=> $controller,
+				'controller'	=> str_replace( '-', '/', strtolower( $controller ) ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
 			);
@@ -150,7 +150,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		$modelRight	= new Model_Role_Right( $this->env );
 		$indices	= array(
 			'roleId'		=> $roleId,
-			'controller'	=> str_replace( '-', '/', $controller ),
+			'controller'	=> str_replace( '-', '/', strtolower( $controller ) ),
 			'action'		=> $action
 		);
 		$modelRight->removeByIndices( $indices );
