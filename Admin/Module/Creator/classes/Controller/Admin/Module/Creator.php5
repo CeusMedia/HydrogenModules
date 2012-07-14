@@ -7,7 +7,7 @@ class Controller_Admin_Module_Creator extends CMF_Hydrogen_Controller{								//
 		$this->logic		= new Logic_Module_Creator( $this->env );
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.creator.css' );
-		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
 	}
 
 	protected function create(){
