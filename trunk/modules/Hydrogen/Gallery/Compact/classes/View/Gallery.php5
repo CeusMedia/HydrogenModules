@@ -48,7 +48,7 @@ class View_Gallery extends CMF_Hydrogen_View{
 	}
 
 	public function index(){
-		$config	= $this->env->getConfig()->get( 'module.gallery_compact.' );
+		$config	= $this->env->getConfig()->getAll( 'module.gallery_compact.' );
 		extract( $this->getData() );
 		foreach( $files as $entry ){
 			if( preg_match( '/\.(small|medium)\.(jpg|jpeg|jpe|png|gif)$/i', $entry->getFilename() ) )
@@ -90,15 +90,15 @@ class View_Gallery extends CMF_Hydrogen_View{
 					if( $angle )
 						UI_Image_Rotator::rotateImage( $fileSmall, $angle );
 
-					if( $fileInfo[0] > $config->get( 'thumb.width' ) || $fileInfo[1] > $config->get( 'thumb.height' ) ){
-						$creator	= new UI_Image_ThumbnailCreator( $fileSmall, $fileSmall, $config->get( 'thumb.quality' ) );
-						$creator->thumbizeByLimit( $config->get( 'thumb.width' ), $config->get( 'thumb.height' ) );
-						if( $fileInfo[0] > $config->get( 'image.width' ) || $fileInfo[1] > $config->get( 'image.height' ) ){
+					if( $fileInfo[0] > $config['thumb.width'] || $fileInfo[1] > $config['thumb.height'] ){
+						$creator	= new UI_Image_ThumbnailCreator( $fileSmall, $fileSmall, $config['thumb.quality'] );
+						$creator->thumbizeByLimit( $config['thumb.width'], $config['thumb.height'] );
+						if( $fileInfo[0] > $config['image.width'] || $fileInfo[1] > $config['image.height'] ){
 							copy( $fileName, $fileMedium );
 							if( $angle )
 								UI_Image_Rotator::rotateImage( $fileMedium, $angle );
-							$creator	= new UI_Image_ThumbnailCreator( $fileMedium, $fileMedium, $config->get( 'image.quality' ) );
-							$creator->thumbizeByLimit( $config->get( 'image.width' ), $config->get( 'image.height' ) );
+							$creator	= new UI_Image_ThumbnailCreator( $fileMedium, $fileMedium, $config['image.quality'] );
+							$creator->thumbizeByLimit( $config['image.width'], $config['image.height'] );
 						}
 					}
 				}
