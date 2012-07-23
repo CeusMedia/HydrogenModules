@@ -22,6 +22,7 @@ return '
 		<div class="">
 			verwande Schlagwörter: '.$tagList.'
 		</div>
+		<hr/>
 		<div>
 			'.$articleList.'
 		</div>
