@@ -55,6 +55,15 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function addAuthor( $articleId, $userId ){
+		$request		= $this->env->getRequest();
+		$modelRelation	= new Model_ArticleAuthor( $this->env );
+		$indices		= array( 'articleId' => $articleId, 'userId' => $userId );
+		if( !$modelRelation->getByIndices( $indices ) )
+			$modelRelation->add( $indices );
+		$this->restart( './blog/edit/'.$articleId );
+	}
+
 	public function addTag( $articleId ){
 		$request		= $this->env->getRequest();
 		$modelTag		= new Model_Tag( $this->env );
@@ -66,28 +75,33 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$tagName	= $request->get( 'tag' );
 		if( !strlen( $tagName ) )
 			$this->restart( './blog/edit/'.$articleId );
-		$tag		= $modelTag->getByIndex( 'title', $tagName );
-		if( $tag ){
-			$tagId	= $tag->tagId;
-			$number	= $tag->number;
-			$indices	= array(
+		
+		$tags	= explode( ' ', str_replace( ',', ' ', $tagName ) );
+		foreach( $tags as $tagName ){
+			$tag		= $modelTag->getByIndex( 'title', trim( $tagName ) );
+			if( $tag ){
+				$tagId	= $tag->tagId;
+				$number	= $tag->number;
+				$indices	= array(
+					'articleId'	=> $articleId,
+					'tagId'		=> $tagId,
+				);
+				if( $modelRelation->getByIndices( $indices ) )
+					$this->restart( './blog/edit/'.$articleId );
+			}
+			else{
+				$tagId	= $modelTag->add( array( 'title' => trim( $tagName ) ) );
+				$number	= 0;
+			}
+			$data	= array(
 				'articleId'	=> $articleId,
 				'tagId'		=> $tagId,
 			);
-			if( $modelRelation->getByIndices( $indices ) )
-				$this->restart( './blog/edit/'.$articleId );
+			$modelRelation->add( $data );
+			$modelTag->edit( $tagId, array( 'number' => ++$number ) );
 		}
-		else{
-			$tagId	= $modelTag->add( array( 'title' => $tagName ) );
-			$number	= 0;
-		}
-		$data	= array(
-			'articleId'	=> $articleId,
-			'tagId'		=> $tagId,
-		);
-		$modelRelation->add( $data );
-		$modelTag->edit( $tagId, array( 'number' => ++$number ) );
-		$this->restart( './blog/edit/'.$articleId );
+		$this->restart( './blog/edit/'.$articleId );		
+
 	}
 
 	public function article( $articleId, $title = NULL ){
@@ -103,7 +117,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'status' => $states );
 		
 		$data	= array(
-			'articles'	=> $this->model->getAll( $conditions ),
+			'articles'	=> $this->model->getAll( $conditions, array( 'createdAt' => 'DESC' ) ),
 			'article'	=> $this->model->get( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
@@ -124,6 +138,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $articleId ){
+
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
 		$request	= $this->env->getRequest();
@@ -154,12 +169,13 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			
 			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde geändert.' );
 		}
-		
+		$modelUser	= new Model_User( $this->env );
 		$data	= array(
 			'articles'	=> $this->model->getAll(),
 			'article'	=> $this->model->get( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
+			'editors'	=> $modelUser->getAll( array( 'status' => '>0' ) ),
 			'articleId'	=> rawurldecode( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 		);
@@ -195,7 +211,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$offset		= $page * $limit;
 		$limits		= array( $offset, $limit );
 		$conditions	= array( 'status' => $states );
-		$orders		= array( 'articleId' => 'DESC' );
+		$orders		= array( 'createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/ );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
 #		remark( $this->model->getLastQuery() );
 #		die;
@@ -218,6 +234,12 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
+	}
+
+	public function removeAuthor( $articleId, $userId ){
+		$model		= new Model_ArticleAuthor( $this->env );
+		$model->removeByIndices( array( 'articleId' => $articleId, 'userId' => $userId ) );
+		$this->restart( './blog/edit/'.$articleId );
 	}
 
 	public function removeTag( $articleId, $tagId ){
