@@ -204,7 +204,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
 		}
 		
-		$query		= 'SELECT COUNT(at.articleId) as nr, at.tagId, t.title FROM article_tags AS at, tags AS t WHERE at.tagId=t.tagId GROUP BY at.tagId ORDER BY nr DESC';
+		$query		= 'SELECT COUNT(at.articleId) as nr, at.tagId, t.title FROM articles AS a, article_tags AS at, tags AS t WHERE at.tagId=t.tagId AND at.articleId=a.articleId AND a.status=1 GROUP BY at.tagId ORDER BY nr DESC';
 		$topTags	= $this->env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$data		= array(
 			'page'		=> $page,
@@ -277,7 +277,8 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			$model		= new Model_Article( $this->env );
 			foreach( $relations as $relation ){
 				$article	= $model->get( $relation->articleId );
-				$list[$article->articleId]	= $article;
+				if( $article->status == 1 )
+					$list[$article->articleId]	= $article;
 			}
 			krsort( $list );
 			
