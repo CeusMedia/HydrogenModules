@@ -2,6 +2,7 @@
 
 $list	= array();
 
+$instance->path	= empty( $instance->path ) ? '/' : $instance->path;
 if( !preg_match( '/^\//', $instance->path ) )
 	$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 

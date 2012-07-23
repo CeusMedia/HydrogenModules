@@ -49,6 +49,7 @@ class Model_Instance{
 	public function get( $id ){
 		$data		= (object) $this->file->getProperties( FALSE, $id );
 		$data->id	= $id;
+		$data->path	= empty( $data->path ) ? '' : $data->path;
 		return $data;
 	}
 
@@ -59,6 +60,7 @@ class Model_Instance{
 			$data	= array( 'id' => $section );
 			foreach( $this->file->getProperties( NULL, $section ) as $key => $value )
 				$data[$key]	= $value;
+			$data['path']	= empty( $data['path'] ) ? '' : $data['path'];
 			$list[$section]	= (object) $data;
 		}
 		return $list;
