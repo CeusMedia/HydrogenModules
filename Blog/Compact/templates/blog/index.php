@@ -38,8 +38,9 @@ $pageList	= $helper->render( './blog/index/', $number, $limit, $page );
 $list	= array();
 foreach( $topTags as $relation ){
 	$url	= './blog/tag/'.urlencode( urlencode( $relation->title ) );
+	$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
 	$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link );
+	$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
 } 
 $listTopTags	= '<h4>Häufige Schlüsselwörter</h4><ul class="top-tags">'.join( $list ).'</ul>';
 
@@ -70,6 +71,20 @@ if( !$isEditor )
 	$filters	= '';
 
 return '
+<style>
+span.number-indicator {
+	float: right;
+	display: block;
+	display: none;
+	margin: 3px 6px 1px 0px;
+	padding: 0px 6px 0px 6px;
+	background-color: rgba(127,127,127,0.5);
+	border-radius: 10px;
+	color: rgba(255, 255, 255, 1);
+	font-weight: normal;
+	font-size: 0.8em;
+	}
+</style>
 <div id="blog">
 	'.$filters.'
 	'.$heading.'
