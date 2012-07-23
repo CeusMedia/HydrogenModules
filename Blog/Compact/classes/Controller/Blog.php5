@@ -138,10 +138,14 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $articleId ){
+		$request	= $this->env->getRequest();
 
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
-		$request	= $this->env->getRequest();
+		$article	= $this->model->get( $articleId );
+		if( !$article )
+			$this->restart( './blog/' );
+
 		$userId		= $this->env->getSession()->get( 'userId' );
 		
 		if( $request->get( 'do' ) == 'save' ){
@@ -149,12 +153,17 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 				throw new InvalidArgumentException( 'Article title is missing' ) ;
 			if( !strlen( trim( $request->get( 'content' ) ) ) )
 				throw new InvalidArgumentException( 'Article content is missing' ) ;
-			
+
+	
+			$article->createdAt	= $article->createdAt ? $article->createdAt : time();
+			$date	= $request->get( 'date' ).' '.date( 'H:i:s', $article->createdAt );				//  new creation date string
 			$data	= array(
 				'title'			=> trim( $request->get( 'title' ) ),
 				'content'		=> trim( $request->get( 'content' ) ),
 				'status'		=> $request->get( 'status' ),
+				'createdAt'		=> strtotime( $date ),
 			);
+			
 			$model	= new Model_Article( $this->env );
 			if( !$model->edit( $articleId, $data, FALSE ) ){
 				$this->env->getMessenger()->noteError( 'Am Artikel wurde nichts geändert.' );
@@ -286,6 +295,17 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		}
 		if( $request->isAjax() )
 			exit;
+		$this->restart( './blog/' );
+	}
+
+	public function setStatus( $articleId, $status ){
+		if( (int) $articleId < 1 )
+			$this->restart( './blog/' );
+		$article	= $this->model->get( $articleId );
+		if( !$article )
+			$this->restart( './blog/' );
+		$this->model->edit( $articleId, array( 'status' => $status ) );
+		$this->restart( './blog/edit/'.$articleId );
 	}
 	
 	public function tag( $tagName ){
