@@ -92,11 +92,18 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	public function article( $articleId, $title = NULL ){
 		$articleId	= preg_replace( "/^(\d+).*/", '\\1', trim( $articleId ) );
-		
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
+
+		$states		= $this->env->getSession()->get( 'filter_blog_states' );
+		if( !$this->isEditor )
+			$states	= array( 1 );
+		else if( !$states )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 0, 1 ) );
+		$conditions	= array( 'status' => $states );
+		
 		$data	= array(
-			'articles'	=> $this->model->getAll(),
+			'articles'	=> $this->model->getAll( $conditions ),
 			'article'	=> $this->model->get( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
@@ -178,12 +185,20 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	public function index( $page = 0, $limit = NULL ){
 		$perPage	= abs( (int) $this->env->getConfig()->get( 'module.blog_compact.perPage' ) );
+		$states		= $this->env->getSession()->get( 'filter_blog_states' );
+		if( !$this->isEditor )
+			$states	= array( 1 );
+		else if( !$states )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 0, 1 ) );
+		
 		$limit		= !is_null( $limit ) ? $limit : ( $perPage ? $perPage : 10 );
 		$offset		= $page * $limit;
 		$limits		= array( $offset, $limit );
-		$conditions	= $this->isEditor ? array() : array( 'status' => 1 );
+		$conditions	= array( 'status' => $states );
 		$orders		= array( 'articleId' => 'DESC' );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
+#		remark( $this->model->getLastQuery() );
+#		die;
 		foreach( $articles as $nr => $article ){
 			$articles[$nr]->authors	= $this->model->getArticleAuthors( $article->articleId );
 			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
@@ -196,8 +211,10 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'limit'		=> $limit,
 			'offset'	=> $offset,
 			'articles'	=> $articles,
+			'states'	=> $states,
 			'number'	=> $this->model->count( $conditions ),
 			'topTags'	=> $topTags,
+			'isEditor'	=> $this->isEditor,
 			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
@@ -218,6 +235,37 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->restart( './blog/edit/'.$articleId );
 	}
 
+	public function setFilter(){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+		$mode		= $request->get( 'mode' );
+		$name		= $request->get( 'name' );
+		$value		= $request->get( 'value' );
+		$store		= $session->get( 'filter_blog_'.$name );
+#		$session->remove( 'filter_blog_states' );
+		switch( $mode ){
+			case 'add':
+				if( !is_array( $store ) )
+					$store	= array();
+				$store[]	= $value;
+				$session->set( 'filter_blog_'.$name, $store );
+				break;
+			case 'set':
+				$session->set( 'filter_blog_'.$name, $value );
+				break;
+			case 'remove':
+				if( !is_array( $store ) )
+					$session->remove( 'filter_blog_'.$name );
+				else{
+					$store	= array_diff( $store, array( $value ) );
+					$session->set( 'filter_blog_'.$name, $store );
+				}
+				break;
+		}
+		if( $request->isAjax() )
+			exit;
+	}
+	
 	public function tag( $tagName ){
 		$model	= new Model_Tag( $this->env );
 		$tag	= $model->getByIndex( 'title', $tagName );
