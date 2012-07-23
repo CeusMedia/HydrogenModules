@@ -41,7 +41,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			if( empty( $data['title'] ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
-				$issueId	= $model->add( $data );
+				$issueId	= $model->add( $data, FALSE );
 				if( $issueId )
 					$this->restart( './work/issue/edit/'.$issueId );
 			}
@@ -133,7 +133,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				'title'		=> $request->get( 'title' ),
 				'content'	=> $request->get( 'content' ),
 			);
-			$modelIssue->edit( $issueId, $data );
+			$modelIssue->edit( $issueId, $data, FALSE );
 //			$this->restart( './work/issue' );
 		}
 		$issue			= $modelIssue->get( $issueId );
