@@ -35,12 +35,17 @@ foreach( $authors as $author ){
 }
 $authorList	= $authorList ? join( $authorList ) : '<b><em>noch keine</em></b>';
 
+$buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 );
+$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status == 1 );
+$buttonRemove		= UI_HTML_Elements::LinkButton( './blog/remove/'.$article->articleId, 'entfernen', 'button remove', 'Wirklich?', $article->status > 0 );
+$buttonCancel		= UI_HTML_Elements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
+
 return '
 <div id="blog-edit-form">
 	<form name="editArticle" id="form-blogArticleEdit" action="./blog/edit/'.$articleId.'" method="post">
 		<fieldset>
 			<legend class="messages">Artikel verändern</legend>
-			<ul class="input">$authorList
+			<ul class="input">
 				<li>
 					<label for="input-title">Titel</label><br/>
 					<input type="text" name="title" id="input-title" class="max" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>
@@ -57,14 +62,23 @@ return '
 					<label for="input-date">Datum</label><br/>
 					<input type="text" name="date" id="input-date" class="datepicker max" value="'.date( 'Y-m-d', $article->createdAt ).'"/>
 				</li>
+				<li class="column-left-20">
+					<label for="input-time">Zeit</label><br/>
+					<input type="text" name="time" id="input-time" class="timepicker max" value="'.date( 'H:i', $article->createdAt ).'"/>
+				</li>
 				<li class="column-right-20">
 					<label for="input-date">zuletzt geändert</label><br/>
 					<b style="line-height: 2em">'.date( 'Y-m-d H:i:s', $article->modifiedAt ).'</b>
 				</li>
 			</ul>
 			<div class="buttonbar">
-				<button type="button" onclick="document.location.href=\'./blog/article/'.$articleId.'\';" class="button cancel"><span>zurück</span></button>&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.$buttonCancel.'
+				&nbsp;&nbsp;|&nbsp;&nbsp;
 				<button type="submit" name="do" value="save" class="button save"><span>speichern</span></button>
+				'.$buttonStatusShow.'
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.$buttonStatusHide.'
+				'.$buttonRemove.'
 			</div>
 		</fieldset>
 	</form>
