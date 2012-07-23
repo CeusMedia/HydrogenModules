@@ -13,12 +13,16 @@ class Model_Tag extends CMF_Hydrogen_Model{
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getRelatedTags( $tagId ){
-		$model		= new Model_ArticleTag( $this->env );
-		$articles	= $model->getAllByIndex( 'tagId', $tagId );
+		$modelRelation	= new Model_ArticleTag( $this->env );
+		$modelArticle	= new Model_Article( $this->env );
+		$articles	= $modelRelation->getAllByIndex( 'tagId', $tagId );
 		foreach( $articles as $articles ){
-			$relations	= $model->getAllByIndex( 'articleId', $articles->articleId );
+			$relations	= $modelRelation->getAllByIndex( 'articleId', $articles->articleId );
 			foreach( $relations as $relation ){
 				if( $relation->tagId == $tagId )
+					continue;
+				$conditions	= array( 'articleId' => $relation->articleId, 'status' => 1 );
+				if( !$modelArticle->getByIndices( $conditions ) )
 					continue;
 				if( !isset( $list[$relation->tagId] ) )
 					$list[$relation->tagId]	= 0;
