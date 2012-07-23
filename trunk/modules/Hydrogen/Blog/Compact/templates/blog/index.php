@@ -43,8 +43,35 @@ foreach( $topTags as $relation ){
 } 
 $listTopTags	= '<h4>Häufige Schlüsselwörter</h4><ul class="top-tags">'.join( $list ).'</ul>';
 
+$filters		= '
+	<div style="float: right; top: 0px; right: 0px;">
+		<label><input type="checkbox" name="states" value="0" '.( in_array( 0, $states ) ? 'checked="checked"' : '').'>versteckte</label>
+		<label><input type="checkbox" name="states" value="1" '.( in_array( 1, $states ) ? 'checked="checked"' : '').'>öffentliche</label>
+	</div>
+	<script>
+$("#blog input[name=states]").bind("change",function(){
+	console.log($(this).is(":checked") ? "add" : "remove");
+	$.ajax({
+		url: "./blog/setFilter",
+		data: {
+			name: "states",
+			mode: $(this).is(":checked") ? "add" : "remove",
+			value: $(this).attr("value")
+		},
+		type: "post",
+		success: function(){
+			document.location.reload();
+		}
+	});
+});		
+	</script>
+	';
+if( !$isEditor )
+	$filters	= '';
+
 return '
 <div id="blog">
+	'.$filters.'
 	'.$heading.'
 	<div class="column-left-70">
 		'.$articleList.'
