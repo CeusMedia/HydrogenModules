@@ -11,7 +11,7 @@ This module installs the main classes needed to run a server application which i
 		<class>Dispatcher.php5</class>
 		<class>Environment.php5</class>
 		<class>Server.php5</class>
-		<file>.htaccess.dist</file>
+		<file>.htaccess</file>
 		<file>index.php5</file>
 	</files>
 	<config protected="yes" type="boolean" name="token.active" info="force token authentication">yes</config>
