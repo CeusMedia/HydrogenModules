@@ -16,12 +16,12 @@ Using tokens, client applications can identify requesting clients, authenticated
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
-	<config protected="yes" type="boolean" name="bind.host">yes</config>
-	<config protected="yes" type="boolean" name="bind.protocol">yes</config>
-	<config protected="yes" type="boolean" name="bind.time">no</config>
-	<config protected="yes" type="string" name="secret">secret</config>
-	<config protected="yes" type="string" name="lifetime">0</config>
-	<config protected="yes" type="string" name="salt"></config>
+	<config protected="yes" type="boolean" name="bind.host" info="bind token to user host">yes</config>
+	<config protected="yes" type="boolean" name="bind.protocol" info="bind token to user protocol">yes</config>
+	<config protected="yes" type="boolean" name="bind.time" info="bind token to micro time">no</config>
+	<config protected="yes" type="string" name="secret" info="shared secret with client on token generation">secret</config>
+	<config protected="yes" type="string" name="lifetime" info="seconds a token will be valid for, 0 for endless">0</config>
+	<config protected="yes" type="string" name="salt" info=""></config>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>tokens`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>tokens` (
