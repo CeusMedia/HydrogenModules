@@ -1,5 +1,5 @@
 
-Options -MultiViews -Indexes -FollowSymLinks
+Options -MultiViews -Indexes +FollowSymLinks
 
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
