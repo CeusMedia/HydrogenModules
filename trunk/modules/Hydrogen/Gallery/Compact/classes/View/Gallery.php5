@@ -47,6 +47,41 @@ class View_Gallery extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
 	}
 
+	public function feed(){
+		$galleries	= $this->getData( 'galleries' );
+		$path		= $this->getData( 'path' );
+		$debug		= $this->getData( 'debug' );
+		$config		= $this->env->getConfig();
+		$baseUrl	= $config->get( 'app.base.url' );
+		$channel	= array(
+			'title'			=> $config->get( 'app.name' ).': Galerien',
+			'description'	=> 'Aktuelle Galerien von iamkriss.net',
+			'link'			=> $baseUrl.'gallery/'
+		);
+		$feed		= new XML_RSS_Builder();
+		$feed->setChannelData( $channel );
+		foreach( $galleries as $gallery ){
+			$uri	= $baseUrl.'gallery/'.$gallery->pathname;
+			$data	= array(
+				'title'			=> $gallery->label,
+		//		'description'	=> array_shift( explode( "\n", strip_tags( $article->content ) ) ),
+				'guid'			=> $uri,
+				'link'			=> $uri,
+			);
+			if( $gallery->timestamp )
+				$data['pubDate']	= date( "r", (double) $gallery->timestamp );
+			$feed->addItem( $data );
+		}
+		$rss	= $feed->build( 'utf-8', '0.92' );
+		if( $debug ){
+			xmp( $rss );
+			die;
+		}
+		header( 'Content-type: application/rss+xml' );
+		print( $rss );
+		exit;
+	}
+
 	public function index(){
 		$config	= $this->env->getConfig()->getAll( 'module.gallery_compact.' );
 		extract( $this->getData() );

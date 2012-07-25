@@ -29,6 +29,7 @@
 		<needs type="module">JS_Layer</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="gallery">Galerie</link>
+	<link rank="99" access="public" path="gallery/feed"/>
 	<link rank="99" access="public" path="gallery/index"></link>
 	<link rank="99" access="public" path="gallery/download"></link>
 </module>

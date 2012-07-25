@@ -18,6 +18,34 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 			throw new RuntimeException( 'File is not existing.' );
 		Net_HTTP_Download::sendFile( $uri );
 	}
+	
+	/**
+	 *	Generates RSS Feed and returns it directly to the requesting client.
+	 *	@access		public
+	 *	@param		integer		$limit
+	 *	@param		boolean		$debug
+	 *	@return		void
+	 */
+	public function feed( $limit = 10, $debug = NULL ){
+		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
+
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
+		$index		= Folder_RecursiveLister::getFolderList( $path, '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /' );
+		foreach( $index as $folder ){
+			$timestamp	= filemtime( $folder->getPathname() );
+			$list[$timestamp.'_'. uniqid()]	= (object) array(
+				'label'		=> $folder->getFilename(),
+				'pathname'	=> substr( $folder->getPathname(), strlen( $path ) ),
+				'timestamp'	=> $timestamp,
+			);
+		}
+		ksort( $list );
+		$galleries	= array_reverse( array_slice( $list, -$limit ) );
+		$this->addData( 'galleries', $galleries );
+		$this->addData( 'path', $path );
+		$this->addData( 'debug', (bool) $debug );
+	}
 
 	public function image(){
 		$this->addData( 'path', $this->path );
