@@ -118,3 +118,26 @@ div.layer div.layer-close:hover {
 	background-color: #999;
 	color: white;
 	}
+div.layer button {
+	margin-top: 0px;
+	}
+div.layer button span {
+	float: left;
+	display: block;
+	width: 18px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	}
+div.layer button.prev span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_left.png);
+	}
+div.layer button.next span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_right.png);
+	}
+div.layer button.info span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/information.png);
+	}
+div.layer button span.label {
+	display: none;
+	}

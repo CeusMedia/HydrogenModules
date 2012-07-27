@@ -5,14 +5,32 @@
 	<version>0.1</version>
 	<category>JavaScript</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<script load="auto" source="local">UI.Layer.js</script>
 		<style load="auto" source="theme">layer.css</style>
 	</files>
+	<config name="button.image.download">no</config>
+	<config name="button.image.info">yes</config>
+	<config name="button.image.prev.label"><![CDATA[&laquo;]]></config>
+	<config name="button.image.next.label"><![CDATA[&raquo;]]></config>
+	<config name="button.image.info.label">info</config>
+	<config name="button.image.load.label">download</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$script	= '$(document).ready(function(){Layer.init();});';
+		$config	= $env->getConfig()->getAll( 'module.js_layer.' );
+		$buttonDownload	= $config['button.image.download'] == 'yes' ? 'true' : 'false';
+		$buttonInfo		= $config['button.image.info'] == 'yes' ? 'true' : 'false';
+		$script	= '
+$(document).ready(function(){
+	Layer.init();
+	Layer.buttonImageDownload = '.$buttonDownload.';
+	Layer.buttonImageInfo = '.$buttonInfo.';
+	Layer.labelButtonPrev = "'.addslashes( $config['button.image.prev.label'] ).'";
+	Layer.labelButtonNext = "'.addslashes( $config['button.image.next.label'] ).'";
+	Layer.labelButtonInfo = "'.addslashes( $config['button.image.info.label'] ).'";
+	Layer.labelButtonLoad = "'.addslashes( $config['button.image.load.label'] ).'";
+});';
 		$context->js->addScript( $script );
 	]]></hook>
 </module>
