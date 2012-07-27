@@ -47,6 +47,14 @@ class View_Gallery extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
 	}
 
+	protected function calculateFraction( $fraction ){
+		$value	= eval( 'return '.$fraction.';' );
+		$label	= $value.' Sekunden';
+		if( $value <= 1 )
+			$label	= '1/'.round( 1 / $value ).' Sekunde';
+		return $label;
+	}
+
 	public function feed(){
 		$galleries	= $this->getData( 'galleries' );
 		$path		= $this->getData( 'path' );
@@ -156,29 +164,6 @@ class View_Gallery extends CMF_Hydrogen_View{
 	 *	@return		void
 	 */
 	public function info(){
-		extract( $this->getData() );
-
-		if( !$source )
-			throw new InvalidArgumentException( 'No file name given.' );
-		$uri	= $path.$source;
-		if( !file_exists( $uri ) )
-			throw new RuntimeException( 'File is not existing.' );
-		try{
-			$exif	= new UI_Image_Exif( $uri );
-			$data	= $exif->getAll();
-
-			$content	= "".
-			$data['Make']." ".$data['Model']."<br/>
-			ISO ".$data['ISOSpeedRatings']." ".$data['ExposureTime']." sec<br/>".
-			$data['ExifImageWidth']."x".$data['ExifImageLength']."<br/>".
-			date( "j.m.Y H:i:s", strtotime( $data['DateTimeOriginal'] ) ).
-			"";
-
-#			die( $content );
-			print_m( $data );
-			die;
-		}
-		catch( Exception $e ){}
 	}
 }
 ?>

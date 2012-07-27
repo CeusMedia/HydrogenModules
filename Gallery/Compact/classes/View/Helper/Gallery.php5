@@ -1,5 +1,11 @@
 <?php
 class View_Helper_Gallery{
+	
+	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
+		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
+		return $env->getConfig()->get( 'app.base.url' ).'gallery/feed'.$limit;
+	}
+
 	static public function renderLatestGalleries( $env, $limit ){
 		$list		= array();
 		$config		= $env->getConfig();
