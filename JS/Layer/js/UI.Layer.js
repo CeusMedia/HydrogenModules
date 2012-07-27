@@ -13,7 +13,13 @@ Layer = {
 	},
 	speedShow: 0,
 	speedHide: 0,
-
+	buttonImageWallpaper: false,
+	buttonImageDownload: false,
+	buttonImageInfo: false,
+	labelButtonPrev: '<span>&laquo;</span>',
+	labelButtonNext: '<span>&raquo;</span>',
+	labelButtonDown: '<span>download</span>',
+	labelButtonInfo: '<span>info</span>',
 
 	init: function(){
 		$("a.layer-image").click(function(event){
@@ -89,7 +95,8 @@ Layer = {
 		Layer.show();
 	},
 	showImage: function(elem){
-		var imageIndex	= 0
+		var imageIndex	= 0;
+		var image, label, buttonPrev, buttonNext, infoNavi, infoTitle, info;
 		var imageGroup	= []
 		if(elem.attr('rel')){
 			$("a[rel='"+elem.attr('rel')+"']").each(function(i){
@@ -103,38 +110,42 @@ Layer = {
 		if(!Layer.current)
 			this.create();
 
-		var buttonDownload = "";
-		var image = new Image();
+		image = new Image();
 		$(image).click(Layer.hide);
-		if(elem.data('original')){
-			buttonDownload = $('<button class="button download"><span>download</button>').click(function(){
-				document.location.href = './gallery/download/'+elem.data('original');
-			});
-			buttonInfo = $('<button class="button info"><span>info</button>').click(function(){
-				document.location.href = './gallery/download/'+elem.data('original');
-			});
-		}
-		image.onload = function(){
-			$(this).hide();
-			Layer.scaleImage($(this));
-		};
+		image.onload = function(){Layer.scaleImage($(this).hide());};
 
 		Layer.current.html('').append($('<div></div>').addClass('layer-image').html(image));
 		image.src = elem.attr('href')+ ( $.browser.msie ? "#"+new Date().getMilliseconds() : '' );
-
-		var buttonPrev = $('<button class="button no-to-prev"><span>&laquo;</span></button>').click(function(){
+			
+		label = '<span class="label">'+Layer.labelButtonPrev+'</span>';
+		buttonPrev = $('<button></button>').click(function(){
 			Layer.showImage($(imageGroup[imageIndex-1]));
-		});
-		var buttonNext = $('<button class="button no-to-next"><span>&raquo;</button>').click(function(){
+		}).addClass('button prev').html('<span>'+label+'</span>');
+		label = '<span class="label">'+Layer.labelButtonNext+'</span>';
+		buttonNext = $('<button></button>').click(function(){
 			Layer.showImage($(imageGroup[imageIndex+1]));
-		});
+		}).addClass('button next').html('<span>'+label+'</span>');
 		if(imageIndex == 0)
 			buttonPrev.attr('disabled','disabled');
 		if(imageIndex == imageGroup.length - 1)
 			buttonNext.attr('disabled','disabled');
-		var infoNavi = $('<div></div>').addClass('layer-info-navi buttons').append(buttonPrev).append(buttonNext).append(buttonDownload);
-		var infoTitle = $('<div></div>').addClass('layer-info-title').html(elem.attr('title'));
-		var info = $('<div></div>').addClass('layer-info').append(infoNavi).append(infoTitle);
+		infoNavi = $('<div></div>').addClass('layer-info-navi buttons').append(buttonPrev).append(buttonNext);
+		if(elem.data('original')){
+			if(Layer.buttonImageDownload){
+				label = '<span class="label">'+Layer.labelButtonLoad+'</span>';
+				infoNavi.append($('<button></button>').click(function(){
+					document.location.href = './gallery/download/'+elem.data('original');
+				}).addClass('button download').html('<span>'+label+'</span>'));
+			}
+			if(Layer.buttonImageInfo){
+				label = '<span class="label">'+Layer.labelButtonInfo+'</span>';
+				infoNavi.append($('<button></button>').click(function(){
+					document.location.href = './gallery/info/'+elem.data('original');
+				}).addClass('button info').html('<span>'+label+'</span>'));
+			}
+		}
+		infoTitle = $('<div></div>').addClass('layer-info-title').html(elem.attr('title'));
+		info = $('<div></div>').addClass('layer-info').append(infoNavi).append(infoTitle);
 		Layer.current.append(info);
 		Layer.show();
 	},
