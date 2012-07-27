@@ -7,6 +7,7 @@ foreach( $articles as $article ){
 	$list[]	= UI_HTML_Tag::create( 'li', $link );
 }
 $articleList	= UI_HTML_Tag::create( 'ul', join( $list ) );
+$articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
 
 $list	= array();
 foreach( $friends as $friend ){
@@ -19,10 +20,9 @@ return '
 <div id="blog">
 	<div class="blog-tag">
 		<h3>Artikel für Schlagwort "'.$tagName.'"</h3>
-		<div class="">
+		<div class="tag-related-tags">
 			verwande Schlagwörter: '.$tagList.'
 		</div>
-		<hr/>
 		<div>
 			'.$articleList.'
 		</div>

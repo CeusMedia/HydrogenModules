@@ -10,13 +10,14 @@ class View_Blog extends CMF_Hydrogen_View{
 	public function edit(){}
 
 	public function feed(){
+		$words		= $this->getWords( 'feed' );
 		$articles	= $this->getData( 'articles' );
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
 		$channel	= array(
-			'title'			=> $config->get( 'app.name' ).': Blog-Artikel',
-			'description'	=> 'Aktuelle Blog-Artikel von iamkriss.net',
+			'title'			=> $config->get( 'app.name' ).': '.$words->title,
+			'description'	=> $words->description,
 			'link'			=> $baseUrl.'blog/'
 		);
 		$feed		= new XML_RSS_Builder();
@@ -47,10 +48,6 @@ class View_Blog extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	public function index(){}
-
-	public function tag(){}
-
 	protected function formatContent( $content, $articleId ){
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.blog_compact.path.images' );
@@ -66,6 +63,53 @@ class View_Blog extends CMF_Hydrogen_View{
 		View_Helper_BlogContentFormat::formatImdbLinks( $content );
 		View_Helper_BlogContentFormat::formatWikiLinks( $content );
 		return $content;
+	}
+
+	public function index(){}
+
+	public function tag(){}
+
+	protected function renderArticleAbstractList( $articles, $date = TRUE, $time = TRUE, $authors = TRUE, $linkAuthors = TRUE ){
+		$list		= array();
+		$config		= $this->env->getConfig();
+		foreach( $articles as $article ){
+			$url		= './blog/article/'.$article->articleId;
+			if( $config->get( 'niceURLs' ) )
+				$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
+			$link		= UI_HTML_Elements::Link( $url, $article->title, 'blog-article-link' );
+
+			$abstract	= array_shift( preg_split( "/\n/", $article->content ) );
+			$abstract	= $this->formatContent( $abstract, $article->articleId );
+			$abstract	= UI_HTML_Tag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
+
+			$infoList	= View_Blog::renderInfoList( $article, $date, $time );
+			$authorList	= $authors ? View_Blog::renderAuthorList( $article->authors, $linkAuthors ) : '';
+			$tagList	= View_Blog::renderTagList( $article->tags );
+			$info		= UI_HTML_Tag::create( 'div', $infoList.$authorList.$tagList, array( 'class' => "blog-article-info" ) );
+
+			$content	= $info . $link . $abstract;
+			$attributes	= array( 'class' => 'blog-article-list-item  blog-article-abstract' );
+			$item		= UI_HTML_Tag::create( 'li', $content, $attributes );
+			$articleList[$article->title]	= $item;
+		}
+		return UI_HTML_Tag::create( 'ul', join( $articleList ), array( 'class' => 'blog-article-list' ) );
+	}
+
+	static public function renderInfoList( $article, $date = TRUE, $time = TRUE ){
+		$infoList	= array();
+		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
+		if( $date && $article->createdAt ){
+			$date		= date( 'Y-m-d', $article->createdAt );
+			$label		= UI_HTML_Tag::create( 'span', $date, array( 'class' => 'blog-article-date' ) );
+			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+		}
+		if( $time && $article->createdAt ){
+			$time		= date( 'H:i', $article->createdAt );
+			$label		= UI_HTML_Tag::create( 'span', $time, array( 'class' => 'blog-article-time' ) );
+			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+		}
+		$attrList	= array( 'class' => 'blog-article-info-list' );
+		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
 	}
 
 	static public function renderAuthorList( $authors, $linked = FALSE ){

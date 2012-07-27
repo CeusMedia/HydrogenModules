@@ -311,7 +311,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	public function tag( $tagName ){
 		$model	= new Model_Tag( $this->env );
 		$tag	= $model->getByIndex( 'title', $tagName );
-		$list	= array();
+		$articles	= array();
 		$relatedTags	= array();
 		if( $tag ){
 			$model		= new Model_ArticleTag( $this->env );
@@ -320,15 +320,19 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			foreach( $relations as $relation ){
 				$article	= $model->get( $relation->articleId );
 				if( $article->status == 1 )
-					$list[$article->articleId]	= $article;
+					$articles[$article->articleId]	= $article;
 			}
-			krsort( $list );
+			krsort( $articles );
 			
 			$model			= new Model_Tag( $this->env );
 			$relatedTags	= $model->getRelatedTags( $tag->tagId );
 		}
+		foreach( $articles as $nr => $article ){
+			$articles[$nr]->authors	= $this->model->getArticleAuthors( $article->articleId );
+			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
+		}
 		$this->setData( array(
-			'articles'	=> $list,
+			'articles'	=> $articles,
 			'tag'		=> $tag,
 			'tagName'	=> $tagName,
 			'friends'	=> $relatedTags
