@@ -30,6 +30,17 @@
 	</relations>
 	<link xml:lang="de" access="public" path="gallery">Galerie</link>
 	<link rank="99" access="public" path="gallery/feed"/>
-	<link rank="99" access="public" path="gallery/index"></link>
-	<link rank="99" access="public" path="gallery/download"></link>
+	<link rank="99" access="public" path="gallery/index"/>
+	<link rank="99" access="public" path="gallery/info"/>
+	<link rank="99" access="public" path="gallery/download"/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$env->getLanguage()->load( 'gallery' );														//  load gallery language file
+		$words		= $env->getLanguage()->getWords( 'gallery' );									//  get gallery feed words
+		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes
+			'rel'	=> "alternate",																	//  
+			'type'	=> "application/rss+xml",														//  MIME type of RSS
+			'href'	=> $env->getConfig()->get( 'app.base.url' )."gallery/feed",						//  URL to RSS feed
+			'title'	=> $env->getConfig()->get( 'app.name' ).': '.$words['feed']['title']			//  link title
+		) ) );																						//  and add link to page head
+	]]></hook>
 </module>

@@ -40,3 +40,61 @@
 	background-repeat: no-repeat;
 	}
 
+body.controller-gallery .link-feed {
+	background-color: rgba(255, 250, 240, 0.5);
+	background-repeat: no-repeat;
+	background-position: 4px 2px;
+	padding: 2px 8px 2px 25px;
+	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	}
+
+body.controller-gallery #licence {
+	clear: left;
+	margin-top: 1em;
+	border-top: 1px solid gray;
+	padding: 1em;
+	font-size: 0.8em;
+	}
+
+body.controller-gallery #gallery-item-info-button {
+	display: none;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	width: 16px;
+	height: 16px;
+	padding: 4px;
+	border-radius: 10px;
+	background-color: white;
+	cursor: pointer;
+	}
+
+	
+/*  --  IMAGE INFO  --  */
+.gallery-image-info dl dt {
+	clear: left;
+	float: left;
+	display: block;
+	width: 100px;
+	}
+.gallery-image-info dl dd {
+	float: left;
+	display: block;
+	}
+.gallery-image-info .image {
+	padding: 0.75em;
+	margin: 0.1em 0.5em 0.4em 0.5em;
+	border: 1px solid gray;
+	background: white;
+	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+	-o-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+	}
+button.download span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_down.png);
+	}
+.gallery-image-info .list-actions {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}

@@ -7,10 +7,10 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$config		= $this->env->getConfig();
 		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 	}
-
-	public function download( $source = NULL ){
+	
+	public function download( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
 		$args	= func_get_args();
-		$source	= $source ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
+		$source	= $arg1 ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
 		if( !$source )
 			throw new InvalidArgumentException( 'No file name given.' );
 		$uri	= $this->path.$source;
@@ -68,10 +68,22 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 			)
 		);
 	}
-
-	public function info(){
+	
+	public function info( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
+		$args	= func_get_args();
+		$source	= $arg1 ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
+		if( !$source )
+			throw new InvalidArgumentException( 'No file name given.' );
+		$uri	= $this->path.$source;
+		$exif	= new UI_Image_Exif( $uri );
+		$info	= $this->readGalleryInfo( dirname( $source ) );
+		$key	= pathinfo( $source, PATHINFO_FILENAME );
+		$title	= isset( $info[$key] ) ? $info[$key] : NULL;
+		
 		$this->addData( 'path', $this->path );
-		$this->addData( 'source', $this->env->getRequest()->get( 'source' ) );
+		$this->addData( 'source', $source );
+		$this->addData( 'title', $title );
+		$this->addData( 'exif', new ADT_List_Dictionary( $exif->getAll() ) );
 	}
 
 	protected function readGalleryInfo( $source ){

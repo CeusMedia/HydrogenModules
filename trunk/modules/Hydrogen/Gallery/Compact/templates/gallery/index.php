@@ -1,4 +1,5 @@
 <?php
+$feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
 $list	= array();
 foreach( $folders as $entry )
@@ -53,16 +54,25 @@ $desc		= !empty( $info['description'] ) ? UI_HTML_Tag::create( "p", $info['descr
 $navigation	= $this->buildStepNavigation( $source );
 		
 return '
-<style>
-#licence {
-	clear: left;
-	margin-top 1em;
-	border-top: 1px solid gray;
-	padding: 1em;
-	font-size: 0.8em;
-	}
-</style>
+<script>
+$(document).ready(function(){
+	var galleryItemInfoButton = $("#gallery-item-info-button");
+	$("div.thumbnail").bind("mouseenter",function(){
+		galleryItemInfoButton.unbind("click").bind("click",function(){
+			var url = $(this).parent().children("a").data("original");
+			document.location.href = "./gallery/info/"+url;
+		});
+		$(this).append(galleryItemInfoButton.show());
+	}).bind("mouseleave",function(){
+		galleryItemInfoButton.hide();
+	});
+});
+</script>
 <div id="gallery">
+	<div id="gallery-item-info-button" title="Informationen und Zoom">
+		<img src="http://img.int1a.net/famfamfam/silk/information.png"/>
+	</div>
+	<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
 	'.$navigation.'<br/>
 	'.$title.'
 	'.$desc.'
