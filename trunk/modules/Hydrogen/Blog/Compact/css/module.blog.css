@@ -149,3 +149,63 @@ body.controller-blog .link-author {
 body.controller-blog a.external {
 	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/link.png);
 	}
+
+
+body.controller-blog .tag-related-tags {
+	margin-bottom: 1em;
+	}
+
+
+/*  --  LIST OF BLOG ARTICLE ABSTRACTS  --  */ 
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract {
+	padding: 0 0 1em 0;
+	background: -moz-linear-gradient(top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.25)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info {
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info ul.blog-article-info-list {
+	margin: 0px;
+	padding: 0px;
+	display: inline;
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item {
+	display: inline;
+	margin-right: 0.5em;
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item span {
+	background-color: rgba(255,250,240,0.5);
+	background-repeat: no-repeat;
+	background-position: 3px 1px;
+	padding: 1px 6px 1px 23px;
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item span.blog-article-date {
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item span.blog-article-time {
+	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
+	}
+
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-link,
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-content {
+	clear: both;
+	display: block;
+	padding: 0 5px 0 8px;
+	margin-top: 0.25em;
+	}
+body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info .blog-article-author-list {
+	display: inline;
+	}
+
+body.controller-blog .link-feed {
+	background-color: rgba(255, 250, 240, 0.5);
+	background-repeat: no-repeat;
+	background-position: 4px 2px;
+	padding: 2px 8px 2px 25px;
+	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	}

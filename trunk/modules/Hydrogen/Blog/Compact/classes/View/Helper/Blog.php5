@@ -9,8 +9,12 @@ class View_Helper_Blog{
 		return urlencode( $label );																	//  return encoded URL component
 	}
 	
+	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
+		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
+		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
+	}
 	
-	static public function renderLatestArticles( $env, $limit ){
+	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit ){
 		$list	= array();
 		$model	= new Model_Article( $env );
 		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( 0, $limit ) );
