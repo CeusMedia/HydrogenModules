@@ -80,5 +80,7 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<div class="column-clear"></div>
+	'.$text['info.bottom'].'
+	'.$license.'
 </div>';
 ?>
