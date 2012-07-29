@@ -177,6 +177,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 			
 			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde geändert.' );
+			$this->restart( './blog/edit/'.$articleId );
 		}
 		$modelUser	= new Model_User( $this->env );
 		$data	= array(
