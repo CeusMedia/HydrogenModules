@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module>
+	<title>Management Index</title>
+	<description><![CDATA[Index for management.
+Main page for all management modules which can either display a customized HTML page or forward to a specific management module.
+This module is a placeholder for the main navigation.
+	]]></description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage.php5</class>
+		<class>View/Manage.php5</class>
+		<locale>de/html/manage/index.html</locale>
+		<locale>en/html/manage/index.html</locale>
+	</files>
+	<relations/>
+	<config type="string" name="forward"></config>					; controller + action to forward to
+	<link xml:lang="de" path="manage">Verwaltung</link>
+	<link xml:lang="en" path="manage">Management</link>
+</module>
