@@ -34,15 +34,19 @@ $tableRights	= '<table><tr><th>Controller</th><th>Aktionen</th><th>Status</th></
 $script	= '
 $(document).ready(function(){
 	$("#role-edit-rights li.changable").bind("mousedown",function(){
+		if(event.button != 0)
+			return;
 		var id = $(this).attr("id");
 		var parts = id.split(/-/);
 		var action = parts.pop();
 		var controller = parts.pop();
+		$(this).addClass("yellow");
 		$.ajax({
 			url: "./admin/role/ajaxChangeRight/'.$roleId.'/"+controller+"/"+action,
 			dataType: "json",
 			context: $(this),
 			success: function(data){
+				$(this).removeClass("yellow");
 				if(data)
 					$(this).removeClass("red").addClass("green");
 				else
