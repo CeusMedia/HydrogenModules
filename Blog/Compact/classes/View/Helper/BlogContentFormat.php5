@@ -70,7 +70,7 @@ class View_Helper_BlogContentFormat
 			$query		= trim( $matches[1][$i] );
 			$title		= trim( $matches[3][$i] );
 			$url		= 'http://maps.google.de/maps?hl=de&q='.$query;
-			$link		= UI_HTML_Elements::Link( $url, $title, 'link-search-image', 'search' );
+			$link		= UI_HTML_Elements::Link( $url, $title, 'link-search-map', 'search' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 	}
