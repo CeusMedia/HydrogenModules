@@ -117,6 +117,7 @@ body.controller-blog a.link-edit {
 body.controller-blog .link-author,
 body.controller-blog .link-map,
 body.controller-blog .link-search-image,
+body.controller-blog .link-search-map,
 body.controller-blog .link-imdb,
 body.controller-blog .link-wiki,
 body.controller-blog .link-youtube,
@@ -128,7 +129,8 @@ body.controller-blog a.external {
 	padding: 1px 5px 1px 20px;
 	}
 
-body.controller-blog .link-map {
+body.controller-blog .link-map,
+body.controller-blog .link-search-map {
 	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/map.png);
 	}
 body.controller-blog .link-search-image {
