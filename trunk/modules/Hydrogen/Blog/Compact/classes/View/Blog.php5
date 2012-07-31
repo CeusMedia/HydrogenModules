@@ -57,6 +57,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		View_Helper_BlogContentFormat::formatImageSearch( $content );
 		View_Helper_BlogContentFormat::formatIFrames( $content );
 		View_Helper_BlogContentFormat::formatText( $content );
+		View_Helper_BlogContentFormat::formatYoutubeLinks( $content );
 		View_Helper_BlogContentFormat::formatEmoticons( $content );
 		View_Helper_BlogContentFormat::formatCurrencies( $content );
 		View_Helper_BlogContentFormat::formatMapSearch( $content );

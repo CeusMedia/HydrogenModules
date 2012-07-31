@@ -119,6 +119,7 @@ body.controller-blog .link-map,
 body.controller-blog .link-search-image,
 body.controller-blog .link-imdb,
 body.controller-blog .link-wiki,
+body.controller-blog .link-youtube,
 body.controller-blog .link-tag,
 body.controller-blog a.external {
 	background-color: rgba(255,250,240,0.5);
@@ -130,7 +131,6 @@ body.controller-blog a.external {
 body.controller-blog .link-map {
 	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/map.png);
 	}
-
 body.controller-blog .link-search-image {
 	background-image: url(http://icons.ceusmedia.com/famfamfam/silk/magnifier.png);
 	}
@@ -139,6 +139,9 @@ body.controller-blog .link-imdb {
 	}
 body.controller-blog .link-wiki {
 	background-image: url(http://de.wikipedia.org/favicon.ico);
+	}
+body.controller-blog .link-youtube {
+	background-image: url(http://www.youtube.com/favicon.ico);
 	}
 body.controller-blog .link-tag {
 	background-image: url(/lib/cmIcons/famfamfam/silk/tag_blue.png);
