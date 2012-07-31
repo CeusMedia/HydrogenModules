@@ -8,18 +8,18 @@ foreach( $articles as $item ){
 $index		= array_search( $articleId, $articleIndex );
 $linkNext	= '';
 $linkPrev	= '';
-if( isset( $articleIndex[$index+1] ) )
+if( isset( $articleIndex[$index-1] ) )
 {
-	$next		= $articleList[$articleIndex[$index+1]];
+	$next		= $articleList[$articleIndex[$index-1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $next->title );
 	$url		= './blog/article/'.$next->articleId;
 	if( $config->get( 'niceURLs' ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $next );
 	$linkNext	= UI_HTML_Elements::Link( $url, $label.'&nbsp;&raquo;' );
 }
-if( isset( $articleIndex[$index-1] ) )
+if( isset( $articleIndex[$index+1] ) )
 {
-	$previous	= $articleList[$articleIndex[$index-1]];
+	$previous	= $articleList[$articleIndex[$index+1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $previous->title );
 	$url		= './blog/article/'.$previous->articleId;
 	if( $config->get( 'niceURLs' ) )

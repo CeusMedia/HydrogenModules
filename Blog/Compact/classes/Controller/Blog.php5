@@ -40,6 +40,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 					'title'			=> trim( $request->get( 'title' ) ),
 					'content'		=> trim( $request->get( 'content' ) ),
 					'createdAt'		=> time(),
+					'status'		=> 0,
 				);
 				$model	= new Model_Article( $this->env );
 				$articleId	= $model->add( $data, FALSE );

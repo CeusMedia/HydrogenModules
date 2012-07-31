@@ -160,5 +160,19 @@ class View_Helper_BlogContentFormat
 			$content	= str_replace($matches[0][$i], $link, $content);
 		}
 	}
+
+	public static function formatYoutubeLinks( & $content )
+	{
+		$matches	= array();
+		preg_match_all('/\[youtube:(.+)(\|(.*))?\]/U',$content,$matches);
+		for($i=0; $i<count($matches[0]); $i++)
+		{
+			$query		= trim($matches[1][$i]);
+			$title		= empty($matches[3][$i]) ? $query : trim($matches[3][$i]);
+			$url		= 'http://www.youtube.com/watch?v='.$query;
+			$link		= UI_HTML_Elements::Link($url, $title, 'link-wiki', '_blank');
+			$content	= str_replace($matches[0][$i], $link, $content);
+		}
+	}
 }
 ?>
