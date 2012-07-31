@@ -68,6 +68,9 @@
 #role-edit-rights li.green.changable {
 	background-color: #7FFF7F;
 	}
+#role-edit-rights li.yellow {
+	background-color: #FFFF7F !important;
+	}
 #role-edit-rights li.red {
 	background-color: #FFBFBF;
 	}

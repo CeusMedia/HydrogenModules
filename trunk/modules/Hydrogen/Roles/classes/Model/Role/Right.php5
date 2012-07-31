@@ -33,5 +33,13 @@ class Model_Role_Right extends CMF_Hydrogen_Model{
 		'action',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
+
+	static public function maxifyController( $controller ){
+		return str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $controller ) ) );
+	}
+
+	static public function minifyController( $controller ){
+		return str_replace( array( '-', '/' ), '_', strtolower( $controller ) );
+	}
 }
 ?>
