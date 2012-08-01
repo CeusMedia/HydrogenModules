@@ -51,22 +51,6 @@ foreach( $issue->notes as $note ){
 	}
 
 	$content	= '
-<style>
-#issue-change-list-note {
-	float: left;
-	width: 58%;
-	margin-right: 2%;
-	}
-#issue-change-list-changes {
-	float: left;
-	width: 38%;
-	margin-right: 2%;
-	}
-#issue-change-list-changes dl dt {
-	width: 100px;
-	}
-</style>
-
 <div id="issue-change-list-changes">
 	<dl>
 		<dt>Bearbeiter</dt>
@@ -93,6 +77,21 @@ foreach( $issue->notes as $note ){
 $list	= $list ? UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'list' ) ) : '';
 	
 return '
+<style>
+#issue-change-list-note {
+	float: left;
+	width: 58%;
+	margin-right: 2%;
+	}
+#issue-change-list-changes {
+	float: left;
+	width: 38%;
+	margin-right: 2%;
+	}
+#issue-change-list-changes dl dt {
+	width: 100px;
+	}
+</style>
 <fieldset>
 	<legend>Entwicklung</legend>
 	'.$list.'
