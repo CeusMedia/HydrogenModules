@@ -101,7 +101,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 						$this->noteChange( $issueId, $noteId, $changeType, $issue->$changeKey, $value );
 					}
 				}
-				$modelIssue->edit( $issueId, $changes );
+				$modelIssue->edit( $issueId, $changes, FALSE );
 				$this->env->getMessenger()->noteSuccess( 'Die Veränderungen wurden gespeichert.' );
 			}
 			else
@@ -127,8 +127,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		if( $request->has( 'save' ) ){
 			$data		= array(
 				'type'		=> $request->get( 'type' ),
-				'severity'	=> $request->get( 'severity' ),
-				'status'	=> $request->get( 'status' ),
+//				'severity'	=> $request->get( 'severity' ),
+//				'status'	=> $request->get( 'status' ),
 //				'progress'	=> $request->get( 'progress' ),
 				'title'		=> $request->get( 'title' ),
 				'content'	=> $request->get( 'content' ),
@@ -185,7 +185,9 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		foreach( $session->getAll() as $key => $value )
 			if( preg_match( '/^filter-issue-/', $key ) ){
 				$column	= preg_replace( '/^filter-issue-/', '', $key );
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
+				if( $column == 'title' )
+					$filters[$column] = '%'.str_replace( ' ', '%', trim( $value ) ).'%';
+				else if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
 					$filters[$column] = $value;
 			}
 
