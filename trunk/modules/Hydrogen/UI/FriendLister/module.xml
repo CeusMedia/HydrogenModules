@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: FriendLister</title>
+	<description><![CDATA[Helps to render a link list of related friends, defined using a XML file.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/FriendLister.php5</class>
+		<style source="theme" load="auto">friends.css</style>
+		<file>config/friends.xml.dist</file>
+	</files>
+	<config type="string" name="class.list">friends</config>
+	<config type="string" name="file">config/friends.xml</config>
+	<config type="string" name="icon.female">http://img.int1a.net/famfamfam/silk/user_female.png</config>
+	<config type="string" name="icon.male">http://img.int1a.net/famfamfam/silk/user.png</config>
+	<config type="boolean" name="shuffle">yes</config>
+</module>

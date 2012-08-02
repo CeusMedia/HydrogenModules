@@ -1,0 +1,33 @@
+ul.friends {
+	width: 180px;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	}
+ul.friends li.user-item {
+	margin: 1px 0px;
+	background-color: rgba(255,250,240,0.5);
+	}
+ul.friends li.user-item span.user-label {
+	display: block;
+	clear: left;
+	height: 20px;
+	}
+ul.friends li.user-item span.user-label a {
+	display: block;
+	white-space: nowrap;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-decoration: none;
+	}
+ul.friends li.user-item span.user-label span.user-icon {
+	display: block;
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin: 2px 6px 2px 4px;
+	overflow: hidden;
+	}
+ul.friends li.user-item span.user-label span.user-name {
+	}
