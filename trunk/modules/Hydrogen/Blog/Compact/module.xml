@@ -29,6 +29,8 @@
 		<needs type="module">Roles</needs>
 		<needs type="module">Users</needs>
 		<needs type="module">JS_Layer</needs>
+		<needs type="module">JS_jQuery_UI</needs>
+		<needs type="module">JS_jQuery_UI_Timepicker</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="blog">Blog</link>
 	<link rank="99" access="public" path="blog/feed"/>
