@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<friends>
+	<friend gender="m" disabled="yes">
+		<link>http://example.org/~jdoe/</link>
+		<name>John Doe</name>
+		<title>This is a test entry, only</title>
+	</friend>
+</friends>
