@@ -238,8 +238,11 @@ class Model_Module{
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
 #		print_m( $module );
 #		die;
-		if( $moduleId )
+		if( $moduleId ){
+			if( !empty( $module->path ) )								// @todo: finish this hack usind $module->pathSource or ->pathCopy depending on module installation status
+				return preg_replace( "/\/*$/", '/', $module->path );
 			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
+		}
 		return $this->pathRepos;
 	}
 
