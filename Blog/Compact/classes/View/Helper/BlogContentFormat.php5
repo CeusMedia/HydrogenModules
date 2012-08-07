@@ -40,11 +40,12 @@ class View_Helper_BlogContentFormat
 	public static function formatText( & $content )
 	{
 		$content	= preg_replace( '/\*\*(.+)\*\*/U', '<b>\\1</b>', $content );
-		$content	= preg_replace( '/__(.+)__/U',' <em>\\1</em>', $content );
+		$content	= preg_replace( '/\/\/(.+)\/\//U',' <em>\\1</em>', $content );
+		$content	= preg_replace( '/__(.+)__/U',' <u>\\1</u>', $content );
 		$content	= preg_replace( '/(----){4,}/',' <hr/>', $content );
 		$content	= preg_replace( '/([^>])\r?\n\r?\n\r?\n/', '\\1<br class="clearfloat">', $content );
 		$content	= preg_replace( '/([^>])\r?\n\r?\n/', '\\1<br/><br/>', $content );
-#		$content	= preg_replace( '/([^>])\r?\n/', '\\1<br/>', $content );
+		$content	= preg_replace( '/(.+)\t\r?\n/', '\\1<br/>', $content );
 	}
 
 	public static function formatImageSearch( & $content )
