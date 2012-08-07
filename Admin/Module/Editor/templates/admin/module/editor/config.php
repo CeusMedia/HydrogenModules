@@ -39,14 +39,14 @@ if( count( $module->config ) ){
 				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => $value->value, 'class' => 'label max', 'readonly' => TRUE ) );
 				break;
 			default:
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => $value->value, 'class' => 'label max', 'readonly' => TRUE ) );
+				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => htmlentities( $value->value, ENT_QUOTES, 'UTF-8' ), 'class' => 'label max', 'readonly' => TRUE ) );
 				if( count( $value->values ) ){
 					$options	= array_combine( $value->values, $value->values );
 					$options	= UI_HTML_Elements::Options( $options, $value->value );
 					$input		= UI_HTML_Elements::Select( 'config['.$key.']', $options, 'm'.$class );
 				}
 				else
-					$input	= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 'max'.$class );
+					$input	= UI_HTML_Elements::Input( 'config['.$key.']', htmlentities( $value->value, ENT_QUOTES, 'UTF-8' ), 'max'.$class );
 				break;
 		}
 		$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
