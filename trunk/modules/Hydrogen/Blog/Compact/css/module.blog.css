@@ -80,15 +80,15 @@ body.controller-blog div.blog-article div.blog-article-navi {
 	border-top: 2px solid rgba(0,0,0,0.5);
 	}
 
-body.controller-blog ul.top-tags {
+ul.top-tags {
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
 	}
-body.controller-blog ul.top-tags li {
+ul.top-tags li {
 	margin: 1px;
 	}
-body.controller-blog ul.top-tags li a {
+ul.top-tags li a {
 	display: block;
 	}
 
@@ -166,4 +166,18 @@ body.controller-blog .link-feed {
 	background-position: 4px 2px;
 	padding: 2px 8px 2px 25px;
 	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	}
+
+span.number-indicator {
+	float: right;
+	display: none;
+	display: block;
+	margin: 3px 6px 1px 0px;
+	padding: 0px 6px 0px 6px;
+	background-color: rgba(0,0,0,0.10);
+	border-radius: 10px;
+	color: rgba(0,0,0,1);
+	font-weight: normal;
+	font-size: 0.8em;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.25);
 	}

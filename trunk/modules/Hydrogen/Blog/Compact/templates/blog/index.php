@@ -52,20 +52,6 @@ if( !$isEditor )
 $feedUrl	= View_Helper_Blog::getFeedUrl( $env );
 
 return '
-<style>
-span.number-indicator {
-	float: right;
-	display: block;
-	display: none;
-	margin: 3px 6px 1px 0px;
-	padding: 0px 6px 0px 6px;
-	background-color: rgba(127,127,127,0.5);
-	border-radius: 10px;
-	color: rgba(255, 255, 255, 1);
-	font-weight: normal;
-	font-size: 0.8em;
-	}
-</style>
 <div id="blog">
 	<div class="column-left-70">
 		'.$filters.'
