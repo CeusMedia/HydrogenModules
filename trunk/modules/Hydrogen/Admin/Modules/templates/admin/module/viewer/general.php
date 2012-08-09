@@ -15,8 +15,12 @@ $desc	= $module->description;
 $desc	= preg_replace( "/\[(http\S+) ([^]]+)\]/", '<a href="\\1">\\2</a>', $desc );
 $desc	= preg_replace( "/\[(http\S+)\]/", '<a href="\\1">\\1</a>', $desc );
 
-$helper	= new View_Helper_ContentConverter();
-$desc	= $helper->convert( $desc );
+$desc	= View_Helper_ContentConverter::formatText( $env, $desc );
+$desc	= View_Helper_ContentConverter::formatLinks( $env, $desc );
+$desc	= View_Helper_ContentConverter::formatCurrencies( $env, $desc );
+$desc	= View_Helper_ContentConverter::formatWikiLinks( $env, $desc );
+$desc	= View_Helper_ContentConverter::formatCodeBlocks( $env, $desc );
+$desc	= View_Helper_ContentConverter::formatBreaks( $env, $desc );
 
 $list	= array();
 
