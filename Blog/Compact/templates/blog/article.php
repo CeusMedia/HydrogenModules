@@ -27,7 +27,7 @@ if( isset( $articleIndex[$index+1] ) )
 	$linkPrev	= UI_HTML_Elements::Link( $url, '&laquo;&nbsp;'.$label );
 }
 $title		= Alg_Text_Unicoder::convertToUnicode( $article->title );
-$text		= $this->formatContent( $article->content, $articleId );
+$text		= View_Helper_ContentConverter::render( $env, $article->content );
 
 $authorList	= View_Blog::renderAuthorList( $authors, !TRUE );
 $tagList	= View_Blog::renderTagList( $tags );
