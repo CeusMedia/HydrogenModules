@@ -1,0 +1,55 @@
+	
+.link-author,
+.link-map,
+.link-search-image,
+.link-search-map,
+.link-imdb,
+.link-wiki,
+.link-youtube,
+.link-tag,
+.link-blog,
+.link-gallery,
+.link-internal,
+.link-external {
+	background-color: rgba(255,250,240,0.5);
+	background-repeat: no-repeat;
+	background-position: 2px 1px;
+	padding: 1px 5px 1px 20px;
+	}
+
+.link-map,
+.link-search-map {
+	background-image: url(http://img.int1a.net/famfamfam/silk/map.png);
+	}
+.link-search-image {
+	background-image: url(http://img.int1a.net/famfamfam/silk/magnifier.png);
+	}
+.link-imdb {
+	background-image: url(../img/icons/imdb.png);
+	}
+.link-wiki {
+	background-image: url(../img/icons/wikipedia.png);
+	}
+.link-youtube {
+	background-image: url(../img/icons/youtube.png);
+	}
+.link-blog {
+	background-image: url(http://img.int1a.net/famfamfam/silk/information.png);
+	}
+.link-gallery {
+	background-image: url(http://img.int1a.net/famfamfam/silk/image.png);
+	}
+.link-tag {
+	background-image: url(http://img.int1a.net/famfamfam/silk/tag_blue.png);
+	}
+.link-author {
+	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	}
+.link-internal,
+.link-external {
+	background-image: url(http://img.int1a.net/famfamfam/silk/link.png);
+	background-position: 2px 2px;
+	}
+.link-feed {
+	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	}

@@ -6,6 +6,11 @@
 	<version>0.1</version>
 	<files>
 		<class>View/Helper/ContentConverter.php5</class>
+		<style source="theme" load="auto">links.css</style>
+		<image source="theme">icons/wikipedia.png</image>
+		<image source="theme">icons/youtube.png</image>
+		<image source="theme">icons/google.png</image>
+		<image source="theme">icons/imdb.png</image>
 	</files>
 	<relations/>
 </module>
