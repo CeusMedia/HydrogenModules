@@ -1,4 +1,28 @@
 /*  --  GALLERY  --  */
+
+body.controller-gallery ul.folders {
+	list-style: none;
+	margin: 0px;
+	padding: 0px 0px 0px 5px;
+	}
+body.controller-gallery ul.folders li {
+	margin-bottom: 2px;
+	}
+body.controller-gallery ul.folders li a {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-position-y: 2px; 
+	background-position-x: 3px;
+	padding-left: 25px;
+	}
+body.controller-gallery ul.folders li span.date{
+	font-style: italic;
+	margin-left: 0.5em;
+	font-size: 0.9em;
+	color: rgba(0,0,0,0.5);
+	}
+
+
 #gallery .label {
 	text-align: center;
 	font-size: 0.8em;
@@ -47,7 +71,7 @@ body.controller-gallery .link-feed {
 	padding: 2px 8px 2px 25px;
 	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
 	}
-
+body.controller-gallery 
 body.controller-gallery #licence {
 	clear: left;
 	margin-top: 1em;

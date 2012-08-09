@@ -2,19 +2,45 @@
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
 $list	= array();
-foreach( $folders as $entry )
-{
-	$name			= $entry->getFilename();
-	$url			= './gallery/index/'.$source.urlencode( $name );
-	$link			= UI_HTML_Elements::Link( $url, $name );
-	$list[$name]	= UI_HTML_Elements::ListItem( $link );
+foreach( $folders as $entry ){
+	$folderName	= $entry->getFilename();
+	$parts		= explode( " ", $folderName );
+	$date		=  NULL;
+	if( preg_match( "/^[0-9-]+$/", $parts[0] ) && count( $parts ) > 1 )
+		$date	= '<span class="date">'.array_shift( $parts ).'</span>';
+	$label		= implode( " ", $parts );
+	
+	$url			= './gallery/index/'.$source.urlencode( $folderName );
+	$link			= UI_HTML_Elements::Link( $url, $label, 'link-gallery' );
+	$list[$folderName]	= UI_HTML_Elements::ListItem( $link.$date );
 }
 krsort( $list );
-$folders	= $list ? UI_HTML_Elements::unorderedList( $list ) : NULL;
+$folders	= '';
+if( $list ){
+	$width	= 50;
+	$lists	= array( $list );
+	if( count( $list ) > 5 ){
+		if( count( $list ) > 10 ){
+			$width		= 33;
+			$cut		= ceil( count( $list ) / 3 );
+			$lists[0]	= array_slice( $list, 0, $cut );
+			$lists[1]	= array_slice( $list, $cut, $cut );
+			$lists[2]	= array_slice( $list, 2 * $cut );
+		}
+		else{
+			$cut		= ceil( count( $list ) / 2 );
+			$lists[0]	= array_slice( $list, 0, $cut );
+			$lists[1]	= array_slice( $list, $cut );
+		}
+	}
+	foreach( $lists as $list ){
+		$list		= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
+		$folders	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'column-left-'.$width ) );
+	}
+}
 
 $list		= array();
-foreach( $files as $file )
-{
+foreach( $files as $file ){
 	$fileName	= $file->getFilename();
 	if( preg_match( '/\.(small|medium)\.(jpg|jpeg|jpe|png|gif)$/i', $fileName ) )
 		continue;
@@ -77,9 +103,11 @@ $(document).ready(function(){
 	'.$title.'
 	'.$desc.'
 	'.$folders.'
-	<div style="clear: left"></div>
+	<div class="column-clear"></div>
+	<br/>
 	'.$files.'
 	<div style="clear: left"></div>
+	<br/>
 	'.$textBottom.'
 	'.$license.'
 	<div style="clear: left"></div>

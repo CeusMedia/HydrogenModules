@@ -6,7 +6,7 @@ class View_Helper_Gallery{
 		return $env->getConfig()->get( 'app.base.url' ).'gallery/feed'.$limit;
 	}
 
-	static public function renderLatestGalleries( $env, $limit ){
+	static public function renderLatestGalleries( $env, $limit, $offset = 0 ){
 		$list		= array();
 		$config		= $env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
@@ -14,7 +14,8 @@ class View_Helper_Gallery{
 		foreach( $index as $folder )
 			$list[$folder->getFilename()]	= substr( $folder->getPathname(), strlen( $path ) );
 		natcasesort( $list );
-		$latest	= array_reverse( array_slice( $list, -$limit ) );
+		$list	= array_reverse( $list );
+		$latest	= array_slice( $list, $offset, $limit );
 		$list	= array();
 		foreach( $latest as $title => $path ){
 			$link	= UI_HTML_Tag::create( 'a', $title, array( 'href' => 'gallery/index/'.$path ) );
