@@ -1,6 +1,30 @@
 <?php
 class View_Blog extends CMF_Hydrogen_View{
-	
+
+	public function __onInit(){
+		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatGaleryLinks" );
+		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatBlogLinks" );
+		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatEmoticons" );
+		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatImages" );
+		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatIFrames" );
+		$converters	= array(
+			"formatText",
+			"formatLinks",
+			"formatImageSearch",
+			"formatMapSearch",
+			"formatCurrencies",
+			"formatWikiLinks",
+			"formatYoutubeLinks",
+			"formatImdbLinks",
+			"formatMapLinks",
+			"formatBreaks",
+			"formatCodeBlocks",
+			"formatLists",
+		);
+		foreach( $converters as $converter )
+			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
+	}
+
 	public function add(){}
 	
 	public function article(){}
@@ -48,24 +72,6 @@ class View_Blog extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	protected function formatContent( $content, $articleId ){
-		$config		= $this->env->getConfig();
-		$path		= $config->get( 'path.images' ).$config->get( 'module.blog_compact.path.images' );
-		View_Helper_BlogContentFormat::formatLinks( $content );
-		View_Helper_BlogContentFormat::formatMapLinks( $content );
-		View_Helper_BlogContentFormat::formatImages( $content, $path, $articleId );
-		View_Helper_BlogContentFormat::formatImageSearch( $content );
-		View_Helper_BlogContentFormat::formatIFrames( $content );
-		View_Helper_BlogContentFormat::formatText( $content );
-		View_Helper_BlogContentFormat::formatYoutubeLinks( $content );
-		View_Helper_BlogContentFormat::formatEmoticons( $content );
-		View_Helper_BlogContentFormat::formatCurrencies( $content );
-		View_Helper_BlogContentFormat::formatMapSearch( $content );
-		View_Helper_BlogContentFormat::formatImdbLinks( $content );
-		View_Helper_BlogContentFormat::formatWikiLinks( $content );
-		return $content;
-	}
-
 	public function index(){}
 
 	public function tag(){}
@@ -80,7 +86,7 @@ class View_Blog extends CMF_Hydrogen_View{
 			$link		= UI_HTML_Elements::Link( $url, $article->title, 'blog-article-link' );
 
 			$abstract	= array_shift( preg_split( "/\n/", $article->content ) );
-			$abstract	= $this->formatContent( $abstract, $article->articleId );
+			$abstract	= View_Helper_ContentConverter::render( $this->env, $abstract );
 			$abstract	= UI_HTML_Tag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
 
 			$infoList	= View_Blog::renderInfoList( $article, $date, $time );

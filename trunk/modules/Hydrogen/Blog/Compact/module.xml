@@ -11,7 +11,6 @@
 		<class>Model/Tag.php5</class>
 		<class>View/Blog.php5</class>
 		<class>View/Helper/Blog.php5</class>
-		<class>View/Helper/BlogContentFormat.php5</class>
 		<template>blog/add.php</template>
 		<template>blog/article.php</template>
 		<template>blog/author.php</template>
@@ -31,6 +30,7 @@
 		<needs type="module">JS_Layer</needs>
 		<needs type="module">JS_jQuery_UI</needs>
 		<needs type="module">JS_jQuery_UI_Timepicker</needs>
+		<needs type="module">UI_Helper_Content</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="blog">Blog</link>
 	<link rank="99" access="public" path="blog/feed"/>
