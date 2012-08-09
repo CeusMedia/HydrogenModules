@@ -48,14 +48,16 @@ class View_Helper_Blog{
 			$uri		= $path.$fileName;
 			$thumb		= './blog/thumb/'.$fileName;
 			$image		= UI_HTML_Elements::Image( $thumb, $title, 'thumb' );
-			$attributes	= array(
-				'href'	=> $uri,
-				'class'	=> 'no-thickbox layer-image',
-				'title'	=> $title,
-				'rel'	=> 'blog-article-gallery',
-			);
-			$link		= UI_HTML_Tag::create( 'a', $image, $attributes );
-			$container	= UI_HTML_Tag::create( 'div', $link, array( 'class'=>'image' ) );
+			if( file_exists( $uri ) ){
+				$attributes	= array(
+					'href'	=> $uri,
+					'class'	=> 'no-thickbox layer-image',
+					'title'	=> $title,
+					'rel'	=> 'blog-article-gallery',
+				);
+				$image		= UI_HTML_Tag::create( 'a', $image, $attributes );
+			}
+			$container	= UI_HTML_Tag::create( 'div', $image, array( 'class'=>'image' ) );
 			$content	= str_replace( $matches[0][$i], $container, $content );
 		}
 		return $content;
@@ -105,14 +107,43 @@ class View_Helper_Blog{
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
 	}
+
+	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
+		$prefix		= $env->getDatabase()->getPrefix();
+		$query		= '
+			SELECT
+				COUNT(at.articleId) as nr,
+				at.tagId,
+				t.title
+			FROM
+				'.$prefix.'articles AS a,
+				'.$prefix.'article_tags AS at,
+				'.$prefix.'tags AS t
+			WHERE
+				at.tagId = t.tagId AND
+				at.articleId = a.articleId AND
+				a.status = 1
+			GROUP BY at.tagId
+			ORDER BY nr DESC
+			LIMIT '.$offset.', '.$limit;
+		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
+		$list	= array();
+		foreach( $tags as $relation ){
+			$url	= './blog/tag/'.urlencode( urlencode( $relation->title ) );
+			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
+			$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
+			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
+		} 
+		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+	}
 	
-	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit ){
+	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
 		$list	= array();
 		$model	= new Model_Article( $env );
-		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( 0, $limit ) );
+		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => 'blog/article/'.$article->articleId.'' ) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'gallery-item' ) );
+			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
 	}
