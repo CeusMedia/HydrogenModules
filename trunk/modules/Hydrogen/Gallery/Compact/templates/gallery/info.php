@@ -139,9 +139,11 @@ $(document).ready(function(){
 		$("img.zoomable").addClass("fullscreenable").cmImagnifier("toggle");
 		$("#button-magnifier").removeAttr("disabled");
 		$("#hint-magnifier").fadeOut(100);
+		$("#hint-fullscreen").fadeIn(200);
 		$(this).attr("disabled","disabled");
 	}).attr("disabled","disabled");
 	$("#button-magnifier").bind("click",function(){
+		$("#hint-fullscreen").fadeOut(100);
 		$("#hint-magnifier").fadeIn(200);
 		$("img.zoomable").cmImagnifier("toggle");
 		$(this).attr("disabled","disabled");
