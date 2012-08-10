@@ -109,7 +109,6 @@ $list	= '<dl>'.join( $list ).'</dl>';
 return '
 <link rel="stylesheet" href="'.$jsBase.'cmImagnifier/0.1.css"/>
 <script src="'.$jsBase.'cmImagnifier/0.1.js"></script>
-<script src="js/screenfull.js"></script>
 <script>
 $(document).ready(function(){
 	$("img.zoomable").cmImagnifier({
