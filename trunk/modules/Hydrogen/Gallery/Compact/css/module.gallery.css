@@ -1,69 +1,6 @@
 /*  --  GALLERY  --  */
 
-body.controller-gallery ul.folders {
-	list-style: none;
-	margin: 0px;
-	padding: 0px 0px 0px 5px;
-	}
-body.controller-gallery ul.folders li {
-	margin-bottom: 2px;
-	}
-body.controller-gallery ul.folders li a {
-	padding-top: 2px;
-	padding-bottom: 2px;
-	background-position-y: 2px; 
-	background-position-x: 3px;
-	padding-left: 25px;
-	}
-body.controller-gallery ul.folders li span.date{
-	font-style: italic;
-	margin-left: 0.5em;
-	font-size: 0.9em;
-	color: rgba(0,0,0,0.5);
-	}
-
-
-#gallery .label {
-	text-align: center;
-	font-size: 0.8em;
-	font-style: italic;
-	color: gray;
-	}
-#gallery .file-name {
-	text-align: center;
-	font-size: 0.8em;
-	font-style: italic;
-	color: gray;
-	}
-#gallery div.thumbnail {
-	position: relative;
-	float: left;
-	padding: 0.5em;
-	margin: 0.1em 0.5em 0.4em 0.5em;
-	border: 1px solid gray;
-	background: #FFF;
-	box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-	-moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-	-o-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-	}
-#gallery .navi-steps {
-/*	font-weight: bold;*/
-	border-bottom: 1px dotted gray;
-	padding: 4px 8px;
-/*	letter-spacing: 1px;*/
-	}
-#gallery div.thumbnail a.thickbox img.thumbnail {
-	min-width: 68px;
-	min-height: 90px;
-	max-width: 120px;
-	height: 90px;
-	display: block;
-	background-image: url(ajax-loader3.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
-	}
-
+/*  --  GENERAL  --  */
 body.controller-gallery .link-feed {
 	background-color: rgba(255, 250, 240, 0.5);
 	background-repeat: no-repeat;
@@ -80,7 +17,54 @@ body.controller-gallery #licence {
 	font-size: 0.8em;
 	}
 
-body.controller-gallery #gallery-item-info-button {
+
+/*  --  INDEX: FOLDERS  --  */
+body.moduleGallery.action-index ul.folders {
+	list-style: none;
+	margin: 0px;
+	padding: 0px 0px 0px 5px;
+	}
+body.moduleGallery.action-index ul.folders li {
+	margin-bottom: 2px;
+	}
+body.moduleGallery.action-index ul.folders li a {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-position-y: 2px; 
+	background-position-x: 3px;
+	padding-left: 25px;
+	}
+body.moduleGallery.action-index ul.folders li span.date{
+	font-style: italic;
+	margin-left: 0.5em;
+	font-size: 0.9em;
+	color: rgba(0,0,0,0.5);
+	}
+
+/*  --  INDEX: IMAGE THUMBNAILS  --  */
+body.moduleGallery.action-index div.thumbnail {
+	position: relative;
+	float: left;
+	padding: 0.5em;
+	margin: 0.1em 0.5em 0.4em 0.5em;
+	border: 1px solid gray;
+	background: #FFF;
+	box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	-o-box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+	}
+body.moduleGallery.action-index div.thumbnail a.thickbox img.thumbnail {
+	min-width: 68px;
+	min-height: 90px;
+	max-width: 120px;
+	height: 90px;
+	display: block;
+	background-image: url(ajax-loader3.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	}
+body.moduleGallery.action-index #gallery-item-info-button {
 	display: none;
 	position: absolute;
 	bottom: 0px;
@@ -93,19 +77,32 @@ body.controller-gallery #gallery-item-info-button {
 	cursor: pointer;
 	}
 
-	
 /*  --  IMAGE INFO  --  */
-.gallery-image-info dl dt {
-	clear: left;
-	float: left;
-	display: block;
-	width: 100px;
+body.moduleGallery.action-info .navi-control {
+	padding: 0.6em 0;
+	border-bottom: 1px solid rgba(0,0,0,0.25);
 	}
-.gallery-image-info dl dd {
-	float: left;
-	display: block;
+body.moduleGallery.action-info #hint-magnifier {
+	display: none;
 	}
-.gallery-image-info .image {
+.gallery-image-info .list-actions {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+
+/*  --  IMAGE INFO: NAVI: STEPS  --  */
+body.moduleGallery .navi-steps {
+	border-bottom: 1px dotted gray;
+	padding: 4px 8px;
+	}
+body.moduleGallery .navi-steps .link-gallery-current {
+	font-weight: bold;
+	font-size: 1.0em;
+	}
+	
+/*  --  IMAGE INFO: IMAGE  --  */
+body.moduleGallery.action-info div.image {
 	padding: 0.75em;
 	margin: 0.1em 0.5em 0.4em 0.5em;
 	border: 1px solid gray;
@@ -114,11 +111,68 @@ body.controller-gallery #gallery-item-info-button {
 	-webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	-o-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	}
-button.download span {
+body.moduleGallery.action-info div.image img {
+	display: block;
+	}
+body.moduleGallery.action-info div.image img.fullscreenable {
+	cursor: pointer;
+	}
+body.moduleGallery.action-info div.image img.zoomable {}
+	
+/*  --  IMAGE INFO: DATA LIST  --  */
+body.moduleGallery.action-info .gallery-image-info dl dt {
+	clear: left;
+	float: left;
+	display: block;
+	width: 100px;
+	}
+body.moduleGallery.action-info .gallery-image-info dl dd {
+	float: left;
+	display: block;
+	}
+
+/*  --  IMAGE INFO: BUTTONS  --  */
+body.moduleGallery.action-info button.button span {
+	padding-left: 22px;
+	background-position-x: 0px;
+	}
+body.moduleGallery.action-info button.button.loading span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_refresh.png) !important;
+	}
+body.moduleGallery.action-info button.button.resize-max span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_out.png);
+	}
+body.moduleGallery.action-info button.button.download span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_down.png);
 	}
-.gallery-image-info .list-actions {
-	margin: 0px;
-	padding: 0px;
-	list-style: none;
+	
+/*  --  IMAGE INFO: FULLSCREEN LAYER  --  */
+body.moduleGallery.action-info #gallery-image-fullscreen {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1010;
+	overflow: hidden;
+	cursor: pointer;
+	background-color: white;
 	}
+body.moduleGallery.action-info #gallery-image-fullscreen img{
+	}
+
+/*
+#gallery .label {
+	text-align: center;
+	font-size: 0.8em;
+	font-style: italic;
+	color: gray;
+	}
+#gallery .file-name {
+	text-align: center;
+	font-size: 0.8em;
+	font-style: italic;
+	color: gray;
+	}
+*/

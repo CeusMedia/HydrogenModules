@@ -30,20 +30,19 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 
 		$config		= $this->env->getConfig();
-		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$index		= Folder_RecursiveLister::getFolderList( $path, '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /' );
 		foreach( $index as $folder ){
 			$timestamp	= filemtime( $folder->getPathname() );
 			$list[$timestamp.'_'. uniqid()]	= (object) array(
 				'label'		=> $folder->getFilename(),
-				'pathname'	=> substr( $folder->getPathname(), strlen( $path ) ),
+				'pathname'	=> substr( $folder->getPathname(), strlen( $this->path ) ),
 				'timestamp'	=> $timestamp,
 			);
 		}
 		ksort( $list );
 		$galleries	= array_reverse( array_slice( $list, -$limit ) );
 		$this->addData( 'galleries', $galleries );
-		$this->addData( 'path', $path );
+		$this->addData( 'path', $this->path );
 		$this->addData( 'debug', (bool) $debug );
 	}
 
@@ -79,11 +78,16 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$info	= $this->readGalleryInfo( dirname( $source ) );
 		$key	= pathinfo( $source, PATHINFO_FILENAME );
 		$title	= isset( $info[$key] ) ? $info[$key] : NULL;
-		
-		$this->addData( 'path', $this->path );
-		$this->addData( 'source', $source );
-		$this->addData( 'title', $title );
-		$this->addData( 'exif', new ADT_List_Dictionary( $exif->getAll() ) );
+
+		$this->setData(
+			array(
+				'path'		=> $this->path,
+				'source'	=> $source,
+				'title'		=> $title,
+				'files'		=> Folder_Lister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
+				'exif'		=> new ADT_List_Dictionary( $exif->getAll() ),
+			)
+		);
 	}
 
 	protected function readGalleryInfo( $source ){
