@@ -108,7 +108,8 @@ class View_Helper_Blog{
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
 	}
 
-	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
+	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
+		$states		= is_array( $states ) ? $states : array( $states );
 		$prefix		= $env->getDatabase()->getPrefix();
 		$query		= '
 			SELECT
@@ -122,7 +123,7 @@ class View_Helper_Blog{
 			WHERE
 				at.tagId = t.tagId AND
 				at.articleId = a.articleId AND
-				a.status = 1
+				a.status IN('.join( ", ", $states ) .')
 			GROUP BY at.tagId
 			ORDER BY nr DESC
 			LIMIT '.$offset.', '.$limit;
@@ -134,6 +135,8 @@ class View_Helper_Blog{
 			$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
 		} 
+		if( !$list )
+			return NULL;
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
 	}
 	

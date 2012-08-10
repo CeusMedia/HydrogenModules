@@ -97,9 +97,11 @@ class View_Blog extends CMF_Hydrogen_View{
 			$content	= $info . $link . $abstract;
 			$attributes	= array( 'class' => 'blog-article-list-item  blog-article-abstract' );
 			$item		= UI_HTML_Tag::create( 'li', $content, $attributes );
-			$articleList[$article->title]	= $item;
+			$list[$article->title]	= $item;
 		}
-		return UI_HTML_Tag::create( 'ul', join( $articleList ), array( 'class' => 'blog-article-list' ) );
+		if( !$list )
+			return NULL;
+		return UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'blog-article-list' ) );
 	}
 
 	static public function renderInfoList( $article, $date = TRUE, $time = TRUE ){
