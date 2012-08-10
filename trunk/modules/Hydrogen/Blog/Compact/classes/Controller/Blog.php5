@@ -154,15 +154,15 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 				throw new InvalidArgumentException( 'Article title is missing' ) ;
 			if( !strlen( trim( $request->get( 'content' ) ) ) )
 				throw new InvalidArgumentException( 'Article content is missing' ) ;
-
 	
-			$article->createdAt	= $article->createdAt ? $article->createdAt : time();
-			$date	= $request->get( 'date' ).' '.date( 'H:i:s', $article->createdAt );				//  new creation date string
-			$data	= array(
+			$createdAt	= strtotime( $request->get( 'date' ).' '.$request->get( 'time' ).':00' );	//  new creation date string
+			$createdAt	= $createdAt ? $createdAt : time();
+
+			$data		= array(
 				'title'			=> trim( $request->get( 'title' ) ),
 				'content'		=> trim( $request->get( 'content' ) ),
 				'status'		=> $request->get( 'status' ),
-				'createdAt'		=> strtotime( $date ),
+				'createdAt'		=> $createdAt,
 			);
 			
 			$model	= new Model_Article( $this->env );
@@ -216,7 +216,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		if( !$this->isEditor )
 			$states	= array( 1 );
 		else if( !$states )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 0, 1 ) );
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( -2, -1, 0, 1, 2 ) );
 		
 		$limit		= !is_null( $limit ) ? $limit : ( $perPage ? $perPage : 10 );
 		$offset		= $page * $limit;

@@ -35,9 +35,9 @@ foreach( $authors as $author ){
 }
 $authorList	= $authorList ? join( $authorList ) : '<b><em>noch keine</em></b>';
 
+$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 );
 $buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 );
-$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status == 1 );
-$buttonRemove		= UI_HTML_Elements::LinkButton( './blog/remove/'.$article->articleId, 'entfernen', 'button remove', 'Wirklich?', $article->status > 0 );
+$buttonStatusRemove	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 );
 $buttonCancel		= UI_HTML_Elements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
 
 return '
@@ -55,7 +55,7 @@ return '
 					<textarea name="content" id="input-content" rows="10" class="max CodeMirror">'.htmlentities( $article->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</li>
 				<li class="column-left-20">
-					<label for="input-status">Sichtbarkeit</label><br/>
+					<label for="input-status">Status / Sichtbarkeit</label><br/>
 					<select name="status" id="input-status" class="max">'.$optStatus.'</select>
 				</li>
 				<li class="column-left-20">
@@ -75,10 +75,10 @@ return '
 				'.$buttonCancel.'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				<button type="submit" name="do" value="save" class="button save"><span>speichern</span></button>
-				'.$buttonStatusShow.'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.$buttonStatusShow.'
 				'.$buttonStatusHide.'
-				'.$buttonRemove.'
+				'.$buttonStatusRemove.'
 			</div>
 		</fieldset>
 	</form>
@@ -116,7 +116,14 @@ return '
 <script>
 $(document).ready(function(){
 	$(".datepicker").datepicker({dateFormat: "yy-mm-dd"});
-	
+
+	$("#input-content").bind("change",function(){			//  @todo	this only works without CodeMirror
+		if($(this).val().length && $("#button-save").attr("disabled"))
+			$("#button-save").removeAttr("disabled");
+		else
+			$("#button-save").attr("disabled", "disabled");
+	}).trigger("change");
+
 	$("#input-authorId").bind("change",function(){
 		var url = "./blog/addAuthor/'.$articleId.'/"+$(this).val();
 		document.location.href = url;

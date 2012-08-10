@@ -6,13 +6,15 @@ $url		= './blog/add';
 $label		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/add.png', 'neuer Eintrag' );
 $linkAdd	= $canAdd ? UI_HTML_Elements::Link( $url, $label, 'button link-add' ) : '';
 
-$articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
+$articleList	= UI_HTML_Tag::create( 'em', 'Keine Artikel gefunden.' );
+if( $articles )
+	$articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
+
 #$heading	= UI_HTML_Elements::Heading( 'Artikel', 3 );
 $heading	= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
 
 $helper		= new View_Helper_Pagination();
 $pageList	= $helper->render( './blog/index/', $number, $limit, $page );
-
 
 $list	= array();
 foreach( $topTags as $relation ){
@@ -21,16 +23,45 @@ foreach( $topTags as $relation ){
 	$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
 } 
-$listTopTags	= '<h4>Häufige Schlüsselwörter</h4><ul class="top-tags">'.join( $list ).'</ul>';
+$topTags		= View_Helper_Blog::renderTopTags( $env, 10, 0, $states );
+$listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
 
-$filters		= '
-	<div style="float: right; top: 0px; right: 0px;">
-		<label><input type="checkbox" name="states" value="0" '.( in_array( 0, $states ) ? 'checked="checked"' : '').'>versteckte</label>
-		<label><input type="checkbox" name="states" value="1" '.( in_array( 1, $states ) ? 'checked="checked"' : '').'>öffentliche</label>
-	</div>
+$listStates		= '
+<style>
+.article-status {
+	background-repeat: no-repeat;
+	background-position: 3px 1px;
+	background-color: rgba(255,250,240,0.5);
+	padding: 1px 5px 1px 24px;
+	}
+.article-status.status-1 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
+	background-position: 2px 1px;
+	}
+.article-status.status0 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/pencil.png);
+	}
+.article-status.status1 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/world.png);
+	}
+</style>
+	<h4>Artikel-Typen</h4>
+	<label>
+		<input type="checkbox" name="states" value="1" '.( in_array( 1, $states ) ? 'checked="checked"' : '').'>
+		<span class="article-status status1">'.$words['states']['1'].'</span>
+	</label><br/>
+	<label>
+		<input type="checkbox" name="states" value="0" '.( in_array( 0, $states ) ? 'checked="checked"' : '').'>
+		<span class="article-status status0">'.$words['states']['0'].'</span>
+	</label><br/>
+	<label>
+		<input type="checkbox" name="states" value="-1" '.( in_array( -1, $states ) ? 'checked="checked"' : '').'>
+		<span class="article-status status-1">'.$words['states']['-1'].'</span>
+	</label><br/>
+	<br/>
+		
 	<script>
 $("#blog input[name=states]").bind("change",function(){
-//	console.log($(this).is(":checked") ? "add" : "remove");
 	$.ajax({
 		url: "./blog/setFilter",
 		data: {
@@ -47,14 +78,13 @@ $("#blog input[name=states]").bind("change",function(){
 	</script>
 	';
 if( !$isEditor )
-	$filters	= '';
+	$listTypes	= '';
 
 $feedUrl	= View_Helper_Blog::getFeedUrl( $env );
 
 return '
 <div id="blog">
 	<div class="column-left-70">
-		'.$filters.'
 		'.$heading.'
 		'.$articleList.'
 		'.$pageList.'
@@ -63,6 +93,7 @@ return '
 		<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
 		<br/>
 		<br/>
+		'.$listStates.'
 		'.$listTopTags.'
 	</div>
 	<div class="column-clear"></div>
