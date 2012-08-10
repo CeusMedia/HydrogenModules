@@ -8,6 +8,7 @@
 .link-youtube,
 .link-tag,
 .link-blog,
+.link-image,
 .link-gallery,
 .link-internal,
 .link-external {
@@ -35,6 +36,9 @@
 	}
 .link-blog {
 	background-image: url(http://img.int1a.net/famfamfam/silk/information.png);
+	}
+.link-image {
+	background-image: url(http://img.int1a.net/famfamfam/silk/image.png);
 	}
 .link-gallery {
 	background-image: url(http://img.int1a.net/famfamfam/silk/folder_image.png);
