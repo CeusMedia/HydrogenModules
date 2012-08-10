@@ -212,16 +212,12 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	public function index( $page = 0, $limit = NULL ){
 		$perPage	= abs( (int) $this->env->getConfig()->get( 'module.blog_compact.perPage' ) );
-		$states		= $this->env->getSession()->get( 'filter_blog_states' );
-		if( !$this->isEditor )
-			$states	= array( 1 );
-		else if( !$states )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( -2, -1, 0, 1, 2 ) );
+		$states		= $this->getFilteredStates();
 		
 		$limit		= !is_null( $limit ) ? $limit : ( $perPage ? $perPage : 10 );
 		$offset		= $page * $limit;
 		$limits		= array( $offset, $limit );
-		$conditions	= array( 'status' => $states );
+		$conditions	= array( 'status' => $states ? $states : -99 );
 		$orders		= array( 'createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/ );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
 #		remark( $this->model->getLastQuery() );
@@ -301,19 +297,31 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	}
 
 	public function setStatus( $articleId, $status ){
+		$words	= $this->getWords( 'states' );
 		if( (int) $articleId < 1 )
 			$this->restart( './blog/' );
 		$article	= $this->model->get( $articleId );
 		if( !$article )
 			$this->restart( './blog/' );
 		$this->model->edit( $articleId, array( 'status' => $status ) );
+		$this->env->getMessenger()->noteSuccess( 'Der wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
 		$this->restart( './blog/edit/'.$articleId );
 	}
 	
+	protected function getFilteredStates(){
+		$states	= $this->env->getSession()->get( 'filter_blog_states' );
+		if( !is_array( $states ) )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+		if( !$this->isEditor /*|| !$states*/ )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+		return $states;
+	}
+	
 	public function tag( $tagName ){
-		$model	= new Model_Tag( $this->env );
-		$tag	= $model->getByIndex( 'title', $tagName );
-		$articles	= array();
+		$model		= new Model_Tag( $this->env );
+		$tag		= $model->getByIndex( 'title', $tagName );
+		$states		= $this->getFilteredStates();
+		$articles		= array();
 		$relatedTags	= array();
 		if( $tag ){
 			$model		= new Model_ArticleTag( $this->env );
@@ -321,7 +329,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			$model		= new Model_Article( $this->env );
 			foreach( $relations as $relation ){
 				$article	= $model->get( $relation->articleId );
-				if( $article->status == 1 )
+				if( in_array( $article->status, $states ) )
 					$articles[$article->articleId]	= $article;
 			}
 			krsort( $articles );

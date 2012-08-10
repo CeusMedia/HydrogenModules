@@ -8,32 +8,40 @@ foreach( $words['states'] as $value => $label )
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $article->status );
 
 
-$optAuthor	= array();
-foreach( $editors as $editor ){
+$optAuthor	= array( '' => '- hinzufügen -');
+foreach( $editors as $editor )
 	foreach( $authors as $author )
-		if( $author->userId == $editor->userId )
-			continue;
-	$optAuthor[$editor->userId]	= $editor->username;
-}
+		if( $author->userId != $editor->userId )
+			$optAuthor[$editor->userId]	= $editor->username;
 $optAuthor	= UI_HTML_Elements::Options( $optAuthor, NULL );
 
-$tagList	= array();
-foreach( $tags as $tag ){
-	$url		= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
-	$link		= UI_HTML_Elements::Link( $url, $tag->title );
-//	$tagList[]	= $link;
-	$tagList[]	= UI_HTML_Elements::ListItem( $link );
-}
-//$tagList	= UI_HTML_Elements::unorderedList( $tagList );
-$tagList	= $tagList ? join( $tagList ) : '<b><em>noch keine</em></b>';
 
-$authorList	= array();
-foreach( $authors as $author ){
-	$url	= './blog/removeAuthor/'.$article->articleId.'/'.$author->userId;
-	$link	= UI_HTML_Elements::Link( $url, $author->username, array( 'class' => 'article-author' ) );
-	$authorList[]	= UI_HTML_Elements::ListItem( $link );
+$listAuthors	= '<b><em>noch keine</em></b>';
+$listTags		= '<b><em>noch keine</em></b>';
+
+$list	= array();
+if( $tags ){
+	foreach( $tags as $tag ){
+		$urlTag		= './blog/tag/'.urlencode( $tag->title );
+		$urlRemove	= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
+		$linkTag	= UI_HTML_Elements::Link( $urlTag, $tag->title, 'link-tag' );
+		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button tiny remove' );
+		$list[]	= UI_HTML_Elements::ListItem( $linkRemove.$linkTag );
+	}
+	$listTags	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
-$authorList	= $authorList ? join( $authorList ) : '<b><em>noch keine</em></b>';
+
+$list	= array();
+if( $authors ){
+	foreach( $authors as $author ){
+		$urlUser	= './admin/user/edit/'.$author->userId;
+		$urlRemove	= './blog/removeAuthor/'.$article->articleId.'/'.$author->userId;
+		$linkUser	= UI_HTML_Elements::Link( $urlUser, $author->username, 'article-author role role'.$author->roleId );
+		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button tiny remove' );
+		$list[]	= UI_HTML_Elements::ListItem( $linkRemove.$linkUser );
+	}
+	$listAuthors	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
+}
 
 $buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 );
 $buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 );
@@ -62,7 +70,7 @@ return '
 					<label for="input-date">Datum</label><br/>
 					<input type="text" name="date" id="input-date" class="datepicker max" value="'.date( 'Y-m-d', $article->createdAt ).'"/>
 				</li>
-				<li class="column-left-20">
+				<li class="column-left-10">
 					<label for="input-time">Zeit</label><br/>
 					<input type="text" name="time" id="input-time" class="timepicker max" value="'.date( 'H:i', $article->createdAt ).'"/>
 				</li>
@@ -82,33 +90,30 @@ return '
 			</div>
 		</fieldset>
 	</form>
-	<div class="column-left-50">
+	<div class="column-left-33">
 		<form name="manageArticleTags" id="form-blogArticleTags" action="./blog/addTag/'.$articleId.'/" method="post">
 			<fieldset>
-				<legend>Tags</legend>
-				<div class="column-left-50">
-					<label>vergebene Schlagwörter</label><br/>
-					'.$tagList.'
-				</div>
-				<div class="column-left-50">
-					<label for="tag">neues Schlagwort</label><br/>
-					<input type="text" name="tag" id="input-tag"/><br/>
-					<button type="submit" name="do" value="add" class="button add"><span>add</span></button>
+				<legend>Schlagwörter</legend>
+				'.$listTags.'
+				<div class="buttonbar">
+					<div style="float: left; width: 89%">
+						<input type="text" name="tag" id="input-tag" class="max"/>
+					</div>
+					<div style="float: left; width: 11%; padding-top: 4px; text-align: right">
+						<button type="submit" name="do" value="add" class="button tiny add"><span></span></button>
+					</div>
+					<em><small>(getrennt mit Leerzeichen)</small></em>
 				</div>
 			</fieldset>
 		</form>
 	</div>
-	<div class="column-left-50">
+	<div class="column-left-33">
 		<fieldset>
 			<legend>Autoren</legend>
-			<div class="column-left-50">
-				<label>zugewiesene Autoren</label><br/>
-				'.$authorList.'
-			</div>
-			<div class="column-left-50">
-				<label for="tag">neuer Autor</label><br/>
-				<select name="authorId" id="input-authorId" class="max">'.$optAuthor.'</select><br/>
-			</div>
+				'.$listAuthors.'
+				<div class="buttonbar">
+					<select name="authorId" id="input-authorId" class="max">'.$optAuthor.'</select>
+				</div>
 		</fieldset>
 	</div>
 	<div class="column-clear"></div>
