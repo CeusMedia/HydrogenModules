@@ -6,7 +6,7 @@ return '
 <div id="blog-edit-form">
 	<form name="editArticle" id="form-blogArticleEdit" action="./blog/add" method="post">
 		<fieldset>
-			<legend class="messages-new">Artikel verändern</legend>
+			<legend class="messages-new">neuer Blog-Artikel</legend>
 			<ul class="input">
 				<li>
 					<label for="title" class="mandatory">Titel</label><br/>

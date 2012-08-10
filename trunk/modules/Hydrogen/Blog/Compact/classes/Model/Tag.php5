@@ -16,6 +16,7 @@ class Model_Tag extends CMF_Hydrogen_Model{
 		$modelRelation	= new Model_ArticleTag( $this->env );
 		$modelArticle	= new Model_Article( $this->env );
 		$articles	= $modelRelation->getAllByIndex( 'tagId', $tagId );
+		$list		= array();
 		foreach( $articles as $articles ){
 			$relations	= $modelRelation->getAllByIndex( 'articleId', $articles->articleId );
 			foreach( $relations as $relation ){

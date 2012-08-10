@@ -181,3 +181,42 @@ span.number-indicator {
 	font-size: 0.8em;
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.25);
 	}
+
+	
+body.controller-blog .article-status {
+	background-repeat: no-repeat;
+	background-position: 3px 1px;
+	background-color: rgba(255,250,240,0.5);
+	padding: 1px 5px 1px 24px;
+	}
+body.controller-blog .article-status.status-1 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
+	background-position: 2px 1px;
+	}
+body.controller-blog .article-status.status0 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/pencil.png);
+	}
+body.controller-blog .article-status.status1 {
+	background-image: url(http://img.int1a.net/famfamfam/silk/world.png);
+	}
+body.controller-blog .article-status.loading {
+	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_refresh.png);
+	background-position: 4px 1px;
+	}
+
+	
+body.controller-blog.action-edit ul.editor-list{
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	}
+body.controller-blog.action-edit ul.editor-list li {
+	}
+body.controller-blog.action-edit ul.editor-list button.remove {
+	float: left;
+	margin-right: 5px;
+	}
+body.controller-blog.action-edit ul.editor-list button.remove span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
+	background-position: -3px 0px;
+	}

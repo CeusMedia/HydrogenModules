@@ -27,24 +27,6 @@ $topTags		= View_Helper_Blog::renderTopTags( $env, 10, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
 
 $listStates		= '
-<style>
-.article-status {
-	background-repeat: no-repeat;
-	background-position: 3px 1px;
-	background-color: rgba(255,250,240,0.5);
-	padding: 1px 5px 1px 24px;
-	}
-.article-status.status-1 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
-	background-position: 2px 1px;
-	}
-.article-status.status0 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/pencil.png);
-	}
-.article-status.status1 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/world.png);
-	}
-</style>
 	<h4>Artikel-Typen</h4>
 	<label>
 		<input type="checkbox" name="states" value="1" '.( in_array( 1, $states ) ? 'checked="checked"' : '').'>
@@ -62,6 +44,7 @@ $listStates		= '
 		
 	<script>
 $("#blog input[name=states]").bind("change",function(){
+	$(this).parent().children("span").addClass("loading");
 	$.ajax({
 		url: "./blog/setFilter",
 		data: {
@@ -71,7 +54,7 @@ $("#blog input[name=states]").bind("change",function(){
 		},
 		type: "post",
 		success: function(){
-			document.location.reload();
+			document.location.href = "./blog";
 		}
 	});
 });		
