@@ -36,12 +36,12 @@ class View_Gallery extends CMF_Hydrogen_View{
 			$steps[]	= urlencode( $label );
 			if( $i < ( count( $parts ) - 1 ) ){
 				$url	= './gallery/index/'.implode( '/', $steps );
-				$list[]	= UI_HTML_Tag::create( "a", $label, array( 'href' => $url ) );
+				$list[]	= UI_HTML_Tag::create( "a", $label, array( 'href' => $url, 'class' => 'link-gallery' ) );
 			}
 			else
-				$list[]	= UI_HTML_Tag::create( "span", $label );
+				$list[]	= UI_HTML_Tag::create( "span", $label, array( 'class' => 'link-gallery-current' ) );
 		}
-		array_unshift( $list, UI_HTML_Tag::create( "a", 'Start', array( 'href' => './gallery/' ) ) );
+		array_unshift( $list, UI_HTML_Tag::create( "a", 'Start', array( 'href' => './gallery/', 'class' => 'link-gallery'  ) ) );
 		$steps		= implode( "&nbsp;&gt;&nbsp;", $list );
 		$steps		= UI_HTML_Tag::create( "span", 'Position: ' ) . $steps;
 		return UI_HTML_Tag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
