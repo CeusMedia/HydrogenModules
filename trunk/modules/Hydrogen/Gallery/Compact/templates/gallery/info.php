@@ -47,8 +47,8 @@ $naviControl	= '
 $navigation	= $this->buildStepNavigation( $source );
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
-$jsBase	= 'http://js.int1a.net/jquery/';
 $jsBase	= 'http://localhost/lib/cmScripts/jquery/';
+$jsBase	= 'http://js.int1a.net/jquery/';
 
 if( 1 ){
 	$label	= UI_HTML_Tag::create( 'span', "Lupe" );
