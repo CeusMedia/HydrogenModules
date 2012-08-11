@@ -17,7 +17,7 @@ class View_Helper_ContentConverter{
 		preg_match_all( $pattern, $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
-			$code		= $matches[3][$i];
+			$code		= trim( $matches[3][$i] );
 			$attributes	= array( 'class' => $type ? $type : NULL );
 			$new		= UI_HTML_Tag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
@@ -29,7 +29,7 @@ class View_Helper_ContentConverter{
 		$matches	= array();
 		preg_match_all( '/\[link:(\S+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
-			$title		= trim( $matches[3][$i] );
+			$title		= str_replace( ' ', '&nbsp;', trim( $matches[3][$i] ) );
 			$link		= UI_HTML_Elements::Link( $matches[1][$i], $title, 'link-external', '_blank' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
