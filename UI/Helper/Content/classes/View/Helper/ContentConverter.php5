@@ -18,7 +18,7 @@ class View_Helper_ContentConverter{
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
 			$code		= trim( $matches[3][$i] );
-			$attributes	= array( 'class' => $type ? $type : NULL );
+			$attributes	= array( 'class' => $type ? $type : 'code' );
 			$new		= UI_HTML_Tag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
@@ -135,8 +135,8 @@ class View_Helper_ContentConverter{
 			"/###(.+)###\r?\n/U"	=> "<h4>\\1</h4>\n",
 			"/##(.+)##\r?\n/U"		=> "<h3>\\1</h3>\n",
 			"/#(.+)#\r?\n/U"		=> "<h2>\\1</h2>\n",
-			"/\*\*(.+)\*\*/U"		=> "<b>\\1</b>",
-			"/\/\/(.+)\/\//U"		=> "<em>\\1</em>",
+			"/([^:])\*\*(.+)\*\*/U"	=> "\\1<b>\\2</b>",
+			"/([^:])\/\/(.+)\/\//U"	=> "\\1<em>\\2</em>",
 			"/__(.+)__/U"			=> "<u>\\1</u>",
 		);
 		foreach( $converters as $key => $value )
