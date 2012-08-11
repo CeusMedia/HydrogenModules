@@ -61,7 +61,7 @@ $("#blog input[name=states]").bind("change",function(){
 	</script>
 	';
 if( !$isEditor )
-	$listTypes	= '';
+	$listStates	= '';
 
 $feedUrl	= View_Helper_Blog::getFeedUrl( $env );
 
