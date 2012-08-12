@@ -22,6 +22,8 @@ Layer = {
 	labelButtonInfo: '<span>info</span>',
 
 	init: function(){
+		if($("#layer-back").length)												//  background layer has been created before
+			return;																//  quit doing nothing
 		$("a.layer-image").click(function(event){
 			Layer.showImage($(this),event)
 			return false;
@@ -30,22 +32,18 @@ Layer = {
 			Layer.showContent($(this),event);
 			return false;
 		});
-		if($("#layer-back").length)
-			return;
-		window.onerror = function(e){
-			alert(e);
-		}
-		var back = $('<div></div>').attr('id','layer-back').click(Layer.hide);
-		$("body").prepend(back);
+		var back = $('<div></div>').attr('id','layer-back').click(Layer.hide);	//  create background layer
+		$("body").prepend(back);												//  and insert in body on top
 
 		$(document).keydown(function(event){
 			if(Layer.current){
-				if(event.keyCode == 27)
-					Layer.hide();
-				if(event.keyCode == 37)
-					$(".layer-info .buttons button.button.prev").not(':disabled').trigger("click");
-				if(event.keyCode == 39)
-					$(".layer-info .buttons button.button.next").not(':disabled').trigger("click");
+				var buttons	= $(".layer-info .buttons button:not(:disabled)");	//  find active buttons in layer
+				if(event.keyCode == 27)											//  key: escape
+					Layer.hide();												//  hide layer
+				if(event.keyCode == 37)											//  key: left arrow
+					buttons.filter(".button.prev").trigger("click");			//  load previous image
+				if(event.keyCode == 39)											//  key: right arrow
+					buttons.filter(".button.next").trigger("click");			//  load next image
 			}
 		});
 	},
