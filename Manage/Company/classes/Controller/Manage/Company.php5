@@ -26,7 +26,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 	public function add(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'add' );
+		$words		= (object) $this->getWords( 'add' );
 		$model		= new Model_Company( $this->env );
 		$data		= $request->getAllFromSource( 'POST' )->getAll();
 
@@ -75,7 +75,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$title			= $request->get( 'title' );
-		$words			= $this->getWords( 'edit' );
+		$words			= (object) $this->getWords( 'edit' );
 		$modelCompany	= new Model_Company( $this->env );
 		$modelUser		= new Model_User( $this->env );
 		$data		= $request->getAllFromSource( 'POST' )->getAll();

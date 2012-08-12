@@ -20,7 +20,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'add' );
 		$model			= new Model_Branch( $this->env );
 		$data			= $request->getAllFromSource( 'POST' )->getAll();
 
@@ -106,7 +106,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 
 	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' ){
 		$this->env->getLanguage()->load( 'manage/my' );
-		$words	= $this->getWords( 'msg', 'manage/my' );
+		$words		= (object) $this->getWords( 'msg', 'manage/my' );
 		$this->env->getMessenger()->noteFailure( $words->$messageKey );
 		$this->restart( $redirect );
 	}
@@ -140,7 +140,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'edit' );
 		$data			= $request->getAllFromSource( 'POST' )->getAll();
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelImage		= new Model_Branch_Image( $this->env );
@@ -209,7 +209,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'index' );
+		$words			= (object) $this->getWords( 'index' );
 		$userId			= $session->get( 'userId' );
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelUser		= new Model_User( $this->env );
@@ -263,7 +263,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 	public function removeImage( $branchId, $imageId ){
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch_Image( $this->env );
-		$words			= $this->getWords( 'removeImage' );
+		$words			= (object) $this->getWords( 'removeImage' );
 
 		$image			= $model->get( $imageId );
 		if( !$image )

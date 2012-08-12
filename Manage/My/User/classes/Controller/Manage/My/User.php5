@@ -41,7 +41,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'index' );
+		$words		= (object) $this->getWords( 'index' );
 		$userId		= $session->get( 'userId' );
 		$modelUser	= new Model_User( $this->env );
 
@@ -108,7 +108,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'password' );
+		$words		= (object) $this->getWords( 'password' );
 		$userId		= $session->get( 'userId' );
 		$modelUser	= new Model_User( $this->env );
 

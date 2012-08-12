@@ -44,7 +44,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'add' );
+		$words		= (object) $this->getWords( 'add' );
 
 		$name		= $request->get( 'file_name' );
 		$path		= $request->get( 'file_path' );
@@ -77,7 +77,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'addFolder' );
+		$words		= (object) $this->getWords( 'addFolder' );
 
 		$folderName	= $request->get( 'folder_name' );
 		$folderPath	= $request->get( 'folder_path' );
@@ -121,7 +121,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'edit' );
+		$words		= (object) $this->getWords( 'edit' );
 
 		$filePath	= base64_decode( $fileHash );
 		if( !$filePath ){
@@ -204,7 +204,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'remove' );
+		$words		= (object) $this->getWords( 'remove' );
 
 		$filePath	= base64_decode( $fileHash );
 		if( !$filePath ){
