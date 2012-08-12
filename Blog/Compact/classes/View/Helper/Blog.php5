@@ -11,7 +11,7 @@ class View_Helper_Blog{
 			$uri		= './blog/article/'.$matches[1][$i];
 			if( $article ){
 				$title	= $title ? $title : $article->title;
-				$uri	= './blog/article/'.$matches[1][$i].'/'.urlencode( $article->title );
+				$uri	= './blog/article/'.$matches[1][$i].'/'.rawurlencode( $article->title );
 			}
 			else
 				$title	= UI_HTML_Tag::create( 'strike', $title );
@@ -100,12 +100,39 @@ class View_Helper_Blog{
 		$label	= str_replace( $cut, '', $article->title );											//  remove inappropriate characters
 		$label	= str_replace( ' ', '-', $label );													//  replace whitespace by hyphen
 		$label	= preg_replace( '/-+/', '-', $label );												//  shorten hyphens to one
-		return urlencode( $label );																	//  return encoded URL component
+		return rawurlencode( $label );																	//  return encoded URL component
 	}
 	
 	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
+	}
+
+	static public function renderArticleLink( $article ){
+		$attributes	= array(
+			'class'	=> 'link-blog',
+			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( $article->title ),
+		);
+		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
+	}
+	
+	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
+		$list	= array();
+		$model	= new Model_Article( $env );
+		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
+		foreach( $latest as $article ){
+			$link	= self::renderArticleLink( $article );
+			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
+		}
+		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
+	}
+
+	static public function renderTagLink( CMF_Hydrogen_Environment_Abstract $env, $tagName ){
+		$attributes	= array(
+			'href'	=> './blog/tag/'.rawurlencode( rawurlencode( $tagName ) ),
+			'class'	=> 'icon-label link-tag'
+		);
+		return UI_HTML_Tag::create( 'a', $tagName, $attributes );
 	}
 
 	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
@@ -130,25 +157,13 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= array();
 		foreach( $tags as $relation ){
-			$url	= './blog/tag/'.urlencode( urlencode( $relation->title ) );
 			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
-			$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
+			$link	= self::renderTagLink( $env, $relation->title );
 			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
 		} 
 		if( !$list )
 			return NULL;
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
-	}
-	
-	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
-		$list	= array();
-		$model	= new Model_Article( $env );
-		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
-		foreach( $latest as $article ){
-			$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => 'blog/article/'.$article->articleId.'' ) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
-		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
 	}
 }
 ?>

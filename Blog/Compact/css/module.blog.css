@@ -212,6 +212,7 @@ body.controller-blog.action-edit ul.editor-list{
 	}
 body.controller-blog.action-edit ul.editor-list li {
 	clear: left;
+	margin: 0px 0px 2px 0px;
 	}
 body.controller-blog.action-edit ul.editor-list button.remove {
 	float: left;
