@@ -111,8 +111,9 @@ Layer = {
 		}
 		else
 			imageGroup.push(elem);
-		if(!Layer.current)
+		if(!Layer.current)														// 
 			this.create();
+		Layer.current.html('').addClass('loading');								//  clear layer and show loading spinner
 
 		image = new Image();
 		$(image).click(Layer.hide);
