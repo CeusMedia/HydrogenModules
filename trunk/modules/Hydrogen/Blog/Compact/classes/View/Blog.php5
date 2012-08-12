@@ -91,7 +91,7 @@ class View_Blog extends CMF_Hydrogen_View{
 
 			$infoList	= View_Blog::renderInfoList( $article, $date, $time );
 			$authorList	= $authors ? View_Blog::renderAuthorList( $article->authors, $linkAuthors ) : '';
-			$tagList	= View_Blog::renderTagList( $article->tags );
+			$tagList	= View_Blog::renderTagList( $this->env, $article->tags );
 			$info		= UI_HTML_Tag::create( 'div', $infoList.$authorList.$tagList, array( 'class' => "blog-article-info" ) );
 
 			$content	= $info . $link . $abstract;
@@ -121,10 +121,10 @@ class View_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
 	}
 
-	static public function renderAuthorList( $authors, $linked = FALSE ){
+	static public function renderAuthorList( $env, $authors, $linked = FALSE ){
 		$authorList	= array();
 		foreach( $authors as $author ){
-			$url		= './blog/author/'.urlencode( $author->username );
+			$url		= './blog/author/'.rawurlencode( $author->username );
 			$label		= UI_HTML_Tag::create( 'span', $author->username, array( 'class' => 'link-author' ) );
 			if( $linked )
 				$label		= UI_HTML_Tag::create( 'a', $author->username, array( 'href' => $url, 'class' => 'link-author' ) );
@@ -133,11 +133,10 @@ class View_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
 	}
 
-	static public function renderTagList( $tags ){
+	static public function renderTagList( $env, $tags ){
 		$tagList	= array();
 		foreach( $tags as $tag ){
-			$url		= './blog/tag/'.urlencode( urlencode( $tag->title ) );
-			$link		= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url, 'class' => 'link-tag' ) );
+			$link		= View_Helper_Blog::renderTagLink( $env, $tag->title );
 			$tagList[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', join( $tagList ), array( 'class' => 'blog-article-tag-list' ) );

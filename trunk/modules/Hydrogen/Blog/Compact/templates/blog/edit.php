@@ -22,11 +22,10 @@ $listTags		= '<b><em>noch keine</em></b>';
 $list	= array();
 if( $tags ){
 	foreach( $tags as $tag ){
-		$urlTag		= './blog/tag/'.urlencode( $tag->title );
-		$urlRemove	= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
-		$linkTag	= UI_HTML_Elements::Link( $urlTag, $tag->title, 'link-tag' );
-		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button tiny remove' );
-		$list[]	= UI_HTML_Elements::ListItem( $linkRemove.$linkTag );
+		$url		= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
+		$linkRemove	= UI_HTML_Elements::LinkButton( $url, '', 'button tiny remove' );
+		$linkTag	= View_Helper_Blog::renderTagLink( $env, $tag->title );
+		$list[]		= UI_HTML_Elements::ListItem( $linkRemove.$linkTag );
 	}
 	$listTags	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }

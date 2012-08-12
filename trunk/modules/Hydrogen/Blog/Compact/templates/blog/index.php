@@ -1,28 +1,21 @@
 <?php
 
-$roleId		= $this->env->getSession()->get( 'roleId');
-$canAdd		= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
-$url		= './blog/add';
-$label		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/add.png', 'neuer Eintrag' );
-$linkAdd	= $canAdd ? UI_HTML_Elements::Link( $url, $label, 'button link-add' ) : '';
+$roleId			= $this->env->getSession()->get( 'roleId');
+$canAdd			= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
+$url			= './blog/add';
+$label			= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/add.png', 'neuer Eintrag' );
+$linkAdd		= $canAdd ? UI_HTML_Elements::Link( $url, $label, 'button link-add' ) : '';
 
 $articleList	= UI_HTML_Tag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )
 	$articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
 
-#$heading	= UI_HTML_Elements::Heading( 'Artikel', 3 );
-$heading	= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
+#$heading		= UI_HTML_Elements::Heading( 'Artikel', 3 );
+$heading		= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
 
-$helper		= new View_Helper_Pagination();
-$pageList	= $helper->render( './blog/index/', $number, $limit, $page );
+$helper			= new View_Helper_Pagination();
+$pageList		= $helper->render( './blog/index/', $number, $limit, $page );
 
-$list	= array();
-foreach( $topTags as $relation ){
-	$url	= './blog/tag/'.urlencode( urlencode( $relation->title ) );
-	$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
-	$link	= UI_HTML_Tag::create( 'a', $relation->title, array( 'href' => $url, 'class' => 'link-tag' ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
-} 
 $topTags		= View_Helper_Blog::renderTopTags( $env, 10, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
 

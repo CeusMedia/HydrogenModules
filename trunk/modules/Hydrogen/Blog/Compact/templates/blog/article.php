@@ -8,8 +8,7 @@ foreach( $articles as $item ){
 $index		= array_search( $articleId, $articleIndex );
 $linkNext	= '';
 $linkPrev	= '';
-if( isset( $articleIndex[$index-1] ) )
-{
+if( isset( $articleIndex[$index-1] ) ){
 	$next		= $articleList[$articleIndex[$index-1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $next->title );
 	$url		= './blog/article/'.$next->articleId;
@@ -17,8 +16,7 @@ if( isset( $articleIndex[$index-1] ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $next );
 	$linkNext	= UI_HTML_Elements::Link( $url, $label.'&nbsp;&raquo;' );
 }
-if( isset( $articleIndex[$index+1] ) )
-{
+if( isset( $articleIndex[$index+1] ) ){
 	$previous	= $articleList[$articleIndex[$index+1]];
 	$label		= Alg_Text_Unicoder::convertToUnicode( $previous->title );
 	$url		= './blog/article/'.$previous->articleId;
@@ -29,8 +27,8 @@ if( isset( $articleIndex[$index+1] ) )
 $title		= Alg_Text_Unicoder::convertToUnicode( $article->title );
 $text		= View_Helper_ContentConverter::render( $env, $article->content );
 
-$authorList	= View_Blog::renderAuthorList( $authors, !TRUE );
-$tagList	= View_Blog::renderTagList( $tags );
+$authorList	= View_Blog::renderAuthorList( $env, $authors, !TRUE );
+$tagList	= View_Blog::renderTagList( $env, $tags );
 
 $roleId		= $this->env->getSession()->get( 'roleId');
 $canEdit	= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'edit' );
