@@ -56,7 +56,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
-	
+		
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
@@ -149,7 +149,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
-			else if( $modelUser->getByIndex( 'username', $username, 'userId' ) != $userId )			//  username is already used
+			else if( $modelUser->countByIndex( 'username', $username ) )
+				if( $modelUser->getByIndex( 'username', $username, 'userId' ) != $userId )			//  username is already used
 				$messenger->noteError( $words->msgUsernameExisting, $username );
 			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength )
 				$messenger->noteError( $words->msgPasswordTooShort );
