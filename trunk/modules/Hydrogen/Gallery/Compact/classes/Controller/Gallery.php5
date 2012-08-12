@@ -69,11 +69,12 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 	}
 	
 	public function info( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
-		$args	= func_get_args();
-		$source	= $arg1 ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
-		if( !$source )
-			throw new InvalidArgumentException( 'No file name given.' );
+		$source	= join( '/', func_get_args() );
 		$uri	= $this->path.$source;
+		if( !$source || !file_exists( $uri ) ){
+			$this->env->getMessenger()->noteNotice( 'Fehlerhafte Bildadresse. Weiterleitung zur Übersicht.' );
+			$this->restart( './gallery' );
+		}
 		$exif	= new UI_Image_Exif( $uri );
 		$info	= $this->readGalleryInfo( dirname( $source ) );
 		$key	= pathinfo( $source, PATHINFO_FILENAME );

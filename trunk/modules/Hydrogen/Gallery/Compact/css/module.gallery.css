@@ -17,6 +17,19 @@ body.controller-gallery #licence {
 	font-size: 0.8em;
 	}
 
+/*  --  GLOBAL  --  */
+.icon-label.link-gallery,
+.icon-label.link-gallery {
+	background-image: url(http://img.int1a.net/famfamfam/silk/folder_image.png);
+	background-image: url(http://img.int1a.net/famfamfam/silk/application_view_tile.png);
+	padding-left: 22px;
+	}
+.icon-label.link-gallery-year {
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+	
+	
+	
 
 /*  --  INDEX: FOLDERS  --  */
 body.moduleGallery.action-index ul.folders {
@@ -27,14 +40,15 @@ body.moduleGallery.action-index ul.folders {
 body.moduleGallery.action-index ul.folders li {
 	margin-bottom: 2px;
 	}
-body.moduleGallery.action-index ul.folders li a {
+/*body.moduleGallery.action-index ul.folders li a {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	background-position-y: 2px; 
 	background-position-x: 3px;
 	padding-left: 25px;
 	}
-body.moduleGallery.action-index ul.folders li span.date{
+body.moduleGallery.action-index ul.folders li span.date,
+*/.link-gallery span.date{
 	font-style: italic;
 	margin-left: 0.5em;
 	font-size: 0.9em;

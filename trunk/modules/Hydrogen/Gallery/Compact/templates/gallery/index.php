@@ -1,18 +1,14 @@
 <?php
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
+$dateFormat	= $env->getConfig()->get( 'module.gallery_compact.format.date' );
+$dateFormat	= 'j.n.Y';
+
 $list	= array();
 foreach( $folders as $entry ){
 	$folderName	= $entry->getFilename();
-	$parts		= explode( " ", $folderName );
-	$date		=  NULL;
-	if( preg_match( "/^[0-9-]+$/", $parts[0] ) && count( $parts ) > 1 )
-		$date	= '<span class="date">'.array_shift( $parts ).'</span>';
-	$label		= implode( " ", $parts );
-	
-	$url			= './gallery/index/'.$source.urlencode( $folderName );
-	$link			= UI_HTML_Elements::Link( $url, $label, 'link-gallery' );
-	$list[$folderName]	= UI_HTML_Elements::ListItem( $link.$date );
+	$link		= View_Helper_Gallery::renderGalleryLink( $env, $source.$folderName, 2, $dateFormat );
+	$list[$folderName]	= UI_HTML_Elements::ListItem( $link );
 }
 krsort( $list );
 $folders	= '';
@@ -77,7 +73,7 @@ $files		= $list ? implode( "", $list ) : NULL;
 		
 $title		= !empty( $info['title'] ) ? UI_HTML_Tag::create( "h3", $info['title'] ) : NULL;
 $desc		= !empty( $info['description'] ) ? UI_HTML_Tag::create( "p", $info['description'] ) : NULL;
-$navigation	= $this->buildStepNavigation( $source );
+$navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 		
 return '
 <script>

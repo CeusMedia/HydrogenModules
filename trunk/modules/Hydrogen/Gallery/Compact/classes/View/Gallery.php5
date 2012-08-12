@@ -19,42 +19,7 @@ class View_Gallery extends CMF_Hydrogen_View{
 		$actions	= implode( '', $actions );
 		return $actions;
 	}
-
-	/**
-	 *	@deprecated	not used anymore
-	 *	@todo		remove
-	 */
-	protected function buildStepNavigation( $source ){
-		$steps	= array();
-		$list	= array();
-		$source	= preg_replace( '/\/$/', '', $source ); 
-		$parts	= $source ? explode( '/', $source ) : array();
-		for( $i=0; $i<count( $parts ); $i++ ){
-			$label	= $parts[$i];
-			if( !trim( $label ) )
-				continue;
-			$steps[]	= urlencode( $label );
-			if( $i < ( count( $parts ) - 1 ) ){
-				$url	= './gallery/index/'.implode( '/', $steps );
-				$list[]	= UI_HTML_Tag::create( "a", $label, array( 'href' => $url, 'class' => 'link-gallery' ) );
-			}
-			else
-				$list[]	= UI_HTML_Tag::create( "span", $label, array( 'class' => 'link-gallery-current' ) );
-		}
-		array_unshift( $list, UI_HTML_Tag::create( "a", 'Start', array( 'href' => './gallery/', 'class' => 'link-gallery'  ) ) );
-		$steps		= implode( "&nbsp;&gt;&nbsp;", $list );
-		$steps		= UI_HTML_Tag::create( "span", 'Position: ' ) . $steps;
-		return UI_HTML_Tag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
-	}
-
-	protected function calculateFraction( $fraction ){
-		$value	= eval( 'return '.$fraction.';' );
-		$label	= $value.' Sekunden';
-		if( $value <= 1 )
-			$label	= '1/'.round( 1 / $value ).' Sekunde';
-		return $label;
-	}
-
+	
 	public function feed(){
 		$galleries	= $this->getData( 'galleries' );
 		$path		= $this->getData( 'path' );

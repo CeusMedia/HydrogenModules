@@ -1,6 +1,4 @@
 <?php
-
-
 $folderPath	= dirname( $source ).'/';
 $imageName	= basename( $source );
 
@@ -16,11 +14,11 @@ $linkNext	= '';
 $linkPrev	= '';
 $index		= array_search( $imageName, $images );
 if( isset( $images[$index-1] ) ){
-	$url		= './gallery/info/'.str_replace( '%2F', '/', urlencode( $folderPath.$images[$index-1] ) );
+	$url		= './gallery/info/'.rawurlencode( $folderPath.$images[$index-1] );
 	$linkPrev	= UI_HTML_Elements::Link( $url, $images[$index-1], 'link-image' );
 }
 if( isset( $images[$index+1] ) ){
-	$url		= './gallery/info/'.str_replace( '%2F', '/', urlencode( $folderPath.$images[$index+1] ) );
+	$url		= './gallery/info/'.rawurlencode( $folderPath.$images[$index+1] );
 	$linkNext	= UI_HTML_Elements::Link( $url, $images[$index+1], 'link-image' );
 }
 $naviControl	= '
@@ -44,7 +42,7 @@ $naviControl	= '
 	</div>';
 
 
-$navigation	= $this->buildStepNavigation( $source );
+$navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
 $jsBase	= 'http://localhost/lib/cmScripts/jquery/';
@@ -91,7 +89,7 @@ $timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
 $model		= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
 $data	= array(
 	'Kamera'			=> $exif->get( 'Make' ).' <b>'.$model.'</b>',
-	'Belichtungszeit'	=> $this->calculateFraction( $exif->get( 'ExposureTime' ) ),
+	'Belichtungszeit'	=> View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) ),
 	'Blende'			=> eval( 'return '.$exif->get( 'FNumber' ).';' ),
 	'Empfindlichkeit'	=> 'ISO '.$exif->get( 'ISOSpeedRatings' ),
 	'Auflösung'			=> $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>',
