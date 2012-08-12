@@ -78,7 +78,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 	public function add(){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'add' );
 		$model			= new Model_Branch( $this->env );
 		$data			= $request->getAllFromSource( 'POST' )->getAll();
 
@@ -132,7 +132,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'edit' );
 		$data			= $request->getAllFromSource( 'POST' )->getAll();
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelCompany	= new Model_Company( $this->env );

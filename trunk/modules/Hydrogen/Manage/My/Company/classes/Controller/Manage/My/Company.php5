@@ -4,7 +4,7 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller
 	public function edit( $companyId ){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'index' );
+		$words		= (object) $this->getWords( 'index' );
 		$model		= new Model_Company( $this->env );
 		$data		= $request->getAllFromSource( 'POST' )->getAll();
 		if( $request->get( 'doEdit' ) ){
