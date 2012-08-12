@@ -10,6 +10,7 @@
 .link-tag,
 .link-blog,
 .link-image,
+.link-download,
 .link-internal,
 .link-external {
 	background-color: rgba(255,250,240,0.5);
@@ -33,6 +34,9 @@
 	}
 .link-youtube {
 	background-image: url(../img/icons/youtube.png);
+	}
+.link-download {
+	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
 	}
 .link-blog {
 	background-image: url(http://img.int1a.net/famfamfam/silk/comment.png);

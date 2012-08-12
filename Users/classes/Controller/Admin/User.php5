@@ -38,7 +38,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'add' );
+		$words		= (object) $this->getWords( 'add' );
 		$input		= $request->getAllFromSource( 'POST' );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
@@ -126,7 +126,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'edit' );
+		$words		= (object) $this->getWords( 'edit' );
 		$input		= $request->getAllFromSource( 'POST' );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
@@ -283,7 +283,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 
 	public function remove( $userId ){
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'remove' );
+		$words		= (object) $this->getWords( 'remove' );
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $userId );
 		if( !$user ){
