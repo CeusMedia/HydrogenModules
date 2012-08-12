@@ -14,7 +14,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'confirm' );
+		$words		= (object) $this->getWords( 'confirm' );
 
 		if( $request->has( 'confirm_code' ) ){
 			$code			= $request->get( 'confirm_code' );
@@ -71,7 +71,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'login' );
+		$words		= (object) $this->getWords( 'login' );
 		
 		if( $session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'loginInside' );
@@ -143,7 +143,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	public function password(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$words		= $this->getWords( 'password' );
+		$words		= (object) $this->getWords( 'password' );
 
 		if( $request->has( 'password_email' ) ){
 			if( $request->get( 'password_email' ) ){
@@ -173,7 +173,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
-		$words			= $this->getWords( 'register' );
+		$words		= (object) $this->getWords( 'register' );
 
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );

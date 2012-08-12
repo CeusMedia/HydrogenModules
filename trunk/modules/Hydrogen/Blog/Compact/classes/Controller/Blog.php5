@@ -304,7 +304,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		if( !$article )
 			$this->restart( './blog/' );
 		$this->model->edit( $articleId, array( 'status' => $status ) );
-		$this->env->getMessenger()->noteSuccess( 'Der wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
+		$this->env->getMessenger()->noteSuccess( 'Der Status wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
 		$this->restart( './blog/edit/'.$articleId );
 	}
 	
