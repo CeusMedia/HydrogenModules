@@ -39,9 +39,13 @@ Layer = {
 		$("body").prepend(back);
 
 		$(document).keydown(function(event){
-			if(event.keyCode == 27){
-				if(Layer.current)
+			if(Layer.current){
+				if(event.keyCode == 27)
 					Layer.hide();
+				if(event.keyCode == 37)
+					$(".layer-info .buttons button.button.prev").not(':disabled').trigger("click");
+				if(event.keyCode == 39)
+					$(".layer-info .buttons button.button.next").not(':disabled').trigger("click");
 			}
 		});
 	},
