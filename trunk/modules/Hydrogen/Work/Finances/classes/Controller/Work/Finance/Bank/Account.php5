@@ -21,7 +21,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 	}
 	public function add(){
 		$request		= $this->env->getRequest();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'add' );
 		$userId			= $this->env->getSession()->get( 'userId' );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 		$modelBank		= new Model_Finance_Bank( $this->env );
@@ -62,7 +62,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 	
 	public function edit( $bankAccountId ){
 		$request		= $this->env->getRequest();
-		$words			= $this->getWords( 'edit' );
+		$words			= (object) $this->getWords( 'edit' );
 		$userId			= $this->env->getSession()->get( 'userId' );
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );

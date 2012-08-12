@@ -7,7 +7,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		$logic		= new Logic_Note( $this->env );
 		$model		= new Model_Note( $this->env );
-		$words		= $this->getWords( 'add' );
+		$words		= (object) $this->getWords( 'add' );
 		$data		= $request->getAllFromSource( 'post' )->getAll();
 
 		if( $request->get( 'add' ) ){
@@ -52,7 +52,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		if( (int) $tagId < 1 )
 			$linkId	= $logic->createLink( $request->get( 'link_url' ), FALSE );
 		$logic->addLinkToNote( $linkId, $noteId, $request->get( 'link_title' ), FALSE );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
@@ -85,7 +85,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$tagId	= $logic->createTag( $tag, FALSE );
 		}
 		$logic->addTagToNote( $tagId, $noteId, FALSE );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
@@ -94,7 +94,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$logic			= new Logic_Note( $this->env );
-		$words			= $this->getWords( 'edit' );
+		$words			= (object) $this->getWords( 'edit' );
 
 		$modelNote		= new Model_Note( $this->env );
 		$note			= $modelNote->get( $noteId );
@@ -196,14 +196,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function remove( $noteId ){
 		$logic		= new Logic_Note( $this->env );
 		$logic->removeNote( $noteId );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->env->getMessenger()->noteSuccess( $words->successNoteRemoved );
 		$this->restart( './work/note' );
 	}
 	
 	public function removeTag( $noteId, $tagId ){
 		$logic		= new Logic_Note( $this->env );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$logic->removeTagFromNote( $tagId, $noteId );
 		$this->env->getMessenger()->noteSuccess( $words->successNoteTagRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
@@ -212,7 +212,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function removeLink( $noteId, $noteLinkId ){
 		$logic		= new Logic_Note( $this->env );
 		$logic->removeNoteLink( $noteLinkId );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
