@@ -10,6 +10,7 @@
 	<files>
 		<script load="auto" source="local">UI.Layer.js</script>
 		<style load="auto" source="theme">layer.css</style>
+		<image source="theme">spinner.gif</image>
 	</files>
 	<config name="button.image.download">no</config>
 	<config name="button.image.info">yes</config>
