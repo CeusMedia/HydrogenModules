@@ -10,7 +10,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 	
 	public function add(){
 		$request	= $this->env->getRequest();
-		$words		= $this->getWords( 'add' );
+		$words		= (object) $this->getWords( 'add' );
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$model		= new Model_Finance_Fund( $this->env );
 
@@ -47,7 +47,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 	
 	public function edit( $fundId ){
 		$request	= $this->env->getRequest();
-		$words		= $this->getWords( 'edit' );
+		$words		= (object) $this->getWords( 'edit' );
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$model		= new Model_Finance_Fund( $this->env );
 
@@ -106,7 +106,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 	 *	@return		float		Current price or 0 if request failed
 	 */
 	protected function fetchFromYahoo( $fund ){
-		$words	= $this->getWords( 'request' );
+		$words	= (object) $this->getWords( 'request' );
 		$url	= 'http://de.finance.yahoo.com/lookup?s=';
 		try{
 			$html		= Net_Reader::readUrl( $url.$fund->ISIN );
@@ -145,7 +145,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 	
 	public function requestPrices(){
 		$userId		= $this->env->getSession()->get( 'userId' );
-		$words		= $this->getWords( 'request' );
+		$words		= (object) $this->getWords( 'request' );
 		$modelFund	= new Model_Finance_Fund( $this->env );
 		$modelPrice	= new Model_Finance_FundPrice( $this->env );
 		$funds		= $modelFund->getAllByIndex( 'userId', $userId );

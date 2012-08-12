@@ -26,7 +26,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'add' );
+		$words			= (object) $this->getWords( 'add' );
 
 		$content	= $request->get( 'content' );
 		$status		= $request->get( 'status' );
@@ -94,7 +94,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'edit' );
+		$words			= (object) $this->getWords( 'edit' );
 
 		$content	= $request->get( 'content' );
 		$dayStart	= $request->get( 'dayStart' );
@@ -274,7 +274,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'index' );
+		$words			= (object) $this->getWords( 'index' );
 
 		$userId		= $session->get( 'userId' );
 		$roleId		= $session->get( 'roleId' );
