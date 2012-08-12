@@ -41,7 +41,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function uninstall( $moduleId, $verbose = TRUE ){
-		$words	= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )
 			$this->restart( './admin/module/editor' );

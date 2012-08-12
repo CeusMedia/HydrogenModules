@@ -54,7 +54,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
 		
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$force		= $request->get( 'force' );
 		$settings	= $request->get( 'config' );
 		

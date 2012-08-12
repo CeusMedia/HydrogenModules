@@ -41,7 +41,7 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 	public function addVersion( $projectId ){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'addVersion' );
+		$words			= (object) $this->getWords( 'addVersion' );
 		$model			= new Model_Project_Version( $this->env );
 		$data	= array(
 			'projectId'	=> $projectId,
@@ -67,7 +67,7 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'edit' );
+		$words			= (object) $this->getWords( 'edit' );
 
 		$model			= new Model_Project( $this->env );
 		$project		= $model->get( $projectId );
@@ -130,7 +130,7 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'remove' );
+		$words			= (object) $this->getWords( 'remove' );
 
 		$modelProject	= new Model_Project( $this->env );
 		$project		= $modelProject->get( $projectId );

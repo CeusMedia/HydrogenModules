@@ -13,7 +13,7 @@ class Controller_Admin_Module_Creator extends CMF_Hydrogen_Controller{								//
 	protected function create(){
 		$model		= $this->logic->model;
 		$this->addData( 'request', $this->request );
-		$words		= $this->getWords( 'index' );
+		$words		= (object) $this->getWords( 'index' );
 
 		try{
 
