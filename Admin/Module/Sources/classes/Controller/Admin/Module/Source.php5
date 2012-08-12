@@ -105,7 +105,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	public function add(){
 		$messenger	= $this->env->getMessenger();
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		if( $post->get( 'add' ) ){
 
 			$id			= trim( $post->get( 'id' ) );
@@ -155,7 +155,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	public function edit( $sourceId ){
 		$messenger	= $this->env->getMessenger();
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		if( $post->get( 'edit' ) ){
 
 			$id			= trim( $post->get( 'id' ) );
@@ -213,7 +213,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	}
 
 	public function refresh( $sourceId, $toList = TRUE ){
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->env->getMessenger()->noteSuccess( $words->successRefreshed, $sourceId );
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
 		$this->env->getCache()->flush();
@@ -224,7 +224,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	}
 	
 	public function remove( $sourceId ){
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$this->model->remove( $sourceId );
 		$this->env->getMessenger()->noteSuccess( $words->successRemoved, $sourceId );
 		$this->restart( NULL, TRUE );

@@ -197,7 +197,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function remove( $moduleId, $verbose = NULL ){
-		$words		= $this->getWords( 'msg' );
+		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )
 			$this->restart( './admin/module/editor' );

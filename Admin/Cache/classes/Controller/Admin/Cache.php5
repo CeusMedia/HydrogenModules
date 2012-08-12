@@ -6,7 +6,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 		$cache	= $this->getCache();
 		$result	= NULL;
 		if( $cache ){
-			$words	= $this->getWords( 'add' );
+			$words	= (object) $this->getWords( 'add' );
 			$key	= $post->get( 'key' );
 			$value	= $post->get( 'value' );
 			switch( $post->get( 'type' ) ){

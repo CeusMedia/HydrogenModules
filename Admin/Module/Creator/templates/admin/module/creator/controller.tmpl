@@ -21,7 +21,7 @@ class Controller_<%classKey%> extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'index' );
+		$words			= (object) $this->getWords( 'index' );
 
 		$messenger->noteFailure( 'Controller "<%classKey%>" is not implemented, yet.' );
 

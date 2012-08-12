@@ -3,7 +3,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$model	= new Model_Server( $this->env );
-		$words	= $this->getWords( 'add' );
+		$words	= (object) $this->getWords( 'add' );
 		$post	= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'add' ) ){
 			if( !strlen( trim( $post->get( 'title' ) ) ) )
@@ -29,7 +29,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	public function addProject( $serverId ){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$words			= $this->getWords( 'addProject' );
+		$words			= (object) $this->getWords( 'addProject' );
 		$model			= new Model_Server_Project( $this->env );
 		$data	= array(
 			'serverId'			=> $serverId,
@@ -47,7 +47,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 
 	public function edit( $serverId ){
 		$post	= $this->env->getRequest()->getAllFromSource( 'post' );
-		$words	= $this->getWords( 'edit' );
+		$words	= (object) $this->getWords( 'edit' );
 		$model	= new Model_Server( $this->env );
 		if( $post->get( 'edit' ) ){
 			if( !strlen( trim( $post->get( 'title' ) ) ) )
@@ -78,7 +78,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 			$relations[]	= $relation;
 		}
 		$this->env->getLanguage()->load( 'admin/project' );
-		$this->addData( 'wordsProjectVersionStates', (array) $this->getWords( 'version-states', 'admin/project' ) );
+		$this->addData( 'wordsProjectVersionStates', $this->getWords( 'version-states', 'admin/project' ) );
 		$this->addData( 'serverProjects', $relations );
 	}
 
@@ -94,8 +94,9 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	public function view( $serverId ){
 		$model	= new Model_Server( $this->env );
 		$server	= $model->get( $serverId );
+		$words	= (object) $this->getWords( 'view' );
 		if( !$server )
-			$this->env->getMessenger()->noteError( $this->getWords( 'view' )->msgErrorInvalidId );
+			$this->env->getMessenger()->noteError( $words->msgErrorInvalidId );
 		$this->addData( 'server', $server );
 	}
 
