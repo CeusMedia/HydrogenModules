@@ -1,4 +1,5 @@
 	
+.icon-label,
 .link-author,
 .link-map,
 .link-search-image,
@@ -9,7 +10,6 @@
 .link-tag,
 .link-blog,
 .link-image,
-.link-gallery,
 .link-internal,
 .link-external {
 	background-color: rgba(255,250,240,0.5);
@@ -35,14 +35,10 @@
 	background-image: url(../img/icons/youtube.png);
 	}
 .link-blog {
-	background-image: url(http://img.int1a.net/famfamfam/silk/information.png);
+	background-image: url(http://img.int1a.net/famfamfam/silk/comment.png);
 	}
 .link-image {
 	background-image: url(http://img.int1a.net/famfamfam/silk/image.png);
-	}
-.link-gallery {
-	background-image: url(http://img.int1a.net/famfamfam/silk/folder_image.png);
-	padding-left: 22px;
 	}
 .link-tag {
 	background-image: url(http://img.int1a.net/famfamfam/silk/tag_blue.png);
