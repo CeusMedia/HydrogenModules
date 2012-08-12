@@ -18,6 +18,8 @@
 	<config name="button.image.next.label"><![CDATA[&raquo;]]></config>
 	<config name="button.image.info.label">info</config>
 	<config name="button.image.load.label">download</config>
+	<config name="speed.hide">0</config>
+	<config name="speed.show">0</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.js_layer.' );
 		$buttonDownload	= $config['button.image.download'] == 'yes' ? 'true' : 'false';
@@ -27,6 +29,8 @@ $(document).ready(function(){
 	Layer.init();
 	Layer.buttonImageDownload = '.$buttonDownload.';
 	Layer.buttonImageInfo = '.$buttonInfo.';
+	Layer.speedShow = '.(int) $config['speed.show'].';
+	Layer.speedHide = '.(int) $config['speed.hide'].';
 	Layer.labelButtonPrev = "'.addslashes( $config['button.image.prev.label'] ).'";
 	Layer.labelButtonNext = "'.addslashes( $config['button.image.next.label'] ).'";
 	Layer.labelButtonInfo = "'.addslashes( $config['button.image.info.label'] ).'";
