@@ -1,6 +1,25 @@
 <?php
 class View_Gallery extends CMF_Hydrogen_View{
 
+	public function __onInit(){
+		$converters	= array(
+			"formatText",
+			"formatLinks",
+			"formatImageSearch",
+			"formatMapSearch",
+			"formatCurrencies",
+			"formatWikiLinks",
+			"formatYoutubeLinks",
+			"formatImdbLinks",
+			"formatMapLinks",
+			"formatBreaks",
+			"formatCodeBlocks",
+			"formatLists",
+		);
+		foreach( $converters as $converter )
+			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
+	}
+
 	/**
 	 *	@deprecated	not used anymore
 	 *	@todo		remove
@@ -21,25 +40,59 @@ class View_Gallery extends CMF_Hydrogen_View{
 	}
 	
 	public function feed(){
+		$words		= $this->getWords( 'feed' );
 		$galleries	= $this->getData( 'galleries' );
 		$path		= $this->getData( 'path' );
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
 		$channel	= array(
-			'title'			=> $config->get( 'app.name' ).': Galerien',
-			'description'	=> 'Aktuelle Galerien von iamkriss.net',
-			'link'			=> $baseUrl.'gallery/'
+			'link'		=> $baseUrl.'gallery',
+			'language'	=> $config->get( 'module.gallery_compact.feed.language' ),
+			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
+			'title'		=> $words->title,
 		);
+		if( $config->get( 'app.name' ) )
+			$channel['title']	= $config->get( 'app.name' ).': '.$words->title;
+		if( $words->description )
+			$channel['description']	= $words->description;
+		if( $words->category )
+			$channel['category']	= $words->category;
+		if( $words->copyright )
+			$channel['copyright']	= $words->copyright;
+		if( $config->get( 'module.gallery_compact.feed.editor' ) )
+			$channel['managingEditor']	= $config->get( 'module.gallery_compact.feed.editor' );
+		if( $config->get( 'app.email' ) ){
+			$channel['webMaster']	= $config->get( 'app.email' );
+			if( $config->get( 'app.author' ) )
+				$channel['webMaster']	.=' ('.$config->get( 'app.author' ).')';
+		}
+
 		$feed		= new XML_RSS_Builder();
 		$feed->setChannelData( $channel );
 		foreach( $galleries as $gallery ){
-			$uri	= $baseUrl.'gallery/'.$gallery->pathname;
+			$uri	= $baseUrl.'gallery/index/'.str_replace( '%2F', '/', rawurlencode( $gallery->pathname ) );
+
+			$content	= array_shift( explode( "\n", strip_tags( $gallery->content ) ) );
+			$content	= View_Helper_ContentConverter::formatText( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatWikiLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatYoutubeLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatMapLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatMapSearch( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatImageSearch( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatImdbLinks( $this->env, $content );
+			$content	= View_Helper_Blog::formatBlogLinks( $this->env, $content );
+			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
+				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
+			
 			$data	= array(
 				'title'			=> $gallery->label,
-		//		'description'	=> array_shift( explode( "\n", strip_tags( $article->content ) ) ),
+				'description'	=> $content,
 				'guid'			=> $uri,
 				'link'			=> $uri,
+				'category'		=> 'Foto-Galerie',
+				'source'		=> $baseUrl.'gallery/feed',
 			);
 			if( $gallery->timestamp )
 				$data['pubDate']	= date( "r", (double) $gallery->timestamp );

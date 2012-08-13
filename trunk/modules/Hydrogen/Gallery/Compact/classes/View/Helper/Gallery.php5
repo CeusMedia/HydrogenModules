@@ -11,6 +11,18 @@ class View_Helper_Gallery{
 		return $label;
 	}
 
+	static public function formatGalleryLinks( $env, $content ){
+		$matches	= array();
+		preg_match_all( '/\[gallery:(.+)(\|(.*))?\]/U', $content, $matches );
+		for( $i=0; $i<count( $matches[0] ); $i++ ){
+			$uri		= './gallery/index/'.str_replace( '%2F', '/', rawurlencode( $matches[1][$i] ) );
+			$title		= trim( $matches[3][$i] );
+			$link		= UI_HTML_Elements::Link( $uri, $title, 'icon-label link-gallery' );
+			$content	= str_replace( $matches[0][$i], $link, $content );
+		}
+		return $content;
+	}
+
 	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'gallery/feed'.$limit;
@@ -18,7 +30,6 @@ class View_Helper_Gallery{
 
 	static public function renderGalleryLink( $env, $path, $dateMode = 0, $dateFormat = NULL ){
 		$config		= $env->getConfig();
-
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );						//  @todo realize module config
 		$pattern	= '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /';
 		
@@ -85,17 +96,17 @@ class View_Helper_Gallery{
 		$source	= preg_replace( '/\/$/', '', $source ); 
 		$parts	= $source ? explode( '/', $source ) : array();
 		for( $i=0; $i<count( $parts ); $i++ ){
-			$label	= $parts[$i];
-			if( !trim( $label ) )
+			if( !trim( $parts[$i] ) )
 				continue;
-			$steps[]	= $label;
-			if( $i < ( count( $parts ) - 1 ) ){
-				$url	= './gallery/index/'.implode( '/', $steps );
-				$list[]	= self::renderGalleryLink( $env, implode( '/', $steps ), 0 );
-#				$list[]	= UI_HTML_Tag::create( "a", $label, array( 'href' => $url, 'class' => 'link-gallery' ) );
+			$steps[]	= $parts[$i];
+			if( $i < ( count( $parts ) - 1 ) )														//  not the last step
+				$list[]	= self::renderGalleryLink( $env, implode( '/', $steps ), 0 );				//  render gallery forder link
+			else{																					//  last step
+				if( !preg_match( "/\.(jpg|jpe|jpeg|png|gif|bmp|ico)$/i", $parts[$i] ) )				//  last step is not an image
+					$parts[$i]	= self::renderGalleryLink( $env, implode( '/', $steps ), 2 );
+				$class	= 'link-gallery-current';
+				$list[]	= UI_HTML_Tag::create( "span", $parts[$i], array( 'class' => $class ) );
 			}
-			else
-				$list[]	= UI_HTML_Tag::create( "span", $label, array( 'class' => 'link-gallery-current' ) );
 		}
 		$link	= UI_HTML_Tag::create( "a", 'Start', array( 'href' => './gallery', 'class' => 'icon-label link-gallery' ) );
 		array_unshift( $list, $link );

@@ -9,37 +9,38 @@ foreach( $files as $file )
 		$images[]	= $file->getFilename();
 sort( $images );
 
-
+//  --  NAVI CONTROL  --  //
 $linkNext	= '';
 $linkPrev	= '';
 $index		= array_search( $imageName, $images );
+$folderUri	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $folderPath ) );
 if( isset( $images[$index-1] ) ){
-	$url		= './gallery/info/'.rawurlencode( $folderPath.$images[$index-1] );
+	$url		= $folderUri.rawurlencode( $images[$index-1] );
 	$linkPrev	= UI_HTML_Elements::Link( $url, $images[$index-1], 'link-image' );
 }
 if( isset( $images[$index+1] ) ){
-	$url		= './gallery/info/'.rawurlencode( $folderPath.$images[$index+1] );
+	$url		= $folderUri.rawurlencode( $images[$index+1] );
 	$linkNext	= UI_HTML_Elements::Link( $url, $images[$index+1], 'link-image' );
 }
 $naviControl	= '
-	<div class="navi-control">
-		<div class="column-left-20" style="text-align: left">
-			'.( $linkPrev ? $linkPrev : '&nbsp;' ).'
-		</div>
-		<div class="column-left-10" style="text-align: right">
-			'.( $linkPrev ? '&laquo;' : '&nbsp;' ).'
-		</div>
-		<div class="column-left-40" style="text-align: center">
-			<b>'.$imageName.'</b>
-		</div>
-		<div class="column-left-10" style="text-align: left">
-			'.( $linkNext ? '&raquo;' : '&nbsp;' ).'
-		</div>
-		<div class="column-right-20" style="text-align: right">
-			'.( $linkNext ? $linkNext : '&nbsp;' ).'
-		</div>
-		<div class="column-clear"></div>
-	</div>';
+<div class="navi-control">
+	<div style="float: left; width: 30%; text-align: left">
+		'.( $linkPrev ? $linkPrev : '&nbsp;' ).'
+	</div>
+	<div style="float: left; width: 5%; text-align: center">
+		'.( $linkPrev ? '&laquo;' : '&nbsp;' ).'
+	</div>
+	<div style="float: left; width: 30%; text-align: center">
+		<b>'.$imageName.'</b>
+	</div>
+	<div style="float: left; width: 5%; text-align: center">
+		'.( $linkNext ? '&raquo;' : '&nbsp;' ).'
+	</div>
+	<div style="float: left; width: 30%; text-align: right">
+		'.( $linkNext ? $linkNext : '&nbsp;' ).'
+	</div>
+	<div class="column-clear"></div>
+</div>';
 
 
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
@@ -172,9 +173,10 @@ $(document).ready(function(){
 <div id="gallery" class="gallery-image-info" data-original="'.$source.'">
 	<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
 	'.$navigation.'
-	'.$naviControl.'
-	<br/>
 	<div class="column-left-66">
+		<div style="width: 94%; margin-left: 1%">
+			'.$naviControl.'
+		</div>
 		<div style="width: 90%" class="image">
 			<img src="'.$path.preg_replace( '/(\.\w+)$/', '.medium\\1', $source ).'" style="width: 100%" data-original="'.$path.$source.'" class="zoomable fullscreenable"/>
 		</div>
@@ -186,6 +188,8 @@ $(document).ready(function(){
 		</div>
 	</div>
 	<div class="column-left-33">
+		<br/>
+		<br/>
 		<h4>Bild-Informationen</h4>
 		'.$title.'
 		<div>

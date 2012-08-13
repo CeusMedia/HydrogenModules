@@ -53,6 +53,7 @@ body.moduleGallery.action-index ul.folders li span.date,
 	margin-left: 0.5em;
 	font-size: 0.9em;
 	color: rgba(0,0,0,0.5);
+	font-weight: normal;
 	}
 
 /*  --  INDEX: IMAGE THUMBNAILS  --  */
@@ -93,8 +94,7 @@ body.moduleGallery.action-index #gallery-item-info-button {
 
 /*  --  IMAGE INFO  --  */
 body.moduleGallery.action-info .navi-control {
-	padding: 0.6em 0;
-	border-bottom: 1px solid rgba(0,0,0,0.25);
+	padding: 0.7em 0 0.4em 0;
 	}
 body.moduleGallery.action-info #hint-magnifier {
 	display: none;
