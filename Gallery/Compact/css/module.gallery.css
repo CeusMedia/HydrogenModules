@@ -26,9 +26,6 @@ body.controller-gallery #license {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
 	
-	
-	
-
 /*  --  INDEX: FOLDERS  --  */
 body.moduleGallery.action-index ul.folders {
 	list-style: none;
@@ -52,6 +49,12 @@ body.moduleGallery.action-index ul.folders li span.date,
 	font-size: 0.9em;
 	color: rgba(0,0,0,0.5);
 	font-weight: normal;
+	}
+body.moduleGallery span.file-ext {
+	font-size: 0.7em;
+	opacity: 0.75;
+	font-weight: normal;
+/*	text-transform: lowercase;*/
 	}
 
 /*  --  INDEX: IMAGE THUMBNAILS  --  */

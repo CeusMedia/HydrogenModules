@@ -3,25 +3,19 @@ $folderPath	= dirname( $source ).'/';
 $imageName	= basename( $source );
 
 //  --  NAVI CONTROL  --  //
+$linkNext	= '';
+$linkPrev	= '';
 $images		= array();
 foreach( $files as $file )
 	if( !preg_match( '/\.(medium|small)\./', $file->getFilename() ) )
 		$images[]	= $file->getFilename();
 sort( $images );
-
-//  --  NAVI CONTROL  --  //
-$linkNext	= '';
-$linkPrev	= '';
 $index		= array_search( $imageName, $images );
-$folderUri	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $folderPath ) );
-if( isset( $images[$index-1] ) ){
-	$url		= $folderUri.rawurlencode( $images[$index-1] );
-	$linkPrev	= UI_HTML_Elements::Link( $url, $images[$index-1], 'link-image' );
-}
-if( isset( $images[$index+1] ) ){
-	$url		= $folderUri.rawurlencode( $images[$index+1] );
-	$linkNext	= UI_HTML_Elements::Link( $url, $images[$index+1], 'link-image' );
-}
+if( isset( $images[$index-1] ) )
+	$linkPrev	= View_Helper_Gallery::renderImageLink( $env, $folderPath.$images[$index-1] );
+if( isset( $images[$index+1] ) )
+	$linkNext	= View_Helper_Gallery::renderImageLink( $env, $folderPath.$images[$index+1] );
+
 $naviControl	= '
 <div class="navi-control">
 	<div style="float: left; width: 30%; text-align: left">
@@ -31,7 +25,7 @@ $naviControl	= '
 		'.( $linkPrev ? '&laquo;' : '&nbsp;' ).'
 	</div>
 	<div style="float: left; width: 30%; text-align: center">
-		<b>'.$imageName.'</b>
+		<b>'.View_Helper_Gallery::renderImageLabel( $env, $imageName ).'</b>
 	</div>
 	<div style="float: left; width: 5%; text-align: center">
 		'.( $linkNext ? '&raquo;' : '&nbsp;' ).'
@@ -42,31 +36,26 @@ $naviControl	= '
 	<div class="column-clear"></div>
 </div>';
 
-
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
-$jsBase	= 'http://localhost/lib/cmScripts/jquery/';
-$jsBase	= 'http://js.int1a.net/jquery/';
-
 $options	= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.info.' ) );
 
-if( $options->get( 'magnifier' ) ){
+//  --  VIEW MODE CONTROLS  --  //
+$viewMode	= '';
+if( $env->getModules ()->has( 'JS_cmImagnifier' ) && $options->get( 'magnifier' ) ){
 	$label		= UI_HTML_Tag::create( 'span', "Lupe" );
 	$attr		= array( 'type' => "button", 'class' => "button search", 'id' => "button-magnifier" );
 	$buttonZoom	= UI_HTML_Tag::create( 'button', $label, $attr );
-}
-if( $options->get( 'fullscreen' ) ){
-	$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
-	$attr		= array( 'type' => "button", 'class' => "button search resize-max", 'id' => "button-fullscreen" );
-	$buttonFull	= UI_HTML_Tag::create( 'button', $label, $attr );
-}
-$viewMode	= '';
-if( $options->get( 'magnifier' ) && $options->get( 'fullscreen' ) ){
-	$viewMode	= '<div>Modus:'.$buttonZoom.''.$buttonFull.'</div><br/>';
+	if( $options->get( 'fullscreen' ) ){
+		$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
+		$attr		= array( 'type' => "button", 'class' => "button search resize-max", 'id' => "button-fullscreen" );
+		$buttonFull	= UI_HTML_Tag::create( 'button', $label, $attr );
+		$viewMode	= '<div>Modus:'.$buttonZoom.''.$buttonFull.'</div><br/>';
+	}
 }
 
-
+//  --  ACTION CONTROLS  --  //
 $buttons	= array();
 if( 1 ){
 	$label	= UI_HTML_Tag::create( 'span', "zur Galerieansicht" );
@@ -87,7 +76,6 @@ $list	= array();
 foreach( $buttons as $label => $attributes )
 	$list[]	= UI_HTML_Tag::create( 'li', UI_HTML_Tag::create( 'button', $label, $attributes ) );
 $buttons	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'buttons list-actions' ) );
-
 
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
@@ -121,12 +109,12 @@ if( $options->get( 'exif' ) ){
 </div>';
 }
 
+//  --  IMAGE VIEW  --  //
 $class	= array();
-if( $options->get( 'magnifier' ) )
+if( $env->getModules ()->has( 'JS_cmImagnifier' ) && $options->get( 'magnifier' ) )
 	$class[]	= 'zoomable';
 if( $options->get( 'fullscreen' ) )
 	$class[]	= 'fullscreenable';
-	
 $image	= UI_HTML_Tag::create( 'img', NULL, array(
 	'class'			=> $class,
 	'src'			=> $path.preg_replace( '/(\.\w+)$/', '.medium\\1', $source ),
@@ -138,8 +126,6 @@ $image	= UI_HTML_Tag::create( 'img', NULL, array(
 #	$title	= basename( $source );
 
 return '
-<link rel="stylesheet" href="'.$jsBase.'cmImagnifier/0.1.css"/>
-<script src="'.$jsBase.'cmImagnifier/0.1.js"></script>
 <script>
 $(document).ready(function(){
 	Gallery.setupInfo();
