@@ -1,0 +1,80 @@
+/*  --  PAGINATION  --  */
+
+ul.pagination {
+	border-top: 2px solid rgba(0,0,0,0.25);
+	font-size: 1em;
+	display: block;
+	width: auto;
+	margin: 0px;
+	padding: 0px;
+	padding-top: 2px;
+	}
+
+ul.pagination li {
+	float:left;
+	list-style: none;
+	}
+
+ul.pagination a,
+ul.pagination span {
+	display: block;
+	float: left;
+	margin: 0em 0.3em 0.35em 0em;
+	padding: 0.2em 0.65em 0.2em 0.65em;   /* Links */
+	background: #EEEEEE url(../../petrol/images/layout-button-menu-gradient.png) repeat-x scroll center top;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #CCCCCC #999999 #999999 #CCCCCC;
+	border-radius: 0.4em;
+	-moz-border-radius: 0.4em;
+	color: #333333;
+	font-family: "Lucida Grande",Tahoma,Arial,Verdana,sans-serif;
+	font-size: 1em;
+	font-weight: normal;
+	line-height: 1.3em;
+	text-decoration: none;
+	outline: none;
+	}
+
+ul.pagination a:hover {
+	border-color: #cdd7dd #9aa6aa #9aa6aa #cdd7dd;
+	background-color: #eff9ff;
+	background: url(../../petrol/images/layout-button-menu-hover-gradient.png) repeat-x bottom center #eff9ff;
+	}
+
+ul.pagination a:focus {
+	border-color: #9aa6aa #cdd7dd #cdd7dd #9aa6aa;
+	color: #333;
+	background: url(../../petrol/images/layout-button-menu-hover-gradient.png) repeat-x bottom center #eff9ff;
+	}
+ul.pagination a:active {
+	border-color: #999999 #CCCCCC #CCCCCC #999999;
+	}
+
+ul.pagination span {
+	display: block;
+	float: left;
+	background-color: #DEE8EE !important;
+	border-color: #CDD7DD !important;
+	}
+
+ul.pagination span.current {
+	background-color: #DEE8EE !important;
+	border-color: #CDD7DD !important;
+	font-weight: bold;
+	}
+
+ul.pagination span.more {
+	background-color: #FFF !important;
+	border-color: #FFF !important;
+	padding-left: 0em;
+	padding-right: 0em;
+	}
+
+ul.pagination a.skip {}
+
+ul.pagination a.extreme {}
+
+ul.pagination span.disabled {
+	color: gray;
+	}
