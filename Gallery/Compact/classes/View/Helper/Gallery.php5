@@ -30,8 +30,7 @@ class View_Helper_Gallery{
 
 	static public function renderGalleryLink( $env, $path, $dateMode = 0, $dateFormat = NULL ){
 		$config		= $env->getConfig();
-		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );						//  @todo realize module config
-		$pattern	= '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /';
+		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
 		
 		$folderName	= basename( $path );
 		$pathName	= $path == dirname( $path ) ? '' : dirname( $path ).'/';
@@ -66,12 +65,9 @@ class View_Helper_Gallery{
 	static public function renderLatestGalleries( $env, $limit, $offset = 0, $dateMode = 0 ){
 		$config		= $env->getConfig();
 
-		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );						//  @todo realize module config
+		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
 		$dateFormat	= $config->get( 'module.gallery_compact.format.date' );
 		$reverse	= $config->get( 'module.gallery_compact.latest.reverse' );
-		$pattern	= '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /';
-		$dateFormat	= 'j.n.Y';
-		$reverse	= TRUE;
 		
 		$list		= array();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );

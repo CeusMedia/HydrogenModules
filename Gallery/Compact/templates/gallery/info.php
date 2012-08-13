@@ -49,15 +49,21 @@ $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 $jsBase	= 'http://localhost/lib/cmScripts/jquery/';
 $jsBase	= 'http://js.int1a.net/jquery/';
 
-if( 1 ){
-	$label	= UI_HTML_Tag::create( 'span', "Lupe" );
-	$attr	= array( 'type' => "button", 'class' => "button search", 'id' => "button-magnifier" );
+$options	= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.info.' ) );
+
+if( $options->get( 'magnifier' ) ){
+	$label		= UI_HTML_Tag::create( 'span', "Lupe" );
+	$attr		= array( 'type' => "button", 'class' => "button search", 'id' => "button-magnifier" );
 	$buttonZoom	= UI_HTML_Tag::create( 'button', $label, $attr );
 }
-if( 1 ){
-	$label	= UI_HTML_Tag::create( 'span', "Vollbild" );
-	$attr	= array( 'type' => "button", 'class' => "button search resize-max", 'id' => "button-fullscreen" );
+if( $options->get( 'fullscreen' ) ){
+	$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
+	$attr		= array( 'type' => "button", 'class' => "button search resize-max", 'id' => "button-fullscreen" );
 	$buttonFull	= UI_HTML_Tag::create( 'button', $label, $attr );
+}
+$viewMode	= '';
+if( $options->get( 'magnifier' ) && $options->get( 'fullscreen' ) ){
+	$viewMode	= '<div>Modus:'.$buttonZoom.''.$buttonFull.'</div><br/>';
 }
 
 
@@ -67,12 +73,12 @@ if( 1 ){
 	$attr	= array( 'type' => "button", 'class' => "button cancel", 'id' => "button-gallery" );
 	$buttons[$label]	= $attr;
 }
-if( 1 ){
+if( $options->get( 'download' ) ){
 	$label	= UI_HTML_Tag::create( 'span', "Download der Bilddatei" );
 	$attr	= array( 'type' => "button", 'class' => "button save download", 'id' => "button-download" );
 	$buttons[$label]	= $attr;
 }
-if( $env->getModules()->has( 'UI_Background' ) ){
+if( $env->getModules()->has( 'UI_Background' ) && $options->get( 'wallpaper' ) ){
 	$label	= UI_HTML_Tag::create( 'span', "als Wallpaper verwenden" );
 	$attr	= array( 'type' => "button", 'class' => "button save", 'id' => "button-wallpaper" );
 	$buttons[$label]	= $attr;
@@ -84,26 +90,52 @@ $buttons	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'buttons list-act
 
 
 //  --  IMAGE DATA / EXIF  --  //
-$list	= array();
-$mps	= round( $exif->get( 'COMPUTED.Width' ) * $exif->get( 'COMPUTED.Height' ) / 1024 / 1024, 1 );
-$timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
-$model		= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
-$data	= array(
-	'Kamera'			=> $exif->get( 'Make' ).' <b>'.$model.'</b>',
-	'Belichtungszeit'	=> View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) ),
-	'Blende'			=> eval( 'return '.$exif->get( 'FNumber' ).';' ),
-	'Empfindlichkeit'	=> 'ISO '.$exif->get( 'ISOSpeedRatings' ),
-	'Auflösung'			=> $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>',
-//	'Größe'				=> $mps.' <acronym title="Megapixel">MP</acronym>',
-//	'Dimensionen'		=> $exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).' Pixel',
-	'Dateigröße'		=> Alg_UnitFormater::formatBytes( $exif->get( 'FileSize' ) ),
-//	'Dateiname'			=> $exif->get( 'FileName' ),
-//	'Gallerie'			=> implode( ' / ', array_slice( explode( '/', $source ), 0, -1 ) ),
-	'Datum/Zeit'		=> date( 'Y-m-d', $timestamp ).' '.date( 'H:i:s', $timestamp ),
-);
-foreach( $data as $label => $value )
-	$list[]	= '<dt>'.$label.'</dt><dd>'.$value.'</dd>';
-$list	= '<dl>'.join( $list ).'</dl>';
+$listExif	= '';
+if( $options->get( 'exif' ) ){
+	$formatDate	= $config->get( 'module.gallery_compact.format.date' );
+	$formatTime	= $config->get( 'module.gallery_compact.format.time' );
+	$list	= array();
+	$mps	= round( $exif->get( 'COMPUTED.Width' ) * $exif->get( 'COMPUTED.Height' ) / 1024 / 1024, 1 );
+	$timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
+	$model		= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
+	$data	= array(
+		'Kamera'			=> $exif->get( 'Make' ).' <b>'.$model.'</b>',
+		'Belichtungszeit'	=> View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) ),
+		'Blende'			=> eval( 'return '.$exif->get( 'FNumber' ).';' ),
+		'Empfindlichkeit'	=> 'ISO '.$exif->get( 'ISOSpeedRatings' ),
+		'Auflösung'			=> $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>',
+	//	'Größe'				=> $mps.' <acronym title="Megapixel">MP</acronym>',
+	//	'Dimensionen'		=> $exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).' Pixel',
+		'Dateigröße'		=> Alg_UnitFormater::formatBytes( $exif->get( 'FileSize' ) ),
+	//	'Dateiname'			=> $exif->get( 'FileName' ),
+	//	'Gallerie'			=> implode( ' / ', array_slice( explode( '/', $source ), 0, -1 ) ),
+		'Datum/Zeit'		=> date( $formatDate, $timestamp ).' <small><em>'.date( $formatTime, $timestamp ).'</em></small>',
+	);
+	foreach( $data as $label => $value )
+		$list[]	= '<dt>'.$label.'</dt><dd>'.$value.'</dd>';
+	$listExif	= '
+<h4>Bild-Informationen</h4>
+<div>
+	<dl>'.join( $list ).'</dl>
+	<div class="column-clear"></div>
+</div>';
+}
+
+$class	= array();
+if( $options->get( 'magnifier' ) )
+	$class[]	= 'zoomable';
+if( $options->get( 'fullscreen' ) )
+	$class[]	= 'fullscreenable';
+	
+$image	= UI_HTML_Tag::create( 'img', NULL, array(
+	'class'			=> $class,
+	'src'			=> $path.preg_replace( '/(\.\w+)$/', '.medium\\1', $source ),
+	'data-original'	=> $path.$source,
+	'style'			=> 'width: 100%'
+) );
+
+#if( !$title )
+#	$title	= basename( $source );
 
 return '
 <link rel="stylesheet" href="'.$jsBase.'cmImagnifier/0.1.css"/>
@@ -111,6 +143,8 @@ return '
 <script>
 $(document).ready(function(){
 	Gallery.setupInfo();
+	if("'.$options->get( 'fullscreen' ).'")
+		$("#hint-fullscreen").show();
 });
 </script>
 <div id="gallery" class="gallery-image-info" data-original="'.$source.'">
@@ -121,35 +155,30 @@ $(document).ready(function(){
 			'.$naviControl.'
 		</div>
 		<div style="width: 90%" class="image">
-			<img src="'.$path.preg_replace( '/(\.\w+)$/', '.medium\\1', $source ).'" style="width: 100%" data-original="'.$path.$source.'" class="zoomable fullscreenable"/>
+			'.$image.'
+			'.( $title ? UI_HTML_Tag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
 		</div>
-		<div id="hint-magnifier" class="column-clear hint" style="font-size: 0.9em; padding-left: 1em">
+		<div id="hint-magnifier" class="column-clear hint">
 			<b>Tipp:</b> Die Lupe ist aktiviert. Fahre mit der Maus über das Bild!
 		</div>
-		<div id="hint-fullscreen" class="column-clear hint" style="font-size: 0.9em; padding-left: 1em">
+		<div id="hint-fullscreen" class="column-clear hint">
 			Klicke auf das Bild für die Vollbildanzeige. <b>Tipp:</b> Drücke vorher <kbd>F11</kbd>
 		</div>
 	</div>
 	<div class="column-left-33">
 		<br/>
 		<br/>
-		<h4>Bild-Informationen</h4>
-		'.$title.'
-		<div>
-			'.$list.'
-			<div class="column-clear"></div>
-		</div>
+		'.$listExif.'
 		<br/>
 		<div class="image-actions">
-			<div>Klick-Modus:'.$buttonZoom.''.$buttonFull.'</div>
-			<br/>
+			'.$viewMode.'
 			'.$buttons.'
 		</div>
 	</div>
 	<div class="column-clear"></div>
 	<br/>
 	<br/>
-	'.$text['info.bottom'].'
-	'.$license.'
+	'.View_Helper_ContentConverter::render( $env, $text['info.bottom'] ).'
+	'.View_Helper_ContentConverter::render( $env, $license ).'
 </div>';
 ?>

@@ -2,7 +2,6 @@
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
 $dateFormat	= $env->getConfig()->get( 'module.gallery_compact.format.date' );
-$dateFormat	= 'j.n.Y';
 
 $list	= array();
 foreach( $folders as $entry ){
@@ -65,7 +64,7 @@ ksort( $list );
 $files		= $list ? implode( "", $list ) : NULL;
 		
 $title		= !empty( $info['title'] ) ? UI_HTML_Tag::create( "h3", $info['title'] ) : NULL;
-$desc		= View_Helper_ContentConverter::render( $env, $info['description'] );
+$desc		= !empty( $info['title'] ) ? View_Helper_ContentConverter::render( $env, $info['description'] ) : NULL;
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 
 return '
@@ -90,8 +89,8 @@ $(document).ready(function(){
 	'.$files.'
 	<div style="clear: left"></div>
 	<br/>
-	'.$textBottom.'
-	'.$license.'
+	'.View_Helper_ContentConverter::render( $env, $textBottom ).'
+	'.View_Helper_ContentConverter::render( $env, $license ).'
 	<div style="clear: left"></div>
 </div>
 ';

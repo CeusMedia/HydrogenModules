@@ -31,7 +31,8 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-		$index		= Folder_RecursiveLister::getFolderList( $path, '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /' );
+		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
+		$index		= Folder_RecursiveLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder ){
 			$timestamp	= filemtime( $folder->getPathname() );
 			$data		= array(
