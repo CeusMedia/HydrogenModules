@@ -8,6 +8,7 @@
 		<class>View/Gallery.php5</class>
 		<class>View/Helper/Gallery.php5</class>
 		<template>gallery/index.php</template>
+		<script>Gallery.js</script>
 		<style load="auto">module.gallery.css</style>
 		<locale>de/html/gallery/index.bottom.html</locale>
 		<locale>de/html/gallery/license.html</locale>

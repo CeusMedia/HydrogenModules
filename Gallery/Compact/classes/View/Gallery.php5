@@ -18,25 +18,12 @@ class View_Gallery extends CMF_Hydrogen_View{
 		);
 		foreach( $converters as $converter )
 			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
-	}
 
-	/**
-	 *	@deprecated	not used anymore
-	 *	@todo		remove
-	 */
-	protected function buildActions( $source ){
-		$actions	= array();
-
-		$icon		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => '//icons.ceusmedia.com/famfamfam/silk/disk.png' ) );
-		$action		= UI_HTML_Tag::create( 'a', $icon, array( 'href' => './gallery/download/'.$source ) );
-		$actions[]	= UI_HTML_Tag::create( 'span', $action );
-
-		$icon		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => '//icons.ceusmedia.com/famfamfam/silk/information.png' ) );
-		$action		= UI_HTML_Tag::create( 'a', $icon, array( 'href' => './gallery/info/'.$source, 'class' => 'thickbox' ) );
-		$actions[]	= UI_HTML_Tag::create( 'span', $action );
-
-		$actions	= implode( '', $actions );
-		return $actions;
+		$config	= $this->env->getConfig();
+		$path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
+		$page	= $this->env->getPage();
+		$page->js->addScript( 'Gallery.pathImages	= "'.$path.'";' );
+		$page->js->addUrl( $config->get( 'path.scripts').'Gallery.js' );
 	}
 	
 	public function feed(){

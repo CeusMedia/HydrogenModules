@@ -50,9 +50,6 @@ foreach( $files as $file ){
 		'class'			=> 'thumbnail',
 	);
 	$image		= UI_HTML_Tag::create( 'image', NULL, $attributes );
-//	$img		= new UI_Image( $path.$source.$data['filename'].'.'.$data['extension'] );
-//	$exif		= new UI_Image_Exif( $path.$source.$data['filename'].'.'.$data['extension'] );
-//	print_m( $exif->getAll() );
 	$attributes	= array(
 		'href'			=> $path.$source.$data['filename'].'.medium.'.$data['extension'],
 		'class'			=> 'no-thickbox layer-image',
@@ -60,13 +57,9 @@ foreach( $files as $file ){
 		'target'		=> '_blank',
 		'title'			=> $title,
 		'data-original'	=> $source.$data['filename'].'.'.$data['extension'],
-//		'data-size-x'	=> $img->getWidth(),
-//		'data-size-y'	=> $img->getHeight(),
 	);
 	$image		= UI_HTML_Tag::create( 'a', $image, $attributes );
-	$actions	= $this->buildActions( $source.$fileName, TRUE );
-	$actions	= "";
-	$list[$fileName]		= UI_HTML_Tag::create( 'div', $image.$actions, array( 'class' => 'thumbnail' ) );
+	$list[$fileName]		= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'thumbnail' ) );
 }
 ksort( $list );
 $files		= $list ? implode( "", $list ) : NULL;
@@ -74,20 +67,11 @@ $files		= $list ? implode( "", $list ) : NULL;
 $title		= !empty( $info['title'] ) ? UI_HTML_Tag::create( "h3", $info['title'] ) : NULL;
 $desc		= View_Helper_ContentConverter::render( $env, $info['description'] );
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
-		
+
 return '
 <script>
 $(document).ready(function(){
-	var galleryItemInfoButton = $("#gallery-item-info-button");
-	$("div.thumbnail").bind("mouseenter",function(){
-		galleryItemInfoButton.unbind("click").bind("click",function(){
-			var url = $(this).parent().children("a").data("original");
-			document.location.href = "./gallery/info/"+url;
-		});
-		$(this).append(galleryItemInfoButton.show());
-	}).bind("mouseleave",function(){
-		galleryItemInfoButton.hide();
-	});
+	Gallery.setupIndex();
 });
 </script>
 <div id="gallery">
