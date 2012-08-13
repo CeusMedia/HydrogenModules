@@ -12,21 +12,24 @@
 		<locale>de/html/gallery/index.bottom.html</locale>
 		<locale>de/html/gallery/license.html</locale>
 	</files>
-	<config protected="yes" type="string" name="path">gallery/</config>
+	<config protected="yes" type="string" name="feed.editor">johndoe@example.org (John Doe)</config>
+	<config protected="yes" type="string" name="feed.language">de-de</config>
 	<config protected="yes" type="integer" name="image.width">1024</config>
 	<config protected="yes" type="integer" name="image.height">768</config>
 	<config protected="yes" type="integer" name="image.quality">90</config>
+	<config protected="no" type="string" name="license.path">http://creativecommons.org/licenses/by-nc-sa/3.0/</config>
+	<config protected="no" type="string" name="license.image">http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
+	<config protected="no" type="string" name="license.label">Creative Commons Namensnennung-Nicht-kommerziell-Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz</config>
+	<config protected="no" type="string" name="license.work.creator">kriss</config>
+	<config protected="no" type="string" name="license.work.url">http://iamkriss.net/gallery/</config>
+	<config protected="no" type="string" name="license.work.title">Bildmaterial</config>
+	<config protected="yes" type="string" name="path">gallery/</config>
 	<config protected="yes" type="integer" name="thumb.width">126</config>
 	<config protected="yes" type="integer" name="thumb.height">84</config>
 	<config protected="yes" type="integer" name="thumb.quality">80</config>
-	<config type="string" name="license.path">http://creativecommons.org/licenses/by-nc-sa/3.0/</config>
-	<config type="string" name="license.image">http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
-	<config type="string" name="license.label">Creative Commons Namensnennung-Nicht-kommerziell-Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz</config>
-	<config type="string" name="license.work.creator">kriss</config>
-	<config type="string" name="license.work.url">http://iamkriss.net/gallery/</config>
-	<config type="string" name="license.work.title">Bildmaterial</config>
 	<relations>
 		<needs type="module">JS_Layer</needs>
+		<needs type="module">UI_Helper_Content</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="gallery">Galerie</link>
 	<link rank="99" access="public" path="gallery/feed"/>
@@ -42,5 +45,6 @@
 			'href'	=> $env->getConfig()->get( 'app.base.url' )."gallery/feed",						//  URL to RSS feed
 			'title'	=> $env->getConfig()->get( 'app.name' ).': '.$words['feed']['title']			//  link title
 		) ) );																						//  and add link to page head
+		View_Helper_ContentConverter::register( "View_Helper_Gallery", "formatGalleryLinks" );
 	]]></hook>
 </module>

@@ -30,14 +30,25 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 
 		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$index		= Folder_RecursiveLister::getFolderList( $path, '/^[0-9]{4}-[0-9]{2}-[0-9]{2} /' );
 		foreach( $index as $folder ){
 			$timestamp	= filemtime( $folder->getPathname() );
-			$list[$timestamp.'_'. uniqid()]	= (object) array(
+			$data		= array(
 				'label'		=> $folder->getFilename(),
 				'pathname'	=> substr( $folder->getPathname(), strlen( $this->path ) ),
 				'timestamp'	=> $timestamp,
+				'content'	=> NULL,
 			);
+			$fileInfo	= $folder->getPathname().'/info.ini';
+			if( file_exists( $fileInfo ) ){
+				$info	= File_INI_Reader::load( $fileInfo );
+				if( isset( $info['title'] ) )
+					$data['label']	= $info['title'];
+				if( isset( $info['description'] ) )
+					$data['content']	= $info['description'];
+			}
+			$list[$timestamp.'_'. uniqid()]	= (object) $data;
 		}
 		ksort( $list );
 		$galleries	= array_reverse( array_slice( $list, -$limit ) );

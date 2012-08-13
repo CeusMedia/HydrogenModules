@@ -72,7 +72,7 @@ ksort( $list );
 $files		= $list ? implode( "", $list ) : NULL;
 		
 $title		= !empty( $info['title'] ) ? UI_HTML_Tag::create( "h3", $info['title'] ) : NULL;
-$desc		= !empty( $info['description'] ) ? UI_HTML_Tag::create( "p", $info['description'] ) : NULL;
+$desc		= View_Helper_ContentConverter::render( $env, $info['description'] );
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 		
 return '
@@ -97,7 +97,9 @@ $(document).ready(function(){
 	<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
 	'.$navigation.'<br/>
 	'.$title.'
-	'.$desc.'
+	<p>
+		'.$desc.'
+	</p>
 	'.$folders.'
 	<div class="column-clear"></div>
 	<br/>
