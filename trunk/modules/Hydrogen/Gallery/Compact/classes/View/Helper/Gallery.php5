@@ -62,6 +62,19 @@ class View_Helper_Gallery{
 		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
 	}
 
+	static public function renderImageLabel( $env, $fileName ){
+		$ext	= pathinfo( basename( $fileName ), PATHINFO_EXTENSION );
+		$ext	= UI_HTML_Tag::create( "span", '.'.$ext, array( 'class' => 'file-ext' ) );
+		return pathinfo( basename( $fileName ), PATHINFO_FILENAME ).$ext;
+	}
+
+	static public function renderImageLink( $env, $pathName ){
+		$label	= self::renderImageLabel( $env, $pathName );
+		$url	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $pathName ) );
+		$class	= 'icon-label link-image';
+		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class'=> $class ) );
+	}
+
 	static public function renderLatestGalleries( $env, $limit, $offset = 0, $dateMode = 0 ){
 		$config		= $env->getConfig();
 
@@ -98,7 +111,12 @@ class View_Helper_Gallery{
 			if( $i < ( count( $parts ) - 1 ) )														//  not the last step
 				$list[]	= self::renderGalleryLink( $env, implode( '/', $steps ), 0 );				//  render gallery forder link
 			else{																					//  last step
-				if( !preg_match( "/\.(jpg|jpe|jpeg|png|gif|bmp|ico)$/i", $parts[$i] ) )				//  last step is not an image
+				if( preg_match( "/\.(jpg|jpe|jpeg|png|gif|bmp|ico)$/i", $parts[$i] ) ){				//  last step is an image
+					$ext	= '.'.pathinfo( $parts[$i], PATHINFO_EXTENSION );
+					$ext	= UI_HTML_Tag::create( "span", $ext, array( 'class' => 'file-ext' ) );
+					$parts[$i]	= self::renderImageLabel( $env, $parts[$i] );
+				}
+				else
 					$parts[$i]	= self::renderGalleryLink( $env, implode( '/', $steps ), 2 );
 				$class	= 'link-gallery-current';
 				$list[]	= UI_HTML_Tag::create( "span", $parts[$i], array( 'class' => $class ) );

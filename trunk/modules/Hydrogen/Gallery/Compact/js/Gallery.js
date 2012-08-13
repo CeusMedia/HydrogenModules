@@ -16,18 +16,18 @@ Gallery = {
 		if($("img.zoomable").size()){
 			$("img.zoomable").cmImagnifier({
 				autoEnable: false,
-				classContainer: config.module_gallery_compact_magnifier_class_container,
-				classLense: config.module_gallery_compact_magnifier_class_lense,
-				classImage: config.module_gallery_compact_magnifier_class_image,
-				classMagnified: config.module_gallery_compact_magnifier_class_magnified,
-				classPosition: config.module_gallery_compact_magnifier_class_position,
-				classRatio: config.module_gallery_compact_magnifier_class_ratio,
-				easeIn: config.module_gallery_compact_magnifier_ease_in,
-				easeOut: config.module_gallery_compact_magnifier_ease_out,
-				showRatio: config.module_gallery_compact_magnifier_show_ratio,
-				showPosition: config.module_gallery_compact_magnifier_show_position,
-				speedIn: config.module_gallery_compact_magnifier_speed_in,
-				speedOut: config.module_gallery_compact_magnifier_speed_out
+				classContainer: config.module_js_cmimagnifier_classContainer,
+				classLense: config.module_js_cmimagnifier_classLense,
+				classImage: config.module_js_cmimagnifier_classImage,
+				classMagnified: config.module_js_cmimagnifier_classMagnified,
+				classPosition: config.module_js_cmimagnifier_classPosition,
+				classRatio: config.module_js_cmimagnifier_classRatio,
+				easeIn: config.module_js_cmimagnifier_easeIn,
+				easeOut: config.module_js_cmimagnifier_easeOut,
+				showRatio: config.module_js_cmimagnifier_showRatio,
+				showPosition: config.module_js_cmimagnifier_showPosition,
+				speedIn: config.module_js_cmimagnifier_speedIn,
+				speedOut: config.module_js_cmimagnifier_speedOut
 			});
 			$("#button-fullscreen").bind("click",function(){
 				$("img.zoomable").addClass("fullscreenable").cmImagnifier("toggle");
