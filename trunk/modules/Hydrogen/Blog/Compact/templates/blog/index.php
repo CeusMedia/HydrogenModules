@@ -14,7 +14,7 @@ if( $articles )
 $heading		= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
 
 $helper			= new View_Helper_Pagination();
-$pageList		= $helper->render( './blog/index/', $number, $limit, $page );
+$pageList		= $helper->render( './blog/index', $number, $limit, $page );
 
 $topTags		= View_Helper_Blog::renderTopTags( $env, 10, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';

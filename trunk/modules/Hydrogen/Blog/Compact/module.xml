@@ -33,6 +33,7 @@
 		<needs type="module">JS_jQuery_UI</needs>
 		<needs type="module">JS_jQuery_UI_Timepicker</needs>
 		<needs type="module">UI_Helper_Content</needs>
+		<needs type="module">UI_Helper_Pagination</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="blog">Blog</link>
 	<link rank="99" access="public" path="blog/feed"/>
