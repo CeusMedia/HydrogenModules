@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Pagination</title>
+	<description><![CDATA[Support for simple list pagination.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<files>
+		<class>View/Helper/Pagination.php5</class>
+		<style source="theme" load="auto">pagination.css</style>
+	</files>
+	<relations/>
+</module>
