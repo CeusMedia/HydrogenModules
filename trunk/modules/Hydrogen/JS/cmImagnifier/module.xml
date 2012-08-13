@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: cmImagnifier</title>
+	<description><![CDATA[Magnifier for large images.]]></description>
+	<category>JavaScript</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script source="local" load="auto">cmImagnifier-0.1.js</script>
+		<style source="theme" load="auto">cmImagnifier-0.1.css</style>
+	</files>
+	<config protected="no" type="boolean" name="autoEnable">no</config>
+	<config protected="no" type="string" name="classContainer">cmImagnifier-container</config>
+	<config protected="no" type="string" name="classLense">cmImagnifier-lense</config>
+	<config protected="no" type="string" name="classImage">cmImagnifier-image</config>
+	<config protected="no" type="string" name="classMagnified">cmImagnifier-image-magnified</config>
+	<config protected="no" type="string" name="classPosition">cmImagnifier-lense-position</config>
+	<config protected="no" type="string" name="classRatio">cmImagnifier-lense-ratio</config>
+	<config protected="no" type="string" name="easeIn">linear</config>
+	<config protected="no" type="string" name="easeOut">linear</config>
+	<config protected="no" type="boolean" name="showRatio">yes</config>
+	<config protected="no" type="boolean" name="showPosition">no</config>
+	<config protected="no" type="integer" name="speedIn">0</config>
+	<config protected="no" type="integer" name="speedOut">0</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$options	= (object) $env->getConfig()->getAll( 'module.js_cmimagnifier.' );
+		$script		= '$("img.cmImagnifier").cmImagnifier('.json_encode( $options ).');';
+		$script		= '$(document).ready(function(){'.$script.'});';
+		$context->js->addScript( $script );
+	]]></hook>
+</module>
