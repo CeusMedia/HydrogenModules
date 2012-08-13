@@ -8,13 +8,11 @@ body.controller-gallery .link-feed {
 	padding: 2px 8px 2px 25px;
 	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
 	}
-body.controller-gallery 
-body.controller-gallery #licence {
+body.controller-gallery #license {
 	clear: left;
-	margin-top: 1em;
-	border-top: 1px solid gray;
-	padding: 1em;
-	font-size: 0.8em;
+	border-top: 1px solid rgba(0,0,0,0.25);
+	padding: 1em 1em 0 1em;
+	font-size: 0.9em;
 	}
 
 /*  --  GLOBAL  --  */
@@ -124,15 +122,27 @@ body.moduleGallery.action-info div.image {
 	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	-o-box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+	position: relative;
 	}
 body.moduleGallery.action-info div.image img {
 	display: block;
+	width: 100%;
 	}
 body.moduleGallery.action-info div.image img.fullscreenable {
 	cursor: pointer;
 	}
 body.moduleGallery.action-info div.image img.zoomable {}
-	
+body.moduleGallery.action-info div.image .image-title {
+	clear: left;
+	width: 100%;
+	text-align: center;
+	font-size: 1.1em;
+	padding: 0.3em 0 0 0;
+	margin-bottom: -0.4em;
+	}
+
+
+
 /*  --  IMAGE INFO: DATA LIST  --  */
 body.moduleGallery.action-info .gallery-image-info dl dt {
 	clear: left;
@@ -162,7 +172,6 @@ body.moduleGallery.action-info button.button.download span {
 	
 /*  --  IMAGE INFO: FULLSCREEN LAYER  --  */
 body.moduleGallery.action-info #gallery-image-fullscreen {
-	display: none;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -171,9 +180,13 @@ body.moduleGallery.action-info #gallery-image-fullscreen {
 	z-index: 1010;
 	overflow: hidden;
 	cursor: pointer;
-	background-color: white;
+	background-color: rgba(0,0,0,0.5);
+	background-image: url(../../../images/loadingAnimation.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
 	}
 body.moduleGallery.action-info #gallery-image-fullscreen img{
+	display: none;
 	}
 
 /*
@@ -190,3 +203,11 @@ body.moduleGallery.action-info #gallery-image-fullscreen img{
 	color: gray;
 	}
 */
+
+
+
+body.moduleGallery.action-info .hint {
+	font-size: 0.9em;
+	padding-left: 1em;
+	display: none;
+	}

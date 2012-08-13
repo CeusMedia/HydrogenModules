@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Gallery &raquo;Compact&laquo;]]></title>
 	<description>Simple gallery with auto indexing in nested folders.</description>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files>
 		<class>Controller/Gallery.php5</class>
 		<class>View/Gallery.php5</class>
@@ -13,17 +13,38 @@
 		<locale>de/html/gallery/index.bottom.html</locale>
 		<locale>de/html/gallery/license.html</locale>
 	</files>
+	<config protected="yes" type="boolean" name="info.download">yes</config>
+	<config protected="yes" type="boolean" name="info.exif">yes</config>
+	<config protected="yes" type="boolean" name="info.fullscreen">yes</config>
+	<config protected="yes" type="boolean" name="info.magnifier">no</config>
+	<config protected="yes" type="boolean" name="info.wallpaper">yes</config>
 	<config protected="yes" type="string" name="feed.editor">johndoe@example.org (John Doe)</config>
 	<config protected="yes" type="string" name="feed.language">de-de</config>
+	<config protected="yes" type="string" name="format.date">j.n.Y</config>
+	<config protected="yes" type="string" name="format.time">H:i:s</config>
 	<config protected="yes" type="integer" name="image.width">1024</config>
 	<config protected="yes" type="integer" name="image.height">768</config>
 	<config protected="yes" type="integer" name="image.quality">90</config>
+	<config protected="yes" type="string" name="latest.regex">/^[0-9]{4}-[0-9]{2}-[0-9]{2} /</config>
+	<config protected="yes" type="boolean" name="latest.reverse">yes</config>
 	<config protected="no" type="string" name="license.path">http://creativecommons.org/licenses/by-nc-sa/3.0/</config>
 	<config protected="no" type="string" name="license.image">http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
 	<config protected="no" type="string" name="license.label">Creative Commons Namensnennung-Nicht-kommerziell-Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz</config>
 	<config protected="no" type="string" name="license.work.creator">kriss</config>
 	<config protected="no" type="string" name="license.work.url">http://iamkriss.net/gallery/</config>
 	<config protected="no" type="string" name="license.work.title">Bildmaterial</config>
+	<config protected="no" type="string" name="magnifier.class.container">cmImagnifier-container</config>
+	<config protected="no" type="string" name="magnifier.class.lense">cmImagnifier-lense</config>
+	<config protected="no" type="string" name="magnifier.class.image">cmImagnifier-image</config>
+	<config protected="no" type="string" name="magnifier.class.magnified">cmImagnifier-image-magnified</config>
+	<config protected="no" type="string" name="magnifier.class.position">cmImagnifier-lense-position</config>
+	<config protected="no" type="string" name="magnifier.class.ratio">cmImagnifier-lense-ratio</config>
+	<config protected="no" type="string" name="magnifier.ease.in">linear</config>
+	<config protected="no" type="string" name="magnifier.ease.out">linear</config>
+	<config protected="no" type="boolean" name="magnifier.show.ratio">yes</config>
+	<config protected="no" type="boolean" name="magnifier.show.position">no</config>
+	<config protected="no" type="integer" name="magnifier.speed.in">0</config>
+	<config protected="no" type="integer" name="magnifier.speed.out">0</config>
 	<config protected="yes" type="string" name="path">gallery/</config>
 	<config protected="yes" type="integer" name="thumb.width">126</config>
 	<config protected="yes" type="integer" name="thumb.height">84</config>
@@ -31,6 +52,7 @@
 	<relations>
 		<needs type="module">JS_Layer</needs>
 		<needs type="module">UI_Helper_Content</needs>
+		<supports type="module">JS_cmImagnifier</supports>
 	</relations>
 	<link xml:lang="de" access="public" path="gallery">Galerie</link>
 	<link rank="99" access="public" path="gallery/feed"/>
