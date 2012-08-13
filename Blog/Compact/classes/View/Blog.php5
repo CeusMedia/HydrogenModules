@@ -2,11 +2,6 @@
 class View_Blog extends CMF_Hydrogen_View{
 
 	public function __onInit(){
-		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatGaleryLinks" );
-		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatBlogLinks" );
-		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatEmoticons" );
-		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatImages" );
-		View_Helper_ContentConverter::register( "View_Helper_Blog", "formatIFrames" );
 		$converters	= array(
 			"formatText",
 			"formatLinks",
@@ -39,25 +34,57 @@ class View_Blog extends CMF_Hydrogen_View{
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
+
 		$channel	= array(
-			'title'			=> $config->get( 'app.name' ).': '.$words->title,
-			'description'	=> $words->description,
-			'link'			=> $baseUrl.'blog/'
+			'link'		=> $baseUrl.'blog',
+			'language'	=> $config->get( 'module.blog_compact.feed.language' ),
+			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
+			'title'		=> $words->title,
 		);
+		if( $config->get( 'app.name' ) )
+			$channel['title']	= $config->get( 'app.name' ).': '.$words->title;
+		if( $words->description )
+			$channel['description']	= $words->description;
+		if( $words->category )
+			$channel['category']	= $words->category;
+		if( $words->copyright )
+			$channel['copyright']	= $words->copyright;
+		if( $config->get( 'module.blog_compact.feed.editor' ) )
+			$channel['managingEditor']	= $config->get( 'module.blog_compact.feed.editor' );
+		if( $config->get( 'app.email' ) ){
+			$channel['webMaster']	= $config->get( 'app.email' );
+			if( $config->get( 'app.author' ) )
+				$channel['webMaster']	.=' ('.$config->get( 'app.author' ).')';
+		}
+		
 		$feed		= new XML_RSS_Builder();
 		$feed->setChannelData( $channel );
 		foreach( $articles as $article ){
-#			print_m( $articles );
 			$uri	= $baseUrl.'blog/article/'.$article->articleId;
+			$content	= array_shift( explode( "\n", strip_tags( $article->content ) ) );
+			$content	= View_Helper_ContentConverter::formatText( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatWikiLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatYoutubeLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatMapLinks( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatMapSearch( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatImageSearch( $this->env, $content );
+			$content	= View_Helper_ContentConverter::formatImdbLinks( $this->env, $content );
+			$content	= View_Helper_Blog::formatBlogLinks( $this->env, $content );
+			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
+				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
+				
 			$data	= array(
 				'title'			=> $article->title,
-				'description'	=> array_shift( explode( "\n", strip_tags( $article->content ) ) ),
+				'description'	=> $content,
 				'guid'			=> $uri,
 				'link'			=> $uri,
+				'category'		=> 'Blog-Artikel',
+				'source'		=> $baseUrl.'blog/feed',
 			);
 			if( $config->get( 'module.blog_compact.niceURLs' ) )
 				$data['link']	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
-			$timestamp	= max( $article->createdAt, $article->modifiedAt );
+			$timestamp	= $article->createdAt;
 			if( $timestamp )
 				$data['pubDate']	= date( "r", (double) $timestamp );
 			$feed->addItem( $data );
