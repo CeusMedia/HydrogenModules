@@ -101,7 +101,7 @@ class View_Helper_Blog{
 			'class'	=> 'link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( $article->title ),
 		);
-		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
+		return UI_HTML_Tag::create( 'a', htmlentities( $article->title ), $attributes );
 	}
 	
 	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
