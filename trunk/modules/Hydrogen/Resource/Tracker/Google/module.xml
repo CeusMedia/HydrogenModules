@@ -2,7 +2,7 @@
 <module>
 	<title>Google Analytics Tracker</title>
 	<description><![CDATA[Request tracking using Google Analytics.]]></description>
-	<category>Tracker</category>
+	<category>Resource</category>
 	<version>0.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
