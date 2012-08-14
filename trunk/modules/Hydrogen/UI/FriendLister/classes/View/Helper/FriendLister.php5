@@ -88,7 +88,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 			$icon	= (string) $friend->icon;														//  
 		if( !$icon ) 
 			return '&nbsp;';
-		$attributes	= array( 'src' => $icon, 'title' => $friend->name );							//  
+		$attributes	= array( 'src' => $icon, 'alt' => $friend->name );								//  
 		return UI_HTML_Tag::create( 'img', NULL, $attributes );										//  
 	}
 }
