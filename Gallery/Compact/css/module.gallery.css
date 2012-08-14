@@ -108,7 +108,7 @@ body.moduleGallery.action-info #hint-magnifier {
 
 /*  --  IMAGE INFO: NAVI: STEPS  --  */
 body.moduleGallery .navi-steps {
-	border-bottom: 1px dotted gray;
+	border-bottom: 1px solid rgba(0,0,0,0.5);
 	padding: 4px 8px;
 	}
 body.moduleGallery .navi-steps .link-gallery-current {

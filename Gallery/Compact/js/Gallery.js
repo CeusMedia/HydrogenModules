@@ -1,16 +1,17 @@
 Gallery = {
 	pathImages: 'images/gallery/',
-	setupIndex: function(){
+	setupIndex: function(isMobile){
 		var galleryItemInfoButton = $("#gallery-item-info-button");
-		$("div.thumbnail").bind("mouseenter",function(){
-			galleryItemInfoButton.unbind("click").bind("click",function(){
-				var url = $(this).parent().children("a").data("original");
-				document.location.href = "./gallery/info/"+url;
+		if(!isMobile)
+			$("div.thumbnail").bind("mouseenter",function(){
+				galleryItemInfoButton.unbind("click").bind("click",function(){
+					var url = $(this).parent().children("a").data("original");
+					document.location.href = "./gallery/info/"+url;
+				});
+				$(this).append(galleryItemInfoButton.show());
+			}).bind("mouseleave",function(){
+				galleryItemInfoButton.hide();
 			});
-			$(this).append(galleryItemInfoButton.show());
-		}).bind("mouseleave",function(){
-			galleryItemInfoButton.hide();
-		});
 	},
 	setupInfo: function(){
 		if($("img.zoomable").size()){
@@ -47,7 +48,11 @@ Gallery = {
 		}
 		var layer = $("<div></div>").prependTo($("body"));
 		layer.attr("id","gallery-image-fullscreen").addClass("loading");
-		layer.bind("click",function(){$(this).fadeOut(200);});
+		layer.bind("click",function(){
+			$(this).fadeOut(200,function(){
+				$(this).children("img").remove();
+			});
+		});
 		
 		$("img.fullscreenable").live("click",function(){
 			var source = $(".gallery-image-info").data("original");
