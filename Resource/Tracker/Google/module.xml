@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Google Analytics Tracker</title>
+	<description><![CDATA[Request tracking using Google Analytics.]]></description>
+	<category>Tracker</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">ga.js</script>
+	</files>
+	<relations/>
+	<config protected="no" type="string" name="trackingID" info="starting with UA-">UA-28507900-1</config>
+	<config protected="no" type="boolean" name="anonymizeIP">no</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$options	= $env->getConfig()->getAll( 'module.tracker_google.' );
+		$context->js->addScript( 'initGoogleAnalytics('.json_encode( $options ).');' );
+	]]></hook>
+</module>
