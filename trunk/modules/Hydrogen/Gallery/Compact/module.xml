@@ -34,18 +34,6 @@
 	<config protected="no" type="string" name="license.work.creator">kriss</config>
 	<config protected="no" type="string" name="license.work.url">http://iamkriss.net/gallery/</config>
 	<config protected="no" type="string" name="license.work.title">Bildmaterial</config>
-	<config protected="no" type="string" name="magnifier.class.container">cmImagnifier-container</config>
-	<config protected="no" type="string" name="magnifier.class.lense">cmImagnifier-lense</config>
-	<config protected="no" type="string" name="magnifier.class.image">cmImagnifier-image</config>
-	<config protected="no" type="string" name="magnifier.class.magnified">cmImagnifier-image-magnified</config>
-	<config protected="no" type="string" name="magnifier.class.position">cmImagnifier-lense-position</config>
-	<config protected="no" type="string" name="magnifier.class.ratio">cmImagnifier-lense-ratio</config>
-	<config protected="no" type="string" name="magnifier.ease.in">linear</config>
-	<config protected="no" type="string" name="magnifier.ease.out">linear</config>
-	<config protected="no" type="boolean" name="magnifier.show.ratio">yes</config>
-	<config protected="no" type="boolean" name="magnifier.show.position">no</config>
-	<config protected="no" type="integer" name="magnifier.speed.in">0</config>
-	<config protected="no" type="integer" name="magnifier.speed.out">0</config>
 	<config protected="yes" type="string" name="path">gallery/</config>
 	<config protected="yes" type="integer" name="thumb.width">126</config>
 	<config protected="yes" type="integer" name="thumb.height">84</config>
