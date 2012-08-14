@@ -47,6 +47,8 @@ $buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->
 $buttonStatusRemove	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 );
 $buttonCancel		= UI_HTML_Elements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
 
+$dateLastModified	= $article->modifiedAt ? date( 'Y-m-d H:i:s', $article->modifiedAt ) : '-';
+
 return '
 <div id="blog-edit-form">
 	<form name="editArticle" id="form-blogArticleEdit" action="./blog/edit/'.$articleId.'" method="post">
@@ -73,9 +75,9 @@ return '
 					<label for="input-time">Zeit</label><br/>
 					<input type="text" name="time" id="input-time" class="timepicker max" value="'.date( 'H:i', $article->createdAt ).'"/>
 				</li>
-				<li class="column-right-20">
+				<li class="column-right-20" style="display: '.( $article->modifiedAt ? 'block' : 'none' ).'">
 					<label for="input-date">zuletzt geändert</label><br/>
-					<b style="line-height: 2em">'.date( 'Y-m-d H:i:s', $article->modifiedAt ).'</b>
+					<b style="line-height: 2em">'.$dateLastModified.'</b>
 				</li>
 			</ul>
 			<div class="buttonbar">

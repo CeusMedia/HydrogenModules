@@ -97,11 +97,12 @@ class View_Helper_Blog{
 	}
 
 	static public function renderArticleLink( $article ){
+		$label		= str_replace( '&', '&amp;', $article->title );
 		$attributes	= array(
 			'class'	=> 'link-blog',
-			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( $article->title ),
+			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( strip_tags( $article->title ) ),
 		);
-		return UI_HTML_Tag::create( 'a', htmlentities( $article->title ), $attributes );
+		return UI_HTML_Tag::create( 'a', $label, $attributes );
 	}
 	
 	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){

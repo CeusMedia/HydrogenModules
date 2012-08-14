@@ -65,6 +65,7 @@ return '
 		</div>
 		<div class="blog-article-content">
 			'.$text.'
+			<div style="clear: both"></div>
 		</div>
 		<br/>
 		<div class="blog-article-navi">
