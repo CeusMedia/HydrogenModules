@@ -86,7 +86,10 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 			$icon	= $config->get( 'module.ui_friendlister.icon.female' );							//  
 		if( strlen( (string) $friend->icon ) )														//  
 			$icon	= (string) $friend->icon;														//  
-		return $icon ? UI_HTML_Tag::create( 'img', NULL, array( 'src' => $icon ) ) : '&nbsp;';		//  
+		if( !$icon ) 
+			return '&nbsp;';
+		$attributes	= array( 'src' => $icon, 'title' => $friend->name );							//  
+		return UI_HTML_Tag::create( 'img', NULL, $attributes );										//  
 	}
 }
 ?>
