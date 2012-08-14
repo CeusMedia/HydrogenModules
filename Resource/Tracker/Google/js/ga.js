@@ -1,6 +1,6 @@
 var _gaq = _gaq || [];
 function initGoogleAnalytics(options){
-	_gaq.push(['_setAccount', options.trackingId]);
+	_gaq.push(['_setAccount', options.trackingID]);
 	if(options.anonymizeIP)
 		_gaq.push(['_gat._anonymizeIp']);
 	_gaq.push(['_trackPageview']);
