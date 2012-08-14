@@ -30,7 +30,7 @@ Gallery = {
 				speedOut: config.module_js_cmimagnifier_speedOut
 			});
 			$("#button-fullscreen").bind("click",function(){
-				$("img.zoomable").addClass("fullscreenable").cmImagnifier("toggle");
+				$("img.zoomable").addClass("fullscreenable").cmImagnifier("toggle");				//  @todo handle: module cmMagnifier not installed
 				$("#button-magnifier").removeAttr("disabled");
 				$("#hint-magnifier").hide();
 				$("#hint-fullscreen").fadeIn(200);
@@ -45,22 +45,20 @@ Gallery = {
 				$("#button-fullscreen").removeAttr("disabled");
 			});
 		}
+		var layer = $("<div></div>").prependTo($("body"));
+		layer.attr("id","gallery-image-fullscreen").addClass("loading");
+		layer.bind("click",function(){$(this).fadeOut(200);});
+		
 		$("img.fullscreenable").live("click",function(){
 			var source = $(".gallery-image-info").data("original");
-			$(this).addClass("loading");
-			var layer = $("<div></div>").prependTo($("body"));
-			layer.attr("id","gallery-image-fullscreen");
-			layer.bind("click",function(){
-				$(this).fadeOut(200,function(){
-					$(this).remove();
-				});
-			});
+			$("#gallery-image-fullscreen")/*.addClass("loading")*/.show();
 			var image =  $("<img/>").appendTo(layer);
 			image.bind("load",function(){
 				$("#button-fullscreen").removeClass("loading");
 				var ratioBody = $("body").width() / $("body").height();
 				var ratioImage = $(this).get(0).width / $(this).get(0).height;
 				$(this).css((ratioBody > ratioImage ? "width" : "height"), "100%");
+//				$(this).parent().removeClass("loading");
 				$(this).fadeIn(300,function(){});
 			});
 			image.attr("src",Gallery.pathImages+source);
