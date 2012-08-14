@@ -12,6 +12,7 @@
 		<style load="auto">module.gallery.css</style>
 		<locale>de/html/gallery/index.bottom.html</locale>
 		<locale>de/html/gallery/license.html</locale>
+		<image source="theme">loadingAnimation.gif</image>
 	</files>
 	<config protected="yes" type="boolean" name="info.download">yes</config>
 	<config protected="yes" type="boolean" name="info.exif">yes</config>
