@@ -12,8 +12,8 @@ MailDecrypt = function(selector,pattern){
 					attr[i] = ' '+attr[i].replace(/:/,'="')+'"';				//  
 				attr = attr.join("");											//  
 			}
-			user = matches[1].replace(/<.+?>/g,'');								//  get clean user
-			host = matches[2].replace(/<.+?>/g,'');								//  get clean host
+			user = matches[1].replace(/<.+?>/g,'').replace(/&.+?;/g,'');		//  get clean user
+			host = matches[2].replace(/<.+?>/g,'').replace(/&.+?;/g,'');		//  get clean host
 			repl = '<a href="mailto:'+user+'@'+host+'"'+attr+'>$1@$2</a>';		//  
 			string = string.replace(pattern, repl);								//  replace node conten by mail link
 			$(selector).html(string);											//  realize new linked content in node
