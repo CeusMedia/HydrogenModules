@@ -108,7 +108,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		$config		= $this->env->getConfig();
 		foreach( $articles as $article ){
 			$url		= './blog/article/'.$article->articleId;
-			if( $config->get( 'niceURLs' ) )
+			if( $config->get( 'module.blog_compact.niceURLs' ) )
 				$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$label		= str_replace( '&', '&amp;', $article->title );
 			$link		= UI_HTML_Elements::Link( $url, $label, 'blog-article-link' );

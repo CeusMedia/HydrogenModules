@@ -39,5 +39,13 @@ class Model_Article extends CMF_Hydrogen_Model{
 		ksort( $tags );
 		return $tags;
 	}
+
+	public function getArticleVersions( $articleId ){
+		$model	= new Model_ArticleVersion( $this->env );
+		return $model->getAll(
+			array( 'articleId'			=> $articleId ),
+			array( 'articleVersionId'	=> 'ASC' )
+		);
+	}
 }
 ?>

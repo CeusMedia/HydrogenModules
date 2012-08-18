@@ -12,11 +12,13 @@ class View_Helper_Blog{
 			$uri		= $baseUri.'blog/article/'.$matches[1][$i];
 			if( $article ){
 				$title	= $title ? $title : $article->title;
-				$uri	= $baseUri.'blog/article/'.$matches[1][$i].'/'.rawurlencode( $article->title );
+				$uri	= $baseUri.'blog/article/'.$matches[1][$i];
+				if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
+					$uri	.= '/'.self::getArticleTitleUrlLabel( $article );
 			}
 			else
 				$title	= UI_HTML_Tag::create( 'strike', $title );
-			$link		= UI_HTML_Elements::Link( $uri, $title, 'link-blog', '_blank' );
+			$link		= UI_HTML_Elements::Link( $uri, $title, 'icon-label link-blog', '_blank' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -86,8 +88,8 @@ class View_Helper_Blog{
 
 	static public function getArticleTitleUrlLabel( $article ){
 		$cut	= array( '?', '!', ':', '.', ';', '"', "'" );
-		$label	= str_replace( $cut, '', $article->title );											//  remove inappropriate characters
-		$label	= trim( preg_replace( '/ +/', ' ', $label ) );										//  shorten spaces to one and trim
+		$label	= str_replace( $cut, '', strip_tags( $article->title ) );							//  remove inappropriate characters and HTML tags
+		$label	= trim( preg_replace( '/ +/', '_', $label ) );										//  shorten spaces to one and trim
 		return rawurlencode( $label.'.html' );														//  return encoded URL component
 	}
 	
@@ -96,11 +98,14 @@ class View_Helper_Blog{
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
 	}
 
-	static public function renderArticleLink( $article ){
+	static public function renderArticleLink( $env, $article, $version = 0 ){
 		$label		= str_replace( '&', '&amp;', $article->title );
+		$keywords	= "";
+		if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
+			$keywords	= self::getArticleTitleUrlLabel( $article );
 		$attributes	= array(
-			'class'	=> 'link-blog',
-			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( strip_tags( $article->title ) ),
+			'class'	=> 'icon-label link-blog',
+			'href'	=> 'blog/article/'.$article->articleId.'/'.$version.'/'.$keywords,
 		);
 		return UI_HTML_Tag::create( 'a', $label, $attributes );
 	}
@@ -110,7 +115,7 @@ class View_Helper_Blog{
 		$model	= new Model_Article( $env );
 		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
-			$link	= self::renderArticleLink( $article );
+			$link	= self::renderArticleLink( $env, $article );
 			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );

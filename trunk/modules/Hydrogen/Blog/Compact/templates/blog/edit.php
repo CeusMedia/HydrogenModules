@@ -18,6 +18,7 @@ $optAuthor	= UI_HTML_Elements::Options( $optAuthor, NULL );
 
 $listAuthors	= '<b><em>noch keine</em></b>';
 $listTags		= '<b><em>noch keine</em></b>';
+$listVersions	= '<b><em>noch keine</em></b>';
 
 $list	= array();
 if( $tags ){
@@ -42,14 +43,52 @@ if( $authors ){
 	$listAuthors	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
 
-$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 );
-$buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 );
-$buttonStatusRemove	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 );
+$list	= array();
+if( $article->versions ){
+	$label	= 'Version '.( count( $article->versions ) + 1 );
+	$link	= UI_HTML_Elements::Link( './blog/edit/'.$article->articleId, $label, 'version latest' );
+	$class	= $version != count( $article->versions ) ? 'current' : NULL;
+	$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => $class ) );
+	foreach( $article->versions as $nr => $articleVersion ){
+		$label	= 'Version '.++$nr;
+		$url	= './blog/edit/'.$article->articleId.'/'.$nr;
+		$class	= $version == $nr ? 'current' : NULL;
+		$link	= UI_HTML_Elements::Link( $url, $label, 'version' );
+		$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => $class ) );
+	}
+	$listVersions	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'not-editor-list versions' ) );
+}
+
+$isHistory			= $version <= count( $article->versions );
+
 $buttonCancel		= UI_HTML_Elements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
+$buttonSave			= UI_HTML_Elements::Button( 'save', 'speichern', 'button save', NULL, $isHistory );
+$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 || $isHistory );
+$buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 || $isHistory );
+$buttonStatusRemove	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 || $isHistory );
 
 $dateLastModified	= $article->modifiedAt ? date( 'Y-m-d H:i:s', $article->modifiedAt ) : '-';
 
+if( $version > 0 && $version < $article->version ){
+	$nr	= $version - 1;
+	$article->title			= $article->versions[$nr]->title;
+	$article->content		= $article->versions[$nr]->content;
+	$article->createdAt		= $article->versions[$nr]->createdAt;
+	$article->modifiedAt	= $article->versions[$nr]->modifiedAt;
+	$article->version		= $version;
+}
+
+$title		= htmlentities( $article->title, ENT_QUOTES, 'UTF-8' );
+$content	= htmlentities( $article->content, ENT_QUOTES, 'UTF-8' );
+$date		= date( 'Y-m-d', $article->createdAt );
+$time		= date( 'H:i', $article->createdAt );
+
 return '
+<style>
+.versions .current {
+	font-weight: bold;
+	}
+</style>
 <div id="blog-edit-form">
 	<form name="editArticle" id="form-blogArticleEdit" action="./blog/edit/'.$articleId.'" method="post">
 		<fieldset>
@@ -57,11 +96,11 @@ return '
 			<ul class="input">
 				<li>
 					<label for="input-title">Titel</label><br/>
-					<input type="text" name="title" id="input-title" class="max" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="title" id="input-title" class="max" value="'.$title.'"/>
 				</li>
 				<li>
 					<label for="input-title">Inhalt</label><br/>
-					<textarea name="content" id="input-content" rows="10" class="max CodeMirror">'.htmlentities( $article->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="content" id="input-content" rows="10" class="max CodeMirror">'.$content.'</textarea>
 				</li>
 				<li class="column-left-20">
 					<label for="input-status">Status / Sichtbarkeit</label><br/>
@@ -69,11 +108,22 @@ return '
 				</li>
 				<li class="column-left-20">
 					<label for="input-date">Datum</label><br/>
-					<input type="text" name="date" id="input-date" class="datepicker max" value="'.date( 'Y-m-d', $article->createdAt ).'"/>
+					<input type="text" name="date" id="input-date" class="datepicker max" value="'.$date.'"/>
 				</li>
 				<li class="column-left-10">
 					<label for="input-time">Zeit</label><br/>
-					<input type="text" name="time" id="input-time" class="timepicker max" value="'.date( 'H:i', $article->createdAt ).'"/>
+					<input type="text" name="time" id="input-time" class="timepicker max" value="'.$time.'"/>
+				</li>
+				<li class="column-left-20" style="padding-left: 1em;">
+<!--					<b>Optionen:</b><br/>-->
+					<label for="input-version">
+						<input type="checkbox" name="version" id="input-version" value="1"/>
+						&nbsp;neue Version
+					</label><br/>
+					<label for="input-now">
+						<input type="checkbox" name="now" id="input-now" value="1"/>
+						&nbsp;aktuelle Zeit setzen
+					</label><br/>
 				</li>
 				<li class="column-right-20" style="display: '.( $article->modifiedAt ? 'block' : 'none' ).'">
 					<label for="input-date">zuletzt geändert</label><br/>
@@ -83,8 +133,8 @@ return '
 			<div class="buttonbar">
 				'.$buttonCancel.'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
-				<button type="submit" name="do" value="save" class="button save"><span>speichern</span></button>
-				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.$buttonSave.'
+				&nbsp;&nbsp;&nbsp;<b>oder</b>&nbsp;&nbsp;
 				'.$buttonStatusShow.'
 				'.$buttonStatusHide.'
 				'.$buttonStatusRemove.'
@@ -117,6 +167,12 @@ return '
 				</div>
 		</fieldset>
 	</div>
+	<div class="column-left-33">
+		<fieldset>
+			<legend>Versionen</legend>
+				'.$listVersions.'
+		</fieldset>
+	</div>
 	<div class="column-clear"></div>
 </div>
 <script>
@@ -134,6 +190,24 @@ $(document).ready(function(){
 		var url = "./blog/addAuthor/'.$articleId.'/"+$(this).val();
 		document.location.href = url;
 	})
+	
+	if('.(int) $isHistory.'){
+		$("#form-blogArticleEdit :input").each(function(){
+			var id = $(this).attr("disabled","disabled").attr("id");
+		});
+	}		
+		
+
+	$("#input-now").bind("change",function(){
+		if($(this).is(":checked")){
+			$("#input-date").attr("disabled", "disabled");
+			$("#input-time").attr("disabled", "disabled");
+		}
+		else{
+			$("#input-date").removeAttr("disabled");
+			$("#input-time").removeAttr("disabled");
+		}
+	});
 });
 </script>
 ';

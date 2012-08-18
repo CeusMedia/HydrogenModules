@@ -69,17 +69,26 @@ body.controller-blog .blog-article .blog-article-author-list {
 	display: inline;
 	}
 
-body.controller-blog div.blog-article div.article-navi {
-	padding-bottom: 3px;
-	border-bottom: 2px solid rgba(0,0,0,0.5);
+body.controller-blog div.blog-article div.article-navi {}
+body.controller-blog div.blog-article div.blog-article-navi.top {
+	padding-bottom: 5px;
+	border-bottom: 1px solid rgba(0,0,0,0.5);
 	}
-body.controller-blog div.blog-article div.blog-article-navi {
+body.controller-blog div.blog-article div.blog-article-navi.bottom {
 	clear: both;
 	margin-top: 5px;
 	padding-top: 5px;
-	border-top: 2px solid rgba(0,0,0,0.5);
+	border-top: 1px solid rgba(0,0,0,0.5);
 	}
 
+body.controller-blog div.blog-article #blog-article-info {
+	padding: 5px;
+	background-color: rgba(127,127,127,0.1);
+	border-top: 1px solid rgba(127,127,127,0.2);
+	border-bottom: 1px solid rgba(127,127,127,0.2);
+	}
+
+	
 ul.top-tags {
 	list-style: none;
 	margin: 0px;
