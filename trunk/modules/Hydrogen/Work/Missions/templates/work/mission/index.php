@@ -110,19 +110,7 @@ if( count( $list[6] ) ){
 
 $panelList	= join( $folders );
 
-
 $buttonAdd	= UI_HTML_Elements::LinkButton( './work/mission/add', $w->buttonAdd, 'button add' );
-	
-$panelPort	= '
-	<fieldset>
-		<legend>Daten-Port</legend>
-		'.UI_HTML_Elements::LinkButton( './work/mission/export', 'exportieren', 'button export' ).'
-		<hr/>
-		<form action="./work/mission/import" method="post" enctype="multipart/form-data">
-			<input type="file" name="serial"/>'.UI_HTML_Elements::Button( 'import', 'importieren', 'button import' ).'
-		</form>
-	</fieldset>
-';
 
 $panelAdd	= '<fieldset>
 	<legend class="icon add">Neuer Eintrag</legend>
@@ -130,9 +118,49 @@ $panelAdd	= '<fieldset>
 	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'neuer Termin', 'button add event-add' ).'
 </fieldset>';
 
-$content	= '
-<style>
+$panelExport	= '<fieldset>
+	<legend class="icon export">Export / Import</legend>
+	<b>Export als:</b>&nbsp;
+	'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
+	'.UI_HTML_Elements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
+	<hr/>
+	<form action="./work/mission/import" method="post" enctype="multipart/form-data">
+		<b>Import aus:</b>&nbsp;
+		<input type="text" name="import" id="input-import" class="m" readonly="readonly"/>
+		<input type="file" name="serial" id="input-serial" accept="application/gzip"/>
+	</form>
+</fieldset>';
 
+$content	= '
+<script>
+
+$(document).ready(function(){
+	$("#input-import").bind("click",function(){
+		$("#input-serial").trigger("click")
+	});
+	$("#input-serial").trigger("click");
+	$("#input-serial").bind("change",function(){
+		var value = $("#input-serial").val().replace(/\\\/g,"/");
+		$("#input-import").val(value.split(/\//).pop());
+		var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
+		if(confirm(text))
+			$("#input-import").get(0).form.submit();
+		else
+			$("#input-import").val("");
+	});
+});
+
+</script>
+<style>
+#input-import {
+	background-color: white;
+	font-style: italic;
+	font-weight: bold;
+	}
+#input-serial {
+	position: absolute;
+	left: -1000px;
+	}
 /*  table.sort.css  */
 table tr th.sortable {
 	cursor: pointer;
@@ -144,6 +172,16 @@ table tr th.sortable.ordered.direction-asc {
 	}
 table tr th.sortable.ordered.direction-desc {
 	}
+button.export.ical span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+button.export.archive span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
+	}
+legend.icon.export {
+	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
+	}
+
 </style>
 <script>
 function makeTableSortable(jq,options){
@@ -182,7 +220,7 @@ $(document).ready(function(){
 <div class="column-left-20">
 	'.$panelFilter.'
 	'.$panelAdd.'
-<!--	'.$panelPort.'-->
+	'.$panelExport.'
 </div>
 <div class="column-left-80">
 	<div id="mission-folders">

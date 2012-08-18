@@ -63,7 +63,7 @@ return '
 	<fieldset>
 		<legend class="icon info">Info</legend>
 		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
-		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'small', TRUE ).'
+		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'
 		<dl>
 			<dt>Views</dt>
 			<dd>'.$note->numberViews.'</dd>
