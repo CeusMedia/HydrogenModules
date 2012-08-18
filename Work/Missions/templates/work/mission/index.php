@@ -133,57 +133,6 @@ $panelExport	= '<fieldset>
 
 $content	= '
 <script>
-
-$(document).ready(function(){
-	$("#input-import").bind("click",function(){
-		$("#input-serial").trigger("click")
-	});
-	$("#input-serial").trigger("click");
-	$("#input-serial").bind("change",function(){
-		var value = $("#input-serial").val().replace(/\\\/g,"/");
-		$("#input-import").val(value.split(/\//).pop());
-		var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
-		if(confirm(text))
-			$("#input-import").get(0).form.submit();
-		else
-			$("#input-import").val("");
-	});
-});
-
-</script>
-<style>
-#input-import {
-	background-color: white;
-	font-style: italic;
-	font-weight: bold;
-	}
-#input-serial {
-	position: absolute;
-	left: -1000px;
-	}
-/*  table.sort.css  */
-table tr th.sortable {
-	cursor: pointer;
-	text-decoration: underline;
-	}
-table tr th.sortable.ordered {
-	}
-table tr th.sortable.ordered.direction-asc {
-	}
-table tr th.sortable.ordered.direction-desc {
-	}
-button.export.ical span{
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
-	}
-button.export.archive span{
-	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
-	}
-legend.icon.export {
-	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
-	}
-
-</style>
-<script>
 function makeTableSortable(jq,options){
 	var options = $.extend({order: null, direction: "ASC"},options);
 	$("body").data("tablesort-options",options);
