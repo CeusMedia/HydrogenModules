@@ -71,7 +71,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$modelRelation	= new Model_ArticleTag( $this->env );
 
 		if( (int) $articleId < 1 )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
 
 		$tagName	= $request->get( 'tag' );
 		if( !strlen( $tagName ) )
@@ -105,10 +105,12 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	}
 
-	public function article( $articleId, $title = NULL ){
+	public function article( $articleId, $version = 0, $title = NULL ){
 		$articleId	= preg_replace( "/^(\d+).*/", '\\1', trim( $articleId ) );
 		if( (int) $articleId < 1 )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
+
+		$version	= preg_replace( "/^(\d+).*/", '\\1', trim( $version ) );
 
 		$states		= $this->env->getSession()->get( 'filter_blog_states' );
 		if( !$this->isEditor )
@@ -116,13 +118,20 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		else if( !$states )
 			$this->env->getSession()->set( 'filter_blog_states', $states = array( 0, 1 ) );
 		$conditions	= array( 'status' => $states );
-		
+
+		$article				= $this->model->get( $articleId );
+		$article->versions		= $this->model->getArticleVersions( $articleId );
+		$article->version		= count( $article->versions ) + 1;
+		if( $version < 1 )
+			$version	= $article->version;
+
 		$data	= array(
 			'articles'	=> $this->model->getAll( $conditions, array( 'createdAt' => 'DESC' ) ),
-			'article'	=> $this->model->get( $articleId ),
+			'article'	=> $article,
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
 			'articleId'	=> rawurldecode( $articleId ),
+			'version'	=> $version,
 			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
@@ -138,46 +147,66 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'user', $user );
 	}
 
-	public function edit( $articleId ){
+	public function edit( $articleId, $version = 0 ){
 		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
 
 		if( (int) $articleId < 1 )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
 		$article	= $this->model->get( $articleId );
 		if( !$article )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
+		
+		$model		= new Model_ArticleVersion( $this->env );
+		$article->versions	= $this->model->getArticleVersions( $articleId );
+		$article->version	= count( $article->versions ) + 1;
+		if( $version < 1 )
+			$version	= $article->version;
 
 		$userId		= $this->env->getSession()->get( 'userId' );
-		
-		if( $request->get( 'do' ) == 'save' ){
+
+		if( $request->get( 'save' ) ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				throw new InvalidArgumentException( 'Article title is missing' ) ;
 			if( !strlen( trim( $request->get( 'content' ) ) ) )
 				throw new InvalidArgumentException( 'Article content is missing' ) ;
 	
 			$createdAt	= strtotime( $request->get( 'date' ).' '.$request->get( 'time' ).':00' );	//  new creation date string
-			$createdAt	= $createdAt ? $createdAt : time();
+			$createdAt	= ( $createdAt && !$request->get( 'now' ) ) ? $createdAt : time();
 
 			$data		= array(
-				'title'			=> trim( $request->get( 'title' ) ),
-				'content'		=> trim( $request->get( 'content' ) ),
-				'status'		=> $request->get( 'status' ),
-				'createdAt'		=> $createdAt,
+				'title'		=> trim( $request->get( 'title' ) ),
+				'content'	=> trim( $request->get( 'content' ) ),
+				'status'	=> $request->get( 'status' ),
+				'createdAt'	=> $createdAt,
 			);
 			
 			$model	= new Model_Article( $this->env );
 			if( !$model->edit( $articleId, $data, FALSE ) ){
-				$this->env->getMessenger()->noteError( 'Am Artikel wurde nichts geändert.' );
+				$messenger->noteError( 'Am Artikel wurde nichts geändert.' );
 				return;
 			}
 			$model->edit( $articleId, array( 'modifiedAt' => time() ) );
+			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde geändert.' );
+			
+			if( $request->get( 'version' ) ){
+				$model	= new Model_ArticleVersion( $this->env );
+				$data	= array(
+					'articleId'		=> $article->articleId,
+					'title'			=> $article->title,
+					'content'		=> $article->content,
+					'createdAt'		=> $article->createdAt,
+					'modifiedAt'	=> max( $article->createdAt, $article->modifiedAt ),
+				);
+				$model->add( $data, FALSE );
+				$messenger->noteNotice( 'Die vorherige Version des Artikels wurde archiviert.' );
+			}
 			
 			$model	= new Model_ArticleAuthor( $this->env );
 			if( !$model->count( array( 'articleId' => $articleId, 'userId' => $userId ) ) )
 				$model->add( array( 'articleId' => $articleId, 'userId' => $userId ) );
 
 			
-			$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde geändert.' );
 			$this->restart( './blog/edit/'.$articleId );
 		}
 		$modelUser	= new Model_User( $this->env );
@@ -189,6 +218,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'editors'	=> $modelUser->getAll( array( 'status' => '>0' ) ),
 			'articleId'	=> rawurldecode( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
+			'version'	=> $version,
 		);
 		$this->setData( $data );
 	}
@@ -220,11 +250,12 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'status' => $states ? $states : -99 );
 		$orders		= array( 'createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/ );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
-#		remark( $this->model->getLastQuery() );
-#		die;
+
 		foreach( $articles as $nr => $article ){
-			$articles[$nr]->authors	= $this->model->getArticleAuthors( $article->articleId );
-			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
+			$article->authors		= $this->model->getArticleAuthors( $article->articleId );
+			$article->tags			= $this->model->getArticleTags( $article->articleId );
+			$article->versions		= $this->model->getArticleVersions( $article->articleId );
+			$article->version		= count( $article->versions ) + 1;
 		}
 		
 		$query		= 'SELECT COUNT(at.articleId) as nr, at.tagId, t.title FROM articles AS a, article_tags AS at, tags AS t WHERE at.tagId=t.tagId AND at.articleId=a.articleId AND a.status=1 GROUP BY at.tagId ORDER BY nr DESC LIMIT 0, 10';
@@ -293,16 +324,16 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		}
 		if( $request->isAjax() )
 			exit;
-		$this->restart( './blog/' );
+		$this->restart( './blog' );
 	}
 
 	public function setStatus( $articleId, $status ){
 		$words	= $this->getWords( 'states' );
 		if( (int) $articleId < 1 )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
 		$article	= $this->model->get( $articleId );
 		if( !$article )
-			$this->restart( './blog/' );
+			$this->restart( './blog' );
 		$this->model->edit( $articleId, array( 'status' => $status ) );
 		$this->env->getMessenger()->noteSuccess( 'Der Status wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
 		$this->restart( './blog/edit/'.$articleId );

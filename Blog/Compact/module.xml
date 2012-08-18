@@ -8,6 +8,7 @@
 		<class>Model/Article.php5</class>
 		<class>Model/ArticleAuthor.php5</class>
 		<class>Model/ArticleTag.php5</class>
+		<class>Model/ArticleVersion.php5</class>
 		<class>Model/Tag.php5</class>
 		<class>View/Blog.php5</class>
 		<class>View/Helper/Blog.php5</class>
