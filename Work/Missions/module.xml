@@ -18,6 +18,7 @@
 		<locale>de/work/mission.ini</locale>
 		<style load="auto">site.mission.css</style>
 		<script load="auto">work.mission.js</script>
+		<image source="theme">clearSearch.png</image>
 	</files>
 	<relations>
 		<needs type="module">Auth</needs>
