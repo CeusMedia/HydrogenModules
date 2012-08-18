@@ -56,7 +56,7 @@ class View_Helper_Gallery{
 		return UI_HTML_Tag::create( 'span', $link.$date, array( 'class' => $class ) );
 
 		$attributes	= array(
-			'class'	=> 'link-blog',
+			'class'	=> 'icon-label link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.rawurlencode( $article->title ),
 		);
 		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
