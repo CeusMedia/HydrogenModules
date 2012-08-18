@@ -59,23 +59,37 @@ function showOptionals(elem){
 
 $(document).ready(function(){
 	var site = $("body.controller-work-mission");
-	if(site.size()){
-		$("body.controller-work-mission #input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
-			dateFormat: "yy-mm-dd",
-	//		appendText: "(yyyy-mm-dd)",
-	//		buttonImage: "/images/datepicker.gif",
-	//		changeMonth: true,
-	//		changeYear: true,
-	//		gotoCurrent: true,
-	//		autoSize: true,
-			nextText: "nächster Monat",
-			prevText: "vorheriger Monat",
-			yearRange: "c:c+2",
-			monthNames: monthNames
-		});
-		//  @link	http://trentrichardson.com/examples/timepicker/
-		$("body.controller-work-mission #input_timeStart").timepicker({});
-		$("body.controller-work-mission #input_timeEnd").timepicker({});
-		$("body.controller-work-mission #input_type").trigger("change");
-	}
+	if(!site.size())
+		return;
+	$("#input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
+		dateFormat: "yy-mm-dd",
+//		appendText: "(yyyy-mm-dd)",
+//		buttonImage: "/images/datepicker.gif",
+//		changeMonth: true,
+//		changeYear: true,
+//		gotoCurrent: true,
+//		autoSize: true,
+		nextText: "nächster Monat",
+		prevText: "vorheriger Monat",
+		yearRange: "c:c+2",
+		monthNames: monthNames
+	});
+	//  @link	http://trentrichardson.com/examples/timepicker/
+	$("#input_timeStart").timepicker({});
+	$("#input_timeEnd").timepicker({});
+	$("#input_type").trigger("change");
+
+	$("#input-import").bind("click",function(){
+		$("#input-serial").trigger("click")
+	});
+	$("#input-serial").trigger("click");
+	$("#input-serial").bind("change",function(){
+		var value = $("#input-serial").val().replace(/\\/g,"/");
+		$("#input-import").val(value.split(/\//).pop());
+		var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
+		if(confirm(text))
+			$("#input-import").get(0).form.submit();
+		else
+			$("#input-import").val("");
+	});
 });
