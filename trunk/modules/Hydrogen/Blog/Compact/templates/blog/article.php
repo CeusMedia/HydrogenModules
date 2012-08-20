@@ -46,6 +46,8 @@ if( $article->versions ){
 	$list[]	= UI_HTML_Elements::Link( $url, $label, $class );
 	$listVersions	= UI_HTML_Tag::create( 'span', join( '&nbsp;', $list ), array( 'class' => 'not-editor-list versions' ) );
 }
+else
+	$listVersions	= '<b>1</b>';
 
 
 if( $version > 0 && $version < $article->version ){
@@ -93,6 +95,15 @@ return '
 	border: 1px solid rgba(0,0,0,0.5);
 	}
 </style>
+<script>
+$(window).keydown(function(event){
+	if(event.ctrlKey && event.which == 69){										//  ctrl+e is pressed
+		event.preventDefault();													//  prevent default browser behaviour
+		document.location.href = $("a.link-edit.button").attr("href");			//  redirect to article edit mode
+		return false;
+	}
+});
+</script>
 <div id="blog">
 	<div class="blog-article">
 		<div class="blog-article-navi top">
@@ -113,7 +124,7 @@ return '
 					<span class="icon-label date">'.$date.'</span> <span class="icon-label time">'.$time.'</span>
 				</div>
 				<div class="blog-article-version-list">
-					Versionen:
+					Version(en):
 					'.$listVersions.'
 				</div>
 			</div>
