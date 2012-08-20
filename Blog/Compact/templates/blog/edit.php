@@ -88,6 +88,9 @@ return '
 .versions .current {
 	font-weight: bold;
 	}
+code {
+	font-size: 0.8em;
+	}
 </style>
 <div id="blog-edit-form">
 	<form name="editArticle" id="form-blogArticleEdit" action="./blog/edit/'.$articleId.'" method="post">
@@ -176,6 +179,8 @@ return '
 	<div class="column-clear"></div>
 </div>
 <script>
+var blogArticleId = '.(int) $articleId.';
+var blogIsHistory = '.(int) $isHistory.';
 $(document).ready(function(){
 	$(".datepicker").datepicker({dateFormat: "yy-mm-dd"});
 
@@ -187,16 +192,15 @@ $(document).ready(function(){
 	}).trigger("change");
 
 	$("#input-authorId").bind("change",function(){
-		var url = "./blog/addAuthor/'.$articleId.'/"+$(this).val();
+		var url = "./blog/addAuthor/"+blogArticleId+"/"+$(this).val();
 		document.location.href = url;
 	})
-	
-	if('.(int) $isHistory.'){
+
+	if(blogIsHistory){
 		$("#form-blogArticleEdit :input").each(function(){
 			var id = $(this).attr("disabled","disabled").attr("id");
 		});
-	}		
-		
+	}
 
 	$("#input-now").bind("change",function(){
 		if($(this).is(":checked")){
@@ -206,6 +210,33 @@ $(document).ready(function(){
 		else{
 			$("#input-date").removeAttr("disabled");
 			$("#input-time").removeAttr("disabled");
+		}
+	});
+
+	$(window).keydown(function(event){
+		if(event.ctrlKey){														//  control key is pressed
+			if(event.which == 67){												//  ctrl+c
+				event.preventDefault();											//  prevent default browser behaviour
+				document.location.href = "./blog/article/"+blogArticleId;		//  redirect to article view
+			}
+			if(event.which == 83 && !blogIsHistory){							//  ctrl+s is pressed and not viewing old version
+				event.preventDefault();											//  prevent default browser behaviour
+				var input = $("#input-content");								//  shortcut textarea
+				var mirror = $("div.CodeMirror-focused");						//  shortcut code mirror
+				if(mirror.size())												//  code mirror is enabled
+					input.data("codemirror").save();							//  save code mirror content to textarea
+				input.add(mirror).css("opacity", 0.5);							//  dim textarea and code mirror
+				$.ajax({														//  save content using AJAX
+					url: "./blog/setContent/"+blogArticleId,					//  controller action and article ID
+					data: {content: input.val()},								//  send content ...
+					type: "post",												//  ... via POST
+					success: function(response){								//  
+						$("div.CodeMirror-focused").css("opacity", 1);			//  reset code mirror opacity
+						$("#input-content").css("opacity", 1);					//  reset textarea opacity
+					}
+				});
+				return false;													//  
+			}
 		}
 	});
 });

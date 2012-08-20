@@ -239,6 +239,15 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'articles', $articles );
 		$this->addData( 'debug', (bool) $debug );
 	}
+	
+	protected function getFilteredStates(){
+		$states	= $this->env->getSession()->get( 'filter_blog_states' );
+		if( !is_array( $states ) )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+		if( !$this->isEditor /*|| !$states*/ )
+			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+		return $states;
+	}
 
 	public function index( $page = 0, $limit = NULL ){
 		$perPage	= abs( (int) $this->env->getConfig()->get( 'module.blog_compact.perPage' ) );
@@ -295,6 +304,21 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->restart( './blog/edit/'.$articleId );
 	}
 
+	public function setContent( $articleId ){
+		$request	= $this->env->getRequest();
+		if( (int) $articleId < 1 || !( $article	= $this->model->get( (int) $articleId ) ) )
+			$this->restart( './blog' );
+
+		if( $article->content != $request->get( 'content' ) ){
+			$data	= array(
+				'content'		=> $request->get( 'content' ),
+				'modifiedAt'	=> time(),
+			);
+			$this->model->edit( $articleId, $data, FALSE );
+		}
+		$request->isAjax() ? exit : $this->restart( './blog/edit/'.$articleId );
+	}
+
 	public function setFilter(){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -337,15 +361,6 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->model->edit( $articleId, array( 'status' => $status ) );
 		$this->env->getMessenger()->noteSuccess( 'Der Status wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
 		$this->restart( './blog/edit/'.$articleId );
-	}
-	
-	protected function getFilteredStates(){
-		$states	= $this->env->getSession()->get( 'filter_blog_states' );
-		if( !is_array( $states ) )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
-		if( !$this->isEditor /*|| !$states*/ )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
-		return $states;
 	}
 	
 	public function tag( $tagName ){
