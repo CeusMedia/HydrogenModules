@@ -14,6 +14,7 @@ class View_Helper_ContentConverter{
 	}
 
 	static public function formatCodeBlocks( $env, $content ){
+		$content	= preg_replace( '/<(\/?)code>/', "_____\\1code_____", $content );				//  preserve <code> tags
 		$pattern	= "/(\r?\n)*code:?(\w+)?>(.*)<code(\r?\n)*/siU";
 		$matches	= array();
 		preg_match_all( $pattern, $content, $matches );
@@ -24,6 +25,7 @@ class View_Helper_ContentConverter{
 			$new		= UI_HTML_Tag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
+		$content	= preg_replace( '/_____(\/?)code_____/', '<\\1code>', $content );				//  recreate <code> tags
 		return $content;
 	}
 	
