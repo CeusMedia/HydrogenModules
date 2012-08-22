@@ -33,9 +33,10 @@ class View_Gallery extends CMF_Hydrogen_View{
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
+		$module		= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.' ) );
 		$channel	= array(
 			'link'		=> $baseUrl.'gallery',
-			'language'	=> $config->get( 'module.gallery_compact.feed.language' ),
+			'language'	=> $module->get( 'feed.language' ),
 			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
 			'title'		=> $words->title,
 		);
@@ -47,12 +48,22 @@ class View_Gallery extends CMF_Hydrogen_View{
 			$channel['category']	= $words->category;
 		if( $words->copyright )
 			$channel['copyright']	= $words->copyright;
-		if( $config->get( 'module.gallery_compact.feed.editor' ) )
-			$channel['managingEditor']	= $config->get( 'module.gallery_compact.feed.editor' );
+		if( $module->get( 'feed.editor' ) )
+			$channel['managingEditor']	= $module->get( 'feed.editor' );
 		if( $config->get( 'app.email' ) ){
 			$channel['webMaster']	= $config->get( 'app.email' );
 			if( $config->get( 'app.author' ) )
 				$channel['webMaster']	.=' ('.$config->get( 'app.author' ).')';
+		}
+
+		if( $module->get( 'feed.image' ) ){
+			$channel['imageUrl']	= $module->get( 'feed.image' );
+			$channel['imageLink']	= $this->env->getConfig()->get( 'app.base.url' );
+			$channel['imageTitle']	= $config->get( 'app.name' );
+			if( $module->get( 'feed.image.width' ) )
+				$channel['imageWidth']	= $module->get( 'feed.image.width' );
+			if( $module->get( 'feed.image.height' ) )
+				$channel['imageHeight']	= $module->get( 'feed.image.height' );
 		}
 
 		$feed		= new XML_RSS_Builder();
