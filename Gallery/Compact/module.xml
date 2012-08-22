@@ -20,6 +20,9 @@
 	<config protected="yes" type="boolean" name="info.magnifier">no</config>
 	<config protected="yes" type="boolean" name="info.wallpaper">yes</config>
 	<config protected="yes" type="string" name="feed.editor">johndoe@example.org (John Doe)</config>
+	<config protected="yes" type="string" name="feed.image"></config>
+	<config protected="yes" type="string" name="feed.image.width"></config>
+	<config protected="yes" type="string" name="feed.image.height"></config>
 	<config protected="yes" type="string" name="feed.language">de-de</config>
 	<config protected="yes" type="string" name="format.date">j.n.Y</config>
 	<config protected="yes" type="string" name="format.time">H:i:s</config>
