@@ -25,6 +25,10 @@ class View_Blog extends CMF_Hydrogen_View{
 	public function article(){}
 
 	public function author(){}
+
+	public function dev(){
+		return View_Helper_ContentConverter::render( $this->env, $this->getData( 'dev' ) );
+	}
 	
 	public function edit(){}
 
@@ -34,10 +38,10 @@ class View_Blog extends CMF_Hydrogen_View{
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
-
+		$module		= new ADT_List_Dictionary( $config->getAll( 'module.blog_compact.' ) );
 		$channel	= array(
 			'link'		=> $baseUrl.'blog',
-			'language'	=> $config->get( 'module.blog_compact.feed.language' ),
+			'language'	=> $module->get( 'feed.language' ),
 			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
 			'title'		=> $words->title,
 		);
@@ -50,13 +54,23 @@ class View_Blog extends CMF_Hydrogen_View{
 		if( $words->copyright )
 			$channel['copyright']	= $words->copyright;
 		if( $config->get( 'module.blog_compact.feed.editor' ) )
-			$channel['managingEditor']	= $config->get( 'module.blog_compact.feed.editor' );
+			$channel['managingEditor']	= $module->get( 'feed.editor' );
 		if( $config->get( 'app.email' ) ){
 			$channel['webMaster']	= $config->get( 'app.email' );
 			if( $config->get( 'app.author' ) )
 				$channel['webMaster']	.=' ('.$config->get( 'app.author' ).')';
 		}
-		
+
+		if( $module->get( 'feed.image' ) ){
+			$channel['imageUrl']	= $module->get( 'feed.image' );
+			$channel['imageLink']	= $this->env->getConfig()->get( 'app.base.url' );
+			$channel['imageTitle']	= $config->get( 'app.name' );
+			if( $module->get( 'feed.image.width' ) )
+				$channel['imageWidth']	= $module->get( 'feed.image.width' );
+			if( $module->get( 'feed.image.height' ) )
+				$channel['imageHeight']	= $module->get( 'feed.image.height' );
+		}
+
 		$feed		= new XML_RSS_Builder();
 		$feed->setChannelData( $channel );
 		foreach( $articles as $article ){
@@ -82,7 +96,7 @@ class View_Blog extends CMF_Hydrogen_View{
 				'category'		=> 'Blog-Artikel',
 				'source'		=> $baseUrl.'blog/feed',
 			);
-			if( $config->get( 'module.blog_compact.niceURLs' ) )
+			if( $module->get( 'niceURLs' ) )
 				$data['link']	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$timestamp	= $article->createdAt;
 			if( $timestamp )

@@ -147,6 +147,14 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'user', $user );
 	}
 
+	public function dev( $topic = NULL ){
+		$topic		= strlen( $topic ) ? $topic : NULL;
+		$fileName	= 'contents/dev_'.$topic.'.txt';
+		$this->addData( 'dev', '' );
+		if( file_exists( $fileName ) )
+			$this->addData( 'dev', File_Reader::load( $fileName ) );
+	}
+
 	public function edit( $articleId, $version = 0 ){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();

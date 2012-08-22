@@ -23,6 +23,9 @@
 	</files>
 	<config protected="yes" type="string" name="feed.editor">johndoe@example.org (John Doe)</config>
 	<config protected="yes" type="string" name="feed.language">de-de</config>
+	<config protected="yes" type="string" name="feed.image"></config>
+	<config protected="yes" type="string" name="feed.image.width"></config>
+	<config protected="yes" type="string" name="feed.image.height"></config>
 	<config protected="yes" type="string" name="path.images">blog/</config>
 	<config protected="no" type="integer" name="perPage">10</config>
 	<config protected="no" type="boolean" name="niceURLs">yes</config>
