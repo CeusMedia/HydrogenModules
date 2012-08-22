@@ -19,10 +19,10 @@ class Mail_Syslog extends Mail_Abstract{
 	</dd>
 </dl>';
 
-		$fileStyle	= File_Reader::load( $config->get( 'path.themes' ).'css/mail.min.css' );
-		$fileScript	= File_Reader::load( $config->get( 'path.scripts' ).'mail.min.js' );
-		$style	= file_exists( $fileStyle ) ? File_Reader::load( $fileStyle ): '';
-		$script	= file_exists( $fileScript ) ? File_Reader::load( $fileScript ): '';
+		$fileStyle	= $config->get( 'path.themes' ).'css/mail.min.css';
+		$fileScript	= $config->get( 'path.scripts' ).'mail.min.js';
+		$style		= file_exists( $fileStyle ) ? File_Reader::load( $fileStyle ): '';
+		$script		= file_exists( $fileScript ) ? File_Reader::load( $fileScript ): '';
 		
 		$page	= new UI_HTML_PageFrame();
 		$page->addHead( UI_HTML_Tag::create( 'style', $style ) );
