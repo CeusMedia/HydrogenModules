@@ -3,7 +3,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Module( $this->env );
+		$this->logic		= Logic_Module::getInstance( $this->env );
 		$this->categories	= $this->logic->getCategories();
 #		$this->envApp		= $this->env->getRemote();
 #		print_m( $this->envApp );

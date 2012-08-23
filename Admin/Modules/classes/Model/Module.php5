@@ -308,6 +308,7 @@ class Model_Module{
 			catch( Exception $e ){
 				$results[$source->id]	= $e;
 			}
+			$this->env->clock->profiler->tick( 'Model_Module: Source: '.$source->title );
 		}
 		ksort( $list );
 		$this->modulesAvailable	= $list;
