@@ -4,7 +4,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	protected function __onInit(){
 #		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Module( $this->env );
+		$this->logic		= Logic_Module::getInstance( $this->env );
 #		$this->categories	= $this->logic->getCategories();
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.viewer.css' );

@@ -1,6 +1,13 @@
 <?php
+/**
+ *	Singleton of module logic. 
+ */
+/**
+ *	Singleton of module logic. 
+ */
 class Logic_Module {
 
+	static protected $instance	= NULL;
 	protected $env;
 	protected $messenger;
 	/**	@var	Model_Module	$model		Module module instance */
@@ -10,15 +17,18 @@ class Logic_Module {
 	const INSTALL_TYPE_LINK		= 1;
 	const INSTALL_TYPE_COPY		= 2;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env	= $env;
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Module( $env );
+		$this->env->clock->profiler->tick( 'Logic_Module: init' );
 
 		$moduleSource		= new Model_ModuleSource( $env );
 		$this->sources		= $moduleSource->getAll( FALSE );
+		$this->env->clock->profiler->tick( 'Logic_Module: get sources' );
 		foreach( $this->model->loadSources() as $sourceId => $status )
 			$this->sources[$sourceId]->status = $status;
+		$this->env->clock->profiler->tick( 'Logic_Module: load sources' );
 
 		foreach( $this->sources as $sourceId => $source ){
 			if( isset( $source->status ) && !is_integer( $source->status ) ){
@@ -29,6 +39,15 @@ class Logic_Module {
 				$this->env->getMessenger()->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
 			}
 		}
+		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
+	}
+	protected function __clone(){}
+	
+	
+	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+		if( !self::$instance )
+			self::$instance	= new Logic_Module( $env );
+		return self::$instance;
 	}
 
 	public function getSourceFromModuleId( $moduleId ){
