@@ -11,9 +11,10 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	protected $editor;
 	
 	protected function __onInit(){
+		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Module( $this->env );
+		$this->logic		= Logic_Module::getInstance( $this->env );
 		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->env->getRemote() );
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
