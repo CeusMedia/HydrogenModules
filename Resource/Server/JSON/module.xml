@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>JSON Server</title>
+	<description><![CDATA[Access to JSON Server.]]></description>
+	<category>Resource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<files>
+		<class>Resource/Server/Json.php5</class>
+		<class>View/Helper/JsonServerResponseCodeHandler.php5</class>
+	</files>
+	<config name="userAgent" type="string"></config>
+	<config name="auth.username" type="string"></config>
+	<config name="auth.password" type="string"></config>
+	<config name="auth.secret" type="string">secret</config>
+	<config name="log" type="string">server.json.log</config>
+	<config name="uri" type="string">http://example.org/server/json/</config>
+</module>
