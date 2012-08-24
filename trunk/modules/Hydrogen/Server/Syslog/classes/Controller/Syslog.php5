@@ -133,7 +133,8 @@ class Controller_Syslog extends Controller_Abstract {
 	protected function getLinesFromLog(){
 		$fileName	= $this->env->getConfig()->get( 'log.exception' );
 		if( !file_exists( $fileName ) )
-			throw new RuntimeException( 'Log not existing' );
+			return array();
+#			throw new RuntimeException( 'Log not existing' );
 		return File_Reader::loadArray( $fileName );
 	}
 
