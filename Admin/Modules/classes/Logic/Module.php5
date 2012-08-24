@@ -383,7 +383,7 @@ class Logic_Module {
 		if( !is_readable( $pathNameIn ) )
 			throw new Exception_Logic( 'Resource file is not readable', $fileIn, 21 );
 		if( !is_executable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not executable', $fileIn, 22 );
+			throw new Exception_Logic( 'Resource "'.$fileIn.'" file is not executable', $fileIn, 22 );
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
 			throw new Exception_Logic( 'Resource file is not executable', $fileOut, 30 );
