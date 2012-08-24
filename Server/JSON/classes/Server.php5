@@ -119,6 +119,9 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$mimeTypeSniffer	= new Net_HTTP_Sniffer_MimeType;
 		$mimeType			= $mimeTypeSniffer->getMimeType( $mimeTypesAllowed, $mimeTypeDefault );
 		$response->addHeaderPair( 'Content-type', $mimeType );
+		$allowed			= $config->get( 'module.server_json.access.allow.origin' );
+		if( $allowed )
+			$response->addHeaderPair( 'Access-Control-Allow-Origin', $allowed );
 		return json_encode( $data );
 	}
 
