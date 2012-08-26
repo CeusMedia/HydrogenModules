@@ -20,6 +20,11 @@ button {
 	font-size: 1em;
 */
 	}
+a.button {
+	display: block;
+	float: left;
+	text-decoration: none;
+	}
 .button:focus,
 .button:hover {
 	background-position: 0 -7px;
@@ -155,6 +160,7 @@ button {
 	}
 
 
+a.button[disabled],
 button[disabled] {
 	opacity: 0.5;
 	color: black;
