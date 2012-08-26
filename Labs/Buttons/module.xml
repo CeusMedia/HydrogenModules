@@ -12,6 +12,7 @@
 		<class>View/Lab/Button.php5</class>
 		<template>lab/button/index.php</template>
 		<style>site.lab.buttons.css</style>
+		<image source="theme">background_button_gradient_1.png</image>
 	</files>
 	<link path="lab/button">Lab: Buttons</link>
 </module>
