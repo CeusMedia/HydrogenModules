@@ -82,7 +82,7 @@ return '<h3>Buttons</h3>
 			<ul class="input">
 				<li>
 					<label for="input_style">&nbsp;&nbsp;Style File</label><br/>
-					<select name="style" id="input_style" onchange="this.form.submit()">'.$optStyle.'</select>
+					<select name="style" id="input_style" class="max" onchange="this.form.submit()">'.$optStyle.'</select>
 				</li>
 			</ul>
 		</form>
