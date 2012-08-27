@@ -78,7 +78,7 @@ return '<h3>Buttons</h3>
 <div class="column-left-20">
 	<fieldset>
 		<legend>Styles</legend>
-		<form action="./lab/button/">
+		<form action="./lab/button" method="get">
 			<ul class="input">
 				<li>
 					<label for="input_style">&nbsp;&nbsp;Style File</label><br/>
