@@ -93,6 +93,7 @@ $buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/
 $disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
 $buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/viewer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh', !$disabled );
 
 return '
 <fieldset>
@@ -112,8 +113,11 @@ return '
 	<div class="buttonbar">
 		'.$buttonBack.'
 		'.$buttonInstall.'
+		&nbsp;|&nbsp;
 		'.$buttonEdit.'
 		'.$buttonUninstall.'
+		&nbsp;|&nbsp;
+		'.$buttonReload.'
 	</div>
 </fieldset>
 ';
