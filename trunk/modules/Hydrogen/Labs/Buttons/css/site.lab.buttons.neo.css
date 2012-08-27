@@ -1,0 +1,135 @@
+#buttons .button,
+#buttons .button.disabled,
+#buttons .button:focus,
+#buttons .button[disabled],
+#buttons .button[readonly],
+#buttons .button[disabled]:hover,
+#buttons .button[readonly]:hover {
+	height: 2.9em !important;
+	margin: 0 0.35em 0.15em;
+	padding: 0 .91em !important;
+	border: 1px solid !important;
+	border-color: #CCC #AAA #AAA #CCC !important;
+	border-radius: 2px !important;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-box-shadow: inset 0 0 1px #fff;
+	-ms-box-shadow: inset 0 0 1px #fff;
+	-webkit-box-shadow: inset 0 0 1px #fff;
+	box-shadow: inset 0 0 1px #fff !important;
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#fffafafa,EndColorStr=#ffdcdcdc);
+	background: none;
+	background-color: #E0E0E0 !important;
+	background-position: 0px 0px !important;
+	background-image: -moz-linear-gradient(top,#FAFAFA 0,gainsboro 100%);
+	background-image: -ms-linear-gradient(top,#FAFAFA 0,gainsboro 100%);
+	background-image: -o-linear-gradient(top,#FAFAFA 0,gainsboro 100%);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#FAFAFA),color-stop(100%,gainsboro));
+	background-image: -webkit-linear-gradient(top,#FAFAFA 0,gainsboro 100%);
+	background-image: linear-gradient(to bottom,#FAFAFA 0,gainsboro 100%);
+	outline: 0;
+	font-weight: bold;
+	font-weight: normal;
+	font-size: 12px;
+	white-space: nowrap;
+	word-wrap: normal;
+	vertical-align: middle;
+	text-shadow: 0 1px 0 white;
+	color: #888 !important;
+	cursor: pointer;
+	}
+#buttons .button[disabled],
+#buttons .button[readonly],
+#buttons .button[disabled]:hover,
+#buttons .button[readonly]:hover {
+	opacity: 0.5;
+	cursor: default;
+	}
+#buttons .button:hover {
+	border-color: #888 !important;
+	box-shadow: 1px 1px 2px #bbb !important;
+	}
+#buttons .button:active,
+#buttons .button:focus {
+	border-color: #888 #888 #CCC #AAA !important;
+	-moz-box-shadow: inset 0 1px 5px rgba(0,0,0,0.25),0 1px 0 #fff;
+	-ms-box-shadow: inset 0 1px 5px rgba(0,0,0,0.25),0 1px 0 #fff;
+	-webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,0.25),0 1px 0 #fff;
+	box-shadow: inset 0 1px 5px rgba(0,0,0,0.25),0 1px 0 #fff !important;
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#ffc8c8c8,EndColorStr=#ffe6e6e6);
+	background-image: -moz-linear-gradient(top,#C8C8C8 0,#E6E6E6 100%);
+	background-image: -ms-linear-gradient(top,#C8C8C8 0,#E6E6E6 100%);
+	background-image: -o-linear-gradient(top,#C8C8C8 0,#E6E6E6 100%);
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,#C8C8C8),color-stop(100%,#E6E6E6));
+	background-image: -webkit-linear-gradient(top,#C8C8C8 0,#E6E6E6 100%);
+	background-image: linear-gradient(to bottom,#C8C8C8 0,#E6E6E6 100%);
+	}
+#buttons .button span {
+	color: #555 !important;
+	}
+
+	
+#buttons a.button {
+	display: block;
+	float: left;
+	text-decoration: none;
+	vertical-align: middle !important;
+	}
+#buttons a.button.icon span {
+	display: block;
+	float: left;
+	margin-top: 9px;
+	padding-left: 20px;
+	padding-right: 4px;
+	background-repeat: no-repeat;
+	}
+#buttons a.button span {
+	line-height: normal;
+	}
+
+/*  --  ICONS  --  */
+.button.icon.add span {			background-image: url(/lib/cmIcons/famfamfam/silk/add.png);}
+.button.icon.edit span {		background-image: url(/lib/cmIcons/famfamfam/silk/pencil.png);}
+.button.icon.save span {		background-image: url(/lib/cmIcons/famfamfam/silk/accept.png);}
+.button.icon.delete span{		background-image: url(/lib/cmIcons/famfamfam/silk/delete.png);}
+.button.icon.remove span {		background-image: url(/lib/cmIcons/famfamfam/silk/delete.png);}
+.button.icon.cancel span {		background-image: url(/lib/cmIcons/famfamfam/silk/arrow_left.png);}
+.button.icon.lock span {		background-image: url(/lib/cmIcons/famfamfam/silk/lock.png);}
+.button.icon.unlock span {		background-image: url(/lib/cmIcons/famfamfam/silk/lock_open.png);}
+.button.icon.open span {		background-image: url(/lib/cmIcons/famfamfam/silk/door_open.png);}
+.button.icon.close span {		background-image: url(/lib/cmIcons/famfamfam/silk/door.png);}
+.button.icon.exit span {		background-image: url(/lib/cmIcons/famfamfam/silk/door_out.png);}
+.button.icon.search span{		background-image: url(/lib/cmIcons/famfamfam/silk/magnifier.png);}
+.button.icon.filter span {		background-image: url(/lib/cmIcons/famfamfam/silk/zoom.png);}
+.button.icon.info span {		background-image: url(/lib/cmIcons/famfamfam/silk/information.png);}
+.button.icon.list span {		background-image: url(/lib/cmIcons/famfamfam/silk/table.png);}
+.button.icon.activate span {	background-image: url(/lib/cmIcons/famfamfam/silk/tick.png);}
+.button.icon.deactivate span{	background-image: url(/lib/cmIcons/famfamfam/silk/cross.png);}
+.button.icon.up span {			background-image: url(/lib/cmIcons/famfamfam/silk/arrow_down.png);}
+.button.icon.down span{			background-image: url(/lib/cmIcons/famfamfam/silk/arrow_up.png);}
+.button.icon.reset span {		background-image: url(/lib/cmIcons/famfamfam/silk/bin_closed.png);}
+.button.icon.filter span {		background-position: 0px 0px;}
+.button.icon.deactivate span,
+.button.icon.up span,
+.button.icon.down span{			background-position: -1px 0px;}
+.button.icon.reset span {		background-position: -2px 0px;}
+
+
+#buttons .button.icon-only span {
+	width: 16px !important;
+	padding: 0px !important;
+	}
+
+#buttons .button.tiny.icon-only {
+	width: 22px !important;
+	height: 21px !important;
+	margin: 0px 2px 1px 0px !important;
+	padding: 0px !important;
+	}
+
+#buttons .button.tiny.icon-only span {
+	width: 16px !important;
+	height: 16px !important;
+	margin: 3px !important;
+	padding: 0px !important;
+	}
