@@ -398,3 +398,8 @@ select.active-no {
 	border-radius: 0.6em;
 	cursor: pointer;
 	}
+
+.button.refresh span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_refresh.png);
+	padding-left: 22px;
+	}
