@@ -68,7 +68,6 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 
 	public function view( $moduleId ){
 		$module		= $this->logic->model->get( $moduleId );
-		print_m( $module );
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
 		$this->addData( 'module', $module );
