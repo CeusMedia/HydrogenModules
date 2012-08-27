@@ -1,8 +1,5 @@
-button {
-	cursor: pointer;
-	}
-
 .button {
+	margin: 0px 1px 1px 0px;
 	padding: 3px 10px;
 	background-color: #DDD;
 	background-image: url(../img/background_button_gradient_1.png);
@@ -16,14 +13,7 @@ button {
 	font-size: 1em;
 	cursor: pointer;
 	outline: none;
-/*
-	font-size: 1em;
-*/
-	}
-a.button {
-	display: block;
-	float: left;
-	text-decoration: none;
+	line-height: normal;
 	}
 .button:focus,
 .button:hover {
@@ -39,19 +29,29 @@ a.button {
 .button::-moz-focus-inner {				/*  Firefox */
 	border: 0;
 	}
-
-.button.save {
-	background-color: #DFB;
-	}
-.button.cancel {
-	background-color: #FFD;
-	}
-.button.delete {
-	background-color: #FCB;
+.button span {
+	font-size: 1em;
+	display: block;
+	min-height: 16px;
+	outline: none;
 	}
 
+
+button.button {
+	}
+a.button {
+	display: block;
+	float: left;
+	text-decoration: none;
+	}
+a.button span {
+	line-height: normal;
+	}
+	
+	
 
 /*  BUTTON ICONS  */
+.button.icon span,
 .button.add span,
 .button.cancel span,
 .button.close span,
@@ -72,32 +72,30 @@ a.button {
 .button.up span,
 .button.down span,
 .button.save span {
-	display: block;
-	min-height: 16px;
 	background-repeat: no-repeat;
 	background-position: -1px 0px;
 	padding-left: 20px;
 	padding-right: 4px;
-	outline: none;
 	}
+
 .button.add span {
-	background-image: url(http://icons.motrada.net/silk/add.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/add.png);
 	}
 .button.edit span {
-	background-image: url(http://icons.motrada.net/silk/pencil.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/pencil.png);
 	}
 .button.save span {
-	background-image: url(http://icons.motrada.net/silk/accept.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/accept.png);
 	}
 .button.delete span,
 .button.remove span {
-	background-image: url(http://icons.motrada.net/silk/delete.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/delete.png);
 	}
 .button.cancel span {
-	background-image: url(http://icons.motrada.net/silk/arrow_left.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_left.png);
 	}
 .button.reset span {
-	background-image: url(http://icons.motrada.net/silk/bin_closed.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/bin_closed.png);
 	background-position: -2px 0px;
 	}
 
@@ -109,18 +107,18 @@ a.button {
 	background-position: -1px 0px;
 	}
 .button.lock span {
-	background-image: url(http://icons.motrada.net/silk/lock.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock.png);
 	}
 .button.unlock span {
-	background-image: url(http://icons.motrada.net/silk/lock_open.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock_open.png);
 	}
 .button.open span {
-	background-image: url(http://icons.motrada.net/silk/arrow_up.png);
-	background-image: url(http://icons.motrada.net/silk/door_open.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_up.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/door_open.png);
 	}
 .button.close span {
-	background-image: url(http://icons.motrada.net/silk/arrow_down.png);
-	background-image: url(http://icons.motrada.net/silk/door.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_down.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/door.png);
 	}
 .button.up span {
 	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_down.png);
@@ -130,20 +128,18 @@ a.button {
 	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_up.png);
 	background-position: -1px 0px;
 	}
-
-
 .button.exit span {
-	background-image: url(http://icons.motrada.net/silk/door_out.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/door_out.png);
 	}
 .button.search span,
 .button.filter span {
-	background-image: url(http://icons.motrada.net/silk/magnifier.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/magnifier.png);
 	}
 .button.info span {
-	background-image: url(http://icons.motrada.net/silk/information.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/information.png);
 	}
 .button.list span {
-	background-image: url(http://icons.motrada.net/silk/table.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/table.png);
 	}
 
 
@@ -175,4 +171,18 @@ button.tiny span {
 	padding: 0;
 	width: 15px;
 	height: 12px;
+	}
+
+	
+	
+
+/*  --  deprecated  --  */
+.button.save {
+	background-color: #DFB;
+	}
+.button.cancel {
+	background-color: #FFD;
+	}
+.button.delete {
+	background-color: #FCB;
 	}

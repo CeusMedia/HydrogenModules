@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <module>
 	<title>Labs: Buttons</title>
-	<description>Labs for button experiments.</description>
-	<version>0.1</version>
+	<description>Lab for button styles and experiments.</description>
+	<version>0.2</version>
 	<category>Labs</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
@@ -12,6 +12,7 @@
 		<class>View/Lab/Button.php5</class>
 		<template>lab/button/index.php</template>
 		<style>site.lab.buttons.css</style>
+		<style>site.lab.buttons.neo.css</style>
 		<image source="theme">background_button_gradient_1.png</image>
 	</files>
 	<link path="lab/button">Lab: Buttons</link>
