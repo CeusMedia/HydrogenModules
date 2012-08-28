@@ -9,6 +9,8 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Mail/Abstract.php5</class>
+		<style>mail.min.css</style>
+		<script>mail.min.js</script>
 	</files>
 	<config protected="yes" type="string" name="sender.system" mandatory="yes"></config>
 	<config protected="yes" type="string" name="transport.type" mandatory="yes" values="SMTP,sendmail">sendmail</config>
