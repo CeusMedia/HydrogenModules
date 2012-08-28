@@ -23,6 +23,7 @@
 		<template>work/issue/index.filter.php</template>
 		<template>work/issue/index.list.php</template>
 		<style source="theme" load="auto">site.work.issue.css</style>
+		<script load="auto">Issues.js</script>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
