@@ -26,17 +26,19 @@ foreach( $issues as $issue ){
 	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
 	$rows[]	= '
 <tr>
-	<td>'.$link.'<br/>'.$type.$changes.'</td>
-	<td>'.$priority.'<br/>'.$severity.'</td>
+	<td>'.$link.'<br/>'.$changes.'</td>
+	<td>'.$type.'<br/>'.$priority.'</td>
 	<td>'.$status.'<br/>'.$progress.'</td>
 	<td>'.$reporter.'<br/>'.$manager.'</td>
 	<td><small>'.$createdAt.'</small><br/><small>'.$modifiedAt.'</small></td>
 </tr>';
 }
+$pagination	= new View_Helper_Pagination();
+$pagination	= $pagination->render( './work/issue', $number, 10, $page );
 
 return '
 <fieldset id="issue-list">
-	<legend>Fehler</legend>
+	<legend>Einträge ('.$number.' von '.$total.')</legend>
 	<table>
 		<colgroup>
 			<col width="53%"/>
@@ -54,6 +56,7 @@ return '
 		</tr>
 		'.join( $rows ).'
 	</table>
+	'.$pagination.'
 	<div class="buttonbar">
 		'.UI_HTML_Elements::LinkButton( './work/issue/add', 'neuer Eintrag', 'button add' ).'
 	</div>
