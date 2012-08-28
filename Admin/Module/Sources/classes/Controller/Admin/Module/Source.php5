@@ -218,6 +218,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
 		$this->env->getCache()->flush();
 		$this->env->getCache()->setContext( '' );
+		@unlink( './config/modules/cache/Sources/'.$sourceId );
 		if( $toList )
 			$this->restart( './admin/module/source' );
 		$this->restart( './admin/module/source/edit/'.$sourceId );
