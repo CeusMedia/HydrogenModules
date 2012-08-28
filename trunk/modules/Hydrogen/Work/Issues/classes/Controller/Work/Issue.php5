@@ -243,5 +243,28 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		);
 		return $model->add( $data );
 	}
+
+	public function search(){
+		$request	= $this->env->getRequest();
+		$terms		= explode( " ", trim( $request->get( 'term' ) ) );
+		$modelIssue	= new Model_Issue( $this->env );
+		$issues		= array();
+		$ids		= array();
+		foreach( $terms as $term ){
+			$filters	= array( 'title' => '%'.$term.'%' );
+			foreach( $modelIssue->getAll( $filters ) as $issue ){
+				$issues[$issue->issueId]	= $issue;
+				if( empty( $ids[$issue->issueId] ) )
+					$ids[$issue->issueId]	= 0;
+				$ids[$issue->issueId] ++;
+			}
+		}
+		arsort( $ids );
+		foreach( $ids as $id => $number )
+			if( $number == count( $terms ) )
+				$list[]	= $issues[$id];
+		print( json_encode( $list ) );
+		die;
+	}
 }
 ?>
