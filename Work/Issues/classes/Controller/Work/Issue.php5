@@ -25,6 +25,10 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		'limit'
 	);
 
+	public function __onInit(){
+		$this->env->getDatabase()->query( "SET NAMES 'latin1'" );
+	}
+	
 	public function add(){
 		$request	= $this->env->request;
 		if( $request->has( 'save' ) ){
@@ -47,19 +51,50 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			}
 		}
 	}
+	
+	public function edit( $issueId ){
+		$request	= $this->env->request;
 
-	protected function noteChange( $issueId, $noteId, $type, $from, $to ){
-		$model		= new Model_Issue_Change( $this->env );
-		$data	= array(
-			'issueId'	=> $issueId,
-			'userId'	=> $this->env->getSession()->get( 'userId' ),
-			'noteId'	=> $noteId,
-			'type'		=> $type,
-			'from'		=> $from,
-			'to'		=> $to,
-			'timestamp'	=> time(),
-		);
-		return $model->add( $data );
+		$modelIssue		= new Model_Issue( $this->env );
+		$modelIssueNote	= new Model_Issue_Note( $this->env );
+		$modelIssueChange	= new Model_Issue_Change( $this->env );
+		$modelUser		= new Model_User( $this->env );
+
+		$users	= array();
+		foreach( $modelUser->getAll() as $user )
+			$users[$user->userId]	= $user;
+
+		$this->addData( 'users', $users );
+
+		if( $request->has( 'save' ) ){
+			$data		= array(
+				'type'		=> $request->get( 'type' ),
+//				'severity'	=> $request->get( 'severity' ),
+//				'status'	=> $request->get( 'status' ),
+//				'progress'	=> $request->get( 'progress' ),
+				'title'		=> $request->get( 'title' ),
+				'content'	=> $request->get( 'content' ),
+			);
+			$modelIssue->edit( $issueId, $data, FALSE );
+//			$this->restart( './work/issue' );
+		}
+		$issue			= $modelIssue->get( $issueId );
+
+		$notes		= $modelIssueNote->getAllByIndex( 'issueId', $issueId, array( 'timestamp' => 'ASC' ) );
+		foreach( $notes as $nr => $note ){
+			$changes	= $modelIssueChange->getAllByIndex( 'noteId', $note->issueNoteId, array( 'type' => 'ASC' ) );
+			$notes[$nr]->user	= $users[$note->userId];
+			$notes[$nr]->changes	= $changes;
+			foreach( $changes as $nr => $change )
+				$changes[$nr]->user	= $users[$change->userId];
+		}
+		$issue->notes		= $notes;
+		$issue->changes	= $modelIssueChange->getAll( array( 'issueId' => $issueId, 'noteId' => 0 ), array( 'timestamp' => 'ASC' ) );
+
+		$issue->reporter	= $users[$issue->reporterId];
+		if( $issue->managerId )
+			$issue->manager	= $users[$issue->managerId];
+		$this->addData( 'issue', $issue );
 	}
 	
 	public function emerge( $issueId ){
@@ -109,50 +144,23 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( './work/issue/edit/'.$issueId );
 	}
-	
-	public function edit( $issueId ){
-		$request	= $this->env->request;
 
-		$modelIssue		= new Model_Issue( $this->env );
-		$modelIssueNote	= new Model_Issue_Note( $this->env );
-		$modelIssueChange	= new Model_Issue_Change( $this->env );
-		$modelUser		= new Model_User( $this->env );
-
-		$users	= array();
-		foreach( $modelUser->getAll() as $user )
-			$users[$user->userId]	= $user;
-
-		$this->addData( 'users', $users );
-
-		if( $request->has( 'save' ) ){
-			$data		= array(
-				'type'		=> $request->get( 'type' ),
-//				'severity'	=> $request->get( 'severity' ),
-//				'status'	=> $request->get( 'status' ),
-//				'progress'	=> $request->get( 'progress' ),
-				'title'		=> $request->get( 'title' ),
-				'content'	=> $request->get( 'content' ),
+	public function export( $limit = 10, $offset = 0 ){
+		$request	= $this->env->getRequest();
+		if( !($filters	= $request->get( 'filters' ) ) )
+			$filters	= array(
+				'type'		=> 0,
+				'status'	=> array( 1, 2, 3, 4, 5 ),
 			);
-			$modelIssue->edit( $issueId, $data, FALSE );
-//			$this->restart( './work/issue' );
-		}
-		$issue			= $modelIssue->get( $issueId );
-
-		$notes		= $modelIssueNote->getAllByIndex( 'issueId', $issueId, array( 'timestamp' => 'ASC' ) );
-		foreach( $notes as $nr => $note ){
-			$changes	= $modelIssueChange->getAllByIndex( 'noteId', $note->issueNoteId, array( 'type' => 'ASC' ) );
-			$notes[$nr]->user	= $users[$note->userId];
-			$notes[$nr]->changes	= $changes;
-			foreach( $changes as $nr => $change )
-				$changes[$nr]->user	= $users[$change->userId];
-		}
-		$issue->notes		= $notes;
-		$issue->changes	= $modelIssueChange->getAll( array( 'issueId' => $issueId, 'noteId' => 0 ), array( 'timestamp' => 'ASC' ) );
-
-		$issue->reporter	= $users[$issue->reporterId];
-		if( $issue->managerId )
-			$issue->manager	= $users[$issue->managerId];
-		$this->addData( 'issue', $issue );
+		if( !($orders	= $request->get( 'orders' ) ) )
+			$orders	= array(
+				'priority'	=> 'ASC',
+				'status'	=> 'ASC',
+			);
+		$modelIssue		= new Model_Issue( $this->env );
+		$issues		= $modelIssue->getAll( $filters, $orders, array( $offset, $limit ) );
+		print( json_encode( $issues ) );
+		die;
 	}
 
 	public function filter( $mode = NULL, $modeValue = 0 )
@@ -179,7 +187,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->restart( './work/issue' );
 	}
 
-	public function index(){
+	public function index( $page = 0 ){
 		$session	= $this->env->getSession();
 		$filters	= array();
 		foreach( $session->getAll() as $key => $value )
@@ -204,11 +212,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$modelChange	= new Model_Issue_Change( $this->env );
 		$modelUser		= new Model_User( $this->env );
 
-		$issues		= $modelIssue->getAll( $filters, $orders, array( 0, $limit ) );
+		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 		}
+		$this->addData( 'page', $page );	
+		$this->addData( 'total', $modelIssue->count() );	
+		$this->addData( 'number', $modelIssue->count( $filters ) );	
 		$this->addData( 'issues', $issues );	
 
 
@@ -217,6 +228,20 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			$users[$user->userId]	= $user;
 
 		$this->addData( 'users', $users );
+	}
+
+	protected function noteChange( $issueId, $noteId, $type, $from, $to ){
+		$model		= new Model_Issue_Change( $this->env );
+		$data	= array(
+			'issueId'	=> $issueId,
+			'userId'	=> $this->env->getSession()->get( 'userId' ),
+			'noteId'	=> $noteId,
+			'type'		=> $type,
+			'from'		=> $from,
+			'to'		=> $to,
+			'timestamp'	=> time(),
+		);
+		return $model->add( $data );
 	}
 }
 ?>
