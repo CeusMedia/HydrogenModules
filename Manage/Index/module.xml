@@ -17,7 +17,7 @@ This module is a placeholder for the main navigation.
 		<locale>en/html/manage/index.html</locale>
 	</files>
 	<relations/>
-	<config type="string" name="forward"></config>							; controller + action to forward to
+	<config type="string" name="forward">manage/user</config>							; controller + action to forward to
 	<link xml:lang="de" path="manage">Verwaltung</link>
 	<link xml:lang="en" path="manage">Management</link>
 </module>
