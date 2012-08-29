@@ -163,8 +163,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		die;
 	}
 
-	public function filter( $mode = NULL, $modeValue = 0 )
-	{
+	public function filter( $mode = NULL, $modeValue = 0 ){
 		$session	= $this->env->getSession();
 		switch( $mode )
 		{
@@ -206,12 +205,41 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$limit	= $limit > 0 ? $limit : 10;
 		if( $order && $dir )
 			$orders	= array( $order => $dir );
+		
+		$dir	= 'DESC';
 
 		$modelIssue		= new Model_Issue( $this->env );
 		$modelNote		= new Model_Issue_Note( $this->env );
 		$modelChange	= new Model_Issue_Change( $this->env );
 		$modelUser		= new Model_User( $this->env );
 
+		$numberTypes	= array(
+			0	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 3 ) ) ),
+		);
+		
+		$numberStates	= array(
+			0	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 3 ) ) ),
+			4	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 4 ) ) ),
+			5	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 5 ) ) ),
+			6	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 6 ) ) ),
+		);
+		
+		$numberPriorities	= array(
+			0	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 3 ) ) ),
+			4	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 4 ) ) ),
+			5	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 5 ) ) ),
+			6	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 6 ) ) ),
+		);
+		
 		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
@@ -220,7 +248,11 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $page );	
 		$this->addData( 'total', $modelIssue->count() );	
 		$this->addData( 'number', $modelIssue->count( $filters ) );	
-		$this->addData( 'issues', $issues );	
+		$this->addData( 'numberTypes', $numberTypes );
+		$this->addData( 'numberStates', $numberStates );
+		$this->addData( 'numberPriorities', $numberPriorities );
+		$this->addData( 'numberFilters', count( $filters ) );
+		$this->addData( 'issues', $issues );
 
 
 		$users	= array();

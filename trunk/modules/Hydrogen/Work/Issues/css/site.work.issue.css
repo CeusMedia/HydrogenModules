@@ -49,21 +49,34 @@
 	padding: 1px 4px;
 	}
 .issue-priority.priority-0 {
+	background-color: #FFFFFF;
+	background-color: #0F2F7F;
+	background-color: #7FAFFF;
 	}
 .issue-priority.priority-1 {
-	background-color: #FF7F7F;
+	background-color: #FFBFBF;
+	background-color: #2F4F9F;
+	background-color: #8FBFFF;
 	}
 .issue-priority.priority-2 {
-	background-color: #FFBF7F;
+	background-color: #FFDFBF;
+	background-color: #4F6FBF;
+	background-color: #9FCFFF;
 	}
 .issue-priority.priority-3 {
-	background-color: #FFFF7F;
+	background-color: #FFFFBF;
+	background-color: #6F8FDF;
+	background-color: #AFDFFF;
 	}
 .issue-priority.priority-4 {
-	background-color: #BFFF7F;
+	background-color: #DFFFBF;
+	background-color: #8FAFFF;
+	background-color: #BFEFFF;
 	}
 .issue-priority.priority-5 {
-	background-color: #7FFF7F;
+	background-color: #BFFFBF;
+	background-color: #AFCFFF;
+	background-color: #CFFFFF;
 	}
 
 .issue-status {
@@ -73,22 +86,22 @@
 	border: 1px dotted gray;
 	}
 .issue-status.status-1 {
-	background-color: #FF7F7F;
+	background-color: #FFBFBF;
 	}
 .issue-status.status-2 {
-	background-color: #FFBF7F;
+	background-color: #FFDFBF;
 	}
 .issue-status.status-3 {
-	background-color: #FFFF7F;
+	background-color: #FFFFBF;
 	}
 .issue-status.status-4 {
-	background-color: #7FFF7F;
+	background-color: #BFFFBF;
 	}
 .issue-status.status-5 {
-	background-color: #FFBFFF;
+	background-color: #FFDFFF;
 	}
 .issue-status.status-6 {
-	background-color: #BFBFBF;
+	background-color: #DFFFEF;
 	}
 
 	
@@ -96,13 +109,13 @@
 	padding: 1px 4px;
 	}
 .issue-type.type-0 {
-	background-color: #FF7F7F;
+	background-color: #FFBFBF;
 	}
 .issue-type.type-1 {
-	background-color: #7FFF7F;
+	background-color: #BFFFBF;
 	}
 .issue-type.type-2 {
-	background-color: #FFBFFF;
+	background-color: #FFDFFF;
 	}
 
 	
@@ -141,52 +154,74 @@ li.issue-note {
 	font-size: 0.8em;
 	}
 
+
 	
+table.issues tr td {
+	text-shadow: 0px 1px 1px rgba(127,127,127,0.5);
+	}
+
 table.issues tr td a {
 	text-decoration: none;
-	border-bottom: 1px dotted #BBB;
+/*	border-bottom: 1px dotted #BBB;
+*/	}
+table.issues tr.priority-0 * {
+	color: #000;
+	color: #0F2F7F;
 	}
 table.issues tr.priority-1 * {
 	color: #000;
+	color: #2F4F9F;
 	}
 table.issues tr.priority-2 * {
 	font-weight: normal;
 	color: #333;
+	color: #4F6FBF;
 	}
 table.issues tr.priority-3 * {
 	font-weight: normal;
 	color: #666;
+	color: #6F8FDF;
 	}
 table.issues tr.priority-4 * {
 	font-weight: lighter;
 	color: #999;
+	color: #8FAFFF;
 	}
 table.issues tr.priority-5 * {
 	font-weight: lighter;
 	opacity: 0.75;
+	color: #AFCFFF;
 	}
-table.issues tr td.status {
-	min-width: 12px;
+table.issues tr td.cell-status {
+	width: 12px;
 	text-align: center;
 	}
-table.issues tr.status-0 td.status {
+table.issues tr td.cell-age {
+	width: 12px;
+	text-align: right;
+	}
+table.issues tr.status-0 td.cell-status {
 	border: 1px dotted gray;
 	}
-table.issues tr.status-1 td.status {
+table.issues tr.status-1 td.cell-status {
 	background-color: #FF7F7F;
 	}
-table.issues tr.status-2 td.status {
+table.issues tr.status-2 td.cell-status {
 	background-color: #FFBF7F;
 	}
-table.issues tr.status-3 td.status {
+table.issues tr.status-3 td.cell-status {
 	background-color: #FFFF7F;
 	}
-table.issues tr.status-4 td.status {
+table.issues tr.status-4 td.cell-status {
 	background-color: #7FFF7F;
 	}
-table.issues tr.status-5 td.status {
+table.issues tr.status-5 td.scell-tatus {
 	background-color: #FFBFFF;
 	}
-table.issues tr.status-6 td.status {
-	background-color: #BFBFBF;
+table.issues tr.status-6 td.cell-status {
+	background-color: #DFFFEF;
+	}
+
+body.controller-work-issue.action-index fieldset h4 {
+	margin-bottom: 2px;
 	}

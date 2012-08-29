@@ -51,17 +51,17 @@ if( $mode == 1 ){
 				</colgroup>
 				<tr>
 					<td>
-						<label for="username">'.$words['indexFilter']['labelTitle'].'</label><br/>
+						<label for="title">'.$words['indexFilter']['labelTitle'].'</label><br/>
 						'.UI_HTML_Elements::Input( 'title', $title, 'm' ).'
 					</td>
 					<td>
-						<label for="username">'.$words['indexFilter']['labelIssueId'].'</label><br/>
+						<label for="issueId">'.$words['indexFilter']['labelIssueId'].'</label><br/>
 						'.UI_HTML_Elements::Input( 'issueId', $issueId, 'xs numeric' ).'
 					</td>
 					<td>
-						<label for="status">'.$words['indexFilter']['labelProject'].'</label><br/>
+<!--						<label for="project">'.$words['indexFilter']['labelProject'].'</label><br/>
 						'.UI_HTML_Elements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
-					</td>
+-->					</td>
 					<td>
 
 					</td>
@@ -124,17 +124,17 @@ else
 				</colgroup>
 				<tr>
 					<td>
-						<label for="username">'.$words['indexFilter']['labelTitle'].'</label><br/>
+						<label for="title">'.$words['indexFilter']['labelTitle'].'</label><br/>
 						'.UI_HTML_Elements::Input( 'title', $title, 'm' ).'
 					</td>
 					<td>
-						<label for="username">'.$words['indexFilter']['labelIssueId'].'</label><br/>
+						<label for="issueId">'.$words['indexFilter']['labelIssueId'].'</label><br/>
 						'.UI_HTML_Elements::Input( 'issueId', $issueId, 'xs numeric' ).'
 					</td>
 					<td>
-						<label for="status">'.$words['indexFilter']['labelProject'].'</label><br/>
+<!--						<label for="project">'.$words['indexFilter']['labelProject'].'</label><br/>
 						'.UI_HTML_Elements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
-					</td>
+-->					</td>
 					<td></td>
 				</tr>
 				<tr>
