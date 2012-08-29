@@ -25,6 +25,14 @@ foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus['_selected']	= $this->env->getRequest()->get( 'status' );
 
+/*
+$optProject	= array();
+foreach( $projects as $project )
+	$optProject[$project->projectId]	= $project->title;
+$optProject['_selected']	= $this->env->getRequest()->get( 'project' );
+*/
+
+
 
 
 

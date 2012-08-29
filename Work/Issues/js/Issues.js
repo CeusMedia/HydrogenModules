@@ -7,10 +7,10 @@ Issues = {
 			link = $("<a></a>").html(item.title);
 			link.attr("href","./work/issue/edit/"+item.issueId);
 			title = $("<td></td>").html(link);
-			status = $("<td></td>").addClass("status").html(item.priority);
+			status = $("<td></td>").addClass("cell-status").html(item.priority);
 			age = Math.round(new Date().getTime() / 1000) - item.modifiedAt;
 			age = Math.ceil(age / 24 / 60 / 60);
-			age = $("<td></td>").html(age);
+			age = $("<td></td>").addClass("cell-age").html(age);
 			row = $("<tr></tr>").attr("id","issue-"+item.issueId);
 			row.data("issue-id",item.issueId);
 			row.addClass("status-"+item.status).addClass("priority-"+item.priority);

@@ -23,6 +23,8 @@ class Model_Issue extends CMF_Hydrogen_Model {
 		'issueId',
 		'reporterId',
 		'managerId',
+		'projectId',
+		'serverId',
 		'type',
 		'severity',
 		'priority',
@@ -30,6 +32,8 @@ class Model_Issue extends CMF_Hydrogen_Model {
 		'progress',
 		'title',
 		'content',
+		'location',
+		'link',
 		'createdAt',
 		'modifiedAt',
 	);
@@ -37,10 +41,14 @@ class Model_Issue extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		'reporterId',
 		'managerId',
+		'projectId',
+		'serverId',
 		'type',
 		'severity',
 		'priority',
 		'status',
+		'location',
+		'link',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
