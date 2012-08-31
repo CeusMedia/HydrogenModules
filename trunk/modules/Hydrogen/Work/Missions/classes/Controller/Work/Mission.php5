@@ -324,7 +324,35 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterDirection', $direction );
 		$this->addData( 'users', $this->userMap );
 	}
-	
+
+	public function mail(){
+		$modelUser	= new Model_User( $this->env );
+		$modelMission	= new Model_Mission( $this->env );
+
+		foreach( $modelUser->getAll() as $user ){
+			if( $user->username != "kriss" )
+				continue;
+			$conditions	= array(
+				'ownerId'	=> $user->userId,
+				'type'		=> 0,
+				'status'	=> array( 0, 1, 2, 3 ),
+				'dayStart'	=> "<=".date( "Y-m-d", time() ),
+			);
+			$tasks	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );
+			$conditions	= array(
+				'ownerId'	=> $user->userId,
+				'type'		=> 1,
+				'status'	=> array( 0, 1, 2, 3 ),
+				'dayStart'	=> date( "Y-m-d", time() ),
+			);
+			$events	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );
+			if( !$events && !$tasks )
+				continue;
+#			remark( 'User: '.$user->username.' => Tasks: '.count( $tasks ).' => Events: '.count( $events ) );
+			$mail	= new Mail_Work_Mission_Daily( $this->env, array( 'user' => $user, 'tasks' => $tasks, 'events' => $events ) );
+		}
+	}
+
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );
 		if( !$showMission )																			//  back to list
