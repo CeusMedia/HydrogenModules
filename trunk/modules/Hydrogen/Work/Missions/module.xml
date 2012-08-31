@@ -11,6 +11,7 @@
 		<class>Model/Mission.php5</class>
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
+		<class>Mail/Work/Mission/Daily.php5</class>
 		<template>work/mission/add.php</template>
 		<template>work/mission/edit.php</template>
 		<template>work/mission/index.php</template>
