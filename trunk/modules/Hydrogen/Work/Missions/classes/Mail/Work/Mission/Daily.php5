@@ -56,26 +56,49 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 		$body	= '
 <style>
-.table-mail td.cell-title a {
-	text-decoration: none;
-	font-size: 1.1em;	
-	}
-.table-mail td.cell-time {
+body.controller-work-mission.action-mail div.text-greeting {
+	font-size: 1.2em;
+/*	font-weight: bold;
+*/	}
+body.controller-work-mission.action-mail div.text-salute {
+	font-style: italic;
 	font-weight: bold;
 	font-size: 1.1em;
-	text-align: center;
 	}
-.table-mail {
+body.controller-work-mission.action-mail div.text-signature {
+	font-style: italic;
+	font-weight: lighter;
+	font-size: 1.0em;
+	}
+body.controller-work-mission.action-mail div.tasks {
+	margin-top: 1em;
+	}
+body.controller-work-mission.action-mail div.events {
+	clear: both;
+	margin-top: 1em;
+	}
+body.controller-work-mission.action-mail div.text-greeting {}
+body.controller-work-mission.action-mail div.text-greeting {}
+body.controller-work-mission.action-mail .table-mail {
 	width: 600px;
 	border-radius: 0.4em;
 	overflow: hidden;
 	border: 1px solid gray;
 	box-shadow: 2px 2px 3px #BBB
-}
+	}
+body.controller-work-mission.action-mail .table-mail td.cell-title a {
+	text-decoration: none;
+	font-size: 1.1em;	
+	}
+body.controller-work-mission.action-mail .table-mail td.cell-time {
+	font-weight: bold;
+	font-size: 1.1em;
+	text-align: center;
+	}
 </style>
 <!--<h2>Aufgaben und Termine</h2>-->
 <div class="text-greeting">
-	Hallo <span class="text-username">'.$data['user']->username.'</span>, heute ist der <span class="text-date">'.date( 'j.n.', time() ).'</span>.
+	Hallo <span class="text-username">'.$data['user']->username.'</span>, heute ist der <span class="text-date">'.date( 'j.n.', time() ).'</span> und es gibt etwas zu erledigen.
 </div>
 <div class="tasks">
 	'.$tasks.'
@@ -83,7 +106,6 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 <div class="events">
 	'.$events.'
 </div>
-<br/>
 <div class="text-salute">
 	'.$salute.'
 </div>
