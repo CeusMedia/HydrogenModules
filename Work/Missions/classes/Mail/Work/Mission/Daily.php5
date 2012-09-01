@@ -4,8 +4,8 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
-		$monthNames		= (object) $this->getWords( 'work/mission', 'months' );
-		$weekdays		= (object) $this->getWords( 'work/mission', 'days' );
+		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
+		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new UI_HTML_Indicator();
@@ -63,7 +63,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
-		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'. '.$monthNames[date( 'n' )];
+		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
@@ -87,7 +87,8 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 		$mailBody	= new Net_Mail_Body(  base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
 		$mailBody->setContentEncoding( 'base64' );
-		$this->mail->setSubject( $w->subject );
+		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
+		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
 		$this->mail->addBody( $mailBody );
 	}
 }
