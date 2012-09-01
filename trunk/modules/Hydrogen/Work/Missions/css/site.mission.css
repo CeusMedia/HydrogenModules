@@ -120,7 +120,7 @@ legend.icon.export {
 
 /*  --  MAIL  --  */
 body.jobWorkMission .table-mail {
-	width: 600px;
+	width: 500px;
 	border-radius: 0.4em;
 	overflow: hidden;
 	border: 1px solid gray;
@@ -128,7 +128,7 @@ body.jobWorkMission .table-mail {
 	}
 body.jobWorkMission .table-mail td.cell-title a {
 	text-decoration: none;
-	font-size: 1.1em;	
+	font-size: 1.0em;	
 	}
 body.jobWorkMission .table-mail td.cell-time {
 	font-weight: bold;
