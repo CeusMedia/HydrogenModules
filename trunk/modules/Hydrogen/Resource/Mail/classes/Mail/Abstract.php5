@@ -78,7 +78,7 @@ abstract class Mail_Abstract{
 			return FALSE;
 		$style	= File_Reader::load( $filePath );
 		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
-		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/stylesheet' ) );
+		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/css' ) );
 		$this->page->addHead( $tag );
 		return TRUE;
 	}
