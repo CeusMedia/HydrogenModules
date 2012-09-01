@@ -303,7 +303,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$conditions['workerId']	= $userId;
 		}
 
-		
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
@@ -330,31 +329,38 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$modelMission	= new Model_Mission( $this->env );
 
 		foreach( $modelUser->getAll() as $user ){
-			if( $user->username != "kriss" )
-				continue;
-			$conditions	= array(
-				'ownerId'	=> $user->userId,
-				'type'		=> 0,
-				'status'	=> array( 0, 1, 2, 3 ),
-				'dayStart'	=> "<=".date( "Y-m-d", time() ),
+			if( $user->username != "kriss" ) continue;												//  @todo	kriss: remove on release
+
+			if( !$user->email )
+				continue;																			//  @todo	kriss: handle this exception state!
+
+			$conditions	= array(																	//  task filters
+				'type'		=> 0,																	//  tasks only
+				'ownerId'	=> $user->userId,														//  users tasks only
+				'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
+				'dayStart'	=> "<=".date( "Y-m-d", time() ),										//  present and past (overdue)
 			);
-			$tasks	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );
-			$conditions	= array(
-				'ownerId'	=> $user->userId,
-				'type'		=> 1,
-				'status'	=> array( 0, 1, 2, 3 ),
-				'dayStart'	=> date( "Y-m-d", time() ),
+			$tasks	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );			//  get filtered tasks ordered by priority
+
+			$conditions	= array(																	//  event filters
+				'type'		=> 1,																	//  events only
+				'ownerId'	=> $user->userId,														//  users events only
+				'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
+				'dayStart'	=> date( "Y-m-d", time() ),												//  starting today
 			);
-			$events	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );
-			if( !$events && !$tasks )
-				continue;
-#			remark( 'User: '.$user->username.' => Tasks: '.count( $tasks ).' => Events: '.count( $events ) );
-			$mail	= new Mail_Work_Mission_Daily( $this->env, array( 'user' => $user, 'tasks' => $tasks, 'events' => $events ) );
+			$events	= $modelMission->getAll( $conditions, array( 'timeStart' => 'ASC' ) );			//  get filtered events ordered by start time
+			if( !$events && !$tasks )																//  user has neither tasks nor events
+				continue;																			//  do not send a mail, leave user alone
+
+			$data	= array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );				//  data for mail upcoming object
+			$mail	= new Mail_Work_Mission_Daily( $this->env, $data );								//  create mail and populate data
+			$mail->sendToAddress( 'dev@ceusmedia.de' );												//  @todo	kriss: still dev!
 		}
+		exit;
 	}
 
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
-		$this->model->edit( $missionId, array( 'priority' => $priority ) );
+		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
 		if( !$showMission )																			//  back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
