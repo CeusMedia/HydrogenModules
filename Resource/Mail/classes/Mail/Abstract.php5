@@ -111,11 +111,11 @@ abstract class Mail_Abstract{
 	/**
 	 *	Loads View Class of called Controller.
 	 *	@access		protected
+	 *	@param		string		$topic		Locale file key, eg. test/my
+	 *	@param		string		$section	Section in locale file
 	 *	@return		void
 	 */
-	protected function getWords( $section = NULL, $topic = NULL ){
-		if( empty( $topic ) && $this->env->getLanguage()->hasWords( $this->controller ) )
-			$topic = $this->controller;
+	protected function getWords( $topic, $section = NULL ){
 		if( empty( $section ) )
 			return $this->env->getLanguage()->getWords( $topic );
 		return $this->env->getLanguage()->getSection( $topic, $section );
