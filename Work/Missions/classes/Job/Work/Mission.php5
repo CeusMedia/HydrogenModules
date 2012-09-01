@@ -21,6 +21,7 @@ class Job_Work_Mission extends Job_Abstract{
 		$modelUser		= new Model_User( $this->env );
 		$modelMission	= new Model_Mission( $this->env );
 
+		$count	= 0;
 		foreach( $modelUser->getAll() as $user ){
 //			IF USER HAS CONFIGURED TO RECEIVE THIS TYPE OF MAILS									//  @todo	kriss: implement mail configuration
 
@@ -50,8 +51,8 @@ class Job_Work_Mission extends Job_Abstract{
 			$data	= array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );				//  data for mail upcoming object
 			$mail	= new Mail_Work_Mission_Daily( $this->env, $data );								//  create mail and populate data
 			$mail->sendTo( $user );																	//  send mail to user
+			$count++;
 		}
-		
 		$this->out( 'Sent '.$count.' mails.' );
 	}
 }
