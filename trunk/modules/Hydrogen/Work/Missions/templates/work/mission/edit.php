@@ -21,7 +21,7 @@ $panelEdit	= '
 		<ul class="input">
 			<li class="-column-left-80">
 				<label for="input_content">'.$w->labelContent.'</label><br/>
-				<input type="text" name="content" id="input_content" class="max" value="'.$mission->content.'"/>
+				<input type="text" name="content" id="input_content" class="max" value="'.htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 <!--			<li class="column-left-20">
 				<label for="input_content">'.$w->labelWorker.'</label><br/>
@@ -68,11 +68,11 @@ $panelEdit	= '
 			<li>
 				<div class="column-left-50">
 					<label for="input_location">'.$w->labelLocation.'</label><br/>
-					<input type="text" name="location" id="input_location" class="max" value="'.$mission->location.'"/>
+					<input type="text" name="location" id="input_location" class="max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="column-left-50">
 					<label for="input_reference">'.$w->labelReference.'</label><br/>
-					<input type="text" name="reference" id="input_reference" class="max" value="'.$mission->reference.'"/>
+					<input type="text" name="reference" id="input_reference" class="max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="column-clear"></div>
 			</li>

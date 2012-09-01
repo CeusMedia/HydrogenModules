@@ -110,7 +110,7 @@ $attributes		= array(
 $inputSwitchStatus	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 
 $list	= array();
-for( $i=0; $i<4; $i++){
+for( $i=0; $i<5; $i++){
 	$id		= 'filter_status_'.$i;
 	$attributes	= array(
 		'type'		=> 'checkbox',
@@ -125,7 +125,7 @@ for( $i=0; $i<4; $i++){
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['states'][$i];
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'id' => 'filter_status_item_'.$i ) );
 }
 $attributes	= array(
 	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledStates ? 'block' : 'none' ),
@@ -149,11 +149,34 @@ $wordsAccess	= array( 'owner' => 'meine', 'worker' => 'mir zugewiesen' );
 
 $optAccess	= UI_HTML_Elements::Options( $wordsAccess, $session->get( 'filter_mission_access' ) );
 
+$optView	= array(
+	'0' => 'ausstehend',
+	'1' => 'geschlossen',
+);
+$optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
 
 $panelFilter	= '
+<style>
+li#filter_status_item_4 {
+	display: none1;
+	}
+</style>
 <script>
+
+function changeView(elem){								//  @todo kriss: fix this hack!
+	var val = parseInt($(elem).val());
+	var url = "./work/mission/filter?status&";
+	if(val)
+		url .= "states[]=4";
+	else
+		url .= "states[]=0&states[]=1&states[]=2&states[]=3";
+	document.location.href = url ;
+}
+
 $(document).ready(function(){
 	FormMissionFilter.__init();
+	if(!parseInt($("#switch_view").val()))
+		$("li.filter_status").show();
 });
 </script>
 <form id="form_mission_filter" action="./work/mission/filter?reset" method="post">
@@ -186,6 +209,11 @@ $(document).ready(function(){
 				'.$optListPriorities.'
 			</li>
 			<li>
+				<label for="switch_view" style="">Sichtweise</label><br/>
+				<select name="view" id="switch_view" onchange="changeView(this);" class="max">'.$optView.'</select>
+		
+			</li>
+			<li class="filter_status" style="display: none">
 				<label for="switch_status" style="font-weight: bold">
 					'.$inputSwitchStatus.'
 					<span>Zustände</span>
