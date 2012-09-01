@@ -2,16 +2,13 @@
 class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
-		$config			= $this->env->getConfig();
 		$language		= $this->env->getLanguage();
+		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $language->getWords( 'work/mission', 'mail-daily' );
 		$salutes		= $language->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$baseUrl		 = $config->get( 'app.base.url' );
 		$indicator		= new UI_HTML_Indicator();
-		$page			= new UI_HTML_PageFrame();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-
 
 		//  --  TASKS  --  //
 		$tasks		= array();
@@ -64,7 +61,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
-		$date		= date( 'j.n.', time() );
+		$date		= date( 'j.n.'/*module->get( 'mail.format.date' )*/, time() );					//  @todo	kriss: realize date format in module config
 		$date		= UI_HTML_Tag::create( 'span', $date, array( 'class' => 'text-date' ) );
 		$greeting	= sprintf( $w->greeting, $username, $date );
 		$body	= '
@@ -76,17 +73,16 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 <div class="text-signature">'.$w->textSignature.'</div>';
 
 		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'mail.min.css' );
 		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'site.mission.css' );
 		$this->addThemeStyle( 'site.user.css' );
+		$this->addThemeStyle( 'site.mission.css' );
 		$this->addThemeStyle( 'indicator.css' );
 
-		$page->addBody( UI_HTML_Tag::create( 'script', File_Reader::load( $config->get( 'path.scripts' ).'mail.min.js' ) ) );
-		$page->addBody( $body );
-		$page	= $page->build( array( 'class' => 'moduleMission controller-work-mission action-mail siteWorkMissionMail' ) );
+		$this->page->addBody( $body );
+		$class	= 'moduleMission controller-work-mission action-mail-daily';
+		$html	= $this->page->build( array( 'class' => $class ) );
 
-		$mailBody	= new Net_Mail_Body(  base64_encode( $page ), Net_Mail_Body::TYPE_HTML );
+		$mailBody	= new Net_Mail_Body(  base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
 		$mailBody->setContentEncoding( 'base64' );
 		$this->mail->setSubject( $w->subject );
 		$this->mail->addBody( $mailBody );
