@@ -116,9 +116,12 @@ abstract class Mail_Abstract{
 	 *	@return		void
 	 */
 	protected function getWords( $topic, $section = NULL ){
+		$language	= $this->env->getLanguage();
+		if( !$language->hasWords( $topic ) )
+			$language->load( $topic );
 		if( empty( $section ) )
-			return $this->env->getLanguage()->getWords( $topic );
-		return $this->env->getLanguage()->getSection( $topic, $section );
+			return $language->getWords( $topic );
+		return $language->getSection( $topic, $section );
 	}
 
 	/**
