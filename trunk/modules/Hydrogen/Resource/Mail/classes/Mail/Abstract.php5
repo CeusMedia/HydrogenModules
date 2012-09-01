@@ -109,6 +109,19 @@ abstract class Mail_Abstract{
 	abstract protected function generate( $data = array() );
 
 	/**
+	 *	Loads View Class of called Controller.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function getWords( $section = NULL, $topic = NULL ){
+		if( empty( $topic ) && $this->env->getLanguage()->hasWords( $this->controller ) )
+			$topic = $this->controller;
+		if( empty( $section ) )
+			return $this->env->getLanguage()->getWords( $topic );
+		return $this->env->getLanguage()->getSection( $topic, $section );
+	}
+
+	/**
 	 *	Sends mail to email address using configured transport.
 	 *	@access		public
 	 *	@param		string		$email		Target email address
