@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="work-mission-mail-daily">
+		<class>Work_Mission</class>
+		<method>mailDaily</method>
+		<interval>day</interval>
+		<mode>test</mode>
+	</job>
+</jobs>

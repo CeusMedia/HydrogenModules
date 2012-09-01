@@ -78,7 +78,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$this->addThemeStyle( 'indicator.css' );
 
 		$this->page->addBody( $body );
-		$class	= 'moduleMission controller-work-mission action-mail-daily';
+		$class	= 'moduleMission jobWorkMission job-work-mission-mail-daily';
 		$html	= $this->page->build( array( 'class' => $class ) );
 
 		$mailBody	= new Net_Mail_Body(  base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
