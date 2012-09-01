@@ -1,7 +1,12 @@
 <?xml version="1.0"?>
 <module>
 	<title>Work: Missions</title>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[Compact task and event management.
+To use the mail functions, please install module &quot;Resource_Jobs&quot; and a cronjob calling:
+code>
+php job.php5 work-mission-mail-daily
+<code
+]]></description>
 	<version>0.1</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
@@ -26,6 +31,7 @@
 	<relations>
 		<needs type="module">Auth</needs>
 		<needs type="module">UI_Indicator</needs>
+		<supports type="module">Resource_Jobs</supports>
 	</relations>
 	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission">Missions</link>
