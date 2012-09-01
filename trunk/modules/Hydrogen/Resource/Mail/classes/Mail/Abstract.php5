@@ -59,7 +59,7 @@ abstract class Mail_Abstract{
 	protected function addPrimerStyle( $fileName ){
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.primer' ).'/css/';
-		return $this->addStyleToPage( $path.$fileName );
+		return $this->addStyle( $path.$fileName );
 	}
 
 	protected function addScriptFile( $fileName ){
@@ -86,7 +86,7 @@ abstract class Mail_Abstract{
 	protected function addThemeStyle( $fileName ){
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
-		return $this->addStyleToPage( $path.$fileName );
+		return $this->addStyle( $path.$fileName );
 	}
 
 	/**
