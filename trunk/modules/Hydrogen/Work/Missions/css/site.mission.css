@@ -117,3 +117,44 @@ button.export.archive span{
 legend.icon.export {
 	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
 	}
+
+/*  --  MAIL  --  */
+body.controller-work-mission.action-mail div.text-greeting {
+	font-size: 1.2em;
+/*	font-weight: bold;
+*/	}
+body.controller-work-mission.action-mail div.text-salute {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.1em;
+	}
+body.controller-work-mission.action-mail div.text-signature {
+	font-style: italic;
+	font-weight: lighter;
+	font-size: 1.0em;
+	}
+body.controller-work-mission.action-mail div.tasks {
+	margin-top: 1em;
+	}
+body.controller-work-mission.action-mail div.events {
+	clear: both;
+	margin-top: 1em;
+	}
+body.controller-work-mission.action-mail div.text-greeting {}
+body.controller-work-mission.action-mail div.text-greeting {}
+body.controller-work-mission.action-mail .table-mail {
+	width: 600px;
+	border-radius: 0.4em;
+	overflow: hidden;
+	border: 1px solid gray;
+	box-shadow: 2px 2px 3px #BBB
+	}
+body.controller-work-mission.action-mail .table-mail td.cell-title a {
+	text-decoration: none;
+	font-size: 1.1em;	
+	}
+body.controller-work-mission.action-mail .table-mail td.cell-time {
+	font-weight: bold;
+	font-size: 1.1em;
+	text-align: center;
+	}
