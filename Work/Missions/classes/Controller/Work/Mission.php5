@@ -329,6 +329,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$modelMission	= new Model_Mission( $this->env );
 
 		foreach( $modelUser->getAll() as $user ){
+//			IF USER HAS CONFIGURED TO RECEIVE THIS TYPE OF MAILS									//  @todo	kriss: implement mail configuration
+
 			if( $user->username != "kriss" ) continue;												//  @todo	kriss: remove on release
 
 			if( !$user->email )
@@ -354,7 +356,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 			$data	= array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );				//  data for mail upcoming object
 			$mail	= new Mail_Work_Mission_Daily( $this->env, $data );								//  create mail and populate data
-			$mail->sendToAddress( 'dev@ceusmedia.de' );												//  @todo	kriss: still dev!
+			$mail->sendTo( $user );																	//  send mail to user
 		}
 		exit;
 	}
