@@ -148,6 +148,14 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-greeting {
 	font-size: 1.2em;
 /*	font-weight: bold;*/
 	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-full {
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-short {
+	font-size: 0.9em;
+	font-weight: lighter;
+	}
 body.jobWorkMission.job-work-mission-mail-daily div.text-salute {
 	font-style: italic;
 	font-weight: bold;
