@@ -122,18 +122,46 @@ abstract class Mail_Abstract{
 	}
 
 	/**
-	 *	Sends mail to email address using configured transport.
+	 *	Sends mail to an email address.
 	 *	@access		public
-	 *	@param		string		$email		Target email address
+	 *	@param		stdClass		$user		User model object
 	 *	@return		void
 	 */
-	public function sendToAddress( $email ){
+	public function sendTo( $user ){
+		if( empty( $user->email ) )
+			RuntimeException( 'User object invalid: no email address' );
+		$this->sendToAddress( $user->email );
+	}
+
+	/**
+	 *	Sends mail to directly email address using configured transport.
+	 *	ATTENTION: You SHOULD NOT use this method unless you REALLY NEED to.
+	 *	Please use one of these methods instead: sendToUser(int $userId), sendTo(obj $user)
+	 *	@access		protected
+	 *	@param		string		$email		Target email address
+	 *	@return		void
+	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
+	 */
+	protected function sendToAddress( $email ){
 		$this->mail->setReceiver( $email );
 		$this->transport->send( $this->mail );
 	}
 
+	/**
+	 *	Sends mail to user by its user ID.
+	 *	Attention: Module "Users" must be installed to use this feature.
+	 *	@access		public
+	 *	@param		integer		$userId		ID of user to send mail to
+	 *	@return		void
+	 */
 	public function sendToUser( $userId ){
-		
+		if( !$this->env->getModules()->has( 'Users' ) )
+			throw new RuntimeException( 'Module "Users" is not installed' );
+		$model	= new Model_User( $this->env );
+		$user	= $model->get( $userId );
+		if( !$user )
+			throw new RuntimeException( 'User with ID '.$userId.' is not existing' );
+		$this->sendTo( $user );
 	}
 }
 ?>

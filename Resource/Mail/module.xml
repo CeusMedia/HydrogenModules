@@ -18,5 +18,7 @@
 	<config protected="yes" type="string" name="transport.username" mandatory="transport.type:SMTP"></config>
 	<config protected="yes" type="string" name="transport.password" mandatory="transport.type:SMTP"></config>
 	<config protected="no" type="string" name="subject.prefix"></config>
-	<relations/>
+	<relations>
+		<supports type="module">Users</supports>
+	</relations>
 </module>
