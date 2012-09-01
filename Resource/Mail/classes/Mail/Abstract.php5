@@ -7,10 +7,16 @@
  */
 abstract class Mail_Abstract{
 
-	/**	@var		Net_Mail					$mail			Mail objectm, build on construction */
+	/**	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
+	protected $env;
+	/**	@var		Net_Mail							$mail			Mail objectm, build on construction */
 	protected $mail;
-	/** @var		Net_Mail_Transport_Abstract	$transport		Mail transport object, build on construction */
+	/** @var		UI_HTML_PageFrame					$page			Empty page oject for HTML mails */
+	protected $page;
+	/** @var		Net_Mail_Transport_Abstract			$transport		Mail transport object, build on construction */
 	protected $transport;
+	/** @var		CMF_Hydrogen_View					$view			General view instance */
+	protected $view;
 	
 	/**
 	 *	Contructor.
@@ -22,8 +28,13 @@ abstract class Mail_Abstract{
 		$this->env	= $env;
 		$this->mail	= new Net_Mail();
 		$this->view	= new CMF_Hydrogen_View( $env );
+		$this->page	= new UI_HTML_PageFrame();
+
+		$config		= $this->env->getConfig();
+		$this->page->setBaseHref( $config->get( 'app.base.url' ) );
+		$this->addThemeStyle( 'mail.min.css' );
+		$this->addScriptFile( 'mail.min.js' );
 		
-		$config	= $this->env->getConfig();
 		switch( strtolower( $config->get( 'module.resource_mail.transport.type' ) ) ){
 			case 'smtp':
 				$hostname	= $config->get( 'module.resource_mail.transport.hostname' );
@@ -43,6 +54,39 @@ abstract class Mail_Abstract{
 		}
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 		$this->generate( $data ); 
+	}
+
+	protected function addPrimerStyle( $fileName ){
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.themes' ).$config->get( 'layout.primer' ).'/css/';
+		return $this->addStyleToPage( $path.$fileName );
+	}
+
+	protected function addScriptFile( $fileName ){
+		$filePath	= $this->env->getConfig()->get( 'path.scripts' ).$fileName;
+		if( !file_exists( $filePath ) )
+			return FALSE;
+		$script	= File_Reader::load( $filePath );
+		$script	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $script );
+		$tag	= UI_HTML_Tag::create( 'script', $script, array( 'type' => 'text/javascript' ) );
+		$this->page->addHead( $tag );
+		return TRUE;
+	}
+	
+	protected function addStyle( $filePath ){
+		if( !file_exists( $filePath ) )
+			return FALSE;
+		$style	= File_Reader::load( $filePath );
+		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
+		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/stylesheet' ) );
+		$this->page->addHead( $tag );
+		return TRUE;
+	}
+
+	protected function addThemeStyle( $fileName ){
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
+		return $this->addStyleToPage( $path.$fileName );
 	}
 
 	/**
