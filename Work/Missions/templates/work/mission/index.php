@@ -25,7 +25,7 @@ $indicator	= new UI_HTML_Indicator();
 $disabled	= array();
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){
-	$link		= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, $mission->content );
+	$link		= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ) );
 	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60);
 	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
@@ -118,18 +118,21 @@ $panelAdd	= '<fieldset>
 	'.UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'neuer Termin', 'button add event-add' ).'
 </fieldset>';
 
-$panelExport	= '<fieldset>
-	<legend class="icon export">Export / Import</legend>
-	<b>Export als:</b>&nbsp;
-	'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
-	'.UI_HTML_Elements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
-	<hr/>
-	<form action="./work/mission/import" method="post" enctype="multipart/form-data">
-		<b>Import aus:</b>&nbsp;
-		<input type="text" name="import" id="input-import" class="m" readonly="readonly"/>
-		<input type="file" name="serial" id="input-serial" accept="application/gzip"/>
-	</form>
-</fieldset>';
+$panelExport	= '';
+if( $filterStates != array( 4 ) ){
+	$panelExport	= '<fieldset>
+		<legend class="icon export">Export / Import</legend>
+		<b>Export als:</b>&nbsp;
+		'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
+		'.UI_HTML_Elements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
+		<hr/>
+		<form action="./work/mission/import" method="post" enctype="multipart/form-data">
+			<b>Import aus:</b>&nbsp;
+			<input type="text" name="import" id="input-import" class="m" readonly="readonly"/>
+			<input type="file" name="serial" id="input-serial" accept="application/gzip"/>
+		</form>
+	</fieldset>';
+}
 
 $content	= '
 <script>
@@ -170,6 +173,7 @@ $(document).ready(function(){
 	'.$panelFilter.'
 	'.$panelAdd.'
 	'.$panelExport.'
+	<a href="./work/mission/mail">MAIL</a>
 </div>
 <div class="column-left-80">
 	<div id="mission-folders">
