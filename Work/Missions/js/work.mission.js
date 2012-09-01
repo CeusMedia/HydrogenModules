@@ -13,6 +13,15 @@ var FormMissionFilter = {
 		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
 		return true;
 	},
+	changeView: function(elem){								//  @todo kriss: fix this hack!
+		var val = parseInt($(elem).val());
+		var url = "./work/mission/filter?status&";
+		if(val)
+			url += "states[]=4";
+		else
+			url += "states[]=0&states[]=1&states[]=2&states[]=3";
+		document.location.href = url ;
+	},
 	clearQuery: function(){
 		if(!FormMissionFilter.form.size())
 			return false;
@@ -21,9 +30,6 @@ var FormMissionFilter = {
 		return true;
 	}
 };
-
-
-
 
 function showOptionals(elem){
 	var form = $(elem.form);
@@ -69,6 +75,7 @@ $(document).ready(function(){
 //		changeYear: true,
 //		gotoCurrent: true,
 //		autoSize: true,
+		firstDay: 1,
 		nextText: "nächster Monat",
 		prevText: "vorheriger Monat",
 		yearRange: "c:c+2",
