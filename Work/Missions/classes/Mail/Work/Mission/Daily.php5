@@ -2,10 +2,9 @@
 class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
-		$language		= $this->env->getLanguage();
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
-		$w				= (object) $language->getWords( 'work/mission', 'mail-daily' );
-		$salutes		= $language->getWords( 'work/mission', 'mail-salutes' );
+		$w				= (object) $this->getWords( 'mail-daily' );
+		$salutes		= (array) $this->getWords( 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
