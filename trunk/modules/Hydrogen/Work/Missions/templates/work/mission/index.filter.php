@@ -156,23 +156,7 @@ $optView	= array(
 $optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
 
 $panelFilter	= '
-<style>
-li#filter_status_item_4 {
-	display: none1;
-	}
-</style>
 <script>
-
-function changeView(elem){								//  @todo kriss: fix this hack!
-	var val = parseInt($(elem).val());
-	var url = "./work/mission/filter?status&";
-	if(val)
-		url .= "states[]=4";
-	else
-		url .= "states[]=0&states[]=1&states[]=2&states[]=3";
-	document.location.href = url ;
-}
-
 $(document).ready(function(){
 	FormMissionFilter.__init();
 	if(!parseInt($("#switch_view").val()))
@@ -210,7 +194,7 @@ $(document).ready(function(){
 			</li>
 			<li>
 				<label for="switch_view" style="">Sichtweise</label><br/>
-				<select name="view" id="switch_view" onchange="changeView(this);" class="max">'.$optView.'</select>
+				<select name="view" id="switch_view" onchange="FormMissionFilter.changeView(this);" class="max">'.$optView.'</select>
 		
 			</li>
 			<li class="filter_status" style="display: none">
@@ -236,7 +220,6 @@ $(document).ready(function(){
 			'.UI_HTML_Elements::LinkButton( './work/mission/filter?reset', $w->buttonReset, 'button reset' ).'
 		</div>
 	</fieldset>
-</form>
-';
+</form>';
 return $panelFilter;
 ?>

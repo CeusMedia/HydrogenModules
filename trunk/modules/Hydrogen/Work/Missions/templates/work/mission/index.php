@@ -173,7 +173,6 @@ $(document).ready(function(){
 	'.$panelFilter.'
 	'.$panelAdd.'
 	'.$panelExport.'
-	<a href="./work/mission/mail">MAIL</a>
 </div>
 <div class="column-left-80">
 	<div id="mission-folders">
