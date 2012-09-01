@@ -12,6 +12,7 @@
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
+		<class>Job/Work/Mission.php5</class>
 		<template>work/mission/add.php</template>
 		<template>work/mission/edit.php</template>
 		<template>work/mission/index.php</template>
@@ -20,6 +21,7 @@
 		<style load="auto">site.mission.css</style>
 		<script load="auto">work.mission.js</script>
 		<image source="theme">clearSearch.png</image>
+		<file>config/jobs/work.mission.xml</file>
 	</files>
 	<relations>
 		<needs type="module">Auth</needs>

@@ -4,10 +4,13 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
+		$monthNames		= (object) $this->getWords( 'work/mission', 'months' );
+		$weekdays		= (object) $this->getWords( 'work/mission', 'days' );
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 
 		//  --  TASKS  --  //
 		$tasks		= array();
@@ -60,9 +63,10 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
-		$date		= date( 'j.n.'/*module->get( 'mail.format.date' )*/, time() );					//  @todo	kriss: realize date format in module config
-		$date		= UI_HTML_Tag::create( 'span', $date, array( 'class' => 'text-date' ) );
-		$greeting	= sprintf( $w->greeting, $username, $date );
+		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'. '.$monthNames[date( 'n' )];
+		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
+		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
+		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
 '.$heading.'
 <div class="text-greeting">'.$greeting.'</div>
