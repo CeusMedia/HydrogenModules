@@ -253,7 +253,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 		
 		$conditions	= array( 'status' => 1 );
-		$orders		= array( 'articleId' => 'DESC' );
+		$orders		= array( 'createdAt' => 'DESC' );
 		$articles	= $this->model->getAll( $conditions, $orders, array( 0, $limit ) );
 		$this->addData( 'articles', $articles );
 		$this->addData( 'debug', (bool) $debug );
