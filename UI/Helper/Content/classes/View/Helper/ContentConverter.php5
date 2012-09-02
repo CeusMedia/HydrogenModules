@@ -127,6 +127,34 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 	
+	static public function formatDiscogsLinks( $env, $content ){
+		$matches	= array();
+		preg_match_all( '/\[discogs:(.+)(\|(.*))?\]/U', $content, $matches );
+		for( $i=0; $i<count( $matches[0] ); $i++ ){
+			$query		= trim( $matches[1][$i] );
+			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
+			$url		= 'http://www.discogs.com/'.$query;
+			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-discogs';
+			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$content	= str_replace( $matches[0][$i], $link, $content );
+		}
+		return $content;
+	}
+	
+	static public function formatMyspaceLinks( $env, $content ){
+		$matches	= array();
+		preg_match_all( '/\[myspace:(.+)(\|(.*))?\]/U', $content, $matches );
+		for( $i=0; $i<count( $matches[0] ); $i++ ){
+			$query		= trim( $matches[1][$i] );
+			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
+			$url		= 'http://www.myspace.com/'.$query;
+			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-myspace';
+			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$content	= str_replace( $matches[0][$i], $link, $content );
+		}
+		return $content;
+	}
+	
 	static public function formatImdbLinks( $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[imdb:(.+)(\|(.*))?\]/U', $content, $matches );

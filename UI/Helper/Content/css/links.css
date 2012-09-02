@@ -5,8 +5,10 @@
 .link-search-image,
 .link-search-map,
 .link-imdb,
+.link-discogs,
 .link-wiki,
 .link-youtube,
+.link-myspace,
 .link-tag,
 .link-blog,
 .link-image,
@@ -40,11 +42,17 @@ span.icon-label:hover {
 .link-imdb {
 	background-image: url(../img/icons/imdb.png);
 	}
+.link-discogs {
+	background-image: url(../img/icons/discogs.png);
+	}
 .link-wiki {
 	background-image: url(../img/icons/wikipedia.png);
 	}
 .link-youtube {
 	background-image: url(../img/icons/youtube.png);
+	}
+.link-myspace {
+	background-image: url(../img/icons/myspace.png);
 	}
 .link-download {
 	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);

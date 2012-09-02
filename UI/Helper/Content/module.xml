@@ -11,6 +11,8 @@
 		<image source="theme">icons/youtube.png</image>
 		<image source="theme">icons/google.png</image>
 		<image source="theme">icons/imdb.png</image>
+		<image source="theme">icons/discogs.png</image>
+		<image source="theme">icons/myspace.png</image>
 	</files>
 	<relations/>
 </module>
