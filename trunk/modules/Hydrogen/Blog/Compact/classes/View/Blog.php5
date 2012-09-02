@@ -27,7 +27,24 @@ class View_Blog extends CMF_Hydrogen_View{
 	public function author(){}
 
 	public function dev(){
-		return View_Helper_ContentConverter::render( $this->env, $this->getData( 'dev' ) );
+		if( ( $content = $this->getData( 'content' ) ) ){
+			$content	= View_Helper_ContentConverter::render( $this->env, $content );
+			$attributes	= array( 'class' => 'blog-article blog-article-content' );
+			$content	= UI_HTML_Tag::create( 'div', $content, $attributes );
+		}
+		else if( ( $files = $this->getData( 'files' ) ) ){
+			$list	= array();
+			arsort( $files );
+			foreach( $files as $fileName => $timestamp ){
+				$url	= './blog/dev/'.$fileName;
+				$link	= UI_HTML_Tag::create( 'a', $fileName, array( 'href' => $url ) );
+				$date	= UI_HTML_Tag::create( 'span', date( 'y-m-d', $timestamp ) );
+				$list[]	= UI_HTML_Tag::create( 'li', ' <small><em>'.$date.'</em></small> '.$link );
+			}
+			$heading	= UI_HTML_Tag::create( 'h4', 'Artikel in Vorbereitung' );
+			$content	= $heading.UI_HTML_Tag::create( 'ul', join( $list ) );
+		}
+		return $content;
 	}
 	
 	public function edit(){}

@@ -149,10 +149,21 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 
 	public function dev( $topic = NULL ){
 		$topic		= strlen( $topic ) ? $topic : NULL;
-		$fileName	= 'contents/dev_'.$topic.'.txt';
-		$this->addData( 'dev', '' );
-		if( file_exists( $fileName ) )
-			$this->addData( 'dev', File_Reader::load( $fileName ) );
+
+		$index	= new File_RegexFilter( 'contents/dev/', "/\.txt$/" );
+		$list	= array();
+		foreach( $index as $file ){
+			$fileName	= pathinfo( $file->getFilename(), PATHINFO_FILENAME );
+			$list[$fileName]	= filemtime( $file->getPathname() );
+		}
+		$this->addData( 'files', $list );
+		$this->addData( 'content', '' );
+
+		if( $topic ){
+			$fileName	= 'contents/dev/'.$topic.'.txt';
+			if( file_exists( $fileName ) )
+				$this->addData( 'content', File_Reader::load( $fileName ) );
+		}
 	}
 
 	public function edit( $articleId, $version = 0 ){

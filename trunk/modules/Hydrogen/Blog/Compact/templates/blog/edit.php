@@ -215,7 +215,7 @@ $(document).ready(function(){
 
 	$(window).keydown(function(event){
 		if(event.ctrlKey){														//  control key is pressed
-			if(event.which == 67){												//  ctrl+c
+			if(event.which == 81){												//  ctrl+q
 				event.preventDefault();											//  prevent default browser behaviour
 				document.location.href = "./blog/article/"+blogArticleId;		//  redirect to article view
 			}
