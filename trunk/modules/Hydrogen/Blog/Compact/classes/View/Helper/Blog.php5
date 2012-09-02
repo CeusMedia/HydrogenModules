@@ -113,7 +113,7 @@ class View_Helper_Blog{
 	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
 		$list	= array();
 		$model	= new Model_Article( $env );
-		$latest	= $model->getAll( array( 'status' => 1 ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
+		$latest	= $model->getAll( array( 'status' => 1 ), array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );
 			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
