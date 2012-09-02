@@ -11,6 +11,8 @@ class View_Gallery extends CMF_Hydrogen_View{
 			"formatWikiLinks",
 			"formatYoutubeLinks",
 			"formatImdbLinks",
+			"formatDiscogsLinks",	
+			"formatMyspaceLinks",
 			"formatMapLinks",
 			"formatBreaks",
 			"formatCodeBlocks",
