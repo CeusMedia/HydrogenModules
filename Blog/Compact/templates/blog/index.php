@@ -8,7 +8,7 @@ $linkAdd		= $canAdd ? UI_HTML_Elements::Link( $url, $label, 'button link-add' ) 
 
 $articleList	= UI_HTML_Tag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )
-	$articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
+	$articleList	= $this->renderArticleAbstractList( $articles, !FALSE, FALSE, !FALSE );
 
 #$heading		= UI_HTML_Elements::Heading( 'Artikel', 3 );
 $heading		= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
