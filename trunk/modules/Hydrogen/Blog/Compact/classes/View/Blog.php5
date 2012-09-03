@@ -144,18 +144,18 @@ class View_Blog extends CMF_Hydrogen_View{
 			if( $config->get( 'module.blog_compact.niceURLs' ) )
 				$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$label		= str_replace( '&', '&amp;', $article->title );
-			$link		= UI_HTML_Elements::Link( $url, $label, 'blog-article-link' );
+			$link		= UI_HTML_Elements::Link( $url, $label, 'icon-label link-blog' );
 
 			$abstract	= array_shift( preg_split( "/\n/", $article->content ) );
 			$abstract	= View_Helper_ContentConverter::render( $this->env, $abstract );
 			$abstract	= UI_HTML_Tag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
 
 			$infoList	= View_Blog::renderInfoList( $article, $date, $time );
-			$authorList	= $authors ? View_Blog::renderAuthorList( $article->authors, $linkAuthors ) : '';
+			$authorList	= $authors ? View_Blog::renderAuthorList( $this->env, $article->authors, $linkAuthors ) : '';
 			$tagList	= View_Blog::renderTagList( $this->env, $article->tags );
 			$info		= UI_HTML_Tag::create( 'div', $infoList.$authorList.$tagList, array( 'class' => "blog-article-info" ) );
 
-			$content	= $info . $link . $abstract;
+			$content	= $link . $info. $abstract;
 			$attributes	= array( 'class' => 'blog-article-list-item  blog-article-abstract' );
 			$item		= UI_HTML_Tag::create( 'li', $content, $attributes );
 			$list[$article->title]	= $item;
@@ -169,7 +169,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		$infoList	= array();
 		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
 		if( $date && $article->createdAt ){
-			$date		= date( 'Y-m-d', $article->createdAt );
+			$date		= date( 'd.m.Y', $article->createdAt );
 			$label		= UI_HTML_Tag::create( 'span', $date, array( 'class' => 'blog-article-date' ) );
 			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
 		}
@@ -184,6 +184,8 @@ class View_Blog extends CMF_Hydrogen_View{
 
 	static public function renderAuthorList( $env, $authors, $linked = FALSE ){
 		$authorList	= array();
+		if( !$authors )
+			return '';
 		foreach( $authors as $author ){
 			$url		= './blog/author/'.rawurlencode( $author->username );
 			$label		= UI_HTML_Tag::create( 'span', $author->username, array( 'class' => 'link-author' ) );
@@ -195,6 +197,17 @@ class View_Blog extends CMF_Hydrogen_View{
 	}
 
 	static public function renderTagList( $env, $tags ){
+		$tagList	= array();
+		if( $tags ){
+			foreach( $tags as $tag ){
+				$url	= './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tag->title ) );
+				$tagList[]	= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url ) );
+			}
+			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'icon-label link-tag' ) );
+			return UI_HTML_Tag::create( 'span', $span, array( 'class' => 'blog-article-tag-list' ) );
+		}
+		return '';
+
 		$tagList	= array();
 		foreach( $tags as $tag ){
 			$link		= View_Helper_Blog::renderTagLink( $env, $tag->title );

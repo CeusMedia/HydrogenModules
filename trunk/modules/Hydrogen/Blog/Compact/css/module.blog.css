@@ -45,10 +45,12 @@ body.controller-blog .blog-tag ul.blog-article-tag-list {
 	display: inline;
 	margin-bottom: 0.5em;
 	}
-body.controller-blog .blog-article-abstract .blog-article-tag-list {
+body.controller-blog .blog-article-abstract .blog-article-info-list {
 	position: absolute;
 	top: 0px;
 	right: 0px;
+	}
+body.controller-blog .blog-article-abstract .blog-article-tag-list {
 	}
 
 body.controller-blog ul.blog-article-list li.blog-article-list-item>a {
