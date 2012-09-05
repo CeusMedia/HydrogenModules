@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>Uberlog Client</title>
+	<description><![CDATA[/ U B E R L O G \]]></description>
+	<version>0.1</version>
+	<category>Resource</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Resource/Uberlog.php5</class>
+		<script load="auto">UberlogClient.js</script>
+	</files>
+	<relations/>
+	<config protected="yes" type="string" name="uri">http://example.org/work/uberlog</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$config		= $env->getConfig();
+$script1	= 'UberlogClient.uri = "'.$config->get( 'module.resource_uberlog.uri' ).'";';
+$script2	= 'UberlogClient.host = "'.getEnv( 'HTTP_HOST' ).'";';
+$context->js->addScript( $script1 );
+$context->js->addScript( $script2 );
+]]></hook>
+</module>
