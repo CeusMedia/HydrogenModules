@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Uberlog</title>
+	<description><![CDATA[/ U B E R L O G \]]></description>
+	<version>0.1</version>
+	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Work/Uberlog.php5</class>
+		<class>Model/Log/Category.php5</class>
+		<class>Model/Log/Client.php5</class>
+		<class>Model/Log/Host.php5</class>
+		<class>Model/Log/Record.php5</class>
+		<class>Model/Log/UserAgent.php5</class>
+		<class>View/Work/Uberlog.php5</class>
+		<template>work/uberlog/index.php</template>
+		<template>work/uberlog/view.php</template>
+		<locale>de/work/uberlog.ini</locale>
+		<locale>en/work/uberlog.ini</locale>
+		<style>site.work.uberlog.css</style>
+<!--		<script>WorkUberlog.js</script>-->
+	</files>
+	<relations>
+<!--		<needs type="module"></needs>
+-->	</relations>
+	<link xml:lang="de" access="acl" path="work/uberlog">Uberlog</link>
+	<link xml:lang="en" access="acl" path="work/uberlog">Uberlog</link>
+	<link access="public" path="work/uberlog/record"></link>
+	<config type="string" name="urlView"></config>
+</module>
