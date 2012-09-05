@@ -8,6 +8,6 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<style source="primer" load="auto">indicator.css</style>
+		<style source="theme" load="auto">indicator.css</style>
 	</files>
 </module>
