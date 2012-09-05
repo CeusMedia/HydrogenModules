@@ -1,0 +1,18 @@
+table.uberlog {
+	border: 1px solid gray;
+	}
+tr.type-2 {
+	background-color: #FFEEEE;
+	}
+tr.type-1 {
+	background-color: #FFFFEE;
+	}
+tr.type0 {
+	background-color: #F7F7F7;
+	}
+tr.type1 {
+	background-color: #EEFFEE;
+	}
+tr.type2 {
+	background-color: #DDFFDD;
+	}
