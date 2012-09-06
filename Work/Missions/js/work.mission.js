@@ -89,7 +89,6 @@ $(document).ready(function(){
 	$("#input-import").bind("click",function(){
 		$("#input-serial").trigger("click")
 	});
-	$("#input-serial").trigger("click");
 	$("#input-serial").bind("change",function(){
 		var value = $("#input-serial").val().replace(/\\/g,"/");
 		$("#input-import").val(value.split(/\//).pop());
