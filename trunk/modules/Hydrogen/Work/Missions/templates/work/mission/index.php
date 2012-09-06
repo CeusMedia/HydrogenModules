@@ -69,7 +69,7 @@ function getCount( $list, $days ){
 		return ' <div class="mission-number">'.$count.'</div>';
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "110px" );
+$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
@@ -129,7 +129,7 @@ $panelExport	= '';
 if( $filterStates != array( 4 ) ){
 	$panelExport	= '<fieldset>
 		<legend class="icon export">Export / Import</legend>
-		<b>Export als:</b>&nbsp;
+		<b>Export als:</b>&nbsp;<br/>
 		'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
 		'.UI_HTML_Elements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
 		<hr/>
