@@ -25,8 +25,11 @@ $indicator	= new UI_HTML_Indicator();
 $disabled	= array();
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){
-	$link		= UI_HTML_Elements::Link( './work/mission/edit/'.$mission->missionId, htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ) );
-	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60);
+	$label		= htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' );
+	$url		= './work/mission/edit/'.$mission->missionId;
+	$class		= 'icon-label mission-type-'.$mission->type;
+	$link		= UI_HTML_Elements::Link( $url, $label, array( 'class' => $class ) );
+	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60 );
 	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
 	$type		= $words['types'][$mission->type];
@@ -42,12 +45,16 @@ foreach( $missions as $mission ){
 
 	$daysOverdue	= '';
 	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
-	if( $days < 0 ){
+	if( $days < 0 )
 		$daysOverdue	= UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
-	}
 	
-	$line		= '<td><div style="padding: 2px;">'.$graph.'</div></td><td>'.$daysOverdue.$link.'</td><td>'.$priority.'</td><td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>';
-	$list[$daysBound][]	= UI_HTML_Tag::create( 'tr', $line, array( 'class' => $class ) );
+	$cells	= array(
+		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.'</div></td>',
+		'<td>'.$daysOverdue.$link.'</td>',
+		'<td><small>'.$priority.'</small></td>',
+		'<td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>',
+	);
+	$list[$daysBound][]	= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => $class ) );
 }
 
 function getFutureDate( $daysInFuture = 0, $words = NULL ){
@@ -62,7 +69,7 @@ function getCount( $list, $days ){
 		return ' <div class="mission-number">'.$count.'</div>';
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( "13%", "60%", "14%", "13%" );
+$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "100px" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
