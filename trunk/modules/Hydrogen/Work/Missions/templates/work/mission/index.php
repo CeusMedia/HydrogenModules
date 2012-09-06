@@ -69,7 +69,7 @@ function getCount( $list, $days ){
 		return ' <div class="mission-number">'.$count.'</div>';
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "100px" );
+$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "110px" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
