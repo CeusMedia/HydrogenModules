@@ -21,8 +21,12 @@ php job.php5 work-mission-mail-daily
 		<template>work/mission/add.php</template>
 		<template>work/mission/edit.php</template>
 		<template>work/mission/index.php</template>
+		<template>work/mission/index.days.php</template>
 		<template>work/mission/index.filter.php</template>
+		<template>work/mission/index.list.php</template>
 		<locale>de/work/mission.ini</locale>
+		<locale>de/html/work/mission/add.info.html</locale>
+		<locale>de/html/work/mission/index.empty.html</locale>
 		<style load="auto">site.mission.css</style>
 		<script load="auto">work.mission.js</script>
 		<image source="theme">clearSearch.png</image>
@@ -35,6 +39,8 @@ php job.php5 work-mission-mail-daily
 	</relations>
 	<link xml:lang="de" access="acl" path="work/mission">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission">Missions</link>
+	<link access="inside" path="work/mission/ajaxSelectDay"></link>
+	<link access="public" path="work/mission/export"></link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (

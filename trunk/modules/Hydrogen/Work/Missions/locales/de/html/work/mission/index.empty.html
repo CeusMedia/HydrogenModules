@@ -1,0 +1,55 @@
+<style type="text/css">
+button.icon-text {
+	padding: 8px 10px;
+	width: 80px;
+	}
+h4 {
+		margin-bottom: 0.4em;
+	}
+</style>
+
+<h3>Aufgaben und Termine</h3>
+Es wurden keine Einträge gefunden.<br/>
+Entweder wurden noch keine angelegt oder die Suche mittels der Filter führte ins Leere.<br/>
+<br/>
+<div>
+	<div style="float: left; width: 80px">
+		<button type="button" class="icon-text" onclick="document.location.href='./work/mission/add?type=0';">
+			<img src="http://img.int1a.net/famfamfam/silk/script_add.png"><br/>
+			Aufgabe
+		</button>
+	</div>
+	<div style="margin-left: 120px; min-height: 60px">
+		<h4>Neue Aufgabe</h4>
+		Aufgaben beziehen sich auf einen Tag. Entweder sollen sie an diesem Tag begonnen oder beendet werden.<br/>
+		Sie werden solange angezeigt, bis sie erledigt wurden.<br/>
+		
+	</div>
+</div>
+<br/>
+<div>
+	<div style="float: left; width: 80px">
+		<button type="button" class="icon-text" onclick="document.location.href='./work/mission/add?type=1';">
+			<img src="http://img.int1a.net/famfamfam/silk/date_add.png"><br/>
+			Termin
+		</button>
+	</div>
+	<div style="margin-left: 120px; min-height: 60px">
+		<h4>Neuer Termin</h4>
+		Termine sind wie Aufgaben, aber beziehen sich auf einen bestimmten Zeitraum.<br/>
+		Aufgaben können zu Terminen konvertiert werden und umgekehrt.
+	</div>
+</div>
+<br/>
+<br/>
+<h4>Import in <cite>Mozilla Thunderbird</cite></h4>
+Die Aufgaben und Termine können in Kalender-Programmen, wie z.B. <cite>Apple iCal</cite>, <cite>Microsoft Outlook</cite> oder <cite>Mozilla Thunderbird</cite>, importiert werden.<br/>
+Hier die Anleitung für <cite>Mozilla Thunderbird</cite>:
+<ul>
+	<li>diesen <a href="./work/mission/export/ical">Link</a> in Zwischenablage kopieren</li>
+	<li><cite>Mozilla Thunderbird</cite> öffnen <small>(Erweiterung <cite>Lightning</cite> muss installiert sein)</small></li>
+	<li>Menü: <b>Datei</b> -> <b>Neu</b> -> <b>Kalender</b></li>
+	<li>Quelle "Im Netzwerk" auswählen, weiter</li>
+	<li>Format "iCalendar (ICS)" auswählen, als Adresse den kopierten Link eintragen, weiter</li>
+	<li>Name <small>(z.B. "Aufgaben und Termine")</small> vergeben und Farbe für die Terminblöcke wählen</li>
+</ul>

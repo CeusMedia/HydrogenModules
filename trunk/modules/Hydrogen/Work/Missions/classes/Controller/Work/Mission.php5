@@ -324,6 +324,22 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $this->userMap );
 	}
 
+	public function ajaxSelectDay( $day, $mode = 1, $clearOthers = TRUE ){
+		$day		= (int) $day;
+		$session	= $this->env->getSession();
+		$days		= $session->get( 'filter_mission_days' );
+		if( $day >= 0 && $day < 7 ){
+			if( !is_array( $days ) || $clearOthers )													//  no days array set or reset was called
+				$days	= array();																		//  empty days array
+			else if( array_search( $day, $days ) >= 0 )													//  otherwise if day is selected
+				unset( $days[array_search( $day, $days )] );											//  remove day from selection
+			$mode ? array_push( $days, (int) $day ) : NULL;													//  (re)add day in "set mode" (mode = 1)
+			$session->set( 'filter_mission_days', $days );												//  store selected days
+		}
+		print( json_encode( $days ) );
+		exit;
+	}
+
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
 		if( !$showMission )																			//  back to list
