@@ -127,6 +127,66 @@ legend.icon.export {
 	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
 	}
 
+
+/*  --  DAY TABLES  -- */
+
+body.controller-work-mission.action-index #day-controls {
+	overflow: hidden;
+	}
+
+
+body.controller-work-mission.action-index #day-controls button.day {
+	position: relative;
+	min-width: 90px;
+	width: 12%;
+	height: 50px;
+	margin-right: 0.5%;
+	border-radius: 0.5em;
+	background: #f2f5f6; /* Old browsers */
+	background: -moz-linear-gradient(top, #f2f5f6 0%, #EDEDED 37%, #D7D7D7 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#EDEDED), color-stop(100%,#D7D7D7)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#D7D7D7',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #8F8F8F;
+	}
+body.controller-work-mission.action-index #day-controls button.day.active {
+	border-width: 2px;
+	border-style: solid;
+	border-color: green;
+	background-color: #EFE;
+	color: #000;
+/*	color: #23738F;
+*/	}
+body.controller-work-mission.action-index #day-controls button.day.important {
+	width: 16%;
+	}
+body.controller-work-mission.action-index #day-controls button.day.empty {
+	min-width: 80px !important;
+	background: #EFEFEF;
+	}
+body.controller-work-mission.action-index #day-controls button.day.important.empty {
+	}
+body.controller-work-mission.action-index #day-controls button.day .mission-number {
+	position: relative;
+	float: none !important;
+	display: inline !important;
+	margin: 0px 0.8em 0px 0px !important;
+	top: 0px;
+	right: 0px;
+	}
+
+body.controller-work-mission.action-index #day-lists {
+	margin-top: 1em;
+	}
+
+body.controller-work-mission.action-index #day-lists .table-day {
+	display: none;
+	}
+	
+	
 /*  --  MAIL  --  */
 body.jobWorkMission .table-mail {
 	width: 500px;

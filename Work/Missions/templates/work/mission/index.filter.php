@@ -206,10 +206,10 @@ $(document).ready(function(){
 			</li>
 			<li>
 				<label for="filter_order">'.$w->labelOrder.'</label><br/>
-				<div class="column-left-70">
+				<div class="column-left-60">
 					<select name="order" id="filter_order" class="max" onchange="this.form.submit();">'.$optOrder.'</select>
 				</div>
-				<div class="column-right-30">
+				<div class="column-right-40">
 					'.$buttonUp.$buttonDown.'
 				</div>
 				<div class="column-clear"></div>

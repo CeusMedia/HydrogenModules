@@ -82,7 +82,7 @@ $panelAdd	= '
 </form>
 ';
 
-$panelInfo	= '';
+$panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
 return '
 <div class="column-right-30">
