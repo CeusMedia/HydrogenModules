@@ -11,7 +11,9 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
-	protected $userMap	= array();
+	protected $userMap		= array();
+	protected $useIssues	= FALSE;
+	protected $useProjects	= FALSE;
 	
 	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
@@ -19,6 +21,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$model			= new Model_User( $this->env );
 		foreach( $model->getAll() as $user )
 			$this->userMap[$user->userId]	= $user;
+
+		$modules	= $this->env->getModules();
+		
+		$this->addData( 'useProjects', $this->useProjects = $modules->has( 'Manage_Projects' ) );
+		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
 	}
 
 	public function add(){
@@ -40,6 +47,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$data	= array(
 					'ownerId'		=> (int) $session->get( 'userId' ),
 					'workerId'		=> (int) $session->get( 'userId' ),#$request->get( 'workerId' ),
+					'projectId'		=> (int) $request->get( 'projectId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'status'		=> $status,
@@ -66,6 +74,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$mission['status']	= 0;
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
+
+		if( $this->useProjects ){
+			$model		= new Model_Project( $this->env );
+			$projects	= array();
+			foreach( $model->getAll() as $project )
+				$projects[$project->projectId]	= $project;
+			$this->addData( 'projects', $projects );
+			$model		= new Model_Project_User( $this->env );
+			$this->addData( 'userProjects', $model->getAllByIndex( 'userId', $session->get( 'userId' ) ) );
+		}
 	}
 
 	public function changeDay( $missionId ){
@@ -107,7 +125,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
-#					'workerId'		=> (int) $request->get( 'workerId' ),
+					'workerId'		=> (int) $request->get( 'workerId' ),
+					'projectId'		=> (int) $request->get( 'projectId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'content'		=> $content,
@@ -128,6 +147,23 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission	= $this->model->get( $missionId );
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
+
+		if( $this->useProjects ){
+			$model		= new Model_Project( $this->env );
+			$projects	= array();
+			foreach( $model->getAll() as $project )
+				$projects[$project->projectId]	= $project;
+			$this->addData( 'projects', $projects );
+			$model		= new Model_Project_User( $this->env );
+			$this->addData( 'userProjects', $model->getAllByIndex( 'userId', $session->get( 'userId' ) ) );
+			
+		
+		}
+
+		if( $this->useIssues ){
+			$this->env->getLanguage()->load( 'work/issue' );
+			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
+		}
 	}
 
 	public function export( $format = NULL ){

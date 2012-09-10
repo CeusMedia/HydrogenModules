@@ -1,4 +1,49 @@
 
+
+
+.mission.priority1 {
+	background-color: rgba(255,0,0,0.20);
+	}
+.mission.priority2 {
+	background-color: rgba(255,127,0,0.20);
+	}
+.mission.priority3 {
+	background-color: rgba(255,255,63,0.20);
+	}
+.mission.priority4 {
+	background-color: rgba(127,255,0,0.20);
+	}
+.mission.priority5 {
+	background-color: rgba(0,255,0,0.20);
+	}
+
+.mission.status-3 {
+	background-color: rgba(191,191,191,1);
+	}
+.mission.status-2 {
+	background-color: rgba(255,127,127,1);
+	}
+.mission.status-1 {
+	background-color: rgba(255,191,191,1);
+	}
+.mission.status0 {
+	background-color: rgba(255,255,255,1);
+	}
+.mission.status1 {
+	background-color: rgba(255,223,192,1);
+	}
+.mission.status2 {
+	background-color: rgba(255,255,191,1);
+	}
+.mission.status3 {
+	background-color: rgba(191,255,191,1);
+	}
+.mission.status4 {
+	background-color: rgba(127,255,127,1);
+	}
+
+	
+	
 tr.row-priority.priority-1 {
 	background-color: rgba(255,0,0,0.20);
 	}

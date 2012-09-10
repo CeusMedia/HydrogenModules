@@ -45,8 +45,9 @@ php job.php5 work-mission-mail-daily
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `creatorId` int(10) unsigned NOT NULL,
-  `workerId` int(10) unsigned NOT NULL,
+  `ownerId` int(10) unsigned NOT NULL,
+  `workerId` int(10) NOT NULL,
+  `projectId` int(10) unsigned NOT NULL DEFAULT  '0',
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -60,9 +61,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`missionId`),
-  KEY `priority` (`priority`),
+  KEY `ownerId` (`ownerId`),
+  KEY `workerId` (`workerId`),
+  KEY `projectId` (`projectId`),
   KEY `type` (`type`),
-  KEY `creatorId` (`creatorId`,`workerId`)
+  KEY `priority` (`priority`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[

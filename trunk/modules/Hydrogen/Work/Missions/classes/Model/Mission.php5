@@ -22,6 +22,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 		'missionId',
 		'ownerId',
 		'workerId',
+		'projectId',
 		'type',
 		'priority',
 		'status',
@@ -43,6 +44,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'ownerId',
 		'workerId',
+		'projectId',
 		'type',
 		'priority',
 		'status',
