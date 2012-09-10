@@ -1,0 +1,43 @@
+.project.status-3 {
+	background-color: #BFBFBF;
+	}
+.project.status-2 {
+	background-color: #DFBFBF;
+	}
+.project.status-1 {
+	background-color: #FFBFBF;
+	}
+.project.status0 {
+	background-color: #FFFFFF;
+	}
+.project.status1 {
+	background-color: #FFFFDF;
+	}
+.project.status2 {
+	background-color: #DFFFDF;
+	}
+.project.status3 {
+	background-color: #BFFFBF;
+	}
+.project.status4 {
+	background-color: #9FFF9F;
+	}
+
+#project-users ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	}
+#project-users li {
+	clear: both;
+	height: 1.8em;
+	border-bottom: 1px solid #CFCFCF;
+	}
+#project-users button.remove {
+	float: right;
+	right: 0px;
+	margin-top: 2px;
+	}
+body.site-manage-project-index #input_status {
+	height: 8.75em;
+	}
