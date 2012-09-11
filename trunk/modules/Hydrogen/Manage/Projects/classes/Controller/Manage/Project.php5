@@ -116,11 +116,12 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		if( !is_array( $filterStatus ) )
 			$filterStatus	= array();
 		
+		$conditions	= array();
 		if( !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
 			$projects	= array();
 			foreach( $modelUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
 				$projects[$relation->projectId]	= NULL;
-			$conditions	= array( 'projectId' => array_merge( array( 0 ), array_keys( $projects ) ) );
+			$conditions['projectId']	= array_merge( array( 0 ), array_keys( $projects ) );
 		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
