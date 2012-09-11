@@ -43,14 +43,16 @@ foreach( $projects as $project ){
 	$cells		= array();
 	$url		= './manage/project/edit/'.$project->projectId;
 	$link		= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url ) );
+	$users		= count( $project->users );
 	$cells[]	= UI_HTML_Tag::create( 'td', $link );
+	$cells[]	= UI_HTML_Tag::create( 'td', $users );
 	$cells[]	= UI_HTML_Tag::create( 'td', $words['states'][$project->status] );
 	$cells[]	= UI_HTML_Tag::create( 'td', date( 'j.m.Y H:i', $project->createdAt ) );
 	$cells[]	= UI_HTML_Tag::create( 'td', $project->modifiedAt ? date( 'j.m.Y H:i', $project->modifiedAt ) : '-' );
 	$rows[]		= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => 'project status'.$project->status ) );
 }
-$heads		= UI_HTML_Elements::TableHeads( array( 'Projekt', 'Status', 'erstellt', 'letzte Änderung' ) );
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( '55%', '15%', '15%', '15%' ) );
+$heads		= UI_HTML_Elements::TableHeads( array( 'Projekt', 'Teilnehmer', 'Status', 'erstellt', 'letzte Änderung' ) );
+$colgroup	= UI_HTML_Elements::ColumnGroup( array( '40%', '15%', '15%', '15%', '15%' ) );
 $list		= UI_HTML_Tag::create( 'table', $colgroup.$heads.join( $rows ) );
 
 $buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $words['index']['buttonAdd'], 'button add' );

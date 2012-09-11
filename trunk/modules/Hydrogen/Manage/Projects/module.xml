@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
 
 ]]></sql>
 <sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>projects
+DROP TABLE IF EXISTS `<%?prefix%>projects`;
 DROP TABLE IF EXISTS `<%?prefix%>project_users`;
 ]]></sql>
 </module>
