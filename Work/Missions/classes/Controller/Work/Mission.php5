@@ -11,13 +11,16 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
-	protected $userMap		= array();
-	protected $useIssues	= FALSE;
-	protected $useProjects	= FALSE;
+	protected $userMap			= array();
+	protected $useIssues		= FALSE;
+	protected $useProjects		= FALSE;
+	protected $hasFullAccess	= FALSE;
 	
 	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
 		$this->logic	= new Logic_Mission( $this->env );
+		$this->acl		= $this->env->getAcl();
+		
 		$model			= new Model_User( $this->env );
 		foreach( $model->getAll() as $user )
 			$this->userMap[$user->userId]	= $user;
@@ -154,10 +157,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			foreach( $model->getAll() as $project )
 				$projects[$project->projectId]	= $project;
 			$this->addData( 'projects', $projects );
-			$model		= new Model_Project_User( $this->env );
-			$this->addData( 'userProjects', $model->getAllByIndex( 'userId', $session->get( 'userId' ) ) );
-			
-		
+
+			$userProjects	= $projects;
+			if( !$this->hasFullAccess() ){
+				$model		= new Model_Project_User( $this->env );
+				$userProjects	= $model->getAllByIndex( 'userId', $session->get( 'userId' ) );
+			}
+			$this->addData( 'userProjects', $userProjects );
 		}
 
 		if( $this->useIssues ){
@@ -166,6 +172,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	protected function hasFullAccess(){
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );	
+	}
+		
 	public function export( $format = NULL ){
 		switch( $format ){
 			case 'ical':
@@ -252,6 +262,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->remove( 'filter_mission_types' );
 			$session->remove( 'filter_mission_priorities' );
 			$session->remove( 'filter_mission_states' );
+			$session->remove( 'filter_mission_projects' );
 			$session->remove( 'filter_mission_order' );
 			$session->remove( 'filter_mission_direction' );
 		}
@@ -265,6 +276,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
 		if( $request->has( 'status' ) )
 			$session->set( 'filter_mission_states', $request->get( 'states' ) );
+		if( $request->has( 'projects' ) )
+			$session->set( 'filter_mission_projects', $request->get( 'projects' ) );
 		if( $request->has( 'order' ) )
 			$session->set( 'filter_mission_order', $request->get( 'order' ) );
 		if( $request->has( 'direction' ) )
@@ -319,6 +332,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$types		= $session->get( 'filter_mission_types' );
 		$priorities	= $session->get( 'filter_mission_priorities' );
 		$states		= $session->get( 'filter_mission_states' );
+		$projects	= $session->get( 'filter_mission_projects' );
 		$direction	= $session->get( 'filter_mission_direction' );
 		$order		= $session->get( 'filter_mission_order' );
 		if( !$order )
@@ -332,12 +346,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order['content']	= 'ASC';
 
 		$conditions	= array();
-		if( !$this->env->getAcl()->hasFullAccess( $roleId ) ){
-			if( $access == "owner" )
-				$conditions['ownerId']	= $userId;
-			else if( $access == "worker" )
-				$conditions['workerId']	= $userId;
-		}
 
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
@@ -345,17 +353,63 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$conditions['priority']	= $priorities;
 		if( !( is_array( $states ) && count( $states ) ) )
 			$states	= array( 0, 1, 2, 3 );
+		if( is_array( $projects ) && count( $projects ) ){
+			$conditions['projectId']	= $projects;
+			if( $this->hasFullAccess() )
+				$conditions['projectId']	= array_merge( array( 0 ), $projects );
+		}
+			
 		$conditions['status']	= $states;
-
 		if( strlen( $query ) )
 			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 
+		if( $this->useProjects ){
+			$modelProject	= new Model_Project( $this->env );
+			$modelRelation	= new Model_Project_User( $this->env );
+			$userProjects	= array();
+			foreach( $modelProject->getAll() as $project )
+				$userProjects[$project->projectId]	= $project;
+			if( !$this->hasFullAccess() ){
+				$projectIds	= array();
+				foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation )
+					$projectIds[]	= $relation->projectId;
+				foreach( $userProjects as $projectId => $project )
+					if( !in_array( $projectId, $projectIds ) )
+						unset( $userProjects[$projectId] );
+			}
+			$this->addData( 'userProjects', $userProjects );
+		}
+		
+		if( !$this->hasFullAccess() ){
+			$ors	= array();
+			if( $access == "owner" )
+				$ors[]	= 'ownerId = '.$userId;
+			else if( $access == "worker" )
+				$ors[]	= 'workerId = '.$userId;
+
+			if( $this->useProjects ){
+				$modelProject	= new Model_Project( $this->env );
+				$modelRelation	= new Model_Project_User( $this->env );
+				if( !( is_array( $projects ) && count( $projects ) ) )
+					$projects	= array_keys( $userProjects );
+				$ors[]	= 'projectId IN ('.join( ',', $projects ).')';
+			}
+			$prefix	= $this->env->getDatabase()->getPrefix();
+			$query	= 'SELECT missionId FROM '.$prefix.'missions WHERE '.join( ' OR ', $ors );
+			$data	= $this->env->getDatabase()->query( $query );
+			$missionIds	= array();
+			foreach( $data->fetchAll( PDO::FETCH_OBJ ) as $date )
+				$missionIds[]	= $date->missionId;
+			$conditions['missionId']	= $missionIds;
+		}
 		$missions	= $this->model->getAll( $conditions, $order );
+
 		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
 		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
 		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
+		$this->addData( 'filterProjects', $session->get( 'filter_mission_projects' ) );
 		$this->addData( 'filterDirection', $direction );
 		$this->addData( 'users', $this->userMap );
 	}

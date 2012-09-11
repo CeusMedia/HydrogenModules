@@ -125,7 +125,7 @@ for( $i=0; $i<5; $i++){
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['states'][$i];
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'id' => 'filter_status_item_'.$i ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'id' => 'filter_status_item_'.$i, 'class' => ( $i == 4 ? ' invisible' : '' ) ) );
 }
 $attributes	= array(
 	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledStates ? 'block' : 'none' ),
@@ -155,12 +155,71 @@ $optView	= array(
 );
 $optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
 
+
+
+
+
+//  --  FILTER: PROJECTS  --  //
+$optListProjects	= '';
+$inputSwitchProject	= '';
+if( $useProjects && !empty( $userProjects ) ){
+
+	if( $filterProjects === NULL )
+		$filterProjects	= array_keys( $userProjects );
+	
+	$enabledProjects	= count( $filterProjects ) != count( $userProjects );
+	$attributes			= array(
+		'type'				=> 'checkbox',
+		'name'				=> 'project',
+		'id'				=> 'switch_project',
+		'class'				=> 'optional-trigger',
+		'onchange'			=> 'showOptionals(this);',
+		'data-animation'	=> 'slide',
+		'data-speed-show'	=> 500,
+		'data-speed-hide'	=> 300,
+		'checked'			=> $enabledProjects ? 'checked' : NULL,
+	);
+	$inputSwitchProject	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+
+	$list	= array();
+	$index	= array();
+	foreach( $userProjects as $project ){
+		$id		= 'filter_project_'.$project->projectId;
+		$attributes	= array(
+			'type'		=> 'checkbox',
+			'name'		=> 'projects[]',
+			'value'		=> $project->projectId,
+			'id'		=> $id,
+			'class'		=> 'filter-project',
+			'checked'	=> in_array( $project->projectId, $filterProjects ) ? 'checked' : NULL,
+		);
+#		if( !( count( $filterProjects ) == 1 && $filterProjects[0] == $i ) )
+			$attributes['onchange']	= 'this.form.submit();';
+		$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+		$label	= $project->title;
+		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+		$list[]	= UI_HTML_Tag::create( 'li', $label );
+		$index[count( $list ) - 1]	= $project->title;
+	}
+	$list2	= array();
+	natcasesort( $index );
+	foreach( array_keys( $index ) as $nr )
+		$list2[]	= $list[$nr];
+	$attributes	= array(
+		'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledProjects ? 'block' : 'none' ),
+		'class'		=> 'optional project project-true'
+	);
+	$optListProjects	= UI_HTML_Tag::create( 'ul', join( $list2 ), $attributes );
+}
+
 $panelFilter	= '
 <script>
 $(document).ready(function(){
 	FormMissionFilter.__init();
 	if(!parseInt($("#switch_view").val()))
 		$("li.filter_status").show();
+	if($("li.filter_project>ul").size())
+		$("li.filter_project").show();
 });
 </script>
 <form id="form_mission_filter" action="./work/mission/filter?reset" method="post">
@@ -173,6 +232,11 @@ $(document).ready(function(){
 					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 3%; top: 9px; cursor: pointer"/>
 				</div>
 				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="max"/>
+			</li>
+			<li>
+				<label for="switch_view" style="">Sichtweise</label><br/>
+				<select name="view" id="switch_view" onchange="FormMissionFilter.changeView(this);" class="max">'.$optView.'</select>
+		
 			</li>
 <!--			<li>
 				<label for="filter_access">???</label><br/>
@@ -192,11 +256,6 @@ $(document).ready(function(){
 				</label><br/>
 				'.$optListPriorities.'
 			</li>
-			<li>
-				<label for="switch_view" style="">Sichtweise</label><br/>
-				<select name="view" id="switch_view" onchange="FormMissionFilter.changeView(this);" class="max">'.$optView.'</select>
-		
-			</li>
 			<li class="filter_status" style="display: none">
 				<label for="switch_status" style="font-weight: bold">
 					'.$inputSwitchStatus.'
@@ -204,6 +263,16 @@ $(document).ready(function(){
 				</label><br/>
 				'.$optListStates.'
 			</li>
+			<li class="filter_project" style="display: none">
+				<label for="switch_project" style="font-weight: bold">
+					'.$inputSwitchProject.'
+					<span>Projekte</span>
+				</label><br/>
+				'.$optListProjects.'
+			</li>
+			
+
+
 			<li>
 				<label for="filter_order">'.$w->labelOrder.'</label><br/>
 				<div class="column-left-60">
