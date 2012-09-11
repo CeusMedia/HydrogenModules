@@ -3,6 +3,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 	
 	public function add(){
 		$request		= $this->env->getRequest();
+		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 		$modelProject	= new Model_Project( $this->env );
 		$words			= (object) $this->getWords( 'add' );
@@ -20,11 +21,14 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$data				= $request->getAll();
 			$data['createdAt']	= time();
 			$projectId			= $modelProject->add( $data, FALSE );
-			$modelRelation		= new Model_Project_User( $this->env );
-			$modelRelation->add( array(
-				'projectId'		=> $projectId,
-				'userId'		=> $userId,
-			) );
+
+			if( 1 || !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
+				$modelRelation		= new Model_Project_User( $this->env );
+				$modelRelation->add( array(
+					'projectId'		=> $projectId,
+					'userId'		=> $userId,
+				) );
+			}
 			$messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( './manage/project/edit/'.$projectId );
 		}
@@ -108,21 +112,26 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$modelProject	= new Model_Project( $this->env );
 		$modelUser		= new Model_Project_User( $this->env );
 		
-		$projects	= array();
-		foreach( $modelUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
-			$projects[$relation->projectId]	= NULL;
-		
-		
-		
 		$filterStatus	= $session->get( 'filter_manage_project_status' );
 		if( !is_array( $filterStatus ) )
 			$filterStatus	= array();
 		
-		$conditions	= array( 'projectId' => array_merge( array( 0 ), array_keys( $projects ) ) );
+		if( !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
+			$projects	= array();
+			foreach( $modelUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
+				$projects[$relation->projectId]	= NULL;
+			$conditions	= array( 'projectId' => array_merge( array( 0 ), array_keys( $projects ) ) );
+		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
+
+		$projects	= array();
+		foreach( $modelProject->getAll( $conditions ) as $project ){
+			$projects[$project->projectId]	= $project;
+			$project->users	= $modelUser->getAllByIndex( 'projectId', $project->projectId );
+		}
 		
-		$this->addData( 'projects', $modelProject->getAll( $conditions ) );
+		$this->addData( 'projects', $projects );
 		$this->addData( 'filterStatus', $filterStatus );
 	}
 
