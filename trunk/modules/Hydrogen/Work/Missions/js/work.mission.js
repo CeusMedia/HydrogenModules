@@ -35,6 +35,8 @@ function showOptionals(elem){
 	var form = $(elem.form);
 	var name = $(elem).attr("name");
 	var type = $(elem).attr("type");
+	console.log("name: "+name);
+	console.log("type: "+type);
 	var value = name+"-"+$(elem).val();
 	if(type == "checkbox"){
 		value = name+"-"+$(elem).prop("checked");

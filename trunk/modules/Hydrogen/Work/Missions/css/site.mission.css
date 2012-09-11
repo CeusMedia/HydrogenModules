@@ -292,3 +292,8 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 .icon-label.mission-type-1 {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
+
+	
+.invisible {
+	display: none;
+	}
