@@ -19,9 +19,12 @@
 		<style load="auto">site.manage.project.css</style>
 	</files>
 	<relations>
+		<needs type="module">Resource_Database</needs>
+		<supports type="module">Work_Missions</supports>
+		<supports type="module">Work_Issues</supports>
 	</relations>
-	<link path="manage/project" access="acl" xml:lang="de">Projekte</link>
-	<link path="manage/project" access="acl" xml:lang="en">Projects</link>
+	<link path="manage/project" access="acl" xml:lang="de" rank="82">Projekte</link>
+	<link path="manage/project" access="acl" xml:lang="en" rank="82">Projects</link>
 <sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (

@@ -127,7 +127,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$conditions['status']	= $filterStatus;
 
 		$projects	= array();
-		foreach( $modelProject->getAll( $conditions ) as $project ){
+		foreach( $modelProject->getAll( $conditions, array( 'title' => 'ASC' ) ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $modelUser->getAllByIndex( 'projectId', $project->projectId );
 		}
