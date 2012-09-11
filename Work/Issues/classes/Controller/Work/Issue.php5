@@ -292,6 +292,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			}
 		}
 		arsort( $ids );
+		$list	= array();
 		foreach( $ids as $id => $number )
 			if( $number == count( $terms ) )
 				$list[]	= $issues[$id];

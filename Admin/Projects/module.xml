@@ -19,7 +19,7 @@
 		<template>admin/project/edit.servers.php</template>
 	</files>
 	<relations>
-		<needs type="module">Database</needs>
+		<needs type="module">Resource_Database</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="admin/project" rank="90">Projekte</link>
 	<link xml:lang="en" access="acl" path="admin/project" rank="90">Projects</link>
