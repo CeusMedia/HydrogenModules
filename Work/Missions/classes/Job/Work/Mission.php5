@@ -30,21 +30,37 @@ class Job_Work_Mission extends Job_Abstract{
 			if( !$user->email )
 				continue;																			//  @todo	kriss: handle this exception state!
 
-			$conditions	= array(																	//  task filters
+			$groupings	= array( 'missionId' );
+			$havings	= array(
+				'ownerId = '.(int) $user->userId,
+				'workerId = '.(int) $user->userId,
+			);
+			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+				$modelProject	= new Model_Project( $this->env );
+				$userProjects	= $modelProject->getUserProjects( $user->userId );
+				if( $userProjects )
+					$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';
+			}
+			$havings	= array( join( ' OR ', $havings ) );
+
+			//  --  TASKS  --  //
+			$filters	= array(																	//  task filters
 				'type'		=> 0,																	//  tasks only
-				'ownerId'	=> $user->userId,														//  users tasks only
 				'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
 				'dayStart'	=> "<=".date( "Y-m-d", time() ),										//  present and past (overdue)
 			);
-			$tasks	= $modelMission->getAll( $conditions, array( 'priority' => 'ASC' ) );			//  get filtered tasks ordered by priority
+			$order	= array( 'priority' => 'ASC' );
+			$tasks	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
 
-			$conditions	= array(																	//  event filters
+			//  --  EVENTS  --  //
+			$filters	= array(																	//  event filters
 				'type'		=> 1,																	//  events only
-				'ownerId'	=> $user->userId,														//  users events only
 				'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
-				'dayStart'	=> date( "Y-m-d", time() ),												//  starting today
+				'dayStart'	=> "<=".date( "Y-m-d", time() ),												//  starting today
 			);
-			$events	= $modelMission->getAll( $conditions, array( 'timeStart' => 'ASC' ) );			//  get filtered events ordered by start time
+			$order	= array( 'timeStart' => 'ASC' );
+			$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
+
 			if( !$events && !$tasks )																//  user has neither tasks nor events
 				continue;																			//  do not send a mail, leave user alone
 

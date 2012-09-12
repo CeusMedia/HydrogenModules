@@ -60,41 +60,10 @@ tr.row-priority.priority-5 {
 	background-color: rgba(0,255,0,0.20);
 	}
 
-#mission-folders {
-	}
-#mission-folders td {
-	padding: 2px 2px;
-	}
-
-
 #mission-folders1 {
 	border: 1px solid #BFBFBF;
 	overflow: hidden;
 	}
-#mission-folders .panelHead {
-	font-weight: normal;
-	}
-#mission-folders .panelContent {
-	background-color: #FFF;
-	}
-#mission-folders .panelContentInner {
-	padding: 3px 6px;
-	}
-
-#mission-folders .panel {
-	border: 0px solid #BFBFBF;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	overflow: hidden;
-	margin-bottom: 1em;
-	}
-
-#mission-folders .panel .panelHead {
-	border-radius: 5px;
-	overflow: hidden;
-	}
-	
 	
 #mission-folders div.mission-number {
 	float: right;
@@ -106,21 +75,6 @@ tr.row-priority.priority-5 {
 	color: rgba(255,255,255,1);
 	font-weight: bold;
 	font-size: 0.8em;
-/*	margin: 2px 1em 1px 0em;
-	padding: 0px 7px 0px 6px;
-	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
-*/	
-	}
-#mission-folders div.overdue {
-	float: right;
-	display: block;
-	margin: 1px 4px 1px 6px;
-	padding: 0px 6px 0px 6px;
-	background-color: rgba(255,0,0,0.85);
-	border-radius: 12px;
-	color: rgba(255,255,255,0.85);
-	font-size: 0.9em;
-	font-weight: bold;
 /*	margin: 2px 1em 1px 0em;
 	padding: 0px 7px 0px 6px;
 	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
@@ -230,7 +184,55 @@ body.controller-work-mission.action-index #day-lists {
 body.controller-work-mission.action-index #day-lists .table-day {
 	display: none;
 	}
-	
+
+
+table tr.mission-row {
+	min-height: 22px;
+	}
+table tr.mission-row td {
+	padding: 2px 2px;
+	vertical-align: top;
+	}
+table tr.mission-row td.cell-graph {
+	padding: 6px 2px 2px 4px;
+	}
+table tr.mission-row td.cell-time {
+	padding: 3px 2px 2px 5px;
+	}
+table tr.mission-row td.cell-priority {
+	font-size: 0.9em;
+	text-shadow: 1px 1px 1px white;
+	padding-top: 4px;
+	}
+table tr.mission-row td.cell-actions {
+	padding: 1px 2px;
+	text-align: right;
+	}
+table tr.mission-row td.cell-title {
+	font-size: 1.1em;
+	}
+table tr.mission-row td.cell-title a {
+	text-decoration: none;
+	text-shadow: 1px 1px 1px white;
+	}
+table tr.mission-row td.cell-title div.overdue {
+	float: right;
+	display: block;
+	margin: 1px 4px 1px 6px;
+	padding: 0px 6px 0px 6px;
+	background-color: rgba(255,0,0,0.85);
+	border-radius: 12px;
+	color: rgba(255,255,255,0.85);
+	font-size: 0.9em;
+	font-weight: bold;
+/*	margin: 2px 1em 1px 0em;
+	padding: 0px 7px 0px 6px;
+	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/	
+	}
+
+table tr th .sortable.right {
+	text-align: right;
+	}
 	
 /*  --  MAIL  --  */
 body.jobWorkMission .table-mail {
@@ -242,7 +244,7 @@ body.jobWorkMission .table-mail {
 	}
 body.jobWorkMission .table-mail td.cell-title a {
 	text-decoration: none;
-	font-size: 1.0em;	
+	font-size: 1.0em;
 	}
 body.jobWorkMission .table-mail td.cell-time {
 	font-weight: bold;
@@ -281,15 +283,15 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	font-size: 1.0em;
 	}
 
-.icon-label {
+#mission-folders .icon-label {
 	background-repeat: no-repeat;
 	background-position: 0px 1px;
 	padding-left: 20px;
 	}
-.icon-label.mission-type-0 {
+#mission-folders .icon-label.mission-type-0 {
 	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
 	}
-.icon-label.mission-type-1 {
+#mission-folders .icon-label.mission-type-1 {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
 
