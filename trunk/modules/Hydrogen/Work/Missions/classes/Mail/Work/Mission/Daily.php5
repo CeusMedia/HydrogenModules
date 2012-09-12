@@ -12,53 +12,32 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 
+		$words			= $this->getWords( 'work/mission' );
+
 		//  --  TASKS  --  //
-		$tasks		= array();
-		foreach( $data['tasks'] as $task ){
-			$title		= Alg_Text_Trimmer::trimCentric( $task->content, $titleLength, '...' );
-			$title		= htmlentities( $title, ENT_QUOTES, 'UTF-8' );
-			$url		= $baseUrl.'work/mission/edit/'.$task->missionId;
-			$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-			$attributes	= array( 'class' => 'row-priority priority-'.$task->priority );
-			$graph		= $indicator->build( $task->status, 4 );
-			$cellGraph	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
-			$cellTitle	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
-			$cells		= UI_HTML_Tag::create( 'td', $graph ).UI_HTML_Tag::create( 'td', $link );
-			$tasks[]	= UI_HTML_Tag::create( 'tr', $cellGraph.$cellTitle, $attributes );
+		$tasks		= $w->textNoTasks;
+		if( count( $data['tasks'] ) ){
+			$helper		= new View_Helper_MissionList( $this->env, $data['tasks'], $words );
+			$rows		= $helper->renderRows( 0 );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
+			$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
+			$heading	= $w->headingTasks ? UI_HTML_Tag::create( 'h4', $w->headingTasks ) : "";
+			$tasks		= $heading.$table;
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
-		$rows		= join( "\n", $tasks );
-		$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
-		$heading	= $w->headingTasks ? UI_HTML_Tag::create( 'h4', $w->headingTasks ) : "";
-		$tasks		= $heading.$table;
-		if( !count( $data['tasks'] ) )
-			$tasks		= $w->textNoTasks;
 
 		//  --  EVENTS  --  //
-		$events		= array();
-		foreach( $data['events'] as $event ){
-			$title		= Alg_Text_Trimmer::trimCentric( $event->content, $titleLength, '...' );
-			$title		= htmlentities( $title, ENT_QUOTES, 'UTF-8' );
-			$url		= $baseUrl.'work/mission/edit/'.$event->missionId;
-			$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-			$attributes	= array( 'class' => 'row-priority priority-'.$event->priority );
-			$graph		= $indicator->build( $event->status, 4 );
-			$timeStart	= date( 'H:i', strtotime( $event->timeStart ) );
-			$timeEnd	= date( 'H:i', strtotime( $event->timeEnd ) );
-			$times		= $timeStart.' - '.$timeEnd.' '.$w->suffixTime;
-			$cellTime	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
-			$cellTitle	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
-			$events[]	= UI_HTML_Tag::create( 'tr', $cellTime.$cellTitle, $attributes );
+		$events		= $w->textNoEvents;
+		
+		if( count( $data['events'] ) ){
+			$helper		= new View_Helper_MissionList( $this->env, $data['events'], $words );
+			$rows		= $helper->renderRows( 0 );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$attributes	= array( 'class' => 'table-mail table-mail-events' );
+			$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
+			$heading	= $w->headingEvents ? UI_HTML_Tag::create( 'h4', $w->headingEvents ) : "";
+			$events		= $heading.$table;
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
-		$rows		= join( "\n", $events );
-		$attributes	= array( 'class' => 'table-mail table-mail-events' );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
-		$heading	= $w->headingEvents ? UI_HTML_Tag::create( 'h4', $w->headingEvents ) : "";
-		$events		= $heading.$table;
-		if( !count( $data['events'] ) )
-			$events		= $w->textNoEvents;
 
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;

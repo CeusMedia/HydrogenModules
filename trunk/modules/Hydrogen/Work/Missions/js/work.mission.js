@@ -63,41 +63,51 @@ function showOptionals(elem){
 			toShow.show();
 	}
 }
-
+function showDayTable(day,permanent){
+	if(permanent)
+		$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
+	$("div.table-day").hide().filter("#table-"+day).show();
+	$("#day-controls button").removeClass("active").eq(day).addClass("active");
+}
 
 $(document).ready(function(){
 	var site = $("body.controller-work-mission");
 	if(!site.size())
 		return;
-	$("#input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
-		dateFormat: "yy-mm-dd",
-//		appendText: "(yyyy-mm-dd)",
-//		buttonImage: "/images/datepicker.gif",
-//		changeMonth: true,
-//		changeYear: true,
-//		gotoCurrent: true,
-//		autoSize: true,
-		firstDay: 1,
-		nextText: "nächster Monat",
-		prevText: "vorheriger Monat",
-		yearRange: "c:c+2",
-		monthNames: monthNames
-	});
-	//  @link	http://trentrichardson.com/examples/timepicker/
-	$("#input_timeStart").timepicker({});
-	$("#input_timeEnd").timepicker({});
-	$("#input_type").trigger("change");
 
-	$("#input-import").bind("click",function(){
-		$("#input-serial").trigger("click")
-	});
-	$("#input-serial").bind("change",function(){
-		var value = $("#input-serial").val().replace(/\\/g,"/");
-		$("#input-import").val(value.split(/\//).pop());
-		var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
-		if(confirm(text))
-			$("#input-import").get(0).form.submit();
-		else
-			$("#input-import").val("");
-	});
+	if(site.hasClass('action-index')){
+		showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+		$("#input-import").bind("click",function(){
+			$("#input-serial").trigger("click")
+		});
+		$("#input-serial").bind("change",function(){
+			var value = $("#input-serial").val().replace(/\\/g,"/");
+			$("#input-import").val(value.split(/\//).pop());
+			var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
+			if(confirm(text))
+				$("#input-import").get(0).form.submit();
+			else
+				$("#input-import").val("");
+		});
+	}
+	else{
+		$("#input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
+			dateFormat: "yy-mm-dd",
+	//		appendText: "(yyyy-mm-dd)",
+	//		buttonImage: "/images/datepicker.gif",
+	//		changeMonth: true,
+	//		changeYear: true,
+	//		gotoCurrent: true,
+	//		autoSize: true,
+			firstDay: 1,
+			nextText: "nächster Monat",
+			prevText: "vorheriger Monat",
+			yearRange: "c:c+2",
+			monthNames: monthNames
+		});
+		//  @link	http://trentrichardson.com/examples/timepicker/
+		$("#input_timeStart").timepicker({});
+		$("#input_timeEnd").timepicker({});
+		$("#input_type").trigger("change");
+	}
 });

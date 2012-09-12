@@ -16,6 +16,7 @@ php job.php5 work-mission-mail-daily
 		<class>Model/Mission.php5</class>
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
+		<class>View/Helper/MissionList.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
 		<class>Job/Work/Mission.php5</class>
 		<template>work/mission/add.php</template>

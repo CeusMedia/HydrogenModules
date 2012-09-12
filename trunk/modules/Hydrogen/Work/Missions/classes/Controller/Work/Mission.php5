@@ -89,6 +89,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function ajaxSelectDay( $day ){
+		$this->env->getSession()->set( 'filter_mission_day', (int) $day );
+		print( json_encode( (int) $day ) );
+		exit;
+	}
+
 	public function changeDay( $missionId ){
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
@@ -265,6 +271,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->remove( 'filter_mission_projects' );
 			$session->remove( 'filter_mission_order' );
 			$session->remove( 'filter_mission_direction' );
+			$session->remove( 'filter_mission_day' );
 		}
 		if( $request->has( 'access' ) )
 			$session->set( 'filter_mission_access', $request->get( 'access' ) );
@@ -345,64 +352,47 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order		= $order ? array( $order => $direction ) : array();
 		$order['content']	= 'ASC';
 
-		$conditions	= array();
-
+		$conditions	= $groupings	= $havings	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
 			$conditions['priority']	= $priorities;
 		if( !( is_array( $states ) && count( $states ) ) )
 			$states	= array( 0, 1, 2, 3 );
-		if( is_array( $projects ) && count( $projects ) ){
-			$conditions['projectId']	= $projects;
-			if( $this->hasFullAccess() )
-				$conditions['projectId']	= array_merge( array( 0 ), $projects );
-		}
-			
 		$conditions['status']	= $states;
 		if( strlen( $query ) )
 			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 
+		if( !$this->hasFullAccess() )
+			$havings	= array( join( ' OR ', array( 
+				'ownerId = '.(int) $userId,
+				'workerId = '.(int) $userId,
+			) ) );
 		if( $this->useProjects ){
 			$modelProject	= new Model_Project( $this->env );
-			$modelRelation	= new Model_Project_User( $this->env );
-			$userProjects	= array();
-			foreach( $modelProject->getAll() as $project )
-				$userProjects[$project->projectId]	= $project;
-			if( !$this->hasFullAccess() ){
-				$projectIds	= array();
-				foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation )
-					$projectIds[]	= $relation->projectId;
-				foreach( $userProjects as $projectId => $project )
-					if( !in_array( $projectId, $projectIds ) )
-						unset( $userProjects[$projectId] );
+			if( $this->hasFullAccess() ){															//  full access
+				$userProjects	= array();
+				foreach( $modelProject->getAll( array(), array( 'title' => 'ASC' ) ) as $project )	//  list all projects
+					$userProjects[$project->projectId]	= $project;									//  in indexed map
+				if( is_array( $projects ) && count( $projects ) )									//  if filtered by projects
+					$projects	= array_merge( array( 0 ), $projects );								//  append missions without project
 			}
+			else{																					//  normal user access
+				$userProjects	= $modelProject->getUserProjects( $userId );
+				if( $userProjects )
+					$havings		= array( join( ' OR ', array( 
+						'ownerId = '.(int) $userId,
+						'workerId = '.(int) $userId,
+						'projectId IN ('.join( ',', array_keys( $userProjects ) ).')'
+					) ) );
+			}
+			if( is_array( $projects ) && count( $projects ) )										//  if filtered by projects
+				$conditions['projectId']	= $projects;											//  apply project conditions
 			$this->addData( 'userProjects', $userProjects );
 		}
-		
-		if( !$this->hasFullAccess() ){
-			$ors	= array();
-			if( $access == "owner" )
-				$ors[]	= 'ownerId = '.$userId;
-			else if( $access == "worker" )
-				$ors[]	= 'workerId = '.$userId;
-
-			if( $this->useProjects ){
-				$modelProject	= new Model_Project( $this->env );
-				$modelRelation	= new Model_Project_User( $this->env );
-				if( !( is_array( $projects ) && count( $projects ) ) )
-					$projects	= array_keys( $userProjects );
-				$ors[]	= 'projectId IN ('.join( ',', $projects ).')';
-			}
-			$prefix	= $this->env->getDatabase()->getPrefix();
-			$query	= 'SELECT missionId FROM '.$prefix.'missions WHERE '.join( ' OR ', $ors );
-			$data	= $this->env->getDatabase()->query( $query );
-			$missionIds	= array();
-			foreach( $data->fetchAll( PDO::FETCH_OBJ ) as $date )
-				$missionIds[]	= $date->missionId;
-			$conditions['missionId']	= $missionIds;
-		}
-		$missions	= $this->model->getAll( $conditions, $order );
+		if( $havings )
+			$groupings	= array( 'missionId' );
+		$missions	= $this->model->getAll( $conditions, $order, NULL, NULL, $groupings, $havings );
 
 		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
@@ -411,25 +401,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
 		$this->addData( 'filterProjects', $session->get( 'filter_mission_projects' ) );
 		$this->addData( 'filterDirection', $direction );
+		$this->addData( 'currentDay', (int) $session->get( 'filter_mission_day' ) );
 		$this->addData( 'users', $this->userMap );
 	}
 
-	public function ajaxSelectDay( $day, $mode = 1, $clearOthers = TRUE ){
-		$day		= (int) $day;
-		$session	= $this->env->getSession();
-		$days		= $session->get( 'filter_mission_days' );
-		if( $day >= 0 && $day < 7 ){
-			if( !is_array( $days ) || $clearOthers )													//  no days array set or reset was called
-				$days	= array();																		//  empty days array
-			else if( array_search( $day, $days ) >= 0 )													//  otherwise if day is selected
-				unset( $days[array_search( $day, $days )] );											//  remove day from selection
-			$mode ? array_push( $days, (int) $day ) : NULL;													//  (re)add day in "set mode" (mode = 1)
-			$session->set( 'filter_mission_days', $days );												//  store selected days
-		}
-		print( json_encode( $days ) );
-		exit;
+	static public function getUserMissionIds( $owner = NULL, $worker = NULL, $projects = array() ){
+		$ors	= array();
+		if( $owner )	$ors[]	= 'ownerId = '.(int) $owner;
+		if( $worker )	$ors[]	= 'workerId = '.(int) $worker;
+		if( $projects )	$ors[]	= 'projectId IN ('.join( ',', $projects ).')';
+		return join( ' OR ', $ors );
 	}
-
+	
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
 		if( !$showMission )																			//  back to list
