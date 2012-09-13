@@ -182,74 +182,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );	
 	}
 		
-	public function export( $format = NULL ){
+	public function export( $format = NULL, $debug = FALSE ){
 		switch( $format ){
 			case 'ical':
-				$userId	= $this->env->getSession()->get( 'userId' );
-				if( !$userId ){
-					$auth	= new BasicAuthentication( $this->env, 'Export' );
-					$userId	= $auth->authenticate();
-				}
-				$conditions	= array();
-				$conditions['status']	= array( 0, 1, 2, 3 );
-				$conditions['workerId']	= $userId;
-				
-				$missions	= $this->model->getAll( $conditions, array( 'dayStart' => 'ASC' ) );
-				$root		= new XML_DOM_Node( 'event');
-				$calendar	= new XML_DOM_Node( 'VCALENDAR' );
-				$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
-				foreach( $missions as $mission ){
-					switch( $mission->type ){
-						case 0:
-							$node	= new XML_DOM_Node( 'VTODO' );
-							$node->addChild( new XML_DOM_Node( 'DUE', date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 ), array( 'VALUE' => 'DATE' ) ) );
-		#					$node->addChild( new XML_DOM_Node( 'STATUS', 'NEEDS-ACTION' ) );
-							break;
-						case 1:
-							$node	= new XML_DOM_Node( 'VEVENT' );
-							if( $mission->dayStart ){
-								$day	= $mission->dayStart;
-								if( strlen( $mission->timeStart ) )
-									$day	.= ' '.$mission->timeStart;
-								$datetime	= date( "Ymd\THis", strtotime( $day ) );
-								$node->addChild( new XML_DOM_Node( 'DTSTART', $datetime ) );
-							}
-							if( !$mission->dayEnd && $mission->dayStart )
-								$mission->dayEnd	= $mission->dayStart;
-							if( $mission->dayEnd ){
-								$day	= $mission->dayEnd;
-								if( strlen( $mission->timeEnd ) )
-									$day	.= ' '.$mission->timeEnd;
-								else if( $mission->timeStart && $mission->dayStart == $mission->dayEnd ){
-									$parts	= explode( ':', $mission->timeStart );
-									$day	.= ' '.str_pad( ++$parts[0], 2, 0, STR_PAD_LEFT ).':'.$parts[1];
-								}
-								$datetime	= date( "Ymd\THis", strtotime( $day ) );
-								$node->addChild( new XML_DOM_Node( 'DTEND', $datetime ) );
-							}
-							break;
-					}
-					$node->addChild( new XML_DOM_Node( 'SUMMARY', $mission->content ) );
-					$node->addChild( new XML_DOM_Node( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
-					if( $mission->modifiedAt )
-						$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
-					if( $mission->location )
-						$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
-					if( $mission->priority )
-						$node->addChild( new XML_DOM_Node( 'PRIORITY', ( ceil( $mission->priority - 7 ) / -2 ) ) );
-					$calendar->addChild( $node );
-				}
-				$root->addChild( $calendar );
-				$ical	= new File_ICal_Builder();
-				$ical	= trim( $ical->build( $root ) );
-				error_log( getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
-#				if( 1 )
-#					header( 'Content-type: text/plain;charset=utf-8' );
-#				if( 1 )
-#					header( 'Content-type: text/calendar' );
-#				else if( 1 )
-#					Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );			//  deliver downloadable file
-				print( $ical );
+				$ical	= $this->exportAsIcal( $debug );
+				$debug ? xmp( $ical ) : print( $ical );
 				die;
 				break;
 			default:
@@ -257,6 +194,87 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
 				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
 		}
+	}
+
+	protected function exportAsIcal(){
+		$userId	= $this->env->getSession()->get( 'userId' );
+		if( !$userId ){
+			$auth	= new BasicAuthentication( $this->env, 'Export' );
+			$userId	= $auth->authenticate();
+		}
+		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
+		$order		= array( 'dayStart' => 'ASC' );
+		$groupings	= array( 'missionId' );
+		$havings	= array(
+			'ownerId = '.(int) $userId,
+			'workerId = '.(int) $userId,
+		);
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			$modelProject	= new Model_Project( $this->env );
+			$userProjects	= $modelProject->getUserProjects( $userId );
+			if( $userProjects )
+				$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';
+		}
+		$havings	= array( join( ' OR ', $havings ) );
+
+
+		$missions	= $this->model->getAll( $conditions, $order, NULL, NULL, $groupings, $havings );
+		$root		= new XML_DOM_Node( 'event');
+		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
+		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
+		foreach( $missions as $mission ){
+			switch( $mission->type ){
+				case 0:
+					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
+					$node	= new XML_DOM_Node( 'VTODO' );
+					$node->addChild( new XML_DOM_Node( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
+#					$node->addChild( new XML_DOM_Node( 'STATUS', 'NEEDS-ACTION' ) );
+					break;
+				case 1:
+					$node	= new XML_DOM_Node( 'VEVENT' );
+					if( $mission->dayStart ){
+						$day	= $mission->dayStart;
+						if( strlen( $mission->timeStart ) )
+							$day	.= ' '.$mission->timeStart;
+						$datetime	= date( "Ymd\THis", strtotime( $day ) );
+						$node->addChild( new XML_DOM_Node( 'DTSTART', $datetime ) );
+					}
+					if( !$mission->dayEnd && $mission->dayStart )
+						$mission->dayEnd	= $mission->dayStart;
+					if( $mission->dayEnd ){
+						$day	= $mission->dayEnd;
+						if( strlen( $mission->timeEnd ) )
+							$day	.= ' '.$mission->timeEnd;
+						else if( $mission->timeStart && $mission->dayStart == $mission->dayEnd ){
+							$parts	= explode( ':', $mission->timeStart );
+							$day	.= ' '.str_pad( ++$parts[0], 2, 0, STR_PAD_LEFT ).':'.$parts[1];
+						}
+						$datetime	= date( "Ymd\THis", strtotime( $day ) );
+						$node->addChild( new XML_DOM_Node( 'DTEND', $datetime ) );
+					}
+					break;
+			}
+			$node->addChild( new XML_DOM_Node( 'SUMMARY', $mission->content ) );
+			$node->addChild( new XML_DOM_Node( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
+			if( $mission->modifiedAt )
+				$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
+			if( $mission->location )
+				$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
+			if( $mission->priority )
+				$node->addChild( new XML_DOM_Node( 'PRIORITY', ( ceil( $mission->priority - 7 ) / -2 ) ) );
+			$calendar->addChild( $node );
+		}
+		$root->addChild( $calendar );
+		$ical	= new File_ICal_Builder();
+		$ical	= trim( $ical->build( $root ) );
+		error_log( date( 'Y-m-d H:i:s' ).' | '.getEnv( 'REMOTE_ADDR' ).': '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
+#		if( 1 )
+#			header( 'Content-type: text/plain;charset=utf-8' );
+#		if( 1 )
+#			header( 'Content-type: text/calendar' );
+#		else if( 1 )
+#		Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );			//  deliver downloadable file
+		return $ical;
 	}
 	
 	public function filter(){
