@@ -14,13 +14,16 @@
 	background-color: #FFFFDF;
 	}
 .project.status2 {
-	background-color: #DFFFDF;
+	background-color: #CFFFCF;
 	}
 .project.status3 {
-	background-color: #BFFFBF;
+	background-color: #9FFF9F;
 	}
 .project.status4 {
-	background-color: #9FFF9F;
+	background-color: #6FFF6F;
+	}
+.project.status5 {
+	background-color: #6FCF6F;
 	}
 
 #project-users ul {
