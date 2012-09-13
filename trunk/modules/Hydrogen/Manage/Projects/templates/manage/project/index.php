@@ -69,6 +69,7 @@ return '
 <div class="column-right-80">
 	'.$panelList.'
 </div>
+<div class="column-clear"></div>
 ';
 
 ?>

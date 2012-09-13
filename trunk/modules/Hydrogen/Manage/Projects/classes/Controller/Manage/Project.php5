@@ -1,5 +1,11 @@
 <?php
 class Controller_Manage_Project extends CMF_Hydrogen_Controller{
+
+	protected $useMissions	= FALSE;
+
+	public function __onInit(){
+		$this->useMissions	= $this->env->getModules()->has( 'Work_Missions' );
+	}
 	
 	public function add(){
 		$request		= $this->env->getRequest();
@@ -111,6 +117,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$modelProject	= new Model_Project( $this->env );
 		$modelUser		= new Model_Project_User( $this->env );
+		if( $this->useMissions )
+			$modelMission	= new Model_Mission( $this->env );
 		
 		$filterStatus	= $session->get( 'filter_manage_project_status' );
 		if( !is_array( $filterStatus ) )
@@ -121,7 +129,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$projects	= array();
 			foreach( $modelUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
 				$projects[$relation->projectId]	= NULL;
-			$conditions['projectId']	= array_merge( array( 0 ), array_keys( $projects ) );
+			$conditions['projectId']	= array_keys( $projects );
 		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
@@ -130,6 +138,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		foreach( $modelProject->getAll( $conditions, array( 'title' => 'ASC' ) ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $modelUser->getAllByIndex( 'projectId', $project->projectId );
+			if( $this->useMissions )
+				$project->missions	= $modelMission->countByIndex( 'projectId', $project->projectId );
 		}
 		
 		$this->addData( 'projects', $projects );
