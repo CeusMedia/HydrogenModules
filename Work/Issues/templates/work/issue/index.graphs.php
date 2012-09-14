@@ -43,6 +43,12 @@ $graphType		= $view->buildGraph( $data, $words, 'type' );
 $indicator	= new UI_HTML_Indicator();
 $ind1		= $indicator->build( 5, 10 );
 
+#print_m( $env->getConfig()->getAll( 'module.work_issues.graph.all.' ) );
+$width	= $env->getConfig()->get( 'module.work_issues.graph.all.width' );
+#remark( $width + 20 );
+#die;
+
+
 return '
 <style>
 #layout-content dl dt {
@@ -64,11 +70,16 @@ $(document).ready(function(){
 			stroke: true,
 			strokeColor: "000000",
 			strokeOpacity: 0.5,
+			singleSelect: true,
+			clickNavigate: true,
+			onClick: function(){
+				console.log("click");
+			}
 		});
 	}
 });
 </script>
-<div class="column-left-60">
+<div class="not-column-left-60" style="float: left; width: '.( $width + 40 ).'px">
 	<fieldset>
 		<legend>Übersicht</legend>
 <!--		<div class="column-left-50">
@@ -98,11 +109,12 @@ $(document).ready(function(){
 			<h4>Einträge nach Typ</h4>
 			'.$graphType.'
 		</div>
+		<div class="buttonbar">
+			'.UI_HTML_Elements::LinkButton( './work/issue/add', 'neuer Eintrag', 'button add' ).'
+		</div>
 	</fieldset>
 </div>
-<style>
-</style>
-<div class="column-left-40">
+<div class="not-column-left-40" style="margin-left: '.( $width + 70 ).'px">
 	<fieldset>
 		<legend>Notierte Probleme</legend>
 		<table id="table-issues-done" class="issues">

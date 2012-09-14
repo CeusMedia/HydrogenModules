@@ -1,5 +1,6 @@
 <?php
 class View_Work_Issue extends CMF_Hydrogen_View{
+
 	public function add(){
 	}
 	public function edit(){
@@ -7,7 +8,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	public function index(){
 	}
 
-	protected function renderOptions( $options, $key, $values, $class = '' ){
+	public function renderOptions( $options, $key, $values, $class = '' ){
 		$list		= array();
 		if( !is_array( $values ) )
 			$values = $values ? array( $values ) : array();
@@ -28,16 +29,18 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	/**
 	 *	Builds HTML of Graph (with Link Map).
 	 *	@access		private
-	 *	@param		string		$type		Type of Graph (must be definied in graphs.ini)
+	 *	@param		string		$type		Type of graph (status|priority|type)
 	 *	@return 	string
 	 *	@todo		kriss: finish integration (words, config etc.)
 	 */
 	public function buildGraph( $data, $words, $type ){
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
-		$graphConfig	= parse_ini_file( 'config/issue.graphs.ini', TRUE );
-		$graphConfig	= $graphConfig['all'] + $graphConfig[$type];
-		$words['image_title_status']	= 'Status';
+		
+		$graphConfig	= array_merge(
+			$config->getAll( 'module.work_issues.graph.all.' ),
+			$config->getAll( 'module.work_issues.graph.'.$type.'.' )
+		);
 	
 		$statistics		= $data[$type];
 		
@@ -50,7 +53,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		foreach( $statistics as $stat ){
 			$data[]		= $stat['count'];
 			$legend[]	= $stat['name']." (".$stat['count'].")";
-			$targ[]		= "work/issue/filter?".$type."=".$stat[$type];
+			$targ[]		= "work/issue/filter?".$type."[]=".$stat[$type];
 			$alts[]		= $stat['name'];
 			$total		+= $stat['count'];
 		}
@@ -65,7 +68,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 //		$graph->title->SetFont( FF_VERDANA,FS_NORMAL, 11 );
 		$graph->title->SetFont( FF_FONT2, FS_NORMAL );
 		$graph->title->SetPos( 0,  0, 'left', 'top');
-		$graph->legend->Pos( $graphConfig['legend_margin_x'], $graphConfig['legend_margin_y'], $graphConfig['legend_align_x'], $graphConfig['legend_align_y'] );
+		$graph->legend->Pos( $graphConfig['legend.marginX'], $graphConfig['legend.marginY'], $graphConfig['legend.alignX'], $graphConfig['legend.alignY'] );
 //		$graph->legend->SetShadow( $graphConfig['legend_shadow'] );
 		$graph->legend->SetShadow( false );
 		$graph->legend->SetFrameWeight( 1 );
@@ -75,8 +78,8 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 #		$graph->legend->SetShadow( 'darkgray', 1 );
 //		$graph->legend->SetFont( FF_VERDANA, FS_NORMAL, 8 );
 		$graph->legend->SetFont( FF_FONT1, FS_NORMAL, 8 );
-		$graph->legend->SetLayout( $graphConfig['legend_layout'] );
-		$graph->legend->SetHColMargin( $graphConfig['legend_margin_hcol'] );
+		$graph->legend->SetLayout( $graphConfig['legend.layout'] );
+		$graph->legend->SetHColMargin( $graphConfig['legend.margin.hcol'] );
 		$p1 = new PiePlot3D( $data );
 		$p1->SetEdge();
 		$p1->setAngle( 30 );
@@ -87,16 +90,16 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		$p1->SetLegends( $legend );
 		$p1->SetCSIMTargets( $targ, $alts );
 		$p1->setSliceColors( explode( ",", $graphConfig['colors'] ) );
-		$p1->SetCenter( $graphConfig['center_x'], $graphConfig['center_y'] );
+		$p1->SetCenter( $graphConfig['centerX'], $graphConfig['centerY'] );
 		$graph->Add( $p1 );
-		$uri	= $config->get( 'paths.images' ).'graph_'.$type.'.png';
+		$uri	= $config->get( 'path.images' ).'graph_'.$type.'.png';
 		$graph->Stroke( $uri );
 		$map	= $graph->GetHTMLImageMap( 'graph-'.$type, 0, 50 );
 		$image	= "<img src='./".$uri."?".time()."' ISMAP USEMAP='#graph-".$type."' border='0'>";
 		
-		if( !( empty( $graphConfig['crop_x'] ) && empty( $graphConfig['crop_y'] ) ) ){
-			$offsetX	= (int) $graphConfig['crop_x'];
-			$offsetY	= (int) $graphConfig['crop_y'];
+		if( !( empty( $graphConfig['cropX'] ) && empty( $graphConfig['cropY'] ) ) ){
+			$offsetX	= (int) $graphConfig['cropX'];
+			$offsetY	= (int) $graphConfig['cropY'];
 			$matches	= array();
 			preg_match_all( '/ coords="(.+)"/U', $map, $matches );
 			foreach( $matches[1] as $nr => $match ){

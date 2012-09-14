@@ -21,10 +21,32 @@
 		<template>work/issue/edit.emerge.php</template>
 		<template>work/issue/index.php</template>
 		<template>work/issue/index.filter.php</template>
+		<template>work/issue/index.filter.control.php</template>
+		<template>work/issue/index.graphs.php</template>
 		<template>work/issue/index.list.php</template>
 		<style source="theme" load="auto">site.work.issue.css</style>
 		<script load="auto">Issues.js</script>
 	</files>
+	<config protected="yes" type="integer" name="graph.all.width">520</config>
+	<config protected="yes" type="integer" name="graph.all.height">300</config>
+	<config protected="yes" type="float" name="graph.all.centerX">0.35</config>
+	<config protected="yes" type="float" name="graph.all.centerY">0.45</config>
+	<config protected="yes" type="integer" name="graph.all.cropX">0</config>
+	<config protected="yes" type="integer" name="graph.all.cropY">60</config>
+	<config protected="yes" type="boolean" name="graph.all.antialias">1</config>
+	<config protected="yes" type="boolean" name="graph.all.shadow">0</config>
+	<config protected="yes" type="boolean" name="graph.all.legend.layout">0</config>
+	<config protected="yes" type="integer" name="graph.all.legend.margin.hcol">10</config>
+	<config protected="yes" type="string" name="graph.all.legend.alignX">right</config>
+	<config protected="yes" type="string" name="graph.all.legend.alignY">top</config>
+	<config protected="yes" type="float" name="graph.all.legend.marginX">0.001</config>
+	<config protected="yes" type="float" name="graph.all.legend.marginY">0.3</config>
+	<config protected="yes" type="string" name="graph.status.colors">#FFFFFF,#FF0F0F,#FF7F0F,#FFFF0F,#0FFF0F,#FF7FFF,#BFFFDF</config>
+	<config protected="yes" type="float" name="graph.status.legend.marginY">0.25</config>
+	<config protected="yes" type="string" name="graph.priority.colors">#07277F,#2F4F9F,#476FBF,#6F8FDF,#87AFFF,#A7CFFF</config>
+	<config protected="yes" type="float" name="graph.priority.legend.marginY">0.28</config>
+	<config protected="yes" type="string" name="graph.type.colors">#3F3F3F,#7F7F7F,#DFDFDF</config>
+	<config protected="yes" type="float" name="graph.type.legend.marginY">0.35</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Users</needs>
