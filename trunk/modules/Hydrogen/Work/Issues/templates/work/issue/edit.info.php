@@ -1,6 +1,6 @@
 <?php
 
-$modelIssueChange	= new Model_Issue_Change( $this->env );
+$modelIssueChange	= new Model_Issue_Change( $env );
 $changers	= array();
 $changes	= $modelIssueChange->getAllByIndex( 'issueId', $issue->issueId );
 foreach( $changes as $change ){

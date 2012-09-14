@@ -15,6 +15,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 
 	protected $filters	= array(
 		'issueId',
+		'projectId',
 		'type',
 		'severity',
 		'priority',
@@ -24,9 +25,21 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		'direction',
 		'limit'
 	);
+	protected $useProjects	= FALSE;
 
 	public function __onInit(){
 		$this->env->getDatabase()->query( "SET NAMES 'latin1'" );
+		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
+	}
+
+	protected function getUserProjects(){
+		if( !$this->useProjects )
+			return array();
+		$userId			= $this->env->getSession()->get( 'userId' );
+		$modelProject	= new Model_Project( $this->env );
+		if( $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) ) )
+			return $modelProject->getAll();
+		return $modelProject->getUserProjects( $userId );
 	}
 	
 	public function add(){
@@ -35,6 +48,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			$model		= new Model_Issue( $this->env );
 			$data		= array(
 				'reporterId'	=> $this->env->getSession()->get( 'userId' ),
+				'projectId'		=> (int) $request->get( 'projectId' ),
 				'type'			=> (int) $request->get( 'type' ),
 				'severity'		=> (int) $request->get( 'severity' ),
 				'status'		=> 0,
@@ -50,6 +64,13 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 					$this->restart( './work/issue/edit/'.$issueId );
 			}
 		}
+
+		$this->addData( 'type', $request->get( 'type' ) );
+		$this->addData( 'priority', $request->get( 'priority' ) );
+		$this->addData( 'projectId', $request->get( 'projectId' ) );
+		$this->addData( 'title', $request->get( 'title' ) );
+		$this->addData( 'content', $request->get( 'content' ) );
+		$this->addData( 'projects', $this->getUserProjects() );
 	}
 	
 	public function edit( $issueId ){
@@ -68,12 +89,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 
 		if( $request->has( 'save' ) ){
 			$data		= array(
-				'type'		=> $request->get( 'type' ),
-//				'severity'	=> $request->get( 'severity' ),
-//				'status'	=> $request->get( 'status' ),
-//				'progress'	=> $request->get( 'progress' ),
-				'title'		=> $request->get( 'title' ),
-				'content'	=> $request->get( 'content' ),
+				'projectId'		=> (int) $request->get( 'projectId' ),
+				'type'			=> (int) $request->get( 'type' ),
+//				'severity'		=> (int) $request->get( 'severity' ),
+//				'status'		=> (int) $request->get( 'status' ),
+//				'progress'		=> (int) $request->get( 'progress' ),
+				'title'			=> $request->get( 'title' ),
+				'content'		=> $request->get( 'content' ),
+				'modifiedAt'	=> time()
 			);
 			$modelIssue->edit( $issueId, $data, FALSE );
 //			$this->restart( './work/issue' );
@@ -95,6 +118,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		if( $issue->managerId )
 			$issue->manager	= $users[$issue->managerId];
 		$this->addData( 'issue', $issue );
+		$this->addData( 'projects', $this->getUserProjects() );
 	}
 	
 	public function emerge( $issueId ){
@@ -240,6 +264,13 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			6	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 6 ) ) ),
 		);
 		
+		if( $this->useProjects ){
+			$numberProjects	= array();
+			foreach( $this->getUserProjects() as $project )
+				$numberProjects[$project->projectId]	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
+			$this->addData( 'numberProjects', $numberProjects );
+		}
+		
 		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
@@ -253,6 +284,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'numberPriorities', $numberPriorities );
 		$this->addData( 'numberFilters', count( $filters ) );
 		$this->addData( 'issues', $issues );
+		$this->addData( 'projects', $this->getUserProjects() );
 
 
 		$users	= array();

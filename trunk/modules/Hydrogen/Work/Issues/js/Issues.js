@@ -8,7 +8,8 @@ Issues = {
 			link.attr("href","./work/issue/edit/"+item.issueId);
 			title = $("<td></td>").html(link);
 			status = $("<td></td>").addClass("cell-status").html(item.priority);
-			age = Math.round(new Date().getTime() / 1000) - item.modifiedAt;
+			age = Math.max(item.createdAt, item.modifiedAt);
+			age = Math.round(new Date().getTime() / 1000) - age;
 			age = Math.ceil(age / 24 / 60 / 60);
 			age = $("<td></td>").addClass("cell-age").html(age);
 			row = $("<tr></tr>").attr("id","issue-"+item.issueId);

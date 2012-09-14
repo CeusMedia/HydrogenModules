@@ -17,7 +17,7 @@ function numerizeWords( $words, $numbers = array() ){
 	}
 	return $words;
 }
-$session	= $this->env->getSession();
+$session	= $env->getSession();
 
 $title		= $session->get( 'filter-issue-title' );
 $limit		= $session->get( 'filter-issue-limit' ) ? $session->get( 'filter-issue-limit' ) : 10;
@@ -43,10 +43,12 @@ $words['severities']	= numerizeWords( array( '' => '- alle -' ) + $words['severi
 $words['priorities']	= numerizeWords( array( '' => '- alle -' ) + $words['priorities'], $numberPriorities );
 $words['states']		= numerizeWords( array( '' => '- alle -' ) + $words['states'], $numberStates );
 
-$optType		= $this->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
-$optSeverity	= $this->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
-$optPriority	= $this->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
-$optStatus		= $this->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
+
+
+$optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
+$optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
+$optPriority	= $view->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
+$optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 
 $filters		= array();
 $filters[]	= HTML::LiClass( 'column-clear',
@@ -61,6 +63,19 @@ $filters[]	= HTML::LiClass( 'column-clear',
 	HTML::Label( 'type', $words['indexFilter']['labelType'] ).HTML::BR.
 	HTML::Select( 'type[]', $optType, 'max rows-4', NULL, 'this.form.submit()' )
 );
+if( !empty( $projects ) ){
+	$optProject	= array();
+	foreach( $projects as $project )
+		$optProject[$project->projectId]	= $project->title;
+	$optProject		= numerizeWords( array( '' => '- alle -' ) + $optProject, $numberProjects );
+	$optProject	= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
+
+	$filters[]	= HTML::LiClass( 'column-clear',
+		HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).HTML::BR.
+		HTML::Select( 'projectId[]', $optProject, 'max rows-4', NULL, 'this.form.submit()' )
+	);
+}
+	
 $filters[]	= HTML::LiClass( 'column-clear',
 	HTML::Label( 'order', $words['indexFilter']['labelOrder'] ).HTML::BR.
 	HTML::Select( 'order', $optOrder, 'max rows-1', NULL, 'this.form.submit()' )

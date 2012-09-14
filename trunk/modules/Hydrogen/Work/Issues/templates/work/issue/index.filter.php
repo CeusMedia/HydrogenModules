@@ -132,9 +132,9 @@ else
 						'.UI_HTML_Elements::Input( 'issueId', $issueId, 'xs numeric' ).'
 					</td>
 					<td>
-<!--						<label for="project">'.$words['indexFilter']['labelProject'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
--->					</td>
+						<label for="projectId">'.$words['indexFilter']['labelProject'].'</label><br/>
+						'.UI_HTML_Elements::Select( 'projectId', '<option>- alle -</option>', 'm', NULL, 'filter-issues' ).'
+					</td>
 					<td></td>
 				</tr>
 				<tr>

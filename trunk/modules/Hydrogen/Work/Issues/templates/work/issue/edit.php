@@ -20,6 +20,11 @@ foreach( $words['states'] as $key => $value )
 $optStatus['_selected']	= $issue->status;
 
 
+$optProject	= array( '_selected' => $issue->projectId );
+if( !empty( $projects ) ){
+	foreach( $projects as $project )
+		$optProject[$project->projectId]	= $project->title;
+}
 
 $script	= '
 $(document).ready(function(){
@@ -34,7 +39,9 @@ $(document).ready(function(){
 	});
 });
 ';
-$this->env->page->js->addScript( $script );
+$env->page->js->addScript( $script );
+
+
 
 $main	= '
 <fieldset id="issue-details">
@@ -51,11 +58,15 @@ $main	= '
 		</div>
 		<div id="panel-mode-1">
 			<ul class="input">
-				<li>
-					<label for="title">'.$words['edit']['labelTitle'].'</label><br/>
-					'.UI_HTML_Elements::Input( 'title', $issue->title, '' ).'
+				<li class="column-left-75">
+					<label for="title" class="mandatory">'.$words['edit']['labelTitle'].'</label><br/>
+					'.UI_HTML_Elements::Input( 'title', $issue->title, 'max mandatory' ).'
 				</li>
-				<li>
+				<li class="column-left-25">
+					<label for="input_projectId">'.$words['add']['labelProject'].'</label><br/>
+					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'max' ).'
+				</li>
+				<li class="column-clear">
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
 					'.UI_HTML_Tag::create( 'textarea', $issue->content, array( 'name' => 'content', 'rows' => 9 ) ).'
 				</li>
@@ -72,19 +83,19 @@ $main	= '
 
 
 
-$control	= require_once 'templates/work/issue/edit.info.php';
-$main		.= require_once 'templates/work/issue/edit.changes.php';
-$main		.= require_once 'templates/work/issue/edit.emerge.php';
+$control	= $view->loadTemplateFile( 'work/issue/edit.info.php' );
+$main		.= $view->loadTemplateFile( 'work/issue/edit.changes.php' );
+$main		.= $view->loadTemplateFile( 'work/issue/edit.emerge.php' );
 
 return '
 <div class="issue-edit">
-	<div class="column-control">
-		'.$control.'
-	</div>
-	<div class="column-main">
+	<div class="column-left-75">
 		'.$main.'
 	</div>
-	<div style="clear: both"></div>
+	<div class="column-left-25">
+		'.$control.'
+	</div>
+	<div class="column-clear"></div>
 </div>
 ';
 

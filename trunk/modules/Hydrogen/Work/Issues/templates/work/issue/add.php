@@ -1,43 +1,37 @@
 <?php
 
 $types	= $words['types'];
-$optType	= array();
+$optType	= array( '_selected' => $type );
 foreach( $types as $key => $value )
 	$optType[$key]	= $value;
-$optType['_selected']	= $this->env->getRequest()->get( 'type' );
 
 $priorities	= $words['priorities'];
 krsort( $priorities);
-$optPriority	= array();
+$optPriority	= array( '_selected' => $priority );
 foreach( $priorities as $key => $value )
 	$optPriority[$key]	= $value;
-$optPriority['_selected']	= $this->env->getRequest()->get( 'priority' );
 
 $severities	= $words['severities'];
 krsort( $severities );
 $optSeverity	= array();
 foreach( $severities as $key => $value )
 	$optSeverity[$key]	= $value;
-$optSeverity['_selected']	= $this->env->getRequest()->get( 'severity' );
-
-$optStatus	= array( '' => '- alle -' );
-foreach( $words['states'] as $key => $value )
-	$optStatus[$key]	= $value;
-$optStatus['_selected']	= $this->env->getRequest()->get( 'status' );
+//$optSeverity['_selected']	= $severity;
 
 /*
-$optProject	= array();
-foreach( $projects as $project )
-	$optProject[$project->projectId]	= $project->title;
-$optProject['_selected']	= $this->env->getRequest()->get( 'project' );
-*/
+$optStatus	= array( '' => '- alle -', '_selected' => $status );
+foreach( $words['states'] as $key => $value )
+	$optStatus[$key]	= $value;
+ */
 
+$optProject	= array( '_selected' => $projectId );
+if( !empty( $projects ) ){
+	foreach( $projects as $project )
+		$optProject[$project->projectId]	= $project->title;
+}
 
-
-
-
-$script	= '$(document).ready(function(){});';
-$this->env->page->js->addScript( $script );
+#$script	= '$(document).ready(function(){});';
+#$env->page->js->addScript( $script );
 
 $main	= '
 <script>
@@ -66,30 +60,34 @@ $(document).ready(function(){
 });
 </script>
 <fieldset>
-	<legend>Beschreibung</legend>
+	<legend class="icon add">Beschreibung</legend>
 	<form action="./work/issue/add" method="post">
-		<div style="float: left; width: 30%; margin-right: 3%">
-				<label for="type">'.$words['add']['labelType'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'type', $optType, 'm' ).'
+		<div class="column-left-25">
+			<label for="type">'.$words['add']['labelType'].'</label><br/>
+			'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
 		</div>
-		<div style="float: left; width: 30%; margin-right: 3%">
-				<label for="priority">'.$words['add']['labelPriority'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'm' ).'
+		<div class="column-left-25">
+			<label for="priority">'.$words['add']['labelPriority'].'</label><br/>
+			'.UI_HTML_Elements::Select( 'priority', $optPriority, 'max' ).'
 		</div>
-<!--		<div style="float: left; width: 30%; margin-right: 3%">
-				<label for="severity">'.$words['add']['labelSeverity'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'm' ).'
+<!--		<div class="column-left-25">
+			<label for="severity">'.$words['add']['labelSeverity'].'</label><br/>
+			'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'max' ).'
 		</div>-->
-		<div style="clear: left"></div>
+		<div class="column-left-25">
+			<label for="input_projectId">'.$words['add']['labelProject'].'</label><br/>
+			'.UI_HTML_Elements::Select( 'projectId', $optProject, 'max' ).'
+		</div>
+		<div class="column-clear"></div>
 		<br/>
 		<ul class="input">
 			<li>
 				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
-				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $this->env->getRequest()->get( 'title' ), ENT_QUOTES, 'UTF-8' ).'"/>
+				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
 				<label for="content">'.$words['add']['labelContent'].'</label><br/>
-				'.UI_HTML_Tag::create( 'textarea', $this->env->getRequest()->get( 'content' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'max' ) ).'
+				'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'max' ) ).'
 			</li>
 		</ul>
 		<div class="buttonbar">
@@ -107,7 +105,7 @@ return '
 	</div>
 	<div class="column-left-33">
 		<fieldset>
-			<legend>Ähnliche Einträge</legend>
+			<legend class="icon info">Ähnliche Einträge</legend>
 			<table id="list-similar" class="issues">
 				<tbody>
 					<tr><td colspan="3">-</td></tr>
@@ -115,7 +113,7 @@ return '
 			</table>
 		</fieldset>
 		<fieldset>
-			<legend>Letzte Einträge</legend>
+			<legend class="icon info">Letzte Einträge</legend>
 			<table id="list-latest" class="issues">
 				<tbody>
 					<tr><td colspan="3">-</td></tr>

@@ -49,6 +49,12 @@ foreach( $issue->notes as $note ){
 		$manager	= '<a href="./manage/user/edit/'.$note->user->userId.'">'.$note->user->username.'</a>';
 		$manager	= '<span class="role role'.$note->user->roleId.'">'.$manager.'</span>';
 	}
+	
+	$noteText	= nl2br( $note->note );
+	if( $env->getModules()->has( 'UI_Helper_Content' ) ){
+		$helper	= new View_Helper_ContentConverter();
+		$noteText	= $helper->convert( $note->note );
+	}
 
 	$content	= '
 <div id="issue-change-list-changes">
@@ -65,7 +71,7 @@ foreach( $issue->notes as $note ){
 	</dl>
 </div>
 <div id="issue-change-list-note">
-	<div class="issue-note-content">'.( $note->note ? nl2br( $note->note ) : '<em><small>Kein Kommentar.</small></em>' ).'</div>
+	<div class="issue-note-content">'.( $note->note ? $noteText : '<em><small>Kein Kommentar.</small></em>' ).'</div>
 </div>
 <hr style="clear: left"/>
 ';
