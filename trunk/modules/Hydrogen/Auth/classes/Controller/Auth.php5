@@ -1,8 +1,20 @@
 <?php
 class Controller_Auth extends CMF_Hydrogen_Controller {
 
+	protected $config;
+	protected $request;
+	protected $session;
+	protected $messenger;
+	
+	public function __onInit(){
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+	}
+	
 	public function ajaxIsAuthenticated(){
-		print( json_encode( $this->env->getSession()->has( 'userId' ) ) );
+		print( json_encode( $this->session->has( 'userId' ) ) );
 		exit;
 	}
 
@@ -11,14 +23,11 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 	
 	public function confirm(){
-		$config		= $this->env->getConfig();
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'confirm' );
 
-		if( $request->has( 'confirm_code' ) ){
-			$code			= $request->get( 'confirm_code' );
-			$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+		if( $this->request->has( 'confirm_code' ) ){
+			$code			= $this->request->get( 'confirm_code' );
+			$passwordSalt	= trim( $this->config->get( 'module.users.password.salt' ) );						//  string to salt password with
 
 			$modelUser		= new Model_User( $this->env );
 			$users			= $modelUser->getAllByIndex( 'status', 0 );
@@ -26,153 +35,111 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
 				if( $code == $pak ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
-					$messenger->noteSuccess( $words->msgSuccess );
+					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->restart( './auth/login/'.$user->username );
 				}
 			}
-			$messenger->noteError( $words->msgInvalidCode );
+			$this->messenger->noteError( $words->msgInvalidCode );
 		}
 	}
 
-/*	public function login(){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
-		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		
-		if( $session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'loginInside' );
-
-		$username	= $request->get( 'username' );
-		$password	= $request->get( 'password' );
-		if( $request->has( 'login' ) ) {
-			$conditions	= array(
-				'username'	=> $username,
-				'password'	=> md5( $password )
-			);
-			$model	= new Model_User( $this->env );
-			$result	= $model->getAll( $conditions );
-			if( count( $result ) == 1 ) {
-				$user	= array_shift( $result );
-				$message	= $words['login']['msgSuccess'];
-				$messenger->noteSuccess( $message );
-				$session->set( 'userId', $user->userId );
-				$session->set( 'roleId', $user->roleId );
-				$this->restart( './' );
-			}
-			else {
-				$message	= $words['login']['msgErrorInvalidUser'];
-				$messenger->noteError( $message );
-			}
-		}
-		$this->addData( 'data', array( 'username' => $username ) );
-	}*/
 	public function login( $username = NULL ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'login' );
 		
-		if( $session->has( 'userId' ) )
+		if( $this->session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'loginInside' );
 		
-		if( $request->has( 'doLogin' ) ) {
-			$username	= $request->get( 'login_username' );
-			$password	= $request->get( 'login_password' );
-			if( !trim( $username ) )
-				$messenger->noteError( $words->msgNoUsername );
-			if( !trim( $password ) )
-				$messenger->noteError( $words->msgNoPassword );
+		if( $this->request->has( 'doLogin' ) ) {
+			if( !trim( $username = $this->request->get( 'login_username' ) ) )
+				$this->messenger->noteError( $words->msgNoUsername );
+			if( !trim( $password = $this->request->get( 'login_password' ) ) )
+				$this->messenger->noteError( $words->msgNoPassword );
 
-			if( !$messenger->gotError() ){
+			if( !$this->messenger->gotError() ){
 				$modelUser	= new Model_User( $this->env );
 				$modelRole	= new Model_Role( $this->env );
 				$user		= $modelUser->getByIndex( 'username', $username );
 				if( !$user )
-					$messenger->noteError( $words->msgInvalidUser );
+					$this->messenger->noteError( $words->msgInvalidUser );
 				else{
 					$role	= $modelRole->get( $user->roleId );
 					if( !$role->access )
-						$messenger->noteError( $words->msgInvalidRole );
+						$this->messenger->noteError( $words->msgInvalidRole );
 					else if( $user->password !== md5( $password ) )
-						$messenger->noteError( $words->msgInvalidPassword );
+						$this->messenger->noteError( $words->msgInvalidPassword );
 					else if( $user->status == 0 )
-						$messenger->noteError( $words->msgUserUnconfirmed );
+						$this->messenger->noteError( $words->msgUserUnconfirmed );
 					else if( $user->status == -1 )
-						$messenger->noteError( $words->msgUserLocked );
+						$this->messenger->noteError( $words->msgUserLocked );
 					else if( $user->status == -2 )
-						$messenger->noteError( $words->msgUserDisabled );
+						$this->messenger->noteError( $words->msgUserDisabled );
 
-					if( !$messenger->gotError() ){
+					if( !$this->messenger->gotError() ){
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
-						$messenger->noteSuccess( $words->msgSuccess );
-						$session->set( 'userId', $user->userId );
-						$session->set( 'roleId', $user->roleId );
-						if( $request->get( 'from' ) )
-							$this->restart( './'.$request->get(' from' ) );
-						$this->restart( './' );
+						$this->messenger->noteSuccess( $words->msgSuccess );
+						$this->session->set( 'userId', $user->userId );
+						$this->session->set( 'roleId', $user->roleId );
+						$redirectUrl	= $from	= $this->request->get( 'from' );					//  get redirect URL from request if set
+						$this->restart( './'.$redirectUrl );										//  restart (or go to redirect URL)
 					}
 				}
 			}
 		}
-		$this->addData( 'data', array( 'login_username' => $username ) );
+		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$this->addData( 'login_username', $username );
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		$message	= $words['logout']['msgSuccess'];
-		if( $session->remove( 'userId' ) ){
+		if( $this->session->remove( 'userId' ) ){
 			$this->env->getMessenger()->noteSuccess( $message );
-			if( $request->has( 'autoLogout' ) )
+			if( $this->request->has( 'autoLogout' ) )
 				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
-			$session->remove( 'userId' );
-			$session->remove( 'roleId' );
+			$this->session->remove( 'userId' );
+			$this->session->remove( 'roleId' );
+			if( $this->env->getConfig()->get( 'module.auth.logout.clearSession' ) )
+				session_destroy();
 		}
-		$redirectTo	= '';
-		if( $redirectController && $redirectAction )
-			$redirectTo	= $redirectController.'/'.$redirectAction;
-		else if( $redirectController )
-			$redirectTo	= $redirectController;
-		$this->restart( './'.$redirectTo );
+		$redirectTo	= '';																			//  assume empty redirect URL
+		if( $redirectController && $redirectAction )												//  both redirect controller and action given
+			$redirectTo	= $redirectController.'/'.$redirectAction;									//  generate redirect URL
+		else if( $redirectController )																//  or only redirect controller given
+			$redirectTo	= $redirectController;														//  generate redirect URL
+		else if( $this->request->get( 'from' ) )															//  or redirect URL given via parameter "from"
+			$redirectTo	= $this->request->get( 'from' );													//  take redirect URL from parameter
+		$this->restart( './'.$redirectTo );															//  restart (to redirect URL if set)
 	}
 
 	public function loginInside(){}
 
 	public function password(){
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'password' );
 
-		if( $request->has( 'password_email' ) ){
-			if( $request->get( 'password_email' ) ){
+		if( $this->request->has( 'password_email' ) ){
+			if( ( $email = $this->request->get( 'password_email' ) ) ){
 				$modelUser	= new Model_User( $this->env );
-				$user		= $modelUser->getByIndex( 'email', $request->get( 'password_email' ) );
+				$user		= $modelUser->getByIndex( 'email', $email );
 				if( $user ){
 					$randomizer	= new Alg_Randomizer();
 					$randomizer->configure( TRUE, TRUE, TRUE, FALSE, 0 );
 					$password	= $randomizer->get( 8 );
 					$modelUser->edit( $user->userId, array( 'password' => md5( $password ) ) );
-					$messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
-					$messenger->noteSuccess( $words->msgSuccess );
+					$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
+					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->restart( './auth/login' );
 				}
-				$messenger->noteError( $words->msgInvalidEmail );
+				$this->messenger->noteError( $words->msgInvalidEmail );
 			}
-			$messenger->noteError( $words->msgNoEmail );
+			$this->messenger->noteError( $words->msgNoEmail );
 		}
 	}
 
 	public function register(){
-		$config		= $this->env->getConfig();
-#		print_m( $config->getAll() );
+#		print_m( $this->config->getAll() );
 #		remark( CMC_VERSION );
 #		die;
-	
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
+
 		$words		= (object) $this->getWords( 'register' );
 
 		$modelUser	= new Model_User( $this->env );
@@ -183,51 +150,51 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 				$rolesAllowed[]	= $role->roleId;
 				
-		$input		= $request->getAllFromSource( 'post' );
+		$input		= $this->request->getAllFromSource( 'post' );
 		
-		$nameMinLength	= $config->get( 'module.users.name.length.min' );
-		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
-		$nameRegExp		= $config->get( 'module.users.name.preg' );
-		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
-		$needsEmail		= $config->get( 'module.users.email.mandatory' );
-		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
-		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
-		$needsTac		= $config->get( 'module.users.tac.mandatory' );
-		$status			= (int) $config->get( 'module.users.status.register' );
-		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+		$nameMinLength	= $this->config->get( 'module.users.name.length.min' );
+		$nameMaxLength	= $this->config->get( 'module.users.name.length.max' );
+		$nameRegExp		= $this->config->get( 'module.users.name.preg' );
+		$pwdMinLength	= $this->config->get( 'module.users.password.length.min' );
+		$needsEmail		= $this->config->get( 'module.users.email.mandatory' );
+		$needsFirstname	= $this->config->get( 'module.users.firstname.mandatory' );
+		$needsSurname	= $this->config->get( 'module.users.surname.mandatory' );
+		$needsTac		= $this->config->get( 'module.users.tac.mandatory' );
+		$status			= (int) $this->config->get( 'module.users.status.register' );
+		$passwordSalt	= trim( $this->config->get( 'module.users.password.salt' ) );						//  string to salt password with
 
-		$roleId		= $request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;			//  use default register role if none given
+		$roleId		= $this->request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;			//  use default register role if none given
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
 	
-		$errors	= $messenger->gotError();
-		if( $request->get( 'saveUser' ) ){
+		$errors	= $this->messenger->gotError();
+		if( $this->request->get( 'saveUser' ) ){
 			if( !in_array( $roleId, $rolesAllowed ) )
-				$messenger->noteError( $words->msgRoleInvalid );
+				$this->messenger->noteError( $words->msgRoleInvalid );
 			if( empty( $username ) )
-				$messenger->noteError( $words->msgNoUsername );
+				$this->messenger->noteError( $words->msgNoUsername );
 			else if( $modelUser->countByIndex( 'username', $username ) )
-				$messenger->noteError( $words->msgUsernameExisting, $username );
+				$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			else if( $nameRegExp )
 				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
-					$messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
+					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
 			if( empty( $password ) )
-				$messenger->noteError( $words->msgNoPassword );
+				$this->messenger->noteError( $words->msgNoPassword );
 			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+				$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
 			if( $needsEmail && empty( $email ) )
-				$messenger->noteError( $words->msgNoEmail);
+				$this->messenger->noteError( $words->msgNoEmail);
 			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
-				$messenger->noteError( $words->msgEmailExisting, $email );
+				$this->messenger->noteError( $words->msgEmailExisting, $email );
 			if( $needsFirstname && empty( $input['firstname'] ) )
-				$messenger->noteError( $words->msgNoFirstname );
+				$this->messenger->noteError( $words->msgNoFirstname );
 			if( $needsSurname && empty( $input['surname'] ) )
-				$messenger->noteError( $words->msgNoSurname );
+				$this->messenger->noteError( $words->msgNoSurname );
 			if( $needsTac &&  empty( $input['accept_tac'] ) )
-				$messenger->noteError( $words->msgTermsNotAccepted  );
+				$this->messenger->noteError( $words->msgTermsNotAccepted  );
 
-			if( $messenger->gotError() - $errors == 0 ){
+			if( $this->messenger->gotError() - $errors == 0 ){
 				$data	= array(
 					'roleId'		=> $roleId,
 					'status'		=> $status,
@@ -247,7 +214,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					'createdAt'		=> time(),
 				);
 				$userId		= $modelUser->add( $data );
-				$messenger->noteSuccess( $words->msgSuccess );
+				$this->messenger->noteSuccess( $words->msgSuccess );
 				
 				if( !$status ){
 					$pak		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
@@ -256,7 +223,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					$data['password']	= $password;
 					$mail		= new Mail_Auth_Register( $this->env, $data );
 					$mail->sendToAddress( $email );
-					$messenger->noteNotice( $words->msgNoticeConfirm );
+					$this->messenger->noteNotice( $words->msgNoticeConfirm );
 					$this->restart( './auth/confirm' );
 				}
 				$this->restart( './auth/login' );
