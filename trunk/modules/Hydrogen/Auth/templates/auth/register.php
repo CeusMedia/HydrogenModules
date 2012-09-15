@@ -2,21 +2,65 @@
 
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $request->get( 'gender' ) );
 
-$contentTac	= "";
-if( $view->hasContent( 'auth', 'tac' ) )
-	$contentTac	= $view->loadContent( 'auth', 'tac' );
-
 $w		= (object) $words['register'];
 $user	= (object) $request->getAll();
-$text	= $view->populateTexts( array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' ), 'html/auth/register.' );
+$texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
+$text	= $view->populateTexts( $texts, 'html/auth/register.' );
 
-$panelUser	= '<fieldset>
+$formTerms	= '';
+if( $view->hasContent( 'auth', 'tac', 'html/' ) ){
+	$contentTac		= $view->loadContent( 'auth', 'tac', 'html/' );
+	if( $env->getModules()->has( 'UI_Helper_Content' ) ){
+		$contentTac	= View_Helper_ContentConverter::render( $env, $contentTac );
+		$contentTac	= HTML::DivClass( 'framed column-clear max', $contentTac );
+		$formTerms		= HTML::LiClass( 'column-clear',
+			$contentTac.
+			HTML::Checkbox( 'accept_tac', 1, FALSE, 'mandatory' ).'&nbsp;'.
+			HTML::Label( 'accept_tac', $w->labelAccept, 'mandatory' )
+		);
+	}
+	else{
+		$formTerms		= HTML::LiClass( 'column-clear',
+			HTML::Label( 'conditions', $w->labelTerms, '' ).HTML::BR.
+			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )		
+		).HTML::Li(
+			$contentTac.
+			HTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
+			HTML::Label( 'accept_tac', $w->labelAccept, 'mandatory' )
+		);
+	}
+}
+
+$mandatoryEmail		= $config->get( 'module.users.email.mandatory' ) ? 'mandatory' : '';
+$mandatoryFirstname	= $config->get( 'module.users.firstname.mandatory' ) ? 'mandatory' : '';
+$mandatorySurname	= $config->get( 'module.users.surname.mandatory' ) ? 'mandatory' : '';
+
+$panelUser	= '
+<style>
+div.framed {
+	border: 1px solid gray;
+	border-radius: 0.4em;
+	padding: 1em 2em;
+	overflow: auto;
+	height: 200px;
+	}
+</style>
+<script>
+$(document).ready(function(){
+	if($("#input_accept_tac.mandatory").size()){
+		$("button.save").attr("disabled","disabled");
+		$("#input_accept_tac").change(function(){
+			if($(this).is(":checked"))
+				$("button.save").removeAttr("disabled");
+			else
+				$("button.save").attr("disabled","disabled");			
+		});
+	}
+});
+</script>
+<fieldset>
 	<legend class="register">'.$w->legend.'</legend>
 	<ul class="input">
-		<li class="column-left-50">
-			<label for="input_email" class="mandatory">'.$w->labelEmail.'</label><br/>
-			<input type="text" name="email" id="input_email" class="max mandatory" value="'.$request->get( 'email' ).'"/>
-		</li>
 		<li class="column-left-25">
 			<label for="input_username" class="mandatory">'.$w->labelUsername.'</label><br/>
 			<input type="text" name="username" id="input_username" class="max mandatory" value="'.$request->get( 'username' ).'"/>
@@ -24,6 +68,10 @@ $panelUser	= '<fieldset>
 		<li class="column-left-25">
 			<label for="input_password" class="mandatory">'.$w->labelPassword.'</label><br/>
 			<input type="text" name="password" id="input_password" class="max mandatory" value=""/>
+		</li>
+		<li class="column-left-50">
+			<label for="input_email" class="'.$mandatoryEmail.'">'.$w->labelEmail.'</label><br/>
+			<input type="text" name="email" id="input_email" class="max '.$mandatoryEmail.'" value="'.$request->get( 'email' ).'"/>
 		</li>
 
 		<li class="column-clear column-left-20">
@@ -35,12 +83,12 @@ $panelUser	= '<fieldset>
 			<input type="text" name="salutation" id="input_salutation" class="max" value="'.$request->get( 'salutation' ).'"/>
 		</li>
 		<li class="column-left-30">
-			<label for="input_firstname" class="">'.$w->labelFirstname.'</label><br/>
-			<input type="text" name="firstname" id="input_firstname" class="max" value="'.$request->get( 'firstname' ).'"/>
+			<label for="input_firstname" class="'.$mandatoryFirstname.'">'.$w->labelFirstname.'</label><br/>
+			<input type="text" name="firstname" id="input_firstname" class="max '.$mandatoryFirstname.'" value="'.$request->get( 'firstname' ).'"/>
 		</li>
 		<li class="column-left-30">
-			<label for="input_surname" class="">'.$w->labelSurname.'</label><br/>
-			<input type="text" name="surname" id="input_surname" class="max" value="'.$request->get( 'surname' ).'"/>
+			<label for="input_surname" class="'.$mandatorySurname.'">'.$w->labelSurname.'</label><br/>
+			<input type="text" name="surname" id="input_surname" class="max '.$mandatorySurname.'" value="'.$request->get( 'surname' ).'"/>
 		</li>
 
 		<li class="column-clear column-left-20">
@@ -59,29 +107,12 @@ $panelUser	= '<fieldset>
 			<label for="input_number" class="">'.$w->labelNumber.'</label><br/>
 			<input type="text" name="number" id="input_number" class="max" value="'.$request->get( 'number' ).'"/>
 		</li>
+		'.$formTerms.'
 	</ul>
 	<div class="buttonbar">
 		'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
 	</div>
-</fieldset>
-';
-
-$panelConditions	= '';/*HTML::Fields(
-	HTML::Legend( $w->legendFinish, 'register' ).
-	HTML::UlClass( 'input',
-		HTML::Li(
-			HTML::Label( 'conditions', $w->labelTerms, '' ).HTML::BR.
-			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )		
-		).
-		HTML::Li(
-			HTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
-			HTML::Label( 'accept_tac', $w->labelAccept )
-		)
-	).
-	HTML::Buttons(
-		HTML::Button( 'saveUser', $w->buttonSave, 'button save' )
-	)
-);*/
+</fieldset>';
 
 return $text['top'].'
 <form name="form_auth_register" action="./auth/register" method="post">
