@@ -3,7 +3,7 @@
 	<title>UI: Helper: Content</title>
 	<description><![CDATA[Content converter and format helper.]]></description>
 	<category>User Interface</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files>
 		<class>View/Helper/ContentConverter.php5</class>
 		<style source="theme" load="auto">links.css</style>
@@ -31,8 +31,7 @@
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $map	= array(
-	'breaks'		=> "formatBreaks",
-	'code'			=> "formatCodeBlocks",
+	'text'			=> "formatText",
 	'currencies'	=> "formatCurrencies",
 	'links'			=> "formatLinks",
 	'links.discogs'	=> "formatDiscogsLinks",
@@ -43,11 +42,13 @@ $map	= array(
 	'links.youtube'	=> "formatYoutubeLinks",
 	'search.image'	=> "formatImageSearch",
 	'search.map'	=> "formatMapSearch",
-	'text'			=> "formatText",
+	'breaks'		=> "formatBreaks",
+	'code'			=> "formatCodeBlocks",
 	'lists'			=> "formatLists",
 );
-foreach( $env->getConfig()->getAll( 'module.ui_helper_content.register.' ) as $key => $value )
-	if( $value )
-		View_Helper_ContentConverter::register( 'View_Helper_ContentConverter', $map[$key] );
+$plugins	= $env->getConfig()->getAll( 'module.ui_helper_content.register.' );
+foreach( $map as $key => $method )
+	if( isset( $plugins[$key] ) && $plugins[$key] )
+		View_Helper_ContentConverter::register( 'View_Helper_ContentConverter', $method );
 ]]></hook>
 </module>
