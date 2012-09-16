@@ -6,10 +6,11 @@ class View_Helper_ContentConverter{
 	static public $linkTarget		= '_self';
 
 	static public function formatBreaks( $env, $content ){
-		$content	= preg_replace( '/(----){4,}/',' <hr/>', $content );
-		$content	= preg_replace( '/([^>])\r?\n\r?\n\r?\n/', '\\1<br class="clearfloat">', $content );
-		$content	= preg_replace( '/([^>])\r?\n\r?\n/', '\\1<br/><br/>', $content );
-		$content	= preg_replace( '/(.+)\t\r?\n/', '\\1<br/>', $content );
+		$content	= preg_replace( "/(----){4,}\r?\n/",' <hr/>', $content );						//  four dashes make a horizontal row
+		$content	= preg_replace( "/([^>])\r?\n\r?\n\r?\n/", '\\1<br class="clearfloat">', $content );
+		$content	= preg_replace( "/([^>])\r?\n\r?\n/", '\\1<br/><br/>', $content );
+		$content	= preg_replace( "/(.+)\t\r?\n/", '\\1<br/>', $content );						//  special break: line ends with tab
+		$content	= preg_replace( "/\/\r?\n/", '<br/>', $content );								//  special break: line ends with /
 		return $content;
 	}
 
@@ -178,6 +179,8 @@ class View_Helper_ContentConverter{
 			"/([^:])\*\*(.+)\*\*/U"	=> "\\1<b>\\2</b>",
 			"/([^:])\/\/(.+)\/\//U"	=> "\\1<em>\\2</em>",
 			"/__(.+)__/U"			=> "<u>\\1</u>",
+			"/>>(.+)<</U"			=> "<small>\\1</small>\n",
+			"/<<(.+)>>/U"			=> "<big>\\1</big>\n",
 		);
 		foreach( $converters as $key => $value )
 			$content	= preg_replace( $key, $value, $content );
