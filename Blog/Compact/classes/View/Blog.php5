@@ -18,8 +18,8 @@ class View_Blog extends CMF_Hydrogen_View{
 			"formatCodeBlocks",
 			"formatLists",
 		);
-		foreach( $converters as $converter )
-			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
+#		foreach( $converters as $converter )
+#			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
 	}
 
 	public function add(){}
