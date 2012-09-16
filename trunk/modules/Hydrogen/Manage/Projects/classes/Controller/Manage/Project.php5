@@ -94,6 +94,12 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		foreach( $relations as $relation )
 			$projectUsers[$relation->userId]	= $users[$relation->userId];
 
+		if( $this->env->getModules()->has( 'Work_Missions' ) ){
+			$modelMission	= new Model_Mission( $this->env );
+			$missions		= $modelMission->getAllByIndex( 'projectId', $projectId );
+			$this->addData( 'missions', $missions );
+		}
+
 		$this->addData( 'users', $users );
 		$this->addData( 'project', $project );
 		$this->addData( 'projectUsers', $projectUsers );
