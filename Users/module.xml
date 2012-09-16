@@ -31,8 +31,8 @@
 	<config type="integer" name="password.strength.min">0</config>									; highest number of password characters
 	<config type="string" name="password.salt" protected="yes"></config>							; string to salt password with
 	<config type="boolean" name="email.mandatory">no</config>										; user needs a mail address on register and change
-	<config type="integer" name="firstname.mandatory">no</config>									; user needs a firstname
-	<config type="integer" name="surname.mandatory">no</config>										; user needs a surname
+	<config type="boolean" name="firstname.mandatory">no</config>									; user needs a firstname
+	<config type="boolean" name="surname.mandatory">no</config>										; user needs a surname
 	<link xml:lang="de" access="acl" path="admin/user" rank="60">Benutzer</link>
 	<link xml:lang="en" access="acl" path="admin/user" rank="60">Users</link>
 	<sql on="install" type="mysql"><![CDATA[
