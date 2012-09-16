@@ -2,7 +2,7 @@
 <module>
 	<title>Authentication</title>
 	<description>Module for authentication against local database using the Users module.</description>
-	<version>0.3</version>
+	<version>0.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -28,10 +28,12 @@
 		<locale>de/html/auth/register.top.html</locale>
 		<locale>de/html/auth/register.info.html</locale>
 		<locale>de/html/auth/register.bottom.html</locale>
+		<locale>de/html/auth/tac.html</locale>
 		<locale>de/mail/auth/register</locale>
 <!--		<locale>de/mail/auth/password</locale>-->
 		<locale>en/auth.ini</locale>
-		<locale>en/html/auth.login.info.html</locale>
+		<locale>en/html/auth/login.info.html</locale>
+		<locale>en/html/auth/tac.html</locale>
 		<script load="auto">Auth.js</script>
 	</files>
 	<config type="integer" name="refreshSession.minutes">10</config>
