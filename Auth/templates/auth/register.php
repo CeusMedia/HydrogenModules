@@ -22,9 +22,8 @@ if( $view->hasContent( 'auth', 'tac', 'html/' ) ){
 	else{
 		$formTerms		= HTML::LiClass( 'column-clear',
 			HTML::Label( 'conditions', $w->labelTerms, '' ).HTML::BR.
-			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )		
+			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )
 		).HTML::Li(
-			$contentTac.
 			HTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
 			HTML::Label( 'accept_tac', $w->labelAccept, 'mandatory' )
 		);
