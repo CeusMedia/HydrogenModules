@@ -36,6 +36,35 @@ foreach( $users as $user )
 			$optUser[$user->userId]	= $user->username;
 $optUser	= UI_HTML_Elements::Options( $optUser );
 
+
+if( isset( $missions ) ){
+	$url	= './work/mission/filter?projects[]='.$project->projectId;
+	$button	= UI_HTML_Elements::LinkButton( $url, 'anzeigen', 'button filter' );
+	$label	= count( $missions ).'&nbsp;'.$button;
+	$data[]	= UI_HTML_Tag::create( 'dt', 'Aufgaben' ).UI_HTML_Tag::create( 'dd', $label );
+}
+
+if( isset( $issues ) ){
+	$url	= './work/issue/filter?projects[]='.$project->projectId;
+	$button	= UI_HTML_Elements::LinkButton( $url, 'anzeigen', 'button filter' );
+	$label	= count( $missions ).'&nbsp;'.$button;
+	$data[]	= UI_HTML_Tag::create( 'dt', 'Probleme' ).UI_HTML_Tag::create( 'dd', $label );
+}
+
+$panelInfo	= '';
+if( $data ){
+	$panelInfo	= '
+<fieldset>
+	<legend class="icon info">Informationen</legend>
+	<dl>
+		'.join( $data ).'
+	</dl>
+</fieldset>
+';
+	
+} 
+	
+
 $panelUsers	= '
 <form name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
 	<fieldset id="project-users">
@@ -87,8 +116,8 @@ return '
 </div>
 <div class="column-left-25">
 	'.$panelUsers.'
+	'.$panelInfo.'
 </div>
 <div class="column-clear"></div>
 ';
-
 ?>
