@@ -22,26 +22,24 @@ class Job_Work_Mission extends Job_Abstract{
 		$modelMission	= new Model_Mission( $this->env );
 
 		$count	= 0;
-		foreach( $modelUser->getAll() as $user ){
+		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
 //			IF USER HAS CONFIGURED TO RECEIVE THIS TYPE OF MAILS									//  @todo	kriss: implement mail configuration
 
-			if( $user->username != "kriss" ) continue;												//  @todo	kriss: remove on release
-
-			if( !$user->email )
+			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 
-			$groupings	= array( 'missionId' );
-			$havings	= array(
-				'ownerId = '.(int) $user->userId,
-				'workerId = '.(int) $user->userId,
+			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
+			$havings	= array(																	//  apply filters after grouping
+				'ownerId = '.(int) $user->userId,													//  
+				'workerId = '.(int) $user->userId,													//  
 			);
-			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-				$modelProject	= new Model_Project( $this->env );
-				$userProjects	= $modelProject->getUserProjects( $user->userId );
-				if( $userProjects )
-					$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';
+			if( $this->env->getModules()->has( 'Manage_Projects' ) ){								//  look for module
+				$modelProject	= new Model_Project( $this->env );									//  
+				$userProjects	= $modelProject->getUserProjects( $user->userId );					//  get projects assigned to user
+				if( $userProjects )																	//  projects found
+					$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';	//  add to HAVING clause
 			}
-			$havings	= array( join( ' OR ', $havings ) );
+			$havings	= array( join( ' OR ', $havings ) );										//	render HAVING clause
 
 			//  --  TASKS  --  //
 			$filters	= array(																	//  task filters
@@ -56,7 +54,7 @@ class Job_Work_Mission extends Job_Abstract{
 			$filters	= array(																	//  event filters
 				'type'		=> 1,																	//  events only
 				'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
-				'dayStart'	=> "<=".date( "Y-m-d", time() ),												//  starting today
+				'dayStart'	=> "<=".date( "Y-m-d", time() ),										//  starting today
 			);
 			$order	= array( 'timeStart' => 'ASC' );
 			$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
