@@ -14,5 +14,40 @@
 		<image source="theme">icons/discogs.png</image>
 		<image source="theme">icons/myspace.png</image>
 	</files>
+	<config protected="yes" type="boolean" name="register.breaks">1</config>
+	<config protected="yes" type="boolean" name="register.code">1</config>
+	<config protected="yes" type="boolean" name="register.currencies">1</config>
+	<config protected="yes" type="boolean" name="register.links">1</config>
+	<config protected="yes" type="boolean" name="register.links.wiki">1</config>
+	<config protected="yes" type="boolean" name="register.links.youtube">1</config>
+	<config protected="yes" type="boolean" name="register.links.imdb">1</config>
+	<config protected="yes" type="boolean" name="register.links.discogs">1</config>
+	<config protected="yes" type="boolean" name="register.links.myspace">1</config>
+	<config protected="yes" type="boolean" name="register.links.map">1</config>
+	<config protected="yes" type="boolean" name="register.lists">1</config>
+	<config protected="yes" type="boolean" name="register.search.image">1</config>
+	<config protected="yes" type="boolean" name="register.search.map">1</config>
+	<config protected="yes" type="boolean" name="register.text">1</config>
 	<relations/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$map	= array(
+	'breaks'		=> "formatBreaks",
+	'code'			=> "formatCodeBlocks",
+	'currencies'	=> "formatCurrencies",
+	'links'			=> "formatLinks",
+	'links.discogs'	=> "formatDiscogsLinks",
+	'links.imdb'	=> "formatImdbLinks",
+	'links.map'		=> "formatMapLinks",
+	'links.myspace'	=> "formatMyspaceLinks",
+	'links.wiki'	=> "formatWikiLinks",
+	'links.youtube'	=> "formatYoutubeLinks",
+	'search.image'	=> "formatImageSearch",
+	'search.map'	=> "formatMapSearch",
+	'text'			=> "formatText",
+	'lists'			=> "formatLists",
+);
+foreach( $env->getConfig()->getAll( 'module.ui_helper_content.register.' ) as $key => $value )
+	if( $value )
+		View_Helper_ContentConverter::register( 'View_Helper_ContentConverter', $map[$key] );
+]]></hook>
 </module>

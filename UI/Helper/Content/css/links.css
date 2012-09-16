@@ -80,3 +80,11 @@ span.icon-label:hover {
 .link-archive {
 	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
 	}
+.link-mail {
+	background-image: url(http://img.int1a.net/famfamfam/silk/email.png);
+	}
+
+ul.list {
+	list-style: disc !important;
+	margin-left: 1.5em !important;
+	}
