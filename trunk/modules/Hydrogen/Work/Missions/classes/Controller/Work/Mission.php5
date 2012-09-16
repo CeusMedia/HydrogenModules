@@ -343,7 +343,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function index(){
+	public function index( $missionId = NULL ){
+		if( $missionId )
+			$this->restart( 'edit/'.$missionId, TRUE );
+		
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
@@ -421,14 +424,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterDirection', $direction );
 		$this->addData( 'currentDay', (int) $session->get( 'filter_mission_day' ) );
 		$this->addData( 'users', $this->userMap );
-	}
-
-	static public function getUserMissionIds( $owner = NULL, $worker = NULL, $projects = array() ){
-		$ors	= array();
-		if( $owner )	$ors[]	= 'ownerId = '.(int) $owner;
-		if( $worker )	$ors[]	= 'workerId = '.(int) $worker;
-		if( $projects )	$ors[]	= 'projectId IN ('.join( ',', $projects ).')';
-		return join( ' OR ', $ors );
 	}
 	
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
