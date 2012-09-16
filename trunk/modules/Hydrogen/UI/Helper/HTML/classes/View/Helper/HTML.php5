@@ -6,6 +6,7 @@ class View_Helper_HTML{
 class HTML extends UI_HTML_Elements {
 
 	const BR = '<br/>';
+	const HR = '<hr/>';
 
 	static $prefixIdInput	= 'input_';
 	static $prefixIdForm	= 'form_';
