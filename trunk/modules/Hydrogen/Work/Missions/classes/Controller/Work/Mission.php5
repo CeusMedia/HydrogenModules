@@ -15,18 +15,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $useIssues		= FALSE;
 	protected $useProjects		= FALSE;
 	protected $hasFullAccess	= FALSE;
-	
+
 	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
 		$this->logic	= new Logic_Mission( $this->env );
 		$this->acl		= $this->env->getAcl();
-		
+
 		$model			= new Model_User( $this->env );
 		foreach( $model->getAll() as $user )
 			$this->userMap[$user->userId]	= $user;
 
 		$modules	= $this->env->getModules();
-		
+
 		$this->addData( 'useProjects', $this->useProjects = $modules->has( 'Manage_Projects' ) );
 		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
 	}
@@ -37,19 +37,20 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'add' );
+		$userId			= $session->get( 'userId' );
 
 		$content	= $request->get( 'content' );
 		$status		= $request->get( 'status' );
 		$dayStart	= !$request->get( 'type' ) ? $request->get( 'day' ) : $request->get( 'dayStart' );
 		$dayEnd		= $request->get( 'dayEnd' );
-		
+
 		if( $request->get( 'add' ) ){
 			if( !$content )
 				$messenger->noteError( $words->msgNoContent );
 			if( !$messenger->gotError() ){
 				$data	= array(
-					'ownerId'		=> (int) $session->get( 'userId' ),
-					'workerId'		=> (int) $session->get( 'userId' ),#$request->get( 'workerId' ),
+					'ownerId'		=> (int) $userId,
+					'workerId'		=> (int) $request->get( 'workerId' ),
 					'projectId'		=> (int) $request->get( 'projectId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
@@ -77,6 +78,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$mission['status']	= 0;
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
+		$this->addData( 'userId', $userId );
+		$this->addData( 'day', (int) $session->get( 'filter_mission_day' ) );
 
 		if( $this->useProjects ){
 			$model		= new Model_Project( $this->env );
@@ -179,9 +182,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	protected function hasFullAccess(){
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );	
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
-		
+
 	public function export( $format = NULL, $debug = FALSE ){
 		switch( $format ){
 			case 'ical':
