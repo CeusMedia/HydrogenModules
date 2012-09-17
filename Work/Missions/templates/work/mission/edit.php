@@ -9,12 +9,12 @@ $optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
 
 $optPriority	= array();
 foreach( $priorities as $key => $value )
-	$optPriority[]	= UI_HTML_Elements::Option( $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
+	$optPriority[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
 $optPriority	= join( $optPriority, $mission->priority );
 
 $optStatus	= array();
 foreach( $words['states'] as $key => $value )
-	$optStatus[]	= UI_HTML_Elements::Option( $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus, $mission->status );
 
 $optWorker	= array();
