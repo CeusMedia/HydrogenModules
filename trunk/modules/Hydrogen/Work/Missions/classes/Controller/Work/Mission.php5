@@ -370,11 +370,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( './work/mission/filter?order=priority' );
 		if( !$access )
 			$this->restart( './work/mission/filter?access=worker' );
-		
+
 		$direction	= $direction ? $direction : 'ASC';
 		$session->set( 'filter_mission_direction', $direction );
-		$order		= $order ? array( $order => $direction ) : array();
-		$order['content']	= 'ASC';
+		$orders		= array(					//  collect order pairs
+			$order		=> $direction,				//  selected or default order and direction
+			'timeStart'	=> 'ASC',				//  order events by start time
+			'content'	=> 'ASC',				//  order by title at last
+		);
 
 		$conditions	= $groupings	= $havings	= array();
 		if( is_array( $types ) && count( $types ) )
@@ -416,7 +419,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 		if( $havings )
 			$groupings	= array( 'missionId' );
-		$missions	= $this->model->getAll( $conditions, $order, NULL, NULL, $groupings, $havings );
+		$missions	= $this->model->getAll( $conditions, $orders, NULL, NULL, $groupings, $havings );
 
 		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
