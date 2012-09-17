@@ -35,8 +35,8 @@ function showOptionals(elem){
 	var form = $(elem.form);
 	var name = $(elem).attr("name");
 	var type = $(elem).attr("type");
-	console.log("name: "+name);
-	console.log("type: "+type);
+//	console.log("name: "+name);
+//	console.log("type: "+type);
 	var value = name+"-"+$(elem).val();
 	if(type == "checkbox"){
 		value = name+"-"+$(elem).prop("checked");
@@ -63,7 +63,9 @@ function showOptionals(elem){
 			toShow.show();
 	}
 }
+
 function showDayTable(day,permanent){
+	missionDay = day;
 	if(permanent)
 		$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
 	$("div.table-day").hide().filter("#table-"+day).show();
@@ -109,5 +111,10 @@ $(document).ready(function(){
 		$("#input_timeStart").timepicker({});
 		$("#input_timeEnd").timepicker({});
 		$("#input_type").trigger("change");
+		if( typeof missionDay !== "undefined" ){
+			$("body.action-add #input_day").datepicker("setDate",missionDay);
+			$("body.action-add #input_dayStart").datepicker("setDate",missionDay);
+			$("body.action-add #input_dayEnd").datepicker("setDate",missionDay);
+		}
 	}
 });

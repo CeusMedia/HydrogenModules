@@ -19,7 +19,7 @@ $optStatus	= join( $optStatus );
 $optWorker	= array();
 foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
-$optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
+$optWorker		= UI_HTML_Elements::Options( $optWorker, $userId );
 
 if( $useProjects ){
 	$optProject	= array();
@@ -107,6 +107,9 @@ $panelAdd	= '
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
 return '
+<script>
+var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
+</script>
 <div class="column-right-30">
 	'.$panelInfo.'
 </div>
