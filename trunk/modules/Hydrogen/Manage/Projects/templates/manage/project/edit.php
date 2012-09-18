@@ -61,9 +61,9 @@ if( $data ){
 	</dl>
 </fieldset>
 ';
-	
-} 
-	
+
+}
+
 
 $panelUsers	= '
 <form name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
@@ -87,11 +87,11 @@ $panelEdit	= '
 		<ul class="input">
 			<li>
 				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
-				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $project->title ).'"/>
+				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $project->title, ENT_COMPAT, 'UTF-8' ).'"/>
 			</li>
 			<li>
 				<label for="input_description">'.$words['add']['labelDescription'].'</label><br/>
-				<textarea name="description" id="input_description" class="max">'.htmlentities( $project->description ).'</textarea>
+				<textarea name="description" id="input_description" class="max">'.htmlentities( $project->description, ENT_COMPAT, 'UTF-8' ).'</textarea>
 			</li>
 			<li class="column-left-20">
 				<label for="input_status" class="mandatory">'.$words['add']['labelStatus'].'</label><br/>
@@ -99,7 +99,7 @@ $panelEdit	= '
 			</li>
 			<li class="column-left-80">
 				<label for="input_url">'.$words['add']['labelUrl'].'</label><br/>
-				<input type="text" name="url" id="input_url" class="max" value="'.htmlentities( $project->url ).'"/>
+				<input type="text" name="url" id="input_url" class="max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
 			</li>
 		</ul>
 		<div class="buttonbar">

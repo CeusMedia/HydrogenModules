@@ -22,14 +22,33 @@ class Model_Project extends CMF_Hydrogen_Model{
 	public function getUserProjects( $userId, $conditions = array() ){
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
-		$list			= array();
+		$projectIds	= array();
 		foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation )
-			$list[$relation->projectId]	= NULL;
-		$conditions['projectId']	= array_keys( $list );
-		$projects		= $modelProject->getAll( $conditions, array( 'title' => 'ASC' ) );
-		foreach( $projects as $project )
-			$list[$project->projectId]	= $project;
-		return $list;
+			$projectIds[]	= $relation->projectId;
+		if( !$projectIds )
+			return array();
+		$conditions['projectId']	= $projectIds;
+		$projects	= array();
+		$orders		= array( 'title' => 'ASC' );
+		foreach( $modelProject->getAll( $conditions, $orders ) as $project )
+			$projects[$project->projectId]	= $project;
+		return $projects;
+	}
+
+	public function getProjectUsers( $projectId, $conditions = array() ){
+		$modelUser	= new Model_User( $this->env );
+		$modelRelation	= new Model_Project_User( $this->env );
+		$userIds	= array();
+		foreach( $modelRelation->getAllByIndex( 'projectId', $projectId ) as $relation )
+			$userIds[]	= $relation->userId;
+		if( !$userIds )
+			return array();
+		$conditions['userId']	= $userIds;
+		$orders		= array( 'roleId' => 'ASC', 'username' => 'ASC' );
+		$users		= array();
+		foreach( $modelUser->getAll( $conditions, $orders ) as $user )
+			$users[$user->userId]	= $user;
+		return $users;
 	}
 }
 ?>
