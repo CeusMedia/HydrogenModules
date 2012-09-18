@@ -292,7 +292,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 			$this->restart( NULL, TRUE );
 		}
 		$model->remove( $userId );
-		$messenger->noteError( $words->msgSuccess, $user->username );
+		$messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( NULL, TRUE );
 	}
 }
