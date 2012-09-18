@@ -34,8 +34,8 @@ if( count( $note->tags ) ){
 </fieldset>';
 }
 
-$converter	= new View_Helper_ContentConverter();
-$content	= $converter->convert( $note->content );
+#$converter	= new View_Helper_ContentConverter();
+$content	= View_Helper_ContentConverter::render( $env, $note->content );
 
 function getShortHash( $noteId ){
 	$hash	= base64_encode( $noteId );
@@ -67,6 +67,12 @@ return '
 		<dl>
 			<dt>Views</dt>
 			<dd>'.$note->numberViews.'</dd>
+			<dt>erstellt</dt>
+			<dd>'.( $note->createdAt ? date( 'Y-m-d H:i', $note->createdAt ) : '-' ).'</dd>
+			<dt>zuletzt verändert</dt>
+			<dd>'.( $note->modifiedAt ? date( 'Y-m-d H:i', $note->modifiedAt ) : '-' ).'</dd>
+			<dt>Notiz-Textverweis</dt>
+			<dd><code>[note:'.$note->noteId.']</code></dd>
 		</dl>
 	</fieldset>
 </div>

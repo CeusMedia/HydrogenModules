@@ -14,7 +14,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$data		= array(
 				'userId'	=> $session->get( 'userId' ),
 				'title'		=> $request->get( 'note_title' ),
-				'content'	=> $request->get( 'note_content' )
+				'content'	=> $request->get( 'note_content' ),
+				'createdAt'	=> time(),
 			);
 			if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( $words->msgNoTitle );
@@ -38,14 +39,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				$this->restart( './work/note/edit/'.$noteId );
 			}
 		}
-		
+
 		$note	= (object) array();
 		$columns	= array_merge( $model->getColumns(), array( 'tags', 'link_url', 'link_title' ) );
 		foreach( $columns as $column )
 			$note->$column	= $request->get( $column );
 		$this->addData( 'note', $note );
 	}
-	
+
 	public function addLink( $noteId, $tagId = NULL ){
 		$request			= $this->env->getRequest();
 		$logic				= new Logic_Note( $this->env );
@@ -106,7 +107,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		if( $request->get( 'save' ) ){
 			$data		= array(
 				'title'		=> $request->get( 'note_title' ),
-				'content'	=> $request->get( 'note_content' )
+				'content'	=> $request->get( 'note_content' ),
+				'modifiedAt'	=> time(),
 			);
 			if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( $words->msgNoTitle );
@@ -138,6 +140,13 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$session	= $this->env->getSession();
 		$tags		= $session->get( 'filter_notes_tags' );
 		$query		= $session->get( 'filter_notes_term');
+		$order		= $session->get( 'filter_notes_order' );
+		$direction	= $session->get( 'filter_notes_direction' );
+
+		if( !$order || !$direction ){
+			$order		= 'modifiedAt';
+			$direction	= 'DESC';
+		}
 
 		if( $request->has( 'filter_query' ) )
 			$query	= trim( $request->get( 'filter_query' ) );
@@ -164,7 +173,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 		$session->set( 'filter_notes_term', $query );
 		$session->set( 'filter_notes_tags', $tags );
-		
+
 		$logic		= new Logic_Note( $this->env );
 		$notes	= array();
 		$offset	= (int) $session->get( 'filter_notes_offset' );
