@@ -51,7 +51,7 @@ foreach( $projects as $project ){
 	$cells[]	= UI_HTML_Tag::create( 'td', $project->modifiedAt ? date( 'j.m.Y H:i', $project->modifiedAt ) : '-' );
 	$rows[]		= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => 'project status'.$project->status ) );
 }
-$heads		= UI_HTML_Elements::TableHeads( array( 'Projekt', 'Teilnehmer', 'Status', 'erstellt', 'letzte Änderung' ) );
+$heads		= UI_HTML_Elements::TableHeads( array( 'Projekt', 'Teilnehmer', 'Status', 'erstellt', 'geändert' ) );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '40%', '15%', '15%', '15%', '15%' ) );
 $list		= UI_HTML_Tag::create( 'table', $colgroup.$heads.join( $rows ) );
 

@@ -46,9 +46,8 @@ return '
 	'.$panelAdd.'
 </div>
 <div class="column-left-25">
-	
+
 </div>
 <div class="column-clear"></div>
 ';
-
 ?>
