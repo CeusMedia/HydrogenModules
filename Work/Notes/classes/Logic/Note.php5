@@ -246,7 +246,7 @@ class Logic_Note{
 		if( !count( $relations ) )																	//  tag is unrelated now
 			$modelTag->remove( $tagId );															//  remove tag
 	}
-	
+
 	public function getTopNotes( $offset = 0, $limit = 10 ){
 
 		$model		= new Model_Note( $this->env );
@@ -255,7 +255,12 @@ class Logic_Note{
 			$offset	= 0;
 
 		$clock		= new Alg_Time_Clock();
-		$notes	= $model->getAll( NULL, array( 'title' => 'ASC' ), array( $offset, $limit ) );
+		$orders		= array(
+			'modifiedAt'	=> 'DESC',
+			'createdAt'	=> 'DESC',
+			'title'		=> 'ASC',
+		);
+		$notes	= $model->getAll( NULL, $orders, array( $offset, $limit ) );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		$time		= $clock->stop( 6, 0 );
@@ -266,12 +271,16 @@ class Logic_Note{
 		);
 	}
 
+	/**
+	 *	@todo		use of GREATEST only works for MySQL - improve this!
+	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
+	 */
 	public function searchNotes( $query, $tags = array(), $offset = 0, $limit = 10 ){
 		foreach( $tags as $tag )
 			$query	.= " ".$tag->content;
 		if( !trim( $query ) )
 			return;
-		
+
 		$terms 	= explode( ' ', trim( $query ) );
 
 		$likes	= array();
@@ -282,7 +291,8 @@ class Logic_Note{
 		$query	= '
 SELECT
 	DISTINCT(n.noteId),
-	n.*
+	n.*,
+	GREATEST(n.createdAt, n.modifiedAt) AS touchedAt
 FROM
 	'.$this->prefix.'notes as n LEFT OUTER JOIN
 	'.$this->prefix.'note_links as nl ON(n.noteId=nl.noteId) LEFT OUTER JOIN
@@ -291,6 +301,8 @@ FROM
 	'.$this->prefix.'tags as t ON(nt.tagId=t.tagId)
 WHERE
 	'.$likes.'
+ORDER BY
+	touchedAt DESC
 ';
 		$clock		= new Alg_Time_Clock();
 		$result		= $this->env->getDatabase()->query( $query );

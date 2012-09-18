@@ -24,7 +24,7 @@ foreach( $notes['list'] as $note ){
 		$listTags[$tag->content]	= UI_HTML_Tag::create( 'li', $button );
 	}
 	ksort( $listTags );
-	$spanAuthor	= '<span class="info user role role-1 role1">'.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</a></span>';
+	$spanAuthor	= '<span class="info user role role'.$note->user->roleId.'">'.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</a></span>';
 	$timestamp	= max( $note->createdAt, $note->modifiedAt, 0 );
 	$spanDate	= $timestamp ? '<span class="info date ">'.date( 'd.m.y', $timestamp ).'</span>' : '';
 	$spanRating	= '<span class="indicator rating">'.$indicator->build( 5, 7 ).'</span>';
