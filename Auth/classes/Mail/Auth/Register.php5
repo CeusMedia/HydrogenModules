@@ -5,11 +5,13 @@ class Mail_Auth_Register extends Mail_Abstract{
 		$words			= $this->env->getLanguage()->getWords( 'auth', 'mails' );
 		$data['config']	= $this->env->getConfig()->getAll();
 
-		$subject		= $words['mails']['onRegister'];
-		$body			= $this->view->loadContentFile( 'mail/auth/register', $data );
-
+		$subject	= $words['mails']['onRegister'];
+		$content	= $this->view->loadContentFile( 'mail/auth/register', $data );
+		$body		= new Net_Mail_Body( base64_encode( $content ), Net_Mail_Body::TYPE_PLAIN );
+		$body->setContentEncoding( "base64" );
+		
 		$this->mail->setSubject( $subject );
-		$this->mail->addBody( new Net_Mail_Body( $body, Net_Mail_Body::TYPE_PLAIN ) );
+		$this->mail->addBody( $body );
 	}
 }
 ?>
