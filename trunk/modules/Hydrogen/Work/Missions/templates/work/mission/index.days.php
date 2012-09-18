@@ -10,7 +10,7 @@ $labels	= array(
 	$h->renderDate( 3, '%2$s<br/>%1$s' ),
 	$h->renderDate( 4, '%2$s<br/>%1$s' ),
 	$h->renderDate( 5, '%2$s<br/>%1$s' ),
-	'<span>Zukunft</span><br/>&nbsp;',
+	'<br/><span>Zukunft</span>',
 );
 
 //  --  DAY TABLES  --  //
