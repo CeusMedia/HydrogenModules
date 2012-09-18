@@ -17,12 +17,13 @@ class View_Helper_MissionList{
 	protected $titleLength	= 80;
 	protected $baseUrl;
 	protected $today;
+	protected $timeOffset	= 14400;
 
 	public function __construct( $env, $missions, $words ){
 		$this->env		= $env;
 		$this->words	= $words;
 		
-		$this->today			= strtotime( date( 'Y-m-d', time() ) );
+		$this->today			= strtotime( date( 'Y-m-d', time() - $this->timeOffset ) );
 		foreach( $missions as $mission ){
 			$days	= ( strtotime( $mission->dayStart ) - $this->today ) / ( 24 * 60 * 60 );
 			$days	= max( min( $days , 6 ), 0 );
@@ -69,7 +70,7 @@ class View_Helper_MissionList{
 	}
 
 	public function renderDate( $daysInFuture = 0, $template = '%1$s, %2$s' ){
-		$then	= time() + $daysInFuture * 24 * 60 * 60;
+		$then	= time() - $this->timeOffset + ( $daysInFuture * 24 * 60 * 60 );
 		$day	= isset( $this->words['days'] ) ? $this->words['days'][date( "w", $then )] : '';
 		$date	= date( "j.n.", $then );
 		return sprintf( $template, $day, $date );

@@ -157,11 +157,21 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			}
 		}
 		$mission	= $this->model->get( $missionId );
+		$modelUser	= new Model_User( $this->env );
+		$mission->owner		= array_key_exists( $mission->ownerId, $this->userMap ) ? $this->userMap[$mission->ownerId] : NULL;
+		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
+		$missionUsers		= array( $mission->ownerId => $mission->owner );
+		if( $mission->workerId )
+			$missionUsers[$mission->workerId]	= $mission->worker;
+
 
 		if( $this->useProjects ){
 			$model		= new Model_Project( $this->env );
+			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
+				$missionUsers[$user->userId]	= $user;
+
 			$projects	= array();
 			foreach( $model->getAll() as $project )
 				$projects[$project->projectId]	= $project;
@@ -173,7 +183,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$userProjects	= $model->getAllByIndex( 'userId', $session->get( 'userId' ) );
 			}
 			$this->addData( 'userProjects', $userProjects );
+
 		}
+		$this->addData( 'missionUsers', $missionUsers );
 
 		if( $this->useIssues ){
 			$this->env->getLanguage()->load( 'work/issue' );
