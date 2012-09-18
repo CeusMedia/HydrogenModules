@@ -79,12 +79,44 @@ $panelStatus	= '
 	</fieldset>
 </form>';
 
-$loggedAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
-$loggedAt		= $loggedAt->toPhrase( $env, TRUE );
-$activeAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
-$activeAt		= $activeAt->toPhrase( $env, TRUE );
-$createdAt		= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
-$createdAt		= $createdAt->toPhrase( $env, TRUE );
+$facts	= array();
+
+$createdAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
+$facts[]	= array(
+	'label'	=> 'registriert',
+	'value'	=> $createdAt->toPhrase( $env, TRUE )
+);
+if( $user->loggedAt ){
+	$loggedAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
+	$facts[]	= array(
+		'label'	=> 'zuletzt eingeloggt',
+		'value'	=> $loggedAt->toPhrase( $env, TRUE )
+	);
+}
+if( $user->activeAt ){
+	$activeAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
+	$facts[]	= array(
+		'label'	=> 'zuletzt aktiv',
+		'value'	=> $activeAt->toPhrase( $env, TRUE )
+	);
+}
+if( !empty( $projects ) ){
+	$list	= array();
+	foreach( $projects as $project ){
+		$url	= './manage/project/edit/'.$project->projectId;
+		$link	= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
+		$list[]	= UI_HTML_Tag::create( 'li', $link );
+	}
+	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
+	$facts[]	= array(
+		'label'	=> 'Projekte',
+		'value'	=> $projects
+	);
+}
+
+foreach( $facts as $nr => $fact )
+	$facts[$nr]	= UI_HTML_Tag::create( 'dt', $fact['label'] ).UI_HTML_Tag::create( 'dd', $fact['value'] );
+$facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
 
 $panelInfo	= '
 <fieldset>
@@ -96,14 +128,7 @@ $panelInfo	= '
 		<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
 	</dl>
 	<hr>
-	<dl>
-		<dt>registriert</dt>
-		<dd>'.$createdAt.'</dd>
-		<dt>zuletzt eingeloggt</dt>
-		<dd>'.$loggedAt.'</dd>
-		<dt>zuletzt aktiv</dt>
-		<dd>'.$activeAt.'</dd>
-	</dl>
+	'.$facts.'
 </fieldset>
 ';
 
