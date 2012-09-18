@@ -201,6 +201,11 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
+
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			$modelProject	= new Model_Project( $this->env );
+			$this->addData( 'projects', $modelProject->getUserProjects( $userId ) );
+		}
 	}
 
 	public function filter( $mode = NULL )
