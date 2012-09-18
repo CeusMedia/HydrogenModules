@@ -181,6 +181,7 @@ class View_Helper_ContentConverter{
 			"/__(.+)__/U"			=> "<u>\\1</u>",
 			"/>>(.+)<</U"			=> "<small>\\1</small>\n",
 			"/<<(.+)>>/U"			=> "<big>\\1</big>\n",
+			"/--(.+)--/U"			=> "<strike>\\1</strike>\n",
 		);
 		foreach( $converters as $key => $value )
 			$content	= preg_replace( $key, $value, $content );
