@@ -111,10 +111,12 @@ class View_Helper_MissionList{
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
 		if( $days ){
 			$url		= $baseUrl.'?date='.urlencode( '-1' );
-			$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['left'], 'tiny' );
+			$title		= $this->words['list-actions']['moveLeft'];
+			$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['left'], 'tiny', NULL, NULL, $title );
 		}
 		$url		= $baseUrl.'?date='.urlencode( '+1' );
-		$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['right'], 'tiny' );
+		$title		= $this->words['list-actions']['moveRight'];
+		$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['right'], 'tiny', NULL, NULL, $title );
 		return join( '', $buttons );
 	}
 
