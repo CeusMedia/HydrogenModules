@@ -222,7 +222,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					$data['pak']		= $pak;
 					$data['password']	= $password;
 					$mail		= new Mail_Auth_Register( $this->env, $data );
-					$mail->sendToAddress( $email );
+					$mail->sendTo( $modelUser->get( $userId ) );
 					$this->messenger->noteNotice( $words->msgNoticeConfirm );
 					$this->restart( './auth/confirm' );
 				}
