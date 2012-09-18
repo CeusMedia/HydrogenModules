@@ -18,7 +18,7 @@ foreach( $projectUsers as $user ){
 	$class	= 'role role'.$user->roleId;
 	$label	= UI_HTML_Tag::create( 'span', $user->username, array( 'class' => $class ) );
 	if( $canEditUsers ){
-		$url	= './manage/user/edit/'.$user->userId;
+		$url	= './admin/user/edit/'.$user->userId;
 		$label	= UI_HTML_Tag::create( 'a', $user->username, array( 'href' => $url, 'class' => $class ) );
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;

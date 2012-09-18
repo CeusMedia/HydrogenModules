@@ -16,8 +16,8 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 $optStatus		= join( '', $optStatus );
 
 
-$buttonFilter	= UI_HTML_Elements::Button( 'filter', $words['filter']['buttonFilter'], 'button filter' );
-$buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', $words['filter']['buttonReset'], 'button reset' );
+$buttonFilter	= UI_HTML_Elements::Button( 'filter', $words['filter']['buttonFilter'], 'button filter add' );
+$buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', $words['filter']['buttonReset'], 'button filter reset remove' );
 
 $panelFilter	= '
 	<form name="" action="./manage/project/filter" method="post">
