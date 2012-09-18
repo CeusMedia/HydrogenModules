@@ -4,6 +4,7 @@ Sie haben sich mit folgenden Zugangsdaten registriert:
 Benutzername: <%username%>
 Passwort: <%password%>
 E-Mail: <%?email%>
+Bestätigungscode: <%pak%>
 
 Das Konto wird aktiviert, wenn Sie auf den folgenden Link klicken:
 <%config.app.base.url%>auth/confirm/?confirm_code=<%pak%>
