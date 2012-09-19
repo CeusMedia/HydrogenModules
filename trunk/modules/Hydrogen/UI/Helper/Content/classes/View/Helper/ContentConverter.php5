@@ -179,9 +179,9 @@ class View_Helper_ContentConverter{
 			"/([^:])\*\*(.+)\*\*/U"	=> "\\1<b>\\2</b>",
 			"/([^:])\/\/(.+)\/\//U"	=> "\\1<em>\\2</em>",
 			"/__(.+)__/U"			=> "<u>\\1</u>",
-			"/>>(.+)<</U"			=> "<small>\\1</small>\n",
-			"/<<(.+)>>/U"			=> "<big>\\1</big>\n",
-			"/--(.+)--/U"			=> "<strike>\\1</strike>\n",
+			"/>>(.+)<</U"			=> "<small>\\1</small>",
+			"/<<(.+)>>/U"			=> "<big>\\1</big>",
+			"/--(.+)--/U"			=> "<strike>\\1</strike>",
 		);
 		foreach( $converters as $key => $value )
 			$content	= preg_replace( $key, $value, $content );
