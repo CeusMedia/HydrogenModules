@@ -109,6 +109,7 @@ $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 return '
 <script>
 var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
+$(document).ready(function(){$("#input_content").focus()});
 </script>
 <div class="column-right-30">
 	'.$panelInfo.'
@@ -120,3 +121,4 @@ var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
 ';
 
 ?>
+
