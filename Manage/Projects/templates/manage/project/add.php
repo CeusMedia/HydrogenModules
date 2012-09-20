@@ -14,7 +14,7 @@ $optStatus		= join( '', $optStatus );
 $panelAdd		= '
 <form name="" action="./manage/project/add" method="post">
 	<fieldset>
-		<legend>'.$words['add']['legend'].'</legend>
+		<legend class="icon add">'.$words['add']['legend'].'</legend>
 		<ul class="input">
 			<li>
 				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
