@@ -78,13 +78,19 @@ olist>
 - bonus - Coupon-Code schicken
 <olist
 ###Fehlt noch###
-list>
+ulist>
+- Relationen <cite>Auth</cite>, <cite>UI:Helper:Content</cite>
 - Integration <cite>Invite-Code</cite> => <cite>Auth</cite>
+- Umsetzung der Modulkonfiguration
+- Project-Join @ <cite>Auth::register</cite>
 - Controller ::cancel
 - Helper für <cite>Manage:My:User</cite>
 - Template für <cite>promote</cite> Modus
 - Locale <cite>en/invite</cite>
 - CSS >>(aus Template <cite>index</cite>)<< auslagern
+<ulist
+###Nice to have###
+list>
 - Modus <cite>bonus</cite> 
 - Einlade-Limit pro Monat >>(hardlimit)<<
 - Limit pro Benutzer pro Monat  >>(softlimit)<<
