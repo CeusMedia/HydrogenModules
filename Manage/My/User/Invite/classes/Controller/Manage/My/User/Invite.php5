@@ -13,27 +13,41 @@ class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 		$this->model		= new Model_User_Invite( $this->env );
 	}
 	
+	public function cancel( $userInviteId ){
+		$this->model->setStatus( $userInviteId, -2 );
+		$this->restart( NULL, TRUE );
+	}
+	
 	public function index(){
+		$config		= $this->env->getConfig();
 		$invites	= (object) array(
 			'codes'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 0 ) ),
 			'open'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 1 ) ),
 			'done'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 2 ) ),
+			'all'	=> $this->model->getAllByIndices( array( 'type' => 1 ) ),
 		);
-		$this->addData( 'invitesCode', $invites );
+		$promotes	= (object) array(
+			'open'	=> $this->model->getAllByIndices( array( 'type' => 0, 'status' => 1 ) ),
+			'done'	=> $this->model->getAllByIndices( array( 'type' => 0, 'status' => 2 ) ),
+		);
+		$this->addData( 'daysValid', $config->get( 'module.manage_my_user_invite.days.valid' ) );
+		$this->addData( 'invites', $invites );
 	}
 
 	public function invite(){
-		$words	= (object) $this->getWords( 'invite' );
+		$userId		= $this->env->getSession()->get( 'userId' );
+		$words		= (object) $this->getWords( 'invite' );
 		if( $this->env->getRequest()->get( 'send' ) ){
 			$email		= $this->request->get( 'email' );
 			$subject	= $this->request->get( 'subject' );
 			$message	= $this->request->get( 'message' );
 
-			$userId	= $this->env->getSession()->get( 'userId' );
-			$code	= $this->model->generateInviteCode( $userId );
+			do $code	= $this->model->generateInviteCode( $userId );								//  generate invite code
+			while( $this->model->countByIndex( 'code', $code ) );									//  until it is unique (not used yet)
 
 			$data	= array(
 				'inviterId'	=> $userId,
+				'projectId'	=> (int) $this->request->get( 'projectId' ),
 				'type'		=> 1,
 				'status'	=> 1,
 				'code'		=> $code,
@@ -44,6 +58,8 @@ class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 			$this->env->getMessenger()->noteSuccess( $words->msgSuccess, $email );
 			$this->restart( NULL, TRUE );
 		}
+		$modelUser	= new Model_User( $this->env );
+		$this->addData( 'user', $modelUser->get( $userId ) );
 	}
 
 	public function promote(){
