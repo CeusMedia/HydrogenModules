@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage My User Invites</title>
+	<description>Management for user invitations.</description>
+	<version>0.1</version>
+	<category>Management</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/My/User/Invite.php5</class>
+		<class>Model/User/Invite.php5</class>
+		<class>View/Manage/My/User/Invite.php5</class>
+		<template>manage/my/user/invite/index.php</template>
+		<template>manage/my/user/invite/invite.php</template>
+		<template>manage/my/user/invite/promote.php</template>
+		<locale>de/manage/my/user/invite.ini</locale>
+		<locale>en/manage/my/user/invite.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Auth</needs>
+	</relations>
+	<link path="manage/my/user/invite" access="inside" xml:lang="de">Einladungen</link>
+	<link path="manage/my/user/invite" access="inside" xml:lang="en">Invitations</link>
+</module>
