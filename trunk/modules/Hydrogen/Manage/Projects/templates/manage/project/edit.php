@@ -37,27 +37,27 @@ foreach( $users as $user )
 $optUser	= UI_HTML_Elements::Options( $optUser );
 
 
-if( isset( $missions ) ){
+$facts	= array();
+if( isset( $missions ) && count( $missions ) ){
 	$url	= './work/mission/filter?projects[]='.$project->projectId;
-	$button	= UI_HTML_Elements::LinkButton( $url, 'anzeigen', 'button filter' );
-	$label	= count( $missions ).'&nbsp;'.$button;
-	$data[]	= UI_HTML_Tag::create( 'dt', 'Aufgaben' ).UI_HTML_Tag::create( 'dd', $label );
+	$label	= UI_HTML_Tag::create( 'a', count( $missions ), array( 'href' => $url ) );
+	$facts[]	= UI_HTML_Tag::create( 'dt', 'Aufgaben' ).UI_HTML_Tag::create( 'dd', $label );
 }
 
 if( isset( $issues ) ){
 	$url	= './work/issue/filter?projects[]='.$project->projectId;
 	$button	= UI_HTML_Elements::LinkButton( $url, 'anzeigen', 'button filter' );
 	$label	= count( $missions ).'&nbsp;'.$button;
-	$data[]	= UI_HTML_Tag::create( 'dt', 'Probleme' ).UI_HTML_Tag::create( 'dd', $label );
+	$facts[]	= UI_HTML_Tag::create( 'dt', 'Probleme' ).UI_HTML_Tag::create( 'dd', $label );
 }
 
 $panelInfo	= '';
-if( $data ){
+if( $facts ){
 	$panelInfo	= '
 <fieldset>
 	<legend class="icon info">Informationen</legend>
 	<dl>
-		'.join( $data ).'
+		'.join( $facts ).'
 	</dl>
 </fieldset>
 ';
@@ -83,7 +83,7 @@ $panelUsers	= '
 $panelEdit	= '
 <form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 	<fieldset>
-		<legend>'.$words['add']['legend'].'</legend>
+		<legend class="icon edit">'.$words['edit']['legend'].'</legend>
 		<ul class="input">
 			<li>
 				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
@@ -103,8 +103,8 @@ $panelEdit	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/project', $words['add']['buttonCancel'], 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'save', $words['add']['buttonSave'], 'button add' ).'
+			'.UI_HTML_Elements::LinkButton( './manage/project', $words['edit']['buttonCancel'], 'button cancel' ).'
+			'.UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add' ).'
 		</div>
 	</fieldset>
 </form>
