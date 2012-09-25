@@ -104,37 +104,43 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				
 			}
 			catch( Exception_Logic $e ){
-				$subject	= $e->getSubject();
 				if( $e->getCode() !== 2 )
 					$subject	= array( $e->getSubject() );
+				else
+					$subject	= array_merge( $e->getSubject(), array_fill( 0, 2, NULL ) );
 					
 				foreach( $subject as $exception ){
-					list( $s0, $s1 )	= (array) $exception->getSubject();
-					switch( $exception->getCode() ){
-						case 20:
-							$messenger->noteError( $words->resourceMissing, $s0 );
-							break;
-						case 21:
-							$messenger->noteError( $words->resourceNotReadable, $s0 );
-							break;
-						case 22:
-							$messenger->noteError( $words->resourceNotExecutable, $s0 );
-							break;
-						case 30:
-							$messenger->noteError( $words->pathNotCreatable, $s0 );
-							break;
-						case 31:
-							$messenger->noteError( $words->targetExisting, $s0 );
-							break;
-						case 40:
-							$messenger->noteError( $words->copyFailed, $s0, $s1 );
-							break;
-						case 50:
-							$messenger->noteError( $words->linkFailed, $s0, $s1 );
-							break;
-						default:
-							$messenger->noteFailure( 'Unbekannter Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
-							break;
+					if( is_string( $exception ) ){
+						$messenger->noteFailure( 'Unbekannter Fehler: '.$exception );
+					}
+					else if( $exception instanceof Exception ){
+						list( $s0, $s1 )	= (array) $exception->getSubject();
+						switch( $exception->getCode() ){
+							case 20:
+								$messenger->noteError( $words->resourceMissing, $s0 );
+								break;
+							case 21:
+								$messenger->noteError( $words->resourceNotReadable, $s0 );
+								break;
+							case 22:
+								$messenger->noteError( $words->resourceNotExecutable, $s0 );
+								break;
+							case 30:
+								$messenger->noteError( $words->pathNotCreatable, $s0 );
+								break;
+							case 31:
+								$messenger->noteError( $words->targetExisting, $s0 );
+								break;
+							case 40:
+								$messenger->noteError( $words->copyFailed, $s0, $s1 );
+								break;
+							case 50:
+								$messenger->noteError( $words->linkFailed, $s0, $s1 );
+								break;
+							default:
+								$messenger->noteFailure( 'Unbekannter Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
+								break;
+						}
 					}
 				}
 			}
