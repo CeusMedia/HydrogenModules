@@ -275,7 +275,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
+			$users[]	= $issue->reporterId;
+			$users[]	= $issue->managerId;
+			foreach( $issues[$nr]->notes as $note )
+				$users[]	= $note->userId;
+			foreach( $issues[$nr]->changes as $change )
+				$users[]	= $change->userId;
 		}
+		
 		$this->addData( 'page', $page );	
 		$this->addData( 'total', $modelIssue->count() );	
 		$this->addData( 'number', $modelIssue->count( $filters ) );	
@@ -286,9 +293,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'issues', $issues );
 		$this->addData( 'projects', $this->getUserProjects() );
 
-
 		$users	= array();
-		foreach( $modelUser->getAll() as $user )
+		foreach( $modelUser->getAll( array( 'userId' => array_unique( $users ) ) ) as $user )
 			$users[$user->userId]	= $user;
 
 		$this->addData( 'users', $users );
