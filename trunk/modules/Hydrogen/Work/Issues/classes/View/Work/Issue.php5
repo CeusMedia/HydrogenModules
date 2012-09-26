@@ -41,7 +41,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 			$config->getAll( 'module.work_issues.graph.all.' ),
 			$config->getAll( 'module.work_issues.graph.'.$type.'.' )
 		);
-	
+
 		$statistics		= $data[$type];
 		
 		$data	= array();
