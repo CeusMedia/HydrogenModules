@@ -49,12 +49,10 @@ foreach( $issue->notes as $note ){
 		$manager	= '<a href="./manage/user/edit/'.$note->user->userId.'">'.$note->user->username.'</a>';
 		$manager	= '<span class="role role'.$note->user->roleId.'">'.$manager.'</span>';
 	}
-	
+
 	$noteText	= nl2br( $note->note );
-	if( $env->getModules()->has( 'UI_Helper_Content' ) ){
-		$helper	= new View_Helper_ContentConverter();
-		$noteText	= $helper->convert( $note->note );
-	}
+	if( $env->getModules()->has( 'UI_Helper_Content' ) )
+		$noteText	= View_Helper_ContentConverter::render( $env, $note->note );
 
 	$content	= '
 <div id="issue-change-list-changes">
