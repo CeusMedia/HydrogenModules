@@ -71,11 +71,10 @@ foreach( $issue->notes as $note ){
 	</dl>
 </div>
 <div id="issue-change-list-note">
-	<div class="issue-note-content">'.( $note->note ? $noteText : '<em><small>Kein Kommentar.</small></em>' ).'</div>
+	<div class="issue-note-content">'.( $note->note ? $noteText : '<em><small>Kein Kommentar.</small></em>' ).'<br/></div>
 </div>
-<hr style="clear: left"/>
-';
-	
+<div class="column-clear"></div>
+<hr/>';
 	
 	$item	= UI_HTML_Tag::create( 'li', $content, array( 'class' => 'issue-note' ) );
 	$list[]	= $item;

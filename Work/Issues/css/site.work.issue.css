@@ -146,8 +146,9 @@
 li.issue-note {
 	clear: left;
 	margin-top: 5px;
-	border-top: 1px solid #DFDFDF;
-	padding: 5px 0px 0px 0px;
+	margin-bottom: 10px;
+/*	border-top: 1px solid #DFDFDF;
+*/	padding: 5px 0px 0px 0px;
 	}
 	
 .issue-note-date {

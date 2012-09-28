@@ -1,13 +1,11 @@
 <?php
 
-$modelIssueChange	= new Model_Issue_Change( $env );
 $changers	= array();
-$changes	= $modelIssueChange->getAllByIndex( 'issueId', $issue->issueId );
-foreach( $changes as $change ){
-	if( $change->userId )
-		if( !array_key_exists( $change->userId, $changers ) )
-			$changers[$change->userId]	= $users[$change->userId];
-}
+foreach( $issue->notes as $note )
+	foreach( $note->changes as $change )
+		if( $change->userId )
+			if( !array_key_exists( $change->userId, $changers ) )
+				$changers[$change->userId]	= $change->user;
 
 foreach( $changers as $userId => $changer ){
 	$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
