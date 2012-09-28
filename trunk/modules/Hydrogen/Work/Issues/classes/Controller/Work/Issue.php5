@@ -227,7 +227,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$limit	= $limit > 0 ? $limit : 10;
 		if( $order && $dir )
 			$orders	= array( $order => $dir );
-		
+
 		$dir	= 'DESC';
 
 		$modelIssue		= new Model_Issue( $this->env );
@@ -241,7 +241,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			2	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 2 ) ) ),
 			3	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 3 ) ) ),
 		);
-		
+
 		$numberStates	= array(
 			0	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 0 ) ) ),
 			1	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 1 ) ) ),
@@ -251,7 +251,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			5	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 5 ) ) ),
 			6	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 6 ) ) ),
 		);
-		
+
 		$numberPriorities	= array(
 			0	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 0 ) ) ),
 			1	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 1 ) ) ),
@@ -261,29 +261,30 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			5	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 5 ) ) ),
 			6	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 6 ) ) ),
 		);
-		
+
 		if( $this->useProjects ){
 			$numberProjects	= array();
 			foreach( $this->getUserProjects() as $project )
 				$numberProjects[$project->projectId]	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
 			$this->addData( 'numberProjects', $numberProjects );
 		}
-		
+
+		$userIds	= array();
 		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
 			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
-			$usersIds[]	= $issue->reporterId;
-			$usersIds[]	= $issue->managerId;
+			$userIds[]	= $issue->reporterId;
+			$userIds[]	= $issue->managerId;
 			foreach( $issues[$nr]->notes as $note )
-				$usersIds[]	= $note->userId;
+				$userIds[]	= $note->userId;
 			foreach( $issues[$nr]->changes as $change )
-				$usersIds[]	= $change->userId;
+				$userIds[]	= $change->userId;
 		}
-		
-		$this->addData( 'page', $page );	
-		$this->addData( 'total', $modelIssue->count() );	
-		$this->addData( 'number', $modelIssue->count( $filters ) );	
+
+		$this->addData( 'page', $page );
+		$this->addData( 'total', $modelIssue->count() );
+		$this->addData( 'number', $modelIssue->count( $filters ) );
 		$this->addData( 'numberTypes', $numberTypes );
 		$this->addData( 'numberStates', $numberStates );
 		$this->addData( 'numberPriorities', $numberPriorities );
@@ -291,10 +292,10 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'issues', $issues );
 		$this->addData( 'projects', $this->getUserProjects() );
 
-		
 		$users	= array();
-		foreach( $modelUser->getAll( array( 'userId' => array_unique( $usersIds ) ) ) as $user )
-			$users[$user->userId]	= $user;
+		if( $userIds )
+			foreach( $modelUser->getAll( array( 'userId' => array_unique( $userIds ) ) ) as $user )
+				$users[$user->userId]	= $user;
 
 		$this->addData( 'users', $users );
 	}
