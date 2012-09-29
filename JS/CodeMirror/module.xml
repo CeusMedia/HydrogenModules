@@ -2,14 +2,14 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>2.25</version>
+	<version>2.34</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
-		<script load="auto" source="lib">CodeMirror/2.25/lib/codemirror.js</script>
-		<style load="auto" source="scripts-lib">CodeMirror/2.25/lib/codemirror.css</style>
+		<script load="auto" source="lib">CodeMirror/2.34/lib/codemirror.js</script>
+		<style load="auto" source="scripts-lib">CodeMirror/2.34/lib/codemirror.css</style>
 		<style load="auto" source="theme">codemirror.css</style>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
@@ -20,13 +20,12 @@
 	<config protected="no" name="option.indentWithTabs" type="boolean">yes</config>
 	<config protected="no" name="option.indentUnit" type="integer">4</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$pathJsLib	= $env->getConfig()->get( 'path.js.lib' );
+		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 //		$config		= $env->getConfig()->getAll( 'module.js_codemirror.option.' );
 		$modes		= explode( ',', $module->config['modes']->value );
 		foreach( $modes as $mode )
-			$context->js->addUrl( $pathJsLib.'CodeMirror/2.25/mode/'.$mode.'/'.$mode.'.js' );
-		$script	= '<!--
-$("fieldset").each(function(){$(this).width($(this).width());});			//  fix for codemirror in fieldsets
+			$context->js->addUrl( $pathJsLib.'CodeMirror/2.34/mode/'.$mode.'/'.$mode.'.js' );
+		$script	= '
 $("textarea.CodeMirror").each(function(){									//  iterate found text areas
 	$(this).data("codemirror", CodeMirror.fromTextArea($(this).get(0), {	//  create an instance and store it on its related textarea
 		gutter: config.module_js_codemirror_option_lineNumbers && !config.module_js_codemirror_option_lineWrapping,
@@ -35,9 +34,10 @@ $("textarea.CodeMirror").each(function(){									//  iterate found text areas
 		indentUnit: config.module_js_codemirror_option_indentUnit,
 		lineWrapping: config.module_js_codemirror_option_lineWrapping,
 		indentWithTabs: config.module_js_codemirror_option_indentWithTabs
-	}));		
+	}));
+	$(this).data("codemirror").setSize($(this).width(),$(this).height());	//  set same size as textarea
 })
-//-->';
+';
 		$context->js->addScript( '$(document).ready(function(){'.$script.'});' );
 	]]></hook>
 </module>
