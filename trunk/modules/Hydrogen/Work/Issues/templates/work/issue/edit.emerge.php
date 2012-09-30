@@ -63,7 +63,7 @@ $(document).ready(function(){
 			</li>
 			<li class="column-clear">
 				<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'max', 'rows' => 13 ) ).'
+				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'max CodeMirror', 'rows' => 8 ) ).'
 			</li>
 		</ul>
 		<div class="buttonbar">
