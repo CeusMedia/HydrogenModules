@@ -17,6 +17,8 @@
 	<config protected="yes" type="float" name="max">20</config>
 	<config protected="yes" type="integer" name="retryAfter">0</config>
 	<relations/>
+	<link access="public" path="system/load/ajaxRenderIndicator"></link>
+	<link access="inside" path="system/load/ajaxGetLoad"></link>
 	<hook type="resource" resource="Env" event="init"><![CDATA[
 $cores	= $env->getConfig()->get( 'module.server_system_load.cores' );								//  get number of cpu cores from module config
 $max	= $env->getConfig()->get( 'module.server_system_load.max' );								//  get maximum load from module config
