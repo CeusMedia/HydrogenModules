@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server Load</title>
+	<description></description>
+	<category>System</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Server/System/Load.php5</class>
+		<class>View/Server/System/Load.php5</class>
+		<locale>de/html/error/503.html</locale>
+		<locale>en/html/error/503.html</locale>
+	</files>
+	<config protected="yes" type="integer" name="cores">1</config>
+	<relations></relations>
+	<link access="public" path="system/load/error503"></link>
+	<hook type="resource" resource="Env" event="initModules"><![CDATA[
+$max	= $env->getConfig()->get( 'module.server_system_load.max' );
+if( $max > 0 && array_shift( sys_getloadavg() ) > $max ){
+	header( 'HTTP/1.1 503 Too busy, try again later' );
+	$language	= $env->getLanguage()->getLanguage();
+	$fileName	= $env->getConfig()->get( 'path.locales' ).$language.'/html/error/503.html';
+	$message	= '<h1>HTTP Error 503 - Too Busy</h1><p>Due to heavy load this application is temporarily not available.<br/>Please try again later.</p>';
+	if( file_exists( $fileName ) )
+		$message	= File_Reader::load( $fileName );
+	print( $message );
+	exit;
+}
+]]></hook>
+</module>
+
