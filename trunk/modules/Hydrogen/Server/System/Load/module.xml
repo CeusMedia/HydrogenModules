@@ -19,6 +19,7 @@
 	<relations/>
 	<link access="public" path="system/load/ajaxRenderIndicator"></link>
 	<link access="inside" path="system/load/ajaxGetLoad"></link>
+	<link access="inside" path="system/load/ajaxGetLoads"></link>
 	<hook type="resource" resource="Env" event="init"><![CDATA[
 $cores	= $env->getConfig()->get( 'module.server_system_load.cores' );								//  get number of cpu cores from module config
 $max	= $env->getConfig()->get( 'module.server_system_load.max' );								//  get maximum load from module config
