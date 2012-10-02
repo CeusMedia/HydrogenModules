@@ -81,7 +81,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( './manage/project/edit/'.$projectId );
 		}
-			
+
 		$model		= new Model_Project_User( $this->env );
 		$modelUser	= new Model_User( $this->env );
 		$relations	= $model->getAllByIndex( 'projectId', $projectId );
@@ -91,8 +91,12 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$users[$user->userId]	= $user;
 
 		$projectUsers	= array();
-		foreach( $relations as $relation )
-			$projectUsers[$relation->userId]	= $users[$relation->userId];
+		foreach( $relations as $relation ){
+			if( empty( $users[$relation->userId] ) )
+				$model->removeByIndices( array( 'projectId' => $projectId, 'userId' => $relation->userId ) );
+			else
+				$projectUsers[$relation->userId]	= $users[$relation->userId];
+		}
 
 		if( $this->env->getModules()->has( 'Work_Missions' ) ){
 			$modelMission	= new Model_Mission( $this->env );
