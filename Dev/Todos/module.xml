@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>Dev: Todos</title>
+	<description>.</description>
+	<version>0.1</version>
+	<category>Development</category>
+	<files>
+		<class>Controller/Dev/Todo.php5</class>
+		<class>View/Dev/Todo.php5</class>
+<!--		<locale>de/dev/todo.ini</locale>-->
+		<template>dev/todo/index.php</template>
+<!--		<style>site.dev.scaffold.css</style>-->
+	</files>
+	<relations/>
+	<link path="dev/todo">Todos</link>
+</module>
