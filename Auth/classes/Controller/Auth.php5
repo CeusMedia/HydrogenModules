@@ -21,6 +21,17 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	public function ajaxRefreshSession(){
 		exit;
 	}
+
+	public function ajaxUsernameExists(){
+		$username	= trim( $this->request->get( 'username' ) );
+		$result		= FALSE;
+		if( strlen( $username ) ){
+			$modelUser		= new Model_User( $this->env );
+			$result			= (bool) $modelUser->countByIndex( 'username', $username );
+		}
+		print( json_encode( $result ) );
+		exit;
+	}
 	
 	public function confirm(){
 		$words		= (object) $this->getWords( 'confirm' );
