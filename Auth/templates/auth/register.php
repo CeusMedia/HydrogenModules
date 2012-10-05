@@ -57,7 +57,7 @@ $(document).ready(function(){
 		var lenMax = config.module_users_name_length_max;
 		var length = $(this).val().length;
 		if($(this).data("last") != $(this).val()){
-			$(this).data("last") = $(this).val();
+			$(this).data("last", $(this).val());
 			$(this).removeClass("state-good").removeClass("state-bad");
 			if(length && lenMin <= length && length <= lenMax ){
 				$.ajax({
