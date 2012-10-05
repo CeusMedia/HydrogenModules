@@ -56,18 +56,21 @@ $(document).ready(function(){
 		var lenMin = config.module_users_name_length_min;
 		var lenMax = config.module_users_name_length_max;
 		var length = $(this).val().length;
-		$(this).removeClass("state-good").removeClass("state-bad");
-		if(length && lenMin <= length && length <= lenMax ){
-			$.ajax({
-				url: "./auth/ajaxUsernameExists",
-				method: "post",
-				data: {username: $(this).val()},
-				dataType: "json",
-				context: this,
-				success: function(response){
-					$(this).addClass(response ? "state-bad" : "state-good");
-				}
-			});
+		if($(this).data("last") != $(this).val()){
+			$(this).data("last") = $(this).val();
+			$(this).removeClass("state-good").removeClass("state-bad");
+			if(length && lenMin <= length && length <= lenMax ){
+				$.ajax({
+					url: "./auth/ajaxUsernameExists",
+					method: "post",
+					data: {username: $(this).val()},
+					dataType: "json",
+					context: this,
+					success: function(response){
+						$(this).addClass(response ? "state-bad" : "state-good");
+					}
+				});
+			}
 		}
 		
 	});
