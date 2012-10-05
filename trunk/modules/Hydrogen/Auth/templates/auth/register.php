@@ -43,9 +43,34 @@ div.framed {
 	overflow: auto;
 	height: 200px;
 	}
+input.state-good {
+	background-color: #EFFFF7;
+	}
+input.state-bad {
+	background-color: #FFDFDF;
+	}
 </style>
 <script>
 $(document).ready(function(){
+	$("#input_username").keyup(function(){
+		var lenMin = config.module_users_name_length_min;
+		var lenMax = config.module_users_name_length_max;
+		var length = $(this).val().length;
+		$(this).removeClass("state-good").removeClass("state-bad");
+		if(length && lenMin <= length && length <= lenMax ){
+			$.ajax({
+				url: "./auth/ajaxUsernameExists",
+				method: "post",
+				data: {username: $(this).val()},
+				dataType: "json",
+				context: this,
+				success: function(response){
+					$(this).addClass(response ? "state-bad" : "state-good");
+				}
+			});
+		}
+		
+	});
 	if($("#input_accept_tac.mandatory").size()){
 		$("button.save").attr("disabled","disabled");
 		$("#input_accept_tac").change(function(){
@@ -62,11 +87,11 @@ $(document).ready(function(){
 	<ul class="input">
 		<li class="column-left-25">
 			<label for="input_username" class="mandatory">'.$w->labelUsername.'</label><br/>
-			<input type="text" name="username" id="input_username" class="max mandatory" value="'.$request->get( 'username' ).'"/>
+			<input type="text" name="username" id="input_username" class="max mandatory" autocomplete="off" value="'.$request->get( 'username' ).'"/>
 		</li>
 		<li class="column-left-25">
 			<label for="input_password" class="mandatory">'.$w->labelPassword.'</label><br/>
-			<input type="text" name="password" id="input_password" class="max mandatory" value=""/>
+			<input type="text" name="password" id="input_password" class="max mandatory" autocomplete="off" value=""/>
 		</li>
 		<li class="column-left-50">
 			<label for="input_email" class="'.$mandatoryEmail.'">'.$w->labelEmail.'</label><br/>

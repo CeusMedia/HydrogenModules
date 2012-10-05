@@ -58,5 +58,6 @@
 	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
 	<link rank="99" access="public" path="auth/ajaxIsAuthenticated"></link>
 	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
+	<link rank="99" access="public" path="auth/ajaxUsernameExists"></link>
 </module>
 

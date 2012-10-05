@@ -10,7 +10,7 @@ class Mail_Auth_Register extends Mail_Abstract{
 		$content	= $this->view->loadContentFile( 'mail/auth/register', $data );
 		$body		= new Net_Mail_Body( base64_encode( $content ), Net_Mail_Body::TYPE_PLAIN );
 		$body->setContentEncoding( "base64" );
-		
+
 		$this->mail->setSubject( $subject );
 		$this->mail->addBody( $body );
 	}
