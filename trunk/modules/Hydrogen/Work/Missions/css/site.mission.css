@@ -155,10 +155,13 @@ body.controller-work-mission.action-index #day-controls button.day.active {
 	border-width: 2px;
 	border-style: solid;
 	border-color: green;
-	background-color: #EFE;
+	background: #EFE;
 	color: #000;
 /*	color: #23738F;
 */	}
+body.controller-work-mission.action-index #day-controls button.day.active div.mission-number {
+	background-color: green;
+	}
 body.controller-work-mission.action-index #day-controls button.day.important {
 	width: 16%;
 	}
