@@ -6,7 +6,7 @@ if( !class_exists( "XHTML" ) )
 
 $optGender	= HTML::Options( $words['gender'], $user->gender );
 
-$this->env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
+$env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
 
 $script		= '
 $(document).ready(function(){
@@ -27,7 +27,7 @@ $(document).ready(function(){
 	}
 });
 ';
-$this->env->page->js->addScript( $script );
+$env->page->js->addScript( $script );
 
 /* TO BE USED LATER FOR STATUS INFO
 $indicator	= new UI_HTML_Indicator();
@@ -36,9 +36,9 @@ $ind1		= $indicator->build( 75, 100 );
 */
 
 //  --  PANEL: INFO  --  //
-$loggedAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->loggedAt, $this->env, TRUE );
-$activeAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->activeAt, $this->env, TRUE );
-$createdAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->createdAt, $this->env, TRUE );
+$loggedAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->loggedAt, $env, TRUE );
+$activeAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->activeAt, $env, TRUE );
+$createdAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->createdAt, $env, TRUE );
 
 $mapInfo	= array();
 if( $config->get( 'module.roles' ) )
@@ -174,13 +174,20 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 	)
 );
 
+$panelSettings	= '';
+if( $env->getModules()->has( 'Manage_My_User_Setting' ) ){
+	$helper			= new View_Helper_UserModuleSettings( $env, './manage/my/user' );
+	$panelSettings	= $helper->renderPanel( './manage/my/user' );
+}
+
 return /*UI_HTML_Tag::create( 'h2', $w->heading ).*/
 HTML::DivClass( 'column-right-33',
 	$panelInfo.
 	$panelPassword
 ).
 HTML::DivClass( 'column-left-66',
-	$panelEdit
+	$panelEdit.
+	$panelSettings
 ).
 HTML::DivClass( 'column-clear' );
 ?>
