@@ -33,18 +33,28 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function applyConfig(){
+	public function applyConfig( $userId = NULL, $hidePasswords = TRUE ){
 		$config		= $this->env->getConfig()->getAll();
-		$userId		= $this->env->getSession()->get( 'userId' );
+		if( $userId === NULL )
+			$userId		= $this->env->getSession()->get( 'userId' );
 		$model		= new Model_User_Setting( $this->env );
 
 		$settings	= $model->getAllByIndex( 'userId', $userId );
 		foreach( $settings as $setting ){
 			$key	= 'module.'.strtolower( $setting->moduleId ).'.'.$setting->key;
 			$value	= $this->castValue( gettype( $config[$key] ), $setting->value );
+			$config[$key]	= $value;
 		}
-		$config[$key]	= $value;
+		if( $hidePasswords )
+			foreach( $config as $key => $value )
+				if( preg_match( "/password/", $key ) )
+					$config[$key]	= (bool) $value;
 		return new ADT_List_Dictionary( $config );
+	}
+
+	public function applyConfigStatic( CMF_Hydrogen_Environment_Abstract $env, $userId = NULL, $hidePasswords = TRUE ){
+		$model	= new Model_User_Setting( $env );
+		return $model->applyConfig( $userId, $hidePasswords );
 	}
 
 	public function castValue( $type, $value ){
