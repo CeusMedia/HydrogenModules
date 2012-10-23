@@ -1,6 +1,6 @@
 <?php
 class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
-	
+
 	public function index(){
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$model		= new Model_User_Setting( $this->env );
@@ -16,13 +16,18 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 			'key'		=> $configKey
 		);
 		$setting	= $model->removeByIndices( $indices );											//  remove user setting
+		if( $this->env->getRequest()->get( 'from' ) )
+			$this->restart( $this->env->getRequest()->get( 'from' ) );
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
-	
+
 	public function update(){
 		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
+		$words		= (object) $this->getWords( 'update' );
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$model		= new Model_User_Setting( $this->env );
+		$count		= 0;
 		foreach( $this->env->getModules()->getAll() as $module ){									//  iterate modules
 			foreach( $module->config as $config ){													//  iterate module config pairs
 				if( $config->protected !== "user" )													//  config pair is not writable for user settings
@@ -46,6 +51,19 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 				else{
 					if( in_array( $config->type, array( 'bool', 'boolean' ) ) )						//  type of config value is boolean
 						$value	= (int) $value;														//  convert to integer for database
+					if( in_array( $config->type, array( 'integer', 'float' ) ) && $config->values ){	//  type of  config value is a number
+						if( preg_match( "/^([0-9]+)-([0-9]+)$/", trim( $config->values[0] ) ) ){	//  first (and hopefully only) value is a range (min-max)
+							$min	= (float) array_shift( explode( "-", $config->values[0] ) );
+							$max	= (float) array_pop( explode( "-", $config->values[0] ) );
+							if( $value < $min )
+								$messenger->noteError( $words->msgErrorNumberTooSmall );
+							if( $value > $max )
+								$messenger->noteError( $words->msgErrorNumberTooLarge );
+						}
+					}
+					if( $messenger->gotError() )
+						continue;
+					$count++;
 					if( $setting ){																	//  a user setting has been stored
 						$data	= array(															//  prepare data
 							'value'			=> $value,
@@ -66,6 +84,10 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 				}
 			}
 		}
+		if( $count )
+			$messenger->noteSuccess( $words->msgSuccess );
+		if( $request->get( 'from' ) )
+			$this->restart( $request->get( 'from' ) );
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
 }

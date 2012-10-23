@@ -1,0 +1,29 @@
+#manageMyUserModuleSettings tr.changed {
+	background-color: #DFFFDF; 
+	}
+#manageMyUserModuleSettings tr.modified {
+	background-color: #FFFFBF; 
+	}
+#manageMyUserModuleSettings legend.config {
+	background-image: url(http://img.int1a.net/famfamfam/silk/wrench.png);
+	}
+#manageMyUserModuleSettings table td {
+	vertical-align: text-bottom;
+	}
+#manageMyUserModuleSettings table td.label,
+#manageMyUserModuleSettings table td.input {
+	border-top: 1px solid #DFDFDF;
+	}
+#manageMyUserModuleSettings table td.label {
+	font-size: 0.9em;
+	}
+#manageMyUserModuleSettings table td.input {
+/*	text-align: right;
+*/	font-size: 1em;
+	}
+#manageMyUserModuleSettings table span.button-reset {
+	float: right;
+	}
+#manageMyUserModuleSettings span.suffix {
+	margin-left: 0.5em;
+	}
