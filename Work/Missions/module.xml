@@ -7,7 +7,7 @@ code>
 php job.php5 work-mission-mail-daily
 <code
 ]]></description>
-	<version>0.2</version>
+	<version>0.3</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian Würker</author>
@@ -40,6 +40,9 @@ php job.php5 work-mission-mail-daily
 		<supports type="module">Resource_Jobs</supports>
 		<supports type="module">Manage_Projects</supports>
 	</relations>
+	<config protected="user" type="boolean" name="mail.active">1</config>
+	<config protected="user" type="boolean" name="mail.html">1</config>
+	<config protected="user" type="integer" name="mail.hour">8</config>
 	<link xml:lang="de" access="acl" path="work/mission" rank="41">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission" rank="41">Missions</link>
 	<link access="inside" path="work/mission/ajaxSelectDay"></link>
