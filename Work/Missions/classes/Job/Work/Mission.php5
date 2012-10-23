@@ -20,13 +20,16 @@ class Job_Work_Mission extends Job_Abstract{
 	public function mailDaily(){
 		$modelUser		= new Model_User( $this->env );
 		$modelMission	= new Model_Mission( $this->env );
-
-		$count	= 0;
+		$config			= $this->env->getConfig();
+		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Setting' );
+		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
-//			IF USER HAS CONFIGURED TO RECEIVE THIS TYPE OF MAILS									//  @todo	kriss: implement mail configuration
-
 			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
+			if( $useSettings )
+				$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
+			if( !$config->get( 'module.work_mission.mail.active' ) )
+				continue;
 
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
 			$havings	= array(																	//  apply filters after grouping
