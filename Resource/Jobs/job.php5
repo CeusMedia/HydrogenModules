@@ -14,7 +14,12 @@ $modes		= array( 'dev', 'test' );
 
 if( class_exists( 'Environment' ) )
 	Jobber::$classEnvironment	= 'Environment';
-$jobber	= new Jobber();												//  start maintainer
-$jobber->loadJobs( $modes );
-$jobber->run( $request );
+try{
+	$jobber	= new Jobber();												//  start maintainer
+	$jobber->loadJobs( $modes );
+	$jobber->run( $request );
+}
+catch( Exception $e ) {
+	die( $e->getMessage() );
+}
 ?>
