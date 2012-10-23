@@ -11,7 +11,9 @@
 		<class>Controller/Manage/My/User/Setting.php5</class>
 		<class>Model/User/Setting.php5</class>
 		<class>View/Manage/My/User/Setting.php5</class>
+		<class>View/Helper/UserModuleSettings.php5</class>
 		<template>manage/my/user/setting/index.php</template>
+		<style load="auto">site.manage.my.user.settings</style>
 		<locale>de/manage/my/user/setting.ini</locale>
 		<locale>en/manage/my/user/setting.ini</locale>
 	</files>
