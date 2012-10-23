@@ -14,12 +14,13 @@ $modes		= array( 'dev', 'test' );
 
 if( class_exists( 'Environment' ) )
 	Jobber::$classEnvironment	= 'Environment';
+#CMF_Hydrogen_Environment_Web::$configFile       = "config/config.ini";
 try{
 	$jobber	= new Jobber();												//  start maintainer
 	$jobber->loadJobs( $modes );
 	$jobber->run( $request );
 }
-catch( Exception $e ) {
+catch( Exception $e ){
 	die( $e->getMessage() );
 }
 ?>
