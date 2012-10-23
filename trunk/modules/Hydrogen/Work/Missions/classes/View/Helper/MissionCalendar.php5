@@ -172,7 +172,7 @@ function setMonth(change){
 	document.location.href = "./?month="+month;
 }
 </script>
-<h2>Übersicht</h2>
+<!--<h2>Übersicht</h2>-->
 <div id="mission-calendar-control">
 	<button type="button" onclick="setMonth(-1)">&laquo;</button>
 	<button type="button" onclick="setMonth(0)">&Omicron;</button>
