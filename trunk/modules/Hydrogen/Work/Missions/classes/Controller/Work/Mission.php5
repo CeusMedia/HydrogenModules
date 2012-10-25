@@ -102,12 +102,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
 		if( preg_match( "/^[+-][0-9]+$/", $date ) ){
-			$day	= 24 * 60 * 60;
-			$sign	= substr( $date, 0, 1 );
-			$number	= substr( $date, 1 );
-			$date	= strtotime( $mission->dayStart );
-			$diff	= $sign == '+' ? $number * $day : -$number * $day;
-			$date	= date( 'Y-m-d', strtotime( $mission->dayStart ) + $diff );
+			$day	= 25 * 60 * 60;							//  24 hours + 1 hour to tolerate DST changes
+			$sign	= substr( $date, 0, 1 );					//  extract direction to move
+			$number	= substr( $date, 1 );						//  extract number of days to move
+			$date	= strtotime( $mission->dayStart );				//  convert current start date to timestamp
+			$isDST	= date( "I", $date );						//  is in DST (Daylight Saving Time)?
+			$diff	= $sign == '+' ? $number * $day : -$number * $day;		//  calculate difference to apply
+			$date	= date( 'Y-m-d', $date + $diff );				//  calculate new date
 		}
 		$data		= array( 'dayStart' => $date );
 		if( $mission->dayEnd ){
