@@ -38,6 +38,7 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 #		$this->initLanguage();																		//  setup language support
 		$this->initTracker();
 		$this->__onInit();
+		$this->dbc->query( 'SET NAMES "utf8"' );
 	}
 
 	public function get( $key ){
