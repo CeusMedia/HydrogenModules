@@ -17,7 +17,7 @@
 <!--	<config protected="yes" type="string" name="access.lazy"></config>-->
 <!--	<config protected="yes" type="string" name="access.charset"></config>-->
 	<config protected="yes" type="string" name="log.statements"></config>
-	<config protected="yes" type="string" name="log.errors"></config>
+	<config protected="yes" type="string" name="log.errors">db.error.log</config>
 	<config protected="yes" type="string" name="option.ATTR_ERRMODE">PDO::ERRMODE_EXCEPTION</config>
 	<config protected="yes" type="boolean" name="option.ATTR_PERSISTENT">yes</config>
 	<config protected="yes" type="string" name="option.ATTR_DEFAULT_FETCH_MODE">PDO::FETCH_OBJ</config>
