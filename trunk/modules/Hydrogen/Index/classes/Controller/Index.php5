@@ -6,7 +6,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 			$response->setStatus( 404 );
 #			$this->env->getMessenger()->noteError( '404' );
 		}
-		$userId         = $env->getSession()->get( 'userId' );
+		$userId         = $this->env->getSession()->get( 'userId' );
 		if( $userId ){
 			$model	= new Model_User( $this->env );
 			$this->addData( 'user', $model->get( $userId ) );
