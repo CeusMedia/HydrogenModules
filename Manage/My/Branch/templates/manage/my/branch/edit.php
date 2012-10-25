@@ -141,7 +141,6 @@ $panelAddImage	= 	HTML::Form( './manage/my/branch/addImage/'.$branch->branchId, 
 	)
 );
 
-
 return HTML::DivClass( 'column-left-60',
 #	UI_HTML_Tag::create( 'h2', $w->heading ).
 	$panelEdit.
@@ -153,5 +152,5 @@ HTML::DivClass( 'column-left-40',
 	$panelMap.
 	$text['info']
 ).
-HTML::DivClass( 'column-left' );
+HTML::DivClass( 'column-clear' );
 ?>
