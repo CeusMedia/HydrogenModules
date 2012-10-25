@@ -15,6 +15,8 @@ if( $limit && $total > $limit )
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }
 
+print_m($words['indexListHeads']);
+die;
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
@@ -67,13 +69,12 @@ return '
 	<legend class="users">'.$words['indexList']['legend'].' <small>('.$total.'/'.$all.')</small></legend>
 	<table id="users">
 		<colgroup>
-			<col width="31%"/>
-			<col width="12%"/>
-			<col width="14%"/>
-			<col width="10%"/>
-			<col width="11%"/>
-			<col width="11%"/>
-			<col width="11%"/>
+			<col width="25%"/>
+			<col width="15%"/>
+			<col width="15%"/>
+			<col width="15%"/>
+			<col width="15%"/>
+			<col width="15%"/>
 		</colgroup>
 		'.$rows.'
 	</table>
