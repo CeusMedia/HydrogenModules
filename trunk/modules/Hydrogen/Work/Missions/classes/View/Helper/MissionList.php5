@@ -17,13 +17,13 @@ class View_Helper_MissionList{
 	protected $titleLength	= 80;
 	protected $baseUrl;
 	protected $today;
-	protected $timeOffset	= 14400;
+	protected $pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
 
 	public function __construct( $env, $missions, $words ){
 		$this->env		= $env;
 		$this->words	= $words;
-		
-		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->timeOffset ) );
+		$this->logic	= new Logic_Mission( $env );
+		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		foreach( $missions as $mission ){															//  iterate missions
 			$diff	= $this->today->diff( new DateTime( $mission->dayStart ) );						//  get difference to today
 			$days	= $diff->invert ? -1 * $diff->days : $diff->days;								//  calculate days left
@@ -31,14 +31,13 @@ class View_Helper_MissionList{
 			$this->list[$days][]	= $mission;														//  assign mission to day list
 		}
 
-		$pathIcons		= 'http://img.int1a.net/famfamfam/silk/';
 		$this->icons	= array(
-			'up'		=> UI_HTML_Elements::Image( $pathIcons.'arrow_up.png', $words['filter-directions']['ASC'] ),
-			'down'		=> UI_HTML_Elements::Image( $pathIcons.'arrow_down.png', $words['filter-directions']['DESC'] ),
-			'right'		=> UI_HTML_Elements::Image( $pathIcons.'arrow_right.png', $words['list-actions']['moveRight'] ),
-			'left'		=> UI_HTML_Elements::Image( $pathIcons.'arrow_left.png', $words['list-actions']['moveLeft'] ),
-			'edit'		=> UI_HTML_Elements::Image( $pathIcons.'pencil.png', $words['list-actions']['edit'] ),
-			'remove'	=> UI_HTML_Elements::Image( $pathIcons.'bin_closed.png', $words['list-actions']['remove'] ),
+			'up'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_up.png', $words['filter-directions']['ASC'] ),
+			'down'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_down.png', $words['filter-directions']['DESC'] ),
+			'right'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_right.png', $words['list-actions']['moveRight'] ),
+			'left'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_left.png', $words['list-actions']['moveLeft'] ),
+			'edit'		=> UI_HTML_Elements::Image( $this->pathIcons.'pencil.png', $words['list-actions']['edit'] ),
+			'remove'	=> UI_HTML_Elements::Image( $this->pathIcons.'bin_closed.png', $words['list-actions']['remove'] ),
 		);
 		$this->indicator		= new UI_HTML_Indicator();
 #		$this->titleLength		= $config->get( 'module.work_mission.mail.title.length' );
@@ -71,13 +70,13 @@ class View_Helper_MissionList{
 	}
 
 	public function renderDate( $daysInFuture = 0, $template = '%1$s, %2$s' ){
-		$then	= time() - $this->timeOffset + ( $daysInFuture * 24 * 60 * 60 );
+		$then	= time() - $this->logic->timeOffset + ( $daysInFuture * 24 * 60 * 60 );
 		$day	= isset( $this->words['days'] ) ? $this->words['days'][date( "w", $then )] : '';
 		$date	= date( "j.n.", $then );
 		return sprintf( $template, $day, $date );
 	}
 
-	public function renderDayButton( $day, $label ){
+	protected function renderDayButton( $day, $label ){
 		$count		= isset(  $this->list[$day] ) ? count( $this->list[$day] ) : 0;
 		$classes	= array( 'day' );
 		if( $day < 3 )
@@ -88,15 +87,14 @@ class View_Helper_MissionList{
 			'class'		=> join( ' ', $classes ),
 			'disabled'	=> $count ? NULL : 'disabled',
 			'type'		=> 'button',
-			'onclick'	=> 'showDayTable('.$day.',true);',
+			'onclick'	=> 'WorkMissions.showDayTable('.$day.',true);',
 		);
 		return UI_HTML_Tag::create( 'button', $label, $attributes );
 	}
 
-	public function renderNumber( $days ){
+	protected function renderNumber( $days ){
 		$count	= $this->countMissions( $days );
 		if( $count )
-	#		return ' <small>('.$count.')</small>';
 			return ' <div class="mission-number">'.$count.'</div>';
 	}
 
@@ -184,6 +182,40 @@ class View_Helper_MissionList{
 				$list[]	= $this->renderRowOfTask( $mission, $day, $showPriority, $showActions );
 			else if( $mission->type == 1 )
 				$list[]	= $this->renderRowOfEvent( $mission, $day, $showPriority, $showActions );
+		}
+		return join( $list );
+	}
+
+	public function renderButtons(){
+		$buttons	= array();
+		$labels		= array(
+			'<b>Heute</b><br/>'.$this->renderDate( 0 ),
+			'<b>Morgen</b><br/>'.$this->renderDate( 1 ),
+			'<b>Übermorgen</b><br/>'.$this->renderDate( 2 ),
+			$this->renderDate( 3, '%2$s<br/>%1$s' ),
+			$this->renderDate( 4, '%2$s<br/>%1$s' ),
+			$this->renderDate( 5, '%2$s<br/>%1$s' ),
+			'<br/><span>Zukunft</span>',
+		);
+		foreach( $labels as $nr => $label )
+			$buttons[]	= $this->renderDayButton( $nr, $this->renderNumber( $nr ).$label );
+		return join( $buttons );
+	}
+
+	public function renderLists(){
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );				//  
+		$tableHeads	= UI_HTML_Elements::TableHeads( array(
+			UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
+			UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
+			UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
+			UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable right', 'data-column' => NULL ) )
+		) );
+
+		$list	= array();
+		for( $i=0; $i<7; $i++ ){
+			$rows		= UI_HTML_Tag::create( 'tbody', $this->renderRows( $i, TRUE, TRUE ) );
+			$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$rows );
+			$list[]	= '<div class="table-day" id="table-'.$i.'">'.$table.'</div>';
 		}
 		return join( $list );
 	}
