@@ -23,11 +23,12 @@ class View_Helper_MissionList{
 		$this->env		= $env;
 		$this->words	= $words;
 		
-		$this->today			= strtotime( date( 'Y-m-d', time() - $this->timeOffset ) );
-		foreach( $missions as $mission ){
-			$days	= ( strtotime( $mission->dayStart ) - $this->today ) / ( 24 * 60 * 60 );
-			$days	= max( min( $days , 6 ), 0 );
-			$this->list[$days][]	= $mission;
+		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->timeOffset ) );
+		foreach( $missions as $mission ){															//  iterate missions
+			$diff	= $this->today->diff( new DateTime( $mission->dayStart ) );						//  get difference to today
+			$days	= $diff->invert ? -1 * $diff->days : $diff->days;								//  calculate days left
+			$days	= max( min( $days , 6 ), 0 );													//  restrict to be within 0 and 6
+			$this->list[$days][]	= $mission;														//  assign mission to day list
 		}
 
 		$pathIcons		= 'http://img.int1a.net/famfamfam/silk/';
@@ -99,11 +100,17 @@ class View_Helper_MissionList{
 			return ' <div class="mission-number">'.$count.'</div>';
 	}
 
+	/**
+	 *	Render overdue container.
+	 *	@access		public
+	 *	@param		object		$mission		Mission data object
+	 *	@return		string		DIV container with number of overdue days or empty string 
+	 */
 	public function renderOverdue( $mission ){
-		$end		= strtotime( max( $mission->dayStart, $mission->dayEnd ) );
-		$days		= ( $end - $this->today ) / ( 24 * 60 * 60);
-		if( $days < 0 )
-			return UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
+		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
+		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
+		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
+			return UI_HTML_Tag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
 	}
 
 	public function renderRowButtons( $mission, $days ){
