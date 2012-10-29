@@ -215,7 +215,7 @@ if( $useProjects && !empty( $userProjects ) ){
 $panelFilter	= '
 <script>
 $(document).ready(function(){
-	FormMissionFilter.__init();
+	WorkMissionFilter.__init();
 	if(!parseInt($("#switch_view").val()))
 		$("li.filter_status").show();
 	if($("li.filter_project>ul").size())
@@ -235,7 +235,7 @@ $(document).ready(function(){
 			</li>
 			<li>
 				<label for="switch_view" style="">Sichtweise</label><br/>
-				<select name="view" id="switch_view" onchange="FormMissionFilter.changeView(this);" class="max">'.$optView.'</select>
+				<select name="view" id="switch_view" onchange="WorkMissionFilter.changeView(this);" class="max">'.$optView.'</select>
 		
 			</li>
 <!--			<li>

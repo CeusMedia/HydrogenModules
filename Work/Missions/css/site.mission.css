@@ -1,6 +1,15 @@
 
 
 
+button.icon.list span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
+	}
+button.icon.calendar span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/calendar_view_month.png);
+	}
+
+
+
 .mission.priority1 {
 	background-color: rgba(255,0,0,0.20);
 	}
@@ -60,6 +69,8 @@ tr.row-priority.priority-5 {
 	background-color: rgba(0,255,0,0.20);
 	}
 
+
+/*  --  MISSION LISTS  --  */
 #mission-folders1 {
 	border: 1px solid #BFBFBF;
 	overflow: hidden;
@@ -218,7 +229,8 @@ table tr.mission-row td.cell-title a {
 	text-decoration: none;
 	text-shadow: 1px 1px 1px white;
 	}
-table tr.mission-row td.cell-title div.overdue {
+
+body.controller-work-mission div.overdue {
 	float: right;
 	display: block;
 	margin: 1px 4px 1px 6px;
@@ -228,6 +240,7 @@ table tr.mission-row td.cell-title div.overdue {
 	color: rgba(255,255,255,0.85);
 	font-size: 0.9em;
 	font-weight: bold;
+	z-index: 1000;
 /*	margin: 2px 1em 1px 0em;
 	padding: 0px 7px 0px 6px;
 	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/	
@@ -301,4 +314,94 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	
 .invisible {
 	display: none;
+	}
+
+/*  --  MISSION CALENDAR  --  */
+#mission-calendar {
+	border: 1px solid #7F7F7F;
+	table-layout: fixed;
+	}
+#mission-calendar th {
+	border: none;
+	}
+#mission-calendar td {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	padding: 0px 0px !important;
+	overflow: hidden;
+	position: relative;
+	height: 50px;
+	}
+#mission-calendar td.inactive,
+#mission-calendar td.past {
+	height: 25px;
+	}
+#mission-calendar td.past {
+	background-color: #F7F7F7;
+	}
+#mission-calendar tr td:last-child {
+	border-width: 1px 0px 0px 0px;
+	}
+#mission-calendar td.inactive {
+	background-color: #EFEFEF;
+	color: #7F7F7F;
+	}
+#mission-calendar td div.date-label {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	border-width: 0px 0px 1px 1px;
+	border-style: solid;
+	border-color: rgba(192,192,192,1);
+	background-color: rgba(242,242,242,0.85);
+	color: #5F5F5F;
+	font-size: 0.9em;
+	text-align: right;
+	padding: 0px 1px 0px 2px;
+	}
+#mission-calendar td div.date-label.today {
+	font-weight: bold;
+	}
+#mission-calendar tr td ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	position: static;
+	}
+#mission-calendar tr td ul li {
+	overflow: hidden;
+	white-space: nowrap;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 1px 4px;
+	}
+#mission-calendar tr td ul li a.icon-label {
+	text-decoration: none;
+	background-color: transparent;
+	}
+#mission-calendar li.priority-1 {
+	background-color: rgba(255,0,0,0.20);
+	}
+#mission-calendar li.priority-2 {
+	background-color: rgba(255,127,0,0.20);
+	}
+#mission-calendar li.priority-3 {
+	background-color: rgba(255,255,63,0.20);
+	}
+#mission-calendar li.priority-4 {
+	background-color: rgba(127,255,0,0.20);
+	}
+#mission-calendar li.priority-5 {
+	background-color: rgba(0,255,0,0.20);
+	}
+#mission-calendar-control {
+	padding-left: 1em;
+	}
+#mission-calendar-control .month-label,
+#mission-calendar-control .year-label {
+	font-weight: lighter;
+	font-size: 1.4em;
 	}

@@ -18,7 +18,8 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 
 		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
 		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
-
+		$page->js->addScript( '$(document).ready(function(){WorkMissions.init();});' );
+		
 /*		$this->config		= $this->env->getConfig();
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
@@ -26,6 +27,9 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 */	}
 
 	public function add(){
+	}
+
+	public function calendar(){
 	}
 
 	public function edit(){

@@ -159,7 +159,7 @@ $panelEdit	= '
 				</div>
 				<div class="column-left-20 optional type type-0">
 					<label for="input_day">'.$w->labelDay.'</label><br/>
-					<input type="text" name="day" id="input_day" value="'.$mission->dayStart.'" class="max autocomplete="off"/>
+					<input type="text" name="day" id="input_day" value="'.$mission->dayStart.'" class="max" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>

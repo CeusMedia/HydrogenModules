@@ -15,6 +15,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $useIssues		= FALSE;
 	protected $useProjects		= FALSE;
 	protected $hasFullAccess	= FALSE;
+	protected $logic;
 
 	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
@@ -30,7 +31,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'useProjects', $this->useProjects = $modules->has( 'Manage_Projects' ) );
 		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
 	}
-
+	
 	public function add(){
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -211,7 +212,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
 		}
 	}
-
+	
 	protected function exportAsIcal(){
 		$userId	= $this->env->getSession()->get( 'userId' );
 		if( !$userId ){
@@ -219,22 +220,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$userId	= $auth->authenticate();
 		}
 		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
-		$order		= array( 'dayStart' => 'ASC' );
-		$groupings	= array( 'missionId' );
-		$havings	= array(
-			'ownerId = '.(int) $userId,
-			'workerId = '.(int) $userId,
-		);
-		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$modelProject	= new Model_Project( $this->env );
-			$userProjects	= $modelProject->getUserProjects( $userId );
-			if( $userProjects )
-				$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';
-		}
-		$havings	= array( join( ' OR ', $havings ) );
-
-
-		$missions	= $this->model->getAll( $conditions, $order, NULL, NULL, $groupings, $havings );
+		$orders		= array( 'dayStart' => 'ASC' );
+		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
+		
 		$root		= new XML_DOM_Node( 'event');
 		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
 		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
@@ -354,13 +342,46 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	public function calendar( $year = NULL, $month = NULL ){
+		$session		= $this->env->getSession();
+
+		if( !$year || !$month ){
+			$year	= date( "Y" );
+			if( $session->has( 'work-mission-view-year' ) )
+				$year	= $session->get( 'work-mission-view-year' );
+			$month	= date( "m" );
+			if( $session->has( 'work-mission-view-month' ) )
+				$month	= $session->get( 'work-mission-view-month' );
+			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
+		}
+		if( $month < 1 || $month > 12 ){
+			while( $month > 12 ){
+				$month	-= 12;
+				$year	++;
+			}
+			while( $month < 1 ){
+				$month	+= 12;
+				$year	--;
+			}
+			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
+		}
+		$session->set( 'work-mission-view-year', $year );
+		$session->set( 'work-mission-view-month', $month );
+
+		$this->setData( array(
+			'userId'	=> $session->get( 'userId' ),
+			'year'		=> $year,
+			'month'		=> $month,
+		) );
+	}
+
 	/**
 	 *	Default action on this controller.
 	 *	@access		public
 	 *	@return		void
 	 */
 	public function index( $missionId = NULL ){
-		if( $missionId )
+		if( trim( $missionId ) )
 			$this->restart( 'edit/'.$missionId, TRUE );
 		
 		$config			= $this->env->getConfig();
@@ -369,8 +390,20 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'index' );
 
-		$userId		= $session->get( 'userId' );
-		$roleId		= $session->get( 'roleId' );
+		if( $request->has( 'view' ) ){
+			$session->set( 'work-mission-view-type', (int) $request->get( 'view' ) );
+		}
+
+		if( (int) $session->get( 'work-mission-view-type' ) == 1 )
+			$this->restart( './work/mission/calendar' );
+
+		$userId			= $session->get( 'userId' );
+		$this->addData( 'userId', $userId );
+		$this->addData( 'viewType', (int) $session->get( 'work-mission-view-type' ) );
+		
+		if( (int) $session->get( 'work-mission-view-type' ) == 1 )
+			return;
+		
 		$access		= $session->get( 'filter_mission_access' );
 		$query		= $session->get( 'filter_mission_query' );
 		$types		= $session->get( 'filter_mission_types' );
@@ -392,7 +425,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'content'	=> 'ASC',				//  order by title at last
 		);
 
-		$conditions	= $groupings	= $havings	= array();
+		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
@@ -402,49 +435,24 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$conditions['status']	= $states;
 		if( strlen( $query ) )
 			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
+			$conditions['projectId']	= $projects;												//  apply project conditions
 
-		if( !$this->hasFullAccess() )
-			$havings	= array( join( ' OR ', array( 
-				'ownerId = '.(int) $userId,
-				'workerId = '.(int) $userId,
-			) ) );
-		if( $this->useProjects ){
-			$modelProject	= new Model_Project( $this->env );
-			if( $this->hasFullAccess() ){															//  full access
-				$userProjects	= array();
-				foreach( $modelProject->getAll( array(), array( 'title' => 'ASC' ) ) as $project )	//  list all projects
-					$userProjects[$project->projectId]	= $project;									//  in indexed map
-				if( is_array( $projects ) && count( $projects ) )									//  if filtered by projects
-					$projects	= array_merge( array( 0 ), $projects );								//  append missions without project
-			}
-			else{																					//  normal user access
-				$userProjects	= $modelProject->getUserProjects( $userId );
-				if( $userProjects )
-					$havings		= array( join( ' OR ', array( 
-						'ownerId = '.(int) $userId,
-						'workerId = '.(int) $userId,
-						'projectId IN ('.join( ',', array_keys( $userProjects ) ).')'
-					) ) );
-			}
-			if( is_array( $projects ) && count( $projects ) )										//  if filtered by projects
-				$conditions['projectId']	= $projects;											//  apply project conditions
-			$this->addData( 'userProjects', $userProjects );
-		}
-		if( $havings )
-			$groupings	= array( 'missionId' );
-		$missions	= $this->model->getAll( $conditions, $orders, NULL, NULL, $groupings, $havings );
+		$this->setData( array(																		//  assign data to view
+			'missions'		=> $this->logic->getUserMissions( $userId, $conditions, $orders ),		//  add user missions
+			'userProjects'	=> $this->logic->getUserProjects( $userId ),							//  add user projects
+			'users'			=> $this->userMap,														//  add user map
+			'currentDay'	=> (int) $session->get( 'filter_mission_day' ),							//  set currently selected day
+		) );
 
-		$this->addData( 'missions', $missions );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
 		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
 		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
 		$this->addData( 'filterProjects', $session->get( 'filter_mission_projects' ) );
 		$this->addData( 'filterDirection', $direction );
-		$this->addData( 'currentDay', (int) $session->get( 'filter_mission_day' ) );
-		$this->addData( 'users', $this->userMap );
 	}
-	
+
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
 		if( !$showMission )																			//  back to list
