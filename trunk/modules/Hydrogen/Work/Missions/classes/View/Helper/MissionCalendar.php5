@@ -32,28 +32,36 @@ class View_Helper_MissionCalendar{
 				for( $j=0; $j<$offsetStart; $j++ )
 					$row[]	= '<td class="inactive"></td>';
 			while( $j<7 ){
-				$day	= $i * 7 - $offsetStart + $j +1;
-				if( $day > $monthDays )
-					$row[]	= '<td class="inactive"></td>';
-				else{
-					$days		= str_pad( $day, 2, "0", STR_PAD_LEFT );
-					$date		= $year.'-'.$showMonth.'-'.$days;
-					$diff		= $this->today->diff( new DateTime( $date ) );
-#					$isPast		= $diff->invert;
-					$isToday	= $diff->days == 0;
-					$conditions	= array( 'dayStart' => $date, 'status' => array( 0, 1, 2, 3 ) );
-					$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-					$list		= array();
-					foreach( $missions as $mission ){
-					//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
-						$title	= $mission->content;
-						$url	= './work/mission/edit/'.$mission->missionId;
-						$class	= 'icon-label mission-type-'.$mission->type;
-						$title	= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
-						$list[]	= '<li class="priority-'.$mission->priority.'">'.$title.'</li>';
+				$day		= $i * 7 - $offsetStart + $j +1;
+				$showYear	= $year;
+				$showMonth	= $month;
+				if( $day > $monthDays ){
+					$class	= "inactive";
+					$day	-= $monthDays;
+					$showMonth++;
+					if( $showMonth > 12 ){
+						$showMonth	-= 12;
+						$showYear++;
 					}
-					$class	= '';
-					if( $isToday ){
+				}
+				$day		= str_pad( $day, 2, "0", STR_PAD_LEFT );
+				$date		= $showYear.'-'.$showMonth.'-'.$day;
+				$diff		= $this->today->diff( new DateTime( $date ) );
+#					$isPast		= $diff->invert;
+				$isToday	= $diff->days == 0;
+				$conditions	= array( 'dayStart' => $date, 'status' => array( 0, 1, 2, 3 ) );
+				$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
+				$list		= array();
+				foreach( $missions as $mission ){
+				//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
+					$title	= $mission->content;
+					$url	= './work/mission/edit/'.$mission->missionId;
+					$class	= 'icon-label mission-type-'.$mission->type;
+					$title	= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
+					$list[]	= '<li class="priority-'.$mission->priority.'">'.$title.'</li>';
+				}
+				$class	= '';
+				if( $isToday ){
 #						$conditions	= array( 'dayStart' => '<'.$date, 'status' => array( 0, 1, 2, 3 ) );
 #						$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 #						foreach( $missions as $mission ){
@@ -65,14 +73,13 @@ class View_Helper_MissionCalendar{
 #							$overdue	= $this->renderOverdue( $mission );
 #							$list[]		= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
 #						}
-						$class	= 'today';
-					}
-					
-					$list	= '<ul>'.join( $list ).'</ul>';
-					$label	= '<div class="date-label '.$class.'">'.date( "j.n.", strtotime( $date ) ).'</div>';
-					$class	= strtotime( $date ) < strtotime( date( "Y-m-d 00:00" ) ) ? "past" : "";
-					$row[]	= '<td class="'.$class.'">'.$label.$list.'</td>';
+					$class	= 'today';
 				}
+
+				$list	= '<ul>'.join( $list ).'</ul>';
+				$label	= '<div class="date-label '.$class.'">'.date( "j.n.", strtotime( $date ) ).'</div>';
+				$class	= strtotime( $date ) < strtotime( date( "Y-m-d 00:00" ) ) ? "past" : "";
+				$row[]	= '<td class="'.$class.'">'.$label.$list.'</td>';
 				$j++;
 			}
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
