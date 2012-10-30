@@ -38,7 +38,9 @@ class View_Helper_MissionCalendar{
 				else{
 					$days		= str_pad( $day, 2, "0", STR_PAD_LEFT );
 					$date		= $year.'-'.$showMonth.'-'.$days;
-					$isToday	= $this->today->diff( new DateTime( $date ) )->days == 0;
+					$diff		= $this->today->diff( new DateTime( $date ) );
+#					$isPast		= $diff->invert;
+					$isToday	= $diff->days == 0;
 					$conditions	= array( 'dayStart' => $date, 'status' => array( 0, 1, 2, 3 ) );
 					$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 					$list		= array();
@@ -52,17 +54,17 @@ class View_Helper_MissionCalendar{
 					}
 					$class	= '';
 					if( $isToday ){
-						$conditions	= array( 'dayStart' => '<'.$date, 'status' => array( 0, 1, 2, 3 ) );
-						$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-						foreach( $missions as $mission ){
-						//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
-							$title		= $mission->content;
-							$url		= './work/mission/edit/'.$mission->missionId;
-							$class		= 'icon-label mission-type-'.$mission->type;
-							$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
-							$overdue	= $this->renderOverdue( $mission );
-							$list[]		= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
-						}
+#						$conditions	= array( 'dayStart' => '<'.$date, 'status' => array( 0, 1, 2, 3 ) );
+#						$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
+#						foreach( $missions as $mission ){
+#						//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
+#							$title		= $mission->content;
+#							$url		= './work/mission/edit/'.$mission->missionId;
+#							$class		= 'icon-label mission-type-'.$mission->type;
+#							$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
+#							$overdue	= $this->renderOverdue( $mission );
+#							$list[]		= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
+#						}
 						$class	= 'today';
 					}
 					
