@@ -45,36 +45,28 @@ class View_Helper_MissionCalendar{
 					}
 				}
 				$day		= str_pad( $day, 2, "0", STR_PAD_LEFT );
+				$showMonth	= str_pad( $showMonth, 2, "0", STR_PAD_LEFT );
 				$date		= $showYear.'-'.$showMonth.'-'.$day;
 				$diff		= $this->today->diff( new DateTime( $date ) );
-#					$isPast		= $diff->invert;
+				$isPast		= $diff->invert;
 				$isToday	= $diff->days == 0;
 				$conditions	= array( 'dayStart' => $date, 'status' => array( 0, 1, 2, 3 ) );
 				$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 				$list		= array();
 				foreach( $missions as $mission ){
-				//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
-					$title	= $mission->content;
-					$url	= './work/mission/edit/'.$mission->missionId;
-					$class	= 'icon-label mission-type-'.$mission->type;
-					$title	= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
-					$list[]	= '<li class="priority-'.$mission->priority.'">'.$title.'</li>';
+				//	$title		= Alg_Text_Trimmer::trim( $mission->content, 20 );
+					$title		= $mission->content;
+					$url		= './work/mission/edit/'.$mission->missionId;
+					$class		= 'icon-label mission-type-'.$mission->type;
+					$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
+					$overdue	= '';
+					if( $isPast )
+						$overdue	= $this->renderOverdue( $mission );
+					$list[]	= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
 				}
-				$class	= '';
-				if( $isToday ){
-#						$conditions	= array( 'dayStart' => '<'.$date, 'status' => array( 0, 1, 2, 3 ) );
-#						$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-#						foreach( $missions as $mission ){
-#						//	$title	= Alg_Text_Trimmer::trim( $mission->content, 20 );
-#							$title		= $mission->content;
-#							$url		= './work/mission/edit/'.$mission->missionId;
-#							$class		= 'icon-label mission-type-'.$mission->type;
-#							$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
-#							$overdue	= $this->renderOverdue( $mission );
-#							$list[]		= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
-#						}
+				$class		= '';
+				if( $isToday )
 					$class	= 'today';
-				}
 
 				$list	= '<ul>'.join( $list ).'</ul>';
 				$label	= '<div class="date-label '.$class.'">'.date( "j.n.", strtotime( $date ) ).'</div>';
