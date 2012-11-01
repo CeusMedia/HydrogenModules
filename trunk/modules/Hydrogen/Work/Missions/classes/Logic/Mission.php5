@@ -7,7 +7,7 @@ class Logic_Mission{
 		$this->env			= $env;
 		$this->model		= new Model_Mission( $env );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
-		
+
 	}
 
 	public function getUserProjects( $userId ){
@@ -24,10 +24,10 @@ class Logic_Mission{
 
 	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL ){
 		$orders	= $orders ? $orders : array( 'dayStart' => 'ASC' );
-		
+
 		if( $this->hasFullAccess() )																//  user has full access
 			return $this->model->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions
-		
+
 		$havings	= array(																		//  additional conditions
 			'ownerId = '.(int) $userId,																//  user is owner
 			'workerId = '.(int) $userId,															//  or user is worker
@@ -41,12 +41,12 @@ class Logic_Mission{
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
 		return $this->model->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return modules matched by conditions
 	}
-	
+
 	public function getDate( $string ){
 		$day	= 24 * 60 * 60;
 		$now	= time();
 		$string	= strtolower( trim( $string ) );
-		
+
 		if( preg_match( "/^[+-][0-9]+$/", $string ) ){
 			$sign	= substr( $string, 0, 1 );
 			$number	= substr( $string, 1 );
@@ -78,8 +78,6 @@ class Logic_Mission{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
 
-	public function moveDate(){
-		
-	}
+	public function moveDate(){}
 }
 ?>
