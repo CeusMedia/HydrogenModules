@@ -17,8 +17,12 @@ foreach( $list as $item ){
 #			$value	= UI_VariableDumper::dump( $item->value, UI_VariableDumper::MODE_PRINT );
 			$value	= 'Instance of class <cite>'.get_class( $item->value ).'</cite>';
 			break;
-		default:
+		case 'string':
+		case 'integer':
+		case 'float':
 			$value	= '<input type="text" value="'.htmlentities( $item->value ).'" class="max"/>';
+		default:
+			$value	= '<input type="text" value="" class="max"/>';
 	}
 	$buttonSave		= UI_HTML_Tag::create( 'button', $imgEdit, array( 'type' => 'button', 'class' => 'button tiny edit' ) );
 	$buttonRemove	= UI_HTML_Tag::create( 'button', $imgRemove, array( 'type' => 'button', 'class' => 'button tiny remove' ) );
