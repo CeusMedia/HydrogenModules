@@ -28,7 +28,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 		//  --  EVENTS  --  //
 		$events		= $w->textNoEvents;
-		
+
 		if( count( $data['events'] ) ){
 			$helper		= new View_Helper_MissionList( $this->env, $data['events'], $words );
 			$rows		= $helper->renderRows( 0 );
@@ -61,7 +61,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$this->addThemeStyle( 'indicator.css' );
 
 		$this->page->addBody( $body );
-		$class	= 'moduleMission jobWorkMission job-work-mission-mail-daily';
+		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
 		$html	= $this->page->build( array( 'class' => $class ) );
 
 		$mailBody	= new Net_Mail_Body(  base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
