@@ -19,6 +19,7 @@ class View_Helper_MissionCalendar{
 	public function render( $userId, $year, $month ){
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
+		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( "t", strtotime( $showScope ) );
 		$offsetStart	= max( 0, date( "w", strtotime( $showScope ) ) - 1 );
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
@@ -27,10 +28,15 @@ class View_Helper_MissionCalendar{
 		for( $i=0; $i<$weeks; $i++ ){
 			$row	= array();
 			$j	= 0;
-			if( $i == 0 )
-				for( $j=0; $j<$offsetStart; $j++ )
-					$row[]	= '<td class="inactive"></td>';
-			while( $j<7 ){
+			$class	= '';
+			if( $i == 0 ){
+				for( $j=0; $j<$offsetStart; $j++ ){
+					$preDate	= clone $monthDate;
+					$preDate	= $preDate->modify( "-".( $offsetStart - $j )." days" );
+					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
+				}
+			}
+			while( $j < 7 ){
 				$day		= $i * 7 - $offsetStart + $j +1;
 				$showYear	= $year;
 				$showMonth	= $month;
@@ -43,58 +49,72 @@ class View_Helper_MissionCalendar{
 						$showYear++;
 					}
 				}
-				$day		= str_pad( $day, 2, "0", STR_PAD_LEFT );
-				$showMonth	= str_pad( $showMonth, 2, "0", STR_PAD_LEFT );
-				$date		= $showYear.'-'.$showMonth.'-'.$day;
-				$diff		= $this->today->diff( new DateTime( $date ) );
-				$isPast		= $diff->invert;
-				$isToday	= $diff->days == 0;
-				$conditions	= array( 'dayStart' => $date, 'status' => array( 0, 1, 2, 3 ) );
-				$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-				$list		= array();
-				foreach( $missions as $mission ){
-				//	$title		= Alg_Text_Trimmer::trim( $mission->content, 20 );
-					$title		= $mission->content;
-					$url		= './work/mission/edit/'.$mission->missionId;
-					$class		= 'icon-label mission-type-'.$mission->type;
-					$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
-					$overdue	= '';
-					if( $isPast )
-						$overdue	= $this->renderOverdue( $mission );
-					$list[]	= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
-				}
-				$class	= $isToday ? 'today' : ( $isPast ? 'past' : 'future' );
-				$list	= '<ul>'.join( $list ).'</ul>';
-				$label	= '<div class="date-label '.$class.'">'.date( "j.n.", strtotime( $date ) ).'</div>';
-				$row[]	= '<td class="'.$class.'">'.$label.$list.'</td>';
+				$date	= $showYear.'-'.$showMonth.'-'.$day;
+				$row[]	= $this->renderDay( $userId, new DateTime( $date ), $orders, $class );
 				$j++;
 			}
+			$weekNr	= date( "W", strtotime( $date ) );
+			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "14%", "14%", "14%", "14%", "14%", "13%", "12%" );
 		$table	= '
 <div id="mission-folders">
 	<table id="mission-calendar">
-	<tr>
-		<th>Montag</th>
-		<th>Dienstag</th>
-		<th>Mittwoch</th>
-		<th>Donnerstag</th>
-		<th>Freitag</th>
-		<th>Samstag</th>
-		<th>Sonntag</th>
-	</tr>
-	'.join( $rows ).'</table>
+		'.$colgroup.'
+		<thead>
+			<tr>
+				<th>KW</th>
+				<th>Montag</th>
+				<th>Dienstag</th>
+				<th>Mittwoch</th>
+				<th>Donnerstag</th>
+				<th>Freitag</th>
+				<th>Samstag</th>
+				<th>Sonntag</th>
+			</tr>
+		</thead>
+		<tbody>
+			'.join( $rows ).'
+		</tbody>
+	</table>
 </div>
 ';
 		$script	= '<script>
 $(document).ready(function(){
 	WorkMissionsCalendar.monthCurrent = '.date( "n" ).';
 	WorkMissionsCalendar.monthShow    = '.(int) $showMonth.';
+//	$("table#mission-calendar tr td ul li").draggable();
 });
 </script>';
-		
+
 		$this->env->getPage()->addHead( $script );
 		return $table;
+	}
+
+	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ){
+		$diff		= $this->today->diff( $date );
+		$isPast		= $diff->invert;
+		$isToday	= $diff->days == 0;
+		$conditions	= array( 'dayStart' => $date->format( "Y-m-d" ), 'status' => array( 0, 1, 2, 3 ) );
+		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
+		$list		= array();
+		foreach( $missions as $mission ){
+		//	$title		= Alg_Text_Trimmer::trim( $mission->content, 20 );
+			$title		= $mission->content;
+			$url		= './work/mission/edit/'.$mission->missionId;
+			$class		= 'icon-label mission-type-'.$mission->type;
+			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
+			$overdue	= '';
+			if( $isPast )
+				$overdue	= $this->renderOverdue( $mission );
+			$list[]	= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
+		}
+		$class	= $isToday ? 'today' : ( $isPast ? 'past' : 'future' );
+		$class	= $cellClass ? $cellClass.' '.$class : $class;
+		$list	= '<ul>'.join( $list ).'</ul>';
+		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
+		return '<td class="'.$class.'">'.$label.$list.'</td>';
 	}
 
 	/**
