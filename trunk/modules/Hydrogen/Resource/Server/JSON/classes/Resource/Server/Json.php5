@@ -170,8 +170,9 @@ class Resource_Server_Json {
 
 		$statusCode	= $reader->getCurlInfo( Net_CURL::INFO_HTTP_CODE );
 		$logPath	= $this->env->config->get( 'path.logs' );
-		$logFile	= $this->env->config->get( 'module.resource_server_json.log' );
-		if( $logFile )
+		$logEnabled	= $this->env->config->get( 'module.resource_server_json.log' );
+		$logFile	= $this->env->config->get( 'module.resource_server_json.log.file' );
+		if( $logEnabled && $logFile )
 			error_log( time()." GET (".$statusCode."): ".$json."\n", 3, $logPath.$logFile );
 		$response	= $this->handleResponse( $json, $url, $statusCode );
 		return $response->data;

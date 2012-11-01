@@ -10,10 +10,11 @@
 		<class>Resource/Server/Json.php5</class>
 		<class>View/Helper/JsonServerResponseCodeHandler.php5</class>
 	</files>
-	<config name="userAgent" type="string"></config>
-	<config name="auth.username" type="string"></config>
-	<config name="auth.password" type="string"></config>
-	<config name="auth.secret" type="string">secret</config>
-	<config name="log" type="string">server.json.log</config>
-	<config name="uri" type="string">http://example.org/server/json/</config>
+        <config protected="yes" type="string" name="userAgent"></config>
+        <config protected="yes" type="string" name="auth.username"></config>
+        <config protected="yes" type="string" name="auth.password"></config>
+        <config protected="yes" type="string" name="auth.secret">secret</config>
+        <config protected="yes" type="boolean" name="log"></config>
+        <config protected="yes" type="string" name="log.file">server.json.log</config>
+	<config protected="yes" type="string" name="uri">http://example.org/server/json/</config>
 </module>
