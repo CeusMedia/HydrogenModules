@@ -20,9 +20,9 @@ $calendar	= $helper->render( $userId, $year, $month );
 $content	= '<div>'.$calendar.'</div>';
 
 $buttonSets[]	= array(
-	'<button type="button" onclick="WorkMissionsCalendar.setMonth(-1)">&laquo;</button>',
-	'<button type="button" onclick="WorkMissionsCalendar.setMonth(0)">&Omicron;</button>',
-	'<button type="button" onclick="WorkMissionsCalendar.setMonth(1)">&raquo;</button>',
+	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(-1)">&laquo;</button>',
+	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(0)">&Omicron;</button>',
+	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(1)">&raquo;</button>',
 	$label
 );
 

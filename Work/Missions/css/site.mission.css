@@ -1,13 +1,10 @@
 
-
-
 button.icon.list span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
 	}
 button.icon.calendar span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/calendar_view_month.png);
 	}
-
 
 
 .mission.priority1 {
@@ -230,7 +227,7 @@ table tr.mission-row td.cell-title a {
 	text-shadow: 1px 1px 1px white;
 	}
 
-body.controller-work-mission div.overdue {
+body.moduleWorkMission div.overdue {
 	float: right;
 	display: block;
 	margin: 1px 4px 1px 6px;
