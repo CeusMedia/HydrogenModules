@@ -6,7 +6,7 @@ class View_Helper_MissionCalendar{
 		$this->logic	= new Logic_Mission( $this->env );
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
-		
+
 	}
 
 	public function renderLabel( $year, $month ){
@@ -14,9 +14,8 @@ class View_Helper_MissionCalendar{
 	<span class="month-label">'.$this->words['months'][$month].'</span>
 	<span class="year-label">'.$year.'</span>
 </span>';
-		
 	}
-	
+
 	public function render( $userId, $year, $month ){
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
@@ -64,13 +63,9 @@ class View_Helper_MissionCalendar{
 						$overdue	= $this->renderOverdue( $mission );
 					$list[]	= '<li class="priority-'.$mission->priority.'">'.$overdue.$title.'</li>';
 				}
-				$class		= '';
-				if( $isToday )
-					$class	= 'today';
-
+				$class	= $isToday ? 'today' : ( $isPast ? 'past' : 'future' );
 				$list	= '<ul>'.join( $list ).'</ul>';
 				$label	= '<div class="date-label '.$class.'">'.date( "j.n.", strtotime( $date ) ).'</div>';
-				$class	= strtotime( $date ) < strtotime( date( "Y-m-d 00:00" ) ) ? "past" : "";
 				$row[]	= '<td class="'.$class.'">'.$label.$list.'</td>';
 				$j++;
 			}

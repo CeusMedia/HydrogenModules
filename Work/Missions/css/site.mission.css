@@ -320,48 +320,46 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 #mission-calendar {
 	border: 1px solid #7F7F7F;
 	table-layout: fixed;
+/*	border-collapse: collapse;*/
 	}
-#mission-calendar th {
+#mission-calendar tr th {
 	border: none;
 	}
-#mission-calendar td {
+#mission-calendar tr td {
 	border-width: 1px 1px 0px 0px;
 	border-style: solid;
 	border-color: #9F9F9F;
 	padding: 0px 0px !important;
 	overflow: hidden;
 	position: relative;
-	height: 50px;
-	}
-#mission-calendar td.inactive,
-#mission-calendar td.past {
-	height: 25px;
-	}
-#mission-calendar td.past {
-	background-color: #F7F7F7;
+	height: 80px;
 	}
 #mission-calendar tr td:last-child {
 	border-width: 1px 0px 0px 0px;
 	}
-#mission-calendar td.inactive {
+#mission-calendar tr td.inactive,
+#mission-calendar tr td.past {
+	height: 35px;
+	}
+#mission-calendar tr td.past {
+	background-color: #F7F7F7;
+	}
+#mission-calendar tr td.inactive {
 	background-color: #EFEFEF;
 	color: #7F7F7F;
 	}
-#mission-calendar td div.date-label {
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	border-width: 0px 0px 1px 1px;
-	border-style: solid;
-	border-color: rgba(192,192,192,1);
-	background-color: rgba(242,242,242,0.85);
-	color: #5F5F5F;
-	font-size: 0.9em;
-	text-align: right;
-	padding: 0px 1px 0px 2px;
+#mission-calendar tr td.today {
+	border-color: black;
 	}
-#mission-calendar td div.date-label.today {
+#mission-calendar tr td div.date-label {
+	font-size: 1.1em;
+	padding: 2px 6px;
+	background-image: linear-gradient(bottom, rgba(255,255,255,0.1), rgba(127,127,127,0.8));
+	background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0.01), rgba(127,127,127,0.25));
+	}
+#mission-calendar tr td.today div.date-label {
 	font-weight: bold;
+	color: black;
 	}
 #mission-calendar tr td ul {
 	list-style: none;
@@ -369,6 +367,9 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	padding: 0px;
 	width: 100%;
 	position: static;
+	max-height: 150px;
+	overflow-y: auto;
+	overflow-x: hidden;
 	}
 #mission-calendar tr td ul li {
 	overflow: hidden;
