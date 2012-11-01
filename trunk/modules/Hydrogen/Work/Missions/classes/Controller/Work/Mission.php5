@@ -345,7 +345,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function calendar( $year = NULL, $month = NULL ){
 		$session		= $this->env->getSession();
 
-		if( !$year || !$month ){
+		if( $year === NULL || $month === NULL ){
 			$year	= date( "Y" );
 			if( $session->has( 'work-mission-view-year' ) )
 				$year	= $session->get( 'work-mission-view-year' );

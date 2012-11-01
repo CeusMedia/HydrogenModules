@@ -318,6 +318,7 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 
 /*  --  MISSION CALENDAR  --  */
 #mission-calendar {
+	position: relative;
 	border: 1px solid #7F7F7F;
 	table-layout: fixed;
 /*	border-collapse: collapse;*/
@@ -330,26 +331,49 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	border-style: solid;
 	border-color: #9F9F9F;
 	padding: 0px 0px !important;
-	overflow: hidden;
+	width: 100%;
 	position: relative;
-	height: 80px;
+	overflow: hidden;
+	height: 90px;
+	}
+#mission-calendar tr th.week-number {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	text-align: center;
+	vertical-align: middle;
+	}
+#mission-calendar tr th.week-number span {
+	display: block;
+	width: 100%;
+/*	padding: 1em 0px;
+*/	text-align: center;
+	color: #BFBFBF;
+	font-size: 1.2em;
+	font-weight: bold;
+	letter-spacing: 1px;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	}
 #mission-calendar tr td:last-child {
 	border-width: 1px 0px 0px 0px;
 	}
 #mission-calendar tr td.inactive,
 #mission-calendar tr td.past {
-	height: 35px;
+	height: 55px;
 	}
 #mission-calendar tr td.past {
 	background-color: #F7F7F7;
 	}
 #mission-calendar tr td.inactive {
-	background-color: #EFEFEF;
-	color: #7F7F7F;
+	background-color: #DFDFDF !important;
+	opacity: 0.75;
+/*	color: #7F7F7F;*/
 	}
 #mission-calendar tr td.today {
-	border-color: black;
+/*	border-color: black;
+*/	background-color: rgb(255,255,170);
 	}
 #mission-calendar tr td div.date-label {
 	font-size: 1.1em;
@@ -361,23 +385,27 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	font-weight: bold;
 	color: black;
 	}
+#mission-calendar tr td.inactive div.date-label {
+	background-image: none;
+	}
 #mission-calendar tr td ul {
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
 	width: 100%;
-	position: static;
 	max-height: 150px;
-	overflow-y: auto;
 	overflow-x: hidden;
+	overflow-y: auto;
 	}
 #mission-calendar tr td ul li {
+	position: relative;
+	width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
 	width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	padding: 1px 4px;
+	padding: 2px 3px;
 	}
 #mission-calendar tr td ul li a.icon-label {
 	text-decoration: none;
