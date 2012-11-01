@@ -22,7 +22,7 @@ $buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', $w
 $panelFilter	= '
 	<form name="" action="./manage/project/filter" method="post">
 		<fieldset>
-			<legend>'.$words['filter']['legend'].'</legend>
+			<legend class="icon filter">'.$words['filter']['legend'].'</legend>
 			<ul class="input">
 				<li>
 					<label for="input_status">Status</label><br/>
@@ -57,9 +57,11 @@ $list		= UI_HTML_Tag::create( 'table', $colgroup.$heads.join( $rows ) );
 
 $buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $words['index']['buttonAdd'], 'button add' );
 $panelList	= '
+<fieldset>
+	<legend class="icon list projects">Projekte</legend>
 	'.$list.'
 	'.$buttonAdd.'
-';
+</fieldset>';
 
 
 return '
