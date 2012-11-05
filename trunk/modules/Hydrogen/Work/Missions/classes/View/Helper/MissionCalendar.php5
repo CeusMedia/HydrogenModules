@@ -109,7 +109,7 @@ $(document).ready(function(){
 		ContextMenu.init("#mission-calendar tbody ul li");
 		ContextMenu.labels.priorities = '.json_encode( $this->words['priorities'] ).';
 		ContextMenu.labels.states = '.json_encode( $this->words['states'] ).';
-		ContextMenu.assignRenderer("#mission-calendar tbody tr td.active", function(menu, elem){
+		ContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
 			var url = "./work/mission/add/?type=0&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
 			menu.addLinkItem(url, "neue Aufgabe", pathIcons+"script_add.png");
