@@ -10,7 +10,7 @@ class View_Helper_MissionList{
 		4 => array(),
 		5 => array(),
 		6 => array(),
-	);	
+	);
 	protected $words		= array();
 	protected $icons		= array();
 	protected $indicator;
@@ -139,10 +139,10 @@ class View_Helper_MissionList{
 		$timeStart	= date( 'H:i', strtotime( $event->timeStart ) );
 		$timeEnd	= date( 'H:i', strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd.' '.$this->words['index']['suffixTime'];
-		
+
 		$cells		= array();
-		$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $overdue.$link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $times.$overdue, array( 'class' => 'cell-time' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
@@ -154,15 +154,15 @@ class View_Helper_MissionList{
 		$attributes	= array( 'class' => 'mission-row row-priority priority-'.$event->priority );
 		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );
 	}
-	
+
 	public function renderRowOfTask( $task, $days, $showPriority = FALSE, $showActions = FALSE ){
 		$link		= $this->renderRowLabel( $task );
 		$overdue	= $this->renderOverdue( $task );
 		$graph		= $this->indicator->build( $task->status, 4 );
 
 		$cells		= array();
-		$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $overdue.$link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $graph.$overdue, array( 'class' => 'cell-graph' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$task->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );

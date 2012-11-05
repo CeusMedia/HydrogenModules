@@ -23,16 +23,15 @@ $optWorker		= UI_HTML_Elements::Options( $optWorker, $userId );
 
 if( $useProjects ){
 	$optProject	= array();
-	foreach( $userProjects as $relation )
-		if( $projects[$relation->projectId]->status >= 0 )
-			$optProject[$relation->projectId]	= $projects[$relation->projectId]->title;
+	foreach( $userProjects as $projectId => $project )
+		$optProject[$projectId]	= $project->title;
 	$optProject	= UI_HTML_Elements::Options( $optProject );
 }
 
 $panelAdd	= '
 <form action="./work/mission/add" method="post">
 	<fieldset>
-		<legend>'.$w->legend.'</legend>
+		<legend class="icon mission-add">'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="-column-left-80">
 				<label for="input_content">'.$w->labelContent.'</label><br/>
@@ -100,16 +99,15 @@ $panelAdd	= '
 			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'add', $w->buttonSave, 'button add' ).'
 		</div>
-	</fieldset>	
-</form>
-';
+	</fieldset>
+</form>';
 
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
 return '
 <script>
-var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
-$(document).ready(function(){$("#input_content").focus()});
+//var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
+//$(document).ready(function(){$("#input_content").focus()});
 </script>
 <div class="column-right-30">
 	'.$panelInfo.'
@@ -117,8 +115,5 @@ $(document).ready(function(){$("#input_content").focus()});
 <div class="column-left-70">
 	'.$panelAdd.'
 </div>
-<div class="column-clear"></div>
-';
-
+<div class="column-clear"></div>';
 ?>
-
