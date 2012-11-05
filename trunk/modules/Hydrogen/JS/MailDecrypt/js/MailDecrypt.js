@@ -1,4 +1,4 @@
-MailDecrypt = function(selector,pattern){
+var MailDecrypt = function(selector,pattern){
 	if(typeof pattern == "undefined")											//  no special regex pattern defined
 		pattern = /\[mail:([\S]+)#([^@]+)(@.+)?\]/g;							//  use default regex pattern
 	var attr, i, matches, string, user, host, repl;								//  declare variables
@@ -19,4 +19,4 @@ MailDecrypt = function(selector,pattern){
 			$(selector).html(string);											//  realize new linked content in node
 		}
 	}
-}
+};
