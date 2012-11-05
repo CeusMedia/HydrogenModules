@@ -10,12 +10,14 @@ class Logic_Mission{
 
 	}
 
-	public function getUserProjects( $userId ){
+	public function getUserProjects( $userId, $activeOnly = FALSE ){
 		if( !$this->useProjects )																	//  projects module not enabled
 			return array();																			//  return empty map
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
-		if( !$this->hasFullAccess() )																//  normal access
-			return $modelProject->getUserProjects( $userId );										//  return user projects
+		if( !$this->hasFullAccess() ){																//  normal access
+			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2, 3, 4 ) ) : array();	//  ...
+			return $modelProject->getUserProjects( $userId, $conditions );							//  return user projects
+		}
 		$userProjects	= array();																	//  otherwise create empty project map
 		foreach( $modelProject->getAll( array(), array( 'title' => 'ASC' ) ) as $project )			//  iterate all projects
 			$userProjects[$project->projectId]	= $project;											//  add to projects map
@@ -33,9 +35,11 @@ class Logic_Mission{
 			'workerId = '.(int) $userId,															//  or user is worker
 		);
 		if( $this->useProjects ){																	//  projects module is enabled
-			$userProjects	= $this->getUserProjects( $userId );									//  get user projects from model
+			$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );				//  get user projects from model
 			if( $userProjects )																		//  user has projects
-				$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';		//  add projects condition
+				$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';						//  add projects condition
+			array_unshift( $userProjects, 0 );														//  
+			$conditions['projectId']	= $userProjects;											//  
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR

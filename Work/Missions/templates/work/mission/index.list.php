@@ -19,7 +19,7 @@ $list	= array(
 	5 => array(),
 	6 => array(),
 	7 => array(),
-);	
+);
 $indicator	= new UI_HTML_Indicator();
 $disabled	= array();
 $today		= strtotime( date( 'Y-m-d', time() ) );
@@ -38,7 +38,7 @@ foreach( $missions as $mission ){
 	$buttonRemove	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/'.urlencode( '-3' ), $iconRemove, 'tiny' );
 	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '-1' ), $iconLeft, 'tiny' );
 	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '+1' ), $iconRight, 'tiny' );
-	
+
 	if( !$daysBound )
 		$buttonLeft	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
 
@@ -46,10 +46,10 @@ foreach( $missions as $mission ){
 	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
 	if( $days < 0 )
 		$daysOverdue	= UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
-	
+
 	$cells	= array(
-		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.'</div></td>',
-		'<td>'.$daysOverdue.$link.'</td>',
+		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.$daysOverdue.'</div></td>',
+		'<td>'.$link.'</td>',
 		'<td><small>'.$priority.'</small></td>',
 		'<td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>',
 	);
@@ -57,10 +57,12 @@ foreach( $missions as $mission ){
 }
 
 function getFutureDate( $daysInFuture = 0, $words = NULL ){
-	$then	= time() + $daysInFuture * 24 * 60 * 60;
-	$day	= $words ? $words['days'][date( "w", $then )].', ' : '';
-	return $day.date( "j.n.", $then );
+	$then	= new DateTime();
+	$then->modify( $daysInFuture );
+	$day	= $words ? $words['days'][$then->format( "w" )].', ' : '';
+	return $day.$then->format( "j.n." );
 }
+
 function getCount( $list, $days ){
 	$count	= count( $list[$days] );
 	if( $count )

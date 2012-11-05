@@ -20,6 +20,7 @@ var WorkMissions = {
 			});
 		}
 		else{
+			$("#input_content").focus();
 			$("#input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
 				dateFormat: "yy-mm-dd",
 		//		appendText: "(yyyy-mm-dd)",
@@ -38,12 +39,13 @@ var WorkMissions = {
 			$("#input_timeStart").timepicker({});
 			$("#input_timeEnd").timepicker({});
 			$("#input_type").trigger("change");
+/*			console.log(missionDay);
 			if( typeof missionDay !== "undefined" ){
 				$("body.action-add #input_day").datepicker("setDate",missionDay);
 				$("body.action-add #input_dayStart").datepicker("setDate",missionDay);
 				$("body.action-add #input_dayEnd").datepicker("setDate",missionDay);
 			}
-		}
+*/		}
 		
 	},
 	changeView: function(type){

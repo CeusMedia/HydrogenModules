@@ -8,23 +8,15 @@ $buttonSets		= array(
 	array(
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
-	),
+/*	),
 	array(
 		UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'iCal-Export', 'button icon export ical' )
-	)
+*/	)
 );
 
 $helper		= new View_Helper_MissionCalendar( $env );
-$label		= $helper->renderLabel( $year, $month );
 $calendar	= $helper->render( $userId, $year, $month );
 $content	= '<div>'.$calendar.'</div>';
-
-$buttonSets[]	= array(
-	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(-1)">&laquo;</button>',
-	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(0)">&Omicron;</button>',
-	'<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(1)">&raquo;</button>',
-	$label
-);
 
 $script	= '
 <script>

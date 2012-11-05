@@ -94,11 +94,9 @@ $optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
 
 if( $useProjects ){
 	$optProject	= array();
-	foreach( $userProjects as $relation )
-		if( $projects[$relation->projectId]->status >= 0 )
-			$optProject[$relation->projectId]	= $projects[$relation->projectId]->title;
+	foreach( $userProjects as $projectId => $project )
+		$optProject[$projectId]	= $project->title;
 	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
-
 }
 
 $panelToIssue	= '';
