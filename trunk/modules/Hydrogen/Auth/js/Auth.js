@@ -1,4 +1,4 @@
-Auth = {
+var Auth = {
 
 	oneMinute: 60 * 1000,
 
@@ -46,6 +46,6 @@ Auth = {
 			}, duration
 		);
 	}
-}
+};
 Auth.initSessionRefresh();
 Auth.initAutoLogout();
