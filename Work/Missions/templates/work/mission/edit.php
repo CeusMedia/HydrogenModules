@@ -226,11 +226,11 @@ return '
 	'.$panelEdit.'
 	'.$panelToIssue.'
 	<fieldset>
-		<legend>Status setzen</legend>
+		<legend class="icon edit">Status setzen</legend>
 		'.$states.'
 	</fieldset>
 	<fieldset>
-		<legend>Priorität ändern</legend>
+		<legend class="icon edit">Priorität ändern</legend>
 		'.$priorities.'
 	</fieldset>
 </div>
