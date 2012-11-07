@@ -9,7 +9,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	protected $messenger;
 	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$edito		Module XML editor instance */
 	protected $editor;
-	
+
 	protected function __onInit(){
 		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
 		$this->request		= $this->env->getRequest();
@@ -292,11 +292,34 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		try{
 			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
 			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+
+			$missings = array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
+			if( $missings ){
+				$list	= array();
+				foreach( $missings as $missing ){
+					$missingModule	= $this->logic->getModule( $missing );
+					$status			= 4;
+					if( !$missingModule ){
+						$missingModule			= new stdClass();
+						$missingModule->id		= $missing;
+						$missingModule->title	= $missing;
+						$status					= 0;
+					}
+					$url		= './admin/module/viewer/'.$missingModule->id;
+					$link		= UI_HTML_Tag::create( 'a', $missingModule->title, array( 'href' => $url ) );
+					$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+					$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+				}
+				$list			= UI_HTML_Tag::create( 'ul', join( $list ) );
+				$msg			= 'Das Modul "%1$s" ist unvollständig installiert. Es fehlen folgende Module:<br/>%2$s';
+				$this->messenger->noteError( $msg, $module->title, $list );
+				$this->restart( './admin/module/installer/'.$missingModule->id.'/'.$module->id );
+			}
 		}
 		catch( Exception $e ){
 			$this->messenger->noteError( 'Problem bei den Abhängigkeiten: '.$e->getMessage() );
 		}
-		
+
 		$this->addData( 'pathApp', $this->env->pathApp );
 		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
 		$this->addData( 'module', $module );

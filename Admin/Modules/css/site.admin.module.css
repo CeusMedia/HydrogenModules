@@ -27,6 +27,13 @@ table.modules.all td div a.image img {
 	max-width: 16px;
 	max-height: 16px;
 	}
+table.modules.all small.shorten {
+	display: block;
+	width: 92%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
 
 
 /*  --  LIST: RELATED MODULES  --  */
