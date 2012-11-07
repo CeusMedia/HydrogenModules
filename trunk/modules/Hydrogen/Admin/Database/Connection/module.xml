@@ -15,7 +15,7 @@
 		<style load="auto">module.admin.database.connection.css</style>
 	</files>
 	<relations>
-		<needs type="module">Database</needs>
+		<needs type="module">Resource_Database</needs>
 	</relations>
 	<link xml:lang="de" access="inside" path="admin/database/connection" rank="95">Datenbank-Verbindung</link>
 </module>
