@@ -13,9 +13,10 @@ if( $modulesTotal > $limit ){
 $list	= array();
 foreach( $modules as $moduleId => $module ){
 	$descLines	= explode( "\n", $module->description );
+	$abstract	= $descLines[0];
 	$attributes	= array(
 		'class'		=> 'module available',
-		'title'		=> array_shift( $descLines ),
+		'title'		=> $abstract,
 		'href'		=> './admin/module/viewer/index/'.$moduleId
 	);
 
@@ -27,8 +28,7 @@ foreach( $modules as $moduleId => $module ){
 	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
 
 	$category	= $module->category;
-#	$abstract	= array_shift( explode( "\n", $module->description ? $module->description : '&nbsp;' ) );
-	$abstract	= strlen( trim( $module->description ) ) ? array_shift( $descLines) : '&nbsp;';
+	$abstract	= strlen( $abstract ) ? $abstract : '&nbsp;';
 	$link		= UI_HTML_Tag::create( 'a', $module->title, $attributes );
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
@@ -41,7 +41,7 @@ foreach( $modules as $moduleId => $module ){
 	}
 	$version	= '<span class="module-version">'.$version.'</span>';
 	$list[]		= '<tr class="'.$class.'">
-		<td>'.$icon.'&nbsp;'.$link.'<br/><small>'.$abstract.'</small></td>
+		<td>'.$icon.'&nbsp;'.$link.'<br/><small class="shorten">'.$abstract.'</small></td>
 		<td>'.$type.'</td>
 		<td>'.$version.'</td>
 		<td>'.$category.'</td>
@@ -54,7 +54,12 @@ $heads		= array(
 	$words['index']['headCategory'],
 );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
-$listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
+$colGroup	= UI_HTML_Elements::ColumnGroup( "58%,14%,8%,20%" );
+$listAll	= '<table class="modules all" style="table-layout: fixed">
+	'.$colGroup.'
+	'.$heads.'
+	'.join( $list ).'
+</table>';
 
 
 function renderPagesIndicator( $count, $total, $offset, $template = '%1$s - %2$s / %3$s' ){

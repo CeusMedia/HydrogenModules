@@ -39,7 +39,8 @@ if( $relations ){
 		$class	= 'icon module module-status-'.$status;
 		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
 		$type	= $words['relation-types'][$relatedModule->relationType];
-		$status	= $words['types'][$modules[$relatedModuleId]->type];
+		$status	= isset( $modules[$relatedModuleId] ) ? $modules[$relatedModuleId]->type : 0;
+		$status	= $words['types'][$status];
 		$rows[]	= '<tr><td>'.$type.'</td><td>'.$label.'</td><td>'.$status.'</td><td>'.$linkRemove.'</td></tr>';
 	}
 	$colgroup		= UI_HTML_Elements::ColumnGroup( '20%', '50%', '20%', '10%' );
