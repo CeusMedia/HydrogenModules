@@ -11,13 +11,26 @@ Extends page components to collect JavaScript and Stylesheet files by combinatio
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>JSMin.php5</script>
+		<class>JSMin.php5</class>
 	</files>
-        <config type="boolean" name="compressScripts"></config>
-        <config type="boolean" name="compressStyles"></config>
-	<config type="string" name="prefix">min.</config>
-	<config type="string" name="suffix">.js</config>
+	<config type="string" name="jsCachePath"></config>
+	<config type="boolean" name="jsMinify"></config>
+	<config type="string" name="jsPrefix">min.</config>
+	<config type="string" name="jsSuffix">.js</config>
+	<config type="string" name="cssCachePath"></config>
+	<config type="boolean" name="cssMinify"></config>
+	<config type="string" name="cssPrefix">min.</config>
+	<config type="string" name="cssSuffix">.css</config>
 	<relations/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$config = (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
+$context->js->setPrefix( $config->jsPrefix );
+$context->js->setSuffix( $config->jsSuffix );
+$pathCache	= $config->jsCachePath ? $config->jsCachePath : $env->getConfig()->get( 'path.cache' );
+$context->js->setCachePath( $pathCache );
+$context->js->setCompression( $config->jsMinify );
+$context->setPackaging( FALSE, $config->cssMinify );
+]]></hook>
 	<hook type="resource" resource="Page" event="prefilter"><![CDATA[
 //die("UI:Compressor: Hook called on event Page@prefilter");
 	]]></hook>
