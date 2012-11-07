@@ -12,21 +12,23 @@ if( $modulesTotal > $limit ){
 /*  --  MODULE TABLE  --  */
 $list	= array();
 foreach( $modules as $moduleId => $module ){
+	$descLines	= explode( "\n", $module->description );
 	$attributes	= array(
 		'class'		=> 'module available',
-		'title'		=> array_shift( explode( "\n", $module->description ) ),
+		'title'		=> array_shift( $descLines ),
 		'href'		=> './admin/module/viewer/index/'.$moduleId
 	);
-	
+
 	$icon		= '';
 	if( !empty( $module->icon ) ){
 		$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
 		$icon	= UI_HTML_Tag::create( 'a', $image, array( 'class' => 'image' ) );
 	}
 	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
-	
+
 	$category	= $module->category;
-	$abstract	= array_shift( explode( "\n", $module->description ? $module->description : '&nbsp;' ) );
+#	$abstract	= array_shift( explode( "\n", $module->description ? $module->description : '&nbsp;' ) );
+	$abstract	= strlen( trim( $module->description ) ) ? array_shift( $descLines) : '&nbsp;';
 	$link		= UI_HTML_Tag::create( 'a', $module->title, $attributes );
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
