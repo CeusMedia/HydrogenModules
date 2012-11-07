@@ -13,7 +13,8 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 			$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
 		$icon	= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'module-icon' ) );
 		$title	= UI_HTML_Tag::create( 'div', $module->title, array( 'class' => 'module-title' ) );
-		$desc	= array_shift( explode( '<br />', nl2br( $module->description ) ) );
+		$desc	= explode( '<br />', nl2br( $module->description ) );
+		$desc	= array_shift( $desc );
 		$desc	= UI_HTML_Tag::create( 'div', $desc, array( 'class' => 'module-desc' ) );
 		$click	= 'document.location.href=\''.$url.$module->id.'\';';
 		return UI_HTML_Tag::create( 'div', $icon.$title.$desc, array( 'class' => $class, 'onclick' => $click ) );
@@ -62,10 +63,11 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 			$label	= $relatedModuleId;
 			if( isset( $allModules[$relatedModuleId] ) ){
 				$relatedModule	= $allModules[$relatedModuleId];
-				$desc	= array_shift( explode( '<br />', nl2br( $relatedModule->description ) ) );
-				$label	= UI_HTML_Tag::create( 'acronym', $relatedModule->title, array( 'title' => $desc ) );
+				$desc	= explode( '<br />', nl2br( $relatedModule->description ) );
+				$attr	= array( 'title' => array_shift( $desc ) );
+				$label	= UI_HTML_Tag::create( 'acronym', $relatedModule->title, $attr );
 				if( $url )
-					$label	= UI_HTML_Elements::Link( $url.$relatedModuleId, $relatedModule->title, array( 'title' => $desc ) );
+					$label	= UI_HTML_Elements::Link( $url.$relatedModuleId, $relatedModule->title, $attr );
 			}
 			$class	= 'icon module module-status-'.$status;
 			$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );
