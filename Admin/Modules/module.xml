@@ -50,6 +50,7 @@ This module needs other modules to be installed:
 	</files>
 	<relations>
 		<needs type="module">Admin_Module_Sources</needs>
+		<needs type="module">UI_Helper_Content</needs>
 <!--		<needs type="module">Admin_Instances</needs>-->
 	</relations>
 	<link xml:lang="de" path="admin/module" access="acl" rank="35">Module</link>
