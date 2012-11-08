@@ -36,6 +36,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 
 	public function reload( $moduleId ){
 		$module	= $this->logic->getModule( $moduleId );
+		$cache	= $this->env->getCache();
 		if( !$module ){
 			$this->messenger->noteError( 'Invalid module ID "'.$moduleId.'".' );
 			$this->restart( './admin/module/viewer' );
@@ -44,15 +45,15 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		switch( (int) $request->get( 'stage' ) ){
 			case 0:
 				$version	= $module->version;
-				$version	= "0.1";
+//				$version	= "0.1";
 				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=1&oldVersion='.$version );
 				break;
 			case 1:
 				$version	= $request->get( 'oldVersion' );
-				$path		= 'Modules/'.$module->source.'/'.$moduleId;
-				if( $this->env->getCache()->has( $path ) )
-					$this->env->getCache()->remove( $path );
-				@unlink( 'config/modules/cache/Sources/'.$module->source );									//  @todo	kriss: extract
+				if( $cache->has( $cacheKey = 'Modules/'.$module->source.'/'.$moduleId ) )			//  module has been cached
+					$cache->remove( $cacheKey );													//  remove module from cache
+				if( $cache->has( $cacheKey = 'Sources/'.$module->source ) )							//  module source has been cached
+					$cache->remove( $cacheKey );													//  remove whole module source from cache
 				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=2&oldVersion='.$version );
 				break;
 			case 2:
@@ -68,6 +69,12 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 
 	public function view( $moduleId ){
 		$module		= $this->logic->model->get( $moduleId );
+		if( strlen( trim( $module->versionInstalled ) ) ){
+			if( version_compare( $module->versionAvailable, $module->versionInstalled ) ){
+				$msg	= 'Update from version %1$s to %2$s available.';
+				$this->env->getMessenger()->noteNotice( $msg, $module->versionInstalled, $module->versionAvailable );
+			}
+		}
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
 		$this->addData( 'module', $module );

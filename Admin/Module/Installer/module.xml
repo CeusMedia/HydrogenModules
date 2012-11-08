@@ -23,7 +23,7 @@ This module needs other modules to be installed:
 		<template>admin/module/installer/view.php</template>
 	</files>
 	<relations>
-		<needs type="module">Admin_Modules</needs>
+		<needs type="module">Admin_Module_Editor</needs>
 	</relations>
 	<link xml:lang="de" path="admin/module/installer" access="acl" rank="37">Modulinstallation</link>
 	<link xml:lang="en" path="admin/module/installer" access="acl" rank="37">Module Installer</link>
