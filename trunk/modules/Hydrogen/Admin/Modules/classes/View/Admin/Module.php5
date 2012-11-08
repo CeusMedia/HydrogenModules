@@ -66,8 +66,10 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 				$desc	= explode( '<br />', nl2br( $relatedModule->description ) );
 				$attr	= array( 'title' => array_shift( $desc ) );
 				$label	= UI_HTML_Tag::create( 'acronym', $relatedModule->title, $attr );
-				if( $url )
-					$label	= UI_HTML_Elements::Link( $url.$relatedModuleId, $relatedModule->title, $attr );
+				if( $url ){
+					$attr['href']	= $url.$relatedModuleId;
+					$label	= UI_HTML_Tag::create( 'a', $relatedModule->title, $attr );
+				}
 			}
 			$class	= 'icon module module-status-'.$status;
 			$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );

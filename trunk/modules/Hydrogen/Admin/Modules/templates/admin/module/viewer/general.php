@@ -6,25 +6,21 @@ $model		= new Model_ModuleSource( $this->env );
 foreach( $model->getAll() as $source )
 	$sources[$source->id]	= $source;
 
-$icon	= "";
-if( $module->icon ){
-	$icon	= '<img src="'.$module->icon.'" style="min-width: 64px; min-height: 64px; max-width: 128px; max-height: 128px"/>';
-}
+$icon	= $module->icon ? UI_HTML_Tag::create( 'img', NULL, array(
+	'src'	=> $module->icon,
+	'style'	=> array(
+		'min-width'		=> '64px',
+		'min-height'	=> '64px',
+		'max-width'		=> '128px',
+		'max-height'	=> '128px'
+) ) ) : '';
 
-$desc	= $module->description;
-$desc	= preg_replace( "/\[(http\S+) ([^]]+)\]/", '<a href="\\1">\\2</a>', $desc );
-$desc	= preg_replace( "/\[(http\S+)\]/", '<a href="\\1">\\1</a>', $desc );
-
-$desc	= View_Helper_ContentConverter::formatText( $env, $desc );
-$desc	= View_Helper_ContentConverter::formatLinks( $env, $desc );
-$desc	= View_Helper_ContentConverter::formatCurrencies( $env, $desc );
-$desc	= View_Helper_ContentConverter::formatWikiLinks( $env, $desc );
-$desc	= View_Helper_ContentConverter::formatCodeBlocks( $env, $desc );
-$desc	= View_Helper_ContentConverter::formatBreaks( $env, $desc );
+$desc	= trim( $module->description );
+$desc	= strlen( $desc ) ? View_Helper_ContentConverter::render( $env, $desc ).'<br/>' : '';
 
 $list	= array();
 
-$source	= 'lokal';
+$source	= 'local';
 if( isset( $sources[$module->source] ) ){
 	$source	= $sources[$module->source];
 	$source	= UI_HTML_Tag::create( 'acronym', $module->source, array( 'title' => htmlentities( $source->title ) ) );
@@ -103,9 +99,9 @@ return '
 	</div>
 	<div class="column-left-70">
 		<h3>'.$module->title.'</h3>
-		<br/>
 		<div class="description">
-			'.nl2br( $desc ).'
+			'.$desc.'
+			<br/>
 		</div>
 		'.$list.'
 	</div>
@@ -119,7 +115,5 @@ return '
 		&nbsp;|&nbsp;
 		'.$buttonReload.'
 	</div>
-</fieldset>
-';
-
+</fieldset>';
 ?>
