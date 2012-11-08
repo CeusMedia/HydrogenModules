@@ -1,37 +1,50 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Compressor</title>
-	<description><![CDATA[
-Increases performance of web applications by reducing HTTP requests and traffic.
-Extends page components to collect JavaScript and Stylesheet files by combination and compression.
+	<description><![CDATA[Increases performance of web applications by reducing HTTP requests and traffic.
+
+The default Hydrogen page components for collecting JavaScripts and Stylesheets already are capable to combine and compress collected resources.
+This module configures and enables this compression.
+
+Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
 ]]></description>
 	<category>User Interface</category>
-	<version>0.1</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>JSMin.php5</class>
 	</files>
-	<config type="string" name="jsCachePath"></config>
-	<config type="boolean" name="jsMinify"></config>
-	<config type="string" name="jsPrefix">min.</config>
-	<config type="string" name="jsSuffix">.js</config>
-	<config type="string" name="cssCachePath"></config>
-	<config type="boolean" name="cssMinify"></config>
-	<config type="string" name="cssPrefix">min.</config>
-	<config type="string" name="cssSuffix">.css</config>
+	<config protected="yes" type="string" name="jsCachePath"></config>
+	<config protected="yes" type="boolean" name="jsMinify" mandatory="yes">yes</config>
+	<config protected="yes" type="string" name="jsPrefix">min.</config>
+	<config protected="yes" type="string" name="jsSuffix"></config>
+	<config protected="yes" type="string" name="cssCachePath"></config>
+	<config protected="yes" type="boolean" name="cssMinify" mandatory="yes">yes</config>
+	<config protected="yes" type="string" name="cssPrefix">min.</config>
+	<config protected="yes" type="string" name="cssSuffix"></config>
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config = (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
+$pathCache  = $env->getConfig()->get( 'path.cache' );
+
 $context->js->setPrefix( $config->jsPrefix );
 $context->js->setSuffix( $config->jsSuffix );
-$pathCache	= $config->jsCachePath ? $config->jsCachePath : $env->getConfig()->get( 'path.cache' );
-$context->js->setCachePath( $pathCache );
+$context->js->setCachePath( $config->jsCachePath ? $config->jsCachePath : $pathCache );
 $context->js->setCompression( $config->jsMinify );
+
+$context->css->primer->setPrefix( $config->cssPrefix );
+$context->css->primer->setSuffix( $config->cssSuffix );
+$context->css->primer->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
+$context->css->primer->setCompression( $config->cssMinify );
+
+$context->css->theme->setPrefix( $config->cssPrefix );
+$context->css->theme->setSuffix( $config->cssSuffix );
+$context->css->theme->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
+$context->css->theme->setCompression( $config->cssMinify );
+
 $context->setPackaging( FALSE, $config->cssMinify );
 ]]></hook>
-	<hook type="resource" resource="Page" event="prefilter"><![CDATA[
-//die("UI:Compressor: Hook called on event Page@prefilter");
-	]]></hook>
 </module>
+
