@@ -23,6 +23,9 @@
 		<script source="local">site.admin.module.source.js</script>
 		<style source="theme">site.admin.module.source.css</style>
 	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
 	<link xml:lang="de" path="admin/module/source" access="acl" rank="93">Module-Quellen</link>
 	<link xml:lang="en" path="admin/module/source" access="acl" rank="93">Module Sources</link>
 </module>

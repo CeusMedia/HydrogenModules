@@ -3,7 +3,7 @@
 	<title>Instances</title>
 	<description><![CDATA[Application instance administration for remote access to other Hydrogen applications.]]></description>
 	<category>Administration</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files>
 		<class>Controller/Admin/Instance.php5</class>
 		<class>Model/Instance.php5</class>
@@ -21,6 +21,9 @@
 		<locale>en/html/admin/instance/add.info.html</locale>
 		<locale>en/html/admin/instance/edit.info.html</locale>
 	</files>
-	<link xml:lang="de" path="admin/instance" access="acl" rank="82">Instanzen</link>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+ 	<link xml:lang="de" path="admin/instance" access="acl" rank="82">Instanzen</link>
 	<link xml:lang="en" path="admin/instance" access="acl" rank="82">Instances</link>
 </module>
