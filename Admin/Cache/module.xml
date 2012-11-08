@@ -14,6 +14,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Cache</needs>
+		<needs type="module">JS_jQuery</needs>
 	</relations>
 	<link xml:lang="de" rank="97" access="acl" path="admin/cache">Cache</link>
 	<link xml:lang="en" rank="97" access="acl" path="admin/cache">Cache</link>
