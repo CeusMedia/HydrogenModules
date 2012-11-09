@@ -2,12 +2,13 @@
 <module>
 	<title>JS: jQuery</title>
 	<description><![CDATA[jQuery JavaScript Library]]></description>
-	<version>1.7.2</version>
+	<version>1.8.2</version>
 	<category>JavaScript</category>
 	<author site="http://jquery.org/team">jQuery Team</author>
 	<url>http://jquery.com/</url>
 	<license source="http://jquery.org/license">MIT / GPL 2</license>
 	<files>
-		<script load="auto" top="yes">jquery.min.js</script>
+		<script load="auto" top="yes">jquery-1.8.2.min.js</script>
+		<script top="yes">jquery-1.8.2.js</script>
 	</files>
 </module>
