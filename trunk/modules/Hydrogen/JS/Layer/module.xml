@@ -20,9 +20,9 @@
 	<config name="button.image.load.label">download</config>
 	<config name="speed.hide">0</config>
 	<config name="speed.show">0</config>
-    <relations>
-        <needs type="module">JS_jQuery</needs>
-    </relations>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.js_layer.' );
 		$buttonDownload	= $config['button.image.download'] == 'yes' ? 'true' : 'false';
