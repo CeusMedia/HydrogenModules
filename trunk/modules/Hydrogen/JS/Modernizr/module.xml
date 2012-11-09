@@ -3,8 +3,9 @@
 	<title>JS: Modernizr</title>
 	<description><![CDATA[Browser feature detection and media query support.]]></description>
 	<category>JavaScript</category>
-	<version>2.5.3</version>
+	<version>2.6.2</version>
 	<files>
-		<script source="lib" load="auto">modernizr/2.5.3.js</script>
+		<script load="auto" top="yes">modernizr-2.6.2.min.js</script>
+		<script>modernizr-2.6.2.js</script>
 	</files>
 </module>
