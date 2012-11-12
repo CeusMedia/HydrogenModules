@@ -98,7 +98,7 @@ return '
 		'.$icon.'
 	</div>
 	<div class="column-left-70">
-		<h3>'.$module->title.'</h3>
+		<h3>'.View_Admin_Module::formatLabel( $module ).'</h3>
 		<div class="description">
 			'.$desc.'
 			<br/>

@@ -7,12 +7,25 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	public function install(){
 	}
 
+	static public function formatLabel( $title ){
+		if( is_object( $title ) && !empty( $title->title ) )
+			$title	= $title->title;
+		$parts	= explode( ': ', $title );
+		$name	= '<span class="module-label-name">'.array_pop( $parts ).'</span>';
+		foreach( $parts as $nr => $part )
+			$parts[$nr]	= '<span class="module-label-prefix">'.$part.'</span>';
+		array_push( $parts, $name );
+		$parts	= implode( '<span class="module-label-separator">:</span>', $parts );
+		return '<div class="module-label">'.$parts.'</div>';
+	}
+	
+	
 	protected function renderModuleButton( $module, $url, $class = 'module button' ){
 		$image		= '';
 		if( !empty( $module->icon ) )
 			$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
 		$icon	= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'module-icon' ) );
-		$title	= UI_HTML_Tag::create( 'div', $module->title, array( 'class' => 'module-title' ) );
+		$title	= UI_HTML_Tag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
 		$desc	= explode( '<br />', nl2br( $module->description ) );
 		$desc	= array_shift( $desc );
 		$desc	= UI_HTML_Tag::create( 'div', $desc, array( 'class' => 'module-desc' ) );
