@@ -15,8 +15,6 @@ if( $limit && $total > $limit )
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }
 
-print_m($words['indexListHeads']);
-die;
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
@@ -83,6 +81,5 @@ return '
 		'.UI_HTML_Elements::LinkButton( './admin/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
 	</div>
 </fieldset>
-';		die( "1" );
-
+';
 ?>
