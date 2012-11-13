@@ -9,12 +9,14 @@ This module configures and enables this compression.
 Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
 ]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>JSMin.php5</class>
+		<class>Controller/Compressor.php5</class>
+		<class>View/Compressor.php5</class>
 	</files>
 	<config protected="yes" type="string" name="jsCachePath"></config>
 	<config protected="yes" type="boolean" name="jsMinify" mandatory="yes">yes</config>
@@ -25,6 +27,7 @@ Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http:/
 	<config protected="yes" type="string" name="cssPrefix">min.</config>
 	<config protected="yes" type="string" name="cssSuffix"></config>
 	<relations/>
+        <link rank="99" access="public" path="compressor/flush"></link>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config = (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
 $pathCache  = $env->getConfig()->get( 'path.cache' );
@@ -47,4 +50,3 @@ $context->css->theme->setCompression( $config->cssMinify );
 $context->setPackaging( FALSE, $config->cssMinify );
 ]]></hook>
 </module>
-
