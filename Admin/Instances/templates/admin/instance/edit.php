@@ -13,9 +13,21 @@ $panelEdit	= '
 				<label for="input_id" class="mandatory">Instanz-ID</label><br/>
 				<input type="text" name="id" id="input_id" value="'.$instance->id.'" class="max"/>
 			</li>
-			<li>
-				<label for="input_path" class="mandatory">Pfad</label><br/>
-				<code>'.$root.'</code><input type="text" name="path" id="input_path" value="'.$instance->path.'" class="l"/>
+			<li class="column-left-20">
+				<label for="input_protocol" class="">Protokol</label><br/>
+				<select name="protocol" id="input_protocol" class="max"><option>http://</option></select>
+			</li>
+			<li class="column-left-30">
+				<label for="input_host" class="mandatory">Server-Host / Domäne</label><br/>
+				<input type="text" name="host" id="input_host" value="'.$instance->host.'" class="max mandatory"/>
+			</li>
+			<li class="column-left-50">
+				<label for="input_path" class="">Pfad</label><br/>
+				<input type="text" name="path" id="input_path" value="'.$instance->path.'" class="max"/>
+			</li>
+			<li class="column-clear">
+				<label for="input_uri" class="mandatory">Absoluter Pfad <small>auf dem Server</small></label><br/>
+				<input type="text" name="uri" id="input_uri" value="'.$instance->uri.'" class="max"/>
 			</li>
 			<li class="column-left-50">
 				<label for="input_configPath" class="">Konfigurationspfad</label><br/>

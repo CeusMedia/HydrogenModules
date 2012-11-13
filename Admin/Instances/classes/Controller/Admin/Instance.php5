@@ -10,16 +10,18 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'add' ) ){
-
 			$id			= trim( $post->get( 'id' ) );
 			$title		= trim( $post->get( 'title' ) );
+			$protocol	= trim( $post->get( 'protocol' ) );
+			$host		= trim( $post->get( 'host' ) );
 			$path		= trim( $post->get( 'path' ) );
+			$uri		= trim( $post->get( 'uri' ) );
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
-			
+
 			$path		= preg_replace( '@^(.+)/*$@', '\\1/', $path );
 			$configPath	= $configPath ? preg_replace( '@/*$@', '', $configPath ).'/' : '';
-			
+
 			if( !strlen( $title ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !strlen( $id ) )
@@ -30,7 +32,10 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				$data		= array(
 					'id'			=> $id,
 					'title'			=> $title,
+					'protocol'		=> $protocol,
+					'host'			=> $host,
 					'path'			=> $path,
+					'uri'			=> $uri,
 				);
 				if( $configPath != '/' && $configPath != 'config/' )
 					$data['configPath']	= $configPath;
@@ -42,7 +47,10 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'id', $post->get( 'id' ) );
-		$this->addData( 'path', $post->get( 'path' ) );
+		$this->addData( 'protocol', $post->get( 'protocol' ) );
+		$this->addData( 'host', $post->get( 'host' ) );
+		$this->addData( 'path', $post->get( 'path' ) ? $post->get( 'path' ) : '/' );
+		$this->addData( 'uri', $post->get( 'uri' ) );
 		$this->addData( 'title', $post->get( 'title' ) );
 		$this->addData( 'configPath', $post->get( 'configPath' ) );
 		$this->addData( 'configFile', $post->get( 'configFile' ) );
@@ -52,14 +60,14 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		$instance	= $this->model->get( $instanceId );
 
-		if( !preg_match( '/^\//', $instance->path ) )
-			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
+#		if( !preg_match( '/^\//', $instance->path ) )
+#			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 		if( empty( $instance->configPath ) )
 			$instance->configPath	= 'config/';
 		if( empty( $instance->configFile ) )
 			$instance->configFile	= 'config.ini';
-		
-		$fileName	= $instance->path.$instance->configPath.$instance->configFile;
+
+		$fileName	= $instance->uri.$instance->configPath.$instance->configFile;
 #		remark( 'Config file: '.$fileName );
 		$data		= array(
 			'app.name'			=> $instance->title,
@@ -87,21 +95,21 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
-		
+
 
 	public function configureDatabase( $instanceId ){
 		$messenger	= $this->env->getMessenger();
 		$instance	= $this->model->get( $instanceId );
 		$request	= $this->env->getRequest();
 
-		if( !preg_match( '/^\//', $instance->path ) )
-			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
+#		if( !preg_match( '/^\//', $instance->path ) )
+#			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 		if( empty( $instance->configPath ) )
 			$instance->configPath	= 'config/';
 		if( empty( $instance->configFile ) )
 			$instance->configFile	= 'config.ini';
-		
-		$fileName	= $instance->path.$instance->configPath.$instance->configFile;
+
+		$fileName	= $instance->uri.$instance->configPath.$instance->configFile;
 
 		$data	= array(
 			'database'				=> 'yes',
@@ -131,22 +139,22 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
-	
+
 	public function createPath( $instanceId, $path = NULL ){
 		$messenger	= $this->env->getMessenger();
 		$instance	= $this->model->get( $instanceId );
 		$path		= base64_decode( $path );
 #		print_m( $instance );
-		if( !preg_match( '/^\//', $instance->path ) )
-			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
-		$path	= $instance->path.$path;
+#		if( !preg_match( '/^\//', $instance->path ) )
+#			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
+		$path	= $instance->uri.$path;
 		if( Folder_Editor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
 			$messenger->noteSuccess( 'Der Pfad "'.$path.'" wurde erzeugt.' );
 		else
 			$messenger->noteError( 'Der Pfad "'.$path.'" konnte nicht erzeugt werden.' );
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
-	
+
 	public function edit( $instanceId ){
 		$messenger	= $this->env->getMessenger();
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );

@@ -2,9 +2,9 @@
 
 $list	= array();
 
-$instance->path	= empty( $instance->path ) ? '/' : $instance->path;
-if( !preg_match( '/^\//', $instance->path ) )
-	$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
+#$instance->path	= empty( $instance->path ) ? '/' : $instance->path;
+#if( !preg_match( '/^\//', $instance->path ) )
+#	$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 
 if( !$instance->configPath )
 	$instance->configPath	= 'config/';
@@ -13,7 +13,7 @@ if( !$instance->configFile )
 
 
 $pathConfig	= '';
-$fileConfig	= $instance->path.$instance->configPath.$instance->configFile;
+$fileConfig	= $instance->uri.$instance->configPath.$instance->configFile;
 
 #print_m( $instance );
 #die;
@@ -25,21 +25,21 @@ $iconStatus2	= UI_HTML_Elements::Image( 'http://localhost/lib/cmIcons/famfamfam/
 //  --  CHECK: INSTANCE PATH  --  //
 $status	= 1;
 $hint	= 'Der Instanzordner existiert nicht.';
-if( file_exists( $instance->path ) ){
+if( file_exists( $instance->uri ) ){
 	$status	= 2;
 	$hint	= 'OK';
 }
 $icon	= UI_HTML_Tag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
 $buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
-$list[]	= '<tr class="status-'.$status.'"><td>Instanzordner</td><td>'.$instance->path.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
+$list[]	= '<tr class="status-'.$status.'"><td>Instanzordner</td><td>'.$instance->uri.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 //  --  CHECK: CONFIG PATH  --  //
 $status	= 0;
 $hint	= 'Der Instanzordner muss vorher erstellt werden.';
-if( file_exists( $instance->path ) ){
+if( file_exists( $instance->uri ) ){
 	$status	= 1;
 	$hint	= 'Der Konfigurationsordner existiert nicht.';
-	if( file_exists( $instance->path.$instance->configPath ) ){
+	if( file_exists( $instance->uri.$instance->configPath ) ){
 		$status = 2;
 		$hint	= 'OK';
 	}
@@ -51,7 +51,7 @@ $list[]	= '<tr class="status-'.$status.'"><td>Konfigurationsordner</td><td>'.$in
 //  --  CHECK: CONFIG FILE  --  //
 $status	= 0;
 $hint	= 'Der Konfigurationsordner muss vorher erstellt werden.';
-if( file_exists( $instance->path.$instance->configPath ) ){
+if( file_exists( $instance->uri.$instance->configPath ) ){
 	$status	= 1;
 	$hint	= 'Die Konfigurationsdatei existiert nicht.';
 	if( file_exists( $fileConfig ) ){
@@ -75,7 +75,7 @@ if( file_exists( $fileConfig ) ){
 		$path	= $config['path.templates'];
 		$status	= 1;
 		$hint	= 'Der Template-Ordner existiert nicht.';
-		if( file_exists( $instance->path.$config['path.templates'] ) ){
+		if( file_exists( $instance->uri.$config['path.templates'] ) ){
 			$status	= 2;
 			$hint	= 'OK';
 		}
