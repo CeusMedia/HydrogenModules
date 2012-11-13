@@ -78,7 +78,7 @@ class View_Helper_MissionList{
 
 	protected function renderDayButton( $day, $label ){
 		$count		= isset(  $this->list[$day] ) ? count( $this->list[$day] ) : 0;
-		$classes	= array( 'day' );
+		$classes	= array( 'button day' );
 		if( $day < 3 )
 			$classes[]	= 'important';
 		if( !$count )
@@ -159,9 +159,10 @@ class View_Helper_MissionList{
 		$link		= $this->renderRowLabel( $task );
 		$overdue	= $this->renderOverdue( $task );
 		$graph		= $this->indicator->build( $task->status, 4 );
+		$graph		= UI_HTML_Tag::create( 'div', $graph.$overdue, array( 'class' => 'cell-graph' ) );
 
 		$cells		= array();
-		$cells[]	= UI_HTML_Tag::create( 'td', $graph.$overdue, array( 'class' => 'cell-graph' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$task->priority];

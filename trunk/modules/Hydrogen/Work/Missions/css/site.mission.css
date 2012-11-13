@@ -82,7 +82,10 @@ tr.row-priority.priority-5 {
 	border-radius: 10px;
 	color: rgba(255,255,255,1);
 	font-weight: bold;
-	font-size: 0.8em;
+	font-size: 11px;
+	text-shadow: none;
+	text-shadow: 0 -1px rgba(0,0,0,0.5), 1px 0 rgba(0,0,0,0.5), 0 1px rgba(0,0,0,0.5), -1px 0 rgba(0,0,0,0.5);
+/*	font-weight: normal;
 /*	margin: 2px 1em 1px 0em;
 	padding: 0px 7px 0px 6px;
 	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
@@ -170,7 +173,8 @@ body.controller-work-mission.action-index #day-controls button.day {
 	min-width: 90px;
 	width: 12%;
 	height: 50px;
-	margin-right: 0.5%;
+	padding: 0px;
+	margin: 0px 0.5% 0px 0px;
 	border-radius: 0.5em;
 	background: #f2f5f6; /* Old browsers */
 	background: -moz-linear-gradient(top, #f2f5f6 0%, #EDEDED 37%, #D7D7D7 100%); /* FF3.6+ */
@@ -221,8 +225,8 @@ body.controller-work-mission.action-index #day-lists .table-day {
 body.controller-work-mission.action-index #day-lists .table-day table {
 	table-layout: fixed;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-graph,
-body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-time,
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-graph div.cell-graph,
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-time div.cell-time,
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
 	position: relative;
 	}
@@ -247,10 +251,10 @@ table tr.mission-row td {
 	padding: 2px 2px;
 	vertical-align: top;
 	}
-table tr.mission-row td.cell-graph {
+table tr.mission-row td.cell-graph div.cell-graph {
 	padding: 6px 2px 2px 4px;
 	}
-table tr.mission-row td.cell-time {
+table tr.mission-row td.cell-time div.cell-time {
 	padding: 3px 2px 2px 5px;
 	}
 table tr.mission-row td.cell-priority {
