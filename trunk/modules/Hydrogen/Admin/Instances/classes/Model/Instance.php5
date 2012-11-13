@@ -27,7 +27,7 @@ class Model_Instance{
 	public function count(){
 		return count( $this->file->getSections() );
 	}
-	
+
 	public function edit( $id, $data ){
 		$changed	= FALSE;
 		if( $this->file->hasSection( $id ) ){

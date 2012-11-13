@@ -2,14 +2,18 @@
 
 $rows	= array();
 foreach( $instances as $instance ){
-	$url	= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
-	$link	= UI_HTML_Elements::Link( './admin/instance/edit/'.$instance->id, $instance->title );
+	$url			= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
+	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instance->id, $instance->title );
+	$url			= $instance->protocol.$instance->host.$instance->path;
+	$linkInstance	= UI_HTML_Tag::create( 'a', $url, array( 'href' => $url ) );
+	$codeUri		= UI_HTML_Tag::create( 'code', $instance->uri );
 	$cells	= array(
 		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'a', $instance->path, array( 'href' => $url ) ) ),
+		UI_HTML_Tag::create( 'td', $linkInstance.'<br/><small>'.$codeUri.'</small>' ),
 		UI_HTML_Tag::create( 'td', '' ),
 	);
-	$rows[$instance->title]	= '<tr data-url="'.$url.'tools/Todos/">'.join( $cells ).'</tr>';
+	$hasTodoTool		= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
+	$rows[$instance->title]	= '<tr data-check="'.$hasTodoTool.'" data-url="'.$url.'tools/Todos/">'.join( $cells ).'</tr>';
 }
 ksort( $rows );
 
@@ -28,7 +32,7 @@ return '
 <script>
 function loadTodos(){
 	$("tr").each(function(){
-		if(!$(this).data("url"))
+		if(!$(this).data("url") || $(this).data("check") == "no")
 			return;
 		$.ajax({
 			url: $(this).data("url") + "?format=json",

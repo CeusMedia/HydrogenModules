@@ -13,9 +13,21 @@ $panelAdd	= '
 				<label for="input_id" class="mandatory">Instanz-ID</label><br/>
 				<input type="text" name="id" id="input_id" value="'.$id.'" class="max"/>
 			</li>
-			<li>
-				<label for="input_path" class="mandatory">Pfad</label><br/>
-				<code>'.$root.'</code><input type="text" name="path" id="input_path" value="'.$path.'" class="l"/>
+			<li class="column-left-20">
+				<label for="input_protocol" class="">Protokol</label><br/>
+				<select name="protocol" id="input_protocol" class="max"><option>http://</option></select>
+			</li>
+			<li class="column-left-30">
+				<label for="input_host" class="mandatory">Server-Host / Domäne</label><br/>
+				<input type="text" name="host" id="input_host" value="'.$host.'" class="max mandatory"/>
+			</li>
+			<li class="column-left-50">
+				<label for="input_path" class="">Pfad</label><br/>
+				<input type="text" name="path" id="input_path" value="'.$path.'" class="max" data-default="/"/>
+			</li>
+             <li class="column-clear">
+				<label for="input_uri" class="mandatory">Absoluter Pfad <small>auf dem Server</small></label><br/>
+				<input type="text" name="uri" id="input_uri" value="'.$uri.'" class="max"/>
 			</li>
 			<li class="column-left-50">
 				<label for="input_configPath" class="">Konfigurationspfad</label><br/>
@@ -32,6 +44,29 @@ $panelAdd	= '
 		</div>
 	</fieldset>
 </form>
+<style>
+input.default {
+	color: gray;
+	}
+</style>
+<script>
+function showDefaultInputValues(selector){
+	$(selector).find("input").each(function(nr){
+		if($(this).data("default")){
+			$(this).bind("focus blue keyup init",function(){
+				var i = $(this);
+				if(i.val() == i.data("default"))
+					i.addClass("default");
+				else
+					i.removeClass("default");
+			}).trigger("init");
+		}
+	});
+}
+$(document).ready(function(){
+	showDefaultInputValues("form");
+});
+</script>
 ';
 
 $panelInfo		= $this->loadContentFile( 'html/admin/instance/add.info.html' );
