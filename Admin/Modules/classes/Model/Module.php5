@@ -25,14 +25,14 @@ class Model_Module{
 			$this->sources[$source->id]	= $source;
 
 		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
-		
+
 		if( !file_exists( $this->pathRepos ) )
 			throw new RuntimeException( 'Modules folder missing in "'.$this->pathRepos.'"', 1 );
 		if( !file_exists( $this->pathConfig ) )
 			if( !mkdir( $this->pathConfig ) )
 				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
 	}
-	
+
 	/**
 	 *	@todo		increase performance / scalability
 	 */
@@ -77,7 +77,7 @@ class Model_Module{
 				$this->modulesAll[$moduleId]	= $module;
 			}
 		}
-		
+
 		$modulesAll	= $this->modulesAll;
 		if( $filters ){
 			foreach( $filters as $filterKey => $filterValue ){
@@ -158,7 +158,7 @@ class Model_Module{
 		}
 		return $list;
 	}
-	
+
 	public function getAvailable(){
 		return $this->modulesAvailable;
 	}
@@ -208,7 +208,7 @@ class Model_Module{
 			return XML_ElementReader::readFile( $moduleFile );
 		return File_Reader::load( $moduleFile );
 	}
-	
+
 	public function getNeededModulesWithStatus( $moduleId ){										//  @todo	refactor to getNeededModuleIdsWithStatus
 		$module	= $this->get( $moduleId );
 		if( !$module )
@@ -314,7 +314,7 @@ class Model_Module{
 		$this->modulesAvailable	= $list;
 		return $results;
 	}
-	
+
 	public function registerLocalFile( $moduleId, $type, $fileName ){								//  @todo: use getLocalModuleXml instead
 		$moduleFile	= $this->pathConfig.$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
