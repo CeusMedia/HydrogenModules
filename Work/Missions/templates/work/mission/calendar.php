@@ -25,9 +25,12 @@ $(document).ready(function(){
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();
 	WorkMissions.init();
+	$(".cmContextMenu").cmContextMenu({"timeSlideDown":150,"timeSlideUp":100}).show();
 });
 </script>';
 $env->getPage()->addHead( $script );
+$env->getPage()->js->addUrl( 'http://localhost/lib/cmScripts/jquery/cmContextMenu/0.1.js' );
+$env->getPage()->addThemeStyle( 'cmContextMenu.css' );
 
 $buttons	= array();
 foreach( $buttonSets as $buttonSet )
