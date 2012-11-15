@@ -42,8 +42,8 @@ $map	= array(
 	'links.youtube'	=> "formatYoutubeLinks",
 	'search.image'	=> "formatImageSearch",
 	'search.map'	=> "formatMapSearch",
-	'breaks'		=> "formatBreaks",
 	'code'			=> "formatCodeBlocks",
+	'breaks'		=> "formatBreaks",
 	'lists'			=> "formatLists",
 );
 $plugins	= $env->getConfig()->getAll( 'module.ui_helper_content.register.' );
