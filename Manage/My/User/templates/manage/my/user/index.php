@@ -180,10 +180,16 @@ if( $env->getModules()->has( 'Manage_My_User_Setting' ) ){
 	$panelSettings	= $helper->renderPanel( './manage/my/user' );
 }
 
+$panelAvatar	= '';
+#if( 1 ){
+#	$panelAvatar	= '';
+#}
+
 return /*UI_HTML_Tag::create( 'h2', $w->heading ).*/
 HTML::DivClass( 'column-right-33',
 	$panelInfo.
-	$panelPassword
+	$panelPassword.
+	$panelAvatar
 ).
 HTML::DivClass( 'column-left-66',
 	$panelEdit.
