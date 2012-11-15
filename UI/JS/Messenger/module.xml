@@ -6,15 +6,13 @@ JavaScript binding to the Hydrogen UI Messenger, which displays result messages 
 Now you can create messages while working with JavaScript. There a 4 methods callable:
 code:js>
 UI.Messenger.noteSuccess("Work done! What's next, pal?");
-<code
-code:js>
 UI.Messenger.noteNotice("Maybe you should know that ...");
-<code
-code:js>
 UI.Messenger.noteError("There was a problem with ...");
-<code
-code:js>
 UI.Messenger.noteFailure("Ouh crap! There was an unexpected error with ...");
+<code
+These methods rely on <cite>UI.Messenger.renderMessage()</cite> with a second parameter:
+code:js>
+UI.Messenger.renderMessage("This is a test","notice");
 <code
 ]]></description>
 	<category>User Interface</category>
