@@ -10,10 +10,11 @@ UI.Messenger.noteNotice("Maybe you should know that ...");
 UI.Messenger.noteError("There was a problem with ...");
 UI.Messenger.noteFailure("Ouh crap! There was an unexpected error with ...");
 <code
-These methods rely on <cite>UI.Messenger.renderMessage()</cite> with a second parameter:
+These methods rely on <cite>UI.Messenger.renderMessage()</cite> with a second parameter, for example:
 code:js>
 UI.Messenger.renderMessage("This is a test","notice");
 <code
+This second parameter can be one of {success,notice,error,failure}.
 ]]></description>
 	<category>User Interface</category>
 	<version>0.1</version>
