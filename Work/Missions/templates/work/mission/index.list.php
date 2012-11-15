@@ -82,16 +82,19 @@ $folders	= array();
 
 if( count( $list[0] ) ){
 	$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 0, $words ).getCount( $list, 0 ) );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-0', $table, $heading, NULL );
 }
 if( count( $list[1] ) ){
 	$heading	= UI_HTML_Tag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 1, $words ).getCount( $list, 1 ) );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-1', $table, $heading, NULL );
 }
 if( count( $list[2] ) ){
 	$heading	= UI_HTML_Tag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
+	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 2, $words ).getCount( $list, 2 ) );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-2', $table, $heading, NULL );
 }

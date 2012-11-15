@@ -170,7 +170,7 @@ body.controller-work-mission.action-index #day-controls {
 
 body.controller-work-mission.action-index #day-controls button.day {
 	position: relative;
-	min-width: 90px;
+	min-width: 80px;
 	width: 12%;
 	height: 50px;
 	padding: 0px;
