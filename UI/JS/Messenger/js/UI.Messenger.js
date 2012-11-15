@@ -6,14 +6,30 @@ UI.Messenger	= {
 	timeRemove: 5000,
 	__init: function(){
 		if(!this.status){
-			var value;		
+			var value;
 			if(typeof config !== "undefined"){
 				this.timeSlideDown	= config.module_ui_js_messenger_slideDown;
 				this.timeSlideUp	= config.module_ui_js_messenger_slideUp;
 				this.timeRemove		= config.module_ui_js_messenger_autoRemove;
+
+				if(this.timeRemove){
+					$(document).ready(function(){
+						$("#layout-messenger>ul>li").each(function(){
+							UI.Messenger.autoRemoveMessage(this);
+						});
+					});	
+				}
 			}
 			this.status = 2;
 		}
+	},
+	autoRemoveMessage: function(item){
+		var messageId	= 'message-'+Math.round(Math.random()*1000000);
+		var callback	= 'UI.Messenger.hideMessage("'+messageId+'")';
+		if(!this.timeRemove)
+			return;
+		$(item).attr("id",messageId);
+		window.setTimeout(callback, this.timeRemove);
 	},
 	discardMessage: function(item){
 		var id;
@@ -48,10 +64,10 @@ UI.Messenger	= {
 		if(!$("ul",container).size())
 			container.prepend($("<ul></ul>"));
 		list		= $("#layout-messenger>ul");
-		messageId	= typeClass+'-'+Math.round(Math.random()*1000000);
-		item		= $("<li></li>").attr('id',messageId).addClass(typeClass).html(message);
+		item		= $("<li></li>").addClass(typeClass).html(message);
 		list.append(item.hide());
 		item.slideDown(this.timeSlideDown);
-		window.setTimeout('UI.Messenger.hideMessage("'+messageId+'")',this.timeRemove);
+		this.autoRemoveMessage(item);
 	}
 };
+UI.Messenger.__init();
