@@ -190,9 +190,12 @@ class View_Helper_MissionList{
 	public function renderButtons(){
 		$buttons	= array();
 		$labels		= array(
-			'<b>Heute</b><br/>'.$this->renderDate( 0 ),
-			'<b>Morgen</b><br/>'.$this->renderDate( 1 ),
-			'<b>Übermorgen</b><br/>'.$this->renderDate( 2 ),
+#			'<b>Heute</b><br/>'.$this->renderDate( 0 ),
+			'<b>'.$this->renderDate( 0, '%2$s</b><br/>%1$s' ),
+#			'<b>Morgen</b><br/>'.$this->renderDate( 1 ),
+			'<b>'.$this->renderDate( 1, '%2$s</b><br/>%1$s' ),
+#			'<b>Übermorgen</b><br/>'.$this->renderDate( 2 ),
+			'<b>'.$this->renderDate( 2, '%2$s</b><br/>%1$s' ),
 			$this->renderDate( 3, '%2$s<br/>%1$s' ),
 			$this->renderDate( 4, '%2$s<br/>%1$s' ),
 			$this->renderDate( 5, '%2$s<br/>%1$s' ),
