@@ -54,6 +54,8 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 					$cache->remove( $cacheKey );													//  remove module from cache
 				if( $cache->has( $cacheKey = 'Sources/'.$module->source ) )							//  module source has been cached
 					$cache->remove( $cacheKey );													//  remove whole module source from cache
+				$this->logic->invalidateFileCache( $this->env->getRemote() );
+				$this->logic->invalidateFileCache( $this->env );
 				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=2&oldVersion='.$version );
 				break;
 			case 2:

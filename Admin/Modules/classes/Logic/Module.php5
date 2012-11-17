@@ -356,8 +356,7 @@ class Logic_Module {
 				}
 				//  --  CONFIGURATION  --  //
 				$this->configureLocalModule( $moduleId, $settings );								//  save given configuration values in local module
-				if( $configApp->get( 'system.cache.modules' ) )
-					@unlink( $pathApp.'config/modules.cache.serial' );
+				$this->invalidateFileCache( $this->env->getRemote() );
 				return TRUE;
 			}
 		}
@@ -373,6 +372,16 @@ class Logic_Module {
 		return FALSE;
 	}
 
+	public function invalidateFileCache( $env = NULL, $f = NULL ){
+		if( $env->getConfig()->get( 'system.cache.modules' ) ){
+			$fileCache	= $env->path.'config/modules.cache.serial';
+			if(file_exists( $fileCache ) ){
+				@unlink( $fileCache );
+				$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
+			}
+		}
+	}
+	
 	protected function linkModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
 		$source		= $this->getSourceFromModuleId( $moduleId );
 		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
@@ -432,8 +441,7 @@ class Logic_Module {
 		$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';
 		if( file_exists( $this->env->pathConfig.'modules/'.$moduleId.'.ini' ) )
 			$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.ini';
-		if( $configApp->get( 'system.cache.modules' ) )
-			$files[]	= $this->env->pathConfig.'modules.cache.serial';
+		$this->invalidateFileCache( $this->env->getRemote() );
 
 		try{
 			//  --  SQL  --  //
