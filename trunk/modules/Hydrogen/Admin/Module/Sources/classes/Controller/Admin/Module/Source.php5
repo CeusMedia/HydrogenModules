@@ -218,7 +218,14 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
 		$this->env->getCache()->flush();
 		$this->env->getCache()->setContext( '' );
-		@unlink( './config/modules/cache/Sources/'.$sourceId );
+		$pathCache	= 'config/modules/cache/';
+		if( $this->env->getConfig()->get( 'path.cache' ) )
+			$pathCache	= $this->env->getConfig()->get( 'path.cache' );
+		$fileCache	= $pathCache.'Sources/'.$sourceId;
+		if( file_exists( $fileCache ) ){
+			@unlink( $fileCache );
+			$this->env->getMessenger()->noteNotice( 'Removed local module cache file <small><code>'.$fileCache.'</code></small>.' );
+		}
 		if( $toList )
 			$this->restart( './admin/module/source' );
 		$this->restart( './admin/module/source/edit/'.$sourceId );
