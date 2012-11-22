@@ -139,9 +139,10 @@ class View_Helper_MissionList{
 		$timeStart	= date( 'H:i', strtotime( $event->timeStart ) );
 		$timeEnd	= date( 'H:i', strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd.' '.$this->words['index']['suffixTime'];
+		$times		= UI_HTML_Tag::create( 'div', $times.$overdue, array( 'class' => 'cell-time' ) );
 
 		$cells		= array();
-		$cells[]	= UI_HTML_Tag::create( 'td', $times.$overdue, array( 'class' => 'cell-time' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];

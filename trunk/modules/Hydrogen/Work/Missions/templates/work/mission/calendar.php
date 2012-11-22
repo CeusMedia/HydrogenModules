@@ -8,10 +8,7 @@ $buttonSets		= array(
 	array(
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
-/*	),
-	array(
-		UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'iCal-Export', 'button icon export ical' )
-*/	)
+	)
 );
 
 $helper		= new View_Helper_MissionCalendar( $env );
@@ -29,8 +26,6 @@ $(document).ready(function(){
 });
 </script>';
 $env->getPage()->addHead( $script );
-$env->getPage()->js->addUrl( 'http://localhost/lib/cmScripts/jquery/cmContextMenu/0.1.js' );
-$env->getPage()->addThemeStyle( 'cmContextMenu.css' );
 
 $buttons	= array();
 foreach( $buttonSets as $buttonSet )
