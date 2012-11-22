@@ -104,19 +104,19 @@ $(document).ready(function(){
 	WorkMissionsCalendar.monthCurrent = '.date( "n" ).';
 	WorkMissionsCalendar.monthShow    = '.(int) $showMonth.';
 //	$("table#mission-calendar tr td ul li").draggable({containment: "#mission-calendar tbody", revert: true});
-	if(typeof ContextMenu !== "undefined"){
+	if(typeof cmContextMenu !== "undefined"){
 		var pathIcons	= "http://img.int1a.net/famfamfam/silk/";
-		ContextMenu.init("#mission-calendar tbody ul li");
-		ContextMenu.labels.priorities = '.json_encode( $this->words['priorities'] ).';
-		ContextMenu.labels.states = '.json_encode( $this->words['states'] ).';
-		ContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
+		cmContextMenu.init("#mission-calendar tbody ul li");
+		cmContextMenu.labels.priorities = '.json_encode( $this->words['priorities'] ).';
+		cmContextMenu.labels.states = '.json_encode( $this->words['states'] ).';
+		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
 			var url = "./work/mission/add/?type=0&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
 			menu.addLinkItem(url, "neue Aufgabe", pathIcons+"script_add.png");
 			var url = "./work/mission/add/?type=1&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
 			menu.addLinkItem(url, "neuer Termin", pathIcons+"date_add.png");
 		});
-		ContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
+		cmContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
 			var missionId = elem.data("id");
 			if(elem.data("title"))
 				menu.addItem("<h4>"+elem.data("title")+"</h4>");
@@ -141,8 +141,8 @@ $(document).ready(function(){
 });
 </script>';
 
-		$this->env->getPage()->addThemeStyle( 'ContextMenu.css' );
-		$this->env->getPage()->js->addUrl( 'javascripts/ContextMenu.js' );
+		$this->env->getPage()->addThemeStyle( 'cmContextMenu.css' );
+		$this->env->getPage()->js->addUrl( 'javascripts/cmContextMenu.js' );
 		$this->env->getPage()->addHead( $script );
 		return $table;
 	}
