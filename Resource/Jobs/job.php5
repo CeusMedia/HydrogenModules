@@ -13,9 +13,9 @@ $modes	= array(
 
 
 //  --  NO NEED TO CHANGE BELOW  --  //
-require_once 'cmClasses/'.$verCMC.'/autoload.php5';							//  load cmClasses
-require_once 'cmFrameworks/'.$verCMF.'/autoload.php5';						//  load cmFrameworks
-require_once 'cmModules/'.$verCMM.'/autoload.php5';							//  load cmModules
+require_once 'cmClasses/'.$verCMC.'/autoload.php5';						//  load cmClasses
+require_once 'cmFrameworks/'.$verCMF.'/autoload.php5';					//  load cmFrameworks
+require_once 'cmModules/'.$verCMM.'/autoload.php5';						//  load cmModules
 
 CMC_Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
 $request	= new Console_RequestReceiver();							//  
