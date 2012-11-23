@@ -27,5 +27,7 @@ This second parameter can be one of {success,notice,error,failure}.
         <config type="integer" name="slideDown">500</config>
         <config type="integer" name="slideUp">500</config>
         <config type="integer" name="autoRemove">5000</config>
-	<relations/>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
 </module>

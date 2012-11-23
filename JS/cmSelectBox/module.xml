@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
-	<title>UI/JS: cmSelectBox</title>
+	<title>JS: cmSelectBox</title>
 	<description><![CDATA[Replacement for HTML selects.]]></description>
 	<category>JavaScript</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -13,6 +13,9 @@
 		<image source="theme">bg_select_arrow.png</image>
 		<image source="theme">bg_select_arrow.psd</image>
 	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$options	= array();
 		$script		= '$("select.cmSelectBox").cmSelectBox('.json_encode( $options ).')';
