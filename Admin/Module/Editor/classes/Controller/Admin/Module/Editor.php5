@@ -149,6 +149,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$request	= $this->env->getRequest();
 		$pairs		= $request->get( 'config' );
 		$this->logic->configureLocalModule( $moduleId, $pairs );
+		$this->logic->invalidateFileCache( $this->env->getRemote() );
 		$this->messenger->noteSuccess( 'Saved.' );
 		$this->restart( './admin/module/editor/view/'.$moduleId.'?tab=config' );
 	}
@@ -324,10 +325,14 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
-		$this->addData( 'modules', $this->logic->model->getAll() );
+		$this->addData( 'modules', $modules = $this->logic->model->getAll() );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'xml', $this->logic->model->getLocalModuleXml( $moduleId ) );
 		$this->addData( 'linkNr', $this->env->getRequest()->get( 'linkNr' ) );
+
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+
 	}
 
 	public function saveXml( $moduleId ){

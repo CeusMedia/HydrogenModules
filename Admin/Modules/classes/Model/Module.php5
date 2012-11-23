@@ -236,8 +236,6 @@ class Model_Module{
 		$module		= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-#		print_m( $module );
-#		die;
 		if( $moduleId ){
 			if( !empty( $module->path ) )								// @todo: finish this hack usind $module->pathSource or ->pathCopy depending on module installation status
 				return preg_replace( "/\/*$/", '/', $module->path );
