@@ -8,4 +8,7 @@
 	<files>
 		<script source="local" load="auto">tinysort-1.3.27.min.js</script>
 	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
 </module>
