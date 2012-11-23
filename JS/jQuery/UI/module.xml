@@ -8,8 +8,8 @@
 	<url>http://jqueryui.com/</url>
 	<license source="http://jquery.org/license">MIT / GPL 2</license>
 	<files>
-		<script load="auto">jquery-ui.min.js</script>
-		<style load="auto">jquery-ui.css</style>
+		<script load="auto">jquery-ui-1.8.18.min.js</script>
+		<style load="auto">jquery-ui-smoothness.css</style>
 		<image source="theme">smoothness/ui-bg_flat_0_aaaaaa_40x100.png</image>
 		<image source="theme">smoothness/ui-bg_flat_75_ffffff_40x100.png</image>
 		<image source="theme">smoothness/ui-bg_glass_55_fbf9ee_1x400.png</image>
