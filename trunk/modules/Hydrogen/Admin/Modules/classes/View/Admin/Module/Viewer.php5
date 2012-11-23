@@ -8,6 +8,11 @@ class View_Admin_Module_Viewer extends View_Admin_Module {
 
 	public function index(){}
 
-	public function view(){}
+	public function view(){
+		$moduleId	= $this->getData( 'moduleId' );
+		$modules	= $this->getData( 'modules' );
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+	}
 }
 ?>
