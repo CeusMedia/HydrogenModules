@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
-	<title>JSON Server</title>
+	<title>Resource: JSON Server</title>
 	<description><![CDATA[Access to JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<files>
