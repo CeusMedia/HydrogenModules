@@ -92,7 +92,7 @@ class View_Helper_Blog{
 		$label	= trim( preg_replace( '/ +/', '_', $label ) );										//  shorten spaces to one and trim
 		return rawurlencode( $label.'.html' );														//  return encoded URL component
 	}
-	
+
 	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
@@ -109,11 +109,12 @@ class View_Helper_Blog{
 		);
 		return UI_HTML_Tag::create( 'a', $label, $attributes );
 	}
-	
+
 	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
-		$list	= array();
-		$model	= new Model_Article( $env );
-		$latest	= $model->getAll( array( 'status' => 1 ), array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
+		$list		= array();
+		$model		= new Model_Article( $env );
+		$conditions	= array( 'status' => 1, 'createdAt' => '<='.time() );
+		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );
 			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
@@ -154,7 +155,7 @@ class View_Helper_Blog{
 			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );
 			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
-		} 
+		}
 		if( !$list )
 			return NULL;
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
