@@ -1,6 +1,8 @@
 <?php
+/**	@todo	kriss: realize new view button, see implementation @scripts */
 
 $w		= (object) $words['tab-resources'];
+$pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
 
 $tableResources	= '<br/><div>'.$w->listNone.'</div><br/>';
 
@@ -21,11 +23,10 @@ $pathStylesLib	= $configApp->get( 'path.styles.lib' );
 $pathThemePrimer	= $configApp->get( 'layout.primer' ).'/';
 $pathThemeCustom	= $configApp->get( 'layout.theme' ).'/';
 
-$iconView	= UI_HTML_Elements::Image( '/lib/cmIcons/famfamfam/silk/eye.png', 'anzeigen' );
-$iconEdit	= UI_HTML_Elements::Image( '/lib/cmIcons/famfamfam/silk/pencil.png', 'bearbeiten' );
-$iconUnlink	= UI_HTML_Elements::Image( '/lib/cmIcons/famfamfam/silk/link_delete.png', 'abmelden' );
-$iconRemove	= UI_HTML_Elements::Image( '/lib/cmIcons/famfamfam/silk/bin_closed.png', 'entfernen' );
-
+$iconView	= UI_HTML_Elements::Image( $pathIcons.'eye.png', 'anzeigen' );
+$iconEdit	= UI_HTML_Elements::Image( $pathIcons.'pencil.png', 'bearbeiten' );
+$iconUnlink	= UI_HTML_Elements::Image( $pathIcons.'link_delete.png', 'abmelden' );
+$iconRemove	= UI_HTML_Elements::Image( $pathIcons.'bin_closed.png', 'entfernen' );
 
 function checkFile( $uri ){
 	if( preg_match( "/^[a-z]+:\/\//", $uri ) ){
@@ -37,12 +38,17 @@ function checkFile( $uri ){
 		return FALSE;
 	}
 	else if( preg_match( "/^\//", $uri ) ){
-		if( substr( $uri, 0, strlen( getEnv( 'DOCUMENT_ROOT' ) ) ) == getEnv( 'DOCUMENT_ROOT' ) )
+#		remark( $uri );
+#		remark( getEnv( 'DOCUMENT_ROOT' ) );
+#		if( substr( $uri, 0, strlen( getEnv( 'DOCUMENT_ROOT' ) ) ) == getEnv( 'DOCUMENT_ROOT' ) )
 			return file_exists( $uri );
-		return file_exists( getEnv( 'DOCUMENT_ROOT' ).$uri );
+#		return file_exists( getEnv( 'DOCUMENT_ROOT' ).$uri );
 	}
 	return file_exists( $uri );
 }
+
+#print_m( $module );
+#die;
 
 //  --  TABLE: CLASSES  --  //
 $classes	= '';
@@ -55,9 +61,9 @@ if( $module->files->classes ){
 
 		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/class/'.base64_encode( $item->file ).'?tab=resources';
-		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
+		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html', '['.$module->title.'] '.$item->file );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
-		
+
 		if( !checkFile( $uri ) ){
 			$this->env->messenger->noteError( 'Missing: '.$uri );
 			$class	= 'missing';
@@ -85,7 +91,7 @@ if( $module->files->templates ){
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/template/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
-		
+
 		if( !checkFile( $uri ) ){
 			$this->env->messenger->noteError( 'Missing: '.$uri );
 			$class	= 'missing';
@@ -118,7 +124,7 @@ if( $module->files->locales ){
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/locale/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
-		
+
 		if( !checkFile( $uri ) ){
 			$this->env->messenger->noteError( 'Missing: '.$uri );
 			$class	= 'missing';
@@ -194,9 +200,14 @@ if( $module->files->scripts ){
 
 		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/script/'.base64_encode( $uri );
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/script/'.base64_encode( $item->file ).'?tab=resources';
-		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
+#		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html', NULL, '['.$module->title.'] '.$item->file );
+		$buttonView		= UI_HTML_Tag::create( 'a', $iconView, array(
+			'href'		=> $urlView,
+			'class'		=> 'button tiny layer-html',
+			'title'		=> '['.$module->title.'] '.$item->file
+		) );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
-		
+
 		if( !checkFile( $uri ) ){
 			$this->env->messenger->noteError( 'Missing: '.$uri );
 			$class	= 'missing';
@@ -231,7 +242,7 @@ if( $module->files->images ){
 
 		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/image/'.base64_encode( $uri );
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/image/'.base64_encode( $item->file ).'?tab=resources';
-		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-image' );
+		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-image', '['.$module->title.'] '.$item->file );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 
 		if( !checkFile( $uri ) ){
