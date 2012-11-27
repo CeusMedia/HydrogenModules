@@ -24,7 +24,7 @@ class Model_Module{
 		foreach( $model->getAll() as $source )
 			$this->sources[$source->id]	= $source;
 
-		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
+//		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
 
 		if( !file_exists( $this->pathRepos ) )
 			throw new RuntimeException( 'Modules folder missing in "'.$this->pathRepos.'"', 1 );
@@ -310,6 +310,8 @@ class Model_Module{
 		}
 		ksort( $list );
 		$this->modulesAvailable	= $list;
+#		print_m( $this->modulesAvailable['JS_jQuery'] );
+#		die;
 		return $results;
 	}
 

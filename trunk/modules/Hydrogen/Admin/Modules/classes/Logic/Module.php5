@@ -42,24 +42,13 @@ class Logic_Module {
 		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
 	}
 	protected function __clone(){}
-	
-	
-	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
-		if( !self::$instance )
-			self::$instance	= new Logic_Module( $env );
-		return self::$instance;
-	}
 
-	public function getSourceFromModuleId( $moduleId ){
-		$module		= $this->getModule( $moduleId );
-		if( !$module )
-			throw new InvalidArgumentException( 'Module '.$moduleId.' not existing' );
-		if( !$module->source )
-			throw new InvalidArgumentException( 'Module '.$moduleId.' has no source attached' );
-		$source		= $this->getSource( $module->source );
-		if( !$source )
-			throw new InvalidArgumentException( 'Module source '.$module->source.' is not existing' );
-		return $source;
+	public function checkForUpdate( $moduleId ){
+		$module		= $this->model->get( $moduleId );
+		if( $module && strlen( trim( $module->versionInstalled ) ) )
+			if( version_compare( $module->versionAvailable, $module->versionInstalled ) )
+				return $module->versionAvailable;
+		return FALSE;
 	}
 
 	public function configureLocalModule( $moduleId, $pairs ){
@@ -73,7 +62,7 @@ class Logic_Module {
 		}
 		return File_Writer::save( $fileName, $xml->asXml() );
 	}
-	
+
 	protected function copyModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
 		$source		= $this->getSourceFromModuleId( $moduleId );
 		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
@@ -114,9 +103,66 @@ class Logic_Module {
 		return mkdir( $path, 02770, TRUE );
 	}
 
+	protected function executeSql( $sql ){
+		if( !trim( $sql ) )
+			throw new InvalidArgumentException( 'No SQL given' );
+		$lines	= explode( "\n", trim( $sql ) );
+		$cmds	= array();
+		$buffer	= array();
+		if( !$this->env->getRemote()->has( 'dbc' ) )
+			throw new RuntimeException( 'Remvote environment has no database connection' );
+		$dbc	= $this->env->getRemote()->getDatabase();
+		$prefix	= $this->env->getRemote()->getDatabase()->getPrefix();								//  @todo use config of module Resource_Database instead
+		while( count( $lines ) ){
+			$line = array_shift( $lines );
+			if( !trim( $line ) )
+				continue;
+			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			if( preg_match( '/;$/', trim( $line ) ) ){
+				$cmds[]	= join( "\n", $buffer );
+				$buffer	= array();
+			}
+			if( !count( $lines ) && $buffer )
+				$cmds[]	= join( "\n", $buffer ).';';
+		}
+		$state	= NULL;
+		foreach( $cmds as $command ){
+			$dbc->exec( $command );
+#			$this->env->getMessenger()->noteNotice( 'DBC: '.$command );
+		}
+		return $state;
+	}
+
 	public function getCategories(){
 		return $this->model->getCategories();
 	}
+
+	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+		if( !self::$instance )
+			self::$instance	= new Logic_Module( $env );
+		return self::$instance;
+	}
+
+	public function getModule( $moduleId ){
+		return $this->model->get( $moduleId );
+	}
+
+	public function getModulePath( $moduleId ){
+		return $this->model->getPath( $moduleId );
+	}
+
+	public function getSourceFromModuleId( $moduleId ){
+		$module		= $this->getModule( $moduleId );
+		if( !$module )
+			throw new InvalidArgumentException( 'Module '.$moduleId.' not existing' );
+		if( !$module->source )
+			throw new InvalidArgumentException( 'Module '.$moduleId.' has no source attached' );
+		$source		= $this->getSource( $module->source );
+		if( !$source )
+			throw new InvalidArgumentException( 'Module source '.$module->source.' is not existing' );
+		return $source;
+	}
+
 	
 /*	public function importLocalModule( $moduleId, $title, $description = NULL, $version = NULL, $route = NULL ){
 		$path	= $this->getModulePath( $moduleId );
@@ -235,49 +281,44 @@ class Logic_Module {
 		}
 		return FALSE;
 	}
-
-	protected function executeSql( $sql ){
-		if( !trim( $sql ) )
-			throw new InvalidArgumentException( 'No SQL given' );
-		$lines	= explode( "\n", trim( $sql ) );
-		$cmds	= array();
-		$buffer	= array();
-		if( !$this->env->getRemote()->has( 'dbc' ) )
-			throw new RuntimeException( 'Remvote environment has no database connection' );
-		$dbc	= $this->env->getRemote()->getDatabase();
-		$prefix	= $this->env->getRemote()->getDatabase()->getPrefix();								//  @todo use config of module Resource_Database instead
-		while( count( $lines ) ){
-			$line = array_shift( $lines );
-			if( !trim( $line ) )
-				continue;
-			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
-			if( preg_match( '/;$/', trim( $line ) ) )
-			{
-				$cmds[]	= join( "\n", $buffer );
-				$buffer	= array();
-			}
-			if( !count( $lines ) && $buffer )
-				$cmds[]	= join( "\n", $buffer ).';';
-		}
-		$state	= NULL;
-		foreach( $cmds as $command ){
-			$dbc->exec( $command );
-#			$this->env->getMessenger()->noteNotice( 'DBC: '.$command );
-		}
-		return $state;
-	}
-
-	public function getModule( $moduleId ){
-		return $this->model->get( $moduleId );
-	}
-
-	public function getModulePath( $moduleId ){
-		return $this->model->getPath( $moduleId );
-	}
 	
 	public function installModule( $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
-		$messenger	= $this->env->getMessenger();
-		$request	= $this->env->getRequest();
+		try{
+			$this->installModuleDatabase( $moduleId );
+			$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
+			if( !count( $exceptions ) ){																//  no error occured until now
+				$this->configureLocalModule( $moduleId, $settings );								//  save given configuration values in local module
+				$this->invalidateFileCache( $this->env->getRemote() );
+				return TRUE;
+			}
+		}
+		catch( Exception $e ){
+			$exceptions	= array( $e->getMessage() );
+		}
+			
+		if( count( $exceptions ) )																	//  several exceptions occured
+			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
+		return FALSE;
+	}
+
+	protected function installModuleDatabase( $moduleId, $verbose = TRUE ){
+		$module		= $this->model->get( $moduleId );
+		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
+			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
+			if( $driver ){																			//  remote database connection is configured
+				if( strlen( trim( $module->sql['install@'.$driver] ) ) )							//  SQL for installation for specific PDO driver is given
+					$this->executeSql( $module->sql['install@'.$driver] );							//  execute SQL
+				else if( strlen( trim( $module->sql['install@*'] ) ) )								//  fallback: general SQL for installation is available
+					$this->executeSql( $module->sql['install@*'] );									//  execute SQL
+				else
+					return NULL;
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	protected function installModuleFiles( $moduleId, $installType = 0, $force = FALSE, $verbose = TRUE ){
 		$module		= $this->model->get( $moduleId );
 		$pathModule	= $this->model->getPath( $moduleId );
 		$configApp	= $this->env->getRemote()->getConfig();
@@ -291,7 +332,6 @@ class Logic_Module {
 		$filesCopy	= array();
 		
 		switch( $installType ){
-			
 			case self::INSTALL_TYPE_LINK:
 				$array	= 'filesLink'; break;
 			case self::INSTALL_TYPE_COPY:
@@ -341,35 +381,11 @@ class Logic_Module {
 				}
 			}
 		}
-
-		try{
-			if( !count( $exceptions ) ){															//  no error occured until now
-				//  --  SQL  --  //
-				if( $this->env->getRemote()->has( 'dbc' ) ){										//  remote environment has database connection
-					$driver	= $this->env->getRemote()->getDatabase()->getDriver();					//  get PDO driver used on dabase connetion
-					if( $driver ){																	//  remote database connection is configured
-						if( strlen( trim( $module->sql['install@'.$driver] ) ) )					//  SQL for installation for specific PDO driver is given
-							$this->executeSql( $module->sql['install@'.$driver] );					//  execute SQL
-						else if( strlen( trim( $module->sql['install@*'] ) ) )						//  fallback: general SQL for installation is available
-							$this->executeSql( $module->sql['install@*'] );							//  execute SQL
-					}
-				}
-				//  --  CONFIGURATION  --  //
-				$this->configureLocalModule( $moduleId, $settings );								//  save given configuration values in local module
-				$this->invalidateFileCache( $this->env->getRemote() );
-				return TRUE;
-			}
-		}
-		catch( Exception $e ){
-			$exceptions[]	= $e->getMessage();
-		}
-
 		if( count( $exceptions ) ){
 			foreach( $listDone as $fileName )
 				@unlink( $pathApp.$fileName );
-			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
 		}
-		return FALSE;
+		return $exceptions;
 	}
 
 	public function invalidateFileCache( $env = NULL, $f = NULL ){
@@ -406,7 +422,32 @@ class Logic_Module {
 		return TRUE;
 	}
 
-	public function uninstallModule( $moduleId, $verbose = TRUE ){
+	public function updateModule( $moduleId, $settings = array(), $verbose = TRUE ){
+		$this->uninstallModuleFiles( $moduleId, $verbose );
+		die("!");
+		$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
+		if( !count( $exceptions ) ){
+//			$this->configureLocalModule( $moduleId, $settings );
+		}
+		if( count( $exceptions ) )																	//  several exceptions occured
+			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
+		return $exceptions;
+	}
+
+	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){
+		$module		= $this->model->get( $moduleId );
+		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
+			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
+			if( $driver ){																			//  remote database connection is configured
+				if( strlen( trim( $module->sql['uninstall@'.$driver] ) ) )							//  SQL for installation for specific PDO driver is given
+					$this->executeSql( $module->sql['uninstall@'.$driver] );						//  execute SQL
+				else if( strlen( trim( $module->sql['uninstall@*'] ) ) )							//  fallback: general SQL for installation is available
+					$this->executeSql( $module->sql['uninstall@*'] );								//  execute SQL
+			}
+		}
+	}
+
+	protected function uninstallModuleFiles( $moduleId, $verbose = TRUE ){
 		$configApp	= $this->env->getRemote()->getConfig();
 		$pathApp	= $this->env->getRemote()->path;
 		$pathTheme	= $pathApp.$configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
@@ -414,10 +455,7 @@ class Logic_Module {
 		if( $configApp->get( 'path.images' ) )
 			$pathImages	= $pathApp.$configApp->get( 'path.images' );
 		$module		= $this->model->get( $moduleId );
-
-		$files	= array();
-
-		//  --  FILES  --  //
+		$files		= array();
 		foreach( $module->files->classes as $class )
 			$files[]	= $pathApp.'classes/'.$class->file;
 		foreach( $module->files->templates as $template )
@@ -442,20 +480,15 @@ class Logic_Module {
 		if( file_exists( $this->env->pathConfig.'modules/'.$moduleId.'.ini' ) )
 			$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.ini';
 		$this->invalidateFileCache( $this->env->getRemote() );
+		foreach( $files as $file )
+			@unlink( $file );
+		return $files;
+	}
 
+	public function uninstallModule( $moduleId, $verbose = TRUE ){
 		try{
-			//  --  SQL  --  //
-			if( $this->env->getRemote()->has( 'dbc' ) ){											//  remote environment has database connection
-				$driver	= $this->env->getRemote()->getDatabase()->getDriver();						//  get PDO driver used on dabase connetion
-				if( $driver ){																		//  remote database connection is configured
-					if( strlen( trim( $module->sql['uninstall@'.$driver] ) ) )						//  SQL for installation for specific PDO driver is given
-						$this->executeSql( $module->sql['uninstall@'.$driver] );					//  execute SQL
-					else if( strlen( trim( $module->sql['uninstall@*'] ) ) )						//  fallback: general SQL for installation is available
-						$this->executeSql( $module->sql['uninstall@*'] );							//  execute SQL
-				}
-			}
-			foreach( $files as $file )
-				@unlink( $file );
+			$this->uninstallModuleDatabase( $moduleId, $verbose );
+			$this->uninstallModuleFiles( $moduleId, $verbose );
 			return TRUE;
 		}
 		catch( Exception $e ){

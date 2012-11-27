@@ -1,7 +1,8 @@
 <?php
 /**	@todo	kriss: realize new view button, see implementation @scripts */
 
-$w		= (object) $words['tab-resources'];
+$w			= (object) $words['tab-resources'];
+$pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
 $pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
 
 $tableResources	= '<br/><div>'.$w->listNone.'</div><br/>';
@@ -297,7 +298,7 @@ if( $module->files->files ){
 
 
 
-$iconAdd	= UI_HTML_Tag::create( 'img', NULL, array( 'href' => '/lib/cmIcons/famfamfam/silk/add.png' ) );
+$iconAdd	= UI_HTML_Tag::create( 'img', NULL, array( 'href' => $pathIcons.'add.png' ) );
 $optType	= UI_HTML_Elements::Options( $words['resource-types'] );
 
 $optSourceScript	= UI_HTML_Elements::Options( $words['sources-script'] );

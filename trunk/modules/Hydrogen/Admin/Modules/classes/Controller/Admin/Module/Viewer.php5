@@ -70,33 +70,17 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function view( $moduleId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$hasUpdate	= $this->logic->checkForUpdate( $moduleId );
 		$module		= $this->logic->model->get( $moduleId );
-		if( strlen( trim( $module->versionInstalled ) ) ){
-			if( version_compare( $module->versionAvailable, $module->versionInstalled ) ){
-				$msg	= 'Update from version %1$s to %2$s available.';
-				$this->env->getMessenger()->noteNotice( $msg, $module->versionInstalled, $module->versionAvailable );
-			}
-		}
+		if( $hasUpdate )
+			$this->messenger->noteNotice( $words->updateAvailable, $module->versionInstalled, $module->versionAvailable );
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
+		$this->addData( 'hasUpdate', $hasUpdate );
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modules', $this->logic->model->getAll() );
-	}
-
-	public function uninstall( $moduleId, $verbose = TRUE ){
-		$words		= (object) $this->getWords( 'msg' );
-		$module		= $this->logic->getModule( $moduleId );
-		if( !$module )
-			$this->restart( './admin/module/editor' );
-		if( $this->logic->uninstallModule( $moduleId, $verbose ) ){
-			$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
-			if( $module->type == Model_Module::TYPE_CUSTOM )
-				$this->restart( './admin/module/viewer' );
-		}
-		else
-			$this->messenger->noteError( $this->words['msg']['moduleNotUninstalled'], $module->title );
-		$this->restart( './admin/module/viewer/index/'.$moduleId );
 	}
 
 	public function viewCode( $moduleId, $type, $fileName ){
