@@ -9,9 +9,24 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 	}
 	
 	public function view(){
-		$language	= $this->env->getLanguage();
-		$language->load( 'admin/module' );
-		$words		= $language->getWords( 'admin/module' );
+		$words		= $this->env->getLanguage()->getWords( 'admin/module' );
+
+		$moduleId	= $this->getData( 'moduleId' );
+		$modules	= $this->getData( 'modules' );
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+
+		$this->addData( 'wordsTypes', $words['types'] );
+	}
+
+	public function update(){
+		$words		= $this->env->getLanguage()->getWords( 'admin/module' );
+
+		$moduleId	= $this->getData( 'moduleId' );
+		$modules	= $this->getData( 'modulesAvailable' );
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+
 		$this->addData( 'wordsTypes', $words['types'] );
 	}
 }

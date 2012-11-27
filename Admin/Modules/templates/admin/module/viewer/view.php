@@ -1,10 +1,7 @@
 <?php
 
-UI_HTML_Tabs::$version	= 3;
+UI_HTML_Tabs::$version	= 4;
 $tabs	= new UI_HTML_Tabs();
-/*$this->env->page->js->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/min.js' );
-$this->env->page->css->theme->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/css/smoothness.css' );
-*/
 
 $mapTabs	= array(
 	'resources'	=> 'tabResources',

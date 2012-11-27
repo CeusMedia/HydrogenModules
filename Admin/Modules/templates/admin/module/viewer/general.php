@@ -86,13 +86,13 @@ $disabled			= $module->type == 4 ? '' : 'disabled';
 $buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' );
 $buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $w->buttonInstall, 'button add', NULL, $disabled );
+$buttonUpdate		= UI_HTmL_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $w->buttonUpdate, 'button update', NULL, !$hasUpdate );
 $disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
-$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/viewer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 $buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh' );
 
-return '
-<fieldset>
+return '<fieldset>
 	<legend class="icon module">Module-Informationen</legend>
 	<div class="column-right-20" style="margin: 2em; text-align: right;">
 		'.$icon.'
@@ -108,11 +108,12 @@ return '
 	<div class="column-clear"></div>	
 	<div class="buttonbar">
 		'.$buttonBack.'
-		'.$buttonInstall.'
 		&nbsp;|&nbsp;
-		'.$buttonEdit.'
+		'.$buttonInstall.'
+		'.$buttonUpdate.'
 		'.$buttonUninstall.'
 		&nbsp;|&nbsp;
+		'.$buttonEdit.'
 		'.$buttonReload.'
 	</div>
 </fieldset>';
