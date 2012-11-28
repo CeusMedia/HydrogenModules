@@ -32,11 +32,13 @@ class Logic_Module {
 
 		foreach( $this->sources as $sourceId => $source ){
 			if( isset( $source->status ) && !is_integer( $source->status ) ){
-#				if( $status instanceof Exception ){}
+				if( $source->status instanceof Exception ){
+					$this->messenger->noteFailure( $source->status->getMessage() );
+				}
 				$label	= '"'.$sourceId.'"';
 				if( $this->env->getAcl()->has( 'admin/source', 'edit' ) )
-					$label	= UI_HTML_Tag::create( 'a', $sourceId, array( 'href' => './admin/source/edit/'.$sourceId ) );
-				$this->env->getMessenger()->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
+					$label	= UI_HTML_Tag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
+				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
 			}
 		}
 		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
@@ -145,6 +147,41 @@ class Logic_Module {
 
 	public function getModule( $moduleId ){
 		return $this->model->get( $moduleId );
+	}
+
+	protected function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
+		$configApp	= $env->getConfig();
+		$pathThemes	= $configApp->get( 'path.themes' );
+		$pathTheme	= $configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
+		$pathImages	= 'images/';
+		if( $configApp->get( 'path.images' ) )
+			$pathImages	= $configApp->get( 'path.images' );
+		$map		= array();
+		foreach( $module->files->classes as $class )
+			$map['classes/'.$class->file]	= 'classes/'.$class->file;
+		foreach( $module->files->templates as $template )
+			$map['templates/'.$template->file]	= $configApp->get( 'path.templates' ).$template->file;
+		foreach( $module->files->locales as $locale )
+			$map['locales/'.$locale->file]	= $configApp->get( 'path.locales' ).$locale->file;
+		foreach( $module->files->scripts as $script )
+			if( empty( $script->source ) || $script->source == 'local' )
+				$map['js/'.$script->file]	= $configApp->get( 'path.scripts' ).$script->file;
+		foreach( $module->files->styles as $style )
+			if( empty( $style->source ) || $style->source == 'theme' ){
+				$pathTarget	= empty( $style->theme ) ? $pathTheme : $pathThemes.$style->theme.'/';
+				$map['css/'.$style->file]	= $pathTarget.'css/'.$style->file;
+			}
+		foreach( $module->files->images as $image ){
+			if( empty( $image->source ) || $image->source == 'local' )
+				$map['img/'.$image->file]	= $pathImages.$image->file;
+			else if( $image->source == 'theme' ){
+				$pathTarget	= empty( $image->theme ) ? $pathTheme : $pathThemes.$image->theme.'/';
+				$map['img/'.$image->file]	= $pathTarget.'img/'.$image->file;
+			}
+		}
+		foreach( $module->files->files as $file )
+			$map[$file->file]	= $file->file;
+		return $map;
 	}
 
 	public function getModulePath( $moduleId ){
@@ -321,57 +358,29 @@ class Logic_Module {
 	protected function installModuleFiles( $moduleId, $installType = 0, $force = FALSE, $verbose = TRUE ){
 		$module		= $this->model->get( $moduleId );
 		$pathModule	= $this->model->getPath( $moduleId );
-		$configApp	= $this->env->getRemote()->getConfig();
 		$pathApp	= $this->env->getRemote()->path;
 
-		$pathTheme	= $configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
-		$pathImages	= 'images/';
-		if( $configApp->get( 'path.images' ) )
-			$pathImages	= $configApp->get( 'path.images' );
-		$filesLink	= array();
-		$filesCopy	= array();
-		
-		switch( $installType ){
-			case self::INSTALL_TYPE_LINK:
-				$array	= 'filesLink'; break;
-			case self::INSTALL_TYPE_COPY:
-				$array	= 'filesCopy'; break;
-			default:
-				throw new InvalidArgumentException( 'Unknown installation type', 10 );
-		}
-		foreach( $module->files->classes as $class )
-			${$array}['classes/'.$class->file]	= 'classes/'.$class->file;
-		foreach( $module->files->templates as $template )
-			${$array}['templates/'.$template->file]	= $configApp->get( 'path.templates' ).$template->file;
-		foreach( $module->files->locales as $locale )
-			${$array}['locales/'.$locale->file]	= $configApp->get( 'path.locales' ).$locale->file;
-		foreach( $module->files->scripts as $script )
-			if( empty( $script->source ) || $script->source == 'local' )
-				${$array}['js/'.$script->file]	= $configApp->get( 'path.scripts' ).$script->file;
-		foreach( $module->files->styles as $style )
-			if( empty( $style->source ) || $style->source == 'theme' )
-				${$array}['css/'.$style->file]	= $pathTheme.'css/'.$style->file;
-		foreach( $module->files->images as $image ){
-			if( empty( $image->source ) || $image->source == 'local' )
-				${$array}['img/'.$image->file]	= $pathImages.$image->file;
-			else if( $image->source == 'theme' )
-				${$array}['img/'.$image->file]	= $pathTheme.'img/'.$image->file;
-		}
-		foreach( $module->files->files as $file )
-			${$array}[$file->file]	= $file->file;
-				
+		$files		= array( 'link' => array(), 'copy' => array() );
+		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
 		$listDone	= array();
 		$exceptions	= array();
 
-		$filesCopy['module.xml']	= 'config/modules/'.$moduleId.'.xml';
-		if( file_exists( $pathModule.'config.ini' ) )
-			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
+		if( $installType == self::INSTALL_TYPE_LINK )
+			$files['link']	= $fileMap;
+		else if( $installType == self::INSTALL_TYPE_COPY )
+			$files['copy']	= $fileMap;
+		else
+			throw new InvalidArgumentException( 'Unknown installation type', 10 );
 
-		foreach( array( 'filesLink', 'filesCopy' ) as $type ){
-			foreach( $$type as $fileIn => $fileOut ){
+		$files['copy']['module.xml']	= 'config/modules/'.$moduleId.'.xml';
+		if( file_exists( $pathModule.'config.ini' ) )
+			$files['copy']['config.ini']	= 'config/modules/'.$moduleId.'.ini';
+
+		foreach( $files as $type => $map ){
+			foreach( $map as $fileIn => $fileOut ){
 				$listDone[]	= $fileOut;
 				try{
-					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
+					if( $type == 'link' )														//  @todo: OS check -> no links in windows <7
 						$this->linkModuleFile( $moduleId, $fileIn, $fileOut, $force );
 					else
 						$this->copyModuleFile( $moduleId, $fileIn, $fileOut, $force );
@@ -450,39 +459,43 @@ class Logic_Module {
 	protected function uninstallModuleFiles( $moduleId, $verbose = TRUE ){
 		$configApp	= $this->env->getRemote()->getConfig();
 		$pathApp	= $this->env->getRemote()->path;
-		$pathTheme	= $pathApp.$configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
-		$pathImages	= $pathApp.'images/';
-		if( $configApp->get( 'path.images' ) )
-			$pathImages	= $pathApp.$configApp->get( 'path.images' );
 		$module		= $this->model->get( $moduleId );
-		$files		= array();
-		foreach( $module->files->classes as $class )
-			$files[]	= $pathApp.'classes/'.$class->file;
-		foreach( $module->files->templates as $template )
-			$files[]	= $pathApp.$configApp->get( 'path.templates' ).$template->file;
-		foreach( $module->files->locales as $locale )
-			$files[]	= $pathApp.$configApp->get( 'path.locales' ).$locale->file;
-		foreach( $module->files->scripts as $script )
-			$files[]	= $pathApp.$configApp->get( 'path.scripts' ).$script->file;
-		foreach( $module->files->styles as $style )
-			if( empty( $style->source ) || $style->source == 'theme' )
-				$files[]	= $pathTheme.'css/'.$style->file;
-		foreach( $module->files->images as $image )
-			if( empty( $image->source ) || $image->source == 'local' )
-				$files[]	= $pathImages.$image->file;
-			else if( $image->source == 'theme' )
-				$files[]	= $pathTheme.'img/'.$image->file;
-		foreach( $module->files->files as $file )
-			$files[]	= $pathApp.$file->file;
-
+		$files		= array_values( $this->getModuleFileMap( $this->env->getRemote(), $module ) );
+		
 		//  --  CONFIGURATION  --  //
-		$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';
-		if( file_exists( $this->env->pathConfig.'modules/'.$moduleId.'.ini' ) )
-			$files[]	= $this->env->pathConfig.'modules/'.$moduleId.'.ini';
+		$files[]	= 'config/modules/'.$moduleId.'.xml';
+		if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
+			$files[]	= 'config/modules/'.$moduleId.'.ini';
 		$this->invalidateFileCache( $this->env->getRemote() );
-		foreach( $files as $file )
-			@unlink( $file );
-		return $files;
+
+		$folders	= array();
+		$baseAppPaths	= $configApp->getAll( 'path.' );
+		foreach( $files as $file ){
+			@unlink( $path = $pathApp.$file );
+			do{
+				$path	= dirname( $path );
+				$folder	= new Folder_Reader( $path );
+				$count	= $folder->getNestedCount();
+				if( !$count ){
+					if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
+						Folder_Editor::removeFolder( $path );
+						$folders[]	= substr( $path, strlen( $pathApp ) );
+					}
+				}
+			}
+			while( !$count );
+		}
+		if( ( 1 || $verbose ) ){
+			if( $files ){
+				$files	= '<ul><li>'.implode( '</li><li>', $files ).'</li></ul>';
+				$this->messenger->noteNotice( 'Removed files: '.$files );
+			}
+			if( $folders ){
+				$folders	= '<ul><li>'.implode( '</li><li>', $folders ).'</li></ul>';
+				$this->messenger->noteNotice( 'Removed folders: '.$folders );
+			}
+		}
+		return array( $files, $folders );
 	}
 
 	public function uninstallModule( $moduleId, $verbose = TRUE ){

@@ -310,8 +310,6 @@ class Model_Module{
 		}
 		ksort( $list );
 		$this->modulesAvailable	= $list;
-#		print_m( $this->modulesAvailable['JS_jQuery'] );
-#		die;
 		return $results;
 	}
 

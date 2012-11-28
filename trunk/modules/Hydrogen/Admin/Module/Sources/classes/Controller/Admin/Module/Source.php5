@@ -5,7 +5,8 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	protected $model;
 	
 	protected function __onInit(){
-		$this->model	= new Model_ModuleSource( $this->env );
+		$this->model		= new Model_ModuleSource( $this->env );
+		$this->messenger	= $this->env->getMessenger();
 		$this->addData( 'root', getEnv( 'DOCUMENT_ROOT' ).'/' );
 	}
 	
@@ -212,9 +213,28 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		$source		= $this->model->get( $sourceId );
 	}
 
+	protected function renderModuleLinkList( $modules, $linkToViewer = FALSE ){
+		$list	= array();
+		foreach( $modules as $module ){
+			$label	= $module->title;
+			if( $linkToViewer ){
+				$url	= './admin/module/viewer/view/'.$module->id;
+				$class	= 'icon module module-status0';
+				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+				$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
+			}
+			$list[]	= UI_HTML_Tag::create( 'li', $label );
+		}
+		return UI_HTML_Tag::create( 'ul', $list );
+	}
+
 	public function refresh( $sourceId, $toList = TRUE ){
 		$words		= (object) $this->getWords( 'msg' );
-		$this->env->getMessenger()->noteSuccess( $words->successRefreshed, $sourceId );
+
+		$source		= $this->model->get( $sourceId );
+		$libOld		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+		$modulesOld	= (array) $libOld->getAll();
+
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
 		$this->env->getCache()->flush();
 		$this->env->getCache()->setContext( '' );
@@ -226,6 +246,48 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			@unlink( $fileCache );
 			$this->env->getMessenger()->noteNotice( 'Removed local module cache file <small><code>'.$fileCache.'</code></small>.' );
 		}
+
+		$libNew		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+		$modulesNew	= (array) $libNew->getAll();
+
+		$modulesRemoved		= array_diff_key( $modulesOld, $modulesNew );
+		$modulesAdded		= array_diff_key( $modulesNew, $modulesOld );
+		$modulesUpdated		= array();
+		foreach( $modulesOld as $moduleKey => $module ){
+			if( array_key_exists( $moduleKey, $modulesNew ) ){
+				if( version_compare( $module->version, $modulesNew[$moduleKey]->version ) < 0 ){
+					$modulesUpdated[$moduleKey]	= $module;
+					$module->versionNew	= $modulesNew[$moduleKey]->version;
+				}
+			}
+		}
+		
+		$sourceLabel	= UI_HTML_Tag::create( 'acronym', $source->id, array( 'title' => $source->title ) );
+		if( $modulesAdded || $modulesRemoved || $modulesUpdated ){
+			$this->messenger->noteSuccess( $words->successRefresh, $sourceLabel, count( $modulesAdded ), count( $modulesRemoved ), count( $modulesUpdated ) );
+			if( $modulesAdded ){
+				$list	= $this->renderModuleLinkList( $modulesAdded, TRUE );
+				$this->messenger->noteNotice( $words->noticeRefreshModulesAdded, $list );
+			}
+
+			if( $modulesRemoved ){
+				$list	= $this->renderModuleLinkList( $modulesRemoved, FALSE );
+				$this->messenger->noteNotice( $words->noticeRefreshModulesRemoved, $list );
+			}
+
+			if( $modulesUpdated ){
+				foreach( $modulesUpdated as $module ){
+					$versions			= $module->version.' &rArr; '.$module->versionNew;
+					$module->title		.= '&nbsp;'.UI_HTML_Tag::create( 'small', '('.$versions.')' );
+				}
+				$list	= $this->renderModuleLinkList( $modulesUpdated, TRUE );
+				$this->messenger->noteNotice( $words->noticeRefreshModulesUpdated, $list );
+			}
+		}
+		else
+			$this->messenger->noteSuccess( $words->successRefreshNoChanges, $sourceLabel );
+		
+		$this->restart( './admin/module/source/edit/'.$sourceId );
 		if( $toList )
 			$this->restart( './admin/module/source' );
 		$this->restart( './admin/module/source/edit/'.$sourceId );
