@@ -10,7 +10,7 @@ php job.php5 work-mission-mail-daily
 	<version>0.4</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian Würker</author>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Work/Mission.php5</class>
 		<class>Model/Mission.php5</class>

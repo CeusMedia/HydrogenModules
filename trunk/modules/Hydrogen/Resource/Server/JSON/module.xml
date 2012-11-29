@@ -5,7 +5,7 @@
 	<category>Resource</category>
 	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Resource/Server/Json.php5</class>
 		<class>View/Helper/JsonServerResponseCodeHandler.php5</class>
