@@ -12,7 +12,7 @@ See [http://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel D
 	<category>User Interface</category>
 	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<style source="scripts-lib" load="auto">jquery/cmCollapsePanel/0.3/panel.default.css</style>
