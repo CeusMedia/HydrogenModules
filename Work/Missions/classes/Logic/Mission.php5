@@ -39,6 +39,8 @@ class Logic_Mission{
 			if( $userProjects )																		//  user has projects
 				$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';						//  add projects condition
 			array_unshift( $userProjects, 0 );														//  
+			if( isset( $conditions['projectId'] ) )													//  projects have been selected
+				$userProjects	= array_intersect( $conditions['projectId'], $userProjects );		//  intersect user projectes and selected projects
 			$conditions['projectId']	= $userProjects;											//  
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
