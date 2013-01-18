@@ -202,7 +202,7 @@ $panelEdit	= '
 			</li>
 			<li>
 				<label for="input_content">'.$w->labelContent.'</label>
-				<textarea id="input_content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+				<textarea id="input_content" name="content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 			</li>
 		</ul>
 		<div class="buttonbar">
