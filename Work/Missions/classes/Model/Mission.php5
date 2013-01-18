@@ -13,7 +13,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 
 	const TYPE_TASK		= 0;
 	const TYPE_EVENT	= 1;
-	
+
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "missions";
 

@@ -159,10 +159,10 @@ $panelEdit	= '
 					<label for="input_dayWork">'.$w->labelDayWork.'</label><br/>
 					<input type="text" name="dayWork" id="input_dayWork" value="'.$mission->dayStart.'" class="max" autocomplete="off"/>
 				</div>
-                                <div class="column-left-20 optional type type-0">
-                                        <label for="input_dayEnd">'.$w->labelDayDue.'</label><br/>
-                                        <input type="text" name="dayDue" id="input_dayDue" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
-                                </div>
+				<div class="column-left-20 optional type type-0">
+					<label for="input_dayEnd">'.$w->labelDayDue.'</label><br/>
+					<input type="text" name="dayDue" id="input_dayDue" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
+				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>
 					<input type="text" name="dayStart" id="input_dayStart" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
@@ -186,9 +186,17 @@ $panelEdit	= '
 					<label for="input_location">'.$w->labelLocation.'</label><br/>
 					<input type="text" name="location" id="input_location" class="max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="column-left-60">
+				<div class="column-left-40">
 					<label for="input_reference">'.$w->labelReference.'</label><br/>
 					<input type="text" name="reference" id="input_reference" class="max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="column-left-10">
+					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label><br/>
+					<input type="text" name="hoursProjected" id="input_hoursProjected" class="xs numeric" value="'.$mission->hoursProjected.'"/><b>h</b>
+				</div>
+				<div class="column-left-10">
+					<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label><br/>
+					<input type="text" name="hoursRequired" id="input_hoursRequired" class="xs numeric" value="'.$mission->hoursRequired.'"/><b>h</b>
 				</div>
 				<div class="column-clear"></div>
 			</li>

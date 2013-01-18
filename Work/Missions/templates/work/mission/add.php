@@ -92,9 +92,13 @@ $panelAdd	= '
 					<label for="input_location">'.$w->labelLocation.'</label><br/>
 					<input type="text" name="location" id="input_location" class="max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="column-left-60">
+				<div class="column-left-40">
 					<label for="input_reference">'.$w->labelReference.'</label><br/>
 					<input type="text" name="reference" id="input_reference" class="max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="column-left-20">
+					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label><br/>
+					<input type="text" name="hoursProjected" id="input_hoursProjected" class="xs numeric" value="'.$mission->hoursProjected.'"/><b>h</b>
 				</div>
 				<div class="column-clear"></div>
 			</li>
