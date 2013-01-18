@@ -255,7 +255,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					}
 					break;
 			}
-			$node->addChild( new XML_DOM_Node( 'SUMMARY', $mission->content ) );
+			$node->addChild( new XML_DOM_Node( 'SUMMARY', $mission->title ) );
 			$node->addChild( new XML_DOM_Node( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
 			if( $mission->modifiedAt )
 				$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );

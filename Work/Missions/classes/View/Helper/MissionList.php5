@@ -130,7 +130,7 @@ class View_Helper_MissionList{
 	}
 
 	public function renderRowLabel( $mission ){
-		$title		= Alg_Text_Trimmer::trimCentric( $mission->content, $this->titleLength, '...' );
+		$title		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$title		= htmlentities( $title, ENT_QUOTES, 'UTF-8' );
 		$url		= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
 		$class		= 'icon-label mission-type-'.$mission->type;
