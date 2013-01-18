@@ -158,8 +158,8 @@ $(document).ready(function(){
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 		$list		= array();
 		foreach( $missions as $mission ){
-		//	$title		= Alg_Text_Trimmer::trim( $mission->content, 20 );
-			$title		= $mission->content;
+		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
+			$title		= $mission->title;
 			$url		= './work/mission/edit/'.$mission->missionId;
 			$class		= 'icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
@@ -172,7 +172,7 @@ $(document).ready(function(){
 				"data-type"		=> $mission->type,
 				"data-priority"	=> $mission->priority,
 				"data-status"	=> $mission->status,
-				"data-title"	=> htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ),
+				"data-title"	=> htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ),
 				"data-date"		=> date( "j.n. Y", strtotime( $mission->dayStart ) ),
 				"data-time"		=> $mission->type ? $mission->timeStart.' - '.$mission->timeEnd : null,
 				"data-project"	=> $mission->projectId ? $this->projects[$mission->projectId]->title : $mission->projectId,

@@ -35,7 +35,7 @@ $panelAdd	= '
 		<ul class="input">
 			<li class="-column-left-80">
 				<label for="input_content">'.$w->labelContent.'</label><br/>
-				<input type="text" name="content" id="input_content" class="max" value="'.htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ).'"/>
+				<input type="text" name="content" id="input_content" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
 				<div class="column-left-20">

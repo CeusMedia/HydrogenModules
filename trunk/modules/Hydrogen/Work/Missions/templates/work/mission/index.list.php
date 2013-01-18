@@ -24,7 +24,7 @@ $indicator	= new UI_HTML_Indicator();
 $disabled	= array();
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){
-	$label		= htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' );
+	$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 	$url		= './work/mission/edit/'.$mission->missionId;
 	$class		= 'icon-label mission-type-'.$mission->type;
 	$link		= UI_HTML_Elements::Link( $url, $label, array( 'class' => $class ) );
