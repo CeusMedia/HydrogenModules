@@ -128,8 +128,8 @@ $panelEdit	= '
 		<legend class="icon edit">'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="-column-left-80">
-				<label for="input_content">'.$w->labelContent.'</label><br/>
-				<input type="text" name="content" id="input_content" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
+				<label for="input_title">'.$w->labelTitle.'</label><br/>
+				<input type="text" name="title" id="input_title" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
 				<div class="column-left-20">
@@ -145,7 +145,7 @@ $panelEdit	= '
 					<select name="projectId" id="input_projectId" class="max">'.$optProject.'</select>
 				</div>
 				<div class="column-left-20">
-					<label for="input_content">'.$w->labelWorker.'</label><br/>
+					<label for="input_workerId">'.$w->labelWorker.'</label><br/>
 					<select name="workerId" id="input_workerId" class="max">'.$optWorker.'</select>
 				</div>
 				<div class="column-clear"></div>
@@ -194,7 +194,7 @@ $panelEdit	= '
 			</li>
 <!--			<li>
 				<label for="input_content">Beschreibung</label>
-				<textarea id="input_content" class="max cmGrowText">'.htmlentities( $mission->title, ENT_QUOTES, 'utf-8' ).'</textarea>
+				<textarea id="input_content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 			</li>
 -->		</ul>
 		<div class="buttonbar">

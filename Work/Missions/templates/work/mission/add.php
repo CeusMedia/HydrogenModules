@@ -34,8 +34,8 @@ $panelAdd	= '
 		<legend class="icon mission-add">'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="-column-left-80">
-				<label for="input_content">'.$w->labelContent.'</label><br/>
-				<input type="text" name="content" id="input_content" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
+				<label for="input_title">'.$w->labelTitle.'</label><br/>
+				<input type="text" name="title" id="input_title" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
 				<div class="column-left-20">
@@ -111,7 +111,7 @@ $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 return '
 <script>
 //var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
-//$(document).ready(function(){$("#input_content").focus()});
+//$(document).ready(function(){$("#input_title").focus()});
 </script>
 <div class="column-right-30">
 	'.$panelInfo.'

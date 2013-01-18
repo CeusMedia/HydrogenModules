@@ -20,7 +20,7 @@ var WorkMissions = {
 			});
 		}
 		else{
-			$("#input_content").focus();
+			$("#input_title").focus();
 			$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
 				dateFormat: "yy-mm-dd",
 		//		appendText: "(yyyy-mm-dd)",
