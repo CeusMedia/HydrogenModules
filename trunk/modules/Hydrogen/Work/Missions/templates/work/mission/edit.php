@@ -156,9 +156,13 @@ $panelEdit	= '
 					<select name="type" id="input_type" class="max" onchange="showOptionals(this)">'.$optType.'</select>
 				</div>
 				<div class="column-left-20 optional type type-0">
-					<label for="input_day">'.$w->labelDay.'</label><br/>
-					<input type="text" name="day" id="input_day" value="'.$mission->dayStart.'" class="max" autocomplete="off"/>
+					<label for="input_dayWork">'.$w->labelDayWork.'</label><br/>
+					<input type="text" name="dayWork" id="input_dayWork" value="'.$mission->dayStart.'" class="max" autocomplete="off"/>
 				</div>
+                                <div class="column-left-20 optional type type-0">
+                                        <label for="input_dayEnd">'.$w->labelDayDue.'</label><br/>
+                                        <input type="text" name="dayDue" id="input_dayDue" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
+                                </div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>
 					<input type="text" name="dayStart" id="input_dayStart" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
@@ -188,7 +192,11 @@ $panelEdit	= '
 				</div>
 				<div class="column-clear"></div>
 			</li>
-		</ul>
+<!--			<li>
+				<label for="input_content">Beschreibung</label>
+				<textarea id="input_content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+			</li>
+-->		</ul>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'
@@ -237,5 +245,11 @@ return '
 <div class="column-right-25">
 	'.$panelInfo.'
 </div>
-<div class="column-clear"></div>';
+<div class="column-clear"></div>
+<script src="http://js.ceusmedia.de/jquery/cmGrowText/0.1.js"></script>
+<script>
+$("textarea.cmGrowText").cmGrowText();
+</script>
+
+';
 ?>

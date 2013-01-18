@@ -15,8 +15,11 @@ class View_Helper_MissionCalendar{
 	}
 
 	public function renderLabel( $year, $month ){
+		$month	= (int) $month;
+		if( $month < 1 || $month > 12 )
+			throw new InvalidArgumentException( 'Invalid month' );
 		return '<span id="mission-calendar-control">
-	<span class="month-label">'.$this->words['months'][$month].'</span>
+	<span class="month-label">'.$this->words['months'][(int) $month].'</span>
 	<span class="year-label">'.$year.'</span>
 </span>';
 	}

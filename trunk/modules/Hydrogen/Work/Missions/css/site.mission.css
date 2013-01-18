@@ -250,6 +250,7 @@ table tr.mission-row {
 table tr.mission-row td {
 	padding: 2px 2px;
 	vertical-align: top;
+	border-bottom: 1px solid rgba(127,127,127,0.25);
 	}
 table tr.mission-row td.cell-graph div.cell-graph {
 	padding: 6px 2px 2px 4px;
@@ -257,6 +258,8 @@ table tr.mission-row td.cell-graph div.cell-graph {
 table tr.mission-row td.cell-time div.cell-time {
 	padding: 3px 2px 2px 5px;
 	}
+table tr.mission-row td.cell-workerId,
+table tr.mission-row td.cell-project,
 table tr.mission-row td.cell-priority {
 	font-size: 0.9em;
 	text-shadow: 1px 1px 1px white;
@@ -510,4 +513,9 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 #mission-calendar-control .year-label {
 	font-weight: lighter;
 	font-size: 1.4em;
+	}
+
+ul li label span.empty {
+	color: #666;
+	font-size: 0.9em;
 	}
