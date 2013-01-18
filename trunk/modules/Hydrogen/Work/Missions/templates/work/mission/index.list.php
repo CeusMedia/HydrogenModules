@@ -73,7 +73,7 @@ function getCount( $list, $days ){
 $colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
-	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
+	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'title' ) ),
 	UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
 	UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
 ) );

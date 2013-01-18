@@ -40,14 +40,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$words			= (object) $this->getWords( 'add' );
 		$userId			= $session->get( 'userId' );
 
-		$content	= $request->get( 'content' );
+		$title		= $request->get( 'title' );
 		$status		= $request->get( 'status' );
 		$dayStart	= !$request->get( 'type' ) ? $request->get( 'dayWork' ) : $request->get( 'dayStart' );
 		$dayEnd		= !$request->get( 'type' ) ? $request->get( 'dayDue' ) : $request->get( 'dayEnd' );
 
 		if( $request->get( 'add' ) ){
-			if( !$content )
-				$messenger->noteError( $words->msgNoContent );
+			if( !$title )
+				$messenger->noteError( $words->msgNoTitle );
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'ownerId'		=> (int) $userId,
@@ -56,6 +56,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
 					'status'		=> $status,
+					'title'			=> $title,
 					'content'		=> $content,
 					'dayStart'		=> $this->logic->getDate( $dayStart ),
 					'dayEnd'		=> $this->logic->getDate( $dayEnd ),
@@ -132,7 +133,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $messenger->gotError() )
 			$this->restart( NULL, TRUE );
 
-		$content	= $request->get( 'content' );
+		$title		= $request->get( 'title' );
 		$dayStart	= $request->get( 'dayStart' );
 		$dayEnd		= $request->get( 'dayEnd' );
 		if( $request->get( 'type' ) == 0 ){
@@ -141,14 +142,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 
 		if( $request->get( 'edit' ) ){
-			if( !$content )
-				$messenger->noteError( $words->msgNoContent );
+			if( !$title )
+				$messenger->noteError( $words->msgNoTitle );
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'workerId'		=> (int) $request->get( 'workerId' ),
 					'projectId'		=> (int) $request->get( 'projectId' ),
 					'type'			=> (int) $request->get( 'type' ),
 					'priority'		=> (int) $request->get( 'priority' ),
+					'title'			=> $title,
 					'content'		=> $content,
 					'status'		=> (int) $request->get( 'status' ),
 					'dayStart'		=> $dayStart,
@@ -413,9 +415,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$direction	= $direction ? $direction : 'ASC';
 		$session->set( 'filter_mission_direction', $direction );
 		$orders		= array(					//  collect order pairs
-			$order		=> $direction,				//  selected or default order and direction
+			$order		=> $direction,			//  selected or default order and direction
 			'timeStart'	=> 'ASC',				//  order events by start time
-			'content'	=> 'ASC',				//  order by title at last
+			'title'		=> 'ASC',				//  order by title at last
 		);
 
 		$conditions	= array();
@@ -427,7 +429,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$states	= array( 0, 1, 2, 3 );
 		$conditions['status']	= $states;
 		if( strlen( $query ) )
-			$conditions['content']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
 			$conditions['projectId']	= $projects;												//  apply project conditions
 
