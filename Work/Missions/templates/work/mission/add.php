@@ -62,8 +62,12 @@ $panelAdd	= '
 					<select name="type" id="input_type" class="max" onchange="showOptionals(this)">'.$optType.'</select>
 				</div>
 				<div class="column-left-20 optional type type-0">
-					<label for="input_day">'.$w->labelDay.'</label><br/>
-					<input type="text" name="day" id="input_day" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
+					<label for="input_dayWork">'.$w->labelDayWork.'</label><br/>
+					<input type="text" name="dayWork" id="input_dayWork" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
+				</div>
+				<div class="column-left-20 optional type type-0">
+					<label for="input_dayDue">'.$w->labelDayDue.'</label><br/>
+					<input type="text" name="dayDue" id="input_dayDue" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>

@@ -21,7 +21,7 @@ var WorkMissions = {
 		}
 		else{
 			$("#input_content").focus();
-			$("#input_day").add("#input_dayStart").add("#input_dayEnd").datepicker({
+			$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
 				dateFormat: "yy-mm-dd",
 		//		appendText: "(yyyy-mm-dd)",
 		//		buttonImage: "/images/datepicker.gif",

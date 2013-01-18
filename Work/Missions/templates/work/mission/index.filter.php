@@ -24,8 +24,14 @@ $attributes		= array(
 $inputSwitchType	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 
 $list	= array();
+
+#print_m( $missions );
+
 for( $i=0; $i<2; $i++){
 	$id		= 'filter_type_'.$i;
+	$count		= 0;
+	foreach( $missions as $mission )
+		$count	+= $mission->type == $i ? 1 : 0;
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'types[]',
@@ -38,6 +44,7 @@ for( $i=0; $i<2; $i++){
 		$attributes['onchange']	= 'this.form.submit();';
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['types'][$i];
+	$label	= $count ? $label.' <small>('.$count.')</small>' : '<span class="empty">'.$label.'</span>';
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $label );
 }
@@ -69,6 +76,9 @@ $inputSwitchPriority	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 $list	= array();
 for( $i=0; $i<6; $i++){
 	$id		= 'filter_priority_'.$i;
+	$count		= 0;
+	foreach( $missions as $mission )
+		$count	+= $mission->priority == $i ? 1 : 0;
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'priorities[]',
@@ -81,6 +91,7 @@ for( $i=0; $i<6; $i++){
 		$attributes['onchange']	= 'this.form.submit();';
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['priorities'][$i];
+	$label	= $count ? $label.' <small>('.$count.')</small>' : '<span class="empty">'.$label.'</span>';
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $label );
 }
@@ -112,6 +123,9 @@ $inputSwitchStatus	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 $list	= array();
 for( $i=0; $i<5; $i++){
 	$id		= 'filter_status_'.$i;
+	$count		= 0;
+	foreach( $missions as $mission )
+		$count	+= $mission->status == $i ? 1 : 0;
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'states[]',
@@ -124,6 +138,7 @@ for( $i=0; $i<5; $i++){
 		$attributes['onchange']	= 'this.form.submit();';
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['states'][$i];
+	$label	= $count ? $label.' <small>('.$count.')</small>' : '<span class="empty">'.$label.'</span>';
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'id' => 'filter_status_item_'.$i, 'class' => ( $i == 4 ? ' invisible' : '' ) ) );
 }
@@ -185,6 +200,9 @@ if( $useProjects && !empty( $userProjects ) ){
 	$index	= array();
 	foreach( $userProjects as $project ){
 		$id		= 'filter_project_'.$project->projectId;
+		$count		= 0;
+		foreach( $missions as $mission )
+			$count	+= $mission->projectId == $project->projectId ? 1 : 0;
 		$attributes	= array(
 			'type'		=> 'checkbox',
 			'name'		=> 'projects[]',
@@ -197,6 +215,7 @@ if( $useProjects && !empty( $userProjects ) ){
 			$attributes['onchange']	= 'this.form.submit();';
 		$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 		$label	= $project->title;
+		$label	= $count ? $label.' <small>('.$count.')</small>' : '<span class="empty">'.$label.'</span>';
 		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
 		$list[]	= UI_HTML_Tag::create( 'li', $label );
 		$index[count( $list ) - 1]	= $project->title;

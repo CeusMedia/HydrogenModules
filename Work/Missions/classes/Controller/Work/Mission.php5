@@ -42,8 +42,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$content	= $request->get( 'content' );
 		$status		= $request->get( 'status' );
-		$dayStart	= !$request->get( 'type' ) ? $request->get( 'day' ) : $request->get( 'dayStart' );
-		$dayEnd		= $request->get( 'dayEnd' );
+		$dayStart	= !$request->get( 'type' ) ? $request->get( 'dayWork' ) : $request->get( 'dayStart' );
+		$dayEnd		= !$request->get( 'type' ) ? $request->get( 'dayDue' ) : $request->get( 'dayEnd' );
 
 		if( $request->get( 'add' ) ){
 			if( !$content )
@@ -135,8 +135,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$content	= $request->get( 'content' );
 		$dayStart	= $request->get( 'dayStart' );
 		$dayEnd		= $request->get( 'dayEnd' );
-		if( $request->get( 'type' ) == 0 )
-			$dayStart	= $this->logic->getDate( $request->get( 'day' ) );
+		if( $request->get( 'type' ) == 0 ){
+			$dayStart	= $this->logic->getDate( $request->get( 'dayWork' ) );
+			$dayEnd		= $request->get( 'dayDue' ) ? $this->logic->getDate( $request->get( 'dayDue' ) ) : NULL;
+		}
 
 		if( $request->get( 'edit' ) ){
 			if( !$content )

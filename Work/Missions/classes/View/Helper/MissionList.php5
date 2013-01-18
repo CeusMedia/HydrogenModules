@@ -13,6 +13,7 @@ class View_Helper_MissionList{
 	);
 	protected $words		= array();
 	protected $icons		= array();
+	protected $projects		= array();
 	protected $indicator;
 	protected $titleLength	= 80;
 	protected $baseUrl;
@@ -30,7 +31,10 @@ class View_Helper_MissionList{
 			$days	= max( min( $days , 6 ), 0 );													//  restrict to be within 0 and 6
 			$this->list[$days][]	= $mission;														//  assign mission to day list
 		}
-
+		$this->projects	= array();
+		$modelProject	= new Model_Project( $this->env );
+		foreach( $modelProject->getAll() as $project )
+			$this->projects[$project->projectId] = $project;
 		$this->icons	= array(
 			'up'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_up.png', $words['filter-directions']['ASC'] ),
 			'down'		=> UI_HTML_Elements::Image( $this->pathIcons.'arrow_down.png', $words['filter-directions']['DESC'] ),
@@ -134,16 +138,24 @@ class View_Helper_MissionList{
 	}
 
 	public function renderRowOfEvent( $event, $days, $showPriority = FALSE, $showActions = FALSE ){
+		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $event );
 		$overdue	= $this->renderOverdue( $event );
-		$timeStart	= date( 'H:i', strtotime( $event->timeStart ) );
-		$timeEnd	= date( 'H:i', strtotime( $event->timeEnd ) );
-		$times		= $timeStart.' - '.$timeEnd.' '.$this->words['index']['suffixTime'];
-		$times		= UI_HTML_Tag::create( 'div', $times.$overdue, array( 'class' => 'cell-time' ) );
+		$date		= date( 'j.n.y', strtotime( $event->timeStart ) );
+		if( $event->timeEnd && $date != date( 'j.n.y', strtotime( $event->timeEnd ) ) )
+			$date	.= " - ".date( 'j.n.y', strtotime( $event->timeEnd ) );
+		$timeStart	= $this->renderTime( strtotime( $event->timeStart ) );
+		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
+		$times		= $timeStart.' - '.$timeEnd/*.' '.$this->words['index']['suffixTime']*/;
+		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$overdue, array( 'class' => 'cell-time' ) );
+		$worker		= $modelUser->get( $event->workerId )->username;
+		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 
 		$cells		= array();
 		$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
@@ -157,14 +169,19 @@ class View_Helper_MissionList{
 	}
 
 	public function renderRowOfTask( $task, $days, $showPriority = FALSE, $showActions = FALSE ){
+		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $task );
 		$overdue	= $this->renderOverdue( $task );
-		$graph		= $this->indicator->build( $task->status, 4 );
+		$graph		= $this->indicator->build( $task->status, 4, 60 );
 		$graph		= UI_HTML_Tag::create( 'div', $graph.$overdue, array( 'class' => 'cell-graph' ) );
+		$worker		= $modelUser->get( $task->workerId )->username;
+		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 
 		$cells		= array();
 		$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$task->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
@@ -208,10 +225,12 @@ class View_Helper_MissionList{
 	}
 
 	public function renderLists(){
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );				//  
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "80px", "90px", "", "120px", "90px", "80px" );				//  
 		$tableHeads	= UI_HTML_Elements::TableHeads( array(
 			UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
+			UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'not-sortable', 'data-column' => 'workerId' ) ),
 			UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'content' ) ),
+			UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'not-sortable', 'data-column' => 'projectId' ) ),
 			UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
 			UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable right', 'data-column' => NULL ) )
 		) );
@@ -223,6 +242,12 @@ class View_Helper_MissionList{
 			$list[]	= '<div class="table-day" id="table-'.$i.'">'.$table.'</div>';
 		}
 		return join( $list );
+	}
+
+	protected function renderTime( $timestamp ){
+		$hours	= date( 'H', $timestamp );
+		$mins	= '<sup><small>'.date( 'i', $timestamp ).'</small></sup>';
+		return $hours.$mins;
 	}
 }
 ?>
