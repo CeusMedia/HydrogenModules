@@ -200,11 +200,11 @@ $panelEdit	= '
 				</div>
 				<div class="column-clear"></div>
 			</li>
-<!--			<li>
-				<label for="input_content">Beschreibung</label>
+			<li>
+				<label for="input_content">'.$w->labelContent.'</label>
 				<textarea id="input_content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 			</li>
--->		</ul>
+		</ul>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'

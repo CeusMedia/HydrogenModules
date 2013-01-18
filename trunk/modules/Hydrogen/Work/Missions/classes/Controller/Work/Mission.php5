@@ -420,8 +420,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$orders		= array(					//  collect order pairs
 			$order		=> $direction,			//  selected or default order and direction
 			'timeStart'	=> 'ASC',				//  order events by start time
-			'title'		=> 'ASC',				//  order by title at last
 		);
+		if( $order != "title" )					//  if not ordered by title
+			$orders['title']	= 'ASC';		//  order by title at last
 
 		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
