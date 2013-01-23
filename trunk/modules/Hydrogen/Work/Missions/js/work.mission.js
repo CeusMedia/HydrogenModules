@@ -35,6 +35,12 @@ var WorkMissions = {
 				yearRange: "c:c+2",
 				monthNames: monthNames
 			});
+			$("#input_dayStart").bind("change",function(){
+				var dStart = $(this).val();
+				var dEnd = $("#input_dayEnd").val();
+				if(dEnd && dStart > dEnd)
+					$("#input_dayEnd").datepicker("setDate", dStart);
+			});
 			//  @link	http://trentrichardson.com/examples/timepicker/
 			$("#input_timeStart").timepicker({});
 			$("#input_timeEnd").timepicker({});
