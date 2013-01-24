@@ -19,12 +19,11 @@
 					speedOut: 0																		//  speed of hiding Animation
 				}, options);
 
-				return this.find(":input").not("select").is("[type=text]").each(function(){			//
+				return this.each(function(){			//
 					var input = $(this);
 					var trigger = $("<span></span>").addClass("cmClearInput-trigger");
 					trigger.insertAfter(input);
-					positionTrigger(input, trigger
-					trigger.bind()
+					positionTrigger(input, trigger);
 					input.bind("change.updateClearTrigger",{trigger: trigger}, function(event){
 						if($(this).val().length)
 							event.data.trigger.show();
