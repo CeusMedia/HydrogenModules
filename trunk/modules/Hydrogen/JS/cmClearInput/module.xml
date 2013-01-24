@@ -16,9 +16,8 @@
 		<needs type="module">JS_jQuery</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-//		$options	= array();
-//		$script		= '$(".cmSelectBox").cmClearInput('.json_encode( $options ).')';
-		$script		= 'cmClearInput.init();';
+		$options	= array();
+		$script		= '$(".cmClearInput").cmClearInput('.json_encode( $options ).')';
 		$script		= '$(document).ready(function(){'.$script.'});';
 		$context->js->addScript( $script );
 	]]></hook>
