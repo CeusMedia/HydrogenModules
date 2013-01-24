@@ -5,7 +5,7 @@
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	background-image: url(themes/custom/img/clearInput.png);
+	background-image: url(../img/clearInput.png);
 	border-radius: 1em;
 	opacity: 0.5;
 	cursor: pointer;
