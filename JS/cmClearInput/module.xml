@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: cmClearInput</title>
+	<description><![CDATA[Adds trigger to input fields and textareas to clear content.]]></description>
+	<category>JavaScript</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script source="local" load="auto">cmClearInput-0.1.js</script>
+		<style source="theme" load="auto">cmClearInput-0.1.css</style>
+		<image source="theme">clearInput.png</image>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+//		$options	= array();
+//		$script		= '$(".cmSelectBox").cmClearInput('.json_encode( $options ).')';
+		$script		= 'cmClearInput.init();';
+		$script		= '$(document).ready(function(){'.$script.'});';
+		$context->js->addScript( $script );
+	]]></hook>
+</module>
