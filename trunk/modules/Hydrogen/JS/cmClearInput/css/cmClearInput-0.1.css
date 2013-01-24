@@ -1,0 +1,17 @@
+.triggerClear {
+	position: absolute;
+        top: 2px;
+/*      right: 4px;
+*/      display: block;
+        width: 11px;
+        height: 11px;
+        border-radius: 1em;
+        opacity: 0.5;
+        border: 1px solid black;
+        background-image: url(themes/custom/img/clearSearch.png);
+        cursor: pointer;
+        }
+.triggerClear:hover {
+        opacity: 1;
+        }
+
