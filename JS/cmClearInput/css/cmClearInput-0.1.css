@@ -1,17 +1,17 @@
 .cmClearInput-trigger {
 	display: block;
-	width: 11px;
-	height: 11px;
+	width: 15px;
+	height: 15px;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	background-image: url(../img/clearInput.png);
-	border-radius: 1em;
+/*	border-radius: 1em;*/
 	opacity: 0.5;
 	cursor: pointer;
 	}
 .cmClearInput-trigger:hover {
-	opacity: 1;
 /*	border: 1px solid black;
-*/	}
+*/	opacity: 1;
+	}
 

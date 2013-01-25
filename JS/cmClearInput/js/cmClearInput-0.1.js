@@ -13,10 +13,6 @@
 		var methods = {																				//  methods callable using constructor
 			init: function(options){
 				var settings = jQuery.extend({														//  options and defaults
-					easeIn: 'linear',																//  easing of showing Animation
-					easeOut: 'linear',																//  easing of hiding Animation
-					speedIn: 0,																		//  speed of showing Animation
-					speedOut: 0																		//  speed of hiding Animation
 				}, options);
 
 				return this.each(function(){			//
@@ -25,13 +21,12 @@
 					trigger.insertAfter(input);
 					positionTrigger(input, trigger);
 					input.bind("change.updateClearTrigger",{trigger: trigger}, function(event){
-						if($(this).val().length)
-							event.data.trigger.show();
-						else
-							event.data.trigger.hide();
+						updateTriggerVisibility($(this), event.data.trigger);
 					}).trigger("change.updateClearTrigger");
 					trigger.bind("click", {input: input}, function(event){
-						event.data.input.val("").trigger("change.updateClearTrigger");
+						event.data.input.val("");
+						event.data.input.trigger("keyup.*");
+						event.data.input.trigger("change.*");
 					});
 				});
 			}
@@ -46,19 +41,24 @@
 
 		function positionTrigger(input, trigger){
 			input.parent().css("position", "relative");
-			var left = input.width() + parseInt(input.css("padding-right")) - 11 - 4;
-			var topPosition = input.position().top;
-			var topMargin = parseInt(input.css("margin-top"));
-			var topHeight = ((input.height() - 11) / 2);
-			var topPadding = parseInt(input.css("padding-top"));
-			var top = Math.ceil(topPosition + topMargin + topPadding + topHeight);
-/*			console.log({
-				topPosition: topPosition,
-				topMargin: topMargin,
-				topPadding: topPadding,
-				topHeight: topHeight,
-				});
-*/			trigger.css("left", left).css("top", top)
+			var left = input.outerWidth();
+			left -= parseInt(input.css("border-right")) + parseInt(input.css("margin-right"));
+			left -= trigger.width() + 5;
+			var top = input.position().top + 6;
+			top += parseInt(input.css("margin-top")) + parseInt(input.css("border-top"));
+			trigger.css({
+				left: (left / input.parent().width() * 100) + "%",
+				top: top
+			});
+		}
+
+		function updateTriggerVisibility(input, trigger){
+			var isVisible = trigger.is(":visible");
+			var shouldBe = input.val().length > 0;
+			if(!isVisible && shouldBe)
+				trigger.show();
+			else if(isVisible && !shouldBe)
+				trigger.hide();
 		}
 	};
 })( jQuery );
