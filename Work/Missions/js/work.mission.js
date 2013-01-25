@@ -6,10 +6,10 @@ var WorkMissions = {
 
 		if(site.hasClass('action-index')){
 			WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
-			$("#input-import").bind("click",function(){
+			$("#input-import").bind("click", function(){
 				$("#input-serial").trigger("click")
 			});
-			$("#input-serial").bind("change",function(){
+			$("#input-serial").bind("change", function(){
 				var value = $("#input-serial").val().replace(/\\/g,"/");
 				$("#input-import").val(value.split(/\//).pop());
 				var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
@@ -35,12 +35,17 @@ var WorkMissions = {
 				yearRange: "c:c+2",
 				monthNames: monthNames
 			});
-			$("#input_dayStart").bind("change",function(){
-				var dStart = $(this).val();
-				var dEnd = $("#input_dayEnd").val();
-				if(dEnd && dStart > dEnd)
-					$("#input_dayEnd").datepicker("setDate", dStart);
+			$("#input_dayWork").bind("change", function(event){
+				var fieldEnd = $("#input_dayDue");
+				if(fieldEnd.val() && $(this).val() > fieldEnd.val())
+					fieldEnd.datepicker("setDate", $(this).val());
 			});
+			$("#input_dayStart").bind("change", function(event){
+				var fieldEnd = $("#input_dayEnd");
+				if(fieldEnd.val() && $(this).val() > fieldEnd.val())
+					fieldEnd.datepicker("setDate", $(this).val());
+			});
+
 			//  @link	http://trentrichardson.com/examples/timepicker/
 			$("#input_timeStart").timepicker({});
 			$("#input_timeEnd").timepicker({});
