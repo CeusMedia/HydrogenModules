@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: cmGrowText</title>
+	<description><![CDATA[Allows textareas to grow by content.]]></description>
+	<category>JavaScript</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script source="local" load="auto">cmGrowText-0.1.js</script>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$options	= array();
+		$script		= '$(".cmGrowText").cmGrowText('.json_encode( $options ).')';
+		$script		= '$(document).ready(function(){'.$script.'});';
+		$context->js->addScript( $script );
+	]]></hook>
+</module>
