@@ -4,12 +4,15 @@ $w	= (object) $words['index'];
 
 class View_Helper_MissionFilter{
 
-
 	protected $options	= array(
 		'animation'	=> 'slide',
 		'speedShow'	=> 500,
 		'speedHide'	=> 300
 	);
+
+	public function __construct( $env ){
+		$this->env	= $env;
+	}
 
 	/**
 	 *	...
@@ -74,7 +77,7 @@ class View_Helper_MissionFilter{
 		}
 		return $list;
 	}
-	
+
 	public function renderCheckboxFilter( $id, $name, $class, $optionName, $optionsMap, $optionSelection, $optionData = NULL, $optionDataKey = NULL, $optionClass = NULL, $optionOrder = NULL ){
 		$isOpen	=  count( $optionsMap ) != count( $optionSelection );
 		$attributes		= array(
@@ -88,19 +91,21 @@ class View_Helper_MissionFilter{
 			'data-speed-hide'	=> $this->options['speedHide'],
 			'checked'			=> $isOpen ? 'checked' : NULL,
 		);
-		$options	= renderFilterOptions( $optionName, $optionsMap, $optionSelection, $optionClass, $optionData, $optionDataKey, 0 );
+		$options	= $this->renderFilterOptions( $optionName, $optionsMap, $optionSelection, $optionClass, $optionData, $optionDataKey, 0 );
 		if( count( $options ) > 1 ){
 			$switch		= UI_HTML_Tag::create( 'input', NULL, $attributes );
 			$attributes	= array(
-				'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledTypes ? 'block' : 'none' ),
+				'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $isOpen ? 'block' : 'none' ),
 				'class'		=> 'optional '.$name.' '.$name.'-true'
 			);
 			$options	= UI_HTML_Tag::create( 'ul', $options, $attributes );
-			return $switch.$options;
+			return array( $switch, $options );
 		}
-		return;
+		return array( '', '' );
 	}
 }
+
+$helperFilter	= new View_Helper_MissionFilter( $this->env );
 
 
 //  --  FILTER: TYPES  --  //
@@ -110,11 +115,14 @@ if( $filterTypes === NULL )
 		Model_Mission::TYPE_EVENT,
 	);
 
-$a	= renderCheckboxFilter( 'switch_type', 'type', NULL, 'types', $words['types'], $filterTypes, $missions, 'type', 'filter-type' );
-xmp( $a );
-die;
+$a	= $helperFilter->renderCheckboxFilter( 'switch_type', 'type', NULL, 'types', $words['types'], $filterTypes, $missions, 'type', 'filter-type' );
+#print_m( $a );
+#die;
+$inputSwitchType	= $a[0];
+$optListTypes		= $a[1];
 
-$enabledTypes	= count( $filterTypes ) != 2;
+
+/*$enabledTypes	= count( $filterTypes ) != 2;
 $attributes		= array(
 	'type'				=> 'checkbox',
 	'name'				=> 'type',
@@ -127,7 +135,7 @@ $attributes		= array(
 	'checked'			=> $enabledTypes ? 'checked' : NULL,
 );
 $inputSwitchType	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-$optType			= renderFilterOptions( 'types', $words['types'], $filterTypes, 'filter-type', $missions, 'type' );
+$optType			= $helperFilter->renderFilterOptions( 'types', $words['types'], $filterTypes, 'filter-type', $missions, 'type' );
 if( count( $optType ) > 1 ){
 	$attributes	= array(
 		'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledTypes ? 'block' : 'none' ),
@@ -136,7 +144,7 @@ if( count( $optType ) > 1 ){
 	$optListTypes	= UI_HTML_Tag::create( 'ul', $optType, $attributes );
 	$filters[]	= "";
 }
-
+*/
 //  --  FILTER: PRIORITIES  --  //
 if( $filterPriorities === NULL )
 	$filterPriorities	= array( 0, 1, 2, 3, 4, 5 );
@@ -154,7 +162,7 @@ $attributes			= array(
 	'checked'			=> $enabledPriorities ? 'checked' : NULL,
 );
 $inputSwitchPriority	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-$optPriority			= renderFilterOptions( 'priorities', $words['priorities'], $filterPriorities, 'filter-priority', $missions, 'priority' );
+$optPriority		= $helperFilter->renderFilterOptions( 'priorities', $words['priorities'], $filterPriorities, 'filter-priority', $missions, 'priority' );
 if( count( $optPriority ) > 1 ){
 	$attributes	= array(
 		'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledPriorities ? 'block' : 'none' ),
@@ -183,7 +191,7 @@ $attributes		= array(
 );
 $inputSwitchStatus	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 
-$optStatus			= renderFilterOptions( 'states', $words['states'], $filterStates, 'filter-status', $missions, 'status' );
+$optStatus			= $helperFilter->renderFilterOptions( 'states', $words['states'], $filterStates, 'filter-status', $missions, 'status' );
 if( count( $optStatus ) > 1 ){
 	$attributes	= array(
 		'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledStates ? 'block' : 'none' ),
@@ -246,7 +254,7 @@ if( $useProjects && !empty( $userProjects ) ){
 	foreach( $userProjects as $project )
 		$optProject[$project->projectId]	= $project->title;
 
-	$optProject		= renderFilterOptions( 'projects', $optProject, $filterProjects, 'filter-project', $missions, 'projectId' );
+	$optProject		= $helperFilter->renderFilterOptions( 'projects', $optProject, $filterProjects, 'filter-project', $missions, 'projectId' );
 	if( count( $optProject ) > 1 ){
 		$attributes	= array(
 			'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledProjects ? 'block' : 'none' ),
@@ -280,7 +288,6 @@ $(document).ready(function(){
 			<li>
 				<label for="switch_view" style="">Sichtweise</label><br/>
 				<select name="view" id="switch_view" onchange="WorkMissionFilter.changeView(this);" class="max">'.$optView.'</select>
-		
 			</li>
 <!--			<li>
 				<label for="filter_access">???</label><br/>
