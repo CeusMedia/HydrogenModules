@@ -161,7 +161,7 @@ $panelEdit	= '
 				</div>
 				<div class="column-left-20 optional type type-0">
 					<label for="input_dayEnd">'.$w->labelDayDue.'</label><br/>
-					<input type="text" name="dayDue" id="input_dayDue" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
+					<input type="text" name="dayDue" id="input_dayDue" class="max cmClearInput" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>
@@ -188,7 +188,7 @@ $panelEdit	= '
 				</div>
 				<div class="column-left-40">
 					<label for="input_reference">'.$w->labelReference.'</label><br/>
-					<input type="text" name="reference" id="input_reference" class="max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="reference" id="input_reference" class="max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="column-left-10">
 					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label><br/>
@@ -202,7 +202,7 @@ $panelEdit	= '
 			</li>
 			<li>
 				<label for="input_content">'.$w->labelContent.'</label>
-				<textarea id="input_content" name="content" class="max cmGrowText">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+				<textarea id="input_content" name="content" class="max cmGrowText cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 			</li>
 		</ul>
 		<div class="buttonbar">
@@ -254,10 +254,5 @@ return '
 	'.$panelInfo.'
 </div>
 <div class="column-clear"></div>
-<script src="http://js.ceusmedia.de/jquery/cmGrowText/0.1.js"></script>
-<script>
-$("textarea.cmGrowText").cmGrowText();
-</script>
-
 ';
 ?>

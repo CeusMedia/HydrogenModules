@@ -2,6 +2,45 @@
 
 $w	= (object) $words['index'];
 
+function renderFilterOptions( $name, $options, $selection, $class = "", $data = array(), $dataKey = NULL ){
+	foreach( $options as $optionKey => $optionLabel ){
+		$id	= array_shift( explode( " ", $class ) );
+		$id	= preg_replace( "/[^a-z0-9]/", "_", $id ).'_'.$optionKey;
+		$count	= 0;
+		if( $data && $dataKey ){
+			foreach( $data as $item )
+				$count += $item->$dataKey == $optionKey ? 1 : 0;
+		}
+		$isChecked	= in_array( $optionKey, $selection );
+		$classes	= array( $class );
+		if( $isChecked )
+			$classes[]	= 'selected';
+		$attributes	= array(
+			'type'		=> 'checkbox',
+			'name'		=> $name.'[]',
+			'value'		=> $optionKey,
+			'id'		=> $id,
+			'class'		=> $class,
+			'checked'	=> $isChecked ? 'checked' : NULL,
+		);
+//		if( !( count( $selection ) == 1 && $selection[0] == $optionKey ) )
+			$attributes['onchange']	= 'this.form.submit();';
+		$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+		$label	= $optionLabel;
+		if( $count ){
+			$label		= $label.' <small>('.$count.')</small>';
+			$classes[]	= 'used';
+		}
+		else{
+			$label	= '<span class="empty">'.$label.'</span>';
+			$classes[]	= 'empty';
+		}
+		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+		$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => implode( ' ', $classes ) ) );
+	}
+	return $list;
+}
+
 //  --  FILTER: TYPES  --  //
 if( $filterTypes === NULL )
 	$filterTypes	= array(
@@ -22,38 +61,54 @@ $attributes		= array(
 	'checked'			=> $enabledTypes ? 'checked' : NULL,
 );
 $inputSwitchType	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-
-$list	= array();
-
-#print_m( $missions );
-
+$optType		= renderFilterOptions( 'types', $words['types'], $filterTypes, 'filter-type', $missions, 'type' );
+if( count( $optType ) > 1 ){
+	$attributes	= array(
+		'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledTypes ? 'block' : 'none' ),
+		'class'		=> 'optional type type-true'
+	);
+	$optListTypes	= UI_HTML_Tag::create( 'ul', $optType, $attributes );
+	$filters[]	= "";
+}
+/*
 for( $i=0; $i<2; $i++){
 	$id		= 'filter_type_'.$i;
 	$count		= 0;
 	foreach( $missions as $mission )
 		$count	+= $mission->type == $i ? 1 : 0;
+	$isChecked	= in_array( $i, $filterTypes );
+	$classes	= array( 'filter-type' );
+	if( $isChecked )
+		$classes[]	= 'selected';
 	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'types[]',
 		'value'		=> $i,
 		'id'		=> $id,
 		'class'		=> 'filter-type',
-		'checked'	=> in_array( $i, $filterTypes ) ? 'checked' : NULL,
+		'checked'	=> $isChecked ? 'checked' : NULL,
 	);
 	if( !( count( $filterTypes ) == 1 && $filterTypes[0] == $i ) )
 		$attributes['onchange']	= 'this.form.submit();';
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 	$label	= $words['types'][$i];
-	$label	= $count ? $label.' <small>('.$count.')</small>' : '<span class="empty">'.$label.'</span>';
+	if( $count ){
+		$label		= $label.' <small>('.$count.')</small>';
+		$classes[]	= 'hasMissions';
+	}
+	else{
+		$label	= '<span class="empty">'.$label.'</span>';
+		$classes[]	= 'empty';
+	}
 	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => implode( ' ', $classes ) ) );
 }
 $attributes	= array(
 	'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $enabledTypes ? 'block' : 'none' ),
 	'class'		=> 'optional type type-true'
 );
 $optListTypes	= UI_HTML_Tag::create( 'ul', join( $list ), $attributes );
-
+*/
 
 //  --  FILTER: PRIORITIES  --  //
 if( $filterPriorities === NULL )

@@ -117,6 +117,8 @@ button.task-add span {
 	left: -1000px;
 	}
 #input_day,
+#input_dayWork,
+#input_dayDue,
 #input_dayStart,
 #input_dayEnd {
 	background-image: url(http://img.int1a.net/famfamfam/silk/calendar.png);
