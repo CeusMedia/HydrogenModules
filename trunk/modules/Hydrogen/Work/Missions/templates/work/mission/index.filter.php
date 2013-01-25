@@ -26,8 +26,22 @@ $optListPriorities		= $a[1];
 //  --  FILTER: STATES  --  //
 if( $filterStates === NULL )
 	$filterStates	= array( 0, 1, 2, 3 );
+if( array_intersect( array( -3, -2, -1, 4), $filterStates ) )
+	$filterStatesMap	= array(
+		-3	=> $words['states'][-3],
+		-2	=> $words['states'][-2],
+		-1	=> $words['states'][-1],
+		4	=> $words['states'][4],
+	);
+else
+	$filterStatesMap	= array(
+		0	=> $words['states'][0],
+		1	=> $words['states'][1],
+		2	=> $words['states'][2],
+		3	=> $words['states'][3],
+	);
 
-$a	= $helperFilter->renderCheckboxFilter( 'switch_status', 'status', NULL, 'states', $words['states'], $filterStates, $missions, 'status', 'filter-status' );
+$a	= $helperFilter->renderCheckboxFilter( 'switch_status', 'status', NULL, 'states', $filterStatesMap, $filterStates, $missions, 'status', 'filter-status' );
 $inputSwitchStatus	= $a[0];
 $optListStates		= $a[1];
 
@@ -66,7 +80,7 @@ $optAccess	= UI_HTML_Elements::Options( $wordsAccess, $session->get( 'filter_mis
 //  --  FILTER: TIME PERSPECTIVE  --  //
 $optView	= array(
 	'0' => 'ausstehend',
-	'1' => 'geschlossen',
+	'1' => 'beendet (+/-)',
 );
 $optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
 
