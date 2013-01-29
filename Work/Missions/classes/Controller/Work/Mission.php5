@@ -444,6 +444,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'currentDay'	=> (int) $session->get( 'filter_mission_day' ),							//  set currently selected day
 		) );
 
+		$this->addData( 'filterAccess', $session->get( 'filter_mission_access' ) );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
 		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
