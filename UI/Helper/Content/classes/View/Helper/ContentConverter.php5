@@ -10,7 +10,7 @@ class View_Helper_ContentConverter{
 		$content	= preg_replace( "/([^>])\r?\n\r?\n\r?\n/", '\\1<br class="clearfloat">', $content );
 		$content	= preg_replace( "/([^>])\r?\n\r?\n/", '\\1<br/><br/>', $content );
 		$content	= preg_replace( "/(.+)\t\r?\n/", '\\1<br/>', $content );						//  special break: line ends with tab
-		$content	= preg_replace( "/\/\r?\n/", '<br/>', $content );								//  special break: line ends with /
+		$content	= preg_replace( "/([^*\/])\/\r?\n/", '\\1<br/>', $content );					//  special break: line ends with / but not with */ or //
 		return $content;
 	}
 
