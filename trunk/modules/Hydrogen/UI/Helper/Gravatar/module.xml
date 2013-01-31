@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Gravatar API</title>
+	<description><![CDATA[Helps getting avatar images from Gravatar.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/Gravatar.php5</class>
+	</files>
+	<config protected="no" type="string" name="default" values="404,identicon,mm,monsterid,wavatar">mm</config>
+	<config protected="no" type="string" name="rate" values="g,pg,r,x">g</config>
+	<config protected="no" type="integer" name="size">32</config>
+</module>
