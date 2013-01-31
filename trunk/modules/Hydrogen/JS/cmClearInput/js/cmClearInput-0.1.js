@@ -15,7 +15,7 @@
 		var methods = {															//  methods callable using constructor
 			init: function(options){
 				var settings = jQuery.extend({									//  options and defaults
-					offsetTop: 5,												//  vertical offset (downwards from top border of input field)
+					offsetTop: 8,												//  vertical offset (downwards from top border of input field)
 					offsetRight: 6												//  horizontal offset (to the left from right border of input field)
 				}, options);
 
@@ -42,12 +42,12 @@
 		function positionTrigger(input, trigger, settings){
 			input.parent().css("position", "relative");							//  position container relative for absolute positioned trigger
 			var left = input.outerWidth();										//  horizontal position is outer width of input field ...
-			left -= parseInt(input.css("border-right"));						//  ... minus right border ...
+			left -= parseInt(input.css("border-right-width"));					//  ... minus right border ...
 			left -= parseInt(input.css("margin-right"));						//  ... minus right margin ...
 			left -= trigger.width() + settings.offsetRight;						//  ... minus trigger width and offset ...
 			left = (left / input.parent().width() * 100) + "%";					//  ... relative to container around input field
 			var top = input.position().top + parseInt(input.css("margin-top"));	//  vertical space above input field ...
-			top += parseInt(input.css("border-top")) + settings.offsetTop;		//  ... including border and trigger offset
+			top += parseInt(input.css("border-top-width")) + settings.offsetTop;		//  ... including border and trigger offset
 			trigger.css({left: left, top: top});								//  position trigger
 		}
 
