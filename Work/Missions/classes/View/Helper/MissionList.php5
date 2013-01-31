@@ -19,6 +19,7 @@ class View_Helper_MissionList{
 	protected $baseUrl;
 	protected $today;
 	protected $pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
+	protected $useGravatar	= FALSE;
 
 	public function __construct( $env, $missions, $words ){
 		$this->env		= $env;
@@ -46,6 +47,7 @@ class View_Helper_MissionList{
 		$this->indicator		= new UI_HTML_Indicator();
 #		$this->titleLength		= $config->get( 'module.work_mission.mail.title.length' );
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
+		$this->useGravatar		= $this->env->getModules()->has( 'UI_Helper_Gravatar' );
 	}
 
 	public function countMissions( $day = NULL ){
@@ -148,7 +150,7 @@ class View_Helper_MissionList{
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd/*.' '.$this->words['index']['suffixTime']*/;
 		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$overdue, array( 'class' => 'cell-time' ) );
-		$worker		= $modelUser->get( $event->workerId )->username;
+		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 
 		$cells		= array();
@@ -168,13 +170,24 @@ class View_Helper_MissionList{
 		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );
 	}
 
-	public function renderRowOfTask( $task, $days, $showPriority = FALSE, $showActions = FALSE ){
+	public function renderUserWithAvatar( $userId ){
 		$modelUser	= new Model_User( $this->env );
+		$worker		= $modelUser->get( $userId );
+		if( !$this->useGravatar )
+			return $worker->username;
+		$gravatar	= new View_Helper_Gravatar( $this->env );
+		$workerPic	= $gravatar->getImage( $worker->email, 20 );
+		$workerPic	= UI_HTML_Tag::create( 'span', $workerPic, array( 'class' => 'user-avatar' ) );
+		$workerName	= UI_HTML_Tag::create( 'span', $worker->username, array( 'class' => 'user-label' ) );
+		return UI_HTML_Tag::create( 'div', $workerPic.' '.$workerName );
+	}
+
+	public function renderRowOfTask( $task, $days, $showPriority = FALSE, $showActions = FALSE ){
 		$link		= $this->renderRowLabel( $task );
 		$overdue	= $this->renderOverdue( $task );
 		$graph		= $this->indicator->build( $task->status, 4, 60 );
 		$graph		= UI_HTML_Tag::create( 'div', $graph.$overdue, array( 'class' => 'cell-graph' ) );
-		$worker		= $modelUser->get( $task->workerId )->username;
+		$worker		= $this->renderUserWithAvatar( $task->workerId );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 
 		$cells		= array();
@@ -225,7 +238,7 @@ class View_Helper_MissionList{
 	}
 
 	public function renderLists(){
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "80px", "90px", "", "120px", "90px", "80px" );				//  
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "80px", "110px", "", "120px", "90px", "80px" );				//  
 		$tableHeads	= UI_HTML_Elements::TableHeads( array(
 			UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 			UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'not-sortable', 'data-column' => 'workerId' ) ),

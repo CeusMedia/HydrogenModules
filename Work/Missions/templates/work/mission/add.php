@@ -34,7 +34,7 @@ $panelAdd	= '
 		<legend class="icon mission-add">'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="-column-left-80">
-				<label for="input_title">'.$w->labelTitle.'</label><br/>
+				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label><br/>
 				<input type="text" name="title" id="input_title" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
@@ -74,12 +74,12 @@ $panelAdd	= '
 					<input type="text" name="dayStart" id="input_dayStart" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
-					<label for="dayEnd">'.$w->labelDayEnd.'</label><br/>
-					<input type="text" name="dayEnd" id="input_dayEnd" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
 					<label for="input_timeStart">'.$w->labelTimeStart.'</label><br/>
 					<input type="text" name="timeStart" id="input_timeStart" class="max" value="'.$mission->timeStart.'" autocomplete="off"/>
+				</div>
+				<div class="column-left-20 optional type type-1">
+					<label for="dayEnd">'.$w->labelDayEnd.'</label><br/>
+					<input type="text" name="dayEnd" id="input_dayEnd" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label><br/>

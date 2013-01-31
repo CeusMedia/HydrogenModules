@@ -265,8 +265,21 @@ table tr.mission-row td.cell-project,
 table tr.mission-row td.cell-priority {
 	font-size: 0.9em;
 	text-shadow: 1px 1px 1px white;
+	padding-left: 0px;
 	padding-top: 4px;
 	}
+table tr.mission-row td.cell-workerId .user-avatar {
+	float: left;
+	display: block;
+	}
+table tr.mission-row td.cell-workerId .user-label {
+	float: left;
+	display: block;
+	margin-left: 5px;
+	margin-top: 1px;
+	padding-top: 1px;
+	}
+
 table tr.mission-row td.cell-actions {
 	padding: 1px 2px;
 	text-align: right;

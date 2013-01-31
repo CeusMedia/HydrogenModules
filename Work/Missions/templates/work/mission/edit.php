@@ -128,7 +128,7 @@ $panelEdit	= '
 		<legend class="icon edit">'.$w->legend.'</legend>
 		<ul class="input">
 			<li class="-column-left-80">
-				<label for="input_title">'.$w->labelTitle.'</label><br/>
+				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label><br/>
 				<input type="text" name="title" id="input_title" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</li>
 			<li>
@@ -168,12 +168,12 @@ $panelEdit	= '
 					<input type="text" name="dayStart" id="input_dayStart" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
-					<label for="dayEnd">'.$w->labelDayEnd.'</label><br/>
-					<input type="text" name="dayEnd" id="input_dayEnd" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
 					<label for="input_timeStart">'.$w->labelTimeStart.'</label><br/>
 					<input type="text" name="timeStart" id="input_timeStart" class="max" value="'.$mission->timeStart.'" autocomplete="off"/>
+				</div>
+				<div class="column-left-20 optional type type-1">
+					<label for="dayEnd">'.$w->labelDayEnd.'</label><br/>
+					<input type="text" name="dayEnd" id="input_dayEnd" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
 				<div class="column-left-20 optional type type-1">
 					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label><br/>
@@ -184,7 +184,7 @@ $panelEdit	= '
 			<li>
 				<div class="column-left-40">
 					<label for="input_location">'.$w->labelLocation.'</label><br/>
-					<input type="text" name="location" id="input_location" class="max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="location" id="input_location" class="max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="column-left-40">
 					<label for="input_reference">'.$w->labelReference.'</label><br/>
@@ -238,17 +238,36 @@ foreach( $priorities as $priority => $label )
 $priorities	= join( $priorities );
 
 return '
+<script>
+$(document).ready(function(){
+	$("input, select, textarea").each(function(){
+		$(this).data("value-original", $(this).val());
+	}).bind("change keyup", function(){
+		var input = $(this);
+		input.removeClass("changed");
+		if(input.val() != input.data("value-original"))
+			input.addClass("changed");
+	});
+});
+</script>
+<style>
+input.changed,
+select.changed,
+textarea.changed {
+	background-color: #FFFFDF;
+	}
+</style>
 <div class="column-left-75">
 	'.$panelEdit.'
 	'.$panelToIssue.'
-	<fieldset>
+<!--	<fieldset>
 		<legend class="icon edit">Status setzen</legend>
 		'.$states.'
 	</fieldset>
 	<fieldset>
 		<legend class="icon edit">Priorität ändern</legend>
 		'.$priorities.'
-	</fieldset>
+	</fieldset>-->
 </div>
 <div class="column-right-25">
 	'.$panelInfo.'
