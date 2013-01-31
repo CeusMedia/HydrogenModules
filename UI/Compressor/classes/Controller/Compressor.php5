@@ -6,7 +6,9 @@ class Controller_Compressor extends CMF_Hydrogen_Controller{
 		$page->css->primer->clearCache();
 		$page->css->theme->clearCache();
 		$this->env->getMessenger()->noteNotice( 'Compressed resource files removed from cache' );
-		$this->restart( './' );
+		$request	= $this->env->getRequest();
+		$redirect	= $request->has( 'from' ) ? $request->get( 'from' ) : NULL;
+		$this->restart( $redirect );
 	}
 }
 ?>
