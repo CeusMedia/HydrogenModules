@@ -2,14 +2,14 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>2.34</version>
+	<version>3.02</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
-		<script load="auto" source="lib">CodeMirror/2.34/lib/codemirror.js</script>
-		<style load="auto" source="scripts-lib">CodeMirror/2.34/lib/codemirror.css</style>
+		<script load="auto" source="lib">CodeMirror/3.02/lib/codemirror.js</script>
+		<style load="auto" source="scripts-lib">CodeMirror/3.02/lib/codemirror.css</style>
 		<style load="auto" source="theme">codemirror.css</style>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
@@ -24,7 +24,7 @@
 //		$config		= $env->getConfig()->getAll( 'module.js_codemirror.option.' );
 		$modes		= explode( ',', $module->config['modes']->value );
 		foreach( $modes as $mode )
-			$context->js->addUrl( $pathJsLib.'CodeMirror/2.34/mode/'.$mode.'/'.$mode.'.js' );
+			$context->js->addUrl( $pathJsLib.'CodeMirror/3.02/mode/'.$mode.'/'.$mode.'.js' );
 		$script	= '
 $("textarea.CodeMirror").each(function(){									//  iterate found text areas
 	$(this).data("codemirror", CodeMirror.fromTextArea($(this).get(0), {	//  create an instance and store it on its related textarea
