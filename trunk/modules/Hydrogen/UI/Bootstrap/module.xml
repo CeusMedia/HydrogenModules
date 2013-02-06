@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Bootstrap</title>
+	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
+	<category>User Interface</category>
+	<version>2.2.2</version>
+	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
+	<author site="https://twitter.com/mdo">Mark Otto</author>
+	<author site="https://twitter.com/fat">fat-kun</author>
+	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
+	<files>
+		<style>bootstrap.css</style>
+		<style load="auto">bootstrap.min.css</style>
+		<style>bootstrap-responsive.css</style>
+		<style load="auto">bootstrap-responsive.min.css</style>
+		<script>bootstrap.js</script>
+		<script load="auto">bootstrap.min.js</script>
+		<image source="theme">glyphicons-halflings-white.png</image>
+		<image source="theme">glyphicons-halflings.png</image>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+</module>
