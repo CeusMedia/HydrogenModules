@@ -84,7 +84,7 @@ if( $mission->status > 0 ){
 			</li>
 		</ul>
 		<div class="buttonbar">
-			<button type="submit" name="">speichern</button>
+			'.UI_HTML_Elements::Button( 'close', 'speichern', 'button save' ).'
 		</div>
 	</fieldset>
 </form>';
