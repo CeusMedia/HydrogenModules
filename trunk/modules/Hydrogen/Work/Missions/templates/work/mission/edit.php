@@ -58,17 +58,38 @@ if( isset( $mission->owner ) )
 
 $panelInfo	= '';
 if( count( $infos ) ){
-	$list	= array();
+	$list		= array();
 	foreach( $infos as $info )
 		$list[]	= UI_HTML_Tag::create( 'dt', $info['label'] ).UI_HTML_Tag::create( 'dd', $info['value'] );
-	$list	= UI_HTML_Tag::create( 'dl', join( $list ) );
-$panelInfo	= '
-<fieldset>
-	<legend class="icon info">Informationen</legend>
-	'.$list.'
-</fieldset>
-';
+	$list		= UI_HTML_Tag::create( 'dl', join( $list ) );
+	$legend		= UI_HTML_Tag::create( 'legend', "Informationen", array( 'class' => "icon info" ) );
+	$fieldset	= UI_HTML_Tag::create( 'fieldset', $legend.$list );
+	$panelInfo	= $fieldset;
 }
+
+$panelClose	= '';
+if( $mission->status > 0 ){
+	$panelClose	= '
+<form action="./work/mission/close/'.$mission->missionId.'" method="post">
+	<fieldset>
+		<legend class="icon mission-close">Abschliessen</legend>
+		<ul class="input">
+			<li>
+				<div class="column-left-60" style="padding-top: 4px">
+					<label for="input_hoursRequired2">Arbeitsstunden</label><br/>
+				</div>
+				<div class="column-left-40">
+					<input type="text" name="hoursRequired" id="input_hoursRequired2" class="xs numeric" value="'.$mission->hoursRequired.'"/><b>h</b>
+				</div>
+			</li>
+		</ul>
+		<div class="buttonbar">
+			<button type="submit" name="">speichern</button>
+		</div>
+	</fieldset>
+</form>';
+}
+
 
 $w	= (object) $words['edit'];
 
@@ -271,6 +292,7 @@ textarea.changed {
 </div>
 <div class="column-right-25">
 	'.$panelInfo.'
+	'.$panelClose.'
 </div>
 <div class="column-clear"></div>
 ';
