@@ -1,4 +1,44 @@
 var WorkMissions = {
+	changeDay: function(missionId, date){
+		WorkMissionsList.disable(100);
+		$.ajax({
+			url: './work/mission/changeDay/'+missionId,
+			data: {date: date},
+			dataType: "json",
+			success: function(json){
+				$("#day-lists").html(json);
+				WorkMissionsList.enable(50);
+				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
+				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+			}
+		});
+	},
+	filter: function(form){
+		$("#day-lists").stop(true);
+		WorkMissionsList.disable();
+		$.ajax({
+			url: './work/mission/filter?reset',
+			data: $(form).serialize(),
+			type: "POST",
+			dataType: "json",
+			success: function(json){
+				WorkMissions.loadLists();
+			}
+		});
+		return false;
+	},
+	loadLists: function(){
+		$.ajax({
+			url: './work/mission/ajaxRenderLists',
+			dataType: "json",			
+			success: function(json){
+				$("#day-lists").html(json).stop(true);
+				WorkMissionsList.enable();
+				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
+				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+			}
+		});
+	},
 	init: function(){
 		var site = $("body.controller-work-mission");
 		if(!site.size())
@@ -95,6 +135,14 @@ var WorkMissionsCalendar = {
 var WorkMissionsList = {
 	sortBy: 'priority',
 	sortDir: 'ASC',
+	disable: function(duration){
+		var duration = typeof duration == "undefined" ? 500 : duration;
+		$("#day-lists").stop(true).animate({opacity: 0.5}, duration);
+	},
+	enable: function(duration){
+		var duration = typeof duration == "undefined" ? 250 : duration;
+		$("#day-lists").stop(true).animate({opacity: 1}, duration);
+	},
 	init: function(){
 		$("#work-mission-view-type-1").removeAttr("disabled");
 		$("#work-mission-view-type-1").click(function(){WorkMissions.changeView(1);});

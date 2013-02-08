@@ -48,7 +48,7 @@ class View_Helper_MissionFilter{
 				'checked'	=> $isChecked ? 'checked' : NULL,
 			);
 			if( !( count( $options ) == 1 && $selection[0] == $optionKey ) )
-				$attributes['onchange']	= 'this.form.submit();';
+				$attributes['onchange']	= 'WorkMissions.filter(this.form);';
 			$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 			$label	= $optionLabel;
 			if( $count ){

@@ -161,6 +161,9 @@ legend.icon.mission-add {
 legend.icon.mission-edit {
 	background-image: url(http://img.int1a.net/famfamfam/silk/script_edit.png);
 	}
+legend.icon.mission-close {
+	background-image: url(http://img.int1a.net/famfamfam/silk/accept.png);
+	}
 
 
 /*  --  DAY TABLES  -- */

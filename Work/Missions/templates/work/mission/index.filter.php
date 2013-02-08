@@ -94,7 +94,7 @@ $(document).ready(function(){
 		$("li.filter_project").show();
 });
 </script>
-<form id="form_mission_filter" action="./work/mission/filter?reset" method="post">
+<form id="form_mission_filter" action="./work/mission/filter?reset" method="post" onsubmit="return WorkMissions.filter(this);">
 	<fieldset>
 		<legend class="icon filter">Filter</legend>
 		<ul class="input">

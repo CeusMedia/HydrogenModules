@@ -127,7 +127,15 @@ class View_Helper_MissionList{
 		}
 		$url		= $baseUrl.'?date='.urlencode( '+1' );
 		$title		= $this->words['list-actions']['moveRight'];
-		$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['right'], 'tiny', NULL, NULL, $title );
+//		$buttons[]	= UI_HTML_Elements::LinkButton( $url, $this->icons['right'], 'tiny', NULL, NULL, $title );
+		$attributes	= array(
+			'type'		=> 'button',
+			'onclick'	=> "WorkMissions.changeDay(".$mission->missionId.",'+1')",
+			'class'		=> 'tiny',
+			'title'		=> $title,
+		);
+		$buttonSpan	= UI_HTML_Tag::create( 'span', $this->icons['right'] );
+		$buttons[]  = UI_HTML_Tag::create( 'button', $buttonSpan, $attributes );
 		return join( '', $buttons );
 	}
 

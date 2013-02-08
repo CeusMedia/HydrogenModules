@@ -94,6 +94,56 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function ajaxRenderLists(){
+		$session	= $this->env->getSession();
+		$words		= $this->getWords();
+
+		$userId		=  $session->get( 'userId' );
+		$missions	= $this->getFilteredMissions( $userId );
+
+//		$w          = (object) $words['index'];
+//		print_m( $words );
+//		die;
+
+		$helper		= new View_Helper_MissionList( $this->env, $missions, $words );
+		$content	= $helper->renderLists();															//  render day lists
+		print( json_encode( $content ) );
+		exit;
+	}
+
+	public function calendar( $year = NULL, $month = NULL ){
+		$session		= $this->env->getSession();
+
+		if( $year === NULL || $month === NULL ){
+			$year	= date( "Y" );
+			if( $session->has( 'work-mission-view-year' ) )
+				$year	= $session->get( 'work-mission-view-year' );
+			$month	= date( "m" );
+			if( $session->has( 'work-mission-view-month' ) )
+				$month	= $session->get( 'work-mission-view-month' );
+			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
+		}
+		if( $month < 1 || $month > 12 ){
+			while( $month > 12 ){
+				$month	-= 12;
+				$year	++;
+			}
+			while( $month < 1 ){
+				$month	+= 12;
+				$year	--;
+			}
+			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
+		}
+		$session->set( 'work-mission-view-year', $year );
+		$session->set( 'work-mission-view-month', $month );
+
+		$this->setData( array(
+			'userId'	=> $session->get( 'userId' ),
+			'year'		=> $year,
+			'month'		=> $month,
+		) );
+	}
+
 	public function changeDay( $missionId ){
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
@@ -110,6 +160,21 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			}
 			$this->model->edit( $missionId, $data );
 		}
+		if( $this->env->request->isAjax() )
+			$this->ajaxRenderLists();
+		$this->restart( NULL, TRUE );
+	}
+
+	public function close( $missionId ){
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$words			= (object) $this->getWords( 'edit' );
+		$data			= array(
+			'hoursRequired'	=> $request->get( 'hoursRequired' ),
+			'status'		=> 4
+		);
+		$this->model->edit( $missionId, $data );
+		$messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -197,10 +262,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function hasFullAccess(){
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
-	}
-
 	public function export( $format = NULL, $debug = FALSE ){
 		switch( $format ){
 			case 'ical':
@@ -283,6 +344,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return $ical;
 	}
 
+	protected function hasFullAccess(){
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
+	}
+
 	public function filter(){
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
@@ -315,7 +380,48 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
 #			if( $request->has( 'direction' ) )
 #				$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
+		if( $request->isAjax() ){
+			print( json_encode( (object) array( 'session' => $session->getAll(), 'request' => $request->getAll() ) ) );
+			 exit;
+		}
 		$this->restart( '', TRUE );
+//		$request->isAjax() ? exit : $this->restart( '', TRUE );
+	}
+
+	protected function getFilteredMissions( $userId ){
+//		$config			= $this->env->getConfig();
+		$session		= $this->env->getSession();
+//		$userId			= $session->get( 'userId' );
+
+		$query		= $session->get( 'filter_mission_query' );
+		$types		= $session->get( 'filter_mission_types' );
+		$priorities	= $session->get( 'filter_mission_priorities' );
+		$states		= $session->get( 'filter_mission_states' );
+		$projects	= $session->get( 'filter_mission_projects' );
+		$direction	= $session->get( 'filter_mission_direction' );
+		$order		= $session->get( 'filter_mission_order' );
+		$order		= $order ? $order : 'priority';
+		$direction	= $direction ? $direction : 'ASC';
+		$orders		= array(					//  collect order pairs
+			$order		=> $direction,			//  selected or default order and direction
+			'timeStart'	=> 'ASC',				//  order events by start time
+		);
+		if( $order != "title" )					//  if not ordered by title
+			$orders['title']	= 'ASC';		//  order by title at last
+
+		$conditions	= array();
+		if( is_array( $types ) && count( $types ) )
+			$conditions['type']	= $types;
+		if( is_array( $priorities ) && count( $priorities ) )
+			$conditions['priority']	= $priorities;
+		if( !( is_array( $states ) && count( $states ) ) )
+			$states	= array( 0, 1, 2, 3 );
+		$conditions['status']	= $states;
+		if( strlen( $query ) )
+			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
+			$conditions['projectId']	= $projects;												//  apply project conditions
+		return $this->logic->getUserMissions( $userId, $conditions, $orders );
 	}
 
 	public function import(){
@@ -344,39 +450,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function calendar( $year = NULL, $month = NULL ){
-		$session		= $this->env->getSession();
-
-		if( $year === NULL || $month === NULL ){
-			$year	= date( "Y" );
-			if( $session->has( 'work-mission-view-year' ) )
-				$year	= $session->get( 'work-mission-view-year' );
-			$month	= date( "m" );
-			if( $session->has( 'work-mission-view-month' ) )
-				$month	= $session->get( 'work-mission-view-month' );
-			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
-		}
-		if( $month < 1 || $month > 12 ){
-			while( $month > 12 ){
-				$month	-= 12;
-				$year	++;
-			}
-			while( $month < 1 ){
-				$month	+= 12;
-				$year	--;
-			}
-			$this->restart( './work/mission/calendar/'.$year.'/'.$month );
-		}
-		$session->set( 'work-mission-view-year', $year );
-		$session->set( 'work-mission-view-month', $month );
-
-		$this->setData( array(
-			'userId'	=> $session->get( 'userId' ),
-			'year'		=> $year,
-			'month'		=> $month,
-		) );
-	}
-
 	/**
 	 *	Default action on this controller.
 	 *	@access		public
@@ -403,11 +476,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'viewType', (int) $session->get( 'work-mission-view-type' ) );
 
 		$access		= $session->get( 'filter_mission_access' );
-		$query		= $session->get( 'filter_mission_query' );
-		$types		= $session->get( 'filter_mission_types' );
-		$priorities	= $session->get( 'filter_mission_priorities' );
-		$states		= $session->get( 'filter_mission_states' );
-		$projects	= $session->get( 'filter_mission_projects' );
 		$direction	= $session->get( 'filter_mission_direction' );
 		$order		= $session->get( 'filter_mission_order' );
 		if( !$order )
@@ -417,38 +485,19 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$direction	= $direction ? $direction : 'ASC';
 		$session->set( 'filter_mission_direction', $direction );
-		$orders		= array(					//  collect order pairs
-			$order		=> $direction,			//  selected or default order and direction
-			'timeStart'	=> 'ASC',				//  order events by start time
-		);
-		if( $order != "title" )					//  if not ordered by title
-			$orders['title']	= 'ASC';		//  order by title at last
-
-		$conditions	= array();
-		if( is_array( $types ) && count( $types ) )
-			$conditions['type']	= $types;
-		if( is_array( $priorities ) && count( $priorities ) )
-			$conditions['priority']	= $priorities;
-		if( !( is_array( $states ) && count( $states ) ) )
-			$states	= array( 0, 1, 2, 3 );
-		$conditions['status']	= $states;
-		if( strlen( $query ) )
-			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
-		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
-			$conditions['projectId']	= $projects;												//  apply project conditions
 
 		$this->setData( array(																		//  assign data to view
-			'missions'		=> $this->logic->getUserMissions( $userId, $conditions, $orders ),		//  add user missions
+			'missions'		=> $this->getFilteredMissions( $userId ),								//  add user missions
 			'userProjects'	=> $this->logic->getUserProjects( $userId, TRUE ),						//  add user projects
 			'users'			=> $this->userMap,														//  add user map
 			'currentDay'	=> (int) $session->get( 'filter_mission_day' ),							//  set currently selected day
 		) );
 
-		$this->addData( 'filterAccess', $session->get( 'filter_mission_access' ) );
+		$this->addData( 'filterAccess', $access );
 		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
 		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
 		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
-		$this->addData( 'filterOrder', $session->get( 'filter_mission_order' ) );
+		$this->addData( 'filterOrder', $order );
 		$this->addData( 'filterProjects', $session->get( 'filter_mission_projects' ) );
 		$this->addData( 'filterDirection', $direction );
 	}
