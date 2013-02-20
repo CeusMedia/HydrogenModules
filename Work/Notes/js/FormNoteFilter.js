@@ -12,9 +12,11 @@ var FormNoteFilter = {
 			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
 		})
 
-		$("ul.tags-list-inline button.tag").bind("click",function(){
-			var action = $(this).hasClass("add") ? "addSearchTag" : "forgetTag";
-			document.location.href = "./work/note/"+action+"/"+$(this).data("tag-id");
+		$("ul.tags-list-inline button.tag-add").bind("click",function(){
+			document.location.href = "./work/note/addSearchTag/"+$(this).data("tag-id");
+		});
+		$("ul.tags-list-inline button.tag-remove").bind("click",function(){
+			document.location.href = "./work/note/forgetTag/"+$(this).data("tag-id");
 		});
 
 		return true;

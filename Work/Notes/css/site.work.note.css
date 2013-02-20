@@ -157,10 +157,10 @@ ul.tags-list-inline li button.tag span {
 	background-position: 3px 2px;
 	text-shadow: 0px 1px solid white;
 	}	
-button.tag.add span {
+button.tag-add span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/tag_blue_add.png);
 	}
-button.tag.remove span {
+button.tag-remove span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/tag_blue_delete.png);
 	}
 	
@@ -374,3 +374,11 @@ legend.note-edit {
 .note-view-content p {
 	font-size: 1em;
 	}
+
+.item-tag-tray button.tag-add span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/magnifier_zoom_in.png);
+	}
+.item-tag-tray button.tag-remove span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/magnifier_zoom_out.png);
+	}
+

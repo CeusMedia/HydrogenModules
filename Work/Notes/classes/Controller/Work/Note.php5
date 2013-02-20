@@ -13,7 +13,9 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		if( $request->get( 'add' ) ){
 			$data		= array(
 				'userId'	=> $session->get( 'userId' ),
+				'projectId'	=> $request->get( 'note_projectId' ),
 				'title'		=> $request->get( 'note_title' ),
+				'public'	=> (int) $request->get( 'note_public' ),
 				'content'	=> $request->get( 'note_content' ),
 				'createdAt'	=> time(),
 			);
@@ -45,6 +47,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		foreach( $columns as $column )
 			$note->$column	= $request->get( $column );
 		$this->addData( 'note', $note );
+
+		$projects	= array();
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			$logic		= new Logic_Project( $this->env );
+			$userId		= $this->env->getSession()->get( 'userId' );
+			$projects	= $logic->getUserProjects( $userId, FALSE );
+		}
+		$this->addData( 'projects', $projects );
 	}
 
 	public function addLink( $noteId, $tagId = NULL ){
@@ -90,7 +100,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
-	
+
 	public function edit( $noteId ){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -106,8 +116,10 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 		if( $request->get( 'save' ) ){
 			$data		= array(
-				'title'		=> $request->get( 'note_title' ),
-				'content'	=> $request->get( 'note_content' ),
+				'projectId'		=> $request->get( 'note_projectId' ),
+				'title'			=> $request->get( 'note_title' ),
+				'content'		=> $request->get( 'note_content' ),
+				'public'		=> (int) $request->get( 'note_public' ),
 				'modifiedAt'	=> time(),
 			);
 			if( !strlen( trim( $data['title'] ) ) )
@@ -122,8 +134,53 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'note', $logic->getNoteData( $noteId ) );
 		$this->addData( 'relatedTags', $logic->getRelatedTags( $noteId ) );
+
+		$projects	= array();
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			$logic		= new Logic_Project( $this->env );
+			$userId		= $this->env->getSession()->get( 'userId' );
+			$projects	= $logic->getUserProjects( $userId, FALSE );
+		}
+		$this->addData( 'projects', $projects );
 	}
-	
+
+	public function filter(){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+
+		if( $request->has( 'filter_visibility' ) )
+			$session->set( 'filter_notes_visibility', $request->get( 'filter_visibility' ) );
+		if( $request->has( 'filter_author' ) )
+			$session->set( 'filter_notes_author', $request->get( 'filter_author' ) );
+		if( $request->has( 'filter_public' ) )
+			$session->set( 'filter_notes_public', $request->get( 'filter_public' ) );
+		if( $request->has( 'filter_projectId' ) )
+			$session->set( 'filter_notes_projectId', $request->get( 'filter_projectId' ) );
+
+		if( $request->has( 'filter_query' ) ){
+			if( trim( $query = $request->get( 'filter_query' ) ) ){
+				$tags		= $session->get( 'filter_notes_tags' );
+				if( !is_array( $tags ) )
+					$tags	= array();
+				$modelTag	= new Model_Tag( $this->env );
+
+				$parts	= explode( ' ', $query );
+				$parts	= array_combine( $parts, $parts );
+				$query	= 'SELECT * FROM '.$modelTag->getName().' WHERE content IN("'.implode( '", "', $parts ).'")';
+				$result	= $this->env->getDatabase()->query( $query );
+				foreach( $result->fetchAll( PDO::FETCH_OBJ ) as $tag ){
+					unset( $parts[$tag->content] );
+					if( !array_key_exists( $tag->tagId, $tags ) )
+						$tags[$tag->tagId]	= $tag;
+				}
+				$query	= implode( ' ', $parts );
+				$session->set( 'filter_notes_tags', $tags );
+			}
+			$session->set( 'filter_notes_term', $query );
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	public function forgetTag( $tagId ){
 		$session	= $this->env->getSession();
 		$tags		= $session->get( 'filter_notes_tags' );
@@ -134,60 +191,67 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$session->set( 'filter_notes_offset', 0 );
 		$this->restart( './work/note' );
 	}
-	
+
 	public function index( $page = 0 ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$tags		= $session->get( 'filter_notes_tags' );
 		$query		= $session->get( 'filter_notes_term');
 		$order		= $session->get( 'filter_notes_order' );
-		$direction	= $session->get( 'filter_notes_direction' );
+		$direction			= $session->get( 'filter_notes_direction' );
+		$filterAuthor		= $session->get( 'filter_notes_author' );
+		$filterPublic		= $session->get( 'filter_notes_public' );
+		$filterProjectId	= $session->get( 'filter_notes_projectId' );
+		$visibility	= $session->get( 'filter_notes_visibility' );
 
 		if( !$order || !$direction ){
 			$order		= 'modifiedAt';
 			$direction	= 'DESC';
 		}
 
-		if( $request->has( 'filter_query' ) )
-			$query	= trim( $request->get( 'filter_query' ) );
 		if( $request->has( 'offset' ) )
 			$session->set( 'filter_notes_offset', (int) $request->get( 'offset' ) );
 
 		if( !is_array( $tags ) )
 			$tags	= array();
 
-		if( trim( $query ) ){
-			$modelTag	= new Model_Tag( $this->env );
-
-			$parts	= explode( ' ', $query );
-			$parts	= array_combine( $parts, $parts );
-			$query	= 'SELECT * FROM '.$modelTag->getName().' WHERE content IN("'.implode( '", "', $parts ).'")';
-			$result	= $this->env->getDatabase()->query( $query );
-			foreach( $result->fetchAll( PDO::FETCH_OBJ ) as $tag ){
-				unset( $parts[$tag->content] );
-				if( !array_key_exists( $tag->tagId, $tags ) )
-					$tags[$tag->tagId]	= $tag;
-			}
-			$query	= implode( ' ', $parts );
-		}
-
-		$session->set( 'filter_notes_term', $query );
-		$session->set( 'filter_notes_tags', $tags );
-
 		$logic		= new Logic_Note( $this->env );
-		$notes	= array();
+
+		$logic->setContext(
+			0,
+			$session->get( 'userId' ),
+			$session->get( 'roleId' ),
+			$session->get( 'filter_projectId' )
+		);
+
+		$notes		= array();
+		$conditions	= array();
+		$userId		= $session->get( 'userId' );
+		if( $filterPublic > 0 )
+			$conditions['public']		= $filterPublic == 2 ? 0 : 1;
+		if( $filterAuthor > 0 )
+			$conditions['userId']		= $filterAuthor == 1 ? $userId : '!='.$userId;
+		if( $filterProjectId )
+			$conditions['projectId']	= $filterProjectId;
 		$offset	= (int) $session->get( 'filter_notes_offset' );
 		if( $query || count( $tags ) ){
 			$notes	= $logic->searchNotes( $query, $tags, $offset, 8 );
 		}
 		else{
-			$notes	= $logic->getTopNotes( $offset, 8 );
+			$notes	= $logic->getTopNotes( $conditions, $offset, 8 );
 		}
 		$modelUser	= new Model_User( $this->env );
 		foreach( $notes['list'] as $nr => $note )
 			$notes['list'][$nr]->user	= $modelUser->get( $note->userId );
+		$logic		= new Logic_Project( $this->env );
+		$projects	= $logic->getUserProjects( $userId );
 		$this->addData( 'offset', $offset );
 		$this->addData( 'limit', 10 );
+		$this->addData( 'filterVisibility', $visibility );
+		$this->addData( 'filterAuthor', $filterAuthor );
+		$this->addData( 'filterPublic', $filterPublic );
+		$this->addData( 'filterProjectId', $filterProjectId );
+		$this->addData( 'projects', $projects );
 		$this->addData( 'notes', $notes );
 	}
 
@@ -209,7 +273,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->env->getMessenger()->noteSuccess( $words->successNoteRemoved );
 		$this->restart( './work/note' );
 	}
-	
+
 	public function removeTag( $noteId, $tagId ){
 		$logic		= new Logic_Note( $this->env );
 		$words		= (object) $this->getWords( 'msg' );

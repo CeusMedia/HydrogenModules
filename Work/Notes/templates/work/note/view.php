@@ -62,9 +62,9 @@ return '
 	'.$panelLinks.'
 	<fieldset>
 		<legend class="icon info">Info</legend>
-		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
+<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
 		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'
-		<dl>
+-->		<dl>
 			<dt>Views</dt>
 			<dd>'.$note->numberViews.'</dd>
 			<dt>erstellt</dt>

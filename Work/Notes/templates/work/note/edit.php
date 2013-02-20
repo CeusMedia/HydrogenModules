@@ -104,6 +104,11 @@ $panelLinks	= '
 </form>
 ';
 
+$optProject	= array( '' => '- keine Zuweisung -' );
+foreach( $projects as $project )
+	$optProject[$project->projectId]	= $project->title;
+$optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
+
 $panelEdit	= '
 	<form id="form_edit_note" name="edit_note" action="./work/note/edit/'.$note->noteId.'" method="post">
 		<fieldset>
@@ -112,6 +117,17 @@ $panelEdit	= '
 				<li class="column-left-50">
 					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label><br/>
 					<input type="text" name="note_title" id="input_note_title" class="max mandatory" value="'.htmlentities( $note->title, ENT_COMPAT, 'UTF-8' ).'"/>
+				</li>
+				<li class="column-left-25">
+					<label for="input_note_projectId">'.$w->labelProjectId.'</label>
+					<select id="input_note_projectId" name="note_projectId" class="max">'.$optProject.'</select>
+				</li>
+				<li class="column-right-20">
+					<br/>
+					<label for="input_note_public">
+						<input type="checkbox" id="input_note_public" name="note_public" value="1" '.( $note->public ? 'checked="checked"' : '' ).'/>
+						&nbsp;'.$w->labelPublic.'
+					</label>
 				</li>
 				<li class="column-clear">
 					<label for="input_note_content">'.$w->labelContent.'</label><br/>
