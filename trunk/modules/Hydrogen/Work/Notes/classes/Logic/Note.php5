@@ -1,10 +1,39 @@
 <?php
 class Logic_Note{
-	
+
+	protected $projectId	= 0;
+	protected $userId		= 0;
+	protected $roleId		= 0;
+	protected $visibility	= 0;
+
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
 		$this->modelNote	= new Model_Note( $env );
 		$this->prefix		= $env->getConfig()->get( 'database.prefix' );
+	}
+
+	public function setContext( $userId, $roleId, $projectId ){
+		$this->userId			= $userId;
+		$this->roleId			= $roleId;
+		$this->projectId		= $projectId;
+	}
+
+	protected function sharpenConditions( $conditions ){
+		if( $this->env->has( 'acl' ) )
+			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
+				return $conditions;
+
+		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )
+			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
+				$conditions['public']	= 1;
+
+		$logic			= new Logic_Project( $this->env );
+		$userProjects	= array( 0 );
+		foreach( $logic->getUserProjects( $this->userId ) as $relation )
+			$userProjects[]	= $relation->projectId;
+		if( !array_key_exists( 'projectId', $conditions ) || !in_array( $conditions['projectId'], $userProjects ) )
+			$conditions['projectId']	= $userProjects;
+		return $conditions;
 	}
 
 	public function countNoteView( $noteId ){
@@ -88,14 +117,13 @@ class Logic_Note{
 			$link->title		= $relation->title;
 			$note->links[]		= $link;
 		}
-		
+
 		$note->tags	= array();
 		foreach( $modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $tag )
 			$note->tags[]	= $modelTag->get( $tag->tagId );
-		
 		return $note;
 	}
-	
+
 	public function getRelatedTags( $noteId ){
 		$modelNote		= new Model_Note( $this->env );
 		$modelNoteTag	= new Model_Note_Tag( $this->env );
@@ -104,7 +132,7 @@ class Logic_Note{
 
 		$noteTags		= array();
 		foreach( $modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $noteTag )
-			$noteTags[]	= $noteTag->tagId;	
+			$noteTags[]	= $noteTag->tagId;
 
 		$list		= array();
 		foreach( $relatedNoteIds as $relatedNoteId => $count ){
@@ -151,7 +179,7 @@ class Logic_Note{
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
-		
+
 		$modelNoteTag	= new Model_Note_Tag( $this->env );
 		$noteIds			= array();
 		foreach( $modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
@@ -172,15 +200,14 @@ class Logic_Note{
 		arsort( $tagIds );
 		return $tagIds;
 	}
-	
+
 	public function getRelatedTagsFromTags( $tagIds = array() ){
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
-		
 	}
-	
+
 	public function getTopTags( $limit = 10, $offset = 0, $tagIds = array() ){
 		$modelTag	= new Model_Tag( $this->env );
 		if( $tagIds ){
@@ -192,7 +219,7 @@ class Logic_Note{
 				$tags[$nr]->relations	= $tagIds[$tag->tagId];
 			return $tags;
 		}
-		
+
 		$tagIds	= array();
 		$modelRel	= new Model_Note_Tag( $this->env );
 		foreach( $modelRel->getAll() as $relation ){
@@ -219,7 +246,7 @@ class Logic_Note{
 		$this->modelNote->remove( $noteId );
 	}
 
-	public function removeNoteLink( $noteLinkId ){ 
+	public function removeNoteLink( $noteLinkId ){
 		$modelNoteLink	= new Model_Note_Link( $this->env );
 		if( !$modelNoteLink->get( $noteLinkId ) )
 			return FALSE;
@@ -227,7 +254,7 @@ class Logic_Note{
 		return TRUE;
 	}
 
-	public function removeLinkFromNote( $linkId, $noteId ){ 
+	public function removeLinkFromNote( $linkId, $noteId ){
 		$modelNoteLink	= new Model_Note_Link( $this->env );
 		$modelLink			= new Model_Link( $this->env );
 		$indices			= array( 'noteId' => $noteId, 'linkId' => $linkId );				//  focus on note and link
@@ -237,7 +264,7 @@ class Logic_Note{
 			$modelLink->remove( $linkId );															//  remove link
 	}
 
-	public function removeTagFromNote( $tagId, $noteId ){ 
+	public function removeTagFromNote( $tagId, $noteId ){
 		$modelNoteTag	= new Model_Note_Tag( $this->env );
 		$modelTag			= new Model_Tag( $this->env );
 		$indices			= array( 'noteId' => $noteId, 'tagId' => $tagId );				//  focus on note and tag
@@ -247,26 +274,27 @@ class Logic_Note{
 			$modelTag->remove( $tagId );															//  remove tag
 	}
 
-	public function getTopNotes( $offset = 0, $limit = 10 ){
-
+	public function getTopNotes( $conditions = array(), $offset = 0, $limit = 10 ){
 		$model		= new Model_Note( $this->env );
-		$number		= $model->count();
-		if( $number < $offset )
-			$offset	= 0;
-
 		$clock		= new Alg_Time_Clock();
 		$orders		= array(
 			'modifiedAt'	=> 'DESC',
 			'createdAt'	=> 'DESC',
 			'title'		=> 'ASC',
 		);
-		$notes	= $model->getAll( NULL, $orders, array( $offset, $limit ) );
+		$conditions	= $this->sharpenConditions( $conditions );
+
+#print_m( $conditions );
+#die;
+		$number	= $model->count( $conditions );
+		if( $number < $offset )
+			$offset	= 0;
+		$notes	= $model->getAll( $conditions, $orders, array( $offset, $limit ) );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
-		$time		= $clock->stop( 6, 0 );
 		return array(
 			'number'	=> $number,
-			'time'		=> $time,
+			'time'		=> $clock->stop( 6, 0 ),
 			'list'		=> $notes
 		);
 	}

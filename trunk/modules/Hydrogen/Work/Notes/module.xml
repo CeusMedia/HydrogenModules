@@ -3,7 +3,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -51,7 +51,9 @@ DROP TABLE IF EXISTS `<%?prefix%>notes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
   `noteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(11) unsigned NOT NULL,
+  `projectId` int(10) unsigned DEFAULT '0',
   `status` tinyint(1) unsigned NOT NULL,
+  `public` int(1) unsigned DEFAULT '0',
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
   `numberViews` int(10) unsigned NOT NULL,
@@ -59,7 +61,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`noteId`),
   KEY `userId` (`userId`),
-  KEY `status` (`status`)
+  KEY `status` (`status`),
+  KEY `projectId` (`projectId`),
+  KEY `public` (`public`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>note_links`;

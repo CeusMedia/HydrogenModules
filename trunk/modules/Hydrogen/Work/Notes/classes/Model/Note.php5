@@ -5,7 +5,9 @@ class Model_Note extends CMF_Hydrogen_Model{
 	protected $columns	= array(
 		'noteId',
 		'userId',
+		'projectId',
 		'status',
+		'public',
 		'title',
 		'content',
 		'numberViews',

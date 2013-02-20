@@ -3,6 +3,8 @@
 $w		= (object) $words['index'];
 
 $tags	= $env->session->get( 'filter_notes_tags' );
+if( !is_array( $tags ) )
+	$tags	= array();
 
 $indicator	= new UI_HTML_Indicator();
 
@@ -20,7 +22,7 @@ foreach( $notes['list'] as $note ){
 	foreach( $note->tags as $tag ){
 		$class	= in_array( $tag, $tags ) ? 'remove' : 'add';
 		$label	= UI_HTML_Tag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ) );
-		$button	= UI_HTML_Tag::create( 'button', $label, array( 'class' => 'button icon tiny tag '.$class, 'data-tag-id' => $tag->tagId ) );
+		$button	= UI_HTML_Tag::create( 'button', $label, array( 'class' => 'button icon tag-'.$class, 'data-tag-id' => $tag->tagId ) );
 		$listTags[$tag->content]	= UI_HTML_Tag::create( 'li', $button );
 	}
 	ksort( $listTags );
