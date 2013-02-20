@@ -65,6 +65,10 @@ if( $facts ){
 }
 
 
+
+$buttonAdd	= UI_HTML_Elements::Button( 'addUser', 'hinzufügen', 'button add' );
+if( !$canEdit )
+	$buttonAdd	= UI_HTML_Elements::Button( 'addUser', 'hinzufügen', 'button add', NULL, TRUE );
 $panelUsers	= '
 <form name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
 	<fieldset id="project-users">
@@ -74,12 +78,24 @@ $panelUsers	= '
 		<label class="not-mandatory">Benutzer</label><br/>
 		<select name="userId" id="input_userId" class="max not-mandatory">'.$optUser.'</select>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'addUser', 'hinzufügen', 'button add' ).'
+			'.$buttonAdd.'
 		</div>
 	</fieldset>
 </form>
 ';
 
+$optCompany	= "";
+if( isset( $projectCompanies ) ){
+	$optCompany	= array();
+	foreach( $projectCompanies as $company )
+		$optCompany[$company->companyId]	= $company->title;
+	$optCompany	= UI_HTML_Elements::Options( $optCompany, $projectId );
+}
+
+
+$buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add' );
+if( !$canEdit )
+	$buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add', NULL, TRUE );
 $panelEdit	= '
 <form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 	<fieldset>
@@ -91,7 +107,7 @@ $panelEdit	= '
 			</li>
 			<li>
 				<label for="input_description">'.$words['add']['labelDescription'].'</label><br/>
-				<textarea name="description" id="input_description" class="max">'.htmlentities( $project->description, ENT_COMPAT, 'UTF-8' ).'</textarea>
+				<textarea name="description" id="input_description" class="max cmGrowText cmClearInput">'.htmlentities( $project->description, ENT_COMPAT, 'UTF-8' ).'</textarea>
 			</li>
 			<li class="column-left-20">
 				<label for="input_status" class="mandatory">'.$words['add']['labelStatus'].'</label><br/>
@@ -99,12 +115,16 @@ $panelEdit	= '
 			</li>
 			<li class="column-left-80">
 				<label for="input_url">'.$words['add']['labelUrl'].'</label><br/>
-				<input type="text" name="url" id="input_url" class="max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
+				<input type="text" name="url" id="input_url" class="max cmClearInput" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
 			</li>
-		</ul>
+<!--			<li class="">
+				<label for="input_companyId">Unternehmen</label>
+				<select name="companyId" id="input_companyId" class="max">'.$optCompany.'</select>
+			</li>
+-->		</ul>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './manage/project', $words['edit']['buttonCancel'], 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add' ).'
+			'.$buttonSave.'
 		</div>
 	</fieldset>
 </form>
