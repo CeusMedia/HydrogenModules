@@ -22,7 +22,7 @@ $panelAdd		= '
 			</li>
 			<li>
 				<label for="input_description">'.$words['add']['labelDescription'].'</label><br/>
-				<textarea name="description" id="input_description" class="max"></textarea>
+				<textarea name="description" id="input_description" class="max cmGrowText cmClearInput"></textarea>
 			</li>
 			<li class="column-left-20">
 				<label for="input_status" class="mandatory">'.$words['add']['labelStatus'].'</label><br/>
@@ -30,7 +30,7 @@ $panelAdd		= '
 			</li>
 			<li class="column-left-80">
 				<label for="input_url">'.$words['add']['labelUrl'].'</label><br/>
-				<input type="text" name="url" id="input_url" class="max"/>
+				<input type="text" name="url" id="input_url" class="max cmClearInput"/>
 			</li>
 		</ul>
 		<div class="buttonbar">

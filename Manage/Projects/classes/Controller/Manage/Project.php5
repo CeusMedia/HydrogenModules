@@ -5,8 +5,9 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		$this->useMissions	= $this->env->getModules()->has( 'Work_Missions' );
+		$this->useCompanies	= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 	}
-	
+
 	public function add(){
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
@@ -88,7 +89,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 
 		$users		= array();
 		foreach( $modelUser->getAll() as $user )
-			$users[$user->userId]	= $user;
+				$users[$user->userId]	= $user;
 
 		$projectUsers	= array();
 		foreach( $relations as $relation ){
@@ -107,53 +108,84 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $users );
 		$this->addData( 'project', $project );
 		$this->addData( 'projectUsers', $projectUsers );
+		$this->addData( 'canEdit', $this->env->getAcl()->has( 'manage_project', 'edit' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'manage_project', 'remove' ) );
+		if( $this->useCompanies ){
+			$modelCompany		= new Model_Company( $this->env );
+			$modelProjectCompany	= new Model_Project_Company( $this->env );
+			$this->addData( 'companies', $modelCompanies->getAll() );				//   @todo: order!
+			$conditions		= array( 'projectId' => $project->projectId );
+			$this->addData( 'projectCompanies', $modelProjectCompanies->get( $conditions ) );	//   @todo: order!
+		}
 	}
 
 	public function filter( $mode = NULL ){
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
-		foreach( array_keys( $session->getAll( 'filter_manage_project_' ) ) as $key )
-			$session->remove( 'filter_manage_project_'.$key );
-		if( $mode !== "reset" ){
+		if( $mode === "reset" )
+			foreach( array_keys( $session->getAll( 'filter_manage_project_' ) ) as $key )
+				$session->remove( 'filter_manage_project_'.$key );
+		if( $request->has( 'status' ) )
 			$session->set( 'filter_manage_project_status', $request->get( 'status' ) );
+		if( $request->has( 'order' ) )
 			$session->set( 'filter_manage_project_order', $request->get( 'order' ) );
+
+		if( $request->has( 'direction' ) )
 			$session->set( 'filter_manage_project_direction', $request->get( 'direction' ) );
+		if( $request->has( 'limit' ) )
 			$session->set( 'filter_manage_project_limit', $request->get( 'limit' ) );
-		}
+		if( $session->get( 'filter_manage_project_order' ) === NULL )
+			$session->set( 'filter_manage_project_order', 'title' );
+		if( $session->get( 'filter_manage_project_direction' ) === NULL )
+			$session->set( 'filter_manage_project_direction', 'ASC' );
 		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){
-		$session		= $this->env->getSession();
-		$modelProject	= new Model_Project( $this->env );
-		$modelUser		= new Model_Project_User( $this->env );
+		$session			= $this->env->getSession();
+		$modelProject		= new Model_Project( $this->env );
+		$modelProjectUser	= new Model_Project_User( $this->env );
+		$modelUser			= new Model_User( $this->env );
 		if( $this->useMissions )
 			$modelMission	= new Model_Mission( $this->env );
-		
-		$filterStatus	= $session->get( 'filter_manage_project_status' );
+
+		$filterStatus		= $session->get( 'filter_manage_project_status' );
+		$filterOrder		= $session->get( 'filter_manage_project_order' );
+		$filterDirection	= $session->get( 'filter_manage_project_direction' );
 		if( !is_array( $filterStatus ) )
 			$filterStatus	= array();
-		
+
 		$conditions	= array();
 		if( !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
-			$projects	= array();
-			foreach( $modelUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
+			$projects	= array( 0 => NULL );
+			foreach( $modelProjectUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
 				$projects[$relation->projectId]	= NULL;
 			$conditions['projectId']	= array_keys( $projects );
 		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
+		$orders	= array();
+		if( $filterOrder && $filterDirection )
+			$orders[$filterOrder]	= $filterDirection;
 
 		$projects	= array();
-		foreach( $modelProject->getAll( $conditions, array( 'title' => 'ASC' ) ) as $project ){
+		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
 			$projects[$project->projectId]	= $project;
-			$project->users	= $modelUser->getAllByIndex( 'projectId', $project->projectId );
+			$project->users	= $modelProjectUser->getAllByIndex( 'projectId', $project->projectId );
+			foreach( $project->users as $nr => $projectUser )
+				$project->users[$nr]	= $modelUser->get( $projectUser->userId );
 			if( $this->useMissions )
 				$project->missions	= $modelMission->countByIndex( 'projectId', $project->projectId );
 		}
-		
+
+
 		$this->addData( 'projects', $projects );
 		$this->addData( 'filterStatus', $filterStatus );
+		$this->addData( 'filterOrder', $filterOrder );
+		$this->addData( 'filterDirection', $filterDirection );
+		$this->addData( 'canAdd', $this->env->getAcl()->has( 'manage_project', 'add' ) );
+		$this->addData( 'canFilter', $this->env->getAcl()->has( 'manage_project', 'filter' ) );
+		$this->addData( 'canEdit', $this->env->getAcl()->has( 'manage_project', 'edit' ) );
 	}
 
 	public function removeUser( $projectId, $userId ){
