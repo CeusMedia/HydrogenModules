@@ -49,6 +49,9 @@ $content	= '
 </div>
 <div class="column-clear"></div>';
 
+//if( !$h->countMissions( (int) $currentDay ) )
+//    $currentDay = $h->getNearestFallbackDay( (int) $currentDay );
+
 $script	= '
 <script>
 $(document).ready(function(){
@@ -56,6 +59,7 @@ $(document).ready(function(){
 	WorkMissionsList.sortBy = "'.$filterOrder.'";
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
 	WorkMissionsList.init();
+	WorkMissions.currentDay = '.$currentDay.';
 });
 </script>';
 $env->getPage()->addHead( $script );
