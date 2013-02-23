@@ -30,13 +30,14 @@ class View_Helper_MissionFilter{
 		foreach( $options as $optionKey => $optionLabel ){
 			$id	= array_shift( explode( " ", $class ) );
 			$id	= preg_replace( "/[^a-z0-9]/", "_", $id ).'_'.$optionKey;
+			$state = $dataKey."-".$optionKey;
 			$count	= 0;
 			if( $data && $dataKey ){
 				foreach( $data as $item )
 					$count += $item->$dataKey == $optionKey ? 1 : 0;
 			}
 			$isChecked	= in_array( $optionKey, $selection );
-			$classes	= array( $class );
+			$classes	= array( $class, $state );
 			if( $isChecked )
 				$classes[]	= 'selected';
 			$attributes	= array(
@@ -59,7 +60,7 @@ class View_Helper_MissionFilter{
 				$label	= '<span class="empty">'.$label.'</span>';
 				$classes[]	= 'empty';
 			}
-			$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id ) );
+			$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$label, array( 'for' => $id, 'class' => 'checkbox' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => implode( ' ', $classes ) ) );
 			if( $orderBy ){
 				$orderValue = $orderBy == 1 ? $optionKey : $optionLabel;
@@ -93,8 +94,10 @@ class View_Helper_MissionFilter{
 		if( count( $options ) > 1 ){
 			$switch		= UI_HTML_Tag::create( 'input', NULL, $attributes );
 			$attributes	= array(
-				'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $isOpen ? 'block' : 'none' ),
-				'class'		=> 'optional '.$name.' '.$name.'-true'
+//				'style'		=> 'margin: 0px; padding: 0px; list-style: none; display: '.( $isOpen ? 'block' : 'none' ),
+				'class'		=> 'dropdown-menu',// optional '.$name.' '.$name.'-true',
+//				'role'		=> 'menu',
+//				'arialabelledby'	=> 'dropdownmenu',
 			);
 			$options	= UI_HTML_Tag::create( 'ul', $options, $attributes );
 			return array( $switch, $options );

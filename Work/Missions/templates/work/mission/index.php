@@ -2,8 +2,10 @@
 $script			= array();
 $buttonSets		= array(
 	array(
-		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="button icon list"><span>Listenansicht</span></button>',
-		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="button icon calendar"><span>Monatsübersicht</span></button>'
+//		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="button icon list"><span>Listenansicht</span></button>',
+//		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="button icon calendar"><span>Monatsübersicht</span></button>'
+		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
+		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 	),
 	array(
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
@@ -60,7 +62,7 @@ $env->getPage()->addHead( $script );
 
 $buttons	= array();
 foreach( $buttonSets as $buttonSet )
-	$buttons[]	= join( " ", $buttonSet );
+	$buttons[]	= '<div class="btn-group">'.join( " ", $buttonSet ).'</div>';
 $buttons	= '<div id="work-mission-buttons">'.join( " | ", $buttons ).'</div><br/>';
 
 return $buttons.$content;
