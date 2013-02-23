@@ -83,22 +83,22 @@ $panelAdd	= '
 				<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 				<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span4 -column-left-40">
-				<label for="input_location">'.$w->labelLocation.'</label>
-				<input type="text" name="location" id="input_location" class="span12 -max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
-			</div>
-			<div class="span4 -column-left-40">
-				<label for="input_reference">'.$w->labelReference.'</label>
-				<input type="text" name="reference" id="input_reference" class="span12 -max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
-			</div>
-			<div class="span2 -column-left-20">
+			<div class="span2 -column-left-20 optional type type-0">
 				<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
 				<div class="input-append">
 					<input type="text" name="hoursProjected" id="input_hoursProjected" class="span10 -xs numeric" value="'.$mission->hoursProjected.'"/>
 					<span class="add-on">h</span>
 				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span5 -column-left-40">
+				<label for="input_location">'.$w->labelLocation.'</label>
+				<input type="text" name="location" id="input_location" class="span12 -max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
+			</div>
+			<div class="span7 -column-left-40">
+				<label for="input_reference">'.$w->labelReference.'</label>
+				<input type="text" name="reference" id="input_reference" class="span12 -max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 		</div>
 		<div class="row-fluid">

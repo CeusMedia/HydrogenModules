@@ -148,7 +148,7 @@ $panelEdit	= '
 		<legend class="icon edit">'.$w->legend.'</legend>
 		<div class="row-fluid">
 			<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
-			<input type="text" name="title" id="input_title" class="span12 max1" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
+			<input type="text" name="title" id="input_title" class="span12 -max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'" required/>
 		</div>
 		<div class="row-fluid">
 			<div class="span3 -column-left-20">
@@ -197,28 +197,29 @@ $panelEdit	= '
 				<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 				<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span4 -column-left-40">
-				<label for="input_location">'.$w->labelLocation.'</label>
-				<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
-			</div>
-			<div class="span4 -column-left-40">
-				<label for="input_reference">'.$w->labelReference.'</label>
-				<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
-			</div>
-			<div class="span2 -column-left-10">
+			<div class="span2 -column-left-10 optional type type-0">
 				<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
 				<div class="input-append">
 					<input type="text" name="hoursProjected" id="input_hoursProjected" class="span8 numeric" value="'.$mission->hoursProjected.'"/>
 					<span class="add-on">h</span>
 				</div>
 			</div>
-			<div class="span2 -column-left-10">
+			<div class="span2 -column-left-10 optional type type-0">
 				<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label>
 				<div class="input-append">
 					<input type="text" name="hoursRequired" id="input_hoursRequired" class="span8 numeric" value="'.$mission->hoursRequired.'"/>
 					<span class="add-on">h</span>
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span5 -column-left-40">
+				<label for="input_location">'.$w->labelLocation.'</label>
+				<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
+			</div>
+			<div class="span7 -column-left-40">
+				<label for="input_reference">'.$w->labelReference.'</label>
+				<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 		</div>
 		<div class="row-fluid">

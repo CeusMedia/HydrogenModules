@@ -17,7 +17,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $hasFullAccess	= FALSE;
 	protected $logic;
 
-	public function testMail( $userId ){
+	public function testMail( $send = FALSE ){
+		$session		= $this->env->getSession();
+		$messenger		= $this->env->getMessenger();
+		$userId			= $session->get( 'userId' );
+
 		$conditions		= array(
 			'status'	=> array( 0, 1, 2, 3 ),
 		);
@@ -44,8 +48,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$data	= array( 'events' => $events, 'tasks' => $tasks, 'user' => $user );
 
 		$mail	= new Mail_Work_Mission_Daily( $this->env, $data );
+		if( $send ){
+			$mail->sendToUser( $userId );
+			$messenger->noteSuccess( 'Mail sent.' );
+			$this->restart( NULL, TRUE );
+		}
 		print( $mail->html );
-die;
+		exit;
 
 		$helper	= new View_Helper_MissionMailDaily();
 		$helper->setEnv( $this->env );

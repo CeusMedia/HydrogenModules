@@ -1,4 +1,5 @@
 var WorkMissions = {
+	currentDay: 0,
 	changeDay: function(missionId, date){
 		WorkMissionsList.disable(100);
 		$.ajax({
@@ -8,9 +9,13 @@ var WorkMissions = {
 			success: function(json){
 				$("#day-controls").html(json.buttons);
 				$("#day-lists").html(json.lists).stop(true);
+				WorkMissionsList.makeTableSortable($("#layout-content table"),{
+					url: "./work/mission/filter/",
+					order: WorkMissionsList.sortBy,
+					direction: WorkMissionsList.sortDir
+				});
 				WorkMissionsList.enable(50);
-				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
-				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+				WorkMissions.showDayTable(WorkMissions.currentDay);
 			}
 		});
 	},
@@ -37,9 +42,13 @@ var WorkMissions = {
 			success: function(json){
 				$("#day-controls").html(json.buttons);
 				$("#day-lists").html(json.lists).stop(true);
-				WorkMissionsList.enable();
-				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
-				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+				WorkMissionsList.makeTableSortable($("#layout-content table"),{
+					url: "./work/mission/filter/",
+					order: WorkMissionsList.sortBy,
+					direction: WorkMissionsList.sortDir
+				});
+				WorkMissionsList.enable(50);
+				WorkMissions.showDayTable(WorkMissions.currentDay);
 			}
 		});
 	},
@@ -49,7 +58,7 @@ var WorkMissions = {
 			return;
 
 		if(site.hasClass('action-index')){
-			WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
+			WorkMissions.showDayTable(WorkMissions.currentDay);
 			$("#input-import").bind("click", function(){
 				$("#input-serial").trigger("click")
 			});
@@ -96,6 +105,7 @@ var WorkMissions = {
 			$("#input_type").trigger("change");
 /*			console.log(missionDay);
 			if( typeof missionDay !== "undefined" ){
+
 				$("body.action-add #input_day").datepicker("setDate",missionDay);
 				$("body.action-add #input_dayStart").datepicker("setDate",missionDay);
 				$("body.action-add #input_dayEnd").datepicker("setDate",missionDay);
@@ -106,8 +116,8 @@ var WorkMissions = {
 	changeView: function(type){
 		document.location.href = "./work/mission?view="+parseInt(type);
 	},
-	showDayTable: function(day,permanent){
-		missionDay = day;
+	showDayTable: function(day, permanent){
+		WorkMissions.currentDay = day;
 		if(permanent)
 			$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
 		$("div.table-day").hide().filter("#table-"+day).show();
