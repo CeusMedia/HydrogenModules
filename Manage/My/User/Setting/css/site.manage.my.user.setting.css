@@ -7,19 +7,19 @@
 #manageMyUserModuleSettings legend.config {
 	background-image: url(http://img.int1a.net/famfamfam/silk/wrench.png);
 	}
+#manageMyUserModuleSettings table th {
+	text-align: left;
+	}
 #manageMyUserModuleSettings table td {
-	vertical-align: text-bottom;
-	}
-#manageMyUserModuleSettings table td.label,
-#manageMyUserModuleSettings table td.input {
 	border-top: 1px solid #DFDFDF;
-	}
-#manageMyUserModuleSettings table td.label {
 	font-size: 0.9em;
+	vertical-align: middle;
 	}
+#manageMyUserModuleSettings table td.input,
 #manageMyUserModuleSettings table td.input {
 /*	text-align: right;
 */	font-size: 1em;
+	margin-bottom: 1px;
 	}
 #manageMyUserModuleSettings table span.button-reset {
 	float: right;

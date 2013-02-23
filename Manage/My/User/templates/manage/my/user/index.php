@@ -75,21 +75,18 @@ $panelInfo		= HTML::Fields(
 $panelPassword	= HTML::Form( './manage/my/user/password', 'my_user_password',
 	HTML::Fields(
 		HTML::Legend( $words['password']['legend'], 'edit my user password' ).
-		HTML::UlClass( 'input',
-			HTML::Li(
-				HTML::DivClass( 'column-left-50',
-					HTML::Label( 'passwordOld', $words['password']['labelPassword'], 'mandatory' ).
-					HTML::Password( 'passwordOld', 'max mandatory' )
-				).
-				HTML::DivClass( 'column-left-50',
-					HTML::Label( 'passwordNew', $words['password']['labelPasswordNew'], 'mandatory' ).
-					HTML::Input( 'passwordNew', NULL, 'max mandatory' )
-				).
-				HTML::DivClass( 'column-clear' )
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span6', 
+				HTML::Label( 'passwordOld', $words['password']['labelPassword'], 'mandatory' ).
+				HTML::Password( 'passwordOld', 'span12 mandatory' )
+			).
+			HTML::DivClass( 'span6',
+				HTML::Label( 'passwordNew', $words['password']['labelPasswordNew'], 'mandatory' ).
+				HTML::Input( 'passwordNew', NULL, 'span12 mandatory' )
 			)
 		).
 		HTML::Buttons(
-			HTML::Button( 'savePassword', $words['password']['buttonSave'], 'button save' )
+			HTML::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$words['password']['buttonSave'], 'btn btn-small btn-success' )
 		)
 	)
 );
@@ -98,78 +95,87 @@ $panelPassword	= HTML::Form( './manage/my/user/password', 'my_user_password',
 $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 	HTML::Fields(
 		HTML::Legend( $w->legend, 'edit my user' ).
-		HTML::UlClass( 'input',
-			HTML::Li(
-				HTML::DivClass( 'column-left-33',
-					HTML::Label( 'username', $w->labelUsername, 'mandatory' ).HTML::BR.
-					HTML::Input( 'username', $user->username, 'max mandatory' )
-				).
-				HTML::DivClass( 'column-left-66',
-					HTML::Label( 'email', $w->labelEmail, 'mandatory' ).HTML::BR.
-					HTML::Input( 'email', $user->email, 'max mandatory' )
-				).
-				HTML::DivClass( 'column-clear' )
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span4',
+				HTML::Label( 'username', $w->labelUsername, 'mandatory' ).
+				HTML::DivClass( 'input-prepend',
+					HTML::SpanClass( 'add-on', '<i class="icon-user"></i>' ).
+					HTML::Input( 'username', $user->username, 'span11 mandatory' )
+				)
 			).
-			HTML::Li( '<hr/>'
-			).
-			HTML::Li(
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'gender', $w->labelGender, '' ).HTML::BR.
-					HTML::Select( 'gender', $optGender, 'max' )
-				).
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'salutation', $w->labelSalutation, '' ).HTML::BR.
-					HTML::Input( 'salutation', $user->salutation, 'max' )
-				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'firstname', $w->labelFirstname, '' ).HTML::BR.
-					HTML::Input( 'firstname', $user->firstname, 'max' )
-				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'surname', $w->labelSurname, '' ).HTML::BR.
-					HTML::Input( 'surname', $user->surname, 'max' )
-				).
-				HTML::DivClass( 'column-clear' )
-			).
-			HTML::Li(
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'postcode', $w->labelPostcode, '' ).HTML::BR.
-					HTML::Input( 'postcode', $user->postcode, 'max' )
-				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'city', $w->labelCity, '' ).HTML::BR.
-					HTML::Input( 'city', $user->city, 'max' )
-				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'street', $w->labelStreet, '' ).HTML::BR.
-					HTML::Input( 'street', $user->street, 'max' )
-				).
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'number', $w->labelNumber, '' ).HTML::BR.
-					HTML::Input( 'number', $user->number, 'max' )
-				).
-				HTML::DivClass( 'column-clear' )
-			).
-			HTML::Li(
-				HTML::DivClass( 'column-left-25',
-					HTML::Label( 'phone', $w->labelPhone ).HTML::BR.
-					HTML::Input( 'phone', $user->phone, 'max' )
-				).
-				HTML::DivClass( 'column-left-25',
-					HTML::Label( 'fax', $w->labelFax ).HTML::BR.
-					HTML::Input( 'fax', $user->fax, 'max' )
-				).
-				HTML::DivClass( 'column-clear' )
-			).
-			HTML::Li( '<hr/>'
-			).
-			HTML::Li(
-				HTML::Label( 'password', $w->labelPassword, 'mandatory' ).HTML::BR.
-				HTML::Password( 'password', 'm mandatory' )
+			HTML::DivClass( 'span8',
+				HTML::Label( 'email', $w->labelEmail, 'mandatory' ).
+				HTML::DivClass( 'input-prepend',
+					HTML::SpanClass( 'add-on', '<i class="icon-envelope"></i>' ).
+					HTML::Input( 'email', $user->email, 'span11 mandatory' )
+				)
 			)
 		).
-		HTML::Buttons(
-			HTML::Button( 'saveUser', $w->buttonSave, 'button save' )
+		'<hr/>'.
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span2',
+				HTML::Label( 'gender', $w->labelGender, '' ).
+				HTML::Select( 'gender', $optGender, 'span12' )
+			).
+			HTML::DivClass( 'span2',
+				HTML::Label( 'salutation', $w->labelSalutation, '' ).
+				HTML::Input( 'salutation', $user->salutation, 'span12' )
+			).
+			HTML::DivClass( 'span4',
+				HTML::Label( 'firstname', $w->labelFirstname, '' ).
+				HTML::Input( 'firstname', $user->firstname, 'span12' )
+			).
+			HTML::DivClass( 'span4',
+				HTML::Label( 'surname', $w->labelSurname, '' ).
+				HTML::Input( 'surname', $user->surname, 'span12' )
+			)
+		).
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span2',
+				HTML::Label( 'postcode', $w->labelPostcode, '' ).
+				HTML::Input( 'postcode', $user->postcode, 'span12 numeric' )
+			).
+			HTML::DivClass( 'span3',
+				HTML::Label( 'city', $w->labelCity, '' ).
+				HTML::Input( 'city', $user->city, 'span12' )
+			).
+			HTML::DivClass( 'span5',
+				HTML::Label( 'street', $w->labelStreet, '' ).
+				HTML::Input( 'street', $user->street, 'span12' )
+			).
+			HTML::DivClass( 'span2',
+				HTML::Label( 'number', $w->labelNumber, '' ).
+				HTML::Input( 'number', $user->number, 'span12 numeric' )
+			)
+		).
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span3',
+				HTML::Label( 'phone', $w->labelPhone ).
+				HTML::Input( 'phone', $user->phone, 'span12' )
+			).
+			HTML::DivClass( 'span3',
+				HTML::Label( 'fax', $w->labelFax ).
+				HTML::Input( 'fax', (string) $user->fax, 'span12' )
+			)
+		).
+/*		'<hr/>'.
+		HTML::DivClass( 'row-fluid',
+			HTML::DivClass( 'span3',
+				HTML::Label( 'password', $w->labelPassword, 'mandatory' ).
+			)
+		).
+*/		HTML::Buttons(
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span6',
+					HTML::DivClass( 'input-prepend input-append',
+						HTML::SpanClass( 'add-on', '<i class="icon-lock"></i>' ).
+						'<input type="password" name="password" id="input_password" class="span7" required placeholder="'.$w->labelPassword.'" value="" autocomplete="off"/>'.
+//						HTML::Password( 'password', 'span11 mandatory' )
+						HTML::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' )
+					)
+				)
+			)
+//			HTML::Button( 'saveUser', $w->buttonSave, 'button save' )
 		)
 	)
 );
