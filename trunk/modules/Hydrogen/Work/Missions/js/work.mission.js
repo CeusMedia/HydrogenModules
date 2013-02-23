@@ -6,7 +6,8 @@ var WorkMissions = {
 			data: {date: date},
 			dataType: "json",
 			success: function(json){
-				$("#day-lists").html(json);
+				$("#day-controls").html(json.buttons);
+				$("#day-lists").html(json.lists).stop(true);
 				WorkMissionsList.enable(50);
 				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
 				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
@@ -14,6 +15,8 @@ var WorkMissions = {
 		});
 	},
 	filter: function(form){
+//		console.log($(form).serialize());
+//		return;
 		$("#day-lists").stop(true);
 		WorkMissionsList.disable();
 		$.ajax({
@@ -32,7 +35,8 @@ var WorkMissions = {
 			url: './work/mission/ajaxRenderLists',
 			dataType: "json",			
 			success: function(json){
-				$("#day-lists").html(json).stop(true);
+				$("#day-controls").html(json.buttons);
+				$("#day-lists").html(json.lists).stop(true);
 				WorkMissionsList.enable();
 				var day = typeof missionShowDay != "undefined" ? missionShowDay : 0;
 				WorkMissions.showDayTable(typeof missionShowDay != "undefined" ? missionShowDay : 0);
@@ -107,7 +111,9 @@ var WorkMissions = {
 		if(permanent)
 			$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
 		$("div.table-day").hide().filter("#table-"+day).show();
-		$("#day-controls button").removeClass("active").eq(day).addClass("active");
+//		$("#day-controls button").removeClass("active").eq(day).addClass("active");
+		$("#day-controls li.active").removeClass("active");
+		$("#day-controls li").eq(day).addClass("active");
 	}	
 }
 

@@ -2,6 +2,17 @@
 class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
+		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
+		$html		= $this->renderBody( $data );
+		$this->html	= $html;
+		$mailBody	= new Net_Mail_Body( base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
+		$mailBody->setContentEncoding( 'base64' );
+		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
+		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
+		$this->mail->addBody( $mailBody );
+	}
+
+	public function renderBody( $data ){
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
@@ -19,7 +30,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		if( count( $data['tasks'] ) ){
 			$helper		= new View_Helper_MissionList( $this->env, $data['tasks'], $words );
 			$rows		= $helper->renderRows( 0 );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( "80", "100", "", "100" );
 			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
 			$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingTasks ? UI_HTML_Tag::create( 'h4', $w->headingTasks ) : "";
@@ -48,13 +59,16 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
 '.$heading.'
-<div class="text-greeting">'.$greeting.'</div>
+<div class="text-greeting text-info">'.$greeting.'</div>
 <div class="tasks">'.$tasks.'</div>
 <div class="events">'.$events.'</div>
+<!--
 <div class="text-salute">'.$salute.'</div>
-<div class="text-signature">'.$w->textSignature.'</div>';
+<div class="text-signature">'.$w->textSignature.'</div>
+-->';
 
 		$this->addPrimerStyle( 'layout.css' );
+		$this->addThemeStyle( 'bootstrap.css' );
 		$this->addThemeStyle( 'layout.css' );
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.mission.css' );
@@ -62,13 +76,7 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 		$this->page->addBody( $body );
 		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-		$html	= $this->page->build( array( 'class' => $class ) );
-
-		$mailBody	= new Net_Mail_Body(  base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
-		$this->mail->addBody( $mailBody );
+		return $this->page->build( array( 'class' => $class ) );
 	}
 }
 ?>

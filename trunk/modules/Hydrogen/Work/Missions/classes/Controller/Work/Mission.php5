@@ -17,6 +17,45 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $hasFullAccess	= FALSE;
 	protected $logic;
 
+	public function testMail( $userId ){
+		$conditions		= array(
+			'status'	=> array( 0, 1, 2, 3 ),
+		);
+		$orders			= array(
+			'priority'		=> "ASC",
+			'timeStart'		=> "ASC",
+		);
+		$missions		= $this->logic->getUserMissions( $userId, $conditions, $orders );
+
+		$today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
+		foreach( $missions as $mission ){													//  iterate missions
+			$diff	= $today->diff( new DateTime( $mission->dayStart ) );					//  get difference to today
+			$days	= $diff->invert ? -1 * $diff->days : $diff->days;						//  calculate days left
+			$days	= max( min( $days , 6 ), 0 );											//  restrict to be within 0 and 6
+			$this->list[$days][]	= $mission;												//  assign mission to day list
+		}
+
+		$user		= new stdClass();
+		$user->username	= 'test';
+		$events		= array();
+		$tasks		= array();
+		foreach( $this->list[0] as $mission )
+			$mission->type == 0 ? $tasks[] = $mission : $events[] = $missions;
+		$data	= array( 'events' => $events, 'tasks' => $tasks, 'user' => $user );
+
+		$mail	= new Mail_Work_Mission_Daily( $this->env, $data );
+		print( $mail->html );
+die;
+
+		$helper	= new View_Helper_MissionMailDaily();
+		$helper->setEnv( $this->env );
+		$helper->render( $data );
+die;
+
+		print_m( $this->list[0] );
+		die;
+	}
+
 	protected function __onInit(){
 		$this->model	= new Model_Mission( $this->env );
 		$this->logic	= new Logic_Mission( $this->env );
@@ -101,13 +140,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$userId		=  $session->get( 'userId' );
 		$missions	= $this->getFilteredMissions( $userId );
 
-//		$w          = (object) $words['index'];
-//		print_m( $words );
-//		die;
-
 		$helper		= new View_Helper_MissionList( $this->env, $missions, $words );
-		$content	= $helper->renderLists();															//  render day lists
-		print( json_encode( $content ) );
+		$buttons	= $helper->renderButtons();
+		$lists		= $helper->renderLists();															//  render day lists
+		print( json_encode( array( 'buttons' => $buttons, 'lists' => $lists ) ) );
 		exit;
 	}
 
@@ -366,11 +402,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_mission_access', $request->get( 'access' ) );
 		if( $request->has( 'query' ) )
 			$session->set( 'filter_mission_query', $request->get( 'query' ) );
-		if( $request->has( 'type' ) )
+		if( $request->has( 'types' ) )
 			$session->set( 'filter_mission_types', $request->get( 'types' ) );
-		if( $request->has( 'priority' ) )
+		if( $request->has( 'priorities' ) )
 			$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
-		if( $request->has( 'status' ) )
+		if( $request->has( 'states' ) )
 			$session->set( 'filter_mission_states', $request->get( 'states' ) );
 		if( $request->has( 'projects' ) )
 			$session->set( 'filter_mission_projects', $request->get( 'projects' ) );

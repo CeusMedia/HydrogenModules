@@ -161,7 +161,7 @@ $(document).ready(function(){
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
 			$title		= $mission->title;
 			$url		= './work/mission/edit/'.$mission->missionId;
-			$class		= 'icon-label mission-type-'.$mission->type;
+			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
 			$overdue	= '';
 			if( $isPast )

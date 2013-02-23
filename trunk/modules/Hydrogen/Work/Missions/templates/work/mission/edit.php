@@ -73,16 +73,15 @@ if( $mission->status > 0 ){
 <form action="./work/mission/close/'.$mission->missionId.'" method="post">
 	<fieldset>
 		<legend class="icon mission-close">Abschliessen</legend>
-		<ul class="input">
-			<li>
-				<div class="column-left-60" style="padding-top: 4px">
-					<label for="input_hoursRequired2">Arbeitsstunden</label><br/>
-				</div>
-				<div class="column-left-40">
-					<input type="text" name="hoursRequired" id="input_hoursRequired2" class="xs numeric" value="'.$mission->hoursRequired.'"/><b>h</b>
-				</div>
-			</li>
-		</ul>
+		<div class="row-fluid">
+			<div class="span7">
+				<label for="input_hoursRequired2">Arbeitsstunden</label>
+			</div>
+			<div class="span5 input-append">
+				<input type="text" name="hoursRequired" id="input_hoursRequired2" class="span8 -xs numeric" value="'.$mission->hoursRequired.'"/>
+				<span class="add-on">h</span>
+			</div>
+		</div>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::Button( 'close', 'speichern', 'button save' ).'
 		</div>
@@ -147,88 +146,92 @@ $panelEdit	= '
 <form action="./work/mission/edit/'.$mission->missionId.'" method="post">
 	<fieldset>
 		<legend class="icon edit">'.$w->legend.'</legend>
-		<ul class="input">
-			<li class="-column-left-80">
-				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label><br/>
-				<input type="text" name="title" id="input_title" class="max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
-			</li>
-			<li>
-				<div class="column-left-20">
-					<label for="input_priority">'.$w->labelPriority.'</label><br/>
-					<select name="priority" id="input_priority" class="max">'.$optPriority.'</select>
+		<div class="row-fluid">
+			<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
+			<input type="text" name="title" id="input_title" class="span12 max1" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'"/>
+		</div>
+		<div class="row-fluid">
+			<div class="span3 -column-left-20">
+				<label for="input_priority">'.$w->labelPriority.'</label>
+				<select name="priority" id="input_priority" class="span12">'.$optPriority.'</select>
+			</div>
+			<div class="span3 -column-left-20">
+				<label for="input_status">'.$w->labelStatus.'</label>
+				<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
+			</div>
+			<div class="span4 -column-left-40">
+				<label for="input_projectId">'.$w->labelProjectId.'</label>
+				<select name="projectId" id="input_projectId" class="span12">'.$optProject.'</select>
+			</div>
+			<div class="span2 -column-left-20">
+				<label for="input_workerId">'.$w->labelWorker.'</label>
+				<select name="workerId" id="input_workerId" class="span12">'.$optWorker.'</select>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span2 -column-left-20">
+				<label for="input_type">'.$w->labelType.'</label>
+				<select name="type" id="input_type" class="span12 -max" onchange="showOptionals(this)">'.$optType.'</select>
+			</div>
+			<div class="span3 -column-left-20 optional type type-0">
+				<label for="input_dayWork">'.$w->labelDayWork.'</label>
+				<input type="text" name="dayWork" id="input_dayWork" value="'.$mission->dayStart.'" class="span12 -max" autocomplete="off"/>
+			</div>
+			<div class="span3 -column-left-20 optional type type-0">
+				<label for="input_dayEnd">'.$w->labelDayDue.'</label>
+				<input type="text" name="dayDue" id="input_dayDue" class="span12 -max cmClearInput" value="'.$mission->dayEnd.'" autocomplete="off"/>
+			</div>
+			<div class="span3 -column-left-20 optional type type-1">
+				<label for="input_dayStart">'.$w->labelDayStart.'</label>
+				<input type="text" name="dayStart" id="input_dayStart" class="span12 -max" value="'.$mission->dayStart.'" autocomplete="off"/>
 				</div>
-				<div class="column-left-20">
-					<label for="input_status">'.$w->labelStatus.'</label><br/>
-					<select name="status" id="input_status" class="max">'.$optStatus.'</select>
+			<div class="span2 -column-left-20 optional type type-1">
+				<label for="input_timeStart">'.$w->labelTimeStart.'</label>
+				<input type="text" name="timeStart" id="input_timeStart" class="span12 -max" value="'.$mission->timeStart.'" autocomplete="off"/>
+			</div>
+			<div class="span3 -column-left-20 optional type type-1">
+				<label for="dayEnd">'.$w->labelDayEnd.'</label>
+				<input type="text" name="dayEnd" id="input_dayEnd" class="span12 -max" value="'.$mission->dayEnd.'" autocomplete="off"/>
+			</div>
+			<div class="span2 -column-left-20 optional type type-1">
+				<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
+				<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4 -column-left-40">
+				<label for="input_location">'.$w->labelLocation.'</label>
+				<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
+			</div>
+			<div class="span4 -column-left-40">
+				<label for="input_reference">'.$w->labelReference.'</label>
+				<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
+			</div>
+			<div class="span2 -column-left-10">
+				<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
+				<div class="input-append">
+					<input type="text" name="hoursProjected" id="input_hoursProjected" class="span8 numeric" value="'.$mission->hoursProjected.'"/>
+					<span class="add-on">h</span>
 				</div>
-				<div class="column-left-40">
-					<label for="input_projectId">'.$w->labelProjectId.'</label><br/>
-					<select name="projectId" id="input_projectId" class="max">'.$optProject.'</select>
-				</div>
-				<div class="column-left-20">
-					<label for="input_workerId">'.$w->labelWorker.'</label><br/>
-					<select name="workerId" id="input_workerId" class="max">'.$optWorker.'</select>
-				</div>
-				<div class="column-clear"></div>
-			</li>
-			<li class="">
-				<div class="column-left-20">
-					<label for="input_type">'.$w->labelType.'</label><br/>
-					<select name="type" id="input_type" class="max" onchange="showOptionals(this)">'.$optType.'</select>
-				</div>
-				<div class="column-left-20 optional type type-0">
-					<label for="input_dayWork">'.$w->labelDayWork.'</label><br/>
-					<input type="text" name="dayWork" id="input_dayWork" value="'.$mission->dayStart.'" class="max" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-0">
-					<label for="input_dayEnd">'.$w->labelDayDue.'</label><br/>
-					<input type="text" name="dayDue" id="input_dayDue" class="max cmClearInput" value="'.$mission->dayEnd.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
-					<label for="input_dayStart">'.$w->labelDayStart.'</label><br/>
-					<input type="text" name="dayStart" id="input_dayStart" class="max" value="'.$mission->dayStart.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
-					<label for="input_timeStart">'.$w->labelTimeStart.'</label><br/>
-					<input type="text" name="timeStart" id="input_timeStart" class="max" value="'.$mission->timeStart.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
-					<label for="dayEnd">'.$w->labelDayEnd.'</label><br/>
-					<input type="text" name="dayEnd" id="input_dayEnd" class="max" value="'.$mission->dayEnd.'" autocomplete="off"/>
-				</div>
-				<div class="column-left-20 optional type type-1">
-					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label><br/>
-					<input type="text" name="timeEnd" id="input_timeEnd" class="max" value="'.$mission->timeEnd.'" autocomplete="off"/>
-				</div>
-				<div class="column-clear"></div>
-			</li>
-			<li>
-				<div class="column-left-40">
-					<label for="input_location">'.$w->labelLocation.'</label><br/>
-					<input type="text" name="location" id="input_location" class="max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
-				<div class="column-left-40">
-					<label for="input_reference">'.$w->labelReference.'</label><br/>
-					<input type="text" name="reference" id="input_reference" class="max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
-				<div class="column-left-10">
-					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label><br/>
-					<input type="text" name="hoursProjected" id="input_hoursProjected" class="xs numeric" value="'.$mission->hoursProjected.'"/><b>h</b>
-				</div>
-				<div class="column-left-10">
-					<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label><br/>
-					<input type="text" name="hoursRequired" id="input_hoursRequired" class="xs numeric" value="'.$mission->hoursRequired.'"/><b>h</b>
-				</div>
-				<div class="column-clear"></div>
-			</li>
-			<li>
+			</div>
+			<div class="span2 -column-left-10">
+				<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label>
+				<div class="input-append">
+					<input type="text" name="hoursRequired" id="input_hoursRequired" class="span8 numeric" value="'.$mission->hoursRequired.'"/>
+					<span class="add-on">h</span>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
 				<label for="input_content">'.$w->labelContent.'</label>
-				<textarea id="input_content" name="content" class="max cmGrowText cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-			</li>
-		</ul>
+				<textarea id="input_content" name="content" class="span12 -max cmGrowText cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+			</div>
+		</div>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'
+			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
+			'.UI_HTML_Elements::Button( 'edit', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+<!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
+			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'-->
 		</div>
 	</fieldset>	
 </form>

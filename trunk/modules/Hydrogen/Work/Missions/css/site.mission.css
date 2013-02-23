@@ -7,62 +7,80 @@ button.icon.calendar span {
 	}
 
 
-.mission.priority1 {
+.mission.priority1,
+li.filter-priority.priority-1 {
 	background-color: rgba(255,0,0,0.20);
 	}
-.mission.priority2 {
+.mission.priority2,
+li.filter-priority.priority-2 {
 	background-color: rgba(255,127,0,0.20);
 	}
-.mission.priority3 {
+.mission.priority3,
+li.filter-priority.priority-3 {
 	background-color: rgba(255,255,63,0.20);
 	}
-.mission.priority4 {
+.mission.priority4,
+li.filter-priority.priority-4 {
 	background-color: rgba(127,255,0,0.20);
 	}
-.mission.priority5 {
+.mission.priority5,
+li.filter-priority.priority-5 {
 	background-color: rgba(0,255,0,0.20);
 	}
 
+li.filter-status.status--3,
 .mission.status-3 {
 	background-color: rgba(191,191,191,1);
 	}
+li.filter-status.status--2,
 .mission.status-2 {
 	background-color: rgba(255,127,127,1);
 	}
+li.filter-status.status--1,
 .mission.status-1 {
 	background-color: rgba(255,191,191,1);
 	}
+li.filter-status.status-0,
 .mission.status0 {
 	background-color: rgba(255,255,255,1);
 	}
+li.filter-status.status-1,
 .mission.status1 {
 	background-color: rgba(255,223,192,1);
 	}
+li.filter-status.status-2,
 .mission.status2 {
 	background-color: rgba(255,255,191,1);
 	}
+li.filter-status.status-3,
 .mission.status3 {
 	background-color: rgba(191,255,191,1);
 	}
+li.filter-status.status-4,
 .mission.status4 {
 	background-color: rgba(127,255,127,1);
 	}
 
 	
 	
-tr.row-priority.priority-1 {
+body.jobWorkMission tr.row-priority.priority-1,
+tr.row-priority.priority-1 td.cell-priority {
 	background-color: rgba(255,0,0,0.20);
 	}
-tr.row-priority.priority-2 {
+body.jobWorkMission tr.row-priority.priority-2,
+tr.row-priority.priority-2 td.cell-priority {
 	background-color: rgba(255,127,0,0.20);
 	}
-tr.row-priority.priority-3 {
+body.jobWorkMission tr.row-priority.priority-3,
+tr.row-priority.priority-3 td.cell-priority {
 	background-color: rgba(255,255,63,0.20);
 	}
-tr.row-priority.priority-4 {
+body.jobWorkMission tr.row-priority.priority-4,
+tr.row-priority.priority-4 td.cell-priority {
 	background-color: rgba(127,255,0,0.20);
 	}
-tr.row-priority.priority-5 {
+body.jobWorkMission tr.row-priority.priority-5,
+tr.row-priority.priority-5 td.cell-priority {
 	background-color: rgba(0,255,0,0.20);
 	}
 
@@ -240,10 +258,10 @@ body.controller-work-mission.action-index #day-lists .table-day table tr td.cell
 	overflow: hidden;
 	text-overflow: ellipsis;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table tr td .overdue {
+body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
 	position: absolute;
-	right: 10px;
-	top: 3px;
+	right: 4px;
+	top: 4px;
 	float: none;
 	margin: 0px;
 	}
@@ -268,8 +286,7 @@ table tr.mission-row td.cell-project,
 table tr.mission-row td.cell-priority {
 	font-size: 0.9em;
 	text-shadow: 1px 1px 1px white;
-	padding-left: 0px;
-	padding-top: 4px;
+	padding: 4px 2px 2px 4px;
 	}
 table tr.mission-row td.cell-workerId .user-avatar {
 	float: left;
@@ -334,65 +351,16 @@ body.moduleWorkMission #ui-datepicker-div td a {
 table tr th .sortable.right {
 	text-align: right;
 	}
-	
-/*  --  MAIL  --  */
-body.jobWorkMission .table-mail {
-	width: 500px;
-	border-radius: 0.4em;
-	overflow: hidden;
-	border: 1px solid gray;
-	box-shadow: 2px 2px 3px #BBB
-	}
-body.jobWorkMission .table-mail td.cell-title a {
-	text-decoration: none;
-	font-size: 1.0em;
-	}
-body.jobWorkMission .table-mail td.cell-time {
-	font-weight: bold;
-	font-size: 1.1em;
-	text-align: center;
-	}
-	
-/*  --  MAIL: DAILY  --  */
-body.jobWorkMission.job-work-mission-mail-daily div.tasks {
-	margin-top: 1em;
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.events {
-	clear: both;
-	margin-top: 1em;
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.text-greeting {
-	font-size: 1.2em;
-/*	font-weight: bold;*/
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.text-date-full {
-	font-size: 1.2em;
-	font-weight: bold;
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.text-date-short {
-	font-size: 0.9em;
-	font-weight: lighter;
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.text-salute {
-	font-style: italic;
-	font-weight: bold;
-	font-size: 1.1em;
-	}
-body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
-	font-style: italic;
-	font-weight: lighter;
-	font-size: 1.0em;
-	}
 
-#mission-folders .icon-label {
+#mission-folders .mission-icon-label {
 	background-repeat: no-repeat;
-	background-position: 0px 1px;
+	background-position: 1px 2px;
 	padding-left: 20px;
 	}
-#mission-folders .icon-label.mission-type-0 {
+#mission-folders .mission-icon-label.mission-type-0 {
 	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
 	}
-#mission-folders .icon-label.mission-type-1 {
+#mission-folders .mission-icon-label.mission-type-1 {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
 
@@ -410,6 +378,7 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	}
 #mission-calendar tr th {
 	border: none;
+	text-align: left;
 	}
 #mission-calendar tr td {
 	border-width: 1px 1px 0px 0px;
@@ -537,3 +506,126 @@ ul li label span.empty {
 	color: #666;
 	font-size: 0.9em;
 	}
+
+
+div.navbar {
+	margin-bottom: 5px;
+	}
+div.navbar div.navbar-inner {
+	padding: 0px;
+	}
+div.navbar ul.nav li a {
+/*	font-weight: bold;
+*/	text-align: center;
+/*	border-left: 1px solid rgba(255,255,255,.75);
+*/	border-right: 1px solid rgba(0,0,0,.1);
+	}
+div.navbar ul.nav {
+	margin: 0;
+	display: table;
+	width: 100%;
+	}
+
+div.navbar ul.nav li {
+	display: table-cell;
+	width: 1%;
+	float: none;
+	}
+
+
+	
+/*  --  MAIL  --  */
+body.jobWorkMission {
+	margin: 1em 2em;
+	}
+body.jobWorkMission .table-mail {
+	width: 500px;
+	overflow: hidden;
+	table-layout: fixed;
+/*	border: 1px solid gray;
+*/	border-radius: 0.4em;
+	box-shadow: 2px 2px 3px #BBB
+	}
+body.jobWorkMission .table-mail tr td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
+body.jobWorkMission .table-mail td.cell-title a {
+	text-decoration: none;
+	font-size: 1.0em;
+	}
+body.jobWorkMission table tr.mission-row td.cell-graph {
+	vertical-align: top;
+	padding: 0px;
+	}
+body.jobWorkMission table tr.mission-row td.cell-graph div.cell-graph {
+	position: relative;
+	padding: 2px 2px 2px 4px !important;
+	}
+body.jobWorkMission td.cell-graph div.cell-graph div.indicator {
+	margin-top: 4px;
+	}
+body.jobWorkMission td.cell-graph div.cell-graph span.badge {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	}
+body.jobWorkMission .table-mail td.cell-time {
+	font-weight: bold;
+	font-size: 1.1em;
+	text-align: center;
+	}
+	
+/*  --  MAIL: DAILY  --  */
+body.jobWorkMission.job-work-mission-mail-daily div.tasks {
+	margin-top: 1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.events {
+	clear: both;
+	margin-top: 1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-greeting {
+	font-size: 1.2em;
+/*	font-weight: bold;*/
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-full {
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-short {
+	font-size: 0.9em;
+	font-weight: lighter;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-salute {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
+	font-style: italic;
+	font-weight: lighter;
+	font-size: 1.0em;
+	}
+
+/*
+body.moduleWorkMission input[type="checkbox"] {
+	margin: 0px;
+	}
+*/
+
+.dropdown .btn-group ul.dropdown-menu {
+	padding: 3px 6px 3px 6px;
+	}
+.dropdown .btn-group ul.dropdown-menu li {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-left: 6px;
+	border-radius: 4px;
+	}
+.dropdown .btn-group ul.dropdown-menu li input[type=checkbox] {
+	}
+
+
+
