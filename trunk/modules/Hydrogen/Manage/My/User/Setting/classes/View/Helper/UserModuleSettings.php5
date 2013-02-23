@@ -30,7 +30,7 @@ class View_Helper_UserModuleSettings {
 		$formUri 	= './manage/my/user/setting/update';
 		if( $from )
 			$formUri .= '?from='.$from;
-		$buttonSave	= UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' );
+		$buttonSave	= UI_HTML_Elements::Button( 'save', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success btn-small' );
 		return '
 <fieldset id="manageMyUserModuleSettings">
 	<legend class="icon config">'.$w->legend.'</legend>
@@ -83,7 +83,7 @@ $(document).ready(function(){
 				$moduleLabel	= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->title;
 				if( $rows )
 					$rows[]		= '<tr><td><br/></td></tr>';
-				$rows[]			= '<tr><td><big>'.$moduleLabel.'</big></td></tr>';
+				$rows[]			= '<tr><th colspan="2"><big>'.$moduleLabel.'</big></td></tr>';
 				foreach( $list as $key => $config ){
 					$config->default	= $config->value;
 					$config->changed	= FALSE;
@@ -103,8 +103,13 @@ $(document).ready(function(){
 					if( isset( $moduleWords['config.'.$config->key] ) )
 						$keyLabel	= $moduleWords['config.'.$config->key];
 					$suffix	= '';
-					if( isset( $moduleWords['config.'.$config->key.'_suffix'] ) )
-						$suffix	= '<span class="suffix">'.$moduleWords['config.'.$config->key.'_suffix'].'</span>';
+					if( isset( $moduleWords['config.'.$config->key.'_suffix'] ) ){
+						$suffix	= $moduleWords['config.'.$config->key.'_suffix'];
+						if( preg_match( '/^icon-/', trim( $suffix ) ) )
+							$suffix	= '<i class="'.$suffix.'"></i>';
+						else
+							$suffix	= '<span class="suffix">'.$moduleWords['config.'.$config->key.'_suffix'].'</span>';
+					}
 					$inputKey	= $module->id.'::'.$config->key;
 					switch( $config->type ){
 						case 'bool':
@@ -112,12 +117,21 @@ $(document).ready(function(){
 							$checked	= $config->value ? ' checked="checked"' : '';
 							$checked1	= $config->value ? ' checked="checked"' : '';
 							$checked0	= !$config->value ? ' checked="checked"' : '';
-							$input	= '<input type="checkbox" value="1"'.$checked.'>';
-							$input	= '<label><input type="radio" name="'.$inputKey.'" id="input_'.$inputKey.'" value="1"'.$checked1.'>Ja</label>&nbsp;<label><input type="radio" name="'.$inputKey.'" id="input_'.$inputKey.'" value="0"'.$checked0.'>Nein</label>';
+							$input	= '<label class="radio inline">
+								<input type="radio" name="'.$inputKey.'" id="input_'.$inputKey.'" value="1"'.$checked1.'>Ja
+							</label>&nbsp;
+							<label class="radio inline">
+								<input type="radio" name="'.$inputKey.'" id="input_'.$inputKey.'" value="0"'.$checked0.'>Nein
+							</label>';
 							break;
 						case 'float':
 						case 'integer':
-							$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'" class="xs numeric"/>';
+							if( $config->values ){
+								$opt	= UI_HTML_Elements::Options( array_combine( $config->values, $config->values ), $config->value );
+								$input	= '<select name="'.$inputKey.'" class="input-mini numeric" id="input_'.$inputKey.'">'.$opt.'</select>';
+							}
+							else
+								$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'" class="xs numeric"/>';
 							break;
 						case 'string':
 							$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'"/>';
@@ -133,7 +147,9 @@ $(document).ready(function(){
 						$button	= UI_HTML_Elements::LinkButton( $url, '', 'button tiny remove', $words->buttonResetAlt );
 						$button	= '<span class="button-reset">'.$button.'</span>';
 					}
-					$rows[]	= '<tr class="'.$class.'" data-value="'.htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ).'"><td class="label">'.$keyLabel.'</td><td class="input">'.$input.$suffix.$button.'</td></tr>';
+					if( $suffix )
+						$input	= '<div class="input-append">'.$input.'<span class="add-on">'.$suffix.'</span></div>';
+					$rows[]	= '<tr class="'.$class.'" data-value="'.htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ).'"><td class="-label">'.$keyLabel.'</td><td class="input">'.$input.$button.'</td></tr>';
 				}
 			}
 		}
