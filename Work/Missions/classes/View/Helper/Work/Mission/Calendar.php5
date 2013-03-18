@@ -1,5 +1,5 @@
 <?php
-class View_Helper_MissionCalendar{
+class View_Helper_Work_Mission_Calendar{
 
 	protected $env;
 	protected $logic;
@@ -159,7 +159,8 @@ $(document).ready(function(){
 		$list		= array();
 		foreach( $missions as $mission ){
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
-			$title		= $mission->title;
+			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
+			$title		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $title );
 			$url		= './work/mission/edit/'.$mission->missionId;
 			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';

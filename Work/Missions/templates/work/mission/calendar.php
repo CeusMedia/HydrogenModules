@@ -13,7 +13,7 @@ $buttonSets		= array(
 	)
 );
 
-$helper		= new View_Helper_MissionCalendar( $env );
+$helper		= new View_Helper_Work_Mission_Calendar( $env );
 $calendar	= $helper->render( $userId, $year, $month );
 $content	= '<div>'.$calendar.'</div>';
 
@@ -23,7 +23,7 @@ $(document).ready(function(){
 	WorkMissionsCalendar.year = '.$year.';
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();
-	WorkMissions.init();
+	WorkMissions.init(1);
 	$(".cmContextMenu").cmContextMenu({"timeSlideDown":150,"timeSlideUp":100}).show();
 });
 </script>';

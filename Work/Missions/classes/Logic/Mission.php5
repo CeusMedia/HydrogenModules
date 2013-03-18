@@ -1,13 +1,13 @@
 <?php
 class Logic_Mission{
 
-	public $timeOffset	= 14400;
+	public $timeOffset	= 0; # 4 hours night shift: 14400;
+	public $generalConditions	= array();
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
 		$this->model		= new Model_Mission( $env );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
-
 	}
 
 	public function getUserProjects( $userId, $activeOnly = FALSE ){
@@ -25,7 +25,11 @@ class Logic_Mission{
 	}
 
 	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL ){
-		$orders	= $orders ? $orders : array( 'dayStart' => 'ASC' );
+//print_m( $conditions );
+		$conditions	= array_merge( $this->generalConditions, $conditions );
+//print_m( $conditions );
+//die;
+		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access
 			return $this->model->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions

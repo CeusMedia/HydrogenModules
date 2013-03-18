@@ -17,6 +17,128 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $hasFullAccess	= FALSE;
 	protected $logic;
 
+	protected $defaultFilterValues	= array(
+		'tense'		=> 1,
+		'states'	=> array(
+			0	=> array(																			//  archive
+				Model_Mission::STATUS_ABORTED,
+				Model_Mission::STATUS_REJECTED,
+				Model_Mission::STATUS_FINISHED
+			 ),
+			1	=> array(																			//  current
+				Model_Mission::STATUS_NEW,
+				Model_Mission::STATUS_ACCEPTED,
+				Model_Mission::STATUS_PROGRESS,
+				Model_Mission::STATUS_READY
+			 ),
+			2	=> array(																			//  future
+				Model_Mission::STATUS_NEW,
+				Model_Mission::STATUS_ACCEPTED,
+				Model_Mission::STATUS_PROGRESS,
+				Model_Mission::STATUS_READY
+			),
+		),
+		'priorities'	=> array(
+			Model_Mission::PRIORITY_NONE,
+			Model_Mission::PRIORITY_HIGHEST,
+			Model_Mission::PRIORITY_HIGH,
+			Model_Mission::PRIORITY_NORMAL,
+			Model_Mission::PRIORITY_LOW,
+			Model_Mission::PRIORITY_LOWEST
+		),
+		'types'			=> array(
+			Model_Mission::TYPE_TASK,
+			Model_Mission::TYPE_EVENT
+		),
+		'order'			=> array(
+			0	=> 'dayStart',																		//  archive
+			1	=> 'priority',																		//  current
+			2	=> 'dayStart',																		//  future
+		),
+		'direction'		=> array(
+			0	=> "DESC",																			//  archive
+			1	=> "ASC",																			//  current
+			2	=> "ASC",																			//  future
+		)
+
+	);
+
+	protected function __onInit(){
+		$this->model	= new Model_Mission( $this->env );
+		$this->logic	= $logic	= new Logic_Mission( $this->env );
+		$this->session	= $session	= $this->env->getSession();
+		$this->acl		= $this->env->getAcl();
+
+		$model			= new Model_User( $this->env );
+		foreach( $model->getAll() as $user )
+			$this->userMap[$user->userId]	= $user;
+
+		$modules	= $this->env->getModules();
+
+		$this->addData( 'useProjects', $this->useProjects = $modules->has( 'Manage_Projects' ) );
+		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
+
+		$userId		= $session->get( 'userId' );
+		if( $this->hasFullAccess() )
+			$this->userProjects	= $this->logic->getUserProjects( $userId );
+		else
+			$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
+
+		$filters	= $session->getAll( 'filter.work.mission.', TRUE );
+
+		//  --  GENERAL LOGIC CONDITIONS  --  //
+		$tense		= $session->get( 'filter.work.mission.tense' );
+		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'][$tense];
+		switch( $tense ){
+			case 1:
+				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				break;
+			case 2:
+				$this->logic->generalConditions['dayStart']	= '>'.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				break;
+		}
+
+		//  --  DEFAULT SETTINGS  --  //
+		if( $session->get( 'filter.work.mission.tense' ) === NULL )
+			$session->set( 'filter.work.mission.tense', $this->defaultFilterValues['tense'] );
+		if( !$session->get( 'filter.work.mission.types' ) )
+			$session->set( 'filter.work.mission.types', $this->defaultFilterValues['types'] );
+		if( !$session->get( 'filter.work.mission.priorities' ) )
+			$session->set( 'filter.work.mission.priorities', $this->defaultFilterValues['priorities'] );
+		if( !$session->get( 'filter.work.mission.states' ) ){
+			$tense		= $session->get( 'filter.work.mission.tense' );
+			$states		= $this->defaultFilterValues['states'][$tense];
+			$session->set( 'filter.work.mission.states', $states );
+		}
+		if( !$session->get( 'filter.work.mission.projects' ) )
+			$session->set( 'filter.work.mission.projects', array_keys( $this->userProjects ) );
+		if( $session->get( 'filter.work.mission.order' ) === NULL ){
+			if( $session->get( 'filter.work.mission.direction' ) === NULL ){
+				$tense		= $session->get( 'filter.work.mission.tense' );
+				$order		= $this->defaultFilterValues['order'][$tense];
+				$direction	= $this->defaultFilterValues['direction'][$tense];
+				$session->set( 'filter.work.mission.order', $order );
+				$session->set( 'filter.work.mission.direction', $direction );
+			}
+		}
+	}
+
+	public function setFilter( $name, $value = NULL, $set = FALSE ){
+		$session	= $this->env->getSession();
+		$values		= $session->get( 'filter.work.mission.'.$name );
+		if( is_array( $values ) ){
+			if( $set )
+				$values[]	= $value;
+			else if( ( $pos = array_search( $value, $values ) ) >= 0 )
+				unset( $values[$pos] );
+		}
+		else{
+			$values	= $value;
+		}
+		$session->set( 'filter.work.mission.'.$name, $values );
+		$this->restart( NULL, TRUE );
+	}
+
 	public function testMail( $send = FALSE ){
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
@@ -65,21 +187,6 @@ die;
 		die;
 	}
 
-	protected function __onInit(){
-		$this->model	= new Model_Mission( $this->env );
-		$this->logic	= new Logic_Mission( $this->env );
-		$this->acl		= $this->env->getAcl();
-
-		$model			= new Model_User( $this->env );
-		foreach( $model->getAll() as $user )
-			$this->userMap[$user->userId]	= $user;
-
-		$modules	= $this->env->getModules();
-
-		$this->addData( 'useProjects', $this->useProjects = $modules->has( 'Manage_Projects' ) );
-		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
-	}
-
 	public function add(){
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -93,7 +200,7 @@ die;
 		$dayStart	= !$request->get( 'type' ) ? $request->get( 'dayWork' ) : $request->get( 'dayStart' );
 		$dayEnd		= !$request->get( 'type' ) ? $request->get( 'dayDue' ) : $request->get( 'dayEnd' );
 
-		if( $request->get( 'add' ) ){
+		if( $request->has( 'add' ) ){
 			if( !$title )
 				$messenger->noteError( $words->msgNoTitle );
 			if( !$messenger->gotError() ){
@@ -130,14 +237,14 @@ die;
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
 		$this->addData( 'userId', $userId );
-		$this->addData( 'day', (int) $session->get( 'filter_mission_day' ) );
+		$this->addData( 'day', (int) $session->get( 'filter.work.mission.day' ) );
 
 		if( $this->useProjects )
-			$this->addData( 'userProjects', $this->logic->getUserProjects( $session->get( 'userId' ), TRUE ) );
+			$this->addData( 'userProjects', $this->userProjects );
 	}
 
 	public function ajaxSelectDay( $day ){
-		$this->env->getSession()->set( 'filter_mission_day', (int) $day );
+		$this->env->getSession()->set( 'filter.work.mission.day', (int) $day );
 		print( json_encode( (int) $day ) );
 		exit;
 	}
@@ -149,9 +256,15 @@ die;
 		$userId		=  $session->get( 'userId' );
 		$missions	= $this->getFilteredMissions( $userId );
 
-		$helper		= new View_Helper_MissionList( $this->env, $missions, $words );
-		$buttons	= $helper->renderButtons();
-		$lists		= $helper->renderLists();															//  render day lists
+		$helper		= new View_Helper_Work_Mission_List_Days( $this->env );
+		$helper->setMissions( $missions );
+		$helper->setWords( $words );
+
+		$buttons	 =new View_Helper_Work_Mission_List_DayControls( $this->env );
+		$buttons->setWords( $words );
+		$buttons->setDayMissions( $helper->getDayMissions() );
+		$buttons	= $buttons->render();
+		$lists		= $helper->render();															//  render day lists
 		print( json_encode( array( 'buttons' => $buttons, 'lists' => $lists ) ) );
 		exit;
 	}
@@ -189,6 +302,18 @@ die;
 		) );
 	}
 
+	/**
+ 	 *	Moves a mission by several days or to a given date.
+	 *	Receives date or day difference using POST.
+	 *	A day difference can be formatted like +2 or -2.
+	 *	Moving a task mission will only affect start date but end date will remain unchanged.
+	 *	Moving an event mission will affect start and end date.
+	 *	If called using AJAX list rendering is triggered.
+	 *	@access		public
+	 *	@param		integer		$mission		ID of mission to move in time
+	 *	@return		void
+	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
+	 */
 	public function changeDay( $missionId ){
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
@@ -199,9 +324,11 @@ die;
 			$change	= $sign." ".$number."day";
 			$date	= new  DateTime( $mission->dayStart );
 			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
-			if( $mission->dayEnd ){
-				$date	= new  DateTime( $mission->dayEnd );
-				$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );
+			if( $mission->dayEnd ){													//  mission has a duration
+				if( $mission->type == 1 ){											//  mission is an event, not a task
+					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ... 
+					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );  //  ... store new moved end date
+				}
 			}
 			$this->model->edit( $missionId, $data );
 		}
@@ -235,10 +362,7 @@ die;
 		if( !$mission )
 			$messenger->noteError( $words->msgInvalidId );
 		if( $this->useProjects ){
-			if( $this->hasFullAccess() )
-				$userProjects	= $this->logic->getUserProjects( $userId );
-			$userProjects	= $this->logic->getUserProjects( $userId, TRUE );
-			if( !array_key_exists( $mission->projectId, $userProjects ) )
+			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
 				$messenger->noteError( $words->msgInvalidProject );
 		}
 		if( $messenger->gotError() )
@@ -292,12 +416,7 @@ die;
 			$model		= new Model_Project( $this->env );
 			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
 				$missionUsers[$user->userId]	= $user;
-
-			$userId		= $session->get( 'userId' );
-			if( $this->hasFullAccess() )
-				$userProjects	= $this->logic->getUserProjects( $userId );
-			$userProjects	= $this->logic->getUserProjects( $userId, TRUE );
-			$this->addData( 'userProjects', $userProjects );
+			$this->addData( 'userProjects', $this->userProjects );
 		}
 		$this->addData( 'missionUsers', $missionUsers );
 
@@ -397,34 +516,34 @@ die;
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
 		if( $request->has( 'reset' ) ){
-			$session->remove( 'filter_mission_access' );
-			$session->remove( 'filter_mission_query' );
-			$session->remove( 'filter_mission_types' );
-			$session->remove( 'filter_mission_priorities' );
-			$session->remove( 'filter_mission_states' );
-			$session->remove( 'filter_mission_projects' );
-			$session->remove( 'filter_mission_order' );
-			$session->remove( 'filter_mission_direction' );
-			$session->remove( 'filter_mission_day' );
+			$session->remove( 'filter.work.mission.access' );
+			$session->remove( 'filter.work.mission.query' );
+			$session->remove( 'filter.work.mission.types' );
+			$session->remove( 'filter.work.mission.priorities' );
+			$session->remove( 'filter.work.mission.states' );
+			$session->remove( 'filter.work.mission.projects' );
+			$session->remove( 'filter.work.mission.order' );
+			$session->remove( 'filter.work.mission.direction' );
+			$session->remove( 'filter.work.mission.day' );
 		}
 		if( $request->has( 'access' ) )
-			$session->set( 'filter_mission_access', $request->get( 'access' ) );
+			$session->set( 'filter.work.mission.access', $request->get( 'access' ) );
 		if( $request->has( 'query' ) )
-			$session->set( 'filter_mission_query', $request->get( 'query' ) );
+			$session->set( 'filter.work.mission.query', $request->get( 'query' ) );
 		if( $request->has( 'types' ) )
-			$session->set( 'filter_mission_types', $request->get( 'types' ) );
+			$session->set( 'filter.work.mission.types', $request->get( 'types' ) );
 		if( $request->has( 'priorities' ) )
-			$session->set( 'filter_mission_priorities', $request->get( 'priorities' ) );
+			$session->set( 'filter.work.mission.priorities', $request->get( 'priorities' ) );
 		if( $request->has( 'states' ) )
-			$session->set( 'filter_mission_states', $request->get( 'states' ) );
+			$session->set( 'filter.work.mission.states', $request->get( 'states' ) );
 		if( $request->has( 'projects' ) )
-			$session->set( 'filter_mission_projects', $request->get( 'projects' ) );
+			$session->set( 'filter.work.mission.projects', $request->get( 'projects' ) );
 		if( $request->has( 'order' ) )
-			$session->set( 'filter_mission_order', $request->get( 'order' ) );
+			$session->set( 'filter.work.mission.order', $request->get( 'order' ) );
 		if( $request->has( 'direction' ) )
-			$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
+			$session->set( 'filter.work.mission.direction', $request->get( 'direction' ) );
 #			if( $request->has( 'direction' ) )
-#				$session->set( 'filter_mission_direction', $request->get( 'direction' ) );
+#				$session->set( 'filter.work.mission.direction', $request->get( 'direction' ) );
 		if( $request->isAjax() ){
 			print( json_encode( (object) array( 'session' => $session->getAll(), 'request' => $request->getAll() ) ) );
 			 exit;
@@ -438,15 +557,13 @@ die;
 		$session		= $this->env->getSession();
 //		$userId			= $session->get( 'userId' );
 
-		$query		= $session->get( 'filter_mission_query' );
-		$types		= $session->get( 'filter_mission_types' );
-		$priorities	= $session->get( 'filter_mission_priorities' );
-		$states		= $session->get( 'filter_mission_states' );
-		$projects	= $session->get( 'filter_mission_projects' );
-		$direction	= $session->get( 'filter_mission_direction' );
-		$order		= $session->get( 'filter_mission_order' );
-		$order		= $order ? $order : 'priority';
-		$direction	= $direction ? $direction : 'ASC';
+		$query		= $session->get( 'filter.work.mission.query' );
+		$types		= $session->get( 'filter.work.mission.types' );
+		$priorities	= $session->get( 'filter.work.mission.priorities' );
+		$states		= $session->get( 'filter.work.mission.states' );
+		$projects	= $session->get( 'filter.work.mission.projects' );
+		$direction	= $session->get( 'filter.work.mission.direction' );
+		$order		= $session->get( 'filter.work.mission.order' );
 		$orders		= array(					//  collect order pairs
 			$order		=> $direction,			//  selected or default order and direction
 			'timeStart'	=> 'ASC',				//  order events by start time
@@ -459,9 +576,8 @@ die;
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
 			$conditions['priority']	= $priorities;
-		if( !( is_array( $states ) && count( $states ) ) )
-			$states	= array( 0, 1, 2, 3 );
-		$conditions['status']	= $states;
+		if( is_array( $states ) && count( $states ) )
+			$conditions['status']	= $states;
 		if( strlen( $query ) )
 			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
@@ -520,31 +636,34 @@ die;
 		$this->addData( 'userId', $userId );
 		$this->addData( 'viewType', (int) $session->get( 'work-mission-view-type' ) );
 
-		$access		= $session->get( 'filter_mission_access' );
-		$direction	= $session->get( 'filter_mission_direction' );
-		$order		= $session->get( 'filter_mission_order' );
+		$access		= $session->get( 'filter.work.mission.access' );
+		$direction	= $session->get( 'filter.work.mission.direction' );
+		$order		= $session->get( 'filter.work.mission.order' );
 		if( !$order )
 			$this->restart( './work/mission/filter?order=priority' );
 		if( !$access )
 			$this->restart( './work/mission/filter?access=worker' );
 
 		$direction	= $direction ? $direction : 'ASC';
-		$session->set( 'filter_mission_direction', $direction );
+		$session->set( 'filter.work.mission.direction', $direction );
 
 		$this->setData( array(																		//  assign data to view
 			'missions'		=> $this->getFilteredMissions( $userId ),								//  add user missions
-			'userProjects'	=> $this->logic->getUserProjects( $userId, TRUE ),						//  add user projects
+			'userProjects'	=> $this->userProjects,												//  add user projects
 			'users'			=> $this->userMap,														//  add user map
-			'currentDay'	=> (int) $session->get( 'filter_mission_day' ),							//  set currently selected day
+			'currentDay'	=> (int) $session->get( 'filter.work.mission.day' ),							//  set currently selected day
 		) );
 
 		$this->addData( 'filterAccess', $access );
-		$this->addData( 'filterTypes', $session->get( 'filter_mission_types' ) );
-		$this->addData( 'filterPriorities', $session->get( 'filter_mission_priorities' ) );
-		$this->addData( 'filterStates', $session->get( 'filter_mission_states' ) );
+		$this->addData( 'filterTypes', $session->get( 'filter.work.mission.types' ) );
+		$this->addData( 'filterPriorities', $session->get( 'filter.work.mission.priorities' ) );
+		$this->addData( 'filterStates', $session->get( 'filter.work.mission.states' ) );
 		$this->addData( 'filterOrder', $order );
-		$this->addData( 'filterProjects', $session->get( 'filter_mission_projects' ) );
+		$this->addData( 'filterProjects', $session->get( 'filter.work.mission.projects' ) );
 		$this->addData( 'filterDirection', $direction );
+		$this->addData( 'filterTense', $session->get( 'filter.work.mission.tense' ) );
+		$this->addData( 'filterQuery', $session->get( 'filter.work.mission.query' ) );
+		$this->addData( 'defaultFilterValues', $this->defaultFilterValues );
 	}
 
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
@@ -559,6 +678,21 @@ die;
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
+	}
+
+	/**
+	 *	Switch tense move between archive(0), current(1) and future(1)
+	 *	@access		public
+	 *	@param		integer		$tense			Tense: 0 - archive, 1 - current, 2 - future
+	 *	@return		void		Restarts application after change in session
+	 */
+	public function switchTense( $tense = 1 ){
+		$tense	= max( 0, min( 2, (int) $tense ) );
+		$this->session->set( 'filter.work.mission.tense', $tense );
+		$this->session->set( 'filter.work.mission.states', array() );
+		$this->session->set( 'filter.work.mission.direction', NULL );
+		$this->session->set( 'filter.work.mission.order', NULL );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>

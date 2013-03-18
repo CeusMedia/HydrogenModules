@@ -9,106 +9,88 @@ button.icon.calendar span {
 
 .mission.priority1,
 li.filter-priority.priority-1 {
-	background-color: rgba(255,0,0,0.20);
+	background-color: rgba(255, 31, 0, 0.5);
 	}
 .mission.priority2,
 li.filter-priority.priority-2 {
-	background-color: rgba(255,127,0,0.20);
+	background-color: rgba(255, 127, 0, 0.5);
 	}
 .mission.priority3,
 li.filter-priority.priority-3 {
-	background-color: rgba(255,255,63,0.20);
+	background-color: rgba(255, 255, 63, 0.5);
 	}
 .mission.priority4,
 li.filter-priority.priority-4 {
-	background-color: rgba(127,255,0,0.20);
+	background-color: rgba(127, 255, 0, 0.4);
 	}
 .mission.priority5,
 li.filter-priority.priority-5 {
-	background-color: rgba(0,255,0,0.20);
+	background-color: rgba(31, 240, 0, 0.6);
 	}
 
 li.filter-status.status--3,
 .mission.status-3 {
-	background-color: rgba(191,191,191,1);
+	background-color: rgba(191, 191, 191, 1);
 	}
 li.filter-status.status--2,
 .mission.status-2 {
-	background-color: rgba(255,127,127,1);
+	background-color: rgba(255, 127, 127, 1);
 	}
 li.filter-status.status--1,
 .mission.status-1 {
-	background-color: rgba(255,191,191,1);
+	background-color: rgba(255, 191, 191, 1);
 	}
 li.filter-status.status-0,
 .mission.status0 {
-	background-color: rgba(255,255,255,1);
+	background-color: rgba(255, 255, 255, 1);
 	}
 li.filter-status.status-1,
 .mission.status1 {
-	background-color: rgba(255,223,192,1);
+	background-color: rgba(255, 223, 192, 1);
 	}
 li.filter-status.status-2,
 .mission.status2 {
-	background-color: rgba(255,255,191,1);
+	background-color: rgba(255, 255, 191, 1);
 	}
 li.filter-status.status-3,
 .mission.status3 {
-	background-color: rgba(191,255,191,1);
+	background-color: rgba(191, 255, 191, 1);
 	}
 li.filter-status.status-4,
 .mission.status4 {
-	background-color: rgba(127,255,127,1);
+	background-color: rgba(127, 255, 127, 1);
 	}
 
 	
 	
 body.jobWorkMission tr.row-priority.priority-1,
 tr.row-priority.priority-1 td.cell-priority {
-	background-color: rgba(255,0,0,0.20);
+	background-color: rgba(255, 31, 0, 0.5);
 	}
 body.jobWorkMission tr.row-priority.priority-2,
 tr.row-priority.priority-2 td.cell-priority {
-	background-color: rgba(255,127,0,0.20);
+	background-color: rgba(255, 127, 0, 0.5);
 	}
 body.jobWorkMission tr.row-priority.priority-3,
 tr.row-priority.priority-3 td.cell-priority {
-	background-color: rgba(255,255,63,0.20);
+	background-color: rgba(255, 255, 63, 0.5);
 	}
 body.jobWorkMission tr.row-priority.priority-4,
 tr.row-priority.priority-4 td.cell-priority {
-	background-color: rgba(127,255,0,0.20);
+	background-color: rgba(127, 255, 0, 0.4);
 	}
 body.jobWorkMission tr.row-priority.priority-5,
 tr.row-priority.priority-5 td.cell-priority {
-	background-color: rgba(0,255,0,0.20);
+	background-color: rgba(31, 240, 0, 0.6);
 	}
 
 
 /*  --  MISSION LISTS  --  */
 #mission-folders1 {
-	border: 1px solid #BFBFBF;
+	border: 10px solid red;
 	overflow: hidden;
 	}
 	
-#mission-folders div.mission-number {
-	float: right;
-	display: block;
-	margin: 1px 1em 1px 0em;
-	padding: 0px 6px 0px 6px;
-	background-color: #999;
-	border-radius: 10px;
-	color: rgba(255,255,255,1);
-	font-weight: bold;
-	font-size: 11px;
-	text-shadow: none;
-	text-shadow: 0 -1px rgba(0,0,0,0.5), 1px 0 rgba(0,0,0,0.5), 0 1px rgba(0,0,0,0.5), -1px 0 rgba(0,0,0,0.5);
-/*	font-weight: normal;
-/*	margin: 2px 1em 1px 0em;
-	padding: 0px 7px 0px 6px;
-	box-shadow: 0px 1px 1px white, 0px -1px 1px black;
-*/	
-	}
 
 button.event span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
@@ -186,7 +168,7 @@ legend.icon.mission-close {
 
 /*  --  DAY TABLES  -- */
 
-body.controller-work-mission.action-index #day-controls {
+body.controller-work-mission.action-index .work-mission-list {
 	overflow: hidden;
 	}
 
@@ -237,12 +219,43 @@ body.controller-work-mission.action-index #day-controls button.day .mission-numb
 	top: 0px;
 	right: 0px;
 	}
+body.controller-work-mission.action-index #day-controls .progress {
+	height: 6px;
+	margin: 4px 2px 2px 2px;
+	padding: 0px;
+	}
+body.controller-work-mission.action-index #day-controls li {
+	width: 16.666666667%;
+	}
+body.controller-work-mission.action-index #day-controls li .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+body.controller-work-mission.action-index #day-controls .navbar .nav li {
+	position: relative;
+	}
+
+body.controller-work-mission.action-index #day-controls .navbar .nav li a {
+	padding-left: 6px;
+	padding-right: 7px;
+	}
+
+body.controller-work-mission.action-index #day-controls .navbar .nav li a div.mission-number {
+	position: absolute;
+	top: 10px;
+	right: 11px;
+	display: block;
+	}
+
 
 body.controller-work-mission.action-index #day-lists {
 	margin-top: 1em;
 	}
 
-body.controller-work-mission.action-index #day-lists .table-day {
+body.controller-work-mission.action-index #work_mission_tense_1 #day-lists .table-day {
 	display: none;
 	}
 body.controller-work-mission.action-index #day-lists .table-day table {
@@ -257,6 +270,7 @@ body.controller-work-mission.action-index #day-lists .table-day table tr td.cell
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	padding: 5px 2px 1px 6px;
 	}
 body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
 	position: absolute;
@@ -285,8 +299,11 @@ table tr.mission-row td.cell-workerId,
 table tr.mission-row td.cell-project,
 table tr.mission-row td.cell-priority {
 	font-size: 0.9em;
-	text-shadow: 1px 1px 1px white;
-	padding: 4px 2px 2px 4px;
+/*	text-shadow: 1px 1px 1px white;*/
+	padding: 4px 2px 2px 2px;
+	}
+table tr.mission-row td.cell-priority {
+	text-align: center;
 	}
 table tr.mission-row td.cell-workerId .user-avatar {
 	float: left;
@@ -311,8 +328,12 @@ table tr.mission-row td.cell-title a {
 	text-decoration: none;
 	text-shadow: 1px 1px 1px white;
 	}
+	}
+table tr.mission-row td.cell-title a i {
+	margin-top: 2px;
+	}
 
-body.moduleWorkMission div.overdue {
+body.controller-work-mission div.overdue {
 	float: right;
 	display: block;
 	margin: 1px 4px 1px 6px;
@@ -335,16 +356,16 @@ body.moduleWorkMission div.overdue {
 	padding: 0px 7px 0px 6px;
 	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/	
 	}
-body.moduleWorkMission #ui-datepicker-div,
-body.moduleWorkMission div.ui-timepicker-div {
+body.controller-work-mission #ui-datepicker-div,
+body.controller-work-mission div.ui-timepicker-div {
 	font-size: 1em;
 	width: 14em;
 	}
-body.moduleWorkMission #ui-datepicker-div th {
+body.controller-work-mission #ui-datepicker-div th {
 	padding: 0.2em 0.2em 0.1em 0.2em;
 	}
-body.moduleWorkMission #ui-datepicker-div td span,
-body.moduleWorkMission #ui-datepicker-div td a {
+body.controller-work-mission #ui-datepicker-div td span,
+body.controller-work-mission #ui-datepicker-div td a {
 	padding: 0em 0.1em;
 	}
 
@@ -352,19 +373,6 @@ table tr th .sortable.right {
 	text-align: right;
 	}
 
-#mission-folders .mission-icon-label {
-	background-repeat: no-repeat;
-	background-position: 1px 2px;
-	padding-left: 20px;
-	}
-#mission-folders .mission-icon-label.mission-type-0 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
-	}
-#mission-folders .mission-icon-label.mission-type-1 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
-	}
-
-	
 .invisible {
 	display: none;
 	}
@@ -609,7 +617,7 @@ body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
 	}
 
 /*
-body.moduleWorkMission input[type="checkbox"] {
+body.controller-work-mission input[type="checkbox"] {
 	margin: 0px;
 	}
 */
@@ -628,4 +636,22 @@ body.moduleWorkMission input[type="checkbox"] {
 	}
 
 
-
+/*  --  TOOLBAR  --  */
+#work-mission-buttons {
+	float: left;
+	margin-top: -5px;
+	}
+#work-mission-buttons ul.dropdown-menu li.selectable a{
+	padding-left: 8px;
+	}
+#work-mission-buttons .btn-toolbar {
+	margin-top: 0px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+	}
+#work-mission-buttons .input-append {
+	margin: 0px;
+	}
+#work-mission-buttons input.changed {
+	background-color: #FFB;
+	} 

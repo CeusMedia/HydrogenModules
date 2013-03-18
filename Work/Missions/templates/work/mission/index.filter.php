@@ -1,66 +1,136 @@
 <?php
+
+//new View_Helper_MissionFilter( $this->env );
+class_exists( 'View_Helper_Work_Mission_Filter' );
+
+$toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
+$toolbar->addButtonGroup( 'tb_0', 'view-tense', array(
+	'<button type="button" id="work-mission-view-tense-0" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
+	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
+	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
+) );
+
+$script			= array();
+if( $filterTense == 1 ){
+	$toolbar->addButtonGroup( 'tb_0', 'view-type', array(
+		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
+		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
+	) );
+}
+$toolbar->addButtonGroup( 'tb_1', 'add', array(
+	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
+	<ul class="dropdown-menu">
+		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
+		<li><a href="./work/mission/add?type=1"><i class="icon-time"></i> Termin</a></li>
+	</ul>'
+//		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
+//		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
+) );
+
+
+//  --  FILTER BUTTONS  --  //
+/*  -- mission types  --  */
+$iconTask			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) )." ";
+$iconEvent			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-time" ) )." ";
+$changedTypes	= array_diff( $defaultFilterValues['types'], $filterTypes );
+$buttonTypes	= new View_Helper_MultiCheckDropdownButton( 'types', $filterTypes, 'Missionstypen' );
+$buttonTypes->useItemIcons( TRUE );
+$buttonTypes->setButtonClass( $changedTypes ? "btn-info" : "" );
+$buttonTypes->addItem( 0, $iconTask.'Aufgabe', '', 'wrench' );
+$buttonTypes->addItem( 1, $iconEvent.'Termin', '', 'time' );
+$toolbar->addButton( 'tb_2', 'types', $buttonTypes->render() );
+
+/*  -- mission priorities  --  */
+$changedPriorities	= array_diff( $defaultFilterValues['priorities'], $filterPriorities );
+$buttonPriorities	= new View_Helper_MultiCheckDropdownButton( 'priorities', $filterPriorities, 'Prioritäten' );
+$buttonPriorities->setButtonClass( $changedPriorities ? "btn-info" : "" );
+foreach( $words['priorities'] as $priority => $label )
+	$buttonPriorities->addItem( $priority, $label, 'filter-priority priority-'.$priority );
+$toolbar->addButton( 'tb_2', 'priorities', $buttonPriorities->render() );
+
+/*  -- mission states  --  */
+$states			= $defaultFilterValues['states'][$filterTense];
+$changedStates	= array_diff( $states, $filterStates );
+$buttonStates	= new View_Helper_MultiCheckDropdownButton( 'states', $filterStates, 'Zustände' );
+$buttonStates->setButtonClass( $changedStates ? "btn-info" : "" );
+foreach( $states as $status ){
+	$label		= $words['states'][$status];
+	$buttonStates->addItem( $status, $label, 'filter-status status-'.$status );
+}
+$toolbar->addButton( 'tb_2', 'states', $buttonStates->render() );
+
+/*  -- mission projects  --  */
+if( $useProjects && !empty( $userProjects ) ){
+	$changedProjects	= array_diff( array_keys( $userProjects ), $filterProjects );
+	$buttonProjects		= new View_Helper_MultiCheckDropdownButton( 'projects', $filterProjects, 'Projekte' );
+	$buttonProjects->setButtonClass( $changedProjects ? "btn-info" : "" );
+	foreach( $userProjects as $project )
+		$buttonProjects->addItem( $project->projectId, $project->title );
+	$toolbar->addButton( 'tb_2', 'projects', $buttonProjects->render() );
+}
+
+/*  -- reset filters  --  */
+$changedFilters		= $changedTypes || $changedPriorities || $changedStates || $changedProjects || $filterQuery;
+
+/*  -- query search  --  */
+$inputSearch	= UI_HTML_Tag::create( 'input', NULL, array(
+	'type'			=> "text",
+	'name'			=> "query",
+	'id'			=> "filter_query",
+	'class'			=> 'span2 '.( $filterQuery ? 'changed' : '' ),
+	'value'			=> htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ),
+	'placeholder'	=> $words['index']['labelQuery'],
+) );
+
+$label				= '<i class="icon-search '.( $filterQuery ? 'icon-white' : '' ).'"></i>';
+$buttonSearch	= UI_HTML_Tag::create( 'button', $label, array(
+	'type'		=> "button",
+	'class'		=> 'btn '.( $filterQuery ? 'btn-info' : '' ),
+	'id'		=> 'button_filter_search'
+) );
+$label				= '<i class="icon-remove '.( $changedFilters ? 'icon-white' : '' ).'"></i> alles';
+$buttonSearchReset	= UI_HTML_Tag::create( 'button', $label, array(
+	'type'		=> "button",
+	'disabled'	=> $changedFilters ? NULL : "disabled",
+	'class'		=> 'btn '.( $changedFilters ? 'btn-inverse' : "" ),
+	'id'		=> 'button_filter_reset',					//  remove query only: 'button_filter_search_reset'
+) );
+
+$search		= $inputSearch.$buttonSearch.$buttonSearchReset;
+$search		= UI_HTML_Tag::create( 'div', $search, array( 'class' => 'input-append' ) );
+$toolbar->addButton( 'tb_2', 'search', $search );
+
+/*
+if( $changedFilters ){
+	$buttonReset	= UI_HTML_Tag::create( 'button', '<i class="icon-zoom-out"></i> alle', array(
+		'type'		=> "button",
+		'class'		=> 'btn btn-inverse',
+		'id'		=> 'button_filter_reset',
+	) );
+	$buttonSets[]	= array( '<div class="btn-group">'.$buttonReset.'</div>' );
+}
+*/
+
+$toolbar->sort();
+$buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';
+return '<div class="work_mission_control">'.$buttons.'
+<!--&nbsp;<span class="badge" id="number-total"></span>-->
+
+</div>';
+
+
+
+
+
+
+
+
+
+
+
 $w	= (object) $words['index'];
 
-$helperFilter	= new View_Helper_MissionFilter( $this->env );
-
-//  --  FILTER: TYPES  --  //
-if( $filterTypes === NULL )
-	$filterTypes	= array(
-		Model_Mission::TYPE_TASK,
-		Model_Mission::TYPE_EVENT,
-	);
-$a	= $helperFilter->renderCheckboxFilter( 'switch_type', 'type', NULL, 'types', $words['types'], $filterTypes, $missions, 'type', 'filter-type' );
-$inputSwitchType	= $a[0];
-$optListTypes		= $a[1];
-
-
-//  --  FILTER: PRIORITIES  --  //
-if( $filterPriorities === NULL )
-	$filterPriorities	= array( 0, 1, 2, 3, 4, 5 );
-
-$a	= $helperFilter->renderCheckboxFilter( 'switch_priority', 'priority', NULL, 'priorities', $words['priorities'], $filterPriorities, $missions, 'priority', 'filter-priority' );
-$inputSwitchPriority	= $a[0];
-$optListPriorities		= $a[1];
-
-
-//  --  FILTER: STATES  --  //
-if( $filterStates === NULL )
-	$filterStates	= array( 0, 1, 2, 3 );
-if( array_intersect( array( -3, -2, -1, 4), $filterStates ) )
-	$filterStatesMap	= array(
-		-3	=> $words['states'][-3],
-		-2	=> $words['states'][-2],
-		-1	=> $words['states'][-1],
-		4	=> $words['states'][4],
-	);
-else
-	$filterStatesMap	= array(
-		0	=> $words['states'][0],
-		1	=> $words['states'][1],
-		2	=> $words['states'][2],
-		3	=> $words['states'][3],
-	);
-
-$a	= $helperFilter->renderCheckboxFilter( 'switch_status', 'status', NULL, 'states', $filterStatesMap, $filterStates, $missions, 'status', 'filter-status' );
-$inputSwitchStatus	= $a[0];
-$optListStates		= $a[1];
-
-
-//  --  FILTER: PROJECTS  --  //
-$inputSwitchProject	= "";
-$optListProjects	= "";
-
-if( $useProjects && !empty( $userProjects ) ){
-	$mapProjects		= array();
-	if( $filterProjects === NULL )
-		$filterProjects	= array_keys( $userProjects );
-	foreach( $userProjects as $project )
-		$mapProjects[$project->projectId]	= $project->title;
-
-	$a	= $helperFilter->renderCheckboxFilter( 'switch_project', 'project', NULL, 'projects', $mapProjects, $filterProjects, $missions, 'projectId', 'filter-project' );
-	$inputSwitchProject	= $a[0];
-	$optListProjects	= $a[1];
-}
+//$helperFilter	= new View_Helper_MissionFilter( $this->env );
 
 //  --  FILTER: ORDER & DIRECTION  --  //
 $optOrder	= $words['filter-orders'];
@@ -87,112 +157,9 @@ $optView	= array(
 $optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
 
 $panelFilter	= '
-<script>
-$(document).ready(function(){
-	WorkMissionFilter.__init();
-	if(!parseInt($("#switch_view").val()))
-		$("div.filter_status").show();
-	if($("div.filter_project>ul").size())
-		$("div.filter_project").show();
-});
-</script>
 <form id="form_mission_filter" action="./work/mission/filter?reset" method="post" onsubmit="return WorkMissions.filter(this);">
 	<fieldset>
 		<legend class="icon filter">Filter</legend>
-		<div class="row-fluid">
-			<div class="span12">
-				<div class="dropdown">
-					<div class="btn-group">
-						<button class="btn dropdown-toggle" data-toggle="dropdown">
-							Missionstypen
-							<span class="caret"></span>
-						</button>
-	<!--			<label for="switch_type" style="font-weight: bold" class="checkbox">
-					'.$inputSwitchType.'
-					<span>Missionstypen</span>
-				</label>-->
-						'.$optListTypes.'
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span12">
-                <div class="dropdown">
-                    <div class="btn-group">
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            Prioritäten
-                            <span class="caret"></span>
-                        </button>
-						'.$optListPriorities.'
-					</div>
-				</div>
-
-<!--				<label for="switch_priority" style="font-weight: bold" class="checkbox">
-					'.$inputSwitchPriority.'
-					<span>Prioritäten</span>
-				</label>
-				'.$optListPriorities.'-->
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span12 filter_status" style="display: none">
-                <div class="dropdown">
-                    <div class="btn-group">
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            Zustände
-                            <span class="caret"></span>
-                        </button>
-						'.$optListStates.'
-					</div>
-				</div>
-<!--				<label for="switch_status" style="font-weight: bold" class="checkbox">
-					'.$inputSwitchStatus.'
-					<span>Zustände</span>
-				</label>
-				'.$optListStates.'-->
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span12 filter_project">
-                <div class="dropdown">
-                    <div class="btn-group">
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            Projekte
-                            <span class="caret"></span>
-                        </button>
-						'.$optListProjects.'
-					</div>
-				</div>
-<!--				<label for="switch_project" style="font-weight: bold" class="checkbox">
-					'.$inputSwitchProject.'
-					<span>Projekte</span>
-				</label>
-				'.$optListProjects.'-->
-			</div>
-		</div>
-		<br/>
-		<div class="row-fluid">
-			<div class="span12">
-				<label for="filter_query">'.$w->labelQuery.'</label>
-				<div style="position: relative; display: none;" id="reset-button-container">
-					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 3%; top: 9px; cursor: pointer"/>
-				</div>
-				<input name="query" id="filter_query" value="'.$session->get( 'filter_mission_query' ).'" class="span12 -max"/>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span12">
-				<label for="switch_view" style="">Sichtweise</label>
-				<select name="view" id="switch_view" onchange="WorkMissionFilter.changeView(this);" class="span12 -max">'.$optView.'</select>
-			</div>
-		</div>
-<!--		<div class="row-fluid">
-			<div class="span12">
-				<label for="filter_access">???</label>
-				<select name="access" id="filter_access" class="max" onchange="this.form.submit();">'.$optAccess.'</select>
-			</div>
-		</div>-->
 		<div class="row-fluid">
 			<div class="span8 -column-left-60">
 				<label for="filter_order">'.$w->labelOrder.'</label>
@@ -204,14 +171,6 @@ $(document).ready(function(){
 					'.$buttonUp.$buttonDown.'
 				</div>
 			</div>
-		</div>
-		<div class="row-fluid">
-		</div>
-		<div class="buttonbar -form-actions">
-			'.UI_HTML_Elements::Button( 'filter', '<i class="icon-search icon-white"></i> '.$w->buttonFilter, 'btn btn-primary' ).'
-			'.UI_HTML_Elements::LinkButton( './work/mission/filter?reset', '<i class="icon-zoom-out icon-white"></i> '.$w->buttonReset, 'btn btn-inverse' ).'
-<!--			'.UI_HTML_Elements::Button( 'filter', $w->buttonFilter, 'button filter' ).'
-			'.UI_HTML_Elements::LinkButton( './work/mission/filter?reset', $w->buttonReset, 'button reset' ).'-->
 		</div>
 	</fieldset>
 </form>';

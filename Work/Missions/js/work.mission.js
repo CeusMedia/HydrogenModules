@@ -49,13 +49,35 @@ var WorkMissions = {
 				});
 				WorkMissionsList.enable(50);
 				WorkMissions.showDayTable(WorkMissions.currentDay);
+				
 			}
 		});
 	},
-	init: function(){
+	init: function(tense){
+		var i, button;
+		for(i=0; i<3; i++){
+			button = $("#work-mission-view-tense-"+i);
+			button.removeAttr("disabled").removeClass("disabled");			
+			if(i === tense){
+				button.addClass("active");
+				button.css("cursor", "default");
+			}
+			else{
+				button.bind("click", {tense: i}, function(event){
+					document.location.href = "./work/mission/switchTense/"+event.data.tense;
+				});
+			}
+		}
+
+//		this.tense = tense;
+
+
 		var site = $("body.controller-work-mission");
 		if(!site.size())
 			return;
+
+		if(tense != 1)
+			WorkMissions.showDayTable(0);
 
 		if(site.hasClass('action-index')){
 			WorkMissions.showDayTable(WorkMissions.currentDay);
@@ -71,6 +93,13 @@ var WorkMissions = {
 				else
 					$("#input-import").val("");
 			});
+var sum = 0;
+$("#day-controls span.badge").each(function(){
+	console.log($(this).html());
+	sum += parseInt($(this).html());
+})
+$("#number-total").html(sum).show();
+
 		}
 		else{
 			$("#input_title").focus();
@@ -195,9 +224,10 @@ var WorkMissionsList = {
 
 
 var WorkMissionFilter = {
+	baseUrl: "./work/mission/",
 	form: null,
 	__init: function(){
-		this.form = $("#form_mission_filter");
+/*		this.form = $("#form_mission_filter");
 		if(!this.form.size())
 			return false;
 		this.form.find(".optional-trigger").trigger("change");
@@ -208,6 +238,22 @@ var WorkMissionFilter = {
 			this.form.find("#reset-button-container").show();
 		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
 		return true;
+		*/
+		$("#filter_query").bind("keydown", function(event){
+			if(event.keyCode == 13)
+				$("#button_filter_search").trigger("click");
+		})
+		$("#button_filter_search").bind("click", function(){
+			var uri = "setFilter/query/"+encodeURI($("#filter_query").val());
+			document.location.href = WorkMissionFilter.baseUrl + uri;
+		})
+		$("#button_filter_search_reset").bind("click", function(){
+			if($("#filter_query").val().length)
+				document.location.href = WorkMissionFilter.baseUrl+"setFilter/query/";
+		})
+		$("#button_filter_reset").bind("click", function(){
+			document.location.href = WorkMissionFilter.baseUrl+"filter/?reset";
+		});
 	},
 	changeView: function(elem){								//  @todo kriss: fix this hack!
 		var val = parseInt($(elem).val());
