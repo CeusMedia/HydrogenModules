@@ -263,8 +263,35 @@ foreach( $priorities as $priority => $label )
 $priorities	= join( $priorities );
 
 return '
+<script src="http://cdn.int1a.net/js/CodeMirror/3.02/lib/codemirror.js"></script>
+<link rel="stylesheet" href="http://cdn.int1a.net/js/CodeMirror/3.02/lib/codemirror.css"/>
+<link rel="stylesheet" href="http://cdn.int1a.net/js/CodeMirror/3.02/theme/elegant.css"/>
+<script src="javascripts/Markdown.Converter.js"></script>
 <script>
+function markdownDescription(){
+	var textarea = $("#input_content");
+	if(!textarea.next("#descriptionAsMarkdown").size())
+		$("<div></div>").attr("id", "descriptionAsMarkdown").insertAfter(textarea);
+	var markdown = $("#descriptionAsMarkdown");
+	var converter = new Markdown.Converter();
+	var html = converter.makeHtml(textarea.hide().val());
+	$(".CodeMirror").hide();
+	markdown.html(html).show().bind("click", function(){
+		$("#descriptionAsMarkdown").hide();
+		$(".CodeMirror").show();
+		var mirror = $("#input_content").data("mirror");
+		mirror.focus();
+		mirror.on("blur", markdownDescription);
+//		$("#input_content").data("mirror").setValue();
+	});
+}
+
 $(document).ready(function(){
+	$("#input_content").data("mirror", CodeMirror.fromTextArea($("#input_content").get(0), {
+		theme: "elegant",
+	}));
+//	markdownDescription();
+
 	$("input, select, textarea").each(function(){
 		$(this).data("value-original", $(this).val());
 	}).bind("change keyup", function(){
@@ -280,6 +307,42 @@ input.changed,
 select.changed,
 textarea.changed {
 	background-color: #FFFFDF;
+	}
+.CodeMirror {
+	border: 1px solid rgb(204, 204, 204);
+	background-color: white;
+	border-radius: 4px;
+	z-index: 0;
+	}
+.CodeMirror,
+#descriptionAsMarkdown {
+	height: auto;
+	min-height: 200px;
+	font-size: 9pt;
+	}
+#descriptionAsMarkdown h1,
+#descriptionAsMarkdown h2,
+#descriptionAsMarkdown h3,
+#descriptionAsMarkdown h4,
+#descriptionAsMarkdown h5 {
+	line-height: 1.5em;
+	margin: 10px 0px 0px 5px;
+	padding: 0px;
+	}
+#descriptionAsMarkdown h1 {
+	font-size: 2em;
+	}
+#descriptionAsMarkdown h2 {
+	font-size: 1.6em;
+	}
+#descriptionAsMarkdown h3 {
+	font-size: 1.4em;
+	}
+#descriptionAsMarkdown h4 {
+	font-size: 1.2em;
+	}
+#descriptionAsMarkdown h5 {
+	font-size: 1.1em;
 	}
 </style>
 <div class="column-left-75">

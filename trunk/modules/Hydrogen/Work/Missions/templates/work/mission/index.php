@@ -1,20 +1,27 @@
 <?php
-$script			= array();
-$buttonSets		= array(
-	array(
-//		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="button icon list"><span>Listenansicht</span></button>',
-//		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="button icon calendar"><span>Monatsübersicht</span></button>'
-		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
-		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
-	),
-	array(
-		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
-		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
-	)
-);
-
 $w				= (object) $words['index'];
+
 $panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
+
+switch( $filterTense ){
+	case 0:
+		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
+		break;
+	case 1:
+		if( count( $missions ) ){
+			$panelList		= $view->loadTemplateFile( 'work/mission/index.days.php' );
+			$panelContent	= '<div id="mission-folders" style="position: relative; width: 100%">'.$panelList.'</div>';
+		}
+		else
+			$panelContent	= $view->loadContentFile( 'html/work/mission/index.empty.html' );
+		break;
+	case 2:
+		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
+		break;
+}
+
+$panelContent	.= '<div class="clearfix"></div>';
+
 /*	$panelExport	= '';
 	if( 0 && $filterStates != array( 4 ) ){
 		$panelExport	= '<fieldset>
@@ -31,43 +38,21 @@ $panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
 		</fieldset>';
 	}*/
 
-if( count( $missions ) )
-	$panelList	= $view->loadTemplateFile( 'work/mission/index.days.php' );
-else
-	$panelList	= $view->loadContentFile( 'html/work/mission/index.empty.html' );
-
-$script[]	= '';
-$script[]	= '';
-$content	= '
-<div class="column-left-20" style="float: left; width: 200px">
-	'.$panelFilter.'
-</div>
-<div style="margin-left: 220px">
-	<div id="mission-folders" style="position: relative; width: 100%">
-		'.$panelList.'
-	</div>
-</div>
-<div class="column-clear"></div>';
-
 //if( !$h->countMissions( (int) $currentDay ) )
 //    $currentDay = $h->getNearestFallbackDay( (int) $currentDay );
 
 $script	= '
 <script>
 $(document).ready(function(){
-	WorkMissions.init();
+//	WorkMissions.init('.( (int) $filterTense ).');
 	WorkMissionsList.sortBy = "'.$filterOrder.'";
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
 	WorkMissionsList.init();
 	WorkMissions.currentDay = '.$currentDay.';
+	WorkMissionFilter.__init();
 });
 </script>';
 $env->getPage()->addHead( $script );
 
-$buttons	= array();
-foreach( $buttonSets as $buttonSet )
-	$buttons[]	= '<div class="btn-group">'.join( " ", $buttonSet ).'</div>';
-$buttons	= '<div id="work-mission-buttons">'.join( " | ", $buttons ).'</div><br/>';
-
-return $buttons.$content;
+return '<div id="work_mission_tense_'.$filterTense.'">'.$panelFilter.$panelContent.'</div>';
 ?>
