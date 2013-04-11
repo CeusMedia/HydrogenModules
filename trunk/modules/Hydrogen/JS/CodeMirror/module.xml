@@ -15,7 +15,7 @@
 	<config protected="yes" name="version" type="string" values="3.02,3.1,3.11">3.11</config>
 	<config protected="yes" name="modes" type="string">css,xml,javascript,clike,php,htmlmixed</config>
 	<config protected="yes" name="addons" type="string">dialog/dialog,search/search,search/searchcursor,edit/matchbrackets</config>
-	<config protected="yes" name="themes" type="string">elegance</config>
+	<config protected="yes" name="themes" type="string">elegant</config>
 	<config protected="no" name="option.lineNumbers" type="boolean">yes</config>
 	<config protected="no" name="option.lineWrapping" type="boolean">no</config>
 	<config protected="no" name="option.indentWithTabs" type="boolean">yes</config>
