@@ -25,17 +25,20 @@
 		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 		$version	= $module->config['version']->value;
 		$path		= $pathJsLib.'CodeMirror/'.$version.'/';
+		$modes		= explode( ',', $module->config['modes']->value );
+		$addons		= explode( ',', $module->config['addons']->value );
+		$themes		= explode( ',', $module->config['themes']->value );
 
 		$context->js->addUrl( $path.'lib/codemirror.js' );
 		$context->css->theme->addUrl( $path.'lib/codemirror.css' );
 
-		foreach( explode( ',', $module->config['modes']->value ) as $mode )
+		foreach( $modes as $mode )
 			$context->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
-		foreach( explode( ',', $module->config['addons']->value ) as $addon )
+		foreach( $addons as $addon )
 			$context->js->addUrl( $path.'addon/'.$addon.'.js' );
 		if( in_array( 'dialog/dialog', $addons ) )
 			$context->css->theme->addUrl( $path.'addon/dialog/dialog.css' );
-		foreach( explode( ',', $module->config['themes']->value ) as $theme )
+		foreach( $themes as $theme )
 			$context->css->theme->addUrl( $path.'theme/'.$theme.'.css' );
 
 		$script	= '
