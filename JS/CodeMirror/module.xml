@@ -2,29 +2,42 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>3.02</version>
+	<version>3.11</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
-		<script load="auto" source="lib">CodeMirror/3.02/lib/codemirror.js</script>
-		<style load="auto" source="scripts-lib">CodeMirror/3.02/lib/codemirror.css</style>
 		<style load="auto" source="theme">codemirror.css</style>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
-	<config protected="yes" name="modes" type="string">css,xml,javascript,clike,php</config>
+	<config protected="yes" name="version" type="string" values="3.02,3.1,3.11">3.11</config>
+	<config protected="yes" name="modes" type="string">css,xml,javascript,clike,php,htmlmixed</config>
+	<config protected="yes" name="addons" type="string">dialog/dialog,search/search,search/searchcursor,edit/matchbrackets</config>
+	<config protected="yes" name="themes" type="string">elegance</config>
 	<config protected="no" name="option.lineNumbers" type="boolean">yes</config>
 	<config protected="no" name="option.lineWrapping" type="boolean">no</config>
 	<config protected="no" name="option.indentWithTabs" type="boolean">yes</config>
 	<config protected="no" name="option.indentUnit" type="integer">4</config>
+	<config protected="no" name="option.theme" type="string">default</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
-//		$config		= $env->getConfig()->getAll( 'module.js_codemirror.option.' );
-		$modes		= explode( ',', $module->config['modes']->value );
-		foreach( $modes as $mode )
-			$context->js->addUrl( $pathJsLib.'CodeMirror/3.02/mode/'.$mode.'/'.$mode.'.js' );
+		$version	= $module->config['version']->value;
+		$path		= $pathJsLib.'CodeMirror/'.$version.'/';
+
+		$context->js->addUrl( $path.'lib/codemirror.js' );
+		$context->css->theme->addUrl( $path.'lib/codemirror.css' );
+
+		foreach( explode( ',', $module->config['modes']->value ) as $mode )
+			$context->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
+		foreach( explode( ',', $module->config['addons']->value ) as $addon )
+			$context->js->addUrl( $path.'addon/'.$addon.'.js' );
+		if( in_array( 'dialog/dialog', $addons ) )
+			$context->css->theme->addUrl( $path.'addon/dialog/dialog.css' );
+		foreach( explode( ',', $module->config['themes']->value ) as $theme )
+			$context->css->theme->addUrl( $path.'theme/'.$theme.'.css' );
+
 		$script	= '
 $("textarea.CodeMirror").each(function(){									//  iterate found text areas
 	$(this).data("codemirror", CodeMirror.fromTextArea($(this).get(0), {	//  create an instance and store it on its related textarea
@@ -33,7 +46,8 @@ $("textarea.CodeMirror").each(function(){									//  iterate found text areas
 		lineNumbers: config.module_js_codemirror_option_lineNumbers,
 		indentUnit: config.module_js_codemirror_option_indentUnit,
 		lineWrapping: config.module_js_codemirror_option_lineWrapping,
-		indentWithTabs: config.module_js_codemirror_option_indentWithTabs
+		indentWithTabs: config.module_js_codemirror_option_indentWithTabs,
+		theme: config.module_js_codemirror_option_theme
 	}));
 	$(this).data("codemirror").setSize($(this).width(),$(this).height());	//  set same size as textarea
 })
