@@ -49,7 +49,7 @@ class Logic_Mission{
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
-		return $this->model->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return modules matched by conditions
+		return $this->model->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
 	}
 
 	public function getDate( $string ){
