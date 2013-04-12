@@ -89,11 +89,11 @@ $panelLinks	= '
 		<div style="clear: left"></div><br/>
 		<ul class="input">
 			<li>
-				<label for="input_link_url" class="mandatory">Link-Adresse</label><br/>
+				<label for="input_link_url" class="mandatory">Link-Adresse</label>
 				<input type="text" name="link_url" id="input_link_url" class="max mandatory"/>
 			</li>
 			<li>
-				<label for="input_link_title">Link-Titel</label><br/>
+				<label for="input_link_title">Link-Titel</label>
 				<input type="text" name="link_title" id="input_link_title" class="max"/>
 			</li>
 		</ul>
@@ -115,7 +115,7 @@ $panelEdit	= '
 			<legend class="icon note-edit">'.$w->legend.'</legend>
 			<ul class="input">
 				<li class="column-left-50">
-					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label><br/>
+					<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label>
 					<input type="text" name="note_title" id="input_note_title" class="max mandatory" value="'.htmlentities( $note->title, ENT_COMPAT, 'UTF-8' ).'"/>
 				</li>
 				<li class="column-left-25">
@@ -130,8 +130,8 @@ $panelEdit	= '
 					</label>
 				</li>
 				<li class="column-clear">
-					<label for="input_note_content">'.$w->labelContent.'</label><br/>
-					<textarea name="note_content" id="input_note_content" rows="20">'.htmlentities( $note->content, ENT_COMPAT, 'UTF-8' ).'</textarea>
+					<label for="input_note_content">'.$w->labelContent.'</label>
+					<textarea name="note_content" id="input_note_content" rows="20" class="max">'.htmlentities( $note->content, ENT_COMPAT, 'UTF-8' ).'</textarea>
 				</li>
 			</ul>
 			<div class="buttonbar">
@@ -145,12 +145,14 @@ $panelEdit	= '
 ';
 
 return '
-<div class="column-left-75">
-	'.$panelEdit.'
-</div>
-<div class="column-left-25">
-	'.$panelTags.'
-	'.$panelLinks.'
+<div class="row-fluid">
+	<div class="span9 -column-left-75">
+		'.$panelEdit.'
+	</div>
+	<div class="span3 -column-left-25">
+		'.$panelTags.'
+		'.$panelLinks.'
+	</div>
 </div>
 <div class="column-clear"></div>
 ';

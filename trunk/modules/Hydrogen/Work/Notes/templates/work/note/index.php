@@ -50,15 +50,17 @@ $iconAdd		= '<img src="http://img.int1a.net/famfamfam/silk/add.png"/>';
 $buttonAdd		= UI_HTML_Elements::LinkButton( './work/note/add', $iconAdd, 'button tiny' );
 
 return '
-<div class="column-left-20">
-	'.$panelFilter.'
-</div>
-<div id="results" class="column-left-80">
-	<fieldset>
-		<legend class="icon note">'.$w->legend.' <!--<small>'.round( $notes['time'] / 1000, 1 ).'ms</small>--> </legend>
-		'.$list.'
-		'.$p.'
-	</fieldset>
+<div class="row-fluid">
+	<div class="span3 -column-left-20">
+		'.$panelFilter.'
+	</div>
+	<div id="results" class="span9 -column-left-80">
+		<fieldset>
+			<legend class="icon note">'.$w->legend.' <!--<small>'.round( $notes['time'] / 1000, 1 ).'ms</small>--> </legend>
+			'.$list.'
+			'.$p.'
+		</fieldset>
+	</div>
 </div>
 <script>
 var query = "'.$query.'";

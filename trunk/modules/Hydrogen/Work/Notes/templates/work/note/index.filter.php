@@ -72,7 +72,7 @@ $panelFilter	= '
 		<legend class="icon filter">'.$w->legend.'</legend>
 		<ul class="input">
 			<li>
-				<label>'.$w->labelQuery.'</label><br/>
+				<label>'.$w->labelQuery.'</label>
 				<div style="position: relative; display: none;" id="reset-button-container">
 					<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 3%; top: 9px; cursor: pointer"/>
 				</div>
@@ -80,15 +80,15 @@ $panelFilter	= '
 				<div style="clear: left"></div>
 			</li>
 			<li>
-				<label for="input_filter_public">'.$w->labelPublic.'</label><br/>
+				<label for="input_filter_public">'.$w->labelPublic.'</label>
 				<select id="input_filter_public" name="filter_public" class="max" onchange="this.form.submit();">'.$optPublic.'</select>
 			</li>
 			<li>
-				<label for="input_filter_author">'.$w->labelAuthor.'</label><br/>
+				<label for="input_filter_author">'.$w->labelAuthor.'</label>
 				<select id="input_filter_author" name="filter_author" class="max" onchange="this.form.submit();">'.$optAuthor.'</select>
 			</li>
 			<li>
-				<label for="input_filter_projectId">'.$w->labelProjectId.'</label><br/>
+				<label for="input_filter_projectId">'.$w->labelProjectId.'</label>
 				<select id="input_filter_projectId" name="filter_projectId" class="max" onchange="this.form.submit();">'.$optProject.'</select>
 			</li>
 			'.$tagsSearch.'

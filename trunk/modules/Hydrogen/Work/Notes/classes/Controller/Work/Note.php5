@@ -218,7 +218,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$logic		= new Logic_Note( $this->env );
 
 		$logic->setContext(
-			0,
 			$session->get( 'userId' ),
 			$session->get( 'roleId' ),
 			$session->get( 'filter_projectId' )

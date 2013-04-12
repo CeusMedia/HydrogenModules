@@ -48,34 +48,37 @@ $shortHash	= getShortHash( $note->noteId );
 $shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
 
 return '
-<div class="column-left-75">
-	<small><a href="./work/note">&laquo;&nbsp;zurück</a></small>
-	<h2>'.htmlentities( $note->title, ENT_QUOTES, 'UTF-8' ).'</h2>
-	<div class="note-view-content">'.$content.'</div>
-	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/note', 'zur Liste', 'button cancel back left' ).'
-		'.UI_HTML_Elements::LinkButton( './work/note/edit/'.$note->noteId, 'bearbeiten', 'button edit' ).'
+<div class="row-fluid">
+	<div class="span8 -column-left-75">
+		<small><a href="./work/note">&laquo;&nbsp;zurück</a></small>
+		<h2>'.htmlentities( $note->title, ENT_QUOTES, 'UTF-8' ).'</h2>
+		<div class="note-view-content">'.$content.'</div>
+		<div class="buttonbar">
+			'.UI_HTML_Elements::LinkButton( './work/note', 'zur Liste', 'button cancel back left' ).'
+			'.UI_HTML_Elements::LinkButton( './work/note/edit/'.$note->noteId, 'bearbeiten', 'button edit' ).'
+		</div>
+	</div>
+	<div class="span4 -column-left-25">
+		'.$panelTags.'
+		'.$panelLinks.'
+		<fieldset>
+			<legend class="icon info">Info</legend>
+	<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
+			'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'
+	-->		<dl>
+				<dt>Views</dt>
+				<dd>'.$note->numberViews.'</dd>
+				<dt>erstellt</dt>
+				<dd>'.( $note->createdAt ? date( 'Y-m-d H:i', $note->createdAt ) : '-' ).'</dd>
+				<dt>zuletzt verändert</dt>
+				<dd>'.( $note->modifiedAt ? date( 'Y-m-d H:i', $note->modifiedAt ) : '-' ).'</dd>
+				<dt>Notiz-Textverweis</dt>
+				<dd><code>[note:'.$note->noteId.']</code></dd>
+			</dl>
+		</fieldset>
 	</div>
 </div>
-<div class="column-left-25">
-	'.$panelTags.'
-	'.$panelLinks.'
-	<fieldset>
-		<legend class="icon info">Info</legend>
-<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
-		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'
--->		<dl>
-			<dt>Views</dt>
-			<dd>'.$note->numberViews.'</dd>
-			<dt>erstellt</dt>
-			<dd>'.( $note->createdAt ? date( 'Y-m-d H:i', $note->createdAt ) : '-' ).'</dd>
-			<dt>zuletzt verändert</dt>
-			<dd>'.( $note->modifiedAt ? date( 'Y-m-d H:i', $note->modifiedAt ) : '-' ).'</dd>
-			<dt>Notiz-Textverweis</dt>
-			<dd><code>[note:'.$note->noteId.']</code></dd>
-		</dl>
-	</fieldset>
-</div>
-<div class="column-clear"></div>
+<!--
+<div class="column-clear"></div>-->
 ';
 ?>
