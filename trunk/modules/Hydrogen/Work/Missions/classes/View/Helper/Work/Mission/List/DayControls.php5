@@ -46,7 +46,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 	}
 
 	protected function renderDayLoadIndicator( $number, $max, $useInfo = FALSE ){
-		$max		= max( $max, 15 );																//  max is atleast 15
+		$max		= $max < 18 ? 18 : $max;														//  max is atleast 18
 		$ratio		= $number / $max;
 		if( $useInfo ){
 			$width		= "100%";																	//  
@@ -75,7 +75,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			'style'		=> 'width: '.$width,
 		);
 		$bar	= UI_HTML_Tag::create( 'div', "", $attributes );
-		return UI_HTML_Tag::create( 'div', $bar, array( 'class' => 'progress' ) );
+		return UI_HTML_Tag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
 	}
 }
 ?>
