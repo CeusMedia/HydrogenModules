@@ -239,6 +239,7 @@ body.controller-work-mission.action-index #day-controls .navbar .nav li {
 	}
 
 body.controller-work-mission.action-index #day-controls .navbar .nav li a {
+	position: relative;
 	padding-left: 6px;
 	padding-right: 7px;
 	}

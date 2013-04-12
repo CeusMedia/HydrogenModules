@@ -2,7 +2,7 @@
 class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission_List{
 
 	protected $dayMissions	= array();
-	
+
 	public function __construct( $env ){
 		parent::__construct( $env );
 	}
@@ -46,6 +46,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 	}
 
 	protected function renderDayLoadIndicator( $number, $max, $useInfo = FALSE ){
+		$max		= max( $max, 15 );																//  max is atleast 15
 		$ratio		= $number / $max;
 		if( $useInfo ){
 			$width		= "100%";																	//  
