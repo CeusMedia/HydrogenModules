@@ -6,6 +6,10 @@ class Job_Abstract{
 	
 	public function __construct( $env ){
 		$this->env	= $env;
+		$this->__onInit();
+	}
+
+	protected function __onInit(){
 	}
 
 	public function out( $message ){
