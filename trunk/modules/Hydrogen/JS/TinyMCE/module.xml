@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: TinyMCE</title>
+	<description><![CDATA[WYSIWYG Editor.]]></description>
+	<version>4.0b2</version>
+	<category>JavaScript</category>
+	<company site="http://www.tinymce.com/">www.tinymce.com</company>
+	<author><![CDATA[Moxiecode Systems AB]]></author>
+	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
+	<files>
+		<script load="auto" source="lib">tinymce/4.0b2/tinymce.min.js</script>
+	</files>
+	<config type="boolean" protected="no" name="auto">1</config>
+	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap print preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
+	<config type="string" protected="no" name="auto.tools">inserttable</config>
+	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$config	= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
+	$script	= '
+$(document).ready(function(){
+	if(config.module_js_tinymce_auto_selector){
+		var options = {
+			selector: config.module_js_tinymce_auto_selector,
+			plugins: config.module_js_tinymce_auto_plugins
+		};
+		if(config.module_js_tinymce_auto_tools)
+			options.tools = config.module_js_tinymce_auto_tools;
+		tinymce.init(options);
+	}
+})';
+	$context->js->addScript( $script );
+}
+	]]></hook>
+</module>
