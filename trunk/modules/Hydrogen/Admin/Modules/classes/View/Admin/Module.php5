@@ -92,26 +92,21 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	}
 
 	public function showRelationGraph(){
-		$graph	= $this->getData( 'graph' );
+		$graph		= $this->getData( 'graph' );
 		$tempFile	= tempnam( sys_get_temp_dir(), 'CMF' );
 		File_Writer::save( $tempFile, $graph );
-		$a	= array();
-		$b	= 0;
-		$a	= array();
-		exec( 'dot -O -Tpng '.$tempFile, $a, $b );
-		unlink( $tempFile );
-		if( 0 && $b ){
-			remark( 'a');
-			print_m( $a );
-			remark( 'b');
-			print_m( $b );
-			remark( 'c');
-			xmp( File_Reader::load( 'e.log' ) );
-#			$image	= new UI_Image_Error( join( $a ) );
-#			UI_Image_Printer::saveImage( $tempFile, $image );
+		$output		= array();
+		$return		= 0;
+		exec( 'dot -V', $output, $return );
+		if( $return !== 0 ){
+			new UI_Image_Error( 'graphVis not installed' );
 		}
+		$output		= array();
+		$return		= 0;
+		exec( 'dot -O -Tpng '.$tempFile, $output, $return );
+		unlink( $tempFile );
 		$tempFile	.= '.png';
-		$image	= File_Reader::load( $tempFile );
+		$image		= File_Reader::load( $tempFile );
 		unlink( $tempFile );
 		header( 'Content-type: image/png' );
 		print( $image );
