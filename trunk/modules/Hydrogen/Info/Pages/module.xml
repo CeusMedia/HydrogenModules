@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 ]]></sql>
 	
