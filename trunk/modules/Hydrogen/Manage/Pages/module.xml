@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Pages</title>
+	<description><![CDATA[Editor for page structure.]]></description>
+	<category>Manage</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Page.php5</class>
+		<class>View/Manage/Page.php5</class>
+		<template>manage/page/add.php</template>
+		<template>manage/page/edit.php</template>
+		<template>manage/page/index.php</template>
+		<template>manage/page/tree.php</template>
+		<locale>de/manage/page.ini</locale>
+		<script>PageEditor.js</script>
+	</files>
+	<relations>
+		<needs type="module">Info_Pages</needs>
+		<needs type="module">JS_TinyMCE</needs>
+		<needs type="module">JS_CodeMirror</needs>
+	</relations>
+</module>
