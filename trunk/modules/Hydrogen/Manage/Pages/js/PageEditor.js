@@ -56,7 +56,8 @@ var PageEditor = {
 			content_css : "http://cdn.int1a.net/css/bootstrap.css",
 			external_image_list_url : "verwaltung/manage/page/getJsImageList",
 			toolbars: "emoticons",
-			height: 360
+			height: 360,
+			language: config.module_js_tinymce_auto_language,
 	/*		template_external_list_url : "js/template_list.js",
 			external_link_list_url : "js/link_list.js",
 			media_external_list_url : "js/media_list.js",
