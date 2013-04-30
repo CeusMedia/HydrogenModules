@@ -100,14 +100,15 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 		exec( 'dot -V', $output, $return );
 		if( $return !== 0 ){
 			new UI_Image_Error( 'graphVis not installed' );
+			exit;
 		}
 		$output		= array();
 		$return		= 0;
 		exec( 'dot -O -Tpng '.$tempFile, $output, $return );
-		unlink( $tempFile );
+		@unlink( $tempFile );
 		$tempFile	.= '.png';
 		$image		= File_Reader::load( $tempFile );
-		unlink( $tempFile );
+		@unlink( $tempFile );
 		header( 'Content-type: image/png' );
 		print( $image );
 		exit;
