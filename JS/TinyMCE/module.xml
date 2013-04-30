@@ -11,18 +11,21 @@
 		<script load="auto" source="lib">tinymce/4.0b2/tinymce.min.js</script>
 	</files>
 	<config type="boolean" protected="no" name="auto">1</config>
+	<config type="string" protected="no" name="auto.language" values="de,en">de</config>
 	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap print preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
-	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
+	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config	= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+
 if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 	$script	= '
 $(document).ready(function(){
 	if(config.module_js_tinymce_auto_selector){
 		var options = {
 			selector: config.module_js_tinymce_auto_selector,
-			plugins: config.module_js_tinymce_auto_plugins
+			plugins: config.module_js_tinymce_auto_plugins,
+			language: config.module_js_tinymce_auto_language
 		};
 		if(config.module_js_tinymce_auto_tools)
 			options.tools = config.module_js_tinymce_auto_tools;
