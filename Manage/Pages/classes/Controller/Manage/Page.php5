@@ -50,9 +50,29 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->preparePageTree();
 	}
 
+	public function ajaxSetEditor( $editor ){
+		$this->env->getSession()->set( 'module.manage_pages.editor', $editor );
+		exit;
+	}
+
+	public function ajaxSetTab( $tabKey ){
+		$this->env->getSession()->set( 'module.manage_pages.tab', $tabKey );
+		exit;
+	}
+	
 	public function edit( $pageId ){
+		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
 		$words		= (object) $this->getWords( 'edit' );
+		
+		$editors	= array( 'none' );
+		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
+			$editors[]	= 'TinyMCE';
+		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
+			$editors[]	= 'CodeMirror';
+
+		if( !$session->get( 'module.manage_pages.editor' ) )
+			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );		
 
 		if( !$pageId )
 			throw new OutOfRangeException( 'No page ID given' );
@@ -100,6 +120,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'current', $pageId );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
+		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
+		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
+		$this->addData( 'editors', $editors );
 		$this->preparePageTree( $pageId );
 	}
 

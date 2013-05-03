@@ -1,23 +1,11 @@
 <?php
 
-$optType	= array(
-	0		=> 'normale Seite (statisch)',
-	1		=> 'Verzweigung (ohne Inhalt)',
-	2		=> 'Modul (dynamische Seite)',
-);
-$optScope	= array(
-	0		=> 'Hauptnavigation',
-	1		=> 'Fußzeile',
-	2		=> 'Topnavigation',
-);
-
-$optStatus	= array(
-	0		=> 'versteckt',
-	1		=> 'sichtbar'
-);
+$optType	= $words['types'];
+$optScope	= $words['scopes'];
+$optStatus	= $words['states'];
+$optEditor	= $words['editors'];
 
 $listPages	= $this->renderTree( $tree, $page );
-
 
 //  --  PAGE EDITOR  --  //
 $content	= "";
@@ -25,41 +13,61 @@ if( $current ){
 	$optType		= UI_HTML_Elements::Options( $optType, $page->type );
 	$optScope		= UI_HTML_Elements::Options( $optScope, $page->scope );
 	$optStatus		= UI_HTML_Elements::Options( $optStatus, $page->status );
+	$optEditor		= UI_HTML_Elements::Options( $optEditor, $editor );
 
 	$inputParent	= "";
-	$inputContent	= "";
 	if( $page->type == 0 || $page->type == 2 ){
 		$optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
 		$inputParent	= '
 		<label for="input_parentId">Unterseite von</label>
-		<select name="parentId" class="span12" id="input_parentId">'.$optParent.'</select>
-';
+		<select name="parentId" class="span12" id="input_parentId">'.$optParent.'</select>';
 	}
-$inputContent	= '
-	<label for="input_content">Inhalt im HTML-Format</label>
-	<textarea name="content" id="input_content" class="span12" rows="20">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
-	';
+	$inputEditor	= '<div><small class="muted"><em>'.$words['edit']['no_editor'].'</em></small></div><br/>';
+	if( $page->type == 0 ){
+		$inputEditor	= '
+		<div class="row-fluid">
+			<div class="span3">
+				<div class="input-prepend">
+					<span class="add-on">'.$words['edit']['labelEditor'].'</span>
+					<select class="span12" name="editor" id="input_editor" onchange="PageEditor.setEditor(this)">'.$optEditor.'</select>
+				</div>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<textarea name="content" id="input_content" class="span12" rows="20">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+		</div>';
+	}
+
+	
+$tabs	= array(
+	'Einstellungen',
+	'HTML-Inhalt',
+	'Suchmaschinenfutter'
+);
+
+$listTabs		= array();
+foreach( $tabs as $nr => $label ){
+	$attributes	= array( 'href' => '#tab'.++$nr, 'data-toggle' => 'tab' );
+	$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
+	$attributes	= array( 'id' => 'page-editor-tab-'.$nr, 'class' => $nr == $tab ? "active" : NULL );
+	$listTabs[]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+}
+$listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
 
 	$content	= '
 <form action="./manage/page/edit/'.$current.'" method="post">
 	<div class="tabbable" id="tabs-page-editor"> <!-- Only required for left/right tabs -->
-		<ul class="nav nav-tabs">
-			<li class="active">
-				<a href="#tab1" data-toggle="tab">Einstellungen</a>
-			</li>
-			<li class="optional type type-0">
-				<a href="#tab2" data-toggle="tab">Inhalt</a>
-			</li>
-			<li class="optional type type-0">
-				<a href="#tab3" data-toggle="tab">HTML</a>
-			</li>
-		</ul>
+		'.$listTabs.'
 		<div class="tab-content">
-			<div class="tab-pane active" id="tab1">
+			<div class="tab-pane" id="tab1">
 				<div class="row-fluid">
 					<div class="span4">
 						<label for="input_title">Titel</label>
 						<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+					</div>
+					<div class="span2">
+						<label for="input_status">Sichtbarkeit</label>
+						<select name="status" class="span12" id="input_status">'.$optStatus.'</select>
 					</div>
 					<div class="span4">
 						<label for="input_identifier">Adresse</label>
@@ -67,10 +75,6 @@ $inputContent	= '
 							<span class="add-on">'.$path.'</span>
 							<input type="text" name="identifier" class="span6" id="input_identifier" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'" required/>
 						</div>
-					</div>
-					<div class="span2">
-						<label for="input_status">Sichtbarkeit</label>
-						<select name="status" class="span12" id="input_status">'.$optStatus.'</select>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -96,10 +100,10 @@ $inputContent	= '
 				</div>
 			</div>
 			<div class="tab-pane" id="tab2">
-				<textarea name="content" id="input_content" class="span12 mceEditor" rows="40">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				'.$inputEditor.'
 			</div>
 			<div class="tab-pane" id="tab3">
-				<textarea name="content" id="input_content" class="span12 CodeMirror" rows="40">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<div><small class="muted"><em>Kommt noch...</em></small></div><br/>
 			</div>
 		</div>
 		<div class="buttonbar">
@@ -108,7 +112,11 @@ $inputContent	= '
 	</div>
 </form>
 <script>
-var pageType = '.(int) $page->type.'
+var pageType = '.(int) $page->type.';
+$(document).ready(function(){
+	PageEditor.editor = "'.$editor.'";
+	PageEditor.init();
+})
 </script>
 ';
 }
@@ -128,5 +136,4 @@ return '
 	</div>
 </div>
 ';
-
 ?>

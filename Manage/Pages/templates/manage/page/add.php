@@ -1,19 +1,8 @@
 <?php
 
-$optType	= array(
-	0		=> 'normale Seite (statisch)',
-	1		=> 'Verzweigung (ohne Inhalt)',
-	2		=> 'Modul (dynamische Seite)',
-);
-$optScope	= array(
-	0		=> 'Hauptnavigation',
-	1		=> 'Fußzeile',
-	2		=> 'Topnavigation',
-);
-$optStatus	= array(
-	0		=> 'versteckt',
-	1		=> 'sichtbar'
-);
+$optType	= $words['types'];
+$optScope	= $words['scopes'];
+$optStatus	= $words['states'];
 
 $listPages	= $this->renderTree( $tree, $page );
 
