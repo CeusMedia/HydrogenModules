@@ -14,10 +14,9 @@ if( count( $note->links ) ){
 	$panelLinks	= '
 <fieldset>
 	<legend class="icon link">Links</legend>
-		<div class="note-links">'.$listLinks.'</div>
+	<div class="note-links">'.$listLinks.'</div>
 </fieldset>';
 }
-
 
 $panelTags	= '';
 if( count( $note->tags ) ){
@@ -78,7 +77,24 @@ return '
 		</fieldset>
 	</div>
 </div>
-<!--
-<div class="column-clear"></div>-->
-';
+<div class="column-left-25">
+	'.$panelTags.'
+	'.$panelLinks.'
+	<fieldset>
+		<legend class="icon info">Info</legend>
+<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
+		'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'
+-->		<dl>
+			<dt>Views</dt>
+			<dd>'.$note->numberViews.'</dd>
+			<dt>erstellt</dt>
+			<dd>'.( $note->createdAt ? date( 'Y-m-d H:i', $note->createdAt ) : '-' ).'</dd>
+			<dt>zuletzt verändert</dt>
+			<dd>'.( $note->modifiedAt ? date( 'Y-m-d H:i', $note->modifiedAt ) : '-' ).'</dd>
+			<dt>Notiz-Textverweis</dt>
+			<dd><code>[note:'.$note->noteId.']</code></dd>
+		</dl>
+	</fieldset>
+</div>
+<div class="column-clear"></div>';
 ?>
