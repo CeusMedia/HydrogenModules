@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>2.2.2</version>
+	<version>2.3.1</version>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -21,4 +21,7 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$context->addBodyClass( 'uses-bootstrap' );
+	]]></hook>
 </module>
