@@ -38,15 +38,8 @@ if( $current ){
 		</div>';
 	}
 
-	
-$tabs	= array(
-	'Einstellungen',
-	'HTML-Inhalt',
-	'Suchmaschinenfutter'
-);
-
 $listTabs		= array();
-foreach( $tabs as $nr => $label ){
+foreach( array_values( $words['tabs'] ) as $nr => $label ){
 	$attributes	= array( 'href' => '#tab'.++$nr, 'data-toggle' => 'tab' );
 	$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
 	$attributes	= array( 'id' => 'page-editor-tab-'.$nr, 'class' => $nr == $tab ? "active" : NULL );
@@ -103,7 +96,20 @@ $listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tab
 				'.$inputEditor.'
 			</div>
 			<div class="tab-pane" id="tab3">
-				<div><small class="muted"><em>Kommt noch...</em></small></div><br/>
+				<form action="" method="post">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
+							<input class="span12" type="text" name="keywords" id="input_keywords" value="'.htmlentities( $page->keywords ).'"/> 
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_description">Beschreibung</label>
+							<textarea class="span12" rows="3" name="description" id="input_description">'.htmlentities( $page->description ).'</textarea> 
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 		<div class="buttonbar">
@@ -116,7 +122,7 @@ var pageType = '.(int) $page->type.';
 $(document).ready(function(){
 	PageEditor.editor = "'.$editor.'";
 	PageEditor.init();
-})
+});
 </script>
 ';
 }
