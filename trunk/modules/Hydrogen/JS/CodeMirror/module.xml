@@ -9,6 +9,8 @@
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
 		<style source="lib">codemirror.css</style>
+		<style load="auto" source="theme">codemirror.ext.css</style>
+		<script load="auto">codemirror.ext.js</script>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
