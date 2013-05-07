@@ -2,15 +2,6 @@ var PageEditor = {
 
 	editor: "none",
 
-	setEditor: function(elem){
-		$.ajax({
-			url: "./manage/page/ajaxSetEditor/"+elem.value,
-			success: function(){
-				document.location.reload();
-			}
-		});
-	},
-
 	init: function(){
 		$("input[type='text'], select").on("keyup change", function(){
 			var input = $(this);
@@ -47,6 +38,15 @@ var PageEditor = {
 		}
 	},
 
+	setEditor: function(elem){
+		$.ajax({
+			url: "./manage/page/ajaxSetEditor/"+elem.value,
+			success: function(){
+				document.location.reload();
+			}
+		});
+	},
+
 	setupCodeMirror: function(){
 		var options = {
 			gutter: true,
@@ -57,7 +57,15 @@ var PageEditor = {
 			tabSize: 4,
 			indentWithTabs: true,
 	//		theme: "elegant",
-			mode: "htmlmixed"
+			mode: "htmlmixed",
+			extraKeys: {
+				"F11": function(cm) {
+					CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));
+				},
+				"Esc": function(cm) {
+					if (CodeMirror.isFullScreen(cm)) CodeMirror.setFullScreen(cm, false);
+				}
+			}
 		};
 		var textarea = $("textarea#input_content");
 		if(!textarea.is(":visible"))
