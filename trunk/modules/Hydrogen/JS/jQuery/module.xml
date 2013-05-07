@@ -11,4 +11,7 @@
 		<script load="auto" top="yes">jquery-1.8.2.min.js</script>
 		<script top="yes">jquery-1.8.2.js</script>
 	</files>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$context->addBodyClass( 'uses-jQuery' );
+	]]></hook>
 </module>
