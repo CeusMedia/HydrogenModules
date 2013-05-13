@@ -74,31 +74,48 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	}
 
 	protected function getLinkList( $pages ){
-		$words	= (object) $this->getWords( 'list-links' );
-		foreach( $pages as $page ){
-			$links[]	= (object) array(
-				'url'	=> './'.$page->identifier,
-				'title'	=> $words->prefixPage.$page->title,
-			);
-		}
+		$words		= (object) $this->getWords( 'list-links' );
+		$resources	= explode( ",", $this->env->getConfig()->get( 'module.manage_pages.link.resources' ) );
+		$links		= array();
 
-		if( class_exists( 'Model_Link' ) ){
-			$model	= new Model_Link( $this->env );
-			foreach( $model->getAll() as $link ){
-				$links[]	= (object) array(
-					'url'	=> $link->url,
-					'title'	=> $link->title,
-				);
-			}
-		}
-
-		if( class_exists( 'Model_Document' ) ){
-			$model	= new Model_Document( $this->env, '../documents/' );
-			foreach( $model->index() as $entry ){
-				$links[]	= (object) array(
-					'url'	=> 'documents/'.$entry,
-					'title'	=> $words->prefixDocument.$entry,
-				);
+		foreach( $resources as $resource ){
+			switch( strtolower( trim( $resource ) ) ){
+				case 'pages':
+					foreach( $pages as $page ){
+						$links[]	= (object) array(
+							'url'	=> './'.$page->identifier,
+							'title'	=> $words->prefixPage.$page->title,
+						);
+					}
+					break;
+				case 'images':
+					foreach( $this->getImageList() as $image ){
+						$image->title	= $words->prefixImage.$image->title;
+						$links[]	= $image;
+					}
+					break;
+				case 'links':
+					if( class_exists( 'Model_Link' ) ){
+						$model	= new Model_Link( $this->env );
+						foreach( $model->getAll() as $link ){
+							$links[]	= (object) array(
+								'url'	=> $link->url,
+								'title'	=> $words->prefixLink.$link->title,
+							);
+						}
+					}
+					break;
+				case 'documents':
+					if( class_exists( 'Model_Document' ) ){
+						$model	= new Model_Document( $this->env, '../documents/' );
+						foreach( $model->index() as $entry ){
+							$links[]	= (object) array(
+								'url'	=> 'documents/'.$entry,
+								'title'	=> $words->prefixDocument.$entry,
+							);
+						}
+					}
+					break;
 			}
 		}
 		return $links;
