@@ -8,7 +8,7 @@ $optPath	= UI_HTML_Elements::Options( $optPath, $pathName );
 $w	= (object) $words['filter'];
 
 return '
-<form action="./manage/content" method="post">
+<form action="./manage/content/static" method="post">
 	<fieldset>
 		<legend>'.$w->legend.'</legend>
 		<label for="input_filter_query">'.$w->labelQuery.'</label><br/>

@@ -1,7 +1,7 @@
 <?php
 
-$panelFilter	= $view->loadTemplate( 'manage/content', 'filter' );
-$panelList		= $view->loadTemplate( 'manage/content', 'list' );
+$panelFilter	= $view->loadTemplate( 'manage/content/static', 'filter' );
+$panelList		= $view->loadTemplate( 'manage/content/static', 'list' );
 
 $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
@@ -9,7 +9,7 @@ $optPath	= UI_HTML_Elements::Options( $optPath );
 
 $w	= (object) $words['addFolder'];
 $panelFolder	= '
-<form action="./manage/content/addFolder" method="post">
+<form action="./manage/content/static/addFolder" method="post">
 	<fieldset>
 		<legend class="add">'.$w->legend.'</legend>
 		<label for="input_folder_name">'.$w->labelName.'</label><br/>
@@ -25,7 +25,7 @@ $panelFolder	= '
 
 $w	= (object) $words['add'];
 $panelFile	= '
-<form action="./manage/content/add" method="post">
+<form action="./manage/content/static/add" method="post">
 	<fieldset>
 		<legend class="add">'.$w->legend.'</legend>
 		<label for="input_file_name">'.$w->labelName.'</label><br/>

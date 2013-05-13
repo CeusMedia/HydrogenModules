@@ -1,29 +1,29 @@
 <?php
 /**
- *	Content Management Controller.
+ *	Static Content Management Controller.
  *	@category		cmFrameworks.Hydrogen.Modules
- *	@package		Controller.Manage.Content
+ *	@package		Controller.Manage.Content.Statics
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
 /**
- *	Content Management Controller.
+ *	Static Content Management Controller.
  *	@category		cmFrameworks.Hydrogen.Modules
- *	@package		Controller.Manage.Content
+ *	@package		Controller.Manage.Content.Statics
  *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
-class Controller_Manage_Content extends CMF_Hydrogen_Controller {
+class Controller_Manage_Content_Static extends CMF_Hydrogen_Controller {
 
 	protected $path;
 
 	protected function __onInit() {
 		parent::__onInit();
 		$config		= $this->env->getConfig();
-		$this->path	= $config->get( 'module.content.path' );
+		$this->path	= $config->get( 'module.manage_content_statics.path' );
 		if( !$this->path ){
 			$locales	= $config->get( 'path.locales' );
 			$language	= $this->env->language->getLanguage();
@@ -62,7 +62,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 					try{
 						File_Writer::save( $fileUri, '' );
 						$messenger->noteSuccess( $words->msgSuccess, $filePath );
-						$this->restart( './manage/content/edit/'.$fileHash );
+						$this->restart( './manage/content/static/edit/'.$fileHash );
 					}
 					catch( Exception $e ){
 						$messenger->noteFailure( $words->msgWriteError, $filePath, $e->getMessage() );
@@ -70,7 +70,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 				}
 			}
 		}
-		$this->restart( './manage/content' );
+		$this->restart( './manage/content/static' );
 	}
 
 	public function addFolder() {
@@ -98,7 +98,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 				}
 			}
 		}
-		$this->restart( './manage/content' );
+		$this->restart( './manage/content/static' );
 	}
 
 	protected function convertLeadingTabsToSpaces( $content ){
@@ -126,12 +126,12 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$filePath	= base64_decode( $fileHash );
 		if( !$filePath ){
 			$messenger->noteError( $words->msgInvalidFileHash );
-			$this->restart( './manage/content' );
+			$this->restart( './manage/content/static' );
 		}
 		$fileUri	= $this->path.$filePath;
 		if( !file_exists( $fileUri ) ){
 			$messenger->noteError( $words->msgInvalidFileUri );
-			$this->restart( './manage/content' );
+			$this->restart( './manage/content/static' );
 		}
 
 		$content	= File_Reader::load( $fileUri );
@@ -169,7 +169,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 							$fileHash	= base64_encode( $filePath );
 							$fileUri	= $this->path.$filePath;
 #							$messenger->noteFailure( $words->msgSuccessRenamed, $name, $path, $e->getMessage() );
-							$this->restart( './manage/content/edit/'.$fileHash );
+							$this->restart( './manage/content/static/edit/'.$fileHash );
 						}
 						catch( Exception $e ){
 							$messenger->noteFailure( $words->msgRenameError, $name, $path, $e->getMessage() );
@@ -178,7 +178,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 				}
 
 			}
-#			$this->restart( './manage/content' );
+#			$this->restart( './manage/content/static' );
 		}
 		$this->addData( 'fileHash', $fileHash );
 		$this->addData( 'fileUri', $fileUri );
@@ -209,19 +209,19 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller {
 		$filePath	= base64_decode( $fileHash );
 		if( !$filePath ){
 			$messenger->noteError( $words->msgInvalidFileHash );
-			$this->restart( './manage/content' );
+			$this->restart( './manage/content/static' );
 		}
 		$fileUri	= $this->path.$filePath;
 		if( !file_exists( $fileUri ) ){
 			$messenger->noteError( $words->msgInvalidFileUri );
-			$this->restart( './manage/content' );
+			$this->restart( './manage/content/static' );
 		}
 		if( @unlink( $fileUri ) ){
 			$messenger->noteSuccess( $words->msgSuccess, $filePath );
 			$this->restart( './manage/content' );
 		}
 		$messenger->noteSuccess( $words->msgWriteError, $filePath );
-		$this->restart( './manage/content/edit/'.$fileHash );
+		$this->restart( './manage/content/static/edit/'.$fileHash );
 	}
 }
 ?>

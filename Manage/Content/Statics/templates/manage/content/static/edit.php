@@ -1,7 +1,7 @@
 <?php
 
-$panelFilter	= $view->loadTemplate( 'manage/content', 'filter' );
-$panelList		= $view->loadTemplate( 'manage/content', 'list' );
+$panelFilter	= $view->loadTemplate( 'manage/content/static', 'filter' );
+$panelList		= $view->loadTemplate( 'manage/content/static', 'list' );
 
 $w	= (object) $words['edit'];
 
@@ -22,11 +22,11 @@ $optPath	= UI_HTML_Elements::Options( $optPath, $pathName );
 
 $textarea		= UI_HTML_Tag::create( 'textarea', utf8_encode( htmlentities( utf8_decode( $content ) ) ), $attributesTextarea );
 $buttonSave		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonSave.'</span>', $attributesButton );
-$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/content', $w->buttonCancel, 'button cancel' );
-$buttonRemove	= UI_HTML_Elements::LinkButton( './manage/content/remove/'.$fileHash, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
+$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/content/static', $w->buttonCancel, 'button cancel' );
+$buttonRemove	= UI_HTML_Elements::LinkButton( './manage/content/static/remove/'.$fileHash, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
 
 $panelEdit	= '
-<form id="form_content-editor" name="editContent" action="./manage/content/edit/'.$fileHash.'" method="post">
+<form id="form_content-editor" name="editContent" action="./manage/content/static/edit/'.$fileHash.'" method="post">
 	<fieldset>
 		<legend class="edit">'.$w->legend.'</legend>
 		<ul class="input">
