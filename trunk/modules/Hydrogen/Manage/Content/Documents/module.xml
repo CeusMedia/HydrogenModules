@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Contents: Documents</title>
+	<description>Basic management of available made documents.</description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Content/Document.php5</class>
+		<class>Model/Document.php5</class>
+		<class>View/Manage/Content/Document.php5</class>
+<!--		<locale>de/manage/content/document.ini</locale>-->
+		<template>manage/content/document/index.php</template>
+	</files>
+	<relations/>
+	<config type="string" name="path"></config>								; path to content files, default: empty
+	<link xml:lang="de" path="manage/content/document">Dokumente</link>
+	<link xml:lang="en" path="manage/content/document">Documents</link>
+</module>
