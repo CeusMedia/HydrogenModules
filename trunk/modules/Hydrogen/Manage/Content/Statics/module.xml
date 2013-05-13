@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: Contents</title>
+	<title>Manage: Contents: Statics</title>
 	<description>Basic content management for HTML files.</description>
 	<category>Management</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Content.php5</class>
-		<class>View/Manage/Content.php5</class>
-		<locale>de/manage/content.ini</locale>
-		<template>manage/content/edit.php</template>
-		<template>manage/content/index.php</template>
-		<template>manage/content/filter.php</template>
-		<template>manage/content/list.php</template>
-		<style>site.content.css</style>
+		<class>Controller/Manage/Content/Static.php5</class>
+		<class>View/Manage/Content/Static.php5</class>
+		<locale>de/manage/content/static.ini</locale>
+		<template>manage/content/static/edit.php</template>
+		<template>manage/content/static/index.php</template>
+		<template>manage/content/static/filter.php</template>
+		<template>manage/content/static/list.php</template>
+		<style>module.manage.content.static.css</style>
 	</files>
 	<relations/>
-	<config type="string" name="path"></config>								; path to content files, default: empty -> path to locales + language folder
-	<link xml:lang="de" path="manage/content">Inhalte</link>
+	<config type="string" name="path" title="path to content files, default: empty (=path to locales + language folder)"></config>
+	<link xml:lang="de" access="acl" path="manage/content/static">statische Inhalte</link>
+	<link xml:lang="en" access="acl" path="manage/content/static">Static Contents</link>
 </module>

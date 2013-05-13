@@ -18,7 +18,7 @@ foreach( $files as $file ){
 		$label	.= '<span class="file-ext">.'.$fileExt.'</span>';				//  and append it again with wrapper
 	}
 
-	$url	= './manage/content/edit/'.base64_encode( $filePath );				//
+	$url	= './manage/content/static/edit/'.base64_encode( $filePath );				//
 	$link	= UI_HTML_Tag::create( 'a', $filePath, array( 'href' => $url ) );	//
 	if( !is_writeable( $file->getPathname() ) ){								//  file ist not writable
 		$class	= "not-writeable";												//
