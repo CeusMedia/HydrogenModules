@@ -104,8 +104,20 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
 				$this->env->getMessenger()->noteSuccess( $words->msgSuccess, $data['title'] );
-				$this->restart( 'manage/page/edit/'.$pageId );
+				$this->restart( './manage/page/edit/'.$pageId );
 			}
+		}
+
+		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $page ){
+			if( $page->parentId ){
+				$parent	= $model->get( $page->parentId );
+				if( $parent->parentId ){
+					$grand	= $model->get( $parent->parentId );
+					$parent->identifier	= $grand->identifier.'/'.$parent->identifier;
+				}
+				$page->identifier	= $parent->identifier.'/'.$page->identifier;
+			}
+			$pages[]	= $page;
 		}
 
 		$page		= (object) array( 'pageId' => 0 );
@@ -117,7 +129,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				$path	= $this->baseUri.$parent->identifier.'/';
 			}
 		}
+
 		$this->addData( 'current', $pageId );
+		$this->addData( 'pages', $pages );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
 		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
