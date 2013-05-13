@@ -1,6 +1,8 @@
 var PageEditor = {
 
 	editor: "none",
+	imageList: [],
+	linkList: [],
 
 	init: function(){
 		$("input[type='text'], select").on("keyup change", function(){
@@ -81,10 +83,12 @@ var PageEditor = {
 	setupTinyMCE: function(){
 		tinymce.init({
 			selector: "textarea#input_content",
-			plugins : "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
-			document_base_url : $("base").attr("href")+"../",
-			content_css : "http://cdn.int1a.net/css/bootstrap.css",
-			external_image_list_url : "verwaltung/manage/page/getJsImageList",
+			plugins: "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
+			document_base_url: $("base").attr("href")+"../",
+			content_css: "http://cdn.int1a.net/css/bootstrap.css",
+			image_list: PageEditor.imageList,
+			link_list: PageEditor.linkList,
+//			external_image_list_url: "verwaltung/manage/page/getJsImageList",
 			toolbars: "emoticons",
 			height: 360,
 			language: config.module_js_tinymce_auto_language

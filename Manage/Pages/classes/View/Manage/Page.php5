@@ -2,7 +2,7 @@
 class View_Manage_Page extends CMF_Hydrogen_View{
 
 	public function __onInit(){
-//		$page	= $this->env->getPage();		
+//		$page	= $this->env->getPage();
 	}
 
 	public function add(){}
@@ -54,5 +54,54 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 	}
 
+	protected function getImageList(){
+		$pathFront	= "../";
+		$pathImages	= "images/";
+		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
+		foreach( $index as $item ){
+			$parts	= explode( "/", $item->getPathname() );
+			$file	= array_pop( $parts );
+			$path	= implode( '/', array_slice( $parts, 1 ) );
+			$label	= $path ? $path.'/'.$file : $file;
+			$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
+			$list[$item->getPathname()]	= (object) array(
+				'title'	=> $label,
+				'url'	=> $uri,
+			);
+		}
+		ksort( $list );
+		return array_values( $list );
+	}
+
+	protected function getLinkList( $pages ){
+		$words	= (object) $this->getWords( 'list-links' );
+		foreach( $pages as $page ){
+			$links[]	= (object) array(
+				'url'	=> './'.$page->identifier,
+				'title'	=> $words->prefixPage.$page->title,
+			);
+		}
+
+		if( class_exists( 'Model_Link' ) ){
+			$model	= new Model_Link( $this->env );
+			foreach( $model->getAll() as $link ){
+				$links[]	= (object) array(
+					'url'	=> $link->url,
+					'title'	=> $link->title,
+				);
+			}
+		}
+
+		if( class_exists( 'Model_Document' ) ){
+			$model	= new Model_Document( $this->env, '../documents/' );
+			foreach( $model->index() as $entry ){
+				$links[]	= (object) array(
+					'url'	=> 'documents/'.$entry,
+					'title'	=> $words->prefixDocument.$entry,
+				);
+			}
+		}
+		return $links;
+	}
 }
 ?>
