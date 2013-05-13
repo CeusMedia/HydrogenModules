@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Content Management Index</title>
+	<description>Central content management site with tabs.</description>
+	<category>Management</category>
+	<version>0.3</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Content.php5</class>
+		<class>View/Manage/Content.php5</class>
+<!--		<locale>de/manage/content/document.ini</locale>-->
+		<locale>de/html/manage/content/index.html</locale>
+		<template>manage/content/index.php</template>
+	</files>
+	<relations/>
+	<link xml:lang="de" path="manage/content">Inhalte</link>
+	<link xml:lang="en" path="manage/content">Contents</link>
+</module>
