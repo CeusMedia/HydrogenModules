@@ -22,7 +22,7 @@ class Model_Bookmark extends CMF_Hydrogen_Model {
 	protected $columns	= array(
 		'bookmarkId',
 		'status',
-		'uri',
+		'url',
 		'title',
 		'createdAt',
 		'checkedAt',
@@ -31,7 +31,7 @@ class Model_Bookmark extends CMF_Hydrogen_Model {
 	protected $primaryKey	= 'bookmarkId';
 	protected $indices		= array(
 		'status',
-		'uri',
+		'url',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

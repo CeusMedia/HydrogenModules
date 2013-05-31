@@ -18,6 +18,24 @@
 		<template>manage/bookmark/index.php</template>
 	</files>
 	<relations/>
+	<sql on="install" type="mysql"><[!CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
+CREATE TABLE `<%?prefix%>bookmarks` (
+  `bookmarkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(4) DEFAULT '0',
+  `url` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `checkedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `usedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bookmarkId`),
+  KEY `status` (`status`),
+  KEY `url` (`url`)
+) ENGINE=InnoDBDEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
+]]></sql>
 	<link xml:lang="de" access="public" path="manage/bookmark">Lesezeichen</link>
 	<link xml:lang="en" access="public" path="manage/bookmark">Bookmarks</link>
 </module>
