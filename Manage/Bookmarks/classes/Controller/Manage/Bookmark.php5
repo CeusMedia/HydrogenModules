@@ -32,7 +32,7 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 	public function edit( $bookmarkId ){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		if( !($bookmark = $this->model->get( $boomarkId ) ) ){
+		if( !($bookmark = $this->model->get( $bookmarkId ) ) ){
 			$messenger->noteError( 'Dieses Lesezeichen ist nicht vorhanden. Weiterleitung zur Liste.' );
 			$this->restart( NULL, TRUE );
 		}

@@ -1,6 +1,5 @@
 <?php
 return '
-'.$this->renderTabs().'
 <div class="row-fluid">
 	<div class="span3">
 		<h3>Lesezeichen</h3>
