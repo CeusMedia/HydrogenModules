@@ -94,13 +94,13 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 						$links[]	= $image;
 					}
 					break;
-				case 'links':
-					if( class_exists( 'Model_Link' ) ){
-						$model	= new Model_Link( $this->env );
+				case 'bookmarks':
+					if( class_exists( 'Model_Bookmark' ) ){
+						$model	= new Model_Bookmark( $this->env );
 						foreach( $model->getAll() as $link ){
 							$links[]	= (object) array(
 								'url'	=> $link->url,
-								'title'	=> $words->prefixLink.$link->title,
+								'title'	=> $words->prefixBookmark.$link->title,
 							);
 						}
 					}
