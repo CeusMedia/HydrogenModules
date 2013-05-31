@@ -1,0 +1,5 @@
+div.mce-container.mce-panel.mce-menu > div.mce-container-body.mce-stack-layout {
+	max-height: 280px;
+	overflow: auto;
+	}
+
