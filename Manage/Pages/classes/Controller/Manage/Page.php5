@@ -59,12 +59,12 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->env->getSession()->set( 'module.manage_pages.tab', $tabKey );
 		exit;
 	}
-	
+
 	public function edit( $pageId ){
 		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
 		$words		= (object) $this->getWords( 'edit' );
-		
+
 		$editors	= array( 'none' );
 		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
 			$editors[]	= 'TinyMCE';
@@ -72,11 +72,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$editors[]	= 'CodeMirror';
 
 		if( !$session->get( 'module.manage_pages.editor' ) )
-			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );		
+			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
 
 		if( !$pageId )
 			throw new OutOfRangeException( 'No page ID given' );
-		
+
 		if( $this->request->has( 'save' ) ){
 			$page	= $this->model->get( $pageId );
 			if( !$pageId )
@@ -108,6 +108,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			}
 		}
 
+		$pages	= array();
 		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $page ){
 			if( $page->parentId ){
 				$parent	= $model->get( $page->parentId );
