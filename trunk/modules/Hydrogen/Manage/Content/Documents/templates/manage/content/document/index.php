@@ -28,7 +28,6 @@ if( $documents ){
 }
 
 return '
-'.$this->renderTabs().'
 <div class="row-fluid">
 	<div class="span6">
 		<h3>Dokumente</h3>
