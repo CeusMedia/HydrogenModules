@@ -15,7 +15,7 @@
 		<template>manage/content/document/index.php</template>
 	</files>
 	<relations/>
-	<config type="string" name="path"></config>								; path to content files, default: empty
+	<config type="string" name="path"></config>								; path to document files, needs trailing slash
 	<link xml:lang="de" path="manage/content/document">Dokumente</link>
 	<link xml:lang="en" path="manage/content/document">Documents</link>
 </module>
