@@ -5,6 +5,8 @@ $optScope	= $words['scopes'];
 $optStatus	= $words['states'];
 $optEditor	= $words['editors'];
 
+$helper		= new View_Helper_TinyMceResourceLister( $this->env );
+
 $listPages	= $this->renderTree( $tree, $page );
 
 //  --  PAGE EDITOR  --  //
@@ -117,18 +119,12 @@ $listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tab
 		</div>
 	</div>
 </form>
-<style>
-div.mce-container.mce-panel.mce-menu > div.mce-container-body.mce-stack-layout {
-	max-height: 280px;
-	overflow: auto;
-	}
-</style>
 <script>
 var pageType = '.(int) $page->type.';
 $(document).ready(function(){
 	PageEditor.editor = "'.$editor.'";
-	PageEditor.linkList = '.json_encode( $this->getLinkList(  $pages ) ).';
-	PageEditor.imageList = '.json_encode( $this->getImageList() ).';
+	PageEditor.linkList = '.json_encode( $helper->getLinkList() ).';
+	PageEditor.imageList = '.json_encode( $helper->getImageList() ).';
 	PageEditor.init();
 });
 </script>
