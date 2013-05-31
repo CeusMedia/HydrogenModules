@@ -16,18 +16,19 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
-class Model_Link extends CMF_Hydrogen_Model {
+class Model_Bookmark extends CMF_Hydrogen_Model {
 
-	protected $name		= 'links';
+	protected $name		= 'bookmarks';
 	protected $columns	= array(
-		'linkId',
+		'bookmarkId',
 		'status',
 		'uri',
 		'title',
 		'createdAt',
 		'checkedAt',
+		'usedAt',
 	);
-	protected $primaryKey	= 'linkId';
+	protected $primaryKey	= 'bookmarkId';
 	protected $indices		= array(
 		'status',
 		'uri',
