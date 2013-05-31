@@ -18,7 +18,7 @@
 		<template>manage/bookmark/index.php</template>
 	</files>
 	<relations/>
-	<sql on="install" type="mysql"><[!CDATA[
+	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
 CREATE TABLE `<%?prefix%>bookmarks` (
   `bookmarkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
