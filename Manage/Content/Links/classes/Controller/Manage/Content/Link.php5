@@ -22,8 +22,8 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 				$messenger->noteError( 'Der Titel fehlt.' );
 			else{
 				$data['createdAt']	= time();
-				$linkId	= $this->model->add( $data );
-				$messenger->noteSuccess( 'Das Lesezeichen wurde hinzugefügt.' );
+				$bookmarkId	= $this->model->add( $data );
+				$messenger->noteSuccess( 'Das Lesezeichen "%s" wurde hinzugefügt.', $data['title'] );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -49,8 +49,8 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 				$messenger->noteError( 'Der Titel fehlt.' );
 			else{
 				$data['modifiedAt']	= time();
-				$linkId	= $this->model->edit( $bookmarkId, $data );
-				$messenger->noteSuccess( 'Das Lesezeichen wurde gespeichert.' );
+				$this->model->edit( $bookmarkId, $data );
+				$messenger->noteSuccess( 'Das Lesezeichen "%s" wurde gespeichert.', $data['title'] );
 				$this->restart( NULL, TRUE );
 			}
 		}

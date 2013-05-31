@@ -3,7 +3,7 @@
 return '
 <div class="row-fluid">
 	<div class="span3">
-		<h3>Links</h3>
+		<h3>Lesezeichen</h3>
         '.$this->renderList().'
 	</div>
 	<div class="span6">
@@ -24,7 +24,7 @@ return '
 			<div class="buttonbar">
 				<a class="btn btn-small" href="./manage/bookmark"><i class="icon-arrow-left"></i> zurück</a>
 				<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
-				<a class="btn btn-small btn-important" href="./manage/bookmark/remove/'.$link->linkId.'"><i class="icon-remove icon-white"></i> entfernen</a>
+				<a class="btn btn-small btn-important" href="./manage/bookmark/remove/'.$bookmark->bookmarkId.'"><i class="icon-remove icon-white"></i> entfernen</a>
 			</div>
 		</form>
 	</div>
