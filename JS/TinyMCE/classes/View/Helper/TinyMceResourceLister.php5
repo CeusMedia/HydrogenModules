@@ -10,7 +10,7 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		$pathImages	= "images/";
 		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
 		foreach( $index as $item ){
-			$parts	= explode( "/", $item->getPathname() );
+			$parts	= explode( "/", substr( $item->getPathname(), strlen( $pathImages ) ) );
 			$file	= array_pop( $parts );
 			$path	= implode( '/', array_slice( $parts, 1 ) );
 			$label	= $path ? $path.'/'.$file : $file;
@@ -35,7 +35,7 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 					$list  = array();
 					if( class_exists( 'Model_Page' ) ){
 						$model	= new Model_Page( $this->env );
-						foreach( $model->getAllByIndex( 'status', 1, array( 'parentId' => 'ASC', 'rank' => 'ASC', 'title' => 'ASC' ) ) as $page ){
+						foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $page ){
 							$page->level		= 0;
 							if( $page->parentId ){
 								$parent = $model->get( $page->parentId );
@@ -49,12 +49,14 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 								$page->identifier   = $parent->identifier.'/'.$page->identifier;
 								$page->title		= $parent->title.' / '.$page->title;
 							}
-							$links[]	= (object) array(
+							$list[$page->title]	= (object) array(
 								'url'	=> './'.$page->identifier,
-							'title'	=> $words->page.$page->title,
+								'title'	=> $words->page.$page->title,
 							);
 						}
 					}
+					ksort( $list );
+					$links	+= array_values( $list );
 					break;
 				case 'images':
 					foreach( $this->getImageList() as $image ){
