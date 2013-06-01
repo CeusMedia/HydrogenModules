@@ -2,7 +2,7 @@
 <module>
 	<title>Work: FTP</title>
 	<description><![CDATA[Basic FTP file management client.]]></description>
-	<version>0.1</version>
+	<version>0.2</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -11,9 +11,12 @@
 		<class>Logic/FTP.php5</class>
 		<class>View/Work/FTP.php5</class>
 		<template>work/FTP/index.php</template>
+		<template>work/FTP/login.php</template>
+		<script>js/FtpClient.js</script>
 	</files>
 	<relations>
 		<needs type="module">Auth</needs>
+		<supports type="module">Manage:My:User:Settings</supports>
 	</relations>
 	<config protected="user" type="string" name="access.host"></config>
 	<config protected="user" type="string" name="access.port">21</config>
@@ -22,4 +25,5 @@
 	<config protected="user" type="string" name="access.password"></config>
 	<link xml:lang="de" access="acl" path="work/FTP" rank="61">Dateien</link>
 	<link xml:lang="en" access="acl" path="work/FTP" rank="61">Files</link>
+	<link access="acl" path="work/FTP/login"></link>
 </module>
