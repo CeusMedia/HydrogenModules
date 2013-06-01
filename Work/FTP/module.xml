@@ -12,6 +12,10 @@
 		<class>View/Work/FTP.php5</class>
 		<template>work/FTP/index.php</template>
 		<template>work/FTP/login.php</template>
+		<locale>de/work/ftp.ini</locale>
+		<locale>en/work/ftp.ini</locale>
+		<locale>de/html/work/ftp/login.info.html</locale>
+		<locale>ee/html/work/ftp/login.info.html</locale>
 		<script>js/FtpClient.js</script>
 	</files>
 	<relations>
