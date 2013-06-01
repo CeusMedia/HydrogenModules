@@ -11,12 +11,17 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 		$this->addData( 'position', $this->renderPosition( $pathCurrent, $pathDeepest ) );
 	}
 
-	protected function renderPosition( $pathCurrent, $pathDeepest, $labelHome = "Home" ){
+	public function login(){
+	}
+
+	protected function renderPosition( $pathCurrent, $pathDeepest, $labelHome = "Home", $labelPosition = "Position: " ){
 		$way	= "";
 		$levels	= array( ''	=> $labelHome );
 		foreach( explode( "/", $pathDeepest ) as $part ){
-			$way .= $way ? '/'.$part : $part;
-			$levels[$way]	= $part;
+			if( strlen( trim( $part ) ) ){
+				$way .= $way ? '/'.$part : $part;
+				$levels[$way]	= $part;
+			}
 		}
 		foreach( $levels as $path => $label ){
 			$divider	= "";
@@ -24,12 +29,14 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 			if( $path !== $pathDeepest )
 				$divider	= UI_HTML_Tag::create( 'span', '/', array( 'class' => 'divider' ) );
 			if( $pathCurrent !== $path ){
-				$url	= './FTP'.( $path ? "?path=".$path : "" );
+				$url	= './work/FTP'.( $path ? "?path=".$path : "" );
 				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 				$attrItem['class']	= NULL;
 			}
 			$list[]	= UI_HTML_Tag::create( 'li', $label.' '.$divider, $attrItem );
 		}
+		if( $labelPosition )
+			array_unshift( $list, UI_HTML_Tag::create( 'li', $labelPosition ) );
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'breadcrumb' ) );
 	}
 
@@ -46,7 +53,7 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 
 			if( $entry->isdir ){
 				$pathNew	= $path ? $path.'/'.$entry->name : $entry->name;
-				$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => './FTP?path='.$pathNew ) );
+				$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => './work/FTP?path='.$pathNew ) );
 				$size		= $entry->folders.' <i class="icon-folder-close"></i> / '.$entry->files.' <i class="icon-file"></i>';
 			}
 			else{
