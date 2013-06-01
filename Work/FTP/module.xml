@@ -15,12 +15,12 @@
 		<locale>de/work/ftp.ini</locale>
 		<locale>en/work/ftp.ini</locale>
 		<locale>de/html/work/ftp/login.info.html</locale>
-		<locale>ee/html/work/ftp/login.info.html</locale>
-		<script>js/FtpClient.js</script>
+		<locale>en/html/work/ftp/login.info.html</locale>
+		<script>FtpClient.js</script>
 	</files>
 	<relations>
 		<needs type="module">Auth</needs>
-		<supports type="module">Manage:My:User:Settings</supports>
+		<supports type="module">Manage_My_User_Setting</supports>
 	</relations>
 	<config protected="user" type="string" name="access.host"></config>
 	<config protected="user" type="string" name="access.port">21</config>

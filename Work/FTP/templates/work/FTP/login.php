@@ -1,7 +1,7 @@
 <?php
 extract( $fromSession );
 
-$texts	= $this->populateTexts( array( 'login.info' ), 'work/ftp/' );
+$texts	= $this->populateTexts( array( 'login.info' ), 'html/work/ftp/' );
 $port	= strlen( trim( $port ) ) ? $port : 21;
 
 return '
