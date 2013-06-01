@@ -5,7 +5,12 @@ class Controller_Work_FTP extends CMF_Hydrogen_Controller {
 	protected $logic;
 
 	protected function __onInit(){
-		$access			= $this->env->getConfig()->getAll( "module.work_ftp.access.", TRUE );
+		$config		= $this->env->getConfig();
+		if( class_exists( 'Model_User_Setting' ) ){
+			$userId	= $this->env->get( 'auth' )->getCurrentUser();
+			$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId );
+		}
+		$access			= $config->getAll( "module.work_ftp.access.", TRUE );
 		$this->logic	= new Logic_FTP(
 			$access->get( 'host' ),
 			$access->get( 'port' ),
