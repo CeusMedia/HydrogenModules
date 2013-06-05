@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Pagination{	
+class View_Helper_Pagination{
 
 	public function render( $baseUri, $number, $limit, $page = 0){
 		$pages		= ceil( $number / $limit );
@@ -37,6 +37,7 @@ class View_Helper_Pagination{
 
 		$list	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'pagination' ) );
 		return $list;
+		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'pagination' ) );
 	}
 }
 ?>
