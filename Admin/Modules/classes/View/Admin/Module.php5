@@ -18,8 +18,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 		$parts	= implode( '<span class="module-label-separator">:</span>', $parts );
 		return '<div class="module-label">'.$parts.'</div>';
 	}
-	
-	
+
 	protected function renderModuleButton( $module, $url, $class = 'module button' ){
 		$image		= '';
 		if( !empty( $module->icon ) )
@@ -92,20 +91,21 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	}
 
 	public function showRelationGraph(){
-		$graph		= $this->getData( 'graph' );
 		$tempFile	= tempnam( sys_get_temp_dir(), 'CMF' );
-		File_Writer::save( $tempFile, $graph );
-		$output		= array();
-		$return		= 0;
-		exec( 'dot -V', $output, $return );
-		if( $return !== 0 ){
-			new UI_Image_Error( 'graphVis not installed' );
+		try{
+			$graph	= $this->getData( 'graph' );
+			exec( "dot", $results, $code );
+			if( $code == 127 )
+				throw new RuntimeException( 'Missing graphViz' ); 
+			File_Writer::save( $tempFile, $graph );
+			exec( 'dot -O -Tpng '.$tempFile );
+			unlink( $tempFile );
 			exit;
 		}
-		$output		= array();
-		$return		= 0;
-		exec( 'dot -O -Tpng '.$tempFile, $output, $return );
-		@unlink( $tempFile );
+		catch( Exception $e ){
+			new UI_Image_Error( $e->getMessage() );
+			exit;
+		}
 		$tempFile	.= '.png';
 		$image		= File_Reader::load( $tempFile );
 		@unlink( $tempFile );
