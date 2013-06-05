@@ -1,5 +1,5 @@
 <?php
-class View_Manage_Bookmark extends View_Manage_Content{
+class View_Manage_Bookmark extends CMF_Hydrogen_View{
 	public function add(){}
 	public function edit(){}
 	public function index(){}
