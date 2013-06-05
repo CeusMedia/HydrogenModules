@@ -32,9 +32,14 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		$this->addData( 'pathDocuments', $this->path );
 	}
 
 	public function remove(){
+		$document	= base64_decode( $this->env->getRequest()->get( 'documentId' ) );
+		if( file_exists( $this->path.$document ) )
+			unlink( $this->path.$document );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>
