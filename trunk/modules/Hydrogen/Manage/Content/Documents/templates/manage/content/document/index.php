@@ -6,10 +6,10 @@ if( $documents ){
 	foreach( $documents as $entry ){
 		$attributes	= array(
 			'class'		=> 'btn btn-mini btn-danger pull-right',
-			'href'		=> './manage/document/remove/'.$entry
+			'href'		=> './manage/content/document/remove/?documentId='.base64_encode( $entry )
 		);
 		$remove	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', $attributes );
-		$link	= '../documents/'.$entry;
+		$link	= $pathDocuments.$entry;
 		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $link ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr',
 			UI_HTML_Tag::create( 'td', $link ).
