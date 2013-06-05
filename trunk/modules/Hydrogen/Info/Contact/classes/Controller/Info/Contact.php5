@@ -5,7 +5,6 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'index' );
 		if( $request->has( 'save' ) ){
-			$data	= $request->getAll();
 			if( !trim( $request->get( 'name' ) ) )
 				$messenger->noteError( $words->msgErrorNameMissing );
 			if( !trim( $request->get( 'email' ) ) )
@@ -15,9 +14,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			if( !trim( $request->get( 'message' ) ) )
 				$messenger->noteError( $words->msgErrorMessageMissing );
 			if( !$messenger->gotError() ){
+				$data	= $request->getAll();
 				$mail	= new Mail_Info_Contact( $this->env, $data );
-die;
-#				$mail->send();
 				$messenger->noteSuccess( $words->msgSuccess );
 				$this->restart( NULL, TRUE );
 			}
