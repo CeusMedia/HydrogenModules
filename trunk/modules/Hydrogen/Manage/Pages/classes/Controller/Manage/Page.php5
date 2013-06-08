@@ -139,6 +139,28 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
 		$this->preparePageTree( $pageId );
+
+		$enabled		= FALSE;
+		$meta		= $this->getRemoteConfigValues( "Meta", array( 'description', 'keywords', 'author', 'publisher' ) );
+		if( !$meta )
+			$this->env->getMessenger()->noteError( 'Das Module "Meta" muss installiert sein, ist es aber nicht.' );
+		$this->addData( 'meta', $meta );
+	}
+
+	protected function getRemoteConfigValues( $moduleId, $keys = array() ){
+		$list		= array();
+		$fileName	= "../config/modules/".$moduleId.".xml";
+		if( file_exists( $fileName ) ){
+			$lines	= explode( "\n", File_Reader::load( $fileName ) );
+			foreach( $lines as $nr => $line ){
+				if( preg_match( "@<config @", $line ) ){
+					$key	= preg_replace( "@^.+name=\"(.+)\".+$@", "\\1", $line );
+					if( in_array( $key, $keys ) )
+						$list[$key]	= preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
+				}
+			}
+		}
+		return $list;
 	}
 
 	public function getJsImageList(){

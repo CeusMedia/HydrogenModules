@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Manage</category>
-	<version>0.3</version>
+	<version>0.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,6 +12,9 @@
 		<class>View/Manage/Page.php5</class>
 		<template>manage/page/add.php</template>
 		<template>manage/page/edit.php</template>
+		<template>manage/page/edit.content.php</template>
+		<template>manage/page/edit.meta.php</template>
+		<template>manage/page/edit.settings.php</template>
 		<template>manage/page/index.php</template>
 		<template>manage/page/tree.php</template>
 		<locale>de/manage/page.ini</locale>
