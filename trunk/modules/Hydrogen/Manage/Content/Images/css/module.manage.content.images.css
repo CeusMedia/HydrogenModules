@@ -1,0 +1,41 @@
+ul.thumbs {
+	list-style: none;
+	margin: 0px;
+	}
+ul.thumbs:after {
+	clear: left;
+	content: "";
+	}
+ul.thumbs > li {
+	margin: 0px;
+	padding: 0px;
+	padding: 0.4em 0.6em;
+	float: left;
+	width: 140px;
+	height: 110px;
+	cursor: pointer;
+	}
+ul.thumbs > li:hover {
+	background-color: #EFEFEF;
+	}
+ul.thumbs > li > div {
+	float: left;
+	width: 140px;
+	height: 100px;
+	text-align: center;
+	}
+ul.thumbs > li > div > div {
+	text-align: center;
+	font-size: 0.8em;
+	color: #777;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	}
+ul.thumbs > li > div > img,
+img.thumbnail {
+	border: 1px solid #AAA;
+	border-radius: 0.3em;
+	padding: 0.4em;
+	box-shadow: 1px 1px 2px 1px #CCC;
+	}

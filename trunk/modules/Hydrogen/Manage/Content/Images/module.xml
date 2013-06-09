@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Contents: Images</title>
+	<description>Basic management of available made images.</description>
+	<category>Management</category>
+	<version>0.2</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Content/Image.php5</class>
+		<class>View/Manage/Content/Image.php5</class>
+		<class>View/Helper/Thumbnailer.php5</class>
+		<class>Resource/SqliteCache.php5</class>
+		<locale>de/manage/content/image.ini</locale>
+		<style load="auto" source="theme">module.manage.content.images.css</style>
+		<template>manage/content/image/index.php</template>
+		<template>manage/content/image/addFolder.php</template>
+		<template>manage/content/image/addImage.php</template>
+		<template>manage/content/image/editFolder.php</template>
+		<template>manage/content/image/editImage.php</template>
+	</files>
+	<relations/>
+	<config type="string" name="path">../images/</config>								; path to document files, needs trailing slash
+	<link xml:lang="de" path="manage/content/image">Bilder</link>
+	<link xml:lang="en" path="manage/content/image">Images</link>
+</module>
