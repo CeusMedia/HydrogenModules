@@ -26,6 +26,10 @@ $listImages	= '<div><em><small class="muted">Keine Bilder in diesem Ordner gefun
 if( $path && $files = listImages( $env, $pathImages, $path, 120, 80 ) )
 	$listImages	= $files;
 
+$linkEditFolder	= '';
+if( $path != "." )
+	$linkEditFolder	= '&nbsp;&nbsp;<a class="btn btn-mini" href="./manage/content/image/editFolder?path='.$path.'" title="ändern" alt="ändern"><i class="icon-pencil"></i></a>';
+
 return '
 <script>
 $(document).ready(function(){
@@ -42,7 +46,7 @@ $(document).ready(function(){
 		<a href="./manage/content/image/addFolder?path='.$path.'" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i> neuer Ordner</a>
 	</div>
 	<div class="span9">
-		<h4><span class="muted">Ordner: </span>'.$path.'&nbsp;&nbsp;<a class="btn btn-mini" href="./manage/content/image/editFolder?path='.$path.'" title="ändern" alt="ändern"><i class="icon-pencil"></i></a></h4>
+		<h4><span class="muted">Ordner: </span>'.$path.$linkEditFolder.'</h4>
 		<div style="position: not-relative">
 			'.$listImages.'
 			<div style="clear: left"></div>
