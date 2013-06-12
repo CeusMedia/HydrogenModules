@@ -95,7 +95,7 @@ var WorkMissions = {
 			});
 var sum = 0;
 $("#day-controls span.badge").each(function(){
-	console.log($(this).html());
+//	console.log($(this).html());
 	sum += parseInt($(this).html());
 })
 $("#number-total").html(sum).show();
