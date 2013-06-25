@@ -4,7 +4,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 	protected $path;
 
 	public function __onInit(){
-		$this->path		= $this->env->getConfig()->get( 'module.manage_content_images.path' );
+		$this->path		= $this->env->getConfig()->get( 'module.manage_content_images.front.path' );
 	}
 
 	public function addFolder(){}

@@ -5,7 +5,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 	protected $path;
 
 	public function __onInit(){
-		$this->path		= $this->env->getConfig()->get( 'module.manage_content_images.path' );
+		$this->path		= $this->env->getConfig()->get( 'module.manage_content_images.front.path' );
 		if( !file_exists( $this->path ) ){
 			$this->env->getMessenger()->noteFailure( 'Der Bilderordner "'.$this->path.'" existiert nicht.' );
 		}
@@ -39,7 +39,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 			else{
 				$target		= $this->path.$folder.$name;
 				try{
-					Folder_Editor::createFolder( $target );
+					Folder_Editor::createFolder( $target, 0775 );
 					$messenger->noteSuccess( 'Der Ordner "'.$folder.$name.'" wurde angelegt.' );
 					$this->restart( './manage/content/image?path='.$folder.$name );
 				}
@@ -122,7 +122,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 				}
 				if( @rename( $source, $target ) ){
 					$messenger->noteSuccess( 'Der <abbr title="'.$folderPath.'">Ordner</abbr> wurde verschoben. Automatische Weiterleitung zum <abbr title="'.$folder.$name.'">neuen Ordner</abbr>.' );
-					$thumbnailer	= new View_Help_Thumbnailer( $this->env );
+					$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
 					$thumbnailer->uncacheFolder( $folderPath );
 					$this->restart( './manage/content/image?path='.$folder.$name );
 				}
@@ -180,6 +180,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'mimetype', image_type_to_mime_type( exif_imagetype( $this->path.$imagePath ) ) );
 		$this->addData( 'filesize', filesize( $this->path.$imagePath ) );
 		$this->addData( 'filetime', filemtime( $this->path.$imagePath ) );
+		$this->addData( 'frontUrl', $this->env->getConfig()->get( 'module.manage_content_images.front.url' ) );
 	}
 
 	public function index(){

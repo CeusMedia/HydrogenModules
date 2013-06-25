@@ -17,8 +17,9 @@ function listImages( $env, $pathImages, $path, $maxWidth, $maxHeight ){
 		$image		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $thumb ) );
 		$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
 		$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
-		$list[]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image' => addslashes( $imagePath ) ) );
+		$list[$entry->getFilename()]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image' => addslashes( $imagePath ) ) );
 	}
+	natcasesort( $list );
 	if( $list )
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
 }

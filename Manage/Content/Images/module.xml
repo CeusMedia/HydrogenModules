@@ -3,7 +3,7 @@
 	<title>Manage: Contents: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -21,7 +21,8 @@
 		<template>manage/content/image/editImage.php</template>
 	</files>
 	<relations/>
-	<config type="string" name="path">../images/</config>								; path to document files, needs trailing slash
+	<config type="string" name="front.path" mandatory="yes" title="path to document files, needs trailing slash">../images/</config>
+	<config type="string" name="front.url" mandatory="yes"></config>
 	<link xml:lang="de" path="manage/content/image">Bilder</link>
 	<link xml:lang="en" path="manage/content/image">Images</link>
 </module>
