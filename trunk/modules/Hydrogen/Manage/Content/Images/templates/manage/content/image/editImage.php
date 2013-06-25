@@ -46,6 +46,8 @@ dl.dl-horizontal dd {
 							<dd>'.$mimetype.'</dd>
 							<dt>Bildgröße</dt>
 							<dd>'.$megaPixel.' <abbr title="Megapixel">MP</abbr> <small class="muted">('.$imageWidth.' x '.$imageHeight.' Pixel)</small></dd>
+							<dt>URL</dt>
+							<dd><small><a href="'.$frontUrl.substr( $folderPath, 2 ).$imageName.'">'.$frontUrl.substr( $folderPath, 2 ).$imageName.'</a></small></dd>
 						</dl>
 					</div>
 					<div class="span4">
