@@ -8,7 +8,7 @@
  *	@version		$Id: Server.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 /**
- *	Chat client.
+ *	Chat server.
  *	@category		cmApps
  *	@package		Chat.Server
  *	@extends		CMF_Hydrogen_Application
@@ -129,7 +129,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$supported	= array( 'text/json', 'text/html' );
 		$request	= $this->env->getRequest();
 
-//		var_dump( $request->getHeaders() )'  
+//		var_dump( $request->getHeaders() );
 		$accepts	= $request->getHeadersByName( 'accept' );
 		foreach( $accepts as $accept ){
 			$types	= array_keys( $accept->getValue( true ) );
@@ -139,7 +139,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		}
 		return $supported[0];
 	}
-	
+
 	protected function respond( $body, $headers = array() ){
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
@@ -148,9 +148,11 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		switch( $this->negotiateContentType() ){
 			case 'text/html':
 				if( $this->env->getModules()->has( 'Server_JSON_Browser' ) ){
-					$channel	= new Browser( $this->env );
-					$body		= $channel->render( $body, $headers );
-					return parent::respond( $body, $headers );
+					if( $config->get( 'module.server_json_browser.enabled' ) ){
+						$channel	= new Browser( $this->env );
+						$body		= $channel->render( $body, $headers );
+						return parent::respond( $body, $headers );
+					}
 				}
 				break;
 			case 'text/json':
@@ -158,7 +160,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		}
 		return parent::respond( $body, $headers );
 	}
-	
+
 	protected function throw401()
 	{
 		$this->env->getResponse()->setStatus( '401 Unauthorized' );
@@ -174,6 +176,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$this->env->close();
 		exit( 1 );
 	}
+
 	protected function throw403()
 	{
 		$this->env->getResponse()->setStatus( '403 Forbidden' );
