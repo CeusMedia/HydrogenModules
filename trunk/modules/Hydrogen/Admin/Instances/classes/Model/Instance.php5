@@ -47,9 +47,10 @@ class Model_Instance{
 	}
 
 	public function get( $id ){
-		$data		= (object) $this->file->getProperties( FALSE, $id );
-		$data->id	= $id;
-		$data->path	= empty( $data->path ) ? '' : $data->path;
+		$data			= (object) $this->file->getProperties( FALSE, $id );
+		$data->id		= $id;
+		$data->path		= empty( $data->path ) ? '' : $data->path;
+		$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
 		return $data;
 	}
 

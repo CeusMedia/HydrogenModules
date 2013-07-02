@@ -47,6 +47,15 @@ class Model_Module{
 		return NULL;
 	}
 
+	public function getFromSource( $moduleId, $source = NULL ){
+		if( !is_null( $source ) ){
+			die( 'not implemented: Model_Module::getFromSource with parameter "source"' );
+		}
+		if( !isset( $this->modulesAvailable[$moduleId] ) )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+		return $this->modulesAvailable[$moduleId];
+	}
+
 	public function getAll( $filters = array(), $limit = NULL, $offset = NULL ){
 		if( !$this->modulesAll ){
 			$this->modulesAll		= $this->modulesAvailable;
@@ -191,6 +200,12 @@ class Model_Module{
 			ksort( $list );
 		}
 		return $list;
+	}
+
+	public function getLocal( $moduleId ){
+		$module		= $this->model->get( $moduleId );
+		print_m( $module );
+		die;
 	}
 
 	/**
