@@ -1,17 +1,21 @@
 <?php
 class Logic_FTP{
 
-		/**	@var	File_Cache	$cache */
+	/**	@var	File_Cache	$cache */
 	protected $cache;
 	/**	@var	Net_FTP_Client	$client */
 	protected $client;
 
 	protected $cachePrefix;
 
-	public function __construct(){
-		$this->cache	= new File_Cache( 'contents/cache/' );
+	public function __construct( $pathCache = "contents/cache/" ){
+		$this->cache	= new File_Cache( $pathCache );
 	}
 
+	public function setCache( $cache ){
+		$this->cache	= $cache;
+	}
+	
 	public function connect( $host, $port, $username, $password, $path ){
 		$this->client	= new Net_FTP_Client( $host, $port, $path, $username, $password );
 		$this->cachePrefix	= 'ftp_'.$host.$path.'_';
@@ -40,6 +44,14 @@ class Logic_FTP{
 		return $number;
 	}
 
+	/**
+	 *	@todo		remove after testing
+	 *	@return		Net_FTP_Client
+	 */
+	public function getClient(){
+		return $this->client;
+	}
+	
 	public function index( $path = "/" ){
 		$this->checkConnection();
 		if( ( $data = $this->cache->get( $this->cachePrefix.'path_'.$path ) ) )

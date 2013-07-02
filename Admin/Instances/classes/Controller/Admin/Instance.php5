@@ -8,6 +8,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$messenger	= $this->env->getMessenger();
+		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'add' ) ){
 			$id			= trim( $post->get( 'id' ) );
@@ -19,13 +20,28 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
 
-			$path		= preg_replace( '@^(.+)/*$@', '\\1/', $path );
-			$configPath	= $configPath ? preg_replace( '@/*$@', '', $configPath ).'/' : '';
+			$path		= str_replace( array( " ", "../" ), "", $path );							//  secure path
+			$path		= preg_replace( '@/*$@', '', $path ).'/';									//  add trailing slash to path
+			$path		= '/'.preg_replace( '@^/*@', '', $path );									//  add leading slash to path
+
+			$uri		= str_replace( array( " ", "../" ), "", $uri );								//  secure URI
+			$uri		= preg_replace( '@/*$@', '', $uri ).'/';									//  add trailing slash to URI
+			$uri		= '/'.preg_replace( '@^/*@', '', $uri );									//  add leading slash to URI
+
+			$configPath	= $configPath ? preg_replace( '@/*$@', '', $configPath ).'/' : '';			//  add trailing slash to config path
 
 			if( !strlen( $title ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
+			if( $module->get( 'lock' ) ){															//  locking is enabled
+				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
+					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
+						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
+				if( strlen( $lockUri = trim( $module->get( 'lock.uri' ) ) ) )						//  a lock URI has been set
+					if( substr( $uri, 0, strlen( $lockUri ) ) !== $lockUri )						//  but is not the beginning of given URI
+						$this->env->getMessenger()->noteError( 'Der absolute Pfad muss mit "'.$lockUri.'" beginnen.' );
+			}
 #			if( $path == '/' )
 #				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
 			if( !$messenger->gotError() ){
@@ -157,24 +173,42 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	public function edit( $instanceId ){
 		$messenger	= $this->env->getMessenger();
+		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'edit' ) ){
 
 			$id			= trim( $post->get( 'id' ) );
 			$title		= trim( $post->get( 'title' ) );
 			$path		= trim( $post->get( 'path' ) );
+			$uri		= trim( $post->get( 'uri' ) );
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
 
-			$path		= preg_replace( '@^(.+)/*$@', '\\1/', $path );
-			$configPath	= $configPath ? preg_replace( '@/*$@', '', $configPath ).'/' : '';
+			$path		= str_replace( array( " ", "../" ), "", $path );							//  secure path
+			$path		= preg_replace( '@/*$@', '', $path ).'/';									//  add trailing slash to path
+			$path		= '/'.preg_replace( '@^/*@', '', $path );									//  add leading slash to path
+
+			$uri		= str_replace( array( " ", "../" ), "", $uri );								//  secure URI
+			$uri		= preg_replace( '@/*$@', '', $uri ).'/';									//  add trailing slash to URI
+			$uri		= '/'.preg_replace( '@^/*@', '', $uri );									//  add leading slash to URI
+
+			$configPath	= $configPath ? preg_replace( '@/*$ 	@', '', $configPath ).'/' : '';			//  add trailing slash to config path
 
 			if( !strlen( $title ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
+			if( $module->get( 'lock' ) ){															//  locking is enabled
+				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
+					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
+						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
+				if( strlen( $lockUri = trim( $module->get( 'lock.uri' ) ) ) )						//  a lock URI has been set
+					if( substr( $uri, 0, strlen( $lockUri ) ) !== $lockUri )						//  but is not the beginning of given URI
+						$this->env->getMessenger()->noteError( 'Der absolute Pfad muss mit "'.$lockUri.'" beginnen.' );
+			}
 #			if( $path == '/' )
 #				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
+
 			if( !$messenger->gotError() ){
 				$data		= array(
 					'title'		=> $title,

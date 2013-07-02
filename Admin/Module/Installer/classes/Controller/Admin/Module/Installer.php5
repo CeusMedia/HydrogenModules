@@ -151,6 +151,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 	}
 
 	public function update( $moduleId, $verbose = TRUE ){
+
+#		$modules	= array_keys( $this->env->getRemote()->getModules()->getAll() );
+#		$moduleId	= $modules[array_rand( $modules )];
+#		remark( "Module: ".$moduleId );
+		
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
@@ -159,6 +164,83 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( './admin/module/viewer' );
 		if( !$hasUpdate )
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
+
+		remark( "Module update in progress." );
+		remark( "Module ID: ".$moduleId );
+		remark( "Logic::getModule(ID): " );
+#		$moduleLocal	= $this->env->getModules()->get( $moduleId );
+		$moduleLocal	= $this->logic->getModule( $moduleId );
+		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+
+		
+		$files	= array();
+		$fileTypes	= array(
+			'classes'		=> 'class',
+			'files'			=> 'file',
+			'images'		=> 'image',
+			'locales'		=> 'locale',
+			'scripts'		=> 'script',
+			'styles'		=> 'style',
+			'templates'		=> 'template',
+		);
+		$files	= array();
+		$pathSource		= $this->logic->model->getPath( $moduleId );
+		$pathLocal		= $this->env->getRemote()->path;
+		foreach( $fileTypes as $typeMember => $typeKey ){
+			foreach( $module->files->$typeMember as $file ){
+				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
+				$pathFileLocal	= $this->logic->getLocalFileTypePath( $this->env->getRemote(), $typeKey, $file );
+				if( $pathFileSource && $pathFileLocal ){
+
+					$answer	= array();
+					remark( "File Source: ". $pathSource.$pathFileSource );
+					remark( "File Local: ". $pathLocal.$pathFileLocal );
+					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
+					remark( "Diff: ". $cmd );
+					exec( $cmd, $answer, $code );
+					print_m( $code );
+					print_m( $answer );
+					die;
+					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
+					exec( $cmd, $answer, $code );
+					if( $code != 1 )
+						throw new Exception( 'diff failed with return code '.$code );
+					if( empty( $answer ) )
+						$files[$typeKey.":".$file->file]	= NULL;
+					else
+						$files[$typeKey.":".$file->file]	= implode( "\n", $answer );
+				}
+			}
+		}
+		die;
+		$files	= join( ", ", $files );
+		print( '<div>
+	<div style="float:left;width:50%;">
+		<h3>LOKAL</h3>
+		<b>Module</b>
+		<div style="height: 300px; overflow: auto;">
+			'.print_m( $moduleLocal, NULL, NULL, TRUE ).'
+		</div>
+	</div>
+	<div style="float:left;width:50%;">
+		<h3>SOURCE</h3>
+		<b>Module</b>
+		<div style="height: 300px; overflow: auto;">
+			'.print_m( $moduleSource, NULL, NULL, TRUE ).'
+		</div>
+	</div>
+	<b>Files</b>
+	'.$files.'
+</div>' );
+		die;
+		$module	= $this->logic->model->getLocal( $moduleId );
+		remark( "Model::getLocal(ID): " );
+		print_m( $module );
+		die( "!" );
+
+
+
+
 		if( $request->has( 'doUpdate' ) ){
 			try{
 				$this->logic->updateModule( $moduleId, $verbose );
