@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Session</title>
+	<description><![CDATA[Keeps browser session alive and can provide session data to client.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/UI/Session.php5</class>
+		<script load="auto">Module.UI.Session.js</script>
+	</files>
+	<config type="boolean" name="keep">yes</config>
+	<config type="integer" name="keep.minutes">300</config>
+	<config type="boolean" name="publish">no</config>
+<!--	<config name=""></config>-->
+</module>
