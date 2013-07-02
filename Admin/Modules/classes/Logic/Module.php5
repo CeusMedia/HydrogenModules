@@ -75,11 +75,9 @@ class Logic_Module {
 			throw new Exception_Logic( 'Resource file is not existing', $fileIn, 20 );
 		if( !is_readable( $pathNameIn ) )
 			throw new Exception_Logic( 'Resource file is not readable', $fileIn, 21 );
-		if( !is_writable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not executable', $fileIn, 22 );
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
-			throw new Exception_Logic( 'Target path could not been created', $pathOut, 30 );
+			throw new Exception_Logic( 'Resource file is not executable', $fileOut, 30 );
 		if( file_exists( $fileOut ) ){
 			if( !$force )
 				throw new Exception_Logic( 'Target file is already existing', $fileOut, 31 );
@@ -151,85 +149,39 @@ class Logic_Module {
 		return $this->model->get( $moduleId );
 	}
 
-	public function getLocalFileTypePath( CMF_Hydrogen_Environment_Remote $env, $fileType, $file ){
-		$config		= $env->getConfig();
-		$paths		= $config->getAll( 'path.', TRUE );
-		$pathTheme	= $paths->get( 'themes' ).$config->get( 'layout.theme' ).'/';
-		switch( $fileType ){
-			case 'locale':
-			case 'script':
-			case 'template':
-				return $paths->get( $fileType.'s' ).$file->file;
-			case 'class':
-				return $paths->get( 'classes' ).$file->file;
-			case 'image':
-				if( empty( $file->source ) || $file->source == 'local' )
-					return $paths->get( 'images' ).$file->file;
-				else if( $file->source == 'theme' ){
-					if( !empty( $file->theme ) )
-						return $paths->get( 'themes' ).$file->theme.'/img/'.$file->file;
-					return $pathTheme.'img/'.$file->file;
-				}
-				break;
-			case 'script':
-				if( empty( $file->source ) || $file->source == 'local' )
-					return $paths->get( 'scripts' ).$file->file;
-				break;
-			case 'style':
-				if( empty( $file->source ) || $file->source == 'theme' ){
-					if( !empty( $file->theme ) )
-						return $paths->get( 'themes' ).$file->theme.'/'.$file->file;
-					return $pathTheme.'css/'.$file->file;
-				}
-				break;
-			default:
-				return $file->file;
-		}
-	}
-
-	public function getSourceFileTypePath( $fileType, $file ){
-		switch( $fileType ){
-			case 'class':
-				return 'classes/'.$file->file;
-			case 'locale':
-				return 'locales/'.$file->file;
-			case 'script':
-				return 'js/'.$file->file;
-			case 'template':
-				return 'templates/'.$file->file;
-			case 'style':
-				return 'css/'.$file->file;
-			case 'image':
-				return 'img/'.$file->file;
-			default:
-				return $file->file;
-		}
-	}
-	
-	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
+	protected function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
+		$configApp	= $env->getConfig();
+		$pathThemes	= $configApp->get( 'path.themes' );
+		$pathTheme	= $configApp->get( 'path.themes' ).$configApp->get( 'layout.theme' ).'/';
+		$pathImages	= 'images/';
+		if( $configApp->get( 'path.images' ) )
+			$pathImages	= $configApp->get( 'path.images' );
 		$map		= array();
-		$fileTypes	= array(
-			'classes'		=> 'class',
-			'files'			=> 'file',
-			'images'		=> 'image',
-			'locales'		=> 'locale',
-			'scripts'		=> 'script',
-			'styles'		=> 'style',
-			'templates'		=> 'template',
-		);
-		foreach( $fileTypes as $typeMember => $typeKey ){
-			foreach( $module->files->$typeMember as $file ){
-				$pathSource	= $this->getSourceFileTypePath( $typeKey, $file );
-				$pathLocal	= $this->getLocalFileTypePath( $env, $typeKey, $file );
-				if( $pathSource && $pathLocal )
-					$map[$pathSource]	= $pathLocal;
+		foreach( $module->files->classes as $class )
+			$map['classes/'.$class->file]	= 'classes/'.$class->file;
+		foreach( $module->files->templates as $template )
+			$map['templates/'.$template->file]	= $configApp->get( 'path.templates' ).$template->file;
+		foreach( $module->files->locales as $locale )
+			$map['locales/'.$locale->file]	= $configApp->get( 'path.locales' ).$locale->file;
+		foreach( $module->files->scripts as $script )
+			if( empty( $script->source ) || $script->source == 'local' )
+				$map['js/'.$script->file]	= $configApp->get( 'path.scripts' ).$script->file;
+		foreach( $module->files->styles as $style )
+			if( empty( $style->source ) || $style->source == 'theme' ){
+				$pathTarget	= empty( $style->theme ) ? $pathTheme : $pathThemes.$style->theme.'/';
+				$map['css/'.$style->file]	= $pathTarget.'css/'.$style->file;
+			}
+		foreach( $module->files->images as $image ){
+			if( empty( $image->source ) || $image->source == 'local' )
+				$map['img/'.$image->file]	= $pathImages.$image->file;
+			else if( $image->source == 'theme' ){
+				$pathTarget	= empty( $image->theme ) ? $pathTheme : $pathThemes.$image->theme.'/';
+				$map['img/'.$image->file]	= $pathTarget.'img/'.$image->file;
 			}
 		}
+		foreach( $module->files->files as $file )
+			$map[$file->file]	= $file->file;
 		return $map;
-	}
-
-	public function getModuleFromSource( $moduleId, $source = NULL ){
-		return $this->model->getFromSource( $moduleId, $source );
 	}
 
 	public function getModulePath( $moduleId ){
@@ -454,7 +406,7 @@ class Logic_Module {
 			}
 		}
 	}
-
+	
 	protected function linkModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
 		$source		= $this->getSourceFromModuleId( $moduleId );
 		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
@@ -465,10 +417,10 @@ class Logic_Module {
 		if( !is_readable( $pathNameIn ) )
 			throw new Exception_Logic( 'Resource file is not readable', $fileIn, 21 );
 		if( !is_executable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not executable', $fileIn, 22 );
+			throw new Exception_Logic( 'Resource "'.$fileIn.'" file is not executable', $fileIn, 22 );
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
-			throw new Exception_Logic( 'Target path could not been created', $pathOut, 30 );
+			throw new Exception_Logic( 'Resource file is not executable', $fileOut, 30 );
 		if( file_exists( $fileOut ) ){
 			if( !$force )
 				throw new Exception_Logic( 'Target file is already existing', $fileOut, 31 );
@@ -481,6 +433,7 @@ class Logic_Module {
 
 	public function updateModule( $moduleId, $settings = array(), $verbose = TRUE ){
 		$this->uninstallModuleFiles( $moduleId, $verbose );
+		die("!");
 		$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
 		if( !count( $exceptions ) ){
 //			$this->configureLocalModule( $moduleId, $settings );

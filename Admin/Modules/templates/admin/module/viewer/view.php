@@ -7,7 +7,6 @@ $mapTabs	= array(
 	'resources'	=> 'tabResources',
 	'config'	=> 'tabConfiguration',
 	'database'	=> 'tabDatabase',
-//	'links'		=> 'tabLinks',
 	'relations'	=> 'tabRelations',
 );
 
