@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Galleries</title>
+	<description></description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Gallery.php5</class>
+		<class>Model/Gallery.php5</class>
+		<class>Model/GalleryAuthor.php5</class>
+		<class>Model/GalleryTag.php5</class>
+		<class>View/Manage/Gallery.php5</class>
+		<locale>de/manage/gallery.ini</locale>
+		<template>manage/gallery/add.php</template>
+		<template>manage/gallery/edit.php</template>
+		<template>manage/gallery/index.php</template>
+		<template>manage/gallery/filter.php</template>
+		<template>manage/gallery/list.php</template>
+		<style>site.manage.gallery.css</style>
+	</files>
+	<relations/>
+	<config type="string" name="path"></config>	
+	<link xml:lang="de" path="manage/gallery">Galerien</link>
+</module>
