@@ -156,12 +156,11 @@ class Logic_Module {
 		$paths		= $config->getAll( 'path.', TRUE );
 		$pathTheme	= $paths->get( 'themes' ).$config->get( 'layout.theme' ).'/';
 		switch( $fileType ){
-			case 'locale':
-			case 'script':
-			case 'template':
-				return $paths->get( $fileType.'s' ).$file->file;
 			case 'class':
 				return $paths->get( 'classes' ).$file->file;
+			case 'locale':
+			case 'template':
+				return $paths->get( $fileType.'s' ).$file->file;
 			case 'image':
 				if( empty( $file->source ) || $file->source == 'local' )
 					return $paths->get( 'images' ).$file->file;
@@ -178,7 +177,7 @@ class Logic_Module {
 			case 'style':
 				if( empty( $file->source ) || $file->source == 'theme' ){
 					if( !empty( $file->theme ) )
-						return $paths->get( 'themes' ).$file->theme.'/'.$file->file;
+						return $paths->get( 'themes' ).$file->theme.'/css/'.$file->file;
 					return $pathTheme.'css/'.$file->file;
 				}
 				break;
