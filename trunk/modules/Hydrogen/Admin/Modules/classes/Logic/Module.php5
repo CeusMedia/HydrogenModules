@@ -204,7 +204,7 @@ class Logic_Module {
 				return $file->file;
 		}
 	}
-	
+
 	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
 		$map		= array();
 		$fileTypes	= array(
@@ -390,10 +390,14 @@ class Logic_Module {
 		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
 			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
 			if( $driver ){																			//  remote database connection is configured
-				if( strlen( trim( $module->sql['install@'.$driver] ) ) )							//  SQL for installation for specific PDO driver is given
-					$this->executeSql( $module->sql['install@'.$driver] );							//  execute SQL
-				else if( strlen( trim( $module->sql['install@*'] ) ) )								//  fallback: general SQL for installation is available
-					$this->executeSql( $module->sql['install@*'] );									//  execute SQL
+				if( isset( $module->sql['install@'.$driver] ) ){
+					if( strlen( trim( $module->sql['install@'.$driver] ) ) )						//  SQL for installation for specific PDO driver is given
+						$this->executeSql( $module->sql['install@'.$driver] );						//  execute SQL
+				}
+				else if( isset( $module->sql['install@*'] ) ){
+					if( strlen( trim( $module->sql['install@*'] ) ) )								//  fallback: general SQL for installation is available
+						$this->executeSql( $module->sql['install@*'] );									//  execute SQL
+				}
 				else
 					return NULL;
 				return TRUE;
