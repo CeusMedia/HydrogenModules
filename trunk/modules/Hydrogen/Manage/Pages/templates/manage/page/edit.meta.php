@@ -34,13 +34,13 @@ return '
 		<div><small class="muted">Diese Werte wurden im Meta-Modul der Website definiert.</small></div>
 		<dl class="dl-horizontal">
 			<dt>Beschreibung</dt>
-			<dd>'.$meta['description'].'</dd>
+			<dd>'.$meta['default.description'].'</dd>
 			<dt>Schlüsselwörter</dt>
-			<dd>'.$meta['keywords'].'</dd>
+			<dd>'.$meta['default.keywords'].'</dd>
 <!--			<dt>Autor</dt>
-			<dd>'.$meta['author'].'</dd>
+			<dd>'.$meta['default.author'].'</dd>
 			<dt>Herausgeber</dt>
-			<dd>'.$meta['publisher'].'</dd>-->
+			<dd>'.$meta['default.publisher'].'</dd>-->
 		</dl>
 	</div>
 </div>';
