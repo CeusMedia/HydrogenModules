@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Meta Tags</title>
+	<description><![CDATA[Support for HTML meta tags, including Dublin Core and Open Graph.]]></description>
+	<category>UI</category>
+	<version>0.2</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/MetaTags.php5</class>
+	</files>
+	<config protected="yes" type="boolean" name="enable">yes</config>
+	<config protected="yes" type="boolean" name="enable.DublinCore">yes</config>
+	<config protected="yes" type="boolean" name="enable.OpenGraph">yes</config>
+	<config protected="yes" type="string" name="default.title">Viva Yoga</config>
+	<config protected="yes" type="string" name="default.description"></config>
+	<config protected="yes" type="string" name="default.keywords"></config>
+	<config protected="yes" type="string" name="default.author"></config>
+	<config protected="yes" type="string" name="default.publisher"></config>
+	<config protected="yes" type="string" name="default.generator">Hydrogen Framework</config>
+	<config protected="yes" type="string" name="default.expires">0</config>
+	<config protected="yes" type="string" name="default.cache.control" values="public,private,no-cache,no-store">public</config>
+	<config protected="yes" type="string" name="default.cache.pragma" values=",no-cache">no-cache</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$helper	= new View_Helper_MetaTags( $env );
+$helper->apply();
+	]]></hook>
+</module>
+
+
