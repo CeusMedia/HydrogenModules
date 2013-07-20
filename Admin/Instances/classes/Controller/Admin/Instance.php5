@@ -176,10 +176,11 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'edit' ) ){
-
 			$id			= trim( $post->get( 'id' ) );
 			$title		= trim( $post->get( 'title' ) );
 			$path		= trim( $post->get( 'path' ) );
+			$protocol	= trim( $post->get( 'protocol' ) );
+			$host		= trim( $post->get( 'host' ) );
 			$uri		= trim( $post->get( 'uri' ) );
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
@@ -212,7 +213,10 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			if( !$messenger->gotError() ){
 				$data		= array(
 					'title'		=> $title,
+					'protocol'	=> $protocol,
+					'host'		=> $host,
 					'path'		=> $path,
+					'uri'		=> $uri,
 				);
 				if( $configPath != '/' && $configPath != 'config/' )
 					$data['configPath']	= $configPath;
