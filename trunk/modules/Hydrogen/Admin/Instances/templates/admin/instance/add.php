@@ -1,6 +1,9 @@
 <?php
 
 $moduleConfig	= $config->getAll( 'module.admin_instances.', TRUE );
+$protocolLocked	= FALSE;
+$hostLocked		= NULL;
+$pathLocked		= NULL;
 
 if( $moduleConfig->get( 'lock' ) ){
 	$moduleConfig->get( 'lock.host' );
