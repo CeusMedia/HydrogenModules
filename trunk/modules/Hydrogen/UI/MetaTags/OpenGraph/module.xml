@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: MetaTags: OpenGraph</title>
+	<description><![CDATA[Enables basic support for Open Graph.]]></description>
+	<version>0.2</version>
+	<category>User Interface</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<config protected="yes" type="string" name="audio"></config>
+	<config protected="yes" type="string" name="audio.type" values=",audio/basic,audio/L24,audio/mp4,audio/mpeg,audio/ogg,audio/vorbis,audio/vnd.rn-realaudio,audio/vnd.wave,audio/webm,audio/x-aac,audio/x-caf"></config>
+	<config protected="yes" type="string" name="image"></config>
+	<config protected="yes" type="string" name="image.width"></config>
+	<config protected="yes" type="string" name="image.height"></config>
+	<config protected="yes" type="string" name="image.type" values=",image/gif,image/jpeg,image/pjpeg,image/png,image/svg+xml,image/tiff,image/x-xcf"></config>
+	<config protected="yes" type="string" name="video"></config>
+	<config protected="yes" type="string" name="video.width"></config>
+	<config protected="yes" type="string" name="video.height"></config>
+	<config protected="yes" type="string" name="video.type" values=",application/x-shockwave-flash,video/mpeg,video/mp4,video/ogg,video/quicktime,video/webm,video/x-matroska,video/x-ms-wmv,video/x-flv"></config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+	<hook type="resource" resource="App" event="respond"><![CDATA[
+	]]></hook>
+	<relations>
+		<needs>UI_MetaTags</needs>
+	</relations>
+</module>
