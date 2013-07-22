@@ -8,14 +8,13 @@ return '
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_description">Beschreibung</label>
-				<textarea class="span12" rows="2" name="description" id="input_description">'.htmlentities( $page->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea class="span12" rows="4" name="description" id="input_description">'.htmlentities( $page->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
-<!--				<input class="span12" type="text" name="keywords" id="input_keywords" value="'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'"/>-->
-				<textarea class="span12" rows="2" name="keywords" id="input_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea class="span12" rows="6" name="keywords" id="input_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 		</div>
 <!--		<div class="row-fluid">
@@ -32,16 +31,17 @@ return '
 	<div class="span6">
 		<h4>Standardwerte</h4>
 		<div><small class="muted">Diese Werte wurden im Meta-Modul der Website definiert.</small></div>
-		<dl class="dl-horizontal">
-			<dt>Beschreibung</dt>
-			<dd>'.$meta['default.description'].'</dd>
-			<dt>Schlüsselwörter</dt>
-			<dd>'.$meta['default.keywords'].'</dd>
-<!--			<dt>Autor</dt>
+		<dl class="dl-horizontal" id="meta-defaults">
+			<dt class="meta-default" data-key="description">Beschreibung</dt>
+			<dd style="min-height: 8em;">'.$meta['default.description'].'</dd>
+			<dt class="meta-default" data-key="keywords">Schlagwörter</dt>
+			<dd style="min-height: 11em;">'.$meta['default.keywords'].'</dd>
+<!--			<dt class="meta-default" data-key="author">Autor</dt>
 			<dd>'.$meta['default.author'].'</dd>
-			<dt>Herausgeber</dt>
+			<dt class="meta-default" data-key="publisher">Herausgeber</dt>
 			<dd>'.$meta['default.publisher'].'</dd>-->
 		</dl>
 	</div>
-</div>';
+</div>
+';
 ?>

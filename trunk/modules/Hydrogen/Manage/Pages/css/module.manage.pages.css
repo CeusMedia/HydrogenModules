@@ -1,0 +1,47 @@
+
+
+/*  --  PAGE PREVIEW  --  */
+#page-preview {
+	width: 99%;
+	height: 500px;
+	margin-bottom: 0.25em;
+	overflow: none;
+	border: 1px solid gray;
+	box-shadow: inset 2px 2px 12px rgba(127, 127, 127, 1);
+	}
+#page-preview-container {
+	width: 133.33%;
+	height: 133.33%;
+	overflow: hidden;
+	transform-origin: 0 0;
+	-webkit-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	transform: scale(.75);
+	-ms-transform: scale(.75); /* IE 9 */
+	-webkit-transform: scale(.75); /* Safari and Chrome */
+	}
+#page-preview-iframe-container {
+	width: 100%;
+	height: 100%;
+	}
+#page-preview-mask {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	box-shadow: inset 2px 2px 12px gray;
+	background-color: rgba(255, 255, 255, 0.21);
+	}
+#page-preview iframe.preview {
+	width: 100%;
+	height: 100%;
+	border: 0px;
+	}
+
+/*  --  META TAGS  --  */
+dl#meta-defaults dd {
+	margin-bottom: 1em;
+	}
+
+

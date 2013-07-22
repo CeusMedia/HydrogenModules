@@ -22,6 +22,26 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 		}
 	}
 
+	protected function renderTabs( $labels, $templates, $current ){
+		$listTabs	= array();
+		$listPanes		= array();
+		foreach( array_values( $labels ) as $nr => $label ){
+			$attributes		= array( 'href' => '#tab'.($nr+1), 'data-toggle' => 'tab' );
+			$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
+			$isActive		= ($nr+1) == $current;
+			$attributes		= array( 'id' => 'page-editor-tab-'.($nr+1), 'class' => $isActive ? "active" : NULL );
+			$listTabs[]		= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$nr] );
+			$attributes		= array( 'id' => 'tab'.($nr+1), 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
+			$listPanes[]	= UI_HTML_Tag::create( 'div', $paneContent, $attributes );
+		}
+		$listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
+		$listPanes	= UI_HTML_Tag::create( 'div', $listPanes, array( 'class' => 'tab-content' ) );
+		$attributes	= array( 'class' => 'tabbable', 'id' => 'tabs-page-editor' );
+		return UI_HTML_Tag::create( 'div', $listTabs.$listPanes, $attributes );
+	}
+
+
 	public function renderTree( $tree, $currentPage = NULL ){
 		$list	= array();
 		foreach( $tree as $item ){
@@ -51,7 +71,9 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => join( ' ', $classes ) ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+		if( $list )
+			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+		return '<div class="muted"><small><em>Keine Seiten vorhanden.</em></small></div>';
 	}
 }
 ?>

@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Manage</category>
-	<version>0.4</version>
+	<version>0.5</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,11 +14,13 @@
 		<template>manage/page/edit.php</template>
 		<template>manage/page/edit.content.php</template>
 		<template>manage/page/edit.meta.php</template>
+		<template>manage/page/edit.preview.php</template>
 		<template>manage/page/edit.settings.php</template>
 		<template>manage/page/index.php</template>
 		<template>manage/page/tree.php</template>
 		<locale>de/manage/page.ini</locale>
 		<script load="auto">PageEditor.js</script>
+		<style load="auto">module.manage.pages.css</style>
 	</files>
     <config type="string" protected="user" name="editor" values="none,CodeMirror,TinyMCE">TinyMCE</config>
     <config type="string" protected="user" name="link.resources">pages,bookmarks,documents,images</config>
