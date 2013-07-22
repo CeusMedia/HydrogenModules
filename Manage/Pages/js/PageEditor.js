@@ -21,8 +21,10 @@ var PageEditor = {
 		});
 		$("#tabs-page-editor>ul>li>a").bind("click", function(){
 			var key = $(this).attr("href").replace(/#tab/, "");
-			if(key == 2 && PageEditor.editor.toLowerCase() == "codemirror")
+			if(key == 3 && PageEditor.editor.toLowerCase() == "codemirror")
 				window.setTimeout(PageEditor.setupCodeMirror, 20);
+			if(key == 4)
+				PageEditor.loadPagePreview();
 			$.ajax({
 				url: "./manage/page/ajaxSetTab/"+key,
 				type: "post"
@@ -38,6 +40,36 @@ var PageEditor = {
 			default:
 				break;
 		}
+		PageEditor.loadPagePreview();
+		$("#page-preview").mouseenter(function(){
+			$("#page-preview-mask").hide();
+		}).mouseleave(function(){
+			$("#page-preview-mask").show();
+		});
+		PageEditor.initDefaultMetaCopy();
+	},
+
+	initDefaultMetaCopy: function(){
+		$("#meta-defaults dt").each(function(nr, term){
+			if($(term).hasClass("meta-default")){
+				var link = $("<a></a>").attr("href", "#").html("&larr;&nbsp;kopieren");
+				link.bind("click", {term: term, key: $(term).data("key")}, function(event){
+					var input = $("#input_"+event.data.key);
+					input.val($(event.data.term).next().html());
+					event.stopPropagation();
+					return false;
+				});
+				link.wrap("<small></small>");
+				$(term).append("<br/>").append(link);
+			}
+		});
+	},
+
+	loadPagePreview: function(){
+		var iframe = $("<iframe></iframe>");
+		iframe.addClass("preview");
+		iframe.attr("src", $("#page-preview").data("url"));
+		$("#page-preview-iframe-container").html(iframe);
 	},
 
 	setEditor: function(elem){

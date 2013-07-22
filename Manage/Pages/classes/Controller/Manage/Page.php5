@@ -9,6 +9,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->words		= $this->getWords();
+
+		$this->session		= $this->env->getSession();
 	}
 
 	public function add(){
@@ -47,6 +49,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		);
 		$this->addData( 'path', $this->baseUri );
 		$this->addData( 'page', $page );
+		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->preparePageTree();
 	}
 
@@ -125,6 +128,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$path		= $this->baseUri;
 		if( $pageId ){
 			$page		= $model->get( (int) $pageId );
+			$this->session->set( 'module.manage_pages.scope', $page->scope );
 			if( $page->parentId ){
 				$parent	= $model->get( (int) $page->parentId );
 				$path	= $this->baseUri.$parent->identifier.'/';
@@ -135,7 +139,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', $pages );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
+		$this->addData( 'pagePreviewUrl', "http://".$path.$page->identifier );
 		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
+		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
 		$this->preparePageTree( $pageId );
@@ -184,11 +190,13 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->preparePageTree();
+		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 	}
 
 	protected function preparePageTree( $currentPageId = NULL ){
+		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
 		$model		= new Model_Page( $this->env );
-		$indices	= array( 'parentId' => 0, 'status' => '>-2' );
+		$indices	= array( 'parentId' => 0, 'status' => '>-2', 'scope' => $scope );
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
 		$tree		= array();
 		$parentMap	= array( '0' => '-' );
@@ -201,6 +209,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'tree', $tree );
 		$this->addData( 'parentMap', $parentMap );
+	}
+
+	public function setScope( $scope ){
+		$this->session->set( 'module.manage_pages.scope', (int) $scope );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>

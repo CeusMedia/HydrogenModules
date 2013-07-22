@@ -2,14 +2,22 @@
 
 $listPages	= $this->renderTree( $tree, NULL );
 
+$optScope	= array();
+foreach( $words['scopes'] as $key => $value )
+	$optScope[$key]	= $value;
+$optScope	= UI_HTML_Elements::Options( $optScope, $scope );
+
 //  --  LAYOUT  --  //
 return '
-<div>
-	<div id="manage-page-tree">
-		<h4>Seiten</h4>
+<div class="row-fluid">
+	<div id="manage-page-tree" class="span3">
+		<div>
+			<label for="input_scope">Navigationstyp</label>
+			<select class="span10" name="scope" id="input_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
+		</div>
 		'.$listPages.'
 	</div>
-	<div id="manage-page-main">
+	<div id="manage-page-main" class="span9">
 		<div style="float: left; width: 100%">
 			<h4>Seitenverwaltung</h4>
 			<p>

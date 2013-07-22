@@ -25,7 +25,6 @@ $(document).ready(function(){
 	PageEditor.editor = "'.$editor.'";
 	PageEditor.linkList = '.json_encode( $helper->getLinkList() ).';
 	PageEditor.imageList = '.json_encode( $helper->getImageList() ).';
-	PageEditor.init();
 });
 	</script>';
 }
