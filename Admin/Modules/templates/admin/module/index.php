@@ -16,13 +16,13 @@ foreach( $modules as $moduleId => $module ){
 	$abstract	= $descLines[0];
 	$attributes	= array(
 		'class'		=> 'module available',
-		'title'		=> $abstract,
+		'title'		=> htmlentities( $abstract,ENT_QUOTES, 'UTF-8' ),
 		'href'		=> './admin/module/viewer/index/'.$moduleId
 	);
 
 	$icon		= '';
 	if( !empty( $module->icon ) ){
-		$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
+		$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 		$icon	= UI_HTML_Tag::create( 'a', $image, array( 'class' => 'image' ) );
 	}
 	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
