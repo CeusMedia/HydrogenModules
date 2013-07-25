@@ -148,6 +148,7 @@ if( $module->files->styles ){
 		$count++;
 		$class	= NULL;
 		$source	= !empty( $item->source ) ? $item->source : 'theme';
+		$theme	= !empty( $item->theme ) ? $item->theme : $configApp->get( 'layout.theme' );
 		$load	= !empty( $item->load ) ? $item->load : '-';
 
 		$uri	= $pathApp.$pathThemes;
@@ -156,7 +157,7 @@ if( $module->files->styles ){
 			case 'lib':			$uri	= $pathStylesLib; break;									//  URL relative to scripts library
 			case 'scripts-lib':	$uri	= $pathScriptsLib; break;									//  URL relative to scripts library
 			case 'primer':		$uri	.= $pathThemePrimer.'css/'; break;							//  file in primer theme folder
-			case 'theme':		$uri	.= $pathThemeCustom.'css/'; break;							//  file in custom theme folder
+			case 'theme':		$uri	.= $theme.'/css/'; break;							//  file in custom theme folder
 			default:			$uri	.= $item->source.'/'; break;								//  ...
 		}
 		$uri	.= $item->file;
@@ -164,7 +165,7 @@ if( $module->files->styles ){
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/style/'.base64_encode( $item->file ).'?tab=resources';
 		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html' );
 		$buttonUnlink	= UI_HTML_Elements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
-		
+
 		if( !checkFile( $uri ) ){
 			$this->env->messenger->noteError( 'Missing: '.$uri );
 			$class	= 'missing';
@@ -231,11 +232,12 @@ if( $module->files->images ){
 		$count++;
 		$class		= NULL;
 		$source		= !empty( $item->source ) ? $item->source : 'local';
+		$theme		= !empty( $item->theme ) ? $item->theme : $configApp->get( 'layout.theme' );
 #		$preload	= !empty( $item->preload ) ? $item->preload : NULL;
 		$uri		= $pathApp;
 		switch( $source ){
 			case 'url':		$uri	= ""; break;													//  absolute URL
-			case 'theme':	$uri	.= $pathThemes.$pathThemeCustom.'img/'; break;					//  URL relative to scripts library
+			case 'theme':	$uri	.= $pathThemes.$theme.'/img/'; break;					//  URL relative to scripts library
 			case 'local':	$uri	.= $pathImages; break;											//  file in local scripts folder
 			default:		$uri	.= $item->source.'/'; break;									//  ...
 		}
