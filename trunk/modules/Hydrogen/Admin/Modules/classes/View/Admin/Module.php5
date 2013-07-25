@@ -22,7 +22,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	protected function renderModuleButton( $module, $url, $class = 'module button' ){
 		$image		= '';
 		if( !empty( $module->icon ) )
-			$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
+			$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 		$icon	= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'module-icon' ) );
 		$title	= UI_HTML_Tag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
 		$desc	= explode( '<br />', nl2br( $module->description ) );
@@ -57,7 +57,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 						continue;
 				$image		= '';
 				if( !empty( $module->icon ) )
-					$image	= UI_HTML_Elements::Image( $module->icon, $module->title );
+					$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 				$listModules[]	= $this->renderModuleButton( $module, $url );
 			}
 			$listModules	= join( $listModules );
@@ -76,7 +76,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 			if( isset( $allModules[$relatedModuleId] ) ){
 				$relatedModule	= $allModules[$relatedModuleId];
 				$desc	= explode( '<br />', nl2br( $relatedModule->description ) );
-				$attr	= array( 'title' => array_shift( $desc ) );
+				$attr	= array( 'title' => htmlentities( array_shift( $desc ), ENT_QUOTES, 'UTF-8' ) );
 				$label	= UI_HTML_Tag::create( 'acronym', $relatedModule->title, $attr );
 				if( $url ){
 					$attr['href']	= $url.$relatedModuleId;
