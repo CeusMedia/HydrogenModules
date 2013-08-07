@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>App: Site: Admin</title>
+	<description><![CDATA[Empty administrative web site application.]]></description>
+	<category>Application</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<relations>
+		<needs type="module">Manage_Pages</needs>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Compressor</needs>
+		<needs type="module">UI_Bootstrap</needs>
+	</relations>
+</module>
+	
