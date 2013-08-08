@@ -10,6 +10,7 @@ $graph			= "";
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonView		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$moduleId, $w->buttonView, 'button view' );
 $buttonIndex	= UI_HTML_Elements::LinkButton( './admin/module/installer', $w->buttonIndex, 'button cancel' );
 $buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonView, 'button cancel' );
 $buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'button add' );
@@ -193,9 +194,9 @@ if( $isInstallable ){
 }
 
 $positions	= array(
-	'Liste'		=> './admin/module',
-	'Übersicht'	=> './admin/module/installer',
-#	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
+#	'Liste'		=> './admin/module',
+#	'Übersicht'	=> './admin/module/installer',
+	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
 );
 
 $urlForm	= './admin/module/installer/install/'.$module->id;
@@ -230,7 +231,8 @@ return '
 
 			<div class="buttonbar">
 				'.$buttonBack.'
-<!--				'.$buttonList.'
+<!--				'.$buttonView.'
+				'.$buttonList.'
 				'.$buttonIndex.'
 				'.$buttonCancel.'-->
 				'.$buttonInstall.'
