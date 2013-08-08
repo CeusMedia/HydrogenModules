@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<module>
+	<title>App: Site</title>
+	<description><![CDATA[Empty installation if a simple web site application.]]></description>
+	<category>Application</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Index.php5</class>
+		<class>View/Index.php5</class>
+		<locale>de/main.ini</locale>
+		<locale>en/main.ini</locale>
+		<locale>de/html/index.html</locale>
+		<locale>en/html/index.html</locale>
+		<template>index/index.php</template>
+		<template>master.php</template>
+		<file>index.php5</file>
+		<style source="theme">layout.css</style>
+	</files>
+	<link xml:lang="de" access="public" rank="0" path="">Start</link>
+	<link xml:lang="en" access="public" rank="0" path="">Home</link>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<supports type="module">UI_FavIcon</supports>
+		<supports type="module">UI_MetaTags</supports>
+		<supports type="module">UI_Compressor</supports>
+		<supports type="module">UI_TEA</supports>
+		<supports type="module">JS_Modernizr</supports>
+		<supports type="module">Info_Contact</supports>
+		<supports type="module">Info_Pages</supports>
+	</relations>
+</module>
