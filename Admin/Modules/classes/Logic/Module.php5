@@ -453,7 +453,7 @@ class Logic_Module {
 			$fileCache	= $env->path.'config/modules.cache.serial';
 			if(file_exists( $fileCache ) ){
 				@unlink( $fileCache );
-				$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
+		//		$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
 			}
 		}
 	}
