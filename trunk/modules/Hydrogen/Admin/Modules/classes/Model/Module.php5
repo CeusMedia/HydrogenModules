@@ -107,6 +107,16 @@ class Model_Module{
 								if( !in_array( $module->source, $filterValue ) )
 									unset( $modulesAll[$moduleId] );
 							break;
+						case 'relation:needs':
+						case 'relation:supports':
+							$type		= preg_replace( "/^(.+):(.+)$/", "\\2", $filterKey );
+							$moduleIds	= $filterValue;
+							if( !is_array( $moduleIds ) && strlen( trim( $moduleIds ) ) )
+								$moduleIds	= array( $moduleIds );
+							$common	= array_intersect( $moduleIds, $module->relations->$type );
+							if( $common !== $moduleIds )
+								unset( $modulesAll[$moduleId] );
+							break;
 						case 'query':
 							if( !strlen( trim( $filterValue ) ) )
 								continue;
@@ -242,6 +252,25 @@ class Model_Module{
 		return $list;
 	}
 
+	public function getNeedingModulesWithStatus( $moduleId ){									//  @todo	refactor to getSupportedModuleIdsWithStatus
+		$module	= $this->get( $moduleId );
+		if( !$module )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+		$list		= array();
+		$modules	= $this->getAll();
+		$found		= $this->getAll( array( 'relation:needs' => $moduleId ) );
+		foreach( array_keys( $found ) as $relatedModuleId ){
+			$status	= Model_Module::TYPE_UNKNOWN;
+			if( array_key_exists( $relatedModuleId, $modules ) )
+				$status	= Model_Module::TYPE_SOURCE;
+			if( $status && $this->isInstalled( $relatedModuleId ) )
+				$status	= Model_Module::TYPE_COPY;
+			$list[$relatedModuleId]	= $status;
+		}
+		array_unique( $list );
+		return $list;
+	}
+
 	public function getNotInstalled(){
 		$localModules	= $this->getInstalled( $this->modulesAvailable );
 		return array_diff_key( $this->modulesAvailable, $localModules );
@@ -268,7 +297,7 @@ class Model_Module{
 		if( array_key_exists( $moduleId, $this->getAll() ) )
 			return self::TYPE_SOURCE;
 	}
-
+	
 	public function getSupportedModulesWithStatus( $moduleId ){										//  @todo	refactor to getSupportedModuleIdsWithStatus
 		$module	= $this->get( $moduleId );
 		if( !$module )
@@ -282,6 +311,25 @@ class Model_Module{
 			if( $status && $this->isInstalled( $relatedModuleId ) )
 				$status	= Model_Module::TYPE_COPY;
 			$list[$relatedModuleId]	= $status;
+		}
+		array_unique( $list );
+		return $list;
+	}
+
+	public function getSupportingModulesWithStatus( $moduleId ){									//  @todo	refactor to getSupportedModuleIdsWithStatus
+		$module	= $this->get( $moduleId );
+		if( !$module )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+		$list		= array();
+		$modules	= $this->getAll();
+		$found		= $this->getAll( array( 'relation:supports' => $moduleId ) );
+		foreach( array_keys( $found ) as $relatedModuleId ){
+			$status	= Model_Module::TYPE_UNKNOWN;
+			if( array_key_exists( $relatedModuleId, $modules ) )
+				$status	= Model_Module::TYPE_SOURCE;
+			if( $status && $this->isInstalled( $relatedModuleId ) )
+				$status	= Model_Module::TYPE_COPY;
+			$list[$$relatedModuleId]	= $status;
 		}
 		array_unique( $list );
 		return $list;
