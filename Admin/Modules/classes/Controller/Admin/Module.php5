@@ -72,9 +72,12 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		$this->view->setData( $data, $topic );
 	}
 
-	public function showRelationGraph( $moduleId, $type = 'needs' ){
+	public function showRelationGraph( $moduleId, $direction = 'out', $type = 'needs', $recursive = FALSE ){
 		$solver	= new Logic_Module_Relation( $this->logic );														//	calculator for module installation order
-		$this->addData( 'graph', $solver->renderGraph( $moduleId, $type ) );												//  load module and related modules
+		if( $direction == "in" )
+			$this->addData( 'graph', $solver->renderRelatingGraph( $moduleId, $type, $recursive ) );												//  load module and related modules
+		else
+			$this->addData( 'graph', $solver->renderGraph( $moduleId, $type, $recursive ) );												//  load module and related modules
 	}
 
 	public function viewCode( $moduleId, $type, $fileName ){
