@@ -18,7 +18,7 @@ class Model_Module{
 	public function __construct( $env ){
 		$this->env			= $env;
 		$this->pathRepos	= $env->pathModules;
-		$this->pathConfig	= $env->pathConfig.'modules/';
+		$this->pathConfig	= $env->pathConfig.'modules';
 
 		$model	= new Model_ModuleSource( $env );
 		foreach( $model->getAll() as $source )
@@ -29,7 +29,7 @@ class Model_Module{
 		if( !file_exists( $this->pathRepos ) )
 			throw new RuntimeException( 'Modules folder missing in "'.$this->pathRepos.'"', 1 );
 		if( !file_exists( $this->pathConfig ) )
-			if( !mkdir( $this->pathConfig ) )
+			if( !@mkdir( $this->pathConfig ) )
 				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
 	}
 
@@ -199,7 +199,7 @@ class Model_Module{
 		if( $modules ){
 			foreach( $modules->getAll() as $id => $module ){
 				$module->type	= self::TYPE_CUSTOM;
-	#			if( is_link( $this->pathConfig.$id.'.xml' ) ){
+	#			if( is_link( $this->pathConfig."/".$id.'.xml' ) ){
 	#				$module->type	= self::TYPE_LINK;
 	#			}
 				if( !empty( $this->modulesAvailable[$id] ) ){
@@ -226,7 +226,7 @@ class Model_Module{
 	 *	@return		XML_Element
 	 */
 	public function getLocalModuleXml( $moduleId, $parse = FALSE ){
-		$moduleFile	= $this->pathConfig.$moduleId.'.xml';
+		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
 		if( $parse )
@@ -340,7 +340,7 @@ class Model_Module{
 	 */
 	public function isInstalled( $moduleId ){
 		$list	= array();
-		$index	= new File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
+		$index	= new File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
 		foreach( $index as $entry ){
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			if( $id == $moduleId )
@@ -377,7 +377,7 @@ class Model_Module{
 	}
 
 	public function registerLocalFile( $moduleId, $type, $fileName ){								//  @todo: use getLocalModuleXml instead
-		$moduleFile	= $this->pathConfig.$moduleId.'.xml';
+		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
 		$xml	= XML_ElementReader::readFile( $moduleFile );
@@ -390,7 +390,7 @@ class Model_Module{
 			$content	= XML_DOM_Formater::format( $content->asXML(), TRUE );
 		if( !is_string( $content ) )
 			throw new InvalidArgumentException( 'No valid XML string given' );
-		$moduleFile	= $this->pathConfig.$moduleId.'.xml';
+		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
 		return File_Writer::save( $moduleFile, $content );
