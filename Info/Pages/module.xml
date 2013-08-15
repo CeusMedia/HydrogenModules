@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.3</version>
+	<version>0.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `module` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
+  `description` text COLLATE utf8_unicode_ci,
+  `keywords` text COLLATE utf8_unicode_ci,
   `timestamp` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`pageId`),
   KEY `scope` (`scope`),
