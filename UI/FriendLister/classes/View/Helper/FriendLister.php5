@@ -1,6 +1,6 @@
 <?php
 /**
- *	Renders list of linked friend sites. 
+ *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
@@ -9,7 +9,7 @@
  *	@version		$Id$
  */
 /**
- *	Renders list of linked friend sites. 
+ *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
@@ -18,7 +18,7 @@
  *	@version		$Id$
  */
 class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
-	
+
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -28,7 +28,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->setEnv( $env );
 	}
-		
+
 	/**
 	 *	Renders and returns list for given XML file.
 	 *	@access		public
