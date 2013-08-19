@@ -1,15 +1,15 @@
 <?php
 class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
-	
+
 	public function index(){}
-	
+
 }
 class View_Helper_MyUserConfig {
 
 	public function __construct( $env ){
 		$this->env	= $env;
 	}
-	
+
 	public function getSingular( $string ){
 		if( preg_match( "/des$/", $string ) )
 			$string	= preg_replace( "/des$/", "de", $string );
@@ -50,7 +50,7 @@ class View_Helper_MyUserConfig {
 				foreach( $list as $key => $config ){
 					$config->default	= $config->value;
 					$config->changed	= FALSE;
-					
+
 					foreach( $settings as $setting ){
 						if( $module->id == $setting->moduleId ){
 							if( $key == $setting->key ){
@@ -84,6 +84,9 @@ class View_Helper_MyUserConfig {
 							break;
 						case 'string':
 							$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'"/>';
+remark( $config->key );
+							if( preg_match( "/password$/", $config->key ) )
+								$input	= '<input type="password" name="'.$inputKey.'" id="input_'.$inputKey.'"/>';
 							break;
 					}
 					$class	= '';

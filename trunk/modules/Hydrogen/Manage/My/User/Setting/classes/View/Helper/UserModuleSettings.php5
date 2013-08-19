@@ -135,6 +135,8 @@ $(document).ready(function(){
 							break;
 						case 'string':
 							$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'"/>';
+							if( preg_match( "/password$/", $config->key ) )
+								$input	= '<input type="password" name="'.$inputKey.'" id="input_'.$inputKey.'"/>';
 							break;
 					}
 					$class	= '';

@@ -36,6 +36,8 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 				if( !$request->has( $key ) )														//  no value for current config pair is in form request
 					continue;																		//  so skip this one
 				$value		= $model->castValue( $config->type, $request->get( $key ) );			//  convert sent input value to type of config value
+				if( preg_match( "/password$/", $config->key ) && !strlen( trim( $value ) ) )		//  no newer password entered
+					continue;																		//  do not save empty password
 
 				$indices	= array(																//  prepare indices for search for user setting in database
 					'userId'	=> $userId,
