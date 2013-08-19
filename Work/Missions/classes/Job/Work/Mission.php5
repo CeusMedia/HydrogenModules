@@ -24,6 +24,8 @@ class Job_Work_Mission extends Job_Abstract{
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Setting' );
 		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
+#			if( $user->email !== "kriss@ceusmedia.de" )
+#				continue;
 			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 			if( $useSettings )

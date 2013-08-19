@@ -60,6 +60,7 @@ foreach( $states as $status ){
 $toolbar->addButton( 'tb_2', 'states', $buttonStates->render() );
 
 /*  -- mission projects  --  */
+$changedProjects	= array();
 if( $useProjects && !empty( $userProjects ) ){
 	$changedProjects	= array_diff( array_keys( $userProjects ), $filterProjects );
 	$buttonProjects		= new View_Helper_MultiCheckDropdownButton( 'projects', $filterProjects, 'Projekte' );
