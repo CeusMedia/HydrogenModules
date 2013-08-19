@@ -80,25 +80,32 @@ $buttons	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'buttons list-act
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
 if( $options->get( 'exif' ) ){
-	$formatDate	= $config->get( 'module.gallery_compact.format.date' );
-	$formatTime	= $config->get( 'module.gallery_compact.format.time' );
 	$list	= array();
 	$mps	= round( $exif->get( 'COMPUTED.Width' ) * $exif->get( 'COMPUTED.Height' ) / 1024 / 1024, 1 );
-	$timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
-	$model		= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
-	$data	= array(
-		'Kamera'			=> $exif->get( 'Make' ).' <b>'.$model.'</b>',
-		'Belichtungszeit'	=> View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) ),
-		'Blende'			=> eval( 'return '.$exif->get( 'FNumber' ).';' ),
-		'Empfindlichkeit'	=> 'ISO '.$exif->get( 'ISOSpeedRatings' ),
-		'Auflösung'			=> $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>',
-	//	'Größe'				=> $mps.' <acronym title="Megapixel">MP</acronym>',
-	//	'Dimensionen'		=> $exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).' Pixel',
-		'Dateigröße'		=> Alg_UnitFormater::formatBytes( $exif->get( 'FileSize' ) ),
-	//	'Dateiname'			=> $exif->get( 'FileName' ),
-	//	'Gallerie'			=> implode( ' / ', array_slice( explode( '/', $source ), 0, -1 ) ),
-		'Datum/Zeit'		=> date( $formatDate, $timestamp ).' <small><em>'.date( $formatTime, $timestamp ).'</em></small>',
-	);
+	$data	= array();
+	if( strlen( $exif->get( 'Make' ) ) && strlen( $exif->get( 'Model' ) ) ){
+		$model	= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
+		$data['Kamera']			= $exif->get( 'Make' ).' <b>'.$model.'</b>';
+	}
+	if( strlen( $exif->get( 'ExposureTime' ) ) )
+		$data['Belichtungszeit']	= View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) );
+	if( strlen( $exif->get( 'FNumber' ) ) )
+		$data['Blende']			= eval( 'return '.$exif->get( 'FNumber' ).';' );
+	if( strlen( $exif->get( 'ISOSpeedRatings' ) ) )
+		$data['Empfindlichkeit']	= 'ISO '.$exif->get( 'ISOSpeedRatings' );
+
+	$data['Auflösung']	= $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>';
+//	$data['Größe']		= $mps.' <acronym title="Megapixel">MP</acronym>';
+//	$data['Dimensionen']	= $exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).' Pixel';
+	$data['Dateigröße']	= Alg_UnitFormater::formatBytes( $exif->get( 'FileSize' ) );
+//	$data['Dateiname']	= $exif->get( 'FileName' );
+//	$data['Gallerie']	= implode( ' / ', array_slice( explode( '/', $source ), 0, -1 ) );
+	if( strlen( $exif->get( 'DateTimeOriginal' ) ) ){
+		$formatDate	= $config->get( 'module.gallery_compact.format.date' );
+		$formatTime	= $config->get( 'module.gallery_compact.format.time' );
+		$timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
+		$data['Datum/Zeit']	= date( $formatDate, $timestamp ).' <small><em>'.date( $formatTime, $timestamp ).'</em></small>';
+	}
 	foreach( $data as $label => $value )
 		$list[]	= '<dt>'.$label.'</dt><dd>'.$value.'</dd>';
 	$listExif	= '
