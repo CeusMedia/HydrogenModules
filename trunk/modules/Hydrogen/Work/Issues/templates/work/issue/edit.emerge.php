@@ -39,35 +39,35 @@ $(document).ready(function(){
 <fieldset>
 	<legend>Fehler bearbeiten</legend>
 	<form action="./work/issue/emerge/'.$issue->issueId.'" method="post">
-		<ul class="input">
-			<li class="column-left-25">
-				<label for="type">'.$words['edit']['labelType'].'</label><br/>
+		<div class="row-fluid">
+			<div class="span3">
+				<label for="type">'.$words['edit']['labelType'].'</label>
 				'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
-			</li>
+			</div>
 <!--			<li class="column-left-25">
-				<label for="severity">'.$words['edit']['labelSeverity'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'max' ).'
+				<label for="severity">'.$words['edit']['labelSeverity'].'</label>
+				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
 			</li>
--->			<li class="column-left-25">
-				<label for="priority">'.$words['edit']['labelPriority'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'max' ).'
-			</li>
-			<li class="column-left-25">
-				<label for="status">'.$words['edit']['labelStatus'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
-			</li>
-			<li class="column-left-25">
-				<label for="progress">'.$words['edit']['labelProgress'].': <span id="progress-view"></span></label><br/>
+-->			<div class="span3">
+				<label for="priority">'.$words['edit']['labelPriority'].'</label>
+				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+			</div>
+			<div class="span3">
+				<label for="status">'.$words['edit']['labelStatus'].'</label>
+				'.UI_HTML_Elements::Select( 'status', $optStatus, 'span12 -max' ).'
+			</div>
+			<div class="span3">
+				<label for="progress">'.$words['edit']['labelProgress'].': <span id="progress-view"></span></label>
 				'.UI_HTML_Elements::Input( 'progress', (int) $issue->progress, 's numeric' ).'
 				<div id="progress-slider" style="display: none; margin-top: 1em"></div>
-			</li>
-			<li class="column-clear">
-				<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'max CodeMirror', 'rows' => 8 ) ).'
-			</li>
-		</ul>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<label for="content">'.$words['edit']['labelContent'].'</label>
+			'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror', 'rows' => 8 ) ).'
+		</div>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'save', 'aktualisieren', 'button save' ).'
+			<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>
 		</div>
 </fieldset>
 ';
