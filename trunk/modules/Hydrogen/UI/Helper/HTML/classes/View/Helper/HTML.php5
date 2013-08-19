@@ -134,9 +134,13 @@ class HTML extends UI_HTML_Elements {
 	static public function DivID( $id, $content, $attributes = array() ){
 		return UI_HTML_Tag::create( 'div', $content, array( 'id' => $id ) );
 	}
-	
+
 	static public function DivClass( $class, $content = '', $attributes = array() ){
 		return UI_HTML_Tag::create( 'div', $content, array( 'class' => $class ) );
+	}
+
+	static public function SpanClass( $class, $content = '', $attributes = array() ){
+		return UI_HTML_Tag::create( 'span', $content, array( 'class' => $class ) );
 	}
 
 	static public function Buttons( $content ){
