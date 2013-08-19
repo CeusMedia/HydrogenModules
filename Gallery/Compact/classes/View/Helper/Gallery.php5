@@ -2,6 +2,8 @@
 class View_Helper_Gallery{
 
 	static public function calculateFraction( $fraction, $words = array() ){
+		if( !strlen( trim( $fraction ) ) )
+			return "";
 		if( !$words )
 			$words	= array( 's', 's' ); 
 		$value	= eval( 'return '.$fraction.';' );
@@ -31,7 +33,7 @@ class View_Helper_Gallery{
 	static public function renderGalleryLink( $env, $path, $dateMode = 0, $dateFormat = NULL ){
 		$config		= $env->getConfig();
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
-		
+
 		$folderName	= basename( $path );
 		$pathName	= $path == dirname( $path ) ? '' : dirname( $path ).'/';
 		$parts		= explode( " ", $folderName );
@@ -81,7 +83,7 @@ class View_Helper_Gallery{
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
 		$dateFormat	= $config->get( 'module.gallery_compact.format.date' );
 		$reverse	= $config->get( 'module.gallery_compact.latest.reverse' );
-		
+
 		$list		= array();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$index		= Folder_RecursiveLister::getFolderList( $path, $pattern );

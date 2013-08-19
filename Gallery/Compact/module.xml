@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Gallery &raquo;Compact&laquo;]]></title>
 	<description>Simple gallery with auto indexing in nested folders.</description>
-	<version>0.2</version>
+	<version>0.3</version>
 	<files>
 		<class>Controller/Gallery.php5</class>
 		<class>View/Gallery.php5</class>
