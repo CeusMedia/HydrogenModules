@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Indicator</title>
-	<description><![CDATA[CSS-Support for UI_HTML_Indicator.]]></description>
+	<description><![CDATA[CSS-Support for UI_HTML_Indicator.
+
+This module adds CSS definitions and JavaScript support for HTML blocks rendered by class <code>UI_HTML_Indicator</code> from library <code>cmClasses</code>.
+Since version 0.3 the style blends in with Bootstrap (by losing the shade).
+]]></description>
 	<category>User Interface</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
