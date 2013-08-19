@@ -4,7 +4,7 @@
 	<description><![CDATA[
 ]]></description>
 	<category>User Interface</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files>
 		<class>View/Helper/HTML.php5</class>
 	</files>
