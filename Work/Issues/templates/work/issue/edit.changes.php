@@ -6,7 +6,6 @@ if( !$issue->notes )
 //	die;
 $list	= array();
 foreach( $issue->notes as $note ){
-	
 	$noteChanges	= array();
 	foreach( $note->changes as $change ){
 		$labelType	= UI_HTML_Tag::create( 'dt', $words['changes'][$change->type] );
@@ -39,9 +38,9 @@ foreach( $issue->notes as $note ){
 			default:
 				$change	= 'unbekannt';
 		}
-		
+
 		$change	= UI_HTML_Tag::create( 'dd', $change );
-		$noteChanges[]	= $labelType.$change;	
+		$noteChanges[]	= $labelType.$change;
 	}
 //	$noteChanges	= UI_HTML_Tag::create( 'dl', join( $noteChanges ) );
 	$manager	= '-';
@@ -73,12 +72,12 @@ foreach( $issue->notes as $note ){
 </div>
 <div class="column-clear"></div>
 <hr/>';
-	
+
 	$item	= UI_HTML_Tag::create( 'li', $content, array( 'class' => 'issue-note' ) );
 	$list[]	= $item;
 }
-$list	= $list ? UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'list' ) ) : '';
-	
+$list	= $list ? UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => '-list unstyled' ) ) : '';
+
 return '
 <style>
 #issue-change-list-note {

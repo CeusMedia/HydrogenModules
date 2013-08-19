@@ -43,71 +43,69 @@ $words['severities']	= numerizeWords( array( '' => '- alle -' ) + $words['severi
 $words['priorities']	= numerizeWords( array( '' => '- alle -' ) + $words['priorities'], $numberPriorities );
 $words['states']		= numerizeWords( array( '' => '- alle -' ) + $words['states'], $numberStates );
 
-
-
 $optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
 $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
 $optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 
 $filters		= array();
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::Label( 'status', $words['indexFilter']['labelStatus'] ).HTML::BR.
-	HTML::Select( 'status[]', $optStatus, 'max rows-8', NULL, 'this.form.submit()' )
+
+$filters[]	= HTML::DivClass( 'row-fluid',
+	HTML::DivClass( 'span8',
+		HTML::Label( 'title', $words['indexFilter']['labelTitle'] ).
+		HTML::Input( 'title', $title, '-max span12' )
+	).
+	HTML::DivClass( 'span4',
+		HTML::Label( 'issueId', $words['indexFilter']['labelIssueId'] ).
+		HTML::Input( 'issueId', $issueId, '-max numeric span12' )
+	)
 );
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::Label( 'priority', $words['indexFilter']['labelPriority'] ).HTML::BR.
-	HTML::Select( 'priority[]', $optPriority, 'max rows-7', NULL, 'this.form.submit()' )
+$filters[]	= HTML::DivClass( 'row-fluid',
+	HTML::Label( 'status', $words['indexFilter']['labelStatus'] ).
+	HTML::Select( 'status[]', $optStatus, 'span12 -max rows-8', NULL, 'this.form.submit()' )
 );
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::Label( 'type', $words['indexFilter']['labelType'] ).HTML::BR.
-	HTML::Select( 'type[]', $optType, 'max rows-4', NULL, 'this.form.submit()' )
+$filters[]	= HTML::DivClass( 'row-fluid',
+	HTML::Label( 'priority', $words['indexFilter']['labelPriority'] ).
+	HTML::Select( 'priority[]', $optPriority, '-max span12 rows-7', NULL, 'this.form.submit()' )
+);
+$filters[]	= HTML::DivClass( 'row-fluid',
+	HTML::Label( 'type', $words['indexFilter']['labelType'] ).
+	HTML::Select( 'type[]', $optType, '-max span12 rows-4', NULL, 'this.form.submit()' )
 );
 if( !empty( $projects ) ){
 	$optProject	= array();
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
 	$optProject		= numerizeWords( array( '' => '- alle -' ) + $optProject, $numberProjects );
-	$optProject	= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
+	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
-	$filters[]	= HTML::LiClass( 'column-clear',
-		HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).HTML::BR.
-		HTML::Select( 'projectId[]', $optProject, 'max rows-4', NULL, 'this.form.submit()' )
+	$filters[]	= HTML::DivClass( 'row-fluid',
+		HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).
+		HTML::Select( 'projectId[]', $optProject, '-max span12 rows-4', NULL, 'this.form.submit()' )
 	);
 }
-	
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::Label( 'order', $words['indexFilter']['labelOrder'] ).HTML::BR.
-	HTML::Select( 'order', $optOrder, 'max rows-1', NULL, 'this.form.submit()' )
-);
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::Label( 'direction', $words['indexFilter']['labelDirection'] ).HTML::BR.
-	HTML::Select( 'direction', $optDirection, 'max rows-1', NULL, 'this.form.submit()' )
-);
-#$filters[]	= HTML::LiClass( 'column-clear','<hr/>' );
 
-$filters[]	= HTML::LiClass( 'column-clear',
-	HTML::DivClass( 'column-left-70',
-		HTML::Label( 'title', $words['indexFilter']['labelTitle'] ).HTML::BR.
-		HTML::Input( 'title', $title, 'max' )
+$filters[]	= HTML::DivClass( 'row-fluid',
+	HTML::DivClass( 'span7',
+		HTML::Label( 'order', $words['indexFilter']['labelOrder'] ).
+		HTML::Select( 'order', $optOrder, '-max span12 rows-1', NULL, 'this.form.submit()' )
 	).
-	HTML::DivClass( 'column-left-25',
-		HTML::Label( 'issueId', $words['indexFilter']['labelIssueId'] ).HTML::BR.
-		HTML::Input( 'issueId', $issueId, 'max numeric' )
-	).HTML::DivClass( 'column-clear' )
+	HTML::DivClass( 'span5',
+		HTML::Label( 'direction', $words['indexFilter']['labelDirection'] ).
+		HTML::Select( 'direction', $optDirection, '-max span12 rows-1', NULL, 'this.form.submit()' )
+	)
 );
 
 return '
 <form id="form_filter-issue" name="filterIssues" action="./work/issue/filter" method="post">
 	<fieldset style="position: relative">
 		<legend class="filter">'.$words['indexFilter']['legend'].'</legend>
-		'.HTML::UlClass( 'input', $filters ).'
+		'.join( $filters ).'
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-			'.UI_HTML_Elements::LinkButton( './work/issue/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+			<button type="submit" class="btn btn-small btn-primary" name="filter"><i class="icon-search icon-white"></i> '.$words['indexFilter']['buttonFilter'].'</button>
+			<a href="./work/issue/filter/reset" class="btn btn-small btn-inverse"><i class="icon-zoom-out icon-white"></i> '.$words['indexFilter']['buttonReset'].'</a>
 		</div>
 	</fieldset>
 </form>
 ';
-
 ?>

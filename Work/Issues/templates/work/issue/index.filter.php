@@ -37,7 +37,7 @@ if( $mode == 1 ){
 	$optSeverity	= $this->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
 	$optPriority	= $this->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
 	$optStatus		= $this->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
-	
+
 	return '
 	<form id="form_filter-issue" name="filterIssues" action="./work/issue/filter" method="post">
 		<fieldset style="position: relative">
@@ -161,6 +161,5 @@ else
 		</fieldset>
 	</form>
 	';
-	
 }
 ?>

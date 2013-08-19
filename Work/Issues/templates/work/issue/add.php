@@ -62,37 +62,35 @@ $(document).ready(function(){
 <fieldset>
 	<legend class="icon add">Beschreibung</legend>
 	<form action="./work/issue/add" method="post">
-		<div class="column-left-25">
-			<label for="type">'.$words['add']['labelType'].'</label><br/>
-			'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+		<div class="row-fluid">
+			<div class="span3">
+				<label for="type">'.$words['add']['labelType'].'</label>
+				'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+			</div>
+			<div class="span3">
+				<label for="priority">'.$words['add']['labelPriority'].'</label>
+				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+			</div>
+<!--			<div class="column-left-25">
+				<label for="severity">'.$words['add']['labelSeverity'].'</label>
+				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
+			</div>-->
+			<div class="span3">
+				<label for="input_projectId">'.$words['add']['labelProject'].'</label>
+				'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+			</div>
 		</div>
-		<div class="column-left-25">
-			<label for="priority">'.$words['add']['labelPriority'].'</label><br/>
-			'.UI_HTML_Elements::Select( 'priority', $optPriority, 'max' ).'
+		<div class="row-fluid">
+			<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label>
+			<input type="text" name="title" id="input_title" class="span12 -max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
-<!--		<div class="column-left-25">
-			<label for="severity">'.$words['add']['labelSeverity'].'</label><br/>
-			'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'max' ).'
-		</div>-->
-		<div class="column-left-25">
-			<label for="input_projectId">'.$words['add']['labelProject'].'</label><br/>
-			'.UI_HTML_Elements::Select( 'projectId', $optProject, 'max' ).'
+		<div class="row-fluid">
+			<label for="content">'.$words['add']['labelContent'].'</label>
+			'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
 		</div>
-		<div class="column-clear"></div>
-		<br/>
-		<ul class="input">
-			<li>
-				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
-				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
-			</li>
-			<li>
-				<label for="content">'.$words['add']['labelContent'].'</label><br/>
-				'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'max' ) ).'
-			</li>
-		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/issue', $words['add']['buttonCancel'], 'button cancel' ).' |
-			'.UI_HTML_Elements::Button( 'save', $words['add']['buttonSave'], 'button save' ).'
+			<a class="btn btn-small btn" href="./work/issue"><i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'].'</a>
+			<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$words['add']['buttonSave'].'</button>
 		</div>
 	</form>
 </fieldset>

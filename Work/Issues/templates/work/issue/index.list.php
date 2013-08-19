@@ -2,7 +2,6 @@
 
 $rows	= array();
 foreach( $issues as $issue ){
-	
 	$reporter	= '';
 	$manager	= '';
 	if( $issue->reporterId ){
@@ -39,12 +38,12 @@ $pagination	= $pagination->render( './work/issue', $number, 10, $page );
 return '
 <fieldset id="issue-list">
 	<legend>Einträge ('.$number.' von '.$total.')</legend>
-	<table>
+	<table class="table table-condensed">
 		<colgroup>
-			<col width="53%"/>
+			<col width="47%"/>
 			<col width="10%"/>
 			<col width="12%"/>
-			<col width="12%"/>
+			<col width="18%"/>
 			<col width="13%"/>
 		</colgroup>
 		<tr>
@@ -58,7 +57,7 @@ return '
 	</table>
 	'.$pagination.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/issue/add', 'neuer Eintrag', 'button add' ).'
+		<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> neuer Eintrag</a>
 	</div>
 </fieldset>
 ';

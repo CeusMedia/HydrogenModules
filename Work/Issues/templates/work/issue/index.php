@@ -7,7 +7,7 @@ $list	= require_once 'templates/work/issue/index.'.$list.'.php';
 
 if( $layout == "control" ){
 	$filter	= require 'templates/work/issue/index.filter.control.php';
-	$layout	= HTML::DivClass( 'column-left-20', $filter ).HTML::DivClass( 'column-right-80', $list );
+	$layout	= '<div class="row-fluid"><div class="span3">'.$filter.'</div><div class="span9">'.$list.'</div></div>';
 }
 else{
 	$filter	= require_once 'templates/work/issue/index.filter.php';
