@@ -58,11 +58,12 @@ class Model_Instance{
 		$list		= array();
 		$sections	= $this->file->getSections();
 		foreach( $sections as $section ){
-			$data	= array( 'id' => $section );
+			$data	= (object) array( 'id' => $section );
 			foreach( $this->file->getProperties( NULL, $section ) as $key => $value )
-				$data[$key]	= $value;
-			$data['path']	= empty( $data['path'] ) ? '' : $data['path'];
-			$list[$section]	= (object) $data;
+				$data->$key	= $value;
+			$data->path		= empty( $data->path ) ? '' : $data->path;
+			$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
+			$list[$section]		= $data;
 		}
 		return $list;
 	}

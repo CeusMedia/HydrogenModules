@@ -287,10 +287,10 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		else
 			$this->messenger->noteSuccess( $words->successRefreshNoChanges, $sourceLabel );
 		
-		$this->restart( './admin/module/source/edit/'.$sourceId );
-		if( $toList )
-			$this->restart( './admin/module/source' );
-		$this->restart( './admin/module/source/edit/'.$sourceId );
+		$redirectTo	= 'admin/module/source/edit/'.$sourceId;										//  afterwards go into source details
+		if( $this->env->getRequest()->get( 'from' ) )												//  or redirect URL given via parameter "from"
+			$redirectTo	= $this->env->getRequest()->get( 'from' );									//  take redirect URL from parameter
+		$this->restart( './'.$redirectTo );															//  restart / redirect
 	}
 	
 	public function remove( $sourceId ){
