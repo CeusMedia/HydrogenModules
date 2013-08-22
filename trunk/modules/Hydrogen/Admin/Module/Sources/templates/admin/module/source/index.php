@@ -8,7 +8,7 @@ $rows	= array();
 foreach( $sources as $source ){
 	$state	= $source->active == "yes" ? $iconEnabled : $iconDisabled;
 	if( $source->active == "yes" ){
-		$urlRefresh	= './admin/module/source/refresh/'.$source->id;
+		$urlRefresh	= './admin/module/source/refresh/'.$source->id."?from=admin/module/source";
 		$state .= '&nbsp;'.UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
 	}
 	$label	= $source->title;
