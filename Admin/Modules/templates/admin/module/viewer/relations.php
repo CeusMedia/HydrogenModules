@@ -105,7 +105,7 @@ return '
 <div class="column-left-50">
 	<dl>
 		<dt>'.$w->relationsSupportedBy.'</dt>
-		<dd>'.$panelGraphSupportedBy.'</dd>
+		<dd>'.$relationsSupportedBy.'</dd>
 	</dl>
 </div>
 <div class="column-clear"></div>

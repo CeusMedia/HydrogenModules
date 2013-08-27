@@ -9,6 +9,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 #		print_m( $this->envApp );
 #		die;
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
+		if( !$this->env->getSession()->get( 'instanceId' ) ){
+			$words	= $this->getWords( 'msg' );
+			$this->messenger->noteError( $words['noInstanceSelected'] );
+			$this->restart( NULL );
+		}
 	}
 
 	public function filter(){
