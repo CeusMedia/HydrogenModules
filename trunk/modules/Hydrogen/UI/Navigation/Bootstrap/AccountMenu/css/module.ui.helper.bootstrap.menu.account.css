@@ -1,0 +1,65 @@
+#account-menu {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	z-index: 1101;
+	padding-left: 5px;
+	padding-right: 5px;
+/*	border: 1px solid red;*/
+	height: 41px;
+/*	background-color: #FFF;*/
+	cursor: pointer;
+	}
+body.navbar-fixed #account-menu {
+	position: fixed;
+	}
+#account-menu:hover {
+	background-color: #DDD;
+	}
+#account-menu .dropdown-menu {
+	width: 200px;
+	}
+#account-menu .dropdown-toggle {
+	}
+#account-menu .avatar {
+	float: left;
+	width: 32px;
+	height: 32px;
+	margin: 3px;
+	border: 1px solid gray;
+	-box-shadow: 1px 1px 4px gray;
+	}
+#account-menu .labels {
+	float: left;
+	width: 150px;
+	margin-left: 5px;
+	overflow: hidden;
+	line-height: 1.1em;
+	}
+#account-menu .labels div {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	}
+#account-menu .labels div.username {
+	padding-top: 0.4em;
+	font-size: 1.1em;
+/*	font-weight: bold;
+*/	}
+#account-menu .labels div.email {
+	font-size: 0.8em;
+	color: #999
+	}
+
+#account-menu.inverse {
+	color: #CCC;
+	}
+#account-menu.inverse:hover {
+	background-color: #333;
+	color: #FFF;
+	}
+#account-menu.inverse .avatar {
+	border: 1px solid white;
+	}
+#account-menu.inverse .labels div.username {
+	}

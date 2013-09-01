@@ -1,0 +1,31 @@
+/*  --  LOGO  --  */
+#logo {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 1100;
+	width: 160px;
+	height: 40px;
+	font-size: 1.4em;
+	line-height: 2em;
+	margin-left: 20px;
+	font-weight: lighter;
+	}
+.inverse #logo {
+	text-shadow: 1px 1px 2px gray;
+	color: #FFF;
+	}
+#logo i {
+	margin: 5px 5px 0px 0px;
+	}
+.navbar-inner>ul.nav {
+	padding-left: 160px;
+	}
+
+/*  --  FIXED NAVBAR  --  */
+body.navbar-fixed #logo {
+	position: fixed;
+	}
+body.navbar-fixed #layout-field {
+	margin-top: 43px;
+	}
