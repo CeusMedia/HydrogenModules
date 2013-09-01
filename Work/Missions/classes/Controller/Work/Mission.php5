@@ -243,6 +243,14 @@ die;
 			$this->addData( 'userProjects', $this->userProjects );
 	}
 
+	public function ajaxSaveContent( $missionId ){
+		$data		= array(
+			'content'	=> $this->env->getRequest()->get( 'content' ),
+		);
+		$this->model->edit( $missionId, $data, FALSE );
+		exit;
+	}
+
 	public function ajaxSelectDay( $day ){
 		$this->env->getSession()->set( 'filter.work.mission.day', (int) $day );
 		print( json_encode( (int) $day ) );

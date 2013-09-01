@@ -3,21 +3,11 @@
 //new View_Helper_MissionFilter( $this->env );
 class_exists( 'View_Helper_Work_Mission_Filter' );
 
-$toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
-$toolbar->addButtonGroup( 'tb_0', 'view-tense', array(
-	'<button type="button" id="work-mission-view-tense-0" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
-	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
-	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
-) );
+$badge		= '<span class="badge badge-success">'.count( $missions ).'</span>';
 
-$script			= array();
-if( $filterTense == 1 ){
-	$toolbar->addButtonGroup( 'tb_0', 'view-type', array(
-		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
-		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
-	) );
-}
-$toolbar->addButtonGroup( 'tb_1', 'add', array(
+$toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
+
+$toolbar->addButtonGroup( 'tb_0', 'add', array(
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
@@ -27,6 +17,21 @@ $toolbar->addButtonGroup( 'tb_1', 'add', array(
 //		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
 ) );
 
+if( $filterTense == 1 ){
+	$toolbar->addButtonGroup( 'tb_1', 'view-type', array(
+		'<button type="button" disabled="disabled" class="btn">'.$badge.'</button>',
+		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
+		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
+	) );
+}
+
+$toolbar->addButtonGroup( 'tb_1', 'view-tense', array(
+	'<button type="button" id="work-mission-view-tense-0" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
+	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
+	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
+) );
+
+//$script			= array();
 
 //  --  FILTER BUTTONS  --  //
 /*  -- mission types  --  */
@@ -89,12 +94,13 @@ $buttonSearch	= UI_HTML_Tag::create( 'button', $label, array(
 	'class'		=> 'btn '.( $filterQuery ? 'btn-info' : '' ),
 	'id'		=> 'button_filter_search'
 ) );
-$label				= '<i class="icon-remove '.( $changedFilters ? 'icon-white' : '' ).'"></i> alles';
+$label				= '<i class="icon-remove-circle '.( $changedFilters ? 'icon-white' : '' ).'"></i>';
 $buttonSearchReset	= UI_HTML_Tag::create( 'button', $label, array(
 	'type'		=> "button",
 	'disabled'	=> $changedFilters ? NULL : "disabled",
 	'class'		=> 'btn '.( $changedFilters ? 'btn-inverse' : "" ),
-	'id'		=> 'button_filter_reset',					//  remove query only: 'button_filter_search_reset'
+	'id'		=> 'button_filter_reset',					//  remove query only: 'button_filter_search_reset',
+	'title'		=> 'alle Filter zurücksetzen',
 ) );
 
 $search		= $inputSearch.$buttonSearch.$buttonSearchReset;
