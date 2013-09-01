@@ -200,14 +200,14 @@ $panelEdit	= '
 			<div class="span2 -column-left-10 optional type type-0">
 				<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
 				<div class="input-append">
-					<input type="text" name="hoursProjected" id="input_hoursProjected" class="span8 numeric" value="'.$mission->hoursProjected.'"/>
+					<input type="text" name="hoursProjected" id="input_hoursProjected" class="span3 numeric" value="'.$mission->hoursProjected.'"/>
 					<span class="add-on">h</span>
 				</div>
 			</div>
 			<div class="span2 -column-left-10 optional type type-0">
 				<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label>
 				<div class="input-append">
-					<input type="text" name="hoursRequired" id="input_hoursRequired" class="span8 numeric" value="'.$mission->hoursRequired.'"/>
+					<input type="text" name="hoursRequired" id="input_hoursRequired" class="span3 numeric" value="'.$mission->hoursRequired.'"/>
 					<span class="add-on">h</span>
 				</div>
 			</div>
@@ -222,20 +222,43 @@ $panelEdit	= '
 				<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 		</div>
-		<div class="row-fluid">
-			<div class="span12">
-				<label for="input_content">'.$w->labelContent.'</label>
-				<textarea id="input_content" name="content" class="span12 -max cmGrowText cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-			</div>
-		</div>
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
 			'.UI_HTML_Elements::Button( 'edit', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
 <!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'-->
 		</div>
-	</fieldset>	
+	</fieldset>
 </form>
+<form>
+<!--	<fieldset>
+		<legend>Beschreibung / Mitschrift</legend>
+		<div class="row-fluid">
+			<div class="span12">
+-->				<div class="tabbable">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tab1" data-toggle="tab">Ansicht</a></li>
+						<li><a href="#tab2" data-toggle="tab">Editor</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab1">
+							<div id="content-editor">
+								<div id="descriptionAsMarkdown"></div>
+							</div>
+						</div>
+						<div class="tab-pane" id="tab2">
+							<div id="mirror-container">
+<!--							<label for="input_content">'.$w->labelContent.'</label>-->
+							<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+<!--			</div>
+		</div>
+	</fieldset>
+--></form>
+
 ';
 
 //  --  STATES  --  //
@@ -263,43 +286,66 @@ foreach( $priorities as $priority => $label )
 $priorities	= join( $priorities );
 
 return '
-<script src="http://cdn.int1a.net/js/CodeMirror/3.02/lib/codemirror.js"></script>
-<link rel="stylesheet" href="http://cdn.int1a.net/js/CodeMirror/3.02/lib/codemirror.css"/>
-<link rel="stylesheet" href="http://cdn.int1a.net/js/CodeMirror/3.02/theme/elegant.css"/>
+<style>
+.tabbable .nav{
+	margin-bottom: 1px;
+}
+</style>
 <script src="javascripts/Markdown.Converter.js"></script>
+<script src="javascripts/bindWithDelay.js"></script>
 <script>
-function markdownDescription(){
+var missionId = '.$mission->missionId.';
+$("body").addClass("uses-bootstrap");
+$(document).ready(function(){
 	var textarea = $("#input_content");
-	if(!textarea.next("#descriptionAsMarkdown").size())
-		$("<div></div>").attr("id", "descriptionAsMarkdown").insertAfter(textarea);
+	var mirror = CodeMirror.fromTextArea(textarea.get(0), {
+		lineNumbers: true,
+		theme: "neat",
+		theme: "elegant",
+		mode: "markdown",
+//		viewportMarin: "Infinity",
+		fixedGutter: true,
+    });
+ 	textarea.bindWithDelay("keyup", function(){
+//		console.log("save");
+		$.ajax({
+			url: "./work/mission/ajaxSaveContent/"+missionId,
+			data: {content: textarea.val()},
+			type: "post",
+			success: function(){
+				$(".CodeMirror").removeClass("changed");
+			}
+		});
+//		$(this).data("queue")
+//		$(this).data("queue", window.setTimeout(function(){
+//		}));
+	}, 1000);
+	mirror.on("change", function(instance, update){
+		instance.save();
+		markdown.html(converter.makeHtml(textarea.hide().val()));
+		$(".CodeMirror").addClass("changed").trigger("keyup");
+		$(instance.getTextArea()).trigger("keyup");
+	});
+	$(window).bind("resize", function(){
+		$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
+	}).trigger("resize");
+
 	var markdown = $("#descriptionAsMarkdown");
 	var converter = new Markdown.Converter();
-	var html = converter.makeHtml(textarea.hide().val());
-	$(".CodeMirror").hide();
-	markdown.html(html).show().bind("click", function(){
-		$("#descriptionAsMarkdown").hide();
-		$(".CodeMirror").show();
-		var mirror = $("#input_content").data("mirror");
-		mirror.focus();
-		mirror.on("blur", markdownDescription);
-//		$("#input_content").data("mirror").setValue();
+	markdown.html(converter.makeHtml(textarea.hide().val()));
+
+	$(".tabbable .nav-tabs li a").bind("shown", function(event){
+		mirror.refresh();
 	});
-}
 
-$(document).ready(function(){
-	$("#input_content").data("mirror", CodeMirror.fromTextArea($("#input_content").get(0), {
-		theme: "elegant",
-	}));
-//	markdownDescription();
-
-	$("input, select, textarea").each(function(){
+/*	$("input, select, textarea").each(function(){
 		$(this).data("value-original", $(this).val());
 	}).bind("change keyup", function(){
 		var input = $(this);
 		input.removeClass("changed");
 		if(input.val() != input.data("value-original"))
 			input.addClass("changed");
-	});
+	});*/
 });
 </script>
 <style>
@@ -314,11 +360,8 @@ textarea.changed {
 	border-radius: 4px;
 	z-index: 0;
 	}
-.CodeMirror,
 #descriptionAsMarkdown {
-	height: auto;
-	min-height: 200px;
-	font-size: 9pt;
+	padding: 0.5em 1em;
 	}
 #descriptionAsMarkdown h1,
 #descriptionAsMarkdown h2,
@@ -326,7 +369,6 @@ textarea.changed {
 #descriptionAsMarkdown h4,
 #descriptionAsMarkdown h5 {
 	line-height: 1.5em;
-	margin: 10px 0px 0px 5px;
 	padding: 0px;
 	}
 #descriptionAsMarkdown h1 {
@@ -343,6 +385,9 @@ textarea.changed {
 	}
 #descriptionAsMarkdown h5 {
 	font-size: 1.1em;
+	}
+#descriptionAsMarkdown del {
+	color: #777;
 	}
 </style>
 <div class="column-left-75">
