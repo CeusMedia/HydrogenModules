@@ -15,9 +15,19 @@
 	text-shadow: 1px 1px 2px gray;
 	color: #FFF;
 	}
+
 #logo i {
 	margin: 5px 5px 0px 0px;
 	}
+
+#logo a {
+	color: black !important;
+	text-decoration: none;
+	}
+.inverse #logo a {
+	color: white !important;
+	}
+
 .navbar-inner>ul.nav {
 	padding-left: 160px;
 	}
