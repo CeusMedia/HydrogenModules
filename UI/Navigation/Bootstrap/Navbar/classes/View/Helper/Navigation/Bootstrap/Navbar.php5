@@ -3,9 +3,11 @@ class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $inverse				= FALSE;
 	protected $logoTitle;
+	protected $logoLink;
 	protected $logoIcon;
 	protected $position				= "static";
 	protected $helperAccountMenu;
+	protected $linksToSkip			= array();
 
 	public function render(){
 		$this->env->getPage()->addBodyClass( "navbar-".$this->position );
@@ -15,6 +17,8 @@ class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 		$helperNavbar->classHelper		= "nav";
 		$helperNavbar->classTab			= "";
 		$helperNavbar->classTabActive	= "active";
+		foreach( $this->linksToSkip as $path )
+			$helperNavbar->skipLink( $path );
 
 		if( $this->inverse )
 			$helperNavbar->classContainer	.= " navbar-inverse";
@@ -34,8 +38,15 @@ class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public function renderLogo(){
 		if( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ){
-			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-			return '<div id="logo"><i class="'.$icon.'"></i> '.$this->logoTitle.'</div>';
+			$icon	= "";
+			if( $this->logoIcon ){
+				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
+				$icon	= '<i class="'.$icon.'"></i> ';
+			}
+			$label	= $icon.$this->logoTitle;
+			if( $this->logoLink )
+				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $this->logoLink ) );
+			return '<div id="logo">'.$label.'</div>';
 		}
 		return '';
 	}
@@ -48,8 +59,13 @@ class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->inverse	= (boolean) $boolean;
 	}
 
-	public function setLogo( $title, $icon = NULL ){
+	public function setLinksToSkip( $links ){
+		$this->linksToSkip	= $links;
+	}
+
+	public function setLogo( $title, $url = NULL, $icon = NULL ){
 		$this->logoTitle	= $title;
+		$this->logoLink		= $url;
 		$this->logoIcon		= $icon;
 	}
 
