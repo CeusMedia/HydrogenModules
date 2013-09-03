@@ -63,3 +63,10 @@ body.navbar-fixed #account-menu {
 	}
 #account-menu.inverse .labels div.username {
 	}
+
+@media screen and (max-width: 900px) {
+	#account-menu .labels {
+		display: none;
+	}
+}
+
