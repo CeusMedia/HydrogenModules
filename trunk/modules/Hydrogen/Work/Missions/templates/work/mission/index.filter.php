@@ -5,6 +5,18 @@ class_exists( 'View_Helper_Work_Mission_Filter' );
 
 $badge		= '<span class="badge badge-success">'.count( $missions ).'</span>';
 
+
+if( 0 && $userId == 2 ){
+	$priorities	= array_fill( 0, 5, 0 );
+	foreach( $missions as $mission ){
+		$priorities[$mission->priority]++;
+#		print_m( $mission );
+	}
+	print_m( $priorities );
+	die;
+}
+
+
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 
 $toolbar->addButtonGroup( 'tb_0', 'add', array(

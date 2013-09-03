@@ -517,30 +517,36 @@ ul li label span.empty {
 	}
 
 
-div.navbar {
+#layout-content div.navbar {
 	margin-bottom: 5px;
 	}
-div.navbar div.navbar-inner {
+#layout-content div.navbar div.navbar-inner {
 	padding: 0px;
 	}
-div.navbar ul.nav li a {
+#layout-content div.navbar ul.nav li a {
 /*	font-weight: bold;
 */	text-align: center;
 /*	border-left: 1px solid rgba(255,255,255,.75);
 */	border-right: 1px solid rgba(0,0,0,.1);
 	}
-div.navbar ul.nav {
+#layout-content div.navbar ul.nav {
 	margin: 0;
 	display: table;
 	width: 100%;
 	}
 
-div.navbar ul.nav li {
+#layout-content div.navbar ul.nav li {
 	display: table-cell;
 	width: 1%;
 	float: none;
 	}
 
+/*  --  BOOTSTRAP FIX  --  */
+.navbar-fixed-top .navbar-inner,
+.navbar-fixed-bottom .navbar-inner{padding:0px}
+@media (max-width: 979px){
+	.navbar-fixed-top, .navbar-fixed-bottom {position: fixed;}
+}
 
 	
 /*  --  MAIL  --  */
