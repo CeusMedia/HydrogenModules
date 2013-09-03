@@ -15,7 +15,7 @@ class Logic_Mission{
 			return array();																			//  return empty map
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
-			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2, 3, 4 ) ) : array();	//  ...
+			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
 			return $modelProject->getUserProjects( $userId, $conditions );							//  return user projects
 		}
 		$userProjects	= array();																	//  otherwise create empty project map

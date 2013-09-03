@@ -249,7 +249,10 @@ $panelEdit	= '
 						<div class="tab-pane" id="tab2">
 							<div id="mirror-container">
 <!--							<label for="input_content">'.$w->labelContent.'</label>-->
-							<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+								<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+								<p>
+									<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+								</p>
 							</div>
 						</div>
 					</div>

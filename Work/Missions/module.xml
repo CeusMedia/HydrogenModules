@@ -43,6 +43,7 @@ php job.php5 work-mission-mail-daily
 	<relations>
 		<needs type="module">Auth</needs>
 		<needs type="module">UI_Indicator</needs>
+		<needs type="module">JS_CodeMirror</needs>
 		<supports type="module">Resource_Jobs</supports>
 		<supports type="module">Manage_Projects</supports>
 	</relations>
