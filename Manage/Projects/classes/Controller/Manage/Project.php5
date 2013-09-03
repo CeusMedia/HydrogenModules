@@ -165,8 +165,11 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
 		$orders	= array();
-		if( $filterOrder && $filterDirection )
-			$orders[$filterOrder]	= $filterDirection;
+		if( !( $filterOrder && $filterDirection ) ){
+			$filterOrder		= "title";
+			$filterDirection	= "ASC";
+		}
+		$orders[$filterOrder]	= $filterDirection;
 
 		$projects	= array();
 		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
