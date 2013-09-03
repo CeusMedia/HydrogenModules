@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Bootstrap_AccountMenu{
+class View_Helper_Navigation_Bootstrap_AccountMenu{
 
 	protected $gravatar;
 	protected $user;
@@ -32,7 +32,7 @@ class View_Helper_Bootstrap_AccountMenu{
 	public function addOutsideLinkLine(){
 		$this->linksOutside[]	= 'line';
 	}
-	
+
 	public function render( $classMenu = "" ){
 		if( $this->user ){
 			$links		= $this->renderLinks( $this->linksInside );
