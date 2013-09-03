@@ -145,7 +145,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
-		
+
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
@@ -160,9 +160,9 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 			if( $needsEmail && empty( $email ) )
 				$messenger->noteError( $words->msgNoEmail );
 			else if( !empty( $email ) )
-				if( $modelUser->getByIndex( 'email', $email, 'userId' ) != $userId )
+				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!='.$userId ) ) )
 					$messenger->noteError( $words->msgEmailExisting, $email );
-			
+
 			if( $needsFirstname && empty( $data['firstname'] ) )
 				$messenger->noteError( $words->msgNoFirstname );
 			if( $needsSurname && empty( $data['surname'] ) )
