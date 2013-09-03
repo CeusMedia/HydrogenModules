@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
+class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $inverse				= FALSE;
 	protected $logoTitle;
@@ -51,7 +51,7 @@ class View_Helper_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 		return '';
 	}
 
-	public function setAccountMenuHelper( View_Helper_Bootstrap_AccountMenu $helper ){
+	public function setAccountMenuHelper( View_Helper_Navigation_Bootstrap_AccountMenu $helper ){
 		$this->helperAccountMenu	= $helper;
 	}
 
