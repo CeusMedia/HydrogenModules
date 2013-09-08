@@ -1,0 +1,11 @@
+
+app.name					= "My JSON Server"
+app.version					= "0.2"
+app.base.url				= "http://localhost/server/"
+app.email.developer			= ""
+
+path.themes					= "inc/"
+path.scripts				= "inc/js/"
+path.templates				= "inc/tmpl/"
+path.lib.js					= "http://cdn.int1a.net/js/"
+path.lib.css				= "http://cdn.int1a.net/css/"
