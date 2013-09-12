@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Shop</title>
+	<description><![CDATA[...]]></description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Shop.php5</class>
+		<class>Controller/Manage/Shop/Order.php5</class>
+		<class>Controller/Manage/Shop/Report.php5</class>
+		<class>Model/Shop/Order.php5</class>
+		<class>Model/Shop/Order/Position.php5</class>
+		<class>Model/Shop/Shipping/Country.php5</class>
+		<class>Model/Shop/Shipping/Grade.php5</class>
+		<class>Model/Shop/Shipping/Option.php5</class>
+		<class>Model/Shop/Shipping/Price.php5</class>
+		<class>Model/Shop/Shipping/Zone.php5</class>
+		<class>View/Manage/Shop.php5</class>
+		<class>View/Manage/Shop/Order.php5</class>
+		<class>View/Manage/Shop/Report.php5</class>
+		<locale>de/manage/shop.ini</locale>
+		<locale>de/manage/shop/order.ini</locale>
+		<template>manage/shop/index.php</template>
+		<template>manage/shop/order/edit.php</template>
+		<template>manage/shop/order/filter.php</template>
+		<template>manage/shop/order/index.php</template>
+		<template>manage/shop/report/index.php</template>
+	</files>
+	<relations/>
+	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
+	<link xml:lang="en" path="manage/shop/report">Statistik</link>
+</module>
