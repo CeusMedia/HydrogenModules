@@ -394,7 +394,7 @@ die;
 					'type'				=> (int) $request->get( 'type' ),
 					'priority'			=> (int) $request->get( 'priority' ),
 					'title'				=> $title,
-					'content'			=> $request->get( 'content' ),
+//					'content'			=> $request->get( 'content' ),
 					'status'			=> (int) $request->get( 'status' ),
 					'dayStart'			=> $dayStart,
 					'dayEnd'			=> $dayEnd,
