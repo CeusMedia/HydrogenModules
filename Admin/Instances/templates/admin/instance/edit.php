@@ -78,6 +78,7 @@ $panelInfo		= $this->loadContentFile( 'html/admin/instance/edit.info.html' );
 
 $panelCheck		= $this->loadTemplateFile( 'admin/instance/edit.check.php' );
 $panelDatabase	= $this->loadTemplateFile( 'admin/instance/edit.database.php' );
+$panelConfig	= $this->loadTemplateFile( 'admin/instance/edit.config.php' );
 
 return '
 <script>
@@ -96,6 +97,7 @@ $(document).ready(function(){
 <div class="column-left-60">
 	'.$panelEdit.'
 	'.$panelCheck.'
+	'.$panelConfig.'
 	'./*$panelDatabase.*/'
 </div>
 <div class="column-left-40">
