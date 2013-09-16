@@ -36,6 +36,7 @@
 		<template>manage/catalog/article/edit.details.php</template>
 		<template>manage/catalog/article/edit.documents.php</template>
 		<template>manage/catalog/article/edit.tags.php</template>
+		<template>manage/catalog/article/filter.php</template>
 		<template>manage/catalog/article/index.php</template>
 		<template>manage/catalog/author/add.php</template>
 		<template>manage/catalog/author/edit.php</template>
@@ -43,6 +44,7 @@
 		<template>manage/catalog/category/add.php</template>
 		<template>manage/catalog/category/edit.php</template>
 		<template>manage/catalog/category/index.php</template>
+		<template>manage/catalog/index.php</template>
 		<script source="lib" load="auto">jquery/cmExpr/containsIgnoreCase/0.2.js</script>
 		<script load="auto">module.manage.catalog.js</script>
 		<style load="auto">module.manage.catalog.css</style>
