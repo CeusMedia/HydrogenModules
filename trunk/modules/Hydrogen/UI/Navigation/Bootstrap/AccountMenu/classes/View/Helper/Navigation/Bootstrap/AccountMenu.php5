@@ -91,7 +91,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 			}
 		}
 		$attributes	= array(
-			'class'				=> "dropdown-menu",
+			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
 		);
