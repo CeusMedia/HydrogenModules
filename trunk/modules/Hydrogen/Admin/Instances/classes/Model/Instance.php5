@@ -39,7 +39,7 @@ class Model_Instance{
 						$this->file->removeProperty( $key, $id );
 				}
 				else if( strlen( trim( $value ) ) )
-					$this->file->addProperty( $key, $value, $id );
+					$this->file->addProperty( $key, $value, NULL, TRUE, $id );
 				$changed	= TRUE;
 			}
 		}
