@@ -1,0 +1,81 @@
+
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked,
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked li {
+	list-style: none;
+	}
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked.main {
+	margin: 0px 1000px 0px -2000px;
+	}
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked li {
+	font-weight: bold;
+	}
+
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked > li > a {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	margin-bottom: 0px;
+	padding-bottom: 5px;
+	}
+
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked {
+	margin-left: 1em;
+	}
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked  > li {
+	font-weight: normal;
+	}
+body.moduleManageCatalogCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	}
+
+body.moduleManageCatalogAuthor ul.nav-pills.nav-stacked,
+body.moduleManageCatalogAuthor ul.nav-pills.nav-stacked li {
+	list-style: none;
+	}
+body.moduleManageCatalogAuthor ul.nav-pills.nav-stacked.main {
+	margin: 0px 1000px 0px -2000px;
+	}
+body.moduleManageCatalogAuthor ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	}
+
+
+body.moduleManageCatalogArticle ul.nav-pills.nav-stacked,
+body.moduleManageCatalogArticle ul.nav-pills.nav-stacked li {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+body.moduleManageCatalogArticle ul.nav-pills.nav-stacked {
+	margin: 0px 1000px 0px -2000px;
+	overflow: scroll;
+	}
+body.moduleManageCatalogArticle ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	}
+
+	
+body.moduleManageCatalogAuthor #input_search,
+body.moduleManageCatalogCategory #input_search {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	margin-bottom: -1px;
+	width: 32%;
+	display: none;
+	}
+body.moduleManageCatalogAuthor #input_search + ul,
+body.moduleManageCatalogCategory #input_search + ul {
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+	}
+
+

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Catalog</title>
+	<description><![CDATA[]]></description>
+	<category>Manage</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Catalog.php5</class>
+		<class>Controller/Manage/Catalog/Article.php5</class>
+		<class>Controller/Manage/Catalog/Author.php5</class>
+		<class>Controller/Manage/Catalog/Category.php5</class>
+		<class>Model/Catalog/Article.php5</class>
+		<class>Model/Catalog/Author.php5</class>
+		<class>Model/Catalog/Category.php5</class>
+		<class>Model/Catalog/Article/Author.php5</class>
+		<class>Model/Catalog/Article/Category.php5</class>
+		<class>Model/Catalog/Article/Document.php5</class>
+		<class>Model/Catalog/Article/Tag.php5</class>
+		<class>Logic/Newsletter.php5</class>
+		<class>View/Manage/Catalog.php5</class>
+		<class>View/Manage/Catalog/Article.php5</class>
+		<class>View/Manage/Catalog/Author.php5</class>
+		<class>View/Manage/Catalog/Category.php5</class>
+		<locale>de/manage/catalog.ini</locale>
+		<locale>de/manage/catalog/article.ini</locale>
+		<locale>de/manage/catalog/author.ini</locale>
+		<locale>de/manage/catalog/category.ini</locale>
+		<template>manage/catalog/article/add.php</template>
+		<template>manage/catalog/article/edit.php</template>
+		<template>manage/catalog/article/edit.authors.php</template>
+		<template>manage/catalog/article/edit.categories.php</template>
+		<template>manage/catalog/article/edit.cover.php</template>
+		<template>manage/catalog/article/edit.details.php</template>
+		<template>manage/catalog/article/edit.documents.php</template>
+		<template>manage/catalog/article/edit.tags.php</template>
+		<template>manage/catalog/article/index.php</template>
+		<template>manage/catalog/author/add.php</template>
+		<template>manage/catalog/author/edit.php</template>
+		<template>manage/catalog/author/index.php</template>
+		<template>manage/catalog/category/add.php</template>
+		<template>manage/catalog/category/edit.php</template>
+		<template>manage/catalog/category/index.php</template>
+		<script source="lib" load="auto">jquery/cmExpr/containsIgnoreCase/0.2.js</script>
+		<script load="auto">module.manage.catalog.js</script>
+		<style load="auto">module.manage.catalog.css</style>
+	</files>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.maxSize" title="Maximum document file site in MB." value="1,2,4,8,16,32">4</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxHeight">240</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxWidth">180</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.image.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.maxHeight">120</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.maxWidth">90</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.image.thumb.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxHeight">240</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxWidth">180</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="author.image.extensions">gif,jpe,jpeg,jpg,png</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">UI_Bootstrap</needs>
+<!--		<needs type="module">Info_Catalog</needs>-->
+<!--		<supports type="module">Resource_Cache</supports>-->
+	</relations>
+</module>
