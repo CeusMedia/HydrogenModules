@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Markdown</title>
+	<description><![CDATA[Dynamic Markdown processor based on [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown] to create HTML in browser.
+
+This module uses parts of code based on pagedown - a [wiki:http://de.wikipedia.org/wiki/JavaScript|JavaScript] [wiki:http://de.wikipedia.org/wiki/Markdown|Markdown] implementation used by [link:http://stackoverflow.com/|Stack Overflow].	
+The Markdown converter **HAS NOT** been implemented, but extended and integrated by [link:http:/ceusmedia.de/|Ceus Media].	
+So, this is a modified version of parts of [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown].
+
+This module will be extended in future to support [link:https://code.google.com/p/pagedown/source/browse/Markdown.Editor.js|Markdown.Editor], which is already a feature of pagedown (prospected to be in version 0.4). 
+
+To apply do something like this:
+code:js>
+var markdownCode        = "MyMarkdownCode";
+var markdownConverter   = new Markdown.Converter();
+$("#myMarkdownContainer").html(markdownConverter.makeHtml(markdownCode));
+<code
+Of course you can bind events using jQuery on changing input contents like this:
+code:js>
+$("#myMarkdownInput").bind( "change", function(){
+	var markdown    = $(this).val();
+	var converter   = new Markdown.Converter();
+	$("#myMarkdownView").html(converter.makeHtml(markdown));
+});
+<code
+]]></description>
+	<category>JavaScript</category>
+	<version>0.2</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script source="local" load="auto">Markdown.Converter.js</script>
+	</files>
+</module>
