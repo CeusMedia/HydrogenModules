@@ -1088,7 +1088,6 @@ else
         function _DoInsAndDel(text) {
             text = text.replace(/([\W_]|^)(\+\+)(?=\S)([^\r]*?\S[\+_]*)\2([\W_]|$)/g,
             "$1<ins>$3</ins>$4");
-            return text;
 
             text = text.replace(/([\W_]|^)(--)(?=\S)([^\r]*?\S[-_]*)\2([\W_]|$)/g,
             "$1<del>$3</del>$4");
