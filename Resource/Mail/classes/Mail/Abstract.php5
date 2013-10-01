@@ -10,13 +10,15 @@ abstract class Mail_Abstract{
 	/**	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
 	protected $env;
 	/**	@var		Net_Mail							$mail			Mail objectm, build on construction */
-	protected $mail;
+	public/*protected*/ $mail;
 	/** @var		UI_HTML_PageFrame					$page			Empty page oject for HTML mails */
 	protected $page;
 	/** @var		Net_Mail_Transport_Abstract			$transport		Mail transport object, build on construction */
 	protected $transport;
 	/** @var		CMF_Hydrogen_View					$view			General view instance */
 	protected $view;
+
+	public $content;
 
 	/**
 	 *	Contructor.
@@ -38,11 +40,13 @@ abstract class Mail_Abstract{
 		switch( strtolower( $config->get( 'module.resource_mail.transport.type' ) ) ){
 			case 'smtp':
 				$hostname	= $config->get( 'module.resource_mail.transport.hostname' );
+				$port		= $config->get( 'module.resource_mail.transport.port' );
 				$username	= $config->get( 'module.resource_mail.transport.username' );
 				$password	= $config->get( 'module.resource_mail.transport.password' );
-				$this->transport	= new Net_Mail_Transport_SMTP( $hostname );
+				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
 				$this->transport->setAuthUsername( $username );
 				$this->transport->setAuthPassword( $password );
+				$this->transport->setVerbose( FALSE );
 				break;
 			case 'local':
 			case 'default':
@@ -53,7 +57,7 @@ abstract class Mail_Abstract{
 				throw new RuntimeException( 'No mail transport configured' );
 		}
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
-		$this->generate( $data ); 
+		$this->content	= $this->generate( $data );
 	}
 
 	/**
@@ -65,6 +69,7 @@ abstract class Mail_Abstract{
 	protected function addHtmlBody( $html ){
 		$base64	= base64_encode( $html );
 		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_HTML, 'base64' );
+		$body->wrapWords();
 		$this->mail->addBody( $body );
 	}
 
@@ -76,6 +81,7 @@ abstract class Mail_Abstract{
 	 */
 	protected function addTextBody( $text ){
 		$body	= new Net_Mail_Body( $text, Net_Mail_Body::TYPE_PLAIN, '8bit' );
+		$body->wrapWords();
 		$this->mail->addBody( $body );
 	}
 
@@ -113,11 +119,11 @@ abstract class Mail_Abstract{
 	}
 
 	/**
-	 *	Create mail body and sets subject and body on mail object. 
+	 *	Create mail body and sets subject and body on mail object.
 	 *	@abstract
 	 *	@access		protected
 	 *	@param		array		$data		Map of body template data
-	 *	@return		void
+	 *	@return		string		HTML or text rendered for mail
 	 *	@example
 	 *		$words			= $this->env->getLanguage()->getWords( 'auth', 'mails' );
 	 *		$data['config']	= $this->env->getConfig()->getAll();
@@ -155,7 +161,7 @@ abstract class Mail_Abstract{
 	 */
 	public function sendTo( $user ){
 		if( empty( $user->email ) )
-			RuntimeException( 'User object invalid: no email address' );
+			throw new RuntimeException( 'User object invalid: no email address' );
 		$this->sendToAddress( $user->email );
 	}
 
@@ -170,7 +176,7 @@ abstract class Mail_Abstract{
 	 */
 	protected function sendToAddress( $email ){
 		$this->mail->setReceiver( $email );
-		$this->transport->send( $this->mail );
+		$this->transport->send( $this->mail, TRUE );
 	}
 
 	/**

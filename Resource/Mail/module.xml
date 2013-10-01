@@ -14,7 +14,8 @@
 	</files>
 	<config protected="yes" type="string" name="sender.system" mandatory="yes"></config>
 	<config protected="yes" type="string" name="transport.type" mandatory="yes" values="SMTP,sendmail">sendmail</config>
-	<config protected="yes" type="string" name="transport.hostname" mandatory="transport.type:SMTP"></config>
+	<config protected="yes" type="string" name="transport.hostname" mandatory="transport.type:SMTP">localhost</config>
+	<config protected="yes" type="string" name="transport.port" mandatory="transport.type:SMTP">25</config>
 	<config protected="yes" type="string" name="transport.username" mandatory="transport.type:SMTP"></config>
 	<config protected="yes" type="string" name="transport.password" mandatory="transport.type:SMTP"></config>
 	<config protected="yes" type="string" name="subject.prefix"></config>
