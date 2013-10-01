@@ -63,23 +63,18 @@ li.filter-status.status-4,
 
 	
 	
-body.jobWorkMission tr.row-priority.priority-1,
 tr.row-priority.priority-1 td.cell-priority {
 	background-color: rgba(255, 31, 0, 0.5);
 	}
-body.jobWorkMission tr.row-priority.priority-2,
 tr.row-priority.priority-2 td.cell-priority {
 	background-color: rgba(255, 127, 0, 0.5);
 	}
-body.jobWorkMission tr.row-priority.priority-3,
 tr.row-priority.priority-3 td.cell-priority {
 	background-color: rgba(255, 255, 63, 0.5);
 	}
-body.jobWorkMission tr.row-priority.priority-4,
 tr.row-priority.priority-4 td.cell-priority {
 	background-color: rgba(127, 255, 0, 0.4);
 	}
-body.jobWorkMission tr.row-priority.priority-5,
 tr.row-priority.priority-5 td.cell-priority {
 	background-color: rgba(31, 240, 0, 0.6);
 	}
