@@ -4,12 +4,13 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$html		= $this->renderBody( $data );
-		$body		= wordwrap( base64_encode( $html ) );
-		$mailBody	= new Net_Mail_Body( base64_encode( $html ), Net_Mail_Body::TYPE_HTML );
+		$body		= chunk_split( base64_encode( $html ), 78 );
+		$mailBody	= new Net_Mail_Body( $body, Net_Mail_Body::TYPE_HTML );
 		$mailBody->setContentEncoding( 'base64' );
 		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
 		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
 		$this->mail->addBody( $mailBody );
+		return $html;
 	}
 
 	public function renderBody( $data ){

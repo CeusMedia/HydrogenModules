@@ -88,6 +88,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		//  --  GENERAL LOGIC CONDITIONS  --  //
 		$tense		= $session->get( 'filter.work.mission.tense' );
+		$tense		= 1;
 		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'][$tense];
 		switch( $tense ){
 			case 1:
@@ -175,7 +176,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$messenger->noteSuccess( 'Mail sent.' );
 			$this->restart( NULL, TRUE );
 		}
-		print( $mail->html );
+		print( $mail->content );
 		exit;
 
 		$helper	= new View_Helper_MissionMailDaily();
@@ -268,7 +269,7 @@ die;
 		$helper->setMissions( $missions );
 		$helper->setWords( $words );
 
-		$buttons	 =new View_Helper_Work_Mission_List_DayControls( $this->env );
+		$buttons	 = new View_Helper_Work_Mission_List_DayControls( $this->env );
 		$buttons->setWords( $words );
 		$buttons->setDayMissions( $helper->getDayMissions() );
 		$buttons	= $buttons->render();
