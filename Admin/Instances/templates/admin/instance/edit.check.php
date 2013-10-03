@@ -63,6 +63,42 @@ $icon	= UI_HTML_Tag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' 
 $buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createConfig/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Konfigurationdatei</td><td>'.$instance->configPath.$instance->configFile.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
+//  --  CHECK: MODULE PATH  --  //
+$status	= 0;
+$hint	= 'Der Konfigurationsordner muss vorher erstellt werden.';
+if( file_exists( $instance->uri.$instance->configPath ) ){
+	$status	= 1;
+	$hint	= 'Der Modulordner existiert nicht.';
+	if( file_exists( $instance->uri.$instance->configPath."modules/" ) ){
+		$status = 2;
+		$hint	= 'OK';
+	}
+}
+$icon	= UI_HTML_Tag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
+$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $instance->configPath."modules/" ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$list[]	= '<tr class="status-'.$status.'"><td>Modulordner</td><td>'.$instance->configPath.'modules/</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
+
+
+//  --  CHECK: CLASSES FOLDER  --  //
+$status	= 0;
+$hint	= 'Die Konfigurationsdatei muss vorher erstellt werden.';
+$path	= 'classes/';
+if( file_exists( $fileConfig ) ){
+	$config	= parse_ini_file( $fileConfig, FALSE );
+	$hint	= 'Der Klassenordner ist nicht konfiguriert.';
+	if( !empty( $config['path.classes'] ) )
+		$path	= $config['path.classes'];
+	$status	= 1;
+	$hint	= 'Der Klassenordner existiert nicht.';
+	if( file_exists( $instance->uri.$path ) ){
+		$status	= 2;
+		$hint	= 'OK';
+	}
+}
+$icon	= UI_HTML_Tag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
+$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $path ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$list[]	= '<tr class="status-'.$status.'"><td>Klassenordner</td><td>'.$path.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
+
 
 //  --  CHECK: TEMPLATE FOLDER  --  //
 $status	= 0;
