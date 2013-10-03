@@ -28,15 +28,15 @@ class Logic_Module_Creator extends Logic_Module{
 			$path	= "";
 			foreach( $folders as $folder ){
 				$path	.= ucfirst( $folder )."/";
-				@mkdir( $this->env->pathApp.'classes/Controller/'.$path );
-				@mkdir( $this->env->pathApp.'classes/View/'.$path );
-				@mkdir( $this->env->pathApp.'templates/'.strtolower( $path ) );
-				@mkdir( $this->env->pathApp.'locales/'.$language.strtolower( $path ) );
+				Folder_Editor::createFolder( $this->env->pathApp.'classes/Controller/'.$path, 0770 );
+				Folder_Editor::createFolder( $this->env->pathApp.'classes/View/'.$path, 0770 );
+				Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ), 0770 );
+				Folder_Editor::createFolder( $this->env->pathApp.'locales/'.$language.strtolower( $path ), 0770 );
 			}
 		}
-		@mkdir( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ) );
+		Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ), 0770 );
 		if( !file_exists( $this->env->pathApp.'classes/Logic' ) )
-			mkdir( $this->env->pathApp.'classes/Logic' );
+			Folder_Editor::createFolder( $this->env->pathApp.'classes/Logic', 0770 );
 		$classPath	= $path.$className;
 		$tmplFile	= strtolower( $classPath ).'/index.php';
 		$localFile	= strtolower( $path ).strtolower( $className ).'.ini';
