@@ -31,7 +31,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					$messenger->noteFailure( 'Unbekannter Fehler: '.$exception );
 				}
 				else if( $exception instanceof Exception ){
-					list( $s0, $s1 )	= (array) $exception->getSubject();
+					list( $s0, $s1 )	= (array) $exception->getResource();
 					switch( $exception->getCode() ){
 						case 20:
 							$messenger->noteError( $words->resourceMissing, $s0 );
