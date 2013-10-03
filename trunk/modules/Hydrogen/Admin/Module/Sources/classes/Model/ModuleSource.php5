@@ -8,8 +8,10 @@ class Model_ModuleSource{
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->fileName	= 'config/modules/sources.ini';
-		if( !file_exists( dirname( $this->fileName ) ) )
+
+		if( !file_exists( dirname( $this->fileName ) ) ){
 			Folder_Editor::createFolder( dirname( $this->fileName ), 0770 );
+		}
 		if( !file_exists( $this->fileName ) ){
 			touch( $this->fileName );
 			chmod( $this->fileName, 0770 );
