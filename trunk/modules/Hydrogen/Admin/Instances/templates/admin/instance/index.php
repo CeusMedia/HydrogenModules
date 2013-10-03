@@ -17,7 +17,7 @@ foreach( $instances as $instance ){
 	$titleStatus	= $uriExists ? "Checked and found on file system" : "NOT FOUND on file system (not installed or path invalid)";
 	$titleStatus	= $uriExists ? "Order auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
 	$indicators		= join( "", array(
-		'<div class="status-file status-box status-box-'.( $uriExists ? 'yes' : 'no' ).'" title="'.$titleStatus.'"></div>',
+		'<div class="status-file status-box status-box-'.( $uriExists ? 'half' : 'no' ).'" title="'.$titleStatus.'"></div>',
 		'<div class="status-http status-box" title="'.$labelsStatusHttp['unchecked'].'"></div>',
 	) );
 	$cells	= array(
@@ -28,7 +28,7 @@ foreach( $instances as $instance ){
 	);
 	$hasTodoTool	= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
 	$attributes		= array(
-		'class'				=> $uriExists ? 'success' : 'error',
+		'class'				=> $uriExists ? 'notice' : 'error',
 		'data-check'		=> $hasTodoTool,
 		'data-url'			=> $url,
 		'data-url-todos'	=> $url.'tools/Todos/',
@@ -88,7 +88,7 @@ div.status-box.status-file.status-box-no{
 </style>
 <script>
 function checkReachabilities(labels){
-	$("tr.success").each(function(){
+	$("tr.notice").each(function(){
 		if(!$(this).data("url"))
 			return;
 		$.ajax({
@@ -98,11 +98,12 @@ function checkReachabilities(labels){
 			success: function(){
 				var box = $(this).find("td.status-http div.status-http");
 				box.addClass("status-box-yes").attr("title", labels["online"]);
+				$(this).removeClass("notice").addClass("success");
 			},
 			error: function(){
 				var box = $(this).find("td.status-http div.status-http");
 				box.addClass("status-box-no").attr("title", labels["offline"]);
-				$(this).removeClass("success").addClass("error");
+				$(this).removeClass("notice").addClass("error");
 			}
 		});
 	});

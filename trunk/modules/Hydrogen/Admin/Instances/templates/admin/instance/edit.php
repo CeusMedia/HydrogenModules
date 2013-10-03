@@ -58,11 +58,11 @@ $panelEdit	= '
 				<input type="text" name="uri" id="input_uri" value="'.htmlentities( $instance->uri, ENT_QUOTES, 'UTF-8' ).'" class="max"/>
 			</li>
 			<li class="column-left-50">
-				<label for="input_configPath" class="">Konfigurationspfad</label><br/>
+				<label for="input_configPath" class="">Konfigurationspfad <small>(Standard: <code>config/</code>)</small></label><br/>
 				<input type="text" name="configPath" id="input_configPath" value="'.htmlentities( $instance->configPath, ENT_QUOTES, 'UTF-8' ).'" class="max"/>
 			</li>
 			<li class="column-right-50">
-				<label for="input_configFile" class="">Konfigurationsdatei</label><br/>
+				<label for="input_configFile" class="">Konfigurationsdatei <small>(Standard: <code>config.ini</code>)</small></label><br/>
 				<input type="text" name="configFile" id="input_configFile" value="'.htmlentities( $instance->configFile, ENT_QUOTES, 'UTF-8' ).'" class="max"/>
 			</li>
 		</ul>

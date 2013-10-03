@@ -3,7 +3,7 @@
 	<title>Instances</title>
 	<description><![CDATA[Application instance administration for remote access to other Hydrogen applications.]]></description>
 	<category>Administration</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<files>
 		<class>Controller/Admin/Instance.php5</class>
 		<class>Model/Instance.php5</class>
@@ -27,6 +27,8 @@
 	<config protected="no" type="string" name="lock.host"></config>
 	<config protected="yes" type="string" name="lock.path"></config>
 	<config protected="yes" type="string" name="lock.uri"></config>
+	<config protected="yes" type="string" name="config.locale.allowed">en</config>
+	<config protected="yes" type="string" name="config.locale.default">en</config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>

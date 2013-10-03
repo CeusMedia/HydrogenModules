@@ -74,6 +74,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	public function createConfig( $instanceId ){
 		$messenger	= $this->env->getMessenger();
+		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$instance	= $this->model->get( $instanceId );
 
 #		if( !preg_match( '/^\//', $instance->path ) )
@@ -87,6 +88,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 #		remark( 'Config file: '.$fileName );
 		$data		= array(
 			'app.name'			=> $instance->title,
+			'app.version'		=> '0.1a',
 			'path.logs'				=> 'logs/',
 			'path.templates'		=> 'templates/',
 			'path.locales'			=> 'locales/',
@@ -95,8 +97,8 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			'path.scripts.lib'		=> '',
 			'layout.primer'			=> '',
 			'layout.theme'			=> 'custom',
-			'locale.allowed'		=> 'en',
-			'locale.default'		=> 'en',
+			'locale.allowed'		=> $module->get( 'config.locale.allowed' ),
+			'locale.default'		=> $module->get( 'config.locale.default' ),
 		);
 
 		try{
