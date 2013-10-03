@@ -38,7 +38,6 @@ ModuleSourceAdmin = {
 	},
 	checkSources: function(){
 		$("table tr.source").each(function(){
-			console.log("1");
 			$.ajax({
 				url: "./admin/module/source/ajaxReadSource/"+$(this).data("id"),
 				dataType: "json",
@@ -59,7 +58,7 @@ ModuleSourceAdmin = {
 						console.log(data);
 						var label = "(-)";
 						if(data.error)
-							label = $("<acronym></acronym>").attr("title",data.error).html(label);
+							label = $("<acronym></acronym>").attr("title", data.error).html(label);
 						cell.append(label);
 						this.addClass("access-none");
 					}
