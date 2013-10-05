@@ -72,21 +72,21 @@ class Logic_Module {
 #		$this->messenger->noteNotice( $fileIn." -> ".$fileOut );
 		$pathNameIn		= realpath( $fileIn );
 		if( !$pathNameIn )
-			throw new Exception_Logic( 'Resource file is not existing', $fileIn, 20 );
+			throw new Exception_IO( 'Resource file is not existing', 20, $fileIn );
 		if( !is_readable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not readable', $fileIn, 21 );
+			throw new Exception_IO( 'Resource file is not readable', 21, $fileIn );
 		if( !is_writable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not executable', $fileIn, 22 );
+			throw new Exception_IO( 'Resource file is not executable', 22, $fileIn );
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
-			throw new Exception_Logic( 'Target path could not been created', $pathOut, 30 );
+			throw new Exception_IO( 'Target path could not been created', 30, $pathOut );
 		if( file_exists( $fileOut ) ){
 			if( !$force )
-				throw new Exception_Logic( 'Target file is already existing', $fileOut, 31 );
+				throw new Exception_IO( 'Target file is already existing', 31, $fileOut );
 			@unlink( $fileOut );
 		}
 		if( !copy( $pathNameIn, $fileOut ) )
-			throw new Exception_Logic( 'Link failed', array( $fileIn, $fileOut ), 50 );
+			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
 		chmod( $fileOut, 0770 );
 		return TRUE;
 	}
@@ -377,11 +377,9 @@ class Logic_Module {
 			}
 		}
 		catch( Exception $e ){
-			$exceptions	= array( $e->getMessage() );
+			$exceptions	= array( $e );
 		}
-			
-		if( count( $exceptions ) )																	//  several exceptions occured
-			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
+		throw new Exception_Logic( 'Module installation failed', $exceptions, 2 );
 		return FALSE;
 	}
 
@@ -464,21 +462,21 @@ class Logic_Module {
 		$fileOut	= $this->env->pathApp.$fileOut;
 		$pathNameIn	= realpath( $fileIn );
 		if( !$pathNameIn )
-			throw new Exception_Logic( 'Resource file is not existing', $fileIn, 20 );
+			throw new Exception_IO( 'Resource file is not existing', 20, $fileIn );
 		if( !is_readable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not readable', $fileIn, 21 );
+			throw new Exception_IO( 'Resource file is not readable', 21, $fileIn );
 		if( !is_executable( $pathNameIn ) )
-			throw new Exception_Logic( 'Resource file is not executable', $fileIn, 22 );
+			throw new Exception_IO( 'Resource file is not executable', 22, $fileIn );
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
-			throw new Exception_Logic( 'Target path could not been created', $pathOut, 30 );
+			throw new Exception_IO( 'Target path could not been created', 30, $pathOut );
 		if( file_exists( $fileOut ) ){
 			if( !$force )
-				throw new Exception_Logic( 'Target file is already existing', $fileOut, 31 );
+				throw new Exception_IO( 'Target file is already existing', 31, $fileOut );
 			@unlink( $fileOut );
 		}
 		if( !symlink( $pathNameIn, $fileOut ) )
-			throw new Exception_Logic( 'Link failed', array( $fileIn, $fileOut ), 50 );
+			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
 		return TRUE;
 	}
 
@@ -489,7 +487,7 @@ class Logic_Module {
 //			$this->configureLocalModule( $moduleId, $settings );
 		}
 		if( count( $exceptions ) )																	//  several exceptions occured
-			throw new Exception_Logic( 'Install failed', $exceptions, 2 );
+			throw new Exception_Logic( 'Module update failed', $exceptions, 2 );
 		return $exceptions;
 	}
 
