@@ -28,9 +28,14 @@ class Model_Module{
 
 		if( !file_exists( $this->pathRepos ) )
 			throw new RuntimeException( 'Modules folder missing in "'.$this->pathRepos.'"', 1 );
-		if( !file_exists( $this->pathConfig ) )
-			if( !@mkdir( $this->pathConfig ) )
+		if( !file_exists( $this->pathConfig ) ){
+			try{
+				Folder_Editor::createFolder( $this->pathConfig, 0770 );
+			}
+			catch( Exception $e ){
 				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
+			}
+		}
 	}
 
 	/**
