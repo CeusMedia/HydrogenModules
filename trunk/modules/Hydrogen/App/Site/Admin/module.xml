@@ -7,10 +7,11 @@
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<relations>
+		<needs type="module">App_Site</needs>
 		<needs type="module">Manage_Pages</needs>
-		<needs type="module">JS_jQuery</needs>
+<!--		<needs type="module">JS_jQuery</needs>-->
 		<needs type="module">UI_Compressor</needs>
-		<needs type="module">UI_Bootstrap</needs>
+<!--		<needs type="module">UI_Bootstrap</needs>-->
 	</relations>
 </module>
 	
