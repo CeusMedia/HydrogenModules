@@ -7,7 +7,7 @@ This is a module only existing to start an empty demonstration web application.
 From here you could start to integrate your own stuff.
 ]]></description>
 	<category>Application</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,15 +17,9 @@ From here you could start to integrate your own stuff.
 		<locale>en/html/index.html</locale>
 		<template>master.php</template>
 		<style source="theme" load="auto">layout.css</style>
-		<file>index.php</file>
-		<file>.htaccess</file>
-		<file>.htpasswd</file>
 	</files>
-	<link xml:lang="de" access="public" rank="0" path="">Start</link>
-	<link xml:lang="en" access="public" rank="0" path="">Home</link>
 	<relations>
 		<needs type="module">App_Site</needs>
-		<needs type="module">UI_Bootstrap</needs>
 		<supports type="module">UI_FavIcon</supports>
 		<supports type="module">UI_MetaTags</supports>
 	</relations>
