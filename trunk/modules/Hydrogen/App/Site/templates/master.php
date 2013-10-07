@@ -1,41 +1,41 @@
 <?php
-/*
-$helperNav		= new View_Helper_Navigation();
-$helperNav->setEnv( $this->env );
-$helperNav->setCurrent( $this->env->getRequest()->get( 'path' ) );
-*/
 
-#$pathTheme		= "themes/plain/";
-#$pathCDN		= "http://cdn.int1a.net/";
+$pathCDN	= "http://cdn.int1a.net/";
 
-#$page->addFavouriteIcon( $pathTheme.'img/favicon.ico' );
+$links		= array(
+	''			=> "Start",
+);
+
+$controller	= $this->env->getRequest()->get( 'controller' );
+$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
+
+$list	= array();
+foreach( $links as $key => $value ){
+	$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => './'.$key ) );
+	$class	= $key == $current ? "active" : NULL;
+	$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+}
+
+$list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => "nav" ) );
 
 $body	= '
 <div id="layout-container">
-	<div id="layout-header">
+	<div class="nav navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<span href="../" class="brand">My Project</span>
+				'.$list.'
+			</div>
+		</div>
 	</div>
-	<div class="container">
+	<div class="container" style="margin-top: 50px">
 		<div id="layout-messenger">'.$messenger->buildMessages().'</div>
 		<div id="layout-content">
 			'.$content.'
-		</div>
-		<div id="layout-footer">
 		</div>
 	</div>
 </div>';
 
 $page->addBody( $body );
-
-/*
-if( $config->get( 'theme.primer' ) ){
-	$page->css->primer->addUrl( 'layout.messenger.css' );
-	$page->css->primer->addUrl( 'layout.messenger.exception.css' );
-}
-#$page->css->theme->addUrl( 'layout.messenger.css' );
-#$page->css->theme->addUrl( 'layout.messenger.exception.css' );
-*/
-
-#$page->js->addUrl( 'javascripts/script.js' );
-
 return $page->build();
 ?>

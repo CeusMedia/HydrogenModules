@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
 	<title>App: Site</title>
-	<description><![CDATA[Empty installation if a simple web site application.]]></description>
+	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.1</version>
+	<version>0.3.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -11,12 +11,12 @@
 		<class>View/Index.php5</class>
 		<locale>de/main.ini</locale>
 		<locale>en/main.ini</locale>
-		<locale>de/html/index.html</locale>
-		<locale>en/html/index.html</locale>
 		<template>index/index.php</template>
 		<template>master.php</template>
-		<file>index.php5</file>
-		<style source="theme">layout.css</style>
+		<style source="theme" load="auto">layout.css</style>
+		<file>index.php</file>
+		<file>.htaccess.dist</file>
+		<file>.htpasswd</file>
 	</files>
 	<link xml:lang="de" access="public" rank="0" path="">Start</link>
 	<link xml:lang="en" access="public" rank="0" path="">Home</link>
@@ -31,4 +31,19 @@
 		<supports type="module">Info_Contact</supports>
 		<supports type="module">Info_Pages</supports>
 	</relations>
+    <hook type="resource" resource="Page" event="applyModules">
+		<![CDATA[
+	        //  --  INIT  --  //
+	        $messenger  = $context->env->getMessenger();                            //  shortcut messenger
+	        $config     = $module->config;                                          //  shortcut module configuration pairs
+			if( file_exists( '.htaccess.dist' ) ){
+				if( file_exists( '.htaccess' ) ){
+					if( !@copy( '.htaccess.dist', '.htaccess' ) ){
+						throw new RuntimeException( "Cannot create .htaccess from .htaccess.dist" );
+					}
+					
+				}
+			}
+		}]]>
+	</hook>
 </module>
