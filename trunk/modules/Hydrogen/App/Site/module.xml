@@ -41,7 +41,7 @@
 					if( !@copy( '.htaccess.dist', '.htaccess' ) ){
 						throw new RuntimeException( "Cannot create .htaccess from .htaccess.dist" );
 					}
-					
+					$messenger->noteSuccess( 'Created .htaccess' );
 				}
 			}
 		}]]>
