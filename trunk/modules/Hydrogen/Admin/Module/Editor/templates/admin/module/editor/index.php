@@ -7,7 +7,15 @@ $filters		= array( 'type' => array( Model_Module::TYPE_CUSTOM, Model_Module::TYP
 $listSections	= $this->renderModuleSections( $modules, $categories, $filters );
 
 if( !$listSections )
-	$listSections	= '<em>Keine <a href="./admin/module">Module</a> installiert.</em>';
+	$listSections	= '
+<p>
+	<em>In dieser Instanz sind gerade <b>keine <a href="./admin/module/viewer">Module</a> installiert</b>.</em>
+</p>
+<p>
+	'.UI_HTML_Elements::LinkButton( './admin/module/search', 'Modul suchen', 'button module search' ).'
+	'.UI_HTML_Elements::LinkButton( './admin/module/viewer', 'alle Module betrachten', 'button module view' ).'
+	'.UI_HTML_Elements::LinkButton( './admin/module/installer', 'Modul installieren', 'button module add' ).'
+</p>';
 
 return '
 <div id="search">
