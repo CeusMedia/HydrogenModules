@@ -6,7 +6,8 @@ if( !empty( $path ) ){
 		return $view->loadContentFile( 'html/index.html' );
 }
 if( $view->hasContentFile( 'html/index.html' ) ){
-	return $view->loadContentFile( 'html/index.html' );
+//	$data	= array( 'file' => $view->getContentUri( 'html/index.html' ) );
+	return $view->loadContentFile( 'html/index.html', //$data );
 }
 
 //  --  OR RETURN TEMPLATE CONTENT --  //
