@@ -6,14 +6,33 @@ $labelsStatusHttp	= array(
 	'offline'		=> 'NICHT erreichbar'
 );
 
+function formatUrl( $url ){
+	$parts	= parse_url( $url );
+//	print_m( $parts );
+	$scheme	= UI_HTML_Tag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
+	$host	= UI_HTML_Tag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], array( 'class' => '' ) );
+	$path	= explode( "/", preg_replace( "/^(\/*)(.*)(\/+)$/", "\\2", $parts['path'] ) );
+	$main	= UI_HTML_Tag::create( 'strong', array_pop( $path ), array( 'class' => '' ) );
+	$path	= str_replace( "//", "/", "/".implode( "/", $path )."/" );
+	$path	= UI_HTML_Tag::create( 'small', $path, array( 'class' => 'muted' ) );
+	$path	.= "&nbsp;&nbsp;".$main;
+	$path	= UI_HTML_Tag::create( 'span', "&nbsp;&nbsp;".$path, array( 'class' => '' ) );
+	$line	= $scheme.$host.$path;
+//	xmp( $line );
+//die;
+	return $line;
+}
+
 $rows	= array();
 foreach( $instances as $instance ){
 	$url			= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
 	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instance->id, $instance->title );
+	$link			= UI_HTML_Tag::create( 'strong', $link, array( 'class' => '' ) );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );
-	$linkInstance	= UI_HTML_Tag::create( 'a', $url, array( 'href' => $url ) );
+	$linkInstance	= UI_HTML_Tag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
 	$codeUri		= UI_HTML_Tag::create( 'code', $instance->uri );
+	$codeUri		= UI_HTML_Tag::create( 'small', $codeUri, array( 'class' => 'muted' ) );
 	$titleStatus	= $uriExists ? "Checked and found on file system" : "NOT FOUND on file system (not installed or path invalid)";
 	$titleStatus	= $uriExists ? "Order auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
 	$indicators		= join( "", array(
@@ -22,7 +41,7 @@ foreach( $instances as $instance ){
 	) );
 	$cells	= array(
 		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', $linkInstance.'<br/><small>'.$codeUri.'</small>' ),
+		UI_HTML_Tag::create( 'td', $linkInstance.'<br/>'.$codeUri.'<br/>'.'<br/>' ),
 		UI_HTML_Tag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
 		UI_HTML_Tag::create( 'td', "", array( 'class' => 'status-todos' ) ),
 	);

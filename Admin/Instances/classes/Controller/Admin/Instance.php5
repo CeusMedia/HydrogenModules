@@ -35,6 +35,10 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
 			if( $module->get( 'lock' ) ){															//  locking is enabled
+				if( strlen( $lockProtocol = trim( $module->get( 'lock.protocol' ) ) ) )				//  a locked protocol has been set
+					$protocol	= $lockProtocol;													//  override post with locked protocol
+				if( strlen( $lockHost = trim( $module->get( 'lock.host' ) ) ) )						//  a locked host has been set
+					$host	= $lockHost;															//  override post with locked host
 				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
 					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
@@ -202,6 +206,10 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
 			if( $module->get( 'lock' ) ){															//  locking is enabled
+				if( strlen( $lockProtocol = trim( $module->get( 'lock.protocol' ) ) ) )				//  a locked protocol has been set
+					$protocol	= $lockProtocol;													//  override post with locked protocol
+				if( strlen( $lockHost = trim( $module->get( 'lock.host' ) ) ) )						//  a locked host has been set
+					$host	= $lockHost;															//  override post with locked host
 				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
 					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
@@ -232,6 +240,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			}
 		}
 		$instance		= $this->model->get( $instanceId );
+		$instance		= (object) array_merge( (array) $instance, array( 'host' => '' ) );
 		$instance->id	= $instanceId;
 		if( empty( $instance->configPath ) )
 			$instance->configPath	= '';
@@ -245,6 +254,14 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $instanceId ){
+		$instanceId	= trim( $instanceId );
+		$messenger	= $this->env->getMessenger();
+		if( !$this->model->has( $instanceId ) ){
+			$messenger->noteError( 'Die aufgerufene Instanz existiert nicht. Weiterleitung zur Übersicht.' );
+			$this->restart( './admin/instance' );
+		}
+		$instance	= $this->model->get( $instanceId );
+		$messenger->noteSuccess( 'Die Instanz "'.$instance->title.'" wurde abgemeldet. <small class="hint muted">Der Instanzordner wurde dabei <b>nicht gelöscht</b></small>.' );
 		$this->model->remove( $instanceId );
 		$this->restart( NULL, TRUE );
 	}

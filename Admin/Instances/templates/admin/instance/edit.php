@@ -6,7 +6,6 @@ $hostLocked		= NULL;
 $pathLocked		= NULL;
 
 if( $moduleConfig->get( 'lock' ) ){
-	$moduleConfig->get( 'lock.host' );
 	if( ( $protocolLocked = strlen( trim( $moduleConfig->get( 'lock.protocol' ) ) ) ) )
 		$instance->protocol	= $moduleConfig->get( 'lock.protocol' );
 	if( ( $hostLocked = strlen( trim( $moduleConfig->get( 'lock.host' ) ) ) ) )
@@ -69,6 +68,10 @@ $panelEdit	= '
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './admin/instance', 'zur Liste', 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'edit', 'speichern', 'button save' ).'
+			&nbsp;&nbsp;|&nbsp;&nbsp;
+			'.UI_HTML_Elements::LinkButton( './admin/instance/remove/'.$instance->id, 'abmelden', 'button module remove', 'Wollen Sie diese Instanz wirklich abmelden?\n\nHinweis: Der Instanzordner wird dabei nicht gelöscht.\nSie können die Instanz später wieder anmelden.' ).'
+			&nbsp;&nbsp;|&nbsp;&nbsp;
+			'.UI_HTML_Elements::LinkButton( './admin/module/editor?selectInstanceId='.$instance->id, 'Module der Instanz', 'button module magic' ).'
 		</div>
 	</fieldset>
 </form>
@@ -93,7 +96,6 @@ $(document).ready(function(){
 	$("#input_database_driver").trigger("change");
 });
 </script>
-	
 <div class="column-left-60">
 	'.$panelEdit.'
 	'.$panelCheck.'
