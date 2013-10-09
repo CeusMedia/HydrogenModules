@@ -12,7 +12,9 @@ class Model_Instance{
 	}
 
 	public function add( $data ){
-		$id		= $data['id'];
+		if( empty( $data['id'] ) || !strlen( trim( $data['id'] ) ) )
+			throw new InvalidArgumentException( 'Instance data is missing an instance ID (id)' );
+		$id		= trim( $data['id'] );
 		$this->file->addSection( $id );
 		unset( $data['id'] );
 		foreach( $data as $key => $value )
@@ -44,6 +46,10 @@ class Model_Instance{
 			}
 		}
 		return $changed;
+	}
+
+	public function has( $id ){
+		return $this->file->hasSection( $id );
 	}
 
 	public function get( $id ){
