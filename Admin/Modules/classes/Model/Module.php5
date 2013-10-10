@@ -334,7 +334,7 @@ class Model_Module{
 				$status	= Model_Module::TYPE_SOURCE;
 			if( $status && $this->isInstalled( $relatedModuleId ) )
 				$status	= Model_Module::TYPE_COPY;
-			$list[$$relatedModuleId]	= $status;
+			$list[$relatedModuleId]	= $status;
 		}
 		array_unique( $list );
 		return $list;
