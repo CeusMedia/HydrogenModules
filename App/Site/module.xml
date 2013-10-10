@@ -32,18 +32,16 @@
 		<supports type="module">Info_Pages</supports>
 	</relations>
     <hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	        //  --  INIT  --  //
-	        $messenger  = $context->env->getMessenger();                            	//  shortcut messenger
-	        $config     = $module->config;                                          	//  shortcut module configuration pairs
-			if( file_exists( '.htaccess' ) ){											//  .htaccess file is not existing
-				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist) ){	//  but default files are existing
-					if( !@copy( '.htaccess.dist', '.htaccess' ) )						//  try to install default .htaccess
+	        $messenger  = $context->env->getMessenger();                            		//  shortcut messenger
+	        $config     = $module->config;                                          		//  shortcut module configuration pairs
+			if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
+				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
+					if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
 						throw new RuntimeException( "Cannot create .htaccess from .htaccess.dist" );
 					if( !@copy( '.htpasswd.dist', '.htpasswd' ) )
 						throw new RuntimeException( "Cannot create .htpasswd from .htpasswd.dist" );
 					$messenger->noteSuccess( 'Created .htaccess and .htpasswd for authentication.' );
 				}
 			}
-		]]>
-	</hook>
+		]]></hook>
 </module>

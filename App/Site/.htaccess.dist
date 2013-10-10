@@ -13,9 +13,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/?$ index.php?__path=$1&%{QUERY_STRING} [L]
 
 #  AUTHENTICATION
-AuthType Basic
-AuthName "My Project"
-AuthUserFile /path/to/my/project/.htpasswd
+#AuthType Basic
+#AuthName "My Project"
+#AuthUserFile /path/to/my/project/.htpasswd
 #Require valid-user
 
 #  DISABLE ETAGS
