@@ -3,9 +3,14 @@
 	<title>App: Site: Admin</title>
 	<description><![CDATA[Empty administrative web site application.]]></description>
 	<category>Application</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Index.php5</class>
+		<class>View/Index.php5</class>
+		<template>index/index.php</template>
+	</files>
 	<relations>
 		<needs type="module">App_Site</needs>
 		<needs type="module">Manage_Pages</needs>
