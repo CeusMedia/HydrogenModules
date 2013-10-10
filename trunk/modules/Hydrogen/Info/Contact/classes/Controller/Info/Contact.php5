@@ -15,9 +15,14 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->msgErrorMessageMissing );
 			if( !$messenger->gotError() ){
 				$data	= $request->getAll();
-				$mail	= new Mail_Info_Contact( $this->env, $data );
-				$messenger->noteSuccess( $words->msgSuccess );
-				$this->restart( NULL, TRUE );
+				try{
+					$mail	= new Mail_Info_Contact( $this->env, $data );
+					$messenger->noteSuccess( $words->msgSuccess );
+					$this->restart( NULL, TRUE );
+				}
+				catch( Exception $e ){
+					die( $e->getMessage() );
+				}
 			}
 		}
 		$this->addData( 'name', $request->get( 'name' ) );

@@ -14,6 +14,7 @@ class Mail_Info_Contact extends Mail_Abstract{
 		$mailSubject	= $words['mail']['subject'];
 		$mailSubject	= sprintf( $mailSubject, $data->subject, $data->name, $data->email );
 		$this->setSubject( $mailSubject );
+
 		$this->setSender( $config->get( 'mail.sender' ) );
 		$this->sendToAddress( $config->get( 'mail.receiver' ) );
 	}
