@@ -1,4 +1,31 @@
 
+/*  --  MANAGE: PAGE: TREE  --  */
+body.moduleManagePage #manage-page-tree {
+	padding-bottom: 2em;
+	}
+body.moduleManagePage #manage-page-tree h4 {
+	display: none;
+	}
+body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked {
+	margin-bottom: 0.5em;
+	}
+body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li > a {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	}
+body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li.disabled a:hover {
+	background-color: #eeeeee;
+	color: #999999;
+	}
+body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li.disabled > a > i {
+	opacity: 0.33;
+	}
+
+/*  --  MANAGE: PAGE  --  */
+body.moduleManagePage #manage-page-main {
+	}
 
 /*  --  PAGE PREVIEW  --  */
 #page-preview {
@@ -45,3 +72,9 @@ dl#meta-defaults dd {
 	}
 
 
+	
+.mceLayout {
+	margin-bottom: 8px !important;
+	box-shadow: 1px 1px 4px 1px #DDD;
+	width: 100% !important;
+	}

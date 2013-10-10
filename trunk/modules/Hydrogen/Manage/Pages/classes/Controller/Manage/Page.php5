@@ -4,7 +4,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	protected $model;
 
 	protected function __onInit(){
-		$this->baseUri		= "viva-yoga.de/";
+		$config		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
+		
+		$this->baseUri		= $config->get( 'site.domain' ).$config->get( 'site.path' );
 		$this->model		= new Model_Page( $this->env );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
