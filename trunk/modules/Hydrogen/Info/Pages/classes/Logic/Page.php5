@@ -32,6 +32,8 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		$parts		= explode( '/', $path );
 		$parentId	= 0;
 		$parents	= array();
+		if( !$parts )
+			return NULL;
 		while( $part = array_shift( $parts ) ){
 			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
 			$page		= $model->getByIndices( $indices );
