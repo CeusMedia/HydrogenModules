@@ -61,6 +61,7 @@ foreach( $modules as $id => $item )
 		if( !in_array( $id, $module->relations->needs ) )
 			if( !in_array( $id, $module->relations->supports ) )
 				$optModule[$id]	= $item->title;
+asort( $optModule );
 $optModule	= UI_HTML_Elements::Options( $optModule );
 $optType	= UI_HTML_Elements::Options( $words['relation-types'] );
 
