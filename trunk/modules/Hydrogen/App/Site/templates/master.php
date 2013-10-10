@@ -4,6 +4,7 @@ $pathCDN	= "http://cdn.int1a.net/";
 
 $links		= array(
 	''			=> "Start",
+	'manage/page'	=> 'Seiten',
 );
 
 $controller	= $this->env->getRequest()->get( 'controller' );
