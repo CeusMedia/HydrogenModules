@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Optionals</title>
+	<description><![CDATA[]]></description>
+	<version>0.2</version>
+	<category>JavaScript</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">optionals.js</script>
+	</files>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+//		$config		= $env->getConfig()->getAll( 'module.js_optionals', TRUE );
+		$script		= '$(document).ready(function(){FormOptionals.init();})';
+		$context->js->addScript( $script );
+	]]></hook>
+</module>
