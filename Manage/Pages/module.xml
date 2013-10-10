@@ -3,12 +3,14 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Manage</category>
-	<version>0.5</version>
+	<version>0.6.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Page.php5</class>
+		<class>Logic/Page.php5</class>
+		<class>Model/Page.php5</class>
 		<class>View/Manage/Page.php5</class>
 		<template>manage/page/add.php</template>
 		<template>manage/page/edit.php</template>
@@ -22,11 +24,14 @@
 		<script load="auto">PageEditor.js</script>
 		<style load="auto">module.manage.pages.css</style>
 	</files>
+    <config type="string" protected="yes" name="site.domain">localhost</config>
+    <config type="string" protected="yes" name="site.path">/</config>
     <config type="string" protected="user" name="editor" values="none,CodeMirror,TinyMCE">TinyMCE</config>
     <config type="string" protected="user" name="link.resources">pages,bookmarks,documents,images</config>
 	<relations>
-		<needs type="module">Info_Pages</needs>
+		<needs type="module">Resource_Database</needs>
 		<needs type="module">JS_TinyMCE</needs>
 		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">JS_Optionals</needs>
 	</relations>
 </module>
