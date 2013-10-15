@@ -4,7 +4,7 @@ $texts	= $this->populateTexts( array( 'top', 'bottom' ), 'html/info/contact/' );
 return '
 <h2>'.$w->heading.'</h2>
 '.$texts['top'].'
-<form action="" method="post">
+<form action="'.$formPath.'" method="post">
 	<div class="row-fluid">
 		<div class="span5">
 			<label for="input_name">'.$w->labelName.'</label>
