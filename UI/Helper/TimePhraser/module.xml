@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: TimePhraser</title>
+	<description><![CDATA[Convers timestamps to time phrases.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<files>
+		<class>View/Helper/TimePhraser.php5</class>
+		<locale>de/timephraser.ini</locale>
+		<locale>en/timephraser.ini</locale>
+	</files>
+	<relations/>
+</module>
