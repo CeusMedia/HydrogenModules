@@ -1,0 +1,166 @@
+
+/*  --  USERS  --  */
+
+.controller-manage-user.action-edit .column-control {
+	float: right;
+	width: 40%;
+	}
+.controller-manage-user.action-edit .column-main {
+	margin-right: 42%;
+	}
+
+.user-status {
+	background-repeat: no-repeat;
+	background-position: 4px 1px;
+	padding-left: 1.8em;
+	}
+input.user-status {
+	background-position: 6px 4px;
+	}
+.user-status.status1 {
+	color: darkgreen;
+	background-image: url(//img.int1a.net/famfamfam/silk/accept.png);
+	}
+.user-status.status0 {
+	font-weight: normal;
+	font-style: italic;
+	background-image: url(//img.int1a.net/famfamfam/silk/star.png);
+	}
+.user-status.status-1 {
+	font-weight: normal;
+	font-style: italic;
+	color: red;
+	background-image: url(//img.int1a.net/famfamfam/silk/lock.png);
+	}
+.user-status.status-2 {
+	font-weight: normal;
+	color: darkred;
+	background-image: url(//img.int1a.net/famfamfam/silk/delete.png);
+	}
+
+
+.user-activity {
+	background-repeat: no-repeat;
+	background-position: 4px 1px;
+	padding-left: 1.8em;
+	}
+input.user-activity {
+	background-position: 6px 4px;
+	}
+.user-activity.activity0 {
+	background-image: url(//img.int1a.net/famfamfam/silk/status_offline.png);
+	opacity: 0.8;
+	}
+.user-activity.activity1 {
+	background-image: url(//img.int1a.net/famfamfam/silk/status_online.png);
+	}
+.user-activity.activity2 {
+	background-image: url(//img.int1a.net/famfamfam/silk/status_busy.png);
+	}
+.user-activity.activity3 {
+	background-image: url(//img.int1a.net/famfamfam/silk/status_away.png);
+	}
+.user-activity.activity4 {
+	background-image: url(//img.int1a.net/famfamfam/silk/status_online.png);
+	}
+.user-activity.activity5 {
+	background-image: url(//img.int1a.net/famfamfam/silk/star.png);
+	}
+
+.controller-manage-user #content dl dt {
+	width: 150px;
+	}
+
+	
+legend.user-add {
+	background-image:  url(///img.int1a.net/famfamfam/silk/user_add.png);
+	}
+	
+legend.user-edit {
+	background-image:  url(///img.int1a.net/famfamfam/silk/user_edit.png);
+	}
+
+	
+	
+	
+/*  --  ROLES  --  */
+
+span.role.role1,
+span.role.role2,
+span.role.role3,
+span.role.role4,
+span.role.role5 {
+	background-repeat: no-repeat;
+	background-position: 2px 1px;
+	padding-left: 1.8em;
+	}
+
+span.role.role1,
+span.role.role2 {
+	background-image: url(//img.int1a.net/famfamfam/silk/user_gray.png);
+	}
+span.role.role3 {
+	background-image: url(//img.int1a.net/famfamfam/silk/user_suit.png);
+	}
+span.role.role4 {
+	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
+	}
+span.role.role5 {
+	background-image: url(//img.int1a.net/famfamfam/silk/user_green.png);
+	}
+
+.role-access {
+	background-repeat: no-repeat;
+	background-position: 2px 1px;
+	padding-left: 1.8em;
+	min-height: 20px;
+	display: block;
+	float: left;
+	}
+.role-access.access0 {
+	background-image: url(//img.int1a.net/famfamfam/silk/stop.png);
+	}
+.role-access.access64 {
+	background-image: url(//img.int1a.net/famfamfam/silk/shield.png);
+	}
+.role-access.access128 {
+	background-image: url(//img.int1a.net/famfamfam/silk/world.png);
+	}
+
+#role-edit-rights {
+	}
+#role-edit-rights ul {
+	padding: 0px;
+	margin: 0px;
+	}
+#role-edit-rights li {
+	float: left;
+	display: block;
+	padding: 0px 4px;
+	margin-right: 2px;
+	font-size: 0.9em;
+	color: #3F3F3F;
+	}
+#role-edit-rights li.changable {
+	color: black;
+	cursor: pointer;
+	}
+#role-edit-rights li.changable label {
+	cursor: pointer;
+	}
+#role-edit-rights li.green {
+	background-color: #BFFFBF;
+	}
+#role-edit-rights li.green.changable {
+	background-color: #7FFF7F;
+	}
+#role-edit-rights li.yellow {
+	background-color: #FFFF7F !important;
+	}
+#role-edit-rights li.red {
+	background-color: #FFBFBF;
+	}
+#role-edit-rights li.red.changable {
+	background-color: #FF7F7F;
+	}
+
