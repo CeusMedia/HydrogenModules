@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Resource: Users & Roles]]></title>
+	<description><![CDATA[Support for users and groups stored in database.]]></description>
+	<category>Resource</category>
+	<version>0.1.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Model/User.php5</class>
+		<class>Model/Role.php5</class>
+		<class>Model/Role/Right.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<config type="string" name="acl" protected="yes">CMF_Hydrogen_Environment_Resource_Acl_Database</config>
+	<config type="integer" name="status.register" protected="yes" title="user status to be set on register, set to 1 for 'auto active'">1</config>
+	<config type="integer" name="name.length.min" title="lowest number of name characters">3</config>
+	<config type="integer" name="name.length.max" title="highest number of name characters">17</config>
+	<config type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]/i</config>
+	<config type="integer" name="password.length.min" title="lowest number of password characters">3</config>
+	<config type="integer" name="password.strength.min" title="highest number of password characters">0</config>
+	<config type="string" name="password.salt" protected="yes" title="string to salt password with"></config>
+	<config type="boolean" name="email.mandatory" title="user needs a mail address on register and change">yes</config>
+	<config type="boolean" name="firstname.mandatory" title="user needs a firstname">yes</config>
+	<config type="boolean" name="surname.mandatory" title="user needs a surname">yes</config>
+	<sql on="install" type="mysql"><![CDATA[
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+DROP TABLE IF EXISTS `<%?prefix%>users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
+  `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `roleId` int(11) unsigned DEFAULT NULL,
+  `companyId` int(11) unsigned NOT NULL,
+  `roomId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `gender` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `salutation` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `firstname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `surname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) DEFAULT NULL,
+  `loggedAt` decimal(12,0) DEFAULT NULL,
+  `activeAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`userId`),
+  KEY `roleId` (`roleId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`),
+  KEY `username` (`username`),
+  KEY `gender` (`gender`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+INSERT INTO `newsletter_users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
+(1, 1, 0, 0, 1, 'root@localhost', 'root', '63a9f0ea7bb98050796b649e85481845', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1383589432, NULL, NULL, 1383589432);
+
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
+  `roleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `access` tinyint(1) unsigned NOT NULL,
+  `register` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`roleId`),
+  KEY `access` (`access`,`register`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
+(1, 128, 0, 'Entwickler', '', '1294083736', '0'),
+(2, 128, 0, 'Administrator', '', '1294083928', '0'),
+(3, 64, 0, 'Manager', '', '1294083948', '0'),
+(4, 64, 64, 'Benutzer', '', '1294083995', '0'),
+(5, 64, 128, 'Gast', '', '1294084004', '0');
+
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
+  `roleRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `roleId` int(11) unsigned NOT NULL,
+  `controller` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`roleRightId`),
+  KEY `roleId` (`roleId`,`controller`,`action`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+]]>
+	</sql>
+	<sql on="install" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>users";
+CREATE TABLE "<%?prefix%>users" (
+	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
+	"roleId" INTEGER,
+	"status" INTEGER,
+	"username" VARCHAR,
+	"password" VARCHAR,
+	"email" VARCHAR,
+	"gender" INTEGER,
+	"salutation" VARCHAR,
+	"firstname" VARCHAR,
+	"surname" VARCHAR,
+	"postcode" VARCHAR,
+	"city" VARCHAR,
+	"street" VARCHAR,
+	"number" VARCHAR,
+	"phone" VARCHAR,
+	"fax" VARCHAR,
+	"createdAt" DECIMAL,
+	"modifiedAt" DECIMAL,
+	"loggedAt" DECIMAL,
+	"activeAt" DECIMAL
+	);
+DROP TABLE IF EXISTS "<%?prefix%>roles";
+CREATE TABLE "<%?prefix%>roles" (
+	"roleId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
+	"access" INTEGER NOT NULL  DEFAULT 0,
+	"register" INTEGER NOT NULL  DEFAULT 0,
+	"title" VARCHAR NOT NULL ,
+	"description" TEXT NOT NULL ,
+	"createdAt" NUMERIC NOT NULL ,
+	"modifiedAt" NUMERIC NOT NULL
+);
+
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (1, 128, 0, 'Entwickler', '', '1294083736', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (2, 128, 0, 'Administrator', '', '1294083928', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (3, 64, 0, 'Manager', '', '1294083948', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (4, 64, 64, 'Benutzer', '', '1294083995', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (5, 64, 128, 'Gast', '', '1294084004', '0');
+
+DROP TABLE IF EXISTS "<%?prefix%>role_rights";
+CREATE TABLE "<%?prefix%>role_rights" (
+	"roleRightId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
+	"roleId" INTEGER NOT NULL ,
+	"controller" VARCHAR NOT NULL ,
+	"action" VARCHAR,
+	"timestamp" NUMERIC NOT NULL
+);
+
+]]>
+	</sql>
+	
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>users`;
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+]]>
+	</sql>
+	<sql on="uninstall" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>users";
+DROP TABLE IF EXISTS "<%?prefix%>roles";
+DROP TABLE IF EXISTS "<%?prefix%>role_rights";
+]]>
+	</sql>
+	<todo>
+<![CDATA[
+[role-type-groups]
+0				= "Administrator"
+1				= "Manager"
+2				= "Mitarbeiter"
+3				= "Zuarbeiter"
+4				= "Betreuer"
+5				= "Premium"
+6				= "Privilegierter"
+7				= "Händler"
+8				= "Teilnehmer"
+9				= "Betrachter"
+
+
+[role-types-0]
+1				= "root (full access)"
+2				= "developer"
+3				= "administrator"
+4				= "controller"
+5				= "supervisor"
+6				= "inspector"
+
+[role-types-1]
+10				= "manager"
+11				= "manager assistant"
+12				= "controller"
+13				= "controlling assistant"
+14				= "moderator"
+15				= "moderation assistant"
+16				= "leader"
+17				= "leading assistant"
+
+[role-types-2]
+20				= "worker"
+
+[role-types-3]
+30				= "contributer"
+
+[role-types-4]
+40				= "expert"
+41				= "scientist"
+42				= "consultant"
+43				= "guru"
+44				= "agent"
+45				= "evangelist"
+46				= "informant"
+47				= "whistle blower"
+48				= "informer"
+49				= "expert helper"
+
+[role-types-5]
+50				= "diamond member"
+51				= "platin member"
+52				= "gold member"
+53				= "silver member"
+54				= "bronze member"
+55				= "iron member"
+56				= "cooper member"
+
+[role-types-6]
+60				= "premium member"
+61				= "pro member"
+62				= "advanced member"
+63				= "skilled member"
+
+[role-types-7]
+70				= "full trader"
+71				= "stable trader"
+72				= "normal trader"
+73				= "volatile trader"
+74				= "trail trader"
+74				= "guest trader"
+
+[role-types-8]
+80				= "full provider"
+81				= "stable provider"
+82				= "normal provider"
+83				= "volatile provider"
+84				= "trail provider"
+85				= "guest provider"
+
+[role-types-9]
+90				= "full member"
+91				= "stable member"
+92				= "normal member"
+93				= "volatile member"
+94				= "trail member"
+95				= "guest"
+96				= "visitor"
+97				= "surfer"
+]]>		
+	</todo>
+</module>
