@@ -20,6 +20,7 @@
 	</files>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
+		<supports type="module">UI_Helper_Messenger_Bootstrap</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $context->addBodyClass( 'uses-bootstrap' );
