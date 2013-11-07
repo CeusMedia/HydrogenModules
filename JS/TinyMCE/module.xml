@@ -2,14 +2,14 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0b2-p1</version>
+	<version>4.0.10</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
 		<class>View/Helper/TinyMceResourceLister.php5</class>
-		<script load="auto" source="lib">tinymce/4.0b2/tinymce.min.js</script>
+		<script load="auto" source="lib">tinymce/4.0.10/tinymce.min.js</script>
 		<style load="auto" source="theme">tinymce.css</style>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
