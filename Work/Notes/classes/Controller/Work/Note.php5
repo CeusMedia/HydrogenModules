@@ -35,7 +35,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 					$messenger->noteSuccess( $words->msgTagsAdded, implode( ', ', $tags ) );
 				}
 				if( trim( $request->get( 'link_url' ) ) ){
-					$linkId	= $logic->createLink( $url, FALSE );
+					$linkId	= $logic->createLink( $request->get( 'link_url' ), FALSE );
 					$logic->addLinkToNote( $linkId, $noteId, $request->get( 'link_title' ) );
 				}
 				$this->restart( './work/note/edit/'.$noteId );
