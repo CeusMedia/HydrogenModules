@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Shop Bridge</title>
+	<description><![CDATA[]]></description>
+	<category>Resource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/ShopBridge.php5</class>
+		<class>Logic/ShopBridge/Abstract.php5</class>
+		<class>Model/Shop/Bridge.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Shop</needs>
+	</relations>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_bridges`;
+CREATE TABLE IF NOT EXISTS `luv_shop_bridges` (
+  `bridgeId` int(11) NOT NULL AUTO_INCREMENT,
+  `class` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`bridgeId`),
+  KEY `class` (`class`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_bridges`;
+	]]></sql>
+</module>
