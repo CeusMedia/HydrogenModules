@@ -3,16 +3,19 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Index.php5</class>
 		<class>View/Index.php5</class>
+		<class>.htaccess</class>
 		<locale>de/main.ini</locale>
 		<locale>en/main.ini</locale>
+		<locale>.htaccess</locale>
 		<template>index/index.php</template>
 		<template>master.php</template>
+		<template>.htaccess</template>
 		<style source="theme" load="auto">layout.css</style>
 		<file>index.php</file>
 		<file>.htaccess.dist</file>
