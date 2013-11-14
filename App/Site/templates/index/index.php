@@ -2,12 +2,12 @@
 
 //  --  LOAD STATIC HTML CONTENT FILE  --  //
 if( !empty( $path ) ){
-	if( $view->hasContentFile( 'html/'.$path.'.html' ) ){
+	if( $view->hasContentFile( 'html/'.$path.'.html' ) )
 		return $view->loadContentFile( 'html/index.html' );
 }
 if( $view->hasContentFile( 'html/index.html' ) ){
 //	$data	= array( 'file' => $view->getContentUri( 'html/index.html' ) );
-	return $view->loadContentFile( 'html/index.html', //$data );
+	return $view->loadContentFile( 'html/index.html'/*, $data*/ );
 }
 
 //  --  OR RETURN TEMPLATE CONTENT --  //
