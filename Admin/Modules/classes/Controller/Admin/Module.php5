@@ -12,7 +12,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		if( !$this->env->getSession()->get( 'instanceId' ) ){
 			$words	= $this->getWords( 'msg' );
 			$this->messenger->noteError( $words['noInstanceSelected'] );
-			$this->restart( NULL );
+			$this->restart( 'viewer', TRUE );
 		}
 	}
 
