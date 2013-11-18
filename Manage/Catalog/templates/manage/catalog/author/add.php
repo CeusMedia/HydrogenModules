@@ -2,7 +2,7 @@
 $w			= (object) $words['add'];
 
 $tabs		= $this->renderMainTabs();
-$list		= $this->renderList( $authors, $author->author_id );
+$list		= $this->renderList( $authors, $author->authorId );
 
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );

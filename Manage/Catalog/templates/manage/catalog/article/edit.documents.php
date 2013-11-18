@@ -7,7 +7,7 @@ $listDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeicher
 if( $articleDocuments ){
 	$listDocuments	= array();
 	foreach( $articleDocuments as $item ){
-		$urlRemove		= './manage/catalog/article/removeDocument/'.$article->article_id.'/'.$item->article_document_id;
+		$urlRemove		= './manage/catalog/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
 		$listDocuments[]	= '<tr>
 	<td>'.$item->title.'</td>
 	<td><div class="pull-right"><a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a></div></td>
@@ -52,7 +52,7 @@ return '
 				<b>Größe: </b>
 				<span>max. '.$maxSize.'</span>
 			</div>
-			<form action="./manage/catalog/article/addDocument/'.$article->article_id.'" method="post" enctype="multipart/form-data">
+			<form action="./manage/catalog/article/addDocument/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_document">lokale Dokumentdatei <small class="muted">(max. '.$maxSize.')</small></label>

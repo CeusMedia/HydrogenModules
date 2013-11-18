@@ -6,7 +6,7 @@ $optMark	= UI_HTML_Elements::Options( $words['marks'], $article->new );
 
 return '
 <!--  Manage: Catalog: Article: Details  -->
-	<form action="./manage/catalog/article/edit/'.$article->article_id.'" method="post">
+	<form action="./manage/catalog/article/edit/'.$article->articleId.'" method="post">
 		<label for="input_title">'.$w->labelTitle.'</label>
 		<input class="span12" type="text" name="title" id="input_title" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>
 		<label for="input_subtitle">'.$w->labelSubtitle.'</label>
@@ -64,7 +64,7 @@ return '
 		<div class="buttonbar">
 			<a class="btn btn-small" href="./manage/catalog/article"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
 			<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-			<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/article/remove/'.$article->article_id.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
+			<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/article/remove/'.$article->articleId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
 		</div>
 	</form>
 <!--  /Manage: Catalog: Article: Details  -->

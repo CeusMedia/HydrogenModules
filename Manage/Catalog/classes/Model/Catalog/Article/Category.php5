@@ -18,17 +18,17 @@
  */
 class Model_Catalog_Article_Category extends CMF_Hydrogen_Model {
 
-	protected $name		= 'article_categories';
+	protected $name		= 'catalog_article_categories';
 	protected $columns	= array(
-		"article_category_id",
-		"article_id",
-		"category_id",
+		"articleCategoryId",
+		"articleId",
+		"categoryId",
 		"volume",
 	);
-	protected $primaryKey	= 'article_category_id';
+	protected $primaryKey	= 'articleCategoryId';
 	protected $indices		= array(
-		"article_id",
-		"category_id"
+		"articleId",
+		"categoryId"
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

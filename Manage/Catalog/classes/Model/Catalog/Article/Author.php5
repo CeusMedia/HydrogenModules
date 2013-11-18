@@ -19,17 +19,17 @@
  */
 class Model_Catalog_Article_Author extends CMF_Hydrogen_Model {
 
-	protected $name		= 'article_authors';
+	protected $name		= 'catalog_article_authors';
 	protected $columns	= array(
-		"article_author_id",
-		"article_id",
-		"author_id",
+		"articleAuthorId",
+		"articleId",
+		"authorId",
 		"editor",
 	);
-	protected $primaryKey	= 'article_author_id';
+	protected $primaryKey	= 'articleAuthorId';
 	protected $indices		= array(
-		"article_id",
-		"author_id",
+		"articleId",
+		"authorId",
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

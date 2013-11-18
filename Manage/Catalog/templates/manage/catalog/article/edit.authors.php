@@ -1,8 +1,7 @@
 <?php
-
 $authorRelationsByAuthorId	= array();
 foreach( $articleAuthors as $item )
-	$authorRelationsByAuthorId[$item->author_id]	= $item;
+	$authorRelationsByAuthorId[$item->authorId]	= $item;
 
 $listAuthors	= '<small class="muted"><em>Noch kein(e) Autore(n) zugewiesen.</em></small>';
 $listAuthors	= '<div class="label not-label-warning">Noch kein(e) Autore(n) zugewiesen.</div>';
@@ -14,11 +13,11 @@ if( $articleAuthors ){
 		
 		$optRole		= $words['authorRoles'];
 		$optRole		= UI_HTML_Elements::Options( $optRole, (int) $item->editor );
-		$urlRemove		= './manage/catalog/article/removeAuthor/'.$article->article_id.'/'.(int) $item->author_id;
+		$urlRemove		= './manage/catalog/article/removeAuthor/'.$article->articleId.'/'.(int) $item->authorId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
 		$listAuthors[]	= '<tr>
 		<td><div class="autocut">'.$item->lastname.( $item->firstname ? ', '.$item->firstname : "" ).'</div></td>
-		<td><select class="span12" onchange="document.location.href=\'./manage/catalog/article/setAuthorRole/'.$article->article_id.'/'.$item->author_id.'/\'+this.value;">'.$optRole.'</select></td>
+		<td><select class="span12" onchange="document.location.href=\'./manage/catalog/article/setAuthorRole/'.$article->articleId.'/'.$item->authorId.'/\'+this.value;">'.$optRole.'</select></td>
 		<td><div class="pull-right">'.$buttonRemove.'</div></td>
 	</tr>';
 	}
@@ -41,9 +40,9 @@ if( $articleAuthors ){
 
 $optAuthor	= array();
 foreach( $authors as $item )
-	if( !in_array( $item->author_id, array_keys( $authorRelationsByAuthorId ) ) ){
+	if( !in_array( $item->authorId, array_keys( $authorRelationsByAuthorId ) ) ){
 		$label	= $item->lastname . ( $item->firstname ? ', '.$item->firstname : "" );
-		$optAuthor[$item->author_id]	= $label;
+		$optAuthor[$item->authorId]	= $label;
 	}
 $optAuthor	= UI_HTML_Elements::Options( $optAuthor );
 
@@ -58,7 +57,7 @@ return '
 	</div>
 	<div class="row-fluid">
 		<h4>Autor zuweisen</h4>
-		<form action="./manage/catalog/article/addAuthor/'.$article->article_id.'" method="post">
+		<form action="./manage/catalog/article/addAuthor/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_authorId">'.$w->labelAuthor.'</label>

@@ -18,7 +18,7 @@
  */
 class Model_Catalog_Category extends CMF_Hydrogen_Model {
 
-	protected $name		= 'categories';
+	protected $name		= 'catalog_categories';
 	protected $columns	= array(
 		'categoryId',
 		'parentId',

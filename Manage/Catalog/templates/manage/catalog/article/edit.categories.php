@@ -32,7 +32,7 @@ if( $articleCategories ){
 			';
 		}
 		
-		$urlRemove	= './manage/catalog/article/removeCategory/'.$article->article_id.'/'.$item->categoryId;
+		$urlRemove	= './manage/catalog/article/removeCategory/'.$article->articleId.'/'.$item->categoryId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
 		$listCategories[]	= '<tr>
 		<td>'.$label.'</td>
@@ -91,7 +91,7 @@ return '
 	</div>
 	<div class="row-fluid">
 		<h4>Kategorie zuweisen</h4>
-		<form action="./manage/catalog/article/addCategory/'.$article->article_id.'" method="post">
+		<form action="./manage/catalog/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<label for="input_categoryId">Kategorie</label>
 				<select class="span12" name="categoryId" id="input_categoryId">'.$optCategory.'</select>
