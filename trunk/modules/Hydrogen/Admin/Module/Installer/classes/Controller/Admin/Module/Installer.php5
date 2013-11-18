@@ -1,10 +1,13 @@
 <?php
 class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							//  @todo	1) inherit from View_Admin_Module after cleanup
 
-	/**	@var	Logic_Module		$logic		Instance of module logic */
+	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
-	protected $request;
+	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
 	protected $messenger;
+	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
+	protected $request;
+
 	protected $categories;
 
 	protected function __onInit(){
@@ -15,6 +18,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.installer.css' );
 #		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+		if( !$this->env->getSession()->get( 'instanceId' ) ){
+			$words	= $this->getWords( 'msg' );
+			$this->messenger->noteError( $words['noInstanceSelected'] );
+			$this->restart( 'admin/module/viewer' );
+		}
 	}
 
 	protected function handleException( Exception_Logic $e ){
@@ -30,7 +38,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				if( is_string( $exception ) ){
 					$messenger->noteFailure( 'Unbekannter Fehler: '.$exception );
 				}
-				else if( $exception instanceof Exception ){
+				else if( $exception instanceof Exception_IO ){
 					list( $s0, $s1 )	= (array) $exception->getResource();
 					switch( $exception->getCode() ){
 						case 20:
@@ -58,6 +66,9 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 							$messenger->noteFailure( 'Unbekannter Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
 							break;
 					}
+				}
+				else if( $exception instanceof Exception ){
+					$messenger->noteError( 'Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
 				}
 			}
 		}

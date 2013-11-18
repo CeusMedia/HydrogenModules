@@ -1,14 +1,14 @@
 <?php
 class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
-	/**	@var	Logic_Module		$logic			Module logic instance */
+	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$editor		Module XML editor instance */
+	protected $editor;
+	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
-	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
-	protected $request;
 	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
 	protected $messenger;
-	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$edito		Module XML editor instance */
-	protected $editor;
+	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
+	protected $request;
 
 	protected function __onInit(){
 		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
@@ -19,6 +19,11 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
 #		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+		if( !$this->env->getSession()->get( 'instanceId' ) ){
+			$words	= $this->getWords( 'msg' );
+			$this->messenger->noteError( $words['noInstanceSelected'] );
+			$this->restart( 'admin/module/viewer' );
+		}
 	}
 
 	public function addAuthor( $moduleId ){
