@@ -100,6 +100,19 @@ if( $module->files->images ){
 	$list[]	= '<dd>'.$images.'</dd>';
 }
 
+if( $module->files->files ){
+	$files	= array();
+	foreach( $module->files->files as $item ){
+		$count++;
+		$class	= NULL;
+		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
+		$files[]	= UI_HTML_Elements::ListItem( $label, 1, array( 'class' => $class ) );
+	}
+	$files		= UI_HTML_Elements::unorderedList( $files, 1, array( 'class' => 'files' ) );
+	$list[]	= '<dt>'.$w->resourceFiles.'</dt>';
+	$list[]	= '<dd>'.$files.'</dd>';
+}
+
 return '
 <dl class="resources">
 	'.join( $list ).'

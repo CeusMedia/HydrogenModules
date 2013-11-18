@@ -1,8 +1,13 @@
 <?php
 class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
-	/**	@var	Logic_Module		$logic		Module logic instance */
+	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
+	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
+	protected $messenger;
+#	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
+#	protected $request;
+	
 	
 	protected function __onInit(){
 #		$this->request		= $this->env->getRequest();

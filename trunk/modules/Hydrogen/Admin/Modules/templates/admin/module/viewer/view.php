@@ -2,6 +2,7 @@
 
 UI_HTML_Tabs::$version	= 4;
 $tabs	= new UI_HTML_Tabs();
+$activeTab	= 0;
 
 $mapTabs	= array(
 	'resources'	=> 'tabResources',
@@ -18,13 +19,19 @@ foreach( $mapTabs as $key => $tabLabel ){
 	$content	= require_once( 'templates/admin/module/viewer/'.$key.'.php' );
 	$label		= $words['view'][$tabLabel];
 	$label		.= $count ? ' <small>('.$count.')</small>' : '';
-	if( $key != 'general' && !$count )
+	if( $key != 'general' && !$count ){
 		$disabled[]	= $nr;
+		if( $activeTab == $nr )
+			$activeTab++;
+	}
 	$tabs->addTab( $label, $content );
 	$nr++;
 }
 
-$options	= array( 'disabled'	=> $disabled );
+$options	= array(
+	'active'	=> $activeTab,
+	'disabled'	=> $disabled
+);
 
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 
