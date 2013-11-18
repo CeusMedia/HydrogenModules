@@ -10,6 +10,12 @@ if( $module->config ){
 		$count++;
 		if( $item->type == 'boolean' )
 			$item->value	= $words['boolean-values'][( $item->value ? 'yes' : 'no' )];
+		
+		if( preg_match( "/password/", $item->key ) )
+			$item->value	= '<em class="muted">hidden</em>';
+//		else if( $item->protected === "yes" )
+//			$item->value	= '<em class="muted">protected</em>';
+		
 		$key		= UI_HTML_Tag::create( 'td', $item->key );
 		$value		= UI_HTML_Tag::create( 'td', $item->value, array( 'class' => 'config-type-'.$item->type ) );
 		$rows[$item->key]	= '<tr>'.$key.$value.'</tr>';

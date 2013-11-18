@@ -3,6 +3,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 
 	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$editor		Module XML editor instance */
 	protected $editor;
+	/** @var	View_Helper_Module								$helper		Modile View helper instance */
+	protected $helper;
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
 	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
@@ -16,6 +18,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Module::getInstance( $this->env );
 		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->env->getRemote() );
+		$this->helper		= new View_Helper_Module( $this->env );
+
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
 #		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
 #		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
@@ -23,6 +27,35 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 			$words	= $this->getWords( 'msg' );
 			$this->messenger->noteError( $words['noInstanceSelected'] );
 			$this->restart( 'admin/module/viewer' );
+		}
+		$this->modules	= (object) array(
+			'all'		=> $this->logic->model->getAll(),
+			'missing'	=> $this->logic->listModulesMissing( 1 ),
+			'possible'	=> $this->logic->listModulesPossible( 1 ),
+		);
+
+		if( 0 && $this->modules->missing ){
+			$list	= array();
+			$first	= NULL;
+			foreach( $this->modules->missing as $moduleId => $relations ){
+				$first	= $first ? $first : $moduleId;
+				$label	= $title	= $moduleId;
+				foreach( $this->modules->all as $module ){
+					if( $module->id == $moduleId ){
+						$descLines	= explode( "\n", $module->description );
+						$descFirst	= addslashes( trim( array_shift( $descLines ) ) );
+						$title		= $module->title;
+						$label		= $descFirst ? '<acronym title="'.$descFirst.'">'.$title.'</acronym>' : $title;
+					}
+				}
+				$url		= './admin/module/viewer/'.$moduleId;
+				$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
+				$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+				$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+			}
+			$list	= UI_HTML_Tag::create( 'ul', $list );
+			$this->messenger->noteError( 'Folgende Module müssen installiert werden:<br/>'.$list );
+			$this->restart( 'admin/module/viewer/index/'.$first );
 		}
 	}
 
@@ -262,6 +295,9 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		$this->restart( 'view/'.$moduleId.'?tab=resources', TRUE );
 	}
+
+	public function removeIcon( $moduleId ){
+	}
 	
 	public function removeLink( $moduleId, $number ){
 		try{
@@ -277,67 +313,6 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	public function removeRelation( $moduleId, $type, $relatedModuleId ){
 		$this->editor->removeRelation( $moduleId, $type, $relatedModuleId );
 		$this->restart( 'view/'.$moduleId.'?tab=relations', TRUE );
-	}
-	
-	public function view( $moduleId ){
-		if( !$moduleId ){
-			$this->messenger->noteError( "No module selected. Redirecting to list" );
-			$this->restart( NULL, TRUE );
-		}
-		$module		= $this->logic->getModule( $moduleId );
-		if( !$module ){
-			$this->messenger->noteError( "Module not existing. Redirecting to list" );
-			$this->restart( NULL, TRUE );
-		}
-
-		if( !$this->logic->model->isInstalled( $moduleId ) ){
-			$this->messenger->noteError( "Module not installed. Redirecting to list" );
-			$this->restart( NULL, TRUE );
-		}
-
-		try{
-			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
-			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
-
-			$missings = array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
-			if( $missings ){
-				$list	= array();
-				foreach( $missings as $missing ){
-					$missingModule	= $this->logic->getModule( $missing );
-					$status			= 4;
-					if( !$missingModule ){
-						$missingModule			= new stdClass();
-						$missingModule->id		= $missing;
-						$missingModule->title	= $missing;
-						$status					= 0;
-					}
-					$url		= './admin/module/viewer/'.$missingModule->id;
-					$link		= UI_HTML_Tag::create( 'a', $missingModule->title, array( 'href' => $url ) );
-					$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
-					$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
-				}
-				$list			= UI_HTML_Tag::create( 'ul', join( $list ) );
-				$msg			= 'Das Modul "%1$s" ist unvollständig installiert. Es fehlen folgende Module:<br/>%2$s';
-				$this->messenger->noteError( $msg, $module->title, $list );
-				$this->restart( './admin/module/installer/'.$missingModule->id.'/'.$module->id );
-			}
-		}
-		catch( Exception $e ){
-			$this->messenger->noteError( 'Problem bei den Abhängigkeiten: '.$e->getMessage() );
-		}
-
-		$this->addData( 'pathApp', $this->env->pathApp );
-		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
-		$this->addData( 'module', $module );
-		$this->addData( 'moduleId', $moduleId );
-		$this->addData( 'modules', $modules = $this->logic->model->getAll() );
-		$this->addData( 'sources', $this->logic->listSources() );
-		$this->addData( 'xml', $this->logic->model->getLocalModuleXml( $moduleId ) );
-		$this->addData( 'linkNr', $this->env->getRequest()->get( 'linkNr' ) );
-
-		if( isset( $modules[$moduleId] ) )
-			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
-
 	}
 
 	public function saveXml( $moduleId ){
@@ -381,8 +356,68 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		$this->restart( './admin/module/editor/'.$moduleId );
 	}
+	
+	public function view( $moduleId ){
+		if( !$moduleId ){
+			$this->messenger->noteError( "No module selected. Redirecting to list" );
+			$this->restart( NULL, TRUE );
+		}
+		$module		= $this->logic->getModule( $moduleId );
+		if( !$module ){
+			$this->messenger->noteError( "Module not existing. Redirecting to list" );
+			$this->restart( NULL, TRUE );
+		}
 
-	public function removeIcon( $moduleId ){
+		if( !$this->logic->model->isInstalled( $moduleId ) ){
+			$this->messenger->noteError( "Module not installed. Redirecting to list" );
+			$this->restart( NULL, TRUE );
+		}
+
+//		$this->messenger->noteNotice( "Modul in Bearbeitung: ".$this->helper->renderModuleLink( $moduleId, 1 ) );
+		
+		try{
+//			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
+//			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+
+			$missings = array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
+			if( 0 && $missings ){
+				$list	= array();
+				foreach( $missings as $missing ){
+					$missingModule	= $this->logic->getModule( $missing );
+					$status			= 4;
+					if( !$missingModule ){
+						$missingModule			= new stdClass();
+						$missingModule->id		= $missing;
+						$missingModule->title	= $missing;
+						$status					= 0;
+					}
+					$url		= './admin/module/viewer/'.$missingModule->id;
+					$link		= UI_HTML_Tag::create( 'a', $missingModule->title, array( 'href' => $url ) );
+					$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+					$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+				}
+				$list			= UI_HTML_Tag::create( 'ul', join( $list ) );
+				$msg			= 'Das Modul "%1$s" ist unvollständig installiert. Es fehlen folgende Module:<br/>%2$s';
+				$this->messenger->noteError( $msg, $module->title, $list );
+				$this->restart( './admin/module/installer/'.$missingModule->id.'/'.$module->id );
+			}
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( 'Problem bei den Abhängigkeiten: '.$e->getMessage() );
+		}
+
+		$this->addData( 'pathApp', $this->env->pathApp );
+		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
+		$this->addData( 'module', $module );
+		$this->addData( 'moduleId', $moduleId );
+		$this->addData( 'modules', $modules = $this->logic->model->getAll() );
+		$this->addData( 'sources', $this->logic->listSources() );
+		$this->addData( 'xml', $this->logic->model->getLocalModuleXml( $moduleId ) );
+		$this->addData( 'linkNr', $this->env->getRequest()->get( 'linkNr' ) );
+
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+
 	}
 
 	public function viewCode( $moduleId, $type, $fileName ){

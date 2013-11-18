@@ -318,6 +318,27 @@ class Logic_Module {
 			),
 		);
 
+		/*  --  IMAGES NEED SPECIAL TREATMENT  --  */
+		$images	= (object) array( 'content' => array(), 'theme' => array() );						//  prepare image lists
+		foreach( $module->files->images as $image ){												//  iterate noted imaged
+			if( empty( $image->source ) )															//  no image source given
+				$images->content[]	= $image;														//  append to content image list
+			else if( $image->source === "theme" )													//  image is within theme
+				$images->theme[]	= $image;														//  append to theme image list
+		}
+		if( $images->content )																		//  content images are noted
+			$types[]	= (object) array(															//  add content images to file list
+				'resources'		=> $images->content,												//  set image list
+				'pathSource'	=> $config->get( 'path.images' ),									//  set source folder
+				'pathTarget'	=> 'img/',															//  set target folder
+			);
+		if( $images->theme )																		//  theme images are noted
+			$types[]	= (object) array(															//  add theme images to file list
+				'resources'		=> $images->theme,													//  set image list
+				'pathSource'	=> $pathTheme.'img/',												//  set source folder
+				'pathTarget'	=> 'img/',															//  set target folder
+			);
+
 		$list	= array();
 		foreach( $types as $type ){
 			foreach( $type->resources as $targetFile => $resource ){
@@ -584,6 +605,91 @@ class Logic_Module {
 	public function editSource( $sourceId ){
 		
 	}
+
+	public function listModulesMissing( $instanceId ){
+		$remote		= $this->env->getRemote();
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				foreach( $module->relations->needs as $need )
+					if( !array_key_exists( $need, $modulesInstalled ) )
+						$list[$need]	= isset( $list[$need] ) ? $list[$need] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+
+	public function listModulesPossible( $instanceId ){
+		$remote		= $this->env->getRemote();
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				foreach( $module->relations->supports as $support )
+					if( !array_key_exists( $support, $modulesInstalled ) )
+						$list[$support]	= isset( $list[$support] ) ? $list[$support] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+
+	public function listModulesOutdated( $instanceId ){
+		$remote		= $this->env->getRemote();
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				if( $module->versionInstalled && $module->versionAvailable )
+					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
+						$list[$module]	= isset( $list[$module] ) ? $list[$module] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+/*
+	public function listModulesMissing( $instanceId ){
+//projects_luv_migration
+		$remote		= $this->env->getRemote();
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+				
+			foreach( $modulesInstalled as $module ){
+				foreach( $module->relations->needs as $need )
+					if( !array_key_exists( $need, $modulesInstalled ) )
+						$listModulesMissing[]	= $need;
+				foreach( $module->relations->supports as $support )
+					if( !array_key_exists( $support, $modulesInstalled ) )
+						$listModulesPossible[]	= $support;
+			}
+			foreach( $modulesInstalled as $module )
+				if( $module->versionInstalled && $module->versionAvailable )
+					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
+						$listModulesUpdate[]	= $module;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+		}
+		return $list;
+	}*/
 	
 	public function listSources(){
 		$list	= array();
