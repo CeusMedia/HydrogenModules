@@ -18,7 +18,7 @@
  */
 class Model_Catalog_Article_Tag extends CMF_Hydrogen_Model {
 
-	protected $name		= 'article_tags';
+	protected $name		= 'catalog_article_tags';
 	protected $columns	= array(
 		"articleTagId",
 		"articleId",

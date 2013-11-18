@@ -169,7 +169,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	 		}
 		}
 		if( $articleIds )
-			$conditions['article_id']	= $articleIds;
+			$conditions['articleId']	= $articleIds;
 		$offset		= isset( $filter['offset'] ) ? $filter['offset'] : 0;
 		$articles	= $this->logic->getArticles( $conditions, $orders, array( $offset, 50 ) );
 		return $articles;
@@ -179,10 +179,14 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$articles	= $this->getFilteredArticles();
 		if( count( $articles ) === 1 ){
 			$article	= array_pop( $articles );
-			$this->restart( './manage/catalog/article/edit/'.$article->article_id );
+			$this->restart( './manage/catalog/article/edit/'.$article->articleId );
 		}
 		$this->addData( 'articles', $articles );
 		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_article.filter.' ) );
+	}
+
+	public function remove( $articleId ){
+		$this->logic->removeArticle( $articleId );
 	}
 
 	public function removeAuthor( $articleId, $authorId ){

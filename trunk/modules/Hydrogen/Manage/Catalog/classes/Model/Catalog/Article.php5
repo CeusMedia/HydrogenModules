@@ -20,9 +20,9 @@
  */
 class Model_Catalog_Article extends CMF_Hydrogen_Model {
 
-	protected $name		= 'articles';
+	protected $name		= 'catalog_articles';
 	protected $columns	= array(
-		"article_id",
+		"articleId",
 		"status",
 		"title",
 		"subtitle",
@@ -38,9 +38,9 @@ class Model_Catalog_Article extends CMF_Hydrogen_Model {
 		"cover",
 		"language",
 		"new",
-		"timestamp",
+		"createdAt",
 	);
-	protected $primaryKey	= 'article_id';
+	protected $primaryKey	= 'articleId';
 	protected $indices		= array(
 		"status",
 		"title",

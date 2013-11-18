@@ -18,18 +18,18 @@
  */
 class Model_Catalog_Article_Document extends CMF_Hydrogen_Model {
 
-	protected $name		= 'article_documents';
+	protected $name		= 'catalog_article_documents';
 	protected $columns	= array(
-		'article_document_id',
-		'article_id',
+		'articleDocumentId',
+		'articleId',
 		'status',
 		'type',
 		'url',
 		'title',
 	);
-	protected $primaryKey	= 'article_document_id';
+	protected $primaryKey	= 'articleDocumentId';
 	protected $indices		= array(
-		"article_id",
+		"articleId",
 		"status",
 		"type",
 		"url",

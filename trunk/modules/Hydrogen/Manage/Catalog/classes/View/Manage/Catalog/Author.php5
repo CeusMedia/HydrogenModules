@@ -10,10 +10,10 @@ class View_Manage_Catalog_Author extends View_Manage_Catalog{
 	protected function renderList( $authors, $authorId = NULL ){
 		$list	= array();
 		foreach( $authors as $author ){
-			$url	= './manage/catalog/author/edit/'.$author->author_id;
+			$url	= './manage/catalog/author/edit/'.$author->authorId;
 			$label	= $author->lastname.', '.$author->firstname;
 			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-			$class	= $authorId == $author->author_id ? "active" : "";
+			$class	= $authorId == $author->authorId ? "active" : "";
 			$list[$author->lastname.'_'.$author->firstname]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 		}
 		ksort( $list );

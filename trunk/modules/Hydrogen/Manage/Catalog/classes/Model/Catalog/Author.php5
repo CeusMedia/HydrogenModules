@@ -18,9 +18,9 @@
  */
 class Model_Catalog_Author extends CMF_Hydrogen_Model {
 
-	protected $name		= 'authors';
+	protected $name		= 'catalog_authors';
 	protected $columns	= array(
-		"author_id",
+		"authorId",
 		"lastname",
 		"firstname",
 //		"institution",
@@ -28,7 +28,7 @@ class Model_Catalog_Author extends CMF_Hydrogen_Model {
 		"reference",
 		"description",
 	);
-	protected $primaryKey	= 'author_id';
+	protected $primaryKey	= 'authorId';
 	protected $indices		= array(
 		"lastname",
 		"image",

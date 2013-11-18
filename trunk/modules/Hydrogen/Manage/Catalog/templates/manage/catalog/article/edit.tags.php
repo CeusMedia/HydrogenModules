@@ -8,7 +8,7 @@ if( $articleTags ){
 	foreach( $articleTags as $item ){
 		$listTags[]	= '<tr>
 	<td>'.$item->tag.'</td>
-	<td><div class="pull-right"><a class="btn btn-mini btn-danger" href="./manage/catalog/article/removeTag/'.$article->article_id.'/'.$item->articleTagId.'"><i class="icon-remove icon-white"></i></a></div></td>
+	<td><div class="pull-right"><a class="btn btn-mini btn-danger" href="./manage/catalog/article/removeTag/'.$article->articleId.'/'.$item->articleTagId.'"><i class="icon-remove icon-white"></i></a></div></td>
 </tr>';
 	}
 
@@ -37,7 +37,7 @@ return '
 			<h4>Schlagwort vergeben</h4>
 			<label for="input_tag">neues Schlagwort</label>
 			<input class="span12" type="text" name="tag" id="input_tag"/><br/>
-			<button type="button" class="btn btn-small btn-success" onclick="addArticleTag('.$article->article_id.')"><i class="icon-plus icon-white"></i> hinzufügen</button>
+			<button type="button" class="btn btn-small btn-success" onclick="addArticleTag('.$article->articleId.')"><i class="icon-plus icon-white"></i> hinzufügen</button>
 		</div>
 	</div>
 <!--  Manage: Catalog: Article: Tags  -->

@@ -3,7 +3,7 @@
 $listImages	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.</div>';
 
 if( $article->cover ){
-	$id			= str_pad( $article->article_id, 5, "0", STR_PAD_LEFT );
+	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
 	$path		= "../Univerlag/contents/articles/covers/";
 	$source		= $path.$id.'_'.$article->cover;
 	$class		= 'img-polaroid';
@@ -41,7 +41,7 @@ return '
 	</div>
 	<div class="span6">
 		<h4>Cover-Bild hochladen</h4>
-		<form action="./manage/catalog/article/setCover/'.$article->article_id.'" method="post" enctype="multipart/form-data">
+		<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_image">Bilddatei <small class="muted">(mindestens 240 Pixel hoch/breit; Typen: PNG, JPEG)</small></label>

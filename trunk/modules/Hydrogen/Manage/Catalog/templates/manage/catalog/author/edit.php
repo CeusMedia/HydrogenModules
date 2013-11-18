@@ -2,21 +2,21 @@
 $w			= (object) $words['edit'];
 
 $tabs		= $this->renderMainTabs();
-$list		= $this->renderList( $authors, $author->author_id );
+$list		= $this->renderList( $authors, $author->authorId );
 
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
 $image		= "images/no_author.png";
 if( $author->image ){
-	$id		= str_pad( $author->author_id, 5, "0", STR_PAD_LEFT );
+	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
 	$image	= "../Univerlag/contents/authors/".$id.'_'.$author->image;
 }
 $image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 
 $buttonRemoveImage	= "";
 if( $author->image ){
-	$urlRemoveImage	= './manage/catalog/author/removeImage/'.$author->author_id;
+	$urlRemoveImage	= './manage/catalog/author/removeImage/'.$author->authorId;
 	$attributes		= array(
 		'title'		=> $w->buttonRemoveImage,
 		'type'		=> "button",
@@ -35,7 +35,7 @@ return '
 		'.$list.'
 	</div>
 	<div class="span8">
-		<form action="./manage/catalog/author/edit/'.$author->author_id.'" method="post" enctype="multipart/form-data">
+		<form action="./manage/catalog/author/edit/'.$author->authorId.'" method="post" enctype="multipart/form-data">
 			<h3>'.$w->heading.'</h3>
 			<div class="row-fluid">
 				<div class="span6">
@@ -87,7 +87,7 @@ return '
 			<div class="buttonbar">
 				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
 				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/author/remove/'.$author->author_id.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
+				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/author/remove/'.$author->authorId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
 			</div>
 		</form>
 	</div>

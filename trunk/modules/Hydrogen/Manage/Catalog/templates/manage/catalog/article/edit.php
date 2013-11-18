@@ -4,7 +4,7 @@ $w			= (object) $words['edit'];
 #$articles	= array_slice( $articles, 0, 50 );
 
 $tabsMain	= $this->renderMainTabs();
-$list		= $this->renderList( $articles, $article->article_id );
+$list		= $this->renderList( $articles, $article->articleId );
 
 $tabs		= array();
 $panes		= array(
