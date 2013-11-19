@@ -13,7 +13,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 
 		$sessionPrefix		= 'module.manage_shop_order.filter.';
 		if( !$this->session->get( $sessionPrefix.'order' ) )
-				$this->session->set( $sessionPrefix.'order', 'created:DESC' );
+				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
 		if( !$this->session->get( $sessionPrefix.'status' ) )
 				$this->session->set( $sessionPrefix.'status', array( -5, 2, 3, 4, 5 ) );
 	}
@@ -21,7 +21,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 	public function edit( $orderId ){
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		foreach( $order->positions as $nr => $position )
-			$order->positions[$nr]->article	= $this->logicCatalog->getArticle( $position->article_id );
+			$order->positions[$nr]->article	= $this->logicCatalog->getArticle( $position->articleId );
 		$this->addData( 'order', $order );
 	}
 
@@ -50,12 +50,12 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 						$value		= '%'.str_replace( " ", "%", str_replace( ' ', '', $filterValue ) ).'%';
 						$find		= array( 'CONCAT(firstname, lastname)' => $value );
 						$customers	= $model->getAll( $find );
-						$conditions['customer_id']	= array();
+						$conditions['customerId']	= array();
 						foreach( $customers as $customer ){
-							$conditions['customer_id'][]	= $customer->customer_id;
+							$conditions['customerId'][]	= $customer->customerId;
 						}
-						if( !$conditions['customer_id'] )
-							unset( $conditions['customer_id'] );
+						if( !$conditions['customerId'] )
+							unset( $conditions['customerId'] );
 					}
 					break;
 				case 'status':
@@ -71,9 +71,9 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		$orders			= $this->logicShop->getOrders( $conditions, $orders, array( $pageNr * 15, 15 ) );
 		$customerIds	= array();
 		foreach( $orders as $nr => $order ){
-			$customerIds[]	= $order->customer_id;
-			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->order_id );
-			$orders[$nr]->customer	= $this->logicShop->getCustomer( $order->customer_id );
+			$customerIds[]	= $order->customerId;
+			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->orderId );
+			$orders[$nr]->customer	= $this->logicShop->getCustomer( $order->customerId );
 		}
 //		$customers		= $this->modelCustomer->getAll( array( 'customerId' => $customerIds ) );
 		$this->addData( 'orders', $orders );
@@ -86,7 +86,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 	public function setPositionStatus( $positionId, $status ){
 		$this->logicShop->setOrderPositionStatus( $positionId, $status );
 		$position	= $this->logicShop->getOrderPosition( $positionId );
-		$this->restart( 'edit/'.$position->order_id, TRUE );
+		$this->restart( 'edit/'.$position->orderId, TRUE );
 	}
 
 	public function setStatus( $orderId, $status ){
