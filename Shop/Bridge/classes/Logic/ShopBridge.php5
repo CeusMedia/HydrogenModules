@@ -48,8 +48,30 @@ class Logic_ShopBridge{
 	 *	@param		integer		$articleId	Article ID
 	 *	@return		string
 	 */
-	public function getArticlePicture( $source, $articleId ){
-		return $this->getSource( $source )->getThumbnailUri( $articleId );
+	public function getArticle( $source, $articleId, $quantity = 1 ){
+		return $this->getSource( $source )->get( $articleId, $quantity );
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
+	 *	@return		float
+	 */
+	public function getArticleLink( $source, $articleId ){
+		return $this->getSource( $source )->getLink( $articleId );
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
+	 *	@return		string
+	 */
+	public function getArticlePicture( $source, $articleId, $absolute = FALSE ){
+		return $this->getSource( $source )->getPicture( $articleId, $absolute );
 	}
 	
 	/**
@@ -62,16 +84,6 @@ class Logic_ShopBridge{
 	 */
 	public function getArticlePrice( $source, $articleId, $amount = 1 ){
 		return $this->getSource( $source )->getPrice( $articleId, $amount );
-	}
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		mixed		$source		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
-	 *	@return		float
-	 */
-	public function getArticleLink( $source, $articleId ){
-		return $this->getSource( $source )->getLink( $articleId );
 	}
 
 	/**
@@ -98,10 +110,10 @@ class Logic_ShopBridge{
 	}
 
 	/**
-	 *	...
-	 *	@param Logic_ShopBridge_Abstract $bridge
-	 *	@return type
-	 *	@throws InvalidArgumentException
+	 *	Returns bridge class from bridge object.
+	 *	@param		Logic_ShopBridge_Abstract $bridge
+	 *	@return		string
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getBridgeClass( $bridge ){
 		if( is_object( $bridge ) )
