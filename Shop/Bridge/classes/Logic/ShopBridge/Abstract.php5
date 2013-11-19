@@ -32,6 +32,15 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
+	abstract public function getLink( $articleId );
+	
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$articleId
+	 *	@param		boolean		$absolute
+	 *	@return		string
+	 */
 	abstract public function getPicture( $articleId, $absolute = FALSE );
 
 	/**
