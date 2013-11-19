@@ -44,7 +44,8 @@ class Logic_ShopBridge{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
 	 *	@return		string
 	 */
 	public function getArticlePicture( $source, $articleId ){
@@ -54,18 +55,30 @@ class Logic_ShopBridge{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
 	public function getArticlePrice( $source, $articleId, $amount = 1 ){
 		return $this->getSource( $source )->getPrice( $articleId, $amount );
 	}
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
+	 *	@return		float
+	 */
+	public function getArticleLink( $source, $articleId ){
+		return $this->getSource( $source )->getLink( $articleId );
+	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
@@ -76,13 +89,20 @@ class Logic_ShopBridge{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
 	 *	@return		string
 	 */
 	public function getArticleTitle( $source, $articleId ){
 		return $this->getSource( $source )->getTitle( $articleId );
 	}
 
+	/**
+	 *	...
+	 *	@param Logic_ShopBridge_Abstract $bridge
+	 *	@return type
+	 *	@throws InvalidArgumentException
+	 */
 	public function getBridgeClass( $bridge ){
 		if( is_object( $bridge ) )
 			if( $bridge instanceof Logic_ShopBridge_Abstract )
@@ -104,7 +124,7 @@ class Logic_ShopBridge{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		$source
+	 *	@param		mixed		$source		Bridge ID or class name
 	 *	@return		Logic_ShopBridge_Abstract
 	 */
 	public function getSource( $bridgeIdOrClass ){
@@ -121,16 +141,33 @@ class Logic_ShopBridge{
 		return $this->sources[$bridgeIdOrClass];
 	}
 
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$bridgeId	Bridge ID
+	 *	@return		Logic_ShopBridge_Abstract
+	 *	@throws		InvalidArgumentException
+	 */
 	public function getSourceFromBridge( $bridgeId ){
 		if( !in_array( (int)$bridgeId, array_keys( $this->bridges ) ) )
 			throw new InvalidArgumentException( 'Bridge with ID '.$bridgeId.' is not exising' );
 		return $this->getSource( $this->bridges[(int)$bridgeId] );
 	}
 
+	/**
+	 *	Returns map of bridge classes.
+	 *	@access		public
+	 *	@return		array
+	 */
 	public function getSourceBridges(){
 		return $this->bridges;
 	}
 
+	/**
+	 *	Returns map of bridge objects.
+	 *	@access		public
+	 *	@return		array
+	 */
 	public function getSources(){
 		return $this->sources;
 	}
