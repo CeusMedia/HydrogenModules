@@ -18,22 +18,24 @@
  */
 class Model_Shop_Order_Position extends CMF_Hydrogen_Model {
 
-	protected $name		= 'orderpositions';
+	protected $name		= 'shop_order_positions';
 	protected $columns	= array(
-		"position_id",
-		"order_id",
-		"article_id",
-		"user_id",
+		"positionId",
+		"orderId",
+		"userId",
+		"bridgeId",
+		"articleId",
 		"quantity",
 		"status",
-		"created",
-		"edited",
+		"createdAt",
+		"modifiedAt",
 	);
-	protected $primaryKey	= 'position_id';
+	protected $primaryKey	= 'positionId';
 	protected $indices		= array(
-		"order_id",
-		"article_id",
-		"user_id",
+		"orderId",
+		"userId",
+		"bridgeId",
+		"articleId",
 		"status"
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
