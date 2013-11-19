@@ -8,7 +8,7 @@ class View_Helper_Messenger_Bootstrap{
 		'3'	=> 'messenger messenger-success alert alert-success',
 	);
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env	= $env;
 	}
 
@@ -48,4 +48,12 @@ class View_Helper_Messenger_Bootstrap{
 		$this->env->getMessenger()->clear();
 		return $list;
 	}
+
+	public static function renderStatic( CMF_Hydrogen_Environment_Abstract $env, $timeFormat = NULL, $linkResources = FALSE ){
+		if( !$env->getMessenger()->getMessages() )
+			return;
+		$helper		= new self( $env );
+		return $helper->render( $timeFormat, $linkResources );
+	}
 }
+?>

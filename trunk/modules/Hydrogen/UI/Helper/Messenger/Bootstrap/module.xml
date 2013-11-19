@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Helper: Messenger: Bootstrap</title>
-	<version>0.2</version>
+	<version>0.3</version>
 	<files>
 		<class>View/Helper/Messenger/Bootstrap.php5</class>
 	</files>
