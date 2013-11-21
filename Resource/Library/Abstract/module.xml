@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Library: Abstract Autoloader</title>
+	<description><![CDATA[
+This module is ***abstract*** and can be used as template for library autoloaders.
+
+**ATTENTION**: You need to adjust the module hook (first line) if you copy/inherit this module.
+]]></description>
+	<category>Resource</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files/>
+	<relations/>
+	<config protected="yes" mandatory="yes" name="extensions">php</config>
+	<config protected="yes" mandatory="yes" name="path"></config>
+	<config protected="yes" mandatory="no" name="prefix"></config>
+
+	<hook type="resource" resource="Env" event="init"><![CDATA[
+		$conf	= $env->getConfig()->getAll( 'module.resource_library_MYLIBRARY.' );				//  get module config dictionary
+		if( count( $conf ) ) ){																		//  module config found
+			$path	= preg_replace( "@/+$@si", "", trim( $conf['path'] ) ).'/';						//  extract and sanitize include path
+			CMC_Loader::registerNew( $conf['extensions'], trim( $conf['prefix'], $path );			//  register autoloader for library classes
+		}
+		die( "Resource:Library:Abstract: No module configuration found.\nIt seems you extended/copied this module and forgot to adjust the first line of the first hook of this module." );
+	]]></hook>
+</module>
