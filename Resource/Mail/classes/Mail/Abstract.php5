@@ -10,7 +10,7 @@ abstract class Mail_Abstract{
 	/**	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
 	protected $env;
 	/**	@var		Net_Mail							$mail			Mail objectm, build on construction */
-	public/*protected*/ $mail;
+	public $mail;
 	/** @var		UI_HTML_PageFrame					$page			Empty page oject for HTML mails */
 	protected $page;
 	/** @var		Net_Mail_Transport_Abstract			$transport		Mail transport object, build on construction */

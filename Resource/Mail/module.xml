@@ -3,12 +3,13 @@
 	<title>Mail</title>
 	<description>Enables application to send mails.</description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Mail/Abstract.php5</class>
+		<class>Mail/Example.php5</class>
 		<style>mail.min.css</style>
 		<script>mail.min.js</script>
 	</files>
