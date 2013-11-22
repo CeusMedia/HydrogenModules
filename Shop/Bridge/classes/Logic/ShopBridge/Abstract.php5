@@ -17,6 +17,15 @@ abstract class Logic_ShopBridge_Abstract{
 		$this->bridge	= $bridge;
 		$this->__onInit();
 	}
+	
+	/**
+	 *	Checks existance of article and returns data object if found.
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@return		object						Bridged article data object if found
+	 *	@throws		InvalidArgumentException	if not found
+	 */
+	abstract public function check( $articleId );
 
 	public function getBridgeClass(){
 		return preg_replace( "/^Logic_ShopBridge_/", "", get_class( $this ) );
