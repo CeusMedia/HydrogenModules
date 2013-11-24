@@ -49,10 +49,26 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
+	 *	Tries to find page related to module and returns found page.
+	 *	@access		public
+	 *	@param		string		$module			ID of module to find related page for
+	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@throws		InvalidArgumentException	if no or empty module ID is given
+	 */
+	public function getPageFromModule( $module ){
+		if( !strlen( trim( $module ) ) )
+			throw new InvalidArgumentException( 'No module ID given' );
+		$model	= new Model_Page( $this->env );
+		$page	= $model->getByIndex( 'module', $module );
+		return $page ? $page : NULL;
+	}
+
+	/**
 	 *	Indicates wheter a page exists for an URI path.
 	 *	@access		public
 	 *	@param		string		$path			Path to find page for
 	 *	@return		boolean
+	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
 	 */
 	public function hasPage( $path ){
 		$model		= new Model_Page( $this->env );
