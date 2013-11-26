@@ -3,7 +3,7 @@
 	<title>Library: cmModules</title>
 	<description><![CDATA[Integrates cmModules.]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files/>
@@ -11,7 +11,7 @@
 	<config protected="yes" name="path" mandatory="yes">cmModules/trunk/</config>
 	<hook type="resource" resource="Env" event="initModules"><![CDATA[
 		if( !defined( 'CMM_PATH' ) ){																//  if cmModules is not yet loaded
-			$config	= $context->config->getAll( 'module.resource_library_cmmodules.path', TRUE );	//  get include path from config
+			$config	= $context->config->getAll( 'module.resource_library_cmmodules.', TRUE );		//  get include path from config
 			$path	= preg_replace( "@/+$@si", "", trim( $config->get( 'path' ) ) ).'/';			//  sanitize include path
 			if( !@include_once $path.'autoload.php5' )												//  loading autoloader script failed
 				die( 'Library "cmModules" could not been found in path "'.$path.'".' );				//  quit fataly since this is essential
