@@ -32,9 +32,7 @@ $list	= UI_HTML_Tag::create( 'ul', implode( $list ), array( 'class' => 'list-loc
 #return $list;
 
 return '
-<fieldset>
-	<legend>'.$w->legend.'</legend>
-	'.$list.'
-</fieldset>
+<h3>'.$w->legend.'</h3>
+'.$list.'
 ';
 ?>
