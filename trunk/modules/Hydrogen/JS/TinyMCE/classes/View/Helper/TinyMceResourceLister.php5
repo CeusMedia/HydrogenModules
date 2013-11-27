@@ -1,15 +1,33 @@
 <?php
 class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstract{
 
+	/**	@var	ADT_List_Dictionary		$config		Module configuration */
+	protected $config;
+
+	/**	@var 	string					$pathFront	Path to frontend application */
+	protected $pathFront;
+
+	/**
+	 *	Constructor.
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment_Web	$env
+	 *	@return		void
+	 */
 	public function __construct( CMF_Hydrogen_Environment_Web $env ){
 		$this->setEnv( $env );
-		$this->config	= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$this->config		= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$this->pathFront	= $this->config->get( 'path' );
 	}
 
+	/**
+	 *	...
+	 *	@access		public
+	 *	@return		array		List of images
+	 */
 	public function getImageList(){
-		$pathFront	= $this->config->get( 'path' );
-		$pathImages	= $this->config->get( 'path.images' );
-		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
+		$list		= array();
+		$path		= $this->pathFront.$this->config->get( 'path.images' );
+		$index		= new File_RecursiveRegexFilter( $path, "/\.jpg$/i" );
 		foreach( $index as $item ){
 			$parts	= explode( "/", substr( $item->getPathname(), strlen( $pathImages ) ) );
 			$file	= array_pop( $parts );
@@ -25,6 +43,11 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		return array_values( $list );
 	}
 
+	/**
+	 *	...
+	 *	@access		public
+	 *	@return		array		List of links
+	 */
 	public function getLinkList(){
 		$words		= (object) $this->getWords( 'link-prefixes', 'js/tinymce' );
 		$resources	= explode( ",", $this->env->getConfig()->get( 'module.manage_pages.link.resources' ) );
@@ -77,11 +100,12 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 					}
 					break;
 				case 'documents':
+					$pathDocuments	= $this->config->get( 'path.documents' );
 					if( class_exists( 'Model_Document' ) ){
-						$model	= new Model_Document( $this->env, '../documents/' );
+						$model	= new Model_Document( $this->env, $this->pathFront.$pathDocuments );
 						foreach( $model->index() as $entry ){
 							$links[]	= (object) array(
-								'url'	=> 'documents/'.$entry,
+								'url'	=> $pathDocuments.$entry,
 								'title'	=> $words->document.$entry,
 							);
 						}
