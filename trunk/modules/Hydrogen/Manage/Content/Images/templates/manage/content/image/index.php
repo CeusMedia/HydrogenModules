@@ -1,5 +1,4 @@
 <?php
-$pathImages	= '../images/';
 
 $listFolders	= $view->listFolders( $path );
 
@@ -24,7 +23,7 @@ function listImages( $env, $pathImages, $path, $maxWidth, $maxHeight ){
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
 }
 $listImages	= '<div><em><small class="muted">Keine Bilder in diesem Ordner gefunden.</small></em></div>';
-if( $path && $files = listImages( $env, $pathImages, $path, 120, 80 ) )
+if( $path && $files = listImages( $env, $basePath, $path, 120, 80 ) )
 	$listImages	= $files;
 
 $linkEditFolder	= '';

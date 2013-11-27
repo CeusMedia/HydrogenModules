@@ -9,6 +9,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		if( !file_exists( $this->path ) ){
 			$this->env->getMessenger()->noteFailure( 'Der Bilderordner "'.$this->path.'" existiert nicht.' );
 		}
+
 		$this->folders	= array( '' => '.' );
 		foreach( Folder_RecursiveLister::getFolderList( $this->path ) as $entry )
 			$this->folders[]	= './'.substr( $entry->getPathname(), strlen( $this->path ) );
@@ -16,10 +17,10 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 
 		$path			= trim( $this->env->getRequest()->get( 'path' ) );
 		$path			= str_replace( "../", "", $path );
-		$path			= strlen( trim( $path ) ) ? trim( $path ) : "."; 
+		$path			= strlen( trim( $path ) ) ? trim( $path ) : ".";
 		$this->addData( 'path', $path );
+		$this->addData( 'basePath', $this->path );
 		$this->addData( 'folders', $this->folders );
-
 #		$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
 #		$thumbnailer->optimize( $this->path );
 	}
