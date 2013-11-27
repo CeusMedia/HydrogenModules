@@ -5,7 +5,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
 		$config		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
-		
+
 		$this->baseUri		= $config->get( 'site.domain' ).$config->get( 'site.path' );
 		$this->model		= new Model_Page( $this->env );
 		$this->request		= $this->env->getRequest();
@@ -151,7 +151,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$enabled		= FALSE;
 		$meta		= $this->getRemoteConfigValues( "UI_MetaTags", array( 'default.description', 'default.keywords', 'default.author', 'default.publisher' ) );
 		if( !$meta )
-			$this->env->getMessenger()->noteError( 'Das Module "UI:MetaTags" muss installiert sein, ist es aber nicht.' );
+			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
 		$this->addData( 'meta', $meta );
 	}
 

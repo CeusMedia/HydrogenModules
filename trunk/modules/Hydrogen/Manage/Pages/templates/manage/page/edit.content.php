@@ -28,5 +28,6 @@ $(document).ready(function(){
 });
 	</script>';
 }
+
 return $content;
 ?>
