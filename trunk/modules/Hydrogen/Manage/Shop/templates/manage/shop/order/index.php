@@ -22,19 +22,19 @@ $statusIcons		= array(
 
 $listOrders	= array();
 foreach( $orders as $order ){
-	$attributes		= array( 'href' => './manage/shop/order/edit/'.$order->order_id );
+	$attributes		= array( 'href' => './manage/shop/order/edit/'.$order->orderId );
 	$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$order->status] ) );
-	$link	= UI_HTML_Tag::create( 'a', "#".$order->order_id, $attributes );
+	$link	= UI_HTML_Tag::create( 'a', "#".$order->orderId, $attributes );
 
 	$customer	= $order->customer ? $order->customer->lastname.', '.$order->customer->firstname : "-";
 	$customer	= UI_HTML_Tag::create( 'div', $customer, array( 'class' => 'autocut' ) );
 	$customer	= UI_HTML_Tag::create( 'a', $customer, $attributes );
-	$link		= UI_HTML_Tag::create( 'small', "#".$order->order_id, array( 'class' => 'muted' ) );
+	$link		= UI_HTML_Tag::create( 'small', "#".$order->orderId, array( 'class' => 'muted' ) );
 	$cellLink		= UI_HTML_Tag::create( 'td', $link );
 	$cellCustomer	= UI_HTML_Tag::create( 'td', $customer );
 	$cellStatus		= UI_HTML_Tag::create( 'td', '<small>'./*$iconStatus.' '.*/$words->states[$order->status].'</small>' );
-	$cellCreated	= UI_HTML_Tag::create( 'td', '<small>'.( $order->created ? date( 'd.m.Y', $order->created ) : "-" ).'</small>' );
-	$cellModified	= UI_HTML_Tag::create( 'td', '<small>'.( $order->edited ? date( 'd.m.Y', $order->edited ) : '-' ).'</small>' );
+	$cellCreated	= UI_HTML_Tag::create( 'td', '<small>'.( $order->createdAt ? date( 'd.m.Y', $order->createdAt ) : "-" ).'</small>' );
+	$cellModified	= UI_HTML_Tag::create( 'td', '<small>'.( $order->editedAt ? date( 'd.m.Y', $order->editedAt ) : '-' ).'</small>' );
 	$rowColor		= "info";
 	if( in_array( $order->status, array( 6 ) ) )
 		$rowColor	= 'success';
