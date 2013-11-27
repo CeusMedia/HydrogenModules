@@ -20,15 +20,15 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 
 	protected $name		= 'shop_orders';
 	protected $columns	= array(
-			"orderId",
-			"customerId",
-			"sessionId",
-			"options",
-			"channel",
-			"status",
-			"created",
-			"edited",
-			);
+		"orderId",
+		"customerId",
+		"sessionId",
+		"options",
+		"channel",
+		"status",
+		"createdAt",
+		"editedAt",
+	);
 	protected $primaryKey	= 'orderId';
 	protected $indices		= array(
 		"customerId",

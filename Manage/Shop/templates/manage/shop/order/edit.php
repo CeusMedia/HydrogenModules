@@ -2,7 +2,7 @@
 
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
-$baseUrl	= './manage/shop/order/setStatus/'.$order->order_id.'/';
+$baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= array( new CMM_Bootstrap_LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
 
 if( in_array( $order->status, array( 2 ) ) )
@@ -51,9 +51,9 @@ $panels[]	= '
 	<div class="span4">
 		<h4>Bestellung</h4>
 		<dl class="dl-horizontal">
-			<dt>Order-ID</dt><dd>'.$order->order_id.'</dd>
-			<dt>Kunden-ID</dt><dd>'.$order->customer_id.'</dd>
-			<dt>Datum</dt><dd>'.date( "d.m.Y", $order->created ).' <small><em>'.date( "H:i:s", $order->created ).'</em></small><dd>
+			<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
+			<dt>Kunden-ID</dt><dd>'.$order->customerId.'</dd>
+			<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
 			<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
 <!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
 		</dl>
@@ -75,28 +75,28 @@ if( $order->customer && $order->customer->alternative )
 $w		= (object) $words['positions'];
 $rows	= array();
 foreach( $order->positions as $position ){
-	$url	= './manage/catalog/article/edit/'.$position->article_id;
+	$url	= './manage/catalog/article/edit/'.$position->articleId;
 	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
 	$cellTitle		= UI_HTML_Tag::create( 'td', $link );
 	$cellQuantity	= UI_HTML_Tag::create( 'td', $position->quantity );
 	$cellStatus		= UI_HTML_Tag::create( 'td', new CMM_Bootstrap_ButtonGroup( array(
 		new CMM_Bootstrap_LinkButton(
-			'./manage/shop/order/setPositionStatus/'.$position->position_id.'/1',
+			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
 			'btn-small btn-warning',
 			'arrow-right',
 			$order->status < 1 || $position->status != 0
 		),
 		new CMM_Bootstrap_LinkButton(
-			'./manage/shop/order/setPositionStatus/'.$position->position_id.'/2',
+			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/2',
 			'geliefert',
 			'btn-small btn-success',
 			'ok',
 			$order->status < 1 || $position->status == 2
 		),
 	) ) );
-	
+
 	$rowColor		= $position->status == 1 ? 'warning' : ( $position->status == 2 ? 'success' : 'error' );
 	$cells			= array( $cellTitle, $cellQuantity, $cellStatus );
 	$attributes		= array( 'class' => $rowColor );
@@ -126,7 +126,7 @@ return $this->renderMainTabs().'
 	}
 </style>
 <div>
-	<h3><span class="muted">Bestellung</span> <span>#'.$order->order_id.'</span></h3>
+	<h3><span class="muted">Bestellung</span> <span>#'.$order->orderId.'</span></h3>
 	<div class="row-fluid panels">
 		'.join( $panels ).'
 	</div>
