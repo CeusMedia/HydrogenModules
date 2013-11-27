@@ -3,11 +3,12 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 
 	public function __construct( CMF_Hydrogen_Environment_Web $env ){
 		$this->setEnv( $env );
+		$this->config	= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 	}
 
 	public function getImageList(){
-		$pathFront	= "../";
-		$pathImages	= "images/";
+		$pathFront	= $this->config->get( 'path' );
+		$pathImages	= $this->config->get( 'path.images' );
 		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
 		foreach( $index as $item ){
 			$parts	= explode( "/", substr( $item->getPathname(), strlen( $pathImages ) ) );
