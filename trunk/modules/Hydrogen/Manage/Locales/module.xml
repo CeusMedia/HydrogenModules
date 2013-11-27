@@ -17,5 +17,6 @@
 		<locale>de/manage/locale.ini</locale>
 		<style>site.locale.css</style>
 	</files>
-	<link>manage/locale</link>
+	<config type="string" protected="yes" name="path">../locales/</config>
+	<link>manage/locale</link>	
 </module>
