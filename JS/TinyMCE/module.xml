@@ -21,6 +21,7 @@
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
     <config type="string" protected="no" name="path">../</config>
     <config type="string" protected="no" name="path.images">images/</config>
+    <config type="string" protected="no" name="path.documents">documents/</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config	= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
