@@ -6,7 +6,8 @@ if( $documents ){
 	foreach( $documents as $entry ){
 		$attributes	= array(
 			'class'		=> 'btn btn-mini btn-danger pull-right',
-			'href'		=> './manage/content/document/remove/?documentId='.base64_encode( $entry )
+			'href'		=> './manage/content/document/remove/?documentId='.base64_encode( $entry ),
+			'title'		=> $words['index']['buttonRemove'],
 		);
 		$remove	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', $attributes );
 		$link	= $pathDocuments.$entry;
@@ -30,28 +31,23 @@ if( $documents ){
 return '
 <div class="row-fluid">
 	<div class="span6">
-		<h3>Dokumente</h3>
+		<h3>'.$words['index']['heading'].'</h3>
 		'.$list.'
 	</div>
 	<div class="span6">
-		<h3>Dokument hinzufügen</h3>
+		<h3>'.$words['add']['heading'].'</h3>
 		<form action="./manage/content/document/add" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_upload">Datei</label>
+					<label for="input_upload">'.$words['add']['labelFile'].'</label>
 					<input type="file" name="upload" id="input_upload"/>
 				</div>
 				<div class="buttonbar">
-					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> hochladen</button>
+					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> '.$words['add']['buttonSave'].'</button>
 				</div>
 			</div>
 		</form>
 	</div>
-<!--	<div class="span3">
-		<h4>Info</h4>
-		...
-	</div>-->
-</div>
-';
-
+</div>';
 ?>
+

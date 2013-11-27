@@ -17,15 +17,20 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
 			$upload	= (object) $request->get( 'upload' );
 			if( $upload->error ){
+                $handler    = new Net_HTTP_UploadErrorHandler();
+                $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
+				$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
+				$this->restart( NULL, TRUE );
 			}
 			else{
 				if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
-					$this->env->getMessenger()->noteFailure( 'Moving uploaded file to documents folder failed' );
+					$messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
 				else
-					$this->env->getMessenger()->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
+					$messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
 				$this->restart( NULL, TRUE );
 			}
 		}
