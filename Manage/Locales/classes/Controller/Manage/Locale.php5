@@ -24,6 +24,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		parent::__onInit();
 		$config		= $this->env->getConfig();
 		$locales	= $config->get( 'path.locales' );
+		$locales	= $config->get( 'module.manage_locales.path' );
 		$language	= $this->env->language->getLanguage();
 		$this->path	= $locales.$language.'/';
 		if( !file_exists( $this->path ) )
