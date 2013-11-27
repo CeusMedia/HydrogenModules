@@ -7,7 +7,10 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 
 	public function add(){}
 
-	public function edit(){}
+	public function edit(){
+#		xmp( $this->loadTemplate( 'manage/page', 'edit', $this->getData() ) );
+#die;
+	}
 
 	public function index(){}
 
