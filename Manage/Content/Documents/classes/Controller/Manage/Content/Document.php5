@@ -1,9 +1,11 @@
 <?php
 class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 
+	protected $path;
+	
 	public function __onInit(){
 		$config			= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
-		$this->path		= $config->get( 'path' );
+		$this->path		= $config->get( 'frontend.path' ).$config->get( 'path.documents' );
 		if( !$this->path )
 			throw new RuntimeException( 'No document path set in module configuration' );
 #		$words			= $this->getWords( "exceptions", "manage/content/documents" );
@@ -12,9 +14,28 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		if( !is_writable( $this->path ) )
 			throw new RuntimeException( 'Documents folder "'.$this->path.'" is not writable' );
 		$this->model	= new Model_Document( $this->env, $this->path );
-		$this->addData( 'documents', $this->model->index() );
 	}
 
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$config			= $env->getConfig()->getAll( 'module.manage_content_documents.', TRUE );
+		$pathFront		= $config->get( 'frontend.path' );
+		$pathDocuments	= $config->get( 'path.documents' );
+
+		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
+		$prefixes		= (object) $words['link-prefixes'];
+
+		$list			= array();
+		$model			= new Model_Document( $env, $pathFront.$pathDocuments );
+		foreach( $model->index() as $nr => $entry ){
+			$list[$entry.$nr]	= (object) array(
+				'title'	=> $prefixes->document.$entry,
+				'url'	=> $pathDocuments.$entry,
+			);
+		}
+		ksort( $list );
+		$context->list	= array_merge( $context->list, array_values( $list ) );
+	}
+	
 	public function add(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -24,20 +45,23 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
                 $handler    = new Net_HTTP_UploadErrorHandler();
                 $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
 				$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
-				$this->restart( NULL, TRUE );
 			}
 			else{
 				if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
 					$messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
 				else
 					$messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
-				$this->restart( NULL, TRUE );
 			}
 		}
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){
-		$this->addData( 'pathDocuments', $this->path );
+		$config		= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
+		$this->addData( 'frontendPath', $config->get( 'frontend.path' ) );
+		$this->addData( 'frontendUrl', $config->get( 'frontend.url' ) );
+		$this->addData( 'pathDocuments', $config->get( 'path.documents' ) );
+		$this->addData( 'documents', $this->model->index() );
 	}
 
 	public function remove(){
