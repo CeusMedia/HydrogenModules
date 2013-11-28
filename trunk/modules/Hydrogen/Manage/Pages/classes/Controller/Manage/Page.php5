@@ -15,6 +15,36 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 	}
 
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
+		$prefixes	= (object) $words['link-prefixes'];
+
+		$list  = array();
+		$model	= new Model_Page( $env );
+		foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $nr => $page ){
+			$page->level		= 0;
+			if( $page->parentId ){
+				$parent = $model->get( $page->parentId );
+				$page->level		= 1;
+				if( $parent->parentId ){
+					$grand  = $model->get( $parent->parentId );
+					$parent->identifier = $grand->identifier.'/'.$parent->identifier;
+					$parent->title		= $grand->title.' / '.$parent->title;
+					$page->level		= 2;
+				}
+				$page->identifier   = $parent->identifier.'/'.$page->identifier;
+				$page->title		= $parent->title.' / '.$page->title;
+			}
+			$list[$page->title.$nr]	= (object) array(
+				'title'	=> $prefixes->page.$page->title,
+				'url'	=> './'.$page->identifier,
+			);
+		}
+		ksort( $list );
+		$context->list	= array_merge( $context->list, array_values( $list ) );
+	}
+	
+	
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			foreach( $this->model->getColumns() as $column ){
