@@ -369,8 +369,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 
 		if( !$this->logic->model->isInstalled( $moduleId ) ){
-			$this->messenger->noteError( "Module not installed. Redirecting to list" );
-			$this->restart( NULL, TRUE );
+			$this->messenger->noteNotice( 'Das Modul "'.$moduleId.'" ist nicht installiert.' );
+			$this->restart( './admin/module/viewer/view/'.$moduleId );
 		}
 
 //		$this->messenger->noteNotice( "Modul in Bearbeitung: ".$this->helper->renderModuleLink( $moduleId, 1 ) );
