@@ -40,6 +40,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		ksort( $paths );
 		$this->addData( 'pathLocale', $this->path );
 		$this->addData( 'paths', $paths );
+		$this->addData( 'filePath', NULL );
 	}
 
 	public function add() {
@@ -176,9 +177,12 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 	}
 
 	public function index() {
+		$config	= $this->env->getConfig();
 #		$request	= $this->env->getRequest();
 #		$this->addData( 'filename', $request->get( 'key' ) );
 		$this->loadFileTree();
+
+		$this->addData( 'showAddForms', $config->get( 'module.manage_locales.create' ) );
 	}
 
 	protected function loadFileTree(){

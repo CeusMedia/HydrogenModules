@@ -29,7 +29,7 @@ $buttonRemove	= UI_HTML_Elements::LinkButton( './manage/locale/remove/'.$fileHas
 
 $panelEdit	= '
 <form id="form_locale-editor" name="editContent" action="./manage/locale/edit/'.$fileHash.'" method="post">
-	<h4>'.$w->legend.'</h4>
+	<h3><span class="muted">'.$w->heading.' </span>'.$filePath.'</h3>
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_name">'.$w->labelName.'</label>
@@ -51,13 +51,12 @@ $panelEdit	= '
 </form>';
 
 return '
-<!--<h2>HTML Inhalte</h2>-->
 <div class="row-fluid">
-	<div class="span4">
+	<div class="span3">
 		'.$panelFilter.'
 		'.$panelList.'
 	</div>
-	<div class="span8">
+	<div class="span9">
 		'.$panelEdit.'
 	</div>
 </div>
