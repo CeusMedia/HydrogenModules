@@ -540,6 +540,8 @@ class Logic_Module {
 		$folders	= array();
 		$baseAppPaths	= $configApp->getAll( 'path.' );
 		foreach( $files as $file ){
+			if( $file === "config/config.ini" )														//  @todo	fix this hack
+				continue;
 			@unlink( $path = $pathApp.$file );
 			do{
 				$path	= dirname( $path );
