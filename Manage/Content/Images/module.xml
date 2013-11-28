@@ -20,9 +20,16 @@
 		<template>manage/content/image/editFolder.php</template>
 		<template>manage/content/image/editImage.php</template>
 	</files>
-	<relations/>
-	<config type="string" name="front.path" mandatory="yes" title="path to document files, needs trailing slash">../images/</config>
-	<config type="string" name="front.url" mandatory="yes"></config>
+	<relations>
+		<supports type="module">JS_TinyMCE</supports>
+	</relations>
+	<config type="string" name="frontend.path" mandatory="no" title="folder path to managed application, needs trailing slash if set">../</config>
+	<config type="string" name="frontend.url" mandatory="yes" title="net path to managed application, needs trailing slash">../</config>
+	<config type="string" name="path.images" mandatory="yes" title="path to images within managed application, needs trailing slash">contents/images/</config>
+	<config type="string" name="path.ignore" mandatory="no" title="regular expression of paths to ignore">/^(galleries|gallery)/i</config>
+	<config type="string" name="extensions" mandatory="yes" title="regular expression of accepted file extensions">/\.(gif|ico|jpe|jpeg|jpg|png|svg)$/i</config>
 	<link xml:lang="de" path="manage/content/image">Bilder</link>
 	<link xml:lang="en" path="manage/content/image">Images</link>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
 </module>
