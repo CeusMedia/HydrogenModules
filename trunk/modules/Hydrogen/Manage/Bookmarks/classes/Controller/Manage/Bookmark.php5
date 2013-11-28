@@ -6,6 +6,22 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 		$this->addData( 'bookmarks', $this->model->getAll( array( 'status' => '0' ), array( 'title' => 'ASC' ) ) );
 	}
 
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
+		$prefixes	= (object) $words['link-prefixes'];
+
+		$list		= array();
+		$model		= new Model_Bookmark( $env );
+		foreach( $model->getAll() as $nr => $link ){
+			$list[$link->title.$nr]	= (object) array(
+				'title'	=> $prefixes->bookmark.$link->title,
+				'url'	=> $link->url,
+			);
+		}
+		ksort( $list );
+		$context->list	= array_merge( $context->list, array_values( $list ) );
+	}		
+
 	public function add(){
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
