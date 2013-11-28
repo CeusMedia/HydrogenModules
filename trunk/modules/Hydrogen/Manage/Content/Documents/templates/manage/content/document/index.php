@@ -10,7 +10,7 @@ if( $documents ){
 			'title'		=> $words['index']['buttonRemove'],
 		);
 		$remove	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', $attributes );
-		$link	= $pathDocuments.$entry;
+		$link	= $frontendPath.$pathDocuments.$entry;
 		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $link ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr',
 			UI_HTML_Tag::create( 'td', $link ).

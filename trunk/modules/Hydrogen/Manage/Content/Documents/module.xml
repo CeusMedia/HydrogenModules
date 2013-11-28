@@ -3,7 +3,7 @@
 	<title>Manage: Contents: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.2</version>
+	<version>0.3.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,8 +14,13 @@
 		<locale>de/manage/content/document.ini</locale>
 		<template>manage/content/document/index.php</template>
 	</files>
-	<relations/>
-	<config type="string" name="path"></config>								; path to document files, needs trailing slash
+	<relations>
+		<supports type="module">JS_TinyMCE</supports>
+	</relations>
+	<config type="string" name="frontend.path" title="file path to managed application, needs trailing slash if set">../</config>
+	<config type="string" name="frontend.url" title="net path to managed application, needs trailing slash">../</config>
+	<config type="string" name="path.documents" title="path to documents within managed application, needs trailing slash">contents/documents/</config>
 	<link xml:lang="de" path="manage/content/document">Dokumente</link>
 	<link xml:lang="en" path="manage/content/document">Documents</link>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Document::___onTinyMCE_getLinkList</hook>
 </module>
