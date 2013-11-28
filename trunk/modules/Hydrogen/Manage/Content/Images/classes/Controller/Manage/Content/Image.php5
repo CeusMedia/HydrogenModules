@@ -5,19 +5,27 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 	protected $path;
 
 	public function __onInit(){
-		$this->path		= $this->env->getConfig()->get( 'module.manage_content_images.front.path' );
+		$this->config		= $this->env->getConfig();
+		$this->messenger	= $this->env->getMessenger();
+
+		$config		= $this->config->getAll( 'module.manage_content_images.', TRUE );
+		$pathIgnore	= trim( $config->get( 'path.ignore' ) );
+		
+		$this->path			= $config->get( 'frontend.path' ).$config->get( 'path.images' );
 		if( !file_exists( $this->path ) ){
-			$this->env->getMessenger()->noteFailure( 'Der Bilderordner "'.$this->path.'" existiert nicht.' );
+			$this->messenger->noteFailure( 'Der Bilderordner "'.$this->path.'" existiert nicht.' );
 		}
 
 		$this->folders	= array( '' => '.' );
-		foreach( Folder_RecursiveLister::getFolderList( $this->path ) as $entry )
-			$this->folders[]	= './'.substr( $entry->getPathname(), strlen( $this->path ) );
+		foreach( Folder_RecursiveLister::getFolderList( $this->path ) as $entry ){
+			$path	= substr( $entry->getPathname(), strlen( $this->path ) );
+			if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )
+				$this->folders[]	= './'.$path;
+		}
 		natcasesort( $this->folders );
 
-		$path			= trim( $this->env->getRequest()->get( 'path' ) );
-		$path			= str_replace( "../", "", $path );
-		$path			= strlen( trim( $path ) ) ? trim( $path ) : ".";
+		$path	= str_replace( "../", "", trim( $this->env->getRequest()->get( 'path' ) ) );
+		$path	= strlen( trim( $path ) ) ? trim( $path ) : ".";
 		$this->addData( 'path', $path );
 		$this->addData( 'basePath', $this->path );
 		$this->addData( 'folders', $this->folders );
@@ -25,6 +33,39 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 #		$thumbnailer->optimize( $this->path );
 	}
 
+	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
+	}
+
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$config		= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$pathFront	= trim( $config->get( 'frontend.path' ) );
+		$pathImages	= trim( $config->get( 'path.images' ) );
+		$pathIgnore	= trim( $config->get( 'path.ignore' ) );
+		$hidePrefix	= !empty( $arguments['hidePrefix'] ) && $arguments['hidePrefix'];
+
+		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
+		$prefixes	= (object) $words['link-prefixes'];
+		$list		= array();
+		$index		= new File_RecursiveRegexFilter( $pathFront.$pathImages, $config->get( 'extensions' ) );
+		foreach( $index as $item ){
+			$path	= substr( $item->getPathname(), strlen( $pathFront.$pathImages ) );
+			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
+				continue;
+			$parts	= explode( "/", $path );
+			$file	= array_pop( $parts );
+			$path	= implode( '/', array_slice( $parts, 1 ) );
+			$label	= $path ? $path.'/'.$file : $file;
+			$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
+			$list[$item->getPathname()]	= (object) array(
+				'title'	=> $hidePrefix ? $label : $prefixes->image.$label,
+				'url'	=> $uri,
+			);
+		}
+		ksort( $list );
+		$context->list	= array_merge( $context->list, array_values( $list ) );
+	}		
+	
 	public function addFolder(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
