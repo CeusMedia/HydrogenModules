@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.6.2</version>
+	<version>0.7.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -34,4 +34,5 @@
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Optionals</needs>
 	</relations>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Page::___onTinyMCE_getLinkList</hook>
 </module>
