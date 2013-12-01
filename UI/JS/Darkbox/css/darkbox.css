@@ -1,0 +1,77 @@
+#darkbox-container {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.85);
+	z-index: 1000;
+	}
+#darkbox-container div,
+#darkbox-container figure {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+	}
+#darkbox-container figure {
+	}
+#darkbox-container figure div {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+	}
+#darkbox-container figure div img {
+	border: 10px solid rgba(255,255,255,1);
+	border-radius: 1em;
+	box-shadow: rgba(0,0,0,0.75) 0px 0px 40px 15px;	
+	}
+#darkbox-container figure figcaption {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 5px 0px;
+	background-color: rgba(0,0,0,0.7);
+	z-index: 1010;
+	color: white;
+	font-size: 1.15em;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	}
+
+#darkbox-container figure div {
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	top: 10%;
+	left: 10%;
+	right: 10%;
+	bottom: 10%;
+	}
+
+#darkbox-container figure div img{
+	width: auto;
+	height: 100%;
+	}
+
+#darkbox-container .darkbox-button-close {
+	position: absolute;
+	z-index: 1020;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: .3em .5em;
+	font-size: 2em;
+	color: white;
+	background-color: black;
+	border: none;
+	}

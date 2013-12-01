@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: JS: Darkbox</title>
+	<description><![CDATA[Lightbox replacement.]]></description>
+	<category>User Interface</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">jquery.darkbox.js</script>
+		<style source="theme" load="auto">darkbox.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<config name="auto" type="boolean">1</config>
+	<config name="auto.close.label">×</config>
+	<config name="auto.close.title">Close [ESC]</config>
+	<config	name="auto.duration.fade.in">200</config>
+	<config name="auto.duration.fade.out">250</config>
+	<config name="auto.prefix">darkbox-</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig()->getAll( 'module.ui_js_darkbox.', TRUE );
+		if( $config->get( 'auto' ) ){
+			$options	= json_encode( array(
+				'durationFadeIn'	=> $config->get( 'auto.duration.fade.in' ),
+				'durationFadeOut'	=> $config->get( 'auto.duration.fade.out' ),
+				'prefix'			=> $config->get( 'auto.prefix' ),
+				'btnCloseLabel'		=> $config->get( 'auto.close.label' ),
+				'btnCloseTitle'		=> $config->get( 'auto.close.title' ),
+			) );
+			$script		= '$(document).ready(function(){$(".darkbox").darkbox('.$options.');});';
+			$context->js->addScript( $script );
+		}
+	]]></hook>
+</module>
