@@ -294,6 +294,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->getArticlesFromAuthorIds( $authorIds, $returnIds );
 	}
 
+	public function getArticleUri( $articleId ){
+		$article	= $this->getArticle( $articleId );
+		return './catalog/article/'.$article->articleId.'-'.$this->getUriPart( $article->title );
+	}
+
 	public function getAuthor( $authorId ){
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
@@ -325,6 +330,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		ksort( $list );
 		$this->cache->set( 'catalog.article.author.'.$articleId, serialize( $list ) );
 		return $list;
+	}
+
+	public function getAuthorUri( $authorId ){
+		$this->checkAuthorId( $authorId, TRUE );
+		$author	= $this->modelAuthor->get( $authorId );
 	}
 
 	public function getCategories( $conditions = array(), $orders = array() ){
@@ -409,6 +419,13 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		foreach( $tags as $tag )
 			$list[$tag->articleTagId]	= $tag->tag;
 		return $list;
+	}
+
+	public function getUriPart( $label, $delimiter = "_" ){
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
 	}
 
 /*  -------------------------------------------------  */
