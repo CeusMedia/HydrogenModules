@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p2</version>
+	<version>4.0.10-p3</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
