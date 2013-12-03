@@ -2,14 +2,15 @@
 
 $listFolders	= $view->listFolders( $path );
 
-function listImages( $env, $pathImages, $path, $maxWidth, $maxHeight ){
+function listImages( $env, $pathImages, $path, $extensions, $maxWidth, $maxHeight ){
 	$list			= array();
 	$index			= new DirectoryIterator( $pathImages.$path );
 	$thumbnailer	= new View_Helper_Thumbnailer( $env );
 	foreach( $index as $entry ){
 		if( !$entry->isFile() )
 			continue;
-		if( !in_array( strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) ), array( "jpeg", "jpg", "png" ) ) )
+		$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );
+		if( !preg_match( $extensions, $entry->getFilename() ) )
 			continue;
 		$imagePath	= substr( $entry->getPathname(), strlen( $pathImages ) );
 		$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
@@ -23,7 +24,7 @@ function listImages( $env, $pathImages, $path, $maxWidth, $maxHeight ){
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
 }
 $listImages	= '<div><em><small class="muted">Keine Bilder in diesem Ordner gefunden.</small></em></div>';
-if( $path && $files = listImages( $env, $basePath, $path, 120, 80 ) )
+if( $path && $files = listImages( $env, $basePath, $path, $extensions, 120, 80 ) )
 	$listImages	= $files;
 
 $linkEditFolder	= '';

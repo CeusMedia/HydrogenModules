@@ -4,8 +4,9 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 	protected $path;
 
 	public function __onInit(){
-		$config		= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$this->path	= $config->get( 'frontend.path' ).$config->get( 'path.images' );
+		$config				= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$this->path			= $config->get( 'frontend.path' ).$config->get( 'path.images' );
+		$this->extensions	= $config->get( 'extensions' );
 	}
 
 	public function addFolder(){}
@@ -20,7 +21,8 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		$index	= new DirectoryIterator( $path );
 		foreach( $index as $entry )
 			if( $entry->isFile() )
-				$number++;
+				if( preg_match( $this->extensions, $entry->getFilename() ) )
+					$number++;
 		return $number;
 	}
 
@@ -47,10 +49,12 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		$list			= array();
 		$index			= new DirectoryIterator( $this->path.$path );
 		$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
+		$extensions		= array( "jpe", "jpeg", "jpg", "png", "gif" );
 		foreach( $index as $entry ){
 			if( !$entry->isFile() )
 				continue;
-			if( !in_array( strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) ), array( "jpeg", "jpg", "png" ) ) )
+			$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );
+			if( !in_array( $extension, $extensions ) )
 				continue;
 			$imagePath	= substr( $entry->getPathname(), strlen( $pathImages ) );
 			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
