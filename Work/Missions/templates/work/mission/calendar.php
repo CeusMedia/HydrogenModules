@@ -31,8 +31,6 @@ $env->getPage()->addHead( $script );
 
 $buttons	= array();
 foreach( $buttonSets as $buttonSet )
-	$buttons[]	= '<div class="btn-group">'.join( " ", $buttonSet ).'</div>';
-$buttons	= '<div id="work-mission-buttons">'.join( " | ", $buttons ).'</div><br/>';
-
+	$buttons[]	= '<div class="btn-group">'.join( " ", $buttonSet ).'</div>'; $buttons	= '<div id="work-mission-buttons">'.join( " | ", $buttons ).'</div>';
 return $buttons.$content;
 ?>

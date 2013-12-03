@@ -7,10 +7,6 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		parent::__construct( $env );
 	}
 
-	public function setDayMissions( $dayMissions ){
-		$this->dayMissions	= $dayMissions;
-	}
-
 	public function render(){
 		$buttons	= array();
 		$numbers	= array();
@@ -76,6 +72,10 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		);
 		$bar	= UI_HTML_Tag::create( 'div', "", $attributes );
 		return UI_HTML_Tag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
+	}
+
+	public function setDayMissions( $dayMissions ){
+		$this->dayMissions	= $dayMissions;
 	}
 }
 ?>
