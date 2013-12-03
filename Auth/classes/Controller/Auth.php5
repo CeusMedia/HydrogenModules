@@ -5,14 +5,14 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	protected $request;
 	protected $session;
 	protected $messenger;
-	
+
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 	}
-	
+
 	public function ajaxIsAuthenticated(){
 		print( json_encode( $this->session->has( 'userId' ) ) );
 		exit;
@@ -32,7 +32,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		print( json_encode( $result ) );
 		exit;
 	}
-	
+
 	public function confirm(){
 		$words		= (object) $this->getWords( 'confirm' );
 
@@ -56,10 +56,11 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function login( $username = NULL ){
 		$words		= (object) $this->getWords( 'login' );
-		
+
 		if( $this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'loginInside' );
-		
+			return $this->restart( "./" );
+//			return $this->redirect( 'auth', 'loginInside' );
+
 		if( $this->request->has( 'doLogin' ) ) {
 			if( !trim( $username = $this->request->get( 'login_username' ) ) )
 				$this->messenger->noteError( $words->msgNoUsername );

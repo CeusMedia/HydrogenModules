@@ -1,9 +1,9 @@
 <?php
 $w		= (object) $words['confirm'];
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm.' );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm.' ) );
 
 return '
-'.$text['top'].'
+'.$textTop.'
 <div class="column-left-50">
 	<div class="column-left-90">
 		<fieldset>
@@ -23,7 +23,7 @@ return '
 	</div>
 </div>
 <div class="column-left-50">
-	'.$text['info'].'
+	'.$textInfo.'
 </div>
 <div class="column-clear"></div>';
 ?>
