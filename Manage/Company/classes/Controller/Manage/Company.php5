@@ -6,7 +6,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => 1 ) );
+		$model->edit( $companyId, array( 'status' => 1, 'modifiedAt' => time() ) );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
 		$this->restart( './manage/company' );
@@ -17,12 +17,12 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => -1 ) );
+		$model->edit( $companyId, array( 'status' => -1, 'modifiedAt' => time() ) );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
 		$this->restart( './manage/company' );
 	}
-	
+
 	public function add(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -43,7 +43,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 				$messenger->noteError( $words->msgNoStreet );
 			if( empty( $data['number'] ) )
 				$messenger->noteError( $words->msgNoNumber );
-		
+
 			if( !$messenger->gotError() ){
 				$data['createdAt']	= time();
 				$model->add( $data );
@@ -92,7 +92,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 				$messenger->noteError( $words->msgNoStreet );
 			if( empty( $data['number'] ) )
 				$messenger->noteError( $words->msgNoNumber );
-		
+
 			if( !$messenger->gotError() ){
 				$data['modifiedAt']	= time();
 				$modelCompany->edit( $companyId, $data );
