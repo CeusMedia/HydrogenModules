@@ -10,7 +10,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 
 		$config		= $this->config->getAll( 'module.manage_content_images.', TRUE );
 		$pathIgnore	= trim( $config->get( 'path.ignore' ) );
-		
+
 		$this->path			= $config->get( 'frontend.path' ).$config->get( 'path.images' );
 		if( !file_exists( $this->path ) ){
 			$this->messenger->noteFailure( 'Der Bilderordner "'.$this->path.'" existiert nicht.' );
@@ -29,6 +29,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'path', $path );
 		$this->addData( 'basePath', $this->path );
 		$this->addData( 'folders', $this->folders );
+		$this->addData( 'extensions', $config->get( 'extensions' ) );
+
 #		$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
 #		$thumbnailer->optimize( $this->path );
 	}
@@ -64,8 +66,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		}
 		ksort( $list );
 		$context->list	= array_merge( $context->list, array_values( $list ) );
-	}		
-	
+	}
+
 	public function addFolder(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();

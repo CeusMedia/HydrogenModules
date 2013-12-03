@@ -27,7 +27,7 @@
 	<config type="string" name="frontend.url" mandatory="yes" title="net path to managed application, needs trailing slash">../</config>
 	<config type="string" name="path.images" mandatory="yes" title="path to images within managed application, needs trailing slash">contents/images/</config>
 	<config type="string" name="path.ignore" mandatory="no" title="regular expression of paths to ignore">/^(galleries|gallery)/i</config>
-	<config type="string" name="extensions" mandatory="yes" title="regular expression of accepted file extensions">/\.(gif|ico|jpe|jpeg|jpg|png|svg)$/i</config>
+	<config type="string" name="extensions" mandatory="yes" title="regular expression of accepted file extensions">/\.(gif|jpe|jpeg|jpg|png)$/i</config>
 	<link xml:lang="de" path="manage/content/image">Bilder</link>
 	<link xml:lang="en" path="manage/content/image">Images</link>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
