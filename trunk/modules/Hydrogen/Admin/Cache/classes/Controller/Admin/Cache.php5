@@ -20,19 +20,9 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 			if( !strlen( trim( $key ) ) )
 				$this->env->getMessenger()->noteError( $words->errorKeyMissing );
 			else
-				$result	= $cache->set( $key, serialize( $value ) );
+				$result	= $cache->set( $key, $value );
 		}
-		$this->restart( './admin/cache' );
-	}
-
-	public function ajaxEdit(){
-		$post	= $this->env->getRequest()->getAllFromSource( "post" );
-		$cache	= $this->getCache();
-		$result	= NULL;
-		if( $cache )
-			$result	= $cache->set( $post->get( 'key' ), serialize( $post->get( 'value' ) ) );
-		print( json_encode( $result ) );
-		exit;
+		$this->restart( NULL, TRUE );
 	}
 
 	public function ajaxRemove(){
@@ -55,10 +45,10 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 	public function index(){
 		$list		= array();
 		$cache		= $this->getCache();
-		$persistent	= get_class( $cache ) != 'CMM_SEA_Adapter_Noop';
+		$persistent	= $cache->getType() !== 'Noop';
 		if( $cache && $persistent ){
 			foreach( $cache->index() as $key ){
-				$value	= unserialize( $cache->get( $key ) );
+				$value	= $cache->get( $key );
 				$list[]	= (object) array(
 					'key'	=> $key,
 					'value'	=> $value,
