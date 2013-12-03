@@ -1,17 +1,24 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Cache</title>
-	<description><![CDATA[Cache support.]]></description>
+	<description><![CDATA[Cache resource.
+
+This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (part of cmModules).
+]]></description>
 	<category>Resource</category>
-	<version>0.1.2</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<class>Model/Cache.php5</class>
 	<config protected="yes" type="boolean" name="enabled">yes</config>
 	<config protected="yes" type="string" name="type" mandatory="yes" values="Folder,Memcache,Memory,Noop,PDO,Session">Noop</config>
 	<config protected="yes" type="string" name="resource"></config>
 	<config protected="yes" type="string" name="context"></config>
 	<config protected="yes" type="integer" name="expiration"></config>
+	<relation>
+		<needs type="module">Resource_Library_cmModules</needs>
+	</relation>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>cache`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>cache` (
