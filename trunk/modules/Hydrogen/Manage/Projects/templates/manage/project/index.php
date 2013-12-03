@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 $filterStatus	= $session->get( 'filter_manage_project_status' );
 if( !is_array( $filterStatus ) )
@@ -80,7 +80,7 @@ foreach( $projects as $project ){
 	if( count( $descLines ) )
 		$desc	.= '&nbsp;<small><em>(...)</em></small>';
 */	$desc		= trim( $project->description );
-	$graph		= $indicator->build( $project->status + 2, 5, 80 );
+	$graph		= $indicator->build( $project->status + 2, 5, 65 );
 	$status		= $words['states'][$project->status];
 	$cells[]	= UI_HTML_Tag::create( 'td', '<small>'.$status.'</small><br/>'.$graph );
 	$cells[]	= UI_HTML_Tag::create( 'td', $link.'<br/>'.$desc );
@@ -92,7 +92,7 @@ foreach( $projects as $project ){
 }
 $heads		= UI_HTML_Elements::TableHeads( array( 'Status', 'Projekt', 'Teilnehmer', 'erstellt', 'geändert' ) );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '10%', '35%', '25%', '15%', '15%' ) );
-$list		= UI_HTML_Tag::create( 'table', $colgroup.$heads.join( $rows ) );
+$list		= UI_HTML_Tag::create( 'table', $colgroup.$heads.join( $rows ), array( 'class' => 'table table-condensed' ) );
 
 $buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $words['index']['buttonAdd'], 'button add' );
 $buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', '<i class="icon-plus icon-white"></i> '.$words['index']['buttonAdd'], 'btn btn-info' );
