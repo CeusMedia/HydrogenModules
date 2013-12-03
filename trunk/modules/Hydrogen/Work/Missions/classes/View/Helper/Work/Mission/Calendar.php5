@@ -30,7 +30,8 @@ class View_Helper_Work_Mission_Calendar{
 		$showScope		= $year.'-'.$showMonth.'-01';
 		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( "t", strtotime( $showScope ) );
-		$offsetStart	= max( 0, date( "w", strtotime( $showScope ) ) - 1 );
+		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
+		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
 		$rows			= array();
 		$orders			= array( 'priority' => 'ASC' );

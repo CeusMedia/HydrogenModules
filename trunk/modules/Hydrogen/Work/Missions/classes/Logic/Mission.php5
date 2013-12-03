@@ -27,8 +27,8 @@ class Logic_Mission{
 	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL ){
 //print_m( $conditions );
 		$conditions	= array_merge( $this->generalConditions, $conditions );
-//print_m( $conditions );
-//die;
+#print_m( $conditions );
+#die;
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access

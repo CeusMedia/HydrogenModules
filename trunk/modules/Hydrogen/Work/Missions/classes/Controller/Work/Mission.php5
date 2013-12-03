@@ -88,7 +88,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		//  --  GENERAL LOGIC CONDITIONS  --  //
 		$tense		= $session->get( 'filter.work.mission.tense' );
-		$tense		= 1;
 		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'][$tense];
 		switch( $tense ){
 			case 1:
@@ -145,46 +144,48 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$userId			= $session->get( 'userId' );
 
-		$conditions		= array(
-			'status'	=> array( 0, 1, 2, 3 ),
-		);
-		$orders			= array(
-			'priority'		=> "ASC",
-			'timeStart'		=> "ASC",
-		);
-		$missions		= $this->logic->getUserMissions( $userId, $conditions, $orders );
 
-		$today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-		foreach( $missions as $mission ){													//  iterate missions
-			$diff	= $today->diff( new DateTime( $mission->dayStart ) );					//  get difference to today
-			$days	= $diff->invert ? -1 * $diff->days : $diff->days;						//  calculate days left
-			$days	= max( min( $days , 6 ), 0 );											//  restrict to be within 0 and 6
-			$this->list[$days][]	= $mission;												//  assign mission to day list
-		}
+		$modelUser		= new Model_User( $this->env );
+		$modelMission	= new Model_Mission( $this->env );
+		$user			= $modelUser->get( $userId );
 
-		$user		= new stdClass();
-		$user->username	= 'test';
-		$events		= array();
-		$tasks		= array();
-		foreach( $this->list[0] as $mission )
-			$mission->type == 0 ? $tasks[] = $mission : $events[] = $missions;
-		$data	= array( 'events' => $events, 'tasks' => $tasks, 'user' => $user );
+		$groupings	= array( 'missionId' );															//  group by mission ID to apply HAVING clause
+	    $havings	= array(																		//  apply filters after grouping
+            'ownerId = '.(int) $user->userId,                                                   //  
+            'workerId = '.(int) $user->userId,                                                  //  
+        );
+        if( $this->env->getModules()->has( 'Manage_Projects' ) ){                               //  look for module
+            $modelProject   = new Model_Project( $this->env );                                  //  
+            $userProjects   = $modelProject->getUserProjects( $user->userId );                  //  get projects assigned to user
+            if( $userProjects )                                                                 //  projects found
+                $havings[]  = 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';    //  add to HAVING clause
+        }
+        $havings    = array( join( ' OR ', $havings ) );                                        //  render HAVING clause
 
-		$mail	= new Mail_Work_Mission_Daily( $this->env, $data );
-		if( $send ){
-			$mail->sendToUser( $userId );
-			$messenger->noteSuccess( 'Mail sent.' );
-			$this->restart( NULL, TRUE );
-		}
+        //  --  TASKS  --  //
+        $filters    = array(                                                                    //  task filters
+            'type'      => 0,                                                                   //  tasks only
+            'status'    => array( 0, 1, 2, 3 ),                                                 //  states: new, accepted, progressing, ready
+            'dayStart'  => "<=".date( "Y-m-d", time() ),                                        //  present and past (overdue)
+        );
+        $order  = array( 'priority' => 'ASC' );
+        $tasks  = $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );  //  get filtered tasks ordered by priority
+
+        //  --  EVENTS  --  //
+        $filters    = array(                                                                    //  event filters
+            'type'      => 1,                                                                   //  events only
+            'status'    => array( 0, 1, 2, 3 ),                                                 //  states: new, accepted, progressing, ready
+            'dayStart'  => "<=".date( "Y-m-d", time() ),                                        //  starting today
+        );
+        $order  = array( 'timeStart' => 'ASC' );
+        $events = $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );  //  get filtered events ordered by start time
+
+        if( !$events && !$tasks )                                                               //  user has neither tasks nor events
+            continue;                                                                           //  do not send a mail, leave user alone
+
+        $data   = array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );             //  data for mail upcoming object
+        $mail   = new Mail_Work_Mission_Daily( $this->env, $data );                             //  create mail and populate data
 		print( $mail->content );
-		exit;
-
-		$helper	= new View_Helper_MissionMailDaily();
-		$helper->setEnv( $this->env );
-		$helper->render( $data );
-die;
-
-		print_m( $this->list[0] );
 		die;
 	}
 

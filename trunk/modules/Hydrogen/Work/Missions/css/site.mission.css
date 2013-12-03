@@ -640,8 +640,9 @@ body.controller-work-mission input[type="checkbox"] {
 
 /*  --  TOOLBAR  --  */
 #work-mission-buttons {
-	float: left;
+/*	float: left;*/
 	margin-top: -5px;
+	margin-bottom: 10px;
 	}
 #work-mission-buttons ul.dropdown-menu li.selectable a{
 	padding-left: 8px;
