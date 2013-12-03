@@ -3,7 +3,7 @@
 	<title>Users</title>
 	<description>Basic user support and administration.</description>
 	<category>Administration</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -70,6 +70,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   KEY `username` (`username`),
   KEY `gender` (`gender`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+INSERT INTO `<%?prefix%>users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
+(1, 1, 0, 0, 1, 'root@localhost', 'root', '63a9f0ea7bb98050796b649e85481845', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1383589432, NULL, NULL, 1383589432);
 
 ]]>
 	</sql>
