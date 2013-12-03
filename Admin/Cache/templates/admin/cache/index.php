@@ -1,36 +1,19 @@
 <?php
 
-$wf			= (object) $words['index'];
-
-
+$wf		= (object) $words['index'];
 $rows	= array();
 if( !$hasCache )
 	return '<div class="hint">'.$wf->hintNoCache.'</div>';
 	
-
-$imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'http://img.int1a.net/famfamfam/silk/pencil.png', 'alt' => $wf->buttonEdit, 'title' => $wf->buttonEdit ) );
-$imgRemove	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'http://img.int1a.net/famfamfam/silk/delete.png', 'alt' => $wf->buttonRemove, 'title' => $wf->buttonRemove ) );
-
 foreach( $list as $item ){
-	switch( $item->type ){
-		case 'object':
-#			$value	= UI_VariableDumper::dump( $item->value, UI_VariableDumper::MODE_PRINT );
-			$value	= 'Instance of class <cite>'.get_class( $item->value ).'</cite>';
-			break;
-		case 'string':
-		case 'integer':
-		case 'float':
-			$value	= '<input type="text" value="'.htmlentities( $item->value ).'" class="max"/>';
-		default:
-			$value	= '<input type="text" value="" class="max"/>';
-	}
-	$buttonSave		= UI_HTML_Tag::create( 'button', $imgEdit, array( 'type' => 'button', 'class' => 'button tiny edit' ) );
-	$buttonRemove	= UI_HTML_Tag::create( 'button', $imgRemove, array( 'type' => 'button', 'class' => 'button tiny remove' ) );
-	$cells	= array(
+	$buttonRemove	= '<button type="button" class="btn btn-mini btn-danger btn-cache-remove"><i class="icon-remove icon-white" title="'.$wf->buttonRemove.'"></i>&nbsp;</button>';
+	$value	= trim( print_m( $item->value, NULL, NULL, TRUE ) );
+	$value	= preg_replace( "/^<br\/>(.*)<br\/>$/s", "\\1", $value );
+	$cells			= array(
 		UI_HTML_Tag::create( 'td', $item->key ),
-		UI_HTML_Tag::create( 'td', $item->type ),
+		UI_HTML_Tag::create( 'td', '<em>'.$item->type.'</em>' ),
 		UI_HTML_Tag::create( 'td', $value ),
-		UI_HTML_Tag::create( 'td', $buttonSave.$buttonRemove ),
+		UI_HTML_Tag::create( 'td', $buttonRemove ),
 	);
 	$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( "data-key" => $item->key ) );
 }
@@ -38,52 +21,41 @@ foreach( $list as $item ){
 $columns	= UI_HTML_Elements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
 $heads		= array( $wf->headKey, $wf->headType, $wf->headValue, $wf->headAction );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
-$table		= UI_HTML_Tag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "list" ) ); 
-
+$table		= UI_HTML_Tag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "table table-condensed table-striped" ) ); 
 
 $panelEdit	= '
-	<fieldset>
-		<legend class="icon edit">'.$wf->legend.'</legend>
-		'.$table.'
-	</fieldset>
-';
-
-
+	<h3>'.$wf->legend.'</h3>
+	'.$table;
 
 $wf			= (object) $words['add'];
 $optType	= UI_HTML_Elements::Options( $words['types'] );
 $panelAdd	= '
-	<form action="./admin/cache/add" method="post">
-		<fieldset>
-			<legend class="icon add">'.$wf->legend.'</legend>
-			<ul class="input">
-				<li>
-					<label for="input_key" class="mandatory">'.$wf->labelKey.'</label><br/>
-					<input type="text" name="key" id="input_key" class="max mandatory" value=""/>
-				</li>
-				<li>
-					<label for="input_value" class="mandatory">'.$wf->labelValue.'</label><br/>
-					<input type="text" name="value" id="input_value" class="max mandatory" value=""/>
-				</li>
-				<li>
-					<label for="input_type">'.$wf->labelType.'</label><br/>
-					<select name="type" id="input_type" class="max">'.$optType.'</select>
-				</li>
-			</ul>
-			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'add', $wf->buttonAdd, 'button add' ).'
-			</div>
-		</fieldset>
-	</form>
-';
+<h3>'.$wf->legend.'</h3>
+<form action="./admin/cache/add" method="post">
+	<div class="row-fluid">
+		<div class="span2">
+			<label for="input_type">'.$wf->labelType.'</label>
+			<select name="type" id="input_type" class="max span12">'.$optType.'</select>
+		</div>
+		<div class="span3">
+			<label for="input_key" class="mandatory">'.$wf->labelKey.'</label>
+			<input type="text" name="key" id="input_key" class="max mandatory span12" value=""/>
+		</div>
+		<div class="span5">
+			<label for="input_value" class="mandatory">'.$wf->labelValue.'</label>
+			<input type="text" name="value" id="input_value" class="max mandatory span12" value=""/>
+		</div>
+		<div class="span2">
+			<label>&nbsp;</label>
+			<button type="submit" class="button add btn btn-success"><i class="icon-ok icon-white"></i>&nbsp;'.$wf->buttonAdd.'</button>
+		</div>
+	</div>
+</form>';
 
 return '
-<div class="column-right-25">
+<div class="row-fluid">
+	'.$panelEdit.'
 	'.$panelAdd.'
 </div>
-<div class="column-left-75">
-	'.$panelEdit.'
-</div>
-<div class="column-clear"></div>
 ';
 ?>
