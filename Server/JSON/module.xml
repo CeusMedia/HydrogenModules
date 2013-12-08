@@ -4,17 +4,20 @@
 	<description><![CDATA[Standalone JSON answering server application base.]]></description>
 This module installs the main classes needed to run a server application which is requested using REST and answering in JSON.
 	<category>Server</category>
-	<version>0.2</version>
+	<version>0.2.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Dispatcher.php5</class>
 		<class>Environment.php5</class>
 		<class>Server.php5</class>
+		<class>Controller/Abstract.php5</class>
+		<class>Controller/Index.php5</class>
 		<file>.htaccess</file>
 		<file>index.php5</file>
 		<file>config/config.ini.dist</file>
 		<file>config/.htaccess</file>
+		<file>logs/.htaccess</file>
 	</files>
 	<config protected="yes" type="boolean" name="token.active" info="force token authentication">yes</config>
 	<config protected="yes" type="string" name="token.excludes" info="request paths which do not need a token">index/index,auth/getToken,auth/validateToken</config>					; controller/action patterns allowed without token

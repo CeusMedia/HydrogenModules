@@ -2,7 +2,7 @@
 /**
  *	Server Action Dispatcher Class.
  *
- *	Copyright (c) 2007-2010 Christian Würker (ceus-media.de)
+ *	Copyright (c) 2010-2013 Christian Würker (ceus-media.de)
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2013 Ceus Media
  *	@since			0.1
  *	@version		$Id: Dispatcher.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
@@ -32,7 +32,7 @@
  *	@uses			Alg_Object_Factory
  *	@uses			Alg_Object_MethodFactory
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2013 Ceus Media
  *	@version		$Id: Dispatcher.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
@@ -56,10 +56,11 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 	 */
 	protected function checkAuth( $controller, $action )
 	{
-		if( !$this->env->getConfig()->get( 'module.server_json.token.active' ) )									//  token is not needed for authentication
+		$config	= $this->env->getConfig()->getAll( 'module.server_json.', TRUE );					//  shortcurt module config
+		if( !$config->get( 'token.active' ) )														//  token is not needed for authentication
 			return;
-		$excludes	= $this->env->getConfig()->get( 'module.server_json.token.excludes' );						//  extract paths ...
-		$excludes	= preg_split( '/, */', $excludes );												//  ... accessible without token
+		$excludes	= preg_split( '/, */', $config->get( 'token.excludes' ) );							//  extract paths accessible without token
+		
 		if( !in_array( $controller.'/'.$action, $excludes ) )										//  not a token-free resource
 		{
 			$token	= $this->request->get( 'token' );												//  extract sent token
@@ -84,8 +85,6 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 		$controller	= trim( $this->request->get( 'controller' ) );									//  get called controller
 		$action		= trim( $this->request->get( 'action' ) );										//  get called action
 		$arguments	= $this->request->get( 'arguments' );											//  get given arguments
-
-
 
 		if( $this->env->getConfig()->get( 'tracker.enabled' ) )										//  a tracker is enabled
 			$this->env->getTracker()->doTrackPageView( $controller.' > '.$action );					//  track request

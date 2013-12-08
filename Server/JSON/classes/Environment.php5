@@ -26,6 +26,7 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 	 */
 	public function __construct() {
 		self::$classRouter	= 'CMF_Hydrogen_Environment_Router_Recursive';
+		self::$configFile	= "config/config.ini";
 		$this->initClock();																			//  setup clock
 		$this->initConfiguration();																	//  setup configuration
 		$this->initModules();																		//  setup module support
@@ -37,7 +38,8 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 #		$this->initLanguage();																		//  [DO NOT] setup language support
 		$this->initTracker();																		//  setup server side request tracking
 		$this->__onInit();																			//  call init event (implemented by extending classes)
-		$this->dbc->query( 'SET NAMES "utf8"' );													//  ...
+		if( $this->getModules()->has( 'Resource_Database' ) )
+			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
 	}
 
 	public function get( $key ){
