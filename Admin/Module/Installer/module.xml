@@ -10,7 +10,7 @@ This module needs other modules to be installed:
 - Modules Editor (thus Modules, Module Sources, App Instances)
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -22,6 +22,7 @@ This module needs other modules to be installed:
 		<template>admin/module/installer/index.php</template>
 		<template>admin/module/installer/update.php</template>
 		<template>admin/module/installer/view.php</template>
+		<style source="theme">php-diff.css</style>
 	</files>
 	<relations>
 		<needs type="module">Admin_Module_Editor</needs>
