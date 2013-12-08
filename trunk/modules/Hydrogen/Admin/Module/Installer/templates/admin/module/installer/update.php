@@ -1,4 +1,76 @@
 <?php
+
+$list	= array();
+foreach( $files as $file ){
+	$actions	= array();
+	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'checkbox', 'value' => $file->file ) );
+	if( $file->status === 2 )
+		$checkbox;
+	if( $file->status === 4 ){
+		$url		= './admin/module/installer/diff/'.base64_encode( $file->pathLocal ).'/'.base64_encode( $file->pathSource );
+		$actions[]	= UI_HTML_Tag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
+	}
+	$cells	= array(
+		UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => 'cell-check' ) ),
+		UI_HTML_Tag::create( 'td', $file->typeKey, array( 'class' => 'cell-type' ) ),
+		UI_HTML_Tag::create( 'td', $file->name, array( 'class' => 'cell-name' ) ),
+		UI_HTML_Tag::create( 'td', join( " ", $actions ), array( 'class' => 'cell-actions' ) ),
+	);
+	$states	= array(
+		0	=> 'new',
+		1	=> 'installed',
+		2	=> 'linked',
+		3	=> 'foreign',
+		4	=> 'changed',
+	);
+	$status	= $states[$file->status];
+	$list[]	= UI_HTML_Tag::create( 'tr', $cells, array(
+		'class'	=> 'status-'.$status,
+		'data-file-source'	=> $file->pathSource,
+		'data-file-local'	=> $file->pathLocal
+	) );
+}
+$colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "7%", "70%", "20%" );
+$thead		= UI_HTML_Tag::create( 'thead' );
+$tbody		= UI_HTML_Tag::create( 'tbody', $list );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+
+$panelFiles	= '
+	<style>
+dl>dt{
+	clear: left;
+	float: left;
+	width: 120px;
+	}
+dl>dd{
+	float: left;
+	}
+tr.status-new {background-color: #DFFFDF}
+tr.status-installed {background-color: #FFFFDF}
+tr.status-linked {background-color: #EFEFEF; opacity: 0.75}
+tr.status-foreign {background-color: #DFDFFF; opacity: 0.75}
+tr.status-changed {background-color: #FFDFDF}
+	</style>
+	<h4>Dateien</h4>
+	'.$table.'
+	<div>
+		<div style="float:left;width:50%;">
+			<h3>LOKAL</h3>
+			<b>Module</b>
+			<div style="height: 300px; overflow: auto;">
+				'.print_m( $moduleLocal, NULL, NULL, TRUE ).'
+			</div>
+		</div>
+		<div style="float:left;width:50%;">
+			<h3>SOURCE</h3>
+			<b>Module</b>
+			<div style="height: 300px; overflow: auto;">
+				'.print_m( $moduleSource, NULL, NULL, TRUE ).'
+			</div>
+		</div>
+	</div>';
+
+
 $w	= (object) $words['update'];
 
 $isInstallable	= $hasUpdate;
@@ -20,14 +92,14 @@ $panelInfo	= '
 <fieldset>
 	<legend class="info">Informationen</legend>
 	<dl>
-		<dt>Title</dt>
-		<dd>'.$module->title.'</dd>
+		<dt>Modul</dt>
+		<dd>'.$moduleLocal->title.'</dd>
 		<dt>Quelle</dt>
-		<dd>'.$module->source.'</dd>
+		<dd>'.$moduleLocal->source.'</dd>
 		<dt>Ausgangsversion</dt>
-		<dd>'.( $module->versionInstalled? $module->versionInstalled : '?' ).'</dd>
+		<dd>'.( $moduleLocal->versionInstalled? $moduleLocal->versionInstalled : '?' ).'</dd>
 		<dt>Zielversion </dt>
-		<dd>'.( $module->versionAvailable ? $module->versionAvailable : '?' ).'</dd>
+		<dd>'.( $moduleLocal->versionAvailable ? $moduleLocal->versionAvailable : '?' ).'</dd>
 	</dl>
 	<div class="clearfix"></div>
 </fieldset>
@@ -35,10 +107,9 @@ $panelInfo	= '
 
 $tableConfig	= '';
 if( $isInstallable ){
-	if( count( $module->config ) ){
+	if( count( $moduleSource->config ) ){
 		$rows	= array();
-		foreach( $module->config as $key => $value ){
-			
+		foreach( $moduleSource->config as $key => $value ){
 			$class	= "";
 			if( $value->mandatory ){
 				if( $value->mandatory == "yes" )
@@ -46,8 +117,8 @@ if( $isInstallable ){
 				else if( preg_match( "/^.+:.*$/", $value->mandatory ) ){
 					list( $relatedKey, $relatedValue )	= explode( ':', $value->mandatory );
 					$relatedValue	= explode( ',', $relatedValue );
-					if( isset( $module->config[$relatedKey] ) ){
-						if( in_array( $module->config[$relatedKey]->value, $relatedValue ) )
+					if( isset( $moduleSource->config[$relatedKey] ) ){
+						if( in_array( $moduleSource->config[$relatedKey]->value, $relatedValue ) )
 							$class = " mandatory";
 					}
 				}
@@ -88,33 +159,31 @@ if( $isInstallable ){
 		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 		$tableConfig	= UI_HTML_Tag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	}
-	
-	$a	= '
-		<h4>Installationstyp</h4>
-		<div>
-			<input type="radio" name="type" id="input_type_link" value="link" checked="checked"/>
-			<label for="input_type_link"><acronym title="'.$w->textLink.'">'.$w->labelLink.'</acronym></label><br/>
-			<input type="radio" name="type" id="input_type_copy" value="copy"/>
-			<label for="input_type_copy"><acronym title="'.$w->textCopy.'">'.$w->labelCopy.'</acronym></label><br/>
-		</div><br/>
-		';
-
 }
+$panelType	= '
+	<h4>Installationstyp</h4>
+	<div>
+		<input type="radio" name="type" id="input_type_link" value="link" checked="checked"/>
+		<label for="input_type_link"><acronym title="'.$w->textLink.'">'.$w->labelLink.'</acronym></label><br/>
+		<input type="radio" name="type" id="input_type_copy" value="copy"/>
+		<label for="input_type_copy"><acronym title="'.$w->textCopy.'">'.$w->labelCopy.'</acronym></label><br/>
+	</div><br/>
+	';
 
-$urlForm	= './admin/module/installer/install/'.$module->id;
+$urlForm	= './admin/module/installer/install/'.$moduleLocal->id;
 
 return '
 <h3 class="position">
 	<span>'.$words['view']['heading'].'</span>
-	<cite>'.$module->title.'</cite>
+	<cite>'.$moduleLocal->title.'</cite>
 </h3>
 <div class="column-left-70">
 	<form action="'.$urlForm.'" method="post">
 		<fieldset>
-			<legend class="module-add">Modul installieren</legend>
+			<legend class="module-add">Modul aktualisieren</legend>
 			'.$tableConfig.'
-			'.$a.'
-
+			'.$panelType.'
+			'.$panelFiles.'
 			<div class="buttonbar">
 				'.$buttonBack.'
 				'.$buttonUpdate.'

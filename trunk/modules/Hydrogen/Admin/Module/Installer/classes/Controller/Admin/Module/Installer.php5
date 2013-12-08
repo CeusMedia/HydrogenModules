@@ -89,11 +89,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
-		
+
 		$words		= (object) $this->getWords( 'msg' );
 		$force		= $request->get( 'force' );
 		$settings	= $request->get( 'config' );
-		
+
 		$urlSelf	= './admin/module/installer/'.$moduleId;
 		if( $mainModuleId )
 			$urlSelf	.= '/'.$mainModuleId;
@@ -103,7 +103,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 			if( $request->get( 'force' ) )
 				$mainModuleId	= $moduleId;
-		
+
 			if( $mainModuleId && $mainModuleId == $moduleId ){
 				$solver	= new Logic_Module_Relation( $this->logic );												//	calculator for module installation order
 				$solver->loadModule( $moduleId );													//  load module and related modules
@@ -137,7 +137,6 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					}
 					$messenger->noteError( $words->moduleNotLinked, $moduleId );
 				}
-				
 			}
 			catch( Exception $e ){
 				$this->handleException( $e );
@@ -145,7 +144,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		}
 		$this->restart( $urlSelf );
 	}
-	
+
 	public function uninstall( $moduleId, $verbose = TRUE ){
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
@@ -162,95 +161,16 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 	}
 
 	public function update( $moduleId, $verbose = TRUE ){
-
-#		$modules	= array_keys( $this->env->getRemote()->getModules()->getAll() );
-#		$moduleId	= $modules[array_rand( $modules )];
-#		remark( "Module: ".$moduleId );
-		
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
-		$module		= $this->logic->getModule( $moduleId );
 		$hasUpdate	= $this->logic->checkForUpdate( $moduleId );
-		if( !$module )
+
+		$moduleLocal	= $this->logic->getModule( $moduleId );
+		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+		if( !( $moduleLocal && $moduleSource ) )
 			$this->restart( './admin/module/viewer' );
 		if( !$hasUpdate )
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
-
-		remark( "Module update in progress." );
-		remark( "Module ID: ".$moduleId );
-		remark( "Logic::getModule(ID): " );
-#		$moduleLocal	= $this->env->getModules()->get( $moduleId );
-		$moduleLocal	= $this->logic->getModule( $moduleId );
-		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
-
-		
-		$files	= array();
-		$fileTypes	= array(
-			'classes'		=> 'class',
-			'files'			=> 'file',
-			'images'		=> 'image',
-			'locales'		=> 'locale',
-			'scripts'		=> 'script',
-			'styles'		=> 'style',
-			'templates'		=> 'template',
-		);
-		$files	= array();
-		$pathSource		= $this->logic->model->getPath( $moduleId );
-		$pathLocal		= $this->env->getRemote()->path;
-		foreach( $fileTypes as $typeMember => $typeKey ){
-			foreach( $module->files->$typeMember as $file ){
-				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
-				$pathFileLocal	= $this->logic->getLocalFileTypePath( $this->env->getRemote(), $typeKey, $file );
-				if( $pathFileSource && $pathFileLocal ){
-
-					$answer	= array();
-					remark( "File Source: ". $pathSource.$pathFileSource );
-					remark( "File Local: ". $pathLocal.$pathFileLocal );
-					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
-					remark( "Diff: ". $cmd );
-					exec( $cmd, $answer, $code );
-					print_m( $code );
-					print_m( $answer );
-					die;
-					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
-					exec( $cmd, $answer, $code );
-					if( $code != 1 )
-						throw new Exception( 'diff failed with return code '.$code );
-					if( empty( $answer ) )
-						$files[$typeKey.":".$file->file]	= NULL;
-					else
-						$files[$typeKey.":".$file->file]	= implode( "\n", $answer );
-				}
-			}
-		}
-		die;
-		$files	= join( ", ", $files );
-		print( '<div>
-	<div style="float:left;width:50%;">
-		<h3>LOKAL</h3>
-		<b>Module</b>
-		<div style="height: 300px; overflow: auto;">
-			'.print_m( $moduleLocal, NULL, NULL, TRUE ).'
-		</div>
-	</div>
-	<div style="float:left;width:50%;">
-		<h3>SOURCE</h3>
-		<b>Module</b>
-		<div style="height: 300px; overflow: auto;">
-			'.print_m( $moduleSource, NULL, NULL, TRUE ).'
-		</div>
-	</div>
-	<b>Files</b>
-	'.$files.'
-</div>' );
-		die;
-		$module	= $this->logic->model->getLocal( $moduleId );
-		remark( "Model::getLocal(ID): " );
-		print_m( $module );
-		die( "!" );
-
-
-
 
 		if( $request->has( 'doUpdate' ) ){
 			try{
@@ -262,13 +182,78 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->messenger->noteSuccess( $words->updateInstalled, $module->versionInstalled, $hasUpdate );
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
 		}
+
+		$this->addData( 'files', $this->compareModuleFiles( $moduleId ) );
+
+		$this->addData( 'moduleLocal', $moduleLocal );
+		$this->addData( 'moduleSource', $moduleSource );
 		$this->addData( 'hasUpdate', $hasUpdate );
 		$this->addData( 'moduleId', $moduleId );
-		$this->addData( 'module', $module );
 		$this->addData( 'modulesInstalled', $this->logic->model->getInstalled() );
 		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
 	}
 
+	public function diff( $hashFileLocal, $hashFileSource ){
+
+		CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
+
+		$fileLocal		= base64_decode( $hashFileLocal );
+		$fileSource		= base64_decode( $hashFileSource );
+
+		$this->addData( 'fileLocal', $fileLocal );
+		$this->addData( 'fileSource', $fileSource );
+	}
+
+	protected function compareModuleFiles( $moduleId ){
+		$fileTypes	= array(
+			'classes'	=> 'class',
+			'files'		=> 'file',
+			'images'	=> 'image',
+			'locales'	=> 'locale',
+			'scripts'	=> 'script',
+			'styles'	=> 'style',
+			'templates'	=> 'template',
+		);
+		$files			= array();
+		$moduleLocal	= $this->logic->getModule( $moduleId );
+		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+
+		$envRemote		= $this->env->getRemote();
+		$pathLocal		= $envRemote->path;
+		$pathSource		= $this->logic->model->getPath( $moduleId );
+		foreach( $fileTypes as $typeMember => $typeKey ){
+			foreach( $moduleSource->files->$typeMember as $file ){
+				$diff		= array();
+				$status		= 0;
+				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
+				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
+				if( file_exists( $pathLocal.$pathFileLocal ) ){
+					$status			= 1;
+					if( is_link( $pathLocal.$pathFileLocal ) ){
+						$target		= readlink( $pathLocal.$pathFileLocal );
+						$status		= $target === $pathSource.$pathFileSource ? 2 : 3;
+					}
+					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
+					exec( $cmd, $diff, $code );
+					if( $code == 1 )
+						$status	= 4;
+				}
+				$files[]	= (object) array(
+					'moduleId'		=> $moduleId,
+					'status'		=> $status,
+					'file'			=> $file,
+					'name'			=> $file->file,
+					'typeMember'	=> $typeMember,
+					'typeKey'		=> $typeKey,
+					'pathLocal'		=> $pathLocal.$pathFileLocal,
+					'pathSource'	=> $pathSource.$pathFileSource,
+//					'diff'			=> $diff
+				);
+			}
+		}
+		return $files;
+	}
+	
 	public function view( $moduleId, $mainModuleId = NULL ){
 		
 		$module		= $this->logic->model->get( $moduleId );

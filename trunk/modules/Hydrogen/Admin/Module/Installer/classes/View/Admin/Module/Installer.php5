@@ -5,18 +5,38 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 		$this->env->getLanguage()->load( 'admin/module' );
 	}
 
-	public function index(){
+	public function diff(){
+		$fileLocal	= $this->getData( 'fileLocal' );
+		$fileSource	= $this->getData( 'fileSource' );
+
+		$file1	= File_Reader::loadArray( $fileLocal );
+		$file2	= File_Reader::loadArray( $fileSource );
+
+		$options = array(
+			'ignoreWhitespace'	=> true,
+	//		'ignoreCase'		=> true,
+		);
+		$diff		= new Diff( $file1, $file2, $options );											//  initialize the diff class
+		$renderer	= new Diff_Renderer_Html_Inline;
+		$body		= '
+			<div class="container">
+				<h2><span class="muted">Installer</span> Diff</h2>
+				<b>Old:</b> <code>'.$fileLocal.'</code><br/>
+				<b>New:</b> <code>'.$fileSource.'</code>
+				'.$diff->render( $renderer ).'
+				<hr/>
+			</div>';
+
+		$page	= new UI_HTML_PageFrame();
+		$page->setBaseHref( $this->env->url );
+		$page->addBody( $body );
+		$page->addStylesheet( "//cdn.int1a.net/css/bootstrap.min.css" );
+		$page->addStylesheet( "themes/custom/css/php-diff.css" );
+		print( $page->build() );
+		die;
 	}
-	
-	public function view(){
-		$words		= $this->env->getLanguage()->getWords( 'admin/module' );
 
-		$moduleId	= $this->getData( 'moduleId' );
-		$modules	= $this->getData( 'modules' );
-		if( isset( $modules[$moduleId] ) )
-			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
-
-		$this->addData( 'wordsTypes', $words['types'] );
+	public function index(){
 	}
 
 	public function update(){
@@ -24,6 +44,17 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 
 		$moduleId	= $this->getData( 'moduleId' );
 		$modules	= $this->getData( 'modulesAvailable' );
+		if( isset( $modules[$moduleId] ) )
+			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
+
+		$this->addData( 'wordsTypes', $words['types'] );
+	}
+
+	public function view(){
+		$words		= $this->env->getLanguage()->getWords( 'admin/module' );
+
+		$moduleId	= $this->getData( 'moduleId' );
+		$modules	= $this->getData( 'modules' );
 		if( isset( $modules[$moduleId] ) )
 			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
 
