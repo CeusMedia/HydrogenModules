@@ -128,17 +128,17 @@ class Browser{
 		$pathJs		= $config->get( 'path.scripts' );
 		$pathCss	= $config->get( 'path.themes' );
 		$pathTmpl	= $config->get( 'path.templates' );
-		$pathLibJs	= $config->get( 'path.lib.js' );
-		$pathLibCss	= $config->get( 'path.lib.css' );
+		$pathLibJs	= $config->get( 'path.scripts.lib' );
 
 		$page	= new UI_HTML_PageFrame();
 		$page->setTitle( $config->get( 'app.name' ) );
-		$page->setBaseHref( $config->get( 'app.base.url' ) );
-		$page->addStylesheet( $pathLibCss.'blueprint/reset.css' );
-		$page->addStylesheet( $pathLibCss.'blueprint/typography.css' );
-		$page->addStylesheet( $pathLibCss.'layout.column.css' );
-		$page->addStylesheet( $pathLibCss.'xmp.formats.css' );
-		$page->addStylesheet( $pathCss.'css/browser.css' );
+		$page->setBaseHref( $this->env->getBaseUrl() );
+//		$page->addStylesheet( $pathLibCss.'blueprint/reset.css' );
+//		$page->addStylesheet( $pathLibCss.'blueprint/typography.css' );
+//		$page->addStylesheet( $pathLibCss.'layout.column.css' );
+//		$page->addStylesheet( $pathLibCss.'xmp.formats.css' );
+		$page->addStylesheet( $pathCss.'custom/css/bootstrap.min.css' );
+		$page->addStylesheet( $pathCss.'custom/css/browser.css' );
 		$page->addStylesheet( $pathLibJs.'jquery/cmExceptionView/0.2.css' );
 		$page->addJavaScript( $pathLibJs.'jquery/1.7.min.js' );
 		$page->addJavaScript( $pathLibJs.'jquery/cmExceptionView/0.2.js' );
