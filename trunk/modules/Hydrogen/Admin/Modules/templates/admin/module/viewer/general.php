@@ -68,16 +68,17 @@ if( $module->price )
 $list[]	= UI_HTML_Tag::create( 'dt', $w->labelStatus );
 $list[]	= UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'span', $words['types'][$module->type], array( 'class' => 'module-type type-'.$module->type ) ) );
 
+//$isUpdatable	= FALSE;
 if( $module->versionAvailable || $module->versionInstalled ){
 	$list[]	= UI_HTML_Tag::create( 'dt', $w->labelVersion );
 	if( $module->versionAvailable )
 		$list[]	= UI_HTML_Tag::create( 'dd', $module->versionAvailable.' - verfügbar' );
 	if( $module->versionInstalled )
 		$list[]	= UI_HTML_Tag::create( 'dd', $module->versionInstalled.' - installiert' );
+//	$isUpdatable	= $module->versionAvailable !== $module->versionInstalled;
 }
 
 $list	= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'general' ) );
-
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
@@ -86,11 +87,12 @@ $disabled			= $module->type == 4 ? '' : 'disabled';
 $buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' );
 $buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $w->buttonInstall, 'button add', NULL, $disabled );
-$buttonUpdate		= UI_HTmL_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $w->buttonUpdate, 'button update', NULL, !$hasUpdate );
 $disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
 $buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
-$buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh' );
+$buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh', NULL, $disabled );
+$disabled			= !$hasUpdate ? 'disabled' : '';
+$buttonUpdate		= UI_HTmL_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $w->buttonUpdate, 'button update', NULL, $disabled );
 
 return '<fieldset>
 	<legend class="icon module">Module-Informationen</legend>

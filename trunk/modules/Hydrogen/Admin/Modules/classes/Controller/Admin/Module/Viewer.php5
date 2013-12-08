@@ -40,35 +40,32 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function reload( $moduleId ){
-		$module	= $this->logic->getModule( $moduleId );
-		$cache	= $this->env->getCache();
+		$request	= $this->env->getRequest();
+		$cache		= $this->env->getCache();
+		$words		= (object) $this->getWords( 'reload' );
+		$module		= $this->logic->getModule( $moduleId );
 		if( !$module ){
 			$this->messenger->noteError( 'Invalid module ID "'.$moduleId.'".' );
 			$this->restart( './admin/module/viewer' );
 		}
-		$request		= $this->env->getRequest();
 		switch( (int) $request->get( 'stage' ) ){
 			case 0:
-				$version	= $module->version;
-//				$version	= "0.1";
-				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=1&oldVersion='.$version );
-				break;
-			case 1:
-				$version	= $request->get( 'oldVersion' );
+				$version	= $module->versionAvailable;
 				if( $cache->has( $cacheKey = 'Modules/'.$module->source.'/'.$moduleId ) )			//  module has been cached
 					$cache->remove( $cacheKey );													//  remove module from cache
 				if( $cache->has( $cacheKey = 'Sources/'.$module->source ) )							//  module source has been cached
 					$cache->remove( $cacheKey );													//  remove whole module source from cache
 				$this->logic->invalidateFileCache( $this->env->getRemote() );
 				$this->logic->invalidateFileCache( $this->env );
-				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=2&oldVersion='.$version );
+				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=1&oldVersion='.$version );
 				break;
-			case 2:
-				$version	= $request->get( 'oldVersion' );
-				if( $version != $module->version )
-					$this->messenger->noteSuccess( 'Modul "'.$module->title.'" neu geladen und <b>neue Version '.$module->version.'</b> gefunden.' );
+			case 1:
+				$oldVersion	= $request->get( 'oldVersion' );
+				$version	= max( $module->versionInstalled, $module->versionAvailable );
+				if( $version != $oldVersion )
+					$this->messenger->noteSuccess( $words->msgNewVersion, $module->title, $version );
 				else
-					$this->messenger->noteNotice( 'Modul "'.$module->title.'" neu geladen aber <b>keine neue Version</b> gefunden.' );
+					$this->messenger->noteNotice( $words->msgNoNewVersion, $module->title, $version );
 				$this->restart( './admin/module/viewer/view/'.$moduleId );
 				break;
 		}
