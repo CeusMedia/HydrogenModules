@@ -1,7 +1,7 @@
 <?php
-$versionCMC	= "";
-$versionCMF	= "";
-$versionCMM	= "";
+$versionCMC	= "trunk";
+$versionCMF	= "trunk";
+$versionCMM	= "trunk";
 
 require_once 'cmClasses/'.$versionCMC.'/autoload.php5';			//  load cmClasses
 require_once 'cmFrameworks/'.$versionCMF.'/autoload.php5';		//  load cmFrameworks
