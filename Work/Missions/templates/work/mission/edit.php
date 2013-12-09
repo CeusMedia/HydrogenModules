@@ -230,7 +230,28 @@ $panelEdit	= '
 		</div>
 	</fieldset>
 </form>
+';
+
+$panelContent	= '
 <form>
+	<div class="row-fluid">
+		<div class="span6">
+			<h3>Beschreibung / Inhalt</h3>
+			<div id="content-editor">
+				<div id="descriptionAsMarkdown"></div>
+			</div>
+		</div>
+		<div class="span6">
+			<h3>Editor</h3>
+			<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+			<p>
+				<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+			</p>
+		</div>
+	</div>
+</form>';
+
+/*
 <!--	<fieldset>
 		<legend>Beschreibung / Mitschrift</legend>
 		<div class="row-fluid">
@@ -261,8 +282,8 @@ $panelEdit	= '
 		</div>
 	</fieldset>
 --></form>
+*/
 
-';
 
 //  --  STATES  --  //
 $states	= $words['states'];
@@ -300,6 +321,8 @@ return '
 var missionId = '.$mission->missionId.';
 $("body").addClass("uses-bootstrap");
 $(document).ready(function(){
+	var markdown = $("#descriptionAsMarkdown");
+	var converter = new Markdown.Converter();
 	var textarea = $("#input_content");
 	var mirror = CodeMirror.fromTextArea(textarea.get(0), {
 		lineNumbers: true,
@@ -328,19 +351,21 @@ $(document).ready(function(){
 		markdown.html(converter.makeHtml(textarea.hide().val()));
 		$(".CodeMirror").addClass("changed").trigger("keyup");
 		$(instance.getTextArea()).trigger("keyup");
+		mirror.setSize("100%", Math.max(markdown.height()-30, 70));
 	});
+
 	$(window).bind("resize", function(){
-		$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
+//		$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
+//		$("#mirror-container").width("100%");
 	}).trigger("resize");
 
-	var markdown = $("#descriptionAsMarkdown");
-	var converter = new Markdown.Converter();
 	markdown.html(converter.makeHtml(textarea.hide().val()));
+	mirror.setSize("100%", Math.max(markdown.height()-30, 70));
 
-	$(".tabbable .nav-tabs li a").bind("shown", function(event){
+/*	$(".tabbable .nav-tabs li a").bind("shown", function(event){
 		mirror.refresh();
 	});
-
+*/
 /*	$("input, select, textarea").each(function(){
 		$(this).data("value-original", $(this).val());
 	}).bind("change keyup", function(){
@@ -393,22 +418,28 @@ textarea.changed {
 	color: #777;
 	}
 </style>
-<div class="column-left-75">
-	'.$panelEdit.'
-	'.$panelToIssue.'
-<!--	<fieldset>
-		<legend class="icon edit">Status setzen</legend>
-		'.$states.'
-	</fieldset>
-	<fieldset>
-		<legend class="icon edit">Priorität ändern</legend>
-		'.$priorities.'
-	</fieldset>-->
+<div class="row-fluid">
+	<div class="span9">
+		'.$panelEdit.'
+		'.$panelToIssue.'
+	<!--	<fieldset>
+			<legend class="icon edit">Status setzen</legend>
+			'.$states.'
+		</fieldset>
+		<fieldset>
+			<legend class="icon edit">Priorität ändern</legend>
+			'.$priorities.'
+		</fieldset>-->
+	</div>
+	<div class="span3">
+		'.$panelInfo.'
+		'.$panelClose.'
+	</div>
 </div>
-<div class="column-right-25">
-	'.$panelInfo.'
-	'.$panelClose.'
+<div class="row-fluid">
+	<div class="span12">
+		'.$panelContent.'
+	</div>
 </div>
-<div class="column-clear"></div>
 ';
 ?>
