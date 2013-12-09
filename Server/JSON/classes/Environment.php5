@@ -19,6 +19,7 @@
  */
 class Environment extends CMF_Hydrogen_Environment_Web {
 
+
 	/**
 	 *	Constructor, sets up all resources.
 	 *	@access		public
