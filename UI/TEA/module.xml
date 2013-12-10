@@ -4,27 +4,28 @@
 	<description><![CDATA[Support for several template engines.
 ]]></description>
 	<category>User Interface</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<files/>
 	<relations/>
 	<config protected="yes" type="string" name="pathCache" mandatory="yes">tmp/cache/templates/</config>
 	<config protected="yes" type="string" name="pathCacheCompiled" mandatory="yes">tmp/cache/templates_c/</config>
 	<config protected="yes" type="string" name="defaultsForTemplates" mandatory="yes">PHP</config>
 	<config protected="yes" type="string" name="defaultsForContents" mandatory="yes">STE</config>
-	<config protected="yes" type="boolean" name="engine.PHP" mandatory="yes">yes</config>
-	<config protected="yes" type="boolean" name="engine.Smarty" mandatory="yes">no</config>
-	<config protected="yes" type="string" name="engine.Smarty.loadFile">Smarty/3.1.8/libs/Smarty.class.php</config>
 	<config protected="yes" type="boolean" name="engine.Dwoo" mandatory="yes">no</config>
 	<config protected="yes" type="string" name="engine.Dwoo.loadFile">dwoo/1.1.1/dwooAutoload.php</config>
-	<config protected="yes" type="boolean" name="engine.phpHaml">no</config>
-	<config protected="yes" type="string" name="engine.phpHaml.loadFile">phpHaml/1.0/includes/haml/HamlParser.class.php</config>
+	<config protected="yes" type="boolean" name="engine.PHP" mandatory="yes">yes</config>
 	<config protected="yes" type="boolean" name="engine.PHPTAL" mandatory="yes">no</config>
 	<config protected="yes" type="string" name="engine.PHPTAL.loadPath">/var/www/lib/PHPTAL/trunk/classes/</config>
 	<config protected="yes" type="string" name="engine.PHPTAL.loadPrefix">php</config>
-	<config protected="yes" type="boolean" name="engine.Twig" mandatory="yes">no</config>
-	<config protected="yes" type="string" name="engine.Twig.loadPath">/var/www/lib/Twig/trunk/</config>
-	<config protected="yes" type="string" name="engine.Twig.loadExt">php</config>
-	<config protected="yes" type="string" name="engine.Twig.loadPrefix">Twig</config>
+	<config protected="yes" type="boolean" name="engine.phpHaml">no</config>
+	<config protected="yes" type="string" name="engine.phpHaml.loadFile">phpHaml/1.0/includes/haml/HamlParser.class.php</config>
+	<config protected="yes" type="boolean" name="engine.Mustache">no</config>
+	<config protected="yes" type="string" name="engine.Mustache.extension">html</config>
+	<config protected="yes" type="string" name="engine.Mustache.loadExtension">php</config>
+	<config protected="yes" type="string" name="engine.Mustache.loadPath">/var/www/lib/mustache.php/src/Mustache/</config>
+	<config protected="yes" type="string" name="engine.Mustache.loadPrefix">Mustache_</config>
+	<config protected="yes" type="boolean" name="engine.Smarty" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.Smarty.loadFile">Smarty/3.1.8/libs/Smarty.class.php</config>
 	<config protected="yes" type="boolean" name="engine.STE" mandatory="yes">yes</config>
 	<config protected="yes" type="string" name="engine.STE.filter.Code">code</config>
 	<config protected="yes" type="string" name="engine.STE.filter.Strip">strip</config>
@@ -33,6 +34,13 @@
 	<config protected="yes" type="boolean" name="engine.STE.plugin.Includes">no</config>
 	<config protected="yes" type="boolean" name="engine.STE.plugin.Optionals">no</config>
 	<config protected="yes" type="boolean" name="engine.STE.plugin.Tidy">no</config>
+	<config protected="yes" type="boolean" name="engine.Twig" mandatory="yes">no</config>
+	<config protected="yes" type="string" name="engine.Twig.loadPath">/var/www/lib/Twig/trunk/</config>
+	<config protected="yes" type="string" name="engine.Twig.loadExtension">php</config>
+	<config protected="yes" type="string" name="engine.Twig.loadPrefix">Twig</config>
+	<relations>
+		<needs type="module">Resource_Library_cmModules</needs>
+	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		//  --  INIT  --  //
 		$messenger	= $context->env->getMessenger();							//  shortcut messenger
@@ -42,7 +50,7 @@
 
 		//  --  GET ACTIVE TEMPLATE ENGINES  --  //
 		$engines	= array();													//  prepare empty engine map
-		$parameters	= array( 'loadFile', 'loadPath', 'loadExt' );				//  list of possible engine parameters
+		$parameters	= array( 'loadFile', 'loadPath', 'loadExtension' );			//  list of possible engine parameters
 		foreach( $config as $pair ){											//  iterate module configuration pairs
 			$pattern	= "/^engine\.([a-z0-9]+)$/i";							//  regular expression for finding engines
 			if( preg_match( $pattern, $pair->key ) && $pair->value ){			//  active engine found
