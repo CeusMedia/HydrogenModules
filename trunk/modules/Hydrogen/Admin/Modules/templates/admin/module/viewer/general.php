@@ -90,7 +90,7 @@ $buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/
 $disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, $disabled );
 $buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
-$buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh', NULL, $disabled );
+$buttonReload		= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $w->buttonReload, 'button icon refresh'/*, NULL, $disabled*/ );
 $disabled			= !$hasUpdate ? 'disabled' : '';
 $buttonUpdate		= UI_HTmL_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $w->buttonUpdate, 'button update', NULL, $disabled );
 
