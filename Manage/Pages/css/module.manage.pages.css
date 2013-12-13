@@ -15,6 +15,9 @@ body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li > a {
 	padding-top: 4px;
 	padding-bottom: 4px;
 	}
+body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li > ul {
+	padding-left: 1.2em;
+	}
 body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li.disabled a:hover {
 	background-color: #eeeeee;
 	color: #999999;
