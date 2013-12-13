@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p3</version>
+	<version>4.0.10-p4</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -19,10 +19,12 @@
 	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap print preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
 	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
+	<config type="string" protected="no" name="auto.baseUrl">./</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config	= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
 if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
+	$helper	= new View_Helper_TinyMceResourceLister( $env );
 	$script	= '
 $(document).ready(function(){
 	if($("config.module_js_tinymce_auto_selector").size()){
