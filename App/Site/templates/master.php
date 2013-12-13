@@ -4,7 +4,6 @@ $pathCDN	= "http://cdn.int1a.net/";
 
 $links		= array(
 	''			=> "Start",
-	'manage/page'	=> 'Seiten',
 );
 
 $controller	= $this->env->getRequest()->get( 'controller' );
@@ -19,6 +18,15 @@ foreach( $links as $key => $value ){
 
 $list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => "nav" ) );
 
+
+/*  --  USER MESSAGES  --  */
+if( $env->getModules()->has( 'UI_Helper_Messenger_Bootstrap' ) )
+	$messages	= View_Helper_Messenger_Bootstrap::renderStatic( $env );
+else
+	$messages	= $messenger->buildMessages();
+
+
+/*  --  MAIN STRUCTURE  --  */
 $body	= '
 <div id="layout-container">
 	<div class="nav navbar navbar-fixed-top">
@@ -30,7 +38,7 @@ $body	= '
 		</div>
 	</div>
 	<div class="container" style="margin-top: 50px">
-		<div id="layout-messenger">'.$messenger->buildMessages().'</div>
+		<div id="layout-messenger">'.$messages.'</div>
 		<div id="layout-content">
 			'.$content.'
 		</div>

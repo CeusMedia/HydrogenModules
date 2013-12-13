@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -41,7 +41,7 @@
 				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
 					if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
 						throw new RuntimeException( "Cannot create .htaccess from .htaccess.dist" );
-					if( !@copy( '.htpasswd.dist', '.htpasswd' ) )
+					if( !@copy( '.htpasswd.dist', '.htpasswd' ) )							//  try to install default .htpasswd
 						throw new RuntimeException( "Cannot create .htpasswd from .htpasswd.dist" );
 					$messenger->noteSuccess( 'Created .htaccess and .htpasswd for authentication.' );
 				}
