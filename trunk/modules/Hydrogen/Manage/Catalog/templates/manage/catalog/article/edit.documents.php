@@ -40,11 +40,13 @@ $types		= join( ", ", $types );
 return '
 <!--  Manage: Catalog: Article: Documents  -->
 	<div class="row-fluid">
-		<div class="span6">
+		<div class="span12">
 			<h4>Dokumente</h4>
 			'.$listDocuments.'
 		</div>
-		<div class="span6">
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
 			<h4>Dokumente hinzufügen</h4>
 			<div class="alert">
 				<b>Dateitypen: </b>

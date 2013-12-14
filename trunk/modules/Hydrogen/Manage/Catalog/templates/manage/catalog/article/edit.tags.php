@@ -29,11 +29,13 @@ if( $articleTags ){
 return '
 <!--  Manage: Catalog: Article: Tags  -->
 	<div class="row-fluid">
-		<div class="span6">
+		<div class="span12">
 			<h4>Schlagwörter</h4>
 			'.$listTags.'
 		</div>
-		<div class="span6">
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
 			<h4>Schlagwort vergeben</h4>
 			<label for="input_tag">neues Schlagwort</label>
 			<input class="span12" type="text" name="tag" id="input_tag"/><br/>

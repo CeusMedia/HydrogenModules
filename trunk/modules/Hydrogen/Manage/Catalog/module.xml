@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,7 +19,7 @@
 		<class>Model/Catalog/Article/Category.php5</class>
 		<class>Model/Catalog/Article/Document.php5</class>
 		<class>Model/Catalog/Article/Tag.php5</class>
-		<class>Logic/Newsletter.php5</class>
+		<class>Logic/Catalog.php5</class>
 		<class>View/Manage/Catalog.php5</class>
 		<class>View/Manage/Catalog/Article.php5</class>
 		<class>View/Manage/Catalog/Author.php5</class>
