@@ -36,6 +36,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		parent::__construct( $env, $a );
 	}
 
+	/**
+	 *	@todo	correct paths
+	 */
 	protected function __onInit( $a = NULL ){
 		$this->cache				= $this->env->getCache();
 
@@ -48,9 +51,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
 		$this->modelCategory		= new Model_Catalog_Category( $this->env );
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
-		$this->pathArticleCovers	= dirname( __FILE__ ).'/../../../Univerlag/contents/articles/covers/'; 
-		$this->pathArticleDocuments	= dirname( __FILE__ ).'/../../../Univerlag/contents/articles/documents/';//$this->config['frontend.document.uri'];
-		$this->pathAuthorImages		= dirname( __FILE__ ).'/../../../Univerlag/contents/authors/'; 
+		$this->pathArticleCovers	= '../Univerlag/contents/articles/covers/';
+		$this->pathArticleDocuments	= '../Univerlag/contents/articles/documents/';//$this->config['frontend.document.uri'];
+		$this->pathAuthorImages		= '../Univerlag/contents/authors/';
 //		$this->clean();
 	}
 
@@ -120,6 +123,14 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'title'			=> $title,
 		);
 		return $this->modelArticleDocument->add( $data );
+	}
+
+	public function addArticleTag( $articleId, $tag ){
+		$data	= array(
+			'articleId'	=> $articleId,
+			'tag'		=> $tag,
+		);
+		return $this->modelArticleTag->add( $data );
 	}
 
 	public function addAuthor( $data ){
@@ -417,7 +428,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= array();
 		foreach( $tags as $tag )
-			$list[$tag->articleTagId]	= $tag->tag;
+			$list[$tag->tag]	= $tag;
+		ksort( $list );
 		return $list;
 	}
 

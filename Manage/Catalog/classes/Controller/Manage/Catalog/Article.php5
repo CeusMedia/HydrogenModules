@@ -39,9 +39,10 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$file		= $this->request->get( 'document' );
 		$title		= $this->request->get( 'title' );
 		$words		= (object) $this->getWords( 'upload' );
-		if( !strlen( trim( $title ) ) )
-			$this->messenger->noteError( $words->msgErrorTitleMissing );
-		else if( isset( $file['name'] ) && !empty( $file['name'] ) ){
+		if( isset( $file['name'] ) && !empty( $file['name'] ) ){
+			if( !strlen( trim( $title ) ) )
+				$title	= $file['name'];
+//				$this->messenger->noteError( $words->msgErrorTitleMissing );
 			if( $file['error']	!= 0 ){
 				$handler	= new Net_HTTP_UploadErrorHandler();
 				$handler->setMessages( $this->getWords( 'uploadErrors' ) );
@@ -68,11 +69,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	}
 
 	public function addTag( $articleId, $tag ){
-		$data	= array(
-			'articleId'	=> $articleId,
-			'tag'		=> $tag,
-		);
-		$this->logic->modelArticleTag->add( $data );
+		$this->logic->addArticleTag( $articleId, $tag );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
