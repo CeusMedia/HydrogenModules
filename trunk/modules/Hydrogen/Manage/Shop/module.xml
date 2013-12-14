@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -11,6 +11,7 @@
 		<class>Controller/Manage/Shop.php5</class>
 		<class>Controller/Manage/Shop/Order.php5</class>
 		<class>Controller/Manage/Shop/Report.php5</class>
+		<class>Logic/Shop.php5</class>
 		<class>Model/Shop/Customer.php5</class>
 		<class>Model/Shop/Order.php5</class>
 		<class>Model/Shop/Order/Position.php5</class>
