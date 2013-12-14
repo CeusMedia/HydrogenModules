@@ -60,12 +60,9 @@
 			) );
 			$script	= '
 $("'.$config['selector'].'").each(function(){									//  iterate found text areas
-	var textarea = $(this).get(0);
-	var mirror = CodeMirror.fromTextArea(textarea, '.$options.');
+	var mirror = CodeMirror.fromTextArea($(this).get(0), '.$options.');
+	mirror.setSize("100%", $(this).height());
 	$(this).data("codemirror", mirror);
-	$(window).bind("resize", {textarea: textarea, mirror: mirror}, function(event){
-		event.data.mirror.setSize(event.data.textarea.width(), event.data.textarea.height());
-	}).trigger("resize");
 });';
 			$context->js->addScript( '$(document).ready(function(){'.$script.'});' );
 		}
