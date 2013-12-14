@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p4</version>
+	<version>4.0.10-p5</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -32,9 +32,10 @@ $(document).ready(function(){
 		var listLinks	= '.json_encode( $helper->getLinkList() ).';
 		if(config.module_js_tinymce_auto_selector){
 			var options = {
+				document_base_url: config.module_js_tinymce_auto_baseUrl,
 				selector: config.module_js_tinymce_auto_selector,
 				plugins: config.module_js_tinymce_auto_plugins,
-				language: config.module_js_tinymce_auto_language
+				language: config.module_js_tinymce_auto_language,
 				image_list: listImages,
 				link_list: listLinks,
 			};
