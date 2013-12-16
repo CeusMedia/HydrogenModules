@@ -7,19 +7,22 @@ Additionally contains editing features which need to be enabled.
 
 Features of viewer:	
 list>
-- Documents are existing as files
+- Documents are existing as files and can be stored in (nested) folders 
 - Markdown syntax is rendered before display using PageDown.js
-- Document can be stored in (nested) folders 
 <list
 Features of editor:	
 list>
 - Documents can be added, updated, renamed/moved or removed
-- List order can be managed by pushing documents up or down
+- Document list order can be managed by pushing documents up or down
 - Renaming a document will adjust links to this document in others
 <list
+This module can be translated.
 ]]></description>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<category>Info</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Manual.php5</class>
 		<class>View/Info/Manual.php5</class>
