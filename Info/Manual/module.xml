@@ -1,8 +1,24 @@
 <?xml version="1.0"?>
 <module>
 	<title>Info: Manual</title>
-	<description><![CDATA[Simple automatic viewer for manual-like files written in Markdown syntax.]]></description>
-	<version>0.4</version>
+	<description><![CDATA[Viewer for documents written using Markdown.
+
+Additionally contains editing features which need to be enabled.
+
+Features of viewer:	
+list>
+- Documents are existing as files
+- Markdown syntax is rendered before display using PageDown.js
+- Document can be stored in (nested) folders 
+<list
+Features of editor:	
+list>
+- Documents can be added, updated, renamed/moved or removed
+- List order can be managed by pushing documents up or down
+- Renaming a document will adjust links to this document in others
+<list
+]]></description>
+	<version>0.5</version>
 	<category>Info</category>
 	<files>
 		<class>Controller/Info/Manual.php5</class>
@@ -11,10 +27,12 @@
 		<template>info/manual/edit.php</template>
 		<template>info/manual/index.php</template>
 		<template>info/manual/view.php</template>
+		<locale>de/info/manual.ini</locale>
 		<locale>de/info/manual/demo.syntax.md</locale>
 		<script load="auto">Info.Manual.js</script>
 	</files>
 	<config type="string" protected="yes" name="path">locales/de/info/manual/</config>
+	<config type="boolean" name="editor">1</config>
 	<config type="integer" name="editor.rows">20</config>
 	<relations>
 		<needs type="module">JS_Markdown</needs>

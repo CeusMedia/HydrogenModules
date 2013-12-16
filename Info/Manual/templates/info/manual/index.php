@@ -1,5 +1,5 @@
 <?php
-$list	= '<div><em class="muted">Keine Dokumente</em></div><br/>';
+$list	= '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 if( $files ){
 	$list	= array();
 	foreach( $files as $entry ){
@@ -11,12 +11,22 @@ if( $files ){
 	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 }
 
+$buttonAdd	= "";
+$buttonReload	= "";
+if( $moduleConfig->get( 'editor' ) ){
+	$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$buttonAdd		= UI_HTML_Tag::create( 'a', $icon.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+	$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$buttonReload	= UI_HTML_Tag::create( 'a', $icon.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+}
+
 return '
 <div class="row-fluid">
 	<div class="span3">
-		<h3>Dokumente</h3>
+		<h3>'.$words['list']['heading'].'</h3>
 		'.$list.'
-		<a href="./info/manual/add" class="btn btn-small btn-primary"><i class="icon-plus icon-white"></i> neues Dokument</a>
+		'.$buttonAdd.'
+		'.$buttonReload.'
 	</div>
 </div>';
 ?>
