@@ -2,16 +2,20 @@
 <module>
 	<title>Info: Manual</title>
 	<description><![CDATA[Simple automatic viewer for manual-like files written in Markdown syntax.]]></description>
-	<version>0.1</version>
+	<version>0.4</version>
 	<category>Info</category>
 	<files>
 		<class>Controller/Info/Manual.php5</class>
 		<class>View/Info/Manual.php5</class>
+		<template>info/manual/add.php</template>
+		<template>info/manual/edit.php</template>
 		<template>info/manual/index.php</template>
+		<template>info/manual/view.php</template>
 		<locale>de/info/manual/demo.syntax.md</locale>
 		<script load="auto">Info.Manual.js</script>
 	</files>
 	<config type="string" protected="yes" name="path">locales/de/info/manual/</config>
+	<config type="integer" name="editor.rows">20</config>
 	<relations>
 		<needs type="module">JS_Markdown</needs>
 		<needs type="module">JS_jQuery</needs>

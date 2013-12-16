@@ -1,5 +1,7 @@
-$(document).ready(function(){
+$(document).ready(function(){	
 	var markdown = $(".markdown");
-	var converter = new Markdown.Converter();
-	markdown.html(converter.makeHtml(markdown.html())).show();
+	if(markdown.size()){
+		var converter = new Markdown.Converter();
+		markdown.html(converter.makeHtml(markdown.html())).show();
+	}
 });
