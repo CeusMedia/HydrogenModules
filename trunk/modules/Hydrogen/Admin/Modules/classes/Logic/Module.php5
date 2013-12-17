@@ -585,27 +585,39 @@ class Logic_Module {
 	 *	@todo		implement
 	 */
 	public function addSource(){
-		
+
 	}
-	
+
+	/**
+	 *	@todo		implement
+	 */
+	public function editSource( $sourceId ){
+
+	}
+
 	public function getSource( $sourceId ){
 		if( !array_key_exists( $sourceId, $this->sources ) )
 			throw new RuntimeException( 'Source "'.$sourceId.'" not existing' );
 		return $this->sources[$sourceId];
 	}
-	
+
 	/**
 	 *	@todo		implement
 	 */
 	public function hasSource( $sourceId ){
-		
+
 	}
-	
-	/**
-	 *	@todo		implement
-	 */
-	public function editSource( $sourceId ){
-		
+
+	public function isInstalled( $moduleOrId ){
+		if( is_object( $moduleOrId ) )
+			return in_array( (int) $moduleOrId->type, array(
+				Model_Module::TYPE_CUSTOM,
+				Model_Module::TYPE_COPY,
+				Model_Module::TYPE_LINK
+			) );
+		else if( $moduleOrId )
+			return $this->isInstalled( $this->getModule ( $moduleOrId ) );
+		return NULL;
 	}
 
 	public function listModulesMissing( $instanceId ){

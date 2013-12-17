@@ -7,8 +7,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	protected $messenger;
 #	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
 #	protected $request;
-	
-	
+
 	protected function __onInit(){
 #		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
@@ -27,7 +26,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 				$pair->{0}	= $value;
 		return File_Editor::save( $fileName, $module->asXML() );
 	}
-	
+
 	public function index( $moduleId = NULL ){
 #		$c	= new Alg_Time_Clock();
 		if( $moduleId )
@@ -82,6 +81,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
 		$module->supportedByModules	= $this->logic->model->getSupportingModulesWithStatus( $moduleId );
 		$this->addData( 'hasUpdate', $hasUpdate );
+		$this->addData( 'isInstalled', (int) $this->logic->isInstalled( $module ) );
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modules', $this->logic->model->getAll() );
