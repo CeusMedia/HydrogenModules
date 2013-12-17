@@ -85,7 +85,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->addData( 'modules', $this->logic->model->getAll() );
 	}
 
-	public function install( $moduleId, $mainModuleId = NULL ){
+	public function install( $moduleId, $mainModuleId = NULL, $step = 0 ){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
@@ -99,6 +99,12 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$urlSelf	.= '/'.$mainModuleId;
 		$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
 		$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+
+		if( $this->logic->model->isInstalled( $moduleId ) ){
+			$messenger->noteSuccess( 'Fehlende Module wurden installiert. Nun zum Modul <b>'.$module->title.'</b>.' );
+			$this->restart( './admin/module/viewer/view/'.$moduleId );
+		}
+
 		if( $request->get( 'doInstall' ) ){
 
 			if( $request->get( 'force' ) )
@@ -111,13 +117,38 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				if( count( $order ) > 1 ){
 					$next	= array_shift( $order );
 #					remark( 'Restart: '.'./admin/module/installer/'.$next.'/'.$mainModuleId );
-					$this->restart( './admin/module/installer/'.$next.'/'.$moduleId );
+					$this->restart( './admin/module/installer/'.$next.'/'.$moduleId.'/'.++$step );
 				}
 				else
-					$this->restart( './admin/module/installer/'.$mainModuleId );
+					$this->restart( './admin/module/installer/'.$mainModuleId.'/'.$step );
 			}
 			try{
-				if( $request->get( 'type' ) == 'copy' ){
+/*  --  kriss: new impl start */
+				$urlInstaller	= './admin/module/installer/install/';
+				if( $request->get( 'type' ) == 'copy' ){											//  mode: copy
+					$type		= Logic_Module::INSTALL_TYPE_COPY;
+					$msgSuccess	= $words->moduleCopied;
+					$msgFailed	= $words->moduleNotCopied;
+				}
+				else if( $request->get( 'type' ) == 'link' ){										//  mode: link
+					$type		= Logic_Module::INSTALL_TYPE_LINK;
+					$msgSuccess	= $words->moduleLinked;
+					$msgFailed	= $words->moduleNotLinked;
+				}
+				if( $this->logic->installModule( $moduleId, $type, $settings, TRUE ) ){				//  try to install module by copy or link
+					$messenger->noteSuccess( $msgSuccess, $moduleId );								//  success!
+					if( !$mainModuleId ){															//  there is no parent module
+						if( $step )
+							$messenger->noteNotice( 'Fertig! Modul '.$module->title.' und '.$step.' weitere installiert' );
+						$this->restart( './admin/module/viewer/index/'.$moduleId );					//  go to module view
+					}
+					$url	= $urlInstaller.$mainModuleId.'/'.$mainModuleId.'/'.$step;				//  otherwise go to installer for parent module
+					$this->restart( $url.'?doInstall=yes' );										//  ??? @todo kriss: understand and document !!!
+				}
+				$messenger->noteError( $msgFailed, $moduleId );										//  still here? than error!
+
+/*  --  kriss: old impl start */
+/*				if( $request->get( 'type' ) == 'copy' ){
 					$type	= Logic_Module::INSTALL_TYPE_COPY;
 					if( $this->logic->installModule( $moduleId, $type, $settings, TRUE ) ){
 						$messenger->noteSuccess( $words->moduleCopied, $moduleId );
@@ -137,7 +168,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					}
 					$messenger->noteError( $words->moduleNotLinked, $moduleId );
 				}
-			}
+*/			}
 			catch( Exception $e ){
 				$this->handleException( $e );
 			}
@@ -253,14 +284,14 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		}
 		return $files;
 	}
-	
+
 	public function view( $moduleId, $mainModuleId = NULL ){
-		
+
 		$module		= $this->logic->model->get( $moduleId );
 
 #		$this->addData( 'allNeededModules', $this->logic->model->getAllNeededModules( $moduleId ) );
 #		$this->addData( 'allSupportedModules', $this->logic->model->getAllSupportedModules( $moduleId ) );
-		
+
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
 		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
 
@@ -274,7 +305,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$mainModule->neededModules	= $this->logic->model->getAllNeededModules( $mainModuleId );
 			$mainModule->supportedModules	= $this->logic->model->getAllSupportedModules( $mainModuleId );
 		}
-		
+
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modules', $this->logic->model->getAll() );
