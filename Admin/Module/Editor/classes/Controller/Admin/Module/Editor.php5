@@ -380,7 +380,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 //			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
 
 			$missings = array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
-			if( 0 && $missings ){
+			if( $missings ){
 				$list	= array();
 				foreach( $missings as $missing ){
 					$missingModule	= $this->logic->getModule( $missing );
