@@ -9,7 +9,7 @@ $tableConfig	= '<br/><div>'.$w->listNone.'</div><br/>';
 if( count( $module->config ) ){
 	$rows	= array();
 	foreach( $module->config as $key => $value ){
-		
+
 		$urlRemove	= './admin/module/editor/removeConfig/'.$moduleId.'/'.$key;
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove', $w->buttonRemoveConfirm );
 		$class	= "";
@@ -26,33 +26,43 @@ if( count( $module->config ) ){
 			}
 		}
 		$name	= 'config['.$key.']';
+		$inputName	= 'config['.$key.']';
+		$inputId	= 'input_config_'.$key;
+		$inputValue	= htmlentities( $value->value, ENT_QUOTES, 'UTF-8' );
+		$inputTitle	= trim( htmlentities( $value->title, ENT_QUOTES, 'UTF-8' ) );
 		switch( $value->type ){
 			case 'boolean':
 				$strValue	= $value->value === TRUE ? 'yes' : 'no';
 				$options	= UI_HTML_Elements::Options( $words['boolean-values'], $strValue );
-				$input		= UI_HTML_Tag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => 'input_'.$name ) );
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE ) );
+				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$input		= UI_HTML_Tag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle ) );
 				break;
 			case 'int':
 			case 'integer':
-				$input		= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 's'.$class );
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => $value->value, 'class' => 'label max', 'readonly' => TRUE ) );
+				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$input		= UI_HTML_Tag::create( 'input', NULL, array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 's'.$class ) );
 				break;
 			default:
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$name, 'value' => htmlentities( $value->value, ENT_QUOTES, 'UTF-8' ), 'class' => 'label max', 'readonly' => TRUE ) );
+				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
 				if( count( $value->values ) ){
 					$options	= array_combine( $value->values, $value->values );
 					$options	= UI_HTML_Elements::Options( $options, $value->value );
-					$input		= UI_HTML_Elements::Select( 'config['.$key.']', $options, 'm'.$class );
+					$input		= UI_HTML_Tag::create( 'select', $options, array( 'name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle ) );
 				}
-				else
-					$input	= UI_HTML_Elements::Input( 'config['.$key.']', htmlentities( $value->value, ENT_QUOTES, 'UTF-8' ), 'max'.$class );
+				else{
+					$attr	= array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 'max'.$class, 'title' => $inputTitle );
+					$input	= UI_HTML_Tag::create( 'input', NULL, $attr );
+				}
 				break;
 		}
-		$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
+		$label  = $key;
+		if( strlen( $inputTitle ) )
+			$label  = UI_HTML_Tag::create( 'acronym', $key, array( 'title' => $inputTitle ) );
+
+		$label	= UI_HTML_Tag::create( 'label', $label, array( 'class' => $class, 'for' => $inputId ) );
 		$id		= str_replace( '.', '_', $key );
 		$cells	= array(
-			UI_HTML_Tag::create( 'td', $label, array() ),
+			UI_HTML_Tag::create( 'td', $label, array( 'class' => 'cell-config-key' ) ),
 			UI_HTML_Tag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
 			UI_HTML_Tag::create( 'td', $inputLabel.$input, array( 'class' => 'cell-config-value' ) ),
 			UI_HTML_Tag::create( 'td', $linkRemove, array() ),
@@ -115,11 +125,21 @@ $panelAdd	= '
 	</fieldset>
 </form>
 <script>
+function switchConfigInput(elemTr, event){
+	if( typeof event !== "undefined" ){
+		event.stopPropagation();
+		event.preventDefault();
+	}
+	elemTr.find(":input.label").hide();
+	elemTr.find(":input").not(".label").show().focus();
+}
 $(document).ready(function(){
 	$("#form_admin_module_config tr td.cell-config-value :input").not(".label").hide();
-	$("#form_admin_module_config input.label").bind("focus",function(){
-		$(this).parent().find(":hidden").show().focus();
-		$(this).hide();
+	$("#form_admin_module_config :input.label").bind("mousedown",function(event){
+		switchConfigInput($(this).parent(), event);
+	});
+	$("#form_admin_module_config tr td.cell-config-key label").bind("click", function(event){
+		switchConfigInput($(this).parent().parent());
 	});
 	$("#form_admin_module_config_add #input_type").trigger("change");
 	$("a.disabled").attr("href","#");
