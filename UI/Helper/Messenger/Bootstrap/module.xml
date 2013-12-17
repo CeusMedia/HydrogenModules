@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Helper: Messenger: Bootstrap</title>
-	<version>0.4</version>
+	<version>0.4-p1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
