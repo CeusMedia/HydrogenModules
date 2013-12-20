@@ -1,9 +1,9 @@
 <?php
 /**
- *	Singleton of module logic. 
+ *	Singleton of module logic.
  */
 /**
- *	Singleton of module logic. 
+ *	Singleton of module logic.
  */
 class Logic_Module {
 
@@ -12,7 +12,7 @@ class Logic_Module {
 	protected $messenger;
 	/**	@var	Model_Module	$model		Module module instance */
 	public $model;
-	
+
 	const INSTALL_TYPE_UNKNOWN	= 0;
 	const INSTALL_TYPE_LINK		= 1;
 	const INSTALL_TYPE_COPY		= 2;
@@ -247,7 +247,6 @@ class Logic_Module {
 		return $source;
 	}
 
-	
 /*	public function importLocalModule( $moduleId, $title, $description = NULL, $version = NULL, $route = NULL ){
 		$path	= $this->getModulePath( $moduleId );
 		if( !file_exists( $path ) )
@@ -374,7 +373,7 @@ class Logic_Module {
 				}
 
 				//  @todo	when $move = TRUE => remove database tables of module
-				
+
 				$messenger->noteSuccess( 'Das Module "'.$moduleId.'" wurde bei der Quelle "'.$sourceId.'" eingereicht.' );
 				$messenger->noteNotice( 'Das Module kann nun deinstalliert und aus der Quelle wieder installiert werden.' );
 				return TRUE;
@@ -386,7 +385,7 @@ class Logic_Module {
 		}
 		return FALSE;
 	}
-	
+
 	public function installModule( $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
 		try{
 			$this->installModuleDatabase( $moduleId );
@@ -530,7 +529,7 @@ class Logic_Module {
 		$pathApp	= $this->env->getRemote()->path;
 		$module		= $this->model->get( $moduleId );
 		$files		= array_values( $this->getModuleFileMap( $this->env->getRemote(), $module ) );
-		
+
 		//  --  CONFIGURATION  --  //
 		$files[]	= 'config/modules/'.$moduleId.'.xml';
 		if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
@@ -687,7 +686,7 @@ class Logic_Module {
 			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
 			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
-				
+
 			foreach( $modulesInstalled as $module ){
 				foreach( $module->relations->needs as $need )
 					if( !array_key_exists( $need, $modulesInstalled ) )
@@ -704,15 +703,13 @@ class Logic_Module {
 		}
 		return $list;
 	}*/
-	
-	public function listSources(){
+
+	public function listSources( $activeOnly = FALSE ){
 		$list	= array();
 		$model	= new Model_ModuleSource( $this->env );
-		foreach( $model->getAll( FALSE ) as $source )
-			$list[$source->id]	= $source;
-		return $list;
+		return $model->getAll( $activeOnly );
 	}
-	
+
 	/**
 	 *	@todo		implement
 	 */

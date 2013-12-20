@@ -3,8 +3,7 @@
 $w			= (object) $words['view'];
 $sources	= array();
 $model		= new Model_ModuleSource( $this->env );
-foreach( $model->getAll() as $source )
-	$sources[$source->id]	= $source;
+$sources	= $model->getAll();
 
 $icon	= $module->icon ? UI_HTML_Tag::create( 'img', NULL, array(
 	'src'	=> $module->icon,
