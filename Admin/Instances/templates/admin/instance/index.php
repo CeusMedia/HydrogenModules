@@ -24,9 +24,9 @@ function formatUrl( $url ){
 }
 
 $rows	= array();
-foreach( $instances as $instance ){
+foreach( $instances as $instanceId => $instance ){
 	$url			= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
-	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instance->id, $instance->title );
+	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title );
 	$link			= UI_HTML_Tag::create( 'strong', $link, array( 'class' => '' ) );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );

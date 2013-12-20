@@ -2,12 +2,12 @@
 class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
-		$this->model	= new Model_Instance( $this->env );
+		$this->model		= new Model_Instance( $this->env );
+		$this->messenger	= $this->env->getMessenger();
 		$this->addData( 'root', getEnv( 'DOCUMENT_ROOT' ).'/' );
 	}
 
 	public function add(){
-		$messenger	= $this->env->getMessenger();
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'add' ) ){
@@ -48,7 +48,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			}
 #			if( $path == '/' )
 #				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
-			if( !$messenger->gotError() ){
+			if( !$this->messenger->gotError() ){
 				$data		= array(
 					'id'			=> $id,
 					'title'			=> $title,
@@ -62,7 +62,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				if( $configFile != 'config.ini' )
 					$data['configFile']	= $configFile;
 				$instanceId	= $this->model->add( $data );
-				$messenger->noteSuccess( 'Die Instanz wurde hinzugefügt.' );
+				$this->messenger->noteSuccess( 'Die Instanz wurde hinzugefügt.' );
 				$this->restart( 'edit/'.$instanceId, TRUE );
 			}
 		}
@@ -77,7 +77,6 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function createConfig( $instanceId ){
-		$messenger	= $this->env->getMessenger();
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$instance	= $this->model->get( $instanceId );
 
@@ -110,17 +109,16 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			$editor	= new File_INI_Editor( $fileName, FALSE );
 			foreach( $data as $key => $value )
 				$editor->addProperty( $key, $value );
-			$messenger->noteSuccess( 'Die Konfigurationsdatei "'.$fileName.'" wurde erstellt.' );
+			$this->messenger->noteSuccess( 'Die Konfigurationsdatei "'.$fileName.'" wurde erstellt.' );
 		}
 		catch( Exception $e ){
-			$messenger->noteError( 'Die Konfigurationsdatei "'.$fileName.'" konnte nicht erstellt werden:<br/>'.$e->getMessage() );
+			$this->messenger->noteError( 'Die Konfigurationsdatei "'.$fileName.'" konnte nicht erstellt werden:<br/>'.$e->getMessage() );
 		}
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
 
 
 	public function configureDatabase( $instanceId ){
-		$messenger	= $this->env->getMessenger();
 		$instance	= $this->model->get( $instanceId );
 		$request	= $this->env->getRequest();
 
@@ -154,16 +152,15 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				else
 					$editor->addProperty( $key, $value );
 			}
-			$messenger->noteSuccess( 'Die Datenbankeinstellungen wurden gespeichert.' );
+			$this->messenger->noteSuccess( 'Die Datenbankeinstellungen wurden gespeichert.' );
 		}
 		catch( Exception $e ){
-			$messenger->noteError( 'Die Datenbankeinstellungen konnten nicht gespeichert werden:<br/>'.$e->getMessage() );
+			$this->messenger->noteError( 'Die Datenbankeinstellungen konnten nicht gespeichert werden:<br/>'.$e->getMessage() );
 		}
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
 
 	public function createPath( $instanceId, $path = NULL ){
-		$messenger	= $this->env->getMessenger();
 		$instance	= $this->model->get( $instanceId );
 		$path		= base64_decode( $path );
 #		print_m( $instance );
@@ -171,14 +168,13 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 #			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 		$path	= $instance->uri.$path;
 		if( Folder_Editor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
-			$messenger->noteSuccess( 'Der Pfad "'.$path.'" wurde erzeugt.' );
+			$this->messenger->noteSuccess( 'Der Pfad "'.$path.'" wurde erzeugt.' );
 		else
-			$messenger->noteError( 'Der Pfad "'.$path.'" konnte nicht erzeugt werden.' );
+			$this->messenger->noteError( 'Der Pfad "'.$path.'" konnte nicht erzeugt werden.' );
 		$this->restart( './admin/instance/edit/'.$instanceId );
 	}
 
 	public function edit( $instanceId ){
-		$messenger	= $this->env->getMessenger();
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'edit' ) ){
@@ -220,7 +216,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 #			if( $path == '/' )
 #				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
 
-			if( !$messenger->gotError() ){
+			if( !$this->messenger->gotError() ){
 				$data		= array(
 					'title'		=> $title,
 					'protocol'	=> $protocol,
@@ -235,12 +231,11 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				$this->model->edit( $instanceId, $data );
 				if( $instanceId !== $id )
 					$this->model->changeId( $instanceId, $id );
-				$messenger->noteSuccess( 'Die Instanz wurde gespeichert.' );
+				$this->messenger->noteSuccess( 'Die Instanz wurde gespeichert.' );
 				$this->restart( './admin/instance/edit/'.$id );
 			}
 		}
 		$instance		= $this->model->get( $instanceId );
-		$instance		= (object) array_merge( (array) $instance, array( 'host' => '' ) );
 		$instance->id	= $instanceId;
 		if( empty( $instance->configPath ) )
 			$instance->configPath	= '';
@@ -255,15 +250,27 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	public function remove( $instanceId ){
 		$instanceId	= trim( $instanceId );
-		$messenger	= $this->env->getMessenger();
 		if( !$this->model->has( $instanceId ) ){
-			$messenger->noteError( 'Die aufgerufene Instanz existiert nicht. Weiterleitung zur Übersicht.' );
+			$this->messenger->noteError( 'Die aufgerufene Instanz existiert nicht. Weiterleitung zur Übersicht.' );
 			$this->restart( './admin/instance' );
 		}
 		$instance	= $this->model->get( $instanceId );
-		$messenger->noteSuccess( 'Die Instanz "'.$instance->title.'" wurde abgemeldet. <small class="hint muted">Der Instanzordner wurde dabei <b>nicht gelöscht</b></small>.' );
+		$this->messenger->noteSuccess( 'Die Instanz "'.$instance->title.'" wurde abgemeldet. <small class="hint muted">Der Instanzordner wurde dabei <b>nicht gelöscht</b></small>.' );
 		$this->model->remove( $instanceId );
 		$this->restart( NULL, TRUE );
+	}
+
+	public function select( $instanceId = NULL ){
+		$instanceId	= trim( $instanceId );
+		if( trim( $instanceId) && !$this->model->has( $instanceId ) )			//  unknown
+			throw new InvalidArgumentException( 'Requested instance "'.$instanceId.'" is not existing' );
+		if( $instanceId  ){
+			$instance	= $this->model->get( $instanceId );
+			$this->messenger->noteNotice( 'Instanz ausgewählt: <cite>'.$instance->title.'</cite>' );
+		}
+		$this->env->getSession()->set( 'instanceId', $instanceId );
+		$url	= $this->env->getRequest()->get( 'forward' );
+		$this->restart( $url );
 	}
 }
 ?>
