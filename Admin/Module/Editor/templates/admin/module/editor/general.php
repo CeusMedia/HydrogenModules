@@ -2,7 +2,6 @@
 
 $w	= (object) $words['view'];
 
-
 $attributes			= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack			= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
@@ -65,10 +64,10 @@ $panelLicenses	= $this->loadTemplateFile( 'admin/module/editor/general.licenses.
 */
 
 $optSource	= array( '' => '- wählen -' );
-foreach( $sources as $source ){
+foreach( $sources as $sourceId => $source ){
 	if( $source->active )
 		if( strtolower( $source->type ) == "folder" )
-			$optSource[$source->id]	= /*$source->id.': '.*/$source->title;
+			$optSource[$sourceId]	= /*$sourceId.': '.*/$source->title;
 }
 $optSource	= UI_HTML_Elements::Options( $optSource, $request->get( 'source' ) );
 

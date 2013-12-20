@@ -21,8 +21,8 @@ class Model_Module{
 		$this->pathConfig	= $env->pathConfig.'modules';
 
 		$model	= new Model_ModuleSource( $env );
-		foreach( $model->getAll() as $source )
-			$this->sources[$source->id]	= $source;
+		foreach( $model->getAll() as $sourceId => $source )
+			$this->sources[$sourceId]	= $source;
 
 //		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
 
@@ -357,22 +357,23 @@ class Model_Module{
 	public function loadSources(){
 		$list		= array();
 		$results	= array();
-		foreach( $this->sources as $source ){
+		foreach( $this->sources as $sourceId => $source ){
 			try{
-				$results[$source->id]	= 0;
+				$results[$sourceId]	= 0;
 				if( $source->active ){
+					$source->id	= $sourceId;
 					$library	= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
-					$results[$source->id]	= 1;
+					$results[$sourceId]	= 1;
 					foreach( $library->getAll() as $module ){
-						$module->source			= $source->id;
+						$module->source			= $sourceId;
 						$module->type			= self::TYPE_SOURCE;
 						$list[$module->id]		= $module;
-						$results[$source->id]	= 2;
+						$results[$sourceId]	= 2;
 					}
 				}
 			}
 			catch( Exception $e ){
-				$results[$source->id]	= $e;
+				$results[$sourceId]	= $e;
 			}
 			$this->env->clock->profiler->tick( 'Model_Module: Source: '.$source->title );
 		}
