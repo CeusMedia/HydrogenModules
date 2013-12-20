@@ -5,7 +5,7 @@ $w	= (object) $words['edit'];
 $optType	= UI_HTML_Elements::Options( $words['types'], $source->type );
 
 $panelEdit	= '
-<form action="./admin/module/source/edit/'.$source->id.'" method="post">
+<form action="./admin/module/source/edit/'.$sourceId.'" method="post">
 	<fieldset>
 		<legend class="edit">'.$w->legend.'</legend>
 		<ul class="input">
@@ -15,7 +15,7 @@ $panelEdit	= '
 			</li>
 			<li class="column-left-25">
 				<label for="input_id" class="mandatory">'.$w->labelId.'</label><br/>
-				<input type="text" name="id" id="input_id" value="'.htmlentities( $source->id ).'" class="max"/>
+				<input type="text" name="id" id="input_id" value="'.htmlentities( $sourceId ).'" class="max"/>
 			</li>
 			<li class="column-left-25">
 				<label for="input_type" class="mandatory">'.$w->labelType.'</label><br/>
@@ -39,18 +39,17 @@ $panelEdit	= '
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './admin/module/source', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button save' ).'
-			'.UI_HTML_Elements::LinkButton( './admin/module/source/refresh/'.$source->id.'/0', $w->buttonRefresh, 'button icon refresh' ).'
-			'.UI_HTML_Elements::LinkButton( './admin/module/source/remove/'.$source->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm ).'
+			'.UI_HTML_Elements::LinkButton( './admin/module/source/refresh/'.$sourceId.'/0', $w->buttonRefresh, 'button icon refresh' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/module/source/remove/'.$sourceId, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm ).'
 		</div>
 	</fieldset>
-</form>
-';
+</form>';
 
 $panelInfo	= $view->loadContentFile( 'html/admin/module/source/edit.info.html' );
 
 return '
 <script>
-var sourceId = "'.$source->id.'";
+var sourceId = "'.$sourceId.'";
 </script>
 <div class="column-left-60">
 	'.$panelEdit.'

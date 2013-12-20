@@ -12,8 +12,10 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	
 	public function ajaxReadSource( $sourceId = NULL ){
 		$source		= (object) array( 'id' => NULL, 'path' => NULL, 'type' => NULL );
-		if( $sourceId )
+		if( $sourceId ){
 			$source		= $this->model->get( $sourceId );
+			$source->id	= $sourceId;
+		}
 
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->has( 'path' ) )
@@ -163,7 +165,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$type		= trim( $post->get( 'type' ) );
 			$title		= trim( $post->get( 'title' ) );
 			$path		= trim( $post->get( 'path' ) );
-			$active		= (bool) trim( $post->get( 'active' ) );
+			$active		= (boolean) trim( $post->get( 'active' ) );
 #			$username	= trim( $post->get( 'username' ) );
 #			$password	= trim( $post->get( 'password' ) );
 			
@@ -203,6 +205,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$source->password	= '';
 		
 		$this->addData( 'source', $source );
+		$this->addData( 'sourceId', $sourceId );
 	}
 
 	public function index(){
@@ -232,6 +235,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		$words		= (object) $this->getWords( 'msg' );
 
 		$source		= $this->model->get( $sourceId );
+		$source->id	= $sourceId;
 		$libOld		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
 		$modulesOld	= (array) $libOld->getAll();
 
@@ -262,7 +266,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			}
 		}
 		
-		$sourceLabel	= UI_HTML_Tag::create( 'acronym', $source->id, array( 'title' => $source->title ) );
+		$sourceLabel	= UI_HTML_Tag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
 		if( $modulesAdded || $modulesRemoved || $modulesUpdated ){
 			$this->messenger->noteSuccess( $words->successRefresh, $sourceLabel, count( $modulesAdded ), count( $modulesRemoved ), count( $modulesUpdated ) );
 			if( $modulesAdded ){
