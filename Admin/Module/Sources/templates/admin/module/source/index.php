@@ -5,14 +5,15 @@ $iconDisabled	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/de
 $iconRefresh	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
 
 $rows	= array();
-foreach( $sources as $source ){
-	$state	= $source->active == "yes" ? $iconEnabled : $iconDisabled;
-	if( $source->active == "yes" ){
-		$urlRefresh	= './admin/module/source/refresh/'.$source->id."?from=admin/module/source";
+foreach( $sources as $sourceId => $source ){
+	$state	= $iconDisabled;
+	if( $source->active ){
+		$state		= $iconEnabled;
+		$urlRefresh	= './admin/module/source/refresh/'.$sourceId."?from=admin/module/source";
 		$state .= '&nbsp;'.UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
 	}
 	$label	= $source->title;
-	$link	= UI_HTML_Elements::Link( './admin/module/source/edit/'.$source->id, $source->id );
+	$link	= UI_HTML_Elements::Link( './admin/module/source/edit/'.$sourceId, $sourceId );
 	$type	= $words['types'][$source->type].'  <em><small class="counter-modules"></small></em>';
 	$cellId		= UI_HTML_Tag::create( 'td', $link );
 	$cellLabel	= UI_HTML_Tag::create( 'td', $label );
@@ -20,7 +21,7 @@ foreach( $sources as $source ){
 	$cellActive	= UI_HTML_Tag::create( 'td', $state );
 	$rows[]		= UI_HTML_Tag::create( 'tr',
 		$cellId.$cellLabel.$cellType.$cellActive,
-		array( 'class' => 'source', 'data-id' => $source->id )
+		array( 'class' => 'source', 'data-id' => $sourceId )
 	);
 }
 

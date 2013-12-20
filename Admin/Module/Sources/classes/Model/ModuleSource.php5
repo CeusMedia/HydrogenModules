@@ -1,13 +1,12 @@
 <?php
 class Model_ModuleSource{
 
-	/**	@var	File_INI_Editor		$file		INI editor pointing to module sources file */
-	protected $file;
+	protected $data;
 	protected $fileName;
 	
 	public function __construct( $env ){
 		$this->env		= $env;
-		$this->fileName	= 'config/modules/sources.ini';
+		$this->fileName	= 'config/modules/sources.json';
 
 		if( !file_exists( dirname( $this->fileName ) ) ){
 			Folder_Editor::createFolder( dirname( $this->fileName ), 0770 );
@@ -16,73 +15,72 @@ class Model_ModuleSource{
 			touch( $this->fileName );
 			chmod( $this->fileName, 0770 );
 		}
-		$this->file		= new File_INI_Editor( $this->fileName, TRUE );
-		
+		$json		= File_Reader::load( $this->fileName );
+		$this->data	= json_decode( $json, TRUE );
 	}
 
 	public function add( $data ){
-		$id		= $data['id'];
-		$this->file->addSection( $id );
+		if( empty( $data['id'] ) || !strlen( trim( $data['id'] ) ) )
+			throw new InvalidArgumentException( 'Source data is missing an source ID' );
+		$id		= trim( $data['id'] );
 		unset( $data['id'] );
-		foreach( $data as $key => $value )
-			$this->file->setProperty( $key, $value, $id );
+		$this->data[$id]	 = $data;
+		$this->save();
 		return $id;
 	}
 
 	public function changeId( $from, $to ){
-		return $this->file->renameSection( $from, $to );
+		$data	= $this->data[$from];
+		unset( $this->data[$from] );
+		$this->data[$to]	= $data;
+		return (boolean) $this->save();
 	}
 
 	public function count(){
-		return count( $this->file->getSections() );
+		return count( $this->data );
 	}
 	
 	public function edit( $id, $data ){
-		$changed	= FALSE;
-		if( $this->file->hasSection( $id ) ){
-			foreach( $data as $key => $value ){
-				if( $this->file->hasProperty( $key, $id ) ){
-					if( strlen( trim( $value ) ) || is_bool( $value ) )
-						$this->file->setProperty( $key, $value, $id );
-					else
-						$this->file->removeProperty( $key, $id );
-					$changed	= TRUE;
-				}
-				else{
-					$this->file->addProperty( $key, $value, NULL, TRUE, $id );
-					$changed	= TRUE;
-				}
-			}
-		}
-		return $changed;
+		$old		= $this->data[$id];
+		foreach( $data as $key => $value )
+			$this->data[$id][$key]	= $value;
+		if( $old != $this->data[$id] )
+			return (boolean) $this->save();
+		return FALSE;
 	}
 
 	public function get( $id ){
-		$data		= (object) $this->file->getProperties( FALSE, $id );
-		$data->id	= $id;
-		return $data;
+		if( !$this->has( $id ) )
+			return NULL;
+		$data	= $this->data[$id];
+		return (object) $data;
 	}
 
 	public function getAll( $activeOnly = TRUE ){
 		$list		= array();
-		$sections	= $this->file->getSections();
-		foreach( $sections as $section ){
-			$data	= array( 'id' => $section );
-			foreach( $this->file->getProperties( NULL, $section ) as $key => $value )
-				$data[$key]	= $value;
-			if( $activeOnly && !$data['active'] )
-				continue;
-			$list[$section]	= (object) $data;
+		foreach( $this->data as $id => $data ){
+			if( !$activeOnly || !empty( $data->active ) )
+				$list[$id]	= (object) $this->data[$id];
 		}
 		return $list;
 	}
 
-	public function has( $id ){
-		return $this->file->hasSection( $id );
+	public function has( $id, $key = NULL ){
+		if( !isset( $this->data[$id] ) )
+			return FALSE;
+		if( $key )
+			return isset( $this->data[$id][$key] );
+		return TRUE;
 	}
 
 	public function remove( $id ){
-		$this->file->removeSection( $id );
+		unset( $this->data[$id] );
+		$this->save();
+	}
+
+	protected function save(){
+		$json	= ADT_JSON_Formater::format( json_encode( $this->data ) );
+		return File_Writer::save( $this->fileName, $json );
 	}
 }
 ?>
