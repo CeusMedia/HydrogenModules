@@ -100,11 +100,6 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
 		$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
 
-		if( $this->logic->model->isInstalled( $moduleId ) ){
-			$messenger->noteSuccess( 'Fehlende Module wurden installiert. Nun zum Modul <b>'.$module->title.'</b>.' );
-			$this->restart( './admin/module/viewer/view/'.$moduleId );
-		}
-
 		if( $request->get( 'doInstall' ) ){
 
 			if( $request->get( 'force' ) )
@@ -114,13 +109,17 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				$solver	= new Logic_Module_Relation( $this->logic );												//	calculator for module installation order
 				$solver->loadModule( $moduleId );													//  load module and related modules
 				$order	= array_keys( $solver->getOrder() );										//  get calculated module installation order
+
 				if( count( $order ) > 1 ){
 					$next	= array_shift( $order );
 #					remark( 'Restart: '.'./admin/module/installer/'.$next.'/'.$mainModuleId );
-					$this->restart( './admin/module/installer/'.$next.'/'.$moduleId.'/'.++$step );
+					$this->restart( './admin/module/installer/install/'.$next.'/'.$moduleId.'/'.++$step );
 				}
-				else
-					$this->restart( './admin/module/installer/'.$mainModuleId.'/'.$step );
+				else if( $this->logic->model->isInstalled( $moduleId ) ){
+					$messenger->noteSuccess( 'Fehlende Module wurden installiert. Nun zum Modul <b>'.$module->title.'</b>.' );
+					$this->restart( './admin/module/viewer/view/'.$moduleId );
+				}
+				$this->restart( './admin/module/installer/'.$mainModuleId.'/'.$step );
 			}
 			try{
 /*  --  kriss: new impl start */
@@ -139,8 +138,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					$messenger->noteSuccess( $msgSuccess, $moduleId );								//  success!
 					if( !$mainModuleId ){															//  there is no parent module
 						if( $step )
-							$messenger->noteNotice( 'Fertig! Modul '.$module->title.' und '.$step.' weitere installiert' );
-						$this->restart( './admin/module/viewer/index/'.$moduleId );					//  go to module view
+							$messenger->noteNotice( 'Fertig! Modul '.$module->title.' und '.$step.' weitere installiert.' );
+						$this->restart( './admin/module/editor/view/'.$moduleId );					//  go to module edit view
 					}
 					$url	= $urlInstaller.$mainModuleId.'/'.$mainModuleId.'/'.$step;				//  otherwise go to installer for parent module
 					$this->restart( $url.'?doInstall=yes' );										//  ??? @todo kriss: understand and document !!!
@@ -176,7 +175,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->restart( $urlSelf );
 	}
 
-	public function uninstall( $moduleId, $verbose = TRUE ){
+	public function uninstall( $moduleId, $verbose = NULL ){
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )

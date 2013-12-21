@@ -555,7 +555,7 @@ class Logic_Module {
 			}
 			while( !$count );
 		}
-		if( ( 1 || $verbose ) ){
+		if( $verbose ){
 			if( $files ){
 				$files	= '<ul><li>'.implode( '</li><li>', $files ).'</li></ul>';
 				$this->messenger->noteNotice( 'Removed files: '.$files );
