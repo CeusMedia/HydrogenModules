@@ -16,8 +16,8 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, (string) $filterStatus );
 $optOrder	= array(
 	'title:ASC'			=> 'Titel aufsteigend',
 	'title:DESC'		=> 'Titel absteigend',
-	'timestamp:ASC'		=> 'Erstellung aufsteigend',
-	'timestamp:DESC'	=> 'Erstellung absteigend',
+	'createdAt:ASC'		=> 'Erstellung aufsteigend',
+	'createdAt:DESC'	=> 'Erstellung absteigend',
 );
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
 
