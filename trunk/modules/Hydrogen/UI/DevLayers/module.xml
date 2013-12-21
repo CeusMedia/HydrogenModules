@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Dev: Layers</title>
+	<description><![CDATA[Container for development information layers.]]></description>
+	<version>0.2</version>
+	<category>User Interface</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>View/Helper/DevLayers.php5</class>
+		<script load="auto">UI.DevLayers.js</script>
+		<style load="auto" source="theme">dev.layers.css</style>
+	</files>
+	<config protected="no" type="boolean" name="enabled">yes</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+	<hook type="resource" resource="App" event="respond"><![CDATA[
+		if( $env->getConfig()->get( 'module.ui_devlayers.enabled' ) ){
+			$helper		= new View_Helper_DevLayers( $env );
+			$context->addBody( $helper->render() );
+		}
+	]]></hook>
+</module>
