@@ -3,13 +3,13 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 
 	/**	@var	Model_ModuleSource	$model		Instance of sources model */
 	protected $model;
-	
+
 	protected function __onInit(){
 		$this->model		= new Model_ModuleSource( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->addData( 'root', getEnv( 'DOCUMENT_ROOT' ).'/' );
 	}
-	
+
 	public function ajaxReadSource( $sourceId = NULL ){
 		$source		= (object) array( 'id' => NULL, 'path' => NULL, 'type' => NULL );
 		if( $sourceId ){
@@ -104,7 +104,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		print( json_encode( $result ) );
 		exit;
 	}
-	
+
 	public function add(){
 		$messenger	= $this->env->getMessenger();
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
@@ -118,8 +118,8 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$active		= (bool) trim( $post->get( 'active' ) );
 #			$username	= trim( $post->get( 'username' ) );
 #			$password	= trim( $post->get( 'password' ) );
-			
-#			$path		= preg_replace( '@/*$@', '', $path ).'/';
+
+#			$path		= preg_replace( '/\/*$/', '', $path ).'/';
 
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( $words->errorIdMissing );
@@ -168,7 +168,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$active		= (boolean) trim( $post->get( 'active' ) );
 #			$username	= trim( $post->get( 'username' ) );
 #			$password	= trim( $post->get( 'password' ) );
-			
+
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( $words->errorIdMissing );
 			if( strtolower( $id ) == "local" )
@@ -203,7 +203,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$source->username	= '';
 		if( empty( $source->password ) )
 			$source->password	= '';
-		
+
 		$this->addData( 'source', $source );
 		$this->addData( 'sourceId', $sourceId );
 	}
@@ -242,7 +242,9 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
 		$this->env->getCache()->flush();
 		$this->env->getCache()->setContext( '' );
-		$pathCache	= 'config/modules/cache/';
+		$this->env->getCache()->remove( 'Sources/'.$sourceId );
+
+/*		$pathCache	= 'config/modules/cache/';
 		if( $this->env->getConfig()->get( 'path.cache' ) )
 			$pathCache	= $this->env->getConfig()->get( 'path.cache' );
 		$fileCache	= $pathCache.'Sources/'.$sourceId;
@@ -250,7 +252,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			@unlink( $fileCache );
 			$this->env->getMessenger()->noteNotice( 'Removed local module cache file <small><code>'.$fileCache.'</code></small>.' );
 		}
-
+*/
 		$libNew		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
 		$modulesNew	= (array) $libNew->getAll();
 
@@ -265,7 +267,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 				}
 			}
 		}
-		
+
 		$sourceLabel	= UI_HTML_Tag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
 		if( $modulesAdded || $modulesRemoved || $modulesUpdated ){
 			$this->messenger->noteSuccess( $words->successRefresh, $sourceLabel, count( $modulesAdded ), count( $modulesRemoved ), count( $modulesUpdated ) );
@@ -290,13 +292,13 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 		}
 		else
 			$this->messenger->noteSuccess( $words->successRefreshNoChanges, $sourceLabel );
-		
+
 		$redirectTo	= 'admin/module/source/edit/'.$sourceId;										//  afterwards go into source details
 		if( $this->env->getRequest()->get( 'from' ) )												//  or redirect URL given via parameter "from"
 			$redirectTo	= $this->env->getRequest()->get( 'from' );									//  take redirect URL from parameter
 		$this->restart( './'.$redirectTo );															//  restart / redirect
 	}
-	
+
 	public function remove( $sourceId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$this->model->remove( $sourceId );

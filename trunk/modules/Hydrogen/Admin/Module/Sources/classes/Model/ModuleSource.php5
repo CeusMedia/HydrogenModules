@@ -59,7 +59,7 @@ class Model_ModuleSource{
 	public function getAll( $activeOnly = TRUE ){
 		$list		= array();
 		foreach( $this->data as $id => $data ){
-			if( !$activeOnly || !empty( $data->active ) )
+			if( !$activeOnly || !empty( $data['active'] ) )
 				$list[$id]	= (object) $this->data[$id];
 		}
 		return $list;
