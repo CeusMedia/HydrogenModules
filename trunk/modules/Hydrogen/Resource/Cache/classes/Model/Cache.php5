@@ -44,12 +44,23 @@ class Model_Cache{
 		return $this->model->index();
 	}
 
+	public function remove( $key ){
+		return $this->model->remove( $key );
+	}
+
 	public function set( $key, $value ){
 		return $this->model->set( $key, serialize( $value ) );
 	}
 
-	public function remove( $key ){
-		return $this->model->remove( $key );
+	/**
+	 *	Sets context within cache storage.
+	 *	If folder is not existing, it will be created.
+	 *	@access		public
+	 *	@param		string		$context		Context within cache storage
+	 *	@return		void
+	 */
+	public function setContext( $context ){
+		$this->model->set( $context );
 	}
 }
 ?>
