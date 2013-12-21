@@ -25,6 +25,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**	@var	Model_Catalog_Category				$modelCategory */
 	protected $modelCategory;
 
+	protected $countArticlesInCategories;
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -40,6 +41,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo	correct paths
 	 */
 	protected function __onInit( $a = NULL ){
+		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
 		$this->cache				= $this->env->getCache();
 
 		$this->modelArticle			= new Model_Catalog_Article( $this->env );
@@ -55,6 +57,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->pathArticleDocuments	= '../Univerlag/contents/articles/documents/';//$this->config['frontend.document.uri'];
 		$this->pathAuthorImages		= '../Univerlag/contents/authors/';
 //		$this->clean();
+
+
+
+		$cacheKey	= 'catalog.count.categories.articles';
+		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
+			$list	= array();
+			foreach( $this->getCategories() as $category )
+				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
+			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
+		}
+		$this->env->clock->profiler->tick( 'Logic_Catalog::init done' );
 	}
 
 	public function addArticle( $data ){
@@ -230,6 +243,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
+		if( isset( $categoryId, $this->countArticlesInCategories ) )
+			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
 			$categories	= $this->getCategories( array( 'parentId' => $categoryId ) );
@@ -258,17 +273,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function getArticle( $articleId ){
-		if( ( $data = unserialize( $this->cache->get( 'catalog.article.'.$articleId ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
 		$this->checkArticleId( $articleId, TRUE );
 		$data	= $this->modelArticle->get( $articleId );
-		$this->cache->set( 'catalog.article.'.$articleId, serialize( $data ) );
+		$this->cache->set( 'catalog.article.'.$articleId, $data );
 		return $data;
 	}
 
 	public function getArticles( $conditions = array(), $orders = array(), $limits = array() ){
 		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
-		if( ( $data = unserialize( $this->cache->get( 'catalog.articles.'.$cacheKey ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
 			return $data;
 		$list	= array();
 		foreach( $this->modelArticle->getAll( $conditions, $orders, $limits ) as $article )
@@ -329,7 +344,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@return		array
 	 */
 	public function getAuthorsOfArticle( $articleId ){
-		if( ( $data = unserialize( $this->cache->get( 'catalog.article.author.'.$articleId ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.article.author.'.$articleId ) ) )
 			return $data;
 		$data	= $this->modelArticleAuthor->getAllByIndex( 'articleId', $articleId );
 		$list	= array();
@@ -339,7 +354,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$list[$author->lastname]	= $author;
 		}
 		ksort( $list );
-		$this->cache->set( 'catalog.article.author.'.$articleId, serialize( $list ) );
+		$this->cache->set( 'catalog.article.author.'.$articleId, $list );
 		return $list;
 	}
 
@@ -350,13 +365,13 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	public function getCategories( $conditions = array(), $orders = array() ){
 		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
-		if( ( $data = unserialize( $this->cache->get( 'catalog.categories.'.$cacheKey ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
 			return $data;
 
 		$list	= array();
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$list[$category->categoryId]	= $category;
-		$this->cache->set( 'catalog.categories.'.$cacheKey, serialize( $list ) );
+		$this->cache->set( 'catalog.categories.'.$cacheKey, $list );
 		return $list;
 	}
 
@@ -376,17 +391,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function getCategory( $categoryId ){
-		if( ( $data = unserialize( $this->cache->get( 'catalog.category.'.$categoryId ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.category.'.$categoryId ) ) )
 			return $data;
 		$this->checkCategoryId( $categoryId, TRUE );
 		$data	= $this->modelCategory->get( $categoryId );
-		$this->cache->set( 'catalog.category.'.$categoryId, serialize( $data ) );
+		$this->cache->set( 'catalog.category.'.$categoryId, $data );
 		return $data;
 	}
 
 	public function getCategoryArticles( $category, $orders = array(), $limits = array() ){
 		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
-		if( ( $data = unserialize( $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) ) )
+		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
 			return $data;
 		$conditions	= array( 'categoryId' => $category->categoryId );
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
@@ -398,10 +413,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$article->volume	= $relation->volume;
 			$articles[]			= $article;
 		}
-		$this->cache->set( 'catalog.category.articles.'.$cacheKey, serialize( $articles ) );
+		$this->cache->set( 'catalog.category.articles.'.$cacheKey, $articles );
 		return $articles;
 	}
-	
+
 	public function getCategoryOfArticle( $article ){
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );

@@ -1,6 +1,6 @@
 <?php
 class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
-	
+
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -105,9 +105,6 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$this->session->set( $sessionPrefix.'cover', $this->request->get( 'cover' ) );
 		$this->session->set( $sessionPrefix.'order', $this->request->get( 'order' ) );
 		$this->session->set( $sessionPrefix.'status', $this->request->get( 'status' ) );
-#		print_m( $this->request->getAll() );
-#		print_m( $this->session->getAll( $sessionPrefix ) );
-#		die;
 		if( $reset ){
 			$this->session->remove( $sessionPrefix.'term' );
 			$this->session->remove( $sessionPrefix.'author' );
@@ -118,7 +115,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 			$this->session->remove( $sessionPrefix.'status' );
 		}
 		if( !$this->session->get( $sessionPrefix.'order' ) )
-				$this->session->set( $sessionPrefix.'order', 'timestamp:DESC' );
+				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -171,7 +168,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$articles	= $this->logic->getArticles( $conditions, $orders, array( $offset, 50 ) );
 		return $articles;
 	}
-	
+
 	public function index(){
 		$articles	= $this->getFilteredArticles();
 		if( count( $articles ) === 1 ){

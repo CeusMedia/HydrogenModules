@@ -43,9 +43,13 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->addData( 'author', $this->logic->getAuthor( $authorId ) );
 		$this->addData( 'authors', $this->logic->getAuthors() );
 	}
-	
+
 	public function index(){
-		$this->addData( 'authors', $this->logic->getAuthors() );
+#		if( !( $authors	= $this->env->getCache()->get( 'authors' ) ) ){
+			$authors	= $this->logic->getAuthors();
+#			$this->env->getCache()->set( 'authors', $authors );
+#		}
+		$this->addData( 'authors', $authors );
 	}
 
 	public function remove( $authorId ){
