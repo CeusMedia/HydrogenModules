@@ -6,9 +6,9 @@ $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 $w	= (object) $words['edit'];
 
 $attributesTextarea	= array(
-	'style'	=> 'width: 97%; min-height: 400px; font-size: 1.1em; padding: 0.2em 0.3em;',
+	'style'	=> 'min-height: 400px; padding: 0.2em 0.3em;',
 	'name'	=> 'content',
-	'class'	=> 'CodeMirror',
+	'class'	=> 'span12 CodeMirror',
 );
 $attributesButton	= array(
 	'type'	=> 'submit',
@@ -31,17 +31,19 @@ $panelEdit	= '
 <form id="form_locale-editor" name="editContent" action="./manage/locale/edit/'.$fileHash.'" method="post">
 	<h3><span class="muted">'.$w->heading.' </span>'.$filePath.'</h3>
 	<div class="row-fluid">
-		<div class="span6">
+<!--		<div class="span6">
 			<label for="input_name">'.$w->labelName.'</label>
 			<input type="text" name="name" id="input_name" class="max span11" value="'.addslashes( $fileName ).'"/>
 		</div>
 		<div class="span6">
 			<label for="input_path">'.$w->labelPath.'</label>
 			<select name="path" id="input_path" class="max span11">'.$optPath.'</select>
-		</div>
+		</div>-->
 	</div>
 	<div class="row-fluid">
-		'.$textarea.'
+		<div class="span12">
+			'.$textarea.'
+		</div>
 	</div>
 	<div class="buttonbar">
 		'.$buttonCancel.'
