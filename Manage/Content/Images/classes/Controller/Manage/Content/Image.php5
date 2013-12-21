@@ -3,6 +3,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 
 	protected $folders	= array();
 	protected $path;
+	static protected $cacheImageList	= array();
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
@@ -35,6 +36,35 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 #		$thumbnailer->optimize( $this->path );
 	}
 
+	static protected function getImageList( $env ){
+		$cache		= $env->getCache();
+		if( !self::$cacheImageList ){
+			if( NULL === ( self::$cacheImageList = $cache->get( 'ManageContentImages.list.static' ) ) ){
+				$config		= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+				$extensions	= $config->get( 'extensions' );
+				$pathFront	= trim( $config->get( 'frontend.path' ) );
+				$pathImages	= trim( $config->get( 'path.images' ) );
+				$pathIgnore	= trim( $config->get( 'path.ignore' ) );
+				$list		= array();
+				$index		= new File_RecursiveRegexFilter( $pathFront.$pathImages, $extensions );
+				foreach( $index as $item ){
+					$path	= substr( $item->getPathname(), strlen( $pathFront.$pathImages ) );
+					if( $pathIgnore && preg_match( $pathIgnore, $path ) )
+						continue;
+					$parts	= explode( "/", $path );
+					$file	= array_pop( $parts );
+					$path	= implode( '/', array_slice( $parts, 1 ) );
+					$label	= $path ? $path.'/'.$file : $file;
+					$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
+					$list[$path]	= (object) array( 'label' => $label, 'uri' => $uri );
+				}
+				ksort( $list );
+				$cache->set( 'ManageContentImages.list.static', self::$cacheImageList = $list );
+			}
+		}
+		return self::$cacheImageList;
+	}
+
 	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
 		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
 	}
@@ -49,22 +79,13 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
 		$list		= array();
-		$index		= new File_RecursiveRegexFilter( $pathFront.$pathImages, $config->get( 'extensions' ) );
+		$index		= self::getImageList( $env );
 		foreach( $index as $item ){
-			$path	= substr( $item->getPathname(), strlen( $pathFront.$pathImages ) );
-			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
-				continue;
-			$parts	= explode( "/", $path );
-			$file	= array_pop( $parts );
-			$path	= implode( '/', array_slice( $parts, 1 ) );
-			$label	= $path ? $path.'/'.$file : $file;
-			$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
-			$list[$item->getPathname()]	= (object) array(
-				'title'	=> $hidePrefix ? $label : $prefixes->image.$label,
-				'url'	=> $uri,
+			$list[]	= (object) array(
+				'title'	=> $hidePrefix ? $label : $prefixes->image.$item->label,
+				'url'	=> $item->uri,
 			);
 		}
-		ksort( $list );
 		$context->list	= array_merge( $context->list, array_values( $list ) );
 	}
 
