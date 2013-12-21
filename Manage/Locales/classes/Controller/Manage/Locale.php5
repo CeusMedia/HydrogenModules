@@ -128,8 +128,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$newContent	= $request->get( 'content' );
 
 		if( $request->get( 'do' ) == 'save' ){
-			if( !trim( $newName ) )
-				$messenger->noteError( $words->msgNoName );
+//			if( !trim( $newName ) )
+//				$messenger->noteError( $words->msgNoName );
 //			if( !trim( $newPath ) )
 //				$messenger->noteError( $words->msgNoPath );
 			$newPath	= trim( $newPath ) ? $newPath.'/' : '';
@@ -146,7 +146,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 						$messenger->noteFailure( $words->msgWriteError, $newName, $newPath );
 					}
 				}
-				if( $fileUri != $newFileUri ){
+				if( trim( $newName ) && $fileUri != $newFileUri ){
 					if( file_exists( $newFileUri ) )
 						$messenger->noteError( $words->msgFileExisting, $newName, $newPath );
 					else{
