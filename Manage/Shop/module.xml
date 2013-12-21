@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -31,7 +31,9 @@
 		<template>manage/shop/order/index.php</template>
 		<template>manage/shop/report/index.php</template>
 	</files>
-	<relations/>
+	<relations>
+		<needs type="module">Resource_Library_cmModules</needs>
+	</relations>
 	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
 	<link xml:lang="en" path="manage/shop/report">Statistik</link>
 </module>
