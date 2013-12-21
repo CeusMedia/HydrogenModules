@@ -2,10 +2,12 @@
 class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Category::init start' );
 		$this->logic		= new Logic_Catalog( $this->env );
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Category::init done' );
 	}
 
 	public function add( $parentId = NULL ){
