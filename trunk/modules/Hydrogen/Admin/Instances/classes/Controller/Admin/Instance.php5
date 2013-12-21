@@ -175,6 +175,11 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $instanceId ){
+		if( !$this->model->has( $instanceId ) ){
+			$this->env->getMessenger()->noteError( 'Invalid instance' );
+			$this->restart( './admin/instance' );
+		}
+
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'edit' ) ){
