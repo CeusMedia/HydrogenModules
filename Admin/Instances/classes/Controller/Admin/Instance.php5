@@ -266,16 +266,14 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function select( $instanceId = NULL ){
-		$instanceId	= trim( $instanceId );
-		if( trim( $instanceId) && !$this->model->has( $instanceId ) )			//  unknown
-			throw new InvalidArgumentException( 'Requested instance "'.$instanceId.'" is not existing' );
-		if( $instanceId  ){
-			$instance	= $this->model->get( $instanceId );
-			$this->messenger->noteNotice( 'Instanz ausgewählt: <cite>'.$instance->title.'</cite>' );
+		if( strlen( trim( $instanceId ) ) ){														//  an instance has been given
+			if( !( $instance = $this->model->get( $instanceId ) ) )									//  instance is not existing
+				$this->messenger->noteError( 'Requested instance "'.$instanceId.'" is not existing.' );
+			if( $instanceId !== $this->env->getSession()->get( 'instanceId' ) )						//  instance differs from current
+				$this->messenger->noteNotice( 'Instanz ausgewählt: <cite>'.$instance->title.'</cite>' );
 		}
-		$this->env->getSession()->set( 'instanceId', $instanceId );
-		$url	= $this->env->getRequest()->get( 'forward' );
-		$this->restart( $url );
+		$this->env->getSession()->set( 'instanceId', $instanceId );									//  unset instance or set new instance
+		$this->restart( $this->env->getRequest()->get( 'forward' ) );								//  restart or redirect
 	}
 }
 ?>
