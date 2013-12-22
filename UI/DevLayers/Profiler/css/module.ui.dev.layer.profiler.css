@@ -1,0 +1,106 @@
+table.profiler {
+	width: 100%;
+	padding: 0px;
+	margin: 0px;
+/*	border-collapse: collapse;
+*/	font-family: Sans-Serif;
+	border-width: 1px 1px 0px 1px;
+	border-style: solid;
+	border-color: #7F7F7F;
+	border-spacing: 0;
+	}
+table.profiler thead th {
+	font-weight: bold;
+	border-bottom: 1px solid #BFBFBF;
+	}
+table.profiler tbody {
+	font-size: 14px;
+	}
+table.profiler tfoot td {
+	font-weight: bold;
+	border-top: 1px solid #BFBFBF !important;
+	border-bottom: 2px solid black;
+	}
+table.profiler tbody tr.task-line {}
+table.profiler tbody tr.task-line.about-0 {
+	font-size: 10px;
+	opacity: 0.7;
+	}
+table.profiler tbody tr.task-line.about-0 td {
+	padding: 0px 4px;
+	}
+table.profiler tbody tr.task-line.about-5 {
+	height: 10px;
+	font-size: 10px;
+	opacity: 0.8;
+	}
+table.profiler tbody tr.task-line.about-5 td {
+	padding: 0px 4px;
+	}
+table.profiler tbody tr.task-line.about-10 {
+	height: 14px;
+	font-size: 11px;
+	opacity: 0.9;
+	}
+table.profiler tbody tr.task-line.about-10 td {
+	padding: 1px 4px;
+	}
+table.profiler tbody tr.task-line.about-15 {
+	height: 15px;
+	font-size: 11px;
+	opacity: 0.9;
+	}
+table.profiler tbody tr.task-line.about-15 td {
+	padding: 1px 4px;
+	}
+table.profiler tbody tr.task-line.about-20 {
+	height: 15px;
+	font-size: 12px;
+	opacity: 0.9;
+	}
+table.profiler tbody tr.task-line.about-25 {
+	height: 15px;
+	font-size: 12px;
+	opacity: 1.0;
+	}
+table.profiler tbody tr.task-line.about-25 td {
+	padding: 2px 4px;
+	}
+table.profiler tbody tr.task-line.about-30 {
+	height: 15px;
+	font-size: 13px;
+	opacity: 1.0;
+	}
+table.profiler tbody tr.task-line.about-30 td {
+	padding: 2px 4px;
+	}
+table.profiler tbody tr.task-line td {
+	position: relative;
+	margin: 0px;
+	padding: 2px 4px;
+	height: 12px;
+	border-width: 0px 1px 1px 0px;
+	border-style: solid;
+	border-color: #EEE;
+	color: #666;
+	}
+table.profiler tbody tr.task-line td:last-child {
+	border-right: none;
+	}
+table.profiler tbody tr.task-line:last-child td {
+	border-bottom: none;
+	}
+table.profiler tbody tr.task-line td .task-bar {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: block;
+	height: 100%;
+	background-color: black;
+	background-color: #003FBF;
+	border-radius: 0.5em;
+	}
+table.profiler th.task-measure,
+table.profiler td.task-measure {
+	text-align: right;
+	}
