@@ -27,8 +27,7 @@ function formatUrl( $url ){
 $rows	= array();
 foreach( $instances as $instanceId => $instance ){
 	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;
-	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title );
-	$link			= UI_HTML_Tag::create( 'strong', $link, array( 'class' => '' ) );
+	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );
 	$linkInstance	= UI_HTML_Tag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
@@ -41,8 +40,8 @@ foreach( $instances as $instanceId => $instance ){
 		'<div class="status-http status-box" title="'.$labelsStatusHttp['unchecked'].'"></div>',
 	) );
 	$cells	= array(
-		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', $linkInstance.'<br/>'.$codeUri.'<br/>'.'<br/>' ),
+		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'instance-label' ) ),
+		UI_HTML_Tag::create( 'td', $linkInstance.'<br/>'.$codeUri ),
 		UI_HTML_Tag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
 		UI_HTML_Tag::create( 'td', "", array( 'class' => 'status-todos' ) ),
 	);
