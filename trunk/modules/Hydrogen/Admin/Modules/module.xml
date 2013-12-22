@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Modules</title>
+	<title>Admin: Modules</title>
 	<description><![CDATA[Basic administration of modules.
 After providing support for module handling, this module allows you to
 - browser available modules
@@ -16,7 +16,7 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.3</version>
+	<version>0.2.3-p1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -50,9 +50,7 @@ This module needs other modules to be installed:
 		<image source="theme">search-magnifier.gif</image>
 	</files>
 	<relations>
-		<needs type="module">Admin_Module_Sources</needs>
 		<needs type="module">UI_Helper_Content</needs>
-		<needs type="module">JS_jQuery_UI</needs>
 <!--		<needs type="module">Admin_Instances</needs>-->
 	</relations>
 	<link xml:lang="de" path="admin/module" access="acl" rank="35">Module</link>

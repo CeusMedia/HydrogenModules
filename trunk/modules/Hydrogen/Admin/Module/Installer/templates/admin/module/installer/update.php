@@ -35,6 +35,12 @@ $thead		= UI_HTML_Tag::create( 'thead' );
 $tbody		= UI_HTML_Tag::create( 'tbody', $list );
 $table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
 
+unset( $moduleLocal->icon );
+unset( $moduleLocal->sql );
+
+unset( $moduleSource->icon );
+unset( $moduleSource->sql );
+
 $panelFiles	= '
 	<style>
 dl>dt{

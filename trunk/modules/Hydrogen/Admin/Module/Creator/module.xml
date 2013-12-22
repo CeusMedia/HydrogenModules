@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Module Creator</title>
+	<title>Admin: Module Creator</title>
 	<description><![CDATA[Create local modules.
 Building on basic module administration, this module allows you to create local modules.
 This module can be extended by:
@@ -9,7 +9,7 @@ This module needs other modules to be installed:
 - Modules Editor(thus Modules, Module Sources, App Instances)
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.2</version>
+	<version>0.2.2-p1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,7 +30,6 @@ This module needs other modules to be installed:
 		<template>admin/module/creator/view.tmpl</template>
 	</files>
 	<relations>
-		<needs type="module">Admin_Module_Editor</needs>
 	</relations>
 	<link xml:lang="de" path="admin/module/creator" access="acl" rank="45">Neues Modul</link>
 	<link xml:lang="en" path="admin/module/creator" access="acl" rank="45">New module</link>
