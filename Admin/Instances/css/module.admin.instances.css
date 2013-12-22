@@ -1,0 +1,34 @@
+div.status-box {
+	float: left;
+	min-width: 16px;
+	min-height: 16px;
+	margin: 1px;
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+	opacity: 0.5;
+	cursor: help;
+	}
+div.status-box.status-box-yes {
+	opacity: 1;
+	}
+div.status-box.status-box-no {
+	opacity: 1;
+	}
+div.status-box.status-http{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world.png);
+	}
+div.status-box.status-http.status-box-yes{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_add.png);
+	}
+div.status-box.status-http.status-box-no{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_delete.png);
+	}
+div.status-box.status-file{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_link.png);
+	}
+div.status-box.status-file.status-box-yes{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_add.png);
+	}
+div.status-box.status-file.status-box-no{
+	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_delete.png);
+	}

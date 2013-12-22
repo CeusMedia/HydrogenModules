@@ -1,13 +1,17 @@
 <?php
+
+$w	= (object) $words['index'];
+
 //	@todo		extract labels to locale
 $labelsStatusHttp	= array(
-	'unchecked'		=> 'Nicht geprüft',
-	'online'		=> 'Erreichbar',
-	'offline'		=> 'NICHT erreichbar'
+	'unchecked'		=> $words['availability']['unchecked'],
+	'online'		=> $words['availability']['online'],
+	'offline'		=> $words['availability']['offline']
 );
 
 function formatUrl( $url ){
 	$parts	= parse_url( $url );
+//	remark( $url );
 //	print_m( $parts );
 	$scheme	= UI_HTML_Tag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
 	$host	= UI_HTML_Tag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], array( 'class' => '' ) );
@@ -17,15 +21,12 @@ function formatUrl( $url ){
 	$path	= UI_HTML_Tag::create( 'small', $path, array( 'class' => 'muted' ) );
 	$path	.= "&nbsp;&nbsp;".$main;
 	$path	= UI_HTML_Tag::create( 'span', "&nbsp;&nbsp;".$path, array( 'class' => '' ) );
-	$line	= $scheme.$host.$path;
-//	xmp( $line );
-//die;
-	return $line;
+	return $scheme.$host.$path;
 }
 
 $rows	= array();
 foreach( $instances as $instanceId => $instance ){
-	$url			= 'http://'.getEnv( 'HTTP_HOST' ).'/'.$instance->path;
+	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;
 	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title );
 	$link			= UI_HTML_Tag::create( 'strong', $link, array( 'class' => '' ) );
 	$url			= $instance->protocol.$instance->host.$instance->path;
@@ -58,96 +59,20 @@ ksort( $rows );
 
 $panelList	= '
 <fieldset>
-	<legend>Instanzen</legend>
+	<legend>'.$w->legend.'</legend>
 	<table>
-		<tr><th>Instanz</th><th>Pfad</th><th>Online</th><th>Todos</th></tr>
+		<tr><th>'.$w->headTitle.'</th><th>'.$w->headAddress.'</th><th>'.$w->headAvailability.'</th><th>'.$w->headTasks.'</th></tr>
 		'.join( $rows ).'
 	</table>
-	'.UI_HTML_Elements::LinkButton( './admin/instance/add', 'neue Instanz', 'button add' ).'
-</fieldset>
-';
+	'.UI_HTML_Elements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
+</fieldset>';
 
 return '
-<style>
-div.status-box {
-	float: left;
-	min-width: 16px;
-	min-height: 16px;
-	margin: 1px;
-	background-repeat: no-repeat;
-	background-position: 0px 0px;
-	opacity: 0.5;
-	cursor: help;
-	}
-div.status-box.status-box-yes {
-	opacity: 1;
-	}
-div.status-box.status-box-no {
-	opacity: 1;
-	}
-div.status-box.status-http{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world.png);
-	}
-div.status-box.status-http.status-box-yes{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_add.png);
-	}
-div.status-box.status-http.status-box-no{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_delete.png);
-	}
-div.status-box.status-file{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_link.png);
-	}
-div.status-box.status-file.status-box-yes{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_add.png);
-	}
-div.status-box.status-file.status-box-no{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_delete.png);
-	}
-
-</style>
 <script>
-function checkReachabilities(labels){
-	$("tr.notice").each(function(){
-		if(!$(this).data("url"))
-			return;
-		$.ajax({
-			url: $(this).data("url"),
-			type: "HEAD",
-			context: this,
-			success: function(){
-				var box = $(this).find("td.status-http div.status-http");
-				box.addClass("status-box-yes").attr("title", labels["online"]);
-				$(this).removeClass("notice").addClass("success");
-			},
-			error: function(){
-				var box = $(this).find("td.status-http div.status-http");
-				box.addClass("status-box-no").attr("title", labels["offline"]);
-				$(this).removeClass("notice").addClass("error");
-			}
-		});
-	});
-}
-function loadTodos(){
-	$("tr").each(function(){
-		if(!$(this).data("url-todos") || $(this).data("check") == "no")
-			return;
-		$.ajax({
-			url: $(this).data("url-todos") + "?format=json",
-			dataType: "json",
-			context: this,
-			success: function(response){
-				if(response !== null && typeof(response) == "object"){			//  
-					var link = $("<a></a>").attr("href",$(this).data("url"));	//  
-					$(this).find("td").eq(2).html(link.html(response.todos))	//  
-				}
-			}
-		});
-	})
-}
 $(document).ready(function(){
 	labels = '.json_encode( $labelsStatusHttp ).';
-	checkReachabilities(labels);
-	loadTodos();
+	ModuleAdminInstances.checkReachabilities(labels);
+	ModuleAdminInstances.loadTodos();
 });
 </script>
 <div class="column-left-75">
