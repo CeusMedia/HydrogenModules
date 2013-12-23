@@ -19,11 +19,12 @@ foreach( $sources as $sourceId => $source ){
 	$cellLabel	= UI_HTML_Tag::create( 'td', $label );
 	$cellType	= UI_HTML_Tag::create( 'td', $type );
 	$cellActive	= UI_HTML_Tag::create( 'td', $state );
-	$rows[]		= UI_HTML_Tag::create( 'tr',
+	$rows[$sourceId]		= UI_HTML_Tag::create( 'tr',
 		$cellId.$cellLabel.$cellType.$cellActive,
 		array( 'class' => 'source', 'data-id' => $sourceId )
 	);
 }
+ksort( $rows );
 
 $w			= (object) $words['index'];
 
