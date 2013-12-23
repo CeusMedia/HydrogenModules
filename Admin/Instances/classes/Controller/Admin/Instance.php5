@@ -1,4 +1,4 @@
-<?php
+ <?php
 class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
