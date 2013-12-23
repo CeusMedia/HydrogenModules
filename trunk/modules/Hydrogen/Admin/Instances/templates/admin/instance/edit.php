@@ -27,6 +27,8 @@ foreach( $words['protocols'] as $key => $value )
 	$optProtocol[$key.'://']	= $value;
 $optProtocol	= UI_HTML_Elements::Options( $optProtocol, $instance->protocol );
 
+$instanceUrl	= $instance->protocol.$instance->host.$instance->path;
+
 $panelEdit	= '
 <form action="./admin/instance/edit/'.$instance->id.'" method="post">
 	<fieldset>
@@ -71,14 +73,14 @@ $panelEdit	= '
 			&nbsp;&nbsp;|&nbsp;&nbsp;
 			'.UI_HTML_Elements::LinkButton( './admin/instance/remove/'.$instance->id, 'abmelden', 'button module remove', 'Wollen Sie diese Instanz wirklich abmelden?\n\nHinweis: Der Instanzordner wird dabei nicht gelöscht.\nSie können die Instanz später wieder anmelden.' ).'
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton( './admin/module/editor?selectInstanceId='.$instance->id, 'Module der Instanz', 'button module magic' ).'
+			'.UI_HTML_Elements::LinkButton( './admin/instance/select/'.$instance->id.'?forward=admin/module/editor', 'Module der Instanz', 'button module magic' ).'
+			'.UI_HTML_Elements::LinkButton( $instanceUrl, 'Instanz aufrufen', 'button' ).'
 		</div>
 	</fieldset>
 </form>
 ';
 
 $panelInfo		= $this->loadContentFile( 'html/admin/instance/edit.info.html' );
-
 $panelCheck		= $this->loadTemplateFile( 'admin/instance/edit.check.php' );
 $panelDatabase	= $this->loadTemplateFile( 'admin/instance/edit.database.php' );
 $panelConfig	= $this->loadTemplateFile( 'admin/instance/edit.config.php' );
