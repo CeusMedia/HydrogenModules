@@ -3,6 +3,7 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 
 	protected function __onInit(){
 		$this->env->getLanguage()->load( 'admin/module' );
+		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'module.admin.module.installer.js' );
 	}
 
 	public function diff(){

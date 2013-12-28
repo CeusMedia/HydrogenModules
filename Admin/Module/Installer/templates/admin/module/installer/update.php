@@ -92,7 +92,7 @@ die;
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonUpdate	= UI_HTML_Elements::Button( 'doInstall', $w->buttonUpdate, 'button update' );
+$buttonUpdate	= UI_HTML_Elements::Button( 'doUpdate', $w->buttonUpdate, 'button update' );
 
 $panelInfo	= '
 <fieldset>
@@ -111,60 +111,57 @@ $panelInfo	= '
 </fieldset>
 ';
 
+$configKeys	= array_keys( $moduleSource->config ) + array_keys( $moduleLocal->config );
+
 $tableConfig	= '';
-if( $isInstallable ){
-	if( count( $moduleSource->config ) ){
-		$rows	= array();
-		foreach( $moduleSource->config as $key => $value ){
-			$class	= "";
-			if( $value->mandatory ){
-				if( $value->mandatory == "yes" )
-					$class = " mandatory";
-				else if( preg_match( "/^.+:.*$/", $value->mandatory ) ){
-					list( $relatedKey, $relatedValue )	= explode( ':', $value->mandatory );
-					$relatedValue	= explode( ',', $relatedValue );
-					if( isset( $moduleSource->config[$relatedKey] ) ){
-						if( in_array( $moduleSource->config[$relatedKey]->value, $relatedValue ) )
-							$class = " mandatory";
-					}
-				}
+if( $isInstallable && count( $configKeys ) ){
+	$rows	= array();
+	foreach( $configKeys as $key ){
+		$item	= (object) array();
+		$itemNew	= isset( $moduleSource->config[$key] ) ? $moduleSource->config[$key] : NULL;
+		$itemOld	= isset( $moduleLocal->config[$key] ) ? $moduleLocal->config[$key] : NULL;
+		$item		= $itemNew ? $itemNew : $itemOld;
+		$status		= 5;
+		if( !$itemOld )
+			$status		= 4;
+		else{
+			if( $itemNew ){
+				$status		= 0;
+				if( $itemOld->type !== $itemNew->type )
+					$status		= 3;
+				else if( $itemOld->values !== $itemNew->values )
+					$status		= 2;
+				else if( $itemOld->value !== $itemNew->value )
+					$status		= 1;
 			}
-			$name	= 'config['.$key.']';
-			switch( $value->type ){
-				case 'boolean':
-					$strValue	= $value->value === TRUE ? 'yes' : 'no';
-					$options	= UI_HTML_Elements::Options( $words['boolean-values'], $strValue );
-					$input		= UI_HTML_Tag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => 'input_'.$name ) );
-					break;
-				case 'int':
-				case 'integer':
-					$input		= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 's'.$class );
-					break;
-				default:
-					if( count( $value->values ) ){
-						$options	= array_combine( $value->values, $value->values );
-						$options	= UI_HTML_Elements::Options( $options, $value->value );
-						$input		= UI_HTML_Elements::Select( 'config['.$key.']', $options, 'm'.$class );
-					}
-					else
-						$input	= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 'max'.$class );
-					break;
-			}
-			$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
-			$id		= str_replace( '.', '_', $key );
-			$cells	= array(
-				UI_HTML_Tag::create( 'td', $label, array() ),
-				UI_HTML_Tag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
-				UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
-			);
-			$rows[$key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
-		#	natcasesort( $rows );
 		}
-		$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );
-		$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '10%', '65%' ) );
-		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
-		$tableConfig	= UI_HTML_Tag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
+		$buttonCopy	= UI_HTML_Tag::create( 'button', '<img src="//cdn.int1a.net/img/famfamfam/silk/arrow_down.png"/>', array( 'type' => 'button', 'class' => "button tiny copy" ) );
+		$buttonInit	= UI_HTML_Tag::create( 'button', '<img src="//cdn.int1a.net/img/famfamfam/silk/arrow_refresh.png"/>', array( 'type' => 'button', 'class' => "button tiny reset" ) );
+		$inputOld	= View_Helper_Module::renderModuleConfigInput( $itemOld, $words['boolean-values'], TRUE );
+		$inputNew	= View_Helper_Module::renderModuleConfigInput( $itemNew, $words['boolean-values'] );
+		$input		= $inputNew;
+		if( $itemOld && $itemNew )
+			$input	= $inputOld.'<br/>'.$inputNew.$buttonCopy.$buttonInit;
+		else if( $itemOld )
+			$input	= $inputOld;
+
+		$name	= 'config['.$item->key.']';
+		$class	= ( $item->mandatory && $item->mandatory === "yes" ) ? " mandatory" : "";
+		$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
+		$id		= str_replace( '.', '_', $key );
+		$cells	= array(
+			UI_HTML_Tag::create( 'td', $label, array() ),
+			UI_HTML_Tag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
+			UI_HTML_Tag::create( 'td', $words['config-update-status'][$status], array() ),
+			UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
+		);
+		$rows[$key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+	#	natcasesort( $rows );
 	}
+	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Änderung', 'Wert' ) );
+	$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '10%', '15%', '50%' ) );
+	$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
+	$tableConfig	= UI_HTML_Tag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 }
 $panelType	= '
 	<h4>Installationstyp</h4>
@@ -176,7 +173,7 @@ $panelType	= '
 	</div><br/>
 	';
 
-$urlForm	= './admin/module/installer/install/'.$moduleLocal->id;
+$urlForm	= './admin/module/installer/update/'.$moduleLocal->id;
 
 return '
 <h3 class="position">
@@ -200,5 +197,10 @@ return '
 <div class="column-right-30">
 	'.$panelInfo.'
 </div>
+<script>
+$(document).ready(function(){
+	Updater.init();
+});
+</script>
 <div class="column-clear"></div>';
 ?>
