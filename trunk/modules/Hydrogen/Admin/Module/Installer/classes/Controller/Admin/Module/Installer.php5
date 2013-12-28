@@ -203,6 +203,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
 
 		if( $request->has( 'doUpdate' ) ){
+			print_m( $request->getAll() );
+			die;
 			try{
 				$this->logic->updateModule( $moduleId, $verbose );
 			}
