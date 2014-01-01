@@ -24,6 +24,80 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( 'admin/module/viewer' );
 		}
 	}
+	
+	protected function compareModuleFiles( $moduleId, $pathLinks = array() ){
+		$fileTypes	= array(
+			'classes'	=> 'class',
+			'files'		=> 'file',
+			'images'	=> 'image',
+			'locales'	=> 'locale',
+			'scripts'	=> 'script',
+			'styles'	=> 'style',
+			'templates'	=> 'template',
+		);
+		$files			= array();
+		$moduleLocal	= $this->logic->getModule( $moduleId );
+		
+		
+		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+
+		$envRemote		= $this->env->getRemote();
+		$pathLocal		= $envRemote->path;
+		$pathSource		= $this->logic->model->getPath( $moduleId );
+
+		foreach( $fileTypes as $typeMember => $typeKey ){
+			foreach( $moduleSource->files->$typeMember as $file ){
+				$diff		= array();
+				$status		= 0;
+				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
+				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
+
+				$source		= $pathSource.$pathFileSource;
+				$target		= $pathLocal.$pathFileLocal;
+
+				if( file_exists( $target ) ){
+					$status			= 1;
+					if( is_link( $target ) ){
+						$source		= $this->resolveLinkedPath( $source, $pathLinks );
+						$target		= readlink( $target );
+						$target		= $this->resolveLinkedPath( $target, $pathLinks );
+#						remark( 'Source: '.$source );
+#						remark( 'Target: '.$target );
+						$status		= $target === $source ? 2 : 3;
+					}
+					else{
+						$cmd	= 'diff '.$source.' '.$target;
+						exec( $cmd, $diff, $code );
+						if( $code == 1 )
+							$status	= 4;
+					}
+				}
+				$files[]	= (object) array(
+					'moduleId'		=> $moduleId,
+					'status'		=> $status,
+					'file'			=> $file,
+					'name'			=> $file->file,
+					'typeMember'	=> $typeMember,
+					'typeKey'		=> $typeKey,
+					'pathLocal'		=> $target,
+					'pathSource'	=> $source,
+//					'diff'			=> $diff
+				);
+			}
+		}
+		return $files;
+	}
+
+	public function diff( $hashFileLocal, $hashFileSource ){
+
+		CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
+
+		$fileLocal		= base64_decode( $hashFileLocal );
+		$fileSource		= base64_decode( $hashFileSource );
+
+		$this->addData( 'fileLocal', $fileLocal );
+		$this->addData( 'fileSource', $fileSource );
+	}
 
 	protected function handleException( Exception_Logic $e ){
 		$messenger	= $this->env->getMessenger();
@@ -203,10 +277,13 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
 
 		if( $request->has( 'doUpdate' ) ){
-			print_m( $request->getAll() );
-			die;
+			$files		= $request->get( 'files' ) ? $request->get( 'files' ) : array();
+			$settings	= $request->get( 'config' ) ? $request->get( 'config' ) : array();
+			$installType	= $request->get( 'type' ) == 'link' ? Logic_Module::INSTALL_TYPE_LINK : Logic_Module::INSTALL_TYPE_COPY;
+			foreach( $files as $nr => $file )
+				$files[$nr]	= json_decode( base64_decode( $file ) );
 			try{
-				$this->logic->updateModule( $moduleId, $verbose );
+				$this->logic->updateModule( $moduleId, $installType, $files, $settings, $verbose );
 			}
 			catch( Exception $e ){
 				$this->handleException( $e );
@@ -215,7 +292,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( './admin/module/viewer/view/'.$moduleId );
 		}
 
-		$this->addData( 'files', $this->compareModuleFiles( $moduleId ) );
+		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
 
 		$this->addData( 'moduleLocal', $moduleLocal );
 		$this->addData( 'moduleSource', $moduleSource );
@@ -225,65 +302,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
 	}
 
-	public function diff( $hashFileLocal, $hashFileSource ){
-
-		CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
-
-		$fileLocal		= base64_decode( $hashFileLocal );
-		$fileSource		= base64_decode( $hashFileSource );
-
-		$this->addData( 'fileLocal', $fileLocal );
-		$this->addData( 'fileSource', $fileSource );
-	}
-
-	protected function compareModuleFiles( $moduleId ){
-		$fileTypes	= array(
-			'classes'	=> 'class',
-			'files'		=> 'file',
-			'images'	=> 'image',
-			'locales'	=> 'locale',
-			'scripts'	=> 'script',
-			'styles'	=> 'style',
-			'templates'	=> 'template',
-		);
-		$files			= array();
-		$moduleLocal	= $this->logic->getModule( $moduleId );
-		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
-
-		$envRemote		= $this->env->getRemote();
-		$pathLocal		= $envRemote->path;
-		$pathSource		= $this->logic->model->getPath( $moduleId );
-		foreach( $fileTypes as $typeMember => $typeKey ){
-			foreach( $moduleSource->files->$typeMember as $file ){
-				$diff		= array();
-				$status		= 0;
-				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
-				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
-				if( file_exists( $pathLocal.$pathFileLocal ) ){
-					$status			= 1;
-					if( is_link( $pathLocal.$pathFileLocal ) ){
-						$target		= readlink( $pathLocal.$pathFileLocal );
-						$status		= $target === $pathSource.$pathFileSource ? 2 : 3;
-					}
-					$cmd	= 'diff '.$pathSource.$pathFileSource.' '.$pathLocal.$pathFileLocal;
-					exec( $cmd, $diff, $code );
-					if( $code == 1 )
-						$status	= 4;
-				}
-				$files[]	= (object) array(
-					'moduleId'		=> $moduleId,
-					'status'		=> $status,
-					'file'			=> $file,
-					'name'			=> $file->file,
-					'typeMember'	=> $typeMember,
-					'typeKey'		=> $typeKey,
-					'pathLocal'		=> $pathLocal.$pathFileLocal,
-					'pathSource'	=> $pathSource.$pathFileSource,
-//					'diff'			=> $diff
-				);
-			}
-		}
-		return $files;
+	protected function resolveLinkedPath( $path, $links = array() ){
+		foreach( $links as $source => $target )
+			if( preg_match( "/^".str_replace( "/", "\/", $source )."/", $path ) )
+				$path	= str_replace( $source, $target, $path );
+		return $path;
 	}
 
 	public function view( $moduleId, $mainModuleId = NULL ){

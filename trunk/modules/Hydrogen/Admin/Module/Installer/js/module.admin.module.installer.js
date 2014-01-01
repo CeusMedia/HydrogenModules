@@ -1,4 +1,5 @@
-var Installer = {
+
+var AdminModuleInstaller = {
 	appName: '<em>unknown application<em>',
 	labels: {
 		en: {
@@ -26,20 +27,20 @@ var Installer = {
 	},
 	start: function(){
 		$("#greeting").fadeIn();
-		$("#status").removeClass("failed").addClass("installing").html(Installer.labels.msgStarted);
+		$("#status").removeClass("failed").addClass("installing").html(AdminModuleInstaller.labels.msgStarted);
 		$.ajax({
 			url: './',
 			success: function(response){
 				$("#status").html(" ").removeClass("installing");
 				if(response.match(/#greeting/)){
-					$("#status").addClass("failed").html(Installer.labels.msgErrorConfig);
+					$("#status").addClass("failed").html(AdminModuleInstaller.labels.msgErrorConfig);
 				}
 				else if(response.match(/.\/admin\/instance\/select/)){
-					$("#status").addClass("done").html(Installer.labels.msgDone);
+					$("#status").addClass("done").html(AdminModuleInstaller.labels.msgDone);
 					document.location.reload();
 				}
 				else{
-					$("#status").addClass("failed").html(Installer.labels.msgError);
+					$("#status").addClass("failed").html(AdminModuleInstaller.labels.msgError);
 
 					//  @see http://stackoverflow.com/questions/7965111/prevent-jquery-ajax-to-execute-javascript-from-script-or-html-response
 					var regExp = new RegExp( "<script.*?>([\w\W\d\D\s\S\0\n\f\r\t\v\b\B]*?)<\/script>", "gi");
@@ -50,10 +51,17 @@ var Installer = {
 				}
 			}
 		});
+	},
+	toggleSubmitButton: function(){
+		var button = $("button[type=submit]");
+		if(button.prop("disabled"))
+			button.prop("disabled",null);
+		else
+			button.prop("disabled",true);
 	}
 };
 
-var Updater = {
+var AdminModuleUpdater = {
     init: function(){
         $("button.button.copy").each(function(){
             $(this).parent().css({position: "relative"});
@@ -80,5 +88,16 @@ var Updater = {
                     button.css({opacity: 0.5});
             })
         });
-    }  
+    },
+    switchAllFiles: function(){
+        var status = parseInt($("#btn_switch_files").data("state"));
+        if(status === 0 ){
+            $("#file-rows input.file-check").attr("checked", "checked");
+            $("#btn_switch_files").data("state", 1);
+        }
+        else{
+            $("#file-rows input.file-check").removeAttr("checked");
+            $("#btn_switch_files").data("state", 0);
+        }
+    }
 };
