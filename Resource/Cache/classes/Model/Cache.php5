@@ -60,7 +60,7 @@ class Model_Cache{
 	 *	@return		void
 	 */
 	public function setContext( $context ){
-		$this->model->set( $context );
+		$this->model->setContext( $context );
 	}
 }
 ?>
