@@ -1,3 +1,5 @@
+Options +FollowSymLinks -Indexes
+
 <Files *>
     Deny From All
 </Files>

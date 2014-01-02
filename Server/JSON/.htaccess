@@ -4,4 +4,4 @@ Options -MultiViews -Indexes +FollowSymLinks
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)/?$ index.php5?path=$1&%{QUERY_STRING} [L]
+RewriteRule ^(.*)/?$ index.php?__path=$1&%{QUERY_STRING} [L]

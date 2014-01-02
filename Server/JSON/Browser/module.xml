@@ -10,7 +10,7 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 <b>Attention</b>: You will need to <u>secure</u> this server user interface if you face anonymous access.
 ]]></description>
 	<category>Server</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<todo>implement power switch: on - show browser | off - show pure response</todo>
@@ -27,6 +27,7 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 	<relations>
 		<needs type="module">JS_jQuery_deparam</needs>
 		<needs type="module">Server_Info_Disclosure</needs>
+		<needs type="module">UI_Bootstrap</needs>
 	</relations>
    <config type="boolean" name="enabled" protected="yes">yes</config>
 </module>
