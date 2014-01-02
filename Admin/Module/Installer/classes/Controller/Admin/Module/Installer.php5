@@ -163,6 +163,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
+		
+		if( $this->logic->isInstalled( $moduleOrId ) ){
+			$this->messenger->noteNotice( 'Das Modul "'.$moduleId.'" ist bereits installiert. Weiterleitung zur Aktualisierung.' );
+			$this->restart( './admin/module/installer/update/'.$moduleId );
+		}
 
 		$words		= (object) $this->getWords( 'msg' );
 		$force		= $request->get( 'force' );
@@ -271,6 +276,14 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 		$moduleLocal	= $this->logic->getModule( $moduleId );
 		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+		
+		foreach( $moduleSource->relations->needs as $module ){
+			if( !$this->logic->isInstalled( $module ) ){
+				$this->messenger->noteNotice( 'Das Modul "'.$module.'" wird benötigt. Weiterleitung zur Installation.' );
+				$this->restart( './admin/module/installer/'.$module.'/'.$moduleId );
+			}
+		}
+
 		if( !( $moduleLocal && $moduleSource ) )
 			$this->restart( './admin/module/viewer' );
 		if( !$hasUpdate )

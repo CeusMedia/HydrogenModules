@@ -8,7 +8,7 @@ unset( $moduleSource->sql );
 return '
 <fieldset>
 	<legend class="info">Informationen</legend>
-	<dl>
+	<dl class="general">
 		<dt>Modul</dt>
 		<dd>'.$moduleLocal->title.'</dd>
 		<dt>Quelle</dt>

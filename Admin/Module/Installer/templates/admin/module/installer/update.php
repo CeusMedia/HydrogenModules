@@ -6,6 +6,7 @@ $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonUpdate	= UI_HTML_Elements::Button( 'doUpdate', $w->buttonUpdate, 'button update' );
 
+$panelDatabase	= $view->loadTemplateFile( 'admin/module/installer/update.database.php' );
 $panelInfo		= $view->loadTemplateFile( 'admin/module/installer/update.info.php' );
 $tableConfig	= $view->loadTemplateFile( 'admin/module/installer/update.config.php' );
 $panelFiles		= $view->loadTemplateFile( 'admin/module/installer/update.files.php' );
@@ -39,6 +40,7 @@ return '
 		</fieldset>
 		'.$panelFiles.'
 		'.$tableConfig.'
+		'.$panelDatabase.'
 	</form>
 </div>
 <div class="column-right-30">
@@ -50,12 +52,12 @@ $(document).ready(function(){
 });
 </script>
 <style>
-dl>dt{
+dl.general > dt{
 	clear: left;
 	float: left;
-	width: 120px;
+	width: 110px;
 	}
-dl>dd{
+dl.general > dd{
 	float: left;
 	}
 tr.status-new {background-color: #DFFFDF}

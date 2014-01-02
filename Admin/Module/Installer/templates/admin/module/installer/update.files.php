@@ -1,7 +1,6 @@
 <?php
-
-#print_m( $files );
-#die;
+if( !count( $files ) )
+	return "";
 
 $states	= array(
 	0	=> 'new',
