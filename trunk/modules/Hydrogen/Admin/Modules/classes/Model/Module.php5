@@ -17,7 +17,6 @@ class Model_Module{
 
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->pathRepos	= $env->pathModules;
 		$this->pathConfig	= $env->pathConfig.'modules';
 
 		$model	= new Model_ModuleSource( $env );
@@ -26,8 +25,6 @@ class Model_Module{
 
 //		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
 
-		if( !file_exists( $this->pathRepos ) )
-			throw new RuntimeException( 'Modules folder missing in "'.$this->pathRepos.'"', 1 );
 		if( !file_exists( $this->pathConfig ) ){
 			try{
 				Folder_Editor::createFolder( $this->pathConfig, 0770 );
@@ -50,15 +47,6 @@ class Model_Module{
 		if( array_key_exists( $moduleId, $all ) )
 			return $all[$moduleId];
 		return NULL;
-	}
-
-	public function getFromSource( $moduleId, $source = NULL ){
-		if( !is_null( $source ) ){
-			die( 'not implemented: Model_Module::getFromSource with parameter "source"' );
-		}
-		if( !isset( $this->modulesAvailable[$moduleId] ) )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		return $this->modulesAvailable[$moduleId];
 	}
 
 	public function getAll( $filters = array(), $limit = NULL, $offset = NULL ){
@@ -198,6 +186,15 @@ class Model_Module{
 		return $list;
 	}
 
+	public function getFromSource( $moduleId, $source = NULL ){
+		if( !is_null( $source ) ){
+			die( 'not implemented: Model_Module::getFromSource with parameter "source"' );
+		}
+		if( !isset( $this->modulesAvailable[$moduleId] ) )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+		return $this->modulesAvailable[$moduleId];
+	}
+
 	public function getInstalled(){
 		$list		= array();
 		$modules	= $this->env->getRemote()->getModules();
@@ -285,12 +282,13 @@ class Model_Module{
 		$module		= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		if( $moduleId ){
-			if( !empty( $module->path ) )								// @todo: finish this hack usind $module->pathSource or ->pathCopy depending on module installation status
-				return preg_replace( "/\/*$/", '/', $module->path );
-			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
-		}
-		return $this->pathRepos;
+		if( empty( $module->source ) )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not assigned to any source' );
+		$model	= new Model_ModuleSource( $this->env );
+		$source	= $model->get( $module->source );
+		if( !$source )
+			throw new RuntimeException( 'Module source "'.$module->source.'" is not available' );
+		return preg_replace( "/\/+$/", '/', $source->path ).str_replace( '_', '/', $moduleId ).'/';
 	}
 
 	public function getStatus( $moduleId ){
@@ -301,6 +299,13 @@ class Model_Module{
 			return self::TYPE_COPY;
 		if( array_key_exists( $moduleId, $this->getAll() ) )
 			return self::TYPE_SOURCE;
+	}
+
+	public function getSource( $moduleId ){
+		$module		= $this->getFromSource( $moduleId );
+		if( !$module )
+			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
+		return $module->source;
 	}
 	
 	public function getSupportedModulesWithStatus( $moduleId ){										//  @todo	refactor to getSupportedModuleIdsWithStatus
