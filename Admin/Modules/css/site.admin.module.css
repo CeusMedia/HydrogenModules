@@ -81,6 +81,22 @@ dl.resources>dd>ul li.missing {
 	}
 	
 
+/*  --  DATABASE STATEMENT LIST  -- */
+dl.database > dt{
+	clear: left;
+	float: left;
+	width: 120px;
+	margin-bottom: 1.5em;
+	}
+dl.database > dd{
+	float: left;
+	margin-bottom: 1.5em;
+	}
+dl.database > dd > xmp{
+	margin: 0;
+	}
+
+	
 /*  --  JQUERY UI WIDGET  --  */
 .ui-widget {
 	border: 2px solid #CFCFCF;

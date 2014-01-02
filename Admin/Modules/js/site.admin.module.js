@@ -1,14 +1,4 @@
 
-AdminModuleInstaller = {
-	toggleSubmitButton: function(){
-		var button = $("button[type=submit]");
-		if(button.prop("disabled"))
-			button.prop("disabled",null);
-		else
-			button.prop("disabled",true);
-	}
-};
-
 $(document).ready(function(){
 	new InstantFilter('div#search input#input_query',{
 		caseSense: false,

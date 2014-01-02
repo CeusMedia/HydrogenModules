@@ -429,17 +429,15 @@ class Logic_Module {
 		$pathModule	= $this->model->getPath( $moduleId );
 		$pathApp	= $this->env->getRemote()->path;
 
+		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
+			throw new InvalidArgumentException( 'Unknown installation type', 10 );
+
 		$files		= array( 'link' => array(), 'copy' => array() );
 		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
 		$listDone	= array();
 		$exceptions	= array();
 
-		if( $installType == self::INSTALL_TYPE_LINK )
-			$files['link']	= $fileMap;
-		else if( $installType == self::INSTALL_TYPE_COPY )
-			$files['copy']	= $fileMap;
-		else
-			throw new InvalidArgumentException( 'Unknown installation type', 10 );
+		$files[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
 
 		$files['copy']['module.xml']	= 'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $pathModule.'config.ini' ) )
@@ -500,15 +498,99 @@ class Logic_Module {
 		return TRUE;
 	}
 
-	public function updateModule( $moduleId, $settings = array(), $verbose = TRUE ){
-		$this->uninstallModuleFiles( $moduleId, $verbose );
-		$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
+	public function updateModule( $moduleId, $installType, $files = array(), $settings = array(), $verbose = TRUE ){
+//		$this->uninstallModuleFiles( $moduleId, $verbose );
+		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
 		if( !count( $exceptions ) ){
-//			$this->configureLocalModule( $moduleId, $settings );
+			try{
+				$this->configureLocalModule( $moduleId, $settings );
+				$this->updateModuleDatabase( $moduleId );
+			}
+			catch( Exception $e){
+				$exceptions[]	= $e->getMessage();
+			}
 		}
 		if( count( $exceptions ) )																	//  several exceptions occured
 			throw new Exception_Logic( 'Module update failed', $exceptions, 2 );
 		return $exceptions;
+	}
+
+	protected function updateModuleFiles( $moduleId, $installType = 0, $files = array(), $verbose = TRUE ){
+		$module		= $this->model->getFromSource( $moduleId );
+		$pathApp	= $this->env->getRemote()->path;
+
+		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
+			throw new InvalidArgumentException( 'Unknown installation type', 10 );
+
+		$list	= array();																			//  prepare new module file list
+		foreach( array_keys( (array) $module->files ) as $type )									//  iterate module file types
+			$list[$type]	= array();																//  ...
+
+		foreach( $files as $file ){																	//  iterate file selection
+			$type	= $file->typeMember;															//  ...
+			foreach( $module->files->$type as $moduleFile )											//  ...
+				if( $moduleFile->file == $file->file->file )										//  ...
+					$list[$type][]	= $moduleFile;													//  ...
+		}
+		$module->files	= (object) $list;															//  set new file list on module
+	
+		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
+		$fileLists[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
+	
+		$listDone	= array();
+		$exceptions	= array();
+		$fileLists['copy']['module.xml']	= 'config/modules/'.$moduleId.'.xml';
+		foreach( $fileLists as $type => $map ){
+			foreach( $map as $fileIn => $fileOut ){
+				$listDone[]	= $fileOut;
+				try{
+					if( file_exists( $pathApp.$fileOut ) ){
+						$backup	= new File_Backup( $pathApp.$fileOut );
+						$backup->store();
+					}
+					if( $type == 'link' )														//  @todo: OS check -> no links in windows <7
+						$this->linkModuleFile( $moduleId, $fileIn, $fileOut, TRUE );
+					else
+						$this->copyModuleFile( $moduleId, $fileIn, $fileOut, TRUE );
+				}
+				catch( Exception $e ){
+					$exceptions[]	= $e;
+				}
+			}
+		}
+		if( count( $exceptions ) ){																	//  there have been severe problems
+			foreach( $listDone as $fileName ){														//  iterate list of updated files
+				if( file_exists( $pathApp.$fileName ) ){											//  target file exists
+					$backup	= new File_Backup( $pathApp.$fileName );								//  to target file under backup perspective
+					if( $backup->getVersion() !== NULL )											//  there is atleast 1 backup of target file
+						$backup->restore( -1, TRUE );												//  restore backup file
+					else																			//  otherwise ...
+						@unlink( $pathApp.$fileName );												//  ... remove file as is was new
+				}
+			}
+
+		}
+		return $exceptions;
+	}
+
+	protected function updateModuleDatabase( $moduleId, $versionFrom, $versionTo, $verbose = TRUE ){
+		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
+			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
+			if( $driver ){																			//  remote database connection is configured
+				$moduleLocal	= $this->getModule( $moduleId );									//  get installed module for local version
+				$moduleSource	= $this->getModuleFromSource( $moduleId );							//  get source module for database update
+				$versionFrom	= $moduleLocal->versionInstalled;									//  extract installed version
+				$versionTo		= $moduleSource->versionAvailable;									//  extract available version
+				$key			= 'update:'.$versionFrom.'->'.$versionTo.'@';						//  build key of module database update attribute
+				remark( '$versionFrom: '.$versionFrom );
+				remark( '$versionTo: '.$versionTo );
+				remark( '$key: '.$key );
+				if( strlen( trim( $moduleSource->sql[$key.$driver] ) ) )							//  SQL for update for specific PDO driver is given
+					$this->executeSql( trim( $moduleSource->sql[$key.$driver] ) );					//  execute SQL
+				else if( strlen( trim( $moduleSource->sql[$key.'*'] ) ) )							//  fallback: general SQL for update is available
+					$this->executeSql( trim( $moduleSource->sql[$key.'*'] ) );						//  execute SQL
+			}
+		}
 	}
 
 	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){
