@@ -62,7 +62,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$data		= NULL;
 		$debug		= NULL;
 		$exception	= NULL;
-
+		
 		error_log( getEnv( 'HTTP_REFERER' )."\n", 3, 'logs/referer.log' );
 		if( !$this->validateReferer() )
 			$this->throw403();
@@ -101,12 +101,14 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		if( $exception ) {
 			$data['exception']	= $exception;
 			try{
-				$data['serial']		= @serialize( $e );
+				if( $config->get( 'module.server_json.exception.serialize' ) )
+					$data['serial']		= @serialize( $e );
 			}
 			catch( PDOException $e ){}
 		}
 
 	//	$data['requestHeaders']	= $request->headers->toArray();
+//		$this->messenger->noteNotice( print_m( Net_HTTP_Header_Field::decodeQualifiedValues( getEnv( 'HTTP_ACCEPT' ) ), NULL, NULL, TRUE ) );
 
 		$mimeTypesAllowed	= array(
 			'application/json',

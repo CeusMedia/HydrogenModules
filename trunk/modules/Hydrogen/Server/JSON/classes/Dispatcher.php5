@@ -60,7 +60,7 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 		if( !$config->get( 'token.active' ) )														//  token is not needed for authentication
 			return;
 		$excludes	= preg_split( '/, */', $config->get( 'token.excludes' ) );							//  extract paths accessible without token
-		
+
 		if( !in_array( $controller.'/'.$action, $excludes ) )										//  not a token-free resource
 		{
 			$token	= $this->request->get( 'token' );												//  extract sent token
