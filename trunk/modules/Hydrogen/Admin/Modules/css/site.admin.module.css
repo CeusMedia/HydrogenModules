@@ -144,25 +144,25 @@ span.icon {
 	float: left;
 */	}
 span.icon.class {
-	background-image: url(http://img.int1a.net/famfamfam/silk/page_white_php.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/page_white_php.png);
 	}
 span.icon.locale {
-	background-image: url(http://img.int1a.net/famfamfam/silk/page_white_world.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/page_white_world.png);
 	}
 span.icon.template {
-	background-image: url(http://img.int1a.net/famfamfam/silk/html.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/html.png);
 	}
 span.icon.script {
-	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
 	}
 span.icon.style {
-	background-image: url(http://img.int1a.net/famfamfam/silk/css.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/css.png);
 	}
 span.icon.image {
-	background-image: url(http://img.int1a.net/famfamfam/silk/image.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/image.png);
 	}
 span.icon.file {
-	background-image: url(http://img.int1a.net/famfamfam/silk/page_white.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/page_white.png);
 	}
 
 span.icon.module {
@@ -365,23 +365,23 @@ ul.general-info li.licence {
 	}
 /*
 ul.general-info li.company {
-	background-image: url(http://img.int1a.net/famfamfam/silk/building.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/building.png);
 	}
 ul.general-info li.author {
-	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
 	}
 ul.general-info li.license {
-	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
 	}
 */	
 legend.icon.author{
-	background-image: url(http://img.int1a.net/famfamfam/silk/user.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
 	}
 legend.icon.company{
-	background-image: url(http://img.int1a.net/famfamfam/silk/building.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/building.png);
 	}
 legend.icon.license{
-	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
 	}
 
 
@@ -463,7 +463,7 @@ select.active-no {
 	}
 
 .button.refresh span {
-	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_refresh.png);
+	background-image: url(//img.int1a.net/famfamfam/silk/arrow_refresh.png);
 	padding-left: 22px;
 	}
 
