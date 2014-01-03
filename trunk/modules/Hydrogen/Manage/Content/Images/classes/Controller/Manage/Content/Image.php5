@@ -123,7 +123,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$file		= $request->get( 'file' );
 		$folder		= str_replace( "../", "", $folder );				//  security
 		$folder		= strlen( $folder ) ? $folder.'/' : "";
-		$types		= array( IMAGETYPE_PNG, IMAGETYPE_JPEG );
+		$types		= array( IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF );
 
 		if( $request->has( 'save' ) ){
 			if( $file['error'] ){
