@@ -30,6 +30,9 @@ return '
 </h3>
 <div class="column-left-70">
 	<form action="'.$urlForm.'" method="post">
+		<br/>
+		'.$panelFiles.'
+		'.$tableConfig.'
 		<fieldset>
 			<legend class="module-add">Modul aktualisieren</legend>
 			'.$panelType.'
@@ -38,8 +41,6 @@ return '
 				'.$buttonUpdate.'
 			</div>
 		</fieldset>
-		'.$panelFiles.'
-		'.$tableConfig.'
 		'.$panelDatabase.'
 	</form>
 </div>
