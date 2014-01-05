@@ -73,18 +73,15 @@ if( isset( $sources[$module->source] ) ){
 	$source	= UI_HTML_Tag::create( 'acronym', $module->source, array( 'title' => htmlentities( $source->title ) ) );
 }
 $facts[0][]	= UI_HTML_Tag::create( 'dt', $w->labelSource ).UI_HTML_Tag::create( 'dd', $source );
-$facts[2][]	= UI_HTML_Tag::create( 'dt', $w->labelSource ).UI_HTML_Tag::create( 'dd', $source );
-
-
-
+//$facts[2][]	= UI_HTML_Tag::create( 'dt', $w->labelSource ).UI_HTML_Tag::create( 'dd', $source );
 
 //$isUpdatable	= FALSE;
 if( $module->versionAvailable || $module->versionInstalled ){
-	$facts[2][]	= UI_HTML_Tag::create( 'dt', $w->labelVersion );
+	$facts[1][]	= UI_HTML_Tag::create( 'dt', $w->labelVersion );
 	if( $module->versionAvailable )
-		$facts[2][]	= UI_HTML_Tag::create( 'dd', $module->versionAvailable.' - verfügbar' );
+		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->versionAvailable.' - verfügbar' );
 	if( $module->versionInstalled )
-		$facts[2][]	= UI_HTML_Tag::create( 'dd', $module->versionInstalled.' - installiert' );
+		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->versionInstalled.' - installiert' );
 //	$isUpdatable	= $module->versionAvailable !== $module->versionInstalled;
 }
 
@@ -118,6 +115,8 @@ else{
 	$buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit', NULL, 'disabled' );
 }
 
+$labelDetails	= UI_HTML_Tag::create( 'span', 'Details' );
+$buttonDetails	= UI_HTML_Tag::create( 'button', $labelDetails, array( 'class' => 'button info more', 'onclick' => "$('#panel-details').toggle()" ) );
 
 return '
 <style>
@@ -140,7 +139,7 @@ fieldset.module-facts dl dt {
 /*	font-weight: lighter;*/
 	}
 fieldset.module-facts dl dd {
-	margin-left: 80px;
+	margin-left: 100px;
 	}
 span.button-group {
 	border: 1px solid red;
@@ -156,64 +155,48 @@ span.button-group button:first-child {
 span.button-group button:last-child {
 	border: 1px solid blue;
 	}
-
+hr {
+	height: 1px;
+	border: none;
+	background-color: #CCC;
+	padding: 0;
+	margin: 1em 0em 1em 0em;
+	}
 </style>
-<div class="column-left-30">
-	<fieldset class="module-info module-facts">
-		<div class="module-icon" style="text-align: center">
+<div class="column-left-70">
+	<fieldset class="module-info">
+		<legend class="icon module">Modul</legend>
+		<div style="float: right; margin: -0.6em 1em 0.8em 1em">
 			'.$icon.'
 		</div>
+		<h3>'.View_Admin_Module::formatLabel( $module ).'</h3>
+		<div class="description" style="min-height: 115px; max-height: 230px; overflow: auto">
+			'.$desc.'
+			<br/>
+		</div>
+		<div class="column-clear"></div>
+		<div class="buttonbar">
+			'.$buttonBack.'
+			&nbsp;|&nbsp;
+			'.$buttonInstall.'
+			'.$buttonUpdate.'
+			'.$buttonUninstall.'
+			&nbsp;|&nbsp;
+			'.$buttonDetails.'
+			'.$buttonEdit.'
+			'.$buttonReload.'
+		</div>
+	</fieldset>
+</div>
+<div class="column-right-30">
+	<fieldset class="module-info module-facts">
+		<legend class="icon info">Informationen</legend>
 		'.$list.'
 		'.$facts0.'
+		<hr/>
+		'.$facts1.'
+		'.$facts2.'
 	</fieldset>
-</div>
-<div class="column-right-25" style="">
-	<fieldset class="module-info module-facts">
-		<legend>Aktionen</legend>
-		<div class="buttonlist">
-			'.$facts1.'
-<!--			'.$labelInstall.'<br/>-->
-			<span class="button-group">
-				'.$buttonInstall.'
-				'.$buttonUninstall.'
-			</span><br/><br/>
-			'.$facts2.'
-			'.$buttonUpdate.'
-			'.$buttonReload.'<br/><br/>
-			'.$buttonBack.'
-			'.$buttonEdit.'
-		</div>
-	</fieldset>
-</div>
-<div class="column-left-45">
-	<fieldset class="module-info">
-		<legend class="icon module">Module-Informationen</legend>
-<!--		<div class="column-right-20" style="margin: 2em; text-align: right;">
-			'.$icon.'
-		</div>
-		<div class="column-left-70">-->
-			<h3>'.View_Admin_Module::formatLabel( $module ).'</h3>
-			<div class="description">
-<!--				<div class="module-icon" style="float: right; margin: 0 1em 1.5em 2em;">
-					'.$icon.'
-				</div>-->
-				'.$desc.'
-				<br/>
-			</div>
-<!--		'.$list.'-->
-<!--	</div>-->
-	<div class="column-clear"></div>
-<!--	<div class="buttonbar">
-		'.$buttonBack.'
-		&nbsp;|&nbsp;
-		'.$buttonInstall.'
-		'.$buttonUpdate.'
-		'.$buttonUninstall.'
-		&nbsp;|&nbsp;
-		'.$buttonEdit.'
-		'.$buttonReload.'
-	</div>-->
-</fieldset>
 </div>
 <div class="column-clear"></div>
 ';

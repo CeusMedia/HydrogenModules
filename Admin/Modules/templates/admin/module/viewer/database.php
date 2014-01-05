@@ -1,24 +1,18 @@
 <?php
-
 $count	= 0;
-$sql	= '-';
+$list	= '-';
 if( $module->sql ){
-	$sql	= array();
-	foreach( $module->sql as $type => $content ){
-		if( !strlen( trim( $content ) ) )
+	$list	= array();
+	foreach( $module->sql as $type => $sql ){
+		if( !strlen( trim( $sql->sql ) ) )
 			continue;
 		$count++;
-		$driver		= preg_replace( "/^.*@/", "", $type );
-		$versions	= substr_count( $type, ":" ) ? preg_replace( "/^.*:(.+)->(.+)@.*$/", "v\\1 &rArr; v\\2", $type ) : '';
-		$type		= preg_replace( "/[:@].*$/", "", $type );
-		$type		.= $versions ? '<br/>'.$versions : '';
-		
-		$type		= ucFirst( $type ).'<br/>DBMS: '.( $driver === '*' ? 'all' : $driver );
-		$sql[]		= UI_HTML_Tag::create( 'dt', $type );
-		$sql[]		= UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'xmp', trim( $content ) ) );
+		$versions	= $sql->event === 'update' ? '<br/>v'.$sql->from.' &rArr; v'.$sql->to : '';
+		$label		= ucFirst( $sql->event ).$versions.'<br/>DBMS: '.$sql->type;
+		$list[]		= UI_HTML_Tag::create( 'dt', $label );
+		$list[]		= UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'xmp', trim( $sql->sql ) ) );
 	}
-	$sql	= UI_HTML_Tag::create( 'dl', join( $sql ), array( 'class' => 'database' ) );
+	$list	= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
 }
-
-return $sql.'<div class="clearfix"></div>';
+return $list.'<div class="clearfix"></div>';
 ?>

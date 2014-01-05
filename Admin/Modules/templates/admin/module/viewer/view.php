@@ -56,6 +56,10 @@ dl.general dd {
 	&laquo;&nbsp;<a href="./admin/module">Liste</a>
 </div>
 '.$panelGeneral.'
-'.$tabs->buildTabs( 'tabs-module' ).'
+<div id="panel-details" style="display: none">
+	'.$tabs->buildTabs( 'tabs-module' ).'
+</div>
+<br/>
+<br/>
 ';
 ?>

@@ -85,12 +85,20 @@ dl.resources>dd>ul li.missing {
 dl.database > dt{
 	clear: left;
 	float: left;
-	width: 120px;
+	width: 20%;
 	margin-bottom: 1.5em;
 	}
 dl.database > dd{
 	float: left;
 	margin-bottom: 1.5em;
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 77%;
+	margin-left: 0;
+	padding: 6px 10px 6px 10px;
+	background-color: rgba(239, 239, 239, 0.5);
+	border: 1px solid rgba(223, 223, 223, 0.5);
 	}
 dl.database > dd > xmp{
 	margin: 0;
@@ -99,9 +107,10 @@ dl.database > dd > xmp{
 	
 /*  --  JQUERY UI WIDGET  --  */
 .ui-widget {
-	border: 2px solid #CFCFCF;
+	border: 2px solid rgba(0,0,0,0.33);
 	padding: 0px;
 	font-size: 1em;
+	box-shadow: 2px 2px 6px 1px rgba(127,127,127,0.2);
 	}
 .ui-widget-content {
 	background: none;
@@ -125,10 +134,15 @@ dl.database > dd > xmp{
 	border: 1px solid #BFBFBF;
 	background-color: #FFFFFF;
 	}
+.ui-tabs .ui-tabs-panel {
+	background-color: #FFFFFF;
+	}
 
+
+fieldset {
+	}
 	
-
-
+	
 
 span.icon {
 	display: inline-block;
@@ -322,6 +336,7 @@ div.module-overview fieldset {
 	border-color: gray;
 	margin: 0px;
 	padding: 2px 0px;
+	box-shadow: none;
 }
 div.module-overview fieldset legend {
 	text-align: left;
