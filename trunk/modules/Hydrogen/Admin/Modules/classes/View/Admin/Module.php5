@@ -94,7 +94,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 		$tempFile	= tempnam( sys_get_temp_dir(), 'CMF' );
 		try{
 			$graph	= $this->getData( 'graph' );
-			exec( "dot --help", $results, $code );
+			@exec( "dot -V", $results, $code );
 			if( $code == 127 )
 				throw new RuntimeException( 'Missing graphViz' ); 
 			File_Writer::save( $tempFile, $graph );

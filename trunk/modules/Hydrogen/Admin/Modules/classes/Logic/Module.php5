@@ -500,6 +500,8 @@ class Logic_Module {
 
 	public function updateModule( $moduleId, $installType, $files = array(), $settings = array(), $verbose = TRUE ){
 //		$this->uninstallModuleFiles( $moduleId, $verbose );
+		die;
+		$this->updateModuleDatabase( $moduleId );
 		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
 		if( !count( $exceptions ) ){
 			try{
@@ -574,16 +576,30 @@ class Logic_Module {
 	}
 
 	protected function updateModuleDatabase( $moduleId, $versionFrom, $versionTo, $verbose = TRUE ){
-		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
+		if( 1 || $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
 			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
+			$driver	= "mysql";
 			if( $driver ){																			//  remote database connection is configured
 				$moduleLocal	= $this->getModule( $moduleId );									//  get installed module for local version
 				$moduleSource	= $this->getModuleFromSource( $moduleId );							//  get source module for database update
 				$versionFrom	= $moduleLocal->versionInstalled;									//  extract installed version
 				$versionTo		= $moduleSource->versionAvailable;									//  extract available version
-				$key			= 'update:'.$versionFrom.'->'.$versionTo.'@';						//  build key of module database update attribute
+				$list			= array( $driver => array(), '*' => array() );
+				foreach( $moduleSource->sql as $key => $sql ){
+					if( $sql->event !== "update" )
+						continue;
+					if( version_compare( $sql->from, $versionFrom ) < 0 )
+						continue;
+					if( version_compare( $versionTo, $sql->to ) < 0 )
+						continue;
+					$list[$sql->type][]	= $sql->sql;
+				}
 				remark( '$versionFrom: '.$versionFrom );
 				remark( '$versionTo: '.$versionTo );
+				print_m( $list );
+				die;
+				
+				$key			= 'update:'.$versionFrom.'->'.$versionTo.'@';						//  build key of module database update attribute
 				remark( '$key: '.$key );
 				if( strlen( trim( $moduleSource->sql[$key.$driver] ) ) )							//  SQL for update for specific PDO driver is given
 					$this->executeSql( trim( $moduleSource->sql[$key.$driver] ) );					//  execute SQL
