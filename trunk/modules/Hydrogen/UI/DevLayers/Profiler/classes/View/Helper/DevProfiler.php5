@@ -2,8 +2,8 @@
 class View_Helper_DevProfiler{
 
 	static public function ___onPageBuild( $env, $context, $module, $arguments = array() ){
-		if( $env->getConfig()->get( 'module.ui_helper_dev_profiler.enabled' ) ){
-			$context->addThemeStyle( 'dev.profiler.css' );
+		if( $env->getConfig()->get( 'module.ui_devlayers_profiler.enabled' ) ){
+			$context->addThemeStyle( 'module.ui.dev.layer.profiler.css' );
 			$content	= View_Helper_DevProfiler::render( $env );
 			View_Helper_DevLayers::add( 'profiler', 'Profiler', $content );
 		}
@@ -16,8 +16,8 @@ class View_Helper_DevProfiler{
 
 	static public function render( $env ){
 		$profiler	= $env->clock->profiler;
-		$words		= $env->getLanguage()->getWords( 'ui.helper.dev.profiler' );
-		$options	= $env->getConfig()->getAll( 'module.ui_helper_dev_profiler.', TRUE );
+		$words		= $env->getLanguage()->getWords( 'ui.dev.layer.profiler' );
+		$options	= $env->getConfig()->getAll( 'module.ui_devlayers_profiler.', TRUE );
 		$filter		= $options->get( 'filter' ) ? $options->get( 'filter.type' ) : NULL;
 		$threshold	= $options->get( 'filter.threshold' );
 		$profiler->tick( 'UI:Helper:Dev:Profiler::render: init' );
