@@ -25,8 +25,9 @@ if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) )
 
 	if( $list ){
 		$list		= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
-		$legend		= UI_HTML_Tag::create( 'legend', "Datenbank" );
-		$fieldset	= UI_HTML_Tag::create( 'fieldset', $legend.$list );
+		$legend		= UI_HTML_Tag::create( 'legend', "Datenbank", array( 'class' => 'database' ) );
+		$text		= UI_HTML_Tag::create( 'p', $words['update']['textDatabase'] );
+		$fieldset	= UI_HTML_Tag::create( 'fieldset', $legend.$text.$list );
 	}
 }
 return $fieldset;
