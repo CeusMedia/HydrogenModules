@@ -297,6 +297,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				$files[$nr]	= json_decode( base64_decode( $file ) );
 			try{
 				$this->logic->updateModule( $moduleId, $installType, $files, $settings, $verbose );
+				$this->logic->invalidateFileCache( $this->env->getRemote() );
 			}
 			catch( Exception $e ){
 				$this->handleException( $e );
