@@ -154,8 +154,10 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$event		= $request->get( 'event' );
 		$type		= $request->get( 'type' );
 		$ddl		= $request->get( 'ddl' );
+		$from		= $request->get( 'version_from' );
+		$to			= $request->get( 'version_to' );
 		if( trim( $ddl ) ){
-			$this->editor->addSql( $moduleId, $ddl, $event, $type );
+			$this->editor->addSql( $moduleId, $ddl, $event, $type, $from, $to );
 			$this->env->getMessenger()->noteSuccess( 'SQL added.' );								//  show success message
 		}
 		$this->restart( $moduleId.'?tab=database', TRUE );											//  restart view of database
