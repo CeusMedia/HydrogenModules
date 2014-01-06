@@ -24,7 +24,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( 'admin/module/viewer' );
 		}
 	}
-	
+
 	protected function compareModuleFiles( $moduleId, $pathLinks = array() ){
 		$fileTypes	= array(
 			'classes'	=> 'class',
@@ -276,7 +276,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 		$moduleLocal	= $this->logic->getModule( $moduleId );
 		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
-		
+
 		foreach( $moduleSource->relations->needs as $module ){
 			if( !$this->logic->isInstalled( $module ) ){
 				$this->messenger->noteNotice( 'Das Modul "'.$module.'" wird benötigt. Weiterleitung zur Installation.' );
