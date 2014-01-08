@@ -50,6 +50,9 @@ if( $module->companies ){
 	array_unshift( $facts[0], $item );
 }
 
+#print_m( $module );
+#die;
+
 if( $module->licenses ){
 	$licenses	= array();
 	foreach( $module->licenses as $license ){

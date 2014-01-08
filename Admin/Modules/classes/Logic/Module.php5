@@ -53,7 +53,7 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function configureLocalModule( $moduleId, $pairs ){
+	public function configureLocalModule( $moduleId, $pairs, $installType = NULL, $sourceId = NULL ){
 		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
 		$xml	= File_Reader::load( $fileName );
 		$xml	= new XML_Element( $xml );
@@ -62,6 +62,11 @@ class Logic_Module {
 			if( array_key_exists( $name, $pairs ) )
 				$node->setValue( $pairs[$name] );
 		}
+		if( is_int( $installType ) && !is_null( $sourceId ) ){
+			$xml->version->setAttribute( 'install-type', $installType );
+			$xml->version->setAttribute( 'install-source', $sourceId );
+			$xml->version->setAttribute( 'install-date', date( "c" ) );
+		};
 		return File_Writer::save( $fileName, $xml->asXml() );
 	}
 
@@ -386,12 +391,12 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function installModule( $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
+	public function installModule( $sourceId, $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
 		try{
 			$this->installModuleDatabase( $moduleId );
 			$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
-			if( !count( $exceptions ) ){																//  no error occured until now
-				$this->configureLocalModule( $moduleId, $settings );								//  save given configuration values in local module
+			if( !count( $exceptions ) ){															//  no error occured until now
+				$this->configureLocalModule( $moduleId, $settings, $installType, $sourceId );		//  save given configuration values in local module
 				$this->invalidateFileCache( $this->env->getRemote() );
 				return TRUE;
 			}
@@ -498,11 +503,11 @@ class Logic_Module {
 		return TRUE;
 	}
 
-	public function updateModule( $moduleId, $installType, $files = array(), $settings = array(), $verbose = TRUE ){
+	public function updateModule( $moduleId, $installType = 0, $files = array(), $settings = array(), $verbose = TRUE ){
 		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
 		if( !count( $exceptions ) ){
 			try{
-				$this->configureLocalModule( $moduleId, $settings );
+				$this->configureLocalModule( $moduleId, $settings, $installType );
 				$this->updateModuleDatabase( $moduleId );
 			}
 			catch( Exception $e){
