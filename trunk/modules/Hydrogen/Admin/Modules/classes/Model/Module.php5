@@ -56,11 +56,12 @@ class Model_Module{
 				if( !array_key_exists( $moduleId, $this->modulesAll ) ){
 					$module->source	= 'Local';
 					$this->modulesAll[$moduleId]	= $module;
+//					$module->type	= self::TYPE_CUSTOM;
 				}
 				else{
 					$module->source	= $this->modulesAll[$moduleId]->source;
-					if( $module->type != self::TYPE_LINK )
-						$module->type	= self::TYPE_COPY;
+#					if( $module->type != self::TYPE_LINK )
+#						$module->type	= self::TYPE_COPY;
 				}
 				switch( $module->type ){
 					case self::TYPE_LINK:
@@ -201,9 +202,16 @@ class Model_Module{
 		if( $modules ){
 			foreach( $modules->getAll() as $id => $module ){
 				$module->type	= self::TYPE_CUSTOM;
-	#			if( is_link( $this->pathConfig."/".$id.'.xml' ) ){
-	#				$module->type	= self::TYPE_LINK;
-	#			}
+				if( is_int( $module->installType ) && $module->installType ){
+					$module->type	= self::TYPE_UNKNOWN;
+					if( $module->installType === 1 )
+						$module->type	= self::TYPE_LINK;
+					else if( $module->installType === 2 )
+						$module->type	= self::TYPE_COPY;
+				}
+				else if( array_key_exists( $id, $this->modulesAvailable ) )
+					$module->type	= self::TYPE_COPY;
+						
 				if( !empty( $this->modulesAvailable[$id] ) ){
 					$module->icon	= $this->modulesAvailable[$id]->icon;
 				}
