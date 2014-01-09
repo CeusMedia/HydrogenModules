@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Customers</title>
+	<description><![CDATA[Extensible customer database management.]]></description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Customer.php5</class>
+		<class>View/Manage/Customer.php5</class>
+		<class>Model/Customer.php5</class>
+		<template>manage/customer/add.php</template>
+		<template>manage/customer/index.php</template>
+		<template>manage/customer/view.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="inside" path="manage/customer" rank="36">Kunden</link>
+	<link xml:lang="en" access="inside" path="manage/customer" rank="36">Customers</link>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (
+  `customerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`customerId`),
+  UNIQUE KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customers`;
+]]></sql>
+</module>
+
