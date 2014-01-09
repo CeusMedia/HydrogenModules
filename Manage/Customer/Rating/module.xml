@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Customer: Rating</title>
+	<description><![CDATA[Extension for customer ratings.]]></description>
+	<category>Management</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Customer/Rating.php5</class>
+		<class>View/Manage/Customer/Rating.php5</class>
+		<class>Model/Customer/Rating.php5</class>
+		<template>manage/customer/rating/add.php</template>
+	</files>
+	<relations>
+		<needs type="module">Manage_Customer</needs>
+	</relations>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customer_ratings`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>customer_ratings` (
+  `customerRatingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `customerId` int(10) unsigned NOT NULL,
+  `userId` int(10) unsigned NOT NULL,
+  `affability` tinyint(1) unsigned NOT NULL,
+  `guidability` tinyint(1) unsigned NOT NULL,
+  `growthRate` tinyint(1) unsigned NOT NULL,
+  `profitability` tinyint(1) unsigned NOT NULL,
+  `paymentMoral` tinyint(1) unsigned NOT NULL,
+  `adherence` tinyint(1) unsigned NOT NULL,
+  `uptightness` tinyint(1) unsigned NOT NULL,
+  `comment` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`customerRatingId`),
+  KEY `customerId` (`customerId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customer_ratings`;
+]]></sql>
+</module>
