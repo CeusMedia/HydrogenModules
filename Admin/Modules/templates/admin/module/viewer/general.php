@@ -85,6 +85,10 @@ if( $module->versionAvailable || $module->versionInstalled ){
 		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->versionAvailable.' - verfügbar' );
 	if( $module->versionInstalled )
 		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->versionInstalled.' - installiert' );
+	if( $module->installDate ){
+		$facts[1][]	= UI_HTML_Tag::create( 'dt', 'installiert am' );
+		$facts[1][]	= UI_HTML_Tag::create( 'dd', date( 'd.m.Y H:i', strtotime( $module->installDate ) ) );
+	}
 //	$isUpdatable	= $module->versionAvailable !== $module->versionInstalled;
 }
 

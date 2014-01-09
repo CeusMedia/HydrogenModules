@@ -11,7 +11,7 @@ if( $module->files->classes ){
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
 		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
-		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html' );
+		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'layer-html', 'title' => 'TEST' ) );
 		$classes[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class ) );
 	}
 	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
@@ -78,7 +78,7 @@ if( $module->files->scripts ){
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/script/'.base64_encode( $item->file );
 		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
-		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html' );
+		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html', array( 'title' => 'TEST' ) );
 		$scripts[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class )  );
 	}
 	$scripts		= UI_HTML_Elements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
