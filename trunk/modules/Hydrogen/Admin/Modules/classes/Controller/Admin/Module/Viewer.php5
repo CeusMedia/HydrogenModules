@@ -91,41 +91,33 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$fileName	= base64_decode( $fileName );
 		$pathModule	= $this->logic->getModulePath( $moduleId );
 		$pathFile	= '';
-		$xmpClass	= '';
 		switch( $type ){
 			case 'class':
 				$pathFile	= 'classes/';
-				$xmpClass	= 'php';
 				break;
 			case 'locale':
 				$pathFile	= 'locales/';
-				$xmpClass	= 'ini';
 				break;
 			case 'script':
 				$pathFile	= 'js/';
-				$xmpClass	= 'js';
 				break;
 			case 'style':
 				$pathFile	= 'css/';
-				$xmpClass	= 'css';
 				break;
 			case 'template':
 				$pathFile	= 'templates/';
-				$xmpClass	= 'php';
 				break;
 		}
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
-		$content	= File_Reader::load( $pathModule.$pathFile.$fileName );
-		$code		= UI_HTML_Tag::create( 'pre', htmlentities( $content ), array( 'class' => 'code '.$xmpClass ) );
-		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
-		$page		= new UI_HTML_PageFrame();
-		$page->addStylesheet( 'css/reset.css' );
-		$page->addStylesheet( 'css/typography.css' );
-		$page->addStylesheet( 'css/xmp.formats.css' );
-		$page->addBody( $body );
-		print( $page->build( array( 'style' => 'margin: 1em' ) ) );
-		exit;
+		
+		$this->addData( 'moduleId', $moduleId );
+		$this->addData( 'type', $type );
+		$this->addData( 'fileName', $fileName );
+		$this->addData( 'filePath', $pathModule.$pathFile.$fileName );
+		$this->addData( 'pathFile', $pathFile );
+		$this->addData( 'pathModule', $pathModule );
+		$this->addData( 'content', File_Reader::load( $pathModule.$pathFile.$fileName ) );
 	}
 }
 ?>
