@@ -124,55 +124,21 @@ $panelInfo	= '
 	<div class="clearfix"></div>
 </fieldset>
 ';
-
+$helper	= new View_Helper_Module( $this->env );
 $tableConfig	= '';
 if( $isInstallable ){
 	if( count( $module->config ) ){
 		$rows	= array();
-		foreach( $module->config as $key => $value ){
-			
-			$class	= "";
-			if( $value->mandatory ){
-				if( $value->mandatory == "yes" )
-					$class = " mandatory";
-				else if( preg_match( "/^.+:.*$/", $value->mandatory ) ){
-					list( $relatedKey, $relatedValue )	= explode( ':', $value->mandatory );
-					$relatedValue	= explode( ',', $relatedValue );
-					if( isset( $module->config[$relatedKey] ) ){
-						if( in_array( $module->config[$relatedKey]->value, $relatedValue ) )
-							$class = " mandatory";
-					}
-				}
-			}
-			$name	= 'config['.$key.']';
-			switch( $value->type ){
-				case 'boolean':
-					$strValue	= $value->value === TRUE ? 'yes' : 'no';
-					$options	= UI_HTML_Elements::Options( $words['boolean-values'], $strValue );
-					$input		= UI_HTML_Tag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => 'input_'.$name ) );
-					break;
-				case 'int':
-				case 'integer':
-					$input		= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 's'.$class );
-					break;
-				default:
-					if( count( $value->values ) ){
-						$options	= array_combine( $value->values, $value->values );
-						$options	= UI_HTML_Elements::Options( $options, $value->value );
-						$input		= UI_HTML_Elements::Select( 'config['.$key.']', $options, 'm'.$class );
-					}
-					else
-						$input	= UI_HTML_Elements::Input( 'config['.$key.']', $value->value, 'max'.$class );
-					break;
-			}
-			$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
-			$id		= str_replace( '.', '_', $key );
+		foreach( $module->config as $item ){
+			$input	= View_Helper_Module::renderModuleConfigInput( $item, $words );
+			$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
+			$id		= str_replace( '.', '_', $item->key );
 			$cells	= array(
 				UI_HTML_Tag::create( 'td', $label, array() ),
-				UI_HTML_Tag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
+				UI_HTML_Tag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
 				UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
 			);
-			$rows[$key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+			$rows[$item->key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
 		#	natcasesort( $rows );
 		}
 		$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );

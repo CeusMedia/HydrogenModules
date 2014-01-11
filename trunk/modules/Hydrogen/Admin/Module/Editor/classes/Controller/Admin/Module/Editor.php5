@@ -162,6 +162,12 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		$this->restart( $moduleId.'?tab=database', TRUE );											//  restart view of database
 	}
+
+	public function commit( $moduleId, $move = NULL ){
+		$request	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$this->logic->importLocalModuleToRepository( $moduleId, $request->get( 'source' ), $move );
+		$this->restart( $moduleId, TRUE );
+	}
 	
 	public function edit( $moduleId ){
 		$request	= $this->env->getRequest();
@@ -218,13 +224,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		$this->restart( 'view/'.$moduleId.'?tab=links', TRUE );
 	}
-	
-	public function commit( $moduleId, $move = NULL ){
-		$request	= $this->env->getRequest()->getAllFromSource( 'post' );
-		$this->logic->importLocalModuleToRepository( $moduleId, $request->get( 'source' ), $move );
-		$this->restart( $moduleId, TRUE );
-	}
-	
+
 	public function export( $moduleId, $move = NULL ){
 		$this->logic->importLocalModuleToRepository( $moduleId, $move );
 		$this->restart( $moduleId, TRUE );
