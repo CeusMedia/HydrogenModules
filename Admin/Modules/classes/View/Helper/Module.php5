@@ -91,5 +91,28 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 		}
 		return $input;
 	}
+
+	static public function renderModuleConfigLabel( $module, $item ){
+		$class		= "";
+		$name		= 'config['.$item->key.']';
+		if( $item->mandatory ){
+			if( $item->mandatory == "yes" )
+				$class = " mandatory";
+			else if( preg_match( "/^.+:.*$/", $item->mandatory ) ){
+				list( $relatedKey, $relatedValue )	= explode( ':', $item->mandatory );
+				$relatedValue	= explode( ',', $relatedValue );
+				if( isset( $module->config[$relatedKey] ) ){
+					if( in_array( $module->config[$relatedKey]->value, $relatedValue ) )
+						$class = " mandatory";
+				}
+			}
+		}
+		$label		= $item->key;
+		if( strlen( trim( $title = htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ) ) ) )
+			$label	= UI_HTML_Tag::create( 'acronym', $item->key, array( 'title' => $title ) );
+		$attributes	= array( 'class' => $class, 'for' => 'input_'.$name );
+		$label		= UI_HTML_Tag::create( 'label', $label, $attributes );
+		return $label;
+	}
 }
 ?>
