@@ -3,7 +3,7 @@
 	<title>Manage: Customers</title>
 	<description><![CDATA[Extensible customer database management.]]></description>
 	<category>Management</category>
-	<version>0.1</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,6 +12,7 @@
 		<class>View/Manage/Customer.php5</class>
 		<class>Model/Customer.php5</class>
 		<template>manage/customer/add.php</template>
+		<template>manage/customer/edit.php</template>
 		<template>manage/customer/index.php</template>
 		<template>manage/customer/view.php</template>
 	</files>
@@ -24,12 +25,32 @@
 DROP TABLE IF EXISTS `<%?prefix%>customers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (
   `customerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) unsigned NOT NULL,
+  `size` tinyint(1) unsigned NOT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `street` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nr` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
+  `latitude` float DEFAULT NULL,
+  `contact` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `fax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`customerId`),
-  UNIQUE KEY `title` (`title`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  UNIQUE KEY `title` (`title`),
+  KEY `type` (`type`,`size`),
+  KEY `url` (`url`),
+  KEY `longitude` (`longitude`),
+  KEY `latitude` (`latitude`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>customers`;
