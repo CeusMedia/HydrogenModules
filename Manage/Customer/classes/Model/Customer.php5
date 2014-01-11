@@ -3,14 +3,22 @@ class Model_Customer extends CMF_Hydrogen_Model{
 	protected $name			= 'customers';
 	protected $columns		= array(
 		'customerId',
+		'size',
+		'type',
 		'title',
-		'affability',				//  Umgänglichkeit
-		'guidability',				//  Beratungspotenzial, Beratbarkeit
-		'growthRate',				//  Wachstumschancen
-		'profitability',			//  Rentabilität, Wirtschaftlichkeit
-		'paymentMoral',				//  Zahlungsmoral
-		'adherence',				//  Termintreue
-		'uptightness',				//  Nervfaktor, Nervosität, Verspanntheit
+		'description',
+		'country',
+		'city',
+		'postcode',
+		'street',
+		'nr',
+		'url',
+		'longitude',
+		'lattitude',
+		'contact',
+		'email',
+		'phone',
+		'fax',
 		'createdAt',
 		'modifiedAt',
 	);
