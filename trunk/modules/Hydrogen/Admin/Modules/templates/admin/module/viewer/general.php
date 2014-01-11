@@ -50,9 +50,6 @@ if( $module->companies ){
 	array_unshift( $facts[0], $item );
 }
 
-#print_m( $module );
-#die;
-
 if( $module->licenses ){
 	$licenses	= array();
 	foreach( $module->licenses as $license ){
@@ -87,7 +84,11 @@ if( $module->versionAvailable || $module->versionInstalled ){
 		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->versionInstalled.' - installiert' );
 	if( $module->installDate ){
 		$facts[1][]	= UI_HTML_Tag::create( 'dt', 'installiert am' );
-		$facts[1][]	= UI_HTML_Tag::create( 'dd', date( 'd.m.Y H:i', strtotime( $module->installDate ) ) );
+		$facts[1][]	= UI_HTML_Tag::create( 'dd', date( 'd.m.Y', $module->installDate ).' <small><em>um '.date( 'H:i', $module->installDate ).' Uhr</em></small>' );
+	}
+	if( $module->installSource ){
+		$facts[1][]	= UI_HTML_Tag::create( 'dt', 'aus Quelle' );
+		$facts[1][]	= UI_HTML_Tag::create( 'dd', $module->installSource );
 	}
 //	$isUpdatable	= $module->versionAvailable !== $module->versionInstalled;
 }

@@ -17,6 +17,8 @@ class Logic_Module {
 	const INSTALL_TYPE_LINK		= 1;
 	const INSTALL_TYPE_COPY		= 2;
 
+	protected function __clone(){}
+
 	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env	= $env;
 		$this->messenger	= $this->env->getMessenger();
@@ -43,7 +45,6 @@ class Logic_Module {
 		}
 		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
 	}
-	protected function __clone(){}
 
 	public function checkForUpdate( $moduleId ){
 		$module		= $this->model->get( $moduleId );
@@ -112,12 +113,20 @@ class Logic_Module {
 		return mkdir( $path, 02770, TRUE );
 	}
 
+	/**
+	 *	Executes SQL/DDL and returns number of executed statements.
+	 *	You can provide complex collections of SQL statements, which will be chunked and executed separately.
+	 *	@access		protected
+	 *	@param		string		$sql		SQL statements
+	 *	@return		integer					Number of executed SQL statements
+	 *	@throws		RuntimeException		if remote environment/instance has no database resource
+	 */
 	protected function executeSql( $sql ){
 		if( !trim( $sql ) )
-			throw new InvalidArgumentException( 'No SQL given' );
-		$lines	= explode( "\n", trim( $sql ) );
-		$cmds	= array();
-		$buffer	= array();
+			return 0;
+		$lines		= explode( "\n", trim( $sql ) );
+		$statements	= array();
+		$buffer		= array();
 		if( !$this->env->getRemote()->has( 'dbc' ) )
 			throw new RuntimeException( 'Remvote environment has no database connection' );
 		$dbc	= $this->env->getRemote()->getDatabase();
@@ -128,18 +137,15 @@ class Logic_Module {
 				continue;
 			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
 			if( preg_match( '/;$/', trim( $line ) ) ){
-				$cmds[]	= join( "\n", $buffer );
-				$buffer	= array();
+				$statements[]	= join( "\n", $buffer );
+				$buffer			= array();
 			}
 			if( !count( $lines ) && $buffer )
-				$cmds[]	= join( "\n", $buffer ).';';
+				$statements[]	= join( "\n", $buffer ).';';
 		}
-		$state	= NULL;
-		foreach( $cmds as $command ){
-			$dbc->exec( $command );
-#			$this->env->getMessenger()->noteNotice( 'DBC: '.$command );
-		}
-		return $state;
+		foreach( $statements as $statement )
+			$dbc->exec( $statement );
+		return count( $statements );
 	}
 
 	public function getCategories(){
@@ -413,14 +419,10 @@ class Logic_Module {
 		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
 			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
 			if( $driver ){																			//  remote database connection is configured
-				if( isset( $module->sql['install@'.$driver] ) ){
-					if( strlen( trim( $module->sql['install@'.$driver] ) ) )						//  SQL for installation for specific PDO driver is given
-						$this->executeSql( $module->sql['install@'.$driver] );						//  execute SQL
-				}
-				else if( isset( $module->sql['install@*'] ) ){
-					if( strlen( trim( $module->sql['install@*'] ) ) )								//  fallback: general SQL for installation is available
-						$this->executeSql( $module->sql['install@*'] );									//  execute SQL
-				}
+				if( isset( $module->sql['install@'.$driver] ) )										//  SQL for installation for specific PDO driver is given
+					$this->executeSql( $module->sql['install@'.$driver]->sql );						//  execute SQL
+				else if( isset( $module->sql['install@*'] ) )										//  fallback: general SQL for installation is available
+					$this->executeSql( $module->sql['install@*']->sql );							//  execute SQL
 				else
 					return NULL;
 				return TRUE;

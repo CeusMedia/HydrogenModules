@@ -11,7 +11,6 @@ $mapTabs	= array(
 //	'links'		=> 'tabLinks',
 	'relations'	=> 'tabRelations',
 );
-
 $nr			= 0;
 $disabled	= array();
 foreach( $mapTabs as $key => $tabLabel ){
