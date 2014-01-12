@@ -1,0 +1,17 @@
+.UI_Map img {
+	max-width: none;
+	}
+.UI_Map label {
+	width: auto;
+	display:inline;
+	}
+
+.UI_Map.border{
+	border: 1px solid rgba(127,127,127,0.5);
+	}
+	
+.UI_Map.shadow{
+	-webkit-box-shadow: 2px 2px 2px 2px rgba(127, 127, 127, 0.1); /* WebKit */
+	-moz-box-shadow: 2px 2px 2px 2px rgba(127, 127, 127, 0.1); /* Firefox */
+	box-shadow: 2px 2px 2px 2px rgba(127, 127, 127, 0.1); /* Standard */
+	}

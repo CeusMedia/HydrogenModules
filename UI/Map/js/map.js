@@ -1,5 +1,5 @@
 function loadMap(id){
-	var m = $("#"+id);
+	var m = $("#"+id).addClass("UI_Map");
 	if(!m.size())
 		return;
 	if(m.data('latitude') == 0 && m.data('longitude') == 0)
