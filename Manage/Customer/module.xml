@@ -3,7 +3,7 @@
 	<title>Manage: Customers</title>
 	<description><![CDATA[Extensible customer database management.]]></description>
 	<category>Management</category>
-	<version>0.2.2</version>
+	<version>0.2.5</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,9 +14,11 @@
 		<template>manage/customer/add.php</template>
 		<template>manage/customer/edit.php</template>
 		<template>manage/customer/index.php</template>
+		<locale>de/manage/customer.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">UI_Indicator</needs>
 	</relations>
 	<link xml:lang="de" access="inside" path="manage/customer" rank="36">Kunden</link>
 	<link xml:lang="en" access="inside" path="manage/customer" rank="36">Customers</link>
@@ -24,6 +26,7 @@
 DROP TABLE IF EXISTS `<%?prefix%>customers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (
   `customerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` INT(10) unsigned NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
   `size` tinyint(1) unsigned NOT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -34,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (
   `street` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `nr` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `longitude` float DEFAULT NULL,
   `latitude` float DEFAULT NULL,
+  `longitude` float DEFAULT NULL,
   `contact` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -44,10 +47,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`customerId`),
   UNIQUE KEY `title` (`title`),
-  KEY `type` (`type`,`size`),
+  KEY `type` (`type`),
+  KEY `size` (`size`),
+  KEY `creatorId` (`creatorId`),
   KEY `url` (`url`),
-  KEY `longitude` (`longitude`),
   KEY `latitude` (`latitude`),
+  KEY `longitude` (`longitude`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>

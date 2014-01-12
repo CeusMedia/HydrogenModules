@@ -1,35 +1,37 @@
 <?php
-class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
+class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 
-	public function add(){
-		$request		= $this->env->getRequest();
-		$modelCustomer	= new Model_Customer( $this->env );
-		if( $request->has( 'save' ) ){
-			$data	= $request->getAll();
-			$data['userId']		= (int) $this->env->getSession()->get( 'userId' );
-			$data['createdAt']	= time();
-			$modelCustomer->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Customer has been saved.' );
-			$this->restart( NULL, TRUE );
-		}
-//		$this->addData( 'customer', (object) $request->getAll() );
+	protected $messenger;
+	protected $modelCustomer;
+	protected $modelRating;
+
+	public function __onInit(){
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelCustomer	= new Model_Customer( $this->env );
+		$this->modelRating		= new Model_Customer_Rating( $this->env );
 	}
 
-	public function index(){
-		$modelCustomer	= new Model_Customer( $this->env );
-		$modelRating	= new Model_Customer_Rating( $this->env );
-		$customers		=  $modelCustomer->getAll();
-		foreach( $customers as $nr => $customer ){
-			$order		= array( 'timestamp' => 'DESC' );
-			$limit		= array( 0, 1 );
-			$rating		= $modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
-			if( $rating ){
-				$rating	= array_pop( $rating );
-				$rating->index		= $this->calculateCustomerIndex( $rating );
-			}
-			$customer->rating	= $rating;
+	public function add( $customerId ){
+		$request		= $this->env->getRequest();
+		$customer		= $this->modelCustomer->get( $customerId );
+		if( $request->has( 'save' ) ){
+			$data	= array(
+				'affability'	=> $request->get( 'affability' ) >= 1 ? min( 5, $request->get( 'affability' ) ) : 0,
+				'guidability'	=> $request->get( 'guidability' ) >= 1 ? min( 5, $request->get( 'guidability' ) ) : 0,
+				'growthRate'	=> $request->get( 'growthRate' ) >= 1 ? min( 5, $request->get( 'growthRate' ) ) : 0,
+				'profitability'	=> $request->get( 'profitability' ) >= 1 ? min( 5, $request->get( 'profitability' ) ) : 0,
+				'paymentMoral'	=> $request->get( 'paymentMoral' ) >= 1 ? min( 5, $request->get( 'paymentMoral' ) ) : 0,
+				'adherence'		=> $request->get( 'adherence' ) >= 1 ? min( 5, $request->get( 'adherence' ) ) : 0,
+				'uptightness'	=> $request->get( 'uptightness' ) >= 1 ? min( 5, $request->get( 'uptightness' ) ) : 0,
+				'customerId'	=> $customerId,
+				'timestamp'		=> time()
+			);
+			$this->modelRating->add( $data );
+			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
+			$this->restart( './manage/customer/edit/'.$customerId );
 		}
-		$this->addData( 'customers', $customers );
+		$this->addData( 'customerId', $customerId );
+		$this->addData( 'customer', $customer );
 	}
 
 	protected function calculateCustomerIndex( $rating ){
@@ -66,30 +68,21 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		//  recommend: 4
 	}
 
-	public function rate( $customerId ){
-		$request		= $this->env->getRequest();
+	public function index(){
 		$modelCustomer	= new Model_Customer( $this->env );
 		$modelRating	= new Model_Customer_Rating( $this->env );
-		if( $request->has( 'save' ) ){
-			$data	= array(
-				'affability'	=> $request->get( 'affability' ) >= 1 ? min( 5, $request->get( 'affability' ) ) : 0,
-				'guidability'	=> $request->get( 'guidability' ) >= 1 ? min( 5, $request->get( 'guidability' ) ) : 0,
-				'growthRate'	=> $request->get( 'growthRate' ) >= 1 ? min( 5, $request->get( 'growthRate' ) ) : 0,
-				'profitability'	=> $request->get( 'profitability' ) >= 1 ? min( 5, $request->get( 'profitability' ) ) : 0,
-				'paymentMoral'	=> $request->get( 'paymentMoral' ) >= 1 ? min( 5, $request->get( 'paymentMoral' ) ) : 0,
-				'adherence'		=> $request->get( 'adherence' ) >= 1 ? min( 5, $request->get( 'adherence' ) ) : 0,
-				'uptightness'	=> $request->get( 'uptightness' ) >= 1 ? min( 5, $request->get( 'uptightness' ) ) : 0,
-				'customerId'	=> $customerId,
-				'timestamp'		=> time()
-			);
-			$modelRating->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
-			$this->restart( NULL, TRUE );
+		$customers		=  $modelCustomer->getAll();
+		foreach( $customers as $nr => $customer ){
+			$order		= array( 'timestamp' => 'DESC' );
+			$limit		= array( 0, 1 );
+			$rating		= $modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
+			if( $rating ){
+				$rating	= array_pop( $rating );
+				$rating->index		= $this->calculateCustomerIndex( $rating );
+			}
+			$customer->rating	= $rating;
 		}
-
-		$customer	= $modelCustomer->get( $customerId );
-		$this->addData( 'customer', $customer );
-		$this->addData( 'customerId', $customerId );
+		$this->addData( 'customers', $customers );
 	}
 
 	public function view( $customerId ){
