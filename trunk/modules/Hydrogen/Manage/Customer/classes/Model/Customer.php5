@@ -14,7 +14,7 @@ class Model_Customer extends CMF_Hydrogen_Model{
 		'nr',
 		'url',
 		'longitude',
-		'lattitude',
+		'latitude',
 		'contact',
 		'email',
 		'phone',
