@@ -37,8 +37,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		);
 		$files			= array();
 		$moduleLocal	= $this->logic->getModule( $moduleId );
-		
-		
+
 		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
 
 		$envRemote		= $this->env->getRemote();
@@ -54,8 +53,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 				$source		= $pathSource.$pathFileSource;
 				$target		= $pathLocal.$pathFileLocal;
-
-				if( file_exists( $target ) ){
+				if( $pathFileLocal && file_exists( $target ) ){
 					$status			= 1;
 					if( is_link( $target ) ){
 						$source		= $this->resolveLinkedPath( $source, $pathLinks );
@@ -63,14 +61,17 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 						$target		= $this->resolveLinkedPath( $target, $pathLinks );
 #						remark( 'Source: '.$source );
 #						remark( 'Target: '.$target );
-						$status		= $target === $source ? 2 : 3;
+						$status		= $target === $source ? 3 : 4;
 					}
 					else{
 						$cmd	= 'diff '.$source.' '.$target;
 						exec( $cmd, $diff, $code );
 						if( $code == 1 )
-							$status	= 4;
+							$status	= 2;
 					}
+				}
+				else if( isset( $file->source ) && strtolower( $file->source ) === "url" ){
+					$status	= 5;
 				}
 				$files[]	= (object) array(
 					'moduleId'		=> $moduleId,
