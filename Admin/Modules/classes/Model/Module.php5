@@ -65,15 +65,15 @@ class Model_Module{
 				}
 				switch( $module->type ){
 					case self::TYPE_LINK:
-						$module->versionAvailable	= $module->version;
 						$module->versionInstalled	= $module->version;
+						$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
 						break;
 					case self::TYPE_COPY:
 						$module->versionInstalled	= $module->version;
 						$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
 						break;
 					case self::TYPE_CUSTOM:
-						$module->version			= $module->versionInstalled;
+						$module->versionInstalled	= $module->versionInstalled;
 						$module->versionAvailable	= NULL;
 						break;
 				}
