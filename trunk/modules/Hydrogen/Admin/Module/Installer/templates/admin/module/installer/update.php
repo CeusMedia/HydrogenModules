@@ -61,11 +61,13 @@ dl.general > dt{
 dl.general > dd{
 	float: left;
 	}
-tr.status-new {background-color: #DFFFDF}
-tr.status-installed {background-color: #FFFFDF}
-tr.status-linked {background-color: #EFEFEF; opacity: 0.75}
-tr.status-foreign {background-color: #DFDFFF; opacity: 0.75}
-tr.status-changed {background-color: #FFDFDF}
+
+table.module-update-files tr.status-new {background-color: #DFFFDF}
+table.module-update-files tr.status-installed {background-color: #FFFFDF; opacity: 0.75}
+table.module-update-files tr.status-changed {background-color: #FFDFDF}
+table.module-update-files tr.status-linked {background-color: #EFEFEF; opacity: 0.75}
+table.module-update-files tr.status-foreign {background-color: #DFDFFF}
+table.module-update-files tr.status-refered {background-color: #DFDFFF; opacity: 0.75}
 </style>
 <div class="column-clear"></div>';
 ?>

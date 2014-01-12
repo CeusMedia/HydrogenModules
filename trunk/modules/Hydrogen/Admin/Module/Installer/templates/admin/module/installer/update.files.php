@@ -5,9 +5,10 @@ if( !count( $files ) )
 $states	= array(
 	0	=> 'new',
 	1	=> 'installed',
-	2	=> 'linked',
-	3	=> 'foreign',
-	4	=> 'changed',
+	2	=> 'changed',
+	3	=> 'linked',
+	4	=> 'foreign',
+	5	=> 'refered',
 );
 
 $list	= array();
@@ -18,11 +19,11 @@ foreach( $files as $file ){
 		'name'		=> 'files[]',
 		'value'		=> base64_encode( json_encode( $file ) ),
 		'class'		=> 'file-check',
-		'checked'	=> in_array( $file->status, array( 0, 1, 4 ) ) ? 'checked' : NULL,
+		'checked'	=> in_array( $file->status, array( 0, 1, 2 ) ) ? 'checked' : NULL,
 	) );
-	if( $file->status === 2 )
+	if( in_array( $file->status, array( 3, 5 ) ) )
 		$checkbox	= '';
-	if( $file->status === 4 ){
+	if( $file->status === 2 ){
 		$url		= './admin/module/installer/diff/'.base64_encode( $file->pathLocal ).'/'.base64_encode( $file->pathSource );
 		$actions[]	= UI_HTML_Tag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
 	}
@@ -47,14 +48,15 @@ $checkAll	= UI_HTML_Tag::create( 'input', NULL, array(
 	'type'			=> 'checkbox',
 	'onchange'		=> 'AdminModuleUpdater.switchAllFiles()',
 	'id'			=> 'btn_switch_files',
-	'data-state'	=> 0
+	'checked'		=> 'checked',
+	'data-state'	=> 1
 ) );
 
 $colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "12%", "10%", "60%", "15%" );
 $heads		= UI_HTML_Elements::TableHeads( array( $checkAll, 'Typ', 'Status', 'Datei', 'Aktion' ) );
 $thead		= UI_HTML_Tag::create( 'thead', $heads );
 $tbody		= UI_HTML_Tag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );
 
 return '
 <fieldset>
