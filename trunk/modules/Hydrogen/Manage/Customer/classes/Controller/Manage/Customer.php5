@@ -10,18 +10,23 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->modelCustomer	= new Model_Customer( $this->env );
 		$this->modelRating		= new Model_Customer_Rating( $this->env );
 	}
-
+	
 	public function add(){
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
 			$data['userId']		= (int) $this->env->getSession()->get( 'userId' );
 			$data['createdAt']	= time();
-			$this->modelCustomer->add( $data );
+			$customerId			= $this->modelCustomer->add( $data );
 			$this->env->getMessenger()->noteSuccess( 'Customer has been saved.' );
+			if( !$this->resolveGeocode( $customerId ) )
+				$this->messenger->noteNotice( 'Für diese Adresse konnte keine Geokoordinaten ermittelt werden.' );
 			$this->restart( NULL, TRUE );
 		}
-//		$this->addData( 'customer', (object) $request->getAll() );
+		$customer	= array();
+		foreach( $this->modelCustomer->getColumns() as $key )
+			$customer[$key]	= $request->get( $key );
+		$this->addData( 'customer', (object) $customer );
 	}
 
 	protected function calculateCustomerIndex( $rating ){
@@ -68,55 +73,40 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
-/*				'type'			=> $request->get( 'type' ),
-				'size'			=> $request->get( 'size' ),
-				'title'			=> $request->get( 'title' ),
-				'description'	=> $request->get( 'description' ),
-				'country'		=> $request->get( 'country' ),
-				'city'			=> $request->get( 'city' ),
-				'postcode'		=> $request->get( 'postcode' ),
-				'street'		=> $request->get( 'street' ),
-				'nr'			=> $request->get( 'nr' ),
-				'url'			=> $request->get( 'url' ),
-				'contact'		=> $request->get( 'contact' ),
-				'email'			=> $request->get( 'email' ),
-				'phone'			=> $request->get( 'phone' ),
-				'fax'			=> $request->get( 'fax' ),
-			);*/
+			$data['modifiedAt']	= time();
 			$this->modelCustomer->edit( $customerId, $data );
 			$this->messenger->noteSuccess( 'Gespeichert.' );
 			$addressOld	= $customer->city.', '.$customer->street.' '.$customer->nr;
 			$addressNew	= $data['city'].', '.$data['street'].' '.$data['nr'];
-
 			if( $addressOld !== $addressNew || !($customer->longitude.$customer->latitude) ){
-				$geocoder	= new Net_API_Google_Maps_Geocoder();
-				try{
-					$tags		= $geocoder->getGeoTags( $addressNew );
-					$this->modelCustomer->edit( $customerId, $tags );
-				}
-				catch( Exception $e ){
+				if( !$this->resolveGeocode( $customerId ) )
 					$this->messenger->noteNotice( 'Für diese Adresse konnte keine Geokoordinaten ermittelt werden.' );
-				}
 			}
 			$this->restart( './manage/customer/edit/'.$customerId );
 		}
-		
-		$order		= array( 'timestamp' => 'DESC' );
-		$limit		= array( 0, 10 );
-		$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
-		$ratings	= array_reverse( $ratings );
-		$lastIndex	= NULL;
-		$totalIndex	= 0;
-		foreach( $ratings as $nr => $rating ){
-			$rating->index		= $this->calculateCustomerIndex( $rating );
-			if( !is_null( $lastIndex ) )
-				$variance			+= abs( $lastIndex - $rating->index );
-			$lastIndex	= $rating->index;
-			$totalIndex	+= $rating->index;
-		}	
-		$customer->ratings	= $ratings;
-		$customer->index	= $ratings ? $totalIndex / count( $ratings ) : NULL;
-		$customer->variance	= count( $ratings ) > 1 ? $variance / ( count( $ratings ) - 1 ) : NULL;
+
+		if( $this->env->getModules()->has( 'Manage_Customer_Rating' ) ){
+			$order		= array( 'timestamp' => 'DESC' );
+			$limit		= array( 0, 10 );
+			$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
+			$ratings	= array_reverse( $ratings );
+			$lastIndex	= NULL;
+			$totalIndex	= 0;
+			$variance	= 0;
+			foreach( $ratings as $nr => $rating ){
+				$rating->index		= $this->calculateCustomerIndex( $rating );
+				if( !is_null( $lastIndex ) )
+					$variance			+= abs( $lastIndex - $rating->index );
+				$lastIndex	= $rating->index;
+				$totalIndex	+= $rating->index;
+			}	
+			$customer->ratings	= $ratings;
+			$customer->index	= $ratings ? $totalIndex / count( $ratings ) : NULL;
+			$customer->variance	= count( $ratings ) > 1 ? $variance / ( count( $ratings ) - 1 ) : NULL;
+			$this->addData( 'useRatings', TRUE );
+		}
+		else
+			$this->addData( 'useRatings', FALSE );
 
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
@@ -165,6 +155,24 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'customer', $customer );
 		$this->addData( 'customerId', $customerId );
+	}
+
+	public function resolveGeocode( $customerId ){
+		$customer	= $this->modelCustomer->get( $customerId );
+		if( !$customer ){
+			$this->messenger->noteError( 'Invalid customer' );
+			$this->restart( './manage/customer' );
+		}
+		try{
+			$address	= $customer->city.', '.$customer->street.' '.$customer->nr;
+			$geocoder	= new Net_API_Google_Maps_Geocoder();
+			$tags		= $geocoder->getGeoTags( $address );
+			$this->modelCustomer->edit( $customerId, $tags );
+		}
+		catch( Exception $e ){
+			return FALSE;
+		}
+		return TRUE;
 	}
 }
 ?>

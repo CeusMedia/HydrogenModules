@@ -3,6 +3,7 @@ class Model_Customer extends CMF_Hydrogen_Model{
 	protected $name			= 'customers';
 	protected $columns		= array(
 		'customerId',
+		'creatorId',
 		'size',
 		'type',
 		'title',

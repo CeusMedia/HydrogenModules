@@ -3,7 +3,7 @@
 	<title>Manage: Customer: Rating</title>
 	<description><![CDATA[Extension for customer ratings.]]></description>
 	<category>Management</category>
-	<version>0.1</version>
+	<version>0.2.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,9 +12,11 @@
 		<class>View/Manage/Customer/Rating.php5</class>
 		<class>Model/Customer/Rating.php5</class>
 		<template>manage/customer/rating/add.php</template>
+		<script load="auto">ManageCustomerRating.js</script>
 	</files>
 	<relations>
 		<needs type="module">Manage_Customer</needs>
+		<needs type="module">UI_Map</needs>
 	</relations>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>customer_ratings`;
