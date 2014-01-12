@@ -12,7 +12,7 @@ foreach( $customers as $customer ){
 		$index	= number_format( $customer->rating->index, 1 );
 	}
 	$list[]	= '<tr>
-	<td><a href="./manage/customer/view/'.$customer->customerId.'">'.$customer->title.'</a></td>
+	<td><a href="./manage/customer/edit/'.$customer->customerId.'">'.$customer->title.'</a></td>
 	<td>'.$index.'</td>
 	<td>'.$graph.'</td>
 </tr>';

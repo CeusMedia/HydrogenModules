@@ -3,7 +3,7 @@
 	<title>Manage: Customers</title>
 	<description><![CDATA[Extensible customer database management.]]></description>
 	<category>Management</category>
-	<version>0.2</version>
+	<version>0.2.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,7 +14,6 @@
 		<template>manage/customer/add.php</template>
 		<template>manage/customer/edit.php</template>
 		<template>manage/customer/index.php</template>
-		<template>manage/customer/view.php</template>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
