@@ -73,7 +73,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	public function view( $moduleId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$hasUpdate	= $this->logic->checkForUpdate( $moduleId );
-		$module		= $this->logic->model->get( $moduleId );
+		$module		= $this->logic->model->get( $moduleId );		
 		if( $hasUpdate )
 			$this->messenger->noteNotice( $words->updateAvailable, $module->versionInstalled, $module->versionAvailable );
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
