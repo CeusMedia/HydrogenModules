@@ -185,7 +185,7 @@ class View_Gallery extends CMF_Hydrogen_View{
 		$keys	= array( 'info.top', 'info.bottom', 'info.info' );
 		$path	= 'html/gallery/';
 		$data		= $this->env->getConfig()->getAll( 'module.gallery_compact.license.' );
-		$this->addData( 'text', $this->populateTexts( $keys, $path ) );
+		$this->setData( $this->populateTexts( $keys, $path ) );
 		$this->addData( 'license', $this->loadContentFile( $path.'license.html', $data ) );
 	}
 }
