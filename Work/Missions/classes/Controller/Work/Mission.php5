@@ -704,5 +704,53 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->session->set( 'filter.work.mission.order', NULL );
 		$this->restart( NULL, TRUE );
 	}
+
+	public function view( $missionId ){
+		$config			= $this->env->getConfig();
+		$session		= $this->env->getSession();
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$words			= (object) $this->getWords( 'edit' );
+		$userId			= $session->get( 'userId' );
+
+		$mission	= $this->model->get( $missionId );
+		if( !$mission )
+			$messenger->noteError( $words->msgInvalidId );
+		if( $this->useProjects ){
+			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
+				$messenger->noteError( $words->msgInvalidProject );
+		}
+		if( $messenger->gotError() )
+			$this->restart( NULL, TRUE );
+
+		$title		= $request->get( 'title' );
+		$dayStart	= $request->get( 'dayStart' );
+		$dayEnd		= $request->get( 'dayEnd' );
+		if( $request->get( 'type' ) == 0 ){
+			$dayStart	= $this->logic->getDate( $request->get( 'dayWork' ) );
+			$dayEnd		= $request->get( 'dayDue' ) ? $this->logic->getDate( $request->get( 'dayDue' ) ) : NULL;
+		}
+		$modelUser	= new Model_User( $this->env );
+		$mission->owner		= array_key_exists( $mission->ownerId, $this->userMap ) ? $this->userMap[$mission->ownerId] : NULL;
+		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
+		$this->addData( 'mission', $mission );
+		$this->addData( 'users', $this->userMap );
+		$missionUsers		= array( $mission->ownerId => $mission->owner );
+		if( $mission->workerId )
+			$missionUsers[$mission->workerId]	= $mission->worker;
+
+		if( $this->useProjects ){
+			$model		= new Model_Project( $this->env );
+			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
+				$missionUsers[$user->userId]	= $user;
+			$this->addData( 'userProjects', $this->userProjects );
+		}
+		$this->addData( 'missionUsers', $missionUsers );
+
+		if( $this->useIssues ){
+			$this->env->getLanguage()->load( 'work/issue' );
+			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
+		}
+	}
 }
 ?>

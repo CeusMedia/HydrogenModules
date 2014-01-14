@@ -34,7 +34,7 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 
 	public function ajaxRenderLists(){
 		xmp( $this->loadTemplateFile( 'work/mission/index.day.php' ) );
-die;
+		die;
 	}
 	public function calendar(){
 	}
@@ -46,6 +46,9 @@ die;
 	}
 
 	public function remove(){
+	}
+
+	public function view(){
 	}
 }
 ?>
