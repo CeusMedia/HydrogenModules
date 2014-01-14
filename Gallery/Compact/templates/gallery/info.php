@@ -171,7 +171,7 @@ $(document).ready(function(){
 	<div class="column-clear"></div>
 	<br/>
 	<br/>
-	'.View_Helper_ContentConverter::render( $env, $text['info.bottom'] ).'
+	'.View_Helper_ContentConverter::render( $env, $textInfoBottom ).'
 	'.View_Helper_ContentConverter::render( $env, $license ).'
 </div>';
 ?>
