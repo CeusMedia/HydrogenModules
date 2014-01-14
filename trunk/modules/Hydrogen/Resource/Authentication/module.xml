@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication</title>
 	<description><![CDATA[Module for authentication against local database using the Users module.]]></description>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -11,6 +11,7 @@
 		<class>Mail/Auth/Register.php5</class>
 <!--		<class>Mail/Auth/Password.php5</class>-->
 		<class>View/Auth.php5</class>
+		<class>BasicAuthentication.php5</class>
 		<template>auth/confirm.php</template>
 		<template>auth/login.php</template>
 		<template>auth/password.php</template>
