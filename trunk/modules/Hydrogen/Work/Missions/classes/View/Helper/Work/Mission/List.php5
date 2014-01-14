@@ -10,6 +10,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $titleLength	= 80;
 	protected $today;
 	protected $words		= array();
+	protected $isEditor;
+	protected $isViewer;
 
 	public function __construct( $env ){
 		parent::__construct( $env );
@@ -21,6 +23,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$modelProject		= new Model_Project( $this->env );
 		foreach( $modelProject->getAll() as $project )
 			$this->projects[$project->projectId] = $project;
+		$this->isEditor	= $this->env->getAcl()->has( 'work/mission', 'edit' );
+		$this->isViewer	= $this->env->getAcl()->has( 'work/mission', 'view' );
 	}
 
 	protected function renderBadgeDays( $days, $class ){
@@ -121,6 +125,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
 		$url		= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
+		if( !$this->isEditor && $this->isViewer )
+			$url	= $this->baseUrl.'work/mission/view/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";
 		$icon		= '<i class="icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';
