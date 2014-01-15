@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>UI: Dev: Layers</title>
+	<title>UI: DevLayers</title>
 	<description><![CDATA[Container for development information layers.]]></description>
 	<version>0.2</version>
 	<category>User Interface</category>
