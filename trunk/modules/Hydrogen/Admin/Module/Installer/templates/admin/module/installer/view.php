@@ -130,7 +130,7 @@ if( $isInstallable ){
 	if( count( $module->config ) ){
 		$rows	= array();
 		foreach( $module->config as $item ){
-			$input	= View_Helper_Module::renderModuleConfigInput( $item, $words );
+			$input	= View_Helper_Module::renderModuleConfigInput( $item, $words['boolean-values'] );
 			$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
 			$id		= str_replace( '.', '_', $item->key );
 			$cells	= array(

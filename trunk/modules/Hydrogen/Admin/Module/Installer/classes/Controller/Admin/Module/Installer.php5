@@ -299,12 +299,17 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			try{
 				$this->logic->updateModule( $moduleId, $installType, $files, $settings, $verbose );
 				$this->logic->invalidateFileCache( $this->env->getRemote() );
+				$this->messenger->noteSuccess( $words->updateInstalled, $module->versionInstalled, $hasUpdate );
+				$this->restart( './admin/module/viewer/view/'.$moduleId );
 			}
-			catch( Exception $e ){
+			catch( Exception_Logic $e ){
 				$this->handleException( $e );
 			}
-			$this->messenger->noteSuccess( $words->updateInstalled, $module->versionInstalled, $hasUpdate );
-			$this->restart( './admin/module/viewer/view/'.$moduleId );
+			catch( Exception $e ){
+				UI_HTML_Exception_Page::display( $e );
+				exit;
+			}
+			$this->restart( './admin/module/installer/update/'.$moduleId );
 		}
 
 		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
