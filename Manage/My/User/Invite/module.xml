@@ -2,7 +2,7 @@
 <module>
 	<title>Manage My User Invites</title>
 	<description>Management for user invitations.</description>
-	<version>0.1</version>
+	<version>0.1.1</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
@@ -22,7 +22,7 @@
 	<config protected="no" type="integer" name="days.valid">10</config>
 
 	<relations>
-		<needs type="module">Auth</needs>
+		<needs type="module">Resource_Authentication</needs>
 	</relations>
 	<link path="manage/my/user/invite" access="inside" xml:lang="de">Einladungen</link>
 	<link path="manage/my/user/invite" access="inside" xml:lang="en">Invitations</link>

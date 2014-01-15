@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Companies</title>
 	<description>Management for company accounts.</description>
-	<version>0.1</version>
+	<version>0.1.1</version>
 	<category>Management</category>
 <!--	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -17,7 +17,7 @@
 		<locale>de/manage/company.ini</locale>
 	</files>
 	<relations>
-		<needs type="module">Auth</needs>
+		<needs type="module">Resource_Authentication</needs>
 	</relations>
 	<link path="manage/company" access="acl" xml:lang="de">Unternehmen</link>
 	<link path="manage/company" access="acl" xml:lang="en">Companies</link>
