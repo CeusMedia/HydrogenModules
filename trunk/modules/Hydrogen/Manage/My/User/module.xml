@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -14,7 +14,7 @@
 		<locale>de/manage/my/user.ini</locale>
 	</files>
 	<relations>
-		<needs type="module">Auth</needs>
+		<needs type="module">Resource_Authentication</needs>
 	</relations>
 	<link path="manage/my/user" access="inside" xml:lang="de">Mein Konto</link>
 	<link path="manage/my/user" access="inside" xml:lang="en">My account</link>
