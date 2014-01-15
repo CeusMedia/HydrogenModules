@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   KEY `gender` (`gender`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
-INSERT INTO `newsletter_users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
+INSERT INTO `<%?prefix%>users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
 (1, 1, 0, 0, 1, 'root@localhost', 'root', '63a9f0ea7bb98050796b649e85481845', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1383589432, NULL, NULL, 1383589432);
 
 DROP TABLE IF EXISTS `<%?prefix%>roles`;

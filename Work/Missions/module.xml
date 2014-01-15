@@ -7,7 +7,7 @@ code>
 php job.php5 work-mission-mail-daily
 <code
 ]]></description>
-	<version>0.8.2</version>
+	<version>0.8.3</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -41,7 +41,7 @@ php job.php5 work-mission-mail-daily
 		<file>config/jobs/work.mission.xml</file>
 	</files>
 	<relations>
-		<needs type="module">Auth</needs>
+		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Indicator</needs>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Markdown</needs>
