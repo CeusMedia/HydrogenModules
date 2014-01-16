@@ -612,10 +612,10 @@ class Logic_Module {
 		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
 			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
 			if( $driver ){																			//  remote database connection is configured
-				if( strlen( trim( $module->sql['uninstall@'.$driver] ) ) )							//  SQL for installation for specific PDO driver is given
-					$this->executeSql( $module->sql['uninstall@'.$driver] );						//  execute SQL
-				else if( strlen( trim( $module->sql['uninstall@*'] ) ) )							//  fallback: general SQL for installation is available
-					$this->executeSql( $module->sql['uninstall@*'] );								//  execute SQL
+				if( strlen( trim( $module->sql['uninstall@'.$driver]->sql ) ) )						//  SQL for installation for specific PDO driver is given
+					$this->executeSql( $module->sql['uninstall@'.$driver]->sql );					//  execute SQL
+				else if( strlen( trim( $module->sql['uninstall@*']->sql ) ) )						//  fallback: general SQL for installation is available
+					$this->executeSql( $module->sql['uninstall@*']->sql );							//  execute SQL
 			}
 		}
 	}

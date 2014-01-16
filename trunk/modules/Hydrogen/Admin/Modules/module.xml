@@ -16,7 +16,7 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.6.1</version>
+	<version>0.2.6.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
