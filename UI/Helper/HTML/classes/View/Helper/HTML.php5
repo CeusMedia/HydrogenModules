@@ -3,7 +3,7 @@ class View_Helper_HTML{
 //	public function __construct();
 }
 
-class HTML extends UI_HTML_Elements {
+class HTML/* extends UI_HTML_Elements*/ {
 
 	const BR = '<br/>';
 	const HR = '<hr/>';
