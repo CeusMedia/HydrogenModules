@@ -3,13 +3,13 @@
 	<title>Admin: Instances</title>
 	<description><![CDATA[Application instance administration for remote access to other Hydrogen applications.]]></description>
 	<category>Administration</category>
-	<version>0.3.4</version>
+	<version>0.3.4.1</version>
 	<files>
 		<class>Controller/Admin/Instance.php5</class>
 		<class>Model/Instance.php5</class>
 		<class>View/Admin/Instance.php5</class>
 		<style source="theme" load="auto">module.admin.instances.css</style>
-		<script>module.admin.instances.js</script>
+		<script load="auto">module.admin.instances.js</script>
 		<template>admin/instance/add.php</template>
 		<template>admin/instance/edit.check.php</template>
 		<template>admin/instance/edit.config.php</template>
