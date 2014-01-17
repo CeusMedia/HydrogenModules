@@ -1,23 +1,31 @@
+var Instance = {
+	isReachable: function(url, context, events){
+		var options = $.extend({
+			url: url,
+			context: context,
+			type: "HEAD"
+		}, events);
+		$.ajax(options);
+	}
+}
+
 var ModuleAdminInstances = {
     checkReachabilities: function(labels){
         $("tr.notice").each(function(){
             if(!$(this).data("url"))
                 return;
-            $.ajax({
-                url: $(this).data("url"),
-                type: "HEAD",
-                context: this,
-                success: function(){
-                    var box = $(this).find("td.status-http div.status-http");
-                    box.addClass("status-box-yes").attr("title", labels["online"]);
-                    $(this).removeClass("notice").addClass("success");
-                },
-                error: function(){
-                    var box = $(this).find("td.status-http div.status-http");
-                    box.addClass("status-box-no").attr("title", labels["offline"]);
-                    $(this).removeClass("notice").addClass("error");
-                }
-            });
+			Instance.isReachable($(this).data("url"), $(this), {
+				success: function(){
+					var box = $(this).find("td.status-http div.status-http");
+				    box.addClass("status-box-yes").attr("title", labels["online"]);
+				    $(this).removeClass("notice").addClass("success");
+				},
+				error: function(){
+					var box = $(this).find("td.status-http div.status-http");
+					box.addClass("status-box-no").attr("title", labels["offline"]);
+					$(this).removeClass("notice").addClass("error");
+				}
+			});
         });
     },
     loadTodos: function(){
@@ -38,3 +46,6 @@ var ModuleAdminInstances = {
         })
     }
 };
+
+
+// console.log("%c Status: %s ", "color: #753; background:#F7F7F7; font-size: 9pt; font-style: italic", status);
