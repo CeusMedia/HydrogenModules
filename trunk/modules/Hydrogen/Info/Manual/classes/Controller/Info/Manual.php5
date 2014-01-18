@@ -10,7 +10,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	/** @var	ADT_List_Dictionary	$order */
 	protected $order;
 	protected $ext			= ".md";
-	
+
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
@@ -18,7 +18,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->path			= $this->config->get( 'path' );
 		$this->order		= new ADT_List_Dictionary();
 		$this->isEditable	= $this->config->get( 'editor' );
-		
+
 		if( !file_exists( $this->path ) )
 			throw new RuntimeException( 'Path "'.$this->path.'" is not existing' );
 
@@ -37,6 +37,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'moduleConfig', $this->config );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'order', $this->order );
+		
+		$this->addData( 'canIndex', $this->env->getAcl()->has( 'info/manual', 'index' ) );
+		$this->addData( 'canAdd', $this->env->getAcl()->has( 'info/manual', 'add' ) );
+		$this->addData( 'canEdit', $this->env->getAcl()->has( 'info/manual', 'edit' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'info/manual', 'remove' ) );
 	}
 	
 	public function add(){
