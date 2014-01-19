@@ -41,11 +41,11 @@ $panelAdd	= '
 	<div class="row-fluid">
 		<div class="span2">
 				<label for="username" class="mandatory">'.$w->labelUsername.'</label>
-				<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'"/>
+				<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'" autocomplete="off"/>
 		</div>
 		<div class="span2">
-				<label for="password">'.$w->labelPassword.'</label>
-				<input type="password" name="password" id="input_password" class="span12" required="required"/>
+				<label for="password" class="mandatory">'.$w->labelPassword.'</label>
+				<input type="password" name="password" id="input_password" class="span12" required="required" autocomplete="off"/>
 		</div>
 		<div class="span4">
 				<label for="email" class="mandatory">'.$w->labelEmail.'</label>
@@ -70,11 +70,11 @@ $panelAdd	= '
 				<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
 		</div>
 		<div class="span4">
-				<label for="input_firstname" class="">'.$w->labelFirstname.'</label>
+				<label for="input_firstname" class="mandatory">'.$w->labelFirstname.'</label>
 				<input type="text" name="firstname" id="input_firstname" class="span12" value="'.$user->firstname.'" required="required"/>
 		</div>
 		<div class="span4">
-				<label for="input_surname" class="">'.$w->labelSurname.'</label>
+				<label for="input_surname" class="mandatory">'.$w->labelSurname.'</label>
 				<input type="text" name="surname" id="input_surname" class="span12" value="'.$user->surname.'" required="required"/>
 		</div>
 	</div>

@@ -35,6 +35,9 @@ foreach( $roles as $nr => $role )
 		$label	= UI_HTML_Tag::create( 'a', $label, $attr );
 	}
 	$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $classes ) );
+	if( strlen( $role->description ) )
+		$label	.= '<br/><blockquote>'.nl2br( $role->description ).'</blockquote>';
+	
 	$line	= sprintf(
 		$line,
 		$label,
@@ -66,6 +69,11 @@ return '
 		</div>
 	</div>
 </div>
+<style>
+table tr td blockquote {
+	margin: 0 0 0.1em 0.4em;
+	}
+</style>
 ';
 
 

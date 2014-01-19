@@ -24,7 +24,6 @@ if( count( $total ) ){
 	$phraser	= new View_Helper_TimePhraser( $env );
 	
 	foreach( $users as $nr => $user ){
-
 		$classes	= array( 'user' );
 		$classes[]	= "role role".$user->roleId;
 		$classes[]	= "status".$user->status;
@@ -36,19 +35,23 @@ if( count( $total ) ){
 		$line		= '
 		<tr>
 			<td class="user-role role'.$user->roleId.'">%1$s</td>
-			<td><span class="user-status status'.$user->status.'">%2$s</span></td>
-			<td>%3$s</td>
+			<td><span class="role role'.$user->roleId.'">%2$s</span></td>
+			<td><span class="user-status status'.$user->status.'">%3$s</span></td>
 			<td>%4$s</td>
 			<td>%5$s</td>
+			<td>%6$s</td>
 		</tr>';
 		$label	= $user->username;
 		$url	= './manage/user/edit/'.$user->userId;
 		$alt	= sprintf( $words['indexList']['alt-user'], $user->username );
 		$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
 		$link	= UI_HTML_Tag::create( 'a', $label, $attr );
+		if( $user->firstname && $user->surname )
+			$link	.= '<br/><small class="muted">'.$user->firstname.' '.$user->surname.'</small>';
 		$line	= sprintf(
 			$line,
 			$link,
+			$roles[$user->roleId]->title,
 			$words['status'][$user->status],
 			$phraser->convert( $user->createdAt, TRUE ),
 			$phraser->convert( $user->loggedAt, TRUE ),
@@ -65,12 +68,13 @@ return '
 <h4>'.$words['indexList']['legend'].' <small class="muted">('.$total.'/'.$all.')</small></h4>
 	<table id="users" class="table not-table-condensed table-striped">
 		<colgroup>
-			<col width="25%"/>
+			<col width="20%"/>
+			<col width="17%"/>
 			<col width="15%"/>
-			<col width="15%"/>
-			<col width="15%"/>
-			<col width="15%"/>
-			<col width="15%"/>
+			<col width="12%"/>
+			<col width="12%"/>
+			<col width="12%"/>
+			<col width="12%"/>
 		</colgroup>
 		'.$rows.'
 	</table>
@@ -79,5 +83,7 @@ return '
 		'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
 	</div>
 </fieldset>
+<style>
+</style>
 ';
 ?>

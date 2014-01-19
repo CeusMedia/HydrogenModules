@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user and role administration.]]></description>
 	<category>Management</category>
-	<version>0.4.1</version>
+	<version>0.5</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,6 +27,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Users</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
 	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>
