@@ -30,6 +30,19 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		'limit'
 	);
 
+	public function __onInit(){
+		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$this->setData( array(
+			'nameMinLength'		=> $options->get( 'name.length.min' ),
+			'nameMaxLength'		=> $options->get( 'name.length.max' ),
+			'pwdMinLength'		=> $options->get( 'password.length.min' ),
+			'needsEmail'		=> $options->get( 'email.mandatory' ),
+			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
+			'needsSurname'		=> $options->get( 'surname.mandatory' ),
+			'needsTac'			=> $options->get( 'tac.mandatory' ),
+		) );
+	}
+	
 	public function accept( $userId ) {
 		$this->setStatus( $userId, 1 );
 	}
@@ -43,20 +56,21 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		$nameMinLength	= $config->get( 'module.users.name.length.min' );
-		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
-		$nameRegExp		= $config->get( 'module.users.name.preg' );
-		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
-		$needsEmail		= $config->get( 'module.users.email.mandatory' );
-		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
-		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
-		$needsTac		= $config->get( 'module.users.tac.mandatory' );
-		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$nameMinLength	= $options->get( 'name.length.min' );
+		$nameMaxLength	= $options->get( 'name.length.max' );
+		$nameRegExp		= $options->get( 'name.preg' );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		$needsEmail		= $options->get( 'email.mandatory' );
+		$needsFirstname	= $options->get( 'firstname.mandatory' );
+		$needsSurname	= $options->get( 'surname.mandatory' );
+		$needsTac		= $options->get( 'tac.mandatory' );
+		$passwordSalt	= trim( $options->get( 'password.salt' ) );									//  string to salt password with
 
-		$username	= $input->get( 'username' );
-		$password	= $input->get( 'password' );
-		$email		= $input->get( 'email' );
-		
+		$username		= $input->get( 'username' );
+		$password		= $input->get( 'password' );
+		$email			= $input->get( 'email' );
+
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
@@ -74,11 +88,11 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
 				$messenger->noteError( $words->msgEmailExisting, $email );
 
-			if( $needsFirstname && empty( $data['firstname'] ) )
+			if( $needsFirstname && empty( $input['firstname'] ) )
 				$messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $data['surname'] ) )
+			if( $needsSurname && empty( $input['surname'] ) )
 				$messenger->noteError( $words->msgNoSurname );
-			
+
 			if( !$messenger->gotError() ){
 				$userId		= $modelUser->add( array(
 					'roleId'		=> $input['roleId'],
@@ -102,6 +116,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				$this->restart( './manage/user' );
 			}
 		}
+		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
 		$user		= (object) array();
 		$columns	= $modelUser->getColumns();
 		foreach( $columns as $column )
@@ -131,16 +146,17 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		$nameMinLength	= $config->get( 'module.users.name.length.min' );
-		$nameMaxLength	= $config->get( 'module.users.name.length.max' );
-		$nameRegExp		= $config->get( 'module.users.name.preg' );
-		$pwdMinLength	= $config->get( 'module.users.password.length.min' );
-		$needsEmail		= $config->get( 'module.users.email.mandatory' );
-		$needsFirstname	= $config->get( 'module.users.firstname.mandatory' );
-		$needsSurname	= $config->get( 'module.users.surname.mandatory' );
-		$needsTac		= $config->get( 'module.users.tac.mandatory' );
-		$status			= (int) $config->get( 'module.users.status.register' );
-		$passwordSalt	= trim( $config->get( 'module.users.password.salt' ) );						//  string to salt password with
+		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$nameMinLength	= $options->get( 'name.length.min' );
+		$nameMaxLength	= $options->get( 'name.length.max' );
+		$nameRegExp		= $options->get( 'name.preg' );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		$needsEmail		= $options->get( 'email.mandatory' );
+		$needsFirstname	= $options->get( 'firstname.mandatory' );
+		$needsSurname	= $options->get( 'surname.mandatory' );
+		$needsTac		= $options->get( 'tac.mandatory' );
+		$status			= (int) $options->get( 'status.register' );
+		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
 
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
@@ -154,8 +170,6 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				$messenger->noteError( $words->msgUsernameExisting, $username );
 			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength )
 				$messenger->noteError( $words->msgPasswordTooShort );
-			if( $config->get( 'module.users.email.mandatory') && empty( $input['email'] ) )
-				$messenger->noteError( $words->msgNoEmail );
 
 			if( $needsEmail && empty( $email ) )
 				$messenger->noteError( $words->msgNoEmail );
@@ -163,9 +177,9 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!='.$userId ) ) )
 					$messenger->noteError( $words->msgEmailExisting, $email );
 
-			if( $needsFirstname && empty( $data['firstname'] ) )
+			if( $needsFirstname && empty( $input['firstname'] ) )
 				$messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $data['surname'] ) )
+			if( $needsSurname && empty( $input['surname'] ) )
 				$messenger->noteError( $words->msgNoSurname );
 
 			if( !$messenger->gotError() ){
@@ -233,6 +247,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	public function index( $limit = NULL, $offset = NULL ) {
 		$session	= $this->env->getSession();
 
+		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
+			$this->restart();
 		if( !$limit )
 			$limit		= $session->get( 'filter-user-limit' );
 		if( !$limit )
@@ -256,13 +272,18 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			'filters'	=> $filters,
 			'orders'	=> $orders
 		);
+
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
+		$roleMap	= array();
+		foreach( $modelRole->getAll() as $role )
+			$roleMap[$role->roleId]	= $role;
+
 		$all		= $modelUser->count();
 		$total		= $modelUser->count( $filters );
 		$list		= $modelUser->getAll( $filters, $orders, $limits );
 		$this->addData( 'username', $session->get( 'filter-user-username' ) );
-		$this->addData( 'roles', $modelRole->getAll() );
+		$this->addData( 'roles', $roleMap );
 #		$this->addData( 'rooms', $server->getData( 'room', 'index' ) );
 		$this->addData( 'all', $all );
 		$this->addData( 'total', $total );

@@ -45,6 +45,9 @@ $panelEdit	= '
 				'.UI_HTML_Elements::Button( 'saveRole', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-success' ).'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				'.UI_HTML_Elements::LinkButton( './manage/role/remove/'.$roleId, '<i class="icon-remove icon-white"></i> '.$words['edit']['buttonRemove'], 'btn btn-danger', 'Wirklich?' ).'
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.UI_HTML_Elements::LinkButton( './manage/user/add?roleId='.$roleId, '<i class="icon-plus icon-white"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
+				'.UI_HTML_Elements::LinkButton( './manage/user/filter?roleId='.$roleId, '<i class="icon-search"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
 			</div>
 		</div>
 	</form>

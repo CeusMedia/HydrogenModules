@@ -79,23 +79,24 @@ $panelStatus	= '
 
 $facts	= array();
 
-$createdAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
+$helper	= new View_Helper_TimePhraser( $env );
+
 $facts[]	= array(
 	'label'	=> 'registriert',
-	'value'	=> $createdAt->toPhrase( $env, TRUE )
+	'value'	=> 'vor '.$helper->convert( $user->createdAt, TRUE )
 );
 if( $user->loggedAt ){
-	$loggedAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
+	$loggedAt	= $helper->convert( $user->loggedAt );
 	$facts[]	= array(
 		'label'	=> 'zuletzt eingeloggt',
-		'value'	=> $loggedAt->toPhrase( $env, TRUE )
+		'value'	=> 'vor '.$helper->convert( $user->loggedAt, TRUE )
 	);
 }
 if( $user->activeAt ){
-	$activeAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
+	$activeAt	= $helper->convert( $user->activeAt );
 	$facts[]	= array(
 		'label'	=> 'zuletzt aktiv',
-		'value'	=> $activeAt->toPhrase( $env, TRUE )
+		'value'	=> 'vor '.$helper->convert( $user->activeAt, TRUE )
 	);
 }
 if( !empty( $projects ) ){
@@ -142,65 +143,95 @@ $optRole	= join( $optRole );
 
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
+$buttonRole	= '';
+
+if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
+	$buttonRole	= UI_HTML_Tag::create( 'a', '<i class="icon-search"></i> '.$w->buttonRole, array(
+		'class'	=> 'btn btn-small',
+		'href'	=> './manage/role/edit/'.$user->roleId
+	) );
+}
+
 $panelEdit	= '
 <h4>'.$w->legend.'</h4>
 <form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
 	<div class="row-fluid">
 		<div class="span2">
-				<label for="username" class="mandatory">'.$w->labelUsername.'</label>
-				<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'"/>
+			<label for="username" class="mandatory">'.$w->labelUsername.'</label>
+			<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'"/>
 		</div>
 		<div class="span2">
-				<label for="password">'.$w->labelPassword.'</label>
-				<input type="password" name="password" id="input_password" class="span12" required="required"/>
+			<label for="input_password" class="">'.$w->labelPassword.'</label>
+			<input type="password" name="password" id="input_password" class="span12"/>
 		</div>
 		<div class="span4">
-				<label for="email" class="mandatory">'.$w->labelEmail.'</label>
-				<input type="text" name="email" id="input_email" class="span12 mandatory" value="'.$user->email.'" required="required"/>
+			<label for="email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
+			'.UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> "text",
+				'name'		=> "email",
+				'id'		=> "input_email",
+				'class'		=> "span12 ".( $needsEmail ? 'mandatory' : '' ),
+				'value'		=> htmlentities( $user->email ),
+				'required'	=> $needsEmail ? "required" : NULL
+			) ).'
 		</div>
 		<div class="span2">
-				<label for="status" class="mandatory">'.$w->labelStatus.'</label>
-				<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
+			<label for="status" class="mandatory">'.$w->labelStatus.'</label>
+			<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
 		</div>
 		<div class="span2">
-				<label for="roleId" class="mandatory">'.$w->labelRole.'</label>
-				<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
+			<label for="roleId" class="mandatory">'.$w->labelRole.'</label>
+			<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span2">
-				<label for="input_gender" class="">'.$w->labelGender.'</label>
-				<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
+			<label for="input_gender" class="">'.$w->labelGender.'</label>
+			<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
 		</div>
 		<div class="span2">
-				<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
-				<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
+			<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
+			<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
 		</div>
 		<div class="span4">
-				<label for="input_firstname" class="">'.$w->labelFirstname.'</label>
-				<input type="text" name="firstname" id="input_firstname" class="span12" value="'.$user->firstname.'" required="required"/>
+			<label for="input_firstname" class="'.( $needsFirstname ? 'mandatory' : '' ).'">'.$w->labelFirstname.'</label>
+			'.UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> "text",
+				'name'		=> "firstname",
+				'id'		=> "input_firstname",
+				'class'		=> "span12 ".( $needsFirstname ? 'mandatory' : '' ),
+				'value'		=> htmlentities( $user->firstname ),
+				'required'	=> $needsFirstname ? "required" : NULL
+			) ).'
 		</div>
 		<div class="span4">
-				<label for="input_surname" class="">'.$w->labelSurname.'</label>
-				<input type="text" name="surname" id="input_surname" class="span12" value="'.$user->surname.'" required="required"/>
+			<label for="input_surname" class="'.( $needsSurname ? 'mandatory' : '' ).'">'.$w->labelSurname.'</label>
+			'.UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> "text",
+				'name'		=> "surname",
+				'id'		=> "input_surname",
+				'class'		=> "span12 ".( $needsSurname ? 'mandatory' : '' ),
+				'value'		=> htmlentities( $user->surname ),
+				'required'	=> $needsSurname ? "required" : NULL
+			) ).'
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span1">
-				<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
-				<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
+			<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
+			<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
 		</div>
 		<div class="span5">
-				<label for="input_city" class="">'.$w->labelCity.'</label>
-				<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
+			<label for="input_city" class="">'.$w->labelCity.'</label>
+			<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
 		</div>
 		<div class="span4">
-				<label for="input_street" class="">'.$w->labelStreet.'</label>
-				<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
+			<label for="input_street" class="">'.$w->labelStreet.'</label>
+			<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
 		</div>
 		<div class="span2">
-				<label for="input_number" class="">'.$w->labelNumber.'</label>
-				<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
+			<label for="input_number" class="">'.$w->labelNumber.'</label>
+			<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
 		</div>
 	</div>
 
@@ -215,10 +246,35 @@ $panelEdit	= '
 				'btn btn-danger',
 				$w->buttonRemoveConfirm
 			).'
+			&nbsp;&nbsp;|&nbsp;&nbsp;
+			'.$buttonRole.'
 		</div>
 	</div>
 </form><hr/>
 ';
+
+$acl	= $env->getAcl();
+$matrix	= $acl->index();
+$number	= 0;
+
+foreach( $matrix as $controller => $actions ){
+	if( ( $size = count( $actions ) ) ){
+		$number++;
+		$width	= round( 100 / $size, 8 ).'%';
+		$row	= array();
+		$row[]	= UI_HTML_Tag::create( 'div', $number, array( 'class' => 'counter' ) );
+		foreach( $actions as $action ){
+			$access	= $acl->hasRight( $user->roleId, $controller, $action );
+			$class	= $access ? 'yes' : 'no';
+			$title	= $controller.'/'.$action;
+			$attr	= array( 'class' => $class, 'style' => "width: ".$width, 'title' => $title );
+			$row[]	= UI_HTML_Tag::create( 'div', '', $attr );
+		}
+		$list[]	= UI_HTML_Tag::create( 'div', join( $row ), array( 'class' => 'bar' ) );
+	}
+}
+
+$card	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'acl-card' ) );
 
 return '
 <div class="row-fluid">
@@ -227,11 +283,15 @@ return '
 	</div>
 </div>
 <div class="row-fluid">
-	<div class="span6">
-		'.$panelInfo.'
-	</div>
-	<div class="span6">
+	<div class="span4">
 		'.$panelStatus.'
+	</div>
+	<div class="span5">
+		<h4>Info: Rechte</h4>
+		'.$card.'
+	</div>
+	<div class="span3">
+		'.$panelInfo.'
 	</div>
 </div>
 ';
