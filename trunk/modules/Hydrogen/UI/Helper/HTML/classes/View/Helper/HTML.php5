@@ -153,7 +153,8 @@ class HTML/* extends UI_HTML_Elements*/ {
 	static function Options( $items, $selected = NULL, $keys = array() ){
 		if( !count( $items ) )
 			return '';
-		$first	= array_shift( array_values( $items ) );
+		$values	= array_values( $items );
+		$first	= array_shift( $values );
 		if( is_object( $first ) && count( $keys ) === 2 ){
 			$list	= array();
 			foreach( $items as $item ){
