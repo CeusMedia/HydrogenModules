@@ -14,10 +14,12 @@ if( $files ){
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$buttonAdd		= UI_HTML_Tag::create( 'a', $icon.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
-	$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
-	$buttonReload	= UI_HTML_Tag::create( 'a', $icon.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconReload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	if( array_key_exist( 'add', $rights ) )
+		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+	if( array_key_exist( 'edit', $rights ) )
+		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
 return '

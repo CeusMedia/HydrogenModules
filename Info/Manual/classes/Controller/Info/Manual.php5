@@ -17,6 +17,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->config		= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
 		$this->path			= $this->config->get( 'path' );
 		$this->order		= new ADT_List_Dictionary();
+		$this->rights		= $this->env->getAcl()->index( 'info/manual' );
 		$this->isEditable	= $this->config->get( 'editor' );
 
 		if( !file_exists( $this->path ) )
@@ -37,15 +38,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'moduleConfig', $this->config );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'order', $this->order );
-		
-		$this->addData( 'canIndex', $this->env->getAcl()->has( 'info/manual', 'index' ) );
-		$this->addData( 'canAdd', $this->env->getAcl()->has( 'info/manual', 'add' ) );
-		$this->addData( 'canEdit', $this->env->getAcl()->has( 'info/manual', 'edit' ) );
-		$this->addData( 'canRemove', $this->env->getAcl()->has( 'info/manual', 'remove' ) );
+		$this->addData( 'rights', $this->rights );
 	}
-	
+
 	public function add(){
-		if( !$this->isEditable )
+		if( !$this->isEditable || !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -69,11 +66,10 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'filename', $this->request->get( 'filename' ) );
 		$this->addData( 'content', $this->request->get( 'content' ) );
 	}
-	
+
 	public function edit( $fileHash, $version = NULL ){
 		$fileName	= base64_decode( $fileHash );
-
-		if( !$this->isEditable )
+		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
 			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
 
 		$filePath	= $this->path.$fileName.$this->ext;
@@ -138,7 +134,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function moveDown( $fileHash ){
 		$words		= (object) $this->getWords( 'move' );
 		$fileName	= base64_decode( $fileHash );
-		if( !$this->isEditable )
+		if( !$this->isEditable || !in_array( 'moveDown', $this->rights ) )
 			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
 		if( !in_array( $fileName.$this->ext, $this->files ) ){
 			$this->messenger->noteError( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
@@ -157,7 +153,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function moveUp( $fileHash ){
 		$words		= (object) $this->getWords( 'move' );
 		$fileName	= base64_decode( $fileHash );
-		if( !$this->isEditable )
+		if( !$this->isEditable || !in_array( 'moveUp', $this->rights ) )
 			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
 		if( !in_array( $fileName.$this->ext, $this->files ) ){
 			$this->messenger->noteError( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
@@ -185,7 +181,9 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function reload(){		
+	public function reload(){
+		if( !in_array( 'reload', $this->rights ) )
+			$this->restart( NULL, TRUE );
 		$orderFile	= $this->path.'order.list';
 		$new		= array_diff( $this->files, $this->order->getAll() );
 		$outdated	= array_diff( $this->order->getAll(), $this->files );
@@ -200,7 +198,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function remove( $fileHash ){
 		$words		= (object) $this->getWords( 'remove' );
 		$fileName	= base64_decode( $fileHash );
-		if( !$this->isEditable )
+		if( !$this->isEditable || !in_array( 'remove', $this->rights ) )
 			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
 		$filePath	= $this->path.$fileName.$this->ext;
 
