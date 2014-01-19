@@ -5,7 +5,7 @@ $optGender	= UI_HTML_Elements::Options( $words['gender'], $request->get( 'gender
 $w		= (object) $words['register'];
 $user	= (object) $request->getAll();
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
-$text	= $view->populateTexts( $texts, 'html/auth/register.' );
+extract( $view->populateTexts( $texts, 'html/auth/register.' ) );
 
 $formTerms	= '';
 if( $view->hasContent( 'auth', 'tac', 'html/' ) ){
@@ -72,7 +72,7 @@ $(document).ready(function(){
 				});
 			}
 		}
-		
+
 	});
 	if($("#input_accept_tac.mandatory").size()){
 		$("button.save").attr("disabled","disabled");
@@ -80,7 +80,7 @@ $(document).ready(function(){
 			if($(this).is(":checked"))
 				$("button.save").removeAttr("disabled");
 			else
-				$("button.save").attr("disabled","disabled");			
+				$("button.save").attr("disabled","disabled");
 		});
 	}
 });
@@ -141,13 +141,13 @@ $(document).ready(function(){
 	</div>
 </fieldset>';
 
-return $text['top'].'
+return $textTop.'
 <form name="form_auth_register" action="./auth/register" method="post">
 	<div class="column-left-66">
 		'.$panelUser.'
 	</div>
 	<div class="column-left-33">
-		'.$text['info'].'
+		'.$textInfo.'
 	</div>
 	<div class="column-clear"></div>
 </form>';
