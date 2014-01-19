@@ -1,11 +1,11 @@
 <?php
 
 $w			= (object) $words['login'];
-$text		= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login.' );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login.' ) );
 $formUrl	= './auth/login' . ( $from ? '?from='.rawurlencode( $from ) : '' );
 
 return '
-<div class="auth-login-text-top">'.$text['top'].'</div>
+<div class="auth-login-text-top">'.$textTop.'</div>
 <div class="row-fluid">
 	<div class="span4">
 		<div class="auth-login-form">
@@ -30,9 +30,9 @@ return '
 		</div>
 	</div>
 	<div class="span6">
-		<div class="auth-login-text-info">'.$text['info'].'</div>
+		<div class="auth-login-text-info">'.$textInfo.'</div>
 	</div>
 </div>
-<div class="auth-login-text-bottom">'.$text['bottom'].'</div>
+<div class="auth-login-text-bottom">'.$textBottom.'</div>
 ';
 ?>
