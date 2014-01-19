@@ -1,3 +1,8 @@
 div.messenger-bootstrap alert{
 	margin-bottom: 5px;
 	}
+
+div.messenger-bootstrap label {
+	display: inline;
+	}
+	
