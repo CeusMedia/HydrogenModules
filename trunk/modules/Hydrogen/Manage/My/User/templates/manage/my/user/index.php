@@ -1,8 +1,8 @@
 <?php
 $w			= (object) $words['index'];
 
-if( !class_exists( "XHTML" ) )
-	new CMF_Hydrogen_View_Helper_HTML();
+#if( !class_exists( "XHTML" ) )
+#	new CMF_Hydrogen_View_Helper_HTML();
 
 $optGender	= HTML::Options( $words['gender'], $user->gender );
 
@@ -35,11 +35,6 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
-//  --  PANEL: INFO  --  //
-$loggedAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->loggedAt, $env, TRUE );
-$activeAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->activeAt, $env, TRUE );
-$createdAt		= CMF_Hydrogen_View_Helper_Timestamp::statePhrase( $user->createdAt, $env, TRUE );
-
 $mapInfo	= array();
 if( $config->get( 'module.roles' ) )
 	$mapInfo['Rolle']	= '<span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span>';
@@ -54,10 +49,12 @@ foreach( $mapInfo as $term => $definition )
 	$listInfo[]	= UI_HTML_Tag::create( 'dt', $term ).UI_HTML_Tag::create( 'dd', $definition );
 $listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ) );
 
+//  --  PANEL: INFO  --  //
+$helper			= new View_Helper_TimePhraser( $env );
 $mapTimes	= array();
-$mapTimes['registriert']		= $createdAt;
-$mapTimes['zuletzt eingeloggt']	= $loggedAt;
-$mapTimes['zuletzt aktiv']		= $activeAt;
+$mapTimes['registriert']		= $helper->convert( $user->loggedAt, TRUE );
+$mapTimes['zuletzt eingeloggt']	= $helper->convert( $user->activeAt, TRUE );
+$mapTimes['zuletzt aktiv']		= $helper->convert( $user->createdAt, TRUE );;
 
 $listTimes	= array();
 foreach( $mapTimes as $term => $definition )
@@ -78,15 +75,17 @@ $panelPassword	= HTML::Form( './manage/my/user/password', 'my_user_password',
 		HTML::DivClass( 'row-fluid',
 			HTML::DivClass( 'span6', 
 				HTML::Label( 'passwordOld', $words['password']['labelPassword'], 'mandatory' ).
-				HTML::Password( 'passwordOld', 'span12 mandatory' )
+				'<input type="password" name="passwordOld" id="input_passwordOld" class="span12 mandatory" required value="" autocomplete="off"/>'
+//				HTML::Password( 'passwordOld', 'span12 mandatory' )
 			).
 			HTML::DivClass( 'span6',
 				HTML::Label( 'passwordNew', $words['password']['labelPasswordNew'], 'mandatory' ).
-				HTML::Input( 'passwordNew', NULL, 'span12 mandatory' )
+				'<input type="password" name="passwordNew" id="input_passwordNew" class="span12 mandatory" required value="" autocomplete="off"/>'
+//				HTML::Input( 'passwordNew', NULL, 'span12 mandatory' )
 			)
 		).
 		HTML::Buttons(
-			HTML::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$words['password']['buttonSave'], 'btn btn-small btn-success' )
+			UI_HTML_Elements::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$words['password']['buttonSave'], 'btn btn-small btn-success' )
 		)
 	)
 );
@@ -100,14 +99,30 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 				HTML::Label( 'username', $w->labelUsername, 'mandatory' ).
 				HTML::DivClass( 'input-prepend',
 					HTML::SpanClass( 'add-on', '<i class="icon-user"></i>' ).
-					HTML::Input( 'username', $user->username, 'span11 mandatory' )
+//					HTML::Input( 'username', $user->username, 'span11 mandatory' )
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'name'		=> 'username',
+						'id'		=> 'input_username',
+						'value'		=> htmlentities( $user->username ),
+						'class'		=> 'span11',
+						'required'	=> 'required',
+						'type'		=> 'text',
+					) )
 				)
 			).
 			HTML::DivClass( 'span8',
-				HTML::Label( 'email', $w->labelEmail, 'mandatory' ).
-				HTML::DivClass( 'input-prepend',
+				HTML::Label( 'email', $w->labelEmail, $mandatoryEmail ? 'mandatory' : '' ).
+				HTML::DivClass( 'input-prepend span12',
 					HTML::SpanClass( 'add-on', '<i class="icon-envelope"></i>' ).
-					HTML::Input( 'email', $user->email, 'span11 mandatory' )
+//					HTML::Input( 'email', $user->email, 'span11 mandatory' )
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'name'		=> 'email',
+						'id'		=> 'input_email',
+						'value'		=> htmlentities( $user->email ),
+						'class'		=> 'span11',
+						'required'	=> $mandatoryEmail ? 'required' : NULL,
+						'type'		=> 'text',
+					) )
 				)
 			)
 		).
@@ -122,12 +137,28 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 				HTML::Input( 'salutation', $user->salutation, 'span12' )
 			).
 			HTML::DivClass( 'span4',
-				HTML::Label( 'firstname', $w->labelFirstname, '' ).
-				HTML::Input( 'firstname', $user->firstname, 'span12' )
+				HTML::Label( 'firstname', $w->labelFirstname, $mandatoryFirstname ? 'mandatory' : '' ).
+//				HTML::Input( 'firstname', $user->firstname, 'span12' )
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'name'		=> 'firstname',
+					'id'		=> 'input_firstname',
+					'value'		=> htmlentities( $user->firstname ),
+					'class'		=> 'span12',
+					'required'	=> $mandatoryFirstname ? 'required' : NULL,
+					'type'		=> 'text',
+				) )
 			).
 			HTML::DivClass( 'span4',
-				HTML::Label( 'surname', $w->labelSurname, '' ).
-				HTML::Input( 'surname', $user->surname, 'span12' )
+				HTML::Label( 'surname', $w->labelSurname, $mandatorySurname ? 'mandatory' : '' ).
+//				HTML::Input( 'surname', $user->surname, 'span12' )
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'name'		=> 'surname',
+					'id'		=> 'input_surname',
+					'value'		=> htmlentities( $user->surname ),
+					'class'		=> 'span12',
+					'required'	=> $mandatorySurname ? 'required' : NULL,
+					'type'		=> 'text',
+				) )
 			)
 		).
 		HTML::DivClass( 'row-fluid',
@@ -171,7 +202,7 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 						HTML::SpanClass( 'add-on', '<i class="icon-lock"></i>' ).
 						'<input type="password" name="password" id="input_password" class="span7" required placeholder="'.$w->labelPassword.'" value="" autocomplete="off"/>'.
 //						HTML::Password( 'password', 'span11 mandatory' )
-						HTML::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' )
+						UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' )
 					)
 				)
 			)
@@ -191,15 +222,15 @@ $panelAvatar	= '';
 #	$panelAvatar	= '';
 #}
 
-return /*UI_HTML_Tag::create( 'h2', $w->heading ).*/
-HTML::DivClass( 'column-right-33',
-	$panelInfo.
-	$panelPassword.
-	$panelAvatar
-).
-HTML::DivClass( 'column-left-66',
-	$panelEdit.
-	$panelSettings
-).
-HTML::DivClass( 'column-clear' );
+return HTML::DivClass( 'row-fluid', 
+	HTML::DivClass( 'span8',
+		$panelEdit.
+		$panelSettings
+	).
+	HTML::DivClass( 'span4',
+		$panelInfo.
+		$panelPassword.
+		$panelAvatar
+	)
+);
 ?>
