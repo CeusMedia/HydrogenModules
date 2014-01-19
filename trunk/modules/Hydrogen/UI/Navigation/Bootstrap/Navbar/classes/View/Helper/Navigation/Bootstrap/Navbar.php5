@@ -1,6 +1,7 @@
 <?php
 class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
 
+	protected $container			= FALSE;
 	protected $inverse				= FALSE;
 	protected $logoTitle;
 	protected $logoLink;
@@ -17,6 +18,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		$helperNavbar->classHelper		= "nav";
 		$helperNavbar->classTab			= "";
 		$helperNavbar->classTabActive	= "active";
+		$helperNavbar->setContainer( $this->container );
 		foreach( $this->linksToSkip as $path )
 			$helperNavbar->skipLink( $path );
 
@@ -28,12 +30,11 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		$accountMenu	= "";
 		if( $this->helperAccountMenu )
 			$accountMenu	= $this->helperAccountMenu->render( $inverse );
-
-		return '<div class="'.$inverse.'">
-	'.$this->renderLogo().'
-	'.$helperNavbar->render().'
-	'.$accountMenu.'
-</div>';
+		$links			= $helperNavbar->render();
+		$content		= $this->renderLogo().$links.$accountMenu;
+		if( $this->inverse )
+			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => 'inverse' ) );
+		return $content;
 	}
 
 	public function renderLogo(){
@@ -53,6 +54,10 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 
 	public function setAccountMenuHelper( View_Helper_Navigation_Bootstrap_AccountMenu $helper ){
 		$this->helperAccountMenu	= $helper;
+	}
+
+	public function setContainer( $boolean = NULL ){
+		$this->container	= (boolean) $boolean;
 	}
 
 	public function setInverse( $boolean = NULL ){
