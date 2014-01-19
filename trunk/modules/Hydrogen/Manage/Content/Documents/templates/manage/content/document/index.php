@@ -14,7 +14,7 @@ if( $documents ){
 		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $link ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr',
 			UI_HTML_Tag::create( 'td', $link ).
-			UI_HTML_Tag::create( 'td', $remove )
+			UI_HTML_Tag::create( 'td', in_array( 'remove', $rights ) ? $remove : '' )
 		);
 	}
 	$thead	= UI_HTML_Tag::create( 'thead',
@@ -28,13 +28,10 @@ if( $documents ){
 	$list	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
 }
 
-return '
-<div class="row-fluid">
-	<div class="span6">
-		<h3>'.$words['index']['heading'].'</h3>
-		'.$list.'
-	</div>
-	<div class="span6">
+$panelAdd	= '';
+if( in_array( 'add', $rights ) ){
+	$panelAdd	= '
+	<div class="span5">
 		<h3>'.$words['add']['heading'].'</h3>
 		<form action="./manage/content/document/add" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
@@ -47,7 +44,15 @@ return '
 				</div>
 			</div>
 		</form>
+	</div>';
+}
+
+return '
+<div class="row-fluid">
+	<div class="span7">
+		<h3>'.$words['index']['heading'].'</h3>
+		'.$list.'
 	</div>
+	'.$panelAdd.'
 </div>';
 ?>
-

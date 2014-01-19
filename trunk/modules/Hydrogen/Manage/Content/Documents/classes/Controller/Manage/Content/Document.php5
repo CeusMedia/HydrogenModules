@@ -14,6 +14,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		if( !is_writable( $this->path ) )
 			throw new RuntimeException( 'Documents folder "'.$this->path.'" is not writable' );
 		$this->model	= new Model_Document( $this->env, $this->path );
+		$this->rights	= $this->env->getAcl()->index( 'manage/content/document' );
+		$this->addData( 'rights', $this->rights );
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
@@ -37,6 +39,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 	
 	public function add(){
+		if( !in_array( 'add', $this->rights ) )
+			$this->restart( NULL, TRUE );
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
@@ -57,6 +61,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		if( !in_array( 'index', $this->rights ) )
+			$this->restart();
 		$config		= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$this->addData( 'frontendPath', $config->get( 'frontend.path' ) );
 		$this->addData( 'frontendUrl', $config->get( 'frontend.url' ) );
@@ -65,6 +71,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove(){
+		if( !in_array( 'remove', $this->rights ) )
+			$this->restart( NULL, TRUE );
 		$document	= base64_decode( $this->env->getRequest()->get( 'documentId' ) );
 		if( file_exists( $this->path.$document ) )
 			unlink( $this->path.$document );
