@@ -39,7 +39,7 @@ if( count( $total ) ){
 			<td><span class="user-status status'.$user->status.'">%3$s</span></td>
 			<td>%4$s</td>
 			<td>%5$s</td>
-			<td>%6$s</td>
+<!--			<td>%6$s</td>-->
 		</tr>';
 		$label	= $user->username;
 		$url	= './manage/user/edit/'.$user->userId;
@@ -68,13 +68,13 @@ return '
 <h4>'.$words['indexList']['legend'].' <small class="muted">('.$total.'/'.$all.')</small></h4>
 	<table id="users" class="table not-table-condensed table-striped">
 		<colgroup>
-			<col width="20%"/>
+			<col width="32%"/>
 			<col width="17%"/>
 			<col width="15%"/>
 			<col width="12%"/>
 			<col width="12%"/>
 			<col width="12%"/>
-			<col width="12%"/>
+<!--			<col width="12%"/>-->
 		</colgroup>
 		'.$rows.'
 	</table>
