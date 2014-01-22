@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Forum</title>
+	<description><![CDATA[Simple forum boards.]]></description>
+	<category>Info</category>
+	<version>0.2.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Info/Forum.php5</class>
+		<class>Model/Forum/Post.php5</class>
+		<class>Model/Forum/Thread.php5</class>
+		<class>Model/Forum/Topic.php5</class>
+		<class>View/Info/Forum.php5</class>
+		<template>info/forum/index.php</template>
+		<template>info/forum/thread.php</template>
+		<locale>de/info/forum.ini</locale>
+		<style>module.info.forum.css</style>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+<!--	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>-->
+	<link access="public" path="info/forum" xml:lang="de" rank="55">Forum</link>
+	<link access="public" path="info/forum" xml:lang="en" rank="55">Forum</link>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_posts` (
+  `postId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `threadId` int(11) unsigned NOT NULL,
+  `parentId` int(11) unsigned DEFAULT NULL,
+  `authorId` int(11) unsigned DEFAULT NULL,
+  `type` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`postId`),
+  KEY `threadId` (`threadId`),
+  KEY `parentId` (`parentId`),
+  KEY `authorId` (`authorId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>forum_threads`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_threads` (
+  `threadId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) unsigned DEFAULT NULL,
+  `topicId` int(11) unsigned DEFAULT NULL,
+  `authorId` int(11) unsigned DEFAULT NULL,
+  `type` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`threadId`),
+  KEY `parentId` (`parentId`),
+  KEY `topicId` (`topicId`),
+  KEY `authorId` (`authorId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>forum_topics`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_topics` (
+  `topicId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) unsigned DEFAULT NULL,
+  `authorId` int(11) unsigned DEFAULT NULL,
+  `type` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`topicId`),
+  KEY `parentId` (`parentId`),
+  KEY `authorId` (`authorId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>	
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
+DROP TABLE IF EXISTS `<%?prefix%>forum_threads`;
+DROP TABLE IF EXISTS `<%?prefix%>forum_topics`;
+]]></sql>	
+</module>
