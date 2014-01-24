@@ -1,0 +1,70 @@
+tr.folder td.folder span.name {
+	display: inline-block;
+	height: 32px;
+	padding-left: 40px;
+	background-image: url(//cdn.int1a.net/img/fatcow/32/folder.png);
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
+	line-height: 2.5em;
+	font-weight: bold;
+	}
+tr td.file {
+	height: 33px;
+	}
+tr td.file span {
+	display: inline-block;
+	height: 33px;
+	line-height: 1.3em;
+	}
+tr td.file span.name {
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
+	padding-left: 40px;
+	}
+tr.type- td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/page.png);
+	}
+tr.type-js td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_jar.png);
+	}
+tr.type-css td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/css.png);
+	}
+tr.type-doc td.file span.name,
+tr.type-odt td.file span.name,
+tr.type-docx td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_doc.png);
+	}
+tr.type-pdf td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_pdf.png);
+	}
+tr.type-ods td.file span.name,
+tr.type-xls td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_xls.png);
+	}
+tr.type-png td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_png.png);
+	}
+tr.type-jpeg td.file span.name,
+tr.type-jpg td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_jpg.png);
+	}
+tr.type-7z td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_7z.png);
+	}
+tr.type-gz td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_gz.png);
+	}
+tr.type-zip td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_zip.png);
+	}
+tr.type-wmv td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_wmv.png);
+	}
+tr.type-mpg td.file span.name,
+tr.type-mpeg td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_mpg.png);
+	}
+tr.type-divx td.file span.name {
+	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_divx.png);
+	}

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Files</title>
+	<description><![CDATA[]]></description>
+	<category>Info</category>
+	<version>0.2.2</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/File.php5</class>
+		<class>View/Info/File.php5</class>
+		<locale>de/info/file.ini</locale>
+		<locale>de/html/info/file/index.bottom.html</locale>
+		<locale>de/html/info/file/index.top.html</locale>
+		<template>info/file/index.php</template>
+		<template>info/file/index.folder.php</template>
+		<template>info/file/index.info.php</template>
+		<template>info/file/index.upload.php</template>
+		<style>module.info.files.css</style>
+		<file>contents/files/.htaccess</file>
+	</files>
+	<config protected="yes" type="string" name="path">contents/files/</config>
+	<link xml:lang="de" access="acl" rank="21" path="info/file">Dateien</link>
+	<link xml:lang="en" access="acl" rank="21" path="info/file">Files</link>
+	<relations>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+	</relations>
+</module>
