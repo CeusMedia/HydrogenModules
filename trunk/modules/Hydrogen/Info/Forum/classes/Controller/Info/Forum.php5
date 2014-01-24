@@ -9,6 +9,9 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->modelPost	= new Model_Forum_Post( $this->env );
 		$this->modelThread	= new Model_Forum_Thread( $this->env );
 		$this->modelTopic	= new Model_Forum_Topic( $this->env );
+		$this->messenger	= $this->env->getMessenger();
+		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.' );
+		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
 	}
 
 	public function index( $threadId = NULL ){
@@ -19,6 +22,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$thread->post	= $this->modelPost->countByIndex( 'threadId', $thread->threadId );
 		}
 		$this->addData( 'threads', $threads );
+		$this->addData( 'rights', $this->rights );
 	}
 
 	public function thread( $threadId ){
@@ -29,6 +33,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'thread', $thread );
 		$this->addData( 'posts', $this->modelPost->getAllByIndex( 'threadId', $threadId ) );
+		$this->addData( 'rights', $this->rights );
 	}
 
 	public function addThread(){
@@ -62,7 +67,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$data['authorId']	= $this->env->getSession()->get( 'userId' );
 		$data['createdAt']	= time();
 		$this->modelPost->add( $data );
-		$this->restart( './info/forum/thread/'.$threadId, TRUE );
+		$this->restart( './info/forum/thread/'.$threadId );
 	}
 
 	public function approvePost( $postId ){

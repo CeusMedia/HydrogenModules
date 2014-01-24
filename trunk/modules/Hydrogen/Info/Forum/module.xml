@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,6 +14,7 @@
 		<class>Model/Forum/Topic.php5</class>
 		<class>View/Info/Forum.php5</class>
 		<template>info/forum/index.php</template>
+		<template>info/forum/index.add.php</template>
 		<template>info/forum/thread.php</template>
 		<locale>de/info/forum.ini</locale>
 		<style>module.info.forum.css</style>
@@ -22,9 +23,8 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Authentication</needs>
 	</relations>
-<!--	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>-->
-	<link access="public" path="info/forum" xml:lang="de" rank="55">Forum</link>
-	<link access="public" path="info/forum" xml:lang="en" rank="55">Forum</link>
+	<link access="acl" path="info/forum" xml:lang="de" rank="55">Forum</link>
+	<link access="acl" path="info/forum" xml:lang="en" rank="55">Forum</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_posts` (
