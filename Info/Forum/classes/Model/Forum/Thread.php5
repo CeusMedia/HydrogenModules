@@ -21,7 +21,6 @@ class Model_Forum_Thread extends CMF_Hydrogen_Model {
 	protected $name		= 'forum_threads';
 	protected $columns	= array(
 		'threadId',
-		'parentId',
 		'topicId',
 		'authorId',
 		'type',
@@ -32,7 +31,6 @@ class Model_Forum_Thread extends CMF_Hydrogen_Model {
 	);
 	protected $primaryKey	= 'threadId';
 	protected $indices		= array(
-		'parentId',
 		'topicId',
 		'authorId',
 		'type',
