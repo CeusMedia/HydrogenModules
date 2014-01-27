@@ -1,4 +1,6 @@
 <?php
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
+
 $wf		= (object) $words['index'];
 
 $heads	= array(
@@ -50,7 +52,12 @@ foreach( $roles as $nr => $role )
 $rows	= join( $rows );
 
 
-return '
+return $textIndexTop.'
+<style>
+table tr td blockquote {
+	margin: 0 0 0.1em 0.4em;
+	}
+</style>
 <div id="site-role-index">
 	<!--<h2>Rollen</h2>-->
 	<h3>'.$wf->legend.' <small>('.count( $roles ).')</small></h3>
@@ -68,13 +75,7 @@ return '
 			'.UI_HTML_Elements::LinkButton( './manage/role/add', '<i class="icon-plus icon-white"></i> '.$wf->buttonAdd, 'btn btn-primary', NULL, !$hasRightToAdd ).'
 		</div>
 	</div>
-</div>
-<style>
-table tr td blockquote {
-	margin: 0 0 0.1em 0.4em;
-	}
-</style>
-';
+</div>'.$textIndexBottom;
 
 
 /*
