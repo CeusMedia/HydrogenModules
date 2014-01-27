@@ -22,9 +22,8 @@ class Model_Forum_Topic extends CMF_Hydrogen_Model {
 	protected $columns	= array(
 		'topicId',
 		'parentId',
-		'authorId',
 		'type',
-		'status',
+		'rank',
 		'title',
 		'description',
 		'createdAt',
@@ -33,9 +32,8 @@ class Model_Forum_Topic extends CMF_Hydrogen_Model {
 	protected $primaryKey	= 'topicId';
 	protected $indices		= array(
 		'parentId',
-		'authorId',
 		'type',
-		'status',
+		'rank',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

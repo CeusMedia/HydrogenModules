@@ -22,7 +22,6 @@ class Model_Forum_Post extends CMF_Hydrogen_Model {
 	protected $columns	= array(
 		'postId',
 		'threadId',
-		'parentId',
 		'authorId',
 		'type',
 		'status',
@@ -33,7 +32,6 @@ class Model_Forum_Post extends CMF_Hydrogen_Model {
 	protected $primaryKey	= 'postId';
 	protected $indices		= array(
 		'threadId',
-		'parentId',
 		'authorId',
 		'type',
 		'status',

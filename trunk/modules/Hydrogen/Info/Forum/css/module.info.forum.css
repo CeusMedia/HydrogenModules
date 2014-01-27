@@ -1,0 +1,26 @@
+table td.topic-label a {
+	font-size: 1.2em;
+	}
+
+table td.topic-label {
+	background-position: 11px 8px;
+	background-repeat: no-repeat;
+	padding-left: 52px;
+	background-image: url(//cdn.int1a.net/img/fatcow/32/folder.png);
+	line-height: 1.15em;
+	}
+
+table td.thread-label {
+	background-position: 11px 8px;
+	background-repeat: no-repeat;
+	padding-left: 52px;
+	background-image: url(//cdn.int1a.net/img/fatcow/32/script.png);
+	line-height: 1.15em;
+	}
+
+table tr.type-important td.thread-label a {
+	font-weight: bold;
+	}
+
+
+	
