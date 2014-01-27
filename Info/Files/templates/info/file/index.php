@@ -1,4 +1,6 @@
 <?php
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
+
 $helper			= new View_Helper_TimePhraser( $env );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down icon-white' ) );
@@ -14,7 +16,7 @@ foreach( $files as $file ){
 	$label			= basename( $file->name );
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
-	$prefix			= str_repeat( '&nbsp;', substr_count( $file->name, '/' ) * 3 );
+	$prefix			= str_repeat( '&nbsp;&nbsp;&nbsp;', substr_count( $file->name, '/' ) * 3 );
 	$label			= $prefix.UI_HTML_Tag::create( 'span', $label, array( 'class' => 'name' ) );
 	$buttonDownload	= "";
 	$buttonRemove	= "";
@@ -43,7 +45,7 @@ foreach( $files as $file ){
 }
 
 foreach( $folders as $folder ){
-	$prefix	= str_repeat( '&nbsp;', substr_count( $folder->name, '/' ) * 3 );
+	$prefix	= str_repeat( '&nbsp;&nbsp;&nbsp;', substr_count( $folder->name, '/' ) * 3 );
 	$label	= str_replace( '/', ' / ', $folder->name );
 	$label	= $prefix.UI_HTML_Tag::create( 'span', $label, array( 'class' => 'name' ) );
 
@@ -83,7 +85,7 @@ $panelUpload	= $view->loadTemplateFile( 'info/file/index.upload.php', array( 'op
 $panelAddFolder	= $view->loadTemplateFile( 'info/file/index.folder.php', array( 'optFolder' => $optFolder ) );
 $panelInfo		= $view->loadTemplateFile( 'info/file/index.info.php' );
 
-return '
+return $textIndexTop.'
 <h3>Dateien</h3>
 <div class="row-fluid">
 	<div class="span9">
@@ -96,5 +98,6 @@ return '
 		<br/>
 		'.$panelAddFolder.'
 	</div>
-</div>';
+</div>
+'.$textIndexBottom;
 ?>
