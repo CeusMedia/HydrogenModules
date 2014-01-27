@@ -471,12 +471,13 @@ class Logic_Module {
 		return $exceptions;
 	}
 
-	public function invalidateFileCache( $env = NULL, $f = NULL ){
+	public function invalidateFileCache( $env = NULL, $verbose = NULL ){
 		if( $env->getConfig()->get( 'system.cache.modules' ) ){
 			$fileCache	= $env->path.'config/modules.cache.serial';
 			if(file_exists( $fileCache ) ){
 				@unlink( $fileCache );
-				$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
+				if( $verbose )
+					$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
 			}
 		}
 	}
