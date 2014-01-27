@@ -39,36 +39,12 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		$request	= $this->env->getRequest();
 
-		$fileName	= $this->env->path.'config/config.ini';
-
-		$driver		= trim( $request->get( 'database_driver' ) );
-		
-		$data	= array(
-#			'database'				=> 'yes',
-			'database.driver'		=> $driver,
-			'database.host'			=> $driver ? trim( $request->get( 'database_host' ) ) : "",
-			'database.name'			=> $driver ? trim( $request->get( 'database_name' ) ) : "",
-			'database.username'		=> $driver ? trim( $request->get( 'database_username' ) ) : "",
-			'database.password'		=> $driver ? trim( $request->get( 'database_password' ) ) : "",
-			'database.prefix'		=> $driver ? trim( $request->get( 'database_prefix' ) ) : "",
-			'database.log.error'	=> $driver ? trim( $request->get( 'database_log' ) ) : ""
-		);
-
-		try{
-			$editor	= new File_INI_Editor( $fileName, FALSE );
-			foreach( $data as $key => $value ){
-#				if( !strlen( $data['database.driver'] ) )
-#					$value	= $key == 'database' ? 'no' : '';
-				if( $editor->hasProperty( $key ) )
-					$editor->setProperty( $key, $value );
-				else
-					$editor->addProperty( $key, $value );
-			}
-			$messenger->noteSuccess( 'Die Datenbankeinstellungen wurden gespeichert.' );
+		$messenger->noteFailure( 'Not implemented yet.' );
+/*		try{
 		}
 		catch( Exception $e ){
 			$messenger->noteError( 'Die Datenbankeinstellungen konnten nicht gespeichert werden:<br/>'.$e->getMessage() );
-		}
+		}*/
 		$this->restart( './admin/database/connection' );
 	}
 
@@ -84,26 +60,23 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'index' );
 
-		$fileConfig		= $this->env->path.'config/config.ini';
-
 
 		$this->addData( 'drivers', PDO::getAvailableDrivers() );
 		$config	= array();
-		if( !file_exists( $fileConfig ) )
+		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
 			$messenger->noteError( $words->msgConfigMissing );
-		else
-			$config		= parse_ini_file( $fileConfig, FALSE );
-		$config	= new ADT_List_Dictionary( $config );
-
+			$this->restart();
+		}
+		$config	= $this->env->getConfig()->getAll( 'module.resource_database.', TRUE );
 		$data	= array(
-			'driver'		=> $config->get( 'database.driver' ),
-			'host'			=> $config->get( 'database.host' ),
-			'port'			=> $config->get( 'database.port' ),
-			'name'			=> $config->get( 'database.name' ),
-			'prefix'		=> $config->get( 'database.prefix' ),
-			'username'		=> $config->get( 'database.username' ),
-			'password'		=> $config->get( 'database.password' ),
-			'log'			=> $config->get( 'database.log' )
+			'driver'		=> $config->get( 'access.driver' ),
+			'host'			=> $config->get( 'access.host' ),
+			'port'			=> $config->get( 'access.port' ),
+			'name'			=> $config->get( 'access.name' ),
+			'prefix'		=> $config->get( 'access.prefix' ),
+			'username'		=> $config->get( 'access.username' ),
+			'password'		=> $config->get( 'access.password' ),
+			'log'			=> $config->get( 'log.errors' )
 		);
 		$this->addData( 'data', (object) $data );
 	}
