@@ -5,13 +5,13 @@ if(typeof Module.UI.Session !== "undefined")
 
 Module.UI.Session = {
 	init: function(){
-		if(typeof config.module_ui_session.keep === "undefined" )
+		if(typeof settings.Module_UI_Session.keep === "undefined" )
 			return;
-		if(!config.module_ui_session.keep)
+		if(!settings.Module_UI_Session.keep)
 			return;
 //		if(config.module_ui_session.keepalive.for.toLowerCase = "none")
 //			return;
-		var minutes = parseInt(config.module_ui_session.keep.minutes);
+		var minutes = parseInt(settings.Module_UI_Session.keep_minutes);
 		if( minutes < 1)
 			return;
 		window.setInterval(
