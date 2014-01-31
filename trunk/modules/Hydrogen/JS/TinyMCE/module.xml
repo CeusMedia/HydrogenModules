@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p5</version>
+	<version>4.0.10-p6</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -27,20 +27,20 @@ if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 	$helper	= new View_Helper_TinyMceResourceLister( $env );
 	$script	= '
 $(document).ready(function(){
-	if($("config.module_js_tinymce_auto_selector").size()){
+	if($("settings.Module_JS_TinyMCE.auto_selector").size()){
 		var listImages	= '.json_encode( $helper->getImageList() ).';
 		var listLinks	= '.json_encode( $helper->getLinkList() ).';
-		if(config.module_js_tinymce_auto_selector){
+		if(settings.Module_JS_TinyMCE.auto_selector){
 			var options = {
-				document_base_url: config.module_js_tinymce_auto_baseUrl,
-				selector: config.module_js_tinymce_auto_selector,
-				plugins: config.module_js_tinymce_auto_plugins,
-				language: config.module_js_tinymce_auto_language,
+				document_base_url: settings.Module_JS_TinyMCE.auto_baseUrl,
+				selector: settings.Module_JS_TinyMCE.auto_selector,
+				plugins: settings.Module_JS_TinyMCE.auto_plugins,
+				language: settings.Module_JS_TinyMCE.auto_language,
 				image_list: listImages,
 				link_list: listLinks,
 			};
-			if(config.module_js_tinymce_auto_tools)
-				options.tools = config.module_js_tinymce_auto_tools;
+			if(settings.Module_JS_TinyMCE.auto_tools)
+				options.tools = settings.Module_JS_TinyMCE.auto_tools;
 			tinymce.init(options);
 		}
 	}
