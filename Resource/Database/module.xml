@@ -3,10 +3,13 @@
 	<title>Resource: Database</title>
 	<description><![CDATA[Database connection support.]]></description>
 	<category>Resource</category>
-	<version>0.1.2</version>
+	<version>0.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/Database.php5</class>
+	</files>
 	<config protected="yes" type="string" name="access.driver" mandatory="yes" values="cubrid,mssql,mysql,pgsql,sqlite" title="PDO driver for DBMS">mysql</config>
 	<config protected="yes" type="string" name="access.host" title="Hostname of DBS">localhost</config>
 	<config protected="yes" type="string" name="access.port"></config>
@@ -16,8 +19,10 @@
 	<config protected="yes" type="string" name="access.prefix" title="Table name prefix"></config>
 <!--	<config protected="yes" type="string" name="access.lazy"></config>-->
 <!--	<config protected="yes" type="string" name="access.charset"></config>-->
-	<config protected="yes" type="string" name="log.statements"></config>
-	<config protected="yes" type="string" name="log.errors">db.error.log</config>
+	<config protected="yes" type="boolean" name="log.statements">no</config>
+	<config protected="yes" type="boolean" name="log.errors">yes</config>
+	<config protected="yes" type="string" name="log.file.statements">db.statements.log</config>
+	<config protected="yes" type="string" name="log.file.errors">db.error.log</config>
 	<config protected="yes" type="string" name="option.ATTR_ERRMODE">PDO::ERRMODE_EXCEPTION</config>
 	<config protected="yes" type="boolean" name="option.ATTR_PERSISTENT">yes</config>
 	<config protected="yes" type="string" name="option.ATTR_DEFAULT_FETCH_MODE">PDO::FETCH_OBJ</config>
