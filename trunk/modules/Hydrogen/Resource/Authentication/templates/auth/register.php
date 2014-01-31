@@ -53,8 +53,8 @@ input.state-bad {
 <script>
 $(document).ready(function(){
 	$("#input_username").keyup(function(){
-		var lenMin = config.module_users_name_length_min;
-		var lenMax = config.module_users_name_length_max;
+		var lenMin = settings.Module_Users.name_length_min;
+		var lenMax = settings.Module_Users.name_length_max;
 		var length = $(this).val().length;
 		if($(this).data("last") != $(this).val()){
 			$(this).data("last", $(this).val());

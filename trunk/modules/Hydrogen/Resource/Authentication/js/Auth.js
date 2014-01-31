@@ -3,8 +3,9 @@ var Auth = {
 	oneMinute: 60 * 1000,
 
 	initAutoLogout: function(){
-		var minutes = parseInt(config.module_auth_autoLogout_minutes);
-		if(!minutes)
+		var config	= settings.Resource_Authentication;
+		var minutes = parseInt(config.logout_auto_minutes);
+		if(!config.logout_auto || !minutes)
 			return;
 		duration = minutes * this.oneMinute;
 		$.ajax({
@@ -18,10 +19,10 @@ var Auth = {
 				window.setInterval(
 					function(){
 						var url = './auth/logout';
-						if(config.module_auth_autoLogout_forward_controller){
-							url += '/'+config.module_auth_autoLogout_forward_controller;
-							if(config.module_auth_autoLogout_forward_action)
-								url += '/'+config.module_auth_autoLogout_forward_action;
+						if(config.logout_auto_forward_controller){
+							url += '/'+config.logout_auto_forward_controller;
+							if(config.logout_auto_forward_action)
+								url += '/'+config.logout_auto_forward_action;
 						}
 						url += '?autoLogout';
 						document.location.href = url;
@@ -32,8 +33,9 @@ var Auth = {
 	},
 
 	initSessionRefresh:function(){
-		var minutes = parseInt(config.module_auth_refreshSession_minutes);
-		if(!minutes)
+		var config	= settings.Resource_Authentication;
+		var minutes = parseInt(config.session_refresh_minutes);
+		if(!config.session_refresh || !minutes)
 			return;
 		duration = minutes * this.oneMinute;
 		window.setInterval(
