@@ -15,20 +15,21 @@ Gallery = {
 	},
 	setupInfo: function(){
 		if($("img.zoomable").size()){
+			var config = settings.Module_JS_cmImagnifier;
 			$("img.zoomable").cmImagnifier({
 				autoEnable: false,
-				classContainer: config.module_js_cmimagnifier_classContainer,
-				classLense: config.module_js_cmimagnifier_classLense,
-				classImage: config.module_js_cmimagnifier_classImage,
-				classMagnified: config.module_js_cmimagnifier_classMagnified,
-				classPosition: config.module_js_cmimagnifier_classPosition,
-				classRatio: config.module_js_cmimagnifier_classRatio,
-				easeIn: config.module_js_cmimagnifier_easeIn,
-				easeOut: config.module_js_cmimagnifier_easeOut,
-				showRatio: config.module_js_cmimagnifier_showRatio,
-				showPosition: config.module_js_cmimagnifier_showPosition,
-				speedIn: config.module_js_cmimagnifier_speedIn,
-				speedOut: config.module_js_cmimagnifier_speedOut
+				classContainer: config.classContainer,
+				classLense: config.classLense,
+				classImage: config.classImage,
+				classMagnified: config.classMagnified,
+				classPosition: config.classPosition,
+				classRatio: config.classRatio,
+				easeIn: config.easeIn,
+				easeOut: config.easeOut,
+				showRatio: config.showRatio,
+				showPosition: config.showPosition,
+				speedIn: config.speedIn,
+				speedOut: config.speedOut
 			});
 			$("#button-fullscreen").bind("click",function(){
 				$("img.zoomable").addClass("fullscreenable").cmImagnifier("toggle");				//  @todo handle: module cmMagnifier not installed
