@@ -228,6 +228,7 @@ abstract class Mail_Abstract{
 			if( strlen( trim( $prefix ) ) )
 				$subject	= trim( $prefix ).' '.$subject;
 		}
+		$subject	= UI_Template::renderString( $subject, (array) $env );
 		$this->mail->setSubject( $subject );
 	}
 }
