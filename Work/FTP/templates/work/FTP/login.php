@@ -1,10 +1,10 @@
 <?php
 extract( $fromSession );
 
-$texts	= $this->populateTexts( array( 'login.info' ), 'html/work/ftp/' );
+extract( $this->populateTexts( array( 'login.top', 'login.bottom', 'login.info' ), 'html/work/ftp/' ) );
 $port	= strlen( trim( $port ) ) ? $port : 21;
 
-return '
+return $textLoginTop.'
 <div class="row-fluid">
 	<div class="span6">
 		<h3>Verbindung zu FTP-Server herstellen</h3>
@@ -39,8 +39,8 @@ return '
 		</form>
 	</div>
 	<div class="span6">
-		'.$texts['login.info'].'
+		'.$textLoginInfo.'
 	</div>
 </div>
-';
+'.$textLoginBottom;
 ?>
