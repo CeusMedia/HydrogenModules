@@ -2,7 +2,7 @@
 <module>
 	<title>Work: FTP</title>
 	<description><![CDATA[Basic FTP file management client.]]></description>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
