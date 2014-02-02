@@ -2,8 +2,11 @@
 <module>
 	<title>JS: MailDecrypt</title>
 	<description><![CDATA[Renders mail links for encrypted addresses.
-
 This is the second step for protecting mail addresses against harvesting bots.<br/>The first part is to store mail addresses encrypted within HTML contents, like this:
+code:html><span class="encrypted-mail" data-name="john" data-host="example.net">John Doe</span><code
+
+The old syntax, as follows, will be supported until version 0.3:
+
 code:html>[mail:john#example.net]<code
 You can define attributes for the rendered anchor like this:
 code:html>[mail:john#example.net@class:mail@title:Mail me!]<code
@@ -11,7 +14,7 @@ The decryption will be applied automatically on the HTML node defined selector (
 code:html><a href="mailto:john@example.net" class="mail" title="Mail me!">john@example.net</a><code
 
 ]]></description>
-	<version>0.1</version>
+	<version>0.2</version>
 	<category>JavaScript</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -19,8 +22,6 @@ code:html><a href="mailto:john@example.net" class="mail" title="Mail me!">john@e
 	<files>
 		<script load="auto">MailDecrypt.js</script>
 	</files>
-	<config name="pattern">/\[mail:([\S]+)#([^@]+)(@.+)?\]/g</config>
-	<config name="selector">body>div#container</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$selector	= $env->getConfig()->get( 'module.js_maildecrypt.selector' );
 		$pattern	= $env->getConfig()->get( 'module.js_maildecrypt.pattern' );
