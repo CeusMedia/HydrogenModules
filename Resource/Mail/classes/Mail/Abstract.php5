@@ -228,7 +228,13 @@ abstract class Mail_Abstract{
 			if( strlen( trim( $prefix ) ) )
 				$subject	= trim( $prefix ).' '.$subject;
 		}
-		$subject	= UI_Template::renderString( $subject, (array) $env );
+		$data		=	array(
+			'app'	=> array(
+				'title'	=> $this->env->title,
+				'host'	=> $this->env->host,
+			)
+		);
+		$subject	= UI_Template::renderString( $subject, $data );
 		$this->mail->setSubject( $subject );
 	}
 }
