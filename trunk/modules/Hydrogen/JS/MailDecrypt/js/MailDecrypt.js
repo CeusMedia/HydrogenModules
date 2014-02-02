@@ -1,7 +1,21 @@
-var MailDecrypt = function(selector,pattern){
-	if(typeof pattern == "undefined")											//  no special regex pattern defined
-		pattern = /\[mail:([\S]+)#([^@]+)(@.+)?\]/g;							//  use default regex pattern
+var MailDecrypt = function(){
+	$("body span.encrypted-mail").each(function(){								//  find all spans holding an email address
+		var addr = $(this).data('name') + "@" + $(this).data("host");			//  assemble email address
+		var link = $("<a></a>").attr("href", "mailto:"+addr).html(addr);		//  create link element
+		link.addClass($(this).data("class") ? $(this).data("class") : "mail");	//  set link class
+		link.html($(this).html().length ? $(this).html() : addr);				//  set link content
+		$(this).replaceWith(link);												//  replace span by link
+	});
+	MailDecryptDeprecated("body", "/\[mail:([\S]+)#([^@]+)(@.+)?\]/g");
+}
+
+var MailDecryptDeprecated = function(selector,pattern){
+//	if(typeof pattern == "undefined")											//  no special regex pattern defined
+//		pattern = /\[mail:([\S]+)#([^@]+)(@.+)?\]/g;							//  use default regex pattern
 	var attr, i, matches, string, user, host, repl;								//  declare variables
+	var element = $(selector);
+	if(!$(selector).size())
+		return;
 	string = $(selector).html();												//  get content of selected node
 	if(string.match(pattern)){													//  content matches regex pattern
 		matches = pattern.exec(string);											//  get all matches
