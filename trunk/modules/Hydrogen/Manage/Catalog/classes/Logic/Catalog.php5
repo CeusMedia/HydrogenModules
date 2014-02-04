@@ -43,7 +43,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	protected function __onInit( $a = NULL ){
 		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
 		$this->cache				= $this->env->getCache();
-
 		$this->modelArticle			= new Model_Catalog_Article( $this->env );
 		$this->modelArticleAuthor	= new Model_Catalog_Article_Author( $this->env );
 		$this->modelArticleCategory	= new Model_Catalog_Article_Category( $this->env );
@@ -258,18 +257,28 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
+		$this->cache->remove( 'catalog.article.'.$articleId );
 	}
 
 	public function editAuthor( $authorId, $data ){
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelAuthor->edit( $authorId, $data );
+		$this->cache->remove( 'catalog.article.author.'.$authorId );
 	}
 
 	public function editCategory( $categoryId, $data ){
 		$this->checkCategoryId( $categoryId, TRUE );
+		$old	= $this->modelCategory->get( $categoryId );
 //		$data['modifiedAt']	= time();
 		$this->modelCategory->edit( $categoryId, $data );
+		$new	= $this->modelCategory->get( $categoryId );
+		$this->cache->remove( 'catalog.category.'.$categoryId );
+		$this->cache->remove( 'catalog.categories' );
+
+//		md5( array( 'parentId' => $category->categoryId, 'visible' => 1 )
+		$this->cache->remove( 'catalog.categories.'.$old->parentId );
+		$this->cache->remove( 'catalog.categories.'.$new->parentId );
 	}
 
 	public function getArticle( $articleId ){
@@ -288,7 +297,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$list	= array();
 		foreach( $this->modelArticle->getAll( $conditions, $orders, $limits ) as $article )
 			$list[$article->articleId]	= $article;
-		$this->cache->set( 'catalog.articles.'.$cacheKey, serialize( $list ) );
+		$this->cache->set( 'catalog.articles.'.$cacheKey, $list );
 		return $list;
 	}
 
