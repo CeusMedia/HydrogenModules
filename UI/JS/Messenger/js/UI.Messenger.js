@@ -8,9 +8,9 @@ UI.Messenger	= {
 		if(!this.status){
 			var value;
 			if(typeof config !== "undefined"){
-				this.timeSlideDown	= settings.Module_UI_JS_Messenger.slideDown;
-				this.timeSlideUp	= settings.Module_UI_JS_Messenger.slideUp;
-				this.timeRemove		= settings.Module_UI_JS_Messenger.autoRemove;
+				this.timeSlideDown	= settings.UI_JS_Messenger.slideDown;
+				this.timeSlideUp	= settings.UI_JS_Messenger.slideUp;
+				this.timeRemove		= settings.UI_JS_Messenger.autoRemove;
 
 				if(this.timeRemove){
 					$(document).ready(function(){
