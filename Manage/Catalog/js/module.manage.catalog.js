@@ -45,7 +45,7 @@ function setArticleTab(tabKey){
 	$.ajax("./manage/catalog/article/ajaxSetTab/"+tabKey);
 }
 
-function onSearchChangeFilterList(){
+function onSearchChangeFilterList(event){
 	"use strict";
 	var input = $(this);
 	var query = input.val();
@@ -63,6 +63,11 @@ function onSearchChangeFilterList(){
 				list.find("li").show();
 			}
 			input.data("latestQuery", query);
+		}
+		else if(event.keyCode === 13){
+			list.find("li:visible:eq(0) a").each(function(){
+				document.location.href = $(this).attr("href");
+			});
 		}
 	}
 }
