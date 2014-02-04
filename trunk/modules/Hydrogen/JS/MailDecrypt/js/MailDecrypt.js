@@ -6,12 +6,12 @@ var MailDecrypt = function(){
 		link.html($(this).html().length ? $(this).html() : addr);				//  set link content
 		$(this).replaceWith(link);												//  replace span by link
 	});
-	MailDecryptDeprecated("body", "/\[mail:([\S]+)#([^@]+)(@.+)?\]/g");
+//	MailDecryptDeprecated("body");
 }
 
 var MailDecryptDeprecated = function(selector,pattern){
-//	if(typeof pattern == "undefined")											//  no special regex pattern defined
-//		pattern = /\[mail:([\S]+)#([^@]+)(@.+)?\]/g;							//  use default regex pattern
+	if(typeof pattern == "undefined")											//  no special regex pattern defined
+		pattern = /\[mail:([\S]+)#([^@]+)(@.+)?\]/g;							//  use default regex pattern
 	var attr, i, matches, string, user, host, repl;								//  declare variables
 	var element = $(selector);
 	if(!$(selector).size())
