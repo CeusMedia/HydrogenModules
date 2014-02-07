@@ -6,7 +6,7 @@
 This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (part of cmModules).
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.1-p3</version>
+	<version>0.3.1-p4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

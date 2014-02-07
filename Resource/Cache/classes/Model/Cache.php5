@@ -2,6 +2,8 @@
 class Model_Cache{
 
 	protected $model;
+	protected $env;
+	protected $config;
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env		= $env;
