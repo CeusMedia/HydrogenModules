@@ -288,10 +288,14 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 				}
 				$list	= $this->renderModuleLinkList( $modulesUpdated, TRUE );
 				$this->messenger->noteNotice( $words->noticeRefreshModulesUpdated, $list );
+
 			}
 		}
 		else
 			$this->messenger->noteSuccess( $words->successRefreshNoChanges, $sourceLabel );
+		$model	= new Model_Instance( $this->env );
+		foreach( array_keys( $model->getAll() ) as $instanceId )
+			$this->env->getCache()->remove( 'instance.'.$instanceId );
 
 		$redirectTo	= 'admin/module/source/edit/'.$sourceId;										//  afterwards go into source details
 		if( $this->env->getRequest()->get( 'from' ) )												//  or redirect URL given via parameter "from"
