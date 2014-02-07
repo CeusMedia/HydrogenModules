@@ -222,6 +222,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 						$this->restart( './admin/module/viewer/view/'.$moduleId );					//  go to module edit view
 					}
 					$url	= $urlInstaller.$mainModuleId.'/'.$mainModuleId.'/'.$step;				//  otherwise go to installer for parent module
+					$instanceId	= $this->env->getSession()->get( 'instanceId' );
+					$this->env->getCache()->remove( 'instance.'.$instanceId );
 					$this->restart( $url.'?doInstall=yes' );										//  ??? @todo kriss: understand and document !!!
 				}
 				$messenger->noteError( $msgFailed, $moduleId );										//  still here? than error!
@@ -262,6 +264,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 			$this->restart( './admin/module/editor' );
 		if( $this->logic->uninstallModule( $moduleId, $verbose ) ){
 			$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
+			$instanceId	= $this->env->getSession()->get( 'instanceId' );
+			$this->env->getCache()->remove( 'instance.'.$instanceId );
 			if( $module->type == Model_Module::TYPE_CUSTOM )
 				$this->restart( './admin/module/viewer' );
 		}
@@ -300,6 +304,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				$this->logic->updateModule( $moduleId, $installType, $files, $settings, $verbose );
 				$this->logic->invalidateFileCache( $this->env->getRemote() );
 				$this->messenger->noteSuccess( $words->updateInstalled, $module->versionInstalled, $hasUpdate );
+				$instanceId	= $this->env->getSession()->get( 'instanceId' );
+				$this->env->getCache()->remove( 'instance.'.$instanceId );
 				$this->restart( './admin/module/viewer/view/'.$moduleId );
 			}
 			catch( Exception_Logic $e ){
