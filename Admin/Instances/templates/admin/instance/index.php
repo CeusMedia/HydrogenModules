@@ -24,8 +24,11 @@ function formatUrl( $url ){
 	return $scheme.$host.$path;
 }
 
+
+
 $rows	= array();
 foreach( $instances as $instanceId => $instance ){
+	$instance->host     = $instance->host === "localhost" ? $env->host : $instance->host;
 	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;
 	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
