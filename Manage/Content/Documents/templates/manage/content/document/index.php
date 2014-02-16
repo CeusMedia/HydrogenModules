@@ -47,12 +47,14 @@ if( in_array( 'add', $rights ) ){
 	</div>';
 }
 
-return '
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/content/document/' ) );
+
+return $textTop.'
 <div class="row-fluid">
 	<div class="span7">
 		<h3>'.$words['index']['heading'].'</h3>
 		'.$list.'
 	</div>
 	'.$panelAdd.'
-</div>';
+</div>'.$textBottom;
 ?>
