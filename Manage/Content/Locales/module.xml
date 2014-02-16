@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Content: Locales</title>
+	<description><![CDATA[Editor for language files, HTML blocks and mail templates.]]></description>
+	<category>Management</category>
+	<version>0.5</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Content/Locale.php5</class>
+		<class>View/Manage/Content/Locale.php5</class>
+		<template>manage/content/locale/index.php</template>
+		<locale>de/manage/content/locale.ini</locale>
+		<locale>de/html/manage/content/locale/index.top.html</locale>
+		<locale>de/html/manage/content/locale/index.bottom.html</locale>
+		<style source="theme">module.manage.content.locales.css</style>
+	</files>
+	<link xml:lang="de" access="acl" path="manage/content/locale">Sprachinhalte</link>
+	<link xml:lang="en" access="acl" path="manage/content/locale">Locales</link>
+	<config name="basePath" type="string"></config>
+	<config name="language.default" type="string">auto</config>
+	<relations>
+		<needs type="module">JS_CodeMirror</needs>
+	</relations>
+</module>
