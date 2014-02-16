@@ -78,6 +78,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
+		$label		= $prefixes->image;
 		$list		= array();
 		$index		= self::getImageList( $env );
 		foreach( $index as $item ){
