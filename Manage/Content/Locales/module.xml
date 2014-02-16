@@ -3,7 +3,7 @@
 	<title>Manage: Content: Locales</title>
 	<description><![CDATA[Editor for language files, HTML blocks and mail templates.]]></description>
 	<category>Management</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,7 +17,7 @@
 	</files>
 	<link xml:lang="de" access="acl" path="manage/content/locale">Sprachinhalte</link>
 	<link xml:lang="en" access="acl" path="manage/content/locale">Locales</link>
-	<config name="basePath" type="string"></config>
+	<config name="basePath" type="string">./locales/</config>
 	<config name="language.default" type="string">auto</config>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>

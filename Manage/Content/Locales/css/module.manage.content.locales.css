@@ -1,31 +1,31 @@
-body.moduleManageContent form#file-selector ul,
-body.moduleManageContent form#file-selector ul li {
+body.moduleManageContentLocale form#file-selector ul,
+body.moduleManageContentLocale form#file-selector ul li {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	}
-body.moduleManageContent form#file-selector ul ul {
+body.moduleManageContentLocale form#file-selector ul ul {
 	margin-left: 1em;
 	}
-body.moduleManageContent form#file-selector ul li {
+body.moduleManageContentLocale form#file-selector ul li {
 	font-weight: normal;
 	padding: 1px 3px;
 	border-radius: 4px;
 	}
-body.moduleManageContent form#file-selector ul li:hover {
+body.moduleManageContentLocale form#file-selector ul li:hover {
 	background-color: rgba(127,127,127,0.1);
 	}
-body.moduleManageContent form#file-selector ul li a {
+body.moduleManageContentLocale form#file-selector ul li a {
 	text-decoration: none;
 	}
-body.moduleManageContent form#file-selector ul li small.muted {
+body.moduleManageContentLocale form#file-selector ul li small.muted {
 	}
-body.moduleManageContent form#file-selector ul li.folder {
+body.moduleManageContentLocale form#file-selector ul li.folder {
 	font-weight: bold;
 	}
-body.moduleManageContent form#file-selector ul li.active {
+body.moduleManageContentLocale form#file-selector ul li.active {
 	background-color: #08c;
 	}
-body.moduleManageContent form#file-selector ul li.active a {
+body.moduleManageContentLocale form#file-selector ul li.active a {
 	color: white;
 	}
