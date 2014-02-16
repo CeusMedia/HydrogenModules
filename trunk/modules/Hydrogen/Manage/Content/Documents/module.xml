@@ -3,7 +3,7 @@
 	<title>Manage: Contents: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,6 +12,8 @@
 		<class>Model/Document.php5</class>
 		<class>View/Manage/Content/Document.php5</class>
 		<locale>de/manage/content/document.ini</locale>
+		<locale>de/html/manage/content/document/bottom.html</locale>
+		<locale>de/html/manage/content/document/top.html</locale>
 		<template>manage/content/document/index.php</template>
 	</files>
 	<relations>
