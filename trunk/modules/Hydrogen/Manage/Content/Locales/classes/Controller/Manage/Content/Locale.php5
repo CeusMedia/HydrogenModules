@@ -40,7 +40,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 	public function edit( $language, $type, $fileId) {
 		$request	= $this->env->getRequest();
 		$filePath	= base64_decode( $fileId );
-		$pathName	= $this->basePath.'locales/'.$language.'/'.$filePath;
+		$pathName	= $this->basePath.$language.'/'.$filePath;
 		$words		= (object) $this->getWords( 'msg' );
 
 		switch( $request->get( 'do' ) ){
@@ -62,7 +62,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 	protected function getDefaultLanguage(){
 		$language	= $this->config->get( 'language.default' );
 		if( $language === "auto" )
-			$language	= $this->env->getLanguage()->getLanguage()
+			$language	= $this->env->getLanguage()->getLanguage();
 		if( !trim( $language ) )
 			$language	= array_shift( $this->getLanguages() );
 		return $language;
@@ -72,7 +72,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		if( $this->languages )
 			return $this->languages;
 		$list	= array();
-		$index	= new Folder_Lister( $this->basePath.'locales/' );
+		$index	= new Folder_Lister( $this->basePath );
 		foreach( $index->getList() as $folder )
 			$list[]	= $folder->getFilename();
 		natcasesort( $list );
@@ -98,7 +98,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		}
 		if( $fileId ){
 			$filePath	= base64_decode( $fileId );
-			$fileUri	= $this->basePath.'locales/'.$language.'/'.$filePath;
+			$fileUri	= $this->basePath.$language.'/'.$filePath;
 			if( !file_exists( $fileUri ) ){
 				$messenger->noteNotice( $words->errorFileNotExisting );
 				$this->restart( $language.'/'.$type.'/', TRUE );
@@ -114,7 +114,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$folder		= $this->types[$type]['folder'];
 		$extensions	= $this->types[$type]['extensions'] ? explode( ',', $this->types[$type]['extensions'] ) : array();
 		$list		= array();
-		$path		= $this->basePath.'locales/'.$language.'/';
+		$path		= $this->basePath.$language.'/';
 		if( file_exists( $path.$folder ) ){
 			$index	= Folder_RecursiveLister::getFileList( $path.$folder );
 			foreach( $index as $item ){

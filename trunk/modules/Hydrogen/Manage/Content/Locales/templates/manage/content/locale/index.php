@@ -22,7 +22,7 @@ if( $fileId && isset( $content ) ){
 
 	$panelEdit	= '
 	<h3>'.$words['edit']['heading'].'</h3>
-	<form id="form_content-editor" name="editContent" action="./manage/content/edit/'.$language.'/'.$type.'/'.$fileId.'" method="post">
+	<form id="form_content-editor" name="editContent" action="./manage/content/locale/edit/'.$language.'/'.$type.'/'.$fileId.'" method="post">
 		'.$textarea.'
 		<div class="buttonbar">
 			'.$buttonSave.'
@@ -50,7 +50,7 @@ if( count( $languages ) > 1 ){
 $optType	= UI_HTML_Elements::Options( $words['types'], $type );
 
 $panelFilter	= '
-<form name="form_content-selector" action="./manage/content" method="post">
+<form name="form_content-selector" id="file-selector" action="./manage/content/locale" method="post">
 	<h3>'.$words['index']['heading'].'</h3>
 	'.$filterLanguage.'
 	<div class="row-fluid">
