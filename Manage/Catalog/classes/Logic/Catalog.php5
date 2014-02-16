@@ -276,7 +276,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->cache->remove( 'catalog.category.'.$categoryId );
 		$this->cache->remove( 'catalog.categories' );
 
-//		md5( array( 'parentId' => $category->categoryId, 'visible' => 1 )
 		$this->cache->remove( 'catalog.categories.'.$old->parentId );
 		$this->cache->remove( 'catalog.categories.'.$new->parentId );
 	}
@@ -291,13 +290,13 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function getArticles( $conditions = array(), $orders = array(), $limits = array() ){
-		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
-		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
-			return $data;
+#		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
+#		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
+#			return $data;
 		$list	= array();
 		foreach( $this->modelArticle->getAll( $conditions, $orders, $limits ) as $article )
 			$list[$article->articleId]	= $article;
-		$this->cache->set( 'catalog.articles.'.$cacheKey, $list );
+#		$this->cache->set( 'catalog.articles.'.$cacheKey, $list );
 		return $list;
 	}
 
@@ -373,14 +372,14 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function getCategories( $conditions = array(), $orders = array() ){
-		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
-		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
-			return $data;
+#		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
+#		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
+#			return $data;
 
 		$list	= array();
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$list[$category->categoryId]	= $category;
-		$this->cache->set( 'catalog.categories.'.$cacheKey, $list );
+#		$this->cache->set( 'catalog.categories.'.$cacheKey, $list );
 		return $list;
 	}
 
@@ -409,9 +408,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function getCategoryArticles( $category, $orders = array(), $limits = array() ){
-		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
-		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
-			return $data;
+#		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
+#		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
+#			return $data;
 		$conditions	= array( 'categoryId' => $category->categoryId );
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= array();
@@ -422,7 +421,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$article->volume	= $relation->volume;
 			$articles[]			= $article;
 		}
-		$this->cache->set( 'catalog.category.articles.'.$cacheKey, $articles );
+#		$this->cache->set( 'catalog.category.articles.'.$cacheKey, $articles );
 		return $articles;
 	}
 
