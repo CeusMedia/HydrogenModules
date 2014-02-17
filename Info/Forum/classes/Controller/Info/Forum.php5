@@ -35,7 +35,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$this->env->getMessenger()->noteError( 'Thread '.$threadId.' is closed.' );
 			$this->restart( NULL, TRUE );
 		}
-		
+
 		$data		= $request->getAll();
 		if( in_array( 'approvePost', $this->rights ) )
 			$data['status']	= 1;
@@ -88,7 +88,6 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxStarThread( $threadId ){
-		
 		$thread		= $this->modelThread->get( (int) $threadId );
 		if( $thread ){
 			$this->modelThread->edit( (int) $threadId, array( 'type' => $thread->type ? 0 : 1 ) );
@@ -114,7 +113,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		print( json_encode( $post ) );
 		exit;
 	}
-			
+
 	public function approvePost( $postId ){
 		$post		= $this->modelPost->get( $postId );
 		if( !$post ){
@@ -132,10 +131,12 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		foreach( $topics as $nr => $topic ){
 			$threads	= $this->modelThread->getAllByIndex( 'topicId', $topic->topicId );
 			$topic->threads	= count( $threads );
+			$topic->posts	= 0;
 			$threadIds	= array();
 			foreach( $threads as $thread )
 				$threadIds[]	= $thread->threadId;
-			$topic->posts	+= $this->modelPost->countByIndex( 'threadId', $threadIds );
+			if( $threadIds )
+				$topic->posts	+= $this->modelPost->countByIndex( 'threadId', $threadIds );
 		}
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'topics', $topics );
