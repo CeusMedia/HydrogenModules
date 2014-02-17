@@ -1,0 +1,12 @@
+
+tr.bill-type-0 td {
+	}
+tr.bill-type-1 td.cell-title:before {
+	}
+
+.negative {
+	color: red;	
+	}
+.positive {
+	color: green;
+	}
