@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Bills</title>
+	<description><![CDATA[Extensible customer database management.]]></description>
+	<category>Management</category>
+	<version>0.2.3</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Bill.php5</class>
+		<class>View/Work/Bill.php5</class>
+		<class>Model/Bill.php5</class>
+		<template>work/bill/add.php</template>
+		<template>work/bill/edit.php</template>
+		<template>work/bill/index.php</template>
+		<template>work/bill/index.filter.php</template>
+		<template>work/bill/graph.php</template>
+		<locale>de/work/bill.ini</locale>
+		<style load="auto">module.work.bills.css</style>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="inside" path="work/bill" rank="37">Rechnungen</link>
+	<link xml:lang="en" access="inside" path="work/bill" rank="37">Bills</link>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bills`;
+DROP TABLE IF EXISTS `<%?prefix%>bills`;
+CREATE TABLE IF NOT EXISTS `dev_bills` (
+  `billId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `customerId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `price` float(10,2) unsigned NOT NULL,
+  `date` decimal(8,0) unsigned NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`billId`),
+  KEY `userId` (`userId`),
+  KEY `customerId` (`customerId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `date` (`date`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bills`;
+]]></sql>
+</module>
