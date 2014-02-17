@@ -57,7 +57,7 @@ foreach( $ordersPerYear as $nr => $entry ){
 	);
 }
 
-return '
+return $this->renderMainTabs().'
 <h3>Bestellungen und Umsätze über die Jahre</h3>
 <div class="row-fluid">
 	<div class="span7">
