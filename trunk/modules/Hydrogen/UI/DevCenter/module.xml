@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: DevCenter</title>
+	<description><![CDATA[]]></description>
+	<version>0.2</version>
+	<category>User Interface</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/DevCenter.php5</class>
+		<class>Resource/DevCenter.php5</class>
+		<class>View/Helper/DevCenter.php5</class>
+		<script load="auto">UI.DevCenter.js</script>
+		<style load="auto" source="lib">cmVarTree/0.1.css</style>
+		<style load="auto" source="theme">ui.dev.center.css</style>
+	</files>
+	<config protected="no" type="boolean" name="enabled">yes</config>
+	<hook type="resource" resource="Env" event="initModules"><![CDATA[
+		if( $env->getConfig()->get( 'module.ui_devcenter.enabled' ) ){
+		};
+	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		if( $env->getConfig()->get( 'module.ui_devcenter.enabled' ) ){
+			$center	= Resource_DevCenter::getInstance( $env );
+			$center->add( 'request', "Request", $env->getRequest()->getAll() );
+			$center->add( 'session', "Session", $env->getSession()->getAll() );
+			$center->addByModule( 'cookie' );
+			$center->addByModule( 'files', "Upload" );
+			$center->addByModule( 'env' );
+			$center->addByModule( 'server' );
+			$context->addScript( "$(document).ready(function(){UI.DevCenter.init();});" );
+		}
+	]]></hook>
+	<hook type="resource" resource="App" event="respond"><![CDATA[
+		if( $env->getConfig()->get( 'module.ui_devcenter.enabled' ) ){
+			$center		= Resource_DevCenter::getInstance( $env );
+			$helper		= new View_Helper_DevCenter( $env );
+			$label		= '<b>Dev</b><span class="muted">Center</span>';
+			$context->addBody( $helper->render( $center, $label ) );
+		}
+	]]></hook>
+</module>

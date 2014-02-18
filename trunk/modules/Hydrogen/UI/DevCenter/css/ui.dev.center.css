@@ -1,0 +1,72 @@
+
+@media (max-width: 979px) {
+	#DevCenter .navbar-fixed-top .navbar-inner,
+	#DevCenter .navbar-fixed-bottom .navbar-inner {
+		padding: 0px;
+		}
+	#DevCenter .navbar-fixed-top,
+	#DevCenter .navbar-fixed-bottom,
+	#DevCenter .navbar-static-top {
+		margin-right: 0px;
+		margin-left: 0px;
+		}
+	}
+
+#DevCenter {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	height: 200px;
+	background-color: rgb(255, 255, 255);
+	background-color: rgb(244, 244, 244);
+	border-top: 1px solid gray;
+	z-index: 2000;
+	overflow: hidden;
+	}
+#DevCenterContent {
+	height: 100%;
+	overflow: auto;
+	margin-top: 54px;
+	}
+#DevCenter .navbar.navbar-fixed-top {
+	position: absolute;
+	top: 12px;
+	}
+#DevCenter .navbar.navbar-fixed-top .brand {
+	margin-left: -5px;
+	font-size: 18px;
+	}
+#DevCenter .tab-content {
+	}
+#DevCenter .tab-content pre {
+	padding: 0.5em;
+	margin: 0;
+	height: 100%;
+	border-width: 0;
+	line-height: 1.2em;
+	font-size: 0.8em;
+	}
+#DevCenter .tab-content ul,
+#DevCenter .tab-content ol {
+	margin: 0px; 
+	padding: 0px;
+	line-height: 1em;
+	}
+#DevCenterHandleTop {
+	position: absolute;
+	z-index: 2000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 11px;
+	background-color: rgb(222, 222, 222);
+	font-size: 1em;
+	line-height: 12px;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	border-bottom: 1px solid gray;
+	cursor: pointer;
+	color: gray;
+	}
