@@ -108,7 +108,9 @@ $panelAdd	= '
 
 $panelInfo	= '';
 
-return '
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
+
+return $textIndexTop.'
 <div class="column-control">
 	'.$panelInfo.'
 </div>
@@ -116,5 +118,5 @@ return '
 	'.$panelAdd.'
 </div>
 <div style="clear: both"></div>
-';
+'.$textIndexBottom;
 ?>
