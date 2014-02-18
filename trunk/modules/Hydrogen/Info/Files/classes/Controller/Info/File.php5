@@ -9,7 +9,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	protected $rights		= array();
 	/**	@var	array		$folders	*/
 	protected $folders		= array();
-	
+
 	public function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
 		$this->options	= $this->env->getConfig()->getAll( 'module.info_files.' );
@@ -71,7 +71,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 #		foreach( $index as $folder ){
 #			
 #		}
-		
+
 		$folders	= array();
 		foreach( Folder_Lister::getFolderList( $this->path.$path ) as $folder ){
 			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
@@ -121,8 +121,6 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function remove( $fileId ){
 		$pathName	= base64_decode( $fileId );
 		$path		= dirname( $pathName ) === '.' ? '' : dirname( $pathName ).'/';
-		var_dump( $path );
-		die;
 		if( !file_exists( $this->path.$pathName ) ){
 			$this->messenger->noteError( 'Invalid file: '.$pathName );
 			$this->restart( 'index/'.base64_encode( $path ), TRUE );
