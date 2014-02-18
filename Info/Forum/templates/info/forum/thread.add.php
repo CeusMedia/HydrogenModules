@@ -9,7 +9,7 @@ return '
 		</div>
 	</div>
 	<div class="buttonbar">
-		<a href="./info/forum" class="btn btn-small"><i class="icon-arrow-left"></i> zurück</a>
+		<a href="./info/forum/topic/'.$thread->topicId.'" class="btn btn-small"><i class="icon-arrow-left"></i> zurück</a>
 		<button type="submit" name="save" value="1" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
 	</div>
 </form>
