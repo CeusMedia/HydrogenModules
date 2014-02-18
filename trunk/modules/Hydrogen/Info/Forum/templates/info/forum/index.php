@@ -62,14 +62,21 @@ $table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' 
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/index.add.php' );
 
+$iconHome	= new CMM_Bootstrap_Icon( 'home', TRUE );
+$buttons	= array( new CMM_Bootstrap_Button( $iconHome, 'btn-inverse', NULL, TRUE ) );
+$position	= new CMM_Bootstrap_ButtonGroup( $buttons );
+
 return $textTop.'
-<h3>'.$words['index']['heading'].'</h3>
+<!--<h3>'.$words['index']['heading'].'</h3>-->
+'.$position.'
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span12">
 		'.$table.'
 		<br/>
 	</div>
-	<div class="span3">
+</div>
+<div class="row-fluid">
+	<div class="span8">
 		'.$panelAdd.'
 	</div>
 </div>

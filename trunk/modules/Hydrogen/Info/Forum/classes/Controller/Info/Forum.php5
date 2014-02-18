@@ -17,6 +17,16 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.' );
 		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
+		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->cache		= $this->env->getCache();
+		
+		if( !( $this->userPosts = $this->cache->get( 'info.forum.userPosts' ) ) ){
+			$model	= new Model_User( $this->env );
+			$this->userPosts		= array();
+			foreach( $model->getAll() as $user )
+				$this->userPosts[$user->userId]	= $this->modelPost->countByIndex( 'authorId', $user->userId );
+			$this->cache->set( 'info.forum.userPosts', $this->userPosts );
+		}
 	}
 
 	public function addPost( $threadId ){
@@ -45,6 +55,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->modelPost->add( $data );
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
+		$this->cache->remove( 'info.forum.userPosts' );
 		$this->restart( 'thread/'.$threadId, TRUE );
 	}
 
@@ -101,7 +112,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		if( $postId && $content ){
 			$post	= $this->modelPost->get( (int) $postId );
 			if( $post->content !== $content )
-				$this->modelPost->edit( (int) $postId, array( 'content' => $content ) );
+				$this->modelPost->edit( (int) $postId, array( 'content' => $content, 'modifiedAt' => time() ) );
 		}
 		exit;
 	}
@@ -172,11 +183,12 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		foreach( $posts as $nr => $post )
 			$posts[$nr]->author	= $modelUser->get( $post->authorId );
 		$topic	= $this->modelTopic->get( $thread->topicId );
-		$this->addData( 'userId', $this->env->getSession()->get( 'userId' ) );
+		$this->addData( 'userId', $this->userId );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'topic', $topic );
 		$this->addData( 'thread', $thread );
 		$this->addData( 'posts', $posts );
+		$this->addData( 'userPosts', $this->userPosts );
 	}
 
 	public function topic( $topicId ){
@@ -194,6 +206,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 		$topics		= $this->modelTopic->getAll( array(), array( 'rank' => 'ASC' ) );
 		$this->addData( 'rights', $this->rights );
+		$this->addData( 'userId', $this->userId );
 		$this->addData( 'topics', $topics );
 		$this->addData( 'topic', $topic );
 		$this->addData( 'threads', $threads );
@@ -222,6 +235,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			}
 			else
 				$this->messenger->noteSuccess( 'Removed post.' );
+			$this->cache->remove( 'info.forum.userPosts' );
 		}
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}

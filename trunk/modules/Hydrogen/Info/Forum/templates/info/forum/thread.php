@@ -12,11 +12,19 @@ $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
 $userCanEdit	= in_array( 'ajaxEditPost', $rights );
 $userCanRemove	= in_array( 'removePost', $rights );
+$userIsManager	= in_array( 'removeTopic', $rights );
+
+
+
 
 if( $posts ){
 	$rows	= array();
-	foreach( $posts as $post ){
-		$buttons	= array();
+	foreach( $posts as $nr => $post ){
+		$buttons		= array();
+		$postIsLast		= count( $posts ) === $nr + 1;
+		$userIsAuthor	= $post->authorId == $userId;
+		$userCanChange	= $userIsManager || ( $userIsAuthor && $postIsLast );
+
 		if( (int) $post->status === 0 ){
 			if( $userCanApprove )
 				$buttons[]	= UI_HTML_Tag::create( 'a', $iconApprove, array(
@@ -25,14 +33,14 @@ if( $posts ){
 					'title'	=> $words['thread']['buttonApprove']
 				) );
 		}
-		if( $userCanEdit && ( $post->authorId == $userId || $userCanRemove ) ){
+		if( $userCanEdit && $userCanChange ){
 			$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
 				'onclick'	=> 'InfoForum.preparePostEditor('.$post->postId.')',
 				'class'		=> 'btn not-btn-small',
 				'title'		=> $words['thread']['buttonEdit']
 			) );
 		}
-		if( $userCanRemove ){
+		if( $userCanRemove && $userCanChange ){
 			$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 				'onclick'	=> 'if(confirm(\'Wirklich ?\')) document.location.href = \'./info/forum/removePost/'.$post->postId.'\';',
 				'href'	=> './info/forum/removePost/'.$post->postId,
@@ -44,39 +52,71 @@ if( $posts ){
 		if( $post->author ){
 			$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
 			$gravatar	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $gravatar, 'class' => 'avatar' ) );
-			$user		= $gravatar.$post->author->username;
+			$nrPosts	= UI_HTML_Tag::create( 'small', ' ('.$userPosts[$post->author->userId].')', array( 'class' => 'muted' ) );
+			$datetime	= UI_HTML_Tag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), array( 'class' => 'muted' ) );
+			$username	= UI_HTML_Tag::create( 'div', $post->author->username.$nrPosts, array( 'class' => 'username' ) );
+			$user		= $gravatar.$username.$datetime;
 		}
-		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+		$content		= nl2br( $post->content, TRUE );
+		if( $post->modifiedAt ){
+			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
+			$content		.= UI_HTML_Tag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
+		}
 		$cells	= array(
 			UI_HTML_Tag::create( 'td', $user ),
-			UI_HTML_Tag::create( 'td', nl2br( $post->content, TRUE ), array( 'class' => 'content' ) ),
+			UI_HTML_Tag::create( 'td', $content, array( 'class' => 'content autocut' ) ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		);
 		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => 'post-'.$post->postId ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '25%', '60%', '15%' );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '20%', '65%', '15%' );
 	$heads		= UI_HTML_Elements::TableHeads( array() );
-	$thead		= UI_HTML_Tag::create( 'tbody', $heads );
+	$thead		= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/thread.add.php' );
 
+$iconHome	= new CMM_Bootstrap_Icon( 'home' );
+$iconFolder	= new CMM_Bootstrap_Icon( 'folder-open' );
+$iconFile	= new CMM_Bootstrap_Icon( 'file', TRUE );
+$url		= './info/forum/';
+$buttons	= array(
+	new CMM_Bootstrap_LinkButton( $url, $iconHome ),
+	new CMM_Bootstrap_LinkButton( $url.'topic/'.$topic->topicId, $topic->title, NULL, $iconFolder ),
+	new CMM_Bootstrap_Button( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
+);
+$position	= new CMM_Bootstrap_ButtonGroup( $buttons );
+
 return $textTop.'
-<h3><a href="./info/forum"><span class="muted">'.$words['topic']['heading'].':</span></a> '.$topic->title.'</h3>
-<h4><a href="./info/forum/topic/'.$topic->topicId.'"><span class="muted">'.$words['thread']['heading'].':</span></a> '.$thread->title.'</h4>
+<!--<h3><a href="./info/forum"><span class="muted">'.$words['topic']['heading'].':</span></a> '.$topic->title.'</h3>
+<h4><a href="./info/forum/topic/'.$topic->topicId.'"><span class="muted">'.$words['thread']['heading'].':</span></a> '.$thread->title.'</h4>-->
+'.$position.'
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span12">
 		<h4>Beiträge</h4>
 		'.$table.'
 		<br/>
 	</div>
-	<div class="span4">
+</div>
+<div class="row-fluid">
+	<div class="span8">
 		'.$panelAdd.'
 	</div>
 </div>
 <style>
+div.username {
+	line-height: 1.2em;
+	font-size: 1.1em;
+	}
+div.modified {
+	margin-top: 0.5em;
+	padding-top: 0.5em;
+	padding-bottom: 0.25em;
+	border-top: 1px solid #DDD;
+	}
 img.avatar {
 	float: left;
 	width: 32px;
