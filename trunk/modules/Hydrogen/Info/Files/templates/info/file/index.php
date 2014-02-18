@@ -33,7 +33,8 @@ foreach( $files as $file ){
 		) );
 	}
 	$buttons		= $buttonDownload.'&nbsp;'.$buttonRemove;
-	$actions		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'pull-right' ) );
+	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
+//	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells			= array(
 		UI_HTML_Tag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
 		UI_HTML_Tag::create( 'td', $actions ),
@@ -61,8 +62,8 @@ foreach( $folders as $folder ){
 			'title'	=> $words['index']['buttonRemove']
 		) );
 	}
-//	$actions	= UI_HTML_Tag::create( 'div', $buttonOpen.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
-	$actions	= UI_HTML_Tag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, array( 'class' => 'pull-right' ) );
+	$actions	= UI_HTML_Tag::create( 'div', $buttonOpen.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
+//	$actions	= UI_HTML_Tag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells		= array(
 		UI_HTML_Tag::create( 'td', $label, array( 'class' => 'folder' ) ),
 		UI_HTML_Tag::create( 'td', $actions ),
@@ -77,7 +78,7 @@ $table	= '<br/><p><em><small class="muted">'.$words['index']['empty'].'</small><
 
 if( $rows ){
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "85%", "15%" );
-	$heads		= UI_HTML_Tag::create( 'tr', array( 
+	$heads		= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'th', $words['index']['headFile'] ),
 		UI_HTML_Tag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),
 	) );
@@ -92,26 +93,28 @@ $panelInfo		= $view->loadTemplateFile( 'info/file/index.info.php' );
 
 $way		= '';
 $parts		= $path ? explode( "/", '/'.trim( $path, " /\t" ) ) : array( '' );
-$buttons	= array();
-foreach( $parts as $part ){
-	$way		.= strlen( $part ) ? $part.'/' : '';
-	$isCurrent	= ( $path === $way );
-	$icon		= new CMM_Bootstrap_Icon( 'home', $isCurrent );
+$iconHome	= new CMM_Bootstrap_Icon( 'home', !$path );
+$buttonHome	= new CMM_Bootstrap_LinkButton( './info/file/index', $iconHome );
+if( !$path )
+	$buttonHome	= new CMM_Bootstrap_Button( $iconHome, 'btn-inverse', NULL, TRUE );
+$buttons	= array( $buttonHome );
+foreach( $parts as $nr => $part ){
 	if( strlen( $part ) ){
+		$way		.= strlen( $part ) ? $part.'/' : '';
+		$isCurrent	= ( $path === $way );
+		$isCurrent	= count( $parts ) === $nr + 1;
 		$url		= './info/file/index/'.base64_encode( $way );
 		$icon		= new CMM_Bootstrap_Icon( 'folder-open', $isCurrent );
 		$class		= $isCurrent ? 'btn-inverse' : NULL;
-		$buttons[]	= new CMM_Bootstrap_LinkButton( $url, $icon.'&nbsp;'.$part, $class );
+		$buttons[]	= new CMM_Bootstrap_LinkButton( $url, $part, $class, $icon, $isCurrent );
 	}
-	else
-		$buttons[]	= new CMM_Bootstrap_LinkButton( './info/file/index', $icon, $isCurrent ? 'btn-inverse' : NULL );
 }
 $position	= new CMM_Bootstrap_ButtonGroup( $buttons );
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
 
 return $textIndexTop.'
-<h3>Dateien</h3>
+<!--<h3>Dateien</h3>-->
 <div>'.$position.'</div>
 <div class="row-fluid">
 	<div class="span9">
