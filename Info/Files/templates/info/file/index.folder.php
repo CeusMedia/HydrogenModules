@@ -3,17 +3,11 @@ if( !in_array( 'addFolder', $rights ) )
 	return '';
 return '
 <h4>'.$words['addFolder']['heading'].'</h4>
-<form action="./info/file/addFolder" method="post">
+<form action="./info/file/addFolder/'.$pathId.'" method="post">
 	<div class="row-fluid">
 		<div class="span12">
-			<label for="input_folder">'.$words['addFolder']['labelIn'].'</label>
-			<input type="text" name="folder" id="input_folder" required="required"/>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<label for="input_in">'.$words['addFolder']['labelIn'].'</label>
-			<select name="in" id="input_in">'.$optFolder.'</select>
+			<label for="input_folder">'.$words['addFolder']['labelFolder'].'</label>
+			<input type="text" name="folder" id="input_folder" required="required" value="'.$request->get( 'input_folder' ).'"/>
 		</div>
 	</div>
 	<div class="buttonbar">
