@@ -1,5 +1,4 @@
 <?php
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
 
 $wf		= (object) $words['index'];
 
@@ -51,6 +50,7 @@ foreach( $roles as $nr => $role )
 }
 $rows	= join( $rows );
 
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
 
 return $textIndexTop.'
 <style>

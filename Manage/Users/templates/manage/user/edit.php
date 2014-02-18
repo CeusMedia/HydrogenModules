@@ -276,7 +276,9 @@ foreach( $matrix as $controller => $actions ){
 
 $card	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'acl-card' ) );
 
-return '
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
+
+return $textIndexTop.'
 <div class="row-fluid">
 	<div class="span12">
 		'.$panelEdit.'
@@ -294,5 +296,5 @@ return '
 		'.$panelInfo.'
 	</div>
 </div>
-';
+'.$textIndexBottom;
 ?>

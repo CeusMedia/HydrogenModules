@@ -15,7 +15,9 @@ foreach( $words['type-register'] as $key => $label ){
 }
 $optRegister	= join( $optRegister );
 
-return '
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
+
+return $textIndexTop.'
 <h3>'.$words['add']['legend'].'</h3>
 <form name="addRole" action="./manage/role/add" method="post">
 	<div class="row-fluid">
@@ -44,6 +46,5 @@ return '
 			'.UI_HTML_Elements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['edit']['buttonSave'], 'btn btn-success' ).'
 		</div>
 	</div>
-</form>
-';
+</form>'.$textIndexBottom;
 ?>

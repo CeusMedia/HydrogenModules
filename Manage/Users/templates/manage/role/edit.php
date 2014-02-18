@@ -55,8 +55,9 @@ $panelEdit	= '
 
 $rights	= $view->loadTemplateFile( 'manage/role/edit.rights.php' );
 
-return '
+extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
 
+return $textIndexTop.'
 <!--<h2><span class="muted">Rolle</span> '.$role->title.'</h2>-->
 <div class="row-fluid">
 	<div class="span12">
@@ -67,5 +68,5 @@ return '
 	<div class="span12">
 		'.$rights.'
 	</div>
-</div>';
+</div>'.$textIndexBottom;
 ?>
