@@ -13,7 +13,7 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.1</version>
+	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
