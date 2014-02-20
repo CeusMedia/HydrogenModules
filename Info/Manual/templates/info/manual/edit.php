@@ -36,7 +36,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_content">'.$words['edit']['labelContent'].'</label>
-					<textarea class="span12 CodeMirror" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
+					<textarea class="span12 CodeMirror-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">

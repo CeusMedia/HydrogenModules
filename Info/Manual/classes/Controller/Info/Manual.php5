@@ -121,7 +121,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'file', $fileName );
 		$this->addData( 'content', $content );
 	}
-	
+
 	public function index(){
 		if( $this->files && $this->order ){
 			$file	= preg_replace( "/\.md/", "", $this->order[0] );
@@ -140,7 +140,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
 			$this->restart( NULL, TRUE );
 		}
-		$index	= $this->order->getKeyOf( $fileName.$this->ext );		
+		$index	= $this->order->getKeyOf( $fileName.$this->ext );
 		if( is_int( $index ) && $index >= 0 && $index < $this->order->count() - 1 ){
 			$temp	= $this->order->get( $index + 1 );
 			$this->order->set( $index + 1, $fileName.$this->ext );
@@ -246,7 +246,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->messenger->noteNotice( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
 			$this->restart( NULL, TRUE );
 		}
-		
+
 		$content	= File_Reader::load( $this->path.$fileName.$this->ext );
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );

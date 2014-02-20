@@ -59,8 +59,7 @@ $(document).ready(function(){
 	width: 18em;
 	min-height: 50px;
 	max-height: 70%;
-	margin-right: 0px;
-	margin-top: 10px;
+	margin: 10px 0px 10px 10px;
 	padding: 0.3em 0.5em;
 	background-color: rgb(255, 255, 255);
 	border-width: 1px 1px 1px 1px;
@@ -69,7 +68,7 @@ $(document).ready(function(){
 	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.10);
 	overflow-x: hidden;
 	overflow-y: auto;
-	}	
+	}
 #content-index .heading {
 	font-size: 1.2em;
 	padding: 0.5em 0.5em 0.25em 0.5em;
