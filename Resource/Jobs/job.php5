@@ -3,14 +3,13 @@ $verCMC	= 'trunk';
 $verCMF	= 'trunk';
 $verCMM	= 'trunk';
 
-#$configFile		= "config/config.ini";								//  set (an alternative) config file
+$configFile		= "config/config.ini";								//  set (an alternative) config file
 
 $modes	= array(
-#	'live',
+	'live',
 	'test',
 	'dev',
 );
-
 
 //  --  NO NEED TO CHANGE BELOW  --  //
 require_once 'cmClasses/'.$verCMC.'/autoload.php5';						//  load cmClasses
@@ -27,7 +26,7 @@ $test		= $request->has( '--test' ) || $request->has( '-t' );		//
 if( class_exists( 'Environment' ) )										//  an individual environment class is available
 	Jobber::$classEnvironment	= 'Environment';						//  set individual environment class
 if( isset( $configFile ) )												//  an alternative config file has been set
-	CMF_Hydrogen_Environment_Web::$configFile	= $configFile;
+	CMF_Hydrogen_Environment_Console::$configFile	= $configFile;
 try{
 	$jobber	= new Jobber();												//  start job handler
 	$jobber->loadJobs( $modes );										//  load jobs configured in XML files

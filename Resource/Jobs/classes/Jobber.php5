@@ -16,7 +16,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Maintainer.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Jobber extends CMF_Hydrogen_Application_Abstract {
+class Jobber extends CMF_Hydrogen_Application_Console {
 
 	protected $jobs	= array();
 
@@ -28,7 +28,7 @@ class Jobber extends CMF_Hydrogen_Application_Abstract {
 	protected function out( $message ){
 		print( $message."\n" );
 	}
-	
+
 	public static function readJobXmlFile( $modes = array() ){
 		$map			= new stdClass();
 		$map->jobs		= array();
@@ -52,11 +52,11 @@ class Jobber extends CMF_Hydrogen_Application_Abstract {
 	}
 
 	public function run( $verbose = FALSE ) {
-		
+
 		$request	= new Console_RequestReceiver();
 		$parameters	= $request->getAll();
 		array_shift( $parameters );
-		
+
 		if( count( $parameters ) < 1 )
 			die( "Job ID needed." );
 		$jobId	= array_shift( array_keys( $parameters ) );
@@ -65,17 +65,16 @@ class Jobber extends CMF_Hydrogen_Application_Abstract {
 		if( !array_key_exists( $jobId, $this->jobs ) )
 			die( 'Job with ID "'.$jobId.'" is not existing.' );
 		$job	= $this->jobs[$jobId];
-		
-#		$this->out( 'JobID: '.$jobId );
-#		print_m( $job );
-		
+
 		$classArgs	= array( $this->env );
 		$arguments	= array_keys( $parameters );
 
 		$className	= 'Job_'.$job->class;
 		if( !class_exists( $className ) )
 			die( 'Job class "'.$className.'" is not existing.' );
-		$result		= Alg_Object_MethodFactory::call( $className, $job->method, $arguments, $classArgs );
+		$jobObject	= Alg_Object_Factory::createObject( $className, $classArgs );
+		$jobObject->noteJob( $job->class, $job->method );
+		Alg_Object_MethodFactory::call( $jobObject, $job->method, $arguments );
 	}
 }
 ?>
