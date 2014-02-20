@@ -19,4 +19,5 @@ function loadMap(id){
 			title: m.data('marker-title')
 		});
 	}
+	return map;
 }
