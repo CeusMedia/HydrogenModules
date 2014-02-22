@@ -1,9 +1,9 @@
 <?php
 $w		= (object) $words['index'];
-$texts	= $this->populateTexts( array( 'top', 'bottom' ), 'html/info/contact/' );
+extract( $this->populateTexts( array( 'top', 'bottom' ), 'html/info/contact/' ) );
 return '
 <h2>'.$w->heading.'</h2>
-'.$texts['top'].'
+'.$textTop.'
 <form action="'.$formPath.'" method="post">
 	<div class="row-fluid">
 		<div class="span5">
@@ -32,6 +32,6 @@ return '
 		<button type="reset" class="btn btn-small">zurücksetzen</button>
 	</div>
 </form>
-'.$texts['bottom'].'
+'.$textBottom.'
 ';
 ?>
