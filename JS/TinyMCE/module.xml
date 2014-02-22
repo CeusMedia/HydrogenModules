@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p6</version>
+	<version>4.0.10-p7</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -37,7 +37,7 @@ $(document).ready(function(){
 				plugins: settings.Module_JS_TinyMCE.auto_plugins,
 				language: settings.Module_JS_TinyMCE.auto_language,
 				image_list: listImages,
-				link_list: listLinks,
+				link_list: listLinks
 			};
 			if(settings.Module_JS_TinyMCE.auto_tools)
 				options.tools = settings.Module_JS_TinyMCE.auto_tools;
