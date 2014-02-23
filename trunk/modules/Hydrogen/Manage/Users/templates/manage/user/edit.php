@@ -171,7 +171,7 @@ $panelEdit	= '
 				'name'		=> "email",
 				'id'		=> "input_email",
 				'class'		=> "span12 ".( $needsEmail ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->email ),
+				'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
 				'required'	=> $needsEmail ? "required" : NULL
 			) ).'
 		</div>
@@ -200,7 +200,7 @@ $panelEdit	= '
 				'name'		=> "firstname",
 				'id'		=> "input_firstname",
 				'class'		=> "span12 ".( $needsFirstname ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->firstname ),
+				'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
 				'required'	=> $needsFirstname ? "required" : NULL
 			) ).'
 		</div>
@@ -211,7 +211,7 @@ $panelEdit	= '
 				'name'		=> "surname",
 				'id'		=> "input_surname",
 				'class'		=> "span12 ".( $needsSurname ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->surname ),
+				'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
 				'required'	=> $needsSurname ? "required" : NULL
 			) ).'
 		</div>
