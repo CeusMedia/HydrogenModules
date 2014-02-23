@@ -263,8 +263,8 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		$this->messenger->noteSuccess( 'Die Instanz "'.$instance->title.'" wurde abgemeldet. <small class="hint muted">Der Instanzordner wurde dabei <b>nicht gelöscht</b></small>.' );
 		$this->model->remove( $instanceId );
 
-		if( $this->session->get( 'instanceId' ) === $instanceId )
-			$this->session->remove( 'instanceId' );
+		if( $this->env->getSession()->get( 'instanceId' ) === $instanceId )
+			$this->env->getSession()->remove( 'instanceId' );
 
 		$this->restart( NULL, TRUE );
 	}
