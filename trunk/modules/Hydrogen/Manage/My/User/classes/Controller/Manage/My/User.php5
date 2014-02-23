@@ -12,6 +12,8 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$userId		= $session->get( 'userId' );
 		$roleId		= $session->get( 'roleId' );
 		$modelUser	= new Model_User( $this->env );
+		$modelRole	= new Model_Role( $this->env );
+
 		if( !$userId ){
 			$messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
 			$this->restart( './' );
@@ -21,14 +23,12 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$messenger->noteFailure( 'Zugriff verweigert.' );
 			$this->restart( './manage/my' );
 		}
-		if( $config->get( 'module.roles' ) ){
-			$modelRole	= new Model_Role( $this->env );
-			$user->role	= $modelRole->get( $user->roleId );
-		}
-		if( $config->get( 'module.companies' ) ){
+		$user->role	= $modelRole->get( $user->roleId );
+		if( class_exists( 'Model_Company' ) ){
 			$modelCompany	= new Model_Company( $this->env );
 			$user->company	= $modelCompany->get( $user->companyId );
 		}
+		$this->addData( 'currentUserId', $userId );
 		$this->addData( 'user', $user );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'module.resource_users.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'module.resource_users.password.strength.min' ) );
@@ -59,7 +59,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		}
 
 		$data		= $request->getAllFromSource( 'POST' )->getAll();
-		
+
 		$deniedKeys	= array( 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser' );
 		foreach( $deniedKeys as $deniedKey )
 			unset( $data[$deniedKey] );
@@ -79,12 +79,12 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			'userId'	=> '!='.$userId,
 			'status'	=> '>=-1',
 		);
-		
+
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$needsEmail		= (int) $options->get( 'email.mandatory' );
 		$needsFirstname	= (int) $options->get( 'firstname.mandatory' );
 		$needsSurname	= (int) $options->get( 'surname.mandatory' );
-		
+
 		if( $needsEmail && empty( $data['email'] ) )
 			$messenger->noteError( $words->msgNoEmail );
 		else if( $modelUser->getByIndices( $indices ) )
@@ -94,7 +94,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$messenger->noteError( $words->msgNoFirstname );
 		if( $needsSurname && empty( $data['surname'] ) )
 			$messenger->noteError( $words->msgNoSurname );
-		
+
 		/*		if( empty( $data['postcode'] ) )
 			$messenger->noteError( $words->msgNoPostcode );
 		if( empty( $data['city'] ) )
@@ -103,7 +103,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$messenger->noteError( $words->msgNoStreet );
 		if( empty( $data['number'] ) )
 			$messenger->noteError( $words->msgNoNumber );*/
-		
+
 		if( !trim( $request->get( 'password' ) ) )
 			$messenger->noteError( $words->msgNoPassword );
 		else if( $user->password !== md5( $request->get( 'password' ) ) )
@@ -141,7 +141,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$pwdMinLength	= (int) $options->get( 'password.length.min' );
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
 		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
-		
+
 		$data = $request->getAllFromSource( 'post' );
 		if( empty( $data['passwordOld'] ) )
 			$messenger->noteError( $words->msgNoPasswordOld );
