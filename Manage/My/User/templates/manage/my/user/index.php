@@ -35,8 +35,10 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
+
+
 $mapInfo	= array();
-if( $config->get( 'module.roles' ) )
+#if( $config->get( 'module.roles' ) )
 	$mapInfo['Rolle']	= '<span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span>';
 if( !empty( $user->company ) ){
 	$link	= HTML::Link( './manage/my/company', $user->company->title );
@@ -47,19 +49,21 @@ $mapInfo['Status']	= '<span class="user-status status'.$user->status.'">'.$words
 $listInfo	= array();
 foreach( $mapInfo as $term => $definition )
 	$listInfo[]	= UI_HTML_Tag::create( 'dt', $term ).UI_HTML_Tag::create( 'dd', $definition );
-$listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ) );
+$listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ), array( 'class' => 'dl-horizontal' ) );
 
 //  --  PANEL: INFO  --  //
 $helper			= new View_Helper_TimePhraser( $env );
 $mapTimes	= array();
-$mapTimes['registriert']		= $helper->convert( $user->loggedAt, TRUE );
-$mapTimes['zuletzt eingeloggt']	= $helper->convert( $user->activeAt, TRUE );
-$mapTimes['zuletzt aktiv']		= $helper->convert( $user->createdAt, TRUE );;
+$mapTimes['registriert']		= $helper->convert( $user->createdAt, TRUE, 'vor' );
+if( $user->userId !== $currentUserId ){
+	$mapTimes['zuletzt eingeloggt']	= $helper->convert( $user->loggedAt, TRUE, 'vor' );
+	$mapTimes['zuletzt aktiv']		= $helper->convert( $user->activeAt, TRUE, 'vor' );
+}
 
 $listTimes	= array();
 foreach( $mapTimes as $term => $definition )
 	$listTimes[]	= UI_HTML_Tag::create( 'dt', $term ).UI_HTML_Tag::create( 'dd', $definition );
-$listTimes	= UI_HTML_Tag::create( 'dl', join( $listTimes ) );
+$listTimes	= UI_HTML_Tag::create( 'dl', join( $listTimes ), array( 'class' => 'dl-horizontal' ) );
 
 $panelInfo		= HTML::Fields(
 	HTML::Legend( 'Kontoinformationen', 'info' ).
@@ -73,7 +77,7 @@ $panelPassword	= HTML::Form( './manage/my/user/password', 'my_user_password',
 	HTML::Fields(
 		HTML::Legend( $words['password']['legend'], 'edit my user password' ).
 		HTML::DivClass( 'row-fluid',
-			HTML::DivClass( 'span6', 
+			HTML::DivClass( 'span6',
 				HTML::Label( 'passwordOld', $words['password']['labelPassword'], 'mandatory' ).
 				'<input type="password" name="passwordOld" id="input_passwordOld" class="span12 mandatory" required value="" autocomplete="off"/>'
 //				HTML::Password( 'passwordOld', 'span12 mandatory' )
@@ -103,7 +107,7 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'name'		=> 'username',
 						'id'		=> 'input_username',
-						'value'		=> htmlentities( $user->username ),
+						'value'		=> htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ),
 						'class'		=> 'span11',
 						'required'	=> 'required',
 						'type'		=> 'text',
@@ -118,7 +122,7 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'name'		=> 'email',
 						'id'		=> 'input_email',
-						'value'		=> htmlentities( $user->email ),
+						'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
 						'class'		=> 'span11',
 						'required'	=> $mandatoryEmail ? 'required' : NULL,
 						'type'		=> 'text',
@@ -142,7 +146,7 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'name'		=> 'firstname',
 					'id'		=> 'input_firstname',
-					'value'		=> htmlentities( $user->firstname ),
+					'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
 					'class'		=> 'span12',
 					'required'	=> $mandatoryFirstname ? 'required' : NULL,
 					'type'		=> 'text',
@@ -154,7 +158,7 @@ $panelEdit	= HTML::Form( './manage/my/user/edit', 'my_user_edit',
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'name'		=> 'surname',
 					'id'		=> 'input_surname',
-					'value'		=> htmlentities( $user->surname ),
+					'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
 					'class'		=> 'span12',
 					'required'	=> $mandatorySurname ? 'required' : NULL,
 					'type'		=> 'text',
