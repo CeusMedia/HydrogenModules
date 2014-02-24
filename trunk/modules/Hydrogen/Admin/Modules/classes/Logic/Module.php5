@@ -641,18 +641,19 @@ class Logic_Module {
 			if( $file === "config/config.ini" )														//  @todo	fix this hack
 				continue;
 			@unlink( $path = $pathApp.$file );
-			do{
-				$path	= dirname( $path );
-				$folder	= new Folder_Reader( $path );
-				$count	= $folder->getNestedCount();
-				if( !$count ){
-					if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
-						Folder_Editor::removeFolder( $path );
-						$folders[]	= substr( $path, strlen( $pathApp ) );
+			if( file_exists( dirname( $path ) ) ){
+				do{
+					$path	= dirname( $path );
+					$folder	= new Folder_Reader( $path );
+					if( !( $count = $folder->getNestedCount() ) ){
+						if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
+							Folder_Editor::removeFolder( $path );
+							$folders[]	= substr( $path, strlen( $pathApp ) );
+						}
 					}
 				}
+				while( !$count );
 			}
-			while( !$count );
 		}
 		if( $verbose ){
 			if( $files ){
