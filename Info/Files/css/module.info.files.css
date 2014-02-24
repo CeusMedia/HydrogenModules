@@ -3,10 +3,14 @@ tr.folder td.folder a.name {
 	height: 32px;
 	padding-left: 40px;
 	background-image: url(//cdn.int1a.net/img/fatcow/32/folder.png);
-	background-position: 2px 2px;
+	background-position: 1px 0px;
 	background-repeat: no-repeat;
-	line-height: 2.5em;
+	line-height: 1.1em;
 	font-weight: bold;
+	}
+tr.folder td.folder a.name small {
+	font-weight: normal;
+	font-size: 0.8em;
 	}
 tr td.file {
 	height: 33px;
