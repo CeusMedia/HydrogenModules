@@ -264,7 +264,7 @@ class Logic_Module {
 			throw new RuntimeException( 'Path of module to import is not existing' );
 	#	- create XML file
 	#	- open XML file
-	#	- scan classes 
+	#	- scan classes
 	#	- append files in XML
 	#	- write XML file
 	}*/
@@ -540,10 +540,10 @@ class Logic_Module {
 					$list[$type][]	= $moduleFile;													//  ...
 		}
 		$module->files	= (object) $list;															//  set new file list on module
-	
+
 		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
 		$fileLists[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
-	
+
 		$listDone	= array();
 		$exceptions	= array();
 		$fileLists['copy']['module.xml']	= 'config/modules/'.$moduleId.'.xml';
@@ -586,13 +586,15 @@ class Logic_Module {
 			if( $driver ){																			//  remote database connection is configured
 				$moduleLocal	= $this->getModule( $moduleId );									//  get installed module for local version
 				$moduleSource	= $this->getModuleFromSource( $moduleId );							//  get source module for database update
-				$versionFrom	= $moduleLocal->versionInstalled;									//  extract installed version
-				$versionTo		= $moduleSource->versionAvailable;									//  extract available version
+				$versionFrom	= $this->version( $moduleLocal->versionInstalled );					//  extract installed version
+				$versionTo		= $this->version( $moduleSource->versionAvailable );				//  extract available version
 				$list			= array();
 				foreach( $moduleSource->sql as $key => $sql ){										//  iterate module SQL parts
 					if( $sql->event === "update" ){													//  found update
-						if( version_compare( $sql->from, $versionFrom ) >= 0 ){						//  related to current version or up
-							if( version_compare( $versionTo, $sql->to ) >= 0 ){						//  related to new version or below
+						$sqlVersionFrom = $this->version( $sql->from );
+						$sqlVersionTo	= $this->version( $sql->to );
+						if( version_compare( $sqlVersionFrom, $versionFrom ) >= 0 ){				//  related to current version or up
+							if( version_compare( $versionTo, $sqlVersionTo ) >= 0 ){				//  related to new version or below
 								$key	= $versionFrom.'_'.$versionTo;								//  generate version key for list
 								if( $sql->type == $driver )											//  update SQL is for instance database driver
 									$list[$key]	= trim( $sql->sql );								//  enlist master entry in SQL update list
@@ -675,6 +677,10 @@ class Logic_Module {
 			$this->messenger->noteFailure( 'Failed: '.$e->getMessage() );
 		}
 		return FALSE;
+	}
+
+	protected function version( $version ){
+		return preg_replace( "/-pl?([0-9])/", ".0.\\1", $version );
 	}
 
 	/**
