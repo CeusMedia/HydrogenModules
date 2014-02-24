@@ -15,10 +15,13 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$this->options	= $this->env->getConfig()->getAll( 'module.info_files.' );
 		$this->rights	= $this->env->getAcl()->index( 'info/file' );
 		$this->path		= $this->options['path'];
-		$this->fileIndex	= $this->path.'.index.ini';
+		$this->fileIndex	= $this->path.'.index';
+		$this->index		= array( 'folders' => array(), 'files' => array() );
 		if( !file_exists( $this->fileIndex ) )
 			$this->saveIndex();
-		$this->index		= (array) File_JSON_Reader::load( $this->fileIndex );
+		$this->index			= File_JSON_Reader::load( $this->fileIndex );
+		$this->index->folders	= (array) $this->index->folders;
+		$this->index->files		= (array) $this->index->files;
 
 		foreach( Folder_RecursiveLister::getFolderList( $this->path ) as $folder ){
 			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
@@ -43,8 +46,28 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		else{
 			Folder_Editor::createFolder( $this->path.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
+			$pathCopy	= rtrim( $path, '/' );
+			$this->index->folders[$pathCopy]->folders++;
+			while( ( $pathCopy = dirname( $pathCopy ) ) !== '.' )
+				$this->index->folders[$pathCopy]->folders++;
+			$this->saveIndex();
 			$this->restart( 'index/'.base64_encode( $path ), TRUE );
 		}
+	}
+
+	protected function countIn( $path, $recursive = FALSE ){
+		$files		= 0;
+		$folders	= 0;
+		if( $recursive ){
+			$index		= Folder_RecursiveLister::getMixedList( $this->path.$path );
+			foreach( $index as $entry )
+//				if( !$entry->isDot() )
+					$entry->isDir() ? $folders++ : $files++;
+		}
+		else{
+			die( "no implemented yet" );
+		}
+		return array( 'folders' => $folders, 'files' => $files );
 	}
 
 	public function download( $fileId ){
@@ -53,8 +76,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid file: '.$pathName );
 			$this->restart( NULL, TRUE );
 		}
-		$this->index[strtolower( $pathName )]->downloads++;
-		$this->index[strtolower( $pathName )]->downloaded	= time();
+		$this->index->files[strtolower( $pathName )]->downloads++;
+		$this->index->files[strtolower( $pathName )]->downloaded	= time();
 		$this->saveIndex();
 		Net_HTTP_Download::sendFile( $this->path.$pathName );
 		exit;
@@ -75,10 +98,20 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$folders	= array();
 		foreach( Folder_Lister::getFolderList( $this->path.$path ) as $folder ){
 			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
+			if( !isset( $this->index->folders[$pathName] ) ){
+				$count	= $this->countIn( $pathName, TRUE );
+				$this->index->folders[$pathName] = (object) array(
+					'folders'	=> $count['folders'],
+					'files'		=> $count['files'],
+				);
+				$this->saveIndex();
+			}
 			$folders[$pathName]	= (object) array(
 				'pathName'		=> $pathName,
 				'folderName'	=> basename( $pathName ),
 				'files'			=> 0,
+				'totalFolders'	=> $this->index->folders[$pathName]->folders,
+				'totalFiles'	=> $this->index->folders[$pathName]->files,
 			);
 		}
 
@@ -87,8 +120,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		foreach( $index as $entry ){
 			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$key		= strtolower( $pathName );
-			if( !isset( $this->index[$key] ) ){
-				$this->index[$key]	= (object) array(
+			if( !isset( $this->index->files[$key] ) ){
+				$this->index->files[$key]	= (object) array(
 					'downloaded'	=> NULL,
 					'downloads'		=> 0,
 					'timestamp'		=> filemtime( $entry->getPathname() ),
@@ -98,9 +131,9 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$files[$pathName]	= (object) array(
 				'fileName'		=> $entry->getFilename(),
 				'pathName'		=> $pathName,
-				'downloads'		=> $this->index[$key]->downloads,
-				'timestamp'		=> $this->index[$key]->timestamp,
-				'downloaded'	=> $this->index[$key]->downloaded,
+				'downloads'		=> $this->index->files[$key]->downloads,
+				'timestamp'		=> $this->index->files[$key]->timestamp,
+				'downloaded'	=> $this->index->files[$key]->downloaded,
 			);
 //			if( preg_match( '/\//', $pathName ) )
 //				$folders[dirname( $pathName )]->files++;
@@ -125,7 +158,11 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid file: '.$pathName );
 			$this->restart( 'index/'.base64_encode( $path ), TRUE );
 		}
-		unset( $this->index[strtolower( $pathName )] );
+		unset( $this->index->files[strtolower( $pathName )] );
+		$pathCopy   = rtrim( $pathName, '/' );
+		$this->index->folders[pathCopy]->files--;
+		while( ( $pathCopy = dirname( $pathCopy ) ) != '.' )
+			$this->index->folders[$pathCopy]->files--;
 		$this->saveIndex();
 		@unlink( $this->path.$pathName );
 
@@ -147,6 +184,11 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			else{
 				Folder_Editor::removeFolder( $this->path.$pathName );
 				$this->messenger->noteSuccess( 'Der Ordner <b>"%s"</b> wurde entfernt.', $pathName );
+				$pathCopy	= rtrim( $path, '/' );
+				unset( $this->index->folders[$pathCopy] );
+				while( ( $pathCopy = dirname( $pathCopy ) ) != '.' )
+					$this->index->folders[$pathCopy]->folders--;
+				$this->saveIndex();
 			}
 		}
 		$this->restart( 'index/'.base64_encode( $path ), TRUE );
@@ -175,11 +217,12 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 					$this->restart( NULL, TRUE );
 				}
 				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
-				$this->index[strtolower( $targetFile )]	= array(
+				$this->index->files[strtolower( $targetFile )]	= array(
 					'downloaded'	=> NULL,
 					'downloads'		=> 0,
 					'timestamp'		=> filemtime( $targetFile ),
 				);
+				$this->index->folders[$path]->files++;
 				$this->saveIndex();
 			}
 		}

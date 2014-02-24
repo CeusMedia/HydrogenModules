@@ -46,8 +46,9 @@ ksort( $rows['files'] );
 
 foreach( $folders as $folder ){
 	$url	= './info/file/index/'.base64_encode( $folder->pathName );
-	$label	= $folder->folderName;
-	$label	= UI_HTML_Tag::create( 'a', $label, array( 'class' => 'name', 'href' => $url ) );
+	$label	= $folder->folderName.'<br/>';
+	$info	= UI_HTML_Tag::create( 'small', $folder->totalFiles.' Dateien und '.$folder->totalFolders.' Unterordner', array( 'class' => 'muted' ) );
+	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
 	$buttonOpen	= UI_HTML_Tag::create( 'a', $iconOpenFolder, array(
 		'href'	=> './info/file/index/'.base64_encode( $folder->pathName ),
