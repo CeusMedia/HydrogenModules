@@ -14,7 +14,7 @@ class Model_Bill extends CMF_Hydrogen_Model{
 		'modifiedAt',
 	);
 	protected $primaryKey	= 'billId';
-	protected $indizes		= array(
+	protected $indices		= array(
 		'userId',
 		'customerId',
 		'type',
