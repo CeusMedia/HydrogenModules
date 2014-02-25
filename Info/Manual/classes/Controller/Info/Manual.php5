@@ -232,7 +232,10 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	}
 
 	protected function urlencode( $name ){
-		return str_replace( "%2F", "/", rawurldecode( $name ) );
+		$name	= rawurldecode( $name );
+		$name	= str_replace( "%2F", "/", $name );
+		$name	= str_replace( " ", "%20", $name );
+		return $name;
 	}
 
 	public function view( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ){
@@ -248,14 +251,31 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 
 		$content	= File_Reader::load( $this->path.$fileName.$this->ext );
+
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );
 			$content	= str_replace( "](".$entry.")", "](./info/manual/view/".$this->urlencode( $entry ).")", $content );
 			$content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/view/".$this->urlencode( $entry )."\r\n", $content );
 		}
+		$content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, 'callbackEncode' ), $content );
 		$this->addData( 'file', $fileName );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'content', $content );
+	}
+
+#	protected function callbackEncode( $matches ){
+#	}
+
+	protected function callbackEncode( $matches ){
+		if( preg_match( "/^[a-z]+:\/\//i", $matches[2] ) )
+			return $matches[1].'('.$matches[2].')';
+		if( preg_match( "/^\.\/info\/manual\/view\//i", $matches[2] ) ){
+			$fileName	= str_replace( './info/manual/view/', '', $matches[2] );
+			if( file_exists( $this->path.urldecode( $fileName ).$this->ext ) )
+				return $matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).')';
+			return '<strike>'.$matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).').</strike>';
+		}
+		return '<strike>'.$matches[1].'('.urlencode( $matches[2] ).')</strike>';
 	}
 }
 ?>
