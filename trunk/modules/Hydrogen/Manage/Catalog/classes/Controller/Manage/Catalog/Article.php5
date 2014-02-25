@@ -199,7 +199,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	}
 
 	public function removeTag( $articleId, $articleTagId ){
-		$this->logic->modelArticleTag->remove( $articleTagId );
+		$this->logic->removeArticleTag( $articleTagId );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 

@@ -591,6 +591,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelArticle->edit( $articleId, array( 'cover' => NULL ) );
 	}
 
+	public function removeArticleTag( $articleTagId ){
+		return $this->modelArticleTag->remove( $articleTagId );
+	}
+
 	public function removeAuthorFromArticle( $articleId, $authorId ){
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
