@@ -24,25 +24,59 @@ class Model_Cache{
 		$this->env->set( 'cache', $this );
 	}
 
-	public function flush(){
+	public function flush( $context = NULL ){
+		if( $context !== NULL ){
+			$_ctx	= $this->getContext();
+			$this->setContext( $this->config->context.$context );
+			$result	= $this->model->flush();
+			$this->setContext( $_ctx );
+			return $result;
+		}
 		return $this->model->flush();
 	}
 
-	public function get( $key, $default = NULL ){
+	public function get( $key, $default = NULL, $context = NULL ){
+		if( $context !== NULL ){
+			if( !$this->has( $key, $context ) )
+				return $default;
+			$_ctx	= $this->getContext();
+			$this->setContext( $this->config->context.$context );
+			$result	= unserialize( $this->model->get( $key ) );
+			$this->setContext( $_ctx );
+			return $result;
+		}
 		if( $this->has( $key ) )
 			return unserialize( $this->model->get( $key ) );
 		return $default;
+	}
+
+	public function getContext(){
+		return $this->model->getContext();
 	}
 
 	public function getType(){
 		return $this->config->type;
 	}
 
-	public function has( $key ){
+	public function has( $key, $context = NULL ){
+		if( $context !== NULL ){
+			$_ctx	= $this->getContext();
+			$this->setContext( $this->config->context.$context );
+			$result	= $this->model->has( $key );
+			$this->setContext( $_ctx );
+			return $result;
+		}
 		return $this->model->has( $key );
 	}
 
-	public function index(){
+	public function index( $context = NULL ){
+		if( $context !== NULL ){
+			$_ctx	= $this->getContext();
+			$this->setContext( $this->config->context.$context );
+			$result	= $this->model->index();
+			$this->setContext( $_ctx );
+			return $result;
+		}
 		return $this->model->index();
 	}
 
@@ -50,7 +84,14 @@ class Model_Cache{
 		return $this->model->remove( $key );
 	}
 
-	public function set( $key, $value ){
+	public function set( $key, $value, $context = NULL ){
+		if( $context !== NULL ){
+			$_ctx	= $this->getContext();
+			$this->setContext( $this->config->context.$context );
+			$result	= $this->model->set( $key, serialize( $value ) );
+			$this->setContext( $_ctx );
+			return $result;
+		}
 		return $this->model->set( $key, serialize( $value ) );
 	}
 
