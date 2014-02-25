@@ -187,8 +187,8 @@ abstract class Mail_Abstract{
 	 *	@return		void
 	 */
 	public function sendToUser( $userId ){
-		if( !$this->env->getModules()->has( 'Users' ) )
-			throw new RuntimeException( 'Module "Users" is not installed' );
+		if( !$this->env->getModules()->has( 'Resource_Users' ) )
+			throw new RuntimeException( 'Module "Resource_Users" is not installed' );
 		$model	= new Model_User( $this->env );
 		$user	= $model->get( $userId );
 		if( !$user )
