@@ -1,5 +1,5 @@
 <?php
-class View_Helper_MultiButtonGroupMultiToolbar{
+/*class View_Helper_MultiButtonGroupMultiToolbar{
 
 	public $toolbars	= array();
 
@@ -40,9 +40,9 @@ class View_Helper_MultiButtonGroupMultiToolbar{
 				foreach( array_keys( $buttonGroups ) as $groupId )
 					ksort( $this->toolbars[$toolbarId][$groupId] );
 	}
-}
+}*/
 
-class View_Helper_MultiCheckDropdownButton{
+/*class View_Helper_MultiCheckDropdownButton{
 
 	protected $url			= "./work/mission/setFilter/";
 	protected $filterValues;
@@ -108,7 +108,7 @@ class View_Helper_MultiCheckDropdownButton{
 	public function useItemIcons( $useItemIcons = TRUE ){
 		$this->useItemIcons		= $useItemIcons;
 	}
-}
+}*/
 
 class View_Helper_MissionFilter{
 

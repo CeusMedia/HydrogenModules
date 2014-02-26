@@ -273,6 +273,73 @@ var WorkMissionFilter = {
 	}
 };
 
+
+var WorkMissionEditor = {
+	mirror: null,
+	markdown: null,
+	converter: null,
+	textarea: null,
+	init: function(){
+		"use strict";
+		WorkMissionEditor.markdown = $("#descriptionAsMarkdown");
+		WorkMissionEditor.converter = new Markdown.Converter();
+		WorkMissionEditor.textarea = $("#input_content");
+		WorkMissionEditor.mirror = CodeMirror.fromTextArea(WorkMissionEditor.textarea.get(0), {
+			lineNumbers: true,
+//			theme: "neat",
+			theme: "elegant",
+			mode: "markdown",
+//			viewportMarin: "Infinity",
+			fixedGutter: true,
+		});
+		WorkMissionEditor.textarea.bindWithDelay("keyup", function(){
+//			console.log("save");
+			$.ajax({
+				url: "./work/mission/ajaxSaveContent/"+missionId,
+				data: {content: WorkMissionEditor.textarea.val()},
+				type: "post",
+				success: function(){
+					$(".CodeMirror").removeClass("changed");
+				}
+			});
+		}, 1000);
+		WorkMissionEditor.mirror.on("change", function(instance, update){
+			instance.save();
+			WorkMissionEditor.markdown.html(converter.makeHtml(textarea.hide().val()));
+			$(".CodeMirror").addClass("changed").trigger("keyup");
+			$(instance.getTextArea()).trigger("keyup");
+			WorkMissionEditor.resize();
+		});
+
+//		$(window).bind("resize", function(){
+//			$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
+//			$("#mirror-container").width("100%");
+//		}).trigger("resize");
+
+		WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(WorkMissionEditor.textarea.hide().val()));
+		WorkMissionEditor.resize();
+
+/*	$(".tabbable .nav-tabs li a").bind("shown", function(event){
+		mirror.refresh();
+	});*/
+/*		$("input, select, textarea").each(function(){
+			$(this).data("value-original", $(this).val());
+		}).bind("change keyup", function(){
+		var input = $(this);
+		input.removeClass("changed");
+		if(input.val() != input.data("value-original"))
+			input.addClass("changed");
+		});*/
+
+
+	},
+	resize: function(){
+		var height =  Math.max(WorkMissionEditor.markdown.height()-30, 160);
+		WorkMissionEditor.mirror.setSize("100%", height);
+	}
+};
+
+
 function showOptionals(elem){
 	var form = $(elem.form);
 	var name = $(elem).attr("name");
