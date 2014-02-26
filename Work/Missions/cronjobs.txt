@@ -1,0 +1,24 @@
+
+These cronjobs are needed for daily mails.
+
+
+Legend:
+
+{ROOT}	= absolute file root
+{USER}	= console (or vhost) user
+{PATH}	= relative to user home
+
+As root:
+
+1. Set ownership of module configuration files to user:
+	0 7 * * * chown {USER} {ROOT}{PATH}/config/modules/*
+   Or (not tested but should do too):
+	0 7 * * * chmod 775 {ROOT}{PATH}/config/modules/*
+
+
+As user:
+
+1. Run mail job.
+	0 8 * * * cd {PATH}; php job.php5 work-mission-mail-daily > logs/job.log
+
+

@@ -321,59 +321,7 @@ return '
 var missionId = '.$mission->missionId.';
 $("body").addClass("uses-bootstrap");
 $(document).ready(function(){
-	var markdown = $("#descriptionAsMarkdown");
-	var converter = new Markdown.Converter();
-	var textarea = $("#input_content");
-	var mirror = CodeMirror.fromTextArea(textarea.get(0), {
-		lineNumbers: true,
-		theme: "neat",
-		theme: "elegant",
-		mode: "markdown",
-//		viewportMarin: "Infinity",
-		fixedGutter: true,
-    });
- 	textarea.bindWithDelay("keyup", function(){
-//		console.log("save");
-		$.ajax({
-			url: "./work/mission/ajaxSaveContent/"+missionId,
-			data: {content: textarea.val()},
-			type: "post",
-			success: function(){
-				$(".CodeMirror").removeClass("changed");
-			}
-		});
-//		$(this).data("queue")
-//		$(this).data("queue", window.setTimeout(function(){
-//		}));
-	}, 1000);
-	mirror.on("change", function(instance, update){
-		instance.save();
-		markdown.html(converter.makeHtml(textarea.hide().val()));
-		$(".CodeMirror").addClass("changed").trigger("keyup");
-		$(instance.getTextArea()).trigger("keyup");
-		mirror.setSize("100%", Math.max(markdown.height()-30, 70));
-	});
-
-	$(window).bind("resize", function(){
-//		$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
-//		$("#mirror-container").width("100%");
-	}).trigger("resize");
-
-	markdown.html(converter.makeHtml(textarea.hide().val()));
-	mirror.setSize("100%", Math.max(markdown.height()-30, 70));
-
-/*	$(".tabbable .nav-tabs li a").bind("shown", function(event){
-		mirror.refresh();
-	});
-*/
-/*	$("input, select, textarea").each(function(){
-		$(this).data("value-original", $(this).val());
-	}).bind("change keyup", function(){
-		var input = $(this);
-		input.removeClass("changed");
-		if(input.val() != input.data("value-original"))
-			input.addClass("changed");
-	});*/
+	WorkMissionEditor.init();
 });
 </script>
 <style>
