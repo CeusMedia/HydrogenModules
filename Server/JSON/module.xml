@@ -4,7 +4,7 @@
 	<description><![CDATA[Standalone JSON answering server application base.]]></description>
 This module installs the main classes needed to run a server application which is requested using REST and answering in JSON.
 	<category>Server</category>
-	<version>0.2.3</version>
+	<version>0.2.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

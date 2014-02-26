@@ -35,7 +35,7 @@
  */
 class Controller_Abstract extends CMF_Hydrogen_Controller {
 
-	protected function getViewObject( $controller ){
+	protected function getViewObject( $controller, $force = TRUE ){
 	}
 
 	protected function logException( Exception $exception ) {
