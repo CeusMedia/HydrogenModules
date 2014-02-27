@@ -67,7 +67,6 @@ return '
 <!--	<h3>'.$w->heading.'</h3>-->
 	<div class="row-fluid">
 		<div class="span3">
-			<h4>Filter</h4>
 			'.$view->loadTemplateFile( 'manage/shop/order/filter.php' ).'
 		</div>
 		<div class="span9">

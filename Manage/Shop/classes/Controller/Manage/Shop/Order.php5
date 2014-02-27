@@ -46,16 +46,14 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 			switch( $filterKey ){
 				case 'customer':
 					if( strlen( trim( $filterValue ) ) ){
-						$model		= new Model_Customer( $this->env );
+						$model		= new Model_Shop_Customer( $this->env );
 						$value		= '%'.str_replace( " ", "%", str_replace( ' ', '', $filterValue ) ).'%';
 						$find		= array( 'CONCAT(firstname, lastname)' => $value );
-						$customers	= $model->getAll( $find );
-						$conditions['customerId']	= array();
-						foreach( $customers as $customer ){
-							$conditions['customerId'][]	= $customer->customerId;
+						if( ( $customers = $model->getAll( $find ) ) ){
+							$conditions['customerId']	= array();
+							foreach( $customers as $customer )
+								$conditions['customerId'][]	= $customer->customerId;
 						}
-						if( !$conditions['customerId'] )
-							unset( $conditions['customerId'] );
 					}
 					break;
 				case 'status':
