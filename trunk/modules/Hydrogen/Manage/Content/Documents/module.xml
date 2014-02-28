@@ -3,7 +3,7 @@
 	<title>Manage: Contents: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -25,4 +25,5 @@
 	<link xml:lang="de" path="manage/content/document">Dokumente</link>
 	<link xml:lang="en" path="manage/content/document">Documents</link>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Document::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="HintHelper" event="registerHints">Controller_Manage_Content_Document::___onRegisterHints</hook>
 </module>
