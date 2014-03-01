@@ -1,5 +1,15 @@
 <?php
+
+$viewMain	= new View_Manage_Customer( $env );
+$viewMain->registerTab( 'edit/'.$customerId, 'Daten' );
+if( $useMap )
+	$viewMain->registerTab( 'map/'.$customerId, 'Karte' );
+$viewMain->registerTab( 'rating/'.$customerId, 'Bewertung' );
+$tabs		= $viewMain->renderTabs( 'rating/'.$customerId );
+
 return '
+<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
+'.$tabs.'
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="/resources/demos/style.css" />
@@ -16,8 +26,7 @@ $(document).ready(function(){
 });
 </script>
 
-
-<h3>Kunde bewerten: <span class="muted">'.$customer->title.'</span></h3>
+<h4>Neue Bewertung</h4>
 <form action="./manage/customer/rating/add/'.$customerId.'" method="post" class="form-inline">
 	<div class="row-fluid">
 		<div class="span3">
@@ -104,7 +113,7 @@ $(document).ready(function(){
 	</div>
 	<hr/>
 	<div class="buttonbar">
-		<button type="button" class="btn btn-small" onclick="document.location.href=\'./manage/customer/edit/'.$customer->customerId.'\';"><i class="icon-arrow-left"></i> zurück</button>
+		<button type="button" class="btn btn-small" onclick="document.location.href=\'./manage/customer/rating/'.$customer->customerId.'\';"><i class="icon-arrow-left"></i> zurück</button>
 		<button type="submit" class="btn btn-small btn-primary" name="save"><i class="icon-ok icon-white"></i> speichern</button>
 	</div>
 </form>';

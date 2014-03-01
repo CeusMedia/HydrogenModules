@@ -9,6 +9,7 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelCustomer	= new Model_Customer( $this->env );
 		$this->modelRating		= new Model_Customer_Rating( $this->env );
+		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
 	}
 
 	public function add( $customerId ){
@@ -34,41 +35,7 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->addData( 'customer', $customer );
 	}
 
-	protected function calculateCustomerIndex( $rating ){
-		$factors	= array(
-			'affability'	=> 3,
-			'guidability'	=> 4,
-			'growthRate'	=> 5,
-			'profitability'	=> 8,
-			'paymentMoral'	=> 7,
-			'adherence'		=> 1,
-			'uptightness'	=> -2,
-		);
-		$index		= 0;
-		$properties	= array();
-		foreach( $factors as $property => $factor ){
-			if( $rating->$property <= 0 )
-				continue;
-			if( $factor < 0 )
-				$index	+= abs( $factor ) * ( 5 - $rating->$property );
-			else
-				$index	+= $factor * ( $rating->$property - 1 );
-			$properties[]	= abs( $factor );
-		}
-		$sum	= array_sum( $properties );
-/*		remark( 'index: '.$index );
-		remark( 'sum: '.$sum );
-		remark( 'props: '.count( $properties ) );
-		remark( '~: '.round( $index / $sum, 1 ) );
-		die;
-*/
-		return round( 4 - ( $index / $sum ) + 1, 1 );
-		return round( $index / $sum, 1 );
-		return round( ( $index / 7 + 10 / 7 ) / ( 21.4 / 5 ), 1 );
-		//  recommend: 4
-	}
-
-	public function index(){
+/*	public function index(){
 		$modelCustomer	= new Model_Customer( $this->env );
 		$modelRating	= new Model_Customer_Rating( $this->env );
 		$customers		=  $modelCustomer->getAll();
@@ -78,33 +45,39 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 			$rating		= $modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
 			if( $rating ){
 				$rating	= array_pop( $rating );
-				$rating->index		= $this->calculateCustomerIndex( $rating );
+				$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
 			}
 			$customer->rating	= $rating;
 		}
 		$this->addData( 'customers', $customers );
 	}
-
-	public function view( $customerId ){
+*/
+	public function index( $customerId ){
 		$modelCustomer	= new Model_Customer( $this->env );
-		$modelRating	= new Model_Customer_Rating( $this->env );
+		$modelRating	= new Model_Customer_Rating( $this->env );		
 
 		$customer	= $modelCustomer->get( $customerId );
 		$order		= array( 'timestamp' => 'DESC' );
 		$limit		= array( 0, 10 );
-		$ratings	= $modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
+		$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
 		$ratings	= array_reverse( $ratings );
-		$lastIndex	= NULL;
+		$lastIndex	= 3;
+		$totalIndex	= 0;
+		$variance	= 0;
+		$tendency	= 0;
 		foreach( $ratings as $nr => $rating ){
-			$rating->index		= $this->calculateCustomerIndex( $rating );
+			$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
 			if( !is_null( $lastIndex ) )
 				$variance			+= abs( $lastIndex - $rating->index );
+			$tendency	+= $rating->index - 3;
 			$lastIndex	= $rating->index;
 			$totalIndex	+= $rating->index;
 		}
 		$customer->ratings	= $ratings;
 		$customer->index	= $ratings ? $totalIndex / count( $ratings ) : NULL;
 		$customer->variance	= count( $ratings ) > 1 ? $variance / ( count( $ratings ) - 1 ) : NULL;
+		$customer->tendency	= $tendency / count( $ratings );
+		$customer->lastRate	= $lastIndex;
 
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
