@@ -1,11 +1,6 @@
 <?php
 
-$viewMain	= new View_Manage_Customer( $env );
-$viewMain->registerTab( 'edit/'.$customerId, 'Daten' );
-if( $useMap )
-	$viewMain->registerTab( 'map/'.$customerId, 'Karte' );
-$viewMain->registerTab( 'rating/'.$customerId, 'Bewertung' );
-$tabs		= $viewMain->renderTabs( 'rating/'.$customerId );
+$tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'ratings/'.$customerId );
 
 return '
 <h3><span class="muted">Kunde</span> '.$customer->title.'</h3>

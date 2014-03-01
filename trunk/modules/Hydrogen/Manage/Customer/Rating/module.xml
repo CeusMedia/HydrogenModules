@@ -19,6 +19,7 @@
 		<needs type="module">Manage_Customer</needs>
 		<needs type="module">UI_Map</needs>
 	</relations>
+	<hook type="resource" resource="CustomerManager" event="registerTabs">View_Manage_Customer_Rating::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>customer_ratings`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>customer_ratings` (

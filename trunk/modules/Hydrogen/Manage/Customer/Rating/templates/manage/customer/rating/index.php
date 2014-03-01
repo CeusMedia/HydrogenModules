@@ -1,54 +1,54 @@
 <?php
-$panelRating	= '';
+
+$url			= './manage/customer/rating/add/'.$customer->customerId;
+$iconAdd		= '<i class="icon-plus icon-white"></i>';
+$buttonAdd		= '<button type="button" class="btn btn-small btn-primary" onclick="document.location.href=\''.$url.'\';">'.$iconAdd.' bewerten</button>';
+
+$panelInfo		= '
+<div class="muted"><em><small>Keine Bewertungen bisher.</small></em></div><br/>
+'.$buttonAdd.'
+';
 $panelRatings	= '';
 
-$indicator1	= new UI_HTML_Indicator();
-$indicator2	= new UI_HTML_Indicator( array( 'invertColor' => TRUE ) );
+if( $customer->ratings ){
+	$indicator1	= new UI_HTML_Indicator();
+	$indicator2	= new UI_HTML_Indicator( array( 'invertColor' => TRUE ) );
 
-$averages	= array( 0, 0, 0, 0, 0, 0, 0 );
+	$averages	= array( 0, 0, 0, 0, 0, 0, 0 );
 
-$rows = array();
-foreach( $customer->ratings as $rating ){
-	$averages[0]	+= $rating->affability;
-	$averages[1]	+= $rating->guidability;
-	$averages[2]	+= $rating->growthRate;
-	$averages[3]	+= $rating->profitability;
-	$averages[4]	+= $rating->paymentMoral;
-	$averages[5]	+= $rating->adherence;
-	$averages[6]	+= $rating->uptightness;
+	$rows = array();
+	foreach( $customer->ratings as $rating ){
+		$averages[0]	+= $rating->affability;
+		$averages[1]	+= $rating->guidability;
+		$averages[2]	+= $rating->growthRate;
+		$averages[3]	+= $rating->profitability;
+		$averages[4]	+= $rating->paymentMoral;
+		$averages[5]	+= $rating->adherence;
+		$averages[6]	+= $rating->uptightness;
 
-	$rows[]	= '<tr>
-	<td>'.date( 'Y-m-d', $rating->timestamp ).'</td>
-	<td>'.number_format( $rating->index, 1, ',', '.' ).'</td>
-	<td>'.( $rating->index ? $indicator1->build( abs( $rating->index ) - 0.5, 4.5 ) : '' ).'</td>
-	<td data-value="'.$rating->affability.'"></td>
-	<td data-value="'.$rating->guidability.'"></td>
-	<td data-value="'.$rating->growthRate.'"></td>
-	<td data-value="'.$rating->profitability.'"></td>
-	<td data-value="'.$rating->paymentMoral.'"></td>
-	<td data-value="'.$rating->adherence.'"></td>
-	<td data-value="'.$rating->uptightness.'" data-inverse="yes"></td>
-</tr>';
-}
-for( $i=0; $i<7; $i++ )
-	$averages[$i]	= round( $averages[$i] / count( $customer->ratings ), 1 );
+		$rows[]	= '<tr>
+		<td>'.date( 'Y-m-d', $rating->timestamp ).'</td>
+		<td>'.number_format( $rating->index, 1, ',', '.' ).'</td>
+		<td>'.( $rating->index ? $indicator1->build( abs( $rating->index ) - 0.5, 4.5 ) : '' ).'</td>
+		<td data-value="'.$rating->affability.'"></td>
+		<td data-value="'.$rating->guidability.'"></td>
+		<td data-value="'.$rating->growthRate.'"></td>
+		<td data-value="'.$rating->profitability.'"></td>
+		<td data-value="'.$rating->paymentMoral.'"></td>
+		<td data-value="'.$rating->adherence.'"></td>
+		<td data-value="'.$rating->uptightness.'" data-inverse="yes"></td>
+	</tr>';
+	}
+	for( $i=0; $i<7; $i++ )
+		$averages[$i]	= round( $averages[$i] / count( $customer->ratings ), 1 );
 
-$tendency	= '-';
-if( $customer->tendency > 0 )
-	$tendency	= '<span class="tendency-up">&plus;'.round( $customer->tendency * 50, 0 ).'%</span>';
-else if( $customer->tendency < 0 )
-	$tendency	= '<span class="tendency-down">&minus;'.round( abs( $customer->tendency * 50 ), 0 ).'%</span>';
+	$tendency	= '-';
+	if( $customer->tendency > 0 )
+		$tendency	= '<span class="tendency-up">&plus;'.round( $customer->tendency * 50, 0 ).'%</span>';
+	else if( $customer->tendency < 0 )
+		$tendency	= '<span class="tendency-down">&minus;'.round( abs( $customer->tendency * 50 ), 0 ).'%</span>';
 
-$viewMain	= new View_Manage_Customer( $env );
-$viewMain->registerTab( 'edit/'.$customerId, 'Daten' );
-if( $useMap )
-	$viewMain->registerTab( 'map/'.$customerId, 'Karte' );
-$viewMain->registerTab( 'rating/'.$customerId, 'Bewertung' );
-$tabs		= $viewMain->renderTabs( 'rating/'.$customerId );
-
-return '
-<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
-'.$tabs.'
+	$panelInfo	= '
 <h4>Zusammenfassung</h4>
 <div class="row-fluid">
 	<div class="span3">
@@ -82,7 +82,9 @@ return '
 		</dl>
 	</div>
 </div>
-<br/>
+<br/>';
+
+	$panelRatings	= '
 <div id="panel-customer-ratings">
 	<h4>Bewertungen</h4>
 	<table class="table ratings table-striped table-condensed">
@@ -117,8 +119,17 @@ return '
 		</tbody>
 	</table>
 </div>
-<button type="button" class="btn btn-small btn-primary" onclick="document.location.href=\'./manage/customer/rating/add/'.$customer->customerId.'\';"><i class="icon-plus icon-white"></i> bewerten</button>
-<br/>
+'.$buttonAdd.'
+<br/>';
+}
+
+$tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'rating/'.$customerId );
+
+return '
+<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
+'.$tabs.'
+'.$panelInfo.'
+'.$panelRatings.'
 <script>
 $(document).ready(function(){
 	$("table td, dd").each(function(){
@@ -151,6 +162,9 @@ table.ratings td.colored {
 	color: white;
 	text-shadow: 1px 1px 2px black;
 	border-color: #FFF;
+	}
+dl.ratings dt {
+	padding: 0.2em 0em;
 	}
 dl.ratings dd {
 	text-align: center;
