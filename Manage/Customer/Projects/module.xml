@@ -3,7 +3,7 @@
 	<title>Manage: Customer: Projects</title>
 	<description><![CDATA[Extension for customer projects.]]></description>
 	<category>Management</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,8 +12,7 @@
 		<class>Logic/CustomerProject.php5</class>
 		<class>View/Manage/Customer/Project.php5</class>
 		<class>Model/Customer/Project.php5</class>
-		<template>manage/customer/rating/add.php</template>
-		<template>manage/customer/rating/index.php</template>
+		<template>manage/customer/project/index.php</template>
 	</files>
 	<relations>
 		<needs type="module">Manage_Customer</needs>
