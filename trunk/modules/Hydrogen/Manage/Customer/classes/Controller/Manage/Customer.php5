@@ -8,9 +8,15 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelCustomer	= new Model_Customer( $this->env );
-		$this->modelRating		= new Model_Customer_Rating( $this->env );
+		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
+		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
 	}
-	
+
+	public static function ___registerHints( $env, $context, $module, $arguments = NULL ){
+		if( class_exists( 'View_Helper_Hint' ) )
+			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
+	}
+
 	public function add(){
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
@@ -27,40 +33,6 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		foreach( $this->modelCustomer->getColumns() as $key )
 			$customer[$key]	= $request->get( $key );
 		$this->addData( 'customer', (object) $customer );
-	}
-
-	protected function calculateCustomerIndex( $rating ){
-		$factors	= array(
-			'affability'	=> 3,
-			'guidability'	=> 4,
-			'growthRate'	=> 5,
-			'profitability'	=> 8,
-			'paymentMoral'	=> 7,
-			'adherence'		=> 1,
-			'uptightness'	=> -2,
-		);
-		$index		= 0;
-		$properties	= array();
-		foreach( $factors as $property => $factor ){
-			if( $rating->$property <= 0 )
-				continue;
-			if( $factor < 0 )
-				$index	+= abs( $factor ) * ( 5 - $rating->$property );
-			else
-				$index	+= $factor * ( $rating->$property - 1 );
-			$properties[]	= abs( $factor );
-		}
-		$sum	= array_sum( $properties );
-/*		remark( 'index: '.$index );
-		remark( 'sum: '.$sum );
-		remark( 'props: '.count( $properties ) );
-		remark( '~: '.round( $index / $sum, 1 ) );
-		die;
-*/
-		return round( 4 - ( $index / $sum ) + 1, 1 );
-		return round( $index / $sum, 1 );
-		return round( ( $index / 7 + 10 / 7 ) / ( 21.4 / 5 ), 1 );
-		//  recommend: 4
 	}
 
 	public function edit( $customerId ){
@@ -85,29 +57,6 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 			$this->restart( './manage/customer/edit/'.$customerId );
 		}
 
-		if( $this->env->getModules()->has( 'Manage_Customer_Rating' ) ){
-			$order		= array( 'timestamp' => 'DESC' );
-			$limit		= array( 0, 10 );
-			$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
-			$ratings	= array_reverse( $ratings );
-			$lastIndex	= NULL;
-			$totalIndex	= 0;
-			$variance	= 0;
-			foreach( $ratings as $nr => $rating ){
-				$rating->index		= $this->calculateCustomerIndex( $rating );
-				if( !is_null( $lastIndex ) )
-					$variance			+= abs( $lastIndex - $rating->index );
-				$lastIndex	= $rating->index;
-				$totalIndex	+= $rating->index;
-			}	
-			$customer->ratings	= $ratings;
-			$customer->index	= $ratings ? $totalIndex / count( $ratings ) : NULL;
-			$customer->variance	= count( $ratings ) > 1 ? $variance / ( count( $ratings ) - 1 ) : NULL;
-			$this->addData( 'useRatings', TRUE );
-		}
-		else
-			$this->addData( 'useRatings', FALSE );
-
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
 	}
@@ -120,11 +69,21 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 			$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
 			if( $rating ){
 				$rating	= array_pop( $rating );
-				$rating->index		= $this->calculateCustomerIndex( $rating );
+				$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
 			}
 			$customer->rating	= $rating;
 		}
 		$this->addData( 'customers', $customers );
+	}
+
+	public function map( $customerId ){
+		$customer	= $this->modelCustomer->get( $customerId );
+		if( !$customer ){
+			$this->messenger->noteError( 'Invalid customer' );
+			$this->restart( './manage/customer' );
+		}
+		$this->addData( 'customerId', $customerId );
+		$this->addData( 'customer', $customer );
 	}
 
 	public function rate( $customerId ){
