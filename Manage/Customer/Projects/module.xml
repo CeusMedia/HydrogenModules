@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Customer: Projects</title>
+	<description><![CDATA[Extension for customer projects.]]></description>
+	<category>Management</category>
+	<version>0.3</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Customer/Project.php5</class>
+		<class>Logic/CustomerProject.php5</class>
+		<class>View/Manage/Customer/Project.php5</class>
+		<class>Model/Customer/Project.php5</class>
+		<template>manage/customer/rating/add.php</template>
+		<template>manage/customer/rating/index.php</template>
+	</files>
+	<relations>
+		<needs type="module">Manage_Customer</needs>
+	</relations>
+	<hook type="resource" resource="CustomerManager" event="registerTabs">View_Manage_Customer_Project::___onRegisterTab</hook>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customer_projects`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>customer_projects` (
+  `customerProjectId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `customerId` int(11) unsigned NOT NULL,
+  `projectId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`customerProjectId`),
+  KEY `customerId` (`customerId`,`projectId`,`userId`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>customer_projects`;
+]]></sql>
+</module>
