@@ -22,7 +22,7 @@ foreach( $projectUsers as $user ){
 		$label	= UI_HTML_Tag::create( 'a', $user->username, array( 'href' => $url, 'class' => $class ) );
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;
-	$remove	= UI_HTML_Elements::LinkButton( $url, NULL, array( 'class' => 'button tiny remove' ) );
+	$remove	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', array( 'href' => $url, 'class' => 'btn btn-mini btn-danger pull-right' ) );
 	$list[$user->username]	= UI_HTML_Tag::create( 'li', $remove.$label );
 }
 ksort( $list );
@@ -59,30 +59,34 @@ if( $facts ){
 	<dl>
 		'.join( $facts ).'
 	</dl>
-</fieldset>
-';
+</fieldset>';
 
 }
 
 
 
-$buttonAdd	= UI_HTML_Elements::Button( 'addUser', 'hinzufügen', 'button add' );
+$iconAdd	= '<i class="icon-plus icon-white"></i>';
+$buttonAdd	= UI_HTML_Elements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn not-btn-small btn-success' );
 if( !$canEdit )
-	$buttonAdd	= UI_HTML_Elements::Button( 'addUser', 'hinzufügen', 'button add', NULL, TRUE );
+	$buttonAdd	= UI_HTML_Tag::Button( 'addUser', $iconAdd.' hinzufügen', 'btn not-btn-small btn-success disabled', NULL, TRUE );
 $panelUsers	= '
-<form name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
-	<fieldset id="project-users">
-		<legend>Beteiligte Benutzer</legend>
-		'.$list.'
-		<br/>
-		<label class="not-mandatory">Benutzer</label><br/>
-		<select name="userId" id="input_userId" class="max not-mandatory">'.$optUser.'</select>
+<h3>Beteiligte Benutzer</h3>
+<form id="project-users" name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
+	<div class="row-fluid">
+		<div class="span12">
+			'.$list.'
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<label class="not-mandatory">Benutzer</label>
+			<select name="userId" id="input_userId" class="span12 max not-mandatory">'.$optUser.'</select>
+		</div>
 		<div class="buttonbar">
 			'.$buttonAdd.'
 		</div>
-	</fieldset>
-</form>
-';
+	</div>
+</form>';
 
 $optCompany	= "";
 if( isset( $projectCompanies ) ){
@@ -92,52 +96,57 @@ if( isset( $projectCompanies ) ){
 	$optCompany	= UI_HTML_Elements::Options( $optCompany, $projectId );
 }
 
+$w	= (object) $words['edit'];
 
 $buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add' );
 if( !$canEdit )
 	$buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add', NULL, TRUE );
 $panelEdit	= '
 <form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
-	<fieldset>
-		<legend class="icon edit">'.$words['edit']['legend'].'</legend>
-		<ul class="input">
-			<li>
-				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label><br/>
-				<input type="text" name="title" id="input_title" class="max mandatory" value="'.htmlentities( $project->title, ENT_COMPAT, 'UTF-8' ).'"/>
-			</li>
-			<li>
-				<label for="input_description">'.$words['add']['labelDescription'].'</label><br/>
-				<textarea name="description" id="input_description" class="max cmGrowText cmClearInput">'.htmlentities( $project->description, ENT_COMPAT, 'UTF-8' ).'</textarea>
-			</li>
-			<li class="column-left-20">
-				<label for="input_status" class="mandatory">'.$words['add']['labelStatus'].'</label><br/>
-				<select name="status" id="input_status" class="max">'.$optStatus.'</select>
-			</li>
-			<li class="column-left-80">
-				<label for="input_url">'.$words['add']['labelUrl'].'</label><br/>
-				<input type="text" name="url" id="input_url" class="max cmClearInput" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
-			</li>
+	<div class="row-fluid">
+		<div class="span12">
+			<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
+			<input type="text" name="title" id="input_title" class="span12 max mandatory" value="'.htmlentities( $project->title, ENT_COMPAT, 'UTF-8' ).'"/>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<label for="input_description">'.$w->labelDescription.'</label>
+			<textarea name="description" id="input_description" rows="6" class="span12 max CodeMirror-auto">'.htmlentities( $project->description, ENT_COMPAT, 'UTF-8' ).'</textarea>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span4">
+			<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
+			<select name="status" id="input_status" class="span12 max">'.$optStatus.'</select>
+		</div>
+		<div class="span8">
+			<label for="input_url">'.$w->labelUrl.'</label>
+			<input type="text" name="url" id="input_url" class="span12 max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
+		</div>
+	</div>
+	<div class="buttonbar">
+		<a href="./manage/project" class="btn btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+		<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+	</div>
 <!--			<li class="">
 				<label for="input_companyId">Unternehmen</label>
 				<select name="companyId" id="input_companyId" class="max">'.$optCompany.'</select>
 			</li>
 -->		</ul>
-		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/project', $words['edit']['buttonCancel'], 'button cancel' ).'
-			'.$buttonSave.'
-		</div>
 	</fieldset>
 </form>
 ';
 
 return '
-<div class="column-left-75">
-	'.$panelEdit.'
+<div class="row-fluid">
+	<div class="span8">
+		'.$panelEdit.'
+	</div>
+	<div class="span4">
+		'.$panelUsers.'
+		'.$panelInfo.'
+	</div>
 </div>
-<div class="column-left-25">
-	'.$panelUsers.'
-	'.$panelInfo.'
-</div>
-<div class="column-clear"></div>
 ';
 ?>

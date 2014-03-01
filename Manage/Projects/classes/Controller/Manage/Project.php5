@@ -2,10 +2,13 @@
 class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 
 	protected $useMissions	= FALSE;
+	protected $useCompanies	= FALSE;
+	protected $useCustomers	= FALSE;
 
 	public function __onInit(){
 		$this->useMissions	= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies	= $this->env->getModules()->has( 'Manage_Projects_Companies' );
+		$this->useCustomers	= $this->env->getModules()->has( 'Manage_Customers' );
 	}
 
 	public function add(){
@@ -39,6 +42,9 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( './manage/project/edit/'.$projectId );
 		}
+		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
+		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
+		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
 	}
 
 	public function addUser( $projectId ){
@@ -117,6 +123,13 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$conditions		= array( 'projectId' => $project->projectId );
 			$this->addData( 'projectCompanies', $modelProjectCompanies->get( $conditions ) );	//   @todo: order!
 		}
+		if( $this->useCustomers ){
+			$modelCustomer	= new Model_Customer( $this->env );
+			$modelCustomer->getAll( array( 'userId' => $session->get( 'userId' ) ), array( 'title' => 'ASC' ) );
+		}
+		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
+		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
+		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
 	}
 
 	public function filter( $mode = NULL ){
