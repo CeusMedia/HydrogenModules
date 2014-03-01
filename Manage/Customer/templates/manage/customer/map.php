@@ -15,12 +15,7 @@ if( $customer->latitude || $customer->longitude  ){
 <script>$(document).ready(function(){loadMap("map-customer")});</script>';	
 }
 
-$view->registerTab( 'edit/'.$customerId, 'Daten' );
-if( $useMap )
-	$view->registerTab( 'map/'.$customerId, 'Karte' );
-if( $useRatings )
-	$view->registerTab( 'rating/'.$customerId, 'Bewertung' );
-$tabs		= $view->renderTabs( 'map/'.$customerId );
+$tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'map/'.$customerId );
 
 $url	= preg_replace( "/^https?:\/\/(www.)?/", "", rtrim( $customer->url, '/' ) );
 

@@ -17,7 +17,7 @@ foreach( $customers as $customer ){
 	<td>'.$graph.'</td>
 </tr>';
 }
-$list	= '<table class="table" style="width: 400px">
+$list	= '<table class="table table-striped">
 	<colgroup>
 		<col width="60%"/>
 		<col width="10%"/>
@@ -35,20 +35,7 @@ $list	= '<table class="table" style="width: 400px">
 	</tbody>
 </table>
 <br/>
-<button type="button" class="btn btn-small" onclick="document.location.href=\'./manage/customer/add\';"><i class="icon-plus"></i> neuer Kunde</button>
+<button type="button" class="btn btn-small btn-primary" onclick="document.location.href=\'./manage/customer/add\';"><i class="icon-plus icon-white"></i> neuer Kunde</button>
 ';
 return $list;
-
-/*
- * 		5.0		=> 0.00 + 0.1
- *		4.0		=> 0.25
- *		3.0		=> 0.50
- *		2.0		=> 0.75
- *		1.0		=> 1.00 + 0.1 
- * 
- * 		abs(5 - i) / 4
- * 
- */
-
-
 ?>

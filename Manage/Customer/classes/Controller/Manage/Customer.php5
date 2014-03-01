@@ -8,8 +8,17 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelCustomer	= new Model_Customer( $this->env );
-		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
+		if( $this->env->getModules()->has( 'Manage_Customer_Rating' ) ){
+			$this->modelRating	= new Model_Customer_Rating( $this->env );
+		}
 		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
+		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
+		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
+	}
+
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment_Abstract $env, $context ){
+		View_Manage_Customer::registerTab( 'edit/%s', 'Daten' );
+		View_Manage_Customer::registerTab( 'map/%s', 'Karte' );
 	}
 
 	public static function ___registerHints( $env, $context, $module, $arguments = NULL ){
@@ -63,16 +72,17 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$customers		=  $this->modelCustomer->getAll();
-		foreach( $customers as $nr => $customer ){
-			$order		= array( 'timestamp' => 'DESC' );
-			$limit		= array( 0, 1 );
-			$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
-			if( $rating ){
-				$rating	= array_pop( $rating );
-				$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
+		if( $this->modelRating ) 
+			foreach( $customers as $nr => $customer ){
+				$order		= array( 'timestamp' => 'DESC' );
+				$limit		= array( 0, 1 );
+				$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
+				if( $rating ){
+					$rating	= array_pop( $rating );
+					$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
+				}
+				$customer->rating	= $rating;
 			}
-			$customer->rating	= $rating;
-		}
 		$this->addData( 'customers', $customers );
 	}
 

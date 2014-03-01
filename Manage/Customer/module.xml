@@ -23,6 +23,7 @@
 	</relations>
 	<link xml:lang="de" access="inside" path="manage/customer" rank="36">Kunden</link>
 	<link xml:lang="en" access="inside" path="manage/customer" rank="36">Customers</link>
+	<hook type="resource" resource="CustomerManager" event="registerTabs">View_Manage_Customer::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>customers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>customers` (

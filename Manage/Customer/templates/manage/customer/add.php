@@ -14,7 +14,7 @@ $w	= (object) $words['add'];
 return '
 <h3>'.$w->heading.'</h3>
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span12">
 		<form action="./manage/customer/add" method="post">
 			<div class="row-fluid">
 				<div class="span6">
