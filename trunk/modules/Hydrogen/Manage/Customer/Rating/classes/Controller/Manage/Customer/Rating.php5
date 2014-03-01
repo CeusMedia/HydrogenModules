@@ -29,7 +29,7 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 			);
 			$this->modelRating->add( $data );
 			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
-			$this->restart( './manage/customer/edit/'.$customerId );
+			$this->restart( './manage/customer/rating/'.$customerId );
 		}
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
