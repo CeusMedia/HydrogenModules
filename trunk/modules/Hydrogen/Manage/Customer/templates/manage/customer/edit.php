@@ -12,12 +12,16 @@ $optCountry	= UI_HTML_Elements::Options( $optCountry, $customer->country );
 
 $w	= (object) $words['add'];
 
-$view->registerTab( '', 'Daten' );
+/*$view->registerTab( '', 'Daten' );
 if( $useMap )
 	$view->registerTab( 'map/'.$customerId, 'Karte' );
 if( $useRatings )
 	$view->registerTab( 'rating/'.$customerId, 'Bewertung' );
-$tabs		= $view->renderTabs();
+if( $useProjects )
+	$view->registerTab( 'project/'.$customerId, 'Projekte' );
+*/
+
+$tabs		= View_Manage_Customer::renderTabs( $env, $customerId );
 
 return '
 <h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
