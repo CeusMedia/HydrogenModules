@@ -10,8 +10,13 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->modelCustomer	= new Model_Customer( $this->env );
 		$this->modelRating		= new Model_Customer_Rating( $this->env );
 		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
+		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
 	}
 
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment_Abstract $env, $context ){
+		View_Manage_Customer::registerTab( 'rating/%s', '-Bewertungen' );
+	}
+	
 	public function add( $customerId ){
 		$request		= $this->env->getRequest();
 		$customer		= $this->modelCustomer->get( $customerId );
@@ -76,8 +81,8 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$customer->ratings	= $ratings;
 		$customer->index	= $ratings ? $totalIndex / count( $ratings ) : NULL;
 		$customer->variance	= count( $ratings ) > 1 ? $variance / ( count( $ratings ) - 1 ) : NULL;
-		$customer->tendency	= $tendency / count( $ratings );
-		$customer->lastRate	= $lastIndex;
+		$customer->tendency	= $ratings ? $tendency / count( $ratings ) : NULL;
+		$customer->lastRate	= $ratings ? $lastIndex : NULL;
 
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
