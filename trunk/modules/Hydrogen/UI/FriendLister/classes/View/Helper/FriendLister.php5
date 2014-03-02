@@ -68,7 +68,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment object
 	 *	@return		string
 	 */
-	public function render( CMF_Hydrogen_Environment_Abstract $env ){
+	public static function render( CMF_Hydrogen_Environment_Abstract $env ){
 		$helper	= new View_Helper_FriendLister( $env );
 		return $helper->build();
 	}
