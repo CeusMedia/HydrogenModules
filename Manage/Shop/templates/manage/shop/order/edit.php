@@ -5,7 +5,7 @@ $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= array( new CMM_Bootstrap_LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
 
-if( in_array( $order->status, array( 2 ) ) )
+/*if( in_array( $order->status, array( 2 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-3", 'nicht bezahlt', 'btn-small btn-danger', 'remove' );
 if( in_array( $order->status, array( 2 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-2", 'storniert', 'btn-small btn-danger', 'remove' );
@@ -15,7 +15,7 @@ if( in_array( $order->status, array( -6, -2 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."2", 'bestellt', 'btn-small btn-warning', 'arrow-right' );
 if( in_array( $order->status, array( -3, 2 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."3", 'bezahlt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( -5 ) ) )
+if( in_array( $order->status, array( -4, -5 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-6", 'erstattet', 'btn-small btn-danger', 'remove' );
 if( in_array( $order->status, array( 3 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-4", 'nicht zugestellt', 'btn-small btn-danger', 'remove' );
@@ -27,8 +27,18 @@ if( in_array( $order->status, array( 4, 5, 6 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-5", 'reklamiert', 'btn-small btn-warning', 'arrow-left' );
 if( in_array( $order->status, array( 5 ) ) )
 	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."6", 'fertig!', 'btn-small btn-success', 'ok' );
+*/
+if( in_array( $order->status, array( 3, 5 ) ) )
+	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-6", 'erstattet', 'btn-small btn-danger', 'remove' );
+if( in_array( $order->status, array( 2 ) ) )
+	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-2", 'storniert', 'btn-small btn-danger', 'remove' );
+if( in_array( $order->status, array( 2 ) ) )
+	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."3", 'bezahlt', 'btn-small btn-warning', 'arrow-right' );
+if( in_array( $order->status, array( 3 ) ) )
+	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."5", 'zugestellt', 'btn-small btn-warning', 'arrow-right' );
+if( in_array( $order->status, array( 5 ) ) )
+	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."6", 'fertig!', 'btn-small btn-success', 'ok' );
 
-	
 $buttons	= new CMM_Bootstrap_ButtonToolbar( array( new CMM_Bootstrap_ButtonGroup( $buttons ) ) );
 
 function renderDataList( $keys, $data, $labels ){
@@ -70,6 +80,11 @@ if( $order->customer && $order->customer->alternative )
 	<div class="span4">
 		<h4>Rechnungsanschrift</h4>
 		'.renderDataList( array( 'billing_institution', 'billing_firstname', 'billing_lastname', 'billing_country', 'billing_region', 'billing_city', 'billing_postcode', 'billing_address', 'billing_tnr', 'billing_phone', 'billing_email' ), $order->customer, $labelsCustomer ).'
+	</div>
+	<div class="span4">
+		<a href="img/states.png" class="darkbox" target="_blank">
+			<img src="images/states.png"/>
+		</a>
 	</div>';
 
 $w		= (object) $words['positions'];
