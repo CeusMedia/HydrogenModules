@@ -28,7 +28,7 @@ class View_Manage_My_User extends CMF_Hydrogen_View{
 	}
 
 	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
-		$view	= new View_Manage_Customer( $env );													//  prepare view
+		$view	= new View_Manage_My_User( $env );													//  prepare view
 		$data	= array();																			//  prepare hook data
 		$env->getModules()->callHook( "MyUser", "registerTabs", $view, $data );						//  call tabs to be registered
 		$list	= array();																			//  prepare empty list
