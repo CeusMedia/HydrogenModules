@@ -16,11 +16,6 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
 	}
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment_Abstract $env, $context ){
-		View_Manage_Customer::registerTab( 'edit/%s', 'Daten' );
-		View_Manage_Customer::registerTab( 'map/%s', 'Karte' );
-	}
-
 	public static function ___registerHints( $env, $context, $module, $arguments = NULL ){
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
