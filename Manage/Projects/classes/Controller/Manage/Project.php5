@@ -65,6 +65,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 
 	public function edit( $projectId ){
 		$request		= $this->env->getRequest();
+		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 		$modelProject	= new Model_Project( $this->env );
 		$words			= (object) $this->getWords( 'edit' );
