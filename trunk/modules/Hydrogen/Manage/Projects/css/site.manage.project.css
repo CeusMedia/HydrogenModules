@@ -35,13 +35,10 @@ body.moduleManageProject.action-index table tr td {
 #project-users li {
 	clear: both;
 	height: 1.8em;
-	border-bottom: 1px solid #CFCFCF;
+	border-bottom: 1px solid #EEEEEE;
 	}
 #project-users button.remove {
 	float: right;
 	right: 0px;
 	margin-top: 2px;
-	}
-body.site-manage-project-index #input_status {
-	height: 8.75em;
 	}

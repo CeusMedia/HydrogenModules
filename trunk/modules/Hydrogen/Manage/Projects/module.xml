@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -15,7 +15,11 @@
 		<class>Logic/Project.php5</class>
 		<template>manage/project/add.php</template>
 		<template>manage/project/edit.php</template>
+		<template>manage/project/edit.info.php</template>
+		<template>manage/project/edit.users.php</template>
 		<template>manage/project/index.php</template>
+		<template>manage/project/index.filter.php</template>
+		<template>manage/project/index.list.php</template>
 		<locale>de/manage/project.ini</locale>
 		<style load="auto">site.manage.project.css</style>
 	</files>
