@@ -14,7 +14,7 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 	}
 
 	public static function ___onRegisterTab( CMF_Hydrogen_Environment_Abstract $env, $context ){
-		View_Manage_Customer::registerTab( 'rating/%s', '-Bewertungen' );
+		View_Manage_Customer::registerTab( 'rating/%s', 'Bewertungen' );
 	}
 	
 	public function add( $customerId ){
