@@ -328,10 +328,21 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
 		$data		= array();
-		if( preg_match( "/^[+-][0-9]+$/", $date ) ){
+		$change		= "";
+
+		if( preg_match( "/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]+$/", $date ) ){
+			$date	= strtotime( $date );
+			$diff	= ( $date - strtotime( $mission->dayStart ) ) / ( 24 * 3600 );
+			$sign	= $diff >= 0 ? "+" : "-";
+			$number	= abs( $diff );
+			$change	= $sign." ".$number."day";
+		}
+		else if( preg_match( "/^[+-][0-9]+$/", $date ) ){
 			$sign	= substr( $date, 0, 1 );					//  extract direction to move
 			$number	= substr( $date, 1 );						//  extract number of days to move
 			$change	= $sign." ".$number."day";
+		}
+		if( $change ){
 			$date	= new  DateTime( $mission->dayStart );
 			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
 			if( $mission->dayEnd ){													//  mission has a duration

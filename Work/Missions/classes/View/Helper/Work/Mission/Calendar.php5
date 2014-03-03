@@ -111,6 +111,7 @@ $(document).ready(function(){
 	if(typeof cmContextMenu !== "undefined"){
 		var pathIcons	= "http://img.int1a.net/famfamfam/silk/";
 		cmContextMenu.init("#mission-calendar tbody ul li");
+		cmContextMenu.containment = "#mission-calendar";
 		cmContextMenu.labels.priorities = '.json_encode( $this->words['priorities'] ).';
 		cmContextMenu.labels.states = '.json_encode( $this->words['states'] ).';
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
@@ -120,20 +121,34 @@ $(document).ready(function(){
 			var url = "./work/mission/add/?type=1&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
 			menu.addLinkItem(url, "neuer Termin", pathIcons+"date_add.png");
 		});
+		cmContextMenu.onShow = function(contextMenu){contextMenu.find("#context-date input").datepicker();};
+		cmContextMenu.onChange = function(){$("#mission-calendar").css({opacity: 0.5});};
 		cmContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
 			var missionId = elem.data("id");
 			if(elem.data("title"))
 				menu.addItem("<h4>"+elem.data("title")+"</h4>");
 			if(elem.data("project"))
 				menu.addItem("<small>Projekt: </small>"+elem.data("project"));
-			if(elem.data("date"))
-				menu.addItem("<small>Datum: </small>"+elem.data("date"));
+			if(elem.data("date")){
+				var div = $("<div></div>").attr("id", "context-date");
+				var value = elem.data("date").replace(/ /,"");
+				var input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small", readonly: "readonly"});
+				input.on("change", function(event){
+					cmContextMenu.hide(event, true);
+					document.location.href = "./work/mission/changeDay/"+missionId+"?date="+$(this).val();
+				});
+				var label = $("<small>").append("Datum: ");/*.append(elem.data("date"));*/
+				menu.addItem(div.append(label).append(input));
+			}
 			if(elem.data("time"))
 				menu.addItem("<small>Zeit: </small>"+elem.data("time"));
 			if(elem.data("priority"))
 				menu.addItem("<small>Priorität: </small>"+menu.labels.priorities[elem.data("priority")]);
 			if(elem.data("status"))
 				menu.addItem("<small>Status: </small>"+menu.labels.states[elem.data("status")]);
+
+			menu.addItem()
+
 			var url = "./work/mission/edit/"+missionId;
 			menu.addLinkItem(url, "bearbeiten", pathIcons+"pencil.png");
 			var url = "./work/mission/changeDay/"+missionId+"?date=-1";
@@ -145,8 +160,8 @@ $(document).ready(function(){
 });
 </script>';
 
-		$this->env->getPage()->addThemeStyle( 'cmContextMenu.css' );
-		$this->env->getPage()->js->addUrl( 'javascripts/cmContextMenu.js' );
+//		$this->env->getPage()->addThemeStyle( 'cmContextMenu.css' );
+//		$this->env->getPage()->js->addUrl( 'javascripts/cmContextMenu.js' );
 		$this->env->getPage()->addHead( $script );
 		return $table;
 	}
