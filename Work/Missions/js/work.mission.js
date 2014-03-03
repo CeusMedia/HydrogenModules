@@ -305,7 +305,7 @@ var WorkMissionEditor = {
 		}, 1000);
 		WorkMissionEditor.mirror.on("change", function(instance, update){
 			instance.save();
-			WorkMissionEditor.markdown.html(converter.makeHtml(textarea.hide().val()));
+			WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(WorkMissionEditor.textarea.hide().val()));
 			$(".CodeMirror").addClass("changed").trigger("keyup");
 			$(instance.getTextArea()).trigger("keyup");
 			WorkMissionEditor.resize();
