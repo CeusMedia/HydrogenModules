@@ -24,7 +24,7 @@ $(document).ready(function(){
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();
 	WorkMissions.init(1);
-	$(".cmContextMenu").cmContextMenu({"timeSlideDown":150,"timeSlideUp":100}).show();
+/*	$(".cmContextMenu").cmContextMenu({"timeSlideDown":150,"timeSlideUp":100}).show();*/
 });
 </script>';
 $env->getPage()->addHead( $script );
