@@ -1,12 +1,15 @@
 <?php
 $w		= (object) $words['index'];
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconTag	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-tag' ) );
+
+
 $tags	= $env->session->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= array();
 
 $indicator	= new UI_HTML_Indicator();
-$iconTag	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-tag' ) );
 $pagination	= new CMM_Bootstrap_PageControl( './work/note', $page, ceil( $notes['number'] / $limit ) );
 $helper		= new View_Helper_TimePhraser( $this->env );
 $list	= array();
@@ -50,14 +53,14 @@ else
 #$pagination	= new UI_HTML_Pagination( array( 'uri' => 'work/note/' ) );
 #$p = $pagination->build( $notes['number'], $limit, $offset );
 
-$p	= $pagination->render();
+$pagination	= $pagination->render();
 
 
 //  --  FILTER  --  //
 $panelFilter	= $view->loadTemplateFile( 'work/note/index.filter.php' );
 
-$iconAdd		= '<img src="http://img.int1a.net/famfamfam/silk/add.png"/>';
-$buttonAdd		= UI_HTML_Elements::LinkButton( './work/note/add', $iconAdd, 'button tiny' );
+$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' neue Notiz', array( 'href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary' ) );
+
 
 return '
 <div class="row-fluid">
@@ -69,7 +72,10 @@ return '
 			<h3>'.$w->legend.'</h3>
 			<div class="content-panel-inner" id="results">
 				'.$list.'
-				'.$p.'
+				<div class="buttonbar">
+					'.$buttonAdd.'
+					'.$pagination.'
+				</div>
 			</div>
 		</div>
 	</div>

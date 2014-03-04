@@ -70,9 +70,9 @@ ul.results li.note .note-title a {
 	text-decoration: none;
 	line-height: 1.5em;
 	}
-/*ul.results li.note:last-child {
+ul.results li.note:last-child {
 	border-bottom: 0px;
-	}*/
+	}
 ul.results li.note div.info-inline {
 	clear: both;
 	height: 18px;
@@ -310,6 +310,9 @@ li.item-tag-extended .item-tag-tray .number-indicator {
 	color: rgba(255, 255, 255, 1);
 	font-weight: bold;
 	font-size: 0.8em;
+	}
+li.item-tag-extended .item-tag-tray span.badge {
+	margin-top: 1px;
 	}
 
 /*  --  TAG LIST: EXTENDED  --  */
