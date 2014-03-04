@@ -88,17 +88,22 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	}
 
 	public function addTag( $noteId, $tagId = NULL ){
-		$request			= $this->env->getRequest();
-		$logic				= new Logic_Note( $this->env );
-		if( (int) $tagId < 1 ){
-			$tag	= $request->get( 'tag_content' );
-			if( !strlen( trim( $tag ) ) )
-				$this->restart( './work/note/edit/'.$noteId );
-			$tagId	= $logic->createTag( $tag, FALSE );
+		$request		= $this->env->getRequest();
+		$logic			= new Logic_Note( $this->env );
+		$words			= (object) $this->getWords( 'msg' );
+		if( !is_null( $tagId ) ){
+			$logic->addTagToNote( $tagId, $noteId, FALSE );
+			$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
 		}
-		$logic->addTagToNote( $tagId, $noteId, FALSE );
-		$words		= (object) $this->getWords( 'msg' );
-		$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
+		else{
+			if( ( $parts = explode( ' ', trim( $request->get( 'tag_content' ) ) ) ) ){
+				foreach( $parts as $part ){
+					$tagId	= $logic->createTag( $part, FALSE );
+					$logic->addTagToNote( $tagId, $noteId, FALSE );
+				}
+				$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
+			}
+		}
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
@@ -167,20 +172,20 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				if( !is_array( $tags ) )
 					$tags	= array();
 				$modelTag	= new Model_Tag( $this->env );
-
-				$parts	= explode( ' ', $query );
-				$parts	= array_combine( $parts, $parts );
-				$query	= 'SELECT * FROM '.$modelTag->getName().' WHERE content IN("'.implode( '", "', $parts ).'")';
-				$result	= $this->env->getDatabase()->query( $query );
-				foreach( $result->fetchAll( PDO::FETCH_OBJ ) as $tag ){
-					unset( $parts[$tag->content] );
-					if( !array_key_exists( $tag->tagId, $tags ) )
-						$tags[$tag->tagId]	= $tag;
+				$parts		= explode( ' ', $query );																			//  split query into parts
+				foreach( $parts as $nr => $part ){																				//  iterate query parts
+					$query	= 'SELECT * FROM '.$modelTag->getName().' WHERE content LIKE "'.$part.'"';							//  try to find tag (case insenstive)
+					$result	= $this->env->getDatabase()->query( $query );														//  in database tags
+					foreach( $result->fetchAll( PDO::FETCH_OBJ ) as $tag ){														//  iterate results
+						unset( $parts[$nr] );																					//  remove part from query
+						if( !array_key_exists( $tag->tagId, $tags ) )															//  tag not yet in tag list
+							$tags[$tag->tagId]	= $tag;																			//  enlist tag in tag list
+					}
 				}
-				$query	= implode( ' ', $parts );
-				$session->set( 'filter_notes_tags', $tags );
+				$query	= implode( ' ', $parts );																				//  combine parts to clean query
+				$session->set( 'filter_notes_tags', $tags );																	//  store tag list in session
 			}
-			$session->set( 'filter_notes_term', $query );
+			$session->set( 'filter_notes_term', $query );																		//  store query in session
 		}
 		$this->restart( NULL, TRUE );
 	}

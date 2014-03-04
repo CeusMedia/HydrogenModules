@@ -3,7 +3,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -35,8 +35,8 @@
 		<supports type="module">JS_Markdown</supports>
 <!--		<needs type="module">Tags</needs>-->
 	</relations>
-	<link xml:lang="de" access="acl" path="work/note">Notizen</link>
-	<link xml:lang="en" access="acl" path="work/note">Notes</link>
+	<link xml:lang="de" access="acl" path="work/note" rank="44">Notizen</link>
+	<link xml:lang="en" access="acl" path="work/note" rank="44">Notes</link>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>links` (
@@ -112,10 +112,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>term_log` (
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="update" version-from="0.3.2" version-to="0.3.3"><![CDATA[
+<!--	<sql on="update" version-from="0.3.2" version-to="0.3.3"><![CDATA[
 ALTER TABLE  `notes` ADD  `format` VARCHAR( 20 ) NULL AFTER  `public` ,
 ADD INDEX (  `format` ) ;
-]]></sql>
+]]></sql>-->
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;
 DROP TABLE IF EXISTS `<%?prefix%>notes`;

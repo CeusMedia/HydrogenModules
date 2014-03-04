@@ -174,7 +174,7 @@ class Logic_Note{
 		return $relatedNoteIds;
 	}
 
-	public function getNoteIdsFromTagIds( $tagIds = array() ){
+/*	public function getNoteIdsFromTagIds( $tagIds = array() ){
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
@@ -186,7 +186,7 @@ class Logic_Note{
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
 	}
-
+*/
 	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() ){
 		$modelNoteTag	= new Model_Note_Tag( $this->env );
 		$tagIds	= array();
@@ -211,7 +211,7 @@ class Logic_Note{
 	public function getTopTags( $limit = 10, $offset = 0, $tagIds = array() ){
 		$modelTag	= new Model_Tag( $this->env );
 		if( $tagIds ){
-			$noteIds	= $this->getNoteIdsFromTagIds( $tagIds );
+			$noteIds	= $this->getNoteIdsFromTagIds( $tagIds, !TRUE );
 			$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $tagIds );
 			$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
 			$tags		= array_slice( $tags, $offset, $limit, TRUE );
@@ -297,32 +297,43 @@ class Logic_Note{
 		);
 	}
 
-	protected function getNoteIdsFromTags( $tags ){
-		$tagIds		= array();
-		$notesIds	= array();
-		foreach( $tags as $tag ){
-			if( is_object( $tag ) )
-				$tagIds[]	= $tag->tagId;
-			else if( is_int( $tag ) )
-				$tagIds[]	= $tag;
-			else if( ( $tag = $model->getByIndex( 'content', $tag ) ) )
-				$tagIds[]	= $tag->tagId;
-		}
-		$model		= new Model_Note_Tag( $this->env );
-		$tagIds		= array_unique( $tagIds );
-		foreach( $tagIds as $tagId ){
-			foreach( $model->getAll( array( 'tagId' => $tagId ) ) as $relation ){
-				if( !isset( $notesIds[$relation->noteId] ) )
-					$notesIds[$relation->noteId]	= 0;
-				$notesIds[$relation->noteId]++;
+	/**
+	 *	Returns list of note IDs related to tag IDs.
+	 *	@access		protected
+	 *	@param		array		$tagIds		List of tag IDs
+	 *	@param		boolean		$strict		Notes must be related to ALL tag IDs (slower)
+	 *	@return		array					List of note IDs related to tag IDs
+	 */
+	protected function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
+		if( !is_array( $tagIds ) )
+			throw new InvalidArgumentException( 'Tag list must be an array' );
+		if( !count( $tagIds ) )
+			throw new InvalidArgumentException( 'Tag list cannot be empty' );
+
+		if( $strict ){
+			$noteIds	= array();
+			$model		= new Model_Note_Tag( $this->env );
+			$tagIds		= array_unique( $tagIds );
+			foreach( $tagIds as $tagId ){
+				foreach( $model->getAll( array( 'tagId' => $tagId ) ) as $relation ){
+					if( !isset( $noteIds[$relation->noteId] ) )
+						$noteIds[$relation->noteId]	= array();
+					$noteIds[$relation->noteId][]	= $relation->tagId;
+				}
 			}
+			foreach( $noteIds as $noteId => $tagsFound )
+				if( count( $tagsFound ) !== count( $tagIds ) )
+					unset( $noteIds[$noteId] );
+			return array_keys( $noteIds );
 		}
-		foreach( $notesIds as $noteId => $tagCount )
-			if( $tagCount !== count( $tagIds ) )
-				unset( $notesIds[$noteId] );
-		return array_keys( $notesIds );
+
+		$modelNoteTag	= new Model_Note_Tag( $this->env );
+		$noteIds			= array();
+		foreach( $modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
+			$noteIds[]	= $relation->noteId;
+		return $noteIds;
 	}
-	
+
 	/**
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
@@ -331,19 +342,10 @@ class Logic_Note{
 		if( !strlen( trim( $query ) ) && !$tags )
 			throw new Exception( 'Neither query nor tags to search for given' );
 
-		$noteIds	= $this->getNoteIdsFromTags( $tags );
-		
-		$conditions	= $noteIds ? array( 'n.noteId IN ('.join( ',', $noteIds ).')' ) : array();
-		$noteIds	= array();
-		if( $tags ){
-			$tagIds	= array();
-			$model	= new Model_Note_Tag( $this->env );
+		$conditions	= array();
+		if( $tags )
 			foreach( $tags as $tag )
-				$tagIds[]	= $tag->tagId;
-			foreach( $model->getAll( array( 'tagId' => $tagIds ) ) as $noteTag )
-				$noteIds[]	= $noteTag->noteId;
-			$conditions[]	= 'n.noteId IN('.join( ',', $noteIds ).')';
-		}
+				$query	.= ' '.$tag->content;
 
 		if( $query ){
 			$terms 	= explode( ' ', trim( $query ) );
@@ -351,6 +353,11 @@ class Logic_Note{
 				$conditions[]	= '(n.title LIKE "%'.$term.'%" OR n.content LIKE "%'.$term.'%" OR l.url LIKE "%'.$term.'%" OR nl.title LIKE "%'.$term.'%")';
 		}
 		$conditions	= implode ( ' AND ', $conditions );
+		if( $tags ){
+			$noteIds		= $this->getNoteIdsFromTagIds( array_keys( $tags ), TRUE );
+			if( $noteIds )
+				$conditions	.= ($query ? ' OR ' : '' ).' n.noteId IN('.join( ',', $noteIds ).')';
+		}
 		$query	= '
 SELECT
 	DISTINCT(n.noteId),
@@ -365,14 +372,11 @@ WHERE
 ORDER BY
 	touchedAt DESC
 ';
-#		xmp( $query );
-#		die;
 		$clock		= new Alg_Time_Clock();
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
 		$number		= count( $notes );
 		$notes	= array_slice( $notes, $offset, $limit );
-
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		return array(

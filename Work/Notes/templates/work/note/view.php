@@ -1,4 +1,6 @@
 <?php
+$helper		= new View_Helper_TimePhraser( $this->env );
+
 $panelLinks	= '';
 if( count( $note->links ) ){
 	$list	= array();
@@ -60,6 +62,29 @@ $shortHash	= getShortHash( $note->noteId );
 #$config->set( 'app.base.url', 'kb.ceusmedia.de/');
 $shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
 
+
+$panelInfo	= '
+		<div class="content-panel">
+			<h3>Informationen</h3>
+			<div class="content-panel-inner">
+		<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
+				'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'-->
+				<dl class="dl-horizontal">
+					<dt>erstellt</dt>
+					<dd>vor '.$helper->convert( $note->createdAt, TRUE ).'</dd>
+					<dt>zuletzt verändert</dt>
+					<dd>vor '.$helper->convert( $note->modifiedAt, TRUE ).'</dd>
+					<dt><a href="./work/note/view/'.$note->noteId.'">Link</a></dt>
+					<dd><a href="./work/note/view/'.$note->noteId.'" class="btn btn-mini" target="_blank">in neuem Tab</a></dd>
+					<dt>Notiz-Textverweis</dt>
+					<dd><code>[note:'.$note->noteId.']</code></dd>
+					<dt>Views</dt>
+					<dd>'.$note->numberViews.'</dd>
+				</dl>
+			</div>
+		</div>
+';
+
 return '
 <small><a href="./work/note">&laquo;&nbsp;zurück</a></small>
 <div class="row-fluid">
@@ -78,25 +103,9 @@ return '
 		</div>
 	</div>
 	<div class="span4">
+		'.$panelInfo.'
 		'.$panelTags.'
 		'.$panelLinks.'
-		<div class="content-panel">
-			<h3>Informationen</h3>
-			<div class="content-panel-inner">
-		<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
-				'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'-->
-				<dl class="dl-horizontal">
-					<dt>Views</dt>
-					<dd>'.$note->numberViews.'</dd>
-					<dt>erstellt</dt>
-					<dd>'.( $note->createdAt ? date( 'Y-m-d H:i', $note->createdAt ) : '-' ).'</dd>
-					<dt>zuletzt verändert</dt>
-					<dd>'.( $note->modifiedAt ? date( 'Y-m-d H:i', $note->modifiedAt ) : '-' ).'</dd>
-					<dt>Notiz-Textverweis</dt>
-					<dd><code>[note:'.$note->noteId.']</code></dd>
-				</dl>
-			</div>
-		</div>
 	</div>
 </div>
 <script>
