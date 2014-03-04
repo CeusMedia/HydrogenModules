@@ -57,7 +57,7 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		return join( $list );
 	}
 
-	public function renderDayList( $tense, $day, $showStatus, $showPriority, $showDate, $showActions ){
+	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
 		$this->missions	= $this->list[$day];
 		return parent::renderDayList( $tense, $day, $showStatus, $showPriority, $showDate, $showActions );
 	}

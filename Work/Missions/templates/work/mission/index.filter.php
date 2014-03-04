@@ -1,21 +1,6 @@
 <?php
 
-//new View_Helper_MissionFilter( $this->env );
-class_exists( 'View_Helper_Work_Mission_Filter' );
-
 $badge		= '<span class="badge badge-success">'.count( $missions ).'</span>';
-
-
-if( 0 && $userId == 2 ){
-	$priorities	= array_fill( 0, 5, 0 );
-	foreach( $missions as $mission ){
-		$priorities[$mission->priority]++;
-#		print_m( $mission );
-	}
-	print_m( $priorities );
-	die;
-}
-
 
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 
@@ -25,8 +10,6 @@ $toolbar->addButtonGroup( 'tb_0', 'add', array(
 		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
 		<li><a href="./work/mission/add?type=1"><i class="icon-time"></i> Termin</a></li>
 	</ul>'
-//		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
-//		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
 ) );
 
 if( $filterTense == 1 ){
@@ -42,8 +25,6 @@ $toolbar->addButtonGroup( 'tb_1', 'view-tense', array(
 	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
 	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
 ) );
-
-//$script			= array();
 
 //  --  FILTER BUTTONS  --  //
 /*  -- mission types  --  */
@@ -132,66 +113,5 @@ if( $changedFilters ){
 
 $toolbar->sort();
 $buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';
-return '<div class="work_mission_control">'.$buttons.'
-<!--&nbsp;<span class="badge" id="number-total"></span>-->
-
-</div>';
-
-
-
-
-
-
-
-
-
-
-
-$w	= (object) $words['index'];
-
-//$helperFilter	= new View_Helper_MissionFilter( $this->env );
-
-//  --  FILTER: ORDER & DIRECTION  --  //
-$optOrder	= $words['filter-orders'];
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $session->get( 'filter_mission_order' ) );
-
-$iconUp		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
-$iconDown	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
-
-$disabled	= $session->get( 'filter_mission_direction' ) == 'ASC';
-$buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', $iconUp, 'tiny', NULL, $disabled );
-$buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', $iconDown, 'tiny', NULL, !$disabled );
-$buttonUp	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=ASC', '<i class="icon-arrow-up"></i>', 'btn btn-mini', NULL, $disabled );
-$buttonDown	= UI_HTML_Elements::LinkButton( './work/mission/filter/?direction=DESC', '<i class="icon-arrow-down"></i>', 'btn btn-mini', NULL, !$disabled );
-
-$wordsAccess	= array( 'owner' => 'meine', 'worker' => 'mir zugewiesen' );
-
-$optAccess	= UI_HTML_Elements::Options( $wordsAccess, $session->get( 'filter_mission_access' ) );
-
-//  --  FILTER: TIME PERSPECTIVE  --  //
-$optView	= array(
-	'0' => 'ausstehend',
-	'1' => 'beendet (+/-)',
-);
-$optView	= UI_HTML_Elements::Options( $optView, $filterStates == array( 4 ) ? 1 : 0 );
-
-$panelFilter	= '
-<form id="form_mission_filter" action="./work/mission/filter?reset" method="post" onsubmit="return WorkMissions.filter(this);">
-	<fieldset>
-		<legend class="icon filter">Filter</legend>
-		<div class="row-fluid">
-			<div class="span8 -column-left-60">
-				<label for="filter_order">'.$w->labelOrder.'</label>
-				<select name="order" id="filter_order" class="span12 -max" onchange="this.form.submit();">'.$optOrder.'</select>
-			</div>
-			<div class="span4 -column-right-40">
-				<label>&nbsp;</label>
-				<div class="btn-group">
-					'.$buttonUp.$buttonDown.'
-				</div>
-			</div>
-		</div>
-	</fieldset>
-</form>';
-return $panelFilter;
+return '<div class="work_mission_control">'.$buttons.'</div>';
 ?>

@@ -31,7 +31,15 @@ switch( $filterTense ){
 		break;
 }
 
-return $content;
+return '
+<div class="content-panel content-panel-list">
+	<h3><span class="muted">Aufgaben: </span>6-Tage-Aussicht</h3>
+	<div class="content-panel-inner">
+		'.$content.'
+		<br/>
+	</div>
+</div>
+';
 /*
 <script type="text/javascript">
 var missionShowDay = '.$currentDay.';
