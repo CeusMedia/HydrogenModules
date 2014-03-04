@@ -1,5 +1,4 @@
 <?php
-
 $w		= (object) $words['index'];
 
 $tags	= $env->session->get( 'filter_notes_tags' );
@@ -7,7 +6,9 @@ if( !is_array( $tags ) )
 	$tags	= array();
 
 $indicator	= new UI_HTML_Indicator();
-
+$iconTag	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-tag' ) );
+$pagination	= new CMM_Bootstrap_PageControl( './work/note', $page, ceil( $notes['number'] / $limit ) );
+$helper		= new View_Helper_TimePhraser( $this->env );
 $list	= array();
 foreach( $notes['list'] as $note ){
 	$url		= './work/note/view/'.$note->noteId;
@@ -20,18 +21,25 @@ foreach( $notes['list'] as $note ){
 	$listLinks	= join( ' | ', $listLinks );
 	$listTags	= array();
 	foreach( $note->tags as $tag ){
-		$class	= in_array( $tag, $tags ) ? 'remove' : 'add';
-		$label	= UI_HTML_Tag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ) );
-		$button	= UI_HTML_Tag::create( 'button', $label, array( 'class' => 'button icon tag-'.$class, 'data-tag-id' => $tag->tagId ) );
-		$listTags[$tag->content]	= UI_HTML_Tag::create( 'li', $button );
+		$class		= in_array( $tag, $tags ) ? 'active' : '';
+		$action		= in_array( $tag, $tags ) ? 'forgetTag' : 'addSearchTag';
+		$label		= htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' );
+		$attributes	= array(
+			'class'			=> 'btn btn-small '.$class,
+			'data-toggle'	=> 'button',
+			'href'			=> './work/note/'.$action.'/'.$tag->tagId.'/'.$page,
+		);
+		$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', $iconTag.' '.$label, $attributes );
 	}
 	ksort( $listTags );
-	$spanAuthor	= '<span class="info user role role'.$note->user->roleId.'">'.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</a></span>';
+	$listTags	= '<div class="pull-right">'.join( ' ', $listTags ).'</div>';
+
+	$spanAuthor	= '<span class=""><i class="icon-user"></i> '.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</span>';
 	$timestamp	= max( $note->createdAt, $note->modifiedAt, 0 );
-	$spanDate	= $timestamp ? '<span class="info date ">'.date( 'd.m.y', $timestamp ).'</span>' : '';
+	$time		= $helper->convert( $timestamp, TRUE );
+	$spanDate	= $timestamp ? '<span class=""><i class="icon-time"></i> '.$time.'</span>' : '';
 	$spanRating	= '<span class="indicator rating">'.$indicator->build( 5, 7 ).'</span>';
-	$divInfo	= '<div class="info-inline">'.$spanDate.$spanAuthor.'</div>';
-	$listTags	= '<div style="float: right; text-align: right"><ul class="tags-list-inline">'.join( $listTags ).'</ul></div><div style="clear: left"></div>';
+	$divInfo	= '<div class="info-inline">'.$spanAuthor.' &minus; '.$spanDate.'</div>';
 	$list[]	= '<li class="note">'.$listTags.$title.$divInfo/*.$spanRating./*.$listLinks*/.'</li>';
 }
 if( $list )
@@ -39,8 +47,10 @@ if( $list )
 else
 	$list	= '<p><em>Nichts gefunden.</em></p>';
 
-$pagination	= new UI_HTML_Pagination( array( 'uri' => 'work/note/' ) );
-$p = $pagination->build( $notes['number'], $limit, $offset );
+#$pagination	= new UI_HTML_Pagination( array( 'uri' => 'work/note/' ) );
+#$p = $pagination->build( $notes['number'], $limit, $offset );
+
+$p	= $pagination->render();
 
 
 //  --  FILTER  --  //
@@ -51,15 +61,17 @@ $buttonAdd		= UI_HTML_Elements::LinkButton( './work/note/add', $iconAdd, 'button
 
 return '
 <div class="row-fluid">
-	<div class="span3 -column-left-20">
+	<div class="span3">
 		'.$panelFilter.'
 	</div>
-	<div id="results" class="span9 -column-left-80">
-		<fieldset>
-			<legend class="icon note">'.$w->legend.' <!--<small>'.round( $notes['time'] / 1000, 1 ).'ms</small>--> </legend>
-			'.$list.'
-			'.$p.'
-		</fieldset>
+	<div class="span9">
+		<div class="content-panel content-panel-list">
+			<h3>'.$w->legend.'</h3>
+			<div class="content-panel-inner" id="results">
+				'.$list.'
+				'.$p.'
+			</div>
+		</div>
 	</div>
 </div>
 <script>
@@ -68,31 +80,5 @@ $(document).ready(function(){
 	FormNoteFilter.__init();
 });
 </script>
-<div style="clear: both"></div>
-
-
-
-';
+<div style="clear: both"></div>';
 ?>
-
-
-<html>
-	<head>
-		<script src="jquery.js"></script>
-		<script src="jquery.lightbox.js"></script>
-		<script>
-$(document).ready(function(){
-	$("#gallery a").lightbox();
-});
-
-
-$("div#gallery")
-		</script>
-	</head>
-	<body>
-		<div id="gallery">
-			<a href="large.png"><img src="small.png"></a>
-		</div>
-	</body>
-		
-</html>

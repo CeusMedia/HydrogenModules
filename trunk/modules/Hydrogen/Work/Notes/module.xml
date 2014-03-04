@@ -3,7 +3,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,6 +30,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">Resource_Library_cmModules</needs>
 		<supports type="module">UI_Helper_Content</supports>
 		<supports type="module">JS_Markdown</supports>
 <!--		<needs type="module">Tags</needs>-->

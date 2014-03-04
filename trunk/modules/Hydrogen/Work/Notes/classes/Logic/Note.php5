@@ -279,13 +279,11 @@ class Logic_Note{
 		$clock		= new Alg_Time_Clock();
 		$orders		= array(
 			'modifiedAt'	=> 'DESC',
-			'createdAt'	=> 'DESC',
-			'title'		=> 'ASC',
+			'createdAt'		=> 'DESC',
+			'title'			=> 'ASC',
 		);
 		$conditions	= $this->sharpenConditions( $conditions );
 
-#print_m( $conditions );
-#die;
 		$number	= $model->count( $conditions );
 		if( $number < $offset )
 			$offset	= 0;
@@ -299,23 +297,60 @@ class Logic_Note{
 		);
 	}
 
+	protected function getNoteIdsFromTags( $tags ){
+		$tagIds		= array();
+		$notesIds	= array();
+		foreach( $tags as $tag ){
+			if( is_object( $tag ) )
+				$tagIds[]	= $tag->tagId;
+			else if( is_int( $tag ) )
+				$tagIds[]	= $tag;
+			else if( ( $tag = $model->getByIndex( 'content', $tag ) ) )
+				$tagIds[]	= $tag->tagId;
+		}
+		$model		= new Model_Note_Tag( $this->env );
+		$tagIds		= array_unique( $tagIds );
+		foreach( $tagIds as $tagId ){
+			foreach( $model->getAll( array( 'tagId' => $tagId ) ) as $relation ){
+				if( !isset( $notesIds[$relation->noteId] ) )
+					$notesIds[$relation->noteId]	= 0;
+				$notesIds[$relation->noteId]++;
+			}
+		}
+		foreach( $notesIds as $noteId => $tagCount )
+			if( $tagCount !== count( $tagIds ) )
+				unset( $notesIds[$noteId] );
+		return array_keys( $notesIds );
+	}
+	
 	/**
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
 	public function searchNotes( $query, $tags = array(), $offset = 0, $limit = 10 ){
-		foreach( $tags as $tag )
-			$query	.= " ".$tag->content;
-		if( !trim( $query ) )
-			return;
+		if( !strlen( trim( $query ) ) && !$tags )
+			throw new Exception( 'Neither query nor tags to search for given' );
 
-		$terms 	= explode( ' ', trim( $query ) );
+		$noteIds	= $this->getNoteIdsFromTags( $tags );
+		
+		$conditions	= $noteIds ? array( 'n.noteId IN ('.join( ',', $noteIds ).')' ) : array();
+		$noteIds	= array();
+		if( $tags ){
+			$tagIds	= array();
+			$model	= new Model_Note_Tag( $this->env );
+			foreach( $tags as $tag )
+				$tagIds[]	= $tag->tagId;
+			foreach( $model->getAll( array( 'tagId' => $tagIds ) ) as $noteTag )
+				$noteIds[]	= $noteTag->noteId;
+			$conditions[]	= 'n.noteId IN('.join( ',', $noteIds ).')';
+		}
 
-		$likes	= array();
-		foreach( $terms as $term )
-			$likes[]	= '(n.title LIKE "%'.$term.'%" OR n.content LIKE "%'.$term.'%" OR l.url LIKE "%'.$term.'%" OR nl.title LIKE "%'.$term.'%" OR t.content="'.$term.'")';
-		$likes	= implode ( ' AND ', $likes );
-		$likes	= count( $terms ) > 1 ? '('.$likes.')' : $likes;
+		if( $query ){
+			$terms 	= explode( ' ', trim( $query ) );
+			foreach( $terms as $term )
+				$conditions[]	= '(n.title LIKE "%'.$term.'%" OR n.content LIKE "%'.$term.'%" OR l.url LIKE "%'.$term.'%" OR nl.title LIKE "%'.$term.'%")';
+		}
+		$conditions	= implode ( ' AND ', $conditions );
 		$query	= '
 SELECT
 	DISTINCT(n.noteId),
@@ -324,14 +359,14 @@ SELECT
 FROM
 	'.$this->prefix.'notes as n LEFT OUTER JOIN
 	'.$this->prefix.'note_links as nl ON(n.noteId=nl.noteId) LEFT OUTER JOIN
-	'.$this->prefix.'note_tags as nt ON(n.noteId=nt.noteId) LEFT OUTER JOIN
-	'.$this->prefix.'links as l ON(nl.linkId=l.linkId) LEFT OUTER JOIN
-	'.$this->prefix.'tags as t ON(nt.tagId=t.tagId)
+	'.$this->prefix.'links as l ON(nl.linkId=l.linkId)
 WHERE
-	'.$likes.'
+	'.$conditions.'
 ORDER BY
 	touchedAt DESC
 ';
+#		xmp( $query );
+#		die;
 		$clock		= new Alg_Time_Clock();
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
