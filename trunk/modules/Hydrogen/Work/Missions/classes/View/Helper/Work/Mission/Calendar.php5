@@ -82,7 +82,7 @@ class View_Helper_Work_Mission_Calendar{
 					<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(1)">&raquo;</button>
 					'.$label.'
 					<div style="float: right;">
-						'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'iCal-Export', 'button icon export ical' ).'
+						<a href="./work/mission/export/ical" target="_blank" class="btn btn-small" style="font-weight: normal"><i class="icon-calendar"></i> iCal-Export</a>
 					</div>
 				</th>
 			</tr>

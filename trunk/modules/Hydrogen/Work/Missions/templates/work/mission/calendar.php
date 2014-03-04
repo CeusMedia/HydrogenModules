@@ -1,21 +1,49 @@
 <?php
 
+
+$toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
+
+$toolbar->addButtonGroup( 'tb_0', 'add', array(
+	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
+	<ul class="dropdown-menu">
+		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
+		<li><a href="./work/mission/add?type=1"><i class="icon-time"></i> Termin</a></li>
+	</ul>'
+) );
+
+$toolbar->addButtonGroup( 'tb_1', 'view-type', array(
+	'<button type="button" disabled="disabled" class="btn"><span class="badge badge-info">?</span></button>',
+	'<button type="button" id="work-mission-view-type-0" class="btn"><i class="icon-tasks"></i> Liste</button>',
+	'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
+) );
+/*
 $buttonSets		= array(
 	array(
 //		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="button icon list"><span>Listenansicht</span></button>',
 //		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="button icon calendar"><span>Monatsübersicht</span></button>'
-		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
-		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 	),
 	array(
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
 		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
 	)
 );
+*/
+
+$toolbar->sort();
+$buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';
+$buttons	= '<div class="work_mission_control">'.$buttons.'</div>';
+
+
 
 $helper		= new View_Helper_Work_Mission_Calendar( $env );
 $calendar	= $helper->render( $userId, $year, $month );
-$content	= '<div>'.$calendar.'</div>';
+$content	= '
+<div class="content-panel content-panel-table">
+	<h3><span class="muted">Aufgaben: </span>Monatsansicht</h3>
+	<div class="content-panel-inner">
+		'.$calendar.'
+	</div>
+</div>';
 
 $script	= '
 <script>
@@ -29,8 +57,5 @@ $(document).ready(function(){
 </script>';
 $env->getPage()->addHead( $script );
 
-$buttons	= array();
-foreach( $buttonSets as $buttonSet )
-	$buttons[]	= '<div class="btn-group">'.join( " ", $buttonSet ).'</div>'; $buttons	= '<div id="work-mission-buttons">'.join( " | ", $buttons ).'</div>';
 return $buttons.$content;
 ?>
