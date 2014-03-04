@@ -8,6 +8,7 @@ class Model_Note extends CMF_Hydrogen_Model{
 		'projectId',
 		'status',
 		'public',
+		'format',
 		'title',
 		'content',
 		'numberViews',

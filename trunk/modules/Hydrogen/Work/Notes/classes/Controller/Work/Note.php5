@@ -16,6 +16,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				'projectId'	=> $request->get( 'note_projectId' ),
 				'title'		=> $request->get( 'note_title' ),
 				'public'	=> (int) $request->get( 'note_public' ),
+				'format'	=> $request->get( 'note_format' ),
 				'content'	=> $request->get( 'note_content' ),
 				'createdAt'	=> time(),
 			);
@@ -120,6 +121,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				'title'			=> $request->get( 'note_title' ),
 				'content'		=> $request->get( 'note_content' ),
 				'public'		=> (int) $request->get( 'note_public' ),
+				'format'		=> $request->get( 'note_format' ),
 				'modifiedAt'	=> time(),
 			);
 			if( !strlen( trim( $data['title'] ) ) )
@@ -280,7 +282,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->env->getMessenger()->noteSuccess( $words->successNoteTagRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
-	
+
 	public function removeLink( $noteId, $noteLinkId ){
 		$logic		= new Logic_Note( $this->env );
 		$logic->removeNoteLink( $noteLinkId );
