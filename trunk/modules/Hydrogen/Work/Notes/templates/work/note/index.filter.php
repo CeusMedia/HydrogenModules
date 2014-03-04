@@ -7,8 +7,6 @@ $tags	= $env->session->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= array();
 
-$iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_in.png" title="'.$w->buttonTagEnableAlt.'"/>';
-$iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/magnifier_zoom_out.png" title="'.$w->buttonTagForgetAlt.'"/>';
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
@@ -18,9 +16,8 @@ $not	= array();
 foreach( $tags as $tag )
 	$not[]	= $tag->tagId;
 
-//$logic	= new Logic_Note( $env );
-//$tags	= $logic->getTopTags( 3, 0, $not );
-$tags	= array();
+$logic	= new Logic_Note( $env );
+$tags	= $logic->getTopTags( 3, 0, $not );
 
 $tagsMore	= "";
 if( $tags ){
@@ -28,14 +25,13 @@ if( $tags ){
 	foreach( $tags as $tag ){
 		$url	= './work/note/addSearchTag/'.$tag->tagId;
 		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';
-		$count	= '<div class="number-indicator">'.$tag->relations.'</div>';
+		$count	= '<span class="badge badge-info"><small>'.$tag->relations.'</small></span> ';
 		$button	= '<a href="'.$url.'" class="btn btn-small btn-mini btn-success">'.$iconAdd.'</a>';
 		$tray	= '<div class="item-tag-tray">'.$count.$button.'</div>';
 		$list[]	= '<li class="item-tag-extended border-top">'.$label.$tray.'</li>';
 	}
-	$label		= '<label>'.$w->labelTagsSuggested.'</label><br/>';
 	$tagsMore	= '<ul class="tags-list">'.join( $list ).'</ul>';
-	$tagsMore	= '<li>'.$label.$tagsMore.'</li>';
+	$tagsMore	= '<h4>'.$w->labelTagsSuggested.'</h4>'.$tagsMore;
 }
 
 $tags	= $session->get( 'filter_notes_tags' );
@@ -50,11 +46,9 @@ if( $tags ){
 		$tray	= '<div class="item-tag-tray">'.$button.'</div>';
 		$list[]	= '<li class="item-tag-extended border-top">'.$label.$tray.'</li>';
 	}
-	$label		= '<label>'.$w->labelTagsActive.'</label><br/>';
 	$tagsSearch	= '<ul class="tags-list">'.join( $list ).'</ul>';
-	$tagsSearch	= '<li>'.$label.$tagsSearch.'</li>';
+	$tagsSearch	= '<h4>'.$w->labelTagsActive.'</h4>'.$label.$tagsSearch;
 }
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' neue Notiz', array( 'href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary' ) );
 
 $optAuthor		= $words['filter-author'];
 $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $filterAuthor );
@@ -79,7 +73,7 @@ return '
 					<div style="position: relative; display: none;" id="reset-button-container">
 						<img id="reset-button-trigger" src="themes/custom/img/clearSearch.png" style="position: absolute; right: 3%; top: 9px; cursor: pointer"/>
 					</div>
-					<input type="text" id="input_filter_query" tabindex="1" name="filter_query" value="'.$term.'" class="span12" autocomplete="off"/>
+					<input type="text" id="input_filter_query" tabindex="1" name="filter_query" value="'.$term.'" class="span12" autocomplete="off" onchange="this.form.submit();"/>
 					<div style="clear: left"></div>
 				</div>
 			</div>
@@ -114,9 +108,6 @@ return '
 		</form>
 		'.$tagsSearch.'
 		'.$tagsMore.'
-		<div class="buttonbar">
-			'.$buttonAdd.'
-		</div>
 	</div>
 </div>';
 ?>
