@@ -3,7 +3,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.3.1</version>
+	<version>0.3.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,7 +16,6 @@
 		<class>Model/Tag.php5</class>
 		<class>Logic/Note.php5</class>
 		<class>View/Work/Note.php5</class>
-		<class>View/Helper/ContentConverter.php5</class>
 		<template>work/note/add.php</template>
 		<template>work/note/edit.php</template>
 		<template>work/note/index.php</template>
@@ -31,6 +30,8 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<supports type="module">UI_Helper_Content</supports>
+		<supports type="module">JS_Markdown</supports>
 <!--		<needs type="module">Tags</needs>-->
 	</relations>
 	<link xml:lang="de" access="acl" path="work/note">Notizen</link>
@@ -109,6 +110,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>term_log` (
   PRIMARY KEY (`termLogId`),
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" version-from="0.3.2" version-to="0.3.3"><![CDATA[
+ALTER TABLE  `notes` ADD  `format` VARCHAR( 20 ) NULL AFTER  `public` ,
+ADD INDEX (  `format` ) ;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;

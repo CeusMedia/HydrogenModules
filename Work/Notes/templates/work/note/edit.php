@@ -1,7 +1,6 @@
 <?php
 
 $w		= (object) $words['edit'];
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' );
 
 $iconAdd	= '<img src="http://img.int1a.net/famfamfam/silk/add.png" title="zuweisen"/>';
 $iconRemove	= '<img src="http://img.int1a.net/famfamfam/silk/delete.png" title="entfernen"/>';
@@ -109,6 +108,11 @@ foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
 
+$optFormat	= array();
+foreach( $words['formats'] as $formatKey => $formatLabel )
+	$optFormat[$formatKey]	= $formatLabel;
+$optFormat  = UI_HTML_Elements::Options( $optFormat, $note->format );
+
 $panelEdit	= '
 	<form id="form_edit_note" name="edit_note" action="./work/note/edit/'.$note->noteId.'" method="post">
 		<fieldset>
@@ -129,7 +133,11 @@ $panelEdit	= '
 						&nbsp;'.$w->labelPublic.'
 					</label>
 				</li>
-				<li class="column-clear">
+				<li class="column-clear column-left-20">
+					<label for="input_note_format">'.$w->labelFormat.'</label>
+					<select id="input_note_format" name="note_format" class="max">'.$optFormat.'</select>
+ 				</li>
+ 				<li class="column-clear">
 					<label for="input_note_content">'.$w->labelContent.'</label>
 					<textarea name="note_content" id="input_note_content" rows="20" class="max">'.htmlentities( $note->content, ENT_COMPAT, 'UTF-8' ).'</textarea>
 				</li>
@@ -144,7 +152,10 @@ $panelEdit	= '
 	</form>
 ';
 
-return '
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' ) );
+
+
+return $textTop.'
 <div class="row-fluid">
 	<div class="span9 -column-left-75">
 		'.$panelEdit.'
@@ -155,5 +166,5 @@ return '
 	</div>
 </div>
 <div class="column-clear"></div>
-';
+'.$textBottom;
 ?>

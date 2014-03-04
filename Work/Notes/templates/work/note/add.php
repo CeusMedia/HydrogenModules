@@ -1,14 +1,19 @@
 <?php
 
 $w		= (object) $words['add'];
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' ) );
 
 $optProject	= array( '' => '' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
 
-return '
+$optFormat	= array();
+foreach( $words['formats'] as $formatKey => $formatLabel )
+	$optFormat[$formatKey]	= $formatLabel;
+$optFormat	= UI_HTML_Elements::Options( $optFormat, $note->format );
+
+return $textTop.'
 <div class="row-fluid">
 	<div class="span9 note-add -column-left-75">
 		<form name="note_add" id="form_note_add" action="./work/note/add" method="post">
@@ -30,9 +35,13 @@ return '
 							&nbsp;'.$w->labelPublic.'
 						</label>
 					</li>
+					<li class="column-clear column-left-20">
+						<label for="input_note_format">'.$w->labelFormat.'</label>
+						<select id="input_note_format" name="note_format" class="max">'.$optFormat.'</select>
+					</li>
 					<li class="column-clear">
 						<label for="input_note_content">'.$w->labelContent.'</label>
-						<textarea id="input_note_content" name="note_content" class="max" rows="16"></textarea>
+						<textarea id="input_note_content" name="note_content" class="max CodeMirror-auto" rows="16"></textarea>
 					</li>
 					<li class="column-clear column-left-30">
 						<label for="input_tags">'.$w->labelTags.'</label><br/>
@@ -55,9 +64,9 @@ return '
 		</form>
 	</div>
 	<div class="note-add span3 -column-left-25">
-		'.$text['info'].'
+		'.$textInfo.'
 	</div>
 </div>
 <div class="column-clear"></div>
-';
+'.$textBottom;
 ?>
