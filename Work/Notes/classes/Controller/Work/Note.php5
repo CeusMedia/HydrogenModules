@@ -10,7 +10,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$words		= (object) $this->getWords( 'add' );
 		$data		= $request->getAllFromSource( 'post' )->getAll();
 
-		if( $request->get( 'add' ) ){
+		if( $request->has( 'save' ) ){
 			$data		= array(
 				'userId'	=> $session->get( 'userId' ),
 				'projectId'	=> $request->get( 'note_projectId' ),
@@ -69,7 +69,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function addSearchTag( $tagId ){
+	public function addSearchTag( $tagId, $page = 0 ){
 		$session	= $this->env->getSession();
 		$tags		= $session->get( 'filter_notes_tags' );
 		$model		= new Model_Tag( $this->env );
@@ -84,7 +84,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_notes_tags', $tags );
 			$session->set( 'filter_notes_offset', 0 );
 		}
-		$this->restart( './work/note' );
+		$this->restart( './work/note/'.$page );
 	}
 
 	public function addTag( $noteId, $tagId = NULL ){
@@ -115,7 +115,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$this->restart( './work/note/' );
 		}
 
-		if( $request->get( 'save' ) ){
+		if( $request->has( 'save' ) ){
 			$data		= array(
 				'projectId'		=> $request->get( 'note_projectId' ),
 				'title'			=> $request->get( 'note_title' ),
@@ -158,6 +158,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_notes_public', $request->get( 'filter_public' ) );
 		if( $request->has( 'filter_projectId' ) )
 			$session->set( 'filter_notes_projectId', $request->get( 'filter_projectId' ) );
+		if( $request->has( 'filter_limit' ) )
+			$session->set( 'filter_notes_limit', $request->get( 'filter_limit' ) );
 
 		if( $request->has( 'filter_query' ) ){
 			if( trim( $query = $request->get( 'filter_query' ) ) ){
@@ -183,7 +185,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function forgetTag( $tagId ){
+	public function forgetTag( $tagId, $page = 0 ){
 		$session	= $this->env->getSession();
 		$tags		= $session->get( 'filter_notes_tags' );
 		foreach( $tags as $tag )
@@ -191,21 +193,22 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				$list[]	= $tag;
 		$session->set( 'filter_notes_tags', $list );
 		$session->set( 'filter_notes_offset', 0 );
-		$this->restart( './work/note' );
+		$this->restart( './work/note/'.$page );
 	}
 
 	public function index( $page = 0 ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$tags		= $session->get( 'filter_notes_tags' );
-		$query		= $session->get( 'filter_notes_term');
-		$order		= $session->get( 'filter_notes_order' );
+		$request			= $this->env->getRequest();
+		$session			= $this->env->getSession();
+		$tags				= $session->get( 'filter_notes_tags' );
+		$query				= $session->get( 'filter_notes_term');
+		$order				= $session->get( 'filter_notes_order' );
 		$direction			= $session->get( 'filter_notes_direction' );
+		$limit				= $session->get( 'filter_notes_limit' );
 		$filterAuthor		= $session->get( 'filter_notes_author' );
 		$filterPublic		= $session->get( 'filter_notes_public' );
 		$filterProjectId	= $session->get( 'filter_notes_projectId' );
-		$visibility	= $session->get( 'filter_notes_visibility' );
-
+		$visibility			= $session->get( 'filter_notes_visibility' );
+		$limit				= $limit ? $limit  : 10;
 		if( !$order || !$direction ){
 			$order		= 'modifiedAt';
 			$direction	= 'DESC';
@@ -234,12 +237,12 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$conditions['userId']		= $filterAuthor == 1 ? $userId : '!='.$userId;
 		if( $filterProjectId )
 			$conditions['projectId']	= $filterProjectId;
-		$offset	= (int) $session->get( 'filter_notes_offset' );
+		$offset	= $page * $limit;
 		if( $query || count( $tags ) ){
-			$notes	= $logic->searchNotes( $query, $tags, $offset, 8 );
+			$notes	= $logic->searchNotes( $query, $tags, $offset, $limit );
 		}
 		else{
-			$notes	= $logic->getTopNotes( $conditions, $offset, 8 );
+			$notes	= $logic->getTopNotes( $conditions, $offset, $limit );
 		}
 		$modelUser	= new Model_User( $this->env );
 		foreach( $notes['list'] as $nr => $note )
@@ -247,7 +250,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$logic		= new Logic_Project( $this->env );
 		$projects	= $logic->getUserProjects( $userId );
 		$this->addData( 'offset', $offset );
-		$this->addData( 'limit', 10 );
+		$this->addData( 'limit', $limit );
+		$this->addData( 'page', $page );
 		$this->addData( 'filterVisibility', $visibility );
 		$this->addData( 'filterAuthor', $filterAuthor );
 		$this->addData( 'filterPublic', $filterPublic );
