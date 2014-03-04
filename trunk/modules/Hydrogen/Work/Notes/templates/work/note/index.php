@@ -24,7 +24,7 @@ foreach( $notes['list'] as $note ){
 	$listLinks	= join( ' | ', $listLinks );
 	$listTags	= array();
 	foreach( $note->tags as $tag ){
-		$class		= in_array( $tag, $tags ) ? 'active' : '';
+/*		$class		= in_array( $tag, $tags ) ? 'active' : '';
 		$action		= in_array( $tag, $tags ) ? 'forgetTag' : 'addSearchTag';
 		$label		= htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' );
 		$attributes	= array(
@@ -33,17 +33,26 @@ foreach( $notes['list'] as $note ){
 			'href'			=> './work/note/'.$action.'/'.$tag->tagId.'/'.$page,
 		);
 		$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', $iconTag.' '.$label, $attributes );
+*/
+		if( !in_array( $tag, $tags ) ){
+			$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+				'href' => './work/note/addSearchTag/'.$tag->tagId.'/'.$page
+			) );
+		}
+		else
+			$listTags[$tag->content]	= htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' );
 	}
 	ksort( $listTags );
-	$listTags	= '<div class="pull-right">'.join( ' ', $listTags ).'</div>';
-
+//	$listTags	= '<div class="pull-right">'.join( ' ', $listTags ).'</div>';
+	$listTags	= $listTags ? '<i class="icon-tags"></i> '.join( ', ', $listTags ) : '<em><small class="muted">Keine Tags.</small></em>';
+	$spanTags	= '<span class="">'.$listTags.'</span>';
 	$spanAuthor	= '<span class=""><i class="icon-user"></i> '.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</span>';
 	$timestamp	= max( $note->createdAt, $note->modifiedAt, 0 );
 	$time		= $helper->convert( $timestamp, TRUE );
 	$spanDate	= $timestamp ? '<span class=""><i class="icon-time"></i> '.$time.'</span>' : '';
 	$spanRating	= '<span class="indicator rating">'.$indicator->build( 5, 7 ).'</span>';
-	$divInfo	= '<div class="info-inline">'.$spanAuthor.' &minus; '.$spanDate.'</div>';
-	$list[]	= '<li class="note">'.$listTags.$title.$divInfo/*.$spanRating./*.$listLinks*/.'</li>';
+	$divInfo	= '<div class="info-inline">'.$spanAuthor.' &minus; '.$spanDate.' &minus; '.$spanTags.'</div>';
+	$list[]	= '<li class="note">'./*$listTags.*/$title.$divInfo/*.$listTags/*.$spanRating./*.$listLinks*/.'</li>';
 }
 if( $list )
 	$list	= '<ul class="results">'.join( $list ).'</ul>';

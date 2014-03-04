@@ -64,7 +64,13 @@ ul.results a.link {
 	text-decoration: none;
 	}
 ul.results li.note .note-title {
-	font-size: 1.4em;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	padding: 0.2em 0 0.1em 0;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	}
 ul.results li.note .note-title a {
 	text-decoration: none;

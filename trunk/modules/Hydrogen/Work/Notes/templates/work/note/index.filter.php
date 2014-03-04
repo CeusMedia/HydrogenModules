@@ -78,13 +78,11 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span6">
 					<label for="input_filter_public">'.$w->labelPublic.'</label>
 					<select id="input_filter_public" name="filter_public" class="span12" onchange="this.form.submit();">'.$optPublic.'</select>
 				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
+				<div class="span6">
 					<label for="input_filter_author">'.$w->labelAuthor.'</label>
 					<select id="input_filter_author" name="filter_author" class="span12" onchange="this.form.submit();">'.$optAuthor.'</select>
 				</div>

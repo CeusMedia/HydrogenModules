@@ -160,10 +160,10 @@ extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note
 
 return $textTop.'
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span8">
 		'.$panelEdit.'
 	</div>
-	<div class="span3">
+	<div class="span4">
 		'.$panelTags.'
 		'.$panelLinks.'
 	</div>
