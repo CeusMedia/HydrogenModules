@@ -7,7 +7,7 @@ code>
 php job.php5 work-mission-mail-daily
 <code
 ]]></description>
-	<version>0.8.6</version>
+	<version>0.8.7</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -23,7 +23,10 @@ php job.php5 work-mission-mail-daily
 		<class>View/Helper/Work/Mission/List/Days.php5</class>
 		<class>View/Helper/Work/Mission/List/DayControls.php5</class>
 		<class>View/Helper/Work/Mission/Mail/Daily.php5</class>
+		<class>Mail/Work/Mission/Creation.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
+		<class>Mail/Work/Mission/Finish.php5</class>
+		<class>Mail/Work/Mission/Update.php5</class>
 		<class>Job/Work/Mission.php5</class>
 		<template>work/mission/add.php</template>
 		<template>work/mission/calendar.php</template>

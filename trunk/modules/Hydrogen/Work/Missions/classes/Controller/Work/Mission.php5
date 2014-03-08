@@ -139,54 +139,60 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function testMail( $send = FALSE ){
-		$session		= $this->env->getSession();
-		$messenger		= $this->env->getMessenger();
-		$userId			= $session->get( 'userId' );
+	public function testMail( $type, $send = FALSE ){
+		switch( $type ){
+			case "daily":																			//  
+				$session		= $this->env->getSession();											//  
+				$messenger		= $this->env->getMessenger();										//  
+				$userId			= $session->get( 'userId' );										//  
 
+				$modelUser		= new Model_User( $this->env );										//  
+				$modelMission	= new Model_Mission( $this->env );									//  
+				$user			= $modelUser->get( $userId );										//  
 
-		$modelUser		= new Model_User( $this->env );
-		$modelMission	= new Model_Mission( $this->env );
-		$user			= $modelUser->get( $userId );
+				$groupings	= array( 'missionId' );													//  group by mission ID to apply HAVING clause
+				$havings	= array(																//  apply filters after grouping
+					'ownerId = '.(int) $user->userId,												//  
+					'workerId = '.(int) $user->userId,												//  
+				);
+				if( $this->env->getModules()->has( 'Manage_Projects' ) ){							//  look for module
+					$modelProject	= new Model_Project( $this->env );								//  
+					$userProjects	= $modelProject->getUserProjects( $user->userId );				//  get projects assigned to user
+					if( $userProjects )																//  projects found
+						$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';//  add to HAVING clause
+				}
+				$havings	= array( join( ' OR ', $havings ) );									//  render HAVING clause
 
-		$groupings	= array( 'missionId' );															//  group by mission ID to apply HAVING clause
-	    $havings	= array(																		//  apply filters after grouping
-            'ownerId = '.(int) $user->userId,                                                   //  
-            'workerId = '.(int) $user->userId,                                                  //  
-        );
-        if( $this->env->getModules()->has( 'Manage_Projects' ) ){                               //  look for module
-            $modelProject   = new Model_Project( $this->env );                                  //  
-            $userProjects   = $modelProject->getUserProjects( $user->userId );                  //  get projects assigned to user
-            if( $userProjects )                                                                 //  projects found
-                $havings[]  = 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';    //  add to HAVING clause
-        }
-        $havings    = array( join( ' OR ', $havings ) );                                        //  render HAVING clause
+				//  --  TASKS  --  //
+				$filters	= array(																//  task filters
+					'type'		=> 0,																//  tasks only
+					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
+					'dayStart'	=> "<=".date( "Y-m-d", time() ),									//  present and past (overdue)
+				);
+				$order	= array( 'priority' => 'ASC' );
+				$tasks	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
 
-        //  --  TASKS  --  //
-        $filters    = array(                                                                    //  task filters
-            'type'      => 0,                                                                   //  tasks only
-            'status'    => array( 0, 1, 2, 3 ),                                                 //  states: new, accepted, progressing, ready
-            'dayStart'  => "<=".date( "Y-m-d", time() ),                                        //  present and past (overdue)
-        );
-        $order  = array( 'priority' => 'ASC' );
-        $tasks  = $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );  //  get filtered tasks ordered by priority
+				//  --  EVENTS  --  //
+				$filters	= array(																//  event filters
+					'type'		=> 1,																//  events only
+					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
+					'dayStart'	=> "<=".date( "Y-m-d", time() ),									//  starting today
+				);
+				$order	= array( 'timeStart' => 'ASC' );
+				$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
 
-        //  --  EVENTS  --  //
-        $filters    = array(                                                                    //  event filters
-            'type'      => 1,                                                                   //  events only
-            'status'    => array( 0, 1, 2, 3 ),                                                 //  states: new, accepted, progressing, ready
-            'dayStart'  => "<=".date( "Y-m-d", time() ),                                        //  starting today
-        );
-        $order  = array( 'timeStart' => 'ASC' );
-        $events = $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );  //  get filtered events ordered by start time
+				if( !$events && !$tasks )															//  user has neither tasks nor events
+					continue;																		//  do not send a mail, leave user alone
 
-        if( !$events && !$tasks )                                                               //  user has neither tasks nor events
-            continue;                                                                           //  do not send a mail, leave user alone
-
-        $data   = array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );             //  data for mail upcoming object
-        $mail   = new Mail_Work_Mission_Daily( $this->env, $data );                             //  create mail and populate data
-		print( $mail->content );
-		die;
+				$data		= array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );		//  data for mail upcoming object
+				$mail		= new Mail_Work_Mission_Daily( $this->env, $data );						//  create mail and populate data
+				$content	= print( $mail->content );
+				break;
+			default:
+				throw new InvalidArgumentException( 'Invalid mail type' );
+		}
+		print( $content );
+		exit;
 	}
 
 	public function add(){
