@@ -29,7 +29,7 @@ class Job_Work_Mission extends Job_Abstract{
 			foreach( $receivers as $receiverId => $receiver ){
 #				if( $receiver->email !== "kriss@ceusmedia.de" )
 #					continue;
-				if( 1 || (int) $receiver->userId !== (int) $change->userId ){
+				if( (int) $receiver->userId !== (int) $change->userId ){
 					if( $useSettings )
 						$config	= Model_User_Setting::applyConfigStatic( $this->env, $receiver->userId );
 					if( !$config->get( 'module.work_missions.mail.active' ) )
