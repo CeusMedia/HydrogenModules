@@ -230,8 +230,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'reference'			=> $request->get( 'reference' ),
 					'createdAt'			=> time(),
 				);
-				$this->model->add( $data );
+				$missionId	= $this->model->add( $data );
 				$messenger->noteSuccess( $words->msgSuccess );
+				$this->logic->noteChange( 'new', $missionId, NULL, $userId );
 				$this->restart( './work/mission' );
 			}
 		}
@@ -359,7 +360,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				}
 			}
 			$this->model->edit( $missionId, $data );
-			$this->logic->noteChange( $missionId, $mission, $userId );
+			$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 		}
 		if( $this->env->request->isAjax() )
 			$this->ajaxRenderLists();
@@ -429,7 +430,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				);
 				$this->model->edit( $missionId, $data, FALSE );
 				$messenger->noteSuccess( $words->msgSuccess );
-				$this->logic->noteChange( $missionId, $mission, $userId );
+				$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 				$this->restart( './work/mission' );
 			}
 		}

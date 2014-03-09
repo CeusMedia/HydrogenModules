@@ -17,12 +17,13 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 	public function renderBody( $data ){
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-update' );
+		$labels			= (object) $this->getWords( 'work/mission', 'add' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
 		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$statusLabels	= (array) $this->getWords( 'work/mission', 'states' );
-		$priorityLabels	= (array) $this->getWords( 'work/mission', 'priorities' );
+		$states			= (array) $this->getWords( 'work/mission', 'states' );
+		$priorities		= (array) $this->getWords( 'work/mission', 'priorities' );
 		$types			= (array) $this->getWords( 'work/mission', 'types' );
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
@@ -35,20 +36,20 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 
 		if( $old->title !== $new->title ){
 			$diff[]	= (object) array(
-				'label'		=> "Titel",
+				'label'		=> $labels->labelTitle,
 				'line'		=> $old->title.'<br/>'.$new->title,
 			);
 		}
 		if( $old->status !== $new->status ){
 			$diff[]	= (object) array(
-				'label'		=> "Status",
-				'line'		=> $statusLabels[$old->status].' &rarr; '.$statusLabels[$new->status],
+				'label'		=> $labels->labelStatus,
+				'line'		=> $states[$old->status].' &rarr; '.$statusLabels[$new->status],
 			);
 		}
 		if( $old->priority !== $new->priority ){
 			$diff[]	= (object) array(
-				'label'		=> "Priorität",
-				'line'		=> $priorityLabels[$old->status].' &rarr; '.$priorityLabels[$new->status],
+				'label'		=> $labels->labelPriority,
+				'line'		=> $priorities[$old->status].' &rarr; '.$priorityLabels[$new->status],
 			);
 		}
 		if( $old->workerId !== $new->workerId ){
@@ -61,7 +62,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		}
 		if( $old->location !== $new->location ){
 			$diff[]	= (object) array(
-				'label'		=> "Ort",
+				'label'		=> $labels->labelLocation,
 				'line'		=> $old->location.'<br/>'.$new->location,
 			);
 		}
@@ -75,7 +76,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 			$dateOld	= $old->dayStart ? date( "d.m.Y", strtotime( $old->dayStart ) ) : '-';
 			$dateNew	= $new->dayStart ? date( "d.m.Y", strtotime( $new->dayStart ) ) : '-';
 			$diff[]	= (object) array(
-				'label'		=> "Start<!--datum-->",
+				'label'		=> $new->type ? $labels->labelDayStart : $labels->labelDayWork,
 				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,
 			);
 		}
@@ -89,7 +90,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 			$dateOld	= $old->dayEnd ? date( "d.m.Y", strtotime( $old->dayEnd ) ) : '-';
 			$dateNew	= $new->dayEnd ? date( "d.m.Y", strtotime( $new->dayEnd ) ) : '-';
 			$diff[]	= (object) array(
-				'label'		=> "Ende<!--datum-->",
+				'label'		=> $new->type ? $labels->labelDayEnd : $labels->labelDayDue,
 				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,
 			);
 		}
@@ -97,7 +98,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$list	= array();
 		foreach( $diff as $entry )
 			$list[]	= '<dt>'.$entry->label.'</dt><dd>'.$entry->line.'</dd>';
-		$list	= '<dl class="not-dl-horizontal">'.join( $list ).'</dl>';
+		$list	= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
 
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
@@ -126,9 +127,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$this->addThemeStyle( 'indicator.css' );
 
 		$this->page->addBody( $body );
-		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-//		print( $this->page->build( array( 'class' => $class ) ) );
-//	die;
+		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-update';
 		return $this->page->build( array( 'class' => $class ) );
 	}
 }
