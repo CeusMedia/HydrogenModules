@@ -331,6 +331,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
 	 */
 	public function changeDay( $missionId ){
+		$userId		= $this->env->getSession()->get( 'userId' );
 		$date		= trim( $this->env->getRequest()->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
 		$data		= array();
@@ -358,6 +359,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				}
 			}
 			$this->model->edit( $missionId, $data );
+			$this->logic->noteChange( $missionId, $mission, $userId );
 		}
 		if( $this->env->request->isAjax() )
 			$this->ajaxRenderLists();
@@ -385,7 +387,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$words			= (object) $this->getWords( 'edit' );
 		$userId			= $session->get( 'userId' );
 
-		$mission	= $this->model->get( $missionId );
+		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$messenger->noteError( $words->msgInvalidId );
 		if( $this->useProjects ){
@@ -427,6 +429,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				);
 				$this->model->edit( $missionId, $data, FALSE );
 				$messenger->noteSuccess( $words->msgSuccess );
+				$this->logic->noteChange( $missionId, $mission, $userId );
 				$this->restart( './work/mission' );
 			}
 		}

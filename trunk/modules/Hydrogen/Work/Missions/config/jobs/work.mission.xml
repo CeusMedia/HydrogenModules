@@ -6,4 +6,10 @@
 		<interval>day</interval>
 		<mode>test</mode>
 	</job>
+	<job id="work-mission-changes">
+		<class>Work_Mission</class>
+		<method>informAboutChanges</method>
+		<interval>minute</interval>
+		<mode>test</mode>
+	</job>
 </jobs>

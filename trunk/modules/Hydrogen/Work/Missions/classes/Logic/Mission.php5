@@ -1,8 +1,10 @@
 <?php
 class Logic_Mission{
 
-	public $timeOffset	= 0; # 4 hours night shift: 14400;
+	public $timeOffset			= 0; # 4 hours night shift: 14400;
 	public $generalConditions	= array();
+	public $model;
+	public $useProjects			= FALSE;
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
@@ -89,5 +91,17 @@ class Logic_Mission{
 	}
 
 	public function moveDate(){}
+
+	public function noteChange( $missionId, $oldData, $currentUserId ){
+		$model	= new Model_Mission_Change( $this->env );
+		if( !$model->count( array( 'missionId' => $missionId ) ) ){
+			$model->add( array(
+				'missionId'		=> $missionId,
+				'userId'		=> $currentUserId,
+				'oldData'		=> serialize( $oldData ),
+				'timestamp'		=> time()
+			) );
+		}
+	}
 }
 ?>
