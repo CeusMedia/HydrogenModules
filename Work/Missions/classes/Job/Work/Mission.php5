@@ -16,6 +16,8 @@ class Job_Work_Mission extends Job_Abstract{
 		$useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 		$changes		= $modelChange->getAll();
 		$count			= 0;
+		$config			= $this->env->getConfig();
+		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );
 		foreach( $changes as $change ){
 			$mission	= $modelMission->get( $change->missionId );
 			$receivers	= array();
@@ -25,7 +27,15 @@ class Job_Work_Mission extends Job_Abstract{
 			}
 			$receivers[$mission->workerId] = $modelUser->get( $mission->workerId );
 			foreach( $receivers as $receiverId => $receiver ){
+#				if( $receiver->email !== "kriss@ceusmedia.de" )
+#					continue;
 				if( 1 || (int) $receiver->userId !== (int) $change->userId ){
+					if( $useSettings )
+						$config	= Model_User_Setting::applyConfigStatic( $this->env, $receiver->userId );
+					if( !$config->get( 'module.work_missions.mail.active' ) )
+						continue;
+					if( !$config->get( 'module.work_missions.mail.changes' ) )
+						continue;
 					switch( strtolower( $change->type ) ){
 						case 'update':
 							$mail   = new Mail_Work_Mission_Update( $this->env, array(
@@ -66,16 +76,19 @@ class Job_Work_Mission extends Job_Abstract{
 		$modelUser		= new Model_User( $this->env );
 		$modelMission	= new Model_Mission( $this->env );
 		$config			= $this->env->getConfig();
-		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Setting' );
+		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );
 		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
-			if( $user->email !== "kriss@ceusmedia.de" )
-				continue;
+#			if( $user->email !== "kriss@ceusmedia.de" )
+#				continue;
 			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 			if( $useSettings )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
-			if( !$config->get( 'module.work_missions.mail.active' ) )
+			$config	= $config->getAll( 'module.work_missions.mail.', TRUE );
+			if( !$config->get( 'active' ) || !$config->get( 'daily' ) )
+				continue;
+			if( (int) $config->get( 'daily.hour' ) != (int) date( "H" ) )
 				continue;
 
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
