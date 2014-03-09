@@ -58,7 +58,7 @@ class Job_Work_Mission extends Job_Abstract{
 
 				}
 			}
-//			$modelChange->remove( $change->missionChangeId );
+			$modelChange->remove( $change->missionChangeId );
 		}
 		$this->out( 'Sent '.$count.' mails.' );
 		return $count;
