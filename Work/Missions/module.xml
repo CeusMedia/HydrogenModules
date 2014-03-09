@@ -2,9 +2,10 @@
 <module>
 	<title>Work: Missions</title>
 	<description><![CDATA[Compact task and event management.
-To use the mail functions, please install module &quot;Resource_Jobs&quot; and a cronjob calling:
+To use the mail functions, please install module &quot;Resource_Jobs&quot; and the following cronjobs:
 code>
-php job.php5 work-mission-mail-daily
+  0 * * * * cd /path/to/office && php job.php5 work-mission-mail-daily
+*/5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
 	<version>0.8.11</version>
