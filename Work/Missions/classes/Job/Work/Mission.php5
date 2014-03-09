@@ -9,6 +9,38 @@ class Job_Work_Mission extends Job_Abstract{
 	 */
 	public function archive(){}
 
+    public function informAboutChanges(){
+		$modelChange	= new Model_Mission_Change( $this->env );
+		$modelMission	= new Model_Mission( $this->env );
+		$modelUser		= new Model_User( $this->env );
+		$useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
+		$changes		= $modelChange->getAll();
+		$count			= 0;
+		foreach( $changes as $change ){
+			$mission	= $modelMission->get( $change->missionId );
+			$receivers	= array();
+			if( $useProjects ){
+				$modelProject	= new Model_Project( $this->env );
+				$receivers		= $modelProject->getProjectUsers( (int) $mission->projectId );
+			}
+			$receivers[$mission->workerId] = $modelUser->get( $mission->workerId );
+			foreach( $receivers as $receiverId => $receiver ){
+				if( (int) $receiver->userId !== (int) $change->userId ){
+					$mail   = new Mail_Work_Mission_Update( $this->env, array(
+						'missionBefore'	=> unserialize( $change->oldData ),
+						'missionAfter'	=> $mission,
+						'user'			=> $receiver
+					) );
+					$mail->sendTo( $receiver );
+					$count++;
+				}
+			}
+			$modelChange->remove( $change->missionChangeId );
+		}
+		$this->out( 'Sent '.$count.' mails.' );
+		return $count;
+	}
+
 	/**
 	 *	Calls logic to update user activity states.
 	 *	Depending on activity timeout rules and user interface, users will be marked as "idle" or logout out after some time.
@@ -24,15 +56,13 @@ class Job_Work_Mission extends Job_Abstract{
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Setting' );
 		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
-//			if( $user->email !== "kriss@ceusmedia.de" )
-//				continue;
-//			if( $user->username !== "Karina" )
-//				continue;
+			if( $user->email !== "kriss@ceusmedia.de" )
+				continue;
 			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 			if( $useSettings )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
-			if( !$config->get( 'module.work_mission.mail.active' ) )
+			if( !$config->get( 'module.work_missions.mail.active' ) )
 				continue;
 
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause

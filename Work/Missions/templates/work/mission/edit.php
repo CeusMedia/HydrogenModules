@@ -384,7 +384,7 @@ textarea.changed {
 	}
 </style>
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span8">
 		'.$panelEdit.'
 		'.$panelToIssue.'
 	<!--	<fieldset>
@@ -396,7 +396,7 @@ textarea.changed {
 			'.$priorities.'
 		</fieldset>-->
 	</div>
-	<div class="span3">
+	<div class="span4">
 		'.$panelInfo.'
 		'.$panelClose.'
 	</div>
