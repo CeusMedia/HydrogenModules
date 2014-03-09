@@ -7,7 +7,7 @@ code>
 php job.php5 work-mission-mail-daily
 <code
 ]]></description>
-	<version>0.8.8</version>
+	<version>0.8.9</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -24,9 +24,9 @@ php job.php5 work-mission-mail-daily
 		<class>View/Helper/Work/Mission/List/Days.php5</class>
 		<class>View/Helper/Work/Mission/List/DayControls.php5</class>
 		<class>View/Helper/Work/Mission/Mail/Daily.php5</class>
-		<class>Mail/Work/Mission/Creation.php5</class>
+		<class>Mail/Work/Mission/New.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
-		<class>Mail/Work/Mission/Finish.php5</class>
+		<class>Mail/Work/Mission/Done.php5</class>
 		<class>Mail/Work/Mission/Update.php5</class>
 		<class>Job/Work/Mission.php5</class>
 		<template>work/mission/add.php</template>
@@ -98,11 +98,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_changes` (
   `missionChangeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `missionId` int(11) unsigned NOT NULL,
   `userId` int(11) unsigned NOT NULL,
-  `oldData` text COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
   `timestamp` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`missionChangeId`),
   KEY `missionId` (`missionId`),
-  KEY `userId` (`userId`)
+  KEY `userId` (`userId`),
+  KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[

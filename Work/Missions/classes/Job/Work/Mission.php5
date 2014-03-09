@@ -25,17 +25,30 @@ class Job_Work_Mission extends Job_Abstract{
 			}
 			$receivers[$mission->workerId] = $modelUser->get( $mission->workerId );
 			foreach( $receivers as $receiverId => $receiver ){
-				if( (int) $receiver->userId !== (int) $change->userId ){
-					$mail   = new Mail_Work_Mission_Update( $this->env, array(
-						'missionBefore'	=> unserialize( $change->oldData ),
-						'missionAfter'	=> $mission,
-						'user'			=> $receiver
-					) );
-					$mail->sendTo( $receiver );
-					$count++;
+				if( 1 || (int) $receiver->userId !== (int) $change->userId ){
+					switch( strtolower( $change->type ) ){
+						case 'update':
+							$mail   = new Mail_Work_Mission_Update( $this->env, array(
+								'missionBefore'	=> unserialize( $change->data ),
+								'missionAfter'	=> $mission,
+								'user'			=> $receiver
+							) );
+							$mail->sendTo( $receiver );
+							$count++;
+							break;
+						case 'new':
+							$mail	= new Mail_Work_Mission_New( $this->env, array(
+								'mission'	=> $mission,
+								'user'		=> $receiver
+							) );
+							$mail->sendTo( $receiver );
+							$count++;
+							break;
+					}
+
 				}
 			}
-			$modelChange->remove( $change->missionChangeId );
+//			$modelChange->remove( $change->missionChangeId );
 		}
 		$this->out( 'Sent '.$count.' mails.' );
 		return $count;

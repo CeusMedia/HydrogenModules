@@ -27,10 +27,7 @@ class Logic_Mission{
 	}
 
 	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL ){
-//print_m( $conditions );
 		$conditions	= array_merge( $this->generalConditions, $conditions );
-#print_m( $conditions );
-#die;
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access
@@ -92,13 +89,14 @@ class Logic_Mission{
 
 	public function moveDate(){}
 
-	public function noteChange( $missionId, $oldData, $currentUserId ){
+	public function noteChange( $type, $missionId, $data, $currentUserId ){
 		$model	= new Model_Mission_Change( $this->env );
 		if( !$model->count( array( 'missionId' => $missionId ) ) ){
 			$model->add( array(
 				'missionId'		=> $missionId,
 				'userId'		=> $currentUserId,
-				'oldData'		=> serialize( $oldData ),
+				'type'			=> $type,
+				'data'			=> serialize( $data ),
 				'timestamp'		=> time()
 			) );
 		}
