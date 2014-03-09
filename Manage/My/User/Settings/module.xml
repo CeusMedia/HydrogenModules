@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `<%prefix%>user_settings` (
   KEY `key` (`key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="update" type="mysql" version-from="0.2.0" version-to="0.2.0-p1"><![CDATA[
+	<sql on="update" type="mysql" version-from="0.2.0" version-to="0.2.1"><![CDATA[
 RENAME TABLE `user_settings` TO `<%prefix%>user_settings`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[

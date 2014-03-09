@@ -15,15 +15,19 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 		$moduleWords	= array();
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
+				if( file_exists( $path.$locale->file ) ){
+					$reader	= new File_INI_Reader( $path.$locale->file, TRUE );
+					if( $reader->hasSection( 'module' ) )
+						return $reader->getProperties( TRUE, 'module' );
+				}
+			}
+		}
+		foreach( $module->files->locales as $locale ){
+			if( file_exists( $path.$locale->file ) ){
 				$reader	= new File_INI_Reader( $path.$locale->file, TRUE );
 				if( $reader->hasSection( 'module' ) )
 					return $reader->getProperties( TRUE, 'module' );
 			}
-		}
-		foreach( $module->files->locales as $locale ){
-			$reader	= new File_INI_Reader( $path.$locale->file, TRUE );
-			if( $reader->hasSection( 'module' ) )
-				return $reader->getProperties( TRUE, 'module' );
 		}
 	}
 

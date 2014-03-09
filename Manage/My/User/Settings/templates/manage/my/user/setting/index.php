@@ -1,6 +1,5 @@
 <?php
 $w			= (object) $words['index'];
-
 $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );
 
 $formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
