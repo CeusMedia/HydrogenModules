@@ -15,7 +15,6 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 	}
 
 	public function renderBody( $data ){
-
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-new' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
@@ -35,7 +34,7 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$modelUser	= new Model_User( $this->env );
 		$worker		= $modelUser->get( $mission->workerId );
 
-		$list[]	= '<dt>'.$labels->labelTitle.'<dt><dd>'.$mission->title.'</dd>';
+//		$list[]	= '<dt>'.$labels->labelTitle.'<dt><dd>'.$mission->title.'</dd>';
 		$list[]	= '<dt>'.$labels->labelType.'<dt><dd>'.$types[$mission->type].'</dd>';
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$model		= new Model_Project( $this->env );
@@ -62,25 +61,21 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 
 		$list	= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
 
-		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
 		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$body	= '
-'.$heading.'
-<div class="text-greeting text-info">'.$greeting.'</div>
-<h4>'.$w->facts.'</h4>
-<div class="tasks">'.$list.'</div>
-<!--
-<div class="text-salute">'.$salute.'</div>
-<div class="text-signature">'.$w->textSignature.'</div>
--->';
+		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $baseUrl.'work/mission/'.$mission->missionId ) );
+		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
+		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
+		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $baseUrl.'work/mission/'.$mission->missionId ) );
+		$body		= require_once( 'templates/work/mission/mails/new.php' );
 
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );
+		$this->addThemeStyle( 'bootstrap.respsonsive.css' );
 		$this->addThemeStyle( 'layout.css' );
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.mission.css' );

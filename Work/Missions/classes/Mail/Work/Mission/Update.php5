@@ -107,20 +107,14 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-
+		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
+		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$type		= $types[$old->type];
 		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $baseUrl.'work/mission/'.$old->missionId ) );
-
-		$body	= '
-'.$heading.'
-<div class="text-greeting text-info">'.$greeting.'</div>
-<h4>'.$type.': '.$link.'</h4>
-<div class="tasks">'.$list.'</div>
-<!--<div class="text-salute">'.$salute.'</div>-->
-<!--<div class="text-signature">'.$w->textSignature.'</div>-->';
-
+		$body		= require_once( 'templates/work/mission/mails/update.php' );
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );
+		$this->addThemeStyle( 'bootstrap.responsive.css' );
 		$this->addThemeStyle( 'layout.css' );
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.mission.css' );
