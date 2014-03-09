@@ -42,7 +42,7 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 		$settings	= $model->getAllByIndex( 'userId', $userId );
 		foreach( $settings as $setting ){
 			$key	= 'module.'.strtolower( $setting->moduleId ).'.'.$setting->key;
-			if( array_key_exists( $config[$key] ) ){
+			if( array_key_exists( $key, $config ) ){
 				$value	= $this->castValue( gettype( $config[$key] ), $setting->value );
 				$config[$key]	= $value;
 			}
