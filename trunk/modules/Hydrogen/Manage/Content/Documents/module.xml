@@ -17,6 +17,7 @@
 		<template>manage/content/document/index.php</template>
 	</files>
 	<relations>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 		<supports type="module">JS_TinyMCE</supports>
 	</relations>
 	<config type="string" name="frontend.path" title="file path to managed application, needs trailing slash if set">../</config>

@@ -2,7 +2,7 @@
 class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 
 	protected $path;
-	
+
 	public function __onInit(){
 		$config			= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$this->path		= $config->get( 'frontend.path' ).$config->get( 'path.documents' );
@@ -42,7 +42,7 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		ksort( $list );
 		$context->list	= array_merge( $context->list, array_values( $list ) );
 	}
-	
+
 	public function add(){
 		if( !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
@@ -50,6 +50,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
 			$upload	= (object) $request->get( 'upload' );
+			if( $request->get( 'filename' ) )
+				$upload->name	= $request->get( 'filename' );
 			if( $upload->error ){
                 $handler    = new Net_HTTP_UploadErrorHandler();
                 $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
@@ -59,7 +61,7 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 				if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
 					$messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
 				else
-					$messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
+					$messenger->noteSuccess( 'Datei wurde hochgeladen und als "%s" abgelegt.', $upload->name );
 			}
 		}
 		$this->restart( NULL, TRUE );

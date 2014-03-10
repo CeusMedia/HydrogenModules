@@ -1,5 +1,7 @@
 <?php
 
+$helper	= new View_Helper_TimePhraser( $env );
+
 $list	= '<div><small class="muted"><em>Keine.</em></small></div>';
 if( $documents ){
 	$rows	= array();
@@ -14,19 +16,28 @@ if( $documents ){
 		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $link ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr',
 			UI_HTML_Tag::create( 'td', $link ).
+			UI_HTML_Tag::create( 'td', $helper->convert( filemtime( $frontendPath.$pathDocuments.$entry ) ) ).
+			UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( filesize( $frontendPath.$pathDocuments.$entry ) ) ).
 			UI_HTML_Tag::create( 'td', in_array( 'remove', $rights ) ? $remove : '' )
 		);
 	}
 	$thead	= UI_HTML_Tag::create( 'thead',
 		UI_HTML_Tag::create( 'tr',
 			UI_HTML_Tag::create( 'th', 'Titel').
+			UI_HTML_Tag::create( 'th', 'Upload vor' ).
+			UI_HTML_Tag::create( 'th', 'Größe' ).
 			UI_HTML_Tag::create( 'th', '' )
 		)
 	);
-
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$list	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( "67%", "15%", "10%", "8%" );
+	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
+	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
 }
+
+$optFilename	= array( '' => '' );
+foreach( $documents as $entry )
+	$optFilename[$entry]	= $entry;
+$optFilename	= UI_HTML_Elements::Options( $optFilename );
 
 $panelAdd	= '';
 if( in_array( 'add', $rights ) ){
@@ -38,6 +49,12 @@ if( in_array( 'add', $rights ) ){
 				<div class="span12">
 					<label for="input_upload">'.$words['add']['labelFile'].'</label>
 					<input type="file" name="upload" id="input_upload"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_filename">'.$words['add']['labelFilename'].'</label>
+					<select name="filename" id="input_filename">'.$optFilename.'</select>
 				</div>
 				<div class="buttonbar">
 					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> '.$words['add']['buttonSave'].'</button>
