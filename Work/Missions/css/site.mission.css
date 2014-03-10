@@ -658,3 +658,23 @@ body.controller-work-mission input[type="checkbox"] {
 #work-mission-buttons input.changed {
 	background-color: #FFB;
 	} 
+
+
+
+
+#work-mission-buttons .btn-group ul.dropdown-menu {
+	max-height: 250px;
+	overflow-x: hidden;
+	overflow-y: auto;
+/*	width: 150px;
+	min-width: 150px;
+	max-width: 150px;*/
+	}
+
+#work-mission-buttons .btn-group ul.dropdown-menu li.selectable a {
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+/*	padding: 3px 0px;*/
+	}

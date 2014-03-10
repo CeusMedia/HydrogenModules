@@ -32,9 +32,8 @@ class Job_Work_Mission extends Job_Abstract{
 				if( (int) $receiver->userId !== (int) $change->userId ){
 					if( $useSettings )
 						$config	= Model_User_Setting::applyConfigStatic( $this->env, $receiver->userId );
-					if( !$config->get( 'module.work_missions.mail.active' ) )
-						continue;
-					if( !$config->get( 'module.work_missions.mail.changes' ) )
+					$config	= $config->getAll( 'module.work_missions.mail.', TRUE );
+					if( !( $config->get( 'active' ) && $config->get( 'changes' ) ) )
 						continue;
 					switch( strtolower( $change->type ) ){
 						case 'update':

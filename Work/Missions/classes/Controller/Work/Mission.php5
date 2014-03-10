@@ -79,28 +79,36 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'useIssues', $this->useIssues = $modules->has( 'Manage_Issues' ) );
 
 		$userId		= $session->get( 'userId' );
-		if( $this->hasFullAccess() )
-			$this->userProjects	= $this->logic->getUserProjects( $userId );
-		else
-			$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
+		if( $userId ){
+			if( $this->hasFullAccess() )
+				$this->userProjects	= $this->logic->getUserProjects( $userId );
+			else
+				$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
+			$this->initFilters( $userId );
+		}
+	}
 
-		$filters	= $session->getAll( 'filter.work.mission.', TRUE );
-
-		//  --  GENERAL LOGIC CONDITIONS  --  //
-		$tense		= $session->get( 'filter.work.mission.tense' );
-		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'][$tense];
-		switch( $tense ){
-			case 1:
-				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
-				break;
-			case 2:
-				$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
-				break;
+	protected function initFilters( $userId ){
+		$session	= $this->env->getSession();
+		if( !(int) $userId )
+			return;
+		if( !$session->getAll( 'filter.work.mission.', TRUE )->count() ){
+			$model	= new Model_Mission_Filter( $this->env );
+			$serial	= $model->getByIndex( 'userId', $userId, 'serial' );
+//$this->env->getMessenger()->noteNotice( '<xmp>'.$serial.'</xmp>' );
+			$serial	= $serial ? unserialize( $serial ) : NULL;
+			if( is_array( $serial ) ){
+				foreach( $serial as $key => $value )
+					$session->set( 'filter.work.mission.'.$key, $value );
+				$this->env->getMessenger()->noteNotice( 'Filter für Aufgaben aus der letzten Sitzung wurden reaktiviert.' );
+			}
 		}
 
 		//  --  DEFAULT SETTINGS  --  //
 		if( $session->get( 'filter.work.mission.tense' ) === NULL )
 			$session->set( 'filter.work.mission.tense', $this->defaultFilterValues['tense'] );
+		else
+			$session->set( 'filter.work.mission.tense', (int) $session->get( 'filter.work.mission.tense' ) );
 		if( !$session->get( 'filter.work.mission.types' ) )
 			$session->set( 'filter.work.mission.types', $this->defaultFilterValues['types'] );
 		if( !$session->get( 'filter.work.mission.priorities' ) )
@@ -121,6 +129,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$session->set( 'filter.work.mission.direction', $direction );
 			}
 		}
+
+		//  --  GENERAL LOGIC CONDITIONS  --  //
+		$tense		= $session->get( 'filter.work.mission.tense' );
+		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'][$tense];
+		switch( $tense ){
+			case 1:
+				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				break;
+			case 2:
+				$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				break;
+		}
 	}
 
 	public function setFilter( $name, $value = NULL, $set = FALSE ){
@@ -136,6 +156,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$values	= $value;
 		}
 		$session->set( 'filter.work.mission.'.$name, $values );
+		$userId		= $session->get( 'userId' );
+		$model		= new Model_Mission_Filter( $this->env );
+		$serial		= serialize( $session->getAll( 'filter.work.mission.' ) );
+		$data		= array( 'serial' => $serial, 'timestamp' => time() );
+		$indices	= array( 'userId' => $userId );
+		$filter		= $model->getByIndex( 'userId', $userId );
+		if( $filter )
+			$model->edit( $filter->missionFilterId, $data );
+		else
+			$model->add( $data + $indices );
 		$this->restart( NULL, TRUE );
 	}
 
