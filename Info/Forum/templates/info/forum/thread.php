@@ -59,6 +59,8 @@ if( $posts ){
 		}
 		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 		$content		= nl2br( $post->content, TRUE );
+		if( $post->type == 1 )
+			$content	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'contents/forum/'.$post->content ) );
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
 			$content		.= UI_HTML_Tag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
@@ -102,7 +104,7 @@ return $textTop.'
 	</div>
 </div>
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span12">
 		'.$panelAdd.'
 	</div>
 </div>
