@@ -110,7 +110,8 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$type		= $types[$old->type];
-		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $baseUrl.'work/mission/'.$old->missionId ) );
+		$url		= $baseUrl.'work/mission/'.$old->missionId;
+		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $url ) );
 		$body		= require_once( 'templates/work/mission/mails/update.php' );
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );

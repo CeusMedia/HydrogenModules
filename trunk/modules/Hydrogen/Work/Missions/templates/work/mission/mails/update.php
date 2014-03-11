@@ -1,15 +1,13 @@
 <?php
 return '
-<div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
+<div class="container">
+	<div class="navbar navbar-inverse">
+		<div class="navbar-inner">
 			<a href="'.$baseUrl.'" class="brand">
-				<i class="icon-fire icon-white"></i> Office
+				<!--<i class="icon-fire icon-white"></i> -->Office
 			</a>
 		</div>
 	</div>
-</div>
-<div class="container">
 	<br/>
 	'.$heading.'
 	<div class="text-greeting text-info">'.$greeting.'</div>
