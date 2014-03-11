@@ -9,25 +9,27 @@ $rows			= array( 'folders' => array(), 'files' => array() );
 foreach( $files as $file ){
 	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->timestamp ) );
 	$size			= Alg_UnitFormater::formatBytes( filesize( $pathBase.$file->pathName ) );
+	$urlDownload	= './info/file/download/'.base64_encode( $file->pathName );
+	$urlRemove		= './info/file/remove/'.base64_encode( $file->pathName );
 	$class			= 'type type-'.pathinfo( $file->fileName, PATHINFO_EXTENSION );
 	$underline		= $size.', '.$timePhrase.', '.$file->downloads.' Downloads';
 	$underline		= UI_HTML_Tag::create( 'small', $underline, array( 'class' => "muted" ) );
 	$label			= $file->fileName;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
-	$label			= UI_HTML_Tag::create( 'span', $label, array( 'class' => 'name' ) );
+	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $urlDownload, 'class' => 'name' ) );
 	$buttonDownload	= "";
 	$buttonRemove	= "";
 	if( in_array( 'download', $rights ) ){
 		$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload, array(
-			'href'	=> './info/file/download/'.base64_encode( $file->pathName ),
+			'href'	=> $urlDownload,
 			'class'	=> 'btn not-btn-small btn-primary',
 			'title'	=> $words['index']['buttonDownload']
 		) );
 	}
 	if( in_array( 'remove', $rights ) ){
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-			'href'	=> './info/file/remove/'.base64_encode( $file->pathName ),
+			'href'	=> $urlRemove,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $words['index']['buttonRemove']
 		) );
@@ -122,8 +124,8 @@ return $textIndexTop.'
 		'.$table.'
 	</div>
 	<div class="span3">
-		'.$panelInfo.'
-		<br/>
+<!--		'.$panelInfo.'
+		<br/>-->
 		'.$panelUpload.'
 		<br/>
 		'.$panelAddFolder.'
