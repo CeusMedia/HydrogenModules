@@ -43,13 +43,13 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		if( $old->status !== $new->status ){
 			$diff[]	= (object) array(
 				'label'		=> $labels->labelStatus,
-				'line'		=> $states[$old->status].' &rarr; '.$statusLabels[$new->status],
+				'line'		=> $states[$old->status].' &rarr; '.$states[$new->status],
 			);
 		}
 		if( $old->priority !== $new->priority ){
 			$diff[]	= (object) array(
 				'label'		=> $labels->labelPriority,
-				'line'		=> $priorities[$old->status].' &rarr; '.$priorityLabels[$new->status],
+				'line'		=> $priorities[$old->status].' &rarr; '.$priorities[$new->status],
 			);
 		}
 		if( $old->workerId !== $new->workerId ){
@@ -112,7 +112,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$type		= $types[$old->type];
 		$url		= $baseUrl.'work/mission/'.$old->missionId;
 		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $url ) );
-		$body		= require_once( 'templates/work/mission/mails/update.php' );
+		$body		= require( 'templates/work/mission/mails/update.php' );
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );
 		$this->addThemeStyle( 'bootstrap.responsive.css' );
