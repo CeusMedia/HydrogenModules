@@ -102,7 +102,7 @@ class Job_Work_Mission extends Job_Abstract{
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );
 		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
-			if( !$user->email )																		//  no mail address configured for user
+			if( !strlen( trim( $user->email ) ) )													//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 			if( $useSettings )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
@@ -110,7 +110,7 @@ class Job_Work_Mission extends Job_Abstract{
 			$isActiveUser	= (int) $user->status > 0 && strlen( trim( $user->email ) );			//  user is active and has mail address
 			$isMailReceiver	= $config->get( 'active' ) && $config->get( 'changes' );				//  mails are enabled
 			$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
-			if( !( $isActiveUser && $isMailReceiver && isSendHour ) )								//  
+			if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//  
 				continue;
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
 			$havings	= array(																	//  apply filters after grouping
