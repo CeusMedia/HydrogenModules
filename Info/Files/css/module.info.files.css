@@ -15,60 +15,60 @@ tr.folder td.folder a.name small {
 tr td.file {
 	height: 33px;
 	}
-tr td.file span {
+tr td.file a {
 	display: inline-block;
 	height: 33px;
 	line-height: 1.3em;
 	}
-tr td.file span.name {
+tr td.file a.name {
 	background-position: 2px 2px;
 	background-repeat: no-repeat;
 	padding-left: 40px;
 	}
-tr.type td.file span.name {
+tr.type td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/page.png);
 	}
-tr.type.type-js td.file span.name {
+tr.type.type-js td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_jar.png);
 	}
-tr.type.type-css td.file span.name {
+tr.type.type-css td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/css.png);
 	}
-tr.type.type-doc td.file span.name,
-tr.type.type-odt td.file span.name,
-tr.type.type-docx td.file span.name {
+tr.type.type-doc td.file a.name,
+tr.type.type-odt td.file a.name,
+tr.type.type-docx td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_doc.png);
 	}
-tr.type.type-pdf td.file span.name {
+tr.type.type-pdf td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_pdf.png);
 	}
-tr.type.type-ods td.file span.name,
-tr.type.type-xls td.file span.name {
+tr.type.type-ods td.file a.name,
+tr.type.type-xls td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_xls.png);
 	}
-tr.type.type-png td.file span.name {
+tr.type.type-png td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_png.png);
 	}
-tr.type.type-jpeg td.file span.name,
-tr.type.type-jpg td.file span.name {
+tr.type.type-jpeg td.file a.name,
+tr.type.type-jpg td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_jpg.png);
 	}
-tr.type.type-7z td.file span.name {
+tr.type.type-7z td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_7z.png);
 	}
-tr.type.type-gz td.file span.name {
+tr.type.type-gz td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_gz.png);
 	}
-tr.type.type-zip td.file span.name {
+tr.type.type-zip td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_zip.png);
 	}
-tr.type.type-wmv td.file span.name {
+tr.type.type-wmv td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_wmv.png);
 	}
-tr.type.type-mpg td.file span.name,
-tr.type.type-mpeg td.file span.name {
+tr.type.type-mpg td.file a.name,
+tr.type.type-mpeg td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_mpg.png);
 	}
-tr.type.type-divx td.file span.name {
+tr.type.type-divx td.file a.name {
 	background-image: url(//cdn.int1a.net/img/fatcow/32/file_extension_divx.png);
 	}
