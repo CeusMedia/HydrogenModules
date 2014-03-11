@@ -19,7 +19,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
 		$this->cache		= $this->env->getCache();
-		
+
 		if( !( $this->userPosts = $this->cache->get( 'info.forum.userPosts' ) ) ){
 			$model	= new Model_User( $this->env );
 			$this->userPosts		= array();
@@ -27,22 +27,23 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 				$this->userPosts[$user->userId]	= $this->modelPost->countByIndex( 'authorId', $user->userId );
 			$this->cache->set( 'info.forum.userPosts', $this->userPosts );
 		}
+
+		$path	= $this->env->getConfig()->get( 'module.info_forum.upload.path' );
+		if( !file_exists( $path ) )
+			mkdir( $path, 0770, TRUE );
 	}
 
 	public function addPost( $threadId ){
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread ){
-			$this->env->getMessenger()->noteError( 'Invalid thread ID: '.$threadId );
-			$this->restart( NULL, TRUE );
-		}
-		if( $thread->status < 0 ){
-			$this->env->getMessenger()->noteError( 'Thread '.$threadId.' is no longer available' );
+			$this->messenger->noteError( $words->errorInvalidThreadId, $threadId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $thread->status == 2 ){
-			$this->env->getMessenger()->noteError( 'Thread '.$threadId.' is closed.' );
+			$this->messenger->noteError( $words->errorThreadClosed, $thread->title );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -52,7 +53,36 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$data['threadId']	= $threadId;
 		$data['authorId']	= $this->env->getSession()->get( 'userId' );
 		$data['createdAt']	= time();
+		$data['type']		= 0;
+
+		if( $data['file']['error'] !== 4 ){
+			$file	= (object) $data['file'];
+			$config	= $this->env->getConfig()->getAll( 'module.info_forum.upload.', TRUE );
+			if( $file->error ){
+				$key	= "errorUpload".$file->error;
+				$this->messenger->noteError( $words->$key );
+				$this->restart( 'thread/'.$threadId, TRUE );
+			}
+			$path		= $config->get( 'path' );
+			$fileName	= uniqid().".".pathinfo( $file->name, PATHINFO_EXTENSION );
+			try{
+				move_uploaded_file( $file->tmp_name, $path.$fileName );
+				$image		= new UI_Image( $path.$fileName );
+				$processor	= new UI_Image_Processing( $image );
+				$processor->scaleDownToLimit( $config->get( 'max.x' ), $config->get( 'max.y' ) );
+				$image->save();
+			}
+			catch( Exception $e ){
+				$this->messenger->noteError( $words->errorImageInvalid.': '.$e->getMessage() );
+				@unlink( $path.$fileName );
+				$this->restart( 'thread/'.$threadId, TRUE );
+			}
+			$data['content'] = $fileName;
+			$data['type']	= 1;
+		}
+
 		$this->modelPost->add( $data );
+		$this->messenger->noteSuccess( $words->successPostAdded );
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
 		$this->cache->remove( 'info.forum.userPosts' );
@@ -61,22 +91,26 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function addThread(){
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 		$data		= $request->getAll();
 		$data['authorId']	= $this->env->getSession()->get( 'userId' );
 		$data['createdAt']	= time();
 		$threadId	= $this->modelThread->add( $data );
 		$thread		= $this->modelThread->get( $threadId );
+		$this->messenger->noteSuccess( $words->successThreadAdded, $data['title'] );
 		$request->set( 'threadId', $threadId );
 		$this->redirect( 'info/forum', 'addPost', array( $threadId ) );
 	}
 
 	public function addTopic(){
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 		$data		= $request->getAll();
 		$data['authorId']	= $this->env->getSession()->get( 'userId' );
 		$data['rank']		= $this->modelTopic->count();
 		$data['createdAt']	= time();
 		$postId		= $this->modelTopic->add( $data );
+		$this->messenger->noteSuccess( $words->successTopicAdded, $data['title'] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -127,8 +161,9 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function approvePost( $postId ){
 		$post		= $this->modelPost->get( $postId );
+		$words		= (object) $this->getWords( 'msg' );
 		if( !$post ){
-			$this->env->getMessenger()->noteError( 'Invalid post ID: '.$postId );
+			$this->messenger->noteError( $words->errorInvalidPostId, $postId );
 			$this->restart( NULL, TRUE );
 		}
 		$this->modelPost->edit( $postId, array( 'status' => 1 ) );
@@ -154,9 +189,10 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	}
 
 	public function rankTopic( $topicId, $downwards = NULL ){
+		$words		= (object) $this->getWords( 'msg' );
 		$direction	= (boolean) $downwards ? +1 : -1;
 		if( !( $topic = $this->modelTopic->get( (int) $topicId ) ) )
-			$this->env->getMessenger()->noteError( 'Invalid topic ID: '.$topicId );
+			$this->messenger->noteError( $words->errorInvalidTopicId, $topicId );
 		else{
 			$rank	= $topic->rank + $direction;
 			if( ( $next = $this->modelTopic->getByIndex( 'rank', $rank ) ) ){
@@ -166,12 +202,13 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( NULL, TRUE );
 	}
-	
+
 	public function thread( $threadId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$threadId	= (int) $threadId;
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread ){
-			$this->env->getMessenger()->noteError( 'Invalid thread ID: '.$threadId );
+			$this->messenger->noteError( $words->errorInvalidThreadId, $threadId );
 			$this->restart( NULL, TRUE );
 		}
 		$modelUser	= new Model_User( $this->env );
@@ -194,8 +231,9 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	public function topic( $topicId ){
 		$topicId	= (int) $topicId;
 		$topic		= $this->modelTopic->get( $topicId );
+		$words		= (object) $this->getWords( 'msg' );
 		if( !$topic ){
-			$this->env->getMessenger()->noteError( 'Invalid topic ID: '.$topicId );
+			$this->messenger->noteError( $words->errorInvalidTopicId, $topicId );
 			$this->restart( NULL, TRUE );
 		}
 		$orders		= array( 'type' => 'DESC', 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
@@ -214,27 +252,28 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function removePost( $postId ){
 		$post		= $this->modelPost->get( $postId );
+		$words		= (object) $this->getWords( 'msg' );
 		if( !$post ){
-			$this->env->getMessenger()->noteError( 'Invalid post ID: '.$postId );
+			$this->messenger->noteError( $words->errorInvalidPostId, $postId );
 			$this->restart( NULL, TRUE );
 		}
 		$userCanEdit	= in_array( 'editPost', $this->rights );
 		$userIsManager	= in_array( 'removeTopic', $this->rights );
 		$userOwnsPost	= $post->authorId === (int) $this->env->getSession()->get( 'userId' );
 		if( !( $userCanEdit && $userOwnsPost || $userIsManager ) )
-			$this->messenger->noteError( 'Access denied.' );
+			$this->messenger->noteError( $words->errorAccessDenied );
 		else{
-			$this->modelPost->edit( $postId, array( 'status' => -1 ) );
-			$conditions	= array( 'threadId' => $post->threadId, 'status' => array( 0, 1 ) );
-			if( !$this->modelPost->count( $conditions ) ){
+			$this->modelPost->remove( $postId );
+			if( !$this->modelPost->count( array( 'threadId' => $post->threadId ) ) ){
 				$thread	= $this->modelThread->get( $post->threadId );
 				$this->modelPost->removeByIndex( 'threadId', $post->threadId );
 				$this->modelThread->remove( $post->threadId );
-				$this->messenger->noteSuccess( 'Removed post and thread "%s".', $thread->title );
 				$this->restart( 'topic/'.$thread->topicId, TRUE );
 			}
-			else
-				$this->messenger->noteSuccess( 'Removed post.' );
+			$this->messenger->noteSuccess( $words->successPostRemoved );
+			if( $post->type == 1 ){
+				@unlink( "contents/forum/".$post->content );
+			}
 			$this->cache->remove( 'info.forum.userPosts' );
 		}
 		$this->restart( 'thread/'.$post->threadId, TRUE );
@@ -242,26 +281,30 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function removeThread( $threadId ){
 		$thread		= $this->modelThread->get( (int) $threadId );
+		$words		= (object) $this->getWords( 'msg' );
 		if( !$thread ){
-			$this->env->getMessenger()->noteError( 'Invalid thread ID: '.$thread );
+			$this->messenger->noteError( $words->errorInvalidThreadId, $threadId );
 			$this->restart( NULL, TRUE );
 		}
 		$this->modelPost->removeByIndex( 'threadId', (int) $threadId );
 		$this->modelThread->remove( (int) $threadId );
+		$this->messenger->noteSuccess( $words->successThreadRemoved, $thread->title );
 		$this->restart( 'topic/'.$thread->topicId, TRUE );
 	}
 
 	public function removeTopic( $topicId ){
 		$topic		= $this->modelTopic->get( $topicId );
+		$words		= (object) $this->getWords( 'msg' );
 		if( !$topic ){
-			$this->env->getMessenger()->noteError( 'Invalid topic ID: '.$topicId );
+			$this->messenger->noteError( $words->errorInvalidTopicId, $topicId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->modelThread->countByIndex( 'topicId', $topicId ) ){
-			$this->env->getMessenger()->noteError( 'Topic is not empty' );
+			$this->messenger->noteError( $words->errorTopicNotEmpty, $topic->title );
 			$this->restart( NULL, TRUE );
 		}
 		$this->modelTopic->remove( $topicId );
+		$this->messenger->noteSuccess( $words->successTopicRemoved, $topic->title );
 		$this->restart( NULL, TRUE );
 	}
 }
