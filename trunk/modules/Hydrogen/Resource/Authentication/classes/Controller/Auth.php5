@@ -117,8 +117,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			$redirectTo	= $redirectController.'/'.$redirectAction;									//  generate redirect URL
 		else if( $redirectController )																//  or only redirect controller given
 			$redirectTo	= $redirectController;														//  generate redirect URL
-		else if( $this->request->get( 'from' ) )															//  or redirect URL given via parameter "from"
-			$redirectTo	= $this->request->get( 'from' );													//  take redirect URL from parameter
+		else if( $this->request->get( 'from' ) )													//  or redirect URL given via parameter "from"
+			$redirectTo	= $this->request->get( 'from' );											//  take redirect URL from parameter
 		$this->restart( './'.$redirectTo );															//  restart (to redirect URL if set)
 	}
 
@@ -136,7 +136,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					$randomizer->configure( TRUE, TRUE, TRUE, FALSE, 0 );
 					$password	= $randomizer->get( 8 );
 					$modelUser->edit( $user->userId, array( 'password' => md5( $password ) ) );
-					$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
+//					$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->restart( './auth/login' );
 				}
@@ -147,10 +147,6 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function register(){
-#		print_m( $this->config->getAll() );
-#		remark( CMC_VERSION );
-#		die;
-
 		$words		= (object) $this->getWords( 'register' );
 
 		$modelUser	= new Model_User( $this->env );
