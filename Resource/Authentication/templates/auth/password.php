@@ -4,26 +4,27 @@ extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/pass
 
 return '
 '.$textTop.'
-<div class="column-left-50">
-	<div class="column-left-90">
-		<fieldset>
-			<legend>'.$w->legend.'</legend>
-			<form action="./auth/password" method="post">
-				<ul class="input">
-					<li>
-						<label for="input_password_email" class="mandatory">'.$w->labelEmail.'</label><br/>
-						<input type="text" name="password_email" id="input_password_email" class="max mandatory" value="'.$request->get( 'password_email' ).'">
-					</li>
-				</ul>
-				<div class="buttonbar">
-					'.UI_HTML_Elements::Button( 'confirm', $w->buttonSend, 'button save' ).'
-				</div>
-			</form>
-		</fieldset>
+<div class="content-panel content-panel-form">
+	<h3>'.$w->legend.'</h3>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<div class="span6">
+				<form action="./auth/password" method="post">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_password_email" class="mandatory">'.$w->labelEmail.'</label>
+							<input type="text" name="password_email" id="input_password_email" class="span12 -max mandatory" value="'.$request->get( 'password_email' ).'">
+						</div>
+					</div>
+					<div class="buttonbar">
+						<button type="submit" class="btn btn-primary" name="confirm"><i class="icon-envelope icon-white"></i> '.$w->buttonSend.'</button>
+					</div>
+				</form>
+			</div>
+			<div class="span6">
+				'.$textInfo.'
+			</div>
+		</div>
 	</div>
-</div>
-<div class="column-left-50">
-	'.$textInfo.'
-</div>
-<div class="column-clear"></div>';
+</div>';
 ?>
