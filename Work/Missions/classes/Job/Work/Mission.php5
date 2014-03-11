@@ -2,65 +2,89 @@
 class Job_Work_Mission extends Job_Abstract{
 
 	/**
-	 *	Archive old messages, sessions, users etc.
-	 *	@access		public
-	 *	@todo		implement this job
-	 *	@return		void
+	 *	Get mail receivers of update mails.
+	 *	@access		protected
+	 *	@param		array		$projectsIds		List of project IDs to collect user of
+	 *	@param		array		$includes			List of user IDs to include
+	 *	@param		array		$excludes			List of user IDs to exclude
+	 *  @return		array		List of mail receiving users
 	 */
-	public function archive(){}
+	protected function getUpdateMailReceivers( $projectIds, $includes = array(), $excludes = array() ){
+		$list	= array();																		//  prepare empty user list
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){								//  projects are enabled
+			$modelProject	= new Model_Project( $this->env );									//  get project model
+			foreach( $projectIds as $projectId )												//  iterate given projects IDs
+				foreach( $modelProject->getProjectUsers( (int) $projectId ) as $user )			//  iterate project users
+					$list[(int) $user->userId]	= $user;										//  enlist user
+		}
+		$modelMission	= new Model_Mission( $this->env );										//  get mission model
+		foreach( $includes as $userId )															//  iterate users to include
+			if( !array_key_exists( (int) $userId, $list ) )										//  user is not in list yet
+				$list[(int) $userId]	= $modelUser->get( $userId );							//  enlist user
+		foreach( $excludes as $userId )															//  iterate users to exclude
+			if( array_key_exists( (int) $userId, $list ) )										//  user is in list
+				unset( $list[(int) $userId] );													//  remove user from list
+
+		$users			= array();																//  prepare final user list
+		$config			= $this->env->getConfig();												//  get default config
+		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
+		foreach( $list as $userId => $user ){													//  iterate so far listed users
+			if( $useSettings )																	//  user settings are enabled
+				$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId );			//  apply user settings
+			$user->config	= $config->getAll( 'module.work_missions.mail.', TRUE );			//  store module settings of user
+			if( (int) $user->status > 0 )														//  user is enabled
+				if( strlen( trim( $user->email ) ) > 0 )										//  user as mail address
+					if( (int) $user->config->get( 'active' ) )									//  user mailing is enabled
+						if( (int) $user->config->get( 'changes' ) )								//  changes mail is enabled
+							$users[$userId]	= $user;											//  add user to final user list
+		}
+		return $users;																			//  return final user list
+	}
 
     public function informAboutChanges(){
-		$modelChange	= new Model_Mission_Change( $this->env );
-		$modelMission	= new Model_Mission( $this->env );
-		$modelUser		= new Model_User( $this->env );
-		$useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
-		$changes		= $modelChange->getAll();
-		$count			= 0;
-		$config			= $this->env->getConfig();
-		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );
-		foreach( $changes as $change ){
-			$mission	= $modelMission->get( $change->missionId );
-			$receivers	= array();
-			if( $useProjects ){
-				$modelProject	= new Model_Project( $this->env );
-				$receivers		= $modelProject->getProjectUsers( (int) $mission->projectId );
-			}
-			$receivers[$mission->workerId] = $modelUser->get( $mission->workerId );
-			foreach( $receivers as $receiverId => $receiver ){
-#				if( $receiver->email !== "kriss@ceusmedia.de" )
-#					continue;
-				if( (int) $receiver->userId !== (int) $change->userId ){
-					if( $useSettings )
-						$config	= Model_User_Setting::applyConfigStatic( $this->env, $receiver->userId );
-					$config	= $config->getAll( 'module.work_missions.mail.', TRUE );
-					if( !( $config->get( 'active' ) && $config->get( 'changes' ) ) )
-						continue;
-					switch( strtolower( $change->type ) ){
-						case 'update':
-							$mail   = new Mail_Work_Mission_Update( $this->env, array(
-								'missionBefore'	=> unserialize( $change->data ),
-								'missionAfter'	=> $mission,
-								'user'			=> $receiver
-							) );
-							$mail->sendTo( $receiver );
-							$count++;
-							break;
-						case 'new':
-							$mail	= new Mail_Work_Mission_New( $this->env, array(
-								'mission'	=> $mission,
-								'user'		=> $receiver
-							) );
-							$mail->sendTo( $receiver );
-							$count++;
-							break;
+		$modelChange	= new Model_Mission_Change( $this->env );								//  get mission changes model
+		$modelMission	= new Model_Mission( $this->env );										//  get mission model
+		$count			= 0;																	//  init mail counter
+		foreach( $modelChange->getAll() as $change ){											//  iterate mission changes
+			$missionNew	= $modelMission->get( $change->missionId );								//  get current mission data
+			switch( strtolower( $change->type ) ){												//  which change type?
+				case 'new':																		//  inform about new mission
+					$receivers	= $this->getUpdateMailReceivers(								//  get mail receivers
+						array( (int) $missionNew->projectId ),									//  of mission project
+						array( $missionNew->workerId ),											//  include project worker
+						array( $change->userId )												//  exclude change maker
+					);
+					foreach( $receivers as $receiverId => $user ){								//  iterate mail receivers
+						$mail	= new Mail_Work_Mission_New( $this->env, array(					//  prepare mail
+							'mission'	=> $missionNew,											//  provide current mission data
+							'user'		=> $user												//  provide receiver user data
+						) );
+						$mail->sendTo( $user );													//  send mail to current receiver
+						$count++;																//  count sent mail
 					}
-
-				}
+					break;
+				case 'update':																	//  inform about mission update
+					$missionOld	= unserialize( $change->data );									//  get old mission data
+					$receivers	= $this->getUpdateMailReceivers(								//  get mail receivers
+						array( (int) $missionNew->projectId, (int) $missionOld->projectId ),	//  of old and new project
+						array( $missionNew->workerId, $missionOld->workerId ),					//  include old and new project worker
+						array( $change->userId )												//  exclude change maker
+					);
+					foreach( $receivers as $receiverId => $user ){								//  iterate mail receivers
+						$mail   = new Mail_Work_Mission_Update( $this->env, array(				//  prepare mail
+							'missionBefore'	=> $missionOld,										//  provide old mission data
+							'missionAfter'	=> $missionNew,										//  provide new mission data
+							'user'			=> $user											//  provide receiver user data
+						) );
+						$mail->sendTo( $user );													//  send mail to current receiver
+						$count++;																//  count sent mail
+					}
+					break;
 			}
-			$modelChange->remove( $change->missionChangeId );
+			$modelChange->remove( $change->missionChangeId );									//  remove change
 		}
-		$this->out( 'Sent '.$count.' mails.' );
-		return $count;
+		$this->out( 'Sent '.$count.' mails.' );													//  note sent mails
+		return $count;																			//  return number of sent mails
 	}
 
 	/**
@@ -78,18 +102,16 @@ class Job_Work_Mission extends Job_Abstract{
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );
 		$count			= 0;
 		foreach( $modelUser->getAll( array( 'status' => '>0' ) ) as $user ){						//  get all active users
-#			if( $user->email !== "kriss@ceusmedia.de" )
-#				continue;
 			if( !$user->email )																		//  no mail address configured for user
 				continue;																			//  @todo	kriss: handle this exception state!
 			if( $useSettings )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
-			$config	= $config->getAll( 'module.work_missions.mail.', TRUE );
-			if( !$config->get( 'active' ) || !$config->get( 'daily' ) )
+			$config		= $config->getAll( 'module.work_missions.mail.', TRUE );
+			$isActiveUser	= (int) $user->status > 0 && strlen( trim( $user->email ) );			//  user is active and has mail address
+			$isMailReceiver	= $config->get( 'active' ) && $config->get( 'changes' );				//  mails are enabled
+			$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
+			if( !( $isActiveUser && $isMailReceiver && isSendHour ) )								//  
 				continue;
-			if( (int) $config->get( 'daily.hour' ) != (int) date( "H" ) )
-				continue;
-
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
 			$havings	= array(																	//  apply filters after grouping
 				'ownerId = '.(int) $user->userId,													//  

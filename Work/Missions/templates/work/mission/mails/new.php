@@ -4,7 +4,7 @@ return '
 	<div class="navbar-inner">
 		<div class="container">
 			<a href="'.$baseUrl.'" class="brand">
-				<i class="icon-fire icon-white"></i> Office
+				<!--<i class="icon-fire icon-white"></i> -->Office
 			</a>
 		</div>
 	</div>

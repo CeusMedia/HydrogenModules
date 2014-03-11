@@ -1,4 +1,4 @@
-.<?php
+<?php
 class Mail_Work_Mission_New extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
@@ -67,10 +67,10 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $baseUrl.'work/mission/'.$mission->missionId ) );
+		$url		= $baseUrl.'work/mission/'.$mission->missionId;
+		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $url ) );
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $baseUrl.'work/mission/'.$mission->missionId ) );
 		$body		= require_once( 'templates/work/mission/mails/new.php' );
 
 		$this->addPrimerStyle( 'layout.css' );
