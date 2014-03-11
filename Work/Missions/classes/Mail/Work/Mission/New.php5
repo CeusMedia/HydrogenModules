@@ -71,7 +71,7 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $url ) );
 		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$body		= require_once( 'templates/work/mission/mails/new.php' );
+		$body		= require( 'templates/work/mission/mails/new.php' );
 
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );
