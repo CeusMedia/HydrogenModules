@@ -8,9 +8,9 @@ $lastUpload		= 0;
 $lastDownload	= 0;
 $downloads		= 0;
 foreach( $files as $entry ){
-	$lastUpload		= max( $lastUpload, $entry->timestamp );
-	$lastDownload	= max( $lastDownload, $entry->downloaded );
-	$downloads		+= $entry->downloads;
+	$lastUpload		= max( $lastUpload, $entry->uploadedAt );
+	$lastDownload	= max( $lastDownload, $entry->downloadedAt );
+	$downloads		+= $entry->nrDownloads;
 }
 
 return '

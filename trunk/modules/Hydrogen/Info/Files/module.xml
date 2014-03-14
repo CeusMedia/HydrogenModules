@@ -3,12 +3,14 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/File.php5</class>
 		<class>View/Info/File.php5</class>
+		<class>Model/Download/File.php5</class>
+		<class>Model/Download/Folder.php5</class>
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
 		<locale>de/html/info/file/index.top.html</locale>
@@ -17,6 +19,7 @@
 		<template>info/file/index.info.php</template>
 		<template>info/file/index.upload.php</template>
 		<style>module.info.files.css</style>
+		<script load="auto">InfoFile.js</script>
 		<file>contents/files/.htaccess</file>
 	</files>
 	<config protected="yes" type="string" name="path">contents/files/</config>
@@ -26,4 +29,36 @@
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
+	<sql on="update" type="mysql" version-from="2.7" version-to="2.8"><![CATA[
+DROP TABLE IF EXISTS `<%?prefix%>download_files`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
+  `downloadFileId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `downloadFolderId` int(10) unsigned NOT NULL,
+  `rank` smallint(6) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `nrDownloads` smallint(5) unsigned NOT NULL,
+  `uploadedAt` decimal(12,0) unsigned NOT NULL,
+  `downloadedAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`downloadFileId`),
+  KEY `downloadFolderId` (`downloadFolderId`),
+  KEY `rank` (`rank`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
+  `downloadFolderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(10) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `rank` smallint(5) unsigned NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `nrFolders` smallint(5) unsigned DEFAULT '0',
+  `nrFiles` smallint(5) unsigned DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`downloadFolderId`),
+  KEY `parentId` (`parentId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 </module>
