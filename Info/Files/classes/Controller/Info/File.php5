@@ -9,49 +9,131 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	protected $rights		= array();
 	/**	@var	array		$folders	*/
 	protected $folders		= array();
+	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
+	protected $messenger;
 
 	public function __onInit(){
 		$this->messenger	= $this->env->getMessenger();
-		$this->options	= $this->env->getConfig()->getAll( 'module.info_files.' );
-		$this->rights	= $this->env->getAcl()->index( 'info/file' );
-		$this->path		= $this->options['path'];
-		$this->fileIndex	= $this->path.'.index';
-		$this->index		= array( 'folders' => array(), 'files' => array() );
-		if( !file_exists( $this->fileIndex ) )
-			$this->saveIndex();
-		$this->index			= File_JSON_Reader::load( $this->fileIndex );
-		$this->index->folders	= (array) $this->index->folders;
-		$this->index->files		= (array) $this->index->files;
+		$this->options		= $this->env->getConfig()->getAll( 'module.info_files.' );
+		$this->rights		= $this->env->getAcl()->index( 'info/file' );
+		$this->path			= $this->options['path'];
+		$this->modelFolder	= new Model_Download_Folder( $this->env );
+		$this->modelFile	= new Model_Download_File( $this->env );
+	}
 
+	public function ajaxRenameFolder(){
+		$folderId	= $this->env->getRequest()->get( 'folderId' );
+		$title		= $this->env->getRequest()->get( 'name' );
+		$this->modelFolder->edit( $folderId, array(
+			'title'			=> $title,
+			'modifiedAt'	=> time()
+		) );
+		print( json_encode( $this->modelFolder->get( $folderId ) ) );
+		exit;
+	}
+	
+	public function scan(){
 		foreach( Folder_RecursiveLister::getFolderList( $this->path ) as $folder ){
-			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
-			$this->folders[$pathName]	= (object) array(
-				'name'	=> $pathName,
-				'files'	=> 0,
-			);
+#			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
+#			$this->folders[$pathName]	= (object) array(
+#				'name'	=> $pathName,
+#				'files'	=> 0,
+#			);
 		}
 	}
 
-	public function addFolder( $pathId = NULL ){
-		$path	= is_null( $pathId ) ? '' : rtrim( base64_decode( $pathId ), '/' ).'/';
-		$folder	= trim( $this->env->getRequest()->get( 'folder' ) );
+	protected function checkFolder( $folderId ){
+		if( (int) $folderId > 0 ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( $folder && file_exists( $this->path.$folder->title ) )
+				return TRUE;
+			if( !$folder )
+				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
+			else if( file_exists( $this->path.$folder->title ) )
+				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
+		}
+		else{
+			if( file_exists( $this->path ) )
+				return TRUE;
+			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
+		}
+		return FALSE;
+	}
+
+	protected function getStepsFromFolderId( $folderId ){
+		$steps		= array();
+		while( $folderId ){
+			$folder	= $this->modelFolder->get( $folderId );
+			if( !$folder )
+				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+			$steps[$folder->downloadFolderId]	= $folder;
+			$folderId	= $folder->parentId;
+		}
+		$steps	= array_reverse( $steps );
+		return $steps;
+	}
+
+	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE ){
+		$path	= '';
+		while( $folderId ){
+			$folder	= $this->modelFolder->get( $folderId );
+			if( !$folder )
+				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+			$path		= $folder->title.'/'.$path;
+			$folderId	= $folder->parentId;
+		}
+		return $withBasePath ? $this->path.$path : $path;
+	}
+
+	protected function updateNumber( $folderId, $type, $diff = 1 ){
+		if( !in_array( $type, array( 'folder', 'file' ) ) )
+			throw new InvalidArgumentException( 'Type must be folder or file' );
+		while( $folderId ){
+			$folder	= $this->modelFolder->get( $folderId );
+			$this->messenger->noteNotice( 'updateNumber: '.$folder->title.' ('.$folder->downloadFolderId.')' );
+			if( !$folder )
+				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+			switch( $type ){
+				case 'folder':
+					$data	= array( 'nrFolders' => $folder->nrFolders + $diff );
+					break;
+				case 'file':
+					$data	= array( 'nrFiles' => $folder->nrFiles + $diff );
+					break;
+			}
+			$data['modifiedAt']	= time();
+			$this->modelFolder->edit( $folderId, $data );
+			$folderId	= $folder->parentId;
+		}
+	}
+	
+	protected function countFolders( $folderId ){
+		return $this->modelFolder->count( array( 'parentId' => $folderId ) );
+	}
+
+	public function addFolder( $folderId = NULL ){
+		$path		= $this->getPathFromFolderId( $folderId );
+		$folder		= trim( $this->env->getRequest()->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
-			$this->restart( 'index/'.base64_encode( $path ).'?input_folder='.rawurlencode( $folder ), TRUE );
+			$url	= ( $folderId ? $folderId : NULL).'?input_folder='.rawurlencode( $folder );
+			$this->restart( $url, TRUE );
 		}
 		else if( file_exists( $this->path.$path.$folder ) ){
 			$this->messenger->noteError( sprintf( 'Ein Eintrag <small>(ein Ordner oder eine Datei)</small> mit dem Namen "%s" existiert in diesem Ordner bereits.', $folder ) );
-			$this->restart( 'index/'.base64_encode( $path ).'?input_folder='.rawurlencode( $folder ), TRUE );
+			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
 		else{
 			Folder_Editor::createFolder( $this->path.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
-			$pathCopy	= rtrim( $path, '/' );
-			$this->index->folders[$pathCopy]->folders++;
-			while( ( $pathCopy = dirname( $pathCopy ) ) !== '.' )
-				$this->index->folders[$pathCopy]->folders++;
-			$this->saveIndex();
-			$this->restart( 'index/'.base64_encode( $path ), TRUE );
+			$newId	= $this->modelFolder->add( array(
+				'parentId'	=> (int) $folderId,
+				'rank'		=> $this->countFolders( $folderId ),
+				'title'		=> $folder,
+				'createdAt'	=> time(),
+			) );
+			$this->updateNumber( $folderId, 'folder', 1 );
+			$this->restart( 'index/'.$folderId, TRUE );
 		}
 	}
 
@@ -71,135 +153,99 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	}
 
 	public function download( $fileId ){
-		$pathName	= base64_decode( $fileId );
-		if( !file_exists( $this->path.$pathName ) ){
-			$this->messenger->noteError( 'Invalid file: '.$pathName );
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$this->index->files[strtolower( $pathName )]->downloads++;
-		$this->index->files[strtolower( $pathName )]->downloaded	= time();
-		$this->saveIndex();
-		Net_HTTP_Download::sendFile( $this->path.$pathName );
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$this->modelFile->edit( $fileId, array(
+			'nrDownloads'	=> $file->nrDownloads++,
+			'downloadedAt'	=> time(),
+		) );
+		Net_HTTP_Download::sendFile( $path.$file->title );
 		exit;
 	}
 
-	public function index( $pathId = NULL ){
-		$path	= is_null( $pathId ) ? '' : rtrim( base64_decode( $pathId ), '/' ).'/';
-		if( !file_exists( $this->path.$path ) ){
-			$this->messenger->noteError( sprintf( 'Der Ordner "%s" existiert nicht.', $path ) );
-			$this->restart( NULL, TRUE );
-		}
-
-#		$index	= Folder_RecursiveLister::getFolderList( $this->path );
-#		foreach( $index as $folder ){
-#			
-#		}
-
-		$folders	= array();
-		foreach( Folder_Lister::getFolderList( $this->path.$path ) as $folder ){
-			$pathName	= substr( $folder->getPathname(), strlen( $this->path ) );
-			if( !isset( $this->index->folders[$pathName] ) ){
-				$count	= $this->countIn( $pathName, TRUE );
-				$this->index->folders[$pathName] = (object) array(
-					'folders'	=> $count['folders'],
-					'files'		=> $count['files'],
-				);
-				$this->saveIndex();
+	public function index( $folderId = NULL ){
+		$folderId	= (int) $folderId;
+		$orders		= array( 'rank' => 'ASC' );
+		if( $folderId ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( !$folder ){
+				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+				$this->restart( NULL, TRUE );
 			}
-			$folders[$pathName]	= (object) array(
-				'pathName'		=> $pathName,
-				'folderName'	=> basename( $pathName ),
-				'files'			=> 0,
-				'totalFolders'	=> $this->index->folders[$pathName]->folders,
-				'totalFiles'	=> $this->index->folders[$pathName]->files,
-			);
 		}
+		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
+		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
 
-		$index	= Folder_Lister::getFileList( $this->path.$path );
-		$files	= array();
-		foreach( $index as $entry ){
-			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
-			$key		= strtolower( $pathName );
-			if( !isset( $this->index->files[$key] ) ){
-				$this->index->files[$key]	= (object) array(
-					'downloaded'	=> NULL,
-					'downloads'		=> 0,
-					'timestamp'		=> filemtime( $entry->getPathname() ),
-				);
-				$this->saveIndex();
-			}
-			$files[$pathName]	= (object) array(
-				'fileName'		=> $entry->getFilename(),
-				'pathName'		=> $pathName,
-				'downloads'		=> $this->index->files[$key]->downloads,
-				'timestamp'		=> $this->index->files[$key]->timestamp,
-				'downloaded'	=> $this->index->files[$key]->downloaded,
-			);
-//			if( preg_match( '/\//', $pathName ) )
-//				$folders[dirname( $pathName )]->files++;
-		}
-#		remark( "Files:" );
-#		print_m( $files );
-#		remark( "Folders:" );
-#		print_m( $folders );
-#		die;
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
-		$this->addData( 'path', $path );
+		$this->addData( 'folderId', $folderId );
 		$this->addData( 'pathBase', $this->path );
-		$this->addData( 'pathId', base64_encode( $path ) );
+		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
 		$this->addData( 'rights', $this->rights );
+		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
 	}
 
-	public function remove( $fileId ){
-		$pathName	= base64_decode( $fileId );
-		$path		= dirname( $pathName ) === '.' ? '' : dirname( $pathName ).'/';
-		if( !file_exists( $this->path.$pathName ) ){
-			$this->messenger->noteError( 'Invalid file: '.$pathName );
-			$this->restart( 'index/'.base64_encode( $path ), TRUE );
-		}
-		unset( $this->index->files[strtolower( $pathName )] );
-		$pathCopy   = rtrim( $pathName, '/' );
-		$this->index->folders[pathCopy]->files--;
-		while( ( $pathCopy = dirname( $pathCopy ) ) != '.' )
-			$this->index->folders[$pathCopy]->files--;
-		$this->saveIndex();
-		@unlink( $this->path.$pathName );
-
-		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $pathName );
-		$this->restart( 'index/'.base64_encode( $path ), TRUE );
-	}
-
-	public function removeFolder( $pathId ){
-		$pathName	= base64_decode( $pathId );
-		$path		= dirname( $pathName ) === '.' ? '' : dirname( $pathName ).'/';
-		if( !file_exists( $this->path.$pathName ) )
-			$this->messenger->noteError( 'Invalid path: '.$pathName );
+	public function rankFolder( $folderId, $downwards = NULL ){
+		$words		= (object) $this->getWords( 'msg' );
+		$direction	= (boolean) $downwards ? +1 : -1;
+		if( !( $folder = $this->modelFolder->get( (int) $folderId ) ) )
+			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
 		else{
-			$count	= 0;
-			foreach( Folder_Lister::getMixedList( $this->path.$pathName ) as $entry )
-				$count++;
-			if( $count )
-				$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $pathName );
-			else{
-				Folder_Editor::removeFolder( $this->path.$pathName );
-				$this->messenger->noteSuccess( 'Der Ordner <b>"%s"</b> wurde entfernt.', $pathName );
-				$pathCopy	= rtrim( $path, '/' );
-				unset( $this->index->folders[$pathCopy] );
-				while( ( $pathCopy = dirname( $pathCopy ) ) != '.' )
-					$this->index->folders[$pathCopy]->folders--;
-				$this->saveIndex();
+			$rank		= $folder->rank + $direction;
+			$conditions	= array( 'rank' => $rank, 'parentId' => $folder->parentId );
+			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
+				$this->modelFolder->edit( (int) $folderId, array( 'rank' => $rank, 'modifiedAt' => time() ) );
+				$this->modelFolder->edit( $next->downloadFolderId, array( 'rank' => $folder->rank, 'modifiedAt' => time() ) );
 			}
 		}
-		$this->restart( 'index/'.base64_encode( $path ), TRUE );
+		$this->restart( 'index/'.$folder->parentId, TRUE );		
+	}
+	
+	public function remove( $fileId ){
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->path;
+		if( $file->downloadFolderId ){
+			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		}
+		@unlink( $path.$file->title );
+		$this->modelFile->remove( $fileId );
+		$this->updateNumber( $file->downloadFolderId, 'file', -1 );
+		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $file->title );
+		$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 	}
 
-	protected function saveIndex(){
-		return File_JSON_Writer::save( $this->fileIndex, $this->index, TRUE );
+	public function removeFolder( $folderId ){
+		if( $folderId ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( !$folder ){
+				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+			}
+			else{
+				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
+				$hasSubfiles	= $this->modelFolder->count( array( 'parentId' => $folderId ) );
+				if( $hasSubfolders && $hasSubfiles ){
+					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
+				}
+				else{
+					rmdir( $this->getPathFromFolderId( $folderId, TRUE ) );
+					$this->modelFolder->remove( $folderId );
+					$this->updateNumber( $folder->parentId, 'folder', -1 );
+				}
+				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
+			}
+		}
+		$this->restart( NULL, TRUE );
 	}
 
-	public function upload( $pathId = NULL ){
-		$path	= is_null( $pathId ) ? '' : rtrim( base64_decode( $pathId ), '/' ).'/';
+	public function upload( $folderId = NULL ){
 		if( !in_array( 'upload', $this->rights ) )
 			$this->restart( NULL, TRUE );
 		$request	= $this->env->getRequest();
@@ -211,22 +257,23 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( $handler->getErrorMessage( $upload->error ) );
 			}
 			else{
-				$targetFile	= $this->path.$path.$upload->name;
+				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
 				if( !@move_uploaded_file( $upload->tmp_name, $targetFile ) ){
 					$this->messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
 					$this->restart( NULL, TRUE );
 				}
+				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
+				$this->modelFile->add( array(
+					'downloadFolderId'	=> $folderId,
+					'rank'				=> $rank,
+					'title'				=> $upload->name,
+					'uploadedAt'		=> time()
+				) );
+				$this->updateNumber( $folderId, 'file', 1 );
 				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
-				$this->index->files[strtolower( $targetFile )]	= array(
-					'downloaded'	=> NULL,
-					'downloads'		=> 0,
-					'timestamp'		=> filemtime( $targetFile ),
-				);
-				$this->index->folders[$path]->files++;
-				$this->saveIndex();
 			}
 		}
-		$this->restart( 'index/'.base64_encode( $path ), TRUE );
+		$this->restart( 'index/'.$folderId, TRUE );
 	}
 }
 ?>

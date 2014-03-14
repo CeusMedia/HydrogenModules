@@ -3,7 +3,7 @@ if( !in_array( 'addFolder', $rights ) )
 	return '';
 return '
 <h4>'.$words['addFolder']['heading'].'</h4>
-<form action="./info/file/addFolder/'.$pathId.'" method="post">
+<form action="./info/file/addFolder/'.$folderId.'" method="post">
 	<div class="row-fluid">
 		<div class="span12">
 			<label for="input_folder">'.$words['addFolder']['labelFolder'].'</label>
