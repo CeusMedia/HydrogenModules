@@ -51,7 +51,7 @@ $(document).ready(function(){
 	WorkMissions.currentDay = '.$currentDay.';
 	WorkMissionFilter.__init();
 });
-console.log("'.session_id().'");
+//console.log("'.session_id().'");
 </script>';
 $env->getPage()->addHead( $script );
 

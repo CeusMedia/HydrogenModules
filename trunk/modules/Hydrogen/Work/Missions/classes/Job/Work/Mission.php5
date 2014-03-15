@@ -17,6 +17,7 @@ class Job_Work_Mission extends Job_Abstract{
 				foreach( $modelProject->getProjectUsers( (int) $projectId ) as $user )			//  iterate project users
 					$list[(int) $user->userId]	= $user;										//  enlist user
 		}
+		$modelUser		= new Model_User( $this->env );
 		$modelMission	= new Model_Mission( $this->env );										//  get mission model
 		foreach( $includes as $userId )															//  iterate users to include
 			if( !array_key_exists( (int) $userId, $list ) )										//  user is not in list yet

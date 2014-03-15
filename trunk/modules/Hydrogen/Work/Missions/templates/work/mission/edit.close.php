@@ -1,0 +1,43 @@
+<?php
+
+$w	= (object) $words['edit-panel-close'];
+
+if( $mission->status < 0 )
+	return '';
+return '
+<div class="content-panel content-panel-form">
+	<h3>'.$w->heading.'</h3>
+	<div class="content-panel-inner">
+		<form action="./work/mission/close/'.$mission->missionId.'" method="post" id="form-mission-close">
+			<input type="hidden" name="status" id="input_close_status" value="'.$mission->status.'"/>
+			<div class="row-fluid">
+				<div class="span7">
+					<label for="input_close_hoursRequired">'.$w->labelHours.'</label>
+				</div>
+				<div class="span5 input-append">
+					<input type="text" name="hoursRequired" id="input_close_hoursRequired" class="span8 -xs numeric" value="'.$mission->hoursRequired.'"/>
+					<span class="add-on">'.$w->suffixHours.'</span>
+				</div>
+			</div>
+			<div class="buttonbar btn-group">
+				<button type="button" onclick="closeMission(4, \''.$w->buttonCloseConfirm.'\');" class="btn btn-small btn-success">
+					<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonClose.'
+				</button>
+				<button type="button" onclick="closeMission(-2, \''.$w->buttonCancelConfirm.'\');" class="btn btn-small btn-danger">
+					<i class="icon-remove icon-white"></i>&nbsp;'.$w->buttonCancel.'
+				</button>
+				<button type="button" onclick="closeMission(-3, \''.$w->buttonRemoveConfirm.'\');" class="btn btn-small btn-inverse">
+					<i class="icon-trash icon-white"></i>&nbsp;'.$w->buttonRemove.'
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+function closeMission(status, confirm){
+	if(window.confirm(confirm)){
+		$("#input_close_status").val(status).closest("form").submit();
+	}
+}
+</script>';
+?>
