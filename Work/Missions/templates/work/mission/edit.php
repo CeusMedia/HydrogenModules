@@ -1,30 +1,9 @@
 <?php
 
-$panelInfo	= $view->loadTemplateFile( 'work/mission/edit.info.php' );
-
-$panelClose	= '';
-if( $mission->status > 0 ){
-	$panelClose	= '
-<div class="content-panel content-panel-form">
-	<h3>Abschliessen</h3>
-	<div class="content-panel-inner">
-		<form action="./work/mission/close/'.$mission->missionId.'" method="post">
-			<div class="row-fluid">
-				<div class="span7">
-					<label for="input_hoursRequired2">Arbeitsstunden</label>
-				</div>
-				<div class="span5 input-append">
-					<input type="text" name="hoursRequired" id="input_hoursRequired2" class="span8 -xs numeric" value="'.$mission->hoursRequired.'"/>
-					<span class="add-on">h</span>
-				</div>
-			</div>
-			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'close', 'speichern', 'button save' ).'
-			</div>
-		</form>
-	</div>
-</div>';
-}
+$panelInfo		= $view->loadTemplateFile( 'work/mission/edit.info.php' );
+$panelClose		= $view->loadTemplateFile( 'work/mission/edit.close.php' );
+$panelIssue		= $view->loadTemplateFile( 'work/mission/edit.issue.php' );
+$panelContent	= $view->loadTemplateFile( 'work/mission/edit.content.php' );
 
 $w	= (object) $words['edit'];
 
@@ -55,39 +34,16 @@ if( $useProjects ){
 	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
 }
 
-$panelToIssue	= '';
-if( $useIssues ){
-#	print_m( $wordsIssue['types'] );
-#	die;
-	$panelToIssue	= '
-<div class="content-panel content-panel-form">
-	<h3>Zu "Problem" konvertieren</h3>
-	<div class="content-panel-inner">
-		<form action="./work/mission/convert/'.$mission->missionId.'/issue" method="post">
-			<ul class="input">
-				<li class="column-left-40">
-					<label for="input_title">Titel des Problems</label><br/>
-					<input type="text" name="title" id="input_title" class="max"/>
-				</li>
-				<li class="column-left-20">
-					<label for="input_status">Status</label><br/>
-					<select type="text" name="status" id="input_status" class="max"></select>
-				</li>
-			</ul>
-		</form>
-	</div>
-</div>';
-}
-
-
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/mission/edit/'.$mission->missionId.'" method="post">
 			<div class="row-fluid">
-				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
-				<input type="text" name="title" id="input_title" class="span12 -max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+				<div class="span12">
+					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
+					<input type="text" name="title" id="input_title" class="span12 -max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span3 -column-left-20">
@@ -162,8 +118,11 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
+				'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="not-icon-arrow-left icon-list"></i> '.$w->buttonList, 'btn' ).'
 				'.UI_HTML_Elements::Button( 'edit', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+	<!--			&nbsp;|&nbsp;
+				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
+				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-3', '<i class="icon-trash icon-white"></i> '.$w->buttonRemove, 'btn btn-small btn-inverse' ).'
 	<!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 				'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'-->
 			</div>
@@ -171,63 +130,6 @@ $panelEdit	= '
 	</div>
 </div>
 ';
-
-$panelContent	= '
-<div class="content-panel content-panel-form">
-	<div class="content-panel-inner">
-		<form>
-			<div class="row-fluid">
-				<div class="span6">
-					<h3>Editor</h3>
-					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-					<p>
-						<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
-					</p>
-				</div>
-				<div class="span6">
-					<h3>Beschreibung / Inhalt</h3>
-					<div id="content-editor">
-						<div id="descriptionAsMarkdown"></div>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>';
-
-/*
-<!--	<fieldset>
-		<legend>Beschreibung / Mitschrift</legend>
-		<div class="row-fluid">
-			<div class="span12">
--->				<div class="tabbable">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab">Ansicht</a></li>
-						<li><a href="#tab2" data-toggle="tab">Editor</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab1">
-							<div id="content-editor">
-								<div id="descriptionAsMarkdown"></div>
-							</div>
-						</div>
-						<div class="tab-pane" id="tab2">
-							<div id="mirror-container">
-<!--							<label for="input_content">'.$w->labelContent.'</label>-->
-								<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-								<p>
-									<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-<!--			</div>
-		</div>
-	</fieldset>
---></form>
-*/
-
 
 //  --  STATES  --  //
 $states	= $words['states'];
@@ -254,67 +156,10 @@ foreach( $priorities as $priority => $label )
 $priorities	= join( $priorities );
 
 return '
-<style>
-.tabbable .nav{
-	margin-bottom: 1px;
-}
-</style>
-<script src="javascripts/Markdown.Converter.js"></script>
-<script src="javascripts/bindWithDelay.js"></script>
-<script>
-var missionId = '.$mission->missionId.';
-$("body").addClass("uses-bootstrap");
-$(document).ready(function(){
-	WorkMissionEditor.init();
-});
-</script>
-<style>
-input.changed,
-select.changed,
-textarea.changed {
-	background-color: #FFFFDF;
-	}
-.CodeMirror {
-	border: 1px solid rgb(204, 204, 204);
-	background-color: white;
-	border-radius: 4px;
-	z-index: 0;
-	}
-#descriptionAsMarkdown {
-	padding: 0.5em 1em;
-	}
-#descriptionAsMarkdown h1,
-#descriptionAsMarkdown h2,
-#descriptionAsMarkdown h3,
-#descriptionAsMarkdown h4,
-#descriptionAsMarkdown h5 {
-	line-height: 1.5em;
-	padding: 0px;
-	}
-#descriptionAsMarkdown h1 {
-	font-size: 2em;
-	}
-#descriptionAsMarkdown h2 {
-	font-size: 1.6em;
-	}
-#descriptionAsMarkdown h3 {
-	font-size: 1.4em;
-	}
-#descriptionAsMarkdown h4 {
-	font-size: 1.2em;
-	}
-#descriptionAsMarkdown h5 {
-	font-size: 1.1em;
-	}
-#descriptionAsMarkdown del {
-	color: #777;
-	}
-</style>
 <div class="row-fluid">
 	<div class="span8">
 		'.$panelEdit.'
-		'.$panelToIssue.'
-	<!--	<fieldset>
+<!--		<fieldset>
 			<legend class="icon edit">Status setzen</legend>
 			'.$states.'
 		</fieldset>
@@ -326,6 +171,7 @@ textarea.changed {
 	<div class="span4">
 		'.$panelInfo.'
 		'.$panelClose.'
+		'.$panelIssue.'
 	</div>
 </div>
 <div class="row-fluid">

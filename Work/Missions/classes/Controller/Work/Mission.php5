@@ -400,12 +400,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function close( $missionId ){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
+		$userId			= $this->env->getSession()->get( 'userId' );
 		$words			= (object) $this->getWords( 'edit' );
 		$data			= array(
+			'status'		=> $request->get( 'status' ),
 			'hoursRequired'	=> $request->get( 'hoursRequired' ),
-			'status'		=> 4
 		);
+		$mission		= $this->model->get( $missionId );
 		$this->model->edit( $missionId, $data );
+		$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 		$messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
 	}
