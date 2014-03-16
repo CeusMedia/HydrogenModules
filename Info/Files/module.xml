@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2.8</version>
+	<version>0.2.9</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,6 +17,7 @@
 		<template>info/file/index.php</template>
 		<template>info/file/index.folder.php</template>
 		<template>info/file/index.info.php</template>
+		<template>info/file/index.scan.php</template>
 		<template>info/file/index.upload.php</template>
 		<style>module.info.files.css</style>
 		<script load="auto">InfoFile.js</script>
@@ -29,7 +30,7 @@
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
-	<sql on="update" type="mysql" version-from="2.7" version-to="2.8"><![CATA[
+	<sql on="update" type="mysql" version-from="0.2.7" version-to="0.2.8"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
   `downloadFileId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -60,5 +61,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
   PRIMARY KEY (`downloadFolderId`),
   KEY `parentId` (`parentId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version-from="0.2.8" version-to="0.2.9"><![CDATA[
+ALTER TABLE  `dp_download_files` ADD  `size` INT UNSIGNED NOT NULL AFTER  `rank`;
+ALTER TABLE  `dp_download_files` ADD INDEX ( `title` );
+ALTER TABLE  `dp_download_folders` ADD INDEX ( `type` );
+ALTER TABLE  `dp_download_folders` ADD INDEX ( `rank` );
+ALTER TABLE  `dp_download_folders` ADD INDEX ( `title` );
 ]]></sql>
 </module>

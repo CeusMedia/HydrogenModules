@@ -121,6 +121,7 @@ if( $rows ){
 $panelUpload	= $view->loadTemplateFile( 'info/file/index.upload.php' );
 $panelAddFolder	= $view->loadTemplateFile( 'info/file/index.folder.php' );
 $panelInfo		= $view->loadTemplateFile( 'info/file/index.info.php' );
+$panelScan		= $view->loadTemplateFile( 'info/file/index.scan.php' );
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
@@ -152,8 +153,10 @@ return $textIndexTop.'
 <!--		'.$panelInfo.'
 		<br/>-->
 		'.$panelUpload.'
-		<br/>
+		<hr/>
 		'.$panelAddFolder.'
+		<hr/>
+		'.$panelScan.'
 	</div>
 </div>
 '.$textIndexBottom;

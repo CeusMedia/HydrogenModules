@@ -36,6 +36,7 @@ class Model_Download_Folder extends CMF_Hydrogen_Model {
 		'parentId',
 		'type',
 		'rank',
+		'title',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
