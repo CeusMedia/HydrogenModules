@@ -19,7 +19,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function ajaxRefreshSession(){
-		exit;
+		$this->ajaxIsAuthenticated();
 	}
 
 	public function ajaxUsernameExists(){
