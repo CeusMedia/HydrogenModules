@@ -68,13 +68,15 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		}
 		if( $new->dayStart && $old->dayStart !== $new->dayStart ){
 			$days			= "";
+			$dateOld	= $old->dayStart ? date( "d.m.Y", strtotime( $old->dayStart ) ) : '-';
+			$dateNew	= $new->dayStart ? date( "d.m.Y", strtotime( $new->dayStart ) ) : '-';
 			if( $old->dayStart && $new->dayStart && $old->dayStart !== $new->dayStart ){
 				$days		= ( strtotime( $old->dayStart ) - strtotime( $new->dayStart ) ) / 3600 / 24;
 				$sign		= $days < 0 ? '+' : '-';
 				$days		= ' <small class="muted">'.$sign.abs( $days ).' Tage(e)</small>';
+				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayStart ) ) % 7].', '.$dateOld;
+				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayStart ) ) % 7].', '.$dateNew;
 			}
-			$dateOld	= $old->dayStart ? date( "d.m.Y", strtotime( $old->dayStart ) ) : '-';
-			$dateNew	= $new->dayStart ? date( "d.m.Y", strtotime( $new->dayStart ) ) : '-';
 			$diff[]	= (object) array(
 				'label'		=> $new->type ? $labels->labelDayStart : $labels->labelDayWork,
 				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,
@@ -82,13 +84,15 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		}
 		if( $new->dayEnd && $old->dayEnd !== $new->dayEnd ){
 			$days			= "";
+			$dateOld	= $old->dayEnd ? date( "d.m.Y", strtotime( $old->dayEnd ) ) : '-';
+			$dateNew	= $new->dayEnd ? date( "d.m.Y", strtotime( $new->dayEnd ) ) : '-';
 			if( $old->dayEnd && $new->dayEnd && $old->dayEnd !== $new->dayEnd ){
 				$days		= ( strtotime( $old->dayEnd ) - strtotime( $new->dayEnd ) ) / 3600 / 24;
 				$sign		= $days < 0 ? '+' : '-';
 				$days		= ' <small class="muted">'.$sign.abs( $days ).' Tage(e)</small>';
+				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayEnd ) ) % 7].', '.$dateOld;
+				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayEnd ) ) % 7].', '.$dateNew;
 			}
-			$dateOld	= $old->dayEnd ? date( "d.m.Y", strtotime( $old->dayEnd ) ) : '-';
-			$dateNew	= $new->dayEnd ? date( "d.m.Y", strtotime( $new->dayEnd ) ) : '-';
 			$diff[]	= (object) array(
 				'label'		=> $new->type ? $labels->labelDayEnd : $labels->labelDayDue,
 				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,

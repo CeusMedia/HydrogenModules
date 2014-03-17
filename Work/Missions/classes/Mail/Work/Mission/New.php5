@@ -46,13 +46,20 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$list[]	= '<dt>'.$labels->labelStatus.'</dt><dd>'.$states[$mission->status].'</dd>';
 		$list[]	= '<dt>'.$labels->labelPriority.'</dt><dd>'.$priorities[$mission->priority].'</dd>';
 
+		$timestampStart	= strtotime( $mission->dayStart );
+		$timestampEnd	= strtotime( $mission->dayEnd );
+		$dateStart		= date( 'd.m.Y', $timestampStart );
+		$dateEnd		= date( 'd.m.Y', $timestampEnd );
+		$weekdayStart	= $weekdays[date( 'N', $timestampStart ) % 7];
+		$weekdayEnd		= $weekdays[date( 'N', $timestampEnd ) % 7];
+
 		if( $mission->type ){
-			$list[]	= '<dt>'.$labels->labelDayStart.'</dt><dd>'.date( 'd.m.Y', strtotime( $mission->dayStart ) ).'</dd>';
-			$list[]	= '<dt>'.$labels->labelDayEnd.'</dt><dd>'.date( 'd.m.Y', strtotime( $mission->dayEnd ) ).'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayStart.'</dt><dd>'.$weekdayStart.', '.$datestart.'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayEnd.'</dt><dd>'.$weekdayEnd.', '.$dateEnd.'</dd>';
 		}
 		else{
-			$list[]	= '<dt>'.$labels->labelDayWork.'</dt><dd>'.date( 'd.m.Y', strtotime( $mission->dayStart ) ).'</dd>';
-			$list[]	= '<dt>'.$labels->labelDayDue.'</dt><dd>'.date( 'd.m.Y', strtotime( $mission->dayEnd ) ).'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayWork.'</dt><dd>'.$weekdayStart.', '.$datestart.'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayDue.'</dt><dd>'.$weekdayEnd.', '.$dateEnd.'</dd>';
 		}
 		if( strlen( trim( $mission->location ) ) )
 			$list[]	= '<dt>'.$labels->labelLocation.'</dt><dd>'.$mission->location.'</dd>';
