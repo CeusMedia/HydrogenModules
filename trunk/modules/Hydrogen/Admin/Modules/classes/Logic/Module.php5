@@ -581,33 +581,31 @@ class Logic_Module {
 	}
 
 	protected function updateModuleDatabase( $moduleId, $verbose = TRUE ){
-		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
-			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
-			if( $driver ){																			//  remote database connection is configured
-				$moduleLocal	= $this->getModule( $moduleId );									//  get installed module for local version
-				$moduleSource	= $this->getModuleFromSource( $moduleId );							//  get source module for database update
-				$versionFrom	= $this->version( $moduleLocal->versionInstalled );					//  extract installed version
-				$versionTo		= $this->version( $moduleSource->versionAvailable );				//  extract available version
-				$list			= array();
-				foreach( $moduleSource->sql as $key => $sql ){										//  iterate module SQL parts
-					if( $sql->event === "update" ){													//  found update
-						$sqlVersionFrom = $this->version( $sql->from );
-						$sqlVersionTo	= $this->version( $sql->to );
-						if( version_compare( $sqlVersionFrom, $versionFrom ) >= 0 ){				//  related to current version or up
-							if( version_compare( $versionTo, $sqlVersionTo ) >= 0 ){				//  related to new version or below
-								$key	= $versionFrom.'_'.$versionTo;								//  generate version key for list
-								if( $sql->type == $driver )											//  update SQL is for instance database driver
-									$list[$key]	= trim( $sql->sql );								//  enlist master entry in SQL update list
-								else if( $sql->type === '*' && !isset( $list[$key] ) )				//  update SQL is general and no master entry available
-									$list[$key]	= trim( $sql->sql );								//  enlisten general entry in SQL update list
-							}
-						}
+		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
+			return;
+		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
+			return;
+		$moduleLocal	= $this->getModule( $moduleId );											//  get installed module for local version
+		$moduleSource	= $this->getModuleFromSource( $moduleId );									//  get source module for database update
+		$versionCurrent	= $this->version( $moduleLocal->versionInstalled );							//  extract installed version
+		$versionTarget	= $this->version( $moduleSource->versionAvailable );						//  extract available version
+		$list			= array();
+		foreach( $moduleSource->sql as $key => $sql ){												//  iterate module SQL parts
+			if( $sql->event === "update" ){															//  found update
+				$versionStep	= $this->version( $sql->to );										//  target version of sql part
+				if( version_compare( $versionStep, $versionCurrent ) >= 0 ){						//  related to current version or up
+					if( version_compare( $versionTarget, $versionStep ) >= 0 ){						//  related to new version or below
+						$key	= $versionCurrent.'_'.$versionTarget.'_'.$versionStep;				//  generate version key for list
+						if( $sql->type == $driver )													//  update SQL is for instance database driver
+							$list[$key]	= trim( $sql->sql );										//  enlist master entry in SQL update list
+						else if( $sql->type === '*' && !isset( $list[$key] ) )						//  update SQL is general and no master entry available
+							$list[$key]	= trim( $sql->sql );										//  enlisten general entry in SQL update list
 					}
 				}
-				foreach( $list as $sql )															//  iterate SQL update list
-					$this->executeSql( $sql );														//  execute SQL
 			}
 		}
+		foreach( $list as $sql )																	//  iterate SQL update list
+			$this->executeSql( $sql );																//  execute SQL
 	}
 
 	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){
