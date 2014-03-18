@@ -69,11 +69,23 @@ var Auth = {
 
 	updateAutoLogoutTimer: function(){
 		if(Auth.autoLogout.left > 0){
-			var minutes = Math.floor(Auth.autoLogout.left / 60);
-			var seconds = Auth.autoLogout.left - minutes * 60;
+			var factorMinute	= 60;
+			var factorHour		= 60 * factorMinute;
+			var hours	= Math.floor(Auth.autoLogout.left / factorHour );
+			var minutes = Math.floor((Auth.autoLogout.left - hours * factorHour) / factorMinute);
+			var seconds = Auth.autoLogout.left - hours * factorHour - minutes * factorMinute;
 			if((""+seconds).length == 1)
 				seconds = "0"+seconds;
-			$("#auth-auto-logout-timer").html(minutes+":"+seconds);
+			if(hours && (""+minutes).length == 1)
+				minutes = "0"+minutes;
+			var label	= minutes+":"+seconds;
+			if(hours)
+				label	= hours+":"+label;
+			if(Auth.autoLogout.left <= 60)
+				label	= $("<span></span>").addClass( "label label-important").html(label);
+
+
+			$("#auth-auto-logout-timer").html(label);
 			Auth.autoLogout.left--;
 		}
 	}
