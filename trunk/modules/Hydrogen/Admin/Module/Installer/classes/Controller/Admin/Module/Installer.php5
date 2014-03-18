@@ -164,7 +164,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
-		
+
 		if( $this->logic->isInstalled( $moduleId ) ){
 			$this->messenger->noteNotice( 'Das Modul "'.$moduleId.'" ist bereits installiert. Weiterleitung zur Aktualisierung.' );
 			$this->restart( './admin/module/installer/update/'.$moduleId );
@@ -251,6 +251,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				}
 */			}
 			catch( Exception $e ){
+				UI_HTML_Exception_Page::display( $e );
+die;
 				$this->handleException( $e );
 			}
 		}
