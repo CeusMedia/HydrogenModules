@@ -23,9 +23,11 @@
 	<link path="manage/my/user/setting" access="inside" xml:lang="de">Einstellungen</link>
 	<link path="manage/my/user/setting" access="inside" xml:lang="en">Settings</link>
 	<hook type="resource" resource="Session" event="init"><![CDATA[
-if( ( $userId = $env->getSession()->get( 'userId' ) ) ){				//  if user is inside																
-	$config	= Model_User_Setting::applyConfigStatic( $env, $userId );	//  apply user configuration
-	$env->set( 'config', $config, TRUE );								//  override config by user config
+if( $env->has( 'session' ) ){												//  environment has session support
+	if( ( $userId = $env->getSession()->get( 'userId' ) ) ){				//  an user is logged in
+		$config	= Model_User_Setting::applyConfigStatic( $env, $userId );	//  apply user configuration
+		$env->set( 'config', $config, TRUE );								//  override config by user config
+	}
 }
 ]]></hook>
 	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User_Setting::___onRegisterTab</hook>
