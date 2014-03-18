@@ -54,11 +54,13 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$weekdayEnd		= $weekdays[date( 'N', $timestampEnd ) % 7];
 
 		if( $mission->type ){
-			$list[]	= '<dt>'.$labels->labelDayStart.'</dt><dd>'.$weekdayStart.', '.$datestart.'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayStart.'</dt><dd>'.$weekdayStart.', '.$dateStart.'</dd>';
 			$list[]	= '<dt>'.$labels->labelDayEnd.'</dt><dd>'.$weekdayEnd.', '.$dateEnd.'</dd>';
+			$list[]	= '<dt>'.$labels->labelTimeStart.'</dt><dd>'.date( 'H:i', $timestampStart ).'</dd>';
+			$list[]	= '<dt>'.$labels->labelTimeEnd.'</dt><dd>'.date( 'H:i', $timestampEnd ).'</dd>';
 		}
 		else{
-			$list[]	= '<dt>'.$labels->labelDayWork.'</dt><dd>'.$weekdayStart.', '.$datestart.'</dd>';
+			$list[]	= '<dt>'.$labels->labelDayWork.'</dt><dd>'.$weekdayStart.', '.$dateStart.'</dd>';
 			$list[]	= '<dt>'.$labels->labelDayDue.'</dt><dd>'.$weekdayEnd.', '.$dateEnd.'</dd>';
 		}
 		if( strlen( trim( $mission->location ) ) )
