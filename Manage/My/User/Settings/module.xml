@@ -2,10 +2,10 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/My/User/Setting.php5</class>
@@ -22,6 +22,12 @@
 	</relations>
 	<link path="manage/my/user/setting" access="inside" xml:lang="de">Einstellungen</link>
 	<link path="manage/my/user/setting" access="inside" xml:lang="en">Settings</link>
+	<hook type="resource" resource="Session" event="init"><![CDATA[
+if( ( $userId = $env->getSession()->get( 'userId' ) ) ){				//  if user is inside																
+	$config	= Model_User_Setting::applyConfigStatic( $env, $userId );	//  apply user configuration
+	$env->set( 'config', $config, TRUE );								//  override config by user config
+}
+]]></hook>
 	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User_Setting::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%prefix%>user_settings`;
