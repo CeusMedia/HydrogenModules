@@ -73,7 +73,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 			if( $old->dayStart && $new->dayStart && $old->dayStart !== $new->dayStart ){
 				$days		= ( strtotime( $old->dayStart ) - strtotime( $new->dayStart ) ) / 3600 / 24;
 				$sign		= $days < 0 ? '+' : '-';
-				$days		= ' <small class="muted">'.$sign.abs( $days ).' Tage(e)</small>';
+				$days		= ' <small class="muted">'.$sign.abs( round( $days ) ).' Tage(e)</small>';
 				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayStart ) ) % 7].', '.$dateOld;
 				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayStart ) ) % 7].', '.$dateNew;
 			}
@@ -89,7 +89,7 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 			if( $old->dayEnd && $new->dayEnd && $old->dayEnd !== $new->dayEnd ){
 				$days		= ( strtotime( $old->dayEnd ) - strtotime( $new->dayEnd ) ) / 3600 / 24;
 				$sign		= $days < 0 ? '+' : '-';
-				$days		= ' <small class="muted">'.$sign.abs( $days ).' Tage(e)</small>';
+				$days		= ' <small class="muted">'.$sign.abs( round( $days ) ).' Tage(e)</small>';
 				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayEnd ) ) % 7].', '.$dateOld;
 				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayEnd ) ) % 7].', '.$dateNew;
 			}
