@@ -4,6 +4,11 @@ $w	= (object) $words['edit-panel-close'];
 
 if( $mission->status < 0 )
 	return '';
+
+
+$hoursRequired		= floor( $mission->minutesRequired / 60 );
+$minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
+
 return '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
@@ -15,7 +20,7 @@ return '
 					<label for="input_close_hoursRequired">'.$w->labelHours.'</label>
 				</div>
 				<div class="span5 input-append">
-					<input type="text" name="hoursRequired" id="input_close_hoursRequired" class="span8 -xs numeric" value="'.$mission->hoursRequired.'"/>
+					<input type="text" name="hoursRequired" id="input_close_hoursRequired" class="span8 -xs numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
 					<span class="add-on">'.$w->suffixHours.'</span>
 				</div>
 			</div>
