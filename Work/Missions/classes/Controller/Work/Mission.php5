@@ -24,13 +24,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				Model_Mission::STATUS_ABORTED,
 				Model_Mission::STATUS_REJECTED,
 				Model_Mission::STATUS_FINISHED
-			 ),
+			),
 			1	=> array(																			//  current
 				Model_Mission::STATUS_NEW,
 				Model_Mission::STATUS_ACCEPTED,
 				Model_Mission::STATUS_PROGRESS,
 				Model_Mission::STATUS_READY
-			 ),
+			),
 			2	=> array(																			//  future
 				Model_Mission::STATUS_NEW,
 				Model_Mission::STATUS_ACCEPTED,
@@ -255,7 +255,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'dayEnd'			=> $this->logic->getDate( $dayEnd ),
 					'timeStart'			=> $request->get( 'timeStart' ),
 					'timeEnd'			=> $request->get( 'timeEnd' ),
-					'hoursProjected'	=> $request->get( 'hoursProjected' ) ? $request->get( 'hoursProjected' ) : NULL,
+					'minutesProjected'	=> $this->getMinutesFromInput( $request->get( 'minutesProjected' ) ),
 					'location'			=> $request->get( 'location' ),
 					'reference'			=> $request->get( 'reference' ),
 					'createdAt'			=> time(),
@@ -273,6 +273,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$mission['priority']	= 3;
 		if( $mission['status'] === NULL )
 			$mission['status']	= 0;
+		$mission['minutesProjected']	= $this->getMinutesFromInput( $request->get( 'minutesProjected' ) );
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
 		$this->addData( 'userId', $userId );
@@ -455,12 +456,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'dayEnd'			=> $dayEnd,
 					'timeStart'			=> $request->get( 'timeStart' ),
 					'timeEnd'			=> $request->get( 'timeEnd' ),
-					'hoursProjected'	=> $request->get( 'hoursProjected' ) ? $request->get( 'hoursProjected' ) : NULL,
-					'hoursRequired'		=> $request->get( 'hoursRequired' ) ? $request->get( 'hoursRequired' ) : NULL,
+					'minutesProjected'	=> $this->getMinutesFromInput( $request->get( 'minutesProjected' ) ),
+					'minutesRequired'	=> $this->getMinutesFromInput( $request->get( 'minutesRequired' ) ),
+//					'hoursProjected'	=> $request->get( 'hoursProjected' ) ? $request->get( 'hoursProjected' ) : NULL,
+//					'hoursRequired'		=> $request->get( 'hoursRequired' ) ? $request->get( 'hoursRequired' ) : NULL,
 					'location'			=> $request->get( 'location' ),
 					'reference'			=> $request->get( 'reference' ),
 					'modifiedAt'		=> time(),
 				);
+print_m( $data );
 				$this->model->edit( $missionId, $data, FALSE );
 				$messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'update', $missionId, $mission, $userId );
@@ -570,6 +574,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 #		else if( 1 )
 #		Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );			//  deliver downloadable file
 		return $ical;
+	}
+
+	protected function getMinutesFromInput( $input ){
+		if( !strlen( trim( $input ) ) )
+			return 0;
+		if( substr_count( $input, ":" ) ){
+			$parts	= explode( ":", $input );
+			return $parts[1] + $parts[0] * 60;
+		}
+		return (int) $input;
 	}
 
 	protected function hasFullAccess(){

@@ -34,6 +34,12 @@ if( $useProjects ){
 	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
 }
 
+$hoursProjected		= floor( $mission->minutesProjected / 60 );
+$minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
+
+$hoursRequired		= floor( $mission->minutesRequired / 60 );
+$minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, "0", STR_PAD_LEFT );
+
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
@@ -93,18 +99,12 @@ $panelEdit	= '
 					<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 				</div>
 				<div class="span2 -column-left-10 optional type type-0">
-					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
-					<div class="input-append">
-						<input type="text" name="hoursProjected" id="input_hoursProjected" class="span3 numeric" value="'.$mission->hoursProjected.'"/>
-						<span class="add-on">h</span>
-					</div>
+					<label for="input_hoursProjected">'.$w->labelMinutesProjected.'</label>
+					<input type="text" name="minutesProjected" id="input_minutesProjected" class="span12 -numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
 				</div>
 				<div class="span2 -column-left-10 optional type type-0">
-					<label for="input_hoursRequired">'.$w->labelHoursRequired.'</label>
-					<div class="input-append">
-						<input type="text" name="hoursRequired" id="input_hoursRequired" class="span3 numeric" value="'.$mission->hoursRequired.'"/>
-						<span class="add-on">h</span>
-					</div>
+					<label for="input_minutesRequired">'.$w->labelMinutesRequired.'</label>
+					<input type="text" name="minutesRequired" id="input_minutesRequired" class="span12 -numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

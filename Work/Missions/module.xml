@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.17-p2</version>
+	<version>0.8.18</version>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_changes` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="update" type="mysql" version="0.8.12"><![CDATA[
+	<sql on="update" type="mysql" version="0.8.11"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mission_filters`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_filters` (
   `missionFilterId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -129,6 +129,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_filters` (
 ]]></sql>
 	<sql on="update" type="mysql" version="0.8.17-p2"><![CDATA[
 ALTER TABLE `<%?prefix%>mission_changes` CHANGE  `data`  `data` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
+]]></sql>
+	<sql on="update" type="mysql" version="0.8.18"><![CDATA[
+UPDATE `<%?prefix%>missions` SET hoursProjected = hoursProjected * 60 WHERE hoursProjected > 0;
+UPDATE `<%?prefix%>missions` SET hoursRequired = hoursRequired * 60 WHERE hoursRequired > 0;
+ALTER TABLE `<%?prefix%>missions` CHANGE `hoursProjected`  `minutesProjected` INT( 10 ) UNSIGNED DEFAULT NULL;
+ALTER TABLE `<%?prefix%>missions` CHANGE `hoursRequired`  `minutesRequired` INT( 10 ) UNSIGNED DEFAULT NULL;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
