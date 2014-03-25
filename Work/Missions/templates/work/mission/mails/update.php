@@ -23,7 +23,8 @@ return '
 		<h4>'.$type.': '.$link.'</h4>
 		<div class="content-panel-inner">
 			<div class="tasks">'.$list.'</div>
-			<div class="content">'.nl2br( $new->content ).'</div>
+			<div class="content">'.$content.'</div>
+<!--			<div class="content">'.nl2br( $new->content ).'</div>
 <!--
 			<div class="text-salute">'.$salute.'</div>
 			<div class="text-signature">'.$words->textSignature.'</div>
