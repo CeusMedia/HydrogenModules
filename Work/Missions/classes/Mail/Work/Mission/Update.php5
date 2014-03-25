@@ -1,30 +1,9 @@
 <?php
-class Mail_Work_Mission_Update extends Mail_Abstract{
+class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 
-	protected function generate( $data = array() ){
-		$w			= (object) $this->getWords( 'work/mission', 'mail-update' );
-		$html		= $this->renderBody( $data );
-		$body		= chunk_split( base64_encode( $html ), 78 );
-		$mailBody	= new Net_Mail_Body( $body, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$subject	= $w->subject . ': '.$data['missionBefore']->title;
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $subject );
-		$this->mail->addBody( $mailBody );
-		return $html;
-	}
+	protected $languageSection	= 'mail-update';
 
 	public function renderBody( $data ){
-		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
-		$w				= (object) $this->getWords( 'work/mission', 'mail-update' );
-		$labels			= (object) $this->getWords( 'work/mission', 'add' );
-		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
-		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
-		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
-		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$states			= (array) $this->getWords( 'work/mission', 'states' );
-		$priorities		= (array) $this->getWords( 'work/mission', 'priorities' );
-		$types			= (array) $this->getWords( 'work/mission', 'types' );
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
@@ -32,98 +11,104 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$diff		= array();
 		$old		= $data['missionBefore'];
 		$new		= $data['missionAfter'];
-		$modelUser	= new Model_User( $this->env );
 
-		if( $old->title !== $new->title ){
-			$diff[]	= (object) array(
-				'label'		=> $labels->labelTitle,
-				'line'		=> $old->title.'<br/>'.$new->title,
-			);
-		}
-		if( $old->status !== $new->status ){
-			$diff[]	= (object) array(
-				'label'		=> $labels->labelStatus,
-				'line'		=> $states[$old->status].' &rarr; '.$states[$new->status],
-			);
-		}
-		if( $old->priority !== $new->priority ){
-			$diff[]	= (object) array(
-				'label'		=> $labels->labelPriority,
-				'line'		=> $priorities[$old->status].' &rarr; '.$priorities[$new->status],
-			);
-		}
-		if( $old->workerId !== $new->workerId ){
-			$workerOld	= $modelUser->get( $old->workerId );
-			$workerNew	= $modelUser->get( $new->workerId );
-			$diff[]	= (object) array(
-				'label'		=> "Bearbeiter",
-				'line'		=> $workerOld->username.' &rarr; '.$workerNew->username,
-			);
-		}
-		if( $old->location !== $new->location ){
-			$diff[]	= (object) array(
-				'label'		=> $labels->labelLocation,
-				'line'		=> $old->location.'<br/>'.$new->location,
-			);
-		}
-		if( $new->dayStart && $old->dayStart !== $new->dayStart ){
-			$days			= "";
-			$dateOld	= $old->dayStart ? date( "d.m.Y", strtotime( $old->dayStart ) ) : '-';
-			$dateNew	= $new->dayStart ? date( "d.m.Y", strtotime( $new->dayStart ) ) : '-';
-			if( $old->dayStart && $new->dayStart && $old->dayStart !== $new->dayStart ){
-				$days		= ( strtotime( $old->dayStart ) - strtotime( $new->dayStart ) ) / 3600 / 24;
-				$sign		= $days < 0 ? '+' : '-';
-				$days		= ' <small class="muted">'.$sign.abs( round( $days ) ).' Tage(e)</small>';
-				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayStart ) ) % 7].', '.$dateOld;
-				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayStart ) ) % 7].', '.$dateNew;
+		$this->setSubjectFromMission( $old );
+
+		$this->enlistFact( 'type', $this->labelsTypes[$old->type] );
+		if( $old->type !== $new->type )
+			$this->enlistFact( 'type', $this->labelsTypes[$old->type].' &rarr; '.$this->labelsTypes[$new->type], 'label label-info' );
+
+
+		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			$model		= new Model_Project( $this->env );
+			$projectOld	= $old->projectId ? $model->get( $old->projectId ) : '-';
+			$this->enlistFact( 'projectId', $projectOld->title );
+			if( $old->projectId !== $new->projectId ){
+				$projectNew	= $new->projectId ? $model->get( $new->projectId ) : '-';
+				$this->enlistFact( 'projectId', $projectOld->title.' &rarr; '.$projectNew->title, 'label label-info' );
 			}
-			$diff[]	= (object) array(
-				'label'		=> $new->type ? $labels->labelDayStart : $labels->labelDayWork,
-				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,
-			);
 		}
-		if( $new->dayEnd && $old->dayEnd !== $new->dayEnd ){
-			$days			= "";
-			$dateOld	= $old->dayEnd ? date( "d.m.Y", strtotime( $old->dayEnd ) ) : '-';
-			$dateNew	= $new->dayEnd ? date( "d.m.Y", strtotime( $new->dayEnd ) ) : '-';
-			if( $old->dayEnd && $new->dayEnd && $old->dayEnd !== $new->dayEnd ){
-				$days		= ( strtotime( $old->dayEnd ) - strtotime( $new->dayEnd ) ) / 3600 / 24;
-				$sign		= $days < 0 ? '+' : '-';
-				$days		= ' <small class="muted">'.$sign.abs( round( $days ) ).' Tage(e)</small>';
-				$dateOld	= $weekdays[date( 'N', strtotime( $old->dayEnd ) ) % 7].', '.$dateOld;
-				$dateNew	= $weekdays[date( 'N', strtotime( $new->dayEnd ) ) % 7].', '.$dateNew;
+
+		$this->enlistFact( 'title', $old->title );
+		if( $old->title !== $new->title )
+			$this->enlistFact( 'title', $old->title.'<br/>'.$new->title, 'label label-info' );
+
+		$this->enlistFact( 'status', $this->labelsStates[$old->status] );
+		if( $old->status !== $new->status )
+			$this->enlistFact( 'status', $this->labelsStates[$old->status].' &rarr; '.$this->labelsStates[$new->status], $old->status < $new->status );
+
+		$this->enlistFact( 'priority', $this->labelsPriorities[$old->priority] );
+		if( $old->priority !== $new->priority )
+			$this->enlistFact( 'priority', $this->labelsPriorities[$old->priority].' &rarr; '.$this->labelsPriorities[$new->priority], $old->priority < $new->priority );
+
+		if( $old->workerId ){
+			$worker		= $this->modelUser->get( $old->workerId );
+			$this->enlistFact( 'worker', $worker->username );
+			if( $old->workerId !== $new->workerId ){
+				$workerOld	= $modelUser->get( $old->workerId );
+				$workerNew	= $modelUser->get( $new->workerId );
+				$this->enlistFact( 'worker', $workerOld->username.' &rarr; '.$workerNew->username, TRUE );
 			}
-			$diff[]	= (object) array(
-				'label'		=> $new->type ? $labels->labelDayEnd : $labels->labelDayDue,
-				'line'		=> $dateOld.' &rarr; '.$dateNew.$days,
-			);
+		}
+
+		if( $old->location || $new->location ){
+			$this->enlistFact( 'location', $old->location );
+			if( $old->location !== $new->location )
+				$this->enlistFact( 'location', $old->location.'<br/>'.$new->location, TRUE );
+		}
+
+		if( $old->dayStart && $new->dayStart ){
+			$dateOld	= date( "d.m.Y", strtotime( $old->dayStart ) );
+			$dateNew	= date( "d.m.Y", strtotime( $new->dayStart ) );
+			$key		= $new->type ? 'dayStart' : 'dayWork';
+			$this->enlistFact( $key, $dateOld );
+			if( $old->dayStart !== $new->dayStart ){
+				$days		= round( ( strtotime( $old->dayStart ) - strtotime( $new->dayStart ) ) / 3600 / 24 );
+				$sign		= $days < 0 ? '+' : '-';
+				$badge		= ' <small class="not-muted">('.$sign.abs( round( $days ) ).')</small>';
+				$dateOld	= $this->labelsWeekdays[date( 'N', strtotime( $old->dayStart ) ) % 7].', '.$dateOld;
+				$dateNew	= $this->labelsWeekdays[date( 'N', strtotime( $new->dayStart ) ) % 7].', '.$dateNew;
+				$this->enlistFact( $key, $dateOld.' &rarr; '.$dateNew/*.$badge*/, $days < 0 );
+			}
+		}
+
+		if( $old->dayEnd && $new->dayEnd ){
+			$dateOld	= date( "d.m.Y", strtotime( $old->dayEnd ) );
+			$dateNew	= date( "d.m.Y", strtotime( $new->dayEnd ) );
+			$key		= $new->type ? 'dayEnd' : 'dayDue';
+			$this->enlistFact( $key, $dateOld );
+			if( $old->dayEnd !== $new->dayEnd ){
+				$days		= round( ( strtotime( $old->dayEnd ) - strtotime( $new->dayEnd ) ) / 3600 / 24 );
+				$sign		= $days < 0 ? '+' : '-';
+				$badge		= ' <small class="not-muted">('.$sign.abs( round( $days ) ).')</small>';
+				$dateOld	= $this->labelsWeekdays[date( 'N', strtotime( $old->dayEnd ) ) % 7].', '.$dateOld;
+				$dateNew	= $this->labelsWeekdays[date( 'N', strtotime( $new->dayEnd ) ) % 7].', '.$dateNew;
+				$this->enlistFact( $key, $dateOld.' &rarr; '.$dateNew/*.$badge*/, $days < 0 );
+			}
 		}
 
 		$list	= array();
 		foreach( $diff as $entry )
 			$list[]	= '<dt>'.$entry->label.'</dt><dd>'.$entry->line.'</dd>';
-		$list	= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
+		$list		= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
+		$list		= UI_HTML_Tag::create( 'dl', $this->facts, array( 'class' => 'dl-horizontal' ) );
 
-		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
+		$heading	= $this->words->heading ? UI_HTML_Tag::create( 'h3', $this->words->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
-		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
+		$dateFull	= $this->labelsWeekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$this->labelsMonthNames[date( 'n' )];
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
-		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : '';
-		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
-		$type		= $types[$old->type];
-		$url		= $baseUrl.'work/mission/'.$old->missionId;
+		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
+		$heading	= $this->words->heading ? UI_HTML_Tag::create( 'h3', $this->words->heading ) : '';
+		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
+		$type		= $this->labelsTypes[$old->type];
+		$salute		= $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '';
+		$url		= $this->baseUrl.'work/mission/'.$old->missionId;
+		$words		= $this->words;
+		$baseUrl	= $this->baseUrl;
 		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $url ) );
 		$body		= require( 'templates/work/mission/mails/update.php' );
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'bootstrap.css' );
-		$this->addThemeStyle( 'bootstrap.responsive.css' );
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.mission.css' );
-		$this->addThemeStyle( 'indicator.css' );
 
 		$this->page->addBody( $body );
 		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-update';

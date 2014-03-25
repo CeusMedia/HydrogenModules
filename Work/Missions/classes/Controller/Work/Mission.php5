@@ -820,5 +820,32 @@ print_m( $data );
 			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
 		}
 	}
+
+	public function testMailNew( $missionId ){
+		$data	= array(
+            'mission'   => $this->model->get( $missionId ),
+            'user'      => $this->userMap[$this->session->get( 'userId' )],
+        );
+		$mail	= new Mail_Work_Mission_New( $this->env, $data );
+		print( $mail->renderBody( $data ) );
+		die;
+	}
+
+	public function testMailUpdate( $missionId ){
+		$missionOld		= $this->model->get( $missionId );
+		$missionNew		= clone( $missionOld );
+		$missionOld->status = 1;
+		$missionNew->type = "1";
+		$missionOld->priority = "1";
+		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) - 3600 * 24 );
+		$data		= array(
+			'missionBefore'	=> $missionOld,
+			'missionAfter'	=> $missionNew,
+			'user'			=> $this->userMap[$this->session->get( 'userId' )],
+		);
+		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
+		print( $mail->renderBody( $data ) );
+		die;
+	}
 }
 ?>
