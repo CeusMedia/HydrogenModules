@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Markdown</title>
+	<description><![CDATA[Markdown transformation support.]]></description>
+	<version>1.4.0a</version>
+	<category>User Interface</category>
+	<author site="http://michelf.ca/home/">Michel Fortin</author>
+	<url>http://michelf.ca/projects/php-markdown/</url>
+	<license source="https://github.com/michelf/php-markdown/blob/lib/License.md">BSD-style</license>
+	<files>
+		<class>View/Helper/Markdown.php5</class>
+		<class>Markdown.php</class>
+		<file>licenses/Markdown.md</file>
+	</files>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+</module>
