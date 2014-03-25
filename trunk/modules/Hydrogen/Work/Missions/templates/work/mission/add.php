@@ -29,7 +29,7 @@ if( $useProjects ){
 }
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
-$minutesProjected	= str_pad( $mission->minutesProjects - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
+$minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">
@@ -87,13 +87,6 @@ $panelAdd	= '
 					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 					<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 				</div>
-<!--				<div class="span2 -column-left-20 optional type type-0">
-					<label for="input_hoursProjected">'.$w->labelHoursProjected.'</label>
-					<div class="input-append">
-						<input type="text" name="hoursProjected" id="input_hoursProjected" class="span10 -xs numeric" value="'.$mission->hoursProjected.'"/>
-						<span class="add-on">h</span>
-					</div>
-				</div>-->
 				<div class="span2 -column-left-20 optional type type-0">
 					<label for="input_minutesProjected">'.$w->labelMinutesProjected.'</label>
 					<input type="text" name="minutesProjected" id="input_minutesProjected" class="span10 -xs numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>

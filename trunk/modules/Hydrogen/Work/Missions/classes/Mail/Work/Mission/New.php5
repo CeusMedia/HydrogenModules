@@ -86,6 +86,7 @@ class Mail_Work_Mission_New extends Mail_Abstract{
 		$this->addThemeStyle( 'bootstrap.css' );
 		$this->addThemeStyle( 'bootstrap.respsonsive.css' );
 		$this->addThemeStyle( 'layout.css' );
+		$this->addThemeStyle( 'layout.panels.css' );
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.mission.css' );
 		$this->addThemeStyle( 'indicator.css' );
