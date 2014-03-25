@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.0</version>
+	<version>0.3.1</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -12,7 +12,9 @@
 		<class>Model/Forum/Post.php5</class>
 		<class>Model/Forum/Thread.php5</class>
 		<class>Model/Forum/Topic.php5</class>
-		<class>Mail/Forum/Post/Answer.php5</class>
+		<class>Mail/Forum/Abstract.php5</class>
+		<class>Mail/Forum/Answer.php5</class>
+		<class>Mail/Forum/Daily.php5</class>
 		<class>View/Info/Forum.php5</class>
 		<template>info/forum/index.php</template>
 		<template>info/forum/index.add.php</template>

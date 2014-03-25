@@ -307,5 +307,12 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->messenger->noteSuccess( $words->successTopicRemoved, $topic->title );
 		$this->restart( NULL, TRUE );
 	}
+
+	public function testMailAnswer(){
+		
+		$mail	= new Mail_Info_Forum_Answer( $this->env, array() );
+		print( $mail->renderBody() );
+		die;
+	}
 }
 ?>
