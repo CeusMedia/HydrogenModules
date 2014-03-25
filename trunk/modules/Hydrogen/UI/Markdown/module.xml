@@ -9,7 +9,7 @@
 	<license source="https://github.com/michelf/php-markdown/blob/lib/License.md">BSD-style</license>
 	<files>
 		<class>View/Helper/Markdown.php5</class>
-		<class>Markdown.php</class>
+		<class>Markdown.php5</class>
 		<file>licenses/Markdown.md</file>
 	</files>
 	<relations/>
