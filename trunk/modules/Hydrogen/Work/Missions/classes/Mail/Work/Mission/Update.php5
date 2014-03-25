@@ -107,6 +107,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$url		= $this->baseUrl.'work/mission/'.$old->missionId;
 		$words		= $this->words;
 		$baseUrl	= $this->baseUrl;
+		$content	= View_Helper_Markdown::transformStatic( $this->env, $new->content );
 		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $url ) );
 		$body		= require( 'templates/work/mission/mails/update.php' );
 

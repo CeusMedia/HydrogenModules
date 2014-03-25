@@ -60,6 +60,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
 		$words		= $this->words;
 		$baseUrl	= $this->baseUrl;
+		$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 		$this->page->addBody( require( 'templates/work/mission/mails/new.php' ) );
 		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-new';
 		return $this->page->build( array( 'class' => $class ) );

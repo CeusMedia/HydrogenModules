@@ -26,6 +26,7 @@ return '
 	<div class="content-panel">
 		<h4><!--'.$words->facts.': -->'.$link.'</h4>
 		<div class="content-panel-inner">'.$list.'</div>
+		<div class="">'.$content.'</div>
 <!--
 		<div class="text-salute">'.$salute.'</div>
 		<div class="text-signature">'.$words->textSignature.'</div>
