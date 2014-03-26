@@ -45,8 +45,8 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 			$worker		= $this->modelUser->get( $old->workerId );
 			$this->enlistFact( 'worker', $worker->username );
 			if( $old->workerId !== $new->workerId ){
-				$workerOld	= $modelUser->get( $old->workerId );
-				$workerNew	= $modelUser->get( $new->workerId );
+				$workerOld	= $this->modelUser->get( $old->workerId );
+				$workerNew	= $this->modelUser->get( $new->workerId );
 				$this->enlistFact( 'worker', $workerOld->username.' &rarr; '.$workerNew->username, TRUE );
 			}
 		}
