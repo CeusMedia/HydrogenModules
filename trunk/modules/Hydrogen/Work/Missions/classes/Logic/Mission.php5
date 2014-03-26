@@ -98,7 +98,7 @@ class Logic_Mission{
 				'type'			=> $type,
 				'data'			=> serialize( $data ),
 				'timestamp'		=> time()
-			) );
+			), FALSE );
 		}
 	}
 }
