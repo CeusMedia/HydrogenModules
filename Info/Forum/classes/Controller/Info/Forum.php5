@@ -77,7 +77,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 				@unlink( $path.$fileName );
 				$this->restart( 'thread/'.$threadId, TRUE );
 			}
-			$data['content'] = $fileName;
+			$data['content'] = $fileName."\n".$request->get( 'title' );
 			$data['type']	= 1;
 		}
 

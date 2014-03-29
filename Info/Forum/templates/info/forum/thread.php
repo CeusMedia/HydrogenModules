@@ -14,9 +14,6 @@ $userCanEdit	= in_array( 'ajaxEditPost', $rights );
 $userCanRemove	= in_array( 'removePost', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
-
-
-
 if( $posts ){
 	$rows	= array();
 	foreach( $posts as $nr => $post ){
@@ -42,10 +39,10 @@ if( $posts ){
 		}
 		if( $userCanRemove && $userCanChange ){
 			$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-				'onclick'	=> 'if(confirm(\'Wirklich ?\')) document.location.href = \'./info/forum/removePost/'.$post->postId.'\';',
-				'href'	=> './info/forum/removePost/'.$post->postId,
-				'class'	=> 'btn not-btn-small btn-danger',
-				'title'	=> $words['thread']['buttonRemove']
+				'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;',
+				'href'		=> './info/forum/removePost/'.$post->postId,
+				'class'		=> 'btn not-btn-small btn-danger',
+				'title'		=> $words['thread']['buttonRemove']
 			) );
 		}
 		$user	= '-';
@@ -59,8 +56,16 @@ if( $posts ){
 		}
 		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 		$content		= nl2br( $post->content, TRUE );
-		if( $post->type == 1 )
-			$content	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'contents/forum/'.$post->content ) );
+		if( $post->type == 1 ){
+			$parts		= explode( "\n", $post->content );
+			$title		= $parts[1] ? Alg_Text_Trimmer::trim( $parts[1], 100 ) : '';
+			$caption	= $title ? UI_HTML_Tag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
+			$image		= UI_HTML_Tag::create( 'img', NULL, array(
+				'src'	=> 'contents/forum/'.$parts[0],
+				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
+			) );
+			$content	= UI_HTML_Tag::create( 'figure', $image.$caption );
+		}
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
 			$content		.= UI_HTML_Tag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
@@ -70,7 +75,10 @@ if( $posts ){
 			UI_HTML_Tag::create( 'td', $content, array( 'class' => 'content autocut' ) ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => 'post-'.$post->postId ) );
+		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array(
+			'id'	=> 'post-'.$post->postId,
+			'class'	=> 'post-type-'.$post->type
+		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '20%', '65%', '15%' );
 	$heads		= UI_HTML_Elements::TableHeads( array() );
