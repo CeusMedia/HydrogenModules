@@ -1,8 +1,11 @@
-table td.topic-label a {
+body.controller-info-forum table {
+	table-layout: fixed;
+	}
+body.controller-info-forum table td.topic-label a {
 	font-size: 1.2em;
 	}
 
-table td.topic-label {
+body.controller-info-forum table td.topic-label {
 	background-position: 11px 8px;
 	background-repeat: no-repeat;
 	padding-left: 52px;
@@ -10,7 +13,7 @@ table td.topic-label {
 	line-height: 1.15em;
 	}
 
-table td.thread-label {
+body.controller-info-forum table td.thread-label {
 	background-position: 11px 8px;
 	background-repeat: no-repeat;
 	padding-left: 52px;
@@ -18,9 +21,19 @@ table td.thread-label {
 	line-height: 1.15em;
 	}
 
-table tr.type-important td.thread-label a {
+body.controller-info-forum table tr.type-important td.thread-label a {
 	font-weight: bold;
 	}
 
-
-	
+body.controller-info-forum table figure {
+	}
+body.controller-info-forum table figure figcaption {
+	text-align: center;
+	padding: 0.3em 0em 0.6em 0em;
+	font-size: 0.85em;
+	font-style: italic;
+	text-overflow: ellipsis;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	}
