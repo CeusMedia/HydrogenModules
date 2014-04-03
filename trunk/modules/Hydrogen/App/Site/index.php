@@ -2,7 +2,7 @@
 $errorReporting		= E_ALL;										//  enable full reporting
 $displayErrors		= TRUE;											//  enable error display
 
-//$pathLibraries		= "lib/";									//  path to libraries
+$pathLibraries		= "/var/www/vhosts/univerlag-leipzig.de/lib/";									//  path to libraries
 
 $versionCMC			= 'trunk';										//  branch path of cmClasses
 $versionCMF			= 'trunk';										//  branch path of cmFrameworks
