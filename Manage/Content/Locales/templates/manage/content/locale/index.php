@@ -35,7 +35,7 @@ else if( $language ){
 //	$panelAddFile	= '[AddFile]';
 }
 
-$languageSelector	= '';
+$filterLanguage		= '';
 if( count( $languages ) > 1 ){
 	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
 	$filterLanguage	= '
