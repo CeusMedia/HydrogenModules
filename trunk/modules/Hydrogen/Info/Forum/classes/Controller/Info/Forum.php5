@@ -33,6 +33,35 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			mkdir( $path, 0770, TRUE );
 	}
 
+	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
+		try{
+			$config			= $env->getConfig()->getAll( 'module.info_forum.', TRUE );
+			if( !$config->get( 'sitemap' ) )
+				return;
+			$baseUrl		= $env->url.'info/forum/';
+
+			if( $config->get( 'sitemap.topics' ) ){
+				$modelTopic		= new Model_Forum_Topic( $env );
+				$topics			= $modelTopic->getAll( array(), array( 'modifiedAt' => 'DESC' ) );
+				foreach( $topics as $topic ){
+					$url		= $baseUrl.'topic/'.$topic->topicId;
+					$context->addLink( $url, max( $topic->createdAt, $topic->modifiedAt ) );
+				}
+			}
+			if( $config->get( 'sitemap.threads' ) ){
+				$modelThread	= new Model_Forum_Thread( $env );
+				$threads		= $modelThread->getAll( array( 'status' => '>=0' ), array( 'modifiedAt' => 'DESC' ) );
+				foreach( $threads as $thread ){
+					$url		= $baseUrl.'thread/'.$thread->threadId;
+					$context->addLink( $url, max( $thread->createdAt, $thread->modifiedAt ) );
+				}
+			}
+		}
+		catch( Exception $e ){
+			die( $e->getMessage() );
+		}
+	}
+
 	public function addPost( $threadId ){
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
