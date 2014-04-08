@@ -28,23 +28,23 @@ return '
 				<label for="input_isn">'.$w->labelIsn.'</label>
 				<input class="span12" type="text" name="isn" id="input_isn" value="'.htmlentities( $article->isn, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
-			<div class="span3">
-				<label for="input_language">'.$w->labelLanguages.'</label>
-				<input class="span12" type="text" name="language" id="input_language" value="'.htmlentities( $article->language, ENT_QUOTES, 'UTF-8' ).'"/>
-			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span2">
 				<label for="input_price">'.$w->labelPrice.'</label>
 				<input class="span12" type="text" name="price" id="input_price" value="'.htmlentities( $article->price, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
-			<div class="span4">
+			<div class="span3">
 				<label for="input_digestion">'.$w->labelDigestion.'</label>
 				<input class="span12" type="text" name="digestion" id="input_digestion" value="'.htmlentities( $article->digestion, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
-			<div class="span6">
+			<div class="span3">
 				<label for="input_size">'.$w->labelSize.'</label>
 				<input class="span12" type="text" name="size" id="input_size" value="'.htmlentities( $article->size, ENT_QUOTES, 'UTF-8' ).'"/>
+			</div>
+			<div class="span4">
+				<label for="input_language">'.$w->labelLanguages.'</label>
+				<input class="span12" type="text" name="language" id="input_language" value="'.htmlentities( $article->language, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 		</div>
 		<div class="row-fluid">

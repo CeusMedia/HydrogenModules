@@ -4,7 +4,7 @@ $listImages	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.<
 
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
-	$path		= "../Univerlag/contents/articles/covers/";
+	$path		= "../contents/articles/covers/";													//  @todo configure!
 	$source		= $path.$id.'_'.$article->cover;
 	$class		= 'img-polaroid';
 	$urlFull	= "...";
@@ -13,7 +13,7 @@ if( $article->cover ){
 	$urlThumb	= "...";
 	$source		= $path.$id.'__'.$article->cover;
 	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source, 'class' => $class ) );
-	
+
 	$listImages	= '
 		<div class="row-fluid">
 			<div class="span6">
