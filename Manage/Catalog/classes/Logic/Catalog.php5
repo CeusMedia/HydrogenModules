@@ -52,9 +52,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
 		$this->modelCategory		= new Model_Catalog_Category( $this->env );
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
-		$this->pathArticleCovers	= '../Univerlag/contents/articles/covers/';
-		$this->pathArticleDocuments	= '../Univerlag/contents/articles/documents/';//$this->config['frontend.document.uri'];
-		$this->pathAuthorImages		= '../Univerlag/contents/authors/';
+		$this->pathArticleCovers	= '../contents/articles/covers/';					//  @todo	configure!
+		$this->pathArticleDocuments	= '../contents/articles/documents/';				//	@todo	configure!  $this->config['frontend.document.uri'];
+		$this->pathAuthorImages		= '../contents/authors/';							//  @todo	configure!
 //		$this->clean();
 
 
@@ -242,8 +242,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
-		if( isset( $categoryId, $this->countArticlesInCategories ) )
-			return $this->countArticlesInCategories[$categoryId];
+		$numbers	= $this->countArticlesInCategories;
+		if( isset( $numbers[$categoryId] ) )
+			return $numbers[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
 			$categories	= $this->getCategories( array( 'parentId' => $categoryId ) );
