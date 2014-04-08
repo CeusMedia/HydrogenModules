@@ -38,7 +38,7 @@ return '
 		<div id="content-index">
 			<div class="heading">Inhalt</div>
 		</div>
-		<div class="markdown" id="content-container"style="display: none">
+		<div class="markdown" id="content-container" style="display: none">
 '.$content.'
 		</div>
 		<div class="buttonbar">
