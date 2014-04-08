@@ -37,7 +37,7 @@ class Logic_Sitemap{
             throw new InvalidArgumentException( 'Frequency must with one of '.join( ', ', $this->frequencies ) );
 		$this->links[]	= (object) array(
 			'location'	=> $location,
-			'datetime'	=> date( 'c', $timestamp ),
+			'datetime'	=> $timestamp > 0 ? date( 'c', (int) $timestamp ) : NULL,
 			'frequency'	=> $frequency,
 			'priority'	=> $priority,
 		);
