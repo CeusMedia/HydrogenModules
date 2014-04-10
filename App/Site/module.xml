@@ -3,7 +3,8 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
+	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -18,8 +19,10 @@
 		<template>.htaccess</template>
 		<style source="theme" load="auto">layout.css</style>
 		<file>index.php</file>
+		<file>robots.txt</file>
 		<file>.htaccess.dist</file>
 		<file>.htpasswd.dist</file>
+		<file>logs/.htaccess</file>
 	</files>
 	<link xml:lang="de" access="public" rank="0" path="">Start</link>
 	<link xml:lang="en" access="public" rank="0" path="">Home</link>
