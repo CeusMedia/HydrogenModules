@@ -592,10 +592,10 @@ class Logic_Module {
 		$list			= array();
 		foreach( $moduleSource->sql as $key => $sql ){												//  iterate module SQL parts
 			if( $sql->event === "update" ){															//  found update
-				$versionStep	= $this->version( $sql->to );										//  target version of sql part
-				if( version_compare( $versionStep, $versionCurrent ) >= 0 ){						//  related to current version or up
-					if( version_compare( $versionTarget, $versionStep ) >= 0 ){						//  related to new version or below
-						$key	= $versionCurrent.'_'.$versionTarget.'_'.$versionStep;				//  generate version key for list
+				$versionStep	= $this->version( $sql->version );									//  target version of sql part
+				if( version_compare( $versionStep, $versionCurrent, '>' ) ){						//  sql part is newer than current version
+					if( version_compare( $versionStep, $versionTarget, '<=' ) ){					//  sql part is older or related to new version
+						$key	= $versionCurrent.'_'.$versionStep.'_'.$versionTarget;				//  generate version key for list
 						if( $sql->type == $driver )													//  update SQL is for instance database driver
 							$list[$key]	= trim( $sql->sql );										//  enlist master entry in SQL update list
 						else if( $sql->type === '*' && !isset( $list[$key] ) )						//  update SQL is general and no master entry available
@@ -604,6 +604,7 @@ class Logic_Module {
 				}
 			}
 		}
+		
 		foreach( $list as $sql )																	//  iterate SQL update list
 			$this->executeSql( $sql );																//  execute SQL
 	}
