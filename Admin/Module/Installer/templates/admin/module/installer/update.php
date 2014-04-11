@@ -33,6 +33,7 @@ return '
 		<br/>
 		'.$panelFiles.'
 		'.$tableConfig.'
+		'.$panelDatabase.'
 		<fieldset>
 			<legend class="module-add">Modul aktualisieren</legend>
 			'.$panelType.'
@@ -41,7 +42,6 @@ return '
 				'.$buttonUpdate.'
 			</div>
 		</fieldset>
-		'.$panelDatabase.'
 	</form>
 </div>
 <div class="column-right-30">
