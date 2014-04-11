@@ -2,15 +2,23 @@
 <module>
 	<title>Admin: Module Installer</title>
 	<description><![CDATA[Install modules from module sources.
+
 Building on basic module administration, this module allows you to install modules from any defined module source. Installing a modules with needed but not installed related modules will install these needed modules as well.
+
 This module can be extended by:
+list>
 - Module Editor
 - Module Creator
+<list
+
 This module needs other modules to be installed:
+list>
 - Modules Editor (thus Modules, Module Sources, App Instances)
+<list
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.9</version>
+	<version>0.2.10</version>
+	<log version="0.2.10">Adjusted database update handling.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
