@@ -110,12 +110,12 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$data['type']	= 1;
 		}
 
-		$this->modelPost->add( $data );
-		$this->messenger->noteSuccess( $words->successPostAdded );
+		$postId	= $this->modelPost->add( $data );
+		$this->messenger->noteSuccess( $words->successPostAdded, $postId );
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
 		$this->cache->remove( 'info.forum.userPosts' );
-		$this->restart( 'thread/'.$threadId, TRUE );
+		$this->restart( 'thread/'.$threadId.'#post-'.$postId, TRUE );
 	}
 
 	public function addThread(){
