@@ -3,8 +3,9 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.3.7</version>
-	<log version="0.3.7">Added robots file and locked log folder.</log>
+	<version>0.3.8</version>
+	<log version="0.3.7">Supporting new style auto load level by loading layout.css on "end".</log>
+	<log version="0.3.8">Added robots file and locked log folder.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,7 +18,7 @@
 		<template>index/index.php</template>
 		<template>master.php</template>
 		<template>.htaccess</template>
-		<style source="theme" load="auto">layout.css</style>
+		<style source="theme" load="auto" level="end">layout.css</style>
 		<file>index.php</file>
 		<file>robots.txt</file>
 		<file>.htaccess.dist</file>
