@@ -30,7 +30,7 @@ if( $posts ){
 					'title'	=> $words['thread']['buttonApprove']
 				) );
 		}
-		if( $userCanEdit && $userCanChange ){
+		if( $userCanEdit && $userCanChange && !$post->type ){
 			$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
 				'onclick'	=> 'InfoForum.preparePostEditor('.$post->postId.')',
 				'class'		=> 'btn not-btn-small',
