@@ -4,8 +4,8 @@
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
 	<version>0.3.8</version>
-	<log version="0.3.7">Supporting new style auto load level by loading layout.css on "end".</log>
-	<log version="0.3.8">Added robots file and locked log folder.</log>
+	<log version="0.3.7">Added robots file and locked log folder.</log>
+	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
