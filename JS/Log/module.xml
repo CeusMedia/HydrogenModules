@@ -2,7 +2,10 @@
 <module>
 	<title>JS: Log</title>
 	<description><![CDATA[Layer for displaying images and contents.]]></description>
-	<version>0.2</version>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Added configuration of log levels and ranges.</log>
+	<log version="0.2.1">Typed configuration.</log>
 	<category>JavaScript</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -10,16 +13,16 @@
 	<files>
 		<script load="auto" source="local">Log.js</script>
 	</files>
-	<config name="level.error.enabled" title="1 - error (1)">yes</config>
-	<config name="level.error.range" title="list of allowed IP addresses">*</config>
-	<config name="level.warn.enabled" title="2 - warning (2)">yes</config>
-	<config name="level.warn.range" title="list of allowed IP addresses">*</config>
-	<config name="level.info.enabled" title="3 - info (4)">yes</config>
-	<config name="level.info.range" title="list of allowed IP addresses">*</config>
-	<config name="level.log.enabled" title="4 - log (8)">yes</config>
-	<config name="level.log.range" title="list of allowed IP addresses">*</config>
-	<config name="level.debug.enabled" title="5 - debug (16)">yes</config>
-	<config name="level.debug.range" title="list of allowed IP addresses">*</config>
+	<config type="boolean" name="level.error.enabled" title="1 - error (1)">yes</config>
+	<config type="string" name="level.error.range" title="list of allowed IP addresses">*</config>
+	<config type="boolean" name="level.warn.enabled" title="2 - warning (2)">yes</config>
+	<config type="string" name="level.warn.range" title="list of allowed IP addresses">*</config>
+	<config type="boolean" name="level.info.enabled" title="3 - info (4)">yes</config>
+	<config type="string" name="level.info.range" title="list of allowed IP addresses">*</config>
+	<config type="boolean" name="level.log.enabled" title="4 - log (8)">yes</config>
+	<config type="string" name="level.log.range" title="list of allowed IP addresses">*</config>
+	<config type="boolean" name="level.debug.enabled" title="5 - debug (16)">yes</config>
+	<config type="string" name="level.debug.range" title="list of allowed IP addresses">*</config>
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.js_log.' );
