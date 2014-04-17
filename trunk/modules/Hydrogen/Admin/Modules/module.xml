@@ -16,8 +16,9 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.8</version>
+	<version>0.2.9</version>
 	<log version="0.2.8">Adjusted database update handling.</log>
+	<log version="0.2.9">Imnproved instant module filter.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
