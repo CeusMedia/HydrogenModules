@@ -7,6 +7,8 @@ var InstantFilter = function(selectorInput,options){
 		durationFadeIn: 'fast',
 		durationFadeOut: 'fast',
 		autoFocus: false,
+		onItemHide: function(instance, item){},
+		onItemShow: function(instance, item){},
 		onSearch: function(instance){},
 		onReset: function(instance){}
 	};
@@ -47,19 +49,42 @@ var InstantFilter = function(selectorInput,options){
 	}
 	
 	this.search = function(query){
+		var instance = this;
+		var options = this.options;
 		if(!(this.selectorInput && $(this.selectorInput).size()))
 			return;
-		if(!(this.options.selectorItems && $(this.options.selectorItems).size()))
+		if(!(options.selectorItems && $(options.selectorItems).size()))
 			return;
-		var all = $(this.options.selectorItems).stop(true,true);
+		var all = $(options.selectorItems).data('found', 0).stop(true,true);
 		if(query.length){
-			var expr = this.options.caseSense ? ':contains' : ':icontains';
-			var got = $(this.options.selectorItems+expr+"('"+query+"')");
-			all.not(got).filter(":visible").addClass('hidden').fadeOut(this.options.durationFadeOut);
-			got.not(":visible").removeClass('hidden').fadeIn(this.options.durationFadeIn);
-			if(this.options.selectorReset && $(this.options.selectorReset))
-				$(this.options.selectorReset).fadeIn(this.options.durationFadeIn);
+			var items = $(options.selectorItems);
+			var parts = query.trim().split(/ /);
+			var nrTerms = parts.length;
+			for(var i=0; i<parts.length; i++){
+				var expr = options.caseSense ? ':contains' : ':icontains';
+				var found = items.filter(expr+"('"+parts[i]+"')");
+				found.each(function(){
+					$(this).data('found', $(this).data('found') + 1);
+				});
+			}
+			items.each(function(){
+				var item = $(this);
+				if(item.data('found') === nrTerms){
+					item.removeClass('hidden').fadeIn(options.durationFadeIn, function(){
+						$(this).addClass("found");
+						options.onItemShow(instance, item);
+					});
+				}
+				else{
+					item.removeClass("found").fadeOut(options.durationFadeOut, function(){
+						$(this).addClass('hidden');
+						options.onItemHide(instance, item);
+					});
+				}
+			});
 			this.options.onSearch(this);
+			if(this.options.selectorReset && $(this.options.selectorReset))
+				$(options.selectorReset).fadeIn(options.durationFadeIn);
 		}
 		else{
 			all.filter(".hidden").fadeIn(this.options.durationFadeIn).removeClass("hidden");
