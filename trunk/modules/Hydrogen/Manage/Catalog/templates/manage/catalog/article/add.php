@@ -70,8 +70,8 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_release">'.$w->labelRelease.'</label>
-					<input class="span12" type="text" name="release" id="input_release" value="'.htmlentities( $article->publication, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_publication">'.$w->labelPublication.'</label>
+					<input class="span12" type="text" name="publication" id="input_publication" value="'.htmlentities( $article->publication, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span4">
 					<label for="input_status">'.$w->labelStatus.'</label>
