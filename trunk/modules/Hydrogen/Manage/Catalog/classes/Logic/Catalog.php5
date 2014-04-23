@@ -104,9 +104,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 		/*  --  CREATE THUMBNAIL IMAGE  --  */
 		$uriThumb		= $this->pathArticleCovers.$id."__".$imagename;
-		$thumbWidth		= $this->moduleConfig->get( 'article.thumb.maxWidth' );
-		$thumbHeight	= $this->moduleConfig->get( 'article.thumb.maxHeight' );
-		$thumbQuality	= $this->moduleConfig->get( 'article.thumb.quality' );
+		$thumbWidth		= $this->moduleConfig->get( 'article.image.thumb.maxWidth' );
+		$thumbHeight	= $this->moduleConfig->get( 'article.image.thumb.maxHeight' );
+		$thumbQuality	= $this->moduleConfig->get( 'article.image.thumb.quality' );
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriThumb );
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
 
