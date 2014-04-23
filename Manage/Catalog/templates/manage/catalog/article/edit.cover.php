@@ -2,16 +2,19 @@
 
 $listImages	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.</div>';
 
+$moduleConfig	= $config->getAll( 'module.manage_catalog.', TRUE );
+$imagePath		= $moduleConfig->get( 'path.frontend' ).$moduleConfig->get( 'path.frontend.covers' );
+
+
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
-	$path		= "../contents/articles/covers/";													//  @todo configure!
-	$source		= $path.$id.'_'.$article->cover;
+	$source		= $imagePath.$id.'_'.$article->cover;
 	$class		= 'img-polaroid';
 	$urlFull	= "...";
 	$imageFull	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source, 'class' => $class ) );
 
 	$urlThumb	= "...";
-	$source		= $path.$id.'__'.$article->cover;
+	$source		= $imagePath.$id.'__'.$article->cover;
 	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source, 'class' => $class ) );
 
 	$listImages	= '
