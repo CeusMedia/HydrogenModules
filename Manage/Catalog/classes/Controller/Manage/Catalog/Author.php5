@@ -6,6 +6,8 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		$this->config		= $this->env->getConfig();
+		$this->addData( 'config', $this->config->getAll( 'module.manage_catalog.', TRUE ) );
 	}
 
 	public function add(){
@@ -90,7 +92,7 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 			$this->logic->addAuthorImage( $authorId, $file );										//  set newer image
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $words->msgErrorUpload );
+			$this->messenger->noteFailure( $words->msgErrorUpload, $e->getMessage() );
 		}
 	}
 }

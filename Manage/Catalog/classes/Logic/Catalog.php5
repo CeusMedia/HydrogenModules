@@ -52,12 +52,15 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
 		$this->modelCategory		= new Model_Catalog_Category( $this->env );
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
-		$this->pathArticleCovers	= '../contents/articles/covers/';					//  @todo	configure!
-		$this->pathArticleDocuments	= '../contents/articles/documents/';				//	@todo	configure!  $this->config['frontend.document.uri'];
-		$this->pathAuthorImages		= '../contents/authors/';							//  @todo	configure!
+		$this->config				= $this->env->getConfig();
+		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
+		
+		$paths						= $this->moduleConfig->getAll( 'path.', TRUE );
+		$basePath					= $paths->get( 'frontend' );
+		$this->pathArticleCovers	= $basePath.$paths->get( 'frontend.covers' );
+		$this->pathArticleDocuments	= $basePath.$paths->get( 'frontend.documents' );
+		$this->pathAuthorImages		= $basePath.$paths->get( 'frontend.authors' );
 //		$this->clean();
-
-
 
 		$cacheKey	= 'catalog.count.categories.articles';
 		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
@@ -93,17 +96,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			throw new RuntimeException( 'Storing uploaded file failed' );
 
 		/*  --  SCALE MAIN IMAGE  --  */
-		$imageWidth		= 180;//$this->config['frontend.cover.width'];
-		$imageHeight	= 240;//$this->config['frontend.cover.height'];
-		$imageQuality	= 85;
+		$imageWidth		= $this->moduleConfig->get( 'article.image.maxWidth' );
+		$imageHeight	= $this->moduleConfig->get( 'article.image.maxHeight' );
+		$imageQuality	= $this->moduleConfig->get( 'article.image.quality' );
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 
 		/*  --  CREATE THUMBNAIL IMAGE  --  */
 		$uriThumb		= $this->pathArticleCovers.$id."__".$imagename;
-		$thumbWidth		= 90;//$this->config['frontend.cover.thumb.width'];
-		$thumbHeight	= 120;//$this->config['frontend.cover.thumb.height'];
-		$thumbQuality	= 85;
+		$thumbWidth		= $this->moduleConfig->get( 'article.thumb.maxWidth' );
+		$thumbHeight	= $this->moduleConfig->get( 'article.thumb.maxHeight' );
+		$thumbQuality	= $this->moduleConfig->get( 'article.thumb.quality' );
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriThumb );
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
 
@@ -169,9 +172,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			throw new RuntimeException( 'Storing uploaded file failed' );
 
 		/*  --  SCALE MAIN IMAGE  --  */
-		$imageWidth		= 240;//$this->config['frontend.author.width'];
-		$imageHeight	= 180;//$this->config['frontend.author.height'];
-		$imageQuality	= 80;//
+		$imageWidth		= $this->moduleConfig->get( 'author.image.maxWidth' );
+		$imageHeight	= $this->moduleConfig->get( 'author.image.maxHeight' );
+		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
@@ -180,10 +183,13 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function addAuthorToArticle( $articleId, $authorId, $role ){
 		$data		= array(
 			'articleId'	=> $articleId,
-			'authorId'		=> $authorId,
-			'editor'		=> $role,
+			'authorId'	=> $authorId,
+			'editor'	=> $role,
 		);
-		return $this->modelArticleAuthor->add( $data );
+		$relationId	= $this->modelArticleAuthor->add( $data );
+		$this->cache->remove( 'catalog.article.'.$articleId );
+		$this->cache->remove( 'catalog.article.author.'.$articleId );
+		return $relationId;
 	}
 
 	public function addCategory( $data ){
@@ -195,7 +201,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
-			'articleId'	=> $articleId,
+			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 			'volume'		=> $volume,
 		);
@@ -362,7 +368,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$author->editor	= $entry->editor;
 			$list[$author->lastname]	= $author;
 		}
-		ksort( $list );
+//		ksort( $list );
 		$this->cache->set( 'catalog.article.author.'.$articleId, $list );
 		return $list;
 	}
@@ -601,9 +607,12 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->checkAuthorId( $authorId );
 		$indices	= array(
 			'articleId'	=> $articleId,
-			'authorId'		=> $authorId,
+			'authorId'	=> $authorId,
 		);
-		return $this->modelArticleAuthor->removeByIndices( $indices );
+		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
+		$this->cache->remove( 'catalog.article.'.$articleId );
+		$this->cache->remove( 'catalog.article.author.'.$articleId );
+		return $result;
 	}
 
 	public function removeAuthorImage( $authorId ){

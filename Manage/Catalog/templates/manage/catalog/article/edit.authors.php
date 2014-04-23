@@ -15,8 +15,10 @@ if( $articleAuthors ){
 		$optRole		= UI_HTML_Elements::Options( $optRole, (int) $item->editor );
 		$urlRemove		= './manage/catalog/article/removeAuthor/'.$article->articleId.'/'.(int) $item->authorId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
+		$label			= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
+		$label			= '<a href="./manage/catalog/author/edit/'.$item->authorId.'">'.$label.'</a>';
 		$listAuthors[]	= '<tr>
-		<td><div class="autocut">'.$item->lastname.( $item->firstname ? ', '.$item->firstname : "" ).'</div></td>
+		<td><div class="autocut">'.$label.'</div></td>
 		<td><select class="span12" onchange="document.location.href=\'./manage/catalog/article/setAuthorRole/'.$article->articleId.'/'.$item->authorId.'/\'+this.value;">'.$optRole.'</select></td>
 		<td><div class="pull-right">'.$buttonRemove.'</div></td>
 	</tr>';
