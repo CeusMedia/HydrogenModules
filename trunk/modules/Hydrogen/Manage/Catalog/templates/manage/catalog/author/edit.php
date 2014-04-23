@@ -7,10 +7,11 @@ $list		= $this->renderList( $authors, $author->authorId );
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
+$baseUrl	= $config->get( 'path.frontend' ).$config->get( 'path.frontend.authors' );
 $image		= "images/no_author.png";
 if( $author->image ){
 	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
-	$image	= "../Univerlag/contents/authors/".$id.'_'.$author->image;
+	$image	= $baseUrl.$id.'_'.$author->image;
 }
 $image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 

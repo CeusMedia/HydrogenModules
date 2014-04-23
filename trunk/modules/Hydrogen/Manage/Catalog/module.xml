@@ -3,7 +3,9 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.10</version>
+	<version>0.3.12</version>
+	<log version="0.3.11">Made paths to images and documents configurable.</log>
+	<log version="0.3.12">Made images dimensions configurable.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -63,6 +65,10 @@
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxWidth">180</config>
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.quality">85</config>
 	<config type="string" protected="yes" mandatory="yes" name="author.image.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.frontend">../contents/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.frontend.authors">authors/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.frontend.documents">articles/documents/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.frontend.covers">articles/covers/</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_Bootstrap</needs>
