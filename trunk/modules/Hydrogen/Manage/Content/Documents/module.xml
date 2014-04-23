@@ -3,7 +3,8 @@
 	<title>Manage: Contents: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
+	<log version="0.4.3">Added relation to time phrase helper.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
