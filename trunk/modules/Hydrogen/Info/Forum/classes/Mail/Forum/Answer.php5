@@ -26,8 +26,10 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 			$matches	= array();
 			preg_match_all( '@https?://[\w.:/?&=-_+\@|]+@', $content, $matches );
 			foreach( $matches as $match ){
-				$label		= preg_replace( '@https?://@', '', $match[0] );
-				$content	= str_replace( $match[0], '<a href="'.$match[0].'">'.$label.'</a>', $content );
+				if( array_key_exists( 0, $match ) ){
+					$label		= preg_replace( '@https?://@', '', $match[0] );
+					$content	= str_replace( $match[0], '<a href="'.$match[0].'">'.$label.'</a>', $content );
+				}
 			}
 			if( $this->env->getModules()->has( 'UI_Markdown' ) )
 				if( $options->get( '...markdown...' ) )
@@ -95,8 +97,7 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 		$this->page->addBody( $body );
 		$this->page->setBaseHref( $this->env->url );
 		$class	= 'moduleInfoForum jobInfoForum job-info-forum-mail-answer';
-		echo $this->page->build( array( 'class' => $class ) );
-		die;
+		return $this->page->build( array( 'class' => $class ) );
 	}
 }
 ?>

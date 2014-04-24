@@ -84,7 +84,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$data['createdAt']	= time();
 		$data['type']		= 0;
 
-		if( $data['file']['error'] !== 4 ){
+		if( isset( $data['file'] ) && $data['file']['error'] !== 4 ){
 			$file	= (object) $data['file'];
 			$config	= $this->env->getConfig()->getAll( 'module.info_forum.upload.', TRUE );
 			if( $file->error ){
@@ -161,11 +161,10 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 				'authors'	=> $authors,
 			);
 			$mail	= new Mail_Forum_Answer( $this->env, $data );
-			print( $mail->renderBody( $data ) );
+			$mail->sendTo( $author );
 		}
-		die;
 	}
-	
+
 	public function addThread(){
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
