@@ -15,7 +15,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->modelThread	= new Model_Forum_Thread( $this->env );
 		$this->modelTopic	= new Model_Forum_Topic( $this->env );
 		$this->messenger	= $this->env->getMessenger();
-		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.' );
+		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.', TRUE );
 		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
 		$this->cache		= $this->env->getCache();
@@ -115,9 +115,57 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
 		$this->cache->remove( 'info.forum.userPosts' );
+		$this->informThreadUsersAboutPost( $threadId, $postId );
 		$this->restart( 'thread/'.$threadId.'#post-'.$postId, TRUE );
 	}
 
+	protected function informThreadUsersAboutPost( $threadId, $postId = NULL ){
+		$thread	= $this->modelThread->get( $threadId );
+		if( !$thread ){
+//			$this->messenger->noteError( $words->errorInvalidThreadId, $threadId );
+//			$this->restart( NULL, TRUE );
+			throw new InvalidArgumentException( 'Invalid thread ID' );
+}
+
+		$post		= $this->modelPost->get( (int) $postId );
+		if( !$post ){
+//			$this->messenger->noteError( $words->errorInvalidPostId, $postId );
+//			$this->restart( NULL, TRUE );
+			throw new InvalidArgumentException( 'Invalid post ID' );
+		}
+		$authors	= array();
+		$modelUser	= new Model_User( $this->env );
+		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, array( 'postId' => 'ASC' ) );
+		foreach( $posts as $entry )
+			if( !array_key_exists( $entry->authorId, $authors ) )
+				if( $entry->postId != $postId )
+					$authors[$entry->authorId]	= $modelUser->get( $entry->authorId );
+
+		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
+				
+		$config	= $this->env->getConfig();
+		foreach( $authors as $authorId => $author ){
+			if( $useSettings )
+				$config		= Model_User_Setting::applyConfigStatic( $this->env, $authorId );
+			if( !$config->get( 'module.info_forum.mail.inform.authors' ) )
+				continue;
+			$data		= array(
+				'user'		=> $author,
+				'config'	=> $config,
+				'options'	=> $this->options,
+				'owner'		=> $modelUser->get( $thread->authorId ),
+				'author'	=> $modelUser->get( $post->authorId ),
+				'thread'	=> $thread,
+				'post'		=> $post,
+				'posts'		=> $posts,
+				'authors'	=> $authors,
+			);
+			$mail	= new Mail_Forum_Answer( $this->env, $data );
+			print( $mail->renderBody( $data ) );
+		}
+		die;
+	}
+	
 	public function addThread(){
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
@@ -233,6 +281,8 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	}
 
 	public function thread( $threadId ){
+		if( $this->env->getRequest()->has( 'mail' ) )
+			$this->informThreadUsersAboutPost( $threadId, 23 );
 		$words		= (object) $this->getWords( 'msg' );
 		$threadId	= (int) $threadId;
 		$thread		= $this->modelThread->get( $threadId );

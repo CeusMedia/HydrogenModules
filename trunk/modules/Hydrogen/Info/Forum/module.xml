@@ -3,8 +3,9 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.3.5">Extended thread addition handling.</log>
+	<log version="0.3.6">Added mail on new post answer.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,7 +28,9 @@
 		<style>module.info.forum.css</style>
 		<script>InfoForum.js</script>
 	</files>
-	<config protected="user" type="boolean" name="mail.active">yes</config>
+	<config protected="yes" type="boolean" name="mail.active">yes</config>
+	<config protected="user" type="boolean" name="mail.inform.authors">yes</config>
+	<config protected="yes" type="boolean" name="mail.inform.managers">yes</config>
 	<config protected="yes" type="boolean" name="upload">yes</config>
 	<config protected="yes" type="integer" name="upload.max.x">1024</config>
 	<config protected="yes" type="integer" name="upload.max.y">768</config>
