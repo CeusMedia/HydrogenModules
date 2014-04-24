@@ -138,16 +138,17 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, array( 'postId' => 'ASC' ) );
 		foreach( $posts as $entry )
 			if( !array_key_exists( $entry->authorId, $authors ) )
-				if( $entry->postId != $postId )
-					$authors[$entry->authorId]	= $modelUser->get( $entry->authorId );
+				$authors[$entry->authorId]	= $modelUser->get( $entry->authorId );
 
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
-				
+
 		$config	= $this->env->getConfig();
 		foreach( $authors as $authorId => $author ){
 			if( $useSettings )
 				$config		= Model_User_Setting::applyConfigStatic( $this->env, $authorId );
 			if( !$config->get( 'module.info_forum.mail.inform.authors' ) )
+				continue;
+			if( $author->userId == $post->authorId )
 				continue;
 			$data		= array(
 				'user'		=> $author,
