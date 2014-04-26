@@ -59,7 +59,7 @@ class Resource_Server_Json {
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
 		$this->env	= $env;
 		$config		= $env->getConfig();
-		$module		= new ADT_List_Dictionary( $config->getAll( 'module.resource_server_json.' ) );
+		$module		= new ADT_List_Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
 
 		$this->serverUri	= $module->get( 'uri' );
 		if( empty( $this->serverUri ) )
