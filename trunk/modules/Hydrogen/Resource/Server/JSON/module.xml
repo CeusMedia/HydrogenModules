@@ -3,18 +3,23 @@
 	<title>Resource: JSON Server</title>
 	<description><![CDATA[Access to JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype in project Client:Chat.</log>
+	<log version="0.2">Separation into this module.</log>
+	<log version="0.2.1">Added response code handler.</log>
+	<log version="0.2.2">Updated configuration.</log>
+<!--	<log version="0.2.3">Using hook for automatic configuration.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Resource/Server/Json.php5</class>
 		<class>View/Helper/JsonServerResponseCodeHandler.php5</class>
 	</files>
-        <config protected="yes" type="string" name="userAgent"></config>
-        <config protected="yes" type="string" name="auth.username"></config>
-        <config protected="yes" type="string" name="auth.password"></config>
-        <config protected="yes" type="string" name="auth.secret">secret</config>
-        <config protected="yes" type="boolean" name="log"></config>
-        <config protected="yes" type="string" name="log.file">server.json.log</config>
-	<config protected="yes" type="string" name="uri">http://example.org/server/json/</config>
+	<config protected="no" type="string" name="userAgent">CeusMedia::CMF::Resource:Server:JSON</config>
+	<config protected="no" type="string" name="auth.username"></config>
+	<config protected="no" type="string" name="auth.password"></config>
+	<config protected="no" type="string" name="auth.secret">mySecret</config>
+	<config protected="yes" type="boolean" name="log"></config>
+	<config protected="yes" type="string" name="log.file">server.json.log</config>
+	<config protected="no" type="string" name="uri">http://example.org/server/json/</config>
 </module>
