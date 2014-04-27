@@ -27,6 +27,14 @@ abstract class Logic_ShopBridge_Abstract{
 	 */
 	abstract public function check( $articleId );
 
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$articleId
+	 *	@return		string
+	 */
+	abstract public function get( $articleId, $quantity = 1 );
+
 	public function getBridgeClass(){
 		return preg_replace( "/^Logic_ShopBridge_/", "", get_class( $this ) );
 	}
@@ -34,19 +42,27 @@ abstract class Logic_ShopBridge_Abstract{
 	public function getBridgeId(){
 		return $this->bridge->getBridgeId( $this );
 	}
-	
+
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		integer		$articleId		Article ID
+	 *	@return		string
+	 */
+	abstract public function getDescription( $articleId );
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$articleId		Article ID
 	 *	@return		string
 	 */
 	abstract public function getLink( $articleId );
-	
+
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		integer		$articleId		Article ID
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 */
@@ -55,7 +71,7 @@ abstract class Logic_ShopBridge_Abstract{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		integer		$articleId		Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
@@ -64,7 +80,7 @@ abstract class Logic_ShopBridge_Abstract{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		integer		$articleId		Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
@@ -73,7 +89,7 @@ abstract class Logic_ShopBridge_Abstract{
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		integer		$articleId		Article ID
 	 *	@return		string
 	 */
 	abstract public function getTitle( $articleId );
