@@ -57,6 +57,17 @@ class Logic_ShopBridge{
 	 *	@access		public
 	 *	@param		mixed		$source		Bridge ID or class name
 	 *	@param		integer		$articleId	Article ID
+	 *	@return		string
+	 */
+	public function getArticleDescription( $source, $articleId ){
+		return $this->getSource( $source )->getDescription( $articleId );
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		mixed		$source		Bridge ID or class name
+	 *	@param		integer		$articleId	Article ID
 	 *	@return		float
 	 */
 	public function getArticleLink( $source, $articleId ){
@@ -143,7 +154,7 @@ class Logic_ShopBridge{
 		if( is_int( $bridgeIdOrClass ) )
 			return $this->getSourceFromBridge( $bridgeIdOrClass );	//  
 		if( !in_array( $bridgeIdOrClass, $this->bridges ) )
-			throw new InvalidArgumentException( 'Invalid source "'.$source.'"' );
+			throw new InvalidArgumentException( 'Invalid source "'.$bridgeIdOrClass.'"' );
 		if( !is_object( $this->sources[$bridgeIdOrClass] ) ){
 			$className	= "Logic_ShopBridge_".$bridgeIdOrClass;
 			if( !class_exists( $className ) )
