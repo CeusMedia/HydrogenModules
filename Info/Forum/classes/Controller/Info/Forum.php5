@@ -64,6 +64,29 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function ajaxPoll( $threadId, $lastPostId ){
+		$thread		= $this->modelThread->get( $threadId );
+		if( !$thread ){
+			$data	= array( 'status' => 'error', 'error' => 'invalid thread id' );
+		}
+		else{
+			$data	= array( 'status' => 'data', 'data' => 0 );
+			do{
+				$conditions	= array( 'threadId' => $threadId, 'postId' => '>'.$lastPostId );
+				$orders		= array( 'postId' => 'ASC' );
+				$posts		= $this->modelPost->count( $conditions, $orders );
+				if( $posts ){
+					$data['data']	= $posts;
+					break;
+				}
+				sleep( 1 );
+			}
+			while( $i++ < 300 );
+		}
+		print json_encode( $data );
+		exit;
+	}
+	
 	public function addPost( $threadId ){
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
