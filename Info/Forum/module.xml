@@ -32,7 +32,7 @@
 	<config protected="yes" type="boolean" name="mail.active">yes</config>
 	<config protected="user" type="boolean" name="mail.inform.authors">yes</config>
 	<config protected="yes" type="boolean" name="mail.inform.managers">yes</config>
-	<config protected="yes" type="boolean" name="mail.sender">no_reply@example.com</config>
+	<config protected="yes" type="string" name="mail.sender">no_reply@example.com</config>
 	<config protected="yes" type="boolean" name="upload">yes</config>
 	<config protected="yes" type="integer" name="upload.max.x">1024</config>
 	<config protected="yes" type="integer" name="upload.max.y">768</config>
