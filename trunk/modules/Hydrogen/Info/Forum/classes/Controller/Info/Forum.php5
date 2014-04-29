@@ -64,29 +64,24 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxPoll( $threadId, $lastPostId ){
+	public function ajaxCountUpdates( $threadId, $lastPostId ){
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread ){
 			$data	= array( 'status' => 'error', 'error' => 'invalid thread id' );
 		}
 		else{
-			$data	= array( 'status' => 'data', 'data' => 0 );
-			do{
-				$conditions	= array( 'threadId' => $threadId, 'postId' => '>'.$lastPostId );
-				$orders		= array( 'postId' => 'ASC' );
-				$posts		= $this->modelPost->count( $conditions, $orders );
-				if( $posts ){
-					$data['data']	= $posts;
-					break;
-				}
-				sleep( 1 );
-			}
-			while( $i++ < 300 );
+			$data	= array( 'status' => 'data', 'data' => array( 'count' => 0, 'postId' => NULL ) );
+			$conditions		= array( 'threadId' => $threadId, 'postId' => '>'.$lastPostId );
+			$orders			= array( 'postId' => 'ASC' );
+			$posts			= $this->modelPost->getAll( $conditions, $orders );
+			$data['data']['count']	= count( $posts );
+			$post			= array_pop( $posts );
+			$data['data']['postId']	= $post->postId;
 		}
 		print json_encode( $data );
 		exit;
 	}
-	
+
 	public function addPost( $threadId ){
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
