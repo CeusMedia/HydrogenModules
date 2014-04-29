@@ -85,5 +85,26 @@ var InfoForum = {
 				document.location.href = InfoForum.baseUrl + "/topic/" + topicId;
 			}
 		});
-	}
+	},
+    pollForUpdates: function(threadId, lastPostId){
+		$.ajax({
+			url: './info/forum/ajaxPoll',
+			data: {threadId: threadId, lastPostId: lastPostId},
+			dataType: 'json',
+            type: 'method',
+			success: function(json){
+            	console.log(html);
+				if(json.status === "error")
+                    alert(json.error);
+                else{
+                    if(json.html)
+    					console.log(json.html);
+                    pollForUpdates(threadId, lastPostId);
+                }
+			},
+			error: function(){
+				pollForUpdates(threadId);
+            }              
+        });
+    }
 };
