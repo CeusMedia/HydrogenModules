@@ -7,7 +7,7 @@
 	<log version="0.3.5">Extended thread addition handling.</log>
 	<log version="0.3.6">Added mail on new post answer.</log>
 	<log version="0.3.7">Added option for mail sender.</log>
-	<log version="0.3.8">Useing AJAX long polling for thread updates.</log>
+	<log version="0.3.8">Use AJAX to show hint if posts have been updated.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

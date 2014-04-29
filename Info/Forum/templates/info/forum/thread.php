@@ -14,6 +14,8 @@ $userCanEdit	= in_array( 'ajaxEditPost', $rights );
 $userCanRemove	= in_array( 'removePost', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
+$lastPostId		= 0;
+
 if( $posts ){
 	$rows	= array();
 	foreach( $posts as $nr => $post ){
@@ -79,6 +81,7 @@ if( $posts ){
 			'id'	=> 'post-'.$post->postId,
 			'class'	=> 'post-type-'.$post->type
 		) );
+		$lastPostId	= $post->postId;
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '20%', '65%', '15%' );
 	$heads		= UI_HTML_Elements::TableHeads( array() );
@@ -137,7 +140,9 @@ img.avatar {
 	}
 </style>
 <script>
-InfoForum.pollForUpdates('.$thread->threadId.');
+$(document).ready(function(){
+	InfoForum.pollForUpdates('.$thread->threadId.', '.$lastPostId.');
+});
 </script>
 '.$textBottom;
 

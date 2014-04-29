@@ -87,24 +87,27 @@ var InfoForum = {
 		});
 	},
     pollForUpdates: function(threadId, lastPostId){
-		$.ajax({
-			url: './info/forum/ajaxPoll',
-			data: {threadId: threadId, lastPostId: lastPostId},
-			dataType: 'json',
-            type: 'method',
-			success: function(json){
-            	console.log(html);
-				if(json.status === "error")
-                    alert(json.error);
-                else{
-                    if(json.html)
-    					console.log(json.html);
-                    pollForUpdates(threadId, lastPostId);
-                }
-			},
-			error: function(){
-				pollForUpdates(threadId);
-            }              
-        });
+		window.setInterval(function(){
+			$.ajax({
+				url: './info/forum/ajaxCountUpdates/'+threadId+'/'+lastPostId,
+				dataType: 'json',
+				type: 'GET',
+				success: function(json){
+	            	console.log(json);
+					if(json.status === "error"){
+						alert(json.error);
+					}
+					else{
+						if(json.data.count){
+							$("#hint-updates").remove();
+							var div = $("<div></div>")
+							div.attr("id", "hint-updates").addClass("alert alert");
+							div.html('Mittlerweile gibt weitere Antworten ('+json.data.count+'). Seite <a href="javascript: document.location.reload()">neu laden</a>');
+							div.insertAfter($("table"));
+						}
+					}
+				}
+	        });
+		}, 10000 );
     }
 };
