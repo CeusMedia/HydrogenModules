@@ -1,14 +1,16 @@
 <?php
 class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
-	/**	@var	Model_Forum_Post	$modelPost */
+	/**	@var	Model_Forum_Post		$modelPost */
 	protected $modelPost;
-	/**	@var	Model_Forum_Thread	$modelThread */
+	/**	@var	Model_Forum_Thread		$modelThread */
 	protected $modelThread;
-	/**	@var	Model_Forum_Topic	$modelTopic */
+	/**	@var	Model_Forum_Topic		$modelTopic */
 	protected $modelTopic;
-	/**	@var	array				$rights */
+	/**	@var	array					$rights */
 	protected $rights;
+	/**	@var	ADT_List_Dictionary		$options */
+	protected $ptions;
 
 	public function __onInit(){
 		$this->modelPost	= new Model_Forum_Post( $this->env );
@@ -162,6 +164,8 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 				'authors'	=> $authors,
 			);
 			$mail	= new Mail_Forum_Answer( $this->env, $data );
+			if( $this->options->get( 'mail.sender' ) )
+				$mail->setSender( $this->options->get( 'mail.sender' ) );
 			$mail->sendTo( $author );
 		}
 	}
@@ -390,6 +394,8 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	public function testMailAnswer(){
 		
 		$mail	= new Mail_Info_Forum_Answer( $this->env, array() );
+		if( $this->options->get( 'mail.sender' ) )
+			$mail->setSender( $this->options->get( 'mail.sender' ) );
 		print( $mail->renderBody() );
 		die;
 	}
