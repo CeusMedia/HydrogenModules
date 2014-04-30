@@ -21,7 +21,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 			$this->enlistFact( 'worker', $worker->username );
 		}
 		$this->enlistFact( 'status', $this->labelsStates[$mission->status] );
-		$this->enlistFact( 'priority', $this->labelsStates[$mission->priority] );
+		$this->enlistFact( 'priority', $this->labelsPriorities[$mission->priority] );
 
 		$timestampStart	= strtotime( $mission->dayStart );
 		$timestampEnd	= strtotime( $mission->dayEnd );
