@@ -271,8 +271,8 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$topics		= $this->modelTopic->getAll( array(), array( 'rank' => 'ASC' ) );
-		if( count( $topics ) == 1 )
-			$this->restart( './info/forum/topic/'.$topics[0]->topicId );
+//		if( count( $topics ) == 1 )
+//			$this->restart( './info/forum/topic/'.$topics[0]->topicId );
 		foreach( $topics as $nr => $topic ){
 			$threads	= $this->modelThread->getAllByIndex( 'topicId', $topic->topicId );
 			$topic->threads	= count( $threads );

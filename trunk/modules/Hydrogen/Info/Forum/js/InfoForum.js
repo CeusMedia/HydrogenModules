@@ -29,7 +29,7 @@ var InfoForum = {
 				input.val(json.content).removeAttr("disabled").focus();								//  insert post text content, enable and focus
 				input.on("editor-change", function(){												//  bind custom event 
 					if(InfoForum.lastPostText === $(this).val()){									//  post text content did not change
-						console.log("no change");
+		//				console.log("no change");
 						InfoForum.lastPostCell.html(InfoForum.lastPostHtml);						//  replace text area by old post HTML
 						InfoForum.lastPostId = null;												//  reset noted post ID
 					}
@@ -93,7 +93,6 @@ var InfoForum = {
 				dataType: 'json',
 				type: 'GET',
 				success: function(json){
-	            	console.log(json);
 					if(json.status === "error"){
 						alert(json.error);
 					}
