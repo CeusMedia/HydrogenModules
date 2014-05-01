@@ -26,6 +26,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	protected $modelCategory;
 
 	protected $countArticlesInCategories;
+
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -38,7 +39,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
-	 *	@todo	correct paths
+	 *	@todo		kriss: code doc
 	 */
 	protected function __onInit( $a = NULL ){
 		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
@@ -54,7 +55,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
 		$this->config				= $this->env->getConfig();
 		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
-		
+
 		$paths						= $this->moduleConfig->getAll( 'path.', TRUE );
 		$basePath					= $paths->get( 'frontend' );
 		$this->pathArticleCovers	= $basePath.$paths->get( 'frontend.covers' );
@@ -72,11 +73,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->env->clock->profiler->tick( 'Logic_Catalog::init done' );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addArticle( $data ){
 		$data['createdAt']	= time();
-		return $this->modelArticle->add( $data );
+		$articleId	= $this->modelArticle->add( $data );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addArticleCover( $articleId, $file ){
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
@@ -113,6 +120,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->editArticle( $articleId, array( 'cover' => $imagename ) );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addArticleDocument( $articleId, $file, $title ){
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
@@ -137,22 +147,33 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'url'			=> $filename,
 			'title'			=> $title,
 		);
+//		$this->clearCacheForArticle( $articleId, FALSE );											//  @todo kriss: active after second argument is implemented
 		return $this->modelArticleDocument->add( $data );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addArticleTag( $articleId, $tag ){
 		$data	= array(
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
 		);
+//		$this->clearCacheForArticle( $articleIdId, FALSE );											//  @todo kriss: active after second argument is implemented
 		return $this->modelArticleTag->add( $data );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addAuthor( $data ){
 //		$data['createdAt']	= time();
 		return  $this->modelAuthor->add( $data );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addAuthorImage( $authorId, $file ){
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
@@ -180,6 +201,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addAuthorToArticle( $articleId, $authorId, $role ){
 		$data		= array(
 			'articleId'	=> $articleId,
@@ -187,16 +211,24 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'editor'	=> $role,
 		);
 		$relationId	= $this->modelArticleAuthor->add( $data );
+//		$this->clearCacheForArticle( $categoryId );										//  @todo kriss: active after next line is activated
+//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 		$this->cache->remove( 'catalog.article.'.$articleId );
 		$this->cache->remove( 'catalog.article.author.'.$articleId );
 		return $relationId;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addCategory( $data ){
 //		$data['registeredAt']	= time();
 		return $this->modelCategory->add( $data );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL ){
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
@@ -205,9 +237,14 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'categoryId'	=> $categoryId,
 			'volume'		=> $volume,
 		);
+//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active after next line is activated
+//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		return $this->modelArticleCategory->add( $indices );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function checkArticleId( $articleId, $throwException = FALSE ){
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
@@ -216,6 +253,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return FALSE;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function checkAuthorId( $authorId, $throwException = FALSE ){
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -224,6 +264,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return FALSE;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function checkCategoryId( $categoryId, $throwException = FALSE ){
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
@@ -232,6 +275,12 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return FALSE;
 	}
 
+	/**
+	 *	Removed invalid relations between articles and categories.
+	 *	@todo		kriss: point out what this method is for and when it should be used, make not in method description
+	 *	@todo		kriss: rename method to clearInvalidRelationsOfArticlesAndCategories
+	 *	@todo		kriss: handle cache invalidation for articles and categories
+	 */
 	protected function clean(){
 		$list		= array();
 		$articles	= $this->modelArticle->getAll();
@@ -243,10 +292,52 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 				$this->modelArticleCategory->remove( $relation->articleCategoryId );
 	}
 
+	/**
+	 *	Removes cache files related to article after changes.
+	 *	@access		public
+	 *	@param		integer		$articleId			ID of article to clear cache files for
+	 *	@return		void
+	 */
+	protected function clearCacheForArticle( $articleId ){
+		$article	= $this->modelArticle->get( $articleId );											//  get article
+		$this->cache->remove( 'catalog.article.'.$articleId );											//  remove article cache
+		$categoryId	= $article->categoryId;																//  get category ID of article
+		while( $categoryId ){																			//  loop while category ID exists
+			$category	= $this->modelCategory->get( $categoryId );										//  get category of category ID
+			if( $category ){																			//  category exists
+				$this->cache->remove( 'catalog.category.'.$categoryId );								//  remove category cache
+				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );				//  remove category view cache
+				$categoryId	= (int) $category->parentId;												//  category parent ID is category ID for next loop
+			}
+			else																						//  category is not existing
+				$categoryId	= 0;																		//  no further loops
+		}
+	}
+
+	/**
+	 *	@todo		!implement
+	 */
+	protected function clearCacheForAuthor( $authorId ){
+		throw new RuntimeException( 'Not implemented yet' );
+	}
+
+	/**
+	 *	@todo		!implement
+	 */
+	protected function clearCacheForCategory( $categoryId ){
+		throw new RuntimeException( 'Not implemented yet' );
+	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function countArticles( $conditions = array() ){
 		return $this->modelArticle->count( $conditions );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
 		$numbers	= $this->countArticlesInCategories;
 		if( isset( $numbers[$categoryId] ) )
@@ -260,33 +351,47 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $number;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function editArticle( $articleId, $data ){
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
-		$this->cache->remove( 'catalog.article.'.$articleId );
+		$this->clearCacheForArticle( $articleId, TRUE );
+//		$this->cache->remove( 'catalog.article.'.$articleId );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function editAuthor( $authorId, $data ){
 		$this->checkAuthorId( $authorId, TRUE );
-//		$data['modifiedAt']	= time();
+//		$data['modifiedAt']	= time();													//  @todo kriss: why is this line disabled?
+//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 		$this->modelAuthor->edit( $authorId, $data );
 		$this->cache->remove( 'catalog.article.author.'.$authorId );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function editCategory( $categoryId, $data ){
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
-//		$data['modifiedAt']	= time();
+//		$data['modifiedAt']	= time();													//  @todo kriss: why is this line disabled?
+//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		$this->modelCategory->edit( $categoryId, $data );
 		$new	= $this->modelCategory->get( $categoryId );
 		$this->cache->remove( 'catalog.category.'.$categoryId );
 		$this->cache->remove( 'catalog.categories' );
-
 		$this->cache->remove( 'catalog.categories.'.$old->parentId );
 		$this->cache->remove( 'catalog.categories.'.$new->parentId );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticle( $articleId ){
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
@@ -296,6 +401,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $data;
 	}
 
+	/**
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticles( $conditions = array(), $orders = array(), $limits = array() ){
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
@@ -307,6 +416,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $list;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticlesFromAuthor( $author, $orders = array(), $limits = array() ){
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= array();
@@ -316,7 +428,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$articles	= $this->getArticles( $conditions, $orders, $limits );
 		return $articles;
 	}
-	
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE ){
 		$model		= new Model_Catalog_Article_Author( $this->env );
 		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
@@ -328,6 +443,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $ids;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ){
 		$authorIds	= array();
 		foreach( $authors as $author )
@@ -335,16 +453,25 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->getArticlesFromAuthorIds( $authorIds, $returnIds );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getArticleUri( $articleId ){
 		$article	= $this->getArticle( $articleId );
 		return './catalog/article/'.$article->articleId.'-'.$this->getUriPart( $article->title );
 	}
 
+	/**
+	 *	@todo		kriss: use cache
+	 */
 	public function getAuthor( $authorId ){
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getAuthors( $conditions = array(), $orders = array() ){
 		$list	= array();
 		foreach( $this->modelAuthor->getAll( $conditions, $orders ) as $author )
@@ -373,11 +500,18 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $list;
 	}
 
+	/**
+	 *	@todo		kriss: this method is not doing what it should
+	 *	@todo		kriss: whether this method is used and correct it or remove it
+	 */
 	public function getAuthorUri( $authorId ){
 		$this->checkAuthorId( $authorId, TRUE );
 		$author	= $this->modelAuthor->get( $authorId );
 	}
 
+	/**
+	 *	@todo		kriss: clean up
+	 */
 	public function getCategories( $conditions = array(), $orders = array() ){
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
@@ -390,6 +524,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $list;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getCategoriesOfArticle( $articleId ){
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= array();
@@ -405,6 +542,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $list;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getCategory( $categoryId ){
 		if( NULL !== ( $data = $this->cache->get( 'catalog.category.'.$categoryId ) ) )
 			return $data;
@@ -414,6 +554,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $data;
 	}
 
+	/**
+	 *	@todo		kriss: clean up
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function getCategoryArticles( $category, $orders = array(), $limits = array() ){
 #		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
@@ -432,6 +577,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $articles;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getCategoryOfArticle( $article ){
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
@@ -440,10 +588,17 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $category;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getDocumentsOfArticle( $articleId ){
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
+	/**
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function getFullCategoryName( $categoryId, $language = "de" ){
 		$data	= $this->modelCategory->get( $categoryId );
 		$name	= $data['label_'.$language];
@@ -454,6 +609,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $name;
 	}
 
+	/**
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function getTagsOfArticle( $articleId ){
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= array();
@@ -463,6 +622,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $list;
 	}
 
+	/**
+	 *	@todo		kriss: code doc
+	 */
 	public function getUriPart( $label, $delimiter = "_" ){
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
@@ -471,12 +633,15 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 /*  -------------------------------------------------  */
+
 	/**
 	 *	Indicates whether an Author is Editor of an Article.
 	 *	@access		public
 	 *	@param		int			$articleId			ID of Article
 	 *	@param		int			$authorId			ID of Author
 	 *	@return		bool
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
 	 */
 	public function isArticleEditor( $articleId, $authorId )
 	{
@@ -495,6 +660,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		int			$articleId			ID of Article
 	 *	@param		int			$authorId			ID of Author
 	 *	@return		bool
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
 	 */
 	public function isAuthorOfArticle( $articleId, $authorId  )
 	{
@@ -511,6 +679,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		int			$articleId			ID of Article
 	 *	@param		int			$authorId			ID of Author
 	 *	@return		bool
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
 	 */
 	public function isCategoryOfArticle( $articleId, $categoryId  )
 	{
@@ -526,6 +697,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@access		public
 	 *	@param		int			$articleId			ID of Article
 	 *	@return		void
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
 	 */
 	public function isFuture( $articleId )
 	{
@@ -541,8 +715,12 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 /*  -------------------------------------------------  */
 
-
-
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 *	@todo		kriss: implement and clean up
+	 */
 	/**
 	 *	@todo	Implement!
 	 */
@@ -564,6 +742,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeArticleCover( $articleId ){
 		$article	= $this->getArticle( $articleId );
 		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
@@ -574,6 +757,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeArticleDocument( $documentId ){
 		$document	= $this->modelArticleDocument->get( $documentId );
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
@@ -581,6 +769,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelArticleDocument->remove( $documentId );
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeArticleFromCategory( $articleId, $categoryId ){
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
@@ -588,6 +781,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 		);
+//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active after next line has been activated
+//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
@@ -598,10 +793,20 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelArticle->edit( $articleId, array( 'cover' => NULL ) );
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeArticleTag( $articleTagId ){
 		return $this->modelArticleTag->remove( $articleTagId );
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeAuthorFromArticle( $articleId, $authorId ){
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
@@ -610,11 +815,18 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'authorId'	=> $authorId,
 		);
 		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
+//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active and remove next line
 		$this->cache->remove( 'catalog.article.'.$articleId );
+//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 		$this->cache->remove( 'catalog.article.author.'.$articleId );
 		return $result;
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeAuthorImage( $authorId ){
 		$author		= $this->getAuthor( $authorId );
 		$id			= str_pad( $authorId, 5, 0, STR_PAD_LEFT );
@@ -623,15 +835,27 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			@unlink( $this->pathAuthorImages.$id."_".$author->image );
 			$this->editAuthor( $authorId, array( 'image' => NULL ) );
 		}
+//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeCategory( $categoryId ){
 		$this->checkCategoryId( $categoryId );
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
+//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		return $this->modelCategory->remove( $categoryId );
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function removeCategoryFromArticle( $articleId, $categoryId ){
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
@@ -639,9 +863,15 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'articleId'	=> $articleId,
 			'categoryId'	=> $categoryId,
 		);
+//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
+	/**
+	 *	@todo		kriss: check if this method is used or deprecated
+	 *	@todo		kriss: use cache if possible
+	 *	@todo		kriss: code doc
+	 */
 	public function setArticleAuthorRole( $articleId, $authorId, $role ){
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
@@ -650,117 +880,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( $relation )
 			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
 	}
-
-	/**
-	 *	Returns List of Authors of an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		array		$words				Array with 'Editors' Words
-	 *	@return		void
-	 */
-/*	public function getArticleAuthors( $articleId, $words )
-	{
-		$model		= new Model_Article( $articleId );
-		$data		= $model->getData( TRUE );
-		$language	= substr( $data['language'], 0, 2 );
-
-		$list		= array();
-		$model		= new Model_ArticleAuthor();
-		$authors	= $model->getArticleAuthors( $articleId );
-		foreach( $authors as $author )
-		{
-			if( $author['editor'] )
-				$author['name']	.= $words[$language];
-			$list[$author['id']]	= $author['name'];
-		}
-		return $list;
-	}
-*/
-/*
-	public function getArticleCategories( $articleId )
-	{
-		$model	= new Model_ArticleCategory();
-		$model->focusForeign( "articleId", $articleId );
-		$data	= $model->getData( FALSE, array( 'volume' => "ASC" ) );
-		$list	= array();
-		foreach( $data as $entry )
-		{
-			$model	= new Model_Category();
-			$name	= $model->getFullCategoryName( $entry['categoryId'] );
-			$list[]	= array(
-				'categoryId'		=> $entry['categoryId'],
-				'category_label'	=> $name,
-				'relationId'		=> $entry['articleCategoryId'],
-				'relation_volume'	=> $entry['volume'],
-			);
-		}
-		return $list;
-	}
-*/
-/*	public function getArticleCategories( $articleId, $language = "de" ){
-		$model	= new Model_ArticleCategory();
-		$model->focusForeign( 'articleId', $articleId );
-		$data	= $model->getData();
-		$list	= array();
-		foreach( $data as $entry )
-		{
-			$category	= new Model_Category( $entry['categoryId'] );
-			$category	= $category->getData( TRUE );
-			$category	= array_merge(
-				$category,
-				array(
-					'id'		=> $entry['categoryId'],
-					'label'		=> $category['label_'.$language],
-					'volume'	=> $entry['volume'],
-				)
-			);
-			if( $category['parentId'] )
-			{
-				$parent	= new Model_Category( $category['parentId'] );
-				$parent	= $parent->getData( TRUE );
-				$category['parentLabel']	= $parent['label_'.$language];
-			}
-			$list[]	= $category;
-		}
-		return $list;
-	}
-*/
-	/**
-	 *	Returns List of Article where an Author is related.
-	 *	@access		public
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		void
-	 */
-/*	function getArticlesFromAuthor( $authorId )
-	{
-		$model		= new Model_ArticleAuthor();
-		$model->focusForeign( 'authorId', $authorId );
-		$relations	= $model->getData();
-		$list		= array();
-		foreach( $relations as $relation )
-			$list[]	= $relation['articleId'];
-		return $list;
-	}
-*/
-	/**
-	 *	Returns the amount of Articles in a Category.
-	 *	@access		public
-	 *	@param		int			$branchId			ID of Category
-	 *	@return		int
-	 */
-/*	public function countArticlesInCategory( $categoryId )
-	{
-		$config		= $this->registry->get( 'config' );
-		$builder	= new Database_StatementBuilder( $config['database.prefix'] );
-		$collection	= new Collection_Article( $builder );
-		$collection->withCategoryIdOrNested( $categoryId );
-		$collection->collectArticles();
-
-		$query		= $builder->buildCountStatement();
-		$count		= $this->dbc->execute( $query )->fetchArray();
-		return $count['rowcount'];
-	}
-*/
 }
 class Logic_Upload{
 	static function getMaxUploadSize( $env, $configKey = NULL, $exceptedUnit = NULL ){
