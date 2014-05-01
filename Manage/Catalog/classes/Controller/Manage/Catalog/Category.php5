@@ -31,8 +31,13 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $categoryId ){
+		$words		= (object) $this->getWords( 'edit' );
+		$category	= $this->logic->getCategory( $categoryId );
+		if( !$category ){
+			$this->messenger->noteError( $words->msgErrorInvalidId );
+			$this->restart( NULL, TRUE );
+		}
 		if( $this->request->has( 'save' ) ){
-			$words		= (object) $this->getWords( 'edit' );
 			$data	= $this->request->getAll();
 			if( !strlen( $data['label_de'] ) )
 				$this->messenger->noteError( $words->msgErrorLabelMissing );
@@ -43,6 +48,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'category', $this->logic->getCategory( $categoryId ) );
 		$this->addData( 'categories', $this->logic->getCategories() );
+		$this->addData( 'nrArticles', $this->logic->countArticlesInCategory( $categoryId, TRUE ) );
 	}
 
 	public function index(){
@@ -50,11 +56,19 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $categoryId ){
-		$words	= $this->getWords( 'remove' );
-		if( $this->logic->countArticlesInCategory( $categoryId, TRUE ) )
+		$words		= (object) $this->getWords( 'remove' );
+		$category	= $this->logic->getCategory( $categoryId );
+		if( !$category ){
+			$this->messenger->noteError( $words->msgErrorInvalidId );
+			$this->restart( NULL, TRUE );
+		}
+		if( $this->logic->countArticlesInCategory( $categoryId, TRUE ) ){
 			$this->messenger->noteError( $words->msgErrorNotEmpty );
-		else
-			$this->logic->removeCategory( $categoryId );
+			$this->restart( 'edit/'.$categoryId, TRUE );
+		}
+		$this->logic->removeCategory( $categoryId );
+		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->title, ENT_QUOTES, 'UTF-8' ) );
+		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
 }
 ?>

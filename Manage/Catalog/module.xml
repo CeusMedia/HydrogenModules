@@ -3,11 +3,12 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.14</version>
+	<version>0.3.15</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
 	<log version="0.3.14">Corrected use of configured image paths.</log>
+	<log version="0.3.15">Allow categories to be removed and fixed default order in article list.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

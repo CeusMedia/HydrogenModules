@@ -1,6 +1,16 @@
 <?php
 class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 
+	protected $sessionPrefix;
+
+	public function __onInit(){
+		parent::__onInit();
+		$this->sessionPrefix	= 'module.manage_catalog_article.filter.';
+
+		if( !$this->session->get( $this->sessionPrefix.'order' ) )
+				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
+	}
+
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -97,25 +107,22 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	}
 
 	public function filter( $reset = FALSE ){
-		$sessionPrefix	= 'module.manage_catalog_article.filter.';
-		$this->session->set( $sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
-		$this->session->set( $sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
-		$this->session->set( $sessionPrefix.'isn', trim( $this->request->get( 'isn' ) ) );
-		$this->session->set( $sessionPrefix.'new', $this->request->get( 'new' ) );
-		$this->session->set( $sessionPrefix.'cover', $this->request->get( 'cover' ) );
-		$this->session->set( $sessionPrefix.'order', $this->request->get( 'order' ) );
-		$this->session->set( $sessionPrefix.'status', $this->request->get( 'status' ) );
+		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
+		$this->session->set( $this->sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
+		$this->session->set( $this->sessionPrefix.'isn', trim( $this->request->get( 'isn' ) ) );
+		$this->session->set( $this->sessionPrefix.'new', $this->request->get( 'new' ) );
+		$this->session->set( $this->sessionPrefix.'cover', $this->request->get( 'cover' ) );
+		$this->session->set( $this->sessionPrefix.'order', $this->request->get( 'order' ) );
+		$this->session->set( $this->sessionPrefix.'status', $this->request->get( 'status' ) );
 		if( $reset ){
-			$this->session->remove( $sessionPrefix.'term' );
-			$this->session->remove( $sessionPrefix.'author' );
-			$this->session->remove( $sessionPrefix.'isn' );
-			$this->session->remove( $sessionPrefix.'new' );
-			$this->session->remove( $sessionPrefix.'cover' );
-			$this->session->remove( $sessionPrefix.'order' );
-			$this->session->remove( $sessionPrefix.'status' );
+			$this->session->remove( $this->sessionPrefix.'term' );
+			$this->session->remove( $this->sessionPrefix.'author' );
+			$this->session->remove( $this->sessionPrefix.'isn' );
+			$this->session->remove( $this->sessionPrefix.'new' );
+			$this->session->remove( $this->sessionPrefix.'cover' );
+			$this->session->remove( $this->sessionPrefix.'order' );
+			$this->session->remove( $this->sessionPrefix.'status' );
 		}
-		if( !$this->session->get( $sessionPrefix.'order' ) )
-				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
 		$this->restart( NULL, TRUE );
 	}
 

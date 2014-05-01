@@ -15,7 +15,24 @@ $optVisible	= $words['visible'];
 $optVisible	= UI_HTML_Elements::Options( $optVisible, (int) $category->visible );
 
 $disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
-
+$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+	'href'	=> "./manage/catalog/category",
+	'class'	=> 'btn btn-small'
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-small btn-success'
+) );
+$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' '.$w->buttonRemove, array(
+	'disabled'	=> $nrArticles ? 'disabled' : NULL,
+	'type'		=> 'button',
+	'class'		=> "btn btn-small btn-danger",
+	'onclick'	=> "document.location.href='./manage/catalog/category/remove/".$category->categoryId."';"
+) );
 return '
 '.$tabs.'
 <div class="row-fluid">
@@ -48,9 +65,9 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a class="btn btn-small" href="./manage/catalog/category"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/category/remove/'.$category->categoryId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
+				'.$buttonCancel.'
+				'.$buttonSave.'
+				'.$buttonRemove.'
 			</div>
 		</form>
 	</div>
