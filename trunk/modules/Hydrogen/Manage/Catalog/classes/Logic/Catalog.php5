@@ -627,7 +627,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	public function removeCategory( $categoryId ){
 		$this->checkCategoryId( $categoryId );
-		if( $this->getArticlesOfCategory( $categoryId ) )
+		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
 		return $this->modelCategory->remove( $categoryId );
 	}
