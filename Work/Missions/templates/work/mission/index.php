@@ -49,7 +49,7 @@ $(document).ready(function(){
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
 	WorkMissionsList.init();
 	WorkMissions.currentDay = '.$currentDay.';
-	WorkMissionFilter.__init();
+	WorkMissionsFilter.__init();
 });
 //console.log("'.session_id().'");
 </script>';

@@ -61,7 +61,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span2 -column-left-20">
 					<label for="input_type">'.$w->labelType.'</label>
-					<select name="type" id="input_type" class="span12 -max" onchange="WorkMissionEditor.fallbackFormShowOptionals(this)">'.$optType.'</select>
+					<select name="type" id="input_type" class="span12 -max" onchange="WorkMissions.fallbackFormShowOptionals(this)">'.$optType.'</select>
 				</div>
 				<div class="span3 -column-left-20 optional type type-0">
 					<label for="input_dayWork">'.$w->labelDayWork.'</label>
@@ -154,7 +154,7 @@ return '
 //$(document).ready(function(){$("#input_title").focus()});
 $("body").addClass("uses-bootstrap");
 $(document).ready(function(){
-	WorkMissionEditor.init(0);
+	WorkMissionsEditor.init(0);
 //	$("#input_title").focus();
 });
 </script>';
