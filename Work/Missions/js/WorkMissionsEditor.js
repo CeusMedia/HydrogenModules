@@ -4,7 +4,7 @@ var WorkMissionsEditor = {
 	markdown: null,
 	converter: null,
 	textarea: null,
-	fallbackFormShowOptionals(elem){
+	fallbackFormShowOptionals: function(elem){
 		var form = $(elem.form);
 		var name = $(elem).attr("name");
 		var type = $(elem).attr("type");

@@ -54,6 +54,7 @@ code>
 		<script>WorkMissionsFilter.js</script>
 		<script>WorkMissionsEditor.js</script>
 		<script>WorkMissionsList.js</script>
+		<style load="auto">site.mission.css</style>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
 	</files>
