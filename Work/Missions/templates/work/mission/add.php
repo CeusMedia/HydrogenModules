@@ -61,7 +61,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span2 -column-left-20">
 					<label for="input_type">'.$w->labelType.'</label>
-					<select name="type" id="input_type" class="span12 -max" onchange="showOptionals(this)">'.$optType.'</select>
+					<select name="type" id="input_type" class="span12 -max" onchange="WorkMissionEditor.fallbackFormShowOptionals(this)">'.$optType.'</select>
 				</div>
 				<div class="span3 -column-left-20 optional type type-0">
 					<label for="input_dayWork">'.$w->labelDayWork.'</label>
@@ -103,9 +103,30 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<label for="input_content">'.$w->labelContent.'</label>
+				<div class="span6">
+<!--					<div class="content-panel content-panel-form">
+						<div class="content-panel-inner">
+							<h3>Editor</h3>
+-->							<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+							<p>
+								<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+							</p>
+<!--						</div>
+					</div>
+-->				</div>
+				<div class="span6">
+<!--					<div class="content-panel content-panel-form">
+						<div class="content-panel-inner">
+							<h3>Beschreibung / Inhalt</h3>
+-->							<div id="content-editor">
+							<div id="descriptionAsMarkdown"></div>
+<!--						</div>
+					</div>
+-->				</div>
+
+<!--				<label for="input_content">'.$w->labelContent.'</label>
 				<textarea id="input_content" name="content" class="span12 -max CodeMirror-auto" rows="7">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-			</div>
+-->			</div>
 			<div class="buttonbar">
 				'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
 				<button type="submit" name="add" class="btn btn-success"><i class="icon-ok-circle icon-white"></i> '.$w->buttonSave.'</button>
@@ -127,8 +148,14 @@ return '
 		'.$panelInfo.'
 	</div>
 </div>
+<script src="javascripts/bindWithDelay.js"></script>
 <script>
 //var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
 //$(document).ready(function(){$("#input_title").focus()});
+$("body").addClass("uses-bootstrap");
+$(document).ready(function(){
+	WorkMissionEditor.init(0);
+//	$("#input_title").focus();
+});
 </script>';
 ?>

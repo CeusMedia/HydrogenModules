@@ -8,7 +8,9 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.22</version>
+	<version>0.8.24</version>
+	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
+	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -48,7 +50,11 @@ code>
 		<locale>de/html/work/mission/add.info.html</locale>
 		<locale>de/html/work/mission/index.empty.html</locale>
 		<style load="auto">site.mission.css</style>
-		<script load="auto">work.mission.js</script>
+		<script>WorkMissionCalendar.js</script>
+		<script>WorkMissionFilter.js</script>
+		<script>WorkMissionEditor.js</script>
+		<script>WorkMissionList.js</script>
+		<script>WorkMissions.js</script>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
 	</files>

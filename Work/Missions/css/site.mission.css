@@ -1,4 +1,4 @@
-
+/*  --  PERSPECTIVE BUTTONS  --  */
 button.icon.list span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
 	}
@@ -7,6 +7,7 @@ button.icon.calendar span {
 	}
 
 
+/*  --  LIST: PRIORITIES  --  */
 .mission.priority1,
 li.filter-priority.priority-1 {
 	background-color: rgba(255, 31, 0, 0.5);
@@ -28,6 +29,7 @@ li.filter-priority.priority-5 {
 	background-color: rgba(31, 240, 0, 0.6);
 	}
 
+/*  --  LIST: STATES  --  */
 li.filter-status.status--3,
 .mission.status-3 {
 	background-color: rgba(191, 191, 191, 1);
@@ -81,13 +83,9 @@ tr.row-priority.priority-5 td.cell-priority {
 
 
 /*  --  MISSION LISTS  --  */
-#mission-folders1 {
-	border: 10px solid red;
-	overflow: hidden;
-	}
-	
-
-button.event span {
+/*	@deprecated		not used anymore */
+/*	@todo			to be deleted */
+/*button.event span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
 button.event-add span {
@@ -99,7 +97,7 @@ button.task span {
 button.task-add span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
 	}
-	
+*/	
 
 	
 #input-import {
@@ -111,6 +109,8 @@ button.task-add span {
 	position: absolute;
 	left: -1000px;
 	}
+
+/*  --  FORM ELEMENTS @ ADD|EDIT  --  */  
 #input_day,
 #input_dayWork,
 #input_dayDue,
@@ -162,12 +162,9 @@ legend.icon.mission-close {
 
 
 /*  --  DAY TABLES  -- */
-
 body.controller-work-mission.action-index .work-mission-list {
 	overflow: hidden;
 	}
-
-
 body.controller-work-mission.action-index #day-controls button.day {
 	position: relative;
 	min-width: 80px;
@@ -682,11 +679,12 @@ body.controller-work-mission input[type="checkbox"] {
 
 
 /*  --  MISSION EDITOR  --  */
-body.controller-work-mission input.changed,
+
+/*body.controller-work-mission input.changed,
 body.controller-work-mission select.changed,
 body.controller-work-mission textarea.changed {
 	background-color: #FFFFDF;
-	}
+	}*/
 body.controller-work-mission .CodeMirror {
 	border: 1px solid rgb(204, 204, 204);
 	background-color: white;
@@ -694,11 +692,11 @@ body.controller-work-mission .CodeMirror {
 	z-index: 0;
 	}
 body.controller-work-mission #descriptionAsMarkdown {
-	padding: 0.5em 1.5em;
+/*	padding: 0.5em 1.5em;
 	border: 1px solid rgba(127,127,127,0.75);
 	box-shadow: 2px 2px 2px rgba(127,127,127,0.5);
 	border-radius: 0.3em;
-	background-color: #F7F7F7;
+	background-color: #F7F7F7;*/
 	}
 body.controller-work-mission #descriptionAsMarkdown h1,
 body.controller-work-mission #descriptionAsMarkdown h2,
@@ -731,4 +729,3 @@ body.controller-work-mission #descriptionAsMarkdown del {
 body.controller-work-mission .tabbable .nav{
 	margin-bottom: 1px;
 	}
-

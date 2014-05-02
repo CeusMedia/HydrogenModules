@@ -62,14 +62,11 @@ $panelContentSplitted	= '
 --></form>
 */
 
-
 return $panelContentSplitted.'
 <script src="javascripts/bindWithDelay.js"></script>
 <script>
-var missionId = '.$mission->missionId.';
-$("body").addClass("uses-bootstrap");
 $(document).ready(function(){
-	WorkMissionEditor.init();
+	WorkMissionEditor.init('.(int) $mission->missionId.');
 });
 </script>';
 ?>
