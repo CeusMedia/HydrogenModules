@@ -66,7 +66,7 @@ return $panelContentSplitted.'
 <script src="javascripts/bindWithDelay.js"></script>
 <script>
 $(document).ready(function(){
-	WorkMissionEditor.init('.(int) $mission->missionId.');
+	WorkMissionsEditor.init('.(int) $mission->missionId.');
 });
 </script>';
 ?>
