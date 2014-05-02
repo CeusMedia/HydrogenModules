@@ -20,8 +20,6 @@ var WorkMissions = {
 		});
 	},
 	filter: function(form){
-//		console.log($(form).serialize());
-//		return;
 		$("#day-lists").stop(true);
 		WorkMissionsList.disable();
 		$.ajax({
@@ -70,8 +68,6 @@ var WorkMissions = {
 		}
 
 //		this.tense = tense;
-
-
 		var site = $("body.controller-work-mission");
 		if(!site.size())
 			return;
@@ -273,14 +269,15 @@ var WorkMissionFilter = {
 	}
 };
 
-
 var WorkMissionEditor = {
 	mirror: null,
+	missionId: null,
 	markdown: null,
 	converter: null,
 	textarea: null,
-	init: function(){
+	init: function(missionId){
 		"use strict";
+		WorkMissionEditor.missionId = missionId;
 		WorkMissionEditor.markdown = $("#descriptionAsMarkdown");
 		WorkMissionEditor.converter = new Markdown.Converter();
 		WorkMissionEditor.textarea = $("#input_content");
@@ -292,23 +289,27 @@ var WorkMissionEditor = {
 //			viewportMarin: "Infinity",
 			fixedGutter: true,
 		});
-		WorkMissionEditor.textarea.bindWithDelay("keyup", function(){
-//			console.log("save");
-			$.ajax({
-				url: "./work/mission/ajaxSaveContent/"+missionId,
-				data: {content: WorkMissionEditor.textarea.val()},
-				type: "post",
-				success: function(){
-					$(".CodeMirror").removeClass("changed");
-				}
-			});
-		}, 1000);
+		if(WorkMissionEditor.missionId){
+			WorkMissionEditor.textarea.bindWithDelay("keyup", function(){
+				$.ajax({
+					url: "./work/mission/ajaxSaveContent/"+WorkMissionEditor.missionId,
+					data: {content: WorkMissionEditor.textarea.val()},
+					type: "post",
+					success: function(){
+						$(".CodeMirror").removeClass("changed");
+					}
+				});
+			}, 1000);
+		}
 		WorkMissionEditor.mirror.on("change", function(instance, update){
 			instance.save();
-			WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(WorkMissionEditor.textarea.hide().val()));
-			$(".CodeMirror").addClass("changed").trigger("keyup");
-			$(instance.getTextArea()).trigger("keyup");
-			WorkMissionEditor.resize();
+			var content	= WorkMissionEditor.textarea.hide().val();											//  get content of editor
+			WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(content));					//  display content after markdown rendering
+			if(WorkMissionEditor.missionId){																//  edit mode
+				$(".CodeMirror").addClass("changed").trigger("keyup");										//  trigger key up event for automatic save
+				$(instance.getTextArea()).trigger("keyup");													//  trigger key up event for automatic rendering
+			}
+			WorkMissionEditor.resize();																		//  trigger automatic input element resize
 		});
 
 //		$(window).bind("resize", function(){

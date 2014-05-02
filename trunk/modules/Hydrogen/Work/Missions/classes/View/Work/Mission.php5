@@ -23,6 +23,12 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$tense			= (int) $session->get( 'filter.work.mission.tense' );
 		$page->js->addScript( '$(document).ready(function(){WorkMissions.init('.$tense.');});' );
 
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsEditor.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsFilter.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsList.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissions.js' );
+
 /*		$this->config		= $this->env->getConfig();
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();

@@ -16,18 +16,6 @@ $toolbar->addButtonGroup( 'tb_1', 'view-type', array(
 	'<button type="button" id="work-mission-view-type-0" class="btn"><i class="icon-tasks"></i> Liste</button>',
 	'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 ) );
-/*
-$buttonSets		= array(
-	array(
-//		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="button icon list"><span>Listenansicht</span></button>',
-//		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="button icon calendar"><span>Monatsübersicht</span></button>'
-	),
-	array(
-		UI_HTML_Elements::LinkButton( './work/mission/add?type=0', 'Aufgabe', 'button add task-add' ),
-		UI_HTML_Elements::LinkButton( './work/mission/add?type=1', 'Termin', 'button add event-add' )
-	)
-);
-*/
 
 $toolbar->sort();
 $buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';
