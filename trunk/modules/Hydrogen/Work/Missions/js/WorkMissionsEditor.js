@@ -1,4 +1,4 @@
-var WorkMissionEditor = {
+var WorkMissionsEditor = {
 	mirror: null,
 	missionId: null,
 	markdown: null,
@@ -38,11 +38,11 @@ var WorkMissionEditor = {
 	},
 	init: function(missionId){
 		"use strict";
-		WorkMissionEditor.missionId = missionId;
-		WorkMissionEditor.markdown = $("#descriptionAsMarkdown");
-		WorkMissionEditor.converter = new Markdown.Converter();
-		WorkMissionEditor.textarea = $("#input_content");
-		WorkMissionEditor.mirror = CodeMirror.fromTextArea(WorkMissionEditor.textarea.get(0), {
+		WorkMissionsEditor.missionId = missionId;
+		WorkMissionsEditor.markdown = $("#descriptionAsMarkdown");
+		WorkMissionsEditor.converter = new Markdown.Converter();
+		WorkMissionsEditor.textarea = $("#input_content");
+		WorkMissionsEditor.mirror = CodeMirror.fromTextArea(WorkMissionsEditor.textarea.get(0), {
 			lineNumbers: true,
 //			theme: "neat",
 			theme: "elegant",
@@ -50,11 +50,11 @@ var WorkMissionEditor = {
 //			viewportMarin: "Infinity",
 			fixedGutter: true,
 		});
-		if(WorkMissionEditor.missionId){
-			WorkMissionEditor.textarea.bindWithDelay("keyup", function(){
+		if(WorkMissionsEditor.missionId){
+			WorkMissionsEditor.textarea.bindWithDelay("keyup", function(){
 				$.ajax({
-					url: "./work/mission/ajaxSaveContent/"+WorkMissionEditor.missionId,
-					data: {content: WorkMissionEditor.textarea.val()},
+					url: "./work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId,
+					data: {content: WorkMissionsEditor.textarea.val()},
 					type: "post",
 					success: function(){
 						$(".CodeMirror").removeClass("changed");
@@ -62,19 +62,15 @@ var WorkMissionEditor = {
 				});
 			}, 1000);
 		}
-		WorkMissionEditor.mirror.on("change", function(instance, update){
-			instance.save();
-			var content	= WorkMissionEditor.textarea.hide().val();											//  get content of editor
-			WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(content));					//  display content after markdown rendering
-			if(WorkMissionEditor.missionId){																//  edit mode
-				$(".CodeMirror").addClass("changed").trigger("keyup");										//  trigger key up event for automatic save
-				$(instance.getTextArea()).trigger("keyup");													//  trigger key up event for automatic rendering
+		WorkMissionsEditor.mirror.on("change", function(instance, update){
+			instance.save();																			//  apply changes of markdown editor to input element
+			WorkMissionsEditor.renderContent();															//  render input element content to HTML using markdown
+			if(WorkMissionsEditor.missionId){															//  edit mode
+				$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
+				$(instance.getTextArea()).trigger("keyup");												//  trigger key up event for automatic rendering
 			}
-			WorkMissionEditor.resize();																		//  trigger automatic input element resize
 		});
-
-		WorkMissionEditor.markdown.html(WorkMissionEditor.converter.makeHtml(WorkMissionEditor.textarea.hide().val()));
-		WorkMissionEditor.resize();
+		WorkMissionsEditor.renderContent();
 
 /* --  DEPRECATED CODE --  */
 /*		$(window).bind("resize", function(){
@@ -94,8 +90,13 @@ var WorkMissionEditor = {
 		});
 */
 	},
-	resize: function(){
-		var height =  Math.max(WorkMissionEditor.markdown.height()-30, 160);
-		WorkMissionEditor.mirror.setSize("100%", height);
+	renderContent: function(){
+		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
+		WorkMissionsEditor.markdown.html(WorkMissionsEditor.converter.makeHtml(content));				//  display content after markdown rendering
+		WorkMissionsEditor.resizeInput();
+	},
+	resizeInput: function(){
+		var height =  Math.max(WorkMissionsEditor.markdown.height()-30, 160);
+		WorkMissionsEditor.mirror.setSize("100%", height);
 	}
 };
