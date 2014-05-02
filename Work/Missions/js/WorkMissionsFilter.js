@@ -1,4 +1,4 @@
-var WorkMissionFilter = {
+var WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
 	form: null,
 	__init: function(){
@@ -20,14 +20,14 @@ var WorkMissionFilter = {
 		})
 		$("#button_filter_search").bind("click", function(){
 			var uri = "setFilter/query/"+encodeURI($("#filter_query").val());
-			document.location.href = WorkMissionFilter.baseUrl + uri;
+			document.location.href = WorkMissionsFilter.baseUrl + uri;
 		})
 		$("#button_filter_search_reset").bind("click", function(){
 			if($("#filter_query").val().length)
-				document.location.href = WorkMissionFilter.baseUrl+"setFilter/query/";
+				document.location.href = WorkMissionsFilter.baseUrl+"setFilter/query/";
 		})
 		$("#button_filter_reset").bind("click", function(){
-			document.location.href = WorkMissionFilter.baseUrl+"filter/?reset";
+			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
 		});
 	},
 	changeView: function(elem){								//  @todo kriss: fix this hack!
@@ -40,10 +40,10 @@ var WorkMissionFilter = {
 		document.location.href = url ;
 	},
 	clearQuery: function(){
-		if(!WorkMissionFilter.form.size())
+		if(!WorkMissionsFilter.form.size())
 			return false;
-		WorkMissionFilter.form.find("#filter_query").val("");
-		WorkMissionFilter.form.submit();
+		WorkMissionsFilter.form.find("#filter_query").val("");
+		WorkMissionsFilter.form.submit();
 		return true;
 	}
 };

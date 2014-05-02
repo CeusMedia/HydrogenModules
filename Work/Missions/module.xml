@@ -49,12 +49,11 @@ code>
 		<locale>de/work/mission.ini</locale>
 		<locale>de/html/work/mission/add.info.html</locale>
 		<locale>de/html/work/mission/index.empty.html</locale>
-		<style load="auto">site.mission.css</style>
-		<script>WorkMissionCalendar.js</script>
-		<script>WorkMissionFilter.js</script>
-		<script>WorkMissionEditor.js</script>
-		<script>WorkMissionList.js</script>
 		<script>WorkMissions.js</script>
+		<script>WorkMissionsCalendar.js</script>
+		<script>WorkMissionsFilter.js</script>
+		<script>WorkMissionsEditor.js</script>
+		<script>WorkMissionsList.js</script>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
 	</files>
