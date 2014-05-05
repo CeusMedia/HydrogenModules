@@ -456,9 +456,14 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticleUri( $articleId ){
-		$article	= $this->getArticle( $articleId );
-		return './catalog/article/'.$article->articleId.'-'.$this->getUriPart( $article->title );
+	public function getArticleUri( $articleOrId ){
+		$article	= $articleOrId;
+		if( is_int( $articleOrId ) )
+			$article	= $this->getArticle( $articleOrId );
+		if( !is_object( $article ) )
+			throw new InvalidArgumentException( 'Given article data is invalid' );
+		$keywords	= $this->getUriPart( $article->title );
+		return './catalog/article/'.$article->articleId.'-'.$keywords;
 	}
 
 	/**
@@ -498,15 +503,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		ksort( $list );
 		$this->cache->set( 'catalog.article.author.'.$articleId, $list );
 		return $list;
-	}
-
-	/**
-	 *	@todo		kriss: this method is not doing what it should
-	 *	@todo		kriss: whether this method is used and correct it or remove it
-	 */
-	public function getAuthorUri( $authorId ){
-		$this->checkAuthorId( $authorId, TRUE );
-		$author	= $this->modelAuthor->get( $authorId );
 	}
 
 	/**
@@ -596,29 +592,16 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
+	 *	@todo		kriss: use cache by storing tags in article cache file
 	 */
-	public function getFullCategoryName( $categoryId, $language = "de" ){
-		$data	= $this->modelCategory->get( $categoryId );
-		$name	= $data['label_'.$language];
-		if( $data['parentId'] ){
-			$parent	= $this->modelCategory->get( $data['parentId'] );
-			$name	= $parent['label_'.$language]." -> ".$name;
-		}
-		return $name;
-	}
-
-	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
-	 */
-	public function getTagsOfArticle( $articleId ){
+	public function getTagsOfArticle( $articleId, $sort = FALSE ){
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= array();
 		foreach( $tags as $tag )
 			$list[$tag->tag]	= $tag;
-		ksort( $list );
+		if( $sort )
+			ksort( $list );
 		return $list;
 	}
 
@@ -633,64 +616,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 /*  -------------------------------------------------  */
-
-	/**
-	 *	Indicates whether an Author is Editor of an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 */
-	public function isArticleEditor( $articleId, $authorId )
-	{
-		$model	= new Model_ArticleAuthor();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData( true );
-		if( $data )
-			return $data['editor'];
-		return null;
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
-	 */
-	public function isAuthorOfArticle( $articleId, $authorId  )
-	{
-		$model	= new Model_ArticleAuthor();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData();
-		return (bool)count( $data );
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
-	 */
-	public function isCategoryOfArticle( $articleId, $categoryId  )
-	{
-		$model	= new Model_ArticleCategory();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "categoryId", $categoryId );
-		$data	= $model->getData();
-		return (bool)count( $data );
-	}
 
 	/**
 	 *	Indicates whether an Article is to be releases in future.
@@ -879,6 +804,82 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
 		if( $relation )
 			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
+	}
+
+	/*  --  DEPRECATED METHOD  --  */
+
+	/**
+	 *	@deprecated	not used anymore, will be removed
+	 *	@todo		kriss: remove method
+	 */
+	public function getFullCategoryName( $categoryId, $language = "de" ){
+		throw new RuntimeException( 'Catalog logic method "getFullCategoryName" is deprecated.' );
+		$data	= $this->modelCategory->get( $categoryId );
+		$name	= $data->{"label_".$language};
+		if( $data->parentId ){
+			$parent	= $this->modelCategory->get( $data->parentId );
+			$name	= $parent->{"label_".$language}." -> ".$name;
+		}
+		return $name;
+	}
+
+	/**
+	 *	Indicates whether an Author is Editor of an Article.
+	 *	@access		public
+	 *	@param		int			$articleId			ID of Article
+	 *	@param		int			$authorId			ID of Author
+	 *	@return		bool
+	 *	@deprecated	not used anymore, will be removed
+	 *	@todo		kriss: remove method
+	 */
+	public function isArticleEditor( $articleId, $authorId )
+	{
+		throw new RuntimeException( 'Catalog logic method "isArticleEditor" is deprecated.' );
+		$model	= new Model_ArticleAuthor();
+		$model->focusForeign( "articleId", $articleId );
+		$model->focusForeign( "authorId", $authorId );
+		$data	= $model->getData( true );
+		if( $data )
+			return $data['editor'];
+		return null;
+	}
+
+	/**
+	 *	Indicates whether an Author is related to an Article.
+	 *	@access		public
+	 *	@param		int			$articleId			ID of Article
+	 *	@param		int			$authorId			ID of Author
+	 *	@return		bool
+	 *	@deprecated	not used anymore, will be removed
+	 *	@todo		kriss: remove method
+	 */
+	public function isAuthorOfArticle( $articleId, $authorId  )
+	{
+		throw new RuntimeException( 'Catalog logic method "isAuthorOfArticle" is deprecated.' );
+		$model	= new Model_ArticleAuthor();
+		$model->focusForeign( "articleId", $articleId );
+		$model->focusForeign( "authorId", $authorId );
+		$data	= $model->getData();
+		return (bool)count( $data );
+	}
+
+	/**
+	 *	Indicates whether an Author is related to an Article.
+	 *	@access		public
+	 *	@param		int			$articleId			ID of Article
+	 *	@param		int			$authorId			ID of Author
+	 *	@return		bool
+	 *	@deprecated	not used anymore, will be removed
+	 *	@todo		kriss: remove method
+	 */
+	public function isCategoryOfArticle( $articleId, $categoryId  )
+	{
+		throw new RuntimeException( 'Catalog logic method "isCategoryOfArticle" is deprecated.' );
+		$model	= new Model_ArticleCategory();
+		$model->focusForeign( "articleId", $articleId );
+		$model->focusForeign( "categoryId", $categoryId );
+		$data	= $model->getData();
+		return (bool)count( $data );
 	}
 }
 class Logic_Upload{
