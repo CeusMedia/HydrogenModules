@@ -17,7 +17,7 @@ class View_Sitemap extends CMF_Hydrogen_View{
 			$root->addChild( $child );
 		}
 
-		$type	= "application/xml";
+		$type	= "application/rss+xml";
 		$xml	= XML_DOM_Builder::build( $root );
 		switch( $config->get( 'compression' ) ){
 			case 'bzip':
