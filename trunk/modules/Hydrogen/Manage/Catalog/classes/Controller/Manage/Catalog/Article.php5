@@ -186,8 +186,14 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_article.filter.' ) );
 	}
 
+	/**
+	 *	Removes article with images and relations to categories and authors.
+	 *	@access		public
+	 *	@param		$articleId
+	 */
 	public function remove( $articleId ){
 		$this->logic->removeArticle( $articleId );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function removeAuthor( $articleId, $authorId ){

@@ -11,6 +11,18 @@ class Controller_Manage_Catalog extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 	}
 
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@param		object		$env
+	 *	@param		object		$context
+	 *	@param		unknown		$module
+	 *	@param		unknown		$arguments
+	 *	@return		void
+	 *	@todo		kriss: add authors and categories
+	 *	@todo		kriss: code doc
+	 */
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
 		return "";
 		$config			= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
