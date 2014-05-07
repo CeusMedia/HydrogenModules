@@ -2,40 +2,47 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.10-p7</version>
+	<version>4.0.26</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
 		<class>View/Helper/TinyMceResourceLister.php5</class>
-		<script load="auto" source="lib">tinymce/4.0.10/tinymce.min.js</script>
 		<style load="auto" source="theme">tinymce.css</style>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
 	</files>
-	<config type="boolean" protected="no" name="auto">1</config>
-	<config type="string" protected="no" name="auto.language" values="de,en">de</config>
-	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap print preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
+	<config type="boolean" protected="no" name="auto">yes</config>
+	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
 	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
-	<config type="string" protected="no" name="auto.baseUrl">./</config>
+	<config type="string" protected="no" name="auto.baseUrl"></config>
+	<config type="string" protected="no" name="version" values="4.0.26,4.0.10,4.0.2">4.0.26</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config	= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+$pathLib	= $env->getConfig()->get( 'path.scripts.lib' );
+$language	= $env->getLanguage()->getLanguage();
+$version	= $config->get( 'version' );
+
+$context->js->addUrl( $pathLib.'tinymce/'.$version.'/tinymce.min.js' ); 
+$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' ); 
 
 if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 	$helper	= new View_Helper_TinyMceResourceLister( $env );
 	$script	= '
 $(document).ready(function(){
+	var envUrl = "'.$env->url.'";
 	if($("settings.Module_JS_TinyMCE.auto_selector").size()){
 		var listImages	= '.json_encode( $helper->getImageList() ).';
 		var listLinks	= '.json_encode( $helper->getLinkList() ).';
 		if(settings.Module_JS_TinyMCE.auto_selector){
+			var baseUrl = settings.JS_TinyMCE.auto_baseUrl.match(/^http/) ? settings.JS_TinyMCE.auto_baseUrl : envUrl + settings.JS_TinyMCE.auto_baseUrl;
 			var options = {
-				document_base_url: settings.Module_JS_TinyMCE.auto_baseUrl,
-				selector: settings.Module_JS_TinyMCE.auto_selector,
-				plugins: settings.Module_JS_TinyMCE.auto_plugins,
-				language: settings.Module_JS_TinyMCE.auto_language,
+				document_base_url: baseUrl,
+				selector: settings.JS_TinyMCE.auto_selector,
+				plugins: settings.JS_TinyMCE.auto_plugins,
+				language: settings.JS_TinyMCE.auto_language,
 				image_list: listImages,
 				link_list: listLinks
 			};
