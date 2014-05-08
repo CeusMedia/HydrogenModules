@@ -3,11 +3,12 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.3.5">Extended thread addition handling.</log>
 	<log version="0.3.6">Added mail on new post answer.</log>
 	<log version="0.3.7">Added option for mail sender.</log>
 	<log version="0.3.8">Use AJAX to show hint if posts have been updated.</log>
+	<log version="0.3.9">Fixed bug: Topic addition form always points to last category.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
