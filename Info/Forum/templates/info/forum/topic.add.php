@@ -6,9 +6,9 @@ $optType	= $words['types'];
 $optType	= UI_HTML_Elements::Options( $optType, (int) $request->get( 'type' ) );
 
 $optTopic	= array();
-foreach( $topics as $topic )
-	$optTopic[$topic->topicId]	= $topic->title;
-$optTopic	= UI_HTML_Elements::Options( $optTopic, (int) $topic->topicId );
+foreach( $topics as $entry )
+	$optTopic[$entry->topicId]	= $entry->title;
+$optTopic	= UI_HTML_Elements::Options( $optTopic, (int) $entry->topicId );
 
 
 if( !in_array( 'addThread', $rights ) )
