@@ -17,16 +17,17 @@ UI.Messenger.renderMessage("This is a test","notice");
 This second parameter can be one of {success,notice,error,failure}.
 ]]></description>
 	<category>User Interface</category>
-	<version>0.1.2</version>
+	<version>0.1.3</version>
+	<log version="0.1.2">Added visibility of configuration pairs.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<script load="auto">UI.Messenger.js</script>
 	</files>
-        <config protected="no" type="integer" name="slideDown">500</config>
-        <config protected="no" type="integer" name="slideUp">500</config>
-        <config protected="no" type="integer" name="autoRemove">5000</config>
+	<config protected="no" type="integer" name="slideDown">500</config>
+	<config protected="no" type="integer" name="slideUp">500</config>
+	<config protected="no" type="integer" name="autoRemove">5000</config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
