@@ -3,11 +3,9 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 
 	public function renderBody( $data = array() ){
 		extract( $data );
-
 		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
 
 		$heading	= $this->env->title;
-
 		$words		= $this->env->getLanguage()->getWords( 'main' );
 		$heading	= $words['main']['title'];
 
@@ -35,7 +33,7 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 				if( $options->get( '...markdown...' ) )
 					$content	= View_Helper_Markdown::transformStatic( $this->env, $content );
 		}
-			
+
 		$body	= '
 <div id="layout-mail">
 	<div class="layout-header">
@@ -62,41 +60,15 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 		</div>
 	</div>
 </div>
-<style>
-.layout-header a {
-	color: black;
-	}
-.layout-content {
-	border-top: 5px solid #FF5500;
-	}
-.intro {
-	margin-top: 1em;
-	}
-.intro .salutation {
-	font-weight: bold;
-	font-size: 1.15em;
-	line-height: 1.5em;
-	}
-.post-header {
-	margin-top: 1em;
-	margin-left: 1em;
-	font-weight: bold;
-	}
-.post-content {
-	background-color: #F7F7F7;
-	border: 1px solid #E7E7E7;
-	border-radius: 0.5em;
-	padding: 1em 2em;
-	}
-</style>
 ';
 
 		$this->addPrimerStyle( 'layout.css' );
 		$this->addThemeStyle( 'bootstrap.css' );
 		$this->addThemeStyle( 'layout.css' );
+		$this->addThemeStyle( 'module.info.forum.css' );
 		$this->page->addBody( $body );
 		$this->page->setBaseHref( $this->env->url );
-		$class	= 'moduleInfoForum jobInfoForum job-info-forum-mail-answer';
+		$class	= 'moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer';
 		return $this->page->build( array( 'class' => $class ) );
 	}
 }
