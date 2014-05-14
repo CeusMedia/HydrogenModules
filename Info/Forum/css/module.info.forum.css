@@ -37,3 +37,30 @@ body.controller-info-forum table figure figcaption {
 	white-space: nowrap;
 	overflow: hidden;
 	}
+
+
+body.info-forum-mail #layout-mail .layout-header a {
+	color: black;
+	}
+body.info-forum-mail #layout-mail .layout-content {
+	border-top: 5px solid #FF5500;
+	}
+body.info-forum-mail #layout-mail .intro {
+	margin-top: 1em;
+	}
+body.info-forum-mail #layout-mail .intro .salutation {
+	font-weight: bold;
+	font-size: 1.15em;
+	line-height: 1.5em;
+	}
+body.info-forum-mail #layout-mail .post-header {
+	margin-top: 1em;
+	margin-left: 1em;
+	font-weight: bold;
+	}
+body.info-forum-mail #layout-mail .post-content {
+	background-color: #F7F7F7;
+	border: 1px solid #E7E7E7;
+	border-radius: 0.5em;
+	padding: 1em 2em;
+	}

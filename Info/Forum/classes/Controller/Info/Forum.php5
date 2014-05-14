@@ -411,10 +411,32 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function testMailAnswer(){
 		
-		$mail	= new Mail_Info_Forum_Answer( $this->env, array() );
+		$mail	= new Mail_Forum_Answer( $this->env, array() );
 		if( $this->options->get( 'mail.sender' ) )
 			$mail->setSender( $this->options->get( 'mail.sender' ) );
 		print( $mail->renderBody() );
+		die;
+	}
+
+	public function testMailDaily(){
+		
+		$modelThread	= new Model_Forum_Thread( $this->env );
+		$modelPost		= new Model_Forum_Post( $this->env );
+
+		$threads		= $modelThread->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
+		$posts			= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
+		$user			= (object) array( 'email' => 'dev@ceusmedia.de', 'username' => 'Herr Manager' );
+
+		$data	= array(
+			'threads'		=> $threads,
+			'posts'			=> $posts,
+			'user'			=> $user,
+		);
+
+		$mail	= new Mail_Forum_Daily( $this->env, $data );
+		if( $this->options->get( 'mail.sender' ) )
+			$mail->setSender( $this->options->get( 'mail.sender' ) );
+		print( $mail->renderBody( $data ) );
 		die;
 	}
 }
