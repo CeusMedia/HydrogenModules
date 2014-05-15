@@ -231,7 +231,7 @@ abstract class Mail_Abstract{
 		$data		=	array(
 			'app'	=> array(
 				'title'	=> $this->env->title,
-				'host'	=> $this->env->host,
+				'host'	=> isset( $this->env->host ) ? $this->env->host : parse_url( $this->env->baseUrl, PHP_URL_HOST ),
 			)
 		);
 		$subject	= UI_Template::renderString( $subject, $data );
