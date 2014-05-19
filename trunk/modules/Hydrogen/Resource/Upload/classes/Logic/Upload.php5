@@ -38,7 +38,7 @@ class Logic_Upload{
 	 */
 	public function checkExtension( $allowedExtensions, $noteError = FALSE ){
 		if( !$this->upload )
-			throw new RuntimeException( 'No upload set' )
+			throw new RuntimeException( 'No upload set' );
 		if( !is_array( $allowedExtensions ) )
 			throw new InvalidArgumentException( 'Allowed extensions must be given as list' );
 //		if( $this->upload->error )
