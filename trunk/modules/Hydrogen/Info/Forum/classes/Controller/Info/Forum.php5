@@ -409,8 +409,10 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@todo		remove
+	 */
 	public function testMailAnswer(){
-		
 		$mail	= new Mail_Forum_Answer( $this->env, array() );
 		if( $this->options->get( 'mail.sender' ) )
 			$mail->setSender( $this->options->get( 'mail.sender' ) );
@@ -418,8 +420,10 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		die;
 	}
 
+	/**
+	 *	@todo		remove
+	 */
 	public function testMailDaily(){
-		
 		$modelThread	= new Model_Forum_Thread( $this->env );
 		$modelPost		= new Model_Forum_Post( $this->env );
 
