@@ -130,9 +130,9 @@ $buttonHome	= new CMM_Bootstrap_LinkButton( './info/file/index', $iconHome );
 if( !$folderPath )
 	$buttonHome	= new CMM_Bootstrap_Button( $iconHome, 'btn-inverse', NULL, TRUE );
 $buttons	= array( $buttonHome );
-foreach( $steps as $stepFolderId => $stepFolder ){
+foreach( $steps as $nr => $stepFolder ){
 	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
-	$isCurrent	= $folderId === $stepFolderId;
+	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 	$url		= './info/file/index/'.$stepFolder->downloadFolderId;
 	$icon		= new CMM_Bootstrap_Icon( 'folder-open', $isCurrent );
 	$class		= $isCurrent ? 'btn-inverse' : NULL;
