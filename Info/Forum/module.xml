@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.12</version>
+	<version>0.3.13</version>
 	<log version="0.3.5">Extended thread addition handling.</log>
 	<log version="0.3.6">Added mail on new post answer.</log>
 	<log version="0.3.7">Added option for mail sender.</log>
@@ -12,6 +12,7 @@
 	<log version="0.3.10">Extracted mail style of answer mail for further use.</log>
 	<log version="0.3.11">Added daily mail to manager.</log>
 	<log version="0.3.12">Added job for daily mail to manager.</log>
+	<log version="0.3.13">Several tiny improvements and bug fixes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -38,22 +39,21 @@
 	</files>
 	<config protected="yes" type="boolean" name="mail.active">yes</config>
 	<config protected="user" type="boolean" name="mail.inform.authors" title="Send mail to thread members on new answer.">yes</config>
-	<config protected="yes" type="boolean" name="mail.inform.managers" title="Send daily mail to manager">yes</config>
+	<config protected="yes" type="boolean" name="mail.inform.managers" title="Send daily mail to manager.">yes</config>
 	<config protected="yes" type="string" name="mail.inform.managers.roleIds" title="Comma separated list of role IDs.">3</config>
 	<config protected="yes" type="string" name="mail.inform.managers.userIds" title="Comma separated list of user IDs."></config>
-	<config protected="yes" type="string" name="mail.sender" title="Address of mail sender">no_reply@example.com</config>
+	<config protected="yes" type="string" name="mail.sender" title="Address of mail sender.">no_reply@example.com</config>
 	<config protected="yes" type="boolean" name="upload" title="Allow image uploads.">yes</config>
 	<config protected="yes" type="integer" name="upload.max.x" title="Maximum width on image scaling.">1024</config>
 	<config protected="yes" type="integer" name="upload.max.y" title="Maximum height on image scaling.">768</config>
 	<config protected="yes" type="string" name="upload.path" title="Path to image upload folder.">contents/forum/</config>
 	<config protected="yes" type="boolean" name="sitemap" title="Enable support for sitemap module.">yes</config>
 	<config protected="yes" type="boolean" name="sitemap.topics" title="Append forum topics to sitemap.">yes</config>
-	<config protected="yes" type="boolean" name="sitemap.threads "title="Append forum threads to sitemap.">yes</config>
+	<config protected="yes" type="boolean" name="sitemap.threads" title="Append forum threads to sitemap.">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">Resource_Jobs</needs>
-		<supports type="module">Resource_Maintainer</needs>
 	</relations>
 	<link access="acl" path="info/forum" xml:lang="de" rank="55">Forum</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="55">Forum</link>

@@ -20,8 +20,8 @@ class Job_Info_Forum extends Job_Abstract{
 //		$words		= (object) $this->words->send;													//  get words or like date formats
 //		$saluations	= $this->words->salutations;													//  get salutational words
 
-		$modelUser			= new Model_User( $this->env );
-		$modelPost			= new Model_Forum_Post( $this->env );
+		$modelUser		= new Model_User( $this->env );
+		$modelPost		= new Model_Forum_Post( $this->env );
 
 		$receivers		= array();
 		$roleIds		= trim( $this->options->get( 'mail.inform.managers.roleIds' ) );
@@ -32,7 +32,7 @@ class Job_Info_Forum extends Job_Abstract{
 				if( strlen( trim( $roleId ) ) && (int) $roleId > 0 )
 					$listIds[]	= (int) trim( $roleId );
 			if( $listIds )
-				foreach( $modelUser->getByIndex( 'roleId', $listIds ) as $user )
+				foreach( $modelUser->getAllByIndex( 'roleId', $listIds ) as $user )
 					$receivers[(int) $user->userId]	= $user;
 		}
 		if( strlen( $userIds ) ){
@@ -41,26 +41,28 @@ class Job_Info_Forum extends Job_Abstract{
 				if( strlen( trim( $userId ) ) && (int) $userId > 0 )
 					$listIds[]	= (int) $userId;
 			if( $listIds )
-				foreach( $modelUser->getByIndex( 'userId', $listIds ) as $user )
+				foreach( $modelUser->getAllByIndex( 'userId', $listIds ) as $user )
 					$receivers[(int) $user->userId]	= $user;
 		}
 
 		$posts			= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
 
 		if( $posts ){
-			$mail	= new Mail_Forum_Daily( $this->env, $data );
-			if( $this->options->get( 'mail.sender' ) )
-				$mail->setSender( $this->options->get( 'mail.sender' ) );
 			foreach( $receivers as $receiver ){
 				$data	= array(
 					'posts'			=> $posts,
 					'user'			=> $receiver,
 				);
+				$mail	= new Mail_Forum_Daily( $this->env, $data );
+				if( $this->options->get( 'mail.sender' ) )
+					$mail->setSender( $this->options->get( 'mail.sender' ) );
 				$mail->sendTo( $receiver );
 			}
 			$time	= round( microtime( TRUE ) - $start, 3 ) * 1000;
-			$this->log( sprintf( 'Daily forum mail sent to manager in %d ms', $time ) );
+			$this->log( sprintf( 'Daily forum mail sent to '.count( $receivers ).' manager(s) in %d ms.', $time ) );
 		}
+		else
+			$this->log( sprintf( 'No daily forum mail sent.', $time ) );
 		$this->unlock( 'info.forum.send' );
 	}
 }

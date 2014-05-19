@@ -25,7 +25,7 @@ if( $threads ){
 		$userCanChange	= $userIsManager || $userIsAuthor;
 		if( $userCanEdit && $userCanChange ){
 			$buttons[]	= UI_HTML_Tag::create( 'button', $iconRename, array(
-				'onclick'	=> 'InfoForum.changeThreadName('.$thread->threadId.', '.$thread->topicId.', \''.$thread->title.'\')',
+				'onclick'	=> 'InfoForum.changeThreadName('.$thread->threadId.', '.$thread->topicId.', \''.htmlentities( $thread->title, ENT_QUOTES, 'UTF-8' ).'\')',
 				'class'	=> 'btn not-btn-small',
 				'title'	=> $words['topic']['buttonRename'],
 			) );
