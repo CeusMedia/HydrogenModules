@@ -33,6 +33,7 @@ abstract class Mail_Abstract{
 		$this->page	= new UI_HTML_PageFrame();
 
 		$config		= $this->env->getConfig();
+		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 		$this->page->setBaseHref( $config->get( 'app.base.url' ) );
 		$this->addThemeStyle( 'mail.min.css' );
 		$this->addScriptFile( 'mail.min.js' );
@@ -60,6 +61,15 @@ abstract class Mail_Abstract{
 		$this->content	= $this->generate( $data );
 	}
 
+	/**
+	 *	Do not use all members for serialization.
+	 *	@access		public
+	 *	@return		array		List of allowed members during serialization
+	 */
+	public function __sleep(){
+		return array( 'mail', 'transport', 'page' );
+	}
+	
 	/**
 	 *	Adds HTML body part to mail.
 	 *	@access		protected
@@ -138,6 +148,15 @@ abstract class Mail_Abstract{
 	abstract protected function generate( $data = array() );
 
 	/**
+	 *	Returns set subject of mail.
+	 *	@access		public
+	 *	@return		string		Subject set for mail
+	 */
+	public function getSubject(){
+		return $this->mail->getSubject();
+	}
+
+	/**
 	 *	Loads View Class of called Controller.
 	 *	@access		protected
 	 *	@param		string		$topic		Locale file key, eg. test/my
@@ -160,6 +179,8 @@ abstract class Mail_Abstract{
 	 *	@return		void
 	 */
 	public function sendTo( $user ){
+		if( is_array( $user ) )
+			$user	= (object) $user;
 		if( empty( $user->email ) )
 			throw new RuntimeException( 'User object invalid: no email address' );
 		$this->sendToAddress( $user->email );

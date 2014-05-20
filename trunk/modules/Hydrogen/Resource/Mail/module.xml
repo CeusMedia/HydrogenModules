@@ -3,7 +3,7 @@
 	<title>Resource: Mail</title>
 	<description>Enables application to send mails.</description>
 	<category>Resource</category>
-	<version>0.3.5</version>
+	<version>0.4.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -12,12 +12,15 @@
 	<log version="0.3.3">Added subject template.</log>
 	<log version="0.3.4">Extended subject handling by app title and host.</log>
 	<log version="0.3.5">Adjusted subject handling to work in console environments.</log>
+	<log version="0.4.0">Added mail queue and job.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Mail/Abstract.php5</class>
 		<class>Mail/Example.php5</class>
+		<class>Logic/Mail.php5</class>
+		<class>Job/Mail.php5</class>
 		<style>mail.min.css</style>
 		<script>mail.min.js</script>
 	</files>
@@ -29,4 +32,36 @@
 	<config protected="yes" type="string" name="transport.password" mandatory="transport.type:SMTP"></config>
 	<config protected="yes" type="string" name="subject.prefix"></config>
 	<config protected="yes" type="string" name="subject.template"></config>
+<!--	<relations>
+		<supports type="module">Resource_Jobs</supports>
+		<supports type="module">Resource_Maintainer</supports>
+	</relations>-->
+	<sql on="update" version="0.4.0" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
+  `mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `senderId` int(10) unsigned NOT NULL DEFAULT '0',
+  `receiverId` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `object` longblob NOT NULL,
+  `enqueuedAt` decimal(12,0) unsigned NOT NULL,
+  `attemptedAt` decimal(12,0) unsigned NOT NULL,
+  `sentAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailId`),
+  KEY `senderId` (`senderId`),
+  KEY `receiverId` (`receiverId`),
+  KEY `status` (`status`),
+  KEY `attempts` (`attempts`),
+  KEY `receiverAddress` (`receiverAddress`),
+  KEY `receiverName` (`receiverName`),
+  KEY `subject` (`subject`),
+  KEY `enqueuedAt` (`enqueuedAt`),
+  KEY `attemptedAt` (`attemptedAt`),
+  KEY `sentAt` (`sentAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
 </module>
