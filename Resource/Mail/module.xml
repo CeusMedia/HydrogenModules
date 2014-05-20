@@ -19,6 +19,8 @@
 	<files>
 		<class>Mail/Abstract.php5</class>
 		<class>Mail/Example.php5</class>
+		<class>Mail/Test.php5</class>
+		<class>Model/Mail.php5</class>
 		<class>Logic/Mail.php5</class>
 		<class>Job/Mail.php5</class>
 		<style>mail.min.css</style>
