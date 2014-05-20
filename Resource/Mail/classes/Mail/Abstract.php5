@@ -20,6 +20,8 @@ abstract class Mail_Abstract{
 
 	public $content;
 
+	protected $baseUrl;
+
 	/**
 	 *	Contructor.
 	 *	@access		public
@@ -27,23 +29,27 @@ abstract class Mail_Abstract{
 	 *	@param		araray								$data		Map of template mail data
 	 */
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array() ){
-		$this->env	= $env;
-		$this->mail	= new Net_Mail();
-		$this->view	= new CMF_Hydrogen_View( $env );
-		$this->page	= new UI_HTML_PageFrame();
+		$this->env		= $env;
+		$this->mail		= new Net_Mail();
+		$this->view		= new CMF_Hydrogen_View( $env );
+		$this->page		= new UI_HTML_PageFrame();
+		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->baseUrl	= isset( $env->baseUrl ) ? $env->baseUrl : NULL;
 
 		$config		= $this->env->getConfig();
+		if( !$this->baseUrl && $config->get( 'app.base.url' ) )
+			$this->baseUrl = $config->get( 'app.base.url' );
+		$this->page->setBaseHref( $this->baseUrl );
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
-		$this->page->setBaseHref( $config->get( 'app.base.url' ) );
 		$this->addThemeStyle( 'mail.min.css' );
 		$this->addScriptFile( 'mail.min.js' );
 
-		switch( strtolower( $config->get( 'module.resource_mail.transport.type' ) ) ){
+		switch( strtolower( $this->options->get( 'transport.type' ) ) ){
 			case 'smtp':
-				$hostname	= $config->get( 'module.resource_mail.transport.hostname' );
-				$port		= $config->get( 'module.resource_mail.transport.port' );
-				$username	= $config->get( 'module.resource_mail.transport.username' );
-				$password	= $config->get( 'module.resource_mail.transport.password' );
+				$hostname	= $this->options->get( 'transport.hostname' );
+				$port		= $this->options->get( 'transport.port' );
+				$username	= $this->options->get( 'transport.username' );
+				$password	= $this->options->get( 'transport.password' );
 				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
 				$this->transport->setAuthUsername( $username );
 				$this->transport->setAuthPassword( $password );
@@ -57,7 +63,7 @@ abstract class Mail_Abstract{
 			default:
 				throw new RuntimeException( 'No mail transport configured' );
 		}
-		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
+		$this->mail->setSender( $this->options->get( 'sender.system' ) );
 		$this->content	= $this->generate( $data );
 	}
 
@@ -69,7 +75,7 @@ abstract class Mail_Abstract{
 	public function __sleep(){
 		return array( 'mail', 'transport', 'page' );
 	}
-	
+
 	/**
 	 *	Adds HTML body part to mail.
 	 *	@access		protected
@@ -240,19 +246,20 @@ abstract class Mail_Abstract{
 	 */
 	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
 		if( $useTemplate ){
-			$template	= $this->env->getConfig()->get( 'module.resource_mail.subject.template' );
+			$template	= $this->options->get( 'subject.template' );
 			if( strlen( trim( $template ) ) )
 				$subject	= sprintf( $template, $subject );
 		}
 		if( $usePrefix ){
-			$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
+			$prefix		= $this->options->get( 'subject.prefix' );
 			if( strlen( trim( $prefix ) ) )
 				$subject	= trim( $prefix ).' '.$subject;
 		}
-		$data		=	array(
+		$host		= isset( $this->env->host ) ? $this->env->host : parse_url( $this->baseUrl, PHP_URL_HOST );
+		$data		= array(
 			'app'	=> array(
 				'title'	=> $this->env->title,
-				'host'	=> isset( $this->env->host ) ? $this->env->host : parse_url( $this->env->baseUrl, PHP_URL_HOST ),
+				'host'	=> $host,
 			)
 		);
 		$subject	= UI_Template::renderString( $subject, $data );
