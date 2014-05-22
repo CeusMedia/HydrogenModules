@@ -23,6 +23,13 @@ $request	= new ADT_List_Dictionary( $request->getAll() );			//
 $verbose	= $request->has( '--verbose' ) || $request->has( '-v' );	//  
 $test		= $request->has( '--test' ) || $request->has( '-t' );		//  
 
+function handleError( $errno, $errstr, $errfile, $errline, array $errcontext ){
+    if( error_reporting() === 0 )									    // error was suppressed with the @-operator
+        return FALSE;
+    throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
+}
+set_error_handler( 'handleError' );
+
 if( class_exists( 'Environment' ) )										//  an individual environment class is available
 	Jobber::$classEnvironment	= 'Environment';						//  set individual environment class
 if( isset( $configFile ) )												//  an alternative config file has been set
@@ -33,6 +40,6 @@ try{
 	$jobber->run( $request );											//  execute found jobs
 }
 catch( Exception $e ){
-	die( $e->getMessage() );
+	die( $e->getMessage().'@'.$e->getFile().'@'.$e->getLine() );
 }
 ?>
