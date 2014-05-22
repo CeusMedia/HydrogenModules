@@ -83,6 +83,11 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
+	public function ajaxSetTab( $tabKey ){
+		$this->session->set( 'manage.catalog.article.tab', $tabKey );
+		exit;
+	}
+
 	public function edit( $articleId ){
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -249,11 +254,6 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 			}
 		}
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
-	}
-
-	public function ajaxSetTab( $tabKey ){
-		$this->session->set( 'manage.catalog.article.tab', $tabKey );
-		exit;
 	}
 }
 ?>

@@ -1,4 +1,12 @@
 
+var ModuleManageCatalog = {
+	setAuthorTab: function(tabKey){
+		$.ajax("./manage/catalog/author/ajaxSetTab/"+tabKey);
+	}
+};
+
+/* @todo move method to ModuleManageCatalog */
+
 function addArticleTag(articleId){
 	var tag = $("#input_tag").val();
 	if(tag.length){
@@ -39,6 +47,10 @@ function bindListResize(list){
 			height -= $("#layout-footer").outerHeight();
 		list.height(height);
 	}).trigger("resize");
+}
+
+function setArticleTab(tabKey){
+	$.ajax("./manage/catalog/article/ajaxSetTab/"+tabKey);
 }
 
 function setArticleTab(tabKey){
