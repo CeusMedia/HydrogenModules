@@ -13,7 +13,14 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.3</version>
+	<log version="0.1.0">Initial prototype.</log>
+	<log version="0.2.0">Extracted to Hydrogen module.</log>
+	<log version="0.2.1">Introduced logging mechanism.</log>
+	<log version="0.3.0">Prepared jobber to by called by maintainer.</log>
+	<log version="0.3.1">Introduced locking mechanism.</log>
+	<log version="0.3.2">Updated logging mechanism.</log>
+	<log version="0.3.3">Moved locking mechanism from job class to jobber itself.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
