@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.17</version>
+	<version>0.3.18</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3.15">Allow categories to be removed and fixed default order in article list.</log>
 	<log version="0.3.16">Improved cache management and prepared logic class for clean up.</log>
 	<log version="0.3.17">Cleanup and improved code documentation.</log>
+	<log version="0.3.18">Extended author editor by tabs and article list.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -47,6 +48,8 @@
 		<template>manage/catalog/article/index.php</template>
 		<template>manage/catalog/author/add.php</template>
 		<template>manage/catalog/author/edit.php</template>
+		<template>manage/catalog/author/edit.articles.php</template>
+		<template>manage/catalog/author/edit.details.php</template>
 		<template>manage/catalog/author/index.php</template>
 		<template>manage/catalog/category/add.php</template>
 		<template>manage/catalog/category/edit.php</template>

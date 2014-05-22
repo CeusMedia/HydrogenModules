@@ -29,6 +29,11 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->addData( 'authors', $this->logic->getAuthors() );
 	}
 
+	public function ajaxSetTab( $tabKey ){
+		$this->session->set( 'manage.catalog.author.tab', $tabKey );
+		exit;
+	}
+
 	public function edit( $authorId ){
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -42,8 +47,10 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 				$this->restart( 'manage/catalog/author/edit/'.$authorId );
 			}
 		}
-		$this->addData( 'author', $this->logic->getAuthor( $authorId ) );
+		$author		= $this->logic->getAuthor( $authorId );
+		$this->addData( 'author', $author );
 		$this->addData( 'authors', $this->logic->getAuthors() );
+		$this->addData( 'articles', $this->logic->getArticlesFromAuthor( $author ) );
 	}
 
 	public function index(){
