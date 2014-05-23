@@ -1,0 +1,44 @@
+#layer-lock-back {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+	background-color: rgba(255,255,255,0.5);
+	}
+#layer-lock-back #layer-lock-front {
+	position: absolute;
+	z-index: 1001;
+	left: 30%;
+	top: 50%;
+	margin-top: -2em;
+	width: 40%;
+	height: 5em;
+	background-color: white;
+	border-radius: 0.75em;
+	box-shadow: 2px 2px 14px rgba(0,0,0,0.25);
+}
+#layer-lock-back #layer-lock-front div.layer-lock-message {
+	margin: 1em 2em;
+	height: 2em;
+	padding-left: 2.4em;
+	line-height: 1.4em;
+	font-size: 1.5em;
+	background-image: url(../img/locklayer_loader.gif);
+/*	background-position: 0 0;*/
+	background-repeat: no-repeat;
+}
+
+
+
+#layer-lock-back.theme-light #layer-lock-front {
+	background-color: rgba(255,255,255,0.5);
+	}
+#layer-lock-back.theme-light #layer-lock-front {
+	box-shadow: 2px 2px 14px rgba(0,0,0,0.55);
+	border: 1px solid rgba(0,0,0,0.5);
+	}
+
