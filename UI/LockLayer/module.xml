@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Lock Layer</title>
+	<description><![CDATA[Simple user interface locking layer.
+
+Can be used to cover long loading requests.
+]]></description>
+	<category>User Interface</category>
+	<version>0.2.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<log version="0.2.1">Added automatic mode.</log>
+	<log version="0.2.2">Extended configuration of animation.</log>
+	<log version="0.2.3">Extended configuration of automatic mode.</log>
+<!--	<log version="0.2.4">Support for localized default messages.</log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">UI.LockLayer.js</script>
+		<style source="theme" load="auto">module.ui.locklayer.css</style>
+		<image source="theme">locklayer_loader.gif</image>
+<!--		<locale>de/...</locale>-->
+	</files>
+	<config protected="no" type="boolean" name="auto">yes</config>
+	<config protected="no" type="integer" name="auto.class">locklayer-auto</config>
+	<config protected="no" type="integer" name="auto.delay">0</config>
+	<config protected="no" type="integer" name="auto.message">loading</config>
+	<config protected="no" type="boolean" name="fade">no</config>
+	<config protected="no" type="integer" name="fade.duration.in">150</config>
+	<config protected="no" type="integer" name="fade.duration.out">100</config>
+</module>
