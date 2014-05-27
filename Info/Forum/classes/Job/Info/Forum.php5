@@ -12,9 +12,9 @@ class Job_Info_Forum extends Job_Abstract{
 	}
 
 	public function sendDaily( $verbose = FALSE ){
-		if( $this->isLocked( 'info.forum.send' ) )
-			return;
-		$this->lock( 'info.forum.send' );
+//		if( $this->isLocked( 'info.forum.send' ) )
+//			return;
+//		$this->lock( 'info.forum.send' );
 
 		$start		= microtime( TRUE );
 //		$words		= (object) $this->words->send;													//  get words or like date formats
@@ -63,7 +63,7 @@ class Job_Info_Forum extends Job_Abstract{
 		}
 		else
 			$this->log( sprintf( 'No daily forum mail sent.', $time ) );
-		$this->unlock( 'info.forum.send' );
+//		$this->unlock( 'info.forum.send' );
 	}
 }
 ?>
