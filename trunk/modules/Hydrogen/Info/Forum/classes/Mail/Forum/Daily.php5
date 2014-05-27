@@ -3,6 +3,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract{
 
 	public function renderBody( $data = array() ){
 //		extract( $data );
+
 		$this->setSubject( 'Moderation notwendig' );
 
 		$heading		= $this->env->title;
@@ -24,8 +25,14 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract{
 			$rows	= array();
 			foreach( $list as $thread ){
 				$posts		= UI_HTML_Tag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
-				$linkTopic	= UI_HTML_Tag::create( 'a', $thread->topic->title, array( 'href' => '#', 'class' => 'link-topic' ) );
-				$linkThread	= UI_HTML_Tag::create( 'a', $thread->thread->title, array( 'href' => '#', 'class' => 'link-thread' ) );
+				$linkTopic	= UI_HTML_Tag::create( 'a', $thread->topic->title, array(
+					'href'		=> $this->env->url.'info/forum/topic/'.$thread->topic->topicId,
+					'class'		=> 'link-topic'
+				) );
+				$linkThread	= UI_HTML_Tag::create( 'a', $thread->thread->title, array(
+					'href'		=> $this->env->url.'info/forum/thread/'.$thread->thread->threadId,
+					'class'		=> 'link-thread'
+				) );
 				$line		= '%1$s > %2$s: %3$s';
 				$line		= '%3$s in Kategorie %1$s in Thema %2$s';
 				$line		= sprintf( $line, $linkTopic, $linkThread, $posts );
