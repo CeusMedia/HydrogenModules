@@ -424,6 +424,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$articleIds	= array();
 		foreach( $articles as $article )
 			$articleIds[]	= $article->articleId;
+		if( !$articles )
+			return array();
 		$conditions	= array( 'articleId' => $articleIds );
 		$articles	= $this->getArticles( $conditions, $orders, $limits );
 		return $articles;

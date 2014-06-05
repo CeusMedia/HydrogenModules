@@ -1,7 +1,7 @@
 <?php
 $w			= (object) $words['edit'];
 
-$list		= '<div><em class="muted">Keine Veröffentlichen vorhanden.</em></div>';
+$list		= '<div><em class="muted">Keine Veröffentlichungen vorhanden.</em></div>';
 if( $articles ){
 	$list		= array();
 //	$rows		= array();
