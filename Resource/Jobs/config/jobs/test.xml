@@ -10,7 +10,7 @@
 		<method>date</method>
 		<mode>test</mode>
 	</job>
-    <job id="great-hour">
+    <job id="greet-hour">
         <class>Test</class>
         <method>greetHour</method>
         <interval>hour</interval>
