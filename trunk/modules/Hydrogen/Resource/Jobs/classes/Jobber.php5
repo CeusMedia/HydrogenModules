@@ -118,7 +118,10 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 		$paramKeys	= array_keys( $parameters );													//  get list of parameter keys
 		$jobId		= array_shift( $paramKeys );													//  get first parameter as job ID
 		array_shift( $parameters );																	//  remove job ID from parameter list
+		$this->runJob( $jobId, $parameters );
+	}
 
+	public function runJob( $jobId, $parameters = array() ){
 		if( !array_key_exists( $jobId, $this->jobs ) ){												//  job ID is not in list of registered jobs
 			$this->logError( 'Job with ID "'.$jobId.'" is not existing.' );							//  log error
 			return -1;																				//  quit with negative status
@@ -147,7 +150,6 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 					$this->log( $line );															//  by logging
 			}
 			return 1;																				//  quit with positive status
-			
 		}
 		catch( Exception $e ){																		//  on exception
 			$this->unlock( $job->class, $job->method );												//  remove job lock
@@ -161,7 +163,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 	 *	@access		protected
 	 *	@param		string		$className		Name of job class
 	 *	@param		string		$methodName		Name of job method
-	 *	@return		integer		Status: 1 - success | 0 - not locked | -1 - error		
+	 *	@return		integer		Status: 1 - success | 0 - not locked | -1 - error
 	 */
 	protected function unlock( $className, $methodName ){
 		$fileName	= $this->getLockFileName( $className, $methodName );							//  build lock file name

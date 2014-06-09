@@ -1,9 +1,9 @@
 <?php
-$verCMC	= 'trunk';
-$verCMF	= 'trunk';
-$verCMM	= 'trunk';
+$verCMC	= 'trunk.sync';
+$verCMF	= 'trunk.sync';
+$verCMM	= 'trunk.sync';
 
-$configFile		= "config/config.ini";								//  set (an alternative) config file
+$configFile		= "config/config.ini.inc";								//  set (an alternative) config file
 
 $modes	= array(
 	'live',
