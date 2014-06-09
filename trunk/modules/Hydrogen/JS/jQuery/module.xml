@@ -2,16 +2,34 @@
 <module>
 	<title>JS: jQuery</title>
 	<description><![CDATA[jQuery JavaScript Library]]></description>
-	<version>1.8.2</version>
+	<version>1.11.1</version>
 	<category>JavaScript</category>
 	<author site="http://jquery.org/team">jQuery Team</author>
 	<url>http://jquery.com/</url>
 	<license source="http://jquery.org/license">MIT / GPL 2</license>
 	<files>
-		<script load="auto" top="yes">jquery-1.8.2.min.js</script>
 		<script top="yes">jquery-1.8.2.js</script>
+		<script top="yes">jquery-1.8.2.min.js</script>
+		<script top="yes">jquery-1.10.2.js</script>
+		<script top="yes">jquery-1.10.2.min.js</script>
+		<script top="yes">jquery-1.10.2.min.map</script>
+		<script top="yes">jquery-1.11.1.js</script>
+		<script top="yes">jquery-1.11.1.min.js</script>
+		<script top="yes">jquery-1.11.1.min.map</script>
 	</files>
+	<config protected="yes" type="string" name="version" values="1.8.2,1.10.2,1.11.1">1.11.1</config>
+	<config protected="yes" type="boolean" name="load.minified">yes</config>
+	<config protected="yes" type="boolean" name="load.map">yes</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$context->addBodyClass( 'uses-jQuery' );
+		$pathJs		= $env->getConfig()->get( 'path.scripts' );
+        $version    = $module->config['version']->value;
+		if( $module->config['load.minified']->value ){
+			if( $module->config['load.map']->value )
+		        $context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map' );
+	        $context->addJavaScript( $pathJs.'jquery-'.$version.'.min.js' );
+		}
+		else
+	        $context->addJavaScript( $pathJs.'jquery-'.$version.'.js' );
+		$context->addBodyClass( 'uses-jQuery' );
 	]]></hook>
 </module>
