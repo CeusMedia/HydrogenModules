@@ -10,4 +10,16 @@
 		<method>date</method>
 		<mode>test</mode>
 	</job>
+    <job id="great-hour">
+        <class>Test</class>
+        <method>greetHour</method>
+        <interval>hour</interval>
+        <mode>test</mode>
+    </job>
+    <job id="greet-minute" >
+        <class>Test</class>
+        <method>greetMinute</method>
+        <interval>min</interval>
+        <mode>test</mode>
+    </job>
 </jobs>
