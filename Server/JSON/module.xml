@@ -4,12 +4,13 @@
 	<description><![CDATA[Standalone JSON answering server application base.]]></description>
 This module installs the main classes needed to run a server application which is requested using REST and answering in JSON.
 	<category>Server</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype in project Chat:Server.</log>
 	<log version="0.2">Separated into this Hydrogen module.</log>
 	<log version="0.2.3">Added Piwik as tracker.</log>
 	<log version="0.2.4">Added .htaccess files to protect folders.</log>
 	<log version="0.2.5">Extended index script by library path.</log>
+	<log version="0.2.6">Moved index.php5 to index.php.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -19,7 +20,7 @@ This module installs the main classes needed to run a server application which i
 		<class>Controller/Abstract.php5</class>
 		<class>Controller/Index.php5</class>
 		<file>.htaccess</file>
-		<file>index.php5</file>
+		<file>index.php</file>
 		<file>config/config.ini.dist</file>
 		<file>config/.htaccess</file>
 		<file>logs/.htaccess</file>
