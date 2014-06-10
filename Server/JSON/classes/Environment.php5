@@ -37,7 +37,6 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 		$this->initResponse();																		//  setup HTTP response handler
 		$this->initRouter();																		//  setup request router
 #		$this->initLanguage();																		//  [DO NOT] setup language support
-		$this->initTracker();																		//  setup server side request tracking
 		$this->__onInit();																			//  call init event (implemented by extending classes)
 		if( $this->getModules()->has( 'Resource_Database' ) )
 			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
@@ -47,31 +46,6 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 		if( $key == "dbc" )
 			return $this->getDatabase();
 		return parent::get( $key );
-	}
-
-	public function getTracker(){
-		return $this->tracker;
-	}
-
-	protected function initTracker() {
-		$config	= $this->config;
-		if( $config->get( 'tracker.enabled' ) ){
-			switch( strtolower( $config->get( 'tracker.type' ) ) ){
-				case 'piwik':
-					if( !$config->get( 'tracker.include' ) )
-						throw new RuntimeException( 'Piwik tracker include not defined in configuration (tracker.include)' );
-					@include_once $config->get( 'tracker.include' );
-					if( !class_exists( 'PiwikTracker' ) )
-						throw new RuntimeException( 'Piwik tracker inclusion failed (config::tracker.include is invalid)' );
-					PiwikTracker::$URL = $config->get( 'tracker.uri' );
-					$this->tracker	= new PiwikTracker( $config->get( 'tracker.id' ) );
-					break;
-				case 'etracker':
-				case 'google':
-					throw new RuntimeException( 'Not implemented' );
-					break;
-			}
-		}
 	}
 }
 ?>

@@ -1,4 +1,4 @@
-<?php
+?php
 /**
  *	Server Action Dispatcher Class.
  *
@@ -74,7 +74,7 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 
 	/**
 	 *	Calls controller method depending on request and returns result.
-	 *	Notifies tracker if enabled.
+	 *	Notifies Piwik tracker if enabled.
 	 *	@access		public
 	 *	@return		mixed		Result returned by called controller method
 	 */
@@ -86,9 +86,10 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 		$action		= trim( $this->request->get( 'action' ) );										//  get called action
 		$arguments	= $this->request->get( 'arguments' );											//  get given arguments
 
-		if( $this->env->getConfig()->get( 'tracker.enabled' ) )										//  a tracker is enabled
-			$this->env->getTracker()->doTrackPageView( $controller.' > '.$action );					//  track request
-		
+		if( $this->env->getModules()->has( 'Resource_Tracker_Piwik' ) )								//  Piwik tracker is installed
+			if( $this->env->getConfig()->get( 'module.resource_tracker_piwik.tracker.enabled' ) )	//  a tracker is enabled
+				$this->env->get( 'piwik' )->doTrackPageView( $controller.' > '.$action );			//  track request
+
 		$this->checkAuth( $controller, $action );													//  ensure authentication
 		$className	= self::getControllerClassFromPath( $controller );								// get controller class name from requested controller path
 		$this->checkClass( $className );															//  ensure controller class
