@@ -1,4 +1,4 @@
-?php
+<?php
 /**
  *	Server Action Dispatcher Class.
  *
