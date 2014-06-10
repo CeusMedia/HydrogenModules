@@ -4,7 +4,7 @@ $pathLibs		= "";
 $verCMC			= 'trunk';
 $verCMF			= 'trunk';
 $verCMM			= 'trunk';
-$configFile		= "config/config.ini";								//  set (an alternative) config file
+//$configFile		= "config/config.ini";								//  set (an alternative) config file
 $modes			= array(
 	'live',
 	'test',
@@ -30,9 +30,10 @@ function handleError( $errno, $errstr, $errfile, $errline, array $errcontext ){
 }
 set_error_handler( 'handleError' );
 
-CMF_Hydrogen_Environment_Console::$configFile	= $configFile;			//  set config file
 if( class_exists( 'Environment' ) )										//  an individual environment class is available
 	Jobber::$classEnvironment	= 'Environment';						//  set individual environment class
+if( isset( $configFile ) )												//  an alternative config file is set
+	CMF_Hydrogen_Environment_Console::$configFile	= $configFile;		//  set alternative config file
 try{
 	$jobber	= new Jobber();												//  start job handler
 	$jobber->loadJobs( $modes );										//  load jobs configured in XML files
