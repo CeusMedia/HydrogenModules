@@ -3,7 +3,10 @@
 	<title>Piwik Tracker</title>
 	<description><![CDATA[Request tracking using Piwik.]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Added hooks for server and client.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,9 +19,9 @@
 	<config protected="yes" mandatory="no" type="string" name="path">/var/www/piwik/</config>
 	<config protected="yes" mandatory="yes" type="string" name="URI">http://localhost/piwik/</config>
 	<hook type="resource" resource="Env" event="init"><![CDATA[
-		$config	= $env->getConfig()->getAll( 'modules.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
-		if( $config->get( 'enabled' ) && ( $id = $config->get( 'ID' ) ) ){							//  piwik tracker is enabled and tracking ID is set
-			if( ( $uri = $config->get( 'URI' ) ) && ( $path = $config->get( 'path' ) ) ){			//  path and URI to piwik are defined
+		$options	= $env->getConfig()->getAll( 'modules.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
+		if( $options->get( 'enabled' ) && ( $id = $options->get( 'ID' ) ) ){						//  piwik tracker is enabled and tracking ID is set
+			if( ( $uri = $options->get( 'URI' ) ) && ( $path = $options->get( 'path' ) ) ){			//  path and URI to piwik are defined
 				$classFile	= $path.'libs/PiwikTracker/PiwikTracker.php';							//  calculate piwik tracker class file
 				@include_once $classFile;															//  include piwik tracker class file
 				if( !class_exists( 'PiwikTracker' ) )												//  include was NOT successful
@@ -29,25 +32,25 @@
 		}
 ]]></hook>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$options	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.' );				//  get module configuration as array map
-		if( $options['enabled'] ){
-			$context->js->addUrl( $options['URI'].'piwik.js' );
-			$options['URI']	= preg_replace( "@^[a-z]+://@", "", $options['URI'] );
+		$options	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as array map
+		if( $options->get( 'enabled' ) ){
+			$context->js->addUrl( $options->get( 'URI' ).'piwik.js' );
+			$options->set( 'URI', preg_replace( "@^[a-z]+://@", "", $options->get( 'URI' ) );
 			$context->js->addScript( 'initPiwik('.json_encode( $options ).');' );
 		}
 ]]></hook>
 	<hook type="resource" resource="Page" event="build"><![CDATA[
-		$config		= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
-		if( $config->get( 'enabled' ) ){															//  piwik tracker is enabled
-			if( ( $uri = $config->get( 'URI' ) ) && ( $id = $config->get( 'ID' ) ) ){				//  ID and piwik URI are defined
-				$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',				//  create noscript HTML tag
-					UI_HTML_Tag::create( 'img', NULL, array(											//  create tracking image
-						'src'	=> $uri.'piwik.php?idsite='.$id,										//  
-						'style'	=> 'border: 0',															//  no borders
-						'alt'	=> ''																	//  atleast empty alternative text for XHTML validity
+		$options	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
+		if( $options->get( 'enabled' ) ){															//  piwik tracker is enabled
+			if( ( $uri = $options->get( 'URI' ) ) && ( $id = $options->get( 'ID' ) ) ){				//  ID and piwik URI are defined
+				$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',			//  create noscript HTML tag
+					UI_HTML_Tag::create( 'img', NULL, array(										//  create tracking image
+						'src'	=> $uri.'piwik.php?idsite='.$id,									//  
+						'style'	=> 'border: 0',														//  no borders
+						'alt'	=> ''																//  atleast empty alternative text for XHTML validity
 					) )
 				) );
-				$context->addBody( $noscript );															//  append noscript tag to body
+				$context->addBody( $noscript );														//  append noscript tag to body
 			}
 		}
 ]]></hook>
