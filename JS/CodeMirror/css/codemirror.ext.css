@@ -20,7 +20,7 @@ div.CodeMirror-lines span.cm-tab{
 	background-position: 1px 6px;
 	}
 
-div.CodeMirror.changed {
+div.CodeMirror.changed .CodeMirror-scroll {
 	background-color: #FFF7CF;
 	}
 div.CodeMirror-fullscreen,

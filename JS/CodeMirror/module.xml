@@ -2,7 +2,7 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>3.20-p1</version>
+	<version>3.20-p2</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
