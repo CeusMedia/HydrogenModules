@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: JS: fancyBox</title>
+	<description><![CDATA[Lightbox replacement.
+
+fancyBox is a tool that offers a nice and elegant way to add zooming functionality for images, html content and multi-media on your webpages.	
+It is built on the top of the popular JavaScript framework jQuery and is both easy to implement and a snap to customize.	
+]]></description>
+	<category>User Interface</category>
+	<version>2.1.5</version>
+	<company site="http://fancyapps.com/">fancyApps</company>
+	<author email="janis@fancyapps.com">Jānis Skarnelis</author>
+	<license source="http://creativecommons.org/licenses/by-nc/3.0/">CC BY-NC 3</license>
+	<files>
+		<script load="auto" source="lib">jquery/fancyBox/2.1.5/source/jquery.fancybox.pack.js</script>
+		<style load="auto" source="scripts-lib">jquery/fancyBox/2.1.5/source/jquery.fancybox.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<config name="auto" type="boolean">1</config>
+	<config name="auto.class">fancybox-auto</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig()->getAll( 'module.ui_js_fancybox.', TRUE );
+		if( $config->get( 'auto' ) ){
+			$class		= $config->get( 'auto.class' );
+			$options	= json_encode( array(
+/*				'durationFadeIn'	=> $config->get( 'auto.duration.fade.in' ),
+				'durationFadeOut'	=> $config->get( 'auto.duration.fade.out' ),
+				'prefix'			=> $config->get( 'auto.prefix' ),
+				'btnCloseLabel'		=> $config->get( 'auto.close.label' ),
+				'btnCloseTitle'		=> $config->get( 'auto.close.title' ),
+*/			) );
+			$script		= '$(document).ready(function(){$(".'.$class.'").fancybox('./*$options.*/');});';
+			$context->js->addScript( $script );
+		}
+	]]></hook>
+</module>
