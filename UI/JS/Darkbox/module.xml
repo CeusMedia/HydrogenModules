@@ -3,10 +3,12 @@
 	<title>UI: JS: Darkbox</title>
 	<description><![CDATA[Lightbox replacement.]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Prototype.</log>
 	<log version="0.2">Fixed height bug and improved performance.</log>
 	<log version="0.3">Added support for events.</log>
+	<log version="0.3.1">Made auto selector class configurable.</log>
+	<log version="0.3.2">Updated configuration by type and protection.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -17,12 +19,13 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<config name="auto" type="boolean">1</config>
-	<config name="auto.close.label">×</config>
-	<config name="auto.close.title">Close [ESC]</config>
-	<config	name="auto.duration.fade.in">200</config>
-	<config name="auto.duration.fade.out">250</config>
-	<config name="auto.prefix">darkbox-</config>
+	<config protected="no" name="auto" type="boolean">1</config>
+	<config protected="no" type="string" name="auto.class">darkbox-auto</config>
+	<config protected="no" type="string" name="auto.close.label">×</config>
+	<config protected="no" type="string" name="auto.close.title">Close [ESC]</config>
+	<config protected="no" type="integer" name="auto.duration.fade.in">200</config>
+	<config protected="no" type="integer" name="auto.duration.fade.out">250</config>
+	<config protected="no" type="string" name="auto.prefix">darkbox-</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.ui_js_darkbox.', TRUE );
 		if( $config->get( 'auto' ) ){
@@ -33,7 +36,8 @@
 				'btnCloseLabel'		=> $config->get( 'auto.close.label' ),
 				'btnCloseTitle'		=> $config->get( 'auto.close.title' ),
 			) );
-			$script		= '$(document).ready(function(){$(".darkbox").darkbox('.$options.');});';
+			$selector	= '.'.$config->get( 'auto.class' );
+			$script		= '$(document).ready(function(){$("'.$selector.'").darkbox('.$options.');});';
 			$context->js->addScript( $script );
 		}
 	]]></hook>
