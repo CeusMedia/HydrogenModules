@@ -103,7 +103,7 @@ code {
 				</li>
 				<li>
 					<label for="input-title">Inhalt</label><br/>
-					<textarea name="content" id="input-content" rows="10" class="max CodeMirror">'.$content.'</textarea>
+					<textarea name="content" id="input-content" rows="30" class="max CodeMirror-auto">'.$content.'</textarea>
 				</li>
 				<li class="column-left-20">
 					<label for="input-status">Status / Sichtbarkeit</label><br/>

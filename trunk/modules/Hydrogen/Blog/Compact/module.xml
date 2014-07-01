@@ -2,7 +2,9 @@
 <module>
 	<title><![CDATA[Blog &raquo;Compact&laquo;]]></title>
 	<description>Simple blog with tags but without comments.</description>
-	<version>0.1</version>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<files>
 		<class>Controller/Blog.php5</class>
 		<class>Model/Article.php5</class>
