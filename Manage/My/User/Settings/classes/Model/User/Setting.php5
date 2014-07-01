@@ -54,7 +54,7 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 		return new ADT_List_Dictionary( $config );
 	}
 
-	public function applyConfigStatic( CMF_Hydrogen_Environment_Abstract $env, $userId = NULL, $hidePasswords = TRUE ){
+	static public function applyConfigStatic( CMF_Hydrogen_Environment_Abstract $env, $userId = NULL, $hidePasswords = TRUE ){
 		$model	= new Model_User_Setting( $env );
 		return $model->applyConfig( $userId, $hidePasswords );
 	}
