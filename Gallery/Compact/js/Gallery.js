@@ -15,7 +15,7 @@ Gallery = {
 	},
 	setupInfo: function(){
 		if($("img.zoomable").size()){
-			var config = settings.Module_JS_cmImagnifier;
+			var config = settings.JS_cmImagnifier;
 			$("img.zoomable").cmImagnifier({
 				autoEnable: false,
 				classContainer: config.classContainer,
@@ -55,7 +55,7 @@ Gallery = {
 			});
 		});
 		
-		$("img.fullscreenable").live("click",function(){
+		$("img.fullscreenable").bind("click", function(){
 			var source = $(".gallery-image-info").data("original");
 			$("#gallery-image-fullscreen")/*.addClass("loading")*/.show();
 			var image =  $("<img/>").appendTo(layer);

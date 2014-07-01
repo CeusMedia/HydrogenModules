@@ -2,7 +2,16 @@
 <module>
 	<title><![CDATA[Gallery &raquo;Compact&laquo;]]></title>
 	<description>Simple gallery with auto indexing in nested folders.</description>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added image download.</log>
+	<log version="0.2.2">Added magnification.</log>
+	<log version="0.2.3">Added EXIF data display.</log>
+	<log version="0.2.4">Added RSS feed.</log>
+	<log version="0.3">First stable/production release.</log>
+	<log version="0.3.1">Minor fixes.</log>
+	<log version="0.3.2">Support for darkbox module.</log>
 	<files>
 		<class>Controller/Gallery.php5</class>
 		<class>View/Gallery.php5</class>
@@ -35,8 +44,8 @@
 	<config protected="no" type="string" name="license.image">http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
 	<config protected="no" type="string" name="license.label">Creative Commons Namensnennung-Nicht-kommerziell-Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz</config>
 	<config protected="no" type="string" name="license.work.creator">kriss</config>
-	<config protected="no" type="string" name="license.work.url">http://iamkriss.net/gallery/</config>
-	<config protected="no" type="string" name="license.work.title">Bildmaterial</config>
+	<config protected="no" type="string" name="license.work.url">http://example.org/gallery/</config>
+	<config protected="no" type="string" name="license.work.title"></config>
 	<config protected="yes" type="string" name="path">gallery/</config>
 	<config protected="yes" type="integer" name="thumb.width">126</config>
 	<config protected="yes" type="integer" name="thumb.height">84</config>
@@ -47,6 +56,7 @@
 		<supports type="module">JS_cmImagnifier</supports>
 	</relations>
 	<link xml:lang="de" access="public" path="gallery">Galerie</link>
+	<link xml:lang="en" access="public" path="gallery">Gallery</link>
 	<link rank="99" access="public" path="gallery/feed"/>
 	<link rank="99" access="public" path="gallery/index"/>
 	<link rank="99" access="public" path="gallery/info"/>
