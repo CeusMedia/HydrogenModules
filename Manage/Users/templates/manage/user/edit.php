@@ -256,7 +256,7 @@ $panelEdit	= '
 $acl	= $env->getAcl();
 $matrix	= $acl->index();
 $number	= 0;
-
+$list	= array();
 foreach( $matrix as $controller => $actions ){
 	if( ( $size = count( $actions ) ) ){
 		$number++;
