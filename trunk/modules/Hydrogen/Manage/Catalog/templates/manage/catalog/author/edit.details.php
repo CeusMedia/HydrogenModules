@@ -29,7 +29,7 @@ if( $author->image ){
 
 return '
 		<form action="./manage/catalog/author/edit/'.$author->authorId.'" method="post" enctype="multipart/form-data">
-			<h3>'.$w->heading.'</h3>
+			<!--<h4>'.$w->heading.'</h4>-->
 			<div class="row-fluid">
 				<div class="span6">
 					<div class="row-fluid">
