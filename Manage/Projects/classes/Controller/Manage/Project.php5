@@ -95,8 +95,10 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$relations	= $model->getAllByIndex( 'projectId', $projectId );
 
 		$users		= array();
-		foreach( $modelUser->getAll() as $user )
-				$users[$user->userId]	= $user;
+		$conditions	= array( 'status' => '>0' );
+		$orders		= array( 'username' => 'ASC' );
+		foreach( $modelUser->getAll( $conditions, $orders ) as $user )
+			$users[$user->userId]	= $user;
 
 		$projectUsers	= array();
 		foreach( $relations as $relation ){
