@@ -8,10 +8,11 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.25</version>
+	<version>0.8.26</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
+	<log version="0.8.26">Updated module SQL parts.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -82,9 +83,9 @@ code>
 	<link access="inside" path="work/mission/switchTense"></link>
 	<link access="inside" path="work/mission/setFilter"></link>
 	<link access="inside" path="work/mission/testMail" rank="99"></link>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
+CREATE TABLE `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ownerId` int(10) unsigned NOT NULL,
   `workerId` int(10) unsigned NOT NULL,
@@ -96,8 +97,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
   `dayEnd` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `timeStart` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `timeEnd` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-  `hoursProjected` int(10) unsigned DEFAULT NULL,
-  `hoursRequired` int(10) unsigned DEFAULT NULL,
+  `minutesProjected` int(10) unsigned DEFAULT '0',
+  `minutesRequired` int(10) unsigned DEFAULT '0',
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
   `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -109,6 +110,30 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>missions` (
   KEY `type` (`type`),
   KEY `creatorId` (`ownerId`,`workerId`),
   KEY `projectId` (`projectId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
+CREATE TABLE `<%?prefix%>mission_changes` (
+  `missionChangeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `missionId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `data` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`missionChangeId`),
+  KEY `missionId` (`missionId`),
+  KEY `userId` (`userId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mission_filters`;
+CREATE TABLE `<%?prefix%>mission_filters` (
+  `missionFilterId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `serial` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`missionFilterId`),
+  KEY `userId` (`userId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.8.8"><![CDATA[
@@ -146,7 +171,9 @@ UPDATE `<%?prefix%>missions` SET hoursRequired = hoursRequired * 60 WHERE hoursR
 ALTER TABLE `<%?prefix%>missions` CHANGE `hoursProjected`  `minutesProjected` INT( 10 ) UNSIGNED DEFAULT NULL;
 ALTER TABLE `<%?prefix%>missions` CHANGE `hoursRequired`  `minutesRequired` INT( 10 ) UNSIGNED DEFAULT NULL;
 ]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
+	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
+DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
+DROP TABLE IF EXISTS `<%?prefix%>mission_filters`;
 ]]></sql>
 </module>
