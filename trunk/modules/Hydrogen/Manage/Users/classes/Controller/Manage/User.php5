@@ -249,20 +249,19 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
 		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
 			$this->restart();
-		if( !$limit )
-			$limit		= $session->get( 'filter-user-limit' );
-		if( !$limit )
-			$limit		= 10;
-		$offset		= is_null( $offset ) ? 0 : abs( $offset );
-		$limits		= array( $limit, $offset );
 
-		$filters	= array();
-		foreach( $session->getAll() as $key => $value )
-			if( preg_match( '/^filter-user-/', $key ) ){
-				$column	= preg_replace( '/^filter-user-/', '', $key );
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
-					$filters[$column] = $value;
+		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
+		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
+		$offset		= !is_null( $offset ) ? abs( $offset ) : 0;								//  get offset from request or reset
+
+		$filters	= array();																//  prepare filters map
+		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
+			if( preg_match( '/^filter-user-/', $key ) ){									//  if setting is users filter
+				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
+				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )			// 	filter is within list of allowed filters
+					$filters[$column] = $value;												//  enlist filter
 			}
+		}
 		$orders	= array();
 		$order	= $session->get( 'filter-user-order' );
 		$dir	= $session->get( 'filter-user-direction' );
@@ -281,7 +280,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
 		$all		= $modelUser->count();
 		$total		= $modelUser->count( $filters );
-		$list		= $modelUser->getAll( $filters, $orders, $limits );
+		$list		= $modelUser->getAll( $filters, $orders, array( $offset, $limit ) );
+
 		$this->addData( 'username', $session->get( 'filter-user-username' ) );
 		$this->addData( 'roles', $roleMap );
 #		$this->addData( 'rooms', $server->getData( 'room', 'index' ) );
