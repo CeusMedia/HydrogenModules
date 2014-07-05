@@ -22,7 +22,7 @@ return '
 		</div>
 		<div class="span3">
 			<label for="input_date">'.$w->labelDate.'</label>
-			<input type="text" name="date" id="input_date" class="span12" value=""/>
+			<input type="text" name="date" id="input_date" class="span12" value="" autocomplete="off"/>
 		</div>
 	</div>
 	<div class="row-fluid">
@@ -40,4 +40,22 @@ return '
 		<button type="submit" class="btn btn-success" name="save"><i class="icon-ok icon-white"></i>&nbsp;speichern</button>
 	</div>
 </form>
+<script>
+$(document).ready(function(){
+	$("#input_date").datepicker({
+		dateFormat: "yy-mm-dd",
+//		appendText: "(yyyy-mm-dd)",
+//		buttonImage: "/images/datepicker.gif",
+//		changeMonth: true,
+//		changeYear: true,
+//		gotoCurrent: true,
+//		autoSize: true,
+		firstDay: 1,
+		nextText: "nächster Monat",
+		prevText: "vorheriger Monat",
+		yearRange: "c:c+2",
+		monthNames: monthNames
+	});
+});
+</script>
 ';
