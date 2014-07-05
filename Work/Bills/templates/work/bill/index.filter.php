@@ -38,4 +38,24 @@ return '
 			<button type="submit" name="filter" class="btn btn-small"><i class="icon-filter"></i>&nbsp;'.$w->buttonFilter.'</button>
 			<a href="./work/bill/" class="btn btn-small"><i class="icon-remove-circle"></i>&nbsp;'.$w->buttonReset.'</a>
 		</div>
+
+<script>
+$(document).ready(function(){
+	$("#input_start, #input_end").datepicker({
+		dateFormat: "yy-mm-dd",
+//		appendText: "(yyyy-mm-dd)",
+//		buttonImage: "/images/datepicker.gif",
+//		changeMonth: true,
+//		changeYear: true,
+//		gotoCurrent: true,
+//		autoSize: true,
+		firstDay: 1,
+		nextText: "nächster Monat",
+		prevText: "vorheriger Monat",
+		yearRange: "c:c+2",
+		monthNames: monthNames
+	});
+});
+</script>
+
 ';
