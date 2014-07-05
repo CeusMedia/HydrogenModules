@@ -2,7 +2,8 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
+	<log version="0.3.6">Changes to support new tab module.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
