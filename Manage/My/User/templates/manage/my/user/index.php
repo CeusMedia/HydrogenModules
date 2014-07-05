@@ -139,6 +139,7 @@ $panelEdit	= '
 </div>';
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
+//$tabs	= $view->renderTabs();
 
 return $tabs.HTML::DivClass( 'row-fluid', 
 	HTML::DivClass( 'span8',
