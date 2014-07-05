@@ -43,4 +43,22 @@ return '
 		<button type="submit" class="btn btn-success" name="save"><i class="icon-ok icon-white"></i>&nbsp;speichern</button>
 	</div>
 </form>
+<script>
+$(document).ready(function(){
+	$("#input_date").datepicker({
+		dateFormat: "yy-mm-dd",
+//		appendText: "(yyyy-mm-dd)",
+//		buttonImage: "/images/datepicker.gif",
+//		changeMonth: true,
+//		changeYear: true,
+//		gotoCurrent: true,
+//		autoSize: true,
+		firstDay: 1,
+		nextText: "nächster Monat",
+		prevText: "vorheriger Monat",
+		yearRange: "c-2:c+3",
+		monthNames: monthNames
+	});
+});
+</script>
 ';

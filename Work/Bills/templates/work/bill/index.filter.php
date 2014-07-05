@@ -52,7 +52,7 @@ $(document).ready(function(){
 		firstDay: 1,
 		nextText: "nächster Monat",
 		prevText: "vorheriger Monat",
-		yearRange: "c:c+2",
+		yearRange: "c-10:c+10",
 		monthNames: monthNames
 	});
 });

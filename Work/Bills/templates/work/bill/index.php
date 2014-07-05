@@ -57,9 +57,11 @@ if( $bills ){
 $filter		= $this->loadTemplateFile( 'work/bill/index.filter.php' );
 
 $w	= (object) $words['index'];
+$tabs	= View_Work_Bill::renderTabs( $env );
 
 return '
 <h2>'.$w->heading.'</h2>
+'.$tabs.'
 <div class="row-fluid">
 	<div class="span3">
 		'.$filter.'

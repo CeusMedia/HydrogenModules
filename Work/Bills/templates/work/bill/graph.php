@@ -44,8 +44,11 @@ $optType	= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter
 $optStatus	= array( '' => '- alle -' ) +$words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
+$tabs	= View_Work_Bill::renderTabs( $env, '' );
+
 return '
 <h2>'.$words['graph']['heading'].'</h2>
+'.$tabs.'
 <div class="row-fluid">
 	<div class="span12">
 		<div id="chart_balance"></div>
