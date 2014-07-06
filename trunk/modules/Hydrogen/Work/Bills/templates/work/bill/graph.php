@@ -17,7 +17,33 @@ if( $monthEnd > 12 ){
 }
 
 $conditions	= array(
-//	'userId'	=> $this->env->getSession()->get( 'userId' ),
+	'userId'	=> $userId,
+	'date'		=> '<'.date( 'Ymd' ),
+	'status'	=> 0
+);
+$sum	= 0;
+$openBills	= $model->getAll( $conditions );
+
+foreach( $openBills as $bill ){
+	if( $bill->date < date( 'Ymd' ) )
+		$sum	+= $bill->type ? -1 * $bill->price : $bill->price;
+}
+
+$listOpenPast	= $view->renderTable( $model->getAll( array(
+	'userId'	=> $userId,
+	'date'		=> '<='.date( 'Ymd' ),
+	'status'	=> 0
+) ), './work/bill/graph' );
+$listOpenFuture	= $view->renderTable( $model->getAll( array(
+	'userId'	=> $userId,
+	'date'		=> '>'.date( 'Ymd' ),
+	'status'	=> 0
+) ), './work/bill/graph' );
+
+
+
+$conditions	= array(
+	'userId'	=> $userId,
 //	'date'		=> '>'.$yearStart.$monthStart.'00',
 //	'date'		=> '<'.$yearEnd.$monthEnd.'32',
 );
@@ -25,7 +51,7 @@ $orders		= array( 'date' => 'ASC' );
 $bills		= $model->getAll( $conditions, $orders );
 
 $dataGraph	= array( array( "Tag", "Stand" ) );
-$balance	= 0;
+$balance	= $sum;
 $year		= date( 'Y' );
 $month		= date( 'm' );
 $day		= date( 'd' );
@@ -44,14 +70,47 @@ $optType	= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter
 $optStatus	= array( '' => '- alle -' ) +$words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
-$tabs	= View_Work_Bill::renderTabs( $env, '' );
+$tabs	= View_Work_Bill::renderTabs( $env, 'graph' );
 
 return '
-<h2>'.$words['graph']['heading'].'</h2>
+<!--<h2>'.$words['graph']['heading'].'</h2>-->
 '.$tabs.'
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span4">
+		<h4>Berechnung</h4>
+		<table class="table table-stiped">
+			<colgroup>
+				<col width="70%"/>
+				<col width="30%"/>
+			</colgroup>
+			<tbody>
+				<tr>
+					<th colspan="2">Vergangenheit</th>
+				</tr>
+				<tr>
+					<td>offen: Vergangenheit</td>
+					<td style="text-align: right">'.$view->renderPrice( $sum,  $sum < 0, '&nbsp;&euro;' ).'</td>
+				</tr>
+				<tr>
+					<td>Endstand</td>
+					<td style="text-align: right"><b>'.$view->renderPrice( $balance,  $balance < 0, '&nbsp;&euro;' ).'</b></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="span8">
 		<div id="chart_balance"></div>
+	</div>
+</div>
+<hr/>
+<div class="row-fluid">
+	<div class="span6">
+		<h4><span class="muted">offene Rechnungen: </span>Vergangenheit</h4>
+		'.$listOpenPast.'
+	</div>
+	<div class="span6">
+		<h4><span class="muted">offene Rechnungen: </span>Zukunft</h4>
+		'.$listOpenFuture.'
 	</div>
 </div>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

@@ -2,15 +2,18 @@
 class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 
 	protected $model;
+	protected $userId;
 
 	protected function __onInit(){
 		$this->model	= new Model_Bill( $this->env );
+		$this->userId	= $this->env->getSession()->get( 'userId' );
 	}
 
 	public function add(){
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
+			$data['userId']	= $this->userId;
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !strlen( trim( $request->get( 'price' ) ) ) )
@@ -54,10 +57,17 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 	public function index(){
 	}
 
-	public function remove(){
+	public function graph(){
+		$this->addData( 'userId', $this->userId );
 	}
 
-	public function graph(){
+	public function setStatus( $billId, $status ){
+		$from	= $this->env->getRequest()->get( 'from' );
+		$this->model->edit( $billId, array( 'status' => $status ) );
+		$this->restart( $from ? $from : './work/bill' );
+	}
+
+	public function remove(){
 	}
 }
 

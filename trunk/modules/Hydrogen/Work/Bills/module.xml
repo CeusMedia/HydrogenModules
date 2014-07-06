@@ -3,8 +3,10 @@
 	<title>Work: Bills</title>
 	<description><![CDATA[Extensible customer database management.]]></description>
 	<category>Management</category>
-	<version>0.2.4</version>
+	<version>0.2.6</version>
 	<log version="0.2.4">Added support for tabs.</log>
+	<log version="0.2.5">Added calendar support.</log>
+	<log version="0.2.6">Added more lists.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
