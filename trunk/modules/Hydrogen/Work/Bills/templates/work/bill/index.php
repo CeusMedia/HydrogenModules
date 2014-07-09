@@ -17,7 +17,7 @@ if( $monthEnd > 12 ){
 }
 
 $conditions	= array(
-//	'userId'	=> $this->env->getSession()->get( 'userId' ),
+	'userId'	=> $userId,
 //	'date'		=> '>'.$yearStart.$monthStart.'00',
 //	'date'		=> '<'.$yearEnd.$monthEnd.'32',
 );

@@ -55,6 +55,7 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		$this->addData( 'userId', $userId );
 	}
 
 	public function graph(){
