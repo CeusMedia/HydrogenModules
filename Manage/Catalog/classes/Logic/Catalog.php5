@@ -301,16 +301,19 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	protected function clearCacheForArticle( $articleId ){
 		$article	= $this->modelArticle->get( $articleId );											//  get article
 		$this->cache->remove( 'catalog.article.'.$articleId );											//  remove article cache
-		$categoryId	= $article->categoryId;																//  get category ID of article
-		while( $categoryId ){																			//  loop while category ID exists
-			$category	= $this->modelCategory->get( $categoryId );										//  get category of category ID
-			if( $category ){																			//  category exists
-				$this->cache->remove( 'catalog.category.'.$categoryId );								//  remove category cache
-				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );				//  remove category view cache
-				$categoryId	= (int) $category->parentId;												//  category parent ID is category ID for next loop
+		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );			//  get related categories of article
+		foreach( $categories as $category ){															//  iterate assigned categories
+			$categoryId	= $category->categoryId;														//  get category ID of related category
+			while( $categoryId ){																		//  loop while category ID exists
+				$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
+				if( $category ){																		//  category exists
+					$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
+					$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
+					$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
+				}
+				else																					//  category is not existing
+					$categoryId	= 0;																	//  no further loops
 			}
-			else																						//  category is not existing
-				$categoryId	= 0;																		//  no further loops
 		}
 	}
 
