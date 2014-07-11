@@ -11,6 +11,42 @@ class Logic_Mail{
 		$this->options->set( 'queue', TRUE );
 	}
 
+	public function collectConfiguredReceivers( $userIds, $groupIds = array(), $listConfigKeysToCheck = array() ){
+		if( !$this->env->getModules()->has( 'Resource_Users' ) )
+			return array();
+		$receivers		= array();
+		if( is_string( $userIds ) )
+			$userIds	= explode( ",", trim( $userIds ) );
+		if( is_string( $groupIds ) )
+			$groupIds	= explode( ",", trim( $groupIds ) );
+		if( !is_array( $userIds ) )
+			throw new InvalidArgument( 'Invalid list of user IDs' );
+		if( !is_array( $groupIds ) )
+			throw new InvalidArgument( 'Invalid list of group IDs' );
+		$modelUser		= new Model_User( $this->env );
+		foreach( $groupIds as $groupId ){
+			if( strlen( trim( $groupId ) ) && (int) $groupId > 0 ){
+				$users	= $modelUser->getAllByIndex( 'roleId', $listIds );
+				foreach( $users as $user )
+					$receivers[(int) $user->userId]	= $user;
+			}
+		}
+		foreach( $userIds as $userId ){
+			if( strlen( trim( $userId ) ) && (int) $userId > 0 ){
+				if( !isset( $receivers[(int) $userId] ) ){
+					$user	= $modelUser->get( (int) $userId );
+					$receivers[(int) $userId]	= $user;
+				}
+			}
+		}
+		if( $listConfigKeysToCheck ){
+			foreach( $listConfigKeysToCheck as $key ){
+				
+			}
+		}
+		return $receivers;
+	}
+
 	/**
 	 *	Returns number of mails in queue by given conditions.
 	 *	@access		public
