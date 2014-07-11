@@ -1,6 +1,6 @@
 <?php
 
-$model	= new Model_Bill( $this->env );
+/*$model	= new Model_Bill( $this->env );
 $year	= date( 'Y' );
 $month	= date( 'm' );
 $yearStart	= $year;
@@ -23,7 +23,7 @@ $conditions	= array(
 );
 $orders		= array( 'date' => 'ASC' );
 $bills		= $model->getAll( $conditions, $orders );
-
+*/
 $iconIn		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
 $iconOut	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
 
@@ -32,6 +32,9 @@ $filter		= $this->loadTemplateFile( 'work/bill/index.filter.php' );
 
 $w		= (object) $words['index'];
 $tabs	= View_Work_Bill::renderTabs( $env );
+
+$pagination	= new View_Helper_Pagination();
+$pagination	= $pagination->render( './work/bill', $total, $filters->get( 'limit' ), $page );
 
 return '
 <!--<h2>'.$w->heading.'</h2>-->
@@ -42,8 +45,9 @@ return '
 	</div>
 	<div class="span9">
 		'.$table.'
-		<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;neue Rechnung</a>
-<!--		|
-		<a href="./work/bill/graph" class="btn btn-info"><i class="icon-signal icon-white"></i>&nbsp;Prognose-Graph</a>-->
+		'.$pagination.'
+		<div class="buttonbar">
+			<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;neue Rechnung</a>
+		</div>
 	</div>
 </div>';

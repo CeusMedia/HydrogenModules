@@ -1,15 +1,25 @@
 <?php
 
-$optType	= array( '' => '- alle -' ) + $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
+$optType		= array( '' => '- alle -' ) + $words['types'];
+$optType		= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
-$optStatus	= array( '' => '- alle -' ) +$words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
+$optStatus		= array( '' => '- alle -' ) +$words['states'];
+$optStatus		= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
+
+$optOrder		= array( 'date' => 'Fälligkeit', 'status' => 'Status', 'type' => 'Typ' );
+$optOrder		= UI_HTML_Elements::Options( $optOrder, $filters->get( 'order' ) );
+
+$optDirection	= array( 'ASC' => 'aufsteigend', 'DESC' => 'absteigend' );
+$optDirection	= UI_HTML_Elements::Options( $optDirection, $filters->get( 'direction' ) );
+
+$filterStart	= $filters->get( 'start' );
+$filterEnd		= $filters->get( 'end' );
 
 $w	= (object) $words['index-filter'];
 
 return '
-		<h4>'.$w->heading.'</h4>
+	<h4>'.$w->heading.'</h4>
+	<form name="work_bills_filter" action="./work/bill/filter" method="post">
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_type">'.$w->labelType.'</label>
@@ -25,21 +35,33 @@ return '
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_start">'.$w->labelStart.'</label>
-				<input type="text" name="start" id="input_start" class="span12" value="'.''.'"/>
+				<input type="text" name="start" id="input_start" class="span12 datepicker" value="'.$filterStart.'"/>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_end">'.$w->labelEnd.'</label>
-				<input type="text" name="end" id="input_end" class="span12" value="'.''.'"/>
+				<input type="text" name="end" id="input_end" class="span12 datepicker" value="'.$filterEnd.'"/>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_order">'.$w->labelOrder.'</label>
+				<select name="order" id="input_order" class="span12">'.$optOrder.'</select>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_direction">'.$w->labelDirection.'</label>
+				<select name="order" id="input_order" class="span12">'.$optDirection.'</select>
 			</div>
 		</div>
 		<div class="buttonbar">
-			<button type="submit" name="filter" class="btn btn-small"><i class="icon-filter"></i>&nbsp;'.$w->buttonFilter.'</button>
-			<a href="./work/bill/" class="btn btn-small"><i class="icon-remove-circle"></i>&nbsp;'.$w->buttonReset.'</a>
+			<button type="submit" name="filter" class="btn btn-small btn-info"><i class="icon-filter icon-white"></i>&nbsp;'.$w->buttonFilter.'</button>
+			<a href="./work/bill/filter/reset" class="btn btn-small btn-inverse"><i class="icon-remove-circle icon-white"></i>&nbsp;'.$w->buttonReset.'</a>
 		</div>
-
-<script>
+	</form>
+	<script>
 $(document).ready(function(){
 	$("#input_start, #input_end").datepicker({
 		dateFormat: "yy-mm-dd",
@@ -56,6 +78,5 @@ $(document).ready(function(){
 		monthNames: monthNames
 	});
 });
-</script>
-
+	</script>
 ';
