@@ -11,6 +11,7 @@ $labelsStatusHttp	= array(
 
 function formatUrl( $url ){
 	$parts	= parse_url( $url );
+	$parts['host']	.= !empty( $parts['port'] ) ? ":".$parts['port'] : "";
 //	remark( $url );
 //	print_m( $parts );
 	$scheme	= UI_HTML_Tag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
@@ -28,7 +29,7 @@ function formatUrl( $url ){
 
 $rows	= array();
 foreach( $instances as $instanceId => $instance ){
-	$instance->host     = $instance->host === "localhost" ? $env->host : $instance->host;
+	$instance->host     = $instance->host === "localhost" ? $env->host . ( $env->port && $env->port != 80 ? ":".$env->port : "" ) : $instance->host;
 	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;
 	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
@@ -37,7 +38,7 @@ foreach( $instances as $instanceId => $instance ){
 	$codeUri		= UI_HTML_Tag::create( 'code', $instance->uri );
 	$codeUri		= UI_HTML_Tag::create( 'small', $codeUri, array( 'class' => 'muted' ) );
 	$titleStatus	= $uriExists ? "Checked and found on file system" : "NOT FOUND on file system (not installed or path invalid)";
-	$titleStatus	= $uriExists ? "Order auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
+	$titleStatus	= $uriExists ? "Ordner auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
 	$indicators		= join( "", array(
 		'<div class="status-file status-box status-box-'.( $uriExists ? 'half' : 'no' ).'" title="'.$titleStatus.'"></div>',
 		'<div class="status-http status-box" title="'.$labelsStatusHttp['unchecked'].'"></div>',
