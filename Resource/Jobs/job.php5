@@ -4,7 +4,7 @@ $pathLibs		= "";
 $verCMC			= 'trunk';
 $verCMF			= 'trunk';
 $verCMM			= 'trunk';
-//$configFile		= "config/config.ini";								//  set (an alternative) config file
+$configFile		= "config/config.ini";								//  set (an alternative) config file
 $modes			= array(
 	'live',
 	'test',

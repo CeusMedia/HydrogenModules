@@ -39,7 +39,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 
 	public function logException( $exception ){
 		$message	= $exception->getMessage().'@'.$exception->getFile().':'.$exception->getLine();
-		$this->manager->logError( $this->getLogPrefix().$message );
+		$this->logError( /*$this->getLogPrefix().*/$message );
 	}
 
 	public function logError( $message ){
