@@ -9,6 +9,6 @@
 	<job id="countQueuedMails">
 		<class>Mail</class>
 		<method>countQueuedMails</method>
-		<mode>dev</mode>
+		<mode>test</mode>
 	</job>
 </jobs>

@@ -29,7 +29,7 @@ abstract class Mail_Abstract{
 	 *	@param		araray								$data		Map of template mail data
 	 */
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array() ){
-		$this->env		= $env;
+		$this->setEnv( $env );
 		$this->mail		= new Net_Mail();
 		$this->view		= new CMF_Hydrogen_View( $env );
 		$this->page		= new UI_HTML_PageFrame();
@@ -43,26 +43,7 @@ abstract class Mail_Abstract{
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 		$this->addThemeStyle( 'mail.min.css' );
 		$this->addScriptFile( 'mail.min.js' );
-
-		switch( strtolower( $this->options->get( 'transport.type' ) ) ){
-			case 'smtp':
-				$hostname	= $this->options->get( 'transport.hostname' );
-				$port		= $this->options->get( 'transport.port' );
-				$username	= $this->options->get( 'transport.username' );
-				$password	= $this->options->get( 'transport.password' );
-				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
-				$this->transport->setAuthUsername( $username );
-				$this->transport->setAuthPassword( $password );
-				$this->transport->setVerbose( FALSE );
-				break;
-			case 'local':
-			case 'default':
-			case 'sendmail':
-				$this->transport	= new Net_Mail_Transport_Default();
-				break;
-			default:
-				throw new RuntimeException( 'No mail transport configured' );
-		}
+		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
 		$this->content	= $this->generate( $data );
 	}
@@ -73,7 +54,7 @@ abstract class Mail_Abstract{
 	 *	@return		array		List of allowed members during serialization
 	 */
 	public function __sleep(){
-		return array( 'mail', 'transport', 'page' );
+		return array( 'mail', 'transport', 'page', 'options' );
 	}
 
 	/**
@@ -178,6 +159,29 @@ abstract class Mail_Abstract{
 		return $language->getSection( $topic, $section );
 	}
 
+	public function initTransport(){
+		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		switch( strtolower( $options->get( 'transport.type' ) ) ){
+			case 'smtp':
+				$hostname	= $options->get( 'transport.hostname' );
+				$port		= $options->get( 'transport.port' );
+				$username	= $options->get( 'transport.username' );
+				$password	= $options->get( 'transport.password' );
+				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
+				$this->transport->setAuthUsername( $username );
+				$this->transport->setAuthPassword( $password );
+				$this->transport->setVerbose( FALSE );
+				break;
+			case 'local':
+			case 'default':
+			case 'sendmail':
+				$this->transport	= new Net_Mail_Transport_Default();
+				break;
+			default:
+				throw new RuntimeException( 'No mail transport configured' );
+		}
+	}
+
 	/**
 	 *	Sends mail to an email address.
 	 *	@access		public
@@ -221,6 +225,10 @@ abstract class Mail_Abstract{
 		if( !$user )
 			throw new RuntimeException( 'User with ID '.$userId.' is not existing' );
 		$this->sendTo( $user );
+	}
+
+	public function setEnv( CMF_Hydrogen_Environment_Abstract $env ){
+		$this->env		= $env;
 	}
 
 	/**
