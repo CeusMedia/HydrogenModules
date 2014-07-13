@@ -61,13 +61,17 @@ class Logic_Mail{
 	 *	Send prepared mail later.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail instance to be queued
-	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
+	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@param		integer			$senderId		Optional: ID of sending user
 	 *	@return		integer							ID of queued mail
 	 */
 	public function enqueueMail( Mail_Abstract $mail, $receiver, $senderId = NULL ){
 		if( is_array( $receiver ) )
 			$receiver	= (object) $receiver;
+		if( is_integer( $receiver ) ){
+			$model		= new Model_User( $this->env );
+			$receiver	= $model->get( $receiver );
+		}
 		if( !is_object( $receiver ) )
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		if( empty( $receiver->email ) )
@@ -137,12 +141,16 @@ class Logic_Mail{
 	 *	Send prepared mail right now.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
-	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
+	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@return		void
 	 */
 	public function sendMail( Mail_Abstract $mail, $receiver ){
 		if( is_array( $receiver ) )
 			$receiver	= (object) $receiver;
+		if( is_integer( $receiver ) ){
+			$model		= new Model_User( $this->env );
+			$receiver	= $model->get( $receiver );
+		}
 		$serial		= serialize( $mail );
 		if( function_exists( 'bzcompress' ) )
 			$serial		= bzcompress( $serial );
@@ -153,7 +161,7 @@ class Logic_Mail{
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		$mail->sendTo( $receiver );
 	}
-	
+
 	/**
 	 *	Send prepared mail right now.
 	 *	@access		public
@@ -174,18 +182,23 @@ class Logic_Mail{
 		$object = unserialize( $object );
 		if( !is_object( $object ) )
 			throw new RuntimeException( 'Deserialization of mail failed' );
-		if( !empty( $mail->receiverId ) )
-			return $object->sendToUser( $mail->receiverId );
-		$receiver	= (object) array(
-			'email'		=> $mail->receiverAddress,
-			'username'	=> $mail->receiverName,
-		);
+		$object->setEnv( $this->env );
+		$object->initTransport();
 		$this->model->edit( $mailId, array(
 			'status'		=> 1,
 			'attempts'		=> $mail->attempts + 1,
 			'attemptedAt'	=> time()
 		) );
-		$object->sendTo( $receiver );
+		if( !empty( $mail->receiverId ) ){
+			$object->sendToUser( $mail->receiverId );
+		}
+		else{
+			$receiver	= (object) array(
+				'email'		=> $mail->receiverAddress,
+				'username'	=> $mail->receiverName,
+			);
+			$object->sendTo( $receiver );
+		}
 		$this->model->edit( $mailId, array(
 			'status'		=> 2,
 			'sentAt'		=> time()

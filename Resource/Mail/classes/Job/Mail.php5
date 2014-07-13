@@ -5,6 +5,13 @@ class Job_Mail extends Job_Abstract{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 	}
 
+	public function countQueuedMails(){
+		$logic		= new Logic_Mail( $this->env );
+		$conditions	= array( 'status' => '<2' );
+		$count		= $logic->countQueue( $conditions );
+		$this->out( sprintf( "%s mails on queue.\n", $count ) );
+	}
+
 	public function sendQueuedMails(){
 		$sleep		= (float) $this->options->get( 'job.sleep' );
 		$limit		= (integer) $this->options->get( 'job.limit' );
@@ -14,7 +21,7 @@ class Job_Mail extends Job_Abstract{
 #print_m( $this->options->getAll() );
 #die;
 		$this->log( 'run with config: {sleep: '.$sleep.', limit: '.$limit.'}' );
-		$logic	= new Logic_Mail( $this->env );
+		$logic		= new Logic_Mail( $this->env );
 		$conditions	= array( 'status' => '<2' );
 		$limits		= $limit > 0 ? array( 0, $limit ) : array();
 		$listSent	= array();
