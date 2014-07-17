@@ -29,7 +29,7 @@
 	</relations>
 	<link xml:lang="de" access="inside" path="work/bill" rank="37">Rechnungen</link>
 	<link xml:lang="en" access="inside" path="work/bill" rank="37">Bills</link>
-	<hook type="resource" resource="MyUser" event="registerTabs">View_Work_Bill::___onRegisterTab</hook>
+	<hook type="resource" resource="Work:Bills" event="registerTabs">View_Work_Bill::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bills`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>bills` (
