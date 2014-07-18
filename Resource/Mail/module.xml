@@ -49,6 +49,8 @@
 	<config protected="yes" type="boolean" name="queue.enabled" mandatory="yes">yes</config>
 	<config protected="yes" type="integer" name="queue.job.limit" title="number of mails to send during one job execution">1000</config>
 	<config protected="yes" type="float" name="queue.job.sleep" title="seconds to sleep after job execution">10</config>
+	<link access="acl" xml:lang="de" rank="88" path="mail">E-Mail-Queue</link>
+	<link access="acl" xml:lang="en" rank="88" path="mail">Mail Queue</link>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
