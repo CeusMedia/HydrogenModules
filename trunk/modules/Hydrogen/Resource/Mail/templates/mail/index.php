@@ -22,32 +22,25 @@ if( $mails ){
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 			$datetime	= $helper->convert( $timestamp, TRUE, 'vor' );
 		}
-		if( strlen( trim( $mail->object ) ) ){
-			$m	= unserialize( bzdecompress( $mail->object ) );
-			xmp( $m->mail->getSender() );
-			xmp( $m->mail->getBody() );
-			die;
-		}
 		$datetime   = UI_HTML_Tag::create( 'small', $datetime, array( 'class' => 'muted' ) );
 		$receiverName	= UI_HTML_Tag::create( 'span', $mail->receiverName, array( 'class' => 'mail-user-name' ) );
 		$receiverMail	= UI_HTML_Tag::create( 'small', $mail->receiverAddress, array( 'class' => 'mail-user-address muted' ) );
+		$senderMail		= UI_HTML_Tag::create( 'small', $mail->senderAddress, array( 'class' => 'mail-user-address muted' ) );
 		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './mail/view/'.$mail->mailId ) );
 
 		$cells		= array();
-//		$cells[]	= UI_HTML_Tag::create( 'td', $mail->senderId, array( 'class' => 'cell-mail-sender' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'cell-mail-receiver' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $words['states'][$mail->status].'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
 		$rows[]		= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => 'list-item-mail '.$statusClasses[$mail->status] ) );
 	}
 	$heads	= UI_HTML_Elements::TableHeads( array(
-//		'Absender',
+		'Sender und Betreff',
 		'Empfänger',
-		'Betreff',
 		'Status',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( "25%", "55%", "15%" ) );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( array( "55%", "25%", "15%" ) );
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
