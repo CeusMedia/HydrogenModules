@@ -9,6 +9,26 @@ class Logic_Mail{
 		$this->model	= new Model_Mail( $this->env );
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->options->set( 'queue', TRUE );
+
+/*		$mails	=  $this->model->getAll();
+		foreach( $this->model->getAll() as $mail ){
+			if( empty( $mail->senderAddress ) ){
+		        if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
+		            $object     = bzdecompress( $mail->object );
+		        else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
+		            $object     = gzinflate( $mail->object );
+		        else
+		            $object     = base64_decode( $mail->object );
+		        $object = @unserialize( $object );
+//		        if( !is_object( $object ) )
+//    		        throw new RuntimeException( 'Deserialization of mail failed' );
+				if( is_object( $object ) ){
+					if( method_exists( $object->mail, 'getSender' ) ){
+						$this->model->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
+					}
+				}
+			}
+		}*/
 	}
 
 	public function collectConfiguredReceivers( $userIds, $groupIds = array(), $listConfigKeysToCheck = array() ){
