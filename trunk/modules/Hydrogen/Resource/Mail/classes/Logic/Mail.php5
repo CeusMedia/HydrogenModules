@@ -84,6 +84,7 @@ class Logic_Mail{
 			$serial		= base64_encode( serialize( $mail ) );
 		$data	= array(
 			'senderId'			=> (int) $senderId,
+			'senderAddress'		=> $mail->getSender(),
 			'receiverId'		=> isset( $receiver->userId ) ? $receiver->userId : 0,
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,

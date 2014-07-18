@@ -3,7 +3,7 @@
 	<title>Resource: Mail</title>
 	<description>Enables application to send mails.</description>
 	<category>Resource</category>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -19,16 +19,21 @@
 	<log version="0.4.4">Updated job handling and related modules.</log>
 	<log version="0.4.5">Added function to get number of queued mails.</log>
 	<log version="0.4.6">Improved support for queued mails.</log>
+	<log version="0.4.7">Added insight in queued mails.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Mail.php5</class>
+		<class>View/Mail.php5</class>
 		<class>Mail/Abstract.php5</class>
 		<class>Mail/Example.php5</class>
 		<class>Mail/Test.php5</class>
 		<class>Model/Mail.php5</class>
 		<class>Logic/Mail.php5</class>
 		<class>Job/Mail.php5</class>
+		<template>mail/index.php</template>
+		<locale>de/mail.ini</locale>
 		<style>mail.min.css</style>
 		<script>mail.min.js</script>
 		<file>config/jobs/mail.xml</file>
@@ -75,5 +80,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   KEY `attemptedAt` (`attemptedAt`),
   KEY `sentAt` (`sentAt`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql on="update" version="0.4.7" type="mysql"><![CDATA[
+ALTER TABLE  `<%?prefix%>mails` ADD  `senderAddress` VARCHAR( 255 ) NOT NULL AFTER  `receiverName` ,
+ADD INDEX (  `senderAddress` ) ;
 	]]></sql>
 </module>
