@@ -459,6 +459,13 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
+	 *	Alias for self::getCategoryArticles()
+	 */
+/*	public function getArticlesFromCategory( $categoryId ){
+		return $this->getCategoryArticles( $categoryId );
+	}*/
+
+	/**
 	 *	@todo		kriss: code doc
 	 */
 	public function getArticleUri( $articleOrId ){
