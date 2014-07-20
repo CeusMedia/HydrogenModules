@@ -49,6 +49,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->addData( 'category', $this->logic->getCategory( $categoryId ) );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'nrArticles', $this->logic->countArticlesInCategory( $categoryId, TRUE ) );
+		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
 	}
 
 	public function index(){
