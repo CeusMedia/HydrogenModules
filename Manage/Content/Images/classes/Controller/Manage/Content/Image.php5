@@ -38,31 +38,40 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 
 	static protected function getImageList( $env ){
 		$cache		= $env->getCache();
-		if( !self::$cacheImageList ){
-			if( NULL === ( self::$cacheImageList = $cache->get( 'ManageContentImages.list.static' ) ) ){
-				$config		= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-				$extensions	= $config->get( 'extensions' );
-				$pathFront	= trim( $config->get( 'frontend.path' ) );
-				$pathImages	= trim( $config->get( 'path.images' ) );
-				$pathIgnore	= trim( $config->get( 'path.ignore' ) );
-				$list		= array();
-				$index		= new File_RecursiveRegexFilter( $pathFront.$pathImages, $extensions );
-				foreach( $index as $item ){
-					$path	= substr( $item->getPathname(), strlen( $pathFront.$pathImages ) );
-					if( $pathIgnore && preg_match( $pathIgnore, $path ) )
-						continue;
-					$parts	= explode( "/", $path );
-					$file	= array_pop( $parts );
-					$path	= implode( '/', array_slice( $parts, 1 ) );
-					$label	= $path ? $path.'/'.$file : $file;
-					$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
-					$list[$path]	= (object) array( 'label' => $label, 'uri' => $uri );
-				}
-				ksort( $list );
-				$cache->set( 'ManageContentImages.list.static', self::$cacheImageList = $list );
-			}
+		if( $list = $env->cache->get( 'ManageContentImages.list.static' ) )
+			return $list;
+		$config		= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$extensions	= $config->get( 'extensions' );
+		$pathFront	= trim( $config->get( 'frontend.path' ) );
+		$pathImages	= trim( $config->get( 'path.images' ) );
+		$pathIgnore	= trim( $config->get( 'path.ignore' ) );
+		$list		= array();
+#remark( "classes/Controller/Manage/Content/Image.php5" );
+#print_m( $cache );
+#die;
+#remark( $pathFront.$pathImages );
+		$index		= new File_RecursiveRegexFilter( $pathFront.$pathImages, $extensions );
+		foreach( $index as $item ){
+			$path	= substr( $item->getPathname(), strlen( $pathFront.$pathImages ) );
+			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
+				continue;
+#remark( "Path: ".$path );
+			$parts	= explode( "/", $path );
+			$level	= count( $parts );
+			$file	= array_pop( $parts );
+#print_m( $parts );
+//			$path	= implode( '/', array_slice( $parts, 1 ) );
+			$path	= implode( '/', $parts );
+			$label	= $path ? $path.'/'.$file : $file;
+			$uri	= substr( $item->getPathname(), strlen( $pathFront ) );
+			$key	= $level.'_'.str_replace( "/", "_", strtolower( $label ) );
+			$list[$key]	= (object) array( 'label' => $label, 'uri' => $uri );
 		}
-		return self::$cacheImageList;
+		ksort( $list );
+#print_m( $list );
+#die;
+		$env->getCache()->set( 'ManageContentImages.list.static', $list );
+		return $list;
 	}
 
 	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
@@ -106,6 +115,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 				$target		= $this->path.$folder.$name;
 				try{
 					Folder_Editor::createFolder( $target, 0775 );
+					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 					$messenger->noteSuccess( 'Der Ordner "'.$folder.$name.'" wurde angelegt.' );
 					$this->restart( './manage/content/image?path='.$folder.$name );
 				}
@@ -143,6 +153,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 							$messenger->noteFailure( 'Fehler beim Speichern der Datei. Bitte den Administrator informieren.' );
 						}
 						else{
+							$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 							$messenger->noteSuccess( 'Die Bilddatei wurde hochgeladen.' );
 							$this->restart( './manage/content/image?path='.$request->get( 'folder' ) );
 						}
@@ -190,6 +201,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 					$messenger->noteSuccess( 'Der <abbr title="'.$folderPath.'">Ordner</abbr> wurde verschoben. Automatische Weiterleitung zum <abbr title="'.$folder.$name.'">neuen Ordner</abbr>.' );
 					$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
 					$thumbnailer->uncacheFolder( $folderPath );
+					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 					$this->restart( './manage/content/image?path='.$folder.$name );
 				}
 				$messenger->noteFailure( 'Der Ordner "'.$folderPath.'" konnte nicht verschoben werden. Bitte den Administrator informieren.' );
@@ -229,6 +241,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 				rename( $pathSource, $pathTarget );
 				$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
 				$thumbnailer->uncacheFile( $imagePath );
+				$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 				$messenger->noteSuccess( 'Die Datei wurde verschoben.' );
 				$this->restart( './manage/content/image/editImage?path='.$folderPath.$fileName );
 			}
@@ -286,6 +299,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 			$this->restart( './manage/content/image/editImage?path='.$imagePath );
 		}
 		unlink( $this->path.$imagePath );
+		$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 		$messenger->noteSuccess( 'Die Bilddatei "'.$imageName.'" wurde entfernt.' );
 		$this->restart( './manage/content/image?path='.dirname( $imagePath ) );
 	}
@@ -324,6 +338,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$target			= $this->path.$targetPath;
 		$thumbnailer	= new UI_Image_ThumbnailCreator( $source, $target, $quality );
 		$thumbnailer->thumbize( $width, $height );
+		$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 		$messenger->noteSuccess( 'Das Bild wurde skaliert und unter "'.$targetPath.'" abgespeichert.' );
 		$this->restart( './manage/content/image/editImage?path='.$imagePath );
 	}
