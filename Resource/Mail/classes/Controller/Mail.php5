@@ -86,5 +86,8 @@ class Controller_Mail extends CMF_Hydrogen_Controller{
 			}
 		}
 	}
+
+	public function view( $mailId ){
+	}
 }
 ?>

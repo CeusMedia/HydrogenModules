@@ -6,6 +6,10 @@ class View_Mail extends CMF_Hydrogen_View{
 
 	public function index(){
 	}
+
+	public function view(){
+		return "Noch nicht implementiert.";
+	}
 }
 ?>
 

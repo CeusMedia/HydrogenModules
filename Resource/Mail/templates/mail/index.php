@@ -64,7 +64,7 @@ return $textTop.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_status">'.$wf->labelStatus.'</label>
-					<select name="status" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
+					<select name="status[]" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
