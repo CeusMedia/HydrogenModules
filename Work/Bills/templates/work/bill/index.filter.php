@@ -29,7 +29,7 @@ return '
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_status">'.$w->labelStatus.'</label>
-				<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
+				<select multiple="multiple" rows="3"  name="status[]" id="input_status" class="span12">'.$optStatus.'</select>
 			</div>
 		</div>
 		<div class="row-fluid">
