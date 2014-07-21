@@ -16,6 +16,12 @@ if( $monthEnd > 12 ){
 	$monthEnd	-= 12;
 }
 
+$statusClasses	= array(
+	'error',
+	'warning',
+	'success',
+);
+
 $conditions	= array(
 	'userId'	=> $userId,
 //	'date'		=> '>'.$yearStart.$monthStart.'00',
