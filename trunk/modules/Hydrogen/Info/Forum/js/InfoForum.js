@@ -7,7 +7,7 @@ var InfoForum = {
 	baseUrl: "./info/forum",
 	preparePostEditor: function(postId){
 		if(InfoForum.lastPostId && InfoForum.lastPostCell.find("textarea").size()){					//  post editor in current row is still open
-			console.log(InfoForum.lastPostId);
+//			console.log(InfoForum.lastPostId);
 			InfoForum.lastPostCell.find("textarea").trigger("editor-change");						//  close editor by triggering change event
 			if(InfoForum.lastPostId === postId)														//  same edit button has been clicked
 				return;																				//  stop here since changes will be stored
