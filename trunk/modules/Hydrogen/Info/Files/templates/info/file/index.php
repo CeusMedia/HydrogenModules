@@ -9,12 +9,6 @@ $iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
 $iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
 $rows			= array( 'folders' => array(), 'files' => array() );
 
-$userCanEdit	= TRUE;
-$userCanChange	= TRUE;
-
-$rights[]	= 'rankTopic';
-
-
 foreach( $files as $file ){
 	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->uploadedAt ) );
 	$size			= Alg_UnitFormater::formatBytes( filesize( $pathBase.$folderPath.$file->title ) );
@@ -67,7 +61,7 @@ foreach( $folders as $folder ){
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $words['index']['buttonOpenFolder']
 	) );
-	if( $userCanEdit && $userCanChange ){
+	if( in_array( 'ajaxRenameFolder', $rights ) ){
 		$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
 			'onclick'	=> 'InfoFile.changeFolderName('.$folder->downloadFolderId.', \''.$folder->title.'\')',
 			'class'	=> 'btn not-btn-small',
@@ -118,10 +112,15 @@ if( $rows ){
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
 
-$panelUpload	= $view->loadTemplateFile( 'info/file/index.upload.php' );
-$panelAddFolder	= $view->loadTemplateFile( 'info/file/index.folder.php' );
-$panelInfo		= $view->loadTemplateFile( 'info/file/index.info.php' );
-$panelScan		= $view->loadTemplateFile( 'info/file/index.scan.php' );
+$panels		= array();
+if( 0 )
+	$panels[]	= $view->loadTemplateFile( 'info/file/index.info.php' );
+if( in_array( 'upload', $rights ) )
+	$panels[]	= $view->loadTemplateFile( 'info/file/index.upload.php' );
+if( in_array( 'addFolder', $rights ) )
+	$panels[]	= $view->loadTemplateFile( 'info/file/index.folder.php' );
+if( in_array( 'scan', $rights ) )
+	$panels[]	= $view->loadTemplateFile( 'info/file/index.scan.php' );
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
@@ -150,13 +149,7 @@ return $textIndexTop.'
 		'.$table.'
 	</div>
 	<div class="span3">
-<!--		'.$panelInfo.'
-		<br/>-->
-		'.$panelUpload.'
-		<hr/>
-		'.$panelAddFolder.'
-		<hr/>
-		'.$panelScan.'
+		'.join( '<hr/>', $panels ).'
 	</div>
 </div>
 '.$textIndexBottom;

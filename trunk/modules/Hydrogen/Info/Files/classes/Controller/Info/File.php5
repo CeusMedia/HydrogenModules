@@ -347,8 +347,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		if( $request->has( 'save' ) ){
 			$upload	= (object) $request->get( 'upload' );
 			if( $upload->error ){
-                $handler    = new Net_HTTP_UploadErrorHandler();
-                $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
+				$handler    = new Net_HTTP_UploadErrorHandler();
+				$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
 				$this->messenger->noteError( $handler->getErrorMessage( $upload->error ) );
 			}
 			else{
