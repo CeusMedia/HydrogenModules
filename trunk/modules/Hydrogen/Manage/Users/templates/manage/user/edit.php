@@ -33,105 +33,7 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
-$optStatus	= array();
-foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
-$optStatus	= join( $optStatus );
-
-
-$panelStatus	= '
-<h4>'.$words['editStatus']['legend'].'</h4>
-<form name="editUserStates" action="./user/edit/'.$userId.'" method="post">
-	<div class="row-fluid">
-		<div class="span5">
-			<label for="status">'.$words['editStatus']['labelStatus'].'</label><br/>
-		</div>
-		<div class="span7">
-			'.UI_HTML_Elements::Input( 'status', $words['status'][$user->status], 'span12 user-status status'.$user->status, TRUE ).'
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12 buttonbar">
-			'.UI_HTML_Elements::LinkButton(
-				'./user/accept/'.$userId,
-				'<i class="icon-ok icon-white"></i> '.$words['editStatus']['buttonAccept'],
-				'btn btn-success',
-				$words['editStatus']['buttonAcceptConfirm'],
-				$user->status == 1
-			).'
-			'.UI_HTML_Elements::LinkButton(
-				'./user/ban/'.$userId,
-				'<i class="icon-lock icon-white"></i> '.$words['editStatus']['buttonBan'],
-				'btn btn-warning',
-				$words['editStatus']['buttonBanConfirm'],
-				$user->status != 1
-			).'
-			'.UI_HTML_Elements::LinkButton(
-				'./user/disable/'.$userId,
-				'<i class="icon-remove icon-white"></i> '.$words['editStatus']['buttonDisable'],
-				'btn btn-danger',
-				$words['editStatus']['buttonDisableConfirm'],
-				$user->status == -2
-			).'
-		</div>
-	</div>
-</form><hr/>';
-
-$facts	= array();
-
 $helper	= new View_Helper_TimePhraser( $env );
-
-$facts[]	= array(
-	'label'	=> 'registriert',
-	'value'	=> 'vor '.$helper->convert( $user->createdAt, TRUE )
-);
-if( $user->loggedAt ){
-	$loggedAt	= $helper->convert( $user->loggedAt );
-	$facts[]	= array(
-		'label'	=> 'zuletzt eingeloggt',
-		'value'	=> 'vor '.$helper->convert( $user->loggedAt, TRUE )
-	);
-}
-if( $user->activeAt ){
-	$activeAt	= $helper->convert( $user->activeAt );
-	$facts[]	= array(
-		'label'	=> 'zuletzt aktiv',
-		'value'	=> 'vor '.$helper->convert( $user->activeAt, TRUE )
-	);
-}
-if( !empty( $projects ) ){
-	$list	= array();
-	foreach( $projects as $project ){
-		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
-	}
-	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
-	$facts[]	= array(
-		'label'	=> 'Projekte',
-		'value'	=> $projects
-	);
-}
-
-foreach( $facts as $nr => $fact )
-	$facts[$nr]	= UI_HTML_Tag::create( 'dt', $fact['label'] ).UI_HTML_Tag::create( 'dd', $fact['value'] );
-$facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
-
-$panelInfo	= '
-<h4>Info: Konto</h4>
-<div class="row-fluid">
-	<div class="span12">
-		<dl>
-			<dt>Rolle</dt>
-			<dd><span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span></dd>
-			<dt>Status</dt>
-			<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
-		</dl>
-		<hr>
-		'.$facts.'
-	</div>
-</div><hr/>
-';
 
 $w	= (object) $words['edit'];
 
@@ -140,6 +42,11 @@ $optRole	= array();
 foreach( array_reverse( $roles, TRUE ) as $role )
 	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
 $optRole	= join( $optRole );
+
+$optStatus  = array();
+foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
+	$optStatus[]    = UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
+$optStatus  = join( $optStatus );
 
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
@@ -158,7 +65,7 @@ $panelEdit	= '
 	<div class="row-fluid">
 		<div class="span2">
 			<label for="username" class="mandatory">'.$w->labelUsername.'</label>
-			<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'"/>
+			<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
 			<label for="input_password" class="">'.$w->labelPassword.'</label>
@@ -253,28 +160,10 @@ $panelEdit	= '
 </form><hr/>
 ';
 
-$acl	= $env->getAcl();
-$matrix	= $acl->index();
-$number	= 0;
-$list	= array();
-foreach( $matrix as $controller => $actions ){
-	if( ( $size = count( $actions ) ) ){
-		$number++;
-		$width	= round( 100 / $size, 8 ).'%';
-		$row	= array();
-		$row[]	= UI_HTML_Tag::create( 'div', $number, array( 'class' => 'counter' ) );
-		foreach( $actions as $action ){
-			$access	= $acl->hasRight( $user->roleId, $controller, $action );
-			$class	= $access ? 'yes' : 'no';
-			$title	= $controller.'/'.$action;
-			$attr	= array( 'class' => $class, 'style' => "width: ".$width, 'title' => $title );
-			$row[]	= UI_HTML_Tag::create( 'div', '', $attr );
-		}
-		$list[]	= UI_HTML_Tag::create( 'div', join( $row ), array( 'class' => 'bar' ) );
-	}
-}
 
-$card	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'acl-card' ) );
+$panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
+$panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
+$panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
 
@@ -287,10 +176,10 @@ return $textIndexTop.'
 <div class="row-fluid">
 	<div class="span4">
 		'.$panelStatus.'
+		<hr/>
 	</div>
 	<div class="span5">
-		<h4>Info: Rechte</h4>
-		'.$card.'
+		'.$panelRights.'
 	</div>
 	<div class="span3">
 		'.$panelInfo.'
