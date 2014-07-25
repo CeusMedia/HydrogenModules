@@ -1,6 +1,34 @@
 <?php
-class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
+class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days{
+/*
+	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
+		$this->missions	= $this->list[$day];
 
+		return UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'div', $link, array( 'class' => 'cell-title' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-workerId' ) ),
+				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-project' ) ),
+				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-priority' ) ),
+				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-actions' ) ),
+			) )
+		) );
+
+		$colgroup		= array();
+		$tableHeads		= array();
+
+		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
+		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
+		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
+		
+		$tableBody		= UI_HTML_Tag::create( 'tbody', $list1.$list0 );
+		$table			= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
+		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day", 'id' => 'table-'.$day ) );
+	}
+*/
+	
+/*	
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
@@ -37,14 +65,14 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return $this->renderBadgeDays( $diff->days, "important" );
 	}
-
+*/
 	/**
 	 *	Render overdue container.
 	 *	@access		public
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
 	 */
-	public function renderBadgeDaysStill( $mission ){
+/*	public function renderBadgeDaysStill( $mission ){
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return "";																			//  return without content
 		$start	= new DateTime( $mission->dayStart );
@@ -60,54 +88,44 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			return "";																			//  return without content
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, "success" );
 	}
-
+*/
 	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
-		$colgroup		= array();
-		$tableHeads		= array();
-
-		$colgroup[]		= "120px";
-		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) );
-
-		if( $showDate ){
-			$colgroup[]		= "80px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Datum', array( 'class' => 'sortable', 'data-column' => 'dayStart' ) );
-		}
-
-		$colgroup[]		= "";
-		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Titel', array( 'class' => 'sortable', 'data-column' => 'title' ) );
-
-		$colgroup[]		= "120px";
-		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'not-sortable', 'data-column' => 'workerId' ) );
-
-		$colgroup[]		= "160px";
-		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'not-sortable', 'data-column' => 'projectId' ) );
-
-		if( $showPriority ){
-			$colgroup[]		= "90px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) );
-		}
-		if( $showActions && $tense ){
-			$colgroup[]		= "80px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable right', 'data-column' => NULL ) );
-		}
-		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$this->missions	= $this->list[$day];
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
-		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
+//		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
 		
-		$tableBody		= UI_HTML_Tag::create( 'tbody', $list1.$list0 );
-		$table			= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
-		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day", 'id' => 'table-'.$day ) );
+		$tableBody		= UI_HTML_Tag::create( 'tbody', /*$list1.*/$list0 );
+		$table			= UI_HTML_Tag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
+		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day-small", 'id' => 'table-small-'.$day ) );
 	}
 
 	public function renderRowButtons( $mission, $days ){
 		$buttons	= array();
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
+
+		$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
+		$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+
+		$list		= array();
+		$linkView	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
+			'href'	=> './work/mission/view/'.$mission->missionId
+		) );
+		$linkEdit	= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array(
+			'href'	=> './work/mission/edit/'.$mission->missionId
+		) );
+		$list[]		= UI_HTML_Tag::create( 'li', $linkView );
+		$list[]		= UI_HTML_Tag::create( 'li', $linkEdit );
+		$list		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu pull-right' ) );
+		$caret		= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
+		$button		= UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => 'dropdown' ) );
+		$buttons	= UI_HTML_Tag::create( 'div', $button.$list, array( 'class' => 'btn-group' ) );
+		return $buttons;
+
 		if( $days ){
 			$attributes	= array(
 				'type'		=> 'button',
 				'onclick'	=> "WorkMissions.changeDay(".$mission->missionId.",'-1')",
-				'class'		=> 'btn btn-mini',
+				'class'		=> 'btn btn-large',
 				'title'		=> $this->words['list-actions']['moveLeft'],
 			);
 			$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['left'], $attributes );
@@ -115,7 +133,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$attributes	= array(
 			'type'		=> 'button',
 			'onclick'	=> "WorkMissions.changeDay(".$mission->missionId.",'+1')",
-			'class'		=> 'btn btn-mini',
+			'class'		=> 'btn btn-large',
 			'title'		=> $this->words['list-actions']['moveRight'],
 		);
 		$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['right'], $attributes );
@@ -131,12 +149,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$url	= $this->baseUrl.'work/mission/view/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";
-		$icon		= '<i class="icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';
+		$icon		= '<i class="icon-large icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';
 		$label		= $icon."&nbsp;".$label;
-		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => $class ) );
+		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => $class, 'style' => 'font-size: 1.1em' ) );
 	}
 
-	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
+/*	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $event );
 		$badgeO		= $this->renderBadgeDaysOverdue( $event );
@@ -147,8 +165,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$date	.= " - ".date( 'j.n.y', strtotime( $event->timeEnd ) );
 		$timeStart	= $this->renderTime( strtotime( $event->timeStart ) );
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
-		$times		= $timeStart.' - '.$timeEnd/*.' '.$this->words['index']['suffixTime']*/;
-		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
+		$times		= $timeStart.' - '.$timeEnds;
+		$times		= UI_HTML_Tag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 
@@ -174,14 +192,15 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$attributes	= array( 'class' => 'mission-row row-priority priority-'.$event->priority );
 		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );
 	}
-
+*/
 	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions ){
 		$link		= $this->renderRowLabel( $task );
 		$badgeO		= $this->renderBadgeDaysOverdue( $task );
 		$badgeS		= $this->renderBadgeDaysStill( $task );
 		$badgeU		= $this->renderBadgeDaysUntil( $task );
-		$graph		= $this->indicator->build( $task->status, 4, 60 );
-		$graph		= UI_HTML_Tag::create( 'div', $graph.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-graph' ) );
+		$badge		= $badgeO.$badgeS.$badgeU;
+		$graph		= $this->indicator->build( $task->status, 4, 50 );
+		$graph		= UI_HTML_Tag::create( 'div', $graph, array( 'class' => 'cell-graph' ) );
 		$worker		= $this->renderUserWithAvatar( $task->workerId );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 
@@ -191,40 +210,52 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		if( $showDate ){
 			$date		= date( "d.m", strtotime( $task->dayStart ) );
 			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $task->dayStart ) ), array( 'class' => 'muted' ) );
-			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
+			$cells[]	= UI_HTML_Tag::create( 'div', $date.$year, array( 'class' => 'cell-date' ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
+		$cells[]	= UI_HTML_Tag::create( 'div', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'div', $worker, array( 'class' => 'cell-workerId' ) );
+		$cells[]	= UI_HTML_Tag::create( 'div', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$task->priority];
-			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
+			$cells[]	= UI_HTML_Tag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
 		}
 		if( $showActions ){
 			$buttons	= $this->renderRowButtons( $task, $days );
-			$cells[]	= UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-actions' ) );
+			$cells[]	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );
 		}
-		$attributes	= array( 'class' => 'mission-row row-priority priority-'.$task->priority );
-		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );
+		$attributes	= array(
+			'class'		=> 'mission-row-small row-priority priority-'.$task->priority,
+			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
+		 );
+		return UI_HTML_Tag::create( 'table', array(
+			UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title', 'colspan' => '2' ) ),
+				UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'not-cell-actions', 'style' => 'width: 45px', 'rowspan' => '2' ) ),
+			), array( 'class' => 'cell-priority' ) ),
+			UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'td', $badge.$project, array( 'class' => 'cell-project', 'colspan' => '1' ) ),
+				UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId', 'colspan' => '1' ) ),
+			), array( 'class' => 'cell-priority' ) )
+		), $attributes );
 	}
 
 	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
 		$list	= array();
 		foreach( $this->missions as $mission ){
 			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 )
-				$list[]	= $this->renderRowOfTask( $mission, $day, $showPriority, $showStatus, $showDate, $showActions );
+				$list[]	= UI_HTML_Tag::create( 'tr',
+					UI_HTML_Tag::create( 'td', $this->renderRowOfTask( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
+						'style' => 'padding: 0; margin: 0'
+					) )
+				);
 			else if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 1 )
-				$list[]	= $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions );
+				$list[]	= UI_HTML_Tag::create( 'tr',
+					UI_HTML_Tag::create( 'td', $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
+						'style' => 'padding: 0; margin: 0'
+					) )
+				);
 		}
-		return join( $list );
-	}
-
-	public function setMissions( $missions ){
-		$this->missions		= $missions;
-	}
-
-	public function setWords( $words ){
-		$this->words	= $words;
+		return UI_HTML_Tag::create( 'table', $list, array( 'class' => 'not-table not-table-striped' ) );
 	}
 }
 ?>

@@ -81,6 +81,29 @@ tr.row-priority.priority-5 td.cell-priority {
 	background-color: rgba(31, 240, 0, 0.6);
 	}
 
+/*  -- DAY LIST - SMALL  --  */
+.row-priority.priority-1 .cell-priority {
+	background-color: rgba(255, 31, 0, 0.25);
+	}
+.row-priority.priority-2 .cell-priority {
+	background-color: rgba(255, 127, 0, 0.25);
+	}
+.row-priority.priority-3 .cell-priority {
+	background-color: rgba(255, 255, 63, 0.25);
+	}
+.row-priority.priority-4 .cell-priority {
+	background-color: rgba(127, 255, 0, 0.2);
+	}
+.row-priority.priority-5 .cell-priority {
+	background-color: rgba(31, 240, 0, 0.3);
+	}
+
+.mission-row-small td {
+	padding: 0;
+	margin: 0;
+	}
+
+
 
 /*  --  MISSION LISTS  --  */
 /*	@deprecated		not used anymore */
@@ -251,7 +274,8 @@ body.controller-work-mission.action-index #day-lists {
 body.controller-work-mission.action-index #work_mission_tense_1 #day-lists .table-day {
 	display: none;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table {
+body.controller-work-mission.action-index #day-lists .table-day table,
+body.controller-work-mission.action-index #day-lists-small .table-day-small table {
 	table-layout: fixed;
 	}
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-graph div.cell-graph,
@@ -259,7 +283,8 @@ body.controller-work-mission.action-index #day-lists .table-day table tr td.cell
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
 	position: relative;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title,
+body.controller-work-mission.action-index #day-lists-small .table-day table tr td.cell-title {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -729,3 +754,58 @@ body.controller-work-mission #descriptionAsMarkdown del {
 body.controller-work-mission .tabbable .nav{
 	margin-bottom: 1px;
 	}
+
+	
+/*  --  SMALL  --  */
+body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
+	text-align: left;
+	top: -3px;
+	right: 0px;
+	}
+span.user-avatar img {
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	}
+span.user-label {
+	font-size: 0.9em;
+	}
+
+
+/*  --  PHONE LISTS  --  */
+body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+	padding-left: 9px;
+	}
+body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+	position: relative;
+	padding-left: 28px;
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 0.9em;
+	}
+body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+	position: absolute;
+	right: auto;
+	left: 2px;
+	top: 2px;
+	font-size: 0.9em;
+	padding-left: 4px;
+	padding-right: 4px;
+	}
+.cell-workerId>div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
+body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+	text-align: left;
+	}
+@media (max-width: 767px) {
+	.progress {
+		height: 4px;
+		margin-bottom: 0px;
+		}
+	}
+@media (max-width: 767px) {
+	#day-controls-small ul.nav {
+		margin-bottom: 0px;
+		}
+	}
+

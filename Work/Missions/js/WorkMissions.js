@@ -178,8 +178,10 @@ $("#number-total").html(sum).show();
 		if(permanent)
 			$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
 		$("div.table-day").hide().filter("#table-"+day).show();
+		$("div.table-day-small").hide().filter("#table-small-"+day).show();
 //		$("#day-controls button").removeClass("active").eq(day).addClass("active");
 		$("#day-controls li.active").removeClass("active");
 		$("#day-controls li").eq(day).addClass("active");
+		$("#day-controls-small li:eq("+day+") a").tab("show");
 	}	
 };
