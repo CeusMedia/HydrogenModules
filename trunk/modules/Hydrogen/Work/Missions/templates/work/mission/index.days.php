@@ -1,7 +1,7 @@
 <?php
 $w			= (object) $words['index'];
 
-class_exists( 'View_Helper_MissionList' );
+//class_exists( 'View_Helper_MissionList' );
 //if( !$h->countMissions( (int) $currentDay ) )
 //	$currentDay	= $h->getNearestFallbackDay( (int) $currentDay );
 
@@ -11,14 +11,24 @@ switch( $filterTense ){
 		$helperDays->setMissions( $missions );
 		$helperDays->setWords( $words );
 
+		$helperDays2		= new View_Helper_Work_Mission_List_DaysSmall( $env );								//  renderer for day lists
+		$helperDays2->setMissions( $missions );
+		$helperDays2->setWords( $words );
+
 		$helperDayButtons	= new View_Helper_Work_Mission_List_DayControls( $this->env );			//  renderer for day buttons
 		$helperDayButtons->setWords( $words );
 		$helperDayButtons->setDayMissions( $helperDays->getDayMissions() );
 
+		$helperDayButtons2	= new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );			//  renderer for day buttons
+		$helperDayButtons2->setWords( $words );
+		$helperDayButtons2->setDayMissions( $helperDays->getDayMissions() );
+
 		$content	= '
 <div>
-	<div id="day-controls">'.$helperDayButtons->render().'</div>
-	<div id="day-lists">'.$helperDays->render().'</div>
+	<div id="day-controls" class="hidden-phone">'.$helperDayButtons->render().'</div>
+	<div id="day-controls-small" class="visible-phone">'.$helperDayButtons2->render().'</div>
+	<div id="day-lists" class="hidden-phone">'.$helperDays->render().'</div>
+	<div id="day-lists-small" class="visible-phone">'.$helperDays2->render().'</div>
 </div>';
 		break;
 	case 0:
@@ -38,8 +48,7 @@ return '
 		'.$content.'
 		<br/>
 	</div>
-</div>
-';
+</div>';
 /*
 <script type="text/javascript">
 var missionShowDay = '.$currentDay.';

@@ -119,6 +119,7 @@ $panelEdit	= '
 			</div>
 			<div class="buttonbar">
 				'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="not-icon-arrow-left icon-list"></i> '.$w->buttonList, 'btn' ).'
+				'.UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, '<i class="icon-eye-open icon-white"></i> '.$w->buttonView, 'btn btn-info' ).'
 				'.UI_HTML_Elements::Button( 'edit', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
 	<!--			&nbsp;|&nbsp;
 				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
@@ -128,8 +129,7 @@ $panelEdit	= '
 			</div>
 		</form>
 	</div>
-</div>
-';
+</div>';
 
 //  --  STATES  --  //
 $states	= $words['states'];
@@ -178,6 +178,5 @@ return '
 	<div class="span12">
 		'.$panelContent.'
 	</div>
-</div>
-';
+</div>';
 ?>
