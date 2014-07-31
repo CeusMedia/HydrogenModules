@@ -2,16 +2,19 @@
 class Logic_Mail{
 
 	protected $env;
-	protected $model;
+	protected $modelQueue;
+	protected $modelAttachment;
+	protected $pathAttachments		= "contents/";
 
 	public function __construct( $env ){
-		$this->env		= $env;
-		$this->model	= new Model_Mail( $this->env );
-		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->env				= $env;
+		$this->modelQueue		= new Model_Mail( $this->env );
+		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
+		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->options->set( 'queue', TRUE );
 
-		$mails	=  $this->model->getAll();
-		foreach( $this->model->getAll() as $mail ){
+//		$mails	=  $this->modelQueue->getAll();
+		foreach( $this->modelQueue->getAll() as $mail ){
 			if( empty( $mail->senderAddress ) ){
 		        if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
 		            $object     = bzdecompress( $mail->object );
@@ -22,12 +25,39 @@ class Logic_Mail{
 		        $object = @unserialize( $object );
 				if( is_object( $object ) ){
 					if( method_exists( $object->mail, 'getSender' ) ){
-						$this->model->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
+						$this->modelQueue->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
 					}
 				}
 			}
 		}
 
+	}
+
+	public function getMailClassNames(){
+		$list		= array();
+		$matches	= array();
+		$regexClass	= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";
+		$index		= new File_RecursiveRegexFilter( 'classes/Mail/', "/\.php5$/", $regexClass );
+		foreach( $index as $file ){
+			$content	= File_Reader::load( $file->getPathname() );
+			preg_match_all( $regexClass, $content, $matches );
+			if( count( $matches[0] ) && count( $matches[1] ) )
+				$list[]		= $matches[1][0];
+		}
+		return $list;
+	}
+
+	public function appendRegisteredAttachments( Mail_Abstract $mail ){
+		$class			= get_class( $mail );
+		$attachments	= $this->modelAttachment->getAllByIndex( 'className', $class );
+		foreach( $attachments as $attachment ){
+			print_m( $attachment );
+			$fileName	= $this->pathAttachments.$attachment->filename;
+			print_m( $fileName );
+			print_m( file_exists( $fileName ) );
+
+			$mail->addAttachment( $fileName, $attachment->mimeType );
+		}
 	}
 
 	public function collectConfiguredReceivers( $userIds, $groupIds = array(), $listConfigKeysToCheck = array() ){
@@ -73,7 +103,7 @@ class Logic_Mail{
 	 *	@return		integer						Number of mails in queue matching conditions
 	 */
 	public function countQueue( $conditions = array() ){
-		return $this->model->count( $conditions );
+		return $this->modelQueue->count( $conditions );
 	}
 
 	/**
@@ -111,7 +141,7 @@ class Logic_Mail{
 			'object'			=> $serial,
 			'enqueuedAt'		=> time(),
 		);
-		return $this->model->add( $data, FALSE );
+		return $this->modelQueue->add( $data, FALSE );
 	}
 
 	/**
@@ -122,7 +152,7 @@ class Logic_Mail{
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 */
 	public function getQueuedMail( $mailId ){
-		$mail	= $this->model->get( $mailId );
+		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
 		return $mail;
@@ -139,7 +169,7 @@ class Logic_Mail{
 	 *	@return		array
 	 */
 	public function getQueuedMails( $conditions = array(), $orders = array(), $limits = array(), $columns = array() ){
-		return $this->model->getAll( $conditions, $orders, $limits, $columns );
+		return $this->modelQueue->getAll( $conditions, $orders, $limits, $columns );
 	}
 
 	/**
@@ -204,7 +234,7 @@ class Logic_Mail{
 			throw new RuntimeException( 'Deserialization of mail failed' );
 		$object->setEnv( $this->env );
 		$object->initTransport();
-		$this->model->edit( $mailId, array(
+		$this->modelQueue->edit( $mailId, array(
 			'status'		=> 1,
 			'attempts'		=> $mail->attempts + 1,
 			'attemptedAt'	=> time()
@@ -219,7 +249,7 @@ class Logic_Mail{
 			);
 			$object->sendTo( $receiver );
 		}
-		$this->model->edit( $mailId, array(
+		$this->modelQueue->edit( $mailId, array(
 			'status'		=> 2,
 			'sentAt'		=> time()
 		) );

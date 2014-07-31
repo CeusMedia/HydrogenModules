@@ -11,6 +11,8 @@ class Mail_Test extends Mail_Abstract{
 	}
 
 	public function renderBody( $data = array() ){
+		if( isset( $data['body'] ) && strlen( trim( $data['body'] ) ) )
+			return $data['body'];
 		return "Test: ".time();
 	}
 }

@@ -7,6 +7,51 @@ class Controller_Mail extends CMF_Hydrogen_Controller{
 		$this->logic	= new Logic_Mail( $this->env );
 	}
 
+	public function enqueue(){
+		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
+		if( $request->has( 'add' ) ){
+			if( !strlen( $class	= trim( $request->get( 'class' ) ) ) )
+				$messenger->noteError( 'Mail class is missing.' );
+			if( !strlen( $sender	= trim( $request->get( 'sender' ) ) ) )
+				$messenger->noteError( 'Sender address is missing.' );
+			if( !strlen( $receiver	= trim( $request->get( 'receiver' ) ) ) )
+				$messenger->noteError( 'Receiver address is missing.' );
+			if( !strlen( $subject	= trim( $request->get( 'subject' ) ) ) )
+				$messenger->noteError( 'Mail subject is missing.' );
+			if( !strlen( $body		= trim( $request->get( 'body' ) ) ) )
+				$messenger->noteError( 'Mail body is missing.' );
+			if( !$messenger->gotError() ){
+				try{
+					$receiver	= array( 'email' => $receiver );
+					$mail	= new Mail_Test( $this->env, $request->getAll() );
+					$mail->setSubject( $subject );
+					$mail->setSender( $sender );
+
+					$this->logic->appendRegisteredAttachments( $mail );
+					if( 1 )
+						$mail->sendTo( $receiver );
+					else
+						$this->logic->handleMail( $mail, $receiver );
+
+xmp( $mail->mail->getBody() );
+die("!");
+					$messenger->noteSuccess( "Mail sent ;-)" );
+				}
+				catch( Exception $e ){
+					$messenger->noteFailure( $e->getMessage() );
+				}
+			}
+			$this->restart( 'enqueue', TRUE );
+		}
+		$this->addData( 'classes', $this->logic->getMailClassNames() );
+		$this->addData( 'class', $request->get( 'class' ) );
+		$this->addData( 'subject', $request->get( 'subject' ) );
+		$this->addData( 'body', $request->get( 'body' ) );
+		$this->addData( 'sender', $request->get( 'sender' ) ? $request->get( 'sender' ) : "kriss@localhost" );
+		$this->addData( 'receiver', $request->get( 'receiver' ) ? $request->get( 'receiver' ) : "dev@ceusmedia.de" );
+	}
+
 	public function filter( $reset = NULL ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -47,36 +92,14 @@ class Controller_Mail extends CMF_Hydrogen_Controller{
 		$this->addData( 'filters', $filters );
 	}
 
-	public function enqueue(){
-		if( $this->request->get( 'enqueue' ) ){
-			$aaa	= $this->request->get( 'aaa' );
-			try{
-				$receiver	= array(
-					'email'		=> 'kriss@ceusmedia.de',
-					'username'	=> 'kriss'
-				);
-				$mail	= new Mail_Test( $this->env );
-				$mail->setSender( 'dev@ceusmedia.de' );
-			//  $mail->sendTo( $receiver );
-				$logic->handleMail( $mail, $receiver );
-				$this->env->getMessenger()->noteSuccess( "Mail sent ;-)" );
-			}
-			catch( Exception $e ){
-				$this->env->getMessenger()->noteFailure( $e->getMessage() );
-			}
-//			$this->restart( NULL, TRUE );
-		}
-	}
-
 	public function send(){
-		$logic	= new Logic_Mail( $this->env );
-		$count	= $logic->countQueue( array( 'status' => '<2' ) );
+		$count	= $this->logic->countQueue( array( 'status' => '<2' ) );
 		if( $count ){
-			$this->env->getMessenger()->noteNotice( "Mails in Queue: ".$logic->countQueue() );
-			if( $logic->countQueue( array( 'status' => '<2' ) ) ){
-				foreach( $logic->getQueuedMails( array( 'status' => '<2' ) ) as $mail ){
+			$this->env->getMessenger()->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
+			if( $this->logic->countQueue( array( 'status' => '<2' ) ) ){
+				foreach( $this->logic->getQueuedMails( array( 'status' => '<2' ) ) as $mail ){
 					try{
-						$logic->sendQueuedMail( $mail->mailId );
+						$this->logic->sendQueuedMail( $mail->mailId );
 						$this->env->getMessenger()->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
 					}
 					catch( Exception $e ){
