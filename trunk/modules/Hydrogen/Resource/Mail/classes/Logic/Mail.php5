@@ -4,7 +4,7 @@ class Logic_Mail{
 	protected $env;
 	protected $modelQueue;
 	protected $modelAttachment;
-	protected $pathAttachments		= "contents/";
+	protected $pathAttachments		= "contents/attachments/";
 
 	public function __construct( $env ){
 		$this->env				= $env;
@@ -49,7 +49,7 @@ class Logic_Mail{
 
 	public function appendRegisteredAttachments( Mail_Abstract $mail ){
 		$class			= get_class( $mail );
-		$attachments	= $this->modelAttachment->getAllByIndex( 'className', $class );
+		$attachments	= $this->modelAttachment->getAllByIndices( array( 'className' => $class, 'status' => 1 ) );
 		foreach( $attachments as $attachment ){
 			print_m( $attachment );
 			$fileName	= $this->pathAttachments.$attachment->filename;
