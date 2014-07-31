@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Mail</title>
+	<description></description>
+	<category>Administration</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Mail/Attachment.php5</class>
+		<class>Controller/Admin/Mail/Queue.php5</class>
+		<class>View/Admin/Mail/Attachment.php5</class>
+		<class>View/Admin/Mail/Queue.php5</class>
+		<template>admin/mail/attachment/index.php</template>
+		<template>admin/mail/queue/enqueue.php</template>
+		<template>admin/mail/queue/index.php</template>
+		<locale>de/admin/mail.ini</locale>
+	</files>
+	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
+	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">E-Mail-Anhänge</link>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+</module>
