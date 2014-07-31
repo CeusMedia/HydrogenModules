@@ -57,6 +57,10 @@ abstract class Mail_Abstract{
 		return array( 'mail', 'transport', 'page', 'options' );
 	}
 
+	public function addAttachment( $filePath, $mimeType ){
+		$this->mail->addAttachmentFile( $filePath, $mimeType );
+	}
+
 	/**
 	 *	Adds HTML body part to mail.
 	 *	@access		protected

@@ -3,7 +3,7 @@
 	<title>Resource: Mail</title>
 	<description>Enables application to send mails.</description>
 	<category>Resource</category>
-	<version>0.4.8</version>
+	<version>0.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -21,6 +21,7 @@
 	<log version="0.4.6">Improved support for queued mails.</log>
 	<log version="0.4.7">Added insight in queued mails.</log>
 	<log version="0.4.8">Updated insight in queued mails.</log>
+	<log version="0.4.9">Added mail attachment register.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -31,8 +32,10 @@
 		<class>Mail/Example.php5</class>
 		<class>Mail/Test.php5</class>
 		<class>Model/Mail.php5</class>
+		<class>Model/Mail/Attachment.php5</class>
 		<class>Logic/Mail.php5</class>
 		<class>Job/Mail.php5</class>
+		<template>mail/enqueue.php</template>
 		<template>mail/index.php</template>
 		<locale>de/mail.ini</locale>
 		<style>mail.min.css</style>
@@ -87,5 +90,23 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
 	<sql on="update" version="0.4.7" type="mysql"><![CDATA[
 ALTER TABLE  `<%?prefix%>mails` ADD  `senderAddress` VARCHAR( 255 ) NOT NULL AFTER  `receiverName` ,
 ADD INDEX (  `senderAddress` ) ;
+	]]></sql>
+	<sql on="update" version="0.4.9" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_attachments`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
+  `mailAttachmentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `countAttached` int(11) NOT NULL,
+  `uploadedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`mailAttachmentId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `filename` (`filename`),
+  KEY `mimeType` (`mimeType`),
+  KEY `uploadedAt` (`uploadedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 </module>
