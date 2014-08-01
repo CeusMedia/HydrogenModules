@@ -1,7 +1,7 @@
 <?php
-$w		= (object) $words['queue-index'];
-$wl		= (object) $words['queue-index-list'];
-$wf		= (object) $words['queue-index-filter'];
+$w		= (object) $words['index'];
+$wl		= (object) $words['index-list'];
+$wf		= (object) $words['index-filter'];
 
 $statusClasses	= array(
 	0	=> 'warning',
@@ -26,7 +26,7 @@ if( $mails ){
 		$receiverName	= UI_HTML_Tag::create( 'span', $mail->receiverName, array( 'class' => 'mail-user-name' ) );
 		$receiverMail	= UI_HTML_Tag::create( 'small', $mail->receiverAddress, array( 'class' => 'mail-user-address muted' ) );
 		$senderMail		= UI_HTML_Tag::create( 'small', $mail->senderAddress, array( 'class' => 'mail-user-address muted' ) );
-		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './mail/view/'.$mail->mailId ) );
+		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './admin/mail/queue/view/'.$mail->mailId ) );
 
 		$cells		= array();
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'cell-mail-subject' ) );
@@ -52,7 +52,7 @@ $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
 
 $buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.' '.$wf->buttonFilter, array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './mail/filter/true' ) );
+$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true' ) );
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/mail/' ) );
 
@@ -60,7 +60,7 @@ return $textTop.'
 <div class="row-fluid">
 	<div class="span3">
 		<h3>'.$wf->heading.'</h3>
-		<form action="./mail/filter" method="post">
+		<form action="./admin/mail/queue/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_status">'.$wf->labelStatus.'</label>

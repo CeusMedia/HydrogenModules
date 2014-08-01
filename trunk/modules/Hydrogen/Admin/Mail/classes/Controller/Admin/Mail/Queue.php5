@@ -28,14 +28,14 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 					$mail->setSubject( $subject );
 					$mail->setSender( $sender );
 
+#xmp( $mail->mail->getBody() );
+#die("!");
+
 					$this->logic->appendRegisteredAttachments( $mail );
 					if( 1 )
 						$mail->sendTo( $receiver );
 					else
 						$this->logic->handleMail( $mail, $receiver );
-
-xmp( $mail->mail->getBody() );
-die("!");
 					$messenger->noteSuccess( "Mail sent ;-)" );
 				}
 				catch( Exception $e ){
