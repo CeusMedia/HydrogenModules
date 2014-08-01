@@ -1,27 +1,33 @@
 <?php
-class Controller_Mail_Attachment extends CMF_Hydrogen_Controller{
+class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 
 	protected $model;
-	protected $path	= "contents/attachments/";
+	protected $path;
 
 	public function __onInit(){
 		$this->model	= new Model_Mail_Attachment( $this->env );
 		$this->logic	= new Logic_Mail( $this->env );
+		$this->path		= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
 	}
 
 	public function add(){
 		$request	= $this->env->getRequest();
+		$words		= (object) $this->getWords( 'msg' );
 		if( $request->has( 'add' ) ){
 			$files	= $this->listFiles();
 			$data	= array(
-				'filename'	=> $request->get( 'file' ),
+				'status'	=> (int) (bool) $request->get( 'status' ),
 				'className'	=> $request->get( 'class' ),
+				'filename'	=> $request->get( 'file' ),
 				'mimeType'	=> $files[$request->get( 'file' )]->mimeType,
 				'createdAt'	=> time(),
-				'status'	=> (int) (bool) $request->get( 'status' ),
 			);
 			$this->model->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Attachment added.' );
+			$this->env->getMessenger()->noteSuccess(
+				$words->successAdded,
+				htmlentities( $request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
+				htmlentities( $request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
+			);
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -40,6 +46,7 @@ class Controller_Mail_Attachment extends CMF_Hydrogen_Controller{
 	}
 
 	protected function listFiles(){
+		$list	= array();
 		$index	= new DirectoryIterator( $this->path );
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )
@@ -54,28 +61,45 @@ class Controller_Mail_Attachment extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $attachmentId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
-			$this->env->getMessenger()->noteError( 'Invalid attachment ID.' );
+			$this->env->getMessenger()->noteError( $words->errorIdInvalid );
 		else{
 			$this->model->remove( $attachmentId );
-			$this->env->getMessenger()->noteSuccess( 'Attachment removed.' );
+			$this->env->getMessenger()->noteSuccess(
+				$words->successRemoved,
+				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
+				htmlentities( $attachment->className, ENT_QUOTES, 'UTF-8' )
+			);
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function setStatus( $attachmentId, $status ){
+		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
-			$this->env->getMessenger()->noteError( 'Invalid attachment ID.' );
+			$this->env->getMessenger()->noteError( $words->errorIdInvalid );
 		else{
 			$this->model->edit( $attachmentId, array( 'status' => (int) $status ) );
-			$this->env->getMessenger()->noteSuccess( 'Attachment updated.' );
+			$this->env->getMessenger()->noteSuccess(
+				(int) $status ? $words->successEnabled : $words->successDisabled,
+				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
+				htmlentities( $attachment->className, ENT_QUOTES, 'UTF-8' )
+			);
 		}
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	Stores a new attachment file via HTTP upload to attachment file folder.
+	 *	@access		public
+	 *	@return		void
+	 *	@todo		kriss: handle failure (with mail to developer or exception log)
+	 */
 	public function upload(){
+		$words		= (object) $this->getWords( 'msg' );
 		$upload		= (object) $this->env->getRequest()->get( 'file' );
 		$messenger	= $this->env->getMessenger();
 		if( $upload->error ){
@@ -85,9 +109,12 @@ class Controller_Mail_Attachment extends CMF_Hydrogen_Controller{
 		}
 		else{
 			if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
-				$messenger->noteFailure( 'Moving uploaded file to attachments folder failed' );
+				$messenger->noteFailure( $words->errorUploadFailed );
 			else
-				$messenger->noteSuccess( 'Datei wurde hochgeladen und als "%s" abgelegt.', $upload->name );
+				$messenger->noteSuccess(
+					$words->successUploaded,
+					htmlentities( $upload->name, ENT_QUOTES, 'UTF-8' )
+				);
 		}
 		$this->restart( NULL, TRUE );
 	}
