@@ -85,6 +85,13 @@ $panelUpload	= '
 					<input type="file" name="file"/>
 				</div>
 			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="hint">
+						<small><em class="muted">'.$w->hintMimeType.'</em></small>
+					</div>
+				</div>
+			</div>
 			<div class="buttonbar">
 				<button type="submit" name="add" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 			</div>
