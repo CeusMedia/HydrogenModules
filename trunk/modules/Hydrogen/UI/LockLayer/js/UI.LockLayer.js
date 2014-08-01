@@ -38,6 +38,8 @@ var LockLayer = {
 		var delay = typeof delay === "undefined" ? 0 : parseInt(delay);
 		$(selector).each(function(){
 			$(this).bind("click", {elem: this}, function (event) {
+				if(event.which === 2 || event.ctrlKey)									//  middle mouse button or pressed control key
+					return;																//  do not lock
 				var elem = $(event.data.elem);
 				var label = LockLayer.defaultMessageKey;								//  init label as key of default message
 				if (LockLayer.messages.hasOwnProperty(label))							//  for valid default message key
