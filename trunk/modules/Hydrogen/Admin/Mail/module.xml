@@ -23,6 +23,7 @@
 		<template>admin/mail/attachment/add.php</template>
 		<template>admin/mail/attachment/index.php</template>
 		<template>admin/mail/attachment/index.filter.php</template>
+		<template>admin/mail/attachment/index.list.php</template>
 		<template>admin/mail/attachment/upload.php</template>
 		<template>admin/mail/queue/enqueue.php</template>
 		<template>admin/mail/queue/index.php</template>
