@@ -1,4 +1,4 @@
-<?php
+23<?php
 class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 
 	protected $model;
@@ -12,22 +12,41 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$request	= $this->env->getRequest();
+		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'msg' );
 		if( $request->has( 'add' ) ){
 			$files	= $this->listFiles();
-			$data	= array(
-				'status'	=> (int) (bool) $request->get( 'status' ),
-				'className'	=> $request->get( 'class' ),
-				'filename'	=> $request->get( 'file' ),
-				'mimeType'	=> $files[$request->get( 'file' )]->mimeType,
-				'createdAt'	=> time(),
+			if( !strlen( $class = trim( $request->get( 'class' ) ) ) )
+				$messenger->noteError( $words->errorClassMissing, htmlentities( $class, ENT_QUOTES, 'UTF-8' ) );
+			if( !strlen( $file = trim( $request->get( 'file' ) ) ) )
+				$messenger->noteError( $words->errorFileMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
+			if( $this->model->count( array( 'className' => $class, 'filename' => $file ) ) )
+				$messenger->noteError(
+					$words->errorAlreadyRegistered,
+					htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
+					htmlentities( $class, ENT_QUOTES, 'UTF-8' )
+				);
+			if( !array_key_exists( $file, $files ) )
+				$messenger->noteFailure(
+					$words->errorFileNotExisting,
+					htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
+					htmlentities( $class, ENT_QUOTES, 'UTF-8' )
 			);
-			$this->model->add( $data );
-			$this->env->getMessenger()->noteSuccess(
-				$words->successAdded,
-				htmlentities( $request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
-				htmlentities( $request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
-			);
+			if( !$messenger->gotError() ){
+				$data	= array(
+					'status'	=> (int) (bool) $request->get( 'status' ),
+					'className'	=> $class,
+					'filename'	=> $file,
+					'mimeType'	=> $files[$file]->mimeType,
+					'createdAt'	=> time(),
+				);
+				$this->model->add( $data );
+				$this->env->getMessenger()->noteSuccess(
+					$words->successAdded,
+					htmlentities( $request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
+					htmlentities( $request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
+				);
+			}
 		}
 		$this->restart( NULL, TRUE );
 	}
