@@ -1,61 +1,46 @@
 <?php
+/**
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ */
+/**
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@todo		code doc
+ */
 class Logic_Mail{
 
 	protected $env;
 	protected $modelQueue;
 	protected $modelAttachment;
-	protected $pathAttachments		= "contents/attachments/";
+	protected $options;
+	protected $pathAttachments;
 
 	public function __construct( $env ){
 		$this->env				= $env;
-		$this->modelQueue		= new Model_Mail( $this->env );
-		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->options->set( 'queue', TRUE );
 
-//		$mails	=  $this->modelQueue->getAll();
-		foreach( $this->modelQueue->getAll() as $mail ){
-			if( empty( $mail->senderAddress ) ){
-		        if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
-		            $object     = bzdecompress( $mail->object );
-		        else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
-		            $object     = gzinflate( $mail->object );
-		        else
-		            $object     = base64_decode( $mail->object );
-		        $object = @unserialize( $object );
-				if( is_object( $object ) ){
-					if( method_exists( $object->mail, 'getSender' ) ){
-						$this->modelQueue->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
-					}
-				}
-			}
+		/*  --  INIT QUEUE  --  */
+		$this->modelQueue		= new Model_Mail( $this->env );
+//		$this->options->set( 'queue', TRUE );
+
+		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled == "0.4.7" )
+			$this->_repairQueue();
+
+		/*  --  INIT ATTACHMENTS  --  */
+		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
+		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+		if( !file_exists( $this->pathAttachments ) ){
+			mkdir( $this->pathAttachments, 0755, TRUE );
+			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
+				copy( 'classes/.htaccess', $this->pathAttachments.'.htaccess' );
 		}
-
-	}
-
-	public function getMailClassNames(){
-		$list		= array();
-		$matches	= array();
-		$regexClass	= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";
-		$index		= new File_RecursiveRegexFilter( 'classes/Mail/', "/\.php5$/", $regexClass );
-		foreach( $index as $file ){
-			$content	= File_Reader::load( $file->getPathname() );
-			preg_match_all( $regexClass, $content, $matches );
-			if( count( $matches[0] ) && count( $matches[1] ) )
-				$list[]		= $matches[1][0];
-		}
-		return $list;
 	}
 
 	public function appendRegisteredAttachments( Mail_Abstract $mail ){
 		$class			= get_class( $mail );
-		$attachments	= $this->modelAttachment->getAllByIndices( array( 'className' => $class, 'status' => 1 ) );
+		$indices		= array( 'className' => $class, 'status' => 1 );
+		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
-			print_m( $attachment );
 			$fileName	= $this->pathAttachments.$attachment->filename;
-			print_m( $fileName );
-			print_m( file_exists( $fileName ) );
-
 			$mail->addAttachment( $fileName, $attachment->mimeType );
 		}
 	}
@@ -142,6 +127,20 @@ class Logic_Mail{
 			'enqueuedAt'		=> time(),
 		);
 		return $this->modelQueue->add( $data, FALSE );
+	}
+
+	public function getMailClassNames(){
+		$list		= array();
+		$matches	= array();
+		$regexClass	= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";
+		$index		= new File_RecursiveRegexFilter( 'classes/Mail/', "/\.php5$/", $regexClass );
+		foreach( $index as $file ){
+			$content	= File_Reader::load( $file->getPathname() );
+			preg_match_all( $regexClass, $content, $matches );
+			if( count( $matches[0] ) && count( $matches[1] ) )
+				$list[]		= $matches[1][0];
+		}
+		return $list;
 	}
 
 	/**
@@ -254,5 +253,26 @@ class Logic_Mail{
 			'sentAt'		=> time()
 		) );
 	}
+
+	protected function _repairQueue(){
+//		$mails	=  $this->modelQueue->getAll();
+		foreach( $this->modelQueue->getAll() as $mail ){
+			if( empty( $mail->senderAddress ) ){
+				if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
+					$object		= bzdecompress( $mail->object );
+				else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
+					$object		= gzinflate( $mail->object );
+				else
+					$object		= base64_decode( $mail->object );
+				$object = @unserialize( $object );
+				if( is_object( $object ) ){
+					if( method_exists( $object->mail, 'getSender' ) ){
+						$this->modelQueue->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
+					}
+				}
+			}
+		}
+	}
 }
 ?>
+

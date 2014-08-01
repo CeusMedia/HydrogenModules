@@ -49,6 +49,7 @@
 	<config protected="yes" type="boolean" name="queue.enabled" mandatory="yes">yes</config>
 	<config protected="yes" type="integer" name="queue.job.limit" title="number of mails to send during one job execution">1000</config>
 	<config protected="yes" type="float" name="queue.job.sleep" title="seconds to sleep after job execution">10</config>
+	<config protected="yes" type="string" name="path.attachments" title="path to attachment files">contents/attachments/</config>
 	<link access="acl" xml:lang="de" rank="88" path="mail">E-Mail-Queue</link>
 	<link access="acl" xml:lang="en" rank="88" path="mail">Mail Queue</link>
 	<relations>
@@ -84,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 	<sql on="update" version="0.4.7" type="mysql"><![CDATA[
-ALTER TABLE  `<%?prefix%>mails` ADD  `senderAddress` VARCHAR( 255 ) NOT NULL AFTER  `receiverName` ,
+ALTER TABLE  `<%?prefix%>mails` ADD  `senderAddress` VARCHAR( 255 ) NOT NULL AFTER `attempts` ,
 ADD INDEX (  `senderAddress` ) ;
 	]]></sql>
 	<sql on="update" version="0.4.9" type="mysql"><![CDATA[
@@ -96,16 +97,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
   `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `countAttached` int(11) NOT NULL,
-  `uploadedAt` decimal(12,0) NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`mailAttachmentId`),
   KEY `status` (`status`),
   KEY `className` (`className`),
   KEY `filename` (`filename`),
   KEY `mimeType` (`mimeType`),
-  KEY `uploadedAt` (`uploadedAt`)
+  KEY `createdAt` (`createdAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-	]]></sql>
-	<sql on="update" version="0.4.10" type="mysql"><![CDATA[
-ALTER TABLE  `<%?prefix%>mail_attachments` CHANGE  `uploadedAt`  `createdAt` DECIMAL( 12, 0 ) NOT NULL ;
 	]]></sql>
 </module>
