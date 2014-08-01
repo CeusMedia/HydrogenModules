@@ -1,7 +1,24 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Mail</title>
-	<description>Enables application to send mails.</description>
+	<description><![CDATA[Enables application to send mails.
+
+This modules represents a single point for mail sending.
+
+Therefore it:
+list>
+- allows modules to easily send mails to application users
+- configures SMTP access or uses local sendmail installation
+- delivers an abstract mail class as blueprint for mails of modules
+- delivers minimal standard CSS for HTML mails (should be replaced by application module)
+- supports a queue and allows to enqueue mails for async sending via job
+- holds a register of attachment files for mails by mail class
+<list
+Modules can send mails on (user) request or use the mail queue.	
+Using the queue, provided by mail logic, will result in better web request performance. 
+To enable queued mails you need to set a cron job: 
+code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
+]]></description>
 	<category>Resource</category>
 	<version>0.5.0</version>
 	<log version="0.1">Initial prototype.</log>
