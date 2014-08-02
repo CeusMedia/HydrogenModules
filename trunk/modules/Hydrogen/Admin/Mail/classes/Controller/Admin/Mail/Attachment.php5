@@ -1,4 +1,4 @@
-23<?php
+<?php
 class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 
 	protected $model;
