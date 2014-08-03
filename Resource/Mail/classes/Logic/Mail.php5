@@ -35,9 +35,9 @@ class Logic_Mail{
 		}
 	}
 
-	public function appendRegisteredAttachments( Mail_Abstract $mail ){
+	public function appendRegisteredAttachments( Mail_Abstract $mail, $language ){
 		$class			= get_class( $mail );
-		$indices		= array( 'className' => $class, 'status' => 1 );
+		$indices		= array( 'className' => $class, 'status' => 1, 'language' => $language );
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
 			$fileName	= $this->pathAttachments.$attachment->filename;
@@ -95,11 +95,12 @@ class Logic_Mail{
 	 *	Send prepared mail later.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail instance to be queued
+	 *	@param		string			$language		Language key
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@param		integer			$senderId		Optional: ID of sending user
 	 *	@return		integer							ID of queued mail
 	 */
-	public function enqueueMail( Mail_Abstract $mail, $receiver, $senderId = NULL ){
+	public function enqueueMail( Mail_Abstract $mail, $language, $receiver, $senderId = NULL ){
 		if( is_array( $receiver ) )
 			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
@@ -117,6 +118,7 @@ class Logic_Mail{
 		else
 			$serial		= base64_encode( serialize( $mail ) );
 		$data	= array(
+			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $mail->mail->getSender(),
 			'receiverId'		=> isset( $receiver->userId ) ? $receiver->userId : 0,
@@ -180,9 +182,9 @@ class Logic_Mail{
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		void
 	 */
-	public function handleMail( Mail_Abstract $mail, $receiver, $forceSendNow = NULL ){
+	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
 		if( $this->options->get( 'queue' ) && !$forceSendNow )
-			return $this->enqueueMail( $mail, $receiver );
+			return $this->enqueueMail( $mail, $language, $receiver );
 		return $this->sendMail( $mail, $receiver );
 	}
 
@@ -200,12 +202,12 @@ class Logic_Mail{
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
 		}
-		$serial		= serialize( $mail );
+/*		$serial		= serialize( $mail );
 		if( function_exists( 'bzcompress' ) )
 			$serial		= bzcompress( $serial );
 		else if( function_exists( 'gzcompress' ) )
 			$serial		= gzcompress( $serial );
-
+*/
 		if( !is_object( $receiver ) )
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		$mail->sendTo( $receiver );
