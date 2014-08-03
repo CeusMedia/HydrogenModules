@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -40,6 +40,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.4.8">Updated insight in queued mails.</log>
 	<log version="0.4.9">Added mail attachment register.</log>
 	<log version="0.5.0">Extracted administrative parts to new module Admin:Mail.</log>
+	<log version="0.5.1">Added language support for mail attachments.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -122,5 +123,14 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
   KEY `mimeType` (`mimeType`),
   KEY `createdAt` (`createdAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql on="update" version="0.5.1" type="mysql"><![CDATA[
+ALTER TABLE  `<%?prefix%>mails` ADD `language` VARCHAR( 10 ) NOT NULL AFTER  `attempts` ,
+ADD INDEX (  `language` ) ;
+UPDATE `<%?prefix%>mails` SET language="de" WHERE language="";
+
+ALTER TABLE  `<%?prefix%>mail_attachments` ADD `language` VARCHAR( 10 ) NOT NULL AFTER  `status` ,
+ADD INDEX (  `language` ) ;
+UPDATE `<%?prefix%>mail_attachments` SET language="de" WHERE language="";
 	]]></sql>
 </module>

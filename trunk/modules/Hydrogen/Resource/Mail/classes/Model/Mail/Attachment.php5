@@ -22,6 +22,7 @@ class Model_Mail_Attachment extends CMF_Hydrogen_Model {
 	protected $columns	= array(
 		"mailAttachmentId",
 		"status",
+		"language",
 		"className",
 		"filename",
 		"mimeType",
@@ -31,6 +32,7 @@ class Model_Mail_Attachment extends CMF_Hydrogen_Model {
 	protected $primaryKey	= 'mailAttachmentId';
 	protected $indices		= array(
 		"status",
+		"language",
 		"className",
 		"filename",
 		"mimeType",
