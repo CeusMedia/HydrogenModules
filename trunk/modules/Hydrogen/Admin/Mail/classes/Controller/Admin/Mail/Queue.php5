@@ -10,6 +10,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	public function enqueue(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
+		$language	= $this->env->getLanguage()->getLanguage();
 		if( $request->has( 'add' ) ){
 			if( !strlen( $class	= trim( $request->get( 'class' ) ) ) )
 				$messenger->noteError( 'Mail class is missing.' );
@@ -31,11 +32,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 #xmp( $mail->mail->getBody() );
 #die("!");
 
-					$this->logic->appendRegisteredAttachments( $mail );
+					$this->logic->appendRegisteredAttachments( $mail, $language );
 					if( 1 )
 						$mail->sendTo( $receiver );
 					else
-						$this->logic->handleMail( $mail, $receiver );
+						$this->logic->handleMail( $mail, $receiver, $language );
 					$messenger->noteSuccess( "Mail sent ;-)" );
 				}
 				catch( Exception $e ){

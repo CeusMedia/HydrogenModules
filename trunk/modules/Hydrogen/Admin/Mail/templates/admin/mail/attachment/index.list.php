@@ -13,7 +13,9 @@ if( $attachments ){
 			$buttonStatus	= UI_HTML_Tag::create( 'a', $iconDisable, array( 'href' => './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0', 'class' => 'btn btn-warning not-btn-small', 'title' => 'deaktivieren' ) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => '', 'class' => 'btn btn-danger not-btn-small', 'title' => 'entfernen (Dabei bleibt erhalten)' ) );
 
-		$label		= UI_HTML_Tag::create( 'big', $attachment->filename ).'<br/>'.UI_HTML_Tag::create( 'small', $attachment->mimeType, array( 'class' => 'muted' ) );
+		$language	= UI_HTML_Tag::create( 'span', $attachment->language, array( 'class' => 'label' ) );
+		$mimeType	= UI_HTML_Tag::create( 'small', $attachment->mimeType, array( 'class' => 'muted' ) );
+		$label		= $language.' '.UI_HTML_Tag::create( 'big', $attachment->filename ).'<br/>'.$mimeType;
 		$status		= (object) array (
 			'label'		=> $words['states'][(int) $attachment->status],
 			'icon'		=> $attachment->status > 0 ? $iconEnable : $iconDisable,

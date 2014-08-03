@@ -32,6 +32,10 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
+					<label for="input_language" class="mandatory required">'.$w->labelLanguage.'</label>
+					<input type="text" id="input_language" name="language" class="span12" required="required"/>
+				</div>
+				<div class="span4">
 					<label for="input_status">'.$w->labelStatus.'</label>
 					<select id="input_status" name="status" class="span12">'.$optStatus.'</select>
 				</div>
