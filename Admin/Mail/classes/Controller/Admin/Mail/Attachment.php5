@@ -20,7 +20,14 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $words->errorClassMissing, htmlentities( $class, ENT_QUOTES, 'UTF-8' ) );
 			if( !strlen( $file = trim( $request->get( 'file' ) ) ) )
 				$messenger->noteError( $words->errorFileMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
-			if( $this->model->count( array( 'className' => $class, 'filename' => $file ) ) )
+			if( !strlen( $language = trim( $request->get( 'language' ) ) ) )
+				$messenger->noteError( $words->errorLanguageMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
+			$indices	= array(
+				'className'	=> $class,
+				'filename'	=> $file,
+				'language'	=> $language
+			);
+			if( $this->model->count( $indices ) )
 				$messenger->noteError(
 					$words->errorAlreadyRegistered,
 					htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
@@ -35,6 +42,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'status'	=> (int) (bool) $request->get( 'status' ),
+					'language'	=> $language,
 					'className'	=> $class,
 					'filename'	=> $file,
 					'mimeType'	=> $files[$file]->mimeType,
