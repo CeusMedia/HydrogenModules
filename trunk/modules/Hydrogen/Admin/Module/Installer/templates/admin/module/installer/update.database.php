@@ -8,7 +8,7 @@ function fixVersionBug( $version ){
 $remote		= $env->getRemote();
 if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) ){
 	$driver			= $remote->getConfig()->get( 'module.resource_database.access.driver' );
-	$versionFrom	= $moduleLocal->versionInstalled;
+	$versionFrom		= $moduleLocal->versionInstalled;
 	$versionTo		= $moduleSource->versionAvailable;
 
 	$sqlKey			= 'update:'.$versionFrom.'->'.$versionTo.'@';
