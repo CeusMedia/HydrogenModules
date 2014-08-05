@@ -42,7 +42,7 @@ abstract class Mail_Abstract{
 		$this->page->setBaseHref( $this->baseUrl );
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 		$this->addThemeStyle( 'mail.min.css' );
-		$this->addScriptFile( 'mail.min.js' );
+//		$this->addScriptFile( 'mail.min.js' );
 		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
 		$this->content	= $this->generate( $data );
