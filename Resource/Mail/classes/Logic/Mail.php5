@@ -131,18 +131,25 @@ class Logic_Mail{
 		return $this->modelQueue->add( $data, FALSE );
 	}
 
+	/**
+	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
+	 */
 	public function getMailClassNames(){
-		$list		= array();
-		$matches	= array();
-		$regexClass	= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";
-		$index		= new File_RecursiveRegexFilter( 'classes/Mail/', "/\.php5$/", $regexClass );
-		foreach( $index as $file ){
-			$content	= File_Reader::load( $file->getPathname() );
-			preg_match_all( $regexClass, $content, $matches );
-			if( count( $matches[0] ) && count( $matches[1] ) )
-				$list[]		= $matches[1][0];
+		$list			= array();																	//  prepare empty result list
+		$matches		= array();																	//  prepare empty matches list
+		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
+		$regexExt		= "/\.php5$/";																//  define regular expression of acceptable mail class file extensions
+		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
+		$index			= new File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		foreach( $index as $file ){																	//  iterate recursive list
+			$content	= File_Reader::load( $file->getPathname() );								//  get content of class file
+			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
+			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
+				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key
+				$list[$path]	= $matches[1][0];													//  enqueue mail class name by list key
+			}
 		}
-		return $list;
+		return $list;																				//  return map of found mail classes by their files
 	}
 
 	/**
