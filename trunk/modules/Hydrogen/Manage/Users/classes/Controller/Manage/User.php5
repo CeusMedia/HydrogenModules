@@ -244,7 +244,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = NULL, $offset = NULL ) {
+	public function index( $limit = NULL, $page = NULL ) {
 		$session	= $this->env->getSession();
 
 		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
@@ -252,7 +252,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
 		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
 		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
-		$offset		= !is_null( $offset ) ? abs( $offset ) : 0;								//  get offset from request or reset
+		$offset		= !is_null( $page ) ? abs( $page * $limit ) : 0;						//  get offset from request or reset
 
 		$filters	= array();																//  prepare filters map
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
@@ -288,7 +288,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'all', $all );
 		$this->addData( 'total', $total );
 		$this->addData( 'users', $list );
-		$this->addData( 'offset', $offset );
+		$this->addData( 'page', $page );
 		$this->addData( 'limit', $limit );
 	}
 

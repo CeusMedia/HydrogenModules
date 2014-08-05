@@ -33,7 +33,7 @@ $tableRights	= '<table class="table table-condensed table-striped"><tr><th>Contr
 
 $script	= '
 $(document).ready(function(){
-	$("#role-edit-rights li.changable").bind("mousedown",function(){
+	$("#role-edit-rights li.changable").bind("mousedown",function(event){
 		if(event.button != 0)
 			return;
 		var id = $(this).attr("id");
