@@ -4,6 +4,7 @@
 $pagination	= "";
 if( $limit && $total > $limit )
 {
+	if( 0 ){
 	$options	= array(
 		'uri'	=> './manage/user/index/'.$limit.'/',
 		'keyRequest'	=> '',
@@ -13,6 +14,11 @@ if( $limit && $total > $limit )
 	);
 	$pagination	= new UI_HTML_Pagination( $options );
 	$pagination	= $pagination->build( $total, $limit, $offset );
+	}else{
+		$uri		= './manage/user/index/'.$limit;
+		$pagination	= new View_Helper_Pagination( $options );
+		$pagination	= $pagination->render( $uri, $total, $limit, $page );
+	}
 }
 
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
@@ -22,7 +28,7 @@ if( count( $total ) ){
 
 	$rows	= array();
 	$phraser	= new View_Helper_TimePhraser( $env );
-	
+
 	foreach( $users as $nr => $user ){
 		$classes	= array( 'user' );
 		$classes[]	= "role role".$user->roleId;
@@ -78,9 +84,14 @@ return '
 		</colgroup>
 		'.$rows.'
 	</table>
-	'.$pagination.'<br/>
+<!--	'.$pagination.'<br/>-->
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
+		<div class="pull-right">
+			'.$pagination.'
+		</div>
+		<div class="pull-left">
+			'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
+		</div>
 	</div>
 </fieldset>
 <style>
