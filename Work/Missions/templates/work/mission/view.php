@@ -43,7 +43,7 @@ if( strlen( trim( $mission->content ) ) )
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">
-						<div id="not-descriptionAsMarkdown">'.$content.'</div>
+						<div id="descriptionAsMarkdown">'.$content.'</div>
 					</div>
 				</div>
 			</div>
