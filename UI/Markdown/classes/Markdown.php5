@@ -483,7 +483,15 @@ class Markdown/* implements MarkdownInterface*/ {
 
 		"doItalicsAndBold"    =>  50,
 		"doHardBreaks"        =>  60,
+		"doInsAndDel"         =>  71,
 		);
+
+
+	protected function doInsAndDel($text){
+		$text	= preg_replace( "/\+\+(\S.*\S|\S)\+\+/U", "<ins>\\1</ins>", $text );
+		$text	= preg_replace( "/--(\S.*\S|\S)--/U", "<del>\\1</del>", $text );
+		return $text;
+	}
 
 	protected function runSpanGamut($text) {
 	#
@@ -1588,11 +1596,9 @@ abstract class _MarkdownExtra_TmpImpl extends Markdown {
 			"doFootnotes"        => 5,
 			"doAbbreviations"    => 70,
 			);
-		
 		parent::__construct();
 	}
-	
-	
+
 	# Extra variables used during extra transformations.
 	protected $footnotes = array();
 	protected $footnotes_ordered = array();

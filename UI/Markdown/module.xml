@@ -2,7 +2,8 @@
 <module>
 	<title>UI: Markdown</title>
 	<description><![CDATA[Markdown transformation support.]]></description>
-	<version>1.4.0b</version>
+	<version>1.4.0b-p1</version>
+	<log version="1.4.0b-p1">Add support for INS(++) and DEL(--).</log>
 	<category>User Interface</category>
 	<author site="http://michelf.ca/home/">Michel Fortin</author>
 	<url>http://michelf.ca/projects/php-markdown/</url>
