@@ -8,12 +8,13 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.27</version>
+	<version>0.8.28</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
 	<log version="0.8.26">Updated module SQL parts.</log>
 	<log version="0.8.27">Added small day lists.</log>
+	<log version="0.8.28">Inproved request and rendering of day lists and buttons.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>

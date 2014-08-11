@@ -1,21 +1,15 @@
 var WorkMissions = {
 	currentDay: 0,
-	changeDay: function(missionId, date){
+			
+	moveMissionStartDate: function(missionId, date){
 		WorkMissionsList.disable(100);
 		$.ajax({
 			url: './work/mission/changeDay/'+missionId,
 			data: {date: date},
 			dataType: "json",
 			success: function(json){
-				$("#day-controls").html(json.buttons);
-				$("#day-lists").html(json.lists).stop(true);
-				WorkMissionsList.makeTableSortable($("#layout-content table"),{
-					url: "./work/mission/filter/",
-					order: WorkMissionsList.sortBy,
-					direction: WorkMissionsList.sortDir
-				});
+				WorkMissions.showDayTable(WorkMissions.currentDay, false, false);
 				WorkMissionsList.enable(50);
-				WorkMissions.showDayTable(WorkMissions.currentDay);
 			}
 		});
 	},
@@ -104,8 +98,8 @@ var WorkMissions = {
 		if(!site.size())
 			return;
 
-		if(tense != 1)
-			WorkMissions.showDayTable(0);
+//		if(tense != 1)
+//			WorkMissions.showDayTable(0);
 
 		if(site.hasClass('action-index')){
 			WorkMissions.showDayTable(WorkMissions.currentDay);
@@ -173,15 +167,38 @@ $("#number-total").html(sum).show();
 	changeView: function(type){
 		document.location.href = "./work/mission?view="+parseInt(type);
 	},
-	showDayTable: function(day, permanent){
+	showDayTable: function(day, permanent, fade){
+		if(fade)
+			WorkMissionsList.disable(100);
 		WorkMissions.currentDay = day;
 		if(permanent)
 			$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
-		$("div.table-day").hide().filter("#table-"+day).show();
+		$.ajax({
+			url: "./work/mission/ajaxRenderList",
+			dataType: "json",
+			success: function(json){
+				$("#day-list-large").html(json.lists.large).stop(true);
+				$("#day-list-small").html(json.lists.small).stop(true);
+				WorkMissionsList.makeTableSortable($("#layout-content table"),{
+					url: "./work/mission/filter/",
+					order: WorkMissionsList.sortBy,
+					direction: WorkMissionsList.sortDir
+				});
+				$("#day-controls-large").html(json.buttons.large);
+				$("#day-controls-small").html(json.buttons.small);
+				$("#day-controls-large a.btn.active").removeClass("active");
+				$("#day-controls-large a.btn").eq(day).addClass("active");
+				$("#day-controls-small li:eq("+day+") a").tab("show");
+				if(fade)
+					WorkMissionsList.enable(50);
+			}
+		});
+//		$("#day-controls button").removeClass("active").eq(day).addClass("active");
+/*		$("div.table-day").hide().filter("#table-"+day).show();
 		$("div.table-day-small").hide().filter("#table-small-"+day).show();
 //		$("#day-controls button").removeClass("active").eq(day).addClass("active");
 		$("#day-controls li.active").removeClass("active");
 		$("#day-controls li").eq(day).addClass("active");
 		$("#day-controls-small li:eq("+day+") a").tab("show");
-	}	
+*/	}	
 };

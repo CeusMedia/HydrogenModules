@@ -188,6 +188,28 @@ legend.icon.mission-close {
 body.controller-work-mission.action-index .work-mission-list {
 	overflow: hidden;
 	}
+
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group {
+	width: 100%;
+	}
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group a.btn {
+	width:16.67%; box-sizing: border-box
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn div.mission-number {
+	position: absolute;
+	top: 10px;
+	right: 11px;
+	display: block;
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+	
+	/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day {
 	position: relative;
 	min-width: 80px;
@@ -206,6 +228,7 @@ body.controller-work-mission.action-index #day-controls button.day {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#D7D7D7',GradientType=0 ); /* IE6-9 */
 	border: 1px solid #8F8F8F;
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day.active {
 	border-width: 2px;
 	border-style: solid;
@@ -214,18 +237,23 @@ body.controller-work-mission.action-index #day-controls button.day.active {
 	color: #000;
 /*	color: #23738F;
 */	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day.active div.mission-number {
 	background-color: green;
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day.important {
 	width: 16%;
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day.empty {
 	min-width: 80px !important;
 	background: #EFEFEF;
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day.important.empty {
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day .mission-number {
 	position: relative;
 	float: none !important;
@@ -242,6 +270,7 @@ body.controller-work-mission.action-index #day-controls .progress {
 body.controller-work-mission.action-index #day-controls li {
 	width: 16.666666667%;
 	}
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls li .dayDate {
 	display: block;
 	margin: 0px;
@@ -258,7 +287,7 @@ body.controller-work-mission.action-index #day-controls .navbar .nav li a {
 	padding-left: 6px;
 	padding-right: 7px;
 	}
-
+/* @deprecated */
 body.controller-work-mission.action-index #day-controls .navbar .nav li a div.mission-number {
 	position: absolute;
 	top: 10px;
@@ -271,11 +300,11 @@ body.controller-work-mission.action-index #day-lists {
 	margin-top: 1em;
 	}
 
-body.controller-work-mission.action-index #work_mission_tense_1 #day-lists .table-day {
+/*body.controller-work-mission.action-index #work_mission_tense_1 #day-lists .table-day {
 	display: none;
-	}
-body.controller-work-mission.action-index #day-lists .table-day table,
-body.controller-work-mission.action-index #day-lists-small .table-day-small table {
+	}*/
+body.controller-work-mission.action-index #day-list-large .table-day table,
+body.controller-work-mission.action-index #day-list-small .table-day-small table {
 	table-layout: fixed;
 	}
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-graph div.cell-graph,
@@ -283,8 +312,8 @@ body.controller-work-mission.action-index #day-lists .table-day table tr td.cell
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
 	position: relative;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title,
-body.controller-work-mission.action-index #day-lists-small .table-day table tr td.cell-title {
+body.controller-work-mission.action-index #day-list-large .table-day table tr td.cell-title,
+body.controller-work-mission.action-index #day-list-small .table-day table tr td.cell-title {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -759,9 +788,9 @@ body.controller-work-mission .tabbable .nav{
 /*  --  SMALL  --  */
 body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
 	text-align: left;
-	top: -3px;
+/*	top: -3px;
 	right: 0px;
-	}
+*/	}
 span.user-avatar img {
 	border: 1px solid rgba(0, 0, 0, 0.25);
 	}
@@ -771,16 +800,16 @@ span.user-label {
 
 
 /*  --  PHONE LISTS  --  */
-body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
 	padding-left: 9px;
 	}
-body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
 	position: relative;
 	padding-left: 28px;
 	color: rgba(0, 0, 0, 0.5);
 	font-size: 0.9em;
 	}
-body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
 	position: absolute;
 	right: auto;
 	left: 2px;
@@ -794,7 +823,7 @@ body.controller-work-mission.action-index #day-lists-small .table-day-small tabl
 	overflow: hidden;
 	text-overflow: ellipsis;
 	}
-body.controller-work-mission.action-index #day-lists-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
 	text-align: left;
 	}
 @media (max-width: 767px) {
