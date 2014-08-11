@@ -45,10 +45,10 @@ $script	= '
 <script>
 $(document).ready(function(){
 //	WorkMissions.init('.( (int) $filterTense ).');
+	WorkMissions.currentDay = '.$currentDay.';
 	WorkMissionsList.sortBy = "'.$filterOrder.'";
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
 	WorkMissionsList.init();
-	WorkMissions.currentDay = '.$currentDay.';
 	WorkMissionsFilter.__init();
 });
 //console.log("'.session_id().'");

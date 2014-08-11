@@ -7,7 +7,7 @@ $w			= (object) $words['index'];
 
 switch( $filterTense ){
 	case 1:
-		$helperDays		= new View_Helper_Work_Mission_List_Days( $env );								//  renderer for day lists
+/*		$helperDays		= new View_Helper_Work_Mission_List_Days( $env );								//  renderer for day lists
 		$helperDays->setMissions( $missions );
 		$helperDays->setWords( $words );
 
@@ -22,13 +22,17 @@ switch( $filterTense ){
 		$helperDayButtons2	= new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );			//  renderer for day buttons
 		$helperDayButtons2->setWords( $words );
 		$helperDayButtons2->setDayMissions( $helperDays->getDayMissions() );
-
+*/
 		$content	= '
 <div>
-	<div id="day-controls" class="hidden-phone">'.$helperDayButtons->render().'</div>
-	<div id="day-controls-small" class="visible-phone">'.$helperDayButtons2->render().'</div>
-	<div id="day-lists" class="hidden-phone">'.$helperDays->render().'</div>
-	<div id="day-lists-small" class="visible-phone">'.$helperDays2->render().'</div>
+	<div id="day-controls">
+		<div id="day-controls-large" class="hidden-phone">'./*$helperDayButtons->render().*/'</div>
+		<div id="day-controls-small" class="visible-phone">'./*$helperDayButtons2->render().*/'</div>
+	</div>
+	<div id="day-lists">
+		<div id="day-list-large" class="hidden-phone">'./*$helperDays->render().*/'</div>
+		<div id="day-list-small" class="visible-phone">'./*$helperDays2->render().*/'</div>
+	</div>
 </div>';
 		break;
 	case 0:

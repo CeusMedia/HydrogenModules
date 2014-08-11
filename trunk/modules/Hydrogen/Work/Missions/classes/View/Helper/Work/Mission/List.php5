@@ -106,7 +106,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		if( $days ){
 			$attributes	= array(
 				'type'		=> 'button',
-				'onclick'	=> "WorkMissions.changeDay(".$mission->missionId.",'-1')",
+				'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'-1')",
 				'class'		=> 'btn btn-mini',
 				'title'		=> $this->words['list-actions']['moveLeft'],
 			);
@@ -114,7 +114,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		}
 		$attributes	= array(
 			'type'		=> 'button',
-			'onclick'	=> "WorkMissions.changeDay(".$mission->missionId.",'+1')",
+			'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'+1')",
 			'class'		=> 'btn btn-mini',
 			'title'		=> $this->words['list-actions']['moveRight'],
 		);

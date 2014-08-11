@@ -297,11 +297,49 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function ajaxRenderList( $date = NULL ){
+		$session	= $this->env->getSession();
+		$words		= $this->getWords();
+
+		$userId		= $session->get( 'userId' );
+		$missions	= $this->getFilteredMissions( $userId );
+
+		$day		= (int) $session->get( 'filter.work.mission.day' );
+		
+		$listLarge		= new View_Helper_Work_Mission_List_Days( $this->env );
+		$listLarge->setMissions( $missions );
+		$listLarge->setWords( $words );
+
+		$listSmall		= new View_Helper_Work_Mission_List_DaysSmall( $this->env );
+		$listSmall->setMissions( $missions );
+		$listSmall->setWords( $words );
+
+		$buttonsLarge	 = new View_Helper_Work_Mission_List_DayControls( $this->env );
+		$buttonsLarge->setWords( $words );
+		$buttonsLarge->setDayMissions( $listLarge->getDayMissions() );
+
+		$buttonsSmall	 = new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );
+		$buttonsSmall->setWords( $words );
+		$buttonsSmall->setDayMissions( $listLarge->getDayMissions() );
+
+		$data		= array(
+			'buttons'	=> array(
+				'large'	=> $buttonsLarge->render(),
+				'small'	=> $buttonsSmall->render(),
+			),
+			'lists'		=> array(
+				'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE ),
+				'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE )
+		) );
+		print( json_encode( $data ) );
+		exit;
+	}
+
 	public function ajaxRenderLists(){
 		$session	= $this->env->getSession();
 		$words		= $this->getWords();
 
-		$userId		=  $session->get( 'userId' );
+		$userId		= $session->get( 'userId' );
 		$missions	= $this->getFilteredMissions( $userId );
 
 		$helper		= new View_Helper_Work_Mission_List_Days( $this->env );
