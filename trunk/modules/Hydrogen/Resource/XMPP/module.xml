@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: XMPP (Jabber)</title>
+	<description><![CDATA[Support for XMPP protocol.
+
+This module enables other modules to communicate via XMPP (Jabber).
+]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/XMPP.php5</class>
+	</files>
+	<config protected="yes" type="boolean" mandatory="no" name="active" title="Enable support to send XMPP messages"></config>
+	<config protected="yes" type="string" mandatory="yes" name="sender.domain" title="Hostname or IP of XMPP server"></config>
+	<config protected="yes" type="string" mandatory="yes" name="sender.node" title="Name of user or node on XMPP server"></config>
+	<config protected="yes" type="string" mandatory="yes" name="sender.password" title="Password of user or node on XMPP server"></config>
+	<config protected="yes" type="string" mandatory="no" name="sender.resource" title="Optional name of client resource"></config>
+	<config protected="yes" type="boolean" name="encryption" title="Flag: Use encryption">yes</config>
+	<hook type="resource" resource="Env" event="initModules">Resource_XMPP::___onModulesInit</hook>
+</module>
