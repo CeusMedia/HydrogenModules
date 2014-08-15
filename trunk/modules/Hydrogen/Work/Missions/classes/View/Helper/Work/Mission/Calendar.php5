@@ -18,7 +18,7 @@ class View_Helper_Work_Mission_Calendar{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
-		return '<span id="mission-calendar-control">
+		return '<span id="mission-calendar-control-label">
 	<span class="month-label">'.$this->words['months'][(int) $month].'</span>
 	<span class="year-label">'.$year.'</span>
 </span>';
@@ -33,8 +33,9 @@ class View_Helper_Work_Mission_Calendar{
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
-		$rows			= array();
 		$orders			= array( 'priority' => 'ASC' );
+
+		$rows			= array();
 		for( $i=0; $i<$weeks; $i++ ){
 			$row	= array();
 			$j	= 0;
@@ -68,11 +69,77 @@ class View_Helper_Work_Mission_Calendar{
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "14%", "14%", "14%", "14%", "14%", "13%", "12%" );
+		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$thead		= UI_HTML_Tag::create( 'thead', $heads );
+		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
+		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+
+
+		$rows			= array();
+		for( $i=0; $i<$weeks; $i++ ){
+			$row	= array();
+			$j		= 0;
+			$class	= '';
+			if( $i == 0 ){
+				for( $j=0; $j<$offsetStart; $j++ ){
+//					$preDate	= clone $monthDate;
+//					$preDate	= $preDate->modify( "-".( $offsetStart - $j )." days" );
+//					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
+				}
+			}
+			while( $j < 7 ){
+				$day		= $i * 7 - $offsetStart + $j +1;
+				$showYear	= $year;
+				$showMonth	= $month;
+				if( $day <= $monthDays ){
+					$date	= $showYear.'-'.$showMonth.'-'.$day;
+					$row[]	= '<tr>'.$this->renderDay( $userId, new DateTime( $date ), $orders, $class ).'</tr>';
+  				}
+/*					
+					$class	= "inactive";
+					$day	-= $monthDays;
+					$showMonth++;
+					if( $showMonth > 12 ){
+						$showMonth	-= 12;
+						$showYear++;
+					}
+				}
+*/				$j++;
+			}
+//			$weekNr	= date( "W", strtotime( $date ) );
+//			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
+			$rows[]	= join( $row );
+		}
+		$colgroup	= UI_HTML_Elements::ColumnGroup( /*"5%", "95%"*/"100%" );
+		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "..." ) );
+		$thead		= UI_HTML_Tag::create( 'thead', ""/*$heads*/ );
+		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
+		$tableSmall	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+
+//		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
+
+
 		$label      = $this->renderLabel( $year, $month );
 
 		$table	= '
 <div id="mission-folders">
-	<table id="mission-calendar">
+	<div id="mission-calendar-control" class="row-fluid">
+		<div class="span8">
+			<div class="btn-group">
+				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(-1)" title="1 Monat vor">&laquo;</button>
+				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(0)" title="aktueller Monat">&Omicron;</button>
+				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(1)" title="1 Monat weiter">&raquo;</button>
+			</div>
+			'.$label.'
+		</div>
+		<div class="span4" style="text-align: right">
+			<a href="./work/mission/export/ical" target="_blank" class="btn not-btn-small" style="font-weight: normal"><i class="icon-calendar"></i> iCal-Export</a>
+		</div>
+	</div>
+	<div id="mission-calendar">
+		<div class="visible-desktop">'.$tableLarge.'</div>
+		<div class="hidden-desktop">'.$tableSmall.'</div>
+<!--	<table id="mission-calendar">
 		'.$colgroup.'
 		<thead>
 			<tr>
@@ -100,7 +167,8 @@ class View_Helper_Work_Mission_Calendar{
 		<tbody>
 			'.join( $rows ).'
 		</tbody>
-	</table>
+	</table>-->
+	</div>
 </div>
 ';
 		$script	= '<script>

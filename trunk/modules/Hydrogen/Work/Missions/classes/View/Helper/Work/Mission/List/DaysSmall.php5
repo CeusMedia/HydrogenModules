@@ -93,7 +93,9 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$this->missions	= $this->list[$day];
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 //		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
-		
+
+		if( !strlen( $list0/*.$list1*/ ) )
+			return "";
 		$tableBody		= UI_HTML_Tag::create( 'tbody', /*$list1.*/$list0 );
 		$table			= UI_HTML_Tag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
 		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day-small", 'id' => 'table-small-'.$day ) );
@@ -240,6 +242,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	}
 
 	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
+		if( !count( $this->missions ) )
+			return "";
 		$list	= array();
 		foreach( $this->missions as $mission ){
 			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 )

@@ -35,7 +35,9 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		return $sum;
 	}
 
-	public function getDayMissions(){
+	public function getDayMissions( $day = NULL ){
+		if( is_int( $day ) && $day >= 0 && $day	< 7 )
+			return $this->list[$day];
 		return $this->list;
 	}
 

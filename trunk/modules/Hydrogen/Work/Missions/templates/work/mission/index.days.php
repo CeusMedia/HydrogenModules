@@ -6,25 +6,28 @@ $w			= (object) $words['index'];
 //	$currentDay	= $h->getNearestFallbackDay( (int) $currentDay );
 
 switch( $filterTense ){
-	case 1:
-/*		$helperDays		= new View_Helper_Work_Mission_List_Days( $env );								//  renderer for day lists
+	case 1:																						//  tense: current
+/*		$helperDays		= new View_Helper_Work_Mission_List_Days( $env );						//  renderer for large day lists
 		$helperDays->setMissions( $missions );
 		$helperDays->setWords( $words );
 
-		$helperDays2		= new View_Helper_Work_Mission_List_DaysSmall( $env );								//  renderer for day lists
+		$helperDays2		= new View_Helper_Work_Mission_List_DaysSmall( $env );				//  renderer for small day lists
 		$helperDays2->setMissions( $missions );
 		$helperDays2->setWords( $words );
 
-		$helperDayButtons	= new View_Helper_Work_Mission_List_DayControls( $this->env );			//  renderer for day buttons
+		$helperDayButtons	= new View_Helper_Work_Mission_List_DayControls( $this->env );		//  renderer for large day buttons
 		$helperDayButtons->setWords( $words );
 		$helperDayButtons->setDayMissions( $helperDays->getDayMissions() );
 
-		$helperDayButtons2	= new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );			//  renderer for day buttons
+		$helperDayButtons2	= new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );	//  renderer for small day buttons
 		$helperDayButtons2->setWords( $words );
 		$helperDayButtons2->setDayMissions( $helperDays->getDayMissions() );
 */
 		$content	= '
 <div>
+<!--	<div id="message-loading-list" class="muted"><em><small>'.$w->messageLoadingList.'</small></em></div>-->
+<!--	<div id="message-loading-list" class="not-muted"><em><i class="icon-refresh"></i> '.$w->messageLoadingList.'</em></div>-->
+	<div id="message-loading-list" class="alert alert-info">'.$w->messageLoadingList.'</div>
 	<div id="day-controls">
 		<div id="day-controls-large" class="hidden-phone">'./*$helperDayButtons->render().*/'</div>
 		<div id="day-controls-small" class="visible-phone">'./*$helperDayButtons2->render().*/'</div>
@@ -50,7 +53,7 @@ return '
 	<h3><span class="muted">Aufgaben: </span>6-Tage-Aussicht</h3>
 	<div class="content-panel-inner">
 		'.$content.'
-		<br/>
+		<!--<br/>-->
 	</div>
 </div>';
 /*
