@@ -12,7 +12,7 @@ $toolbar->addButtonGroup( 'tb_0', 'add', array(
 ) );
 
 $toolbar->addButtonGroup( 'tb_1', 'view-type', array(
-	'<button type="button" disabled="disabled" class="btn"><span class="badge badge-info">?</span></button>',
+	'<button type="button" disabled="disabled" class="btn"><span id="number-total" class="badge badge-success"><i class="icon-refresh icon-white"></i></span></button>',
 	'<button type="button" id="work-mission-view-type-0" class="btn"><i class="icon-tasks"></i> Liste</button>',
 	'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 ) );

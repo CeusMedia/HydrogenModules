@@ -8,12 +8,13 @@ switch( $filterTense ){
 		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
 		break;
 	case 1:
-		if( count( $missions ) ){
+//		if( count( $missions ) ){
 			$panelList		= $view->loadTemplateFile( 'work/mission/index.days.php' );
 			$panelContent	= '<div id="mission-folders" style="position: relative; width: 100%">'.$panelList.'</div>';
-		}
-		else
-			$panelContent	= $view->loadContentFile( 'html/work/mission/index.empty.html' );
+//		}
+//		else
+		$panelEmpty		= $view->loadContentFile( 'html/work/mission/index.empty.html' );
+		$panelContent	.= '<div id="day-lists-empty" style="display: none">'.$panelEmpty.'</div>';
 		break;
 	case 2:
 		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
@@ -49,7 +50,7 @@ $(document).ready(function(){
 	WorkMissionsList.sortBy = "'.$filterOrder.'";
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
 	WorkMissionsList.init();
-	WorkMissionsFilter.__init();
+//	WorkMissionsFilter.__init();
 });
 //console.log("'.session_id().'");
 </script>';

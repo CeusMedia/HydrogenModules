@@ -1,10 +1,11 @@
 var WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
 	form: null,
-	__init: function(){
+	__init: function(tense){
 /*		this.form = $("#form_mission_filter");
 		if(!this.form.size())
 			return false;
+
 		this.form.find(".optional-trigger").trigger("change");
 		this.form.find("#filter_query").bind("change",function(){
 			this.form.submit();
@@ -13,7 +14,23 @@ var WorkMissionsFilter = {
 			this.form.find("#reset-button-container").show();
 		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
 		return true;
-		*/
+*/
+
+		/*  --  TENSES  --  */
+		var i, button;
+		for(i=0; i<3; i++){
+			button = $("#work-mission-view-tense-"+i);
+			button.removeAttr("disabled").removeClass("disabled");
+			if(i === tense)
+				button.addClass("active").css("cursor", "default");
+			else
+				button.bind("click", {tense: i}, function(event){
+					document.location.href = "./work/mission/switchTense/"+event.data.tense;
+			});
+		}
+
+
+
 		$("#filter_query").bind("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");

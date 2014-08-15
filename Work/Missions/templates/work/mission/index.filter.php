@@ -1,6 +1,6 @@
 <?php
 
-$badge		= '<span class="badge badge-success">'.count( $missions ).'</span>';
+$badge		= '<span id="number-total" class="badge badge-success"><i class="icon-refresh icon-white"></i></span>';
 
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 

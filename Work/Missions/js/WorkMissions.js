@@ -1,17 +1,8 @@
 var WorkMissions = {
 	currentDay: 0,
 			
-	moveMissionStartDate: function(missionId, date){
-		WorkMissionsList.disable(100);
-		$.ajax({
-			url: './work/mission/changeDay/'+missionId,
-			data: {date: date},
-			dataType: "json",
-			success: function(json){
-				WorkMissions.showDayTable(WorkMissions.currentDay, false, false);
-				WorkMissionsList.enable(50);
-			}
-		});
+	changeView: function(type){
+		document.location.href = "./work/mission?view="+parseInt(type);
 	},
 	fallbackFormShowOptionals: function(elem){
 		var form = $(elem.form);
@@ -59,40 +50,9 @@ var WorkMissions = {
 		});
 		return false;
 	},
-	loadLists: function(){
-		$.ajax({
-			url: './work/mission/ajaxRenderLists',
-			dataType: "json",			
-			success: function(json){
-				$("#day-controls").html(json.buttons);
-				$("#day-lists").html(json.lists).stop(true);
-				WorkMissionsList.makeTableSortable($("#layout-content table"),{
-					url: "./work/mission/filter/",
-					order: WorkMissionsList.sortBy,
-					direction: WorkMissionsList.sortDir
-				});
-				WorkMissionsList.enable(50);
-				WorkMissions.showDayTable(WorkMissions.currentDay);
-				
-			}
-		});
-	},
-	init: function(tense){
-		var i, button;
-		for(i=0; i<3; i++){
-			button = $("#work-mission-view-tense-"+i);
-			button.removeAttr("disabled").removeClass("disabled");			
-			if(i === tense){
-				button.addClass("active");
-				button.css("cursor", "default");
-			}
-			else{
-				button.bind("click", {tense: i}, function(event){
-					document.location.href = "./work/mission/switchTense/"+event.data.tense;
-				});
-			}
-		}
 
+	init: function(tense){
+		WorkMissionsFilter.__init(tense);
 //		this.tense = tense;
 		var site = $("body.controller-work-mission");
 		if(!site.size())
@@ -101,7 +61,10 @@ var WorkMissions = {
 //		if(tense != 1)
 //			WorkMissions.showDayTable(0);
 
-		if(site.hasClass('action-index')){
+		if(site.hasClass('action-calendar')){
+			WorkMissions.showTotalDayMissionCount($("#mission-calendar li").size());
+		}
+		if(site.hasClass('action-index') && tense === 1){
 			WorkMissions.showDayTable(WorkMissions.currentDay);
 			$("#input-import").bind("click", function(){
 				$("#input-serial").trigger("click")
@@ -115,13 +78,6 @@ var WorkMissions = {
 				else
 					$("#input-import").val("");
 			});
-var sum = 0;
-$("#day-controls span.badge").each(function(){
-//	console.log($(this).html());
-	sum += parseInt($(this).html());
-})
-$("#number-total").html(sum).show();
-
 		}
 		else{
 			$("#input_title").focus();
@@ -164,41 +120,39 @@ $("#number-total").html(sum).show();
 */		}
 		
 	},
-	changeView: function(type){
-		document.location.href = "./work/mission?view="+parseInt(type);
-	},
-	showDayTable: function(day, permanent, fade){
-		if(fade)
-			WorkMissionsList.disable(100);
-		WorkMissions.currentDay = day;
-		if(permanent)
-			$.ajax({url: "./work/mission/ajaxSelectDay/"+day});
+	moveMissionStartDate: function(missionId, date){
 		$.ajax({
-			url: "./work/mission/ajaxRenderList",
+			url: './work/mission/changeDay/'+missionId,
+			data: {date: date},
 			dataType: "json",
 			success: function(json){
-				$("#day-list-large").html(json.lists.large).stop(true);
-				$("#day-list-small").html(json.lists.small).stop(true);
-				WorkMissionsList.makeTableSortable($("#layout-content table"),{
-					url: "./work/mission/filter/",
-					order: WorkMissionsList.sortBy,
-					direction: WorkMissionsList.sortDir
-				});
-				$("#day-controls-large").html(json.buttons.large);
-				$("#day-controls-small").html(json.buttons.small);
-				$("#day-controls-large a.btn.active").removeClass("active");
-				$("#day-controls-large a.btn").eq(day).addClass("active");
-				$("#day-controls-small li:eq("+day+") a").tab("show");
-				if(fade)
-					WorkMissionsList.enable(50);
+				WorkMissions.showDayTable(WorkMissions.currentDay, false);
 			}
 		});
-//		$("#day-controls button").removeClass("active").eq(day).addClass("active");
-/*		$("div.table-day").hide().filter("#table-"+day).show();
-		$("div.table-day-small").hide().filter("#table-small-"+day).show();
-//		$("#day-controls button").removeClass("active").eq(day).addClass("active");
-		$("#day-controls li.active").removeClass("active");
-		$("#day-controls li").eq(day).addClass("active");
-		$("#day-controls-small li:eq("+day+") a").tab("show");
-*/	}	
+	},
+	showDayTable: function(day, permanent, onSuccess){
+		WorkMissions.currentDay = day;
+		if(permanent)
+			$.ajax({
+				url: "./work/mission/ajaxSelectDay/"+day,
+				success: function(){
+					WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
+				}
+			});
+		else
+			WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
+	},
+	showTotalDayMissionCount: function(sum){
+		if(typeof sum === "undefined"){
+			console.log("showTotalDayMissionCount");
+			var sum = 0;
+			console.log($("#day-controls-large span.badge"));
+			$("#day-controls-large span.badge").each(function(){
+			//  console.log($(this).html());
+				sum += parseInt($(this).html());
+			})
+		}
+		$("#number-total").html(sum).show();
+	}
+
 };
