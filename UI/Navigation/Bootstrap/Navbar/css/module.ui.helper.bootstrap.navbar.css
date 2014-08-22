@@ -33,9 +33,30 @@
 	}
 
 /*  --  FIXED NAVBAR  --  */
-body.navbar-fixed #logo {
+body.navbar-fixed .visible-desktop #logo {
 	position: fixed;
 	}
+body.navbar-fixed .hidden-desktop #logo {
+	left: 1em;
+	}
+
+@media (max-width: 767px){
+	body.navbar-fixed .hidden-desktop .navbar-fixed-top,
+	body.navbar-fixed .hidden-desktop .navbar-fixed-bottom,
+	body.navbar-fixed .hidden-desktop .navbar-static-top {
+		margin-right: 0px;
+		margin-left: 0px;
+	}
+}
+html.mm-opening .mm-page,
+html.mm-opening #mm-blocker,
+html.mm-opening .mm-fixed-top,
+html.mm-opening .mm-fixed-bottom {
+	left: 240px;
+	}
+
+
+
 body.navbar-fixed #layout-field {
 	margin-top: 41px;
 	}
