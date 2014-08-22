@@ -50,10 +50,15 @@ return '
 		'.$filter.'
 	</div>
 	<div class="span9">
-		'.$table.'
-		'.$pagination.'
-		<div class="buttonbar">
-			<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;neue Rechnung</a>
+		<div class="content-panel">
+			<div class="content-panel-inner">
+				<h4>Rechnungen</h4>
+				'.$table.'
+				'.$pagination.'
+				<div class="buttonbar">
+					<a href="./work/bill/add" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;neue Rechnung</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>';

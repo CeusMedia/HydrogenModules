@@ -17,7 +17,7 @@ return '
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_title">'.$w->labelTitle.'</label>
-			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $bill->title ).'"/>
+			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $bill->title, ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span3">
 			<label for="input_price">'.$w->labelPrice.'</label>
