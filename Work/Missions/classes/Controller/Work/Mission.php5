@@ -241,7 +241,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$listLarge->setWords( $words );
 
 		$listSmall		= new View_Helper_Work_Mission_List_DaysSmall( $this->env );
-		$listSmall->setMissions( $missions );
+		$listSmall->setMissions( $listLarge->getDayMissions( $day ) );
 		$listSmall->setWords( $words );
 
 		$buttonsLarge	= new View_Helper_Work_Mission_List_DayControls( $this->env );
@@ -299,8 +299,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function ajaxSelectDay( $day ){
 		$this->env->getSession()->set( 'filter.work.mission.day', (int) $day );
-		print( json_encode( (int) $day ) );
-		exit;
+		$this->ajaxRenderList();
+//		print( json_encode( (int) $day ) );
+//		exit;
 	}
 
 	public function calendar( $year = NULL, $month = NULL ){
@@ -380,7 +381,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 		}
 		if( $this->env->request->isAjax() )
-			$this->ajaxRenderLists();
+			$this->ajaxRenderList();
 		$this->restart( NULL, TRUE );
 	}
 
