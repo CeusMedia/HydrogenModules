@@ -89,14 +89,18 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_work_bill_direction', 'ASC' );
 		if( !strlen( $filters->get( 'limit' ) ) )
 			$session->set( 'filter_work_bill_limit', 10 );
+		if( !is_array( $filters->get( 'type' ) ) || !count( $filters->get( 'type' ) ) )
+			$session->set( 'filter_work_bill_type', array( 0, 1 ) );
+		if( !is_array( $filters->get( 'status' ) ) || !count( $filters->get( 'status' ) ) )
+			$session->set( 'filter_work_bill_status', array( 0, 1 ) );
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
 
 		$conditions	= array(
 			'userId'	=> $this->userId,
 		);
-		if( strlen( $filters->get( 'status' ) ) )
+		if( count( $filters->get( 'status' ) ) )
 			$conditions['status']	= $filters->get( 'status' );
-		if( strlen( $filters->get( 'type' ) ) )
+		if( count( $filters->get( 'type' ) ) )
 			$conditions['type']		= $filters->get( 'type' );
 		if( $filters->get( 'start' ) || $filters->get( 'fend' ) ){
 			if( $filters->get( 'start' ) && $filters->get( 'end' ) ){
