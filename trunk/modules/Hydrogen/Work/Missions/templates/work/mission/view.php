@@ -60,8 +60,8 @@ $panelFacts	= '
 			<h4>'.$w->legend.'</h4>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
-					<div style="float: left; width: 40%">
-						<dl class="dl-horizontal">
+					<div style="float: left; width: 50%">
+						<dl class="not-dl-horizontal">
 							<dt>'.$w->labelType.'</dt>
 							<dd>'.$words['types'][$mission->type].'</dd>
 							<dt>'.$w->labelPriority.'</dt>
@@ -79,8 +79,8 @@ $panelFacts	= '
 							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>
 						</dl>
 					</div>
-					<div style="float: left; width: 60%">
-						<dl class="dl-horizontal">
+					<div style="float: left; width: 50%">
+						<dl class="not-dl-horizontal">
 							<dt>'.$w->labelOwner.'</dt>
 							<dd><span class="user role role'.$mission->owner->roleId.'">'.$mission->owner->username.'</span></dd>
 							<dt>'.$w->labelWorker.'</dt>

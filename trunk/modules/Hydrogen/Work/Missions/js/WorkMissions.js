@@ -121,22 +121,27 @@ var WorkMissions = {
 		
 	},
 	moveMissionStartDate: function(missionId, date){
+		WorkMissionsList.blendOut(150);
 		$.ajax({
 			url: './work/mission/changeDay/'+missionId,
 			data: {date: date},
 			dataType: "json",
 			success: function(json){
-				WorkMissions.showDayTable(WorkMissions.currentDay, false);
+				WorkMissionsList.renderDayListDayControls(json);
+//				WorkMissions.showDayTable(WorkMissions.currentDay, false);
 			}
 		});
 	},
 	showDayTable: function(day, permanent, onSuccess){
 		WorkMissions.currentDay = day;
+		WorkMissionsList.blendOut(150);
 		if(permanent)
 			$.ajax({
 				url: "./work/mission/ajaxSelectDay/"+day,
-				success: function(){
-					WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
+				dataType: "json",
+				success: function(json){
+					WorkMissionsList.renderDayListDayControls(json);
+//					WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
 				}
 			});
 		else
@@ -144,11 +149,8 @@ var WorkMissions = {
 	},
 	showTotalDayMissionCount: function(sum){
 		if(typeof sum === "undefined"){
-			console.log("showTotalDayMissionCount");
 			var sum = 0;
-			console.log($("#day-controls-large span.badge"));
 			$("#day-controls-large span.badge").each(function(){
-			//  console.log($(this).html());
 				sum += parseInt($(this).html());
 			})
 		}

@@ -107,16 +107,34 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 
 		$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
 		$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+		$iconLeft	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+		$iconRight	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
 
 		$list		= array();
-		$linkView	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
-			'href'	=> './work/mission/view/'.$mission->missionId
+		if( $this->isViewer ){
+			$linkView	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
+				'href'	=> './work/mission/view/'.$mission->missionId
+			) );
+			$list[]		= UI_HTML_Tag::create( 'li', $linkView );
+		}
+		if( $this->isEditor ){
+			$linkEdit	= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array(
+				'href'	=> './work/mission/edit/'.$mission->missionId
+			) );
+			$list[]		= UI_HTML_Tag::create( 'li', $linkEdit );
+		}
+		if( $days ){
+			$linkLeft	= UI_HTML_Tag::create( 'a', $iconLeft.' '.$this->words['list-actions']['moveLeft'], array(
+				'href'		=> '#',
+				'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'-1'); return false;",
+			) );
+			$list[]		= UI_HTML_Tag::create( 'li', $linkLeft );
+		}
+		$linkRight	= UI_HTML_Tag::create( 'a', $iconRight.' '.$this->words['list-actions']['moveRight'], array(
+			'href'		=> '#',
+			'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'+1'); return false;",
 		) );
-		$linkEdit	= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array(
-			'href'	=> './work/mission/edit/'.$mission->missionId
-		) );
-		$list[]		= UI_HTML_Tag::create( 'li', $linkView );
-		$list[]		= UI_HTML_Tag::create( 'li', $linkEdit );
+		$list[]		= UI_HTML_Tag::create( 'li', $linkRight );
 		$list		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu pull-right' ) );
 		$caret		= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
 		$button		= UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => 'dropdown' ) );
@@ -147,7 +165,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
 		$url		= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
-		if( !$this->isEditor && $this->isViewer )
+		if( 1 || !$this->isEditor && $this->isViewer )
 			$url	= $this->baseUrl.'work/mission/view/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";

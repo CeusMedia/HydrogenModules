@@ -24,20 +24,7 @@ var WorkMissionsList = {
 			dataType: "json",
 			success: function(json){
 				$("#message-loading-list").remove();
-				$("#day-list-large").html(json.lists.large).stop(true);
-				$("#day-list-small").html(json.lists.small).stop(true);
-				if(!json.count)
-					$("#day-lists-empty").show();
-				WorkMissionsList.makeTableSortable($("#layout-content table"),{
-					url: "./work/mission/filter/",
-					order: WorkMissionsList.sortBy,
-					direction: WorkMissionsList.sortDir
-				});
-				$("#day-controls-small").html(json.buttons.small);
-				$("#day-controls-large").html(json.buttons.large);
-				$("#day-controls-large a.btn.active").removeClass("active");
-				$("#day-controls-large a.btn").eq(json.day).addClass("active");
-				$("#day-controls-small li:eq("+json.day+") a").tab("show");
+				WorkMissionsList.renderDayListDayControls(json);
 				WorkMissions.showTotalDayMissionCount();
 				onSuccess();
 			}
@@ -65,5 +52,21 @@ var WorkMissionsList = {
 				});
 			}
 		});
+	},
+	renderDayListDayControls: function(data){
+		$("#day-list-large").html(data.lists.large).stop(true);
+		$("#day-list-small").html(data.lists.small).stop(true);
+		if(!data.count)
+			$("#day-lists-empty").show();
+		WorkMissionsList.makeTableSortable($("#layout-content table"),{
+			url: "./work/mission/filter/",
+			order: WorkMissionsList.sortBy,
+			direction: WorkMissionsList.sortDir
+		});
+		$("#day-controls-small").html(data.buttons.small);
+		$("#day-controls-large").html(data.buttons.large);
+		$("#day-controls-large a.btn.active").removeClass("active");
+		$("#day-controls-large a.btn").eq(data.day).addClass("active");
+		$("#day-controls-small li:eq("+data.day+") a").tab("show");
 	}
 }
