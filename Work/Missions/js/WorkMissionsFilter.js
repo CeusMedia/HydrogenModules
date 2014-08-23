@@ -46,6 +46,7 @@ var WorkMissionsFilter = {
 		$("#button_filter_reset").bind("click", function(){
 			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
 		});
+		this.initFilter("projects");
 	},
 	changeView: function(elem){								//  @todo kriss: fix this hack!
 		var val = parseInt($(elem).val());
@@ -62,5 +63,48 @@ var WorkMissionsFilter = {
 		WorkMissionsFilter.form.find("#filter_query").val("");
 		WorkMissionsFilter.form.submit();
 		return true;
+	},
+
+	initFilter: function(filterName){
+		var container	= $("#"+filterName);
+		var inputs		= container.find("ul li input");
+		var button		= container.find("button");
+		container.find("ul").bind("click", function(event){							//  bind click event on dropdown list
+			event.stopPropagation();												//  to stop propagation to avoid close event of bootstrap
+		});
+		inputs.bind("change", function(event){										//  bind change event on every checkbox
+			//  store changed filter
+			var value = event.target.checked ? 1 : 0;								//  get check status as integer
+			var id = event.target.value;											//  get ID of filter to set
+			$.ajax({																//  store action using AJAX
+				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
+					success: function(){											//  on response
+					WorkMissionsList.loadCurrentListAndDayControls();				//  reload day lists and controls
+				}
+			});
+
+			//  count checked and unchecked checkboxes
+			var i, value;
+			var countChecked = 0;
+			var countUnchecked = 0;
+			for(i=0; i<inputs.size(); i++){											//  iterate checkboxes
+				value = inputs.eq(i).prop("checked") ? 1 : 0;						//  get check state
+				countChecked += value;												//  count if checked
+				countUnchecked -= value - 1;										//  count if unchecked
+			}
+
+			//  check all checkboxes if none is checked anymore, since the backend will automatically enable all, too
+			if(!countChecked){														//  no checkbox is checked
+				inputs.prop("checked", "checked");									//  check all checkboxes
+				countUnchecked = 0;													//  reset number of unchecked checkboxes
+				countChecked = inputs.size();										//  reset number if checked checkboxes
+			}
+
+			//  mark filter button if filters have changed
+			if(countUnchecked)														//  atleast one checkbox is unchecked
+				button.addClass("btn-info")											//  mark filter as changed
+			else																	//  no checkbox is unchecked
+				button.removeClass("btn-info");										//  mark filter as unchanged
+		});
 	}
 };
