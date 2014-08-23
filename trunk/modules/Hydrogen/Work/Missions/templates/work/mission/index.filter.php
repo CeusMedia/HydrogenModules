@@ -61,11 +61,25 @@ $toolbar->addButton( 'tb_2', 'states', $buttonStates->render() );
 $changedProjects	= array();
 if( $useProjects && !empty( $userProjects ) ){
 	$changedProjects	= array_diff( array_keys( $userProjects ), $filterProjects );
-	$buttonProjects		= new View_Helper_MultiCheckDropdownButton( 'projects', $filterProjects, 'Projekte' );
-	$buttonProjects->setButtonClass( $changedProjects ? "btn-info" : "" );
-	foreach( $userProjects as $project )
-		$buttonProjects->addItem( $project->projectId, $project->title );
-	$toolbar->addButton( 'tb_2', 'projects', $buttonProjects->render() );
+	$list	= array();
+	foreach( $userProjects as $project ){
+		$input	= UI_HTML_Tag::create( 'input', NULL, array(
+			'type'		=> 'checkbox',
+			'name'		=> 'projects[]',
+			'id'		=> 'project-'.$project->projectId,
+			'value'		=> $project->projectId,
+			'checked'	=> in_array( $project->projectId, $filterProjects ) ? "checked" : NULL
+		) );
+		$label	= UI_HTML_Tag::create( 'label', $input.' '.$project->title, array( 'class' => 'checkbox' ) );
+		$list[]	= UI_HTML_Tag::create( 'li', $label );
+	}
+	$buttonLabel	= 'Projekte <span class="caret"></span>';
+	$buttonClass	= 'dropdown-toggle btn '.( $changedProjects ? "btn-info" : "" );
+	$buttonProjects	= UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+		UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
+	), array( 'class' => 'btn-group', 'id' => 'projects' ) );
+	$toolbar->addButton( 'tb_2', 'projects', $buttonProjects );
 }
 
 /*  -- reset filters  --  */

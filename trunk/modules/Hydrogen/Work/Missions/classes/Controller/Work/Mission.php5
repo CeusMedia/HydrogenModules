@@ -166,6 +166,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$model->edit( $filter->missionFilterId, $data );
 		else
 			$model->add( $data + $indices );
+		if( $this->env->getRequest()->isAjax() ){
+			header( 'Content-Type: application/json' );
+			print( json_encode( TRUE ) );
+			exit;
+		}
 		$this->restart( NULL, TRUE );
 	}
 
