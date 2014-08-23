@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: OAuth2</title>
+	<description><![CDATA[OAuth 2 server implementation.
+
+This module cannot be used standalone.
+Please install inside an application or use module App:Server.
+
+At the moment thee resource service is not implemented.
+
+Authorization is implemented fully (except implicit grant) according to
+RFC 6749 (http://tools.ietf.org/html/rfc6749).
+
+]]></description>
+	<version>0.2.1</version>
+	<log version="0.2.1">Updated application management.</log>
+	<category>Server</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Oauth.php5</class>
+		<class>Controller/Oauth/Application.php5</class>
+		<class>Controller/Oauth/Resource.php5</class>
+		<class>Model/Oauth/AccessToken.php5</class>
+		<class>Model/Oauth/Application.php5</class>
+		<class>Model/Oauth/Code.php5</class>
+		<class>Model/Oauth/RefreshToken.php5</class>
+		<class>Model/Oauth/User.php5</class>
+		<class>Model/Oauth/AccessToken.php5</class>
+		<class>View/Oauth.php5</class>
+		<class>View/Oauth/Application.php5</class>
+		<locale>de/oauth.ini</locale>
+		<locale>de/html/oauth/authorize.bottom.html</locale>
+		<locale>de/html/oauth/authorize.top.html</locale>
+		<locale>de/html/oauth/index.html</locale>
+		<locale>en/oauth.ini</locale>
+		<locale>en/html/oauth/authorize.bottom.html</locale>
+		<locale>en/html/oauth/authorize.top.html</locale>
+		<locale>en/html/oauth/index.html</locale>
+		<template>oauth/authorize.php</template>
+		<template>oauth/application/add.php</template>
+		<template>oauth/application/edit.php</template>
+		<template>oauth/application/index.php</template>
+		<template>oauth/application/view.php</template>
+	</files>
+	<config protected="yes" type="integer" name="lifetime.access" title="Seconds for access token to last (default: 3600 = 1 hour).">3600</config>
+	<config protected="yes" type="integer" name="lifetime.code" title="Seconds for authorization code to last (default: 600 = 10 minutes).">600</config>
+	<config protected="yes" type="integer" name="lifetime.refresh" title="Seconds for refresh token to last (default: 1209600 = 14 days).">1209600</config>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
+  `oauthAccessTokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oauthApplicationId` int(10) unsigned NOT NULL,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `scope` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthAccessTokenId`),
+  KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `token` (`token`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>oauth_applications`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_applications` (
+  `oauthApplicationId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `clientId` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `clientSecret` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthApplicationId`),
+  UNIQUE KEY `clientId` (`clientId`),
+  KEY `userId` (`userId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `clientSecret` (`clientSecret`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>oauth_codes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
+  `oauthCodeId` int(11) NOT NULL AUTO_INCREMENT,
+  `oauthApplicationId` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `redirectUri` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `scope` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthCodeId`),
+  KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `redirectUri` (`redirectUri`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>oauth_refresh_tokens`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_refresh_tokens` (
+  `oauthRefreshTokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oauthApplicationId` int(10) unsigned NOT NULL,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `scope` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthRefreshTokenId`),
+  KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `token` (`token`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>
