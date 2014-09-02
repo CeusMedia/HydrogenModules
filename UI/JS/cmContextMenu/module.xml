@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: JS: cmContextMenu</title>
+	<description><![CDATA[Simple context menu replacement.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<script load="auto">cmContextMenu.js</script>
+		<style load="auto">cmContextMenu.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+</module>
+	
