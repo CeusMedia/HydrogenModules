@@ -11,6 +11,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $words		= array();
 	protected $isEditor;
 	protected $isViewer;
+	protected $icons;
 
 	public function __construct( $env ){
 		parent::__construct( $env );
@@ -24,6 +25,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$this->projects[$project->projectId] = $project;
 		$this->isEditor	= $this->env->getAcl()->has( 'work/mission', 'edit' );
 		$this->isViewer	= $this->env->getAcl()->has( 'work/mission', 'view' );
+		$this->icons	= array(
+			'left'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) ),
+			'right'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) ),
+			'edit'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
+			'view'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) ),
+		);
 	}
 
 	protected function renderBadgeDays( $days, $class ){
@@ -124,13 +131,13 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		return '<div class="btn-group">'.join( '', $buttons ).'</div>';
 	}
 
-	public function renderRowLabel( $mission ){
+	public function renderRowLabel( $mission, $edit = TRUE ){
 		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
-		$url		= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
-		if( !$this->isEditor && $this->isViewer )
-			$url	= $this->baseUrl.'work/mission/view/'.$mission->missionId;
+		$url		= $this->baseUrl.'work/mission/view/'.$mission->missionId;
+		if( $this->isEditor && $edit )
+			$url	= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";
 		$icon		= '<i class="icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';
@@ -140,7 +147,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 
 	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
 		$modelUser	= new Model_User( $this->env );
-		$link		= $this->renderRowLabel( $event );
+		$link		= $this->renderRowLabel( $event, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $event );
 		$badgeS		= $this->renderBadgeDaysStill( $event );
 		$badgeU		= $this->renderBadgeDaysUntil( $event );
@@ -153,6 +160,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
+		$buttonEdit  = $this->renderRowButtonEdit( $event );
 
 		$cells		= array();
 		if( $showStatus )
@@ -162,7 +170,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
 			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){
@@ -177,8 +185,19 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );
 	}
 
+	public function renderRowButtonEdit( $mission ){
+		if( !$this->isEditor )
+			return '';
+		$attributes = array(
+			'href'		=> "./work/mission/edit/".$mission->missionId,
+			'class'		=> 'btn btn-mini work-mission-list-row-button work-mission-list-row-button-edit',
+			'title'		=> $this->words['list-actions']['edit'],
+		);
+		return UI_HTML_Tag::create( 'a', $this->icons['edit'], $attributes );
+	}
+
 	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions ){
-		$link		= $this->renderRowLabel( $task );
+		$link		= $this->renderRowLabel( $task, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $task );
 		$badgeS		= $this->renderBadgeDaysStill( $task );
 		$badgeU		= $this->renderBadgeDaysUntil( $task );
@@ -186,6 +205,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$graph		= UI_HTML_Tag::create( 'div', $graph.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-graph' ) );
 		$worker		= $this->renderUserWithAvatar( $task->workerId );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
+		$buttonEdit  = $this->renderRowButtonEdit( $task );
 
 		$cells		= array();
 		if( $showStatus )
@@ -195,7 +215,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $task->dayStart ) ), array( 'class' => 'muted' ) );
 			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $link.' '.$buttonEdit, array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){

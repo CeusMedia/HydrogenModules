@@ -68,6 +68,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->logic	= $logic	= new Logic_Mission( $this->env );
 		$this->session	= $session	= $this->env->getSession();
 		$this->acl		= $this->env->getAcl();
+        $this->isEditor = $this->acl->has( 'work/mission', 'edit' );
+        $this->isViewer = $this->acl->has( 'work/mission', 'view' );
 
 		$model			= new Model_User( $this->env );
 		foreach( $model->getAll() as $user )
@@ -83,7 +85,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			if( $this->hasFullAccess() )
 				$this->userProjects	= $this->logic->getUserProjects( $userId );
 			else
-				$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
+ 				$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
 			$this->initFilters( $userId );
 		}
 	}
@@ -108,7 +110,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $session->get( 'filter.work.mission.tense' ) === NULL )
 			$session->set( 'filter.work.mission.tense', $this->defaultFilterValues['tense'] );
 		else
-			$session->set( 'filter.work.mission.tense', (int) $session->get( 'filter.work.mission.tense' ) );
 		if( !$session->get( 'filter.work.mission.types' ) )
 			$session->set( 'filter.work.mission.types', $this->defaultFilterValues['types'] );
 		if( !$session->get( 'filter.work.mission.priorities' ) )
@@ -143,37 +144,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function setFilter( $name, $value = NULL, $set = FALSE ){
-		$session	= $this->env->getSession();
-		$values		= $session->get( 'filter.work.mission.'.$name );
-		if( is_array( $values ) ){
-			if( $set )
-				$values[]	= $value;
-			else if( ( $pos = array_search( $value, $values ) ) >= 0 )
-				unset( $values[$pos] );
-		}
-		else{
-			$values	= $value;
-		}
-		$session->set( 'filter.work.mission.'.$name, $values );
-		$userId		= $session->get( 'userId' );
-		$model		= new Model_Mission_Filter( $this->env );
-		$serial		= serialize( $session->getAll( 'filter.work.mission.' ) );
-		$data		= array( 'serial' => $serial, 'timestamp' => time() );
-		$indices	= array( 'userId' => $userId );
-		$filter		= $model->getByIndex( 'userId', $userId );
-		if( $filter )
-			$model->edit( $filter->missionFilterId, $data );
-		else
-			$model->add( $data + $indices );
-		if( $this->env->getRequest()->isAjax() ){
-			header( 'Content-Type: application/json' );
-			print( json_encode( TRUE ) );
-			exit;
-		}
-		$this->restart( NULL, TRUE );
-	}
-
 	public function add(){
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -181,6 +151,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'add' );
 		$userId			= $session->get( 'userId' );
+
+		if( !$this->isEditor ){
+			$messenger->noteError( $words->msgNotEditor );
+			$this->restart( NULL, TRUE, 403 );
+		}
 
 		$title		= $request->get( 'title' );
 		$status		= $request->get( 'status' );
@@ -390,7 +365,25 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	protected function checkIsEditor( $missionId = NULL, $strict = TRUE, $status = 403 ){
+		if( $this->isEditor )
+			return TRUE;
+		if( !$strict )
+			return FALSE;
+		$words		= (object) $this->getWords( 'msg' );
+		$message	= $words->errorNoRightToAdd;
+		$redirect	= NULL;
+		if( $missionId ){
+			$message	= $words->errorNoRightToEdit;
+			$redirect	= 'view/'.$missionId;
+		}
+		$this->env->getMessenger()->noteError( $message );
+		$this->restart( $redirect, TRUE, $status );
+	}
+
+
 	public function close( $missionId ){
+		$this->checkIsEditor( $missionId );
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$userId			= $this->env->getSession()->get( 'userId' );
@@ -407,13 +400,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $missionId ){
+		$this->checkIsEditor( $missionId );
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'edit' );
 		$userId			= $session->get( 'userId' );
-
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$messenger->noteError( $words->msgInvalidId );
@@ -658,6 +651,7 @@ print_m( $data );
 	}
 
 	public function import(){
+		$this->checkIsEditor();
 		$messenger		= $this->env->getMessenger();
 		$file	= $this->env->getRequest()->get( 'serial' );
 		if( $file['error'] != 0 ){
@@ -738,7 +732,40 @@ print_m( $data );
 		$this->addData( 'defaultFilterValues', $this->defaultFilterValues );
 	}
 
+
+	public function setFilter( $name, $value = NULL, $set = FALSE ){
+		$session	= $this->env->getSession();
+		$values		= $session->get( 'filter.work.mission.'.$name );
+		if( is_array( $values ) ){
+			if( $set )
+				$values[]	= $value;
+			else if( ( $pos = array_search( $value, $values ) ) >= 0 )
+				unset( $values[$pos] );
+		}
+		else{
+			$values	= $value;
+		}
+		$session->set( 'filter.work.mission.'.$name, $values );
+		$userId		= $session->get( 'userId' );
+		$model		= new Model_Mission_Filter( $this->env );
+		$serial		= serialize( $session->getAll( 'filter.work.mission.' ) );
+		$data		= array( 'serial' => $serial, 'timestamp' => time() );
+		$indices	= array( 'userId' => $userId );
+		$filter		= $model->getByIndex( 'userId', $userId );
+		if( $filter )
+			$model->edit( $filter->missionFilterId, $data );
+		else
+			$model->add( $data + $indices );
+		if( $this->env->getRequest()->isAjax() ){
+			header( 'Content-Type: application/json' );
+			print( json_encode( TRUE ) );
+			exit;
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
+		$this->checkIsEditor( $missionId );
 		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
 		if( !$showMission )																			//  back to list
 			$this->restart( NULL, TRUE );															//  jump to list
@@ -746,6 +773,7 @@ print_m( $data );
 	}
 
 	public function setStatus( $missionId, $status, $showMission = FALSE ){
+		$this->checkIsEditor( $missionId );
 		$this->model->edit( $missionId, array( 'status' => $status ) );								//  store new status
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list

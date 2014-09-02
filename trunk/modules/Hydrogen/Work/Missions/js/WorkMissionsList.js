@@ -27,6 +27,11 @@ var WorkMissionsList = {
 				WorkMissionsList.renderDayListDayControls(json);
 				WorkMissions.showTotalDayMissionCount();
 				onSuccess();
+			},
+			error: function(a, b, c){
+				console.log(a);
+				console.log(b);
+				console.log(c);
 			}
 		});
 	},

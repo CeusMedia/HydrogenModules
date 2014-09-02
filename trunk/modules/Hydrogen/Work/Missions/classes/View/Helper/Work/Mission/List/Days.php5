@@ -14,10 +14,12 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->icons	= array(
+/*		$this->icons	= array(
 			'left'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) ),
 			'right'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) ),
-		);
+			'edit'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
+			'view'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) ),
+		);*/
 	}
 
 	public function countMissions( $day = NULL ){

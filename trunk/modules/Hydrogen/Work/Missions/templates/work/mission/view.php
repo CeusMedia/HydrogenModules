@@ -73,7 +73,7 @@ $panelFacts	= '
 							<dt>'.$w->labelDayEnd.' / '.$w->labelTimeEnd.'</dt>
 							<dd>'.( $mission->dayEnd ? date( "d.m.Y", strtotime( $mission->dayEnd ) ) : "" ).' '.$mission->timeEnd.'</dd>
 							<dt>'.$w->labelChanged.'</dt>
-							<dd><span class="date">'.date( 'd.m.Y H:i', $mission->modifiedAt ).'</span></dd>
+							<dd><span class="date">'.( $mission->modifiedAt ? date( 'd.m.Y H:i', $mission->modifiedAt ) : '-' ).'</span></dd>
 							<dt>'.$w->labelHours.'</dt>
 							<dd>geplant: '.$hoursProjected.':'.$minutesProjected.'</dd>
 							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>

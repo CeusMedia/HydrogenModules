@@ -14,16 +14,6 @@ class View_Helper_Work_Mission_Calendar{
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 	}
 
-	public function renderLabel( $year, $month ){
-		$month	= (int) $month;
-		if( $month < 1 || $month > 12 )
-			throw new InvalidArgumentException( 'Invalid month' );
-		return '<span id="mission-calendar-control-label">
-	<span class="month-label">'.$this->words['months'][(int) $month].'</span>
-	<span class="year-label">'.$year.'</span>
-</span>';
-	}
-
 	public function render( $userId, $year, $month ){
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
@@ -119,55 +109,13 @@ class View_Helper_Work_Mission_Calendar{
 //		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
 
 
-		$label      = $this->renderLabel( $year, $month );
-
+		$controls		= $this->renderControls( $year, $month );
 		$table	= '
 <div id="mission-folders">
-	<div id="mission-calendar-control" class="row-fluid">
-		<div class="span8">
-			<div class="btn-group">
-				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(-1)" title="1 Monat vor">&laquo;</button>
-				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(0)" title="aktueller Monat">&Omicron;</button>
-				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(1)" title="1 Monat weiter">&raquo;</button>
-			</div>
-			'.$label.'
-		</div>
-		<div class="span4" style="text-align: right">
-			<a href="./work/mission/export/ical" target="_blank" class="btn not-btn-small" style="font-weight: normal"><i class="icon-calendar"></i> iCal-Export</a>
-		</div>
-	</div>
+	'.$controls.'
 	<div id="mission-calendar">
 		<div class="visible-desktop">'.$tableLarge.'</div>
 		<div class="hidden-desktop">'.$tableSmall.'</div>
-<!--	<table id="mission-calendar">
-		'.$colgroup.'
-		<thead>
-			<tr>
-				<th colspan="8">
-					<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(-1)">&laquo;</button>
-					<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(0)">&Omicron;</button>
-					<button type="button" class="button" onclick="WorkMissionsCalendar.setMonth(1)">&raquo;</button>
-					'.$label.'
-					<div style="float: right;">
-						<a href="./work/mission/export/ical" target="_blank" class="btn btn-small" style="font-weight: normal"><i class="icon-calendar"></i> iCal-Export</a>
-					</div>
-				</th>
-			</tr>
-			<tr>
-				<th>KW</th>
-				<th>Montag</th>
-				<th>Dienstag</th>
-				<th>Mittwoch</th>
-				<th>Donnerstag</th>
-				<th>Freitag</th>
-				<th>Samstag</th>
-				<th>Sonntag</th>
-			</tr>
-		</thead>
-		<tbody>
-			'.join( $rows ).'
-		</tbody>
-	</table>-->
 	</div>
 </div>
 ';
@@ -177,53 +125,9 @@ $(document).ready(function(){
 	WorkMissionsCalendar.monthShow    = '.(int) $showMonth.';
 //	$("table#mission-calendar tr td ul li").draggable({containment: "#mission-calendar tbody", revert: true});
 	if(typeof cmContextMenu !== "undefined"){
-		var pathIcons	= "http://img.int1a.net/famfamfam/silk/";
-		cmContextMenu.init("#mission-calendar tbody ul li");
-		cmContextMenu.containment = "#mission-calendar";
 		cmContextMenu.labels.priorities = '.json_encode( $this->words['priorities'] ).';
 		cmContextMenu.labels.states = '.json_encode( $this->words['states'] ).';
-		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
-			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
-			var url = "./work/mission/add/?type=0&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neue Aufgabe", pathIcons+"script_add.png");
-			var url = "./work/mission/add/?type=1&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neuer Termin", pathIcons+"date_add.png");
-		});
-		cmContextMenu.onShow = function(contextMenu){contextMenu.find("#context-date input").datepicker();};
-		cmContextMenu.onChange = function(){$("#mission-calendar").css({opacity: 0.5});};
-		cmContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
-			var missionId = elem.data("id");
-			if(elem.data("title"))
-				menu.addItem("<h4>"+elem.data("title")+"</h4>");
-			if(elem.data("project"))
-				menu.addItem("<small>Projekt: </small>"+elem.data("project"));
-			if(elem.data("date")){
-				var div = $("<div></div>").attr("id", "context-date");
-				var value = elem.data("date").replace(/ /,"");
-				var input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small", readonly: "readonly"});
-				input.on("change", function(event){
-					cmContextMenu.hide(event, true);
-					document.location.href = "./work/mission/changeDay/"+missionId+"?date="+$(this).val();
-				});
-				var label = $("<small>").append("Datum: ");/*.append(elem.data("date"));*/
-				menu.addItem(div.append(label).append(input));
-			}
-			if(elem.data("time"))
-				menu.addItem("<small>Zeit: </small>"+elem.data("time"));
-			if(elem.data("priority"))
-				menu.addItem("<small>Priorität: </small>"+menu.labels.priorities[elem.data("priority")]);
-			if(elem.data("status"))
-				menu.addItem("<small>Status: </small>"+menu.labels.states[elem.data("status")]);
-
-			menu.addItem()
-
-			var url = "./work/mission/edit/"+missionId;
-			menu.addLinkItem(url, "bearbeiten", pathIcons+"pencil.png");
-			var url = "./work/mission/changeDay/"+missionId+"?date=-1";
-			menu.addLinkItem(url, "1 Tag eher", pathIcons+"arrow_left.png");
-			var url = "./work/mission/changeDay/"+missionId+"?date=%2B1";
-			menu.addLinkItem(url, "1 Tag später", pathIcons+"arrow_right.png");
-		});
+		WorkMissionsCalendar.initContextMenu();
 	};
 });
 </script>';
@@ -232,6 +136,56 @@ $(document).ready(function(){
 //		$this->env->getPage()->js->addUrl( 'javascripts/cmContextMenu.js' );
 		$this->env->getPage()->addHead( $script );
 		return $table;
+	}
+
+	protected function renderControls( $year, $month ){
+		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
+		$btnControlPrev	= UI_HTML_Tag::create( 'button', '&laquo;',  array(
+			'type'		=> 'button',
+			'class'		=> 'btn btn-large',
+			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
+			'title'		=> '1 Monat vor',
+		) );
+		$btnControlNext	= UI_HTML_Tag::create( 'button', '&raquo;',  array(
+			'type'		=> 'button',
+			'class'		=> 'btn btn-large',
+			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
+			'title'		=> '1 Monat weiter',
+		) );
+		$btnControlNow	= UI_HTML_Tag::create( 'button', '&Omicron;',  array(
+			'type'		=> 'button',
+			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
+			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
+			'title'		=> 'aktueller Monat',
+			'disabled'	=> $isNow ? 'disabled' : NULL,
+		) );
+
+		$label      = $this->renderLabel( $year, $month );
+
+		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar"></i> iCal-Export', array(
+			'href'		=> './work/mission/export/ical',
+			'target'	=> '_blank',
+			'class'		=> 'btn not-btn-small btn-warn btn-warning',
+			'style'		=> 'font-weight: normal',
+		) );
+		return '
+	<div id="mission-calendar-control" class="row-fluid">
+		<div class="span8">
+			<div class="btn-group">
+				'.$btnControlPrev.'
+				'.$btnControlNow.'
+				'.$btnControlNext.'
+<!--				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(-1)" title="1 Monat vor">&laquo;</button>-->
+<!--				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(0)" title="aktueller Monat">&Omicron;</button>-->
+<!--				<button type="button" class="btn btn" onclick="WorkMissionsCalendar.setMonth(1)" title="1 Monat weiter">&raquo;</button>-->
+			</div>
+			'.$label.'
+		</div>
+		<div class="span4" style="text-align: right">
+			'.$btnExport.'
+<!--			<a href="./work/mission/export/ical" target="_blank" class="btn not-btn-small" style="font-weight: normal"><i class="icon-calendar"></i> iCal-Export</a>-->
+		</div>
+	</div>';
 	}
 
 	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ){
@@ -275,6 +229,16 @@ $(document).ready(function(){
 			"data-year"		=> $date->format( "Y" ),
 			"data-date"		=> $date->format( "Y-m-d" )
 		) );
+	}
+
+	protected function renderLabel( $year, $month ){
+		$month	= (int) $month;
+		if( $month < 1 || $month > 12 )
+			throw new InvalidArgumentException( 'Invalid month' );
+		return '<span id="mission-calendar-control-label">
+	<span class="month-label">'.$this->words['months'][(int) $month].'</span>
+	<span class="year-label">'.$year.'</span>
+</span>';
 	}
 
 	/**
