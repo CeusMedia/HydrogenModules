@@ -2,7 +2,20 @@
 <module>
 	<title>Resource: Authentication</title>
 	<description><![CDATA[Module for authentication against local database using the Users module.]]></description>
-	<version>0.5.6</version>
+	<version>0.5.7</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Added text block support for every page (german only).</log>
+	<log version="0.4">Added support for HTTP basic authentication.</log>
+	<log version="0.4.1">Added support for password salt.</log>
+	<log version="0.5">Refactored JavaScript for auto logout and session refresh.</log>
+	<log version="0.5.1">Made session refresh and its interval (in seconds) configurable.</log>
+	<log version="0.5.2">Made auto logout and its timeout (in seconds) configurable.</log>
+	<log version="0.5.3">Allow user configuration to configure auto logout.</log>
+	<log version="0.5.4">Added AJAX method to check username existance (used on registration).</log>
+	<log version="0.5.5">Added support to forward to a controller action on logout.</log>
+	<log version="0.5.6">Fixed logout loop.</log>
+	<log version="0.5.7">Force to reload page if session refresh indicates expired server session.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
