@@ -90,8 +90,9 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						$this->messenger->noteSuccess( $words->msgSuccess );
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
-						$redirectUrl	= $from	= $this->request->get( 'from' );					//  get redirect URL from request if set
-						$this->restart( './'.$redirectUrl );										//  restart (or go to redirect URL)
+						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
+						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
+						$this->restart( './'.$from );												//  restart (or go to redirect URL)
 					}
 				}
 			}

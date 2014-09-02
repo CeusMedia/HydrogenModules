@@ -51,8 +51,13 @@ var Auth = {
 			function(){
 				$.ajax({
 					url: './auth/ajaxRefreshSession',
-					dataType: 'html',
-					type: 'POST'
+					dataType: 'json',
+					type: 'POST',
+					success: function(json){
+						if(!json){
+							document.location.reload();
+						}
+					}
 				});
 			}, minutes * 60 * 1000
 		);
