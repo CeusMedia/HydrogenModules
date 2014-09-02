@@ -843,3 +843,11 @@ body.controller-work-mission.action-index #day-list-small .table-day-small table
 		}
 	}
 
+
+
+#day-lists table.work-mission-list tbody tr td.cell-title a.btn {
+	opacity: 0;
+	}
+#day-lists table.work-mission-list tbody tr:hover td.cell-title a.btn {
+	opacity: 1;
+	}

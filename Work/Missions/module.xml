@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.31</version>
+	<version>0.8.34</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -18,6 +18,9 @@ code>
 	<log version="0.8.29">Completed JavaScript and AJAX refactoring.</log>
 	<log version="0.8.30">Improved AJAX request performance and day list buttons.</log>
 	<log version="0.8.31">Implemented new filter handling and improved projects filter.</log>
+	<log version="0.8.32">Changed behavior: Show mission first and allow to edit if user role right is given.</log>
+	<log version="0.8.33">Improved handling of edit requests without set user role right.</log> 
+	<log version="0.8.34">Refactored some calendar features.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
