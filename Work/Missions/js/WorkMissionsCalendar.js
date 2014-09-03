@@ -16,9 +16,9 @@ var WorkMissionsCalendar = {
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
 			var url = "./work/mission/add/?type=0&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neue Aufgabe", this.pathIcons+"script_add.png");
+			menu.addLinkItem(url, "neue Aufgabe", WorkMissionsCalendar.pathIcons+"script_add.png");
 			var url = "./work/mission/add/?type=1&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neuer Termin", this.pathIcons+"date_add.png");
+			menu.addLinkItem(url, "neuer Termin", WorkMissionsCalendar.pathIcons+"date_add.png");
 		});
 		cmContextMenu.onShow = function(contextMenu){contextMenu.find("#context-date input").datepicker();};
 		cmContextMenu.onChange = function(){$("#mission-calendar").css({opacity: 0.5});};
@@ -48,13 +48,47 @@ var WorkMissionsCalendar = {
 
 			menu.addItem();
 
-			var url;
-			url = "./work/mission/edit/"+missionId;
-			menu.addLinkItem(url, "bearbeiten", this.pathIcons+"pencil.png");
-			url = "./work/mission/changeDay/"+missionId+"?date=-1";
-			menu.addLinkItem(url, "1 Tag eher", this.pathIcons+"arrow_left.png");
-			url = "./work/mission/changeDay/"+missionId+"?date=%2B1";
-			menu.addLinkItem(url, "1 Tag später", this.pathIcons+"arrow_right.png");
+			var actions = [{
+					url: "./work/mission/changeDay/"+missionId+"?date=-1",
+//					icon: WorkMissionsCalendar.pathIcons+"arrow_left.png",
+					icon: "arrow-left",
+					label: '1 Tag eher',
+//					size: 'small',
+				},{
+					url: "./work/mission/changeDay/"+missionId+"?date=%2B1",
+//					icon: WorkMissionsCalendar.pathIcons+"arrow_right.png",
+					icon: "arrow-right",
+					label: '1 Tag später',
+//					size: 'small',
+				},{
+					url: "./work/mission/view/"+missionId,
+//					icon: WorkMissionsCalendar.pathIcons+"eye.png",
+					icon: "eye-open",
+					label: 'anzeigen',
+//					size: 'small',
+				},{
+					url: "./work/mission/edit/"+missionId,
+//					icon: WorkMissionsCalendar.pathIcons+"pencil.png",
+					icon: "pencil",
+					label: 'bearbeiten',
+//					size: 'small',
+				}
+			];
+
+			var button;
+			var btnGroupMove = $("<div></div>").addClass("btn-group");
+			for(var i=0; i<actions.length; i++){
+				icon = $("<i/>").attr("class", "icon-"+actions[i].icon);
+				button = $("<a></a>").addClass("btn").html(icon);
+				if(typeof actions[i].size !== "undefined" && actions[i].size.length)
+					button.addClass("btn-"+actions[i].size);
+				button.attr("title", actions[i].label);
+				button.attr("href", actions[i].url);
+				btnGroupMove.append(button);
+			}
+			menu.addItem(btnGroupMove);
+//			for(var i=0; i<actions.length; i++)
+//				menu.addLinkItem(actions[i].url, actions[i].label, actions[i].icon);
 		});
 	},
 
