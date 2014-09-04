@@ -162,10 +162,10 @@ $(document).ready(function(){
 
 		$label      = $this->renderLabel( $year, $month );
 
-		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar"></i> iCal-Export', array(
+		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
-			'class'		=> 'btn not-btn-small btn-warn btn-warning',
+			'class'		=> 'btn not-btn-small btn-warning',
 			'style'		=> 'font-weight: normal',
 		) );
 		return '
