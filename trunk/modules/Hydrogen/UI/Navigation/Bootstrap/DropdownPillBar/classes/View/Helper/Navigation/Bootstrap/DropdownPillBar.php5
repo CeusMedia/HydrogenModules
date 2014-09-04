@@ -1,10 +1,23 @@
 <?php
 class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View_Helper_Abstract{
 
+	protected $current	= "";
+
 	public function render( $scope = 0 ){
 		$model		= new Model_Page( $this->env );
 		$indices	= array( 'parentId' => 0, 'scope' => $scope );
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+
+		$linkMap	= array();
+		foreach( $pages as $page )
+			if( (int) $page->type === 2)
+				$linkMap[strtolower( str_replace( '_', '/', $page->module ) )]	= $page->identifier;
+			else
+				$linkMap[$page->identifier]	= $page->identifier;
+		$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $linkMap, $this->current );
+		if( array_key_exists( $current, $linkMap ) )
+			$current	= $linkMap[$current];
+
 		$list	= array();
 		foreach( $pages as $page ){
 			if( $page->status < 1 )
@@ -18,7 +31,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 					if( $subpage->status == 0 )
 						continue;
 					$class	= NULL;
-					if( $this->current == $page->identifier.'/'.$subpage->identifier ){
+					if( $current == $page->identifier.'/'.$subpage->identifier ){
 						$class	= 'active';
 						$found	= TRUE;
 					}
@@ -33,7 +46,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 				$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => $class ) );
 			}
 			else{
-				$class	= $this->current == $page->identifier ? 'active' : NULL;
+				$class	= $current == $page->identifier ? 'active' : NULL;
 				$href	= $page->identifier == "index" ? './' : './'.$page->identifier;
 				$link	= UI_HTML_Tag::create( 'a', $page->title, array( 'href' => $href ) );
 				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
