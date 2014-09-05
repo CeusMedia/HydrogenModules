@@ -1,9 +1,8 @@
 <?php
 
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $request->get( 'gender' ) );
+$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $w		= (object) $words['register'];
-$user	= (object) $request->getAll();
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
 extract( $view->populateTexts( $texts, 'html/auth/register.' ) );
 
@@ -90,7 +89,7 @@ $(document).ready(function(){
 	<ul class="input">
 		<li class="column-left-25">
 			<label for="input_username" class="mandatory">'.$w->labelUsername.'</label><br/>
-			<input type="text" name="username" id="input_username" class="max mandatory" autocomplete="off" value="'.$request->get( 'username' ).'"/>
+			<input type="text" name="username" id="input_username" class="max mandatory" autocomplete="off" value="'.$user->get( 'username' ).'"/>
 		</li>
 		<li class="column-left-25">
 			<label for="input_password" class="mandatory">'.$w->labelPassword.'</label><br/>
@@ -98,7 +97,7 @@ $(document).ready(function(){
 		</li>
 		<li class="column-left-50">
 			<label for="input_email" class="'.$mandatoryEmail.'">'.$w->labelEmail.'</label><br/>
-			<input type="text" name="email" id="input_email" class="max '.$mandatoryEmail.'" value="'.$request->get( 'email' ).'"/>
+			<input type="text" name="email" id="input_email" class="max '.$mandatoryEmail.'" value="'.$user->get( 'email' ).'"/>
 		</li>
 
 		<li class="column-clear column-left-20">
@@ -107,32 +106,32 @@ $(document).ready(function(){
 		</li>
 		<li class="column-left-20">
 			<label for="input_salutation" class="">'.$w->labelSalutation.'</label><br/>
-			<input type="text" name="salutation" id="input_salutation" class="max" value="'.$request->get( 'salutation' ).'"/>
+			<input type="text" name="salutation" id="input_salutation" class="max" value="'.$user->get( 'salutation' ).'"/>
 		</li>
 		<li class="column-left-30">
 			<label for="input_firstname" class="'.$mandatoryFirstname.'">'.$w->labelFirstname.'</label><br/>
-			<input type="text" name="firstname" id="input_firstname" class="max '.$mandatoryFirstname.'" value="'.$request->get( 'firstname' ).'"/>
+			<input type="text" name="firstname" id="input_firstname" class="max '.$mandatoryFirstname.'" value="'.$user->get( 'firstname' ).'"/>
 		</li>
 		<li class="column-left-30">
 			<label for="input_surname" class="'.$mandatorySurname.'">'.$w->labelSurname.'</label><br/>
-			<input type="text" name="surname" id="input_surname" class="max '.$mandatorySurname.'" value="'.$request->get( 'surname' ).'"/>
+			<input type="text" name="surname" id="input_surname" class="max '.$mandatorySurname.'" value="'.$user->get( 'surname' ).'"/>
 		</li>
 
 		<li class="column-clear column-left-20">
 			<label for="input_postcode" class="">'.$w->labelPostcode.'</label><br/>
-			<input type="text" name="postcode" id="input_postcode" class="max" value="'.$request->get( 'postcode' ).'"/>
+			<input type="text" name="postcode" id="input_postcode" class="max" value="'.$user->get( 'postcode' ).'"/>
 		</li>
 		<li class="column-left-30">
 			<label for="input_city" class="">'.$w->labelCity.'</label><br/>
-			<input type="text" name="city" id="input_city" class="max" value="'.$request->get( 'city' ).'"/>
+			<input type="text" name="city" id="input_city" class="max" value="'.$user->get( 'city' ).'"/>
 		</li>
 		<li class="column-left-30">
 			<label for="input_street" class="">'.$w->labelStreet.'</label><br/>
-			<input type="text" name="street" id="input_street" class="max" value="'.$request->get( 'street' ).'"/>
+			<input type="text" name="street" id="input_street" class="max" value="'.$user->get( 'street' ).'"/>
 		</li>
 		<li class="column-left-20">
 			<label for="input_number" class="">'.$w->labelNumber.'</label><br/>
-			<input type="text" name="number" id="input_number" class="max" value="'.$request->get( 'number' ).'"/>
+			<input type="text" name="number" id="input_number" class="max" value="'.$user->get( 'number' ).'"/>
 		</li>
 		'.$formTerms.'
 	</ul>
