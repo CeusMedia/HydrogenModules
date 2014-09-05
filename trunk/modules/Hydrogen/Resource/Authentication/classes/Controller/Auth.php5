@@ -238,9 +238,16 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				$this->restart( './auth/login' );
 			}
 		}
+		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
+			if( !$input->has( 'username' ) )
+				$input->set( 'username', $this->session->get( 'auth_register_oauth_username' ) );
+			if( empty( $input['email'] ) )
+				$input['email']	= $this->session->get( 'auth_register_oauth_email' );
+		}
+
 		foreach( $input as $key => $value )
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
-		$this->addData( 'register', $input );
+		$this->addData( 'user', $input );
 	}
 }
 ?>
