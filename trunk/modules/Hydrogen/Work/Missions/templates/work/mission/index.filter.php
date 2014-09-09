@@ -1,4 +1,6 @@
 <?php
+if( empty( $wordsFilter ) )
+	$wordsFilter	= $words;
 
 $badge		= '<span id="number-total" class="badge badge-success"><i class="icon-refresh icon-white"></i></span>';
 
@@ -19,13 +21,13 @@ if( $filterTense == 1 ){
 		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 	) );
 }
-
+/*
 $toolbar->addButtonGroup( 'tb_1', 'view-tense', array(
 	'<button type="button" id="work-mission-view-tense-0" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
 	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
 	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
 ) );
-
+*/
 //  --  FILTER BUTTONS  --  //
 /*  -- mission types  --  */
 $iconTask			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) )." ";
@@ -42,17 +44,17 @@ $toolbar->addButton( 'tb_2', 'types', $buttonTypes->render() );
 $changedPriorities	= array_diff( $defaultFilterValues['priorities'], $filterPriorities );
 $buttonPriorities	= new View_Helper_MultiCheckDropdownButton( 'priorities', $filterPriorities, 'Prioritäten' );
 $buttonPriorities->setButtonClass( $changedPriorities ? "btn-info" : "" );
-foreach( $words['priorities'] as $priority => $label )
+foreach( $wordsFilter['priorities'] as $priority => $label )
 	$buttonPriorities->addItem( $priority, $label, 'filter-priority priority-'.$priority );
 $toolbar->addButton( 'tb_2', 'priorities', $buttonPriorities->render() );
 
 /*  -- mission states  --  */
-$states			= $defaultFilterValues['states'][$filterTense];
+$states			= $defaultFilterValues['states'];
 $changedStates	= array_diff( $states, $filterStates );
 $buttonStates	= new View_Helper_MultiCheckDropdownButton( 'states', $filterStates, 'Zustände' );
 $buttonStates->setButtonClass( $changedStates ? "btn-info" : "" );
 foreach( $states as $status ){
-	$label		= $words['states'][$status];
+	$label		= $wordsFilter['states'][$status];
 	$buttonStates->addItem( $status, $label, 'filter-status status-'.$status );
 }
 $toolbar->addButton( 'tb_2', 'states', $buttonStates->render() );
@@ -92,7 +94,7 @@ $inputSearch	= UI_HTML_Tag::create( 'input', NULL, array(
 	'id'			=> "filter_query",
 	'class'			=> 'span2 '.( $filterQuery ? 'changed' : '' ),
 	'value'			=> htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ),
-	'placeholder'	=> $words['index']['labelQuery'],
+	'placeholder'	=> $wordsFilter['index']['labelQuery'],
 ) );
 
 $label				= '<i class="icon-search '.( $filterQuery ? 'icon-white' : '' ).'"></i>';
