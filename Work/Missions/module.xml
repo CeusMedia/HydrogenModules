@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.35</version>
+	<version>0.8.36</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -22,16 +22,29 @@ code>
 	<log version="0.8.33">Improved handling of edit requests without set user role right.</log> 
 	<log version="0.8.34">Moved context menu setup from template to JavaScript class WorkMissionsCalendar.</log>
 	<log version="0.8.35">Improved context menu on calendar view.</log>
+	<log version="0.8.36">Refactoring tense perspectives.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Work/Mission.php5</class>
+		<class>Controller/Work/Mission/Archive.php5</class>
+		<class>Controller/Work/Mission/Archive/Calendar.php5</class>
+		<class>Controller/Work/Mission/Archive/List.php5</class>
+		<class>Controller/Work/Mission/Future.php5</class>
+<!--		<class>Controller/Work/Mission/Future/Calendar.php5</class>-->
+<!--		<class>Controller/Work/Mission/Future/List.php5</class>-->
 		<class>Model/Mission.php5</class>
 		<class>Model/Mission/Change.php5</class>
 		<class>Model/Mission/Filter.php5</class>
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
+		<class>View/Work/Mission/Archive.php5</class>
+<!--		<class>View/Work/Mission/Archive/Calendar.php5</class>-->
+		<class>View/Work/Mission/Archive/List.php5</class>
+<!--		<class>View/Work/Mission/Future.php5</class>-->
+<!--		<class>View/Work/Mission/Future/Calendar.php5</class>-->
+<!--		<class>View/Work/Mission/Future/List.php5</class>-->
 		<class>View/Helper/Work/Mission/Abstract.php5</class>
 		<class>View/Helper/Work/Mission/Calendar.php5</class>
 		<class>View/Helper/Work/Mission/Filter.php5</class>
