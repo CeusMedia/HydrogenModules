@@ -20,9 +20,6 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
 		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
 
-		$tense			= (int) $session->get( 'filter.work.mission.tense' );
-		$page->js->addScript( '$(document).ready(function(){WorkMissions.init('.$tense.');});' );
-
 		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
 		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsEditor.js' );
 		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsFilter.js' );
@@ -38,10 +35,10 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	public function add(){
 	}
 
-	public function ajaxRenderLists(){
+/*	public function ajaxRenderLists(){
 		xmp( $this->loadTemplateFile( 'work/mission/index.day.php' ) );
 		die;
-	}
+	}*/
 	public function calendar(){
 	}
 
@@ -49,6 +46,9 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	}
 
 	public function index(){
+		$page		= $this->env->getPage();
+		$mode		= $this->env->getSession()->get( 'filter.work.mission.mode' );
+		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("now");});' );
 	}
 
 	public function remove(){

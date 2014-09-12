@@ -34,7 +34,6 @@ class View_Work_Mission_Archive_List extends View_Work_Mission_Archive{
 		</div>
 	</div>
 </div>';
-//		return 'Controller_Work_Mission_Archive_List::ajaxRenderContent';
 	}
 }
 ?>
