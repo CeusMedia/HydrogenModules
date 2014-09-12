@@ -1,5 +1,5 @@
 <?php
-class View_Work_Mission_Archive extends CMF_Hydrogen_View{
+class View_Work_Mission_Future extends CMF_Hydrogen_View{
 
 	protected function __onInit(){
 		$page			= $this->env->getPage();
@@ -16,41 +16,44 @@ class View_Work_Mission_Archive extends CMF_Hydrogen_View{
 //		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
 	}
 
-    public function ajaxRenderContent(){
+	public function ajaxRenderContent(){
 		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
 		extract( $this->getData() );
 
 		$helperButtons	= new View_Helper_Work_Mission_List_Pagination( $this->env );
 
-		$helperList	= new View_Helper_Work_Mission_List( $this->env );
+		$helperList		= new View_Helper_Work_Mission_List( $this->env );
 		$helperList->setMissions( $this->getData( 'missions' ) );
 		$helperList->setWords( $words );
 
-		$data       = array(
-            'buttons'   => array(
-                'large' => $helperButtons->render( $total, $limit, $page ),
-            ),
-            'lists' => array(
-                'large' => $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE )
-            )
-        );
-        print( json_encode( $data ) );
-        exit;
-    }
+		$data			= array(
+			'buttons'	=> array(
+				'large'	=> $helperButtons->render( $total, $limit, $page ),
+			),
+			'lists' => array(
+				'large'	=> $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE )
+			)
+		);
+		print( json_encode( $data ) );
+		exit;
+	}
 
 	public function index(){
-		$this->env->getPage()->js->addScript( '$(document).ready(function(){WorkMissions.init("archive");});' );
+		$page			= $this->env->getPage();
+		$session		= $this->env->getSession();
+
+		$mode	= $session->get( 'filter.work.mission.mode' );
+		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("'.$mode.'");});' );
+
 		$filter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
+
 		return '
 <div id="work-mission-index">
 	'.$filter.'
 	<div id="work-mission-index-content">
-
 		<div class="content-panel content-panel-list">
-			<h3><span class="muted">Aufgaben: </span>Archiv</h3>
+			<h3><span class="muted">Aufgaben: </span>Zukunft</h3>
 			<div class="content-panel-inner">
-
-
 				<div id="message-loading-list" class="alert alert-info">Loading...</div>
 				<div id="day-controls">
 					<div id="day-controls-large"></div>

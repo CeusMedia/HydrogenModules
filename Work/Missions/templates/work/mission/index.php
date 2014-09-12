@@ -3,11 +3,11 @@ $w				= (object) $words['index'];
 
 $panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
 
-switch( $filterTense ){
-	case 0:
+switch( $filterMode ){
+	case 'archive':
 		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
 		break;
-	case 1:
+	case 'now':
 //		if( count( $missions ) ){
 			$panelList		= $view->loadTemplateFile( 'work/mission/index.days.php' );
 			$panelContent	= '<div id="mission-folders" style="position: relative; width: 100%">'.$panelList.'</div>';
@@ -16,7 +16,7 @@ switch( $filterTense ){
 		$panelEmpty		= $view->loadContentFile( 'html/work/mission/index.empty.html' );
 		$panelContent	.= '<div id="day-lists-empty" style="display: none">'.$panelEmpty.'</div>';
 		break;
-	case 2:
+	case 'future':
 		$panelContent	= $view->loadTemplateFile( 'work/mission/index.days.php' );
 		break;
 }
@@ -45,7 +45,7 @@ $panelContent	.= '<div class="clearfix"></div>';
 $script	= '
 <script>
 $(document).ready(function(){
-//	WorkMissions.init('.( (int) $filterTense ).');
+//	WorkMissions.init('.( (int) $filterMode ).');
 	WorkMissions.currentDay = '.$currentDay.';
 	WorkMissionsList.sortBy = "'.$filterOrder.'";
 	WorkMissionsList.sortDir = "'.$filterDirection.'";
@@ -56,5 +56,5 @@ $(document).ready(function(){
 </script>';
 $env->getPage()->addHead( $script );
 
-return '<div id="work_mission_tense_'.$filterTense.'">'.$panelFilter.$panelContent.'</div>';
+return '<div id="work_mission_mode_'.$filterMode.'">'.$panelFilter.$panelContent.'</div>';
 ?>

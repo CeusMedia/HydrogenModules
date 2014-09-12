@@ -1,3 +1,5 @@
+/*	@todo		kriss: fix UNKNOWN */
+
 /*  --  PERSPECTIVE BUTTONS  --  */
 button.icon.list span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
@@ -375,7 +377,6 @@ table tr.mission-row td.cell-title {
 table tr.mission-row td.cell-title a {
 	text-decoration: none;
 	text-shadow: 1px 1px 1px white;
-	}
 	}
 table tr.mission-row td.cell-title a i {
 	margin-top: 2px;
@@ -805,16 +806,16 @@ span.user-label {
 
 
 /*  --  PHONE LISTS  --  */
-body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td {
 	padding-left: 9px;
 	}
-body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.cell-title {
 	position: relative;
 	padding-left: 28px;
 	color: rgba(0, 0, 0, 0.5);
 	font-size: 0.9em;
 	}
-body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.UNKNOWN {
 	position: absolute;
 	right: auto;
 	left: 2px;
@@ -828,9 +829,10 @@ body.controller-work-mission.action-index #day-list-small .table-day-small table
 	overflow: hidden;
 	text-overflow: ellipsis;
 	}
-body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr t$
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.UNKNOWN {
 	text-align: left;
 	}
+
 @media (max-width: 767px) {
 	.progress {
 		height: 4px;
@@ -850,4 +852,16 @@ body.controller-work-mission.action-index #day-list-small .table-day-small table
 	}
 #day-lists table.work-mission-list tbody tr:hover td.cell-title a.btn {
 	opacity: 1;
+	}
+
+
+
+
+/*  --  FILTERS  --  */
+#work-mission-buttons ul.dropdown-menu li label {
+	margin-bottom: 0px !important;
+	padding-top: 4px;
+	padding-bottom: 3px;
+	font-size: 0.9em !important;
+	letter-spacing: -0.666px;
 	}

@@ -51,20 +51,18 @@ var WorkMissions = {
 		return false;
 	},
 
-	init: function(tense){
-		WorkMissionsFilter.__init(tense);
-//		this.tense = tense;
+	init: function(mode){
+		console.log("WorkMissions: " + mode);
+		WorkMissionsFilter.__init(mode);
+//		this.mode = mode;
 		var site = $("body.controller-work-mission");
 		if(!site.size())
 			return;
 
-//		if(tense != 1)
-//			WorkMissions.showDayTable(0);
-
 		if(site.hasClass('action-calendar')){
 			WorkMissions.showTotalDayMissionCount($("#mission-calendar li").size());
 		}
-		if(site.hasClass('action-index') && tense === 1){
+		if(site.hasClass('action-index') && mode === 'now'){
 			WorkMissions.showDayTable(WorkMissions.currentDay);
 			$("#input-import").bind("click", function(){
 				$("#input-serial").trigger("click")
@@ -79,46 +77,6 @@ var WorkMissions = {
 					$("#input-import").val("");
 			});
 		}
-		else{
-			$("#input_title").focus();
-			$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
-				dateFormat: "yy-mm-dd",
-		//		appendText: "(yyyy-mm-dd)",
-		//		buttonImage: "/images/datepicker.gif",
-		//		changeMonth: true,
-		//		changeYear: true,
-		//		gotoCurrent: true,
-		//		autoSize: true,
-				firstDay: 1,
-				nextText: "nächster Monat",
-				prevText: "vorheriger Monat",
-				yearRange: "c:c+2",
-				monthNames: monthNames
-			});
-			$("#input_dayWork").bind("change", function(event){
-				var fieldEnd = $("#input_dayDue");
-				if(fieldEnd.val() && $(this).val() > fieldEnd.val())
-					fieldEnd.datepicker("setDate", $(this).val());
-			});
-			$("#input_dayStart").bind("change", function(event){
-				var fieldEnd = $("#input_dayEnd");
-				if(fieldEnd.val() && $(this).val() > fieldEnd.val())
-					fieldEnd.datepicker("setDate", $(this).val());
-			});
-
-			//  @link	http://trentrichardson.com/examples/timepicker/
-			$("#input_timeStart").timepicker({});
-			$("#input_timeEnd").timepicker({});
-			$("#input_type").trigger("change");
-/*			console.log(missionDay);
-			if( typeof missionDay !== "undefined" ){
-
-				$("body.action-add #input_day").datepicker("setDate",missionDay);
-				$("body.action-add #input_dayStart").datepicker("setDate",missionDay);
-				$("body.action-add #input_dayEnd").datepicker("setDate",missionDay);
-			}
-*/		}
-		
 	},
 	moveMissionStartDate: function(missionId, date){
 		WorkMissionsList.blendOut(150);
@@ -156,5 +114,4 @@ var WorkMissions = {
 		}
 		$("#number-total").html(sum).show();
 	}
-
 };

@@ -20,7 +20,7 @@ var WorkMissionsList = {
 		WorkMissionsList.blendOut(100);
 		$("#day-lists-empty").hide();
 		$.ajax({
-			url: "./work/mission/ajaxRenderList",
+			url: "./work/mission/ajaxRenderContent",
 			dataType: "json",
 			success: function(json){
 				$("#message-loading-list").remove();
@@ -73,5 +73,13 @@ var WorkMissionsList = {
 		$("#day-controls-large a.btn.active").removeClass("active");
 		$("#day-controls-large a.btn").eq(data.day).addClass("active");
 		$("#day-controls-small li:eq("+data.day+") a").tab("show");
+	},
+	setPage: function(page){
+		$.ajax({															//  store action using AJAX
+			url: "./work/mission/setFilter/page/"+page,						//  URL to set changed filter
+				success: function(){										//  on response
+					WorkMissionsList.loadCurrentListAndDayControls();		//  reload day lists and controls
+				}
+		});
 	}
 }

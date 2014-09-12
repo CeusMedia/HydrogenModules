@@ -5,8 +5,8 @@ $w			= (object) $words['index'];
 //if( !$h->countMissions( (int) $currentDay ) )
 //	$currentDay	= $h->getNearestFallbackDay( (int) $currentDay );
 
-switch( $filterTense ){
-	case 1:																						//  tense: current
+switch( $filterMode ){
+	case 'now':																						//  tense: current
 /*		$helperDays		= new View_Helper_Work_Mission_List_Days( $env );						//  renderer for large day lists
 		$helperDays->setMissions( $missions );
 		$helperDays->setWords( $words );

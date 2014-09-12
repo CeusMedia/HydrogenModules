@@ -4,9 +4,10 @@ if( empty( $wordsFilter ) )
 
 $badge		= '<span id="number-total" class="badge badge-success"><i class="icon-refresh icon-white"></i></span>';
 
-$toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
+$toolbar1	= new View_Helper_MultiButtonGroupMultiToolbar();
+$toolbar2	= new View_Helper_MultiButtonGroupMultiToolbar();
 
-$toolbar->addButtonGroup( 'tb_0', 'add', array(
+$toolbar1->addButtonGroup( 'tb_0', 'add', array(
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
@@ -14,23 +15,26 @@ $toolbar->addButtonGroup( 'tb_0', 'add', array(
 	</ul>'
 ) );
 
-if( $filterTense == 1 ){
-	$toolbar->addButtonGroup( 'tb_1', 'view-type', array(
-		'<button type="button" disabled="disabled" class="btn">'.$badge.'</button>',
+//  @todo	re-implement this modde switch, re-think and re-position counter
+if( $filterMode == '__not_implemented_yet__' ){
+	$toolbar1->addButtonGroup( 'tb_1', 'view-type', array(
+//		'<button type="button" disabled="disabled" class="btn">'.$badge.'</button>',
 		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
 		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
 	) );
 }
-/*
-$toolbar->addButtonGroup( 'tb_1', 'view-tense', array(
-	'<button type="button" id="work-mission-view-tense-0" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
-	'<button type="button" id="work-mission-view-tense-1" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
-	'<button type="button" id="work-mission-view-tense-2" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
-) );
-*/
+
+if( in_array( $filterMode, array( 'archive', 'now', 'future' ) ) ){
+	$toolbar1->addButtonGroup( 'tb_1', 'view-mode', array(
+		'<button type="button" id="work-mission-view-mode-archive" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-left"></i> Archiv</button>',
+		'<button type="button" id="work-mission-view-mode-now" disabled="disabled" class="btn -btn-small"><i class="icon-star"></i> Aktuell</button>',
+		'<button type="button" id="work-mission-view-mode-future" disabled="disabled" class="btn -btn-small"><i class="icon-arrow-right"></i> Zukunft</button>',
+	) );
+}
+
 //  --  FILTER BUTTONS  --  //
 /*  -- mission types  --  */
-$iconTask			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) )." ";
+/*$iconTask			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) )." ";
 $iconEvent			= UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-time" ) )." ";
 $changedTypes	= array_diff( $defaultFilterValues['types'], $filterTypes );
 $buttonTypes	= new View_Helper_MultiCheckDropdownButton( 'types', $filterTypes, 'Missionstypen' );
@@ -38,18 +42,74 @@ $buttonTypes->useItemIcons( TRUE );
 $buttonTypes->setButtonClass( $changedTypes ? "btn-info" : "" );
 $buttonTypes->addItem( 0, $iconTask.'Aufgabe', '', 'wrench' );
 $buttonTypes->addItem( 1, $iconEvent.'Termin', '', 'time' );
-$toolbar->addButton( 'tb_2', 'types', $buttonTypes->render() );
+$toolbar2->addButton( 'tb_2', 'types', $buttonTypes->render() );
+*/
+
+/*  -- mission types  --  */
+$types			= $defaultFilterValues['types'];
+$changedTypes	= array_diff( $types, $filterTypes );
+$typeIcons	= array(
+	0	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) ),
+	1	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-time" ) ),
+);
+$list	= array();
+foreach( $types as $type ){
+	$input	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'		=> 'checkbox',
+		'name'		=> 'types[]',
+		'id'		=> 'type-'.$type,
+		'value'		=> $type,
+		'checked'	=> in_array( $type, $filterTypes ) ? "checked" : NULL
+	) );
+	$label	= $input.'&nbsp;'.$typeIcons[$type].'&nbsp;'.$wordsFilter['types'][$type];
+	$label	= UI_HTML_Tag::create( 'label', $label, array( 'class' => 'checkbox' ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-type type-'.$type ) );
+}
+$buttonLabel		= 'Aufgabentypen <span class="caret"></span>';
+$buttonClass		= 'dropdown-toggle btn '.( $changedTypes ? "btn-info" : "" );
+$buttonTypes	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+	UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
+), array( 'class' => 'btn-group', 'id' => 'types' ) );
+
+$toolbar2->addButton( 'tb_2', 'types', $buttonTypes );
+
 
 /*  -- mission priorities  --  */
-$changedPriorities	= array_diff( $defaultFilterValues['priorities'], $filterPriorities );
+/*$changedPriorities	= array_diff( $defaultFilterValues['priorities'], $filterPriorities );
 $buttonPriorities	= new View_Helper_MultiCheckDropdownButton( 'priorities', $filterPriorities, 'Prioritäten' );
 $buttonPriorities->setButtonClass( $changedPriorities ? "btn-info" : "" );
 foreach( $wordsFilter['priorities'] as $priority => $label )
 	$buttonPriorities->addItem( $priority, $label, 'filter-priority priority-'.$priority );
-$toolbar->addButton( 'tb_2', 'priorities', $buttonPriorities->render() );
+$toolbar2->addButton( 'tb_2', 'priorities', $buttonPriorities->render() );
+*/
+
+/*  -- mission priorities  --  */
+$priorities			= $defaultFilterValues['priorities'];
+$changedPriorities	= array_diff( $priorities, $filterPriorities );
+$list	= array();
+foreach( $priorities as $priority ){
+	$input	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'		=> 'checkbox',
+		'name'		=> 'priorities[]',
+		'id'		=> 'priority-'.$priority,
+		'value'		=> $priority,
+		'checked'	=> in_array( $priority, $filterPriorities ) ? "checked" : NULL
+	) );
+	$label	= UI_HTML_Tag::create( 'label', $input.' '.$wordsFilter['priorities'][$priority], array( 'class' => 'checkbox' ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-priority priority-'.$priority ) );
+}
+$buttonLabel		= 'Prioritäten <span class="caret"></span>';
+$buttonClass		= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
+$buttonPriorities	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+	UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
+), array( 'class' => 'btn-group', 'id' => 'priorities' ) );
+$toolbar2->addButton( 'tb_2', 'priorities', $buttonPriorities );
+
 
 /*  -- mission states  --  */
-$states			= $defaultFilterValues['states'];
+/*$states			= $defaultFilterValues['states'];
 $changedStates	= array_diff( $states, $filterStates );
 $buttonStates	= new View_Helper_MultiCheckDropdownButton( 'states', $filterStates, 'Zustände' );
 $buttonStates->setButtonClass( $changedStates ? "btn-info" : "" );
@@ -57,7 +117,33 @@ foreach( $states as $status ){
 	$label		= $wordsFilter['states'][$status];
 	$buttonStates->addItem( $status, $label, 'filter-status status-'.$status );
 }
-$toolbar->addButton( 'tb_2', 'states', $buttonStates->render() );
+$toolbar2->addButton( 'tb_2', 'states', $buttonStates->render() );
+*/
+
+/*  -- mission states  --  */
+$states			= $defaultFilterValues['states'];
+$changedStates	= array_diff( $states, $filterStates );
+$list	= array();
+foreach( $states as $status ){
+	$input	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'		=> 'checkbox',
+		'name'		=> 'states[]',
+		'id'		=> 'status-'.$status,
+		'value'		=> $status,
+		'checked'	=> in_array( $status, $filterStates ) ? "checked" : NULL
+	) );
+	$label	= UI_HTML_Tag::create( 'label', $input.' '.$wordsFilter['states'][$status], array( 'class' => 'checkbox' ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-status status-'.$status ) );
+}
+$buttonLabel	= 'Zustände <span class="caret"></span>';
+$buttonClass	= 'dropdown-toggle btn '.( $changedStates ? "btn-info" : "" );
+$buttonStates	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+	UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
+), array( 'class' => 'btn-group', 'id' => 'states' ) );
+
+$toolbar2->addButton( 'tb_2', 'states', $buttonStates );
+
 
 /*  -- mission projects  --  */
 $changedProjects	= array();
@@ -73,7 +159,7 @@ if( $useProjects && !empty( $userProjects ) ){
 			'checked'	=> in_array( $project->projectId, $filterProjects ) ? "checked" : NULL
 		) );
 		$label	= UI_HTML_Tag::create( 'label', $input.' '.$project->title, array( 'class' => 'checkbox' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $label );
+		$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'project status'.$project->status ) );
 	}
 	$buttonLabel	= 'Projekte <span class="caret"></span>';
 	$buttonClass	= 'dropdown-toggle btn '.( $changedProjects ? "btn-info" : "" );
@@ -81,7 +167,7 @@ if( $useProjects && !empty( $userProjects ) ){
 		UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
 		UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
 	), array( 'class' => 'btn-group', 'id' => 'projects' ) );
-	$toolbar->addButton( 'tb_2', 'projects', $buttonProjects );
+	$toolbar2->addButton( 'tb_2', 'projects', $buttonProjects );
 }
 
 /*  -- reset filters  --  */
@@ -114,7 +200,7 @@ $buttonSearchReset	= UI_HTML_Tag::create( 'button', $label, array(
 
 $search		= $inputSearch.$buttonSearch.$buttonSearchReset;
 $search		= UI_HTML_Tag::create( 'div', $search, array( 'class' => 'input-append' ) );
-$toolbar->addButton( 'tb_2', 'search', $search );
+$toolbar2->addButton( 'tb_2', 'search', $search );
 
 /*
 if( $changedFilters ){
@@ -127,7 +213,8 @@ if( $changedFilters ){
 }
 */
 
-$toolbar->sort();
-$buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';
+$toolbar1->sort();
+$toolbar2->sort();
+$buttons	= '<div id="work-mission-buttons">'.$toolbar1->render().'<div class="clearfix"></div>'.$toolbar2->render().'</div><div class="clearfix"></div>';
 return '<div class="work_mission_control">'.$buttons.'</div>';
 ?>

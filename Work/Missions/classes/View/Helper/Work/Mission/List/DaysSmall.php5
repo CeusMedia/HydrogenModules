@@ -160,13 +160,13 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return '<div class="btn-group">'.join( '', $buttons ).'</div>';
 	}
 
-	public function renderRowLabel( $mission ){
+	public function renderRowLabel( $mission, $edit = TRUE ){
 		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
-		$url		= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
-		if( 1 || !$this->isEditor && $this->isViewer )
-			$url	= $this->baseUrl.'work/mission/view/'.$mission->missionId;
+		$url		= $this->baseUrl.'work/mission/view/'.$mission->missionId;
+		if( $this->isEditor && $edit )
+			$url	= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";
 		$icon		= '<i class="icon-large icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';

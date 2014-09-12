@@ -36,8 +36,43 @@ var WorkMissionsEditor = {
 				toShow.show();
 		}
 	},
+	initForms: function(){
+		$("#input_title").focus();
+		$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
+			dateFormat: "yy-mm-dd",
+		//	appendText: "(yyyy-mm-dd)",
+		//	buttonImage: "/images/datepicker.gif",
+		//	changeMonth: true,
+		//	changeYear: true,
+		//	gotoCurrent: true,
+		//	autoSize: true,
+			firstDay: 1,
+			nextText: "nächster Monat",
+			prevText: "vorheriger Monat",
+			yearRange: "c:c+2",
+			monthNames: monthNames
+		});
+		$("#input_dayWork").bind("change", function(event){
+			var fieldEnd = $("#input_dayDue");
+			if(fieldEnd.val() && $(this).val() > fieldEnd.val())
+				fieldEnd.datepicker("setDate", $(this).val());
+		});
+		$("#input_dayStart").bind("change", function(event){
+			var fieldEnd = $("#input_dayEnd");
+			if(fieldEnd.val() && $(this).val() > fieldEnd.val())
+				fieldEnd.datepicker("setDate", $(this).val());
+		});
+
+		//  @link   http://trentrichardson.com/examples/timepicker/
+		$("#input_timeStart").timepicker({});
+		$("#input_timeEnd").timepicker({});
+		$("#input_type").trigger("change");
+	},
+
 	init: function(missionId){
 		"use strict";
+		this.initForms();
+	console.log("WorkMissionsEditor.init");
 		WorkMissionsEditor.missionId = missionId;
 		WorkMissionsEditor.markdown = $("#descriptionAsMarkdown");
 		WorkMissionsEditor.converter = new Markdown.Converter();

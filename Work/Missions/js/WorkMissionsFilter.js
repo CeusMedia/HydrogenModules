@@ -1,7 +1,7 @@
 var WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
 	form: null,
-	__init: function(tense){
+	__init: function(mode){
 /*		this.form = $("#form_mission_filter");
 		if(!this.form.size())
 			return false;
@@ -16,9 +16,20 @@ var WorkMissionsFilter = {
 		return true;
 */
 
-		/*  --  TENSES  --  */
+		/*  --  MODES  --  */
 		var i, button;
-		for(i=0; i<3; i++){
+		var mode = mode;
+		$(['archive','now','future']).each(function(nr, entry){
+			button = $("#work-mission-view-mode-"+entry);
+			button.removeAttr("disabled").removeClass("disabled");
+			if(entry === mode)
+				button.addClass("active").css("cursor", "default");
+			else
+				button.bind("click", {mode: entry}, function(event){
+					document.location.href = "./work/mission/"+event.data.mode;
+			});
+		});
+/*		for(i=0; i<3; i++){
 			button = $("#work-mission-view-tense-"+i);
 			button.removeAttr("disabled").removeClass("disabled");
 			if(i === tense)
@@ -28,9 +39,7 @@ var WorkMissionsFilter = {
 					document.location.href = "./work/mission/switchTense/"+event.data.tense;
 			});
 		}
-
-
-
+*/
 		$("#filter_query").bind("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");
@@ -47,7 +56,14 @@ var WorkMissionsFilter = {
 			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
 		});
 		this.initFilter("projects");
+		this.initFilter("states");
+		this.initFilter("priorities");
+		this.initFilter("types");
 	},
+	/**
+	 *	@deprecated	not used anymore
+	 *	@todo		remove
+	 */
 	changeView: function(elem){								//  @todo kriss: fix this hack!
 		var val = parseInt($(elem).val());
 		var url = "./work/mission/filter?status&";
