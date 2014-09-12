@@ -222,7 +222,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function ajaxSelectDay( $day ){
 		$this->env->getSession()->set( $this->filterKeyPrefix.'day', (int) $day );
-		$this->ajaxRenderList();
+		$this->ajaxRenderContent();
 	}
 
 	protected function assignFilters(){
