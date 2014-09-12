@@ -52,7 +52,6 @@ var WorkMissions = {
 	},
 
 	init: function(mode){
-		console.log("WorkMissions: " + mode);
 		WorkMissionsFilter.__init(mode);
 //		this.mode = mode;
 		var site = $("body.controller-work-mission");
