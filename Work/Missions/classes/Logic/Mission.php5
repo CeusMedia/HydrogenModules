@@ -12,6 +12,35 @@ class Logic_Mission{
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 	}
 
+	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = array() ){
+		$session	= $this->env->getSession();
+		$query		= $session->get( $sessionFilterKeyPrefix.'query' );
+		$types		= $session->get( $sessionFilterKeyPrefix.'types' );
+		$priorities	= $session->get( $sessionFilterKeyPrefix.'priorities' );
+		$states		= $session->get( $sessionFilterKeyPrefix.'states' );
+		$projects	= $session->get( $sessionFilterKeyPrefix.'projects' );
+		$direction	= $session->get( $sessionFilterKeyPrefix.'direction' );
+		$order		= $session->get( $sessionFilterKeyPrefix.'order' );
+		$orders		= array(					//  collect order pairs
+			$order		=> $direction,			//  selected or default order and direction
+			'timeStart'	=> 'ASC',				//  order events by start time
+		);
+		$conditions	= array();
+		if( is_array( $types ) && count( $types ) )
+			$conditions['type']	= $types;
+		if( is_array( $priorities ) && count( $priorities ) )
+			$conditions['priority']	= $priorities;
+		if( is_array( $states ) && count( $states ) )
+			$conditions['status']	= $states;
+		if( strlen( $query ) )
+			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
+			$conditions['projectId']	= $projects;												//  apply project conditions
+		foreach( $additionalConditions as $key => $value )
+			$conditions[$key]			= $value;
+		return $conditions;
+	}
+
 	public function getUserProjects( $userId, $activeOnly = FALSE ){
 		if( !$this->useProjects )																	//  projects module not enabled
 			return array();																			//  return empty map

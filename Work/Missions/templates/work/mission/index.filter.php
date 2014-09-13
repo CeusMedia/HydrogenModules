@@ -16,11 +16,11 @@ $toolbar1->addButtonGroup( 'tb_0', 'add', array(
 ) );
 
 //  @todo	re-implement this modde switch, re-think and re-position counter
-if( $filterMode == '__not_implemented_yet__' ){
+if( 1 || $filterMode == '__not_implemented_yet__' ){
 	$toolbar1->addButtonGroup( 'tb_1', 'view-type', array(
 //		'<button type="button" disabled="disabled" class="btn">'.$badge.'</button>',
-		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
-		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
+		'<button type="button" id="work-mission-view-type-0" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>',
+		'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-tasks"></i> Liste</button>',
 	) );
 }
 
