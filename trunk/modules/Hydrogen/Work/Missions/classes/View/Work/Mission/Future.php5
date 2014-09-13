@@ -1,20 +1,7 @@
 <?php
 class View_Work_Mission_Future extends CMF_Hydrogen_View{
 
-	protected function __onInit(){
-		$page			= $this->env->getPage();
-		$session		= $this->env->getSession();
-		$monthsLong		= $this->env->getLanguage()->getWords( 'work/mission', 'months' );
-		$monthsShort	= $this->env->getLanguage()->getWords( 'work/mission', 'months-short' );
-
-//		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
-//		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
-
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissions.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsFilter.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsList.js' );
-//		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
-	}
+	protected function __onInit(){}
 
 	public function ajaxRenderContent(){
 		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
@@ -40,10 +27,17 @@ class View_Work_Mission_Future extends CMF_Hydrogen_View{
 
 	public function index(){
 		$page			= $this->env->getPage();
-		$session		= $this->env->getSession();
+//		$monthsLong		= $this->env->getLanguage()->getWords( 'work/mission', 'months' );
+//		$monthsShort	= $this->env->getLanguage()->getWords( 'work/mission', 'months-short' );
+//		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
+//		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
 
-		$mode	= $session->get( 'filter.work.mission.mode' );
-		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("'.$mode.'");});' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissions.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsFilter.js' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsList.js' );
+//		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
+
+		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("future");});' );
 
 		$filter	= $this->loadTemplateFile( 'work/mission/index.filter.php' );
 

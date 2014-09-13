@@ -73,6 +73,6 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 	protected function initFilters( $userId ){
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';
-    }
+	}
 }
 ?>

@@ -29,8 +29,27 @@ var WorkMissionsFilter = {
 					document.location.href = "./work/mission/"+event.data.mode;
 			});
 		});
+
+		button0 = $("#work-mission-view-type-0");
+		button1 = $("#work-mission-view-type-1");
+		button0.removeAttr("disabled").removeClass("disabled");
+		button1.removeAttr("disabled").removeClass("disabled");
+		if(mode === 'calendar'){
+			button0.addClass("active").css("cursor", "default");
+			button1.bind("click", function(){
+				document.location.href = "./work/mission/now";
+			});
+		}
+		else{
+			button1.addClass("active").css("cursor", "default");
+			button0.removeAttr("disabled").removeClass("disabled");
+			button0.bind("click", function(){
+				document.location.href = "./work/mission/calendar";
+			});
+		}
+
 /*		for(i=0; i<3; i++){
-			button = $("#work-mission-view-tense-"+i);
+			button = $("#work-mission-view-type-"+i);
 			button.removeAttr("disabled").removeClass("disabled");
 			if(i === tense)
 				button.addClass("active").css("cursor", "default");
@@ -94,10 +113,13 @@ var WorkMissionsFilter = {
 			var id = event.target.value;											//  get ID of filter to set
 			$.ajax({																//  store action using AJAX
 				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
-					success: function(){											//  on response
-					WorkMissionsList.loadCurrentListAndDayControls();				//  reload day lists and controls
+				dataType: "json",
+				success: function(json){											//  on response
+//						WorkMissionsList.loadCurrentListAndDayControls();			//  reload day lists and controls
+						WorkMissionsList.renderDayListDayControls(json);			//  render day lists and controls
+					}
 				}
-			});
+			);
 
 			//  count checked and unchecked checkboxes
 			var i, value;

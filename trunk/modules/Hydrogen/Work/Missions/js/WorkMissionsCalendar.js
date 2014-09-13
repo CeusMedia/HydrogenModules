@@ -93,14 +93,28 @@ var WorkMissionsCalendar = {
 	},
 
 	setMonth: function(change){
-		url	= "./work/mission/calendar";
-		if(change)
-			url	+= "/"+this.year+"/"+(this.month + change);
-		else{
-			var date = new Date();
-			url += "/"+date.getFullYear()+"/"+(date.getMonth() + 1);
+		if(change === 0){
+			this.year	= new Date().getFullYear();
+			this.month	= new Date().getMonth() + 1;
 		}
-		document.location.href = url;
+		else{
+			this.month += change;
+			if(this.month > 12){
+				this.year++;
+				this.month = 1;
+			}
+			if(this.month < 1){
+				this.year--;
+				this.month = 12;
+			}
+		}
+		$.ajax({																//  store action using AJAX
+			url: "./work/mission/setFilter/month/"+this.year+"-"+this.month,						//  URL to set changed filter
+			dataType: "json",
+			success: function(json){											//  on response
+				WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+			}
+		});
 	}
 }
 

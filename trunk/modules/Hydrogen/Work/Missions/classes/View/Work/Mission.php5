@@ -39,8 +39,6 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		xmp( $this->loadTemplateFile( 'work/mission/index.day.php' ) );
 		die;
 	}*/
-	public function calendar(){
-	}
 
 	public function edit(){
 	}
