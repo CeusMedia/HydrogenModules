@@ -1,48 +1,7 @@
 <?php
-class Controller_Work_Mission_Export extends Controller_Work_Mission{
+class View_Work_Mission_Export extends CMF_Hydrogen_View{
 
-	public function index( $format = NULL, $debug = FALSE ){
-/*
-
-		switch( $format ){
-			case 'ical':
-				$ical	= $this->exportAsIcal( $debug );
-				$debug ? xmp( $ical ) : print( $ical );
-				die;
-				break;
-			default:
-				$missions	= $this->model->getAll();												//  get all missions
-				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
-				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
-		}
-*/	}
-	public function ical( $debug = NULL ){
-		$ical		= $this->exportAsIcal();
-		$delivery	= "return";
-		$mimeType	= "text/calendar";
-		$mimeType	= "text/plain;charset=utf-8";
-		if( $delivery === "download" )
-			Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );          //  deliver downloadable file
-		else /*if( $delivery === "return" )*/{
-//			header( 'Content-type: '.$mimeType );
-			$debug ? xmp( $ical ) : print( $ical );
-		}
-		exit;
-	}
-
-	protected function exportAsIcal(){
-		$userId	= $this->env->getSession()->get( 'userId' );
-		if( !$userId ){
-			$auth	= new BasicAuthentication( $this->env, 'Export' );
-			$userId	= $auth->authenticate();
-		}
-		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
-		$orders		= array( 'dayStart' => 'ASC' );
-		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-
-		$this->addData( 'missions', $missions );
-		$this->addData( 'userId', $userId );
-
+	public function ical(){
 		$root		= new XML_DOM_Node( 'event');
 		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
 		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
@@ -92,13 +51,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		$ical	= new File_ICal_Builder();
 		$ical	= trim( $ical->build( $root ) );
 		error_log( date( 'Y-m-d H:i:s' ).' | '.getEnv( 'REMOTE_ADDR' ).': '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
-#		if( 1 )
-#			header( 'Content-type: text/plain;charset=utf-8' );
-#		if( 1 )
-#			header( 'Content-type: text/calendar' );
-#		else if( 1 )
-#		Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );			//  deliver downloadable file
 		return $ical;
 	}
+
+	public function index(){}
 }
 ?>

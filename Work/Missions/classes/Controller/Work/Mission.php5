@@ -64,8 +64,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$userId				= $this->session->get( 'userId' );
 
-		if( !$userId || !$this->isViewer )
-			$this->restart( NULL, FALSE, 401 );
+//		if( !$userId || !$this->isViewer )
+//			$this->restart( NULL, FALSE, 401 );
 
 		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)
 		$model			= new Model_User( $this->env );
@@ -300,7 +300,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 		}
 		if( $this->env->request->isAjax() )
-			$this->ajaxRenderList();
+			$this->ajaxRenderContent();
 		$this->restart( NULL, TRUE );
 	}
 
