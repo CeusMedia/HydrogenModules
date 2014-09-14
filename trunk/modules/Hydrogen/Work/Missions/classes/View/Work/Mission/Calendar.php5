@@ -19,9 +19,11 @@ $(document).ready(function(){
 		$data			= array(
 			'buttons'	=> array(
 				'large'	=> $this->renderControls( $year, $month ),
+				'small'	=> $this->renderControls( $year, $month ),
 			),
 			'lists' => array(
 				'large'	=> $this->renderCalendarLarge( $userId, $year, $month ).$script,
+				'small'	=> $this->renderCalendarSmall( $userId, $year, $month ),
 			)
 		);
 		print( json_encode( $data ) );
@@ -56,8 +58,8 @@ $(document).ready(function(){
 			<div id="mission-folders" class="content-panel-inner">
 				<div id="message-loading-list" class="alert alert-info">Loading...</div>
 				<div id="day-controls">
-					<div id="day-controls-large"></div>
-					<div id="day-controls-small"></div>
+					<div class="visible-desktop" id="day-controls-large"></div>
+					<div class="hidden-desktop" id="day-controls-small"></div>
 				</div>
 				<div id="day-lists">
 					<div class="visible-desktop" id="day-list-large"></div>
@@ -135,6 +137,16 @@ $(document).ready(function(){
 	}
 
 	protected function renderCalendarSmall( $userId, $year, $month ){
+		$this->projects	= $this->logic->getUserProjects( $userId );
+		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
+		$showScope		= $year.'-'.$showMonth.'-01';
+		$monthDate		= new DateTime( $showScope );
+		$monthDays		= date( "t", strtotime( $showScope ) );
+		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
+		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
+		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
+		$orders			= array( 'priority' => 'ASC' );
+
 		$rows			= array();
 		for( $i=0; $i<$weeks; $i++ ){
 			$row	= array();
