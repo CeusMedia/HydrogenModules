@@ -103,6 +103,7 @@ code>
 	<link xml:lang="en" access="acl" path="work/mission" rank="41">Missions</link>
 	<link access="inside" path="work/mission/ajaxRenderContent"></link>
 	<link access="inside" path="work/mission/ajaxSelectDay"></link>
+	<link access="inside" path="work/mission/export/ical"></link>
 	<link access="inside" path="work/mission/export/index"></link>
 	<link access="inside" path="work/mission/filter"></link>
 	<link access="inside" path="work/mission/now"></link>
