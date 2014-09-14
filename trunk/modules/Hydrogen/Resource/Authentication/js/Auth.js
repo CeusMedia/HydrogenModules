@@ -1,6 +1,5 @@
 var Auth = {
 
-	oneMinute: 60,
 	autoLogout: {
 		seconds: 0,
 		interval: null,
@@ -8,11 +7,16 @@ var Auth = {
 		url: './auth/logout'
 	},
 	config: [],
+	oneMinute: 60,
+	userId: 0,
 
-	init: function(){
+	init: function(userId){
+		Auth.userId = userId;
 		Auth.config	= settings.Resource_Authentication;
-		Auth.initAutoLogout();
-		Auth.initSessionRefresh();
+		if(userId){
+			Auth.initAutoLogout();
+			Auth.initSessionRefresh();
+		}
 	},
 
 	initAutoLogout: function(){
@@ -96,4 +100,8 @@ var Auth = {
 	}
 };
 
-Auth.init();
+(function () {
+	var authVersion = settings.Resource_Authentication._version;
+	if(!authVersion || authVersion.match(/0\.[0.5]\.[0-8]/))
+		Auth.init(0);
+}());
