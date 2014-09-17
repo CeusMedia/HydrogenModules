@@ -25,7 +25,7 @@ if( $useProjects ){
 	$optProject	= array();
 	foreach( $userProjects as $projectId => $project )
 		$optProject[$projectId]	= $project->title;
-	$optProject	= UI_HTML_Elements::Options( $optProject );
+	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
 }
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
