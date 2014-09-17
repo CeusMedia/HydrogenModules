@@ -161,11 +161,16 @@ if( $useProjects && !empty( $userProjects ) ){
 		$label	= UI_HTML_Tag::create( 'label', $input.' '.$project->title, array( 'class' => 'checkbox' ) );
 		$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'project status'.$project->status ) );
 	}
+	$listClass		= 'dropdown-menu condensed-width';
+	if( count( $userProjects ) > 9 )
+		$listClass	.= ' condensed-height';
+	$listAttr		= array( 'class' => $listClass );
 	$buttonLabel	= 'Projekte <span class="caret"></span>';
 	$buttonClass	= 'dropdown-toggle btn '.( $changedProjects ? "btn-info" : "" );
+	$buttonAttr		= array( 'class' => $buttonClass, 'data-toggle' => 'dropdown' );
 	$buttonProjects	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
-		UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
+		UI_HTML_Tag::create( 'button', $buttonLabel, $buttonAttr ),
+		UI_HTML_Tag::create( 'ul', $list, $listAttr ),
 	), array( 'class' => 'btn-group', 'id' => 'projects' ) );
 	$toolbar2->addButton( 'tb_2', 'projects', $buttonProjects );
 }
@@ -216,5 +221,28 @@ if( $changedFilters ){
 $toolbar1->sort();
 $toolbar2->sort();
 $buttons	= '<div id="work-mission-buttons">'.$toolbar1->render().'<div class="clearfix"></div>'.$toolbar2->render().'</div><div class="clearfix"></div>';
-return '<div class="work_mission_control">'.$buttons.'</div>';
+return '
+<div class="work_mission_control">'.$buttons.'</div>
+<script>
+$(document).ready(function(){
+	$("#work-mission-buttons ul.dropdown-menu li label").hover(
+		function(){
+			var icon = $(this).children("i");
+			if(icon){
+				var wasWhite = icon.hasClass("icon-white");
+				if(wasWhite)
+					icon.data("wasWhite", wasWhite);
+				else
+					icon.addClass("icon-white");
+			}
+		}, function(){
+			var icon = $(this).children("i");
+			if(icon)
+				if(!icon.data("wasWhite"))
+					icon.removeClass("icon-white");
+		}
+	);
+});
+</script>
+';
 ?>

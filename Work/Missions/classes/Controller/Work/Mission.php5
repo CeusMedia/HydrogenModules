@@ -104,7 +104,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function add(){
+	/**
+	 *	Add a new mission.
+	 *	Redirects to index if editor right is missing.
+	 *	@access		public
+	 *	@param		integer		$copyFromMissionId		ID of mission to copy default values from (optional)
+	 *	@return		void
+	 */
+	public function add( $copyFromMissionId = NULL ){
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'add' );
 		$userId			= $this->session->get( 'userId' );
@@ -112,6 +119,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( !$this->isEditor ){
 			$this->messenger->noteError( $words->msgNotEditor );
 			$this->restart( NULL, TRUE, 403 );
+		}
+
+		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
+			foreach( $mission as $key => $value )
+				if( !in_array( $key, array( 'dayStart', 'dayEnd', 'status', 'created' ) ) )
+					$this->request->set( $key, $value );
+			$this->request->set( 'dayStart', date( 'Y-m-d' ) );
 		}
 
 		$title		= $this->request->get( 'title' );

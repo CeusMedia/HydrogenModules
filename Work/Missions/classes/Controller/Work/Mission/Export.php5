@@ -19,12 +19,12 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	public function ical( $debug = NULL ){
 		$ical		= $this->exportAsIcal();
 		$delivery	= "return";
-		$mimeType	= "text/calendar";
 		$mimeType	= "text/plain;charset=utf-8";
+		$mimeType	= "text/calendar";
 		if( $delivery === "download" )
 			Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );          //  deliver downloadable file
 		else /*if( $delivery === "return" )*/{
-//			header( 'Content-type: '.$mimeType );
+			header( 'Content-type: '.$mimeType );
 			$debug ? xmp( $ical ) : print( $ical );
 		}
 		exit;
