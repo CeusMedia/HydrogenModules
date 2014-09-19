@@ -25,8 +25,8 @@ Can be used to cover long loading requests.
 <!--		<locale>de/...</locale>-->
 	</files>
 	<config protected="no" type="boolean" name="enabled">yes</config>
-	<config protected="no" type="integer" name="default.delay">0</config>
-	<config protected="no" type="integer" name="default.type">loading</config>
+	<config protected="no" type="integer" name="default.delay">50</config>
+	<config protected="no" type="string" name="default.type">loading</config>
 	<config protected="no" type="boolean" name="default.fade">yes</config>
 	<config protected="no" type="integer" name="default.fade.duration.in">150</config>
 	<config protected="no" type="integer" name="default.fade.duration.out">100</config>
