@@ -32,7 +32,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 		$this->session->set( 'filter.work.mission.mode', 'archive' );
 	}
 
-	public function ajaxRenderContent(){
+	public function ajaxRenderIndex(){
 		$userId		= $this->session->get( 'userId' );
 
 		//  get list limit and page filters and sanitize them
@@ -59,7 +59,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 			'total'		=> $total,
 			'missions'	=> $missions,
 		) );
-		$json	= $this->view->ajaxRenderContent();
+//		$json	= $this->view->ajaxRenderIndex();
 //		print( json_encode( $json ) );
 //		exit;
 	}

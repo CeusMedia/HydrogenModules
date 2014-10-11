@@ -101,16 +101,18 @@ var WorkMissionsEditor = {
 				$.ajax({
 					url: "./work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId,
 					data: {content: WorkMissionsEditor.textarea.val()},
-					type: "post",
-					success: function(){
+					method: "POST",
+					dataType: "html",
+					success: function(html){
 						$(".CodeMirror").removeClass("changed");
+						WorkMissionsEditor.markdown.html(html);
 					}
 				});
 			}, 1000);
 		}
 		WorkMissionsEditor.mirror.on("change", function(instance, update){
 			instance.save();																			//  apply changes of markdown editor to input element
-			WorkMissionsEditor.renderContent();															//  render input element content to HTML using markdown
+//			WorkMissionsEditor.renderContent();															//  render input element content to HTML using markdown
 			if(WorkMissionsEditor.missionId){															//  edit mode
 				$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
 				$(instance.getTextArea()).trigger("keyup");												//  trigger key up event for automatic rendering
@@ -138,8 +140,16 @@ var WorkMissionsEditor = {
 	},
 	renderContent: function(){
 		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
-		WorkMissionsEditor.markdown.html(WorkMissionsEditor.converter.makeHtml(content));				//  display content after markdown rendering
-		WorkMissionsEditor.resizeInput();
+//		WorkMissionsEditor.markdown.html(WorkMissionsEditor.converter.makeHtml(content));				//  display content after markdown rendering
+		$.ajax({
+			url: "./helper/markdown/ajaxRender",
+			data: {content: content},
+			method: "POST",
+			success: function(html){
+				WorkMissionsEditor.markdown.html(html);
+				WorkMissionsEditor.resizeInput();
+			}
+		});
 	},
 	resizeInput: function(){
 		var height =  Math.max(WorkMissionsEditor.markdown.height()-30, 160);

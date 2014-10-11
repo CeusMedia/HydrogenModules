@@ -1,6 +1,6 @@
 <?php
 
-
+return "----";
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 
 $toolbar->addButtonGroup( 'tb_0', 'add', array(
