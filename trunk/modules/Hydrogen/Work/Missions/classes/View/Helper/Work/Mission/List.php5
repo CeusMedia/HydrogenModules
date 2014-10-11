@@ -69,8 +69,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	}
 
 	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
-		$colgroup		= array();
-		$tableHeads		= array();
+		$colgroup		= array( "20px");
+		$tableHeads		= array( "" );
 
 		$colgroup[]		= "120px";
 		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) );
@@ -160,9 +160,14 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
-		$buttonEdit  = $this->renderRowButtonEdit( $event );
+		$buttonEdit	= $this->renderRowButtonEdit( $event );
 
-		$cells		= array();
+		$checkbox	= UI_HTML_Tag::create( 'input', '', array(
+			'type'	=> 'checkbox',
+			'name'	=> 'missionIds[]',
+			'value'	=> $event->missionId,
+		) );
+		$cells		= array( UI_HTML_Tag::create( 'td', $checkbox ) );
 		if( $showStatus )
 			$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 		if( $showDate ){
@@ -207,7 +212,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 		$buttonEdit  = $this->renderRowButtonEdit( $task );
 
-		$cells		= array();
+		$checkbox	= UI_HTML_Tag::create( 'input', '', array(
+			'type'	=> 'checkbox',
+			'name'	=> 'missionIds[]',
+			'value'	=> $task->missionId,
+		) );
+		$cells		= array( UI_HTML_Tag::create( 'td', $checkbox ) );
 		if( $showStatus )
 			$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
 		if( $showDate ){

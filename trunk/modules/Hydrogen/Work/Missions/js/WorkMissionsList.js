@@ -81,5 +81,17 @@ var WorkMissionsList = {
 					WorkMissionsList.loadCurrentListAndDayControls();		//  reload day lists and controls
 				}
 		});
+	},
+	toggleCheckboxes: function(){
+		$("input").filter("[name*=missionIds]").each(function(){
+			if($(this).is(':checked')){
+				$(this).prop("checked", false);
+				$(this).parent().parent().removeClass("warning");
+			}
+			else{
+				$(this).prop("checked", !$(this).is(':checked'));
+				$(this).parent().parent().addClass("warning");
+			}
+		});
 	}
 }

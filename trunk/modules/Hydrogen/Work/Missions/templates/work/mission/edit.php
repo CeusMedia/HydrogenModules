@@ -40,6 +40,13 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, "0", STR_PAD_LEFT );
 
+
+$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
+$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconCopy	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
+
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
@@ -118,14 +125,17 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="not-icon-arrow-left icon-list"></i> '.$w->buttonList, 'btn' ).'
-				'.UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, '<i class="icon-eye-open icon-white"></i> '.$w->buttonView, 'btn btn-info' ).'
-				'.UI_HTML_Elements::Button( 'edit', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+				'.UI_HTML_Tag::create( 'div', array(
+						UI_HTML_Elements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' ).
+						UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, $iconView.' '.$w->buttonView, 'btn btn-small not-btn-info' )
+					), array( 'class' => 'btn-group' ) ).'
+				'.UI_HTML_Elements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-success' ).'
 	<!--			&nbsp;|&nbsp;
 				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
 				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-3', '<i class="icon-trash icon-white"></i> '.$w->buttonRemove, 'btn btn-small btn-inverse' ).'
-	<!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button edit' ).'-->
+	-->
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn not-btn-info not-btn-success btn-small btn-mini' ).'
 			</div>
 		</form>
 	</div>

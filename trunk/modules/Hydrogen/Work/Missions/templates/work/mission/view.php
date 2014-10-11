@@ -31,7 +31,7 @@ $content			= View_Helper_Markdown::transformStatic( $env, $mission->content );
 
 $iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
 $iconEdit			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconCopy			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign icon-white' ) );
+$iconCopy			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
 
 $panelContent	= '';
 if( strlen( trim( $mission->content ) ) )
@@ -98,10 +98,10 @@ $panelFacts	= '
 					</div>
 				</div>
 				<div class="buttonbar">
-					'.UI_HTML_Elements::LinkButton( './work/mission', $iconCancel.' '.$w->buttonCancel, 'btn' ).'
+					'.UI_HTML_Elements::LinkButton( './work/mission', $iconCancel.' '.$w->buttonCancel, 'btn btn-small' ).'
 					'.UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn not-btn-info btn-success btn-small btn-mini' ).'
+					'.UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn not-btn-info not-btn-success btn-small btn-mini' ).'
 				</div>
 			</div>
 		</div>

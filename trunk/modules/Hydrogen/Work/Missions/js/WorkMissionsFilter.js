@@ -108,6 +108,7 @@ var WorkMissionsFilter = {
 			event.stopPropagation();												//  to stop propagation to avoid close event of bootstrap
 		});
 		inputs.bind("change", function(event){										//  bind change event on every checkbox
+			WorkMissionsList.blendOut(100);
 			//  store changed filter
 			var value = event.target.checked ? 1 : 0;								//  get check status as integer
 			var id = event.target.value;											//  get ID of filter to set
