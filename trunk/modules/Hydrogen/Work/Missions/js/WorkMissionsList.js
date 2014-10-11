@@ -20,7 +20,7 @@ var WorkMissionsList = {
 		WorkMissionsList.blendOut(100);
 		$("#day-lists-empty").hide();
 		$.ajax({
-			url: "./work/mission/ajaxRenderContent",
+			url: "./work/mission/ajaxRenderIndex",
 			dataType: "json",
 			success: function(json){
 				$("#message-loading-list").remove();
@@ -61,8 +61,7 @@ var WorkMissionsList = {
 	renderDayListDayControls: function(data){
 		$("#day-list-large").html(data.lists.large).stop(true);
 		$("#day-list-small").html(data.lists.small).stop(true);
-		if(!data.count)
-			$("#day-lists-empty").show();
+		data.count ? $("#day-lists-empty").hide() : $("#day-lists-empty").show();
 		WorkMissionsList.makeTableSortable($("#layout-content table"),{
 			url: "./work/mission/filter/",
 			order: WorkMissionsList.sortBy,

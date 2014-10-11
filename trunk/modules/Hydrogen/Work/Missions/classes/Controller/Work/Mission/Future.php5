@@ -36,7 +36,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 		$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 	}
 
-	public function ajaxRenderContent(){
+	public function ajaxRenderIndex(){
 		$userId		= $this->session->get( 'userId' );
 
 		//  get list limit and page filters and sanitize them
@@ -63,7 +63,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 			'total'		=> $total,
 			'missions'	=> $missions,
 		) );
-		$json	= $this->view->ajaxRenderContent();
+//		$json	= $this->view->ajaxRenderIndex();
 //		print( json_encode( $json ) );
 //		exit;
 	}

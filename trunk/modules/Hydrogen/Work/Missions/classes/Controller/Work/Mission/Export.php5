@@ -101,32 +101,39 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	public function ical( $debug = NULL ){
 		$method		= strtoupper( getEnv( 'REQUEST_METHOD' ) );
 error_log( date( "Y-m-d H:i:s" )." [".$method."]\n", 3, 'request.method.log' );
-		if( $method === "GET" ){
-			$ical		= $this->exportAsIcal();
-			$delivery	= "return";
-			switch( $delivery ){
-				case "download":
-					Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );          //  deliver downloadable file
-					break;
-				case "return":
-					$mimeType	= "text/calendar";
-					$mimeType	= "text/plain;charset=utf-8";
-					header( "Content-type: ".$mimeType );
-					header( "Last-Modified: ".date( 'r' ) );
-					$debug ? xmp( $ical ) : print( $ical );
-					break;
-			}
-			exit;
+		if( $method === "GET" )
+			$this->icalExport( $debug );
+		else if( $method === "PUT" )
+			$this->icalImport( $debug );
+	}
+
+	protected function icalExport( $debug = FALSE ){
+		$ical		= $this->exportAsIcal();
+		$delivery	= "return";
+		switch( $delivery ){
+			case "download":
+				Net_HTTP_Download::sendString( $ical , 'ical_'.date( 'Ymd' ).'.ics' );          //  deliver downloadable file
+				break;
+			case "return":
+				$mimeType	= "text/calendar";
+				$mimeType	= "text/plain;charset=utf-8";
+				header( "Content-type: ".$mimeType );
+				header( "Last-Modified: ".date( 'r' ) );
+				$debug ? xmp( $ical ) : print( $ical );
+				break;
 		}
-		else if( $method === "PUT" ){
-			$data	= file_get_contents( "php://input" );
-	        file_put_contents( "put_data.txt", $data );
-			exit;
-		}
+		exit;
+	}
+
+	protected function icalImport( $debug = FALSE ){
+		$data	= file_get_contents( "php://input" );
+		file_put_contents( "put_data.txt", $data );
+		exit;
 	}
 
 	public function index( $format = NULL, $debug = FALSE ){
-/*		switch( $format ){
+/*
+		switch( $format ){
 			case 'ical':
 				$ical	= $this->exportAsIcal( $debug );
 				$debug ? xmp( $ical ) : print( $ical );

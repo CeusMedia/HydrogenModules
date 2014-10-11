@@ -27,7 +27,24 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
 
-$content			= View_Helper_Markdown::transformStatic( $env, $mission->content );
+$contentRenderer	= "markdown";
+$content			= $mission->content;
+switch( $contentRenderer ){
+	case 'markdown':
+		if( $env->getModules()->has( 'UI_Markdown' ) )
+			$content		= View_Helper_Markdown::transformStatic( $env, $content );
+		else if( $env->getModules()->has( 'JS_Markdown' ) ){
+			$script	= '
+var markdown = $(".mission-content");
+if(markdown.size()){
+	var converter = new Markdown.Converter();
+	markdown.html(converter.makeHtml(markdown.html()));
+}';
+			$env->getPage()->js->addUrl( "javascripts/Markdown.Converter.js" );
+			$env->getPage()->js->addScript( $script, 'ready' );
+		}
+		break;
+}
 
 $iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
 $iconEdit			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
@@ -44,7 +61,7 @@ if( strlen( trim( $mission->content ) ) )
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">
-						<div id="descriptionAsMarkdown">'.$content.'</div>
+						<div id="descriptionAsMarkdown" class="mission-content">'.$content.'</div>
 					</div>
 				</div>
 			</div>
@@ -112,17 +129,8 @@ $panelFacts	= '
 return '
 '.$panelFacts.'
 '.$panelContent.'
-<script src="javascripts/Markdown.Converter.js"></script>
-<script src="javascripts/bindWithDelay.js"></script>
 <script>
 var missionId = '.$mission->missionId.';
-$("body").addClass("uses-bootstrap");
-$(document).ready(function(){
-	var markdown = $("#descriptionAsMarkdown");
-	var converter = new Markdown.Converter();
-	var textarea = $("#input_content");
-	markdown.html(converter.makeHtml(markdown.html()));
-});
 </script>
 <style>
 input.changed,

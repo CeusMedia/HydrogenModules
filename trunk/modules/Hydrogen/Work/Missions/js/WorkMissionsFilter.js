@@ -48,17 +48,6 @@ var WorkMissionsFilter = {
 			});
 		}
 
-/*		for(i=0; i<3; i++){
-			button = $("#work-mission-view-type-"+i);
-			button.removeAttr("disabled").removeClass("disabled");
-			if(i === tense)
-				button.addClass("active").css("cursor", "default");
-			else
-				button.bind("click", {tense: i}, function(event){
-					document.location.href = "./work/mission/switchTense/"+event.data.tense;
-			});
-		}
-*/
 		$("#filter_query").bind("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");

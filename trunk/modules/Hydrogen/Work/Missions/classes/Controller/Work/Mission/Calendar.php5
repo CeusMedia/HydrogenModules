@@ -40,10 +40,6 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 	);
 
 	protected function __onInit(){
-#		foreach( $this->session->getAll( $this->filterKeyPrefix ) as $key => $value )
-#			$this->session->remove( $this->filterKeyPrefix.$key );
-#		print_m( $this->session->getAll( $this->filterKeyPrefix ) );
-#		die;
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'calendar' );
 
@@ -55,7 +51,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 		) );
 	}
 
-	public function ajaxRenderContent(){
+	public function ajaxRenderIndex(){
 		$userId	= $this->getData( 'userId' );
 	}
 
@@ -66,13 +62,8 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 	}
 
 	public function index( $year = NULL, $month = NULL ){
-
-
 		$this->assignFilters();
 
-#		print_m( $this->session->getAll( $this->filterKeyPrefix ) );
-#		die;
-		
 /*		if( $year === NULL || $month === NULL ){
 			$year	= date( "Y" );
 			if( $this->session->has( 'work-mission-view-year' ) )
@@ -96,11 +87,12 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 		$this->session->set( 'work-mission-view-year', $year );
 		$this->session->set( 'work-mission-view-month', $month );
 */
-#		$this->setData( array(
-#			'userId'	=> $this->session->get( 'userId' ),
-#			'year'		=> $year,
-#			'month'		=> $month,
-#		) );
+/*		$this->setData( array(
+			'userId'	=> $this->session->get( 'userId' ),
+			'year'		=> $year,
+			'month'		=> $month,
+		) );
+*/
 	}
 
 	protected function initFilters( $userId ){

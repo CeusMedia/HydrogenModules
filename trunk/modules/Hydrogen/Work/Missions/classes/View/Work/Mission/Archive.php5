@@ -3,7 +3,7 @@ class View_Work_Mission_Archive extends CMF_Hydrogen_View{
 
 	protected function __onInit(){}
 
-	public function ajaxRenderContent(){
+	public function ajaxRenderIndex(){
 		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
 		extract( $this->getData() );
 

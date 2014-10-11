@@ -16,6 +16,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $isEditor;
 	protected $isViewer;
 	protected $hasFullAccess	= FALSE;
+	protected $lock;
 	protected $logic;
 	protected $messenger;
 	protected $request;
@@ -80,6 +81,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->userProjects		= $this->logic->getUserProjects( $userId );
 
 		$this->initFilters( $userId );
+
+		if( $this->env->getModules()->has( 'Resource_Database_Lock' ) )
+			$this->lock	= new Logic_Database_Lock( $this->env );
+
+		$this->env->getModules()->callHook( 'Test', 'test', array() );
+	}
+
+	static public function ___onDatabaseLockReleaseCheck( $env, $context, $module, $data = array() ){
+		$lockingActions	= array( 'edit' );
+		if( in_array( $env->request->get( 'action' ), $lockingActions ) )
+			return FALSE;
+		return Logic_Database_Lock::release( $env, 'WorkMission' );
 	}
 
 	protected function initFilters( $userId ){
@@ -179,9 +192,19 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxRenderContent(){
+		$content	= $this->env->getRequest()->get( 'content' );
+		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
+		header( "Content-length: ".strlen( $html ) );
+		header( "Content-type: text/html" );
+		print( $html );
+		exit;
+    }
+
+
+	public function ajaxRenderIndex(){
 		$mode	= $this->session->get( 'filter.work.mission.mode' );
 		if( $mode && $mode !== 'now' )
-			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderContent', func_get_args() );
+			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );
 		else{
 			$words		= $this->getWords();
 
@@ -231,12 +254,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'content'	=> $this->env->getRequest()->get( 'content' ),
 		);
 		$this->model->edit( $missionId, $data, FALSE );
+		$html	= View_Helper_Markdown::ajaxRender( $content );
+		header( 'Content-length: '.strlen( $html ) );
+		header( 'Content-type: text/html' );
+		print $html;
 		exit;
 	}
 
 	public function ajaxSelectDay( $day ){
 		$this->session->set( $this->filterKeyPrefix.'day', (int) $day );
-		$this->ajaxRenderContent();
+		$this->ajaxRenderIndex();
 	}
 
 	protected function assignFilters(){
@@ -323,7 +350,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->logic->noteChange( 'update', $missionId, $mission, $userId );
 		}
 		if( $this->env->request->isAjax() )
-			$this->ajaxRenderContent();
+			$this->ajaxRenderIndex();
 		$this->restart( NULL, TRUE );
 	}
 
@@ -373,6 +400,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 		if( $this->messenger->gotError() )
 			$this->restart( NULL, TRUE );
+
+		if( $this->lock ){
+			if( $this->lock->isLockedByOther( 'WorkMission', $missionId ) ){
+				$modelUser	= new Model_User( $this->env );
+				$lockUserId	= $this->lock->getLockUserId( 'WorkMission', $missionId );
+				$lockUser	= $modelUser->get( $lockUserId );
+				$this->messenger->noteNotice( $words->msgLocked, $lockUser->username );
+				$this->restart( 'view/'.$missionId, TRUE );
+			}
+			else if( !$this->lock->isLockedByMe( 'WorkMission', $missionId ) )
+				$this->lock->lockByMe( 'WorkMission', $missionId );
+		}
 
 		$title		= $this->request->get( 'title' );
 		$dayStart	= $this->request->get( 'dayStart' );
@@ -591,8 +630,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'view' ) )
 			$this->session->set( 'work-mission-view-type', (int) $this->request->get( 'view' ) );
 
-		if( (int) $this->session->get( 'work-mission-view-type' ) == 1 )
-			$this->restart( './work/mission/calendar' );
+//		if( (int) $this->session->get( 'work-mission-view-type' ) == 1 )
+//			$this->restart( './work/mission/calendar' );
 
 		$userId			= $this->session->get( 'userId' );
 		$this->addData( 'userId', $userId );
@@ -677,7 +716,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$userId		= $this->session->get( 'userId' );
 		$this->saveFilters( $userId );
 		if( $this->env->getRequest()->isAjax() ){
-			$this->redirect( 'work/mission/ajaxRenderContent' );
+			$this->redirect( 'work/mission/ajaxRenderIndex' );
 //			header( 'Content-Type: application/json' );
 //			print( json_encode( TRUE ) );
 //			exit;
@@ -699,23 +738,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
-	}
-
-	/**
-	 *	Switch tense move between archive(0), current(1) and future(1)
-	 *	@access		public
-	 *	@param		integer		$tense			Tense: 0 - archive, 1 - current, 2 - future
-	 *	@return		void		Restarts application after change in session
-	 *	@deprecated	if other tenses are implemented
-	 *	@todo		to be removed if other tenses are implemented
-	 */
-	public function switchTense( $tense = 1 ){
-		$tense	= max( 0, min( 2, (int) $tense ) );
-		$this->session->set( 'filter.work.mission.tense', $tense );
-		$this->session->set( 'filter.work.mission.states', array() );
-		$this->session->set( 'filter.work.mission.direction', NULL );
-		$this->session->set( 'filter.work.mission.order', NULL );
-		$this->restart( NULL, TRUE );
 	}
 
 	public function view( $missionId ){
