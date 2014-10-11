@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Database: Lock</title>
+	<description><![CDATA[Simple lock for database entries.]]></description>
+	<version>0.2.1</version>
+	<log version="0.1.0">Initial prototype.</log>
+	<log version="0.2.0">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added module activity switch.</log>
+	<category>Resource</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Model/Lock.php5</class>
+		<class>Logic/Database/Lock.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<config protected="user" type="boolean" name="active">yes</config>
+	<hook type="resource" resource="Page" event="applyModules">Logic_Database_Lock::___onAutoModuleLockRelease</hook>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>locks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>locks` (
+  `lockId` int(11) unsigned NOT NULL,
+  `userId` int(10) unsigned NOT NULL,
+  `subject` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `entryId` int(10) unsigned NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`lockId`),
+  KEY `userId` (`userId`),
+  KEY `subject` (`subject`),
+  KEY `entryId` (`entryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>
