@@ -3,7 +3,9 @@
 	<title>Server Load</title>
 	<description/>
 	<category>System</category>
-	<version>0.1</version>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -20,23 +22,5 @@
 	<link access="public" path="system/load/ajaxRenderIndicator"></link>
 	<link access="inside" path="system/load/ajaxGetLoad"></link>
 	<link access="inside" path="system/load/ajaxGetLoads"></link>
-	<hook type="resource" resource="Env" event="init"><![CDATA[
-$cores	= $env->getConfig()->get( 'module.server_system_load.cores' );								//  get number of cpu cores from module config
-$max	= $env->getConfig()->get( 'module.server_system_load.max' );								//  get maximum load from module config
-$retry	= $env->getConfig()->get( 'module.server_system_load.retryAfter' );							//  get seconds to retry after from module config
-$load	= array_shift( sys_getloadavg() ) / $cores;													//  calculate load relative to number of cores
-if( $max > 0 && $load > $max ){																		//  a maximum load is set and load is higer than that
-	header( 'HTTP/1.1 503 Service Unavailable' );													//  send HTTP 503 code
-	header( 'Content-type: text/html; charset=utf-8' );												//  send MIME type header for UTF-8 html error page
-	if( (int) $retry > 0 )																			//  seconds to retry after are set
-		header( 'Retry-After: '.$retry );															//  send retry header
-	$pathLocale	= $env->getConfig()->get( 'path.locales' ).$env->getLanguage()->getLanguage().'/';	//  get path of locales
-	$fileName	= $pathLocale.'html/error/503.html';												//  error page file name
-	$message	= '<h1>Service not available</h1><p>Due to heavy load this service is temporarily not available.<br/>Please try again later.</p>';
-	if( file_exists( $fileName ) )																	//  error page file exists
-		$message	= File_Reader::load( $fileName );												//  load error page content
-	print( $message );																				//  display error message
-	exit;																							//  and quit application
-}
-]]></hook>
+	<hook type="resource" resource="Env" event="init">Controller_System_Load::___onEnvInit</hook>
 </module>
