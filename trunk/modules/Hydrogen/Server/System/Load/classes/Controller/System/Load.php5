@@ -1,6 +1,27 @@
 <?php
 class Controller_System_Load extends CMF_Hydrogen_Controller{
 
+	static public function ___onEnvInit( $env, $context, $module, $arguments = array() ){
+		$cores	= $env->getConfig()->get( 'module.server_system_load.cores' );								//  get number of cpu cores from module config
+		$max	= $env->getConfig()->get( 'module.server_system_load.max' );								//  get maximum load from module config
+		$retry	= $env->getConfig()->get( 'module.server_system_load.retryAfter' );							//  get seconds to retry after from module config
+		$loads	= sys_getloadavg();
+		$load	= array_shift( $loads ) / $cores;															//  calculate load relative to number of cores
+		if( $max > 0 && $load > $max ){																		//  a maximum load is set and load is higer than that
+			header( 'HTTP/1.1 503 Service Unavailable' );													//  send HTTP 503 code
+			header( 'Content-type: text/html; charset=utf-8' );												//  send MIME type header for UTF-8 html error page
+			if( (int) $retry > 0 )																			//  seconds to retry after are set
+				header( 'Retry-After: '.$retry );															//  send retry header
+			$pathLocale	= $env->getConfig()->get( 'path.locales' ).$env->getLanguage()->getLanguage().'/';	//  get path of locales
+			$fileName	= $pathLocale.'html/error/503.html';												//  error page file name
+			$message	= '<h1>Service not available</h1><p>Due to heavy load this service is temporarily not available.<br/>Please try again later.</p>';
+			if( file_exists( $fileName ) )																	//  error page file exists
+				$message	= File_Reader::load( $fileName );												//  load error page content
+			print( $message );																				//  display error message
+			exit;																							//  and quit application
+		}
+	}
+
 	public function ajaxGetLoad( $mode = 0, $relative = NULL ){
 		if( !$this->env->getRequest()->isAjax() )
 			throw new RuntimeException( 'Accessible using AJAX only' );
@@ -30,7 +51,7 @@ class Controller_System_Load extends CMF_Hydrogen_Controller{
 	public function ajaxRenderIndicator( $mode = 0, $relative = NULL ){
 		$this->addData( 'load', $this->getLoad( $mode, $relative ) );
 	}
-	
+
 	protected function getLoad( $mode = 0, $relative = NULL ){
 		$mode	= (int) $mode;
 		if( $mode < 0 || $mode > 2 )
