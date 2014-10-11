@@ -1,6 +1,6 @@
 <?php
 class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
-	
+
 	protected $icons		= array();
 	protected $list			= array(
 		0 => array(),

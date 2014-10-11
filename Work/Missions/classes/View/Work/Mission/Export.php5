@@ -43,8 +43,11 @@ class View_Work_Mission_Export extends CMF_Hydrogen_View{
 				$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
 			if( $mission->location )
 				$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
-			if( $mission->priority )
-				$node->addChild( new XML_DOM_Node( 'PRIORITY', ( ceil( $mission->priority - 7 ) / -2 ) ) );
+			if( $mission->priority ){
+//				$priority	= ceil( $mission->priority - 7 ) / -2;
+				$priority	= $mission->priority > 3 ? 3 : ( $mission->priority < 3 ? 1 : 2 );
+				$node->addChild( new XML_DOM_Node( 'PRIORITY', $priority ) );
+			}
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );

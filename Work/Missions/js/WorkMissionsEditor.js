@@ -67,6 +67,17 @@ var WorkMissionsEditor = {
 		$("#input_timeStart").timepicker({});
 		$("#input_timeEnd").timepicker({});
 		$("#input_type").trigger("change");
+
+		/*  mark changed inputs and selects  */
+		$("input").not("[type=checkbox]").add($("select")).each(function(){
+			var elem = $(this);
+			elem.data('original-value', elem.val());
+			elem.bind("keyup change", {elem: elem}, function(event){
+				var elem = event.data.elem;
+				var changed = elem.val() !== elem.data('original-value');
+				changed ? elem.addClass('changed') : elem.removeClass('changed');
+			});
+		});
 	},
 
 	init: function(missionId){

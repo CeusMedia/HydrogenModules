@@ -21,7 +21,8 @@ class Job_Work_Mission extends Job_Abstract{
 		$modelMission	= new Model_Mission( $this->env );										//  get mission model
 		foreach( $includes as $userId )															//  iterate users to include
 			if( !array_key_exists( (int) $userId, $list ) )										//  user is not in list yet
-				$list[(int) $userId]	= $modelUser->get( $userId );							//  enlist user
+				if( $user = $modelUser->get( $userId ) )										//  user exists
+					$list[(int) $userId]	= $user;											//  enlist user
 		foreach( $excludes as $userId )															//  iterate users to exclude
 			if( array_key_exists( (int) $userId, $list ) )										//  user is in list
 				unset( $list[(int) $userId] );													//  remove user from list

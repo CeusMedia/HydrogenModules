@@ -52,7 +52,15 @@ return '
 <div class="content-panel content-panel-list">
 	<h3><span class="muted">Aufgaben: </span>6-Tage-Aussicht</h3>
 	<div class="content-panel-inner">
-		'.$content.'
+		<form action="./work/mission/bulk" method="post">
+			'.$content.'
+<!--			<div class="buttonbar">
+				<button type="button" onclick="WorkMissionsList.toggleCheckboxes()" class="btn btn-small">
+					<i class="icon-check"></i> alle
+				</button>
+				<button type="submit" name="executeBulk" class="btn btn-small"><i class="icon-arrow-right"></i> morgen</button>
+			</div>-->
+		</form>
 		<!--<br/>-->
 	</div>
 </div>';

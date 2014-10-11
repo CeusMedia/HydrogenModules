@@ -883,3 +883,14 @@ body.controller-work-mission.action-index #day-list-small .table-day-small table
 	padding-top: 1px;
 	padding-bottom: 1px;
 	}
+
+
+body.moduleWorkMission input.changed,
+body.moduleWorkMission select.changed {
+	background: #FFF7CF;
+	}
+body.moduleWorkMission select.changed option:not([class]) {
+	background-color: white;
+	}
+body.moduleWorkMission select.changed option:not(:checked) {
+	}

@@ -235,7 +235,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxSelectDay( $day ){
-		$this->env->getSession()->set( $this->filterKeyPrefix.'day', (int) $day );
+		$this->session->set( $this->filterKeyPrefix.'day', (int) $day );
 		$this->ajaxRenderContent();
 	}
 
@@ -270,6 +270,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'wordsFilter', $this->env->getLanguage()->getWords( 'work/mission' ) );
 	}
 
+	public function bulk(){
+		$action	= $this->request->get( 'action' );
+		$missionIds	= $this->request->get( 'missionIds' );
+
+	print_m( $action );
+	print_m( $missionIds );
+	die;
+	}
+
 	/**
  	 *	Moves a mission by several days or to a given date.
 	 *	Receives date or day difference using POST.
@@ -283,8 +292,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
 	 */
 	public function changeDay( $missionId ){
-		$userId		= $this->env->getSession()->get( 'userId' );
-		$date		= trim( $this->env->getRequest()->get( 'date' ) );
+		$userId		= $this->session->get( 'userId' );
+		$date		= trim( $this->request->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
 		$data		= array();
 		$change		= "";
@@ -337,7 +346,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function close( $missionId ){
 		$this->checkIsEditor( $missionId );
-		$userId			= $this->env->getSession()->get( 'userId' );
+		$userId			= $this->session->get( 'userId' );
 		$words			= (object) $this->getWords( 'edit' );
 		$data			= array(
 			'status'		=> $this->request->get( 'status' ),
@@ -397,7 +406,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'reference'			=> $this->request->get( 'reference' ),
 					'modifiedAt'		=> time(),
 				);
-//print_m( $data );
 				$this->model->edit( $missionId, $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'update', $missionId, $mission, $userId );
@@ -441,7 +449,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 * @todo	remove this because all methods receiver userId and this is using roleId from session
 	 */
 	protected function hasFullAccess(){
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
+		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) );
 	}
 
 	protected function getModeFilterKeyPrefix(){
