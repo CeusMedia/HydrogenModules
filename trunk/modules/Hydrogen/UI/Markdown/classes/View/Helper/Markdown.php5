@@ -5,10 +5,6 @@ class View_Helper_Markdown extends CMF_Hydrogen_View{
 		$this->env	= $env;
 	}
 
-	public function ajaxRender(){
-		return "!";
-	}
-
 	public function transform( $markdown ){
 		return Markdown::defaultTransform( $markdown );
 	}
