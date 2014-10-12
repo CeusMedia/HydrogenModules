@@ -111,7 +111,7 @@ code>
 	<link access="inside" path="work/mission/ajaxRenderContent"/>
 	<link access="inside" path="work/mission/ajaxRenderIndex"/>
 	<link access="inside" path="work/mission/ajaxSelectDay"/>
-	<link access="inside" path="work/mission/export/ical"/>
+	<link access="public" path="work/mission/export/ical"/>
 	<link access="inside" path="work/mission/export/index"/>
 	<link access="inside" path="work/mission/filter"/>
 	<link access="inside" path="work/mission/now"/>
