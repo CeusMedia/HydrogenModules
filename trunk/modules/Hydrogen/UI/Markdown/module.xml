@@ -2,13 +2,15 @@
 <module>
 	<title>UI: Markdown</title>
 	<description><![CDATA[Markdown transformation support.]]></description>
-	<version>1.4.0b-p1</version>
+	<version>1.4.0b-p2</version>
 	<log version="1.4.0b-p1">Add support for INS(++) and DEL(--).</log>
+	<log version="1.4.0b-p2">Add AJAX support.</log>
 	<category>User Interface</category>
 	<author site="http://michelf.ca/home/">Michel Fortin</author>
 	<url>http://michelf.ca/projects/php-markdown/</url>
 	<license source="https://github.com/michelf/php-markdown/blob/lib/License.md">BSD-style</license>
 	<files>
+		<class>Controller/Helper/Markdown.php5</class>
 		<class>View/Helper/Markdown.php5</class>
 		<class>Markdown.php5</class>
 		<file>licenses/Markdown.md</file>

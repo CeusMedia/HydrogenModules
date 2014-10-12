@@ -1,8 +1,12 @@
 <?php
-class View_Helper_Markdown{
+class View_Helper_Markdown extends CMF_Hydrogen_View{
 
 	public function __construct( $env ){
 		$this->env	= $env;
+	}
+
+	public function ajaxRender(){
+		return "!";
 	}
 
 	public function transform( $markdown ){
