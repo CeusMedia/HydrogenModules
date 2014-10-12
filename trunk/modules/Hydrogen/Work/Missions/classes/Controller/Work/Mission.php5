@@ -250,9 +250,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxSaveContent( $missionId ){
-		$data		= array(
-			'content'	=> $this->env->getRequest()->get( 'content' ),
-		);
+		$content	= $this->env->getRequest()->get( 'content' );
+		$data		= array( 'content' => $content );
 		$this->model->edit( $missionId, $data, FALSE );
 		$html	= View_Helper_Markdown::ajaxRender( $content );
 		header( 'Content-length: '.strlen( $html ) );
