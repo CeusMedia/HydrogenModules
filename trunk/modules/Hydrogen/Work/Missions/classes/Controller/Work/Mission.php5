@@ -253,7 +253,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$data		= array( 'content' => $content );
 		$this->model->edit( $missionId, $data, FALSE );
-		$html	= View_Helper_Markdown::ajaxRender( $content );
+		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
 		header( 'Content-length: '.strlen( $html ) );
 		header( 'Content-type: text/html' );
 		print $html;

@@ -83,7 +83,7 @@ var WorkMissionsEditor = {
 	init: function(missionId){
 		"use strict";
 		this.initForms();
-	console.log("WorkMissionsEditor.init");
+//	console.log("WorkMissionsEditor.init");
 		WorkMissionsEditor.missionId = missionId;
 		WorkMissionsEditor.markdown = $("#descriptionAsMarkdown");
 		WorkMissionsEditor.converter = new Markdown.Converter();
@@ -112,6 +112,7 @@ var WorkMissionsEditor = {
 		}
 		WorkMissionsEditor.mirror.on("change", function(instance, update){
 			instance.save();																			//  apply changes of markdown editor to input element
+			WorkMissionsEditor.resizeInput();
 //			WorkMissionsEditor.renderContent();															//  render input element content to HTML using markdown
 			if(WorkMissionsEditor.missionId){															//  edit mode
 				$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
