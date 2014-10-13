@@ -89,10 +89,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onDatabaseLockReleaseCheck( $env, $context, $module, $data = array() ){
-		$lockingActions	= array( 'edit' );
-		if( in_array( $env->request->get( 'action' ), $lockingActions ) )
+		$controllerAction	= $data['controller'].'/'.$data['action'];
+		$skipActions		= array(
+			'work/mission/edit',
+			'work/mission/export/ical',
+		);
+		if( preg_match( "@^work/mission@", $data['controller'] ) )
 			return FALSE;
-		return Logic_Database_Lock::release( $env, 'WorkMission' );
+		if( in_array( $controllerAction, $skipActions ) )
+			return FALSE;
+		return Logic_Database_Lock::release( $env, 'Work_Missions' );
 	}
 
 	protected function initFilters( $userId ){
@@ -401,15 +407,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 
 		if( $this->lock ){
-			if( $this->lock->isLockedByOther( 'WorkMission', $missionId ) ){
-				$modelUser	= new Model_User( $this->env );
-				$lockUserId	= $this->lock->getLockUserId( 'WorkMission', $missionId );
-				$lockUser	= $modelUser->get( $lockUserId );
+			if( $this->lock->isLockedByOther( 'Work_Missions', $missionId ) ){
+				$lockUser	= $this->lock->getLockUser( 'Work_Missions', $missionId );
 				$this->messenger->noteNotice( $words->msgLocked, $lockUser->username );
 				$this->restart( 'view/'.$missionId, TRUE );
 			}
-			else if( !$this->lock->isLockedByMe( 'WorkMission', $missionId ) )
-				$this->lock->lockByMe( 'WorkMission', $missionId );
+			else if( !$this->lock->isLockedByMe( 'Work_Missions', $missionId ) )
+				$this->lock->lockByMe( 'Work_Missions', $missionId );
 		}
 
 		$title		= $this->request->get( 'title' );
