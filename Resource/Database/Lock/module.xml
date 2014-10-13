@@ -22,8 +22,8 @@
 		<needs type="module">Resource_Database</needs>
 	</relations>
 	<config protected="user" type="boolean" name="active">yes</config>
-	<link access="acl" language="de" rank="85" path="database/lock">Sperren</link>
-	<link access="acl" language="en" rank="85" path="database/lock">Locks</link>
+	<link access="acl" path="database/lock" rank="85" xml:lang="de">Sperren</link>
+	<link access="acl" path="database/lock" rank="85" xml:lang="en">Locks</link>
 	<link access="acl" path="database/lock/unlock"/>
 	<hook type="resource" resource="Page" event="applyModules">Logic_Database_Lock::___onAutoModuleLockRelease</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
