@@ -94,7 +94,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'work/mission/edit',
 			'work/mission/export/ical',
 		);
-		if( preg_match( "@^work/mission@", $data['controller'] ) )
+		if( !preg_match( "@^work/mission@", $data['controller'] ) )
 			return FALSE;
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
