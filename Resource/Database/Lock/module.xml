@@ -2,21 +2,29 @@
 <module>
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.2.1</version>
+	<version>0.3.1</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
-	<log version="0.2.1">Added module activity switch.</log>
+	<log version="0.2.1">Add module activity switch.</log>
+	<log version="0.3.0">Add index of all locks.</log>
+	<log version="0.3.1">Allow administrative unlocking from index.</log>
 	<category>Resource</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Database/Lock.php5</class>
+		<class>View/Database/Lock.php5</class>
 		<class>Model/Lock.php5</class>
 		<class>Logic/Database/Lock.php5</class>
+		<template>database/lock/index.php</template>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
 	<config protected="user" type="boolean" name="active">yes</config>
+	<link access="acl" language="de" rank="85" path="database/lock">Sperren</link>
+	<link access="acl" language="en" rank="85" path="database/lock">Locks</link>
+	<link access="acl" path="database/lock/unlock"/>
 	<hook type="resource" resource="Page" event="applyModules">Logic_Database_Lock::___onAutoModuleLockRelease</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>locks`;

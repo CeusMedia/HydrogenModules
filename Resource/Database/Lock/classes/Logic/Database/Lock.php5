@@ -9,10 +9,16 @@ class Logic_Database_Lock{
 		$this->userId	= (int) $env->getSession()->get( 'userId' );
 	}
 
-	static public function ___onAutoModuleLockRelease( $env/*, $context, $module, $data = array()*/ ){
-		if( $env->getRequest()->isAjax() )
+	static public function ___onAutoModuleLockRelease( $env, $context/*, $module, $data = array()*/ ){
+		$request	= $env->getRequest();
+		if( $request->isAjax() )
 			return FALSE;
-		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', array() );
+//		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
+		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', $context, array(
+			'controller'	=> $request->get( 'controller' ),
+			'action'		=> $request->get( 'action' ),
+			'uri'			=> getEnv( 'REQUEST_URI' ),
+		) );
 	}
 
 	public function getLock( $subject, $entryId ){
