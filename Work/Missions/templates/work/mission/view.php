@@ -95,6 +95,8 @@ $panelFacts	= '
 							<dt>'.$w->labelHours.'</dt>
 							<dd>geplant: '.$hoursProjected.':'.$minutesProjected.'</dd>
 							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>
+							<dt>erstellt am</dt>
+							<dd>'.date( "d.m.Y", $mission->createdAt ).'</dd>
 						</dl>
 					</div>
 					<div style="float: left; width: 50%">

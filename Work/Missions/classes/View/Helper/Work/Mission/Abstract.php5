@@ -24,16 +24,19 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 		return $hours.$mins;
 	}
 
-	protected function renderUserWithAvatar( $userId ){
+	protected function renderUserWithAvatar( $userId, $width = 160 ){
 		$modelUser	= new Model_User( $this->env );
 		$worker		= $modelUser->get( $userId );
 		if( !$this->useGravatar )
 			return $worker->username;
 		$gravatar	= new View_Helper_Gravatar( $this->env );
 		$workerPic	= $gravatar->getImage( $worker->email, 20 );
-		$workerPic	= UI_HTML_Tag::create( 'span', $workerPic, array( 'class' => 'user-avatar' ) );
-		$workerName	= UI_HTML_Tag::create( 'span', $worker->username, array( 'class' => 'user-label' ) );
-		return UI_HTML_Tag::create( 'div', $workerPic.' '.$workerName );
+		$workerPic	= UI_HTML_Tag::create( 'div', $workerPic, array( 'class' => 'user-avatar' ) );
+		$workerName	= UI_HTML_Tag::create( 'div', $worker->username, array( 'class' => 'user-label autocut', 'style' => 'width: '.$width.'px' ) );
+		return UI_HTML_Tag::create( 'div', $workerPic.$workerName, array(
+			'class'	=> 'user not-autocut',
+			'title'	=> $worker->username,
+		) );
 	}
 }
 ?>
