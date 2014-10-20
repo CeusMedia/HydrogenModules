@@ -157,16 +157,21 @@ input.datepicker {
 
 
 /*  table.sort.css  */
-table tr th.sortable {
+#day-lists table.work-mission-list tr th {
+	padding: 6px 2px 4px 2px;
+	}
+#day-lists table.work-mission-list tr th.sortable {
 	cursor: pointer;
 	text-decoration: underline;
 	}
-table tr th.sortable.ordered {
+#day-lists table.work-mission-list tr th.sortable.ordered {
 	}
-table tr th.sortable.ordered.direction-asc {
+#day-lists table.work-mission-list tr th.sortable.ordered.direction-asc {
 	}
-table tr th.sortable.ordered.direction-desc {
+#day-lists table.work-mission-list tr th.sortable.ordered.direction-desc {
 	}
+
+/*  --  BUTTONS  --  */
 button.export.ical span{
 	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
 	}
@@ -315,6 +320,9 @@ body.controller-work-mission.action-index #day-lists .table-day table tr td.cell
 body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
 	position: relative;
 	}
+body.controller-work-mission.action-index .autocut,
+body.controller-work-mission.action-index #day-list-large .table-day table tr td.autocut,
+body.controller-work-mission.action-index #day-list-small .table-day table tr td.autocut,
 body.controller-work-mission.action-index #day-list-large .table-day table tr td.cell-title,
 body.controller-work-mission.action-index #day-list-small .table-day table tr td.cell-title {
 	white-space: nowrap;
@@ -355,11 +363,11 @@ table tr.mission-row td.cell-priority {
 table tr.mission-row td.cell-priority {
 	text-align: center;
 	}
-table tr.mission-row td.cell-workerId .user-avatar {
+#day-lists table tr td.cell-workerId .user-avatar {
 	float: left;
 	display: block;
 	}
-table tr.mission-row td.cell-workerId .user-label {
+#day-lists table tr td.cell-workerId .user-label {
 	float: left;
 	display: block;
 	margin-left: 5px;
@@ -367,18 +375,18 @@ table tr.mission-row td.cell-workerId .user-label {
 	padding-top: 1px;
 	}
 
-table tr.mission-row td.cell-actions {
+#day-lists table tr.mission-row td.cell-actions {
 	padding: 1px 2px;
 	text-align: right;
 	}
-table tr.mission-row td.cell-title {
+#day-lists table tr.mission-row td.cell-title {
 	font-size: 1.1em;
 	}
-table tr.mission-row td.cell-title a {
+#day-lists table tr.mission-row td.cell-title a {
 	text-decoration: none;
 	text-shadow: 1px 1px 1px white;
 	}
-table tr.mission-row td.cell-title a i {
+#day-lists table tr.mission-row td.cell-title a i {
 /*	margin-top: 2px;*/
 	}
 
