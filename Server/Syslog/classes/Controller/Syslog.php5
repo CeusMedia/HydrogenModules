@@ -21,6 +21,22 @@ class Controller_Syslog extends Controller_Abstract {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
 
+	static public function ___onLogException( $env, $context, $module, $data = array() ){
+		$fileName	= $env->getConfig()->get( 'log.exception' );
+		if( !isset( $data['exception'] ) )
+			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
+		$exception	= $data['exception'];
+		$serial		= $exception->getMessage();
+		try{
+			$serial		= serialize( $exception );
+			error_log( time().":".base64_encode( $serial )."\n", 3, $fileName );
+		}
+		catch( Exception $e ){}
+		$user	= array( 'email' => $env->getConfig()->get( 'app.email.developer' ) );
+		$mail	= new Mail_Syslog_Exception( $env, array( 'exception' => $exception ) );
+		$mail->sendTo( (object) $user );
+	}
+
 	public function index(){
 		try{
 			return $this->getLinesFromLog();
