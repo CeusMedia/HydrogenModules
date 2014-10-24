@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: String: versionCompare</title>
+	<description><![CDATA[Provides function to compare version strings.]]></description>
+	<category>JavaScript</category>
+	<version>2013-12-18</version>
+	<company site="https://gist.github.com/TheDistantSea/8021359">TheDistantSea @ GitHub Gist</company>
+	<author email="john.papaioannou@gmail.com" site="https://gist.github.com/TheDistantSea/8021359">Jon Papaioannou</author>
+	<license>Public Domain</license>
+	<files>
+		<script source="local" load="auto">String.versionCompare.js</script>
+	</files>
+</module>
