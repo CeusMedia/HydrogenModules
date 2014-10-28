@@ -67,6 +67,8 @@ var WorkMissionsFilter = {
 		this.initFilter("states");
 		this.initFilter("priorities");
 		this.initFilter("types");
+		this.initFilterOptionIconsHover();
+		this.updateFilterReset(true);
 	},
 	/**
 	 *	@deprecated	not used anymore
@@ -105,11 +107,10 @@ var WorkMissionsFilter = {
 				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
 				dataType: "json",
 				success: function(json){											//  on response
-//						WorkMissionsList.loadCurrentListAndDayControls();			//  reload day lists and controls
-						WorkMissionsList.renderDayListDayControls(json);			//  render day lists and controls
-					}
+//					WorkMissionsList.loadCurrentListAndDayControls();			//  reload day lists and controls
+					WorkMissionsList.renderDayListDayControls(json);			//  render day lists and controls
 				}
-			);
+			});
 
 			//  count checked and unchecked checkboxes
 			var i, value;
@@ -133,6 +134,36 @@ var WorkMissionsFilter = {
 				button.addClass("btn-info")											//  mark filter as changed
 			else																	//  no checkbox is unchecked
 				button.removeClass("btn-info");										//  mark filter as unchanged
+			WorkMissionsFilter.updateFilterReset(true);
 		});
+	},
+
+	/**
+	 *	Enabled icons within filter options to turn white on mouse hover.
+	 */
+	initFilterOptionIconsHover: function(){
+		$("#work-mission-buttons ul.dropdown-menu li label>i").parent().hover(		//  get filter items with icon
+			function(){																//  on mouse enter
+				if($(this).children("i").hasClass("icon-white"))					//  if icon was white before
+					$(this).children("i").data("wasWhite", true);					//  note that
+				else																//  and if not
+					$(this).children("i").addClass("icon-white")					//  paint it white
+			}, function(){															//  on mouse leave
+				if(!$(this).children("i").data("wasWhite"))							//  if icon was not white before
+					$(this).children("i").removeClass("icon-white");				//  remove white paint
+			}
+		);
+	},
+
+	updateFilterReset: function(colored){
+		var btn = $("#work-mission-buttons #button_filter_reset");					//  get reset button
+		btn.prop("disabled", "disabled");											//  disable it by default
+		if(colored)																	//  button uses colors
+			btn.removeClass('btn-inverse').children("i").removeClass("icon-white");	//  remove color and icon paint
+		if($("#work-mission-buttons #toolbar-filters button.btn-info").size()){		//  at least one filter is set
+			btn.prop("disabled", null);												//  enabled button
+			if(colored)																//  button uses colors
+				btn.addClass('btn-inverse').children("i").addClass("icon-white");	//  set button color and icon paint
+		}
 	}
 };

@@ -4,14 +4,18 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
-	protected $pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
-	protected $projects		= array();
-	protected $titleLength	= 80;
+	protected $pathIcons		= 'http://img.int1a.net/famfamfam/silk/';
+	protected $projects			= array();
+	protected $titleLength		= 80;
 	protected $today;
-	protected $words		= array();
+	protected $words			= array();
 	protected $isEditor;
 	protected $isViewer;
 	protected $icons;
+	protected $badgesShowPast	= TRUE;
+	protected $badgesShowFuture	= TRUE;
+	protected $badgesColored	= TRUE;
+
 
 	public function __construct( $env ){
 		parent::__construct( $env );
@@ -33,16 +37,18 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		);
 	}
 
-	protected function renderBadgeDays( $days, $class ){
+	protected function renderBadgeDays( $days, $class = NULL ){
 		$label	= UI_HTML_Tag::create( 'small', $this->formatDays( $days ) );
-		return UI_HTML_Tag::create( 'span', $label, array( 'class' => 'badge badge-'.$class ) );
+		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
+		return UI_HTML_Tag::create( 'span', $label, array( 'class' => $class ) );
 	}
 
 	public function renderBadgeDaysOverdue( $mission ){
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
+		$class	= $this->badgesColored ? "important" : NULL;
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return $this->renderBadgeDays( $diff->days, "important" );
+			return $this->renderBadgeDays( $diff->days, $class );
 	}
 
 	/**
@@ -58,14 +64,16 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$end	= new DateTime( $mission->dayEnd );
 		if( $this->today < $start || $end <= $this->today )										//  starts in future or has already ended
 			return "";																			//  return without content
-		return $this->renderBadgeDays( $this->today->diff( $end )->days, "warning" );
+		$class	= $this->badgesColored ? "warning" : NULL;
+		return $this->renderBadgeDays( $this->today->diff( $end )->days, $class );
 	}
 
 	public function renderBadgeDaysUntil( $mission ){
 		$start	= new DateTime( $mission->dayStart );
 		if( $start <= $this->today )																//  mission has started in past
 			return "";																			//  return without content
-		return $this->renderBadgeDays( $this->today->diff( $start)->days, "success" );
+		$class	= $this->badgesColored ? "success" : NULL;
+		return $this->renderBadgeDays( $this->today->diff( $start)->days, $class );
 	}
 
 	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
@@ -196,16 +204,16 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $event, FALSE );
-		$badgeO		= $this->renderBadgeDaysOverdue( $event );
-		$badgeS		= $this->renderBadgeDaysStill( $event );
-		$badgeU		= $this->renderBadgeDaysUntil( $event );
+		$badgeO		= $this->badgesShowPast ? $this->renderBadgeDaysOverdue( $event ) : '';
+		$badgeS		= $this->badgesShowFuture ? $this->renderBadgeDaysStill( $event ) : '';
+		$badgeU		= $this->badgesShowFuture ? $this->renderBadgeDaysUntil( $event ) : '';
 		$date		= date( 'j.n.y', strtotime( $event->timeStart ) );
 		if( $event->timeEnd && $date != date( 'j.n.y', strtotime( $event->timeEnd ) ) )
 			$date	.= " - ".date( 'j.n.y', strtotime( $event->timeEnd ) );
 		$timeStart	= $this->renderTime( strtotime( $event->timeStart ) );
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd/*.' '.$this->words['index']['suffixTime']*/;
-		$times		= UI_HTML_Tag::create( 'div', /*$date."<br/>".*/$times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
+		$times		= UI_HTML_Tag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId, 80 );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 		$buttonEdit	= $this->renderRowButtonEdit( $event );
@@ -300,6 +308,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 
 	public function setWords( $words ){
 		$this->words	= $words;
+	}
+
+	public function setBadges( $showPast = TRUE, $showFuture = TRUE, $colored = TRUE ){
+		$this->badgesShowPast	= $showPast;
+		$this->badgesShowFuture	= $showFuture;
+		$this->badgesColored	= $colored;
 	}
 }
 ?>

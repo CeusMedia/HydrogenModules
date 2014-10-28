@@ -24,7 +24,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 			Model_Mission::TYPE_EVENT
 		),
 		'order'			=> 'dayStart',
-		'direction'		=> 'DESC',
+		'direction'		=> 'ASC',
 	);
 
 	protected function __onInit(){

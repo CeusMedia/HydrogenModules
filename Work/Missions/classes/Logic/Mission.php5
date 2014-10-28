@@ -74,6 +74,8 @@ class Logic_Mission{
 			if( isset( $conditions['projectId'] ) )													//  projects have been selected
 				$userProjects	= array_intersect( $conditions['projectId'], $userProjects );		//  intersect user projectes and selected projects
 			$conditions['projectId']	= $userProjects;											//  
+			if( !$conditions['projectId'] )															//  no projects by filter
+				unset( $conditions['projectId'] );													//  do not filter projects then
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR

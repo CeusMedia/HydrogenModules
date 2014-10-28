@@ -220,7 +220,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			'class'		=> 'mission-row-small row-priority priority-'.$event->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
-		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "40px" );
+		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
 		$tbody			= UI_HTML_Tag::create( 'tbody', array(
 			UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
@@ -315,7 +315,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			'class'		=> 'mission-row-small row-priority priority-'.$task->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
-		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "40px" );
+		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
 		$tbody			= UI_HTML_Tag::create( 'tbody', array(
 			UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
