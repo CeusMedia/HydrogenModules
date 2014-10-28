@@ -2,6 +2,7 @@
 abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $useGravatar	= FALSE;
+	protected $users		= array();
 
 	public function __construct( $env ){
 		$this->setEnv( $env );
@@ -26,7 +27,10 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 
 	protected function renderUserWithAvatar( $userId, $width = 160 ){
 		$modelUser	= new Model_User( $this->env );
-		$worker		= $modelUser->get( $userId );
+		if( !array_key_exists( (int) $userId, $this->users ) )
+			$this->users[(int) $userId] = $modelUser->get( (int) $userId );
+		$worker	= $this->users[(int) $userId];
+
 		if( !$this->useGravatar )
 			return $worker->username;
 		$gravatar	= new View_Helper_Gravatar( $this->env );

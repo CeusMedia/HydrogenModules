@@ -12,7 +12,7 @@ class View_Work_Mission_Future extends CMF_Hydrogen_View{
 		$helperList		= new View_Helper_Work_Mission_List( $this->env );
 		$helperList->setMissions( $this->getData( 'missions' ) );
 		$helperList->setWords( $words );
-
+		$helperList->setBadges( FALSE, TRUE, TRUE );
 		$data			= array(
 			'buttons'	=> array(
 				'large'	=> $helperButtons->render( $total, $limit, $page ),

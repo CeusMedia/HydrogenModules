@@ -101,28 +101,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return Logic_Database_Lock::release( $env, 'Work_Missions' );
 	}
 
-	protected function initFilters( $userId ){
-		if( !(int) $userId )
-			return;
-		if( !$this->session->getAll( 'filter.work.mission.', TRUE )->count() )
-			$this->recoverFilters( $userId );
-
-		//  --  DEFAULT SETTINGS  --  //
-		$this->initDefaultFilters();
-
-		//  --  GENERAL LOGIC CONDITIONS  --  //
-		$mode	= $this->session->get( 'filter.work.mission.mode' );
-		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'];
-		switch( $mode ){
-			case 'now':
-				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
-				break;
-//			case 'future':
-//				$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
-//				break;
-		}
-	}
-
 	/**
 	 *	Add a new mission.
 	 *	Redirects to index if editor right is missing.
@@ -477,30 +455,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function getMinutesFromInput( $input ){
-		if( !strlen( trim( $input ) ) )
-			return 0;
-		if( substr_count( $input, ":" ) ){
-			$parts	= explode( ":", $input );
-			return $parts[1] + $parts[0] * 60;
-		}
-		return (int) $input;
-	}
-
-	/**
-	 * @todo	remove this because all methods receiver userId and this is using roleId from session
-	 */
-	protected function hasFullAccess(){
-		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) );
-	}
-
-	protected function getModeFilterKeyPrefix(){
-		$mode	= '';
-		if( $this->session->get( 'filter.work.mission.mode' ) !== 'now' )
-			$mode	= $this->session->get( 'filter.work.mission.mode' ).'.';
-		return $this->filterKeyPrefix.$mode;
-	}
-
 	public function filter(){
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		if( $this->request->has( 'reset' ) ){
@@ -574,13 +528,37 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$conditions['projectId']	= $projects;												//  apply project conditions
 		foreach( $additionalConditions as $key => $value )
 			$conditions[$key]			= $value;
-//print_m( $conditions );
-//die;
+#print_m( $conditions );
+#die;
 		$limits	= array();
 		if( $limit !== NULL && (int) $limit >= 10 ){
 			$limits	= array( abs( $offset ), $limit );
 		}
 		return $this->logic->getUserMissions( $userId, $conditions, $orders, $limits );
+	}
+
+	protected function getMinutesFromInput( $input ){
+		if( !strlen( trim( $input ) ) )
+			return 0;
+		if( substr_count( $input, ":" ) ){
+			$parts	= explode( ":", $input );
+			return $parts[1] + $parts[0] * 60;
+		}
+		return (int) $input;
+	}
+
+	protected function getModeFilterKeyPrefix(){
+		$mode	= '';
+		if( $this->session->get( 'filter.work.mission.mode' ) !== 'now' )
+			$mode	= $this->session->get( 'filter.work.mission.mode' ).'.';
+		return $this->filterKeyPrefix.$mode;
+	}
+
+	/**
+	 * @todo	remove this because all methods receiver userId and this is using roleId from session
+	 */
+	protected function hasFullAccess(){
+		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) );
 	}
 
 	public function import(){
@@ -606,11 +584,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$this->messenger->noteSuccess( 'Die Daten wurden importiert.' );
 			}
 		}
-		$this->restart( NULL, TRUE );
-	}
-
-	public function now(){
-		$this->session->set( 'filter.work.mission.mode', 'now' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -650,7 +623,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-
 	protected function initDefaultFilters(){
 		if( $this->session->get( 'filter.work.mission.mode' ) === NULL )
 			$this->session->set( 'filter.work.mission.mode', $this->defaultFilterValues['mode'] );
@@ -674,6 +646,33 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$this->session->set( $this->filterKeyPrefix.'direction', $direction );
 			}
 		}
+	}
+
+	protected function initFilters( $userId ){
+		if( !(int) $userId )
+			return;
+		if( !$this->session->getAll( 'filter.work.mission.', TRUE )->count() )
+			$this->recoverFilters( $userId );
+
+		//  --  DEFAULT SETTINGS  --  //
+		$this->initDefaultFilters();
+
+		//  --  GENERAL LOGIC CONDITIONS  --  //
+		$mode	= $this->session->get( 'filter.work.mission.mode' );
+		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'];
+		switch( $mode ){
+			case 'now':
+				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				break;
+//			case 'future':
+//				$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+//				break;
+		}
+	}
+
+	public function now(){
+		$this->session->set( 'filter.work.mission.mode', 'now' );
+		$this->restart( NULL, TRUE );
 	}
 
 	protected function recoverFilters( $userId ){

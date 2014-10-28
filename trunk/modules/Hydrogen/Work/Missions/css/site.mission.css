@@ -330,13 +330,15 @@ body.controller-work-mission.action-index #day-list-small .table-day table tr td
 	text-overflow: ellipsis;
 	padding: 5px 2px 1px 6px;
 	}
-body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
-	position: absolute;
+#work-mission-index #day-lists .table-day table tr td span.badge {
+	float: right;
+	margin-top: -2px;
+/*	position: absolute;
 	right: 4px;
 	top: 4px;
 	float: none;
 	margin: 0px;
-	}
+*/	}
 
 
 table tr.mission-row {
