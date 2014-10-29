@@ -38,9 +38,9 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$modelProject	= new Model_Project( $this->env );
 		if( $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) ) )
 			return $modelProject->getAll();
-		return $modelProject->getUserProjects( $userId );
+		return $modelProject->getUserProjects( $userId, array( 'status' => array( 1, 2, 3 ) ) );
 	}
-	
+
 	public function add(){
 		$request	= $this->env->request;
 		if( $request->has( 'save' ) ){
@@ -71,7 +71,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'content', $request->get( 'content' ) );
 		$this->addData( 'projects', $this->getUserProjects() );
 	}
-	
+
 	public function edit( $issueId ){
 		$request	= $this->env->request;
 

@@ -49,13 +49,17 @@ foreach( $issue->notes as $note ){
 		$manager	= '<span class="role role'.$note->user->roleId.'">'.$manager.'</span>';
 	}
 
-	$noteText	= nl2br( $note->note );
-	if( $env->getModules()->has( 'UI_Helper_Content' ) )
-		$noteText	= View_Helper_ContentConverter::render( $env, $note->note );
+	$noteText	= '<em><small class="muted">Kein Kommentar.</small></em>';
+	if( trim( $note->note ) ){
+		if( $env->getModules()->has( 'UI_Markdown' ) )
+			$noteText	= View_Helper_Markdown::transformStatic( $env, $note->note );
+		else if( $env->getModules()->has( 'UI_Helper_Content' ) )
+			$noteText	= View_Helper_ContentConverter::render( $env, $note->note );
+		else
+			$noteText	= nl2br( $note->note );
+	}
 
-	$content	= '
-<div id="issue-change-list-changes">
-	<dl>
+	$facts	= UI_HTML_Tag::create( 'dl', '
 		<dt>Bearbeiter</dt>
 		<dd>
 			'.$manager.'
@@ -64,39 +68,26 @@ foreach( $issue->notes as $note ){
 		<dd>
 			<span class="issue-note-date">'.date( 'd.m.Y H:i:s', $note->timestamp ).'</span>
 		</dd>
-		'.join( $noteChanges ).'
-	</dl>
-</div>
-<div id="issue-change-list-note">
-	<div class="issue-note-content">'.( $note->note ? $noteText : '<em><small>Kein Kommentar.</small></em>' ).'<br/></div>
-</div>
-<div class="column-clear"></div>
-<hr/>';
-
-	$item	= UI_HTML_Tag::create( 'li', $content, array( 'class' => 'issue-note' ) );
-	$list[]	= $item;
+		'.join( $noteChanges )
+	);
+	$facts	= UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'span6', 'id' => 'issue-change-list-facts' ) );
+	$note	= UI_HTML_Tag::create( 'div', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
+	$note	= UI_HTML_Tag::create( 'div', $note, array( 'class' => 'span6', 'id' => 'issue-change-list-note' ) );
+	$item	= UI_HTML_Tag::create( 'div', array( $facts, $note, '<br/>' ), array( 'class' => 'issue-note row-fluid' ) );
+	$list[]	= UI_HTML_Tag::create( 'tr', UI_HTML_Tag::create( 'td', $item ) );
 }
-$list	= $list ? UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => '-list unstyled' ) ) : '';
+$list	= UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped' ) );
 
 return '
 <style>
-#issue-change-list-note {
-	float: left;
-	width: 58%;
-	margin-right: 2%;
-	}
-#issue-change-list-changes {
-	float: left;
-	width: 38%;
-	margin-right: 2%;
-	}
-#issue-change-list-changes dl dt {
+#issue-change-list-facts dl dt {
 	width: 100px;
 	}
 </style>
-<fieldset>
-	<legend>Entwicklung</legend>
-	'.$list.'
-</fieldset>
-';
+<div class="content-panel">
+	<h3>Entwicklung</h3>
+	<div class="content-panel-inner">
+		'.$list.'
+	</div>
+</div>';
 ?>

@@ -6,7 +6,6 @@ $optStatus		= $view->renderOptions( $words['states'], 'status', $issue->status, 
 
 return '
 	<script>
-	
 function getColor(ratio,opacity){
 	opacity	= typeof opacity == "undefined" ? 1 : opacity;
 	ratio	= Math.max(0,Math.min(1,ratio));									//  keep ratio between 0 and 1
@@ -36,39 +35,41 @@ $(document).ready(function(){
 });
 
 </script>
-<fieldset>
-	<legend>Fehler bearbeiten</legend>
-	<form action="./work/issue/emerge/'.$issue->issueId.'" method="post">
-		<div class="row-fluid">
-			<div class="span3">
-				<label for="type">'.$words['edit']['labelType'].'</label>
-				'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+<div class="content-panel">
+	<h3>Eintrag bearbeiten</h3>
+	<div class="content-panel-inner">
+		<form action="./work/issue/emerge/'.$issue->issueId.'" method="post">
+			<div class="row-fluid">
+				<div class="span3">
+					<label for="type">'.$words['edit']['labelType'].'</label>
+					'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+				</div>
+<!--			<div class="span3">
+					<label for="severity">'.$words['edit']['labelSeverity'].'</label>
+					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
+				</div>
+-->				<div class="span3">
+					<label for="priority">'.$words['edit']['labelPriority'].'</label>
+					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+				</div>
+				<div class="span3">
+					<label for="status">'.$words['edit']['labelStatus'].'</label>
+					'.UI_HTML_Elements::Select( 'status', $optStatus, 'span12 -max' ).'
+				</div>
+				<div class="span3">
+					<label for="progress">'.$words['edit']['labelProgress'].': <span id="progress-view"></span></label>
+					'.UI_HTML_Elements::Input( 'progress', (int) $issue->progress, 's numeric' ).'
+					<div id="progress-slider" style="display: none; margin-top: 1em"></div>
+				</div>
 			</div>
-<!--			<li class="column-left-25">
-				<label for="severity">'.$words['edit']['labelSeverity'].'</label>
-				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
-			</li>
--->			<div class="span3">
-				<label for="priority">'.$words['edit']['labelPriority'].'</label>
-				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+			<div class="row-fluid">
+				<label for="content">'.$words['edit']['labelContent'].'</label>
+				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror', 'rows' => 8 ) ).'
 			</div>
-			<div class="span3">
-				<label for="status">'.$words['edit']['labelStatus'].'</label>
-				'.UI_HTML_Elements::Select( 'status', $optStatus, 'span12 -max' ).'
+			<div class="buttonbar">
+				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>
 			</div>
-			<div class="span3">
-				<label for="progress">'.$words['edit']['labelProgress'].': <span id="progress-view"></span></label>
-				'.UI_HTML_Elements::Input( 'progress', (int) $issue->progress, 's numeric' ).'
-				<div id="progress-slider" style="display: none; margin-top: 1em"></div>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<label for="content">'.$words['edit']['labelContent'].'</label>
-			'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror', 'rows' => 8 ) ).'
-		</div>
-		<div class="buttonbar">
-			<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>
-		</div>
-</fieldset>
-';
+		</form>
+	</div>
+</div>';
 ?>
