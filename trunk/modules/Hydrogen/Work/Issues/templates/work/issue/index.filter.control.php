@@ -97,15 +97,16 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 );
 
 return '
-<form id="form_filter-issue" name="filterIssues" action="./work/issue/filter" method="post">
-	<fieldset style="position: relative">
-		<legend class="filter">'.$words['indexFilter']['legend'].'</legend>
-		'.join( $filters ).'
-		<div class="buttonbar">
-			<button type="submit" class="btn btn-small btn-primary" name="filter"><i class="icon-search icon-white"></i> '.$words['indexFilter']['buttonFilter'].'</button>
-			<a href="./work/issue/filter/reset" class="btn btn-small btn-inverse"><i class="icon-zoom-out icon-white"></i> '.$words['indexFilter']['buttonReset'].'</a>
-		</div>
-	</fieldset>
-</form>
-';
+<div class="content-panel">
+	<h3 class="filter">'.$words['indexFilter']['legend'].'</h3>
+	<div class="content-panel-inner">
+		<form id="form_filter-issue" name="filterIssues" action="./work/issue/filter" method="post">
+			'.join( $filters ).'
+			<div class="buttonbar">
+				<button type="submit" class="btn btn-small btn-primary" name="filter"><i class="icon-search icon-white"></i> '.$words['indexFilter']['buttonFilter'].'</button>
+				<a href="./work/issue/filter/reset" class="btn btn-small btn-inverse"><i class="icon-zoom-out icon-white"></i> '.$words['indexFilter']['buttonReset'].'</a>
+			</div>
+		</form>
+	</div>
+</div>';
 ?>

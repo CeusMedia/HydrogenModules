@@ -123,38 +123,31 @@
 	font-weight: bold;
 	}
 
-	
-#issue-change-list-note {
-	float: left;
-	width: 57%;
-	margin-right: 2%;
-	}
-#issue-change-list-changes {
-	clear: left;
-	float: left;
-	width: 38%;
-	margin-right: 2%;
+
+/*  --  ISSUE CHANGE LIST  --  */	
+#issue-change-list-facts {
 	border-right: 1px solid #DFDFDF;
 	}
-#issue-change-list-changes dl dt {
+#issue-change-list-facts dl dt {
 	width: 90px;
-}
-#issue-change-list-changes dl dd {
+	}
+#issue-change-list-facts dl dd {
 	margin-left: 0px;
 	}
-
-li.issue-note {
-	clear: left;
-	margin-top: 5px;
-	margin-bottom: 10px;
-/*	border-top: 1px solid #DFDFDF;
-*/	padding: 5px 0px 0px 0px;
-	}
-	
-.issue-note-date {
+#issue-change-list-facts dl dt .issue-note-date {
 	font-size: 0.8em;
 	}
 
+#issue-change-list-note {}
+
+#issue-change-list-note .issue-change-list-note-content > h1:first-child,
+#issue-change-list-note .issue-change-list-note-content > h2:first-child,
+#issue-change-list-note .issue-change-list-note-content > h3:first-child,
+#issue-change-list-note .issue-change-list-note-content > h4:first-child,
+#issue-change-list-note .issue-change-list-note-content > h5:first-child {
+	margin-top: 0;
+	padding-top: 0;
+	}
 
 	
 table.issues tr td {

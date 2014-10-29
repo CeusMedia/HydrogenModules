@@ -27,25 +27,29 @@ if( $issue->managerId ){
 }
 
 return '
-<fieldset>
-	<legend>Issue: Info</legend>
-	<dl class="info list">
-		<dt>'.$words['edit']['labelType'].'</dt>
-		<dd><span class="issue-type type-'.$issue->type.'">'.$words['types'][$issue->type].'</span></dd>
-		<dt>'.$words['edit']['labelSeverity'].'</dt>
-		<dd><span class="issue-severity severity-'.$issue->severity.'">'.$words['severities'][$issue->severity].'</span></dd>
-		<dt>'.$words['edit']['labelStatus'].'</dt>
-		<dd><span class="issue-status status-'.$issue->status.'">'.$words['states'][$issue->status].'</span></dd>
-		<dt>'.$words['edit']['labelProgress'].'</dt>
-		<dd><span class="issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 ).'">'.$issue->progress.' %</span></dd>
-		<dt>'.$words['edit']['labelReporter'].'</dt>
-		<dd>'.$reporter.'</dd>
-		<dt>'.$words['edit']['labelManager'].'</dt>
-		<dd>'.$manager.'</dd>
-		<dt>'.$words['edit']['labelChanger'].'</dt>
-		<dd>'.$changers.'</dd>
-	</dl>
-</fieldset>
-
-'
+<div class="content-panel">
+	<h3>Informationen</h3>
+	<div class="content-panel-inner">
+		<dl class="info list">
+			<dt>'.$words['edit']['labelId'].'</dt>
+			<dd><big>#'.$issue->issueId.'</big></dd>
+			<dt>'.$words['edit']['labelType'].'</dt>
+			<dd><span class="issue-type type-'.$issue->type.'">'.$words['types'][$issue->type].'</span></dd>
+			<dt>'.$words['edit']['labelSeverity'].'</dt>
+			<dd><span class="issue-severity severity-'.$issue->severity.'">'.$words['severities'][$issue->severity].'</span></dd>
+			<dt>'.$words['edit']['labelStatus'].'</dt>
+			<dd><span class="issue-status status-'.$issue->status.'">'.$words['states'][$issue->status].'</span></dd>
+			<dt>'.$words['edit']['labelProgress'].'</dt>
+			<dd><span class="issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 ).'">'.$issue->progress.' %</span></dd>
+			<dt>'.$words['edit']['labelCode'].'</dt>
+			<dd><code>[issue:'.$issue->issueId.']</code></dd>
+			<dt>'.$words['edit']['labelReporter'].'</dt>
+			<dd>'.$reporter.'</dd>
+			<dt>'.$words['edit']['labelManager'].'</dt>
+			<dd>'.$manager.'</dd>
+			<dt>'.$words['edit']['labelChanger'].'</dt>
+			<dd>'.$changers.'</dd>
+		</dl>
+	</div>
+</div>';
 ?>

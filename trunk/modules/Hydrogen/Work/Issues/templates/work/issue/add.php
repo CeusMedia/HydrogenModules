@@ -59,69 +59,73 @@ $(document).ready(function(){
 	});
 });
 </script>
-<fieldset>
-	<legend class="icon add">Beschreibung</legend>
-	<form action="./work/issue/add" method="post">
-		<div class="row-fluid">
-			<div class="span3">
-				<label for="type">'.$words['add']['labelType'].'</label>
-				'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+<div class="content-panel">
+	<h3>Beschreibung</h3>
+	<div class="content-panel-inner">
+		<form action="./work/issue/add" method="post">
+			<div class="row-fluid">
+				<div class="span3">
+					<label for="type">'.$words['add']['labelType'].'</label>
+					'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+				</div>
+				<div class="span3">
+					<label for="priority">'.$words['add']['labelPriority'].'</label>
+					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+				</div>
+	<!--			<div class="column-left-25">
+					<label for="severity">'.$words['add']['labelSeverity'].'</label>
+					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
+				</div>-->
+				<div class="span3">
+					<label for="input_projectId">'.$words['add']['labelProject'].'</label>
+					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+				</div>
 			</div>
-			<div class="span3">
-				<label for="priority">'.$words['add']['labelPriority'].'</label>
-				'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+			<div class="row-fluid">
+				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label>
+				<input type="text" name="title" id="input_title" class="span12 -max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
-<!--			<div class="column-left-25">
-				<label for="severity">'.$words['add']['labelSeverity'].'</label>
-				'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
-			</div>-->
-			<div class="span3">
-				<label for="input_projectId">'.$words['add']['labelProject'].'</label>
-				'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+			<div class="row-fluid">
+				<label for="content">'.$words['add']['labelContent'].'</label>
+				'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
 			</div>
-		</div>
-		<div class="row-fluid">
-			<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label>
-			<input type="text" name="title" id="input_title" class="span12 -max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
-		</div>
-		<div class="row-fluid">
-			<label for="content">'.$words['add']['labelContent'].'</label>
-			'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
-		</div>
-		<div class="buttonbar">
-			<a class="btn btn-small btn" href="./work/issue"><i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'].'</a>
-			<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$words['add']['buttonSave'].'</button>
-		</div>
-	</form>
-</fieldset>
-';
-
-return '
-<div class="issue-add">
-	<div class="column-left-66">
-		'.$main.'
+			<div class="buttonbar">
+				<a class="btn btn-small btn" href="./work/issue"><i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'].'</a>
+				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$words['add']['buttonSave'].'</button>
+			</div>
+		</form>
 	</div>
-	<div class="column-left-33">
-		<fieldset>
-			<legend class="icon info">Ähnliche Einträge</legend>
-			<table id="list-similar" class="issues">
-				<tbody>
-					<tr><td colspan="3">-</td></tr>
-				</tbody>
-			</table>
-		</fieldset>
-		<fieldset>
-			<legend class="icon info">Letzte Einträge</legend>
-			<table id="list-latest" class="issues">
-				<tbody>
-					<tr><td colspan="3">-</td></tr>
-				</tbody>
-			</table>
-		</fieldset>
-	</div>
-	<div style="clear: both"></div>
 </div>
 ';
 
-
+return '
+<div class="issue-add row-fluid">
+	<div class="span8">
+		'.$main.'
+	</div>
+	<div class="span4">
+		<div class="content-panel">
+			<h4>Ähnliche Einträge</h4>
+			<div class="content-panel-inner">
+				<table id="list-similar" class="issues">
+					<tbody>
+						<tr><td colspan="3">-</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br/>
+		<div class="content-panel">
+			<h4>Letzte Einträge</h4>
+			<div class="content-panel-inner">
+				<table id="list-latest" class="issues">
+					<tbody>
+						<tr><td colspan="3">-</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>';
 ?>
+
