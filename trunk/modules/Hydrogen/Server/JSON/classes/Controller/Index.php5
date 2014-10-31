@@ -18,9 +18,6 @@
  */
 class Controller_Index extends Controller_Abstract {
 
-	/**	@var		Environment		$env		Environment instance */
-	protected $env;
-
 	/**
 	 *	Just say "Hello".
 	 *	@access		public
