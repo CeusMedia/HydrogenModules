@@ -19,14 +19,6 @@
  */
 class Controller_Abstract extends CMF_Hydrogen_Controller {
 
-	/**	@var	Logic_Chat			$logic					Chat logic resource */
-	protected $logic;
-
-	public function __construct( Environment $env ) {
-		parent::__construct( $env );
-		$this->logic	= new Logic_Chat( $env );
-	}
-
 	protected function logException( Exception $exception ) {
 		UI_HTML_Exception_Page::display( $exception );
 		die;
