@@ -2,7 +2,7 @@
 <module>
 	<title>JS: jQuery UI</title>
 	<description><![CDATA[jQuery User Interface]]></description>
-	<version>1.9.2</version>
+	<version>1.9.2-p1</version>
 	<category>JavaScript</category>
 	<author>jQuery UI Team</author>
 	<url>http://jqueryui.com/</url>
