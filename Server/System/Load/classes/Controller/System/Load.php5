@@ -8,13 +8,16 @@ class Controller_System_Load extends CMF_Hydrogen_Controller{
 		$loads	= sys_getloadavg();
 		$load	= array_shift( $loads ) / $cores;															//  calculate load relative to number of cores
 		if( $max > 0 && $load > $max ){																		//  a maximum load is set and load is higer than that
+			if( is_a( $env, 'CMF_Hydrogen_Environment_Remote' ) )											//  if application is accessed remotely
+				throw new RuntimeException( 'Service not available: server load too high', 503 );			//  throw exception instead of HTTP response
 			header( 'HTTP/1.1 503 Service Unavailable' );													//  send HTTP 503 code
 			header( 'Content-type: text/html; charset=utf-8' );												//  send MIME type header for UTF-8 html error page
 			if( (int) $retry > 0 )																			//  seconds to retry after are set
 				header( 'Retry-After: '.$retry );															//  send retry header
-			$pathLocale	= $env->getConfig()->get( 'path.locales' ).$env->getLanguage()->getLanguage().'/';	//  get path of locales
-			$fileName	= $pathLocale.'html/error/503.html';												//  error page file name
 			$message	= '<h1>Service not available</h1><p>Due to heavy load this service is temporarily not available.<br/>Please try again later.</p>';
+			$language	= $env->getLanguage()->getLanguage();
+			$pathLocale	= $env->getConfig()->get( 'path.locales' ).$language.'/';							//  get path of locales
+			$fileName	= $pathLocale.'html/error/503.html';												//  error page file name
 			if( file_exists( $fileName ) )																	//  error page file exists
 				$message	= File_Reader::load( $fileName );												//  load error page content
 			print( $message );																				//  display error message
