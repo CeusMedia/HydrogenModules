@@ -10,7 +10,14 @@ foreach( $sources as $sourceId => $source ){
 	if( $source->active ){
 		$state		= $iconEnabled;
 		$urlRefresh	= './admin/module/source/refresh/'.$sourceId."?from=admin/module/source";
-		$state .= '&nbsp;'.UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
+		$button		= UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
+		$button		= UI_HTML_Tag::create( 'a', $iconRefresh, array(
+			'href'		=> $urlRefresh,
+			'class'		=> 'button tiny locklayer-auto',
+			'title'		=> 'Quelle neu einlesen',
+			'data-locklayer-label'	=> 'Lese Quelle neu ein ...',
+		) );
+		$state		.= '&nbsp;'.$button;
 	}
 	$label	= $source->title;
 	$link	= UI_HTML_Elements::Link( './admin/module/source/edit/'.$sourceId, $sourceId );
@@ -28,6 +35,15 @@ ksort( $rows );
 
 $w			= (object) $words['index'];
 
+$buttonAdd	= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
+	'type'					=> 'button',
+	'class'					=> 'button add locklayer-auto',
+	'onclick'				=> 'document.location.href = \'./admin/module/source/add\';',
+//	'data-locklayer-label'	=> '
+) );
+
+
+
 $heads		= array( $w->headId, $w->headTitle, $w->headType, $w->headActive );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
 $colgroup	= UI_HTML_Elements::ColumnGroup( '20%,55%,15%,10%' );
@@ -39,7 +55,7 @@ $panelList	= '
 		'.$heads.'
 		'.join( $rows ).'
 	</table>
-	'.UI_HTML_Elements::LinkButton( './admin/module/source/add', $w->buttonAdd, 'button add' ).'
+	'.$buttonAdd.'
 </fieldset>
 ';
 
@@ -48,5 +64,4 @@ return '
 	'.$panelList.'
 </div>
 ';
-
 ?>
