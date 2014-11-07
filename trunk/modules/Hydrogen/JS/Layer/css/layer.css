@@ -6,8 +6,9 @@ body {
 div.layer {
 	display: none;
 	position: fixed;
-	min-width: 800px;
+	width: 80%;
 	min-height: 500px;
+	max-height: 800px;
 /*	border: 5px solid #555;
 */	border-radius: 7px;
 	-moz-border-radius: 7px;
@@ -16,6 +17,7 @@ div.layer {
 	box-shadow: 3px 3px 30px #000;
 	-moz-box-shadow: 3px 3px 30px #000;
 	-webkit-box-shadow: 3px 3px 30px #000;
+	overflow: hidden;
 	}
 
 div.layer.loading {
@@ -82,8 +84,8 @@ div.layer div.layer-head .layer-head-title {
 	}
 div.layer div.layer-content {
 	position: relative;
-	width: 800px;
-	height: 500px;
+	width: 100%;
+	min-height: 500px;
 	margin: 0px;
 	padding: 0px;
 /*	padding: 1em;
