@@ -3,7 +3,11 @@
 	<title>Admin: Module Sources</title>
 	<description><![CDATA[Editor for module sources.]]></description>
 	<category>Administration</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Support new source data storage.</log>
+	<log version="0.2.2">Use UI:Lock:Layer for locking UI on source update.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -25,6 +29,7 @@
 	</files>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_LockLayer</needs>
 	</relations>
 	<link xml:lang="de" path="admin/module/source" access="acl" rank="93">Module-Quellen</link>
 	<link xml:lang="en" path="admin/module/source" access="acl" rank="93">Module Sources</link>

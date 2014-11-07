@@ -5,7 +5,7 @@ $w	= (object) $words['add'];
 $optType	= UI_HTML_Elements::Options( $words['types'] );
 
 $panelAdd	= '
-<form action="./admin/module/source/add" method="post">
+<form action="./admin/module/source/add" method="post" data-locklayer-delay="0" data-locklayer-type="processing">
 	<fieldset>
 		<legend class="add">'.$w->legend.'</legend>
 		<ul class="input">
