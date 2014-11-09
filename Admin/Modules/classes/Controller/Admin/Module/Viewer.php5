@@ -59,12 +59,16 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=1&oldVersion='.$version );
 				break;
 			case 1:
-				$oldVersion	= $request->get( 'oldVersion' );
-				$version	= max( $module->versionInstalled, $module->versionAvailable );
-				if( $version != $oldVersion )
-					$this->messenger->noteSuccess( $words->msgNewVersion, $module->title, $version );
-				else
-					$this->messenger->noteNotice( $words->msgNoNewVersion, $module->title, $version );
+				$title		= $module->title;
+				$newVersion	= $module->versionAvailable;											//  take version number of source module
+				if( version_compare( $module->versionInstalled, $module->versionAvailable ) > 0  )	//  local version is newer
+					$newVersion	= $module->versionInstalled;										//  take version number of local module
+				
+				$oldVersion	= $request->get( 'oldVersion' );										//  get old version from request
+				if( $newVersion != $oldVersion )													//  if version numbers differ
+					$this->messenger->noteSuccess( $words->msgNewVersion, $title, $newVersion );	//  inform about new version
+				else																				//  otherwise if no module update
+					$this->messenger->noteNotice( $words->msgNoNewVersion, $title, $newVersion );	//	note not changes
 				$this->restart( './admin/module/viewer/view/'.$moduleId );
 				break;
 		}
