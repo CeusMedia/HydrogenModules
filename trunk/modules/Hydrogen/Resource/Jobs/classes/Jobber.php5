@@ -83,10 +83,9 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 
 	/**
 	 *	Executes job.
-	 *	@param		boolean		$verbose		Flag: be verbose
 	 *	@return		integer
 	 */
-	public function run( $verbose = FALSE ) {
+	public function run() {
 		$request	= new Console_RequestReceiver();												//  
 		$parameters	= $request->getAll();															//  
 		array_shift( $parameters );																	//  
@@ -132,7 +131,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 		}
 		catch( Exception $e ){																		//  on exception
 			$this->lock->unlock( $job->class, $job->method );										//  remove job lock
-			$this->logError( $e->getMessage() );													//  log exception
+			$this->logError( $e->getMessage()."@".$e->getFile().":".$e->getLine() );				//  log exception
 			return -1;																				//  quit with negative status
 		}
 	}
