@@ -5,6 +5,7 @@ class Model_Project extends CMF_Hydrogen_Model{
 		'projectId',
 		'parentId',
 		'status',
+		'priority',
 		'url',
 		'title',
 		'description',
@@ -15,6 +16,7 @@ class Model_Project extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'parentId',
 		'status',
+		'priority',
 		'title',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

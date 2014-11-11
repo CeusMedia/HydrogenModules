@@ -2,7 +2,15 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.2</version>
+	<version>0.3.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added status indicator.</log>
+	<log version="0.3">Refactored filter, index and forms.</log>
+	<log version="0.3.1">Added support for code mirros.</log>
+	<log version="0.3.2">Adjusted CSS definitions.</log>
+	<log version="0.3.3">Added hook to update project modification timestamp.</log>
+	<log version="0.3.4">Added priority attribute and filter.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -30,7 +38,8 @@
 	</relations>
 	<link path="manage/project" access="acl" xml:lang="de" rank="82">Projekte</link>
 	<link path="manage/project" access="acl" xml:lang="en" rank="82">Projects</link>
-<sql on="install" type="mysql"><![CDATA[
+	<hook type="resource" resource="Project" event="update">Controller_Manage_Project::___onUpdate</hook>
+	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
   `projectId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -56,9 +65,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
   KEY `projectId` (`projectId`),
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 ]]></sql>
-<sql on="uninstall" type="mysql"><![CDATA[
+	<sql on="update" type="mysql" version-from="0.3.3" version-to="0.3.4"><![CDATA[
+ALTER TABLE  `<%?prefix%>projects` ADD  `priority` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT  '3' AFTER  `status` ,
+ADD INDEX (  `priority` ) ;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 DROP TABLE IF EXISTS `<%?prefix%>project_users`;
 ]]></sql>

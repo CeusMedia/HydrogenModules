@@ -1,13 +1,27 @@
-body.moduleManageProject.action-index table {
+
+/*  --  INDEX TABLE  --  */
+body.moduleManageProject.action-index table.table {
 	table-layout: fixed;
 	}
-body.moduleManageProject.action-index table tr td {
+body.moduleManageProject.action-index table.table thead tr th.row-priority {
+	padding-left: 2px;
+	}
+body.moduleManageProject.action-index table.table tbody tr td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+	}
+body.moduleManageProject.action-index table.table tbody tr td.cell-title {
+	font-size: 1.1em;
+	}
+body.moduleManageProject.action-index table.table tbody tr td.cell-priority {
+	text-align: center;
+	font-weight: lighter;
+	font-size: 1.1em;
     }
 
 
+/*  --  STATES  --  */
 .project.status-2 {
 	background-color: rgba(255,255,255,.5);
 	}
@@ -27,18 +41,53 @@ body.moduleManageProject.action-index table tr td {
 	background-color: rgba(0,255,0,.5);
 	}
 
-#project-users ul {
+
+/*  --  PRIORITIES  --  */
+.project.priority1,
+body.moduleManageProject table.table tr td.cell-priority.priority-1 {
+    background-color: rgba(255, 31, 0, 0.5);
+    }
+.project.priority2,
+body.moduleManageProject table.table tr td.cell-priority.priority-2 {
+    background-color: rgba(255, 127, 0, 0.5);
+    }
+.project.priority3,
+body.moduleManageProject table.table tr td.cell-priority.priority-3 {
+    background-color: rgba(255, 255, 63, 0.5);
+    }
+.project.priority4,
+body.moduleManageProject table.table tr td.cell-priority.priority-4 {
+    background-color: rgba(127, 255, 0, 0.4);
+    }
+.project.priority5,
+body.moduleManageProject table.table tr td.cell-priority.priority-5 {
+    background-color: rgba(31, 240, 0, 0.6);
+    }
+
+/*  --  PROJECT USER LIST  --  */
+body.moduleManageProject #project-users ul {
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
 	}
-#project-users li {
+body.moduleManageProject #project-users li {
 	clear: both;
 	height: 1.8em;
 	border-bottom: 1px solid #EEEEEE;
 	}
-#project-users button.remove {
+body.moduleManageProject #project-users button.remove {
 	float: right;
 	right: 0px;
 	margin-top: 2px;
+	}
+
+
+
+
+body.moduleManageProject .autocut {
+	width: 100%;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 	}

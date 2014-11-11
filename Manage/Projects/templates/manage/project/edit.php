@@ -1,5 +1,6 @@
 <?php
 
+/*  --  STATES  --  */
 $optStatus	= array();
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
@@ -11,6 +12,18 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 }
 $optStatus		= join( '', $optStatus );
 
+/*  --  PRIORITIES  --  */
+$optPriority	= array();
+foreach( $words['priorities'] as $key => $value ){
+	$attributes		= array(
+		'value'		=> $key,
+		'class'		=> 'project priority'.$key,
+		'selected'	=> ( $key == $project->priority ? 'selected' : NULL )
+	);
+	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+}
+$optPriority		= join( '', $optPriority );
+
 $optCompany	= "";
 if( isset( $projectCompanies ) ){
 	$optCompany	= array();
@@ -20,12 +33,28 @@ if( isset( $projectCompanies ) ){
 }
 
 $w			= (object) $words['edit'];
-$buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add' );
-if( !$canEdit )
-	$buttonSave	= UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button add', NULL, TRUE );
+
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.' '.$w->buttonCancel, array(
+	'href'		=> './manage/project',
+	'class'		=> 'btn btn-small'
+) );
+$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' '.$w->buttonView, array(
+	'href'		=> './manage/project/view/'.$project->projectId,
+	'class'		=> 'btn btn-small btn-info'
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+	'type'		=> 'submit',
+	'name'		=> 'save',
+	'class'		=> 'btn btn-success',
+	'disabled'	=> !$canEdit ? 'disabled' : NULL,
+ ) );
 $panelEdit	= '
 <div class="content-panel content-panel-form">
-	<h3>'.$w->heading.'</h3>
+	<h3 class="autocut"><a href="./manage/project" class="muted">'.$w->heading.'</a> '.$project->title.'</h3>
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 			<div class="row-fluid">
@@ -45,13 +74,18 @@ $panelEdit	= '
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12 max">'.$optStatus.'</select>
 				</div>
-				<div class="span8">
+				<div class="span4">
+					<label for="input_priority" class="not-mandatory">'.$w->labelPriority.'</label>
+					<select name="priority" id="input_priority" class="span12 max">'.$optPriority.'</select>
+				</div>
+				<div class="span4">
 					<label for="input_url">'.$w->labelUrl.'</label>
 					<input type="text" name="url" id="input_url" class="span12 max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/project" class="btn not-btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+				'.$buttonCancel.'
+				<!--'.$buttonView.'-->
 				<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>	
 			</div>
 <!--			<li class="">
@@ -62,10 +96,22 @@ $panelEdit	= '
 	</div>
 </div>';
 
-$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
 $panelInfo		= $view->loadTemplateFile( 'manage/project/edit.info.php' );
 $panelUsers		= $view->loadTemplateFile( 'manage/project/edit.users.php' );
 
+return '
+<div class="row-fluid">
+	<div class="span9">
+		'.$panelEdit.'
+	</div>
+	<div class="span3">
+		'.$panelUsers.'
+		'.$panelInfo.'
+	</div>
+</div>';
+
+
+$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
 return '
 <div class="row-fluid">
 	<div class="span3">

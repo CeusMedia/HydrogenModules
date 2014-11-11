@@ -2,8 +2,7 @@
 
 $w			= (object) $words['filter'];
 
-if( !is_array( $filterStatus ) )
-	$filterStatus	= array();
+/*  --  STATUS  --  */
 $optStatus	= array();
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
@@ -14,6 +13,19 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$optStatus[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
 }
 $optStatus	= join( '', $optStatus );
+
+/*  --  PRIORITY  --  */
+$optPriority	= array();
+foreach( $words['priorities'] as $key => $value ){
+	$attributes		= array(
+		'value'		=> $key,
+		'class'		=> 'project priority'.$key,
+		'selected'	=> in_array( $key, $filterPriority ) ? 'selected' : NULL
+	);
+	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+}
+$optPriority	= join( '', $optPriority );
+
 $optOrder	= UI_HTML_Elements::Options( $words['filter-orders'], $filterOrder );
 
 $disabled   = $filterDirection == 'ASC';
@@ -35,6 +47,12 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_priority">Priorität</label>
+					<select name="priority[]" multiple id="input_priority" size="6" class="span12">'.$optPriority.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_status">Sortierung</label>
 					<select name="order" id="input_order" class="span12" onchange="this.form.submit()">'.$optOrder.'</select>
@@ -42,6 +60,14 @@ return '
 				<div class="span4">
 					<label>&nbsp;</label>
 					<div class="btn-group">'.$buttonUp.$buttonDown.'</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span3">
+					<input type="text" name="limit" id="input_limit" class="span12" value="'.htmlentities( $filterLimit, ENT_QUOTES, 'utf-8' ).'"/>
+				</div>
+				<div class="span9" style="padding-top: 4px">
+					<label for="input_status">pro Seite</label>
 				</div>
 			</div>
 			<div class="buttonbar">
