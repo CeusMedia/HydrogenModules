@@ -9,6 +9,16 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->useMissions	= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies	= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 		$this->useCustomers	= $this->env->getModules()->has( 'Manage_Customers' );
+		$session			= $this->env->getSession();
+		if( !$session->get( 'filter_manage_project_limit' ) )
+			$session->set( 'filter_manage_project_limit', 10 );
+	}
+
+	static public function ___onUpdate( $env, $module, $context, $data ){
+		if( empty( $data['projectId'] ) )
+			throw new InvalidArgumentException( 'Missing project ID' );
+		$model		= new Model_Project( $env );
+		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
 	}
 
 	public function add(){
@@ -42,9 +52,9 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( './manage/project/edit/'.$projectId );
 		}
-		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
-		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
-		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
+//		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
+//		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
+//		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
 	}
 
 	public function addUser( $projectId ){
@@ -130,9 +140,9 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$modelCustomer	= new Model_Customer( $this->env );
 			$modelCustomer->getAll( array( 'userId' => $session->get( 'userId' ) ), array( 'title' => 'ASC' ) );
 		}
-		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
-		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
-		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
+//		$this->addData( 'filterStatus', $session->get( 'filter_manage_project_status' ) );
+//		$this->addData( 'filterOrder', $session->get( 'filter_manage_project_order' ) );
+//		$this->addData( 'filterDirection', $session->get( 'filter_manage_project_direction' ) );
 	}
 
 	public function filter( $mode = NULL ){
@@ -143,22 +153,39 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$session->remove( 'filter_manage_project_'.$key );
 		if( $request->has( 'status' ) )
 			$session->set( 'filter_manage_project_status', $request->get( 'status' ) );
+		if( $request->has( 'priority' ) )
+			$session->set( 'filter_manage_project_priority', $request->get( 'priority' ) );
 		if( $request->has( 'order' ) )
 			$session->set( 'filter_manage_project_order', $request->get( 'order' ) );
 
 		if( $request->has( 'direction' ) )
 			$session->set( 'filter_manage_project_direction', $request->get( 'direction' ) );
 		if( $request->has( 'limit' ) )
-			$session->set( 'filter_manage_project_limit', $request->get( 'limit' ) );
+			$session->set( 'filter_manage_project_limit', max( 1, $request->get( 'limit' ) ) );
 		if( $session->get( 'filter_manage_project_order' ) === NULL )
 			$session->set( 'filter_manage_project_order', 'title' );
 		if( $session->get( 'filter_manage_project_direction' ) === NULL )
 			$session->set( 'filter_manage_project_direction', 'ASC' );
+		$session->set( 'filter_manage_project_page', 0 );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index( $page = NULL ){
 		$session			= $this->env->getSession();
+
+//		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
+
+		if( $page !== NULL ){																	//  page set as argument
+			$session->set( 'filter_manage_project_page', $page );								//  store page in session (will be validated later)
+			if( $page === "0" )																	//  page was set to 0 explicitly
+				$this->restart( NULL, TRUE );													//  redirect to nicer URI
+		}
+		else{																					//  no page as argument
+			if( preg_match( "@manage/project/[0-9]+$@", getEnv( 'HTTP_REFERER' ) ) )			//  last request was index, too
+				$session->set( 'filter_manage_project_page', 0 );								//  assume first page and store in session
+			$page	= (int) $session->get( 'filter_manage_project_page' );						//  get page from session
+		}
+
 		$modelProject		= new Model_Project( $this->env );
 		$modelProjectUser	= new Model_Project_User( $this->env );
 		$modelUser			= new Model_User( $this->env );
@@ -166,10 +193,14 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$modelMission	= new Model_Mission( $this->env );
 
 		$filterStatus		= $session->get( 'filter_manage_project_status' );
+		$filterPriority		= $session->get( 'filter_manage_project_priority' );
 		$filterOrder		= $session->get( 'filter_manage_project_order' );
 		$filterDirection	= $session->get( 'filter_manage_project_direction' );
+		$filterLimit		= $session->get( 'filter_manage_project_limit' );
 		if( !is_array( $filterStatus ) )
 			$filterStatus	= array();
+		if( !is_array( $filterPriority ) )
+			$filterPriority	= array();
 
 		$conditions	= array();
 		if( !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
@@ -180,6 +211,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
+		if( $filterPriority )
+			$conditions['priority']	= $filterPriority;
 		$orders	= array();
 		if( !( $filterOrder && $filterDirection ) ){
 			$filterOrder		= "title";
@@ -187,8 +220,16 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		}
 		$orders[$filterOrder]	= $filterDirection;
 
+		$total	= $modelProject->count( $conditions );
+		if( $page * $filterLimit > $total )
+			$this->restart( '0', TRUE );
+//		$page	= max( 0, min( floor( $total / $filterLimit ), $page ) );
+		$limit	= $session->get( 'filter_manage_project_limit' );
+		$limits	= array( $page * $filterLimit, $filterLimit );
+
 		$projects	= array();
-		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
+
+		foreach( $modelProject->getAll( $conditions, $orders, $limits ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $modelProjectUser->getAllByIndex( 'projectId', $project->projectId );
 			foreach( $project->users as $nr => $projectUser )
@@ -197,11 +238,14 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$project->missions	= $modelMission->countByIndex( 'projectId', $project->projectId );
 		}
 
-
+		$this->addData( 'page', $page );
+		$this->addData( 'total', $total );
 		$this->addData( 'projects', $projects );
 		$this->addData( 'filterStatus', $filterStatus );
+		$this->addData( 'filterPriority', $filterPriority );
 		$this->addData( 'filterOrder', $filterOrder );
 		$this->addData( 'filterDirection', $filterDirection );
+		$this->addData( 'filterLimit', $filterLimit );
 		$this->addData( 'canAdd', $this->env->getAcl()->has( 'manage_project', 'add' ) );
 		$this->addData( 'canFilter', $this->env->getAcl()->has( 'manage_project', 'filter' ) );
 		$this->addData( 'canEdit', $this->env->getAcl()->has( 'manage_project', 'edit' ) );

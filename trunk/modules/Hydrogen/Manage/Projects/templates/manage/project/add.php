@@ -1,7 +1,8 @@
 <?php
 
-$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
+$w	= (object) $words['add'];
 
+/*  --  STATES  --  */
 $optStatus	= array();
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
@@ -13,7 +14,17 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 }
 $optStatus		= join( '', $optStatus );
 
-$w	= (object) $words['add'];
+/*  --  PRIORITIES  --  */
+$optPriority	= array();
+foreach( $words['priorities'] as $key => $value ){
+	$attributes		= array(
+		'value'		=> $key,
+		'class'		=> 'project priority'.$key,
+		'selected'	=> ( $key == 0 ? 'selected' : NULL )
+	);
+	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+}
+$optPriority		= join( '', $optPriority );
 
 $panelAdd		= '
 <div class="content-panel content-panel-form">
@@ -37,19 +48,34 @@ $panelAdd		= '
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12 max">'.$optStatus.'</select>
 				</div>
-				<div class="span8">
+				<div class="span4">
+					<label for="input_priority" class="not-mandatory">'.$w->labelPriority.'</label>
+					<select name="priority" id="input_priority" class="span12 max">'.$optPriority.'</select>
+				</div>
+				<div class="span4">
 					<label for="input_url">'.$w->labelUrl.'</label>
 					<input type="text" name="url" id="input_url" class="span12 max"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/project" class="btn not-btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+				<a href="./manage/project" class="btn btn-small"><i class="not-icon-arrow-left icon-list"></i> '.$w->buttonCancel.'</a>
 				<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
 </div>';
 
+return '
+<div class="row-fluid">
+	<div class="span9">
+		'.$panelAdd.'
+	</div>
+	<div class="span3">
+	</div>
+</div>
+';
+
+$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
 return '
 <div class="row-fluid">
 	<div class="span3">
