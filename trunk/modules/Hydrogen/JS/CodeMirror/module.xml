@@ -2,7 +2,7 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>3.20-p2</version>
+	<version>3.20-p3</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
@@ -10,7 +10,7 @@
 	<files>
 		<style source="lib">codemirror.css</style>
 		<style load="auto" source="theme">codemirror.ext.css</style>
-		<script load="auto">codemirror.ext.js</script>
+		<script>codemirror.ext.js</script>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
@@ -27,24 +27,28 @@
 	<config protected="no" type="integer" name="auto.option.indentUnit">4</config>
 	<config protected="no" type="string" name="auto.option.theme">default</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$page		= $env->getPage();
+		$pathJs		= $env->getConfig()->get( 'path.scripts' );
 		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 		$version	= $module->config['version']->value;
 		$path		= $pathJsLib.'CodeMirror/'.$version.'/';
+
 		$modes		= explode( ',', $module->config['modes']->value );
 		$addons		= explode( ',', $module->config['addons']->value );
 		$themes		= explode( ',', $module->config['themes']->value );
 
-		$context->js->addUrl( $path.'lib/codemirror.js' );
-		$context->css->theme->addUrl( $path.'lib/codemirror.css' );
+		$page->js->addUrl( $path.'lib/codemirror.js' );
+		$page->js->addUrl( $pathJs.'codemirror.ext.js' );
+		$page>css->theme->addUrl( $path.'lib/codemirror.css' );
 
 		foreach( $modes as $mode )
-			$context->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
+			$page->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
 		foreach( $addons as $addon )
-			$context->js->addUrl( $path.'addon/'.$addon.'.js' );
+			$page->js->addUrl( $path.'addon/'.$addon.'.js' );
 		if( in_array( 'dialog/dialog', $addons ) )
-			$context->css->theme->addUrl( $path.'addon/dialog/dialog.css' );
+			$page->css->theme->addUrl( $path.'addon/dialog/dialog.css' );
 		foreach( $themes as $theme )
-			$context->css->theme->addUrl( $path.'theme/'.$theme.'.css' );
+			$page->css->theme->addUrl( $path.'theme/'.$theme.'.css' );
 
 		$auto	= $module->config;
 		if( $module->config['auto']->value ){
@@ -64,7 +68,7 @@ $("'.$config['selector'].'").each(function(){									//  iterate found text are
 	mirror.setSize("100%", $(this).height());
 	$(this).data("codemirror", mirror);
 });';
-			$context->js->addScript( '$(document).ready(function(){'.$script.'});' );
+			$page->js->addScriptOnReady( $script, 7 );
 		}
 	]]></hook>
 </module>
