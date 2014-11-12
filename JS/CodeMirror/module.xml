@@ -38,7 +38,7 @@
 
 		$page->js->addUrl( $path.'lib/codemirror.js' );
 		$page->js->addUrl( $pathJs.'codemirror.ext.js' );
-		$page>css->theme->addUrl( $path.'lib/codemirror.css' );
+		$page->css->theme->addUrl( $path.'lib/codemirror.css' );
 
 		foreach( $modes as $mode )
 			$page->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
