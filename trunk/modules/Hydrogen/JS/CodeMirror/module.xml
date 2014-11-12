@@ -8,8 +8,7 @@
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
-		<style source="lib">codemirror.css</style>
-		<style load="auto" source="theme">codemirror.ext.css</style>
+		<style source="theme" load="auto">codemirror.ext.css</style>
 		<script>codemirror.ext.js</script>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
