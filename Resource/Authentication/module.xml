@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication</title>
 	<description><![CDATA[Module for authentication against local database using the Users module.]]></description>
-	<version>0.5.9</version>
+	<version>0.5.10</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -18,6 +18,7 @@
 	<log version="0.5.7">Force to reload page if session refresh indicates expired server session.</log>
 	<log version="0.5.8">Updated registration form for error handling or preset information.</log>
 	<log version="0.5.9">Provide current user ID to Auth script on init by hook.</log>
+	<log version="0.5.10">Let the framework run the initial JavaScript code.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
