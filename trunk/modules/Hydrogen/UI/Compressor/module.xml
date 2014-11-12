@@ -9,7 +9,13 @@ This module configures and enables this compression.
 Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Added more options.</log>
+	<log version="0.3.1">Added flush action to clear cache.</log>
+	<log version="0.4">Refactored module hook.</log>
+	<log version="0.4.1">Extracted module hook to controller class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,26 +33,6 @@ Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http:/
 	<config protected="yes" type="string" name="cssPrefix">min.</config>
 	<config protected="yes" type="string" name="cssSuffix"></config>
 	<relations/>
-        <link rank="99" access="public" path="compressor/flush"></link>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config = (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
-$pathCache  = $env->getConfig()->get( 'path.cache' );
-
-$context->js->setPrefix( $config->jsPrefix );
-$context->js->setSuffix( $config->jsSuffix );
-$context->js->setCachePath( $config->jsCachePath ? $config->jsCachePath : $pathCache );
-$context->js->setCompression( $config->jsMinify );
-
-$context->css->primer->setPrefix( $config->cssPrefix );
-$context->css->primer->setSuffix( $config->cssSuffix );
-$context->css->primer->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
-$context->css->primer->setCompression( $config->cssMinify );
-
-$context->css->theme->setPrefix( $config->cssPrefix );
-$context->css->theme->setSuffix( $config->cssSuffix );
-$context->css->theme->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
-$context->css->theme->setCompression( $config->cssMinify );
-
-$context->setPackaging( FALSE, $config->cssMinify );
-]]></hook>
+	<link rank="99" access="public" path="compressor/flush"></link>
+	<hook type="resource" resource="Page" event="applyModules">Controller_Compressor::___onPageBuild</hook>
 </module>
