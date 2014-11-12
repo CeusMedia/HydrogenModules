@@ -3,7 +3,11 @@
 	<title>JS: cmClearInput</title>
 	<description><![CDATA[Adds trigger to input fields and textareas to clear content.]]></description>
 	<category>JavaScript</category>
-	<version>0.2</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Load minified JavaScript file by default.</log>
+	<log version="0.2.2">Let the framework run the initial JavaScript code.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -17,12 +21,10 @@
 		<needs type="module">JS_jQuery</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$options	= array();
-		$script		= '$(".cmClearInput").cmClearInput('.json_encode( $options ).')';
-		$script		= '$(document).ready(function(){'.$script.'});';
-		$context->js->addScript( $script );
+		$options	= array();												//  @todo kriss: add offsets to config and apply here
+		$options	= json_encode( $options );								//  encode options to JSON
+		$selector	= '.cmClearInput';										//  @todo kriss: add default auto selector to config and apply here 
+		$script		= '$("'.$selector.'").cmClearInput('.$options.')';		//  render script
+		$env->getPage()->js->addScriptOnReady( $script, 9 );				//  enlist script to be run on ready
 	]]></hook>
-	<changelog>
-		<change from="0.1" to="0.2">Load minified JavaScript file by default.</change>
-	</changelog>
 </module>
