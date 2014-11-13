@@ -35,18 +35,12 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	public function add(){
 	}
 
-/*	public function ajaxRenderLists(){
-		xmp( $this->loadTemplateFile( 'work/mission/index.day.php' ) );
-		die;
-	}*/
-
 	public function edit(){
 	}
 
 	public function index(){
 		$page		= $this->env->getPage();
-		$mode		= $this->env->getSession()->get( 'filter.work.mission.mode' );
-		$page->js->addScript( '$(document).ready(function(){WorkMissions.init("now");});' );
+		$page->js->addScriptOnReady( 'WorkMissions.init("now");' );
 	}
 
 	public function remove(){
