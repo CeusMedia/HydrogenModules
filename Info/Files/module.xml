@@ -3,7 +3,8 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2.10</version>
+	<version>0.2.11</version>
+	<log version="0.2.11">Added support for news list via hook.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -30,6 +31,7 @@
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
+	<hook type="resource" resource="Page" event="collectNews">Controller_Info_File::___onPageCollectNews</hook>
 	<sql on="update" type="mysql" version-from="0.2.7" version-to="0.2.8"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
