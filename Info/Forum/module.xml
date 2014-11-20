@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.13</version>
+	<version>0.3.14</version>
 	<log version="0.3.5">Extended thread addition handling.</log>
 	<log version="0.3.6">Added mail on new post answer.</log>
 	<log version="0.3.7">Added option for mail sender.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.11">Added daily mail to manager.</log>
 	<log version="0.3.12">Added job for daily mail to manager.</log>
 	<log version="0.3.13">Several tiny improvements and bug fixes.</log>
+	<log version="0.3.14">Added support for news list via hook.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -58,6 +59,7 @@
 	<link access="acl" path="info/forum" xml:lang="de" rank="55">Forum</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="55">Forum</link>
 	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_posts` (

@@ -35,6 +35,22 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			mkdir( $path, 0770, TRUE );
 	}
 
+	static public function ___onPageCollectNews( $env, $context, $module, $data = array() ){
+		$model			= new Model_Forum_Thread( $env );
+		$oneDay			= 24 * 60 * 60;
+		$conditions		= array( 'createdAt' => '>'.( time() - 7 * $oneDay ) );
+		$threads		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( 0, 3 ) );
+		foreach( $threads as $thread ){
+			$context->news[]	= (object) array(
+				'title'		=> $thread->title,
+				'timestamp'	=> $thread->createdAt,
+				'module'	=> 'Info_Forum',
+				'type'		=> 'thread',
+				'url'		=> './info/forum/thread/'.$thread->threadId,
+    	    );
+		}
+    }
+
 	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
 		try{
 			$config			= $env->getConfig()->getAll( 'module.info_forum.', TRUE );
