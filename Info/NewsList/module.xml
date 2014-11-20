@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <module>
-	<title>Info</title>
+	<title>Info: NewsList</title>
 	<description><![CDATA[Collects news from modules as list for index page.]]></description>
 	<category>Info</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added relation to time phraser.</log>
 	<files>
-		<class>View/Helper/Info/NewsList.php5</class>
+		<class>View/Helper/NewsList.php5</class>
 	</files>
 	<relations>
-		<neeeds>UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 </module>
