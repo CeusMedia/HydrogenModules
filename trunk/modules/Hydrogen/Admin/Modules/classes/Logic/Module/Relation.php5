@@ -125,8 +125,10 @@ class Logic_Module_Relation{
 				$edges[]	= $node->moduleId.' -> '.$out->moduleId.' []';
 			$number++;
 		}
-		$graph	= "digraph {\n\t".join( "\n\t", $nodes )."\n\t".join( "\n\t", $edges )."\n}";
-		return $graph;
+		$options	= "\n\t".'rankdir="LR"';
+		$nodes		= $nodes ? "\n\t".join( "\n\t", $nodes ) : '';
+		$edges		= $edges ? "\n\t".join( "\n\t", $edges ) : '';
+		return "digraph {".$options.$nodes.$edges."\n}";
 	}
 
 	public function renderRelatingGraph( $moduleId, $type = 'needs', $recursive = FALSE ){										//  @todo	rename to produceGraphvizGraph and make indepentent from need/support
@@ -163,8 +165,10 @@ class Logic_Module_Relation{
 				$edges[]	= $in->moduleId.' -> '.$node->moduleId.' []';
 			$number++;
 		}
-		$graph	= "digraph {\n\t".join( "\n\t", $nodes )."\n\t".join( "\n\t", $edges )."\n}";
-		return $graph;
+		$options	= "\n\t".'rankdir="LR"';
+		$nodes		= $nodes ? "\n\t".join( "\n\t", $nodes ) : '';
+		$edges		= $edges ? "\n\t".join( "\n\t", $edges ) : '';
+		return "digraph {".$options.$nodes.$edges."\n}";
 	}
 
 	public function getOrder(){
