@@ -2,22 +2,22 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>3.20-p3</version>
+	<version install-type="1" install-source="Local_CM_Public" install-date="2014-11-25T00:22:21+01:00">3.20-p5</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
+		<class>View/Helper/CodeMirror.php5</class>
 		<style source="theme" load="auto">codemirror.ext.css</style>
 		<script>codemirror.ext.js</script>
 		<image source="theme">bg_code_tab.png</image>
 		<image source="theme">bg_code_tab.psd</image>
 	</files>
 	<config protected="yes" type="string" name="version" values="3.02,3.1,3.11,3.20">3.20</config>
-	<config protected="yes" type="string" name="modes">css,xml,javascript,clike,php,htmlmixed</config>
+	<config protected="yes" type="string" name="modes">css,xml,javascript,clike,php,htmlmixed,sql</config>
 	<config protected="yes" type="string" name="addons">dialog/dialog,search/search,search/searchcursor,edit/matchbrackets</config>
 	<config protected="yes" type="string" name="themes">elegant</config>
-	
 	<config protected="no" type="boolean" name="auto">yes</config>
 	<config protected="no" type="string" name="auto.selector">textarea.CodeMirror-auto</config>
 	<config protected="no" type="boolean" name="auto.option.lineNumbers">yes</config>
@@ -25,49 +25,5 @@
 	<config protected="no" type="boolean" name="auto.option.indentWithTabs">yes</config>
 	<config protected="no" type="integer" name="auto.option.indentUnit">4</config>
 	<config protected="no" type="string" name="auto.option.theme">default</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$page		= $env->getPage();
-		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
-		$version	= $module->config['version']->value;
-		$path		= $pathJsLib.'CodeMirror/'.$version.'/';
-
-		$modes		= explode( ',', $module->config['modes']->value );
-		$addons		= explode( ',', $module->config['addons']->value );
-		$themes		= explode( ',', $module->config['themes']->value );
-
-		$page->js->addUrl( $path.'lib/codemirror.js' );
-		$page->js->addUrl( $pathJs.'codemirror.ext.js' );
-		$page->css->theme->addUrl( $path.'lib/codemirror.css' );
-
-		foreach( $modes as $mode )
-			$page->js->addUrl( $path.'mode/'.$mode.'/'.$mode.'.js' );
-		foreach( $addons as $addon )
-			$page->js->addUrl( $path.'addon/'.$addon.'.js' );
-		if( in_array( 'dialog/dialog', $addons ) )
-			$page->css->theme->addUrl( $path.'addon/dialog/dialog.css' );
-		foreach( $themes as $theme )
-			$page->css->theme->addUrl( $path.'theme/'.$theme.'.css' );
-
-		$auto	= $module->config;
-		if( $module->config['auto']->value ){
-			$config		= $env->getConfig()->getAll( 'module.js_codemirror.auto.' );
-			$options	= json_encode( (object) array(
-				'gutter'			=> $config['option.lineNumbers'] && !$config['option.lineWrapping'],
-				'fixedGutter'		=> $config['option.lineNumbers'] && !$config['option.lineWrapping'],
-				'lineNumbers'		=> $config['option.lineNumbers'],
-				'indentUnit'		=> $config['option.indentUnit'],
-				'lineWrapping'		=> $config['option.lineWrapping'],
-				'indentWithTabs'	=> $config['option.indentWithTabs'],
-				'theme'				=> $config['option.theme']
-			) );
-			$script	= '
-$("'.$config['selector'].'").each(function(){									//  iterate found text areas
-	var mirror = CodeMirror.fromTextArea($(this).get(0), '.$options.');
-	mirror.setSize("100%", $(this).height());
-	$(this).data("codemirror", mirror);
-});';
-			$page->js->addScriptOnReady( $script, 7 );
-		}
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_CodeMirror::___onPageApplyModules</hook>
 </module>

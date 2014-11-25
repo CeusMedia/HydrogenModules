@@ -1,4 +1,23 @@
 $(document).ready(function(){
+	CodeMirror.apply = function(selector, options, useDataAttributes){
+		var container = $(selector);
+		container.each(function(){
+			if(useDataAttributes){
+				var key, option;
+				for(key in $(this).data()){
+					if(key.match(/^codemirror/)){
+						option = key.replace(/^codemirror/, "");
+						option = option[0].toLowerCase() + option.substr(1); 
+						options[option] = $(this).data(key);
+					}
+				}
+			}
+			var mirror = CodeMirror.fromTextArea($(this).get(0), options);
+			if(typeof options.height === "undefined")
+				mirror.setSize("100%", $(this).height());
+			$(this).data("codemirror", mirror);
+		});
+	};
 	CodeMirror.isFullScreen = function(cm){
 		return /\bCodeMirror-fullscreen\b/.test(cm.getWrapperElement().className);
 	};
