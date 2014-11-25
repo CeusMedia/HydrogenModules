@@ -17,8 +17,15 @@ list>
 <list
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.10</version>
+	<version>0.2.15</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.10">Adjusted database update handling.</log>
+	<log version="0.2.11">Update: Added version log panel.</log>
+	<log version="0.2.12">Update: Hide file without change by default and show by switch.</log>
+	<log version="0.2.13">Update: Added new panel about local installation.</log>
+	<log version="0.2.14">Update: Moved dev output of local and source module to bottom.</log>
+	<log version="0.2.15">Update: Use module JS:CodeMirror to display database changes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -38,6 +45,7 @@ list>
 		<style source="theme">php-diff.css</style>
 	</files>
 	<relations>
+		<needs type="module">JS_CodeMirror</needs>
 	</relations>
 	<link xml:lang="de" path="admin/module/installer" access="acl" rank="37">Modulinstallation</link>
 	<link xml:lang="en" path="admin/module/installer" access="acl" rank="37">Module Installer</link>
