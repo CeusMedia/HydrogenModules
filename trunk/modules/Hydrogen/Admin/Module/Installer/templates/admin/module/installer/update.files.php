@@ -59,9 +59,43 @@ $tbody		= UI_HTML_Tag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
 $table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );
 
 return '
-<fieldset>
+<fieldset id="panel-module-update-files" class="panel-files">
 	<legend>Dateien</legend>
-	'.$table.'
+	<label>
+		<input type="checkbox" id="input_update_files_show_unchanged" checked="checked"/>
+		Dateien ohne Veränderung ausblenden
+	</label>
+	<div>
+		'.$table.'
+		<div class="panel-if-empty"><small class="muted"></small></div>
+	</div>
 </fieldset>
-';
+<style>
+#panel-module-update-files div {
+    max-height: 320px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
+    }
+#panel-module-update-files div table tr.hidden {
+	display: none;
+    }
+#panel-module-update-files div .panel-if-empty {}
+</style>
+<script>
+function onToggleUpdateFilesWithoutChanges(event){
+	var isChecked = $(this).prop("checked");
+	var table = $("#panel-module-update-files table");
+	var rows = table.find("tbody tr");
+	var rowsLinked = rows.filter(".status-linked");
+	isChecked ? rowsLinked.addClass("hidden") : rowsLinked.removeClass("hidden");
+	var rowsHidden = rows.filter(".hidden");
+	var rowsVisible = rows.not(rowsHidden);
+	rowsVisible.size() ? table.show() : table.hide();
+}
+$(document).ready(function(){
+	$("#input_update_files_show_unchanged").bind("change", onToggleUpdateFilesWithoutChanges );
+	$("#input_update_files_show_unchanged").trigger("change");
+});
+</script>';
 ?>
