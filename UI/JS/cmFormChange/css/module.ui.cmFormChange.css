@@ -1,0 +1,7 @@
+.cmFormChange input.changed,
+.cmFormChange select.changed,
+.cmFormChange textarea.changed,
+.cmFormChange label.checkbox {
+    background: #FFF7CF;
+    }
+
