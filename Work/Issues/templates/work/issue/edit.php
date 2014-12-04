@@ -37,37 +37,40 @@ $(document).ready(function(){
 		$("#panel-mode-0").hide();
 		$("#panel-mode-1").show();
 	});
-});
-';
+});';
+
 $env->page->js->addScript( $script );
 
-
+$content	= $issue->content;
+if( $env->getModules()->has( 'UI_Markdown' ) )
+	$content	= View_Helper_Markdown::transformStatic( $env, $issue->content );
 
 $main	= '
-<h2 class="autocut"><span class="muted">Problem: </span>'.$issue->title.'</h2>
 <div class="content-panel" id="issue-details">
-	<h3 class="autocut">Beschreibung</h3>
+<!--	<h3 class="autocut">Beschreibung</h3>-->
 	<div class="content-panel-inner">
 		<form action="./work/issue/edit/'.$issue->issueId.'" method="post">
 <!--			<div class="issue-id"><small class="muted">Eintrag #'.$issue->issueId.'</small></div>-->
 			<div id="panel-mode-0">
 <!--				<div class="issue-title">'.$issue->title.'</div>-->
-				<div class="issue-content">'.View_Helper_Markdown::transformStatic( $env, $issue->content ).'</div>
+				<div class="issue-content">'.$content.'</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="not-icon-arrow-left icon-list"></i>&nbsp;'.$words['edit']['buttonCancel'].'</a>
 					<button type="button" id="issue-edit-trigger-mode-1" class="btn not-btn-small btn-success"><i class="icon-pencil icon-white"></i>&nbsp;verändern</button>
+					&nbsp;&nbsp;|&nbsp;&nbsp;
+					<a href="./work/issue/edit/'.$issue->issueId.'" class="btn btn-info btn-small not-btn-mini"><i class="icon-refresh icon-white"></i> aktualisieren</a>
 				</div>
 			</div>
-			<div id="panel-mode-1">
+			<div id="panel-mode-1" style="display: none">
 				<div class="row-fluid">
-					<div class="span8">
+					<div class="span12">
 						<label for="title" class="mandatory">'.$words['edit']['labelTitle'].'</label>
 						'.UI_HTML_Elements::Input( 'title', $issue->title, 'span12 -max mandatory' ).'
 					</div>
-					<div class="span4">
+<!--					<div class="span4">
 						<label for="input_projectId">'.$words['add']['labelProject'].'</label>
 						'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
-					</div>
+					</div>-->
 				</div>
 				<div class="row-fluid">
 					<label for="content">'.$words['edit']['labelContent'].'</label>
@@ -81,21 +84,19 @@ $main	= '
 			</div>
 		</form>
 	</div>
-</div>
-';
-
-
+</div>';
 
 $control	= $view->loadTemplateFile( 'work/issue/edit.info.php' );
 $main		.= $view->loadTemplateFile( 'work/issue/edit.changes.php' );
 $main		.= $view->loadTemplateFile( 'work/issue/edit.emerge.php' );
 
 return '
+<h2 class="autocut"><span class="muted">Problem: </span>'.$issue->title.'</h2>
 <div class="issue-edit row-fluid">
-	<div class="span8">
+	<div class="span9">
 		'.$main.'
 	</div>
-	<div class="span4">
+	<div class="span3">
 		'.$control.'
 	</div>
 </div>

@@ -33,6 +33,8 @@ return '
 		<dl class="info list">
 			<dt>'.$words['edit']['labelId'].'</dt>
 			<dd><big>#'.$issue->issueId.'</big></dd>
+			<dt>'.$words['edit']['labelProject'].'</dt>
+			<dd><span class="project status'.$issue->project->status.'">'.$issue->project->title.'</span></dd>
 			<dt>'.$words['edit']['labelType'].'</dt>
 			<dd><span class="issue-type type-'.$issue->type.'">'.$words['types'][$issue->type].'</span></dd>
 			<dt>'.$words['edit']['labelSeverity'].'</dt>

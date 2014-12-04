@@ -36,29 +36,36 @@ $pagination	= new View_Helper_Pagination();
 $pagination	= $pagination->render( './work/issue', $number, 10, $page );
 
 return '
-<fieldset id="issue-list">
-	<legend>Einträge ('.$number.' von '.$total.')</legend>
-	<table class="table table-condensed">
-		<colgroup>
-			<col width="47%"/>
-			<col width="10%"/>
-			<col width="12%"/>
-			<col width="18%"/>
-			<col width="13%"/>
-		</colgroup>
-		<tr>
-			<th>Kurzbeschreibung / <br/>Veränderungen</th>
-			<th>Typ / Schweregrad</th>
-			<th>Zustand / Fortschritt</th>
-			<th>Reporter / Manager</th>
-			<th>gemeldet / bearbeitet</th>
-		</tr>
-		'.join( $rows ).'
-	</table>
-	'.$pagination.'
-	<div class="buttonbar">
-		<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> neuer Eintrag</a>
+<div class="content-panel">
+	<h3>Probleme</h3>
+	<div class="content-panel-inner">
+<!--		<legend>Einträge ('.$number.' von '.$total.')</legend>-->
+		<table class="table table-condensed">
+			<colgroup>
+				<col width="47%"/>
+				<col width="10%"/>
+				<col width="12%"/>
+				<col width="18%"/>
+				<col width="13%"/>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>Kurzbeschreibung / Veränderungen</th>
+					<th>Typ / Schweregrad</th>
+					<th>Zustand / Fortschritt</th>
+					<th>Reporter / Manager</th>
+					<th>gemeldet / bearbeitet</th>
+				</tr>
+			</thead>
+			<tbody>
+				'.join( $rows ).'
+			</tbody>
+		</table>
+		'.$pagination.'
+		<div class="buttonbar">
+			<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> neuer Eintrag</a>
+		</div>
 	</div>
-</fieldset>
+</div>
 ';
 ?>
