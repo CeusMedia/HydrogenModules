@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3.2">Adjusted CSS definitions.</log>
 	<log version="0.3.3">Added hook to update project modification timestamp.</log>
 	<log version="0.3.4">Added priority attribute and filter.</log>
+	<log version="0.3.5">Extended logic methods.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
