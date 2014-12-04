@@ -16,20 +16,40 @@ class Logic_CustomerProject{
 
 	protected function __clone(){
 	}
-	
+
 	public static function getInstance( $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_CustomerProject( $env );
 		return self::$instance;
 	}
 
+	public function add( $customerId, $projectId, $type ){
+		$session	= $this->env->getSession();
+		return $this->modelRelation->add( array(
+			'customerId'	=> $customerId,
+			'projectId'		=> $projectId,
+			'userId'		=> $session->get( 'userId' ),
+			'type'			=> $type,
+			'status'		=> 1,
+			'createdAt'		=> time(),
+		) );
+	}
+
 	public function getProjects( $customerId ){
 		$list		= array();
 		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId ) );
 		foreach( $relations as $relation ){
-			$list[$relation->projectId]	= $this->modelProject->get( $relation->projectId );
+			$relation->project	= $this->modelProject->get( $relation->projectId );
+			$list[$relation->projectId]	= $relation;
 		}
 		return $list;
+	}
+
+	public function remove( $customerId, $projectId ){
+		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId, 'projectId' => $projectId ) );
+		foreach( $relations as $relation )
+			$this->modelRelation->remove( $relation->customerProjectId );
+		return count( $relations );
 	}
 }
 ?>
