@@ -1,15 +1,41 @@
 <?php
-
+try{
 if( !$issue->notes )
 	return;
-//	print_m( $issue->notes );
-//	die;
+$modelUser	= new Model_User( $env );
+
 $list	= array();
 foreach( $issue->notes as $note ){
 	$noteChanges	= array();
 	foreach( $note->changes as $change ){
 		$labelType	= UI_HTML_Tag::create( 'dt', $words['changes'][$change->type] );
 		switch( $change->type ){
+			case 1:
+			case 2:
+				$from	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				$to		= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				if( $change->from ){
+					$from	= $modelUser->get( $change->from )->username;
+					$from	= UI_HTML_Tag::create( 'a', $from, array( 'href' => './user/view/'.$change->from ) );
+					$from	= UI_HTML_Tag::create( 'span', $from, array( 'class' => 'issue-user' ) );
+				}
+				if( $change->to ){
+					$to		= $modelUser->get( $change->to )->username;
+					$to		= UI_HTML_Tag::create( 'a', $to, array( 'href' => './user/view/'.$change->from ) );
+					$to		= UI_HTML_Tag::create( 'span', $to, array( 'class' => 'issue-user' ) );
+				}
+				$change	= $from." -> ".$to;
+				break;
+			case 3:
+				$logic	= new Logic_Project( $this->env );
+				$from	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				$to		= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				if( $change->from )
+					$from	= UI_HTML_Tag::create( 'span', $logic->get( $change->from )->title, array( 'class' => '' ) );
+				if( $change->to )
+					$to		= UI_HTML_Tag::create( 'span', $logic->get( $change->to )->title, array( 'class' => '' ) );
+				$change	= $from." -> ".$to;
+				break;
 			case 4:
 				$from	= UI_HTML_Tag::create( 'span', $words['types'][$change->from], array( 'class' => 'issue-type type-'.$change->from ) );
 				$to		= UI_HTML_Tag::create( 'span', $words['types'][$change->to], array( 'class' => 'issue-type type-'.$change->to ) );
@@ -58,7 +84,6 @@ foreach( $issue->notes as $note ){
 		else
 			$noteText	= nl2br( $note->note );
 	}
-
 	$facts	= UI_HTML_Tag::create( 'dl', '
 		<dt>Bearbeiter</dt>
 		<dd>
@@ -78,6 +103,7 @@ foreach( $issue->notes as $note ){
 }
 $list	= UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped' ) );
 
+
 return '
 <style>
 #issue-change-list-facts dl dt {
@@ -90,4 +116,8 @@ return '
 		'.$list.'
 	</div>
 </div>';
+}
+catch( Exception $e ){
+	UI_HTML_Exception_Page::display( $e);
+}
 ?>

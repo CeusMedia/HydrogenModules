@@ -2,7 +2,7 @@
 
 $layout	= "control";				//  layout: control|top
 
-$list	= $numberFilters ? 'list' : 'graphs';
+$list	= 1 || $numberFilters ? 'list' : 'graphs';
 $list	= require_once 'templates/work/issue/index.'.$list.'.php';
 
 if( $layout == "control" ){

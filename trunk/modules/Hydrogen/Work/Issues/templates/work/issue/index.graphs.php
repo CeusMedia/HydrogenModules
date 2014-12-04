@@ -84,7 +84,7 @@ $(document).ready(function(){
 	}
 });
 </script>
-<!--<div class="not-column-left-60" style="float: left; width: '.( $width + 40 ).'px">
+<div class="not-column-left-60" style="float: left; width: '.( $width + 40 ).'px">
 	<div class="content-panel">
 		<h3>Übersicht</h3>
 		<div class="content-panel-inner">
@@ -102,7 +102,6 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
-</div>-->
 	<div class="content-panel">
 		<h3>Notierte Probleme</h3>
 		<div class="content-panel-inner">
@@ -132,5 +131,6 @@ $(document).ready(function(){
 				'.$buttonAdd.'
 			</div>
 		</div>
-	</div>';
+	</div>
+</div>';
 ?>
