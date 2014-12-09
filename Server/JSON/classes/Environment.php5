@@ -42,10 +42,10 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
 	}
 
-	public function get( $key ){
+	public function get( $key, $strict = TRUE ){
 		if( $key == "dbc" )
 			return $this->getDatabase();
-		return parent::get( $key );
+		return parent::get( $key, $strict );
 	}
 }
 ?>
