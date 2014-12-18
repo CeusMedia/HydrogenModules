@@ -1,11 +1,13 @@
 <?php
 class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 
+	protected $logic;
 	protected $useMissions	= FALSE;
 	protected $useCompanies	= FALSE;
 	protected $useCustomers	= FALSE;
 
 	public function __onInit(){
+		$this->logic		= new Logic_Project( $this->env );
 		$this->useMissions	= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies	= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 		$this->useCustomers	= $this->env->getModules()->has( 'Manage_Customers' );
@@ -151,10 +153,16 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		if( $mode === "reset" )
 			foreach( array_keys( $session->getAll( 'filter_manage_project_' ) ) as $key )
 				$session->remove( 'filter_manage_project_'.$key );
+		if( $request->has( 'id' ) )
+			$session->set( 'filter_manage_project_id', $request->get( 'id' ) );
+		if( $request->has( 'query' ) )
+			$session->set( 'filter_manage_project_query', $request->get( 'query' ) );
 		if( $request->has( 'status' ) )
 			$session->set( 'filter_manage_project_status', $request->get( 'status' ) );
 		if( $request->has( 'priority' ) )
 			$session->set( 'filter_manage_project_priority', $request->get( 'priority' ) );
+		if( $request->has( 'user' ) )
+			$session->set( 'filter_manage_project_user', $request->get( 'user' ) );
 		if( $request->has( 'order' ) )
 			$session->set( 'filter_manage_project_order', $request->get( 'order' ) );
 
@@ -170,8 +178,13 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ){
+	protected function getWorkersOfMyProjects(){
 		$session			= $this->env->getSession();
+		return $this->logic->getCoworkers( $session->get( 'userId' ) );
+	}
+
+	public function index( $page = NULL ){
+		$session		= $this->env->getSession();
 
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
 
@@ -185,15 +198,17 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$session->set( 'filter_manage_project_page', 0 );								//  assume first page and store in session
 			$page	= (int) $session->get( 'filter_manage_project_page' );						//  get page from session
 		}
-
 		$modelProject		= new Model_Project( $this->env );
 		$modelProjectUser	= new Model_Project_User( $this->env );
 		$modelUser			= new Model_User( $this->env );
 		if( $this->useMissions )
 			$modelMission	= new Model_Mission( $this->env );
 
+		$filterId			= $session->get( 'filter_manage_project_id' );
+		$filterQuery		= $session->get( 'filter_manage_project_query' );
 		$filterStatus		= $session->get( 'filter_manage_project_status' );
 		$filterPriority		= $session->get( 'filter_manage_project_priority' );
+		$filterUser			= $session->get( 'filter_manage_project_user' );
 		$filterOrder		= $session->get( 'filter_manage_project_order' );
 		$filterDirection	= $session->get( 'filter_manage_project_direction' );
 		$filterLimit		= $session->get( 'filter_manage_project_limit' );
@@ -201,18 +216,53 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$filterStatus	= array();
 		if( !is_array( $filterPriority ) )
 			$filterPriority	= array();
+		if( !is_array( $filterUser ) )
+			$filterUser		= array();
 
 		$conditions	= array();
 		if( !$this->env->getAcl()->hasFullAccess( $session->get( 'roleId' ) ) ){
-			$projects	= array( 0 => NULL );
+			$projects	= array();
 			foreach( $modelProjectUser->getAllByIndex( 'userId', $session->get( 'userId' ) ) as $relation )
 				$projects[$relation->projectId]	= NULL;
 			$conditions['projectId']	= array_keys( $projects );
+		}
+
+		if( (int) $filterId > 0 )
+			$conditions['projectId']	= array( $filterId );
+		else{
+			if( strlen( trim( $filterQuery ) ) ){
+				$projectIds		= array();
+				$filters	= array(
+					"title LIKE '%".$filterQuery."%'",
+					"description LIKE '%".$filterQuery."%'",
+				);
+				$query	= "SELECT * FROM ".$modelProject->getName()." WHERE ".join( " OR ", $filters )." LIMIT 1000";
+				foreach( $this->env->getDatabase()->query( $query ) as $result )
+					$projectIds[]	= $result['projectId'];
+				if( isset( $conditions['projectId'] ) )
+					$conditions['projectId']	= array_intersect( $conditions['projectId'], $projectIds );
+				else
+					$conditions['projectId']	= $projectIds;
+			}
+
+			if( $filterUser ){
+				$projectIds	= array();
+				foreach( $modelProjectUser->getAll( array( 'userId' => $filterUser ) ) as $relation )
+					$projectIds[]	= $relation->projectId;
+				if( isset( $conditions['projectId'] ) )
+					$conditions['projectId']	= array_intersect( $conditions['projectId'], $projectIds );
+				else
+					$conditions['projectId']	= $projectIds;
+			}
+
 		}
 		if( $filterStatus )
 			$conditions['status']	= $filterStatus;
 		if( $filterPriority )
 			$conditions['priority']	= $filterPriority;
+		if( isset( $conditions['projectId'] ) && !$conditions['projectId'] )
+			unset( $conditions['projectId'] );
+
 		$orders	= array();
 		if( !( $filterOrder && $filterDirection ) ){
 			$filterOrder		= "title";
@@ -228,7 +278,6 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$limits	= array( $page * $filterLimit, $filterLimit );
 
 		$projects	= array();
-
 		foreach( $modelProject->getAll( $conditions, $orders, $limits ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $modelProjectUser->getAllByIndex( 'projectId', $project->projectId );
@@ -237,12 +286,15 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			if( $this->useMissions )
 				$project->missions	= $modelMission->countByIndex( 'projectId', $project->projectId );
 		}
-
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $total );
 		$this->addData( 'projects', $projects );
+		$this->addData( 'users', $this->logic->getCoworkers( $session->get( 'userId' ) ) );
+		$this->addData( 'filterId', $filterId );
+		$this->addData( 'filterQuery', $filterQuery );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterPriority', $filterPriority );
+		$this->addData( 'filterUser', $filterUser );
 		$this->addData( 'filterOrder', $filterOrder );
 		$this->addData( 'filterDirection', $filterDirection );
 		$this->addData( 'filterLimit', $filterLimit );
