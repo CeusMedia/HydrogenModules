@@ -26,6 +26,21 @@ foreach( $words['priorities'] as $key => $value ){
 }
 $optPriority	= join( '', $optPriority );
 
+
+/*  --  USERS  --  */
+$optUser	= array( UI_HTML_Tag::create( 'option', 'alle', array(
+	'selected'	=> !$filterUser ? 'selected' : NULL,
+) ) );
+foreach( $users as $user ){
+	$attributes		= array(
+		'value'		=> $user->userId,
+		'class'		=> 'user user-status status'.$user->status,
+		'selected'	=> in_array( $user->userId, $filterUser ) ? 'selected' : NULL
+	);
+	$optUser[]		= UI_HTML_Tag::create( 'option', $user->username, $attributes );
+}
+$optUser	= join( '', $optUser );
+
 $optOrder	= UI_HTML_Elements::Options( $words['filter-orders'], $filterOrder );
 
 $disabled   = $filterDirection == 'ASC';
@@ -41,6 +56,16 @@ return '
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/filter" method="post">
 			<div class="row-fluid">
+				<div class="span10">
+					<label for="input_query">Suchbegriff</label>
+					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery, ENT_QUOTES, 'utf-8' ).'"/>
+				</div>
+				<div class="span2">
+					<label for="input_id">ID</label>
+					<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filterId, ENT_QUOTES, 'utf-8' ).'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_status">Status</label>
 					<select name="status[]" multiple id="input_status" size="6" class="span12">'.$optStatus.'</select>
@@ -50,6 +75,12 @@ return '
 				<div class="span12">
 					<label for="input_priority">Priorität</label>
 					<select name="priority[]" multiple id="input_priority" size="6" class="span12">'.$optPriority.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_user">Mitarbeiter</label>
+					<select name="user[]" multiple id="input_user" size="6" class="span12">'.$optUser.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">

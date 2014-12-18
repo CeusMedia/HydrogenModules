@@ -16,6 +16,31 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->getProject( $projectId );
 	}
 
+	public function getCoworkers( $userId, $projectId = 0 ){
+		if( $projectId ){
+			$users	= $this->getProjectUsers( $projectId );
+			if( !isset( $users[$userId] ) )
+				throw new RuntimeException( 'User with ID '.$userId.' is not member of project with ID '.$projectId );
+			unset( $users[$userId] );
+			return $users;
+		}
+		$modelProjectUser	= new Model_Project_User( $this->env );
+		$users		= array();
+		$projectIds	= array();
+		$userIds	= array( -1 );
+		$myProjects	= $modelProjectUser->getAll( array( 'userId' => $userId ) );
+		foreach( $myProjects as $relation )
+			$projectIds[]   = $relation->projectId;
+		array_unique( $projectIds );
+		foreach( $projectIds as $projectId )
+			foreach( $modelProjectUser->getAll( array( 'projectId' => $projectId ) ) as $relation )
+				$userIds[]  = $relation->userId;
+		$userIds	= array_unique( $userIds );
+		$modelUser	= new Model_User( $this->env );
+		unset( $userIds[array_search( $userId, $userIds )] );
+		return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+    }
+
 	public function getProject( $projectId ){
 		return $this->model->get( $projectId );
 	}
