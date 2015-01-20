@@ -3,7 +3,8 @@
 	<title>Google Analytics Tracker</title>
 	<description><![CDATA[Request tracking using Google Analytics.]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
+	<log version="0.2.1">Moved script called after document ready.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,7 +17,9 @@
 	<config protected="no" type="boolean" name="anonymizeIP">no</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$options	= $env->getConfig()->getAll( 'module.resource_tracker_google.', TRUE );
-		if( $options->get( 'enabled' ) )
-			$context->js->addScript( 'initGoogleAnalytics('.json_encode( $options->getAll() ).');' );
+		if( $options->get( 'enabled' ) ){
+			$script	= 'initGoogleAnalytics('.json_encode( $options->getAll() ).');';
+			$env->getPage()->runScript( $script, 9 );
+		}
 	]]></hook>
 </module>
