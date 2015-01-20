@@ -23,6 +23,16 @@ return '
 		<h4>'.$w->heading.'</h4>
 		<form name="work_bills_filter" action="./work/bill/filter" method="post">
 			<div class="row-fluid">
+				<div class="span9">
+					<label for="input_term">'.$w->labelTerm.'</label>
+					<input type="text" name="term" id="input_term" class="span12" value="'.htmlentities( $filters->get( 'term' ), ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="span3">
+					<label for="input_id">'.$w->labelId.'</label>
+					<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filters->get( 'id' ), ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_type">'.$w->labelType.'</label>
 					<select multiple="multiple" rows="2" name="type[]" id="input_type" class="span12" style="height: 3em">'.$optType.'</select>

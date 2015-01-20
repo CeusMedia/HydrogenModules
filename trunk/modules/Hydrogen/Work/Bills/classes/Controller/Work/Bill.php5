@@ -59,6 +59,8 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 		$session	= $this->env->getSession();
 
 		if( $reset ){
+			$session->remove( 'filter_work_bill_id' );
+			$session->remove( 'filter_work_bill_term' );
 			$session->remove( 'filter_work_bill_type' );
 			$session->remove( 'filter_work_bill_status' );
 			$session->remove( 'filter_work_bill_start' );
@@ -68,6 +70,8 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 			$session->remove( 'filter_work_bill_direction' );
 		}
 		else{
+			$session->set( 'filter_work_bill_id', $request->get( 'id' ) );
+			$session->set( 'filter_work_bill_term', $request->get( 'term' ) );
 			$session->set( 'filter_work_bill_type', $request->get( 'type' ) );
 			$session->set( 'filter_work_bill_status', $request->get( 'status' ) );
 			$session->set( 'filter_work_bill_start', $request->get( 'start' ) );
@@ -98,6 +102,10 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 		$conditions	= array(
 			'userId'	=> $this->userId,
 		);
+		if( $filters->get( 'id' ) )
+			$conditions['billId']	= $filters->get( 'id' );
+		if( $filters->get( 'term' ) )
+			$conditions['title']	= '%'.$filters->get( 'term' ).'%';
 		if( count( $filters->get( 'status' ) ) )
 			$conditions['status']	= $filters->get( 'status' );
 		if( count( $filters->get( 'type' ) ) )
