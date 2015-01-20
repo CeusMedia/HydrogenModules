@@ -1,21 +1,12 @@
 <?php
 
 $model	= new Model_Bill( $this->env );
-$year	= date( 'Y' );
-$month	= date( 'm' );
-$yearStart	= $year;
-$monthStart	= $month - 1;
-$yearEnd	= $year;
-$monthEnd	= $month + 2;
-if( $monthStart < 1 ){
-	$yearStart	= $year - 1;
-	$monthStart = 12;
-}
-if( $monthEnd > 12 ){
-	$yearEnd	= $year + 1;
-	$monthEnd	-= 12;
-}
 
+$daysFuture	= 60;
+$dateFuture	= date( 'Ymd', time() + $daysFuture * 24 * 60 * 60 );
+
+
+/*  --  OPEN BILLS: PAST  --  */
 $conditions	= array(
 	'userId'	=> $userId,
 	'date'		=> '<'.date( 'Ymd' ),
@@ -23,29 +14,27 @@ $conditions	= array(
 );
 $sum	= 0;
 $openBills	= $model->getAll( $conditions );
+foreach( $openBills as $nr => $bill )
+	$sum	+= $bill->type ? -1 * $bill->price : $bill->price;
+$listOpenPast	= $view->renderTable( $openBills, './work/bill/graph', FALSE );
 
-foreach( $openBills as $bill ){
-	if( $bill->date < date( 'Ymd' ) )
-		$sum	+= $bill->type ? -1 * $bill->price : $bill->price;
-}
 
-$listOpenPast	= $view->renderTable( $model->getAll( array(
-	'userId'	=> $userId,
-	'date'		=> '<='.date( 'Ymd' ),
-	'status'	=> 0
-) ), './work/bill/graph', FALSE );
-$listOpenFuture	= $view->renderTable( $model->getAll( array(
+/*  --  OPEN BILLS: FUTURE  --  */
+$openFutureBills	= $model->getAll( array(
 	'userId'	=> $userId,
 	'date'		=> '>'.date( 'Ymd' ),
 	'status'	=> 0
-) ), './work/bill/graph', FALSE );
+), array( 'date' => 'ASC' ) );
+
+foreach( $openFutureBills as $nr => $bill )
+	if( $bill->date > $dateFuture )
+		unset( $openFutureBills[$nr] );
+$listOpenFuture	= $view->renderTable( $openFutureBills, './work/bill/graph', FALSE );
 
 
-
+/*  --  GRAPH DATA  --  */
 $conditions	= array(
 	'userId'	=> $userId,
-//	'date'		=> '>'.$yearStart.$monthStart.'00',
-//	'date'		=> '<'.$yearEnd.$monthEnd.'32',
 );
 $orders		= array( 'date' => 'ASC' );
 $bills		= $model->getAll( $conditions, $orders );
@@ -55,7 +44,7 @@ $balance	= $sum;
 $year		= date( 'Y' );
 $month		= date( 'm' );
 $day		= date( 'd' );
-for( $i=0; $i<60; $i++ ){
+for( $i=0; $i<$daysFuture; $i++ ){
 	$time 	= time() + $i * 24 * 60 * 60;
 	$date	= date( 'Ymd', $time );
 	foreach( $bills as $bill )
@@ -64,6 +53,8 @@ for( $i=0; $i<60; $i++ ){
 	$dataGraph[]	= array( date( 'j.n.', $time ), $balance );
 }
 
+
+/*  --  FILTERS  --  */
 $optType	= array( '' => '- alle -' ) + $words['types'];
 $optType	= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
@@ -94,7 +85,7 @@ return '
 							<td style="text-align: right">'.$view->renderPrice( $sum,  $sum < 0, '&nbsp;&euro;' ).'</td>
 						</tr>
 						<tr>
-							<td>Endstand</td>
+							<td>Endstand <small class="muted">('.date( 'j.n', strtotime( $dateFuture ) ).')</small></td>
 							<td style="text-align: right"><b>'.$view->renderPrice( $balance,  $balance < 0, '&nbsp;&euro;' ).'</b></td>
 						</tr>
 					</tbody>
