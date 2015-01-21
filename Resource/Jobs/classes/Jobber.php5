@@ -34,7 +34,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 	}
 
 	public function log( $message ){
-		error_log( time().": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.log" );
+		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.log" );
 	}
 
 	public function logException( $exception ){
@@ -43,7 +43,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 	}
 
 	public function logError( $message ){
-		error_log( time().": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.error.log" );
+		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.error.log" );
 		$this->out( "Exception: ".$message."\n" );
 	}
 
