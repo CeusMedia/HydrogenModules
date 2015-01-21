@@ -85,7 +85,7 @@ class Job_Work_Mission extends Job_Abstract{
 			}
 			$modelChange->remove( $change->missionChangeId );									//  remove change
 		}
-		$this->out( 'Sent '.$count.' mails.' );													//  note sent mails
+		$this->out( date( "Y-m-d H:i:s" ).' sent '.$count.' mails.' );							//  note sent mails
 		return $count;																			//  return number of sent mails
 	}
 

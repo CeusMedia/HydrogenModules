@@ -4,6 +4,29 @@ var WorkMissionsEditor = {
 	markdown: null,
 	converter: null,
 	textarea: null,
+	mission: null,
+	missionWorkerId: 0,
+
+	bindWorkerSelectUpdateOnProjectInputChange: function(idSelectWorker, idInputProject){
+		var selectProject = $("#"+idInputProject);
+		if(selectProject.size()){
+			if( !this.mission)
+				$("#"+idSelectWorker).bind("change", function(){
+					alert($(this).val());
+					WorkMissionsEditor.missionWorkerId = $(this).val();
+				});
+			selectProject.bind("change", function(){
+				var workerId;
+				var projectId = selectProject.val();
+				if(WorkMissionsEditor.mission)
+					workerId = WorkMissionsEditor.mission.workerId;
+				else
+					workerId = WorkMissionsEditor.missionWorkerId;
+				WorkMissionsEditor.formUpdateWorkers(projectId, workerId, {idSelectWorker: idSelectWorker});
+			}).trigger("change");
+		}
+	},
+
 	fallbackFormShowOptionals: function(elem){
 		var form = $(elem.form);
 		var name = $(elem).attr("name");
@@ -36,6 +59,32 @@ var WorkMissionsEditor = {
 				toShow.show();
 		}
 	},
+
+	formUpdateWorkers: function(projectId, currentWorkerId, options){
+		var options = $.extend({
+			idSelectWorker: "input_workerId",
+			urlGetProjectUsers: "./work/mission/ajaxGetProjectUsers/"+projectId,
+			allowEmpty: true,
+		}, options);
+		$.ajax({
+			url: options.urlGetProjectUsers,
+			dataType: "json",
+			success: function(json){
+				var selectWorker = $("#"+options.idSelectWorker).html("");
+				if(options.allowEmpty){
+					var option = $("<option></option>").val("").html("-");
+					selectWorker.append(option);
+				}
+				$(json).each(function(nr){
+					var option = $("<option></option>").val(this.userId).html(this.username);
+					if(currentWorkerId === this.userId)
+						option.prop("selected", "selected");
+					selectWorker.append(option);
+				});
+			}
+		});
+	},
+
 	initForms: function(){
 		$("#input_title").focus();
 		$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
@@ -78,6 +127,7 @@ var WorkMissionsEditor = {
 				changed ? elem.addClass('changed') : elem.removeClass('changed');
 			});
 		});
+		this.bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
 	},
 
 	init: function(missionId){

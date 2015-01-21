@@ -40,7 +40,8 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 
 	public function index(){
 		$page		= $this->env->getPage();
-		$page->js->addScriptOnReady( 'WorkMissions.init("now");' );
+//		$page->js->addScriptOnReady( 'WorkMissions.init("now");' );			//  @deprecated use Page::runScript instead
+		$page->runScript( 'WorkMissions.init("now");', 9 );
 	}
 
 	public function remove(){
