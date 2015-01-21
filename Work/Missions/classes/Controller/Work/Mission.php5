@@ -455,6 +455,17 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function ajaxGetProjectUsers( $projectId ){
+		$list	= array();
+		if( $this->useProjects ){
+			$model	= new Model_Project( $this->env );
+			foreach( $model->getProjectUsers( (int) $projectId ) as $user )
+				$list[$user->username]    = $user;
+		}
+		ksort( $list );
+		print( json_encode( array_values( $list ) ) );
+	}
+
 	public function filter(){
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		if( $this->request->has( 'reset' ) ){

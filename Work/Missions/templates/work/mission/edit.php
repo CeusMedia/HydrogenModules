@@ -72,8 +72,8 @@ $panelEdit	= '
 					<select name="projectId" id="input_projectId" class="span12">'.$optProject.'</select>
 				</div>
 				<div class="span2 -column-left-20">
-					<label for="input_workerId">'.$w->labelWorker.'</label>
-					<select name="workerId" id="input_workerId" class="span12">'.$optWorker.'</select>
+					<label for="input_workerId" class="mandatory required">'.$w->labelWorker.'</label>
+					<select name="workerId" id="input_workerId" class="span12" required="required">'.$optWorker.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -188,5 +188,12 @@ return '
 	<div class="span12">
 		'.$panelContent.'
 	</div>
-</div>';
+</div>
+<script>
+/*$(document).ready(function(){
+//	WorkMissionsEditor.mission = '.json_encode( $mission ).';
+//	bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
+});*/
+</script>
+';
 ?>

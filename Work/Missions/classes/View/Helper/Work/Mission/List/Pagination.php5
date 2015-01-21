@@ -6,7 +6,7 @@ class View_Helper_Work_Mission_List_Pagination extends CMF_Hydrogen_View_Helper_
 		$offset			= abs( (int) $page ) * $limit;
 		$attrBtnPrev	= array( 'type' => 'button', 'class' => 'btn disabled' );
 		$attrBtnNext	= array( 'type' => 'button', 'class' => 'btn disabled' );
-		$pages			= ceil( $total / $limit );
+		$pages			= max( 1, ceil( $total / $limit ) );
 		$page		= $reverse ? $pages - $page - 1 : $page;
 		if( $page ){
 			$prevPage	= $reverse ? $page + 1 : $page - 1;
