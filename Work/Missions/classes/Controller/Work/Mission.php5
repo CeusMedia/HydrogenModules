@@ -521,6 +521,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$order		= $this->session->get( $this->filterKeyPrefix.'order' );
 		$orders		= array(					//  collect order pairs
 			$order		=> $direction,			//  selected or default order and direction
+//			'dayStart'	=> 'ASC',
 			'timeStart'	=> 'ASC',				//  order events by start time
 		);
 		if( $order != "title" )					//  if not ordered by title
