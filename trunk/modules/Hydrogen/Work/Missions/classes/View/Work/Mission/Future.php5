@@ -7,18 +7,28 @@ class View_Work_Mission_Future extends CMF_Hydrogen_View{
 		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
 		extract( $this->getData() );
 
-		$helperButtons	= new View_Helper_Work_Mission_List_Pagination( $this->env );
+		if( $missions ){
+			$helperButtons	= new View_Helper_Work_Mission_List_Pagination( $this->env );
+			$helperList		= new View_Helper_Work_Mission_List( $this->env );
 
-		$helperList		= new View_Helper_Work_Mission_List( $this->env );
-		$helperList->setMissions( $this->getData( 'missions' ) );
-		$helperList->setWords( $words );
-		$helperList->setBadges( FALSE, TRUE, TRUE );
+			$helperList->setMissions( $this->getData( 'missions' ) );
+			$helperList->setWords( $words );
+			$helperList->setBadges( FALSE, TRUE, TRUE );
+
+			$listLarge		= $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE );
+			$buttonsLarge	= $helperButtons->render( $total, $limit, $page );
+		}
+		else{
+			$buttonsLarge	= "";
+			$listLarge		= '<div class="alert alert-warning"><em>'.$words['index']['messageNoEntries'].'</em></div>';
+        }
+
 		$data			= array(
 			'buttons'	=> array(
-				'large'	=> $helperButtons->render( $total, $limit, $page ),
+				'large'	=> $buttonsLarge,
 			),
 			'lists' => array(
-				'large'	=> $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE )
+				'large'	=> $listLarge,
 			)
 		);
 		print( json_encode( $data ) );

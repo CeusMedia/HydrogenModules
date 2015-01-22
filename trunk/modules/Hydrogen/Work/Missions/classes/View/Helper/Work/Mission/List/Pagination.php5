@@ -2,11 +2,13 @@
 class View_Helper_Work_Mission_List_Pagination extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ){
+		if( !$total )
+			return "";
 		$limit			= abs( (int) $limit ) >= 10 ? abs( $limit ) : 10;
 		$offset			= abs( (int) $page ) * $limit;
 		$attrBtnPrev	= array( 'type' => 'button', 'class' => 'btn disabled' );
 		$attrBtnNext	= array( 'type' => 'button', 'class' => 'btn disabled' );
-		$pages			= max( 1, ceil( $total / $limit ) );
+		$pages			= ceil( $total / $limit );
 		$page		= $reverse ? $pages - $page - 1 : $page;
 		if( $page ){
 			$prevPage	= $reverse ? $page + 1 : $page - 1;
