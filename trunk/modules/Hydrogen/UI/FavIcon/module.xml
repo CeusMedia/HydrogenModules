@@ -3,15 +3,27 @@
 	<title>UI: Favorite Icon</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>0.1</version>
+	<version>0.3.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Add support for Apple touch icon.</log>
+	<log version="0.3.1">Add support for icons within themes.</log>
+	<log version="0.3.2">Extracted hook into view helper class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
-	<files/>
+	<files>
+		<class>View/Helper/Favicon.php5</class>
+		<image>favicon.ico</image>
+		<image>apple-touch-icon.png</image>
+		<image>apple-touch-icon.psd</image>
+	</files>
 	<relations/>
-	<config protected="yes" type="string" name="url" mandatory="no">./images/favicon.ico</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-if( strlen( trim( $module->config['url']->value ) ) )
-	$context->addFavouriteIcon( $module->config['url']->value );
-]]></hook>
+	<config protected="yes" mandatory="no" type="boolean" name="favorite.active">yes</config>
+	<config protected="yes" mandatory="no" type="boolean" name="favorite.fromTheme">yes</config>
+	<config protected="yes" mandatory="yes" type="string" name="favorite.name">favicon.ico</config>
+	<config protected="yes" mandatory="no" type="boolean" name="touch.active">yes</config>
+	<config protected="yes" mandatory="no" type="boolean" name="touch.fromTheme">yes</config>
+	<config protected="yes" mandatory="yes" type="string" name="touch.name">apple-touch-icon.png</config>
+	<hook type="resource" resource="Page" event="build">View_Helper_Favicon::___onPageBuild</hook>
 </module>
