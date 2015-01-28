@@ -146,6 +146,11 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
+		if( !$modelUser->get( $userId ) ){
+			$messenger->noteError( 'Invalid user ID' );
+			$this->restart( NULL, TRUE );
+		}
+
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$nameMinLength	= $options->get( 'name.length.min' );
 		$nameMaxLength	= $options->get( 'name.length.max' );
