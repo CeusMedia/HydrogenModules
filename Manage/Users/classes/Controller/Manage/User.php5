@@ -42,7 +42,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
 		) );
 	}
-	
+
 	public function accept( $userId ) {
 		$this->setStatus( $userId, 1 );
 	}
@@ -258,8 +258,11 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
 			if( preg_match( '/^filter-user-/', $key ) ){									//  if setting is users filter
 				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )			// 	filter is within list of allowed filters
+				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) ){			// 	filter is within list of allowed filters
+					if( $column === 'username' )											//  filter is username
+						$value = preg_replace( "/\*/", "%", $value );						//  transform for SQL: * -> %
 					$filters[$column] = $value;												//  enlist filter
+				}
 			}
 		}
 		$orders	= array();
