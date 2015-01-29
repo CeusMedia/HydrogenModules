@@ -12,7 +12,6 @@ var WorkMissionsEditor = {
 		if(selectProject.size()){
 			if( !this.mission)
 				$("#"+idSelectWorker).bind("change", function(){
-					alert($(this).val());
 					WorkMissionsEditor.missionWorkerId = $(this).val();
 				});
 			selectProject.bind("change", function(){
