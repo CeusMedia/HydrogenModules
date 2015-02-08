@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: Ubuntu</title>
+	<description><![CDATA[Integration of Ubuntu typeface.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<company site="http://font.ubuntu.com/">Canonical Ltd.</company>
+	<author site="http://www.daltonmaag.com/">Dalton Maag</author>
+	<license source="http://font.ubuntu.com/licence/">Ubuntu Font Licence 1.0</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $config->get( 'module.ui_font_ubuntu.enabled' ) ){
+				$url	= $config->get( 'module.ui_font.uri' ).'Ubuntu/ubuntu.css';				
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+		}
+]]></hook>
+</module>

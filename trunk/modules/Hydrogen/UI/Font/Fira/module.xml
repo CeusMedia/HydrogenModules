@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: Fira</title>
+	<description><![CDATA[Integration of Firefox OS Typeface "Fira".]]></description>
+	<category>User Interface</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<log version="0.3">Removed local file and linked online resource.</log>
+	<company site="http://www.mozilla.org/">mozilla.org</company>
+	<license source="https://www.mozilla.org/en-US/foundation/licensing/website-content/">Creative Commons Attribution Share-Alike 3.0 Unported</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $config->get( 'module.ui_font_fira.enabled' ) ){
+				$url	= $config->get( 'module.ui_font.uri' ).'Fira/fira.css';				
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+		}
+]]></hook>
+</module>
