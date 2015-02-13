@@ -13,7 +13,11 @@ Gallery = {
 				galleryItemInfoButton.hide();
 			});
 	},
-	setupInfo: function(){
+	setupInfo: function(viewModes){
+		var viewModes = viewModes || [];
+		if(viewModes.length)
+			$("#hint-"+viewModes[0]).show();
+
 		if($("img.zoomable").size()){
 			var config = settings.JS_cmImagnifier;
 			$("img.zoomable").cmImagnifier({
@@ -51,6 +55,7 @@ Gallery = {
 		layer.attr("id","gallery-image-fullscreen").addClass("loading");
 		layer.bind("click",function(){
 			$(this).fadeOut(200,function(){
+				$("body").css("overflow-y", "auto");
 				$(this).children("img").remove();
 			});
 		});
@@ -65,6 +70,7 @@ Gallery = {
 				var ratioImage = $(this).get(0).width / $(this).get(0).height;
 				$(this).css((ratioBody > ratioImage ? "width" : "height"), "100%");
 //				$(this).parent().removeClass("loading");
+				$("body").css("overflow-y", "hidden");
 				$(this).fadeIn(300,function(){});
 			});
 			image.attr("src",Gallery.pathImages+source);

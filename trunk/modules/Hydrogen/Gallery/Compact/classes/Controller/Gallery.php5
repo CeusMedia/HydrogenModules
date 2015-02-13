@@ -1,13 +1,13 @@
 <?php
 class Controller_Gallery extends CMF_Hydrogen_Controller{
-	
+
 	protected $path;
-	
+
 	public function __onInit(){
 		$config		= $this->env->getConfig();
 		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 	}
-	
+
 	public function download( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
 		$args	= func_get_args();
 		$source	= $arg1 ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
@@ -18,7 +18,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 			throw new RuntimeException( 'File is not existing.' );
 		Net_HTTP_Download::sendFile( $uri );
 	}
-	
+
 	/**
 	 *	Generates RSS Feed and returns it directly to the requesting client.
 	 *	@access		public
@@ -79,7 +79,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 			)
 		);
 	}
-	
+
 	public function info( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
 		$source	= join( '/', func_get_args() );
 		$uri	= $this->path.$source;

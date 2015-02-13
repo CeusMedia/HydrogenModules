@@ -38,13 +38,14 @@ class View_Helper_Gallery{
 		$pathName	= $path == dirname( $path ) ? '' : dirname( $path ).'/';
 		$parts		= explode( " ", $folderName );
 		$date		=  NULL;
-		$class		= 'icon-label link-gallery';
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-folder-open fa-fw' ) ).'&nbsp';
+		$class		= 'not-icon-label not-link-gallery';
 		if( $dateMode == 0 || $dateMode == 2 ){
 			if( preg_match( str_replace( ' ', '', $pattern ), $parts[0] ) && count( $parts ) > 1 ){
 				$date	= array_shift( $parts );
 				if( $dateFormat )
 					$date	= date( $dateFormat, strtotime( $date ) );
-				$date	= '<span class="date">'.$date.'</span>';
+				$date	= '&nbsp;<small class="not-date muted">'.$date.'</small>';
 			}
 		}
 #		if( preg_match( '/^[0-9]+$/', $folderName ) )
@@ -54,8 +55,8 @@ class View_Helper_Gallery{
 			$date	=  NULL;
 		$label		= implode( " ", $parts );
 		$url		= './gallery/index/'.$pathName.rawurlencode( $folderName );
-		$link		= UI_HTML_Elements::Link( $url, $label );
-		return UI_HTML_Tag::create( 'span', $link.$date, array( 'class' => $class ) );
+		$link		= UI_HTML_Elements::Link( $url, $icon.$label.$date );
+		return UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
 
 		$attributes	= array(
 			'class'	=> 'icon-label link-blog',
@@ -64,16 +65,20 @@ class View_Helper_Gallery{
 		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
 	}
 
-	static public function renderImageLabel( $env, $fileName ){
+	static public function renderImageLabel( $env, $fileName, $withIcon = TRUE ){
 		$ext	= pathinfo( basename( $fileName ), PATHINFO_EXTENSION );
 		$ext	= UI_HTML_Tag::create( "span", '.'.$ext, array( 'class' => 'file-ext' ) );
-		return pathinfo( basename( $fileName ), PATHINFO_FILENAME ).$ext;
+		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-image fa-fw' ) ).'&nbsp;';
+		if( !$withIcon )
+			$icon	= '';
+		$name	= pathinfo( basename( $fileName ), PATHINFO_FILENAME );
+		return $icon.$name.$ext;
 	}
 
 	static public function renderImageLink( $env, $pathName ){
 		$label	= self::renderImageLabel( $env, $pathName );
 		$url	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $pathName ) );
-		$class	= 'icon-label link-image';
+		$class	= 'not-icon-label not-link-image';
 		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class'=> $class ) );
 	}
 
@@ -104,7 +109,7 @@ class View_Helper_Gallery{
 	static public function renderStepNavigation( $env, $source ){
 		$steps	= array();
 		$list	= array();
-		$source	= preg_replace( '/\/$/', '', $source ); 
+		$source	= preg_replace( '/\/$/', '', $source );
 		$parts	= $source ? explode( '/', $source ) : array();
 		for( $i=0; $i<count( $parts ); $i++ ){
 			if( !trim( $parts[$i] ) )
@@ -120,13 +125,15 @@ class View_Helper_Gallery{
 				}
 				else
 					$parts[$i]	= self::renderGalleryLink( $env, implode( '/', $steps ), 2 );
-				$class	= 'link-gallery-current';
+				$class	= 'not-link-gallery-current';
 				$list[]	= UI_HTML_Tag::create( "span", $parts[$i], array( 'class' => $class ) );
 			}
 		}
-		$link	= UI_HTML_Tag::create( "a", 'Start', array( 'href' => './gallery', 'class' => 'icon-label link-gallery' ) );
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-folder fa-fw' ) ).'&nbsp';
+		$link		= UI_HTML_Tag::create( "a", $icon.'Start', array( 'href' => './gallery', 'class' => 'not-icon-label not-link-gallery' ) );
 		array_unshift( $list, $link );
-		$steps		= implode( "&nbsp;&gt;&nbsp;", $list );
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-angle-right fa-fw' ) );
+		$steps		= implode( "&nbsp;".$icon."&nbsp;", $list );
 		$steps		= UI_HTML_Tag::create( "span", 'Position: ' ) . $steps;
 		return UI_HTML_Tag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
 	}
