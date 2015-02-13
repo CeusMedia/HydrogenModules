@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: FontAwesome</title>
+	<description><![CDATA[Integration of Font Awesome icons.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<company site="http://fontawesome.io">fontawesome.io</company>
+	<author twitter="@davegandy">Dave Gandy</author>
+	<license source="http://fontawesome.io/license">Font: SIL OFL 1.1, CSS: MIT License</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $config->get( 'module.ui_font_fontawesome.enabled' ) ){
+				$url	= $config->get( 'module.ui_font.uri' ).'FontAwesome/font-awesome.min.css';				
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+		}
+]]></hook>
+</module>
