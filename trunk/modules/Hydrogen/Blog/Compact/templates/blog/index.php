@@ -3,12 +3,17 @@
 $roleId			= $this->env->getSession()->get( 'roleId');
 $canAdd			= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
 $url			= './blog/add';
-$label			= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/add.png', 'neuer Eintrag' );
-$linkAdd		= $canAdd ? UI_HTML_Elements::Link( $url, $label, 'button link-add' ) : '';
+
+$icon			= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-plus fa-fw' ) );
+$linkAdd		= $canAdd ? '&nbsp;'.UI_HTML_Tag::create( 'a', $icon, array(
+	'href'		=> $url,
+	'class'		=> 'btn btn-mini',
+	'title'		=> 'neuer Eintrag',
+) ) : '';
 
 $articleList	= UI_HTML_Tag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )
-	$articleList	= $this->renderArticleAbstractList( $articles, !FALSE, FALSE, !FALSE );
+	$articleList	= $this->renderArticleAbstractList( $articles, !FALSE, FALSE, !FALSE, FALSE );
 
 #$heading		= UI_HTML_Elements::Heading( 'Artikel', 3 );
 $heading		= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
@@ -17,40 +22,32 @@ $helper			= new View_Helper_Pagination();
 $pageList		= $helper->render( './blog/index', $number, $limit, $page );
 
 $topTags		= View_Helper_Blog::renderTopTags( $env, 10, 0, $states );
+$flopTags		= View_Helper_Blog::renderFlopTags( $env, 5, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
+$listFlopTags	= $flopTags ? '<h4>Seltenste Schlüsselwörter</h4>'.$flopTags : '';
+
+$iconPublic		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-check fa-fw' ) ).'&nbsp;';
+$iconWork		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-pencil fa-fw' ) ).'&nbsp;';
+$iconTrash		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-trash fa-fw' ) ).'&nbsp;';
 
 $listStates		= '
-	<h4>Artikel-Typen</h4>
-	<label>
+	<h4>Artikel-Zustände</h4>
+	<label class="checkbox">
 		<input type="checkbox" name="states" value="1" '.( in_array( 1, $states ) ? 'checked="checked"' : '').'>
-		<span class="article-status status1">'.$words['states']['1'].'</span>
-	</label><br/>
-	<label>
+		'.$iconPublic.$words['states']['1'].'
+	</label>
+	<label class="checkbox">
 		<input type="checkbox" name="states" value="0" '.( in_array( 0, $states ) ? 'checked="checked"' : '').'>
-		<span class="article-status status0">'.$words['states']['0'].'</span>
-	</label><br/>
-	<label>
+		'.$iconWork.$words['states']['0'].'
+	</label>
+	<label class="checkbox">
 		<input type="checkbox" name="states" value="-1" '.( in_array( -1, $states ) ? 'checked="checked"' : '').'>
-		<span class="article-status status-1">'.$words['states']['-1'].'</span>
-	</label><br/>
-	<br/>
-		
+		'.$iconTrash.$words['states']['-1'].'
+	</label>
 	<script>
-$("#blog input[name=states]").bind("change",function(){
-	$(this).parent().children("span").addClass("loading");
-	$.ajax({
-		url: "./blog/setFilter",
-		data: {
-			name: "states",
-			mode: $(this).is(":checked") ? "add" : "remove",
-			value: $(this).attr("value")
-		},
-		type: "post",
-		success: function(){
-			document.location.href = "./blog";
-		}
-	});
-});		
+$(document).ready(function(){
+	Blog.initIndex();
+});
 	</script>
 	';
 if( !$isEditor )
@@ -59,19 +56,20 @@ if( !$isEditor )
 $feedUrl	= View_Helper_Blog::getFeedUrl( $env );
 
 return '
-<div id="blog">
-	<div class="column-left-70">
+<div id="blog" class="row-fluid">
+	<div class="not-column-left-70 span9">
 		'.$heading.'
 		'.$articleList.'
 		'.$pageList.'
 	</div>
-	<div class="column-right-25">
-		<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
+	<div class="notcolumn-right-25 span3">
+		<div style="float: right"><a href="'.$feedUrl.'" class="not-link-feed"><b class="fa fa-rss fa-fw"></b>&nbsp;RSS Feed</a></div>
 		<br/>
 		<br/>
 		'.$listStates.'
 		'.$listTopTags.'
+		'.$listFlopTags.'
 	</div>
-	<div class="column-clear"></div>
+<!--	<div class="column-clear"></div>-->
 </div>';
 ?>

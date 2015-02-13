@@ -139,14 +139,16 @@ class View_Blog extends CMF_Hydrogen_View{
 	protected function renderArticleAbstractList( $articles, $date = TRUE, $time = TRUE, $authors = TRUE, $linkAuthors = TRUE ){
 		$list		= array();
 		$config		= $this->env->getConfig();
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw fa-lg' ) ).'&nbsp';
 		foreach( $articles as $article ){
 			$url		= './blog/article/'.$article->articleId;
 			if( $config->get( 'module.blog_compact.niceURLs' ) )
 				$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$label		= str_replace( '&', '&amp;', $article->title );
-			$link		= UI_HTML_Elements::Link( $url, $label, 'icon-label link-blog' );
+			$link		= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 
-			$abstract	= array_shift( preg_split( "/\n/", $article->content ) );
+			$abstract	= preg_split( "/\n/", $article->content );
+			$abstract	= array_shift( $abstract );
 			$abstract	= View_Helper_ContentConverter::render( $this->env, $abstract );
 			$abstract	= UI_HTML_Tag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
 
@@ -169,13 +171,15 @@ class View_Blog extends CMF_Hydrogen_View{
 		$infoList	= array();
 		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
 		if( $date && $article->createdAt ){
+			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-calendar-o fa-fw' ) ).'&nbsp;';
 			$date		= date( 'd.m.Y', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $date, array( 'class' => 'blog-article-date' ) );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$date, array( 'class' => 'blog-article-date' ) );
 			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
 		}
 		if( $time && $article->createdAt ){
+			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-time fa-fw' ) ).'&nbsp;';
 			$time		= date( 'H:i', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $time, array( 'class' => 'blog-article-time' ) );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$time, array( 'class' => 'blog-article-time' ) );
 			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
 		}
 		$attrList	= array( 'class' => 'blog-article-info-list' );
@@ -186,11 +190,12 @@ class View_Blog extends CMF_Hydrogen_View{
 		$authorList	= array();
 		if( !$authors )
 			return '';
+		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-user fa-fw' ) ).'&nbsp;';
 		foreach( $authors as $author ){
 			$url		= './blog/author/'.rawurlencode( $author->username );
-			$label		= UI_HTML_Tag::create( 'span', $author->username, array( 'class' => 'link-author' ) );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$author->username, array( 'class' => 'not-link-author' ) );
 			if( $linked )
-				$label		= UI_HTML_Tag::create( 'a', $author->username, array( 'href' => $url, 'class' => 'link-author' ) );
+				$label		= UI_HTML_Tag::create( 'a', $icon.$author->username, array( 'href' => $url, 'class' => 'not-link-author' ) );
 			$authorList[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
@@ -198,13 +203,14 @@ class View_Blog extends CMF_Hydrogen_View{
 
 	static public function renderTagList( $env, $tags ){
 		$tagList	= array();
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
 		if( $tags ){
 			foreach( $tags as $tag ){
 				$url	= './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tag->title ) );
 				$tagList[]	= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url ) );
 			}
-			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'icon-label link-tag' ) );
-			return UI_HTML_Tag::create( 'span', $span, array( 'class' => 'blog-article-tag-list' ) );
+			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'not-icon-label not-link-tag' ) );
+			return UI_HTML_Tag::create( 'span', $icon.$span, array( 'class' => 'blog-article-tag-list' ) );
 		}
 		return '';
 
