@@ -118,7 +118,8 @@ Layer = {
 		image.onload = function(){Layer.scaleImage($(this).hide());};
 
 		Layer.current.html('').append($('<div></div>').addClass('layer-image').html(image));
-		image.src = elem.attr('href')+ ( $.browser.msie ? "#"+new Date().getMilliseconds() : '' );
+//		image.src = elem.attr('href')+ ( $.browser.msie ? "#"+new Date().getMilliseconds() : '' );
+		image.src = elem.attr('href') + "#" + new Date().getMilliseconds();
 			
 		label = '<span class="label">'+Layer.labelButtonPrev+'</span>';
 		buttonPrev = $('<button></button>').click(function(){
