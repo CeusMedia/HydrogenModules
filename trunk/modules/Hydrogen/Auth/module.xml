@@ -2,7 +2,9 @@
 <module>
 	<title>Authentication</title>
 	<description>Module for authentication against local database using the Users module.</description>
-	<version>0.4.1</version>
+	<version>0.5.1</version>
+	<log version="0.5">Migration to Bootstrap and FontAwesome.</log>
+	<log version="0.5.1">Adjusted configuration visibility.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,30 +18,28 @@
 		<template>auth/password.php</template>
 		<template>auth/register.php</template>
 		<locale>de/auth.ini</locale>
-		<locale>de/html/auth/confirm.top.html</locale>
-		<locale>de/html/auth/confirm.info.html</locale>
-		<locale>de/html/auth/confirm.bottom.html</locale>
-		<locale>de/html/auth/login.top.html</locale>
-		<locale>de/html/auth/login.info.html</locale>
-		<locale>de/html/auth/login.bottom.html</locale>
-		<locale>de/html/auth/password.top.html</locale>
-		<locale>de/html/auth/password.info.html</locale>
-		<locale>de/html/auth/password.bottom.html</locale>
-		<locale>de/html/auth/register.top.html</locale>
-		<locale>de/html/auth/register.info.html</locale>
-		<locale>de/html/auth/register.bottom.html</locale>
+		<locale>de/html/auth/confirm/top.html</locale>
+		<locale>de/html/auth/confirm/info.html</locale>
+		<locale>de/html/auth/confirm/bottom.html</locale>
+		<locale>de/html/auth/login/top.html</locale>
+		<locale>de/html/auth/login/info.html</locale>
+		<locale>de/html/auth/login/bottom.html</locale>
+		<locale>de/html/auth/password/top.html</locale>
+		<locale>de/html/auth/password/info.html</locale>
+		<locale>de/html/auth/password/bottom.html</locale>
+		<locale>de/html/auth/register/top.html</locale>
+		<locale>de/html/auth/register/info.html</locale>
+		<locale>de/html/auth/register/bottom.html</locale>
 		<locale>de/html/auth/tac.html</locale>
-		<locale>de/mail/auth/register</locale>
-<!--		<locale>de/mail/auth/password</locale>-->
 		<locale>en/auth.ini</locale>
-		<locale>en/html/auth/login.info.html</locale>
+		<locale>en/html/auth/login/info.html</locale>
 		<locale>en/html/auth/tac.html</locale>
 		<script load="auto">Auth.js</script>
 	</files>
-	<config type="integer" name="refreshSession.minutes">10</config>
-	<config type="integer" name="autoLogout.minutes">30</config>
-	<config type="string" name="autoLogout.forward.controller"></config>
-	<config type="string" name="autoLogout.forward.action"></config>
+	<config protected="no" type="integer" name="refreshSession.minutes">10</config>
+	<config protected="no" type="integer" name="autoLogout.minutes">30</config>
+	<config protected="no" type="string" name="autoLogout.forward.controller"></config>
+	<config protected="no" type="string" name="autoLogout.forward.action"></config>
 	<config protected="yes" type="boolean" name="logout.clearSession">1</config>
 	<relations>
 		<needs type="module">Roles</needs>

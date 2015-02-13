@@ -3,7 +3,7 @@ var Auth = {
 	oneMinute: 60 * 1000,
 
 	initAutoLogout: function(){
-		var minutes = parseInt(config.module_auth_autoLogout_minutes);
+		var minutes = parseInt(settings.Auth.autoLogout_minutes);
 		if(!minutes)
 			return;
 		duration = minutes * this.oneMinute;
@@ -18,10 +18,10 @@ var Auth = {
 				window.setInterval(
 					function(){
 						var url = './auth/logout';
-						if(config.module_auth_autoLogout_forward_controller){
-							url += '/'+config.module_auth_autoLogout_forward_controller;
-							if(config.module_auth_autoLogout_forward_action)
-								url += '/'+config.module_auth_autoLogout_forward_action;
+						if(settings.Auth.autoLogout_forward_controller){
+							url += '/'+settings.Auth.autoLogout_forward_controller;
+							if(settings.Auth.autoLogout_forward_action)
+								url += '/'+settings.Auth.autoLogout_forward_action;
 						}
 						url += '?autoLogout';
 						document.location.href = url;
@@ -32,7 +32,7 @@ var Auth = {
 	},
 
 	initSessionRefresh:function(){
-		var minutes = parseInt(config.module_auth_refreshSession_minutes);
+		var minutes = parseInt(settings.Auth.refreshSession_minutes);
 		if(!minutes)
 			return;
 		duration = minutes * this.oneMinute;
