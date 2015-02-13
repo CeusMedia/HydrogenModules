@@ -104,10 +104,11 @@ class View_Helper_Blog{
 		if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
 			$keywords	= self::getArticleTitleUrlLabel( $article );
 		$attributes	= array(
-			'class'	=> 'icon-label link-blog',
+			'class'	=> 'not-icon-label not-link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.$version.'/'.$keywords,
 		);
-		return UI_HTML_Tag::create( 'a', $label, $attributes );
+		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
+		return UI_HTML_Tag::create( 'a', $icon.$label, $attributes );
 	}
 
 	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
@@ -125,9 +126,10 @@ class View_Helper_Blog{
 	static public function renderTagLink( CMF_Hydrogen_Environment_Abstract $env, $tagName ){
 		$attributes	= array(
 			'href'	=> './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tagName ) ),
-			'class'	=> 'icon-label link-tag'
+			'class'	=> 'not-icon-label not-link-tag'
 		);
-		return UI_HTML_Tag::create( 'a', $tagName, $attributes );
+		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tag fa-fw' ) ).'&nbsp;';
+		return UI_HTML_Tag::create( 'a', $icon.$tagName, $attributes );
 	}
 
 	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
@@ -152,7 +154,38 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= array();
 		foreach( $tags as $relation ){
-			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'number-indicator' ) );
+			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
+			$link	= self::renderTagLink( $env, $relation->title );
+			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
+		}
+		if( !$list )
+			return NULL;
+		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+	}
+
+	static public function renderFlopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
+		$states		= is_array( $states ) ? $states : array( $states );
+		$prefix		= $env->getDatabase()->getPrefix();
+		$query		= '
+			SELECT
+				COUNT(at.articleId) as nr,
+				at.tagId,
+				t.title
+			FROM
+				'.$prefix.'articles AS a,
+				'.$prefix.'article_tags AS at,
+				'.$prefix.'tags AS t
+			WHERE
+				at.tagId = t.tagId AND
+				at.articleId = a.articleId AND
+				a.status IN('.join( ", ", $states ) .')
+			GROUP BY at.tagId
+			ORDER BY nr ASC
+			LIMIT '.$offset.', '.$limit;
+		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
+		$list	= array();
+		foreach( $tags as $relation ){
+			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );
 			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
 		}

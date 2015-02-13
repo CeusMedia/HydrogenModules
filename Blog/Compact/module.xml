@@ -2,9 +2,10 @@
 <module>
 	<title><![CDATA[Blog &raquo;Compact&laquo;]]></title>
 	<description>Simple blog with tags but without comments.</description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extracted JavaScript.</log>
 	<files>
 		<class>Controller/Blog.php5</class>
 		<class>Model/Article.php5</class>
@@ -22,6 +23,7 @@
 		<template>blog/tag.php</template>
 		<style load="auto">module.blog.css</style>
 		<locale>de/blog.ini</locale>
+		<script load="auto">Blog.js</script>
 	</files>
 	<config protected="yes" type="string" name="feed.editor">johndoe@example.org (John Doe)</config>
 	<config protected="yes" type="string" name="feed.language">de-de</config>

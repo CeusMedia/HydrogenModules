@@ -6,6 +6,7 @@ foreach( $articles as $item ){
 	$articleList[$item->articleId]	= $item;
 }
 $index		= array_search( $articleId, $articleIndex );
+$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
 $linkNext	= '';
 $linkPrev	= '';
 if( isset( $articleIndex[$index-1] ) ){
@@ -14,7 +15,7 @@ if( isset( $articleIndex[$index-1] ) ){
 	$url		= './blog/article/'.$next->articleId;
 	if( $config->get( 'niceURLs' ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $next );
-	$linkNext	= UI_HTML_Elements::Link( $url, $label, 'icon-label link-blog' );
+	$linkNext	= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 	$linkNext	= 'nächster: '.$linkNext;
 }
 if( isset( $articleIndex[$index+1] ) ){
@@ -23,7 +24,7 @@ if( isset( $articleIndex[$index+1] ) ){
 	$url		= './blog/article/'.$previous->articleId;
 	if( $config->get( 'niceURLs' ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $previous );
-	$linkPrev	= UI_HTML_Elements::Link( $url, $label, 'icon-label link-blog' );
+	$linkPrev	= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 	$linkPrev	= 'vorheriger: '.$linkPrev;
 }
 
