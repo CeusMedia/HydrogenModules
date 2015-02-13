@@ -37,25 +37,27 @@ foreach( $folders as $entry ){
 krsort( $list );
 $folders	= '';
 if( $list ){
-	$width	= 50;
 	$lists	= array( $list );
+	$width	= 12;
 	if( count( $list ) > 5 ){
-		if( count( $list ) > 10 ){
+/*		if( count( $list ) > 10 ){
 			$width		= 33;
+			$width		= 4;
 			$cut		= ceil( count( $list ) / 3 );
 			$lists[0]	= array_slice( $list, 0, $cut );
 			$lists[1]	= array_slice( $list, $cut, $cut );
 			$lists[2]	= array_slice( $list, 2 * $cut );
 		}
-		else{
+		else{*/
+			$width		= 6;
 			$cut		= ceil( count( $list ) / 2 );
 			$lists[0]	= array_slice( $list, 0, $cut );
 			$lists[1]	= array_slice( $list, $cut );
-		}
+//		}
 	}
 	foreach( $lists as $list ){
 		$list		= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
-		$folders	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'column-left-'.$width ) );
+		$folders	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'span'.$width ) );
 	}
 }
 
@@ -71,7 +73,7 @@ foreach( $files as $file ){
 	$attributes	= array(
 		'src'		=> $path.$source.$data['filename'].'.small.'.$data['extension'],
 		'title'		=> htmlentities( utf8_decode( strip_tags( $title ) ) ),
-		'class'		=> 'thumbnail',
+		'class'		=> 'not-thumbnail',
 	);
 	$image		= UI_HTML_Tag::create( 'image', NULL, $attributes );
 	if( $mobile )
@@ -82,7 +84,7 @@ foreach( $files as $file ){
 	else
 		$attributes	= array(
 			'href'			=> $path.$source.$data['filename'].'.medium.'.$data['extension'],
-			'class'			=> 'no-thickbox layer-image darkbox',
+			'class'			=> 'no-thickbox no-layer-image no-darkbox fancybox-auto',
 			'rel'			=> 'gallery',
 			'target'		=> '_blank',
 			'title'			=> $title,
@@ -107,16 +109,18 @@ $(document).ready(function(){
 </script>
 <div id="gallery">
 	<div id="gallery-item-info-button" title="Informationen und Zoom">
-		<img src="http://img.int1a.net/famfamfam/silk/information.png"/>
+		<b class="fa fa-info-circle fa-fw"></b>
+<!--		<img src="http://img.int1a.net/famfamfam/silk/information.png"/>-->
 	</div>
-	<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
+	<div style="float: right"><a href="'.$feedUrl.'" class="not-link-feed"><b class="fa fa-rss fa-fw"></b>&nbsp;RSS Feed</a></div>
 	'.$navigation.'<br/>
 	'.$title.'
 	<p>
 		'.$desc.'
 	</p>
-	'.$folders.'
-	<div class="column-clear"></div>
+	<div class="row-fluid">
+		'.$folders.'
+	</div>
 	<br/>
 	'.$files.'
 	<div style="clear: left"></div>

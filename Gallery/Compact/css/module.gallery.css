@@ -85,10 +85,10 @@ body.moduleGallery.action-index #gallery-item-info-button {
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
-	width: 16px;
-	height: 16px;
-	padding: 4px;
-	border-radius: 10px;
+	width: 20px;
+	height: 20px;
+	padding: 3px;
+	border-radius: 12px;
 	background-color: white;
 	cursor: pointer;
 	}
@@ -108,8 +108,9 @@ body.moduleGallery.action-info #hint-magnifier {
 
 /*  --  IMAGE INFO: NAVI: STEPS  --  */
 body.moduleGallery .navi-steps {
-	border-bottom: 1px solid rgba(0,0,0,0.5);
-	padding: 4px 8px;
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+	padding: 4px 0px;
+	margin-top: 1em;
 	}
 body.moduleGallery .navi-steps .link-gallery-current {
 	font-weight: bold;
@@ -119,7 +120,7 @@ body.moduleGallery .navi-steps .link-gallery-current {
 /*  --  IMAGE INFO: IMAGE  --  */
 body.moduleGallery.action-info div.image {
 	padding: 0.75em;
-	margin: 0.1em 0.5em 0.4em 0.5em;
+	margin: 0.5em 0 0.5em 0;
 	border: 1px solid gray;
 	background: white;
 	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
@@ -152,6 +153,9 @@ body.moduleGallery.action-info .gallery-image-info dl dt {
 	float: left;
 	display: block;
 	width: 100px;
+	font-weight: normal;
+	font-style: italic;
+	font-size: 0.9em;
 	}
 body.moduleGallery.action-info .gallery-image-info dl dd {
 	float: left;
@@ -175,7 +179,7 @@ body.moduleGallery.action-info button.button.download span {
 	
 /*  --  IMAGE INFO: FULLSCREEN LAYER  --  */
 body.moduleGallery.action-info #gallery-image-fullscreen {
-	position: absolute;
+	position: fixed;
 	display: none;
 	left: 0;
 	top: 0;
@@ -216,4 +220,10 @@ body.moduleGallery.action-info .hint {
 	font-size: 0.9em;
 	padding-left: 1em;
 	display: none;
+	}
+
+
+body.moduleGallery .gallery-image-view-modes,
+body.moduleGallery .gallery-image-view-mode-hints {
+	text-align: center;
 	}

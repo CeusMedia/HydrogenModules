@@ -73,7 +73,8 @@ class View_Gallery extends CMF_Hydrogen_View{
 		foreach( $galleries as $gallery ){
 			$uri	= $baseUrl.'gallery/index/'.str_replace( '%2F', '/', rawurlencode( $gallery->pathname ) );
 
-			$content	= array_shift( explode( "\n", strip_tags( $gallery->content ) ) );
+			$paragraphs	= explode( "\n", strip_tags( $gallery->content ) );
+			$content	= array_shift( $paragraphs );
 			$content	= View_Helper_ContentConverter::formatText( $this->env, $content );
 			$content	= View_Helper_ContentConverter::formatLinks( $this->env, $content );
 			$content	= View_Helper_ContentConverter::formatWikiLinks( $this->env, $content );

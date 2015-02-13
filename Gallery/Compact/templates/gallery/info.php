@@ -41,45 +41,67 @@ $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
 $options	= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.info.' ) );
 
+$useMagnifier	= $options->get( 'magnifier' ) && $env->getModules ()->has( 'JS_cmImagnifier' );
+$useFullscreen	= $options->get( 'fullscreen' );
+$useWallpaper	= $options->get( 'wallpaper' ) && $env->getModules()->has( 'UI_Background' );
+$useDownload	= $options->get( 'download' );
+$useExif		= $options->get( 'exif' );
+
 //  --  VIEW MODE CONTROLS  --  //
-$viewMode	= '';
-if( $env->getModules ()->has( 'JS_cmImagnifier' ) && $options->get( 'magnifier' ) ){
-	$label		= UI_HTML_Tag::create( 'span', "Lupe" );
-	$attr		= array( 'type' => "button", 'class' => "button search", 'id' => "button-magnifier" );
-	$buttonZoom	= UI_HTML_Tag::create( 'button', $label, $attr );
-	if( $options->get( 'fullscreen' ) ){
-		$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
-		$attr		= array( 'type' => "button", 'class' => "button search resize-max", 'id' => "button-fullscreen" );
-		$buttonFull	= UI_HTML_Tag::create( 'button', $label, $attr );
-		$viewMode	= '<div>Modus:'.$buttonZoom.''.$buttonFull.'</div><br/>';
-	}
+$modes		= array();
+$hints		= array();
+if( $useFullscreen ){
+	$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
+	$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrows-alt fa-fw' ) ).'&nbsp;';
+	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-fullscreen" );
+	$modes['fullscreen']	= UI_HTML_Tag::create( 'button', $icon.$label, $attr );
+	$hints['fullscreen']	= 'Klicke auf das Bild für die Vollbildanzeige. <b>Tipp:</b> Drücke vorher <kbd>F11</kbd>';
 }
+if( $useMagnifier ){
+	$label		= UI_HTML_Tag::create( 'span', "Lupe" );
+	$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-search fa-fw' ) ).'&nbsp;';
+	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-magnifier" );
+	$modes['magnifier']		= UI_HTML_Tag::create( 'button', $icon.$label, $attr );
+	$hints['magnifier']		= '<b>Tipp:</b> Die Lupe ist aktiviert. Fahre mit der Maus über das Bild!';
+}
+$viewMode	= '';
+if( $modes ){
+	$group		= UI_HTML_Tag::create( 'div', $modes, array( 'class' => 'btn-group' ) );
+	$viewMode	= UI_HTML_Tag::create( 'div', 'Modus: '.$group, array( 'class' => 'gallery-image-view-modes' ) ).'<br/>';
+}
+foreach( $hints as $key => $value )
+	$hints[$key]	= UI_HTML_Tag::create( 'div', $value, array( 'id' => 'hint-'.$key, 'class' => 'alert alert-info alert-center' ) );
+$hints	= UI_HTML_Tag::create( 'div', $hints, array( 'class' => 'gallery-image-view-mode-hints' ) );
+
 
 //  --  ACTION CONTROLS  --  //
 $buttons	= array();
 if( 1 ){
-	$label	= UI_HTML_Tag::create( 'span', "zur Galerieansicht" );
-	$attr	= array( 'type' => "button", 'class' => "button cancel", 'id' => "button-gallery" );
+	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left fa-fw' ) ).'&nbsp;';
+	$label	= UI_HTML_Tag::create( 'span', $icon.'zur Galerieansicht' );
+	$attr	= array( 'type' => "button", 'class' => "not-button not-cancel btn btn-small", 'id' => "button-gallery" );
 	$buttons[$label]	= $attr;
 }
-if( $options->get( 'download' ) ){
-	$label	= UI_HTML_Tag::create( 'span', "Download der Bilddatei" );
-	$attr	= array( 'type' => "button", 'class' => "button save download", 'id' => "button-download" );
+if( $useDownload ){
+	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-download fa-fw' ) ).'&nbsp;';
+	$label	= UI_HTML_Tag::create( 'span', $icon.'Download der Bilddatei' );
+	$attr	= array( 'type' => "button", 'class' => "not-button not-save not-download btn btn-small", 'id' => "button-download" );
 	$buttons[$label]	= $attr;
 }
-if( $env->getModules()->has( 'UI_Background' ) && $options->get( 'wallpaper' ) ){
-	$label	= UI_HTML_Tag::create( 'span', "als Wallpaper verwenden" );
-	$attr	= array( 'type' => "button", 'class' => "button save", 'id' => "button-wallpaper" );
+if( $useWallpaper ){
+	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-heart fa-fw' ) ).'&nbsp;';
+	$label	= UI_HTML_Tag::create( 'span', $icon."als Wallpaper verwenden" );
+	$attr	= array( 'type' => "button", 'class' => "not-button not-save btn btn-small", 'id' => "button-wallpaper" );
 	$buttons[$label]	= $attr;
 }
 $list	= array();
 foreach( $buttons as $label => $attributes )
-	$list[]	= UI_HTML_Tag::create( 'li', UI_HTML_Tag::create( 'button', $label, $attributes ) );
-$buttons	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'buttons list-actions' ) );
+	$list[]	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'button', $label, $attributes ) );
+$buttons	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'buttons list-actions' ) );
 
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
-if( $options->get( 'exif' ) ){
+if( $useExif ){
 	$list	= array();
 	$mps	= round( $exif->get( 'COMPUTED.Width' ) * $exif->get( 'COMPUTED.Height' ) / 1024 / 1024, 1 );
 	$data	= array();
@@ -104,7 +126,7 @@ if( $options->get( 'exif' ) ){
 		$formatDate	= $config->get( 'module.gallery_compact.format.date' );
 		$formatTime	= $config->get( 'module.gallery_compact.format.time' );
 		$timestamp	= strtotime( $exif->get( 'DateTimeOriginal' ) );
-		$data['Datum/Zeit']	= date( $formatDate, $timestamp ).' <small><em>'.date( $formatTime, $timestamp ).'</em></small>';
+		$data['Datum <small>& Zeit</small>']	= date( $formatDate, $timestamp ).' <small><em>'.date( $formatTime, $timestamp ).'</em></small>';
 	}
 	foreach( $data as $label => $value )
 		$list[]	= '<dt>'.$label.'</dt><dd>'.$value.'</dd>';
@@ -112,15 +134,15 @@ if( $options->get( 'exif' ) ){
 <h4>Bild-Informationen</h4>
 <div>
 	<dl>'.join( $list ).'</dl>
-	<div class="column-clear"></div>
+	<div class="column-clear" style="clear: both"></div>
 </div>';
 }
 
 //  --  IMAGE VIEW  --  //
 $class	= array();
-if( $env->getModules ()->has( 'JS_cmImagnifier' ) && $options->get( 'magnifier' ) )
+if( $useMagnifier )
 	$class[]	= 'zoomable';
-if( $options->get( 'fullscreen' ) )
+if( $useFullscreen )
 	$class[]	= 'fullscreenable';
 $image	= UI_HTML_Tag::create( 'img', NULL, array(
 	'class'			=> $class,
@@ -135,40 +157,41 @@ $image	= UI_HTML_Tag::create( 'img', NULL, array(
 return '
 <script>
 $(document).ready(function(){
-	Gallery.setupInfo();
-	if("'.$options->get( 'fullscreen' ).'")
-		$("#hint-fullscreen").show();
+	Gallery.setupInfo('.json_encode( array_keys( $modes ) ).');
 });
 </script>
 <div id="gallery" class="gallery-image-info" data-original="'.$source.'">
-	<div style="float: right"><a href="'.$feedUrl.'" class="link-feed">RSS Feed</a></div>
+	<div style="float: right"><a href="'.$feedUrl.'" class="not-link-feed"><b class="fa fa-rss fa-fw"></b>&nbsp;RSS Feed</a></div>
 	'.$navigation.'
-	<div class="column-left-66">
-		<div style="width: 94%; margin-left: 1%">
-			'.$naviControl.'
+	<div class="row-fluid">
+		<div class="span8">
+			<div style="width: 95%">
+				'.$naviControl.'
+			</div>
+			<div class="row-fluid">
+				<div style="width: 90%" class="image">
+					'.$image.'
+					'.( $title ? UI_HTML_Tag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					'.$viewMode.'
+					'.$hints.'
+				</div>
+			</div>
 		</div>
-		<div style="width: 90%" class="image">
-			'.$image.'
-			'.( $title ? UI_HTML_Tag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
+		<div class="span4">
+			<br/>
+			<br/>
+			'.$listExif.'
+			<br/>
+			<div class="image-actions">
+				'.$buttons.'
+			</div>
 		</div>
-		<div id="hint-magnifier" class="column-clear hint">
-			<b>Tipp:</b> Die Lupe ist aktiviert. Fahre mit der Maus über das Bild!
-		</div>
-		<div id="hint-fullscreen" class="column-clear hint">
-			Klicke auf das Bild für die Vollbildanzeige. <b>Tipp:</b> Drücke vorher <kbd>F11</kbd>
-		</div>
+		<div class="column-clear"></div>
 	</div>
-	<div class="column-left-33">
-		<br/>
-		<br/>
-		'.$listExif.'
-		<br/>
-		<div class="image-actions">
-			'.$viewMode.'
-			'.$buttons.'
-		</div>
-	</div>
-	<div class="column-clear"></div>
 	<br/>
 	<br/>
 	'.View_Helper_ContentConverter::render( $env, $textInfoBottom ).'
