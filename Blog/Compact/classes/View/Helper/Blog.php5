@@ -118,7 +118,7 @@ class View_Helper_Blog{
 		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item' ) );
+			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item autocut' ) );
 		}
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
 	}
