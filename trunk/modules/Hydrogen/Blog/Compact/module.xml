@@ -2,10 +2,20 @@
 <module>
 	<title><![CDATA[Blog &raquo;Compact&laquo;]]></title>
 	<description>Simple blog with tags but without comments.</description>
-	<version>0.2.1</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-	<log version="0.2.1">Extracted JavaScript.</log>
+	<log version="0.3">Adding features.</log>
+	<log version="0.3.1">Added content helper.</log>
+	<log version="0.3.2">Supported feed via RSS and added link.</log>
+	<log version="0.3.3">Integrated editor and set rights.</log>
+	<log version="0.3.4">Added article versioning.</log>
+	<log version="0.3.5">Redesigned article information box.</log>
+	<log version="0.3.6">Redesigned article tag link list.</log>
+	<log version="0.3.7">Migration to Bootstrap and FontAwesome.</log>
+	<log version="0.3.8">Added list of least used tags.</log>
+	<log version="0.3.9">Extracted JavaScript.</log>
+	<log version="0.4">Switched modules for authentication, roles and users</log>
 	<files>
 		<class>Controller/Blog.php5</class>
 		<class>Model/Article.php5</class>
@@ -35,10 +45,8 @@
 	<config protected="no" type="boolean" name="niceURLs">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
-		<needs type="module">Roles</needs>
-		<needs type="module">Users</needs>
+		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">JS_Layer</needs>
-		<needs type="module">JS_jQuery_UI</needs>
 		<needs type="module">JS_jQuery_UI_Timepicker</needs>
 		<needs type="module">UI_Helper_Content</needs>
 		<needs type="module">UI_Helper_Pagination</needs>
