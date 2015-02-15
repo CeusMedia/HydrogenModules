@@ -214,7 +214,9 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					$msgSuccess	= $words->moduleLinked;
 					$msgFailed	= $words->moduleNotLinked;
 				}
-				if( $this->logic->installModule( $module->source, $moduleId, $type, $settings, TRUE ) ){				//  try to install module by copy or link
+				$database	= $request->has( 'database' );
+				$force		= TRUE;																	//  assume forced file copy @todo make configurable
+				if( $this->logic->installModule( $module->source, $moduleId, $type, $settings, $force, $database ) ){				//  try to install module by copy or link
 					$messenger->noteSuccess( $msgSuccess, $moduleId );								//  success!
 					if( !$mainModuleId ){															//  there is no parent module
 						if( $step )
@@ -227,32 +229,10 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 					$this->restart( $url.'?doInstall=yes' );										//  ??? @todo kriss: understand and document !!!
 				}
 				$messenger->noteError( $msgFailed, $moduleId );										//  still here? than error!
-
-/*  --  kriss: old impl start */
-/*				if( $request->get( 'type' ) == 'copy' ){
-					$type	= Logic_Module::INSTALL_TYPE_COPY;
-					if( $this->logic->installModule( $moduleId, $type, $settings, TRUE ) ){
-						$messenger->noteSuccess( $words->moduleCopied, $moduleId );
-						if( $mainModuleId )
-							$this->restart( './admin/module/installer/install/'.$mainModuleId.'/'.$mainModuleId.'?doInstall=yes' );
-						$this->restart( './admin/module/viewer/index/'.$moduleId );
-					}
-					$messenger->noteError( $words->moduleNotCopied, $moduleId );
-				}
-				else if( $request->get( 'type' ) == 'link' ){
-					$type	= Logic_Module::INSTALL_TYPE_LINK;
-					if( $this->logic->installModule( $moduleId, $type, $settings, TRUE ) ){
-						$messenger->noteSuccess( $words->moduleLinked, $moduleId );
-						if( $mainModuleId )
-							$this->restart( './admin/module/installer/install/'.$mainModuleId.'/'.$mainModuleId.'?doInstall=yes' );
-						$this->restart( './admin/module/viewer/index/'.$moduleId );
-					}
-					$messenger->noteError( $words->moduleNotLinked, $moduleId );
-				}
-*/			}
+			}
 			catch( Exception $e ){
 				UI_HTML_Exception_Page::display( $e );
-die;
+die;																								//  @todo handle exception without die
 				$this->handleException( $e );
 			}
 		}
@@ -260,20 +240,36 @@ die;
 	}
 
 	public function uninstall( $moduleId, $verbose = NULL ){
+		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
-		if( !$module )
+		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
+		$module->neededByModules	= $this->logic->model->getNeedingModulesWithStatus( $moduleId );
+		$module->supportedModules	= $this->logic->model->getSupportedModulesWithStatus( $moduleId );
+		$module->supportedByModules	= $this->logic->model->getSupportingModulesWithStatus( $moduleId );
+
+ 		if( !$module )
 			$this->restart( './admin/module/editor' );
-		if( $this->logic->uninstallModule( $moduleId, $verbose ) ){
-			$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
-			$instanceId	= $this->env->getSession()->get( 'instanceId' );
-			$this->env->getCache()->remove( 'instance.'.$instanceId );
-			if( $module->type == Model_Module::TYPE_CUSTOM )
-				$this->restart( './admin/module/viewer' );
-		}
-		else
+		if( $request->get( 'doUninstall' ) ){
+			$database	= $request->get( 'database' );
+			if( $this->logic->uninstallModule( $moduleId, $database, $verbose ) ){
+				$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
+				$instanceId	= $this->env->getSession()->get( 'instanceId' );
+				$this->env->getCache()->remove( 'instance.'.$instanceId );
+				if( $module->type == Model_Module::TYPE_CUSTOM )
+					$this->restart( './admin/module/viewer' );
+				$this->restart( './admin/module/viewer/index/'.$moduleId );
+			}
 			$this->messenger->noteError( $words->moduleNotUninstalled, $module->title );
-		$this->restart( './admin/module/viewer/index/'.$moduleId );
+			$this->restart( './admin/module/installer/uninstall/'.$moduleId );
+		}
+		else{
+			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
+			$module->supportedModules	= $this->logic->model->getAllSupportedModules( $moduleId );
+			$this->addData( 'moduleId', $moduleId );
+			$this->addData( 'module', $module );
+			$this->addData( 'modules', $this->logic->model->getAll() );
+		}
 	}
 
 	public function update( $moduleId, $verbose = TRUE ){

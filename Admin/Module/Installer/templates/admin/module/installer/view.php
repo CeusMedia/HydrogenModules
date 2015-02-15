@@ -55,7 +55,7 @@ if( count( $needs ) ){
 	}
 	$neededModules	= UI_HTML_Elements::unorderedList( $neededModules, 1, array( 'class' => 'relations relations-needed' ) );
 	$buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'button add', NULL, TRUE );
-	
+
 	$a		= 'Es müssen erst folgende Module installiert werden:'.$neededModules.'<div class="column-clear"></div>';
 	if( $listCritical ){
 		$a		.= '<br/><b>Die Installation kann nicht fortgesetzt werden, da mindestens ein benötigtes Modul nicht vorhanden ist.</b><br/>';
@@ -64,7 +64,6 @@ if( count( $needs ) ){
 	else{
 		$a		.= '<label><input type="checkbox" name="force" value="1" onchange="AdminModuleInstaller.toggleSubmitButton()"/>&nbsp;Alle benötigten Module der Reihe nach installieren.</label>';
 	}
-	
 
 	$graph		= '<img src="./admin/module/showRelationGraph/'.$moduleId.'/needs" style="max-width: 100%"/>';
 	$graphNeeds	= '<fieldset><legend>Abhängigkeiten</legend>'.$graph.'</fieldset>';
@@ -96,7 +95,7 @@ if( $mainModuleId ){
 		$main		= UI_HTML_Tag::create( 'span', $mainModule->title, array( 'class' => 'icon module disabled' ) );
 		$list[]		= UI_HTML_Elements::ListItem( $main, 1 );
 	}
-	
+
 	$list	= UI_HTML_Elements::unorderedList( $list, 1, array( 'class' => 'relations relations-needed' ) );
 	$panelProgress	= '
 <fieldset>
@@ -146,7 +145,7 @@ if( $isInstallable ){
 		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 		$tableConfig	= UI_HTML_Tag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	}
-	
+
 	$a	= '
 		<h4>Installationstyp</h4>
 		<div>
@@ -154,8 +153,17 @@ if( $isInstallable ){
 			<label for="input_type_link"><acronym title="'.$w->textLink.'">'.$w->labelLink.'</acronym></label><br/>
 			<input type="radio" name="type" id="input_type_copy" value="copy"/>
 			<label for="input_type_copy"><acronym title="'.$w->textCopy.'">'.$w->labelCopy.'</acronym></label><br/>
-		</div><br/>
-		';
+		</div>';
+
+	if( $module->sql ){
+		$a	.= '
+		<div>
+			<label class="checkbox">
+				<input type="checkbox" name="database" id="input_database" checked="checked">
+				Datenbank-Kommandos ausführen
+			</label>
+		</div><br/>';
+	}
 
 }
 
