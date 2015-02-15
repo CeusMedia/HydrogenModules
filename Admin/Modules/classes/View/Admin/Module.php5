@@ -67,7 +67,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 		return join( $listSections );
 	}
 
-	protected function renderRelatedModulesList( $allModules, $relatedModules, $url = NULL, $listClass = NULL ){
+	public function renderRelatedModulesList( $allModules, $relatedModules, $url = NULL, $listClass = NULL ){
 		$words	= $this->env->getLanguage()->getWords( 'admin/module' );
 		$list	= array();
 		foreach( $relatedModules as $relatedModuleId => $status ){

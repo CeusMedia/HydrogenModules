@@ -397,9 +397,10 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function installModule( $sourceId, $moduleId, $installType = 0, $settings = array(), $force = FALSE, $verbose = NULL ){
+	public function installModule( $sourceId, $moduleId, $installType = 0, $settings = array(), $force = FALSE, $database = TRUE, $verbose = NULL ){
 		try{
-			$this->installModuleDatabase( $moduleId );
+			if( $database )
+				$this->installModuleDatabase( $moduleId );
 			$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
 			if( !count( $exceptions ) ){															//  no error occured until now
 				$this->configureLocalModule( $moduleId, $settings, $installType, $sourceId );		//  save given configuration values in local module
@@ -604,7 +605,6 @@ class Logic_Module {
 				}
 			}
 		}
-		
 		foreach( $list as $sql )																	//  iterate SQL update list
 			$this->executeSql( $sql );																//  execute SQL
 	}
@@ -667,9 +667,10 @@ class Logic_Module {
 		return array( $files, $folders );
 	}
 
-	public function uninstallModule( $moduleId, $verbose = TRUE ){
+	public function uninstallModule( $moduleId, $database = TRUE, $verbose = TRUE ){
 		try{
-			$this->uninstallModuleDatabase( $moduleId, $verbose );
+			if( $database )
+				$this->uninstallModuleDatabase( $moduleId, $verbose );
 			$this->uninstallModuleFiles( $moduleId, $verbose );
 			return TRUE;
 		}

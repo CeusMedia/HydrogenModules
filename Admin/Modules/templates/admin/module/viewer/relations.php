@@ -7,7 +7,7 @@ $url	= './admin/module/viewer/index/';
 $relationsNeeded	= '-';
 $panelGraphNeeds	= '';
 if( $module->neededModules ){
-	$relationsNeeded	= $this->renderRelatedModulesList( $modules, $module->neededModules, $url, 'relations relations-needed' );
+	$relationsNeeded	= $view->renderRelatedModulesList( $modules, $module->neededModules, $url, 'relations relations-needed' );
 	$panelGraphNeeds	= '
 	<h4>Abhängigkeiten</h4>
 	<img src="./admin/module/showRelationGraph/'.$moduleId.'/out/needs/recursive" style="max-width: 100%"/><br/><br/>';
@@ -16,7 +16,7 @@ if( $module->neededModules ){
 $relationsSupported	= '-';
 $panelGraphSupports	= '';
 if( $module->supportedModules ){
-	$relationsSupported	= $this->renderRelatedModulesList( $modules, $module->supportedModules, $url, 'relations relations-supported' );
+	$relationsSupported	= $view->renderRelatedModulesList( $modules, $module->supportedModules, $url, 'relations relations-supported' );
 	$panelGraphSupports	= '
 	<h4>Unterstützung</h4>
 	<img src="./admin/module/showRelationGraph/'.$moduleId.'/out/supports/recursive" style="max-width: 100%"/><br/><br/>';
@@ -25,7 +25,7 @@ if( $module->supportedModules ){
 $panelGraphNeededBy	= '';
 $relationsNeededBy	= '-';
 if( $module->neededByModules ){
-	$relationsNeededBy	= $this->renderRelatedModulesList( $modules, $module->neededByModules, $url, 'relations relations-supported' );
+	$relationsNeededBy	= $view->renderRelatedModulesList( $modules, $module->neededByModules, $url, 'relations relations-supported' );
 	$panelGraphNeededBy	= '
 	<h4>Wird benötigt von</h4>
 	<img src="./admin/module/showRelationGraph/'.$moduleId.'/in/needs" style="max-width: 100%"/><br/><br/>';
@@ -33,7 +33,7 @@ if( $module->neededByModules ){
 $panelGraphSupportedBy	= '';
 $relationsSupportedBy	= '-';
 if( $module->supportedByModules ){
-	$relationsSupportedBy	= $this->renderRelatedModulesList( $modules, $module->supportedByModules, $url, 'relations relations-supported' );
+	$relationsSupportedBy	= $view->renderRelatedModulesList( $modules, $module->supportedByModules, $url, 'relations relations-supported' );
 	$panelGraphSupportedBy	= '
 	<h4>Wird unterstützt von</h4>
 	<img src="./admin/module/showRelationGraph/'.$moduleId.'/in/supports" style="max-width: 100%"/><br/><br/>';
