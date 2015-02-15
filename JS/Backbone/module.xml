@@ -12,9 +12,9 @@
 		<script top="yes">backbone-1.1.0.js</script>
 	</files>
 	<relations>
-		<needs type="module">JS:Underscore</needs>
-		<supports type="module">JS:JSON2</supports>
-		<supports type="module">JS:jQuery</supports>
+		<needs type="module">JS_Underscore</needs>
+		<supports type="module">JS_JSON2</supports>
+		<supports type="module">JS_jQuery</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $context->addBodyClass( 'uses-backbone' );
