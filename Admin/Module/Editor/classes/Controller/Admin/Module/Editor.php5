@@ -243,7 +243,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )
 			$this->restart( './admin/module/editor' );
-		if( $this->logic->uninstallModule( $moduleId, $verbose ) ){
+		if( $this->logic->uninstallModule( $moduleId, TRUE, $verbose ) ){					//  remove module with database
 			$this->messenger->noteSuccess( $words->moduleUninstalled, $module->title );
 			$this->restart( './admin/module/editor' );
 		}
@@ -424,7 +424,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 
 	public function viewCode( $moduleId, $type, $fileName ){
 		$fileName	= base64_decode( $fileName );
-		$helper		= new View_Helper_ModuleCodeViewer( $this->env, $this->logic );
+		$helper		= new View_Helper_Module_CodeViewer( $this->env, $this->logic );
 		try{
 			print( $helper->render( $moduleId, $type, $fileName ) );
 		}
