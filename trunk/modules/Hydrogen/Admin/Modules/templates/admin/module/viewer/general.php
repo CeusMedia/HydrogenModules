@@ -110,7 +110,7 @@ $buttonUpdate	= UI_HTML_Elements::LinkButton( './admin/module/installer/update/'
 if( $isInstalled ){
 	$labelInstall	= "Das Modul ist installiert.";
 	$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $w->buttonInstall, 'button add', NULL, 'disabled' );
-	$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
+	$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $w->buttonRemove, 'button remove' );
 	$buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $w->buttonEdit, 'button edit' );
 
 	if( $hasUpdate )

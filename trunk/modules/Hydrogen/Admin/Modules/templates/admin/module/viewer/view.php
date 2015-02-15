@@ -1,5 +1,8 @@
 <?php
+$helperDetails	= new View_Helper_Module_Details( $env );
+$panelDetails	= $helperDetails->render( $module, $modules, $view );
 
+/*
 UI_HTML_Tabs::$version	= 4;
 $tabs	= new UI_HTML_Tabs();
 $activeTab	= 0;
@@ -33,6 +36,7 @@ $options	= array(
 );
 
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
+*/
 
 $panelGeneral	= $this->loadTemplateFile( 'admin/module/viewer/general.php' );
 
@@ -56,7 +60,7 @@ dl.general dd {
 </div>
 '.$panelGeneral.'
 <div id="panel-details" style="display: none">
-	'.$tabs->buildTabs( 'tabs-module' ).'
+	'.$panelDetails.'
 </div>
 <br/>
 <br/>

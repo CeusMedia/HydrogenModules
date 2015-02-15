@@ -291,6 +291,7 @@ div.module-overview div.module {
 	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-8 */
 	}
+
 div.module-overview div.module.available {
 	}	
 div.module-overview div.module.installed {
@@ -329,6 +330,9 @@ div.module-overview div.module div.module-desc {
 	overflow: hidden;
 	white-space: nowrap;
 	}
+/*div.module-overview div.module * {
+	color: #333;
+	}*/
 div.module-overview fieldset {
 	border-width: 1px 0px 0px 0px;
 	border-style: dotted;
@@ -523,3 +527,17 @@ select.active-no {
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	}
+
+
+body.site-admin-module-viewer-index #module-scope-selector {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    padding: 0.5em 1em 0.5em 1em;
+    border-radius: 0.75em 0 0.75em 0.75em;
+    background-color: rgba(127,127,127,0.15)
+    }
+body.site-admin-module-viewer-index #search {
+    border-radius: 0px;
+    }
+

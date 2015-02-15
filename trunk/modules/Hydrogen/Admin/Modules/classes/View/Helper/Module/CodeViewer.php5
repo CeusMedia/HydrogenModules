@@ -2,7 +2,7 @@
 /**
  *	@todo		implement view for files from available modules
  */
-class View_Helper_ModuleCodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
+class View_Helper_Module_CodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 
 	/**	@var	Logic_Module	$logic		Module logic instance */
 	protected $logic;
@@ -18,7 +18,7 @@ class View_Helper_ModuleCodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 		$this->setEnv( $env );
 		$this->logic	= $logic;
 	}
-	
+
 	public function render( $moduleId, $fileType, $fileName, $sourceType = NULL ){
 		$module	= $this->logic->getModule( $moduleId );
 		if( !$module )
@@ -67,7 +67,7 @@ class View_Helper_ModuleCodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 		}
 		$config			= $this->env->getConfig();
 		$pathJsLib		= $config->get( 'path.scripts.lib' );
-		
+
 		$content	= File_Reader::load( $pathFile.$fileName );
 #		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '

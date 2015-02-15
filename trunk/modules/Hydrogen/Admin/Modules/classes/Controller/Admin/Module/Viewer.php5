@@ -34,6 +34,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'modules', $this->logic->model->getAll() );
+		$this->addData( 'filterModuleScope', $this->env->getSession()->get( 'admin_module_viewer_scope' ) );
 #		remark( $c->stop( 3, 1 ).' ms' );
 #		die;
 	}
@@ -74,10 +75,15 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		}
 	}
 
+	public function setScope( $scope ){
+		$this->env->getSession()->set( 'admin_module_viewer_scope', (int) $scope );
+		$this->restart( NULL, TRUE );
+	}
+
 	public function view( $moduleId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$hasUpdate	= $this->logic->checkForUpdate( $moduleId );
-		$module		= $this->logic->model->get( $moduleId );		
+		$module		= $this->logic->model->get( $moduleId );
 		if( $hasUpdate )
 			$this->messenger->noteNotice( $words->updateAvailable, $module->versionInstalled, $module->versionAvailable );
 		$module->neededModules		= $this->logic->model->getNeededModulesWithStatus( $moduleId );
