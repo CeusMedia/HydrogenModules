@@ -9,7 +9,7 @@
 	<license source="https://github.com/jashkenas/underscore/blob/master/LICENSE">Open Source</license>
 	<files>
 		<script load="auto" top="yes">underscore-1.5.2-min.js</script>
-		<script top="yes">backbone-1.5.2.js</script>
+		<script top="yes">underscore-1.5.2.js</script>
 	</files>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $context->addBodyClass( 'uses-underscore' );
