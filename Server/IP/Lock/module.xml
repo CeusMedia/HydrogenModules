@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: IP Lock</title>
+	<description><![CDATA[]]></description>
+	<category>Server</category>
+	<version>0.2.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen Module.</log>
+	<log version="0.2.1">Extracted logic to class.</log>
+	<log version="0.2.2">Added reasons.</log>
+	<log version="0.2.3">Added filters.</log>
+<!--	<log version="0.2.4">Added whitelist.</log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/IP/Lock.php5</class>
+		<class>Logic/IP/Lock.php5</class>
+		<class>Model/IP/Lock.php5</class>
+		<class>Model/IP/Lock/Filter.php5</class>
+		<class>Model/IP/Lock/Reason.php5</class>
+<!--		<class>Model/IP/Lock/Whitelist.php5</class>-->
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<hook type="resource" resource="Env" event="init">Controller_IP_Lock::___onEnvInit</hook>
+</module>
