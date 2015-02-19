@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: IP Locks</title>
+	<description><![CDATA[]]></description>
+	<category>Management</category>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen Module.</log>
+	<log version="0.2.1">Added tabs and reason management.</log>
+	<log version="0.2.2">Added filter management.</log>
+<!--	<log version="0.2.3">Added whitelist management.</log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Ip/Lock.php5</class>
+		<class>Controller/Manage/Ip/Lock/Filter.php5</class>
+		<class>Controller/Manage/Ip/Lock/Reason.php5</class>
+<!--		<class>Controller/Manage/Ip/Lock/Whitelist.php5</class>-->
+		<class>View/Manage/Ip/Lock.php5</class>
+		<class>View/Manage/Ip/Lock/Filter.php5</class>
+		<class>View/Manage/Ip/Lock/Reason.php5</class>
+<!--		<class>View/Manage/Ip/Lock/Whitelist.php5</class>-->
+		<locale>de/manage/ip/lock.ini</locale>
+		<template>manage/ip/lock/add.php</template>
+		<template>manage/ip/lock/index.php</template>
+		<template>manage/ip/lock/filter/add.php</template>
+		<template>manage/ip/lock/filter/edit.php</template>
+		<template>manage/ip/lock/filter/index.php</template>
+		<template>manage/ip/lock/reason/add.php</template>
+		<template>manage/ip/lock/reason/edit.php</template>
+		<template>manage/ip/lock/reason/index.php</template>
+<!--		<template>manage/ip/lock/reason/index.php</template>-->
+	</files>
+	<relations>
+		<needs type="module">Server_IP_Lock</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Helper_HTML</needs>
+	</relations>
+	<hook type="resource" resource="IpLock" event="registerTabs">View_Manage_Ip_Lock::___onRegisterTab</hook>
+</module>
