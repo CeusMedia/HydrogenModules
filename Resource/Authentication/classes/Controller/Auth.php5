@@ -13,7 +13,14 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->messenger	= $this->env->getMessenger();
 	}
 
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module ){
+	public function a( $b ){
+		$c;
+	}
+
+	public static function b1(){}
+	static public function b2(){}
+
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		$userId	= (int) $env->getSession()->get( 'userId' );															//  get ID of current user (or zero)
 		$script	= 'Auth.init('.$userId.');';																			//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready

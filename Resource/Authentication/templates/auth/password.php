@@ -1,6 +1,6 @@
 <?php
 $w		= (object) $words['password'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password.' ) );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password/' ) );
 
 return '
 '.$textTop.'

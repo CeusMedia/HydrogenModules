@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication</title>
 	<description><![CDATA[Module for authentication against local database using the Users module.]]></description>
-	<version>0.5.10</version>
+	<version>0.5.11</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -19,6 +19,7 @@
 	<log version="0.5.8">Updated registration form for error handling or preset information.</log>
 	<log version="0.5.9">Provide current user ID to Auth script on init by hook.</log>
 	<log version="0.5.10">Let the framework run the initial JavaScript code.</log>
+	<log version="0.5.11">Moved HTML files to subfolders.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -33,23 +34,21 @@
 		<template>auth/password.php</template>
 		<template>auth/register.php</template>
 		<locale>de/auth.ini</locale>
-		<locale>de/html/auth/confirm.top.html</locale>
-		<locale>de/html/auth/confirm.info.html</locale>
-		<locale>de/html/auth/confirm.bottom.html</locale>
-		<locale>de/html/auth/login.top.html</locale>
-		<locale>de/html/auth/login.info.html</locale>
-		<locale>de/html/auth/login.bottom.html</locale>
-		<locale>de/html/auth/password.top.html</locale>
-		<locale>de/html/auth/password.info.html</locale>
-		<locale>de/html/auth/password.bottom.html</locale>
-		<locale>de/html/auth/register.top.html</locale>
-		<locale>de/html/auth/register.info.html</locale>
-		<locale>de/html/auth/register.bottom.html</locale>
+		<locale>de/html/auth/confirm/top.html</locale>
+		<locale>de/html/auth/confirm/info.html</locale>
+		<locale>de/html/auth/confirm/bottom.html</locale>
+		<locale>de/html/auth/login/top.html</locale>
+		<locale>de/html/auth/login/info.html</locale>
+		<locale>de/html/auth/login/bottom.html</locale>
+		<locale>de/html/auth/password/top.html</locale>
+		<locale>de/html/auth/password/info.html</locale>
+		<locale>de/html/auth/password/bottom.html</locale>
+		<locale>de/html/auth/register/top.html</locale>
+		<locale>de/html/auth/register/info.html</locale>
+		<locale>de/html/auth/register/bottom.html</locale>
 		<locale>de/html/auth/tac.html</locale>
-		<locale>de/mail/auth/register</locale>
-<!--		<locale>de/mail/auth/password</locale>-->
 		<locale>en/auth.ini</locale>
-		<locale>en/html/auth/login.info.html</locale>
+		<locale>en/html/auth/login/info.html</locale>
 		<locale>en/html/auth/tac.html</locale>
 		<script load="auto">Auth.js</script>
 	</files>
