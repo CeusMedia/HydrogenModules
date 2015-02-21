@@ -4,7 +4,7 @@ $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' )
 
 $w		= (object) $words['register'];
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
-extract( $view->populateTexts( $texts, 'html/auth/register.' ) );
+extract( $view->populateTexts( $texts, 'html/auth/register/' ) );
 
 $formTerms	= '';
 if( $view->hasContent( 'auth', 'tac', 'html/' ) ){
