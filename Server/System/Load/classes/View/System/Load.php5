@@ -1,6 +1,22 @@
 <?php
+/**
+ *	View for system CPU load indicating.
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@copyright	Ceus Media 2015
+ */
+/**
+ *	View for system CPU load indicating.
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@copyright	Ceus Media 2015
+ *	@extends	CMF_Hydrogen_View
+ */
 class View_System_Load extends CMF_Hydrogen_View{
 
+	/**
+	 *	Prints HTML indicator for system load and quits execution.
+	 *	@access		public
+	 *	@return		void
+	 */
 	public function ajaxRenderIndicator(){
 		$load		= $this->getData( 'load' );														//  get load registered by controller
 		$cores		= max( 1, $this->env->getConfig()->get( 'module.server_system_load.cores' ) );	//  get number of cpu cores from module config

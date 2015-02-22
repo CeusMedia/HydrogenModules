@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <module>
-	<title>Server Load</title>
+	<title>Server: System Load</title>
 	<description/>
-	<category>System</category>
-	<version>0.2.1</version>
+	<category>Server</category>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Handle denial via remote environment with exception instead of HTTP response.</log>
+	<log version="0.3">Refactored controller and moved module to server category.</log>
+	<log version="0.3.1">Improved code documentation and module relations.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,7 +21,9 @@
 	<config protected="yes" type="integer" name="cores">1</config>
 	<config protected="yes" type="float" name="max">20</config>
 	<config protected="yes" type="integer" name="retryAfter">0</config>
-	<relations/>
+	<relations>
+		<needs type="module">UI_Indicator</needs>
+	</relations>
 	<link access="public" path="system/load/ajaxRenderIndicator"></link>
 	<link access="inside" path="system/load/ajaxGetLoad"></link>
 	<link access="inside" path="system/load/ajaxGetLoads"></link>
