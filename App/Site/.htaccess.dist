@@ -2,7 +2,7 @@
     Deny From All
 </Files>
 
-Options -MultiViews -Indexes FollowSymLinks
+Options -MultiViews -Indexes +FollowSymLinks
 
 RewriteEngine On
 
