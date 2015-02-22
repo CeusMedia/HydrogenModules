@@ -2,7 +2,7 @@
 <module>
 	<title>JS: jQuery UI: Timepicker</title>
 	<description><![CDATA[jQuery UI Timepicker Addon]]></description>
-	<version>1.1.1</version>
+	<version>1.1.1-p2</version>
 	<category>JavaScript</category>
 	<author site="http://trentrichardson.com">Trent Richardson</author>
 	<url title="GitHub">https://github.com/trentrichardson/jQuery-Timepicker-Addon</url>
@@ -13,7 +13,6 @@
 		<style load="auto">jquery-ui-timepicker-addon.css</style>
 	</files>
 	<relations>
-<!--		<needs type="module">JS_jQuery_UI</needs>
-		<needs type="module">JS_jQuery</needs>-->
+		<needs type="module">JS_jQuery_UI</needs>
 	</relations>
 </module>
