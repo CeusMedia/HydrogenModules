@@ -14,5 +14,10 @@ class View_Helper_TimePhraser{
 		}
 		return $phrase;
 	}
+
+	static public function convertStatic( $env, $timestamp, $asHtml = FALSE, $prefix = NULL, $suffix = NULL ){
+		$helper	= new self( $env );
+		return $helper->convert( $timestamp, $asHtml, $prefix, $suffix );
+	}
 }
 ?>
