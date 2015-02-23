@@ -20,6 +20,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	}
 
 	protected function renderModuleButton( $module, $url, $class = 'module not-button' ){
+		$class		.= ' module-'.( empty( $module->isInstalled ) ? 'not-' : '' ).'installed';
 		$image		= '';
 		if( !empty( $module->icon ) )
 			$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
