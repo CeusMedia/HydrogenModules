@@ -267,7 +267,7 @@ div.module-overview div.module {
 	margin-bottom: 1em;
 	padding: 0.5% 8px
 	}
-	
+
 div.module-overview div.module {
 	background-position: 0px 0px;
 	background-repeat: repeat-x;
@@ -290,6 +290,14 @@ div.module-overview div.module {
 	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-8 */
+	}
+
+div.module-overview div.module.module-installed {
+	border-left: 5px solid rgba(13, 128, 36, 0.8);
+	border-left: 5px solid rgba(9, 79, 23, 0.7);
+	}
+div.module-overview div.module.module-not-installed {
+	border-left: 5px solid rgba(139, 0, 0, 0.7);
 	}
 
 div.module-overview div.module.available {
