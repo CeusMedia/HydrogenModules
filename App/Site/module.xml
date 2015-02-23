@@ -3,10 +3,12 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.3.9</version>
+	<version>0.3.11</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
+	<log version="0.3.10">Integrated rendering of hints.</log>
+	<log version="0.3.11">Added version and hook to use version to solve browser cache problems.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -26,6 +28,7 @@
 		<file>.htpasswd.dist</file>
 		<file>logs/.htaccess</file>
 	</files>
+	<config protected="no" type="string" name="version">0.1</config>
 	<link xml:lang="de" access="public" rank="0" path="">Start</link>
 	<link xml:lang="en" access="public" rank="0" path="">Home</link>
 	<relations>
@@ -39,9 +42,9 @@
 		<supports type="module">Info_Contact</supports>
 		<supports type="module">Info_Pages</supports>
 	</relations>
-    <hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	        $messenger  = $context->env->getMessenger();                            		//  shortcut messenger
-	        $config     = $module->config;                                          		//  shortcut module configuration pairs
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+			$messenger	= $context->env->getMessenger();									//  shortcut messenger
+	        $config		= $module->config;													//  shortcut module configuration pairs
 			if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
 				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
 					if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
@@ -51,5 +54,16 @@
 					$messenger->noteSuccess( 'Created .htaccess and .htpasswd for authentication.' );
 				}
 			}
-		]]></hook>
+	]]></hook>
+	<hook type="resource" resource="Page" event="init"><![CDATA[
+		$config = $env->getConfig();														//  shortcut configuration
+		if( !$config->get( 'app.revision' ) ){												//  no revision set in base app configuration
+			$version	= $config->get( 'module.app_site.version' );						//  get version from module App:Site
+			if( version_compare( $version, 0 ) === 1 ){										//  a version (greater than 0) has been set
+				$context->css->primer->setRevision( $version );								//  set version as revision on primer CSS collector
+				$context->css->theme->setRevision( $version );								//  set version as revision on theme CSS collector
+				$context->js->setRevision( $version );										//  set version as revision on JavaScript collector
+			}
+		}
+	]]></hook>
 </module>

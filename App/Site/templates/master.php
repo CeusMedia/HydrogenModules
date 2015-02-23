@@ -3,7 +3,11 @@
 $pathCDN	= "http://cdn.int1a.net/";
 
 $links		= array(
-	''			=> "Start",
+	''					=> "Start",
+	'manage/customer'	=> "Kunden",
+	'work/bill'			=> "Rechnungen",
+	'work/time'			=> "Zeiterfassung",
+	'auth/github'		=> "OAuth: Github",
 );
 
 $controller	= $this->env->getRequest()->get( 'controller' );
@@ -25,6 +29,7 @@ if( $env->getModules()->has( 'UI_Helper_Messenger_Bootstrap' ) )
 else
 	$messages	= $messenger->buildMessages();
 
+$hints	= class_exists( 'View_Helper_Hint' ) ? View_Helper_Hint::render( 'Tipp: ' ) : '';
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '
@@ -40,6 +45,7 @@ $body	= '
 	<div class="container" style="margin-top: 50px">
 		<div id="layout-messenger">'.$messages.'</div>
 		<div id="layout-content">
+			'.$hints.'
 			'.$content.'
 		</div>
 	</div>
