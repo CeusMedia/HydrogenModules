@@ -15,7 +15,7 @@
 		<locale>en/html/info/404.html</locale>
 		<style source="theme">site.info.css</style>
 	</files>
-	<config protected="yes" type="string" name="types">HTML,Markdown</config>
+	<config protected="yes" type="string" name="types" title="Order of supported content types.">HTML,Markdown</config>
 	<relations>
 		<supports type="module">UI_Markdown</supports>
 	</relations>
