@@ -7,7 +7,7 @@ class View_Info extends CMF_Hydrogen_View{
 
 	public function index(){
 		$site		= $this->getData( 'site' );
-		$types		= explode( ',', $env->getConfig()->get( 'module.info.types' ) );
+		$types		= explode( ',', $this->env->getConfig()->get( 'module.info.types' ) );
 		foreach( $types as $type ){
 			switch( strtolower( trim( $type ) ) ){
 				case 'html':
