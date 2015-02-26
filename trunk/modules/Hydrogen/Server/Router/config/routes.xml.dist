@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<routes>
+
+<!--  301 MOVED  -->
+	<route regex="0" code="301">
+		<source>OldAddress</source>
+		<target>NewAddress</target>
+	</route>
+
+<!--  404 NOT FOUND  -->
+	<route regex="1" code="404" title="Catch all not loadable resources.">
+		<source>/.+\.(js|json|css|png)?(\?.+)?/</source>
+		<target></target>
+	</route>
+
+<!--  410 GONE  -->
+	<route regex="0" code="410">
+		<source>NotExistingAnymore</source>
+		<target></target>
+	</route>
+
+</routes>
