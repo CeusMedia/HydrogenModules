@@ -43,14 +43,19 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 				$route->target	= preg_replace( $route->source, $route->target, $path );
 			}
 			if( $match ){
-				if( (int) $route->code < 400 ){
-					$controller	= new Controller_Router( $env, FALSE );
-					$controller->restart( $env->url.$route->target, FALSE, $route->code );
+				if( (int) $route->code >= 400 ){
+					Net_HTTP_Status::sendHeader( $route->code );
+					$heading	= $route->code.' '.Net_HTTP_Status::getText( $route->code );
+					print( UI_HTML_Tag::create( 'h1', $heading ) );
+					exit;
 				}
-				Net_HTTP_Status::sendHeader( $route->code );
-				$heading	= $route->code.' '.Net_HTTP_Status::getText( $route->code );
-				print( UI_HTML_Tag::create( 'h1', $heading ) );
-				exit;
+				$controller	= new Controller_Router( $env, FALSE );
+				if( (int) $route->code >= 300 )
+					$controller->restart( $env->url.$route->target, FALSE, $route->code );
+				else{
+					$env->getRequest()->set( '__path', $route->target );
+					$controller->redirect( $route->target, 'index' );
+				}
 			}
 		}
 	}

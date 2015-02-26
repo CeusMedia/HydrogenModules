@@ -3,10 +3,12 @@
 	<title>Server: Router</title>
 	<description/>
 	<category>Server</category>
-	<version>0.2.1</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support XML as data source.</log>
+	<log version="0.2.2">Support silent redirects.</log>
+	<log version="0.2.3">Now hooked on App:onControl.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,7 +19,7 @@
 	<relations>
 		<supports type="module">Resource_Database</supports>
 	</relations>
-	<hook type="resource" resource="App" event="onDispatch">Controller_Router::___onAppDispatch</hook>
+	<hook type="resource" resource="App" event="onControl">Controller_Router::___onAppDispatch</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (
