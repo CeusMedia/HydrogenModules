@@ -3,17 +3,21 @@
 	<title>Info</title>
 	<description><![CDATA[Presents static contents.]]></description>
 	<category></category>
-	<version>0.1</version>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Major redesign with dispatch hook.</log>
+	<log version="0.3.1">Support for Markdown.</log>
 	<files>
 		<class>Controller/Info.php5</class>
 		<class>View/Info.php5</class>
 		<locale>de/html/info/404.html</locale>
 		<locale>en/html/info/404.html</locale>
-<!--		<template>info/404.php</template>-->
-		<script source="local" load="auto">site.info.js</script>
-		<style source="theme" load="auto">site.info.css</style>
+		<style source="theme">site.info.css</style>
 	</files>
+	<config protected="yes" type="string" name="types">HTML,Markdown</config>
 	<relations>
-		<supports>Manage_Content</supports>
+		<supports type="module">UI_Markdown</supports>
 	</relations>
+	<hook type="resource" resource="App" event="onDispatch">Controller_Info::___onAppDispatch</hook>
 </module>

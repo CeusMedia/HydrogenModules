@@ -1,25 +1,26 @@
 <?php
-/**
- *	Auth Controller.
- *	@category		cmApps
- *	@package		Chat.Client.Controller
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
- *	@version		$Id$
- */
-/**
- *	Auth Controller.
- *	@category		cmApps
- *	@package		Chat.Client.Controller
- *	@extends		CMF_Hydrogen_Controller
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
- *	@version		$Id$
- */
-class Controller_Info extends CMF_Hydrogen_Controller {
+class Controller_Info extends CMF_Hydrogen_Controller{
 
-	public function index( $path = NULL, $path = NULL, $path = NULL, $path = NULL, $path = NULL ){
-		$this->addData( 'fileName', join( '/', func_get_args() ) );
+	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
+		$path	= $env->getRequest()->get( '__path' );
+		$view	= new View_Info( $env );
+		if( $view->hasContentFile( 'html/info/'.$path.".html" ) ){
+			$controller	= new Controller_Info( $env, FALSE );
+			$controller->redirect( 'info', 'index', array( $path ) );
+			return TRUE;
+		}
+		else if( $env->getModules()->has( 'UI_Markdown' ) ){
+			$fileKey	= 'html/info/'.$path.".md";
+			if( $view->hasContentFile( $fileKey ) ){
+				$controller	= new Controller_Info( $env, FALSE );
+				$controller->redirect( 'info', 'index', array( $path ) );
+				return TRUE;
+			}
+		}
+	}
+	
+	public function index( $arg1, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ){
+		$this->addData( 'site', join( "/", func_get_args() ) );
 	}
 }
 ?>
