@@ -3,7 +3,9 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
+	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
+	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -15,10 +17,12 @@
 		<locale>en/info/pages.ini</locale>
 		<locale>de/info/pages.ini</locale>
 	</files>
-	<config type="string" protected="yes" name="title.separator">&lt;</config>
+	<config type="string" protected="yes" name="title.separator"><![CDATA[<]]></config>
+	<config type="string" protected="yes" name="direct" values="allowed,denied">denied</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
+	<hook type="event" resource="App" event="onDispatch">Controller_Info_Page::___onAppDispatch</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (

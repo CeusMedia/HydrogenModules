@@ -20,7 +20,8 @@ class View_Info_Page extends CMF_Hydrogen_View{
 			$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 			while( preg_match( $pattern, $object->content ) ){
 				$path	= preg_replace( $pattern, "\\3", $object->content );
-				if( $path == $request->get( 'page' ) )
+			//	if( $path == $request->get( 'page' ) )
+				if( $path == $object->pageId )
 					throw new Exception( 'Page "'.$path.'" must not include itself' );
 				$subcontent		= $this->loadSubpage( $path );									//  load nested page content
 				$subcontent		= preg_replace( "/<h(1|2)>.*<\/h(1|2)>/", "", $subcontent );		//  remove headings above level 3
@@ -32,16 +33,11 @@ class View_Info_Page extends CMF_Hydrogen_View{
 	}
 
 	protected function loadSubpage( $path ){
-		$uri	= $path . ( ( strpos( $path, '?' ) > 0 ) ? '&__contentOnly' : '?__contentOnly' );
-		try{
-#			xmp( $this->env->url.$uri );
-#			die;
-			return Net_Reader::readUrl( $this->env->url.$uri );
-		}
-		catch( Exception $e ){
-			$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
-		}
-		return "";
+		$logic	= new Logic_Page( $this->env );
+		$page	= $logic->getPageFromPath( $path, TRUE );
+		if( $page )
+			return $page->content;
+		$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
 	}
 }
 ?>
