@@ -35,7 +35,7 @@ class View_Info_Page extends CMF_Hydrogen_View{
 				$words	= $this->getWords( 'index', 'info/pages' );
 				$this->env->getMessenger()->noteNotice( $words->msgEmptyContent );
 			}
-			return $this->renderContent( $object->content );
+			return $this->renderContent( $object->content, $object->format );
 		}
 	}
 
