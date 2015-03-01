@@ -1,10 +1,28 @@
 <?php
 class View_Info_Page extends CMF_Hydrogen_View{
 
-	public function index(){
+	static public function ___onRenderContent( $env, $context, $modules, $data ){
+		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
+		$logic		= new Logic_Page( $env );
+		while( preg_match( $pattern, $data->content ) ){
+			$path	= preg_replace( $pattern, "\\3", $data->content );
+		//	if( $path == $request->get( 'page' ) )
 
-		$config		= $this->env->getConfig()->get( 'module.info_pages.', TRUE );
-		$request	= $this->env->getRequest();
+			$page	= $logic->getPageFromPath( $path, TRUE );
+			if( !$page ){
+				$env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
+			}
+			else{
+				$subcontent		= $page->content;													//  load nested page content
+				$subcontent		= preg_replace( "/<h(1|2)>.*<\/h(1|2)>/", "", $subcontent );		//  remove headings above level 3
+				$replacement	= "\\1".$subcontent."\\4";											//  insert content of nested page...
+				$data->content		= preg_replace( $pattern, $replacement, $data->content );		//  ...into page content
+			}
+		}
+	}
+	
+	public function index(){
+//		$config		= $this->env->getConfig()->get( 'module.info_pages.', TRUE );
 		$page		= $this->env->getPage();
 
 		$data		= new ADT_List_Dictionary( $this->getData() );								//  wrap view data into dictionary object
@@ -17,18 +35,7 @@ class View_Info_Page extends CMF_Hydrogen_View{
 				$words	= $this->getWords( 'index', 'info/pages' );
 				$this->env->getMessenger()->noteNotice( $words->msgEmptyContent );
 			}
-			$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
-			while( preg_match( $pattern, $object->content ) ){
-				$path	= preg_replace( $pattern, "\\3", $object->content );
-			//	if( $path == $request->get( 'page' ) )
-				if( $path == $object->pageId )
-					throw new Exception( 'Page "'.$path.'" must not include itself' );
-				$subcontent		= $this->loadSubpage( $path );									//  load nested page content
-				$subcontent		= preg_replace( "/<h(1|2)>.*<\/h(1|2)>/", "", $subcontent );		//  remove headings above level 3
-				$replacement	= "\\1".$subcontent."\\4";										//  insert content of nested page...
-				$object->content	= preg_replace( $pattern, $replacement, $object->content );	//  ...into page content
-			}
-			return $object->content;
+			return $this->renderContent( $object->content );
 		}
 	}
 
