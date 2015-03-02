@@ -12,6 +12,17 @@ $(document).ready(function(){
 					}
 				}
 			}
+			if(settings.settings.JS_CodeMirror.auto_option_fullscreen){
+				options.extraKeys = {
+					"F11": function(cm) {
+						CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));
+					},
+					"Esc": function(cm) {
+						if (CodeMirror.isFullScreen(cm))
+							CodeMirror.setFullScreen(cm, false);
+					}
+				}
+			}
 			var mirror = CodeMirror.fromTextArea($(this).get(0), options);
 			if(typeof options.height === "undefined")
 				mirror.setSize("100%", $(this).height());
