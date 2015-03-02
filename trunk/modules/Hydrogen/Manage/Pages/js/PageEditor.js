@@ -90,7 +90,7 @@ var PageEditor = {
 			indentUnit: 4,
 			tabSize: 4,
 			indentWithTabs: true,
-	//		theme: "elegant",
+			theme: "default",
 			mode: "htmlmixed",
 			extraKeys: {
 				"F11": function(cm) {
@@ -110,6 +110,7 @@ var PageEditor = {
 		});
 		textarea.data('codemirror',mirror);
 		mirror.setSize("auto",textarea.height());	//  set same size as textarea
+		$("#hint").html("Press <b>F11</b> for fullscreen editing.");
 	},
 
 	setupTinyMCE: function(){

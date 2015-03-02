@@ -29,7 +29,7 @@ return '
 	</div>
 	<div id="manage-page-main" class="span9">
 		<div style="float: left; width: 100%">
-			<form action="./manage/page/edit/'.$current.'" method="post">
+			<form action="./manage/page/edit/'.$current.'" method="post" class="cmFormChange-auto">
 				'.$tabs.'
 				<div class="buttonbar">
 					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
