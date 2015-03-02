@@ -30,6 +30,7 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'module',
 		'title',
 		'content',
+		'format',
 		'description',
 		'keywords',
 		'createdAt',

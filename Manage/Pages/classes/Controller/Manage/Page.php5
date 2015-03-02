@@ -78,6 +78,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'identifier'	=> $this->request->get( 'identifier' ),
 			'title'			=> $this->request->get( 'title' ),
 			'content'		=> $this->request->get( 'content' ),
+			'timestamp'		=> time(),
 		);
 		$this->addData( 'path', $this->baseUri );
 		$this->addData( 'page', $page );
@@ -147,7 +148,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $page ){
 			if( $page->parentId ){
 				$parent	= $model->get( $page->parentId );
-				if( $parent->parentId ){
+				if( $parent && $parent->parentId ){
 					$grand	= $model->get( $parent->parentId );
 					$parent->identifier	= $grand->identifier.'/'.$parent->identifier;
 				}
