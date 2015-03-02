@@ -1,10 +1,12 @@
 <?php
 class Logic_Frontend{
 
-	protected $env;
+	static protected $instance;
+
 	protected $config;
+	protected $env;
 	protected $modules	= array();
-	protected $path		= "../";
+	protected $path;
 	protected $paths	= array(
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
@@ -15,23 +17,38 @@ class Logic_Frontend{
 		'logs'		=> 'logs/',
 		'locales'	=> 'locales/',
 	);
-	
-	public function __construct( $env, $path = "../" ){
-		$this->env		= $env;
-		$this->path		= $path;
 
-		$configFile		= $path."config/config.ini";
+	static public function getInstance( $env ){
+		if( !self::$instance )
+			self::$instance	= new self( $env );
+		return self::$instance;
+	}
+
+	protected function __clone(){}
+
+	protected function __construct( $env ){
+		$this->env		= $env;
+		$this->path		= $env->getConfig()->get( 'module.resource_frontend.path' );
+		$this->detectConfig();
+		$this->detectModules();
+		$this->detectBaseUri();
+	}
+
+	protected function detectConfig(){
+		$configFile		= $this->path."config/config.ini";
 		if( !file_exists( $configFile ) )
-			throw new RuntimeException( 'No Hydrogen application found in: '.$path );
-			$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
+			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
+		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
 		$this->paths	= array_merge( $this->paths, $this->config->getAll( 'path.', !TRUE ) );
 		unset( $this->paths['scripts.lib'] );
+	}
 
+	protected function detectBaseUri(){
 		if( $this->config->get( 'app.baseHref' ) )
 			$this->uri	= $this->config->get( 'app.baseHref' );
 		else{
 			$path	= dirname( getEnv( 'SCRIPT_NAME' ) ).'/'.$this->path;
-			while( preg_match( "@\/\.\.\/@", $path ) ){
+			while( preg_match( "@/\.\./@", $path ) ){
 				$parts	= explode( "/", $path );
 				foreach( $parts as $nr => $part ){
 					if( $part === ".." ){
@@ -46,7 +63,9 @@ class Logic_Frontend{
 				$path	= preg_replace( "@/\./@", "/", $path );
 		}
 		$this->uri	= "http://".getEnv( 'HTTP_HOST' ).$path;
+	}
 
+	protected function detectModules(){
 		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
 		foreach( $index as $entry ){
 			if( preg_match( "@^(.+)(\.xml)$@", $entry->getFilename() ) ){
@@ -57,12 +76,7 @@ class Logic_Frontend{
 		ksort( $this->modules );
 	}
 
-	public function checkModule( $moduleId ){
-		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
-		return file_exists( $fileName );
-	}
-
-	public function getAppConfigValues( $keys = array() ){	
+	public function getAppConfigValues( $keys = array() ){
 		$list	= array();
 		foreach( $this->config->getAll( 'app.' ) as $key => $value ){
 			if( !$keys || in_array( $key, $keys ) )
@@ -70,7 +84,7 @@ class Logic_Frontend{
 		}
 		return $list;
 	}
-	
+
 	public function getModuleConfigValues( $moduleId, $keys = array() ){
 		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
 		if( !file_exists( $fileName ) )
@@ -87,12 +101,14 @@ class Logic_Frontend{
 		}
 		return $list;
 	}
-	
+
 	public function getModules(){
 		return array_keys( $this->modules );
 	}
-	
-	public function getPath( $key ){
+
+	public function getPath( $key = NULL ){
+		if( !$key )
+			return $this->path;
 		if(	array_key_exists( $key, $this->paths ) )
 			return $this->path.$this->paths[$key];
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
@@ -100,6 +116,11 @@ class Logic_Frontend{
 
 	public function getUri(){
 		return $this->uri;
+	}
+
+	public function hasModule( $moduleId ){
+		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
+		return file_exists( $fileName );
 	}
 }
 ?>
