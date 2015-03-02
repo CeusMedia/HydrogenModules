@@ -2,17 +2,22 @@
 class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 	protected $model;
+	protected $request;
+	protected $messenger;
+	protected $session;
+	protected $words;
+	protected $frontend;
 
 	protected function __onInit(){
 		$config		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
 
-		$this->baseUri		= $config->get( 'site.domain' ).$config->get( 'site.path' );
 		$this->model		= new Model_Page( $this->env );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->words		= $this->getWords();
 
 		$this->session		= $this->env->getSession();
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
@@ -43,8 +48,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		ksort( $list );
 		$context->list	= array_merge( $context->list, array_values( $list ) );
 	}
-	
-	
+
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			foreach( $this->model->getColumns() as $column ){
@@ -78,9 +82,10 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'identifier'	=> $this->request->get( 'identifier' ),
 			'title'			=> $this->request->get( 'title' ),
 			'content'		=> $this->request->get( 'content' ),
+			'module'		=> $this->request->get( 'module' ),
 			'timestamp'		=> time(),
 		);
-		$this->addData( 'path', $this->baseUri );
+		$this->addData( 'path', $this->frontend->getUri() );
 		$this->addData( 'page', $page );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->preparePageTree();
@@ -158,13 +163,14 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 
 		$page		= (object) array( 'pageId' => 0 );
-		$path		= $this->baseUri;
+		$path		= $this->frontend->getUri();
 		if( $pageId ){
 			$page		= $model->get( (int) $pageId );
 			$this->session->set( 'module.manage_pages.scope', $page->scope );
 			if( $page->parentId ){
 				$parent	= $model->get( (int) $page->parentId );
-				$path	= $this->baseUri.$parent->identifier.'/';
+				if( $parent )
+					$path	.= $parent->identifier.'/';
 			}
 		}
 
@@ -172,7 +178,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', $pages );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
-		$this->addData( 'pagePreviewUrl', "http://".$path.$page->identifier );
+		$this->addData( 'pagePreviewUrl', $path.$page->identifier );
 		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
@@ -180,13 +186,18 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->preparePageTree( $pageId );
 
 		$enabled		= FALSE;
-		$meta		= $this->getRemoteConfigValues( "UI_MetaTags", array( 'default.description', 'default.keywords', 'default.author', 'default.publisher' ) );
-		if( !$meta )
+		if( !$this->frontend->hasModule( 'UI_MetaTags' ) )
 			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
-		$this->addData( 'meta', $meta );
+		else
+			$this->addData( 'meta', $this->frontend->getModuleConfigValues( "UI_MetaTags", array(
+				'default.description',
+				'default.keywords',
+				'default.author',
+				'default.publisher'
+			) ) );
 	}
 
-	protected function getRemoteConfigValues( $moduleId, $keys = array() ){
+/*	protected function getRemoteConfigValues( $moduleId, $keys = array() ){
 		$list		= array();
 		$fileName	= "../config/modules/".$moduleId.".xml";
 		if( file_exists( $fileName ) ){
@@ -201,10 +212,10 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 		return $list;
 	}
-
+*/
 	public function getJsImageList(){
-		$pathFront	= "../";
-		$pathImages	= "images/";
+		$pathFront	= $this->frontend->getPath();
+		$pathImages	= $this->frontend->getPath( 'images' );
 		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
 		foreach( $index as $item ){
 			$parts	= explode( "/", $item->getPathname() );

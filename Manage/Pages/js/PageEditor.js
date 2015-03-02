@@ -5,15 +5,6 @@ var PageEditor = {
 	linkList: [],
 
 	init: function(){
-		$("input[type='text'], select").on("keyup change", function(){
-			var input = $(this);
-			if(typeof input.data("original") == "undefined")
-				input.data("original", input.val());
-			if(input.val() !== input.data("original"))
-				input.addClass("changed");
-			else
-				input.removeClass("changed");
-		}).trigger("keyup");
 		$("#tabs-page-editor .optional-trigger").trigger("change");
 		$("#tabs-page-editor>ul>li>a").each(function(){
 			if($(this).parent().hasClass("active"))
