@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Form: Changes</title>
+	<description><![CDATA[Indicates changes in form inputs and reminds to save before leaving.]]></description>
+	<category>JavaScript</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.1.1">Add script extracted from module Work:Missions.</log>
+	<log version="0.1.2">Add style definition extracted from module Work:Missions.</log>
+	<log version="0.1.3">Add hook for auto apply.</log>
+	<log version="0.1.4">Add switch for auto apply.</log>
+	<log version="0.1.5">Add selector for auto apply.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Rename from UI:JS:cmFormInputChange to UI:JS:cmFormChange.</log>
+	<log version="0.2.2">Validated code by JSLint.</log>
+	<log version="0.2.3">Extended by UI.FormChangeLock and enabling switch.</log>
+	<log version="0.2.4">Rewrote hook script.</log>
+	<log version="0.2.5">Shortened binding between indicator and lock.</log>
+	<log version="0.2.6">Use empty module JS:Forms as base module.</log>
+	<log version="0.3">Rename from UI:JS:cmFormChange to JS:Form:Changes.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">UI.Form.Changes.js</script>
+		<style load="auto">UI.Form.Changes.css</style>
+	</files>
+	<config protected="no" type="boolean" name="auto.enabled">yes</config>
+	<config protected="no" type="string" name="auto.selector">.form-changes-auto</config>
+	<config protected="no" type="boolean" name="auto.lock">yes</config>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$env->getPage()->js->addScriptOnReady( 'UI.Form.Changes.init();', 9 );
+	]]></hook>
+</module>

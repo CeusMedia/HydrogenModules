@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.0.26</version>
+	<version>4.1.7</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -18,7 +18,7 @@
 	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<config type="string" protected="no" name="auto.baseUrl"></config>
-	<config type="string" protected="no" name="version" values="4.0.26,4.0.10,4.0.2">4.0.26</config>
+	<config type="string" protected="no" name="version" values="4.1.7,4.0.26,4.0.10,4.0.2">4.1.7</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 $pathLib	= $env->getConfig()->get( 'path.scripts.lib' );
