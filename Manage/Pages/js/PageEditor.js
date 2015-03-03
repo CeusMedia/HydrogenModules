@@ -1,10 +1,11 @@
 var PageEditor = {
 
 	editor: "none",
+	format: "HTML",
 	imageList: [],
 	linkList: [],
 
-	init: function(){
+	init: function(format){
 		$("#tabs-page-editor .optional-trigger").trigger("change");
 		$("#tabs-page-editor>ul>li>a").each(function(){
 			if($(this).parent().hasClass("active"))
@@ -20,7 +21,9 @@ var PageEditor = {
 				url: "./manage/page/ajaxSetTab/"+key,
 				type: "post"
 			});
-		})
+		});
+		if(this.format.toUpperCase() === "MD" && this.editor.toLowerCase() === "tinymce")
+			this.editor = 'codemirror';
 		switch(this.editor.toLowerCase()){
 			case 'tinymce':
 				PageEditor.setupTinyMCE();
@@ -38,6 +41,7 @@ var PageEditor = {
 			$("#page-preview-mask").show();
 		});
 		PageEditor.initDefaultMetaCopy();
+		$("#input_editor").bind("change", PageEditor.setEditor);
 	},
 
 	initDefaultMetaCopy: function(){
@@ -63,16 +67,20 @@ var PageEditor = {
 		$("#page-preview-iframe-container").html(iframe);
 	},
 
-	setEditor: function(elem){
+	setEditor: function(event){
+		event.stopPropagation();
+		var value = $("#input_editor").val();
 		$.ajax({
-			url: "./manage/page/ajaxSetEditor/"+elem.value,
+			url: "./manage/page/ajaxSetEditor/"+value,
 			success: function(){
+				$("#input_editor").data("original-value", value).trigger("keyup.FormChanges");
 				document.location.reload();
 			}
 		});
 	},
 
 	setupCodeMirror: function(){
+		var mode = PageEditor.format.toUpperCase() === "HTML" ? "htmlmixed" : "markdown";
 		var options = {
 			gutter: true,
 			fixedGutter: true,
@@ -82,7 +90,7 @@ var PageEditor = {
 			tabSize: 4,
 			indentWithTabs: true,
 			theme: "default",
-			mode: "htmlmixed",
+			mode: mode,
 			extraKeys: {
 				"F11": function(cm) {
 					CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));
@@ -92,6 +100,8 @@ var PageEditor = {
 				}
 			}
 		};
+		if(mode === "markdown")
+			options.extraKeys['Enter']	= "newlineAndIndentContinueMarkdownList";
 		var textarea = $("textarea#input_content");
 		if(!textarea.is(":visible"))
 			return;

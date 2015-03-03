@@ -82,12 +82,14 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'identifier'	=> $this->request->get( 'identifier' ),
 			'title'			=> $this->request->get( 'title' ),
 			'content'		=> $this->request->get( 'content' ),
+			'format'		=> $this->request->get( 'format' ),
 			'module'		=> $this->request->get( 'module' ),
 			'timestamp'		=> time(),
 		);
 		$this->addData( 'path', $this->frontend->getUri() );
 		$this->addData( 'page', $page );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
+		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->preparePageTree();
 	}
 
@@ -183,6 +185,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
+		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->preparePageTree( $pageId );
 
 		$enabled		= FALSE;
@@ -197,22 +200,6 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			) ) );
 	}
 
-/*	protected function getRemoteConfigValues( $moduleId, $keys = array() ){
-		$list		= array();
-		$fileName	= "../config/modules/".$moduleId.".xml";
-		if( file_exists( $fileName ) ){
-			$lines	= explode( "\n", File_Reader::load( $fileName ) );
-			foreach( $lines as $nr => $line ){
-				if( preg_match( "@<config @", $line ) ){
-					$key	= preg_replace( "@^.+name=\"(.+)\".+$@", "\\1", $line );
-					if( in_array( $key, $keys ) )
-						$list[$key]	= preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
-				}
-			}
-		}
-		return $list;
-	}
-*/
 	public function getJsImageList(){
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
