@@ -4,6 +4,9 @@
 	<description><![CDATA[Support for HTML meta tags, including Dublin Core and Open Graph.]]></description>
 	<category>UI</category>
 	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improved configuration visibility.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -13,7 +16,7 @@
 	<config protected="yes" type="boolean" name="enable">yes</config>
 	<config protected="yes" type="boolean" name="enable.DublinCore">yes</config>
 	<config protected="yes" type="boolean" name="enable.OpenGraph">yes</config>
-	<config protected="yes" type="string" name="default.title">Viva Yoga</config>
+	<config protected="yes" type="string" name="default.title">My Project</config>
 	<config protected="yes" type="string" name="default.description"></config>
 	<config protected="yes" type="string" name="default.keywords"></config>
 	<config protected="yes" type="string" name="default.author"></config>
