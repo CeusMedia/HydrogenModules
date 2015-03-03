@@ -66,11 +66,12 @@ abstract class Mail_Abstract{
 	 *	@access		protected
 	 *	@param		string		$html		HTML mail body to add to mail
 	 *	@return		void
+	 *	@see		http://wiki.apache.org/spamassassin/Rules/BASE64_LENGTH_78_79
 	 */
 	protected function addHtmlBody( $html ){
 		$base64	= base64_encode( $html );
 		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_HTML, 'base64' );
-		$body->wrapWords();
+		$body->wrapWords( 76 );
 		$this->mail->addBody( $body );
 	}
 
