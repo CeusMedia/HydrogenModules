@@ -3,12 +3,14 @@
 $optType	= $words['types'];
 $optScope	= $words['scopes'];
 $optStatus	= $words['states'];
+$optFormat	= $words['formats'];
 
 $optType		= UI_HTML_Elements::Options( $optType, $page->type );
 $optScope		= UI_HTML_Elements::Options( $optScope, $page->scope );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $page->status );
-
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
+$optFormat		= UI_HTML_Elements::Options( $optFormat, $page->format );
+$optModule		= UI_HTML_Elements::Options( array_combine( $modules, $modules ), $page->format );
 
 return '
 <div class="row-fluid">
@@ -49,9 +51,13 @@ return '
 		<label for="input_type">Seitentyp</label>
 		<select name="type" class="span12 optional-trigger" id="input_type" onchange="showOptionals(this);">'.$optType.'</select>
 	</div>
+	<div class="span3 optional type type-0">
+		<label for="input_format">Format</label>
+		<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
+	</div>
 	<div class="span6 optional type type-2">
 		<label for="input_module">Modul</label>
-		<input type="text" name="module" class="span12" id="input_module" value="'.htmlentities( $page->module, ENT_QUOTES, 'UTF-8' ).'"/>
+		<select name="module" class="span12" id="input_module">'.$optModule.'</select>
 	</div>
 </div>';
 ?>
