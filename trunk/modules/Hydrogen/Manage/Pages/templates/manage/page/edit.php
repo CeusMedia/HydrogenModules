@@ -16,12 +16,15 @@ $tabTemplates	= array(
 
 $tabs	= $view->renderTabs( $words['tabs'], $tabTemplates, $tab );
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+
 //  --  LAYOUT  --  //
 return '
 <div class="row-fluid">
 	<div id="manage-page-tree" class="span3">
 		<div>
 			<label for="input_scope">Navigationstyp</label>
+			<a href="./manage/page/add" class="btn btn-mini btn-primary pull-right">'.$iconAdd.'</a>
 			<select class="span10" name="scope" id="input_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 		</div>
 		'.$listPages.'
@@ -34,6 +37,7 @@ return '
 				<div class="buttonbar">
 					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
 					<button type="reset" class="btn btn-small">zurücksetzen</button>
+					<a href="./manage/page/copy/'.$current.'" class="btn btn-small">kopieren</a>
 				</div>
 			</form>
 		</div>
