@@ -6,8 +6,6 @@ class View_Info_Page extends CMF_Hydrogen_View{
 		$logic		= new Logic_Page( $env );
 		while( preg_match( $pattern, $data->content ) ){
 			$path	= preg_replace( $pattern, "\\3", $data->content );
-		//	if( $path == $request->get( 'page' ) )
-
 			$page	= $logic->getPageFromPath( $path, TRUE );
 			if( !$page ){
 				$env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
@@ -20,7 +18,7 @@ class View_Info_Page extends CMF_Hydrogen_View{
 			}
 		}
 	}
-	
+
 	public function index(){
 //		$config		= $this->env->getConfig()->get( 'module.info_pages.', TRUE );
 		$page		= $this->env->getPage();
