@@ -103,6 +103,17 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function copy( $pageId ){
+		if( !$pageId )
+			throw new OutOfRangeException( 'No page ID given' );
+		$page	= $this->model->get( $pageId );
+		if( !$pageId )
+			throw new OutOfRangeException( 'Invalid page ID given' );
+		foreach( $page as $key => $value )
+			$this->request->set( $key, $value );
+		$this->redirect( 'manage/page', 'add' );
+	}
+
 	public function edit( $pageId ){
 		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );

@@ -5,12 +5,16 @@ $optScope	= $words['scopes'];
 $optStatus	= $words['states'];
 $optFormat	= $words['formats'];
 
+$optModule	= array( '' => '-' );
+foreach( $modules as $module )
+	$optModule[$module]	= $module;
+
 $optType		= UI_HTML_Elements::Options( $optType, $page->type );
 $optScope		= UI_HTML_Elements::Options( $optScope, $page->scope );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $page->status );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
 $optFormat		= UI_HTML_Elements::Options( $optFormat, $page->format );
-$optModule		= UI_HTML_Elements::Options( array_combine( $modules, $modules ), $page->format );
+$optModule		= UI_HTML_Elements::Options( $optModule, $page->module );
 
 return '
 <div class="row-fluid">

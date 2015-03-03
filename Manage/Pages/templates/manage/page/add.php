@@ -1,19 +1,26 @@
 <?php
 
-$listPages	= $this->renderTree( $tree, $page );
+$listPages		= $this->renderTree( $tree, $page );
+
+$optModule		= array( '' => '-' );
+foreach( $modules as $module )
+	$optModule[$module]	= $module;
 
 $optType		= UI_HTML_Elements::Options( $words['types'], $page->type );
 $optScope		= UI_HTML_Elements::Options( $words['scopes'], $scope );
 $optStatus		= UI_HTML_Elements::Options( $words['states'], $page->status );
 $optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
-$optModule		= UI_HTML_Elements::Options( array_combine( $modules, $modules ), $page->module );
+$optModule		= UI_HTML_Elements::Options( $optModule, $page->module );
+
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
 return '
 <div class="row-fluid">
 	<div id="manage-page-tree" class="span3">
 		<div>
 			<label for="input_scope">Navigationstyp</label>
+<!--			<a href="./manage/page/add" class="btn btn-mini btn-primary pull-right">'.$iconAdd.'</a>-->
 			<select class="span10" name="scope" id="input_scope" onclick="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 		</div>
 		'.$listPages.'

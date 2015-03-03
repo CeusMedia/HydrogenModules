@@ -7,13 +7,20 @@ foreach( $words['scopes'] as $key => $value )
 	$optScope[$key]	= $value;
 $optScope	= UI_HTML_Elements::Options( $optScope, $scope );
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
+	'href'	=> './manage/page/add',
+	'class'	=> 'btn btn btn-primary'
+) );
+
 //  --  LAYOUT  --  //
 return '
 <div class="row-fluid">
 	<div id="manage-page-tree" class="span3">
 		<div>
 			<label for="input_scope">Navigationstyp</label>
-			<select class="span10" name="scope" id="input_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
+			<a href="./manage/page/add" class="btn btn-mini btn-primary pull-right">'.$iconAdd.'</a>
+			<select class="span10" name="scope" id="input_scope" class="span10" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 		</div>
 		'.$listPages.'
 	</div>
@@ -30,7 +37,7 @@ return '
 					<li>neue Seiten hinzufügen</li>
 				</ul>
 			</p>
-			<button type="button" onclick="document.location.href=\'./manage/page/add\';" class="btn btn-small btn-info"><i class="icon-plus icon-white"></i> neue Seite</button>
+			'.$buttonAdd.'
 		</div>
 	</div>
 </div>
