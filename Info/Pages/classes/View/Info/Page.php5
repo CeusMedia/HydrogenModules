@@ -5,9 +5,10 @@ class View_Info_Page extends CMF_Hydrogen_View{
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= new Logic_Page( $env );
 		while( preg_match( $pattern, $data->content ) ){
-			$path	= preg_replace( $pattern, "\\3", $data->content );
+			$path	= trim( preg_replace( $pattern, "\\3", $data->content ) );
 			$page	= $logic->getPageFromPath( $path, TRUE );
 			if( !$page ){
+				$data->content	= preg_replace( $pattern, "", $data->content );
 				$env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
 			}
 			else{
