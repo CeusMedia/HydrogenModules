@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.5.2"><![CDATA[
-ALTER TABLE  `pages` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'HTML' AFTER  `content` ,
+ALTER TABLE  `<%?prefix%>pages` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'HTML' AFTER  `content` ,
 ADD INDEX (  `format` ) ;
 ]]></sql>
 </module>
