@@ -35,6 +35,7 @@ UI.Form.Changes.Indicator = {
         UI.Form.Changes.getInputs(form).each(function () {
             var input = jQuery(this);
             input.data("original-value", input.val());
+			input.data("original-container", selectorOrContainer);
             input.bind("keyup.FormChanges change.FormChanges", function () {
                 if (jQuery(this).val() !== input.data("original-value")) {
                     jQuery(this).addClass("changed");
@@ -59,7 +60,12 @@ UI.Form.Changes.Indicator = {
         if (options.lock) {
             form.find("button[type='submit']").bind("click", UI.Form.Changes.Lock.disable);
         }
-    }
+/*    },
+	evaluateInput: function(selectorOrContainer){
+		$(selectorOrContainer){
+
+
+*/	}
 };
 
 UI.Form.Changes.Lock = {
@@ -101,7 +107,7 @@ UI.Form.Changes.Lock = {
         "use strict";
         if (UI.Form.Changes.Lock.state === 0) {
             UI.Form.Changes.Lock.state = 1;
-            jQuery(window).bind("beforeunload..FormChangesLock", function (event) {
+            jQuery(window).bind("beforeunload.FormChangesLock", function (event) {
                 event.returnValue = UI.Form.Changes.Lock.message;
                 return UI.Form.Changes.Lock.message;
             });
