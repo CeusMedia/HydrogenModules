@@ -16,7 +16,7 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.3.13</version>
+	<version>0.3.15</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Adding features.</log>
@@ -26,6 +26,8 @@ This module needs other modules to be installed:
 	<log version="0.3.11">Added helper for module details.</log>
 	<log version="0.3.12">Added switch to run SQL commands during installation or uninstallation.</log> 
 	<log version="0.3.13">Added scope to filter modules in viewer index.</log>
+	<log version="0.3.14">Moved templates for details panel.</log>
+	<log version="0.3.15">Extended details by list of instances using this module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,12 +48,13 @@ This module needs other modules to be installed:
 		<locale>en/admin/module/viewer.ini</locale>
 		<template>admin/module/index.filter.php</template>
 		<template>admin/module/index.php</template>
-		<template>admin/module/viewer/config.php</template>
-		<template>admin/module/viewer/database.php</template>
+		<template>admin/module/details/config.php</template>
+		<template>admin/module/details/database.php</template>
+		<template>admin/module/details/instances.php</template>
+		<template>admin/module/details/relations.php</template>
+		<template>admin/module/details/resources.php</template>
 		<template>admin/module/viewer/general.php</template>
 		<template>admin/module/viewer/index.php</template>
-		<template>admin/module/viewer/relations.php</template>
-		<template>admin/module/viewer/resources.php</template>
 		<template>admin/module/viewer/view.php</template>
 		<script source="local" load="auto">UI.InstantFilter.js</script>
 		<script source="local" load="auto">site.admin.module.js</script>
