@@ -34,19 +34,21 @@ class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
 		$activeTab	= 0;
 
 		$mapTabs	= array(
-			'resources'	=> 'tabResources',
-			'config'	=> 'tabConfiguration',
-			'database'	=> 'tabDatabase',
-		//	'links'		=> 'tabLinks',
-			'relations'	=> 'tabRelations',
+			'resources'		=> 'tabResources',
+			'config'		=> 'tabConfiguration',
+			'database'		=> 'tabDatabase',
+		//	'links'			=> 'tabLinks',
+			'relations'		=> 'tabRelations',
+			'instances'		=> 'tabInstances',
 		);
 
 		$nr			= 0;
 		$disabled	= array();
 		foreach( $mapTabs as $key => $tabLabel ){
 			$count		= 0;
-			$content	= require_once( 'templates/admin/module/viewer/'.$key.'.php' );
-			$label		= $words['view'][$tabLabel];
+			$template	= 'templates/admin/module/details/'.$key.'.php';
+			$content	= file_exists( $template ) ? require_once( $template ) : 'Template "'.$template.'" missing.';
+			$label		= $words['details'][$tabLabel];
 			$label		.= $count ? ' <small>('.$count.')</small>' : '';
 			if( $key != 'general' && !$count ){
 				$disabled[]	= $nr;
