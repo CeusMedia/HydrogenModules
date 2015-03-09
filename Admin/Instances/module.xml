@@ -3,9 +3,19 @@
 	<title>Admin: Instances</title>
 	<description><![CDATA[Application instance administration for remote access to other Hydrogen applications.]]></description>
 	<category>Administration</category>
-	<version>0.3.5-p2</version>
+	<version>0.3.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Migrated instances store from INI to JSON.</log>
+	<log version="0.3.1">Extracted locales.</log>
+	<log version="0.3.2">Added informational HTML files.</log>
+	<log version="0.3.3">Added locked environment.</log>
+	<log version="0.3.4">Updated instance check Java Script.</log>
+	<log version="0.3.5">Added check for todos.</log>
+	<log version="0.3.6">Extracted instance module listing to new logic class.</log>
 	<files>
 		<class>Controller/Admin/Instance.php5</class>
+		<class>Logic/Instance.php5</class>
 		<class>Model/Instance.php5</class>
 		<class>View/Admin/Instance.php5</class>
 		<style source="theme" load="auto">module.admin.instances.css</style>
