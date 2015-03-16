@@ -1,8 +1,8 @@
 <?php
 $w		= (object) $words['index'];
-extract( $this->populateTexts( array( 'top', 'bottom' ), 'html/info/contact/' ) );
-return '
-<h2>'.$w->heading.'</h2>
+extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom' ), 'html/info/contact/' ) );
+$content	= '
+<h3>'.$w->heading.'</h3>
 '.$textTop.'
 <form action="'.$formPath.'" method="post">
 	<div class="row-fluid">
@@ -34,4 +34,16 @@ return '
 </form>
 '.$textBottom.'
 ';
+if( $textRight )
+	$content	= '
+<div class="row-fluid">
+	<div class="span9">
+		'.$content.'
+	</div>
+	<div class="span3">
+		'.$textRight.'
+	</div>
+</div>';
+
+return $textBefore.$content.$textAfter;
 ?>
