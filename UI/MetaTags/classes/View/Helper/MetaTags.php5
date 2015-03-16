@@ -10,7 +10,7 @@ class View_Helper_MetaTags{
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
 		$page		= $this->env->getPage();
-		
+
 		$moduleKey	= 'module.ui_metatags.';
 		$tags		= (object) $config->getAll( $moduleKey.'default.', TRUE );
 
@@ -19,6 +19,13 @@ class View_Helper_MetaTags{
 		$title			= $tags->get( 'title' );
 		$description	= $tags->get( 'description' );
 		$keywords		= $tags->get( 'keywords' );
+		if( file_exists( $keywords ) ){
+			$list	= array();
+			foreach( explode( "\n", file_get_contents( $tags->get( 'keywords' ) ) ) as $line )
+				if( trim( $line ) )
+					$list[]	= trim( $line );
+			$keywords	= join( ", ", $list );
+		}
 
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
 			$logic		= new Logic_Page( $this->env );
