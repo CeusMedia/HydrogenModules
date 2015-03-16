@@ -202,13 +202,23 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$enabled		= FALSE;
 		if( !$this->frontend->hasModule( 'UI_MetaTags' ) )
 			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
-		else
-			$this->addData( 'meta', $this->frontend->getModuleConfigValues( "UI_MetaTags", array(
+		else{
+			$meta	= $this->frontend->getModuleConfigValues( "UI_MetaTags", array(
 				'default.description',
 				'default.keywords',
 				'default.author',
 				'default.publisher'
-			) ) );
+			) );
+			if( file_exists( $this->frontend->getPath().$meta['default.keywords'] ) ){
+				$list	= array();
+				foreach( explode( "\n", file_get_contents( $this->frontend->getPath().$meta['default.keywords'] ) ) as $line )
+					if( trim( $line ) )
+						$list[]	= trim( $line );
+				$meta['default.keywords']	= join( ", ", $list );
+			}
+				
+			$this->addData( 'meta', $meta );
+		}
 	}
 
 	public function getJsImageList(){
