@@ -1,0 +1,20 @@
+{
+  "name": "ceus-media/hydrogen-modules",
+  "version": "0.8.1",
+  "license": [
+    "GPL-3.0+"
+  ],
+  "authors": [
+    {
+      "name": "Christian Würker",
+      "email": "christian.wuerker@ceusmedia.de",
+      "homepage": "http://ceusmedia.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "office@ceusmedia.de",
+    "jabber": "ceus-media@jabber.org"
+  },
+  "minimum-stability": "dev"
+}
