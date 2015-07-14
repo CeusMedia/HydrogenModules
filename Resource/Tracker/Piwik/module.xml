@@ -1,57 +1,44 @@
 <?xml version="1.0"?>
 <module>
 	<title>Piwik Tracker</title>
-	<description><![CDATA[Request tracking using Piwik.]]></description>
+	<description><![CDATA[Request tracking using Piwik.
+
+This module allows to use Piwik as web request tracker.
+
+It will load the Piwik script of an defined Piwik installation
+and enable JavaScript side tracking.
+
+Having a local Piwik installation, this module will enable PHP side tracking, too.
+
+Future features:
+list>
+- provide view for users to deactivate tracking
+<list
+
+]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-	<log version="0.3">Added hooks for server and client.</log>
+	<log version="0.3">Add hooks for server and client.</log>
+	<log version="0.3.1">Extract hooks to new controller class.</log>
+	<log version="0.3.2">Improve configuration.</log>
+	<log version="0.3.3">Improve controller code syntax.</log>
+<!--	<log version="0.4">Add view deactivation by user.</log>--> 
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Piwik.php5</class>
 		<script load="auto">piwik.js</script>
 	</files>
 	<relations/>
-	<config protected="yes" mandatory="no" type="boolean" name="enabled">yes</config>
-	<config protected="yes" mandatory="yes" type="integer" name="ID">1</config>
-	<config protected="yes" mandatory="no" type="string" name="path">/var/www/piwik/</config>
-	<config protected="yes" mandatory="yes" type="string" name="URI">http://localhost/piwik/</config>
-	<hook type="resource" resource="Env" event="init"><![CDATA[
-		$options	= $env->getConfig()->getAll( 'modules.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
-		if( $options->get( 'enabled' ) && ( $id = $options->get( 'ID' ) ) ){						//  piwik tracker is enabled and tracking ID is set
-			if( ( $uri = $options->get( 'URI' ) ) && ( $path = $options->get( 'path' ) ) ){			//  path and URI to piwik are defined
-				$classFile	= $path.'libs/PiwikTracker/PiwikTracker.php';							//  calculate piwik tracker class file
-				@include_once $classFile;															//  include piwik tracker class file
-				if( !class_exists( 'PiwikTracker' ) )												//  include was NOT successful
-					throw new RuntimeException( 'Piwik tracker inclusion failed ('.$classFile.')' );
-				PiwikTracker::$URL = $uri;															//  set URL of piwik
-				$env->set( 'piwik', new PiwikTracker( $id ) );										//  bind piwik tracker instance to environment
-			}
-		}
-]]></hook>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$options	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as array map
-		if( $options->get( 'enabled' ) ){
-			$context->js->addUrl( $options->get( 'URI' ).'piwik.js' );
-			$options->set( 'URI', preg_replace( "@^[a-z]+://@", "", $options->get( 'URI' ) );
-			$context->js->addScript( 'initPiwik('.json_encode( $options ).');' );
-		}
-]]></hook>
-	<hook type="resource" resource="Page" event="build"><![CDATA[
-		$options	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
-		if( $options->get( 'enabled' ) ){															//  piwik tracker is enabled
-			if( ( $uri = $options->get( 'URI' ) ) && ( $id = $options->get( 'ID' ) ) ){				//  ID and piwik URI are defined
-				$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',			//  create noscript HTML tag
-					UI_HTML_Tag::create( 'img', NULL, array(										//  create tracking image
-						'src'	=> $uri.'piwik.php?idsite='.$id,									//  
-						'style'	=> 'border: 0',														//  no borders
-						'alt'	=> ''																//  atleast empty alternative text for XHTML validity
-					) )
-				) );
-				$context->addBody( $noscript );														//  append noscript tag to body
-			}
-		}
-]]></hook>
+	<config protected="yes" mandatory="no" type="boolean" name="enabled" title="main power switch for tracking">yes</config>
+	<config protected="yes" mandatory="yes" type="integer" name="ID" title="Piwik site ID">1</config>
+	<config protected="yes" mandatory="no" type="boolean" name="local" title="use local installation">0</config>
+	<config protected="yes" mandatory="no" type="string" name="local.path" title="path to local installation">vendor/piwik/piwik/</config>
+	<config protected="yes" mandatory="yes" type="string" name="URI" title="URI to Piwik service"></config>
+	<hook type="resource" resource="Env" event="init">Controller_Piwik::___onEnvInit</hook>
+	<hook type="resource" resource="Page" event="applyModules">Controller_Piwik::___onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="build">Controller_Piwik::___onPageBuild</hook>
 </module>

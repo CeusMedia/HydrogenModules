@@ -3,7 +3,6 @@ if( $page->format === "MD" )
 	unset( $words['editors']['TinyMCE'] );
 $optEditor	= $words['editors'];
 
-$helper		= new View_Helper_TinyMceResourceLister( $this->env );
 $optEditor	= UI_HTML_Elements::Options( $optEditor, $editor );
 
 $optFormat	= $words['formats'];
@@ -41,12 +40,6 @@ if( $page->type == 0 ){
 	</div>
 	<script>
 var pageType = '.(int) $page->type.';
-$(document).ready(function(){
-	PageEditor.editor = "'.$editor.'";
-	PageEditor.format = "'.$page->format.'";
-	PageEditor.linkList = '.json_encode( $helper->getLinkList() ).';
-	PageEditor.imageList = '.json_encode( $helper->getImageList() ).';
-});
 	</script>';
 }
 

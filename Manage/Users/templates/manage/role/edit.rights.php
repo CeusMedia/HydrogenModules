@@ -59,9 +59,13 @@ $(document).ready(function(){
 $env->getPage()->js->addScript( $script );
 
 return '
-<h3>Zugriffsrechte</h3>
-<div id="role-edit-rights">
-	'.$tableRights.'
+<div class="content-panel">
+	<h3>Zugriffsrechte</h3>
+	<div class="content-panel-inner">
+		<div id="role-edit-rights">
+			'.$tableRights.'
+		</div>
+	</div>
 </div>
 ';
 ?>

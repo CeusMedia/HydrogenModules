@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Resource: Companies & Branches]]></title>
+	<description></description>
+	<version>0.2.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add branch image model.</log>
+	<log version="0.2.2">Add branch description.</log>
+	<log version="0.2.3">Add company logo.</log>
+	<log version="0.2.4">Add branch tag model.</log>
+	<log version="0.2.5">Add company description.</log>
+	<log version="0.2.6">Extend states of companies and branches.</log>
+	<category>Resource</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Model/Branch.php5</class>
+		<class>Model/Branch/Image.php5</class>
+		<class>Model/Branch/Tag.php5</class>
+		<class>Model/Company.php5</class>
+		<class>Model/Company/User.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>branch_images`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>branch_images` (
+  `branchImageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `branchId` int(10) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `filename` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uploadedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`branchImageId`),
+  KEY `branchId` (`branchId`),
+  KEY `type` (`type`),
+  KEY `filename` (`filename`),
+  KEY `uploadedAt` (`uploadedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>branch_tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>branch_tags` (
+  `branchTagId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `branchId` int(10) unsigned NOT NULL,
+  `label` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`branchTagId`),
+  KEY `branchId` (`branchId`),
+  KEY `label` (`label`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>branches`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>branches` (
+  `branchId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `companyId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `longitude` double NOT NULL,
+  `latitude` double NOT NULL,
+  `x` double NOT NULL,
+  `y` double NOT NULL,
+  `z` double NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`branchId`),
+  KEY `companyId` (`companyId`,`status`,`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>companies` (
+  `companyId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `sector` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `logo` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`companyId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>company_users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>company_users` (
+  `companyUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `companyId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`companyUserId`),
+  KEY `companyId` (`companyId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>branch_images`;
+DROP TABLE IF EXISTS `<%?prefix%>branches`;
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+DROP TABLE IF EXISTS `<%?prefix%>company_users`;
+]]></sql>
+</module>

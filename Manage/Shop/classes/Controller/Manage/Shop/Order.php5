@@ -1,15 +1,15 @@
 <?php
 class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 
-	/**	@var		Logic_Shop			$logicShop */
+	/**	@var		Logic_Shop			$logicShop			Instance of shop logic */
 	protected $logicShop;
-	/**	@var		Logic_Catalog		$logicCatalog */
-	protected $logicCatalog;
+	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
+	protected $logicBridge;
 
 	protected function __onInit(){
 		parent::__onInit();
 		$this->logicShop	= new Logic_Shop( $this->env );
-		$this->logicCatalog	= new Logic_Catalog( $this->env );
+		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 
 		$sessionPrefix		= 'module.manage_shop_order.filter.';
 		if( !$this->session->get( $sessionPrefix.'order' ) )
@@ -20,8 +20,11 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 
 	public function edit( $orderId ){
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
-		foreach( $order->positions as $nr => $position )
-			$order->positions[$nr]->article	= $this->logicCatalog->getArticle( $position->articleId );
+		foreach( $order->positions as $nr => $position ){
+			$bridgeId	= (int) $position->bridgeId;
+			$order->positions[$nr]->bridge	= $this->logicBridge->getBridge( $position->bridgeId );
+			$order->positions[$nr]->article	= $this->logicBridge->getArticle( $bridgeId, $position->articleId );
+		}
 		$this->addData( 'order', $order );
 	}
 

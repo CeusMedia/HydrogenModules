@@ -110,7 +110,7 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 			$conditions['status']	= $filters->get( 'status' );
 		if( count( $filters->get( 'type' ) ) )
 			$conditions['type']		= $filters->get( 'type' );
-		if( $filters->get( 'start' ) || $filters->get( 'fend' ) ){
+		if( $filters->get( 'start' ) || $filters->get( 'end' ) ){
 			if( $filters->get( 'start' ) && $filters->get( 'end' ) ){
 				$start		= strtotime( $filters->get( 'start' )." 00:00:00" );
 				$end		= strtotime( $filters->get( 'end' )." 23:59:59" );

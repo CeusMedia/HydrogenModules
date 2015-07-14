@@ -78,3 +78,11 @@ ul.pagination a.extreme {}
 ul.pagination span.disabled {
 	color: gray;
 	}
+
+
+
+/*  --  LIST NUMBERS  --  */
+span.list-numbers span.list-number-range {}
+span.list-numbers span.list-number-from {}
+span.list-numbers span.list-number-to {}
+span.list-numbers span.list-number-total {}

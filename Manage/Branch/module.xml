@@ -2,7 +2,8 @@
 <module>
 	<title>Manage: Branches</title>
 	<description>Management for company branches.</description>
-	<version>0.1</version>
+	<version>0.3</version>
+	<log version="0.3">End of life: Use Manage:Companies instead.</log>
 	<category>Management</category>
 <!--	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

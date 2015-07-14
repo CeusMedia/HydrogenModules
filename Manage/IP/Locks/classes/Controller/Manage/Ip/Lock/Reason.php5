@@ -46,6 +46,7 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Reason saved.' );
 			$this->restart( NULL, TRUE );
 		}
+		$reason->filters	= $this->logic->getFiltersOfReason( $reason->reasonId );
 		$this->addData( 'reason', $reason );
 	}
 
@@ -54,18 +55,18 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 		$orders		= array();
 		$limits		= array();
 		$reasons	= $this->model->getAll( $conditions, $orders, $limits );
-/*		$model		= new Model_IP_Lock_Reason( $this->env );
-		foreach( $filters as $nr => $filter ){
-			$filter->reason	= $model->get( $filter->reasonId );
+		$model		= new Model_IP_Lock_Filter( $this->env );
+		foreach( $reasons as $nr => $reason ){
+			$reason->filters	= $this->logic->getFiltersOfReason( $reason->reasonId );
 		}
-*/		$this->addData( 'reasons', $reasons );
+		$this->addData( 'reasons', $reasons );
 	}
 
-	public function remove( $readonId ){
+	public function remove( $reasonId ){
 		$request	= $this->env->getRequest();
 		$reason		= $this->model->get( $reasonId );
 		if( !$reason ){
-			$this->messenger->notError( 'Invalid reason ID.' );
+			$this->messenger->noteError( 'Invalid reason ID.' );
 			$this->restart( NULL, FALSE );
 		}
 		$this->model->remove( $reasonId );

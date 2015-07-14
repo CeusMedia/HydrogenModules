@@ -22,13 +22,16 @@ abstract class Mail_Abstract{
 
 	protected $baseUrl;
 
+	protected $addedStyles	= array();
+
 	/**
 	 *	Contructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment object
-	 *	@param		araray								$data		Map of template mail data
+	 *	@param		CMF_Hydrogen_Environment_Abstract	$env			Environment object
+	 *	@param		array								$data			Map of template mail data
+	 *	@param		boolean								$defaultStyle	Flag: load default mail style file
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array() ){
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array(), $defaultStyle = TRUE ){
 		$this->setEnv( $env );
 		$this->mail		= new Net_Mail();
 		$this->view		= new CMF_Hydrogen_View( $env );
@@ -41,7 +44,8 @@ abstract class Mail_Abstract{
 			$this->baseUrl = $config->get( 'app.base.url' );
 		$this->page->setBaseHref( $this->baseUrl );
 		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
-		$this->addThemeStyle( 'mail.min.css' );
+		if( $defaultStyle )
+			$this->addThemeStyle( 'mail.min.css' );
 //		$this->addScriptFile( 'mail.min.js' );
 		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
@@ -82,8 +86,9 @@ abstract class Mail_Abstract{
 	 *	@return		void
 	 */
 	protected function addTextBody( $text ){
-		$body	= new Net_Mail_Body( $text, Net_Mail_Body::TYPE_PLAIN, '8bit' );
-		$body->wrapWords();
+		$base64	= base64_encode( $text );
+		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_PLAIN, 'base64' );
+		$body->wrapWords( 76 );
 		$this->mail->addBody( $body );
 	}
 
@@ -104,11 +109,25 @@ abstract class Mail_Abstract{
 		return TRUE;
 	}
 
+	/**
+	 *	Adds a style file (CSS) to page header by file URI from app root.
+	 *	Ignores already added style files.
+	 *	@access		protected
+	 *	@param		string		$filePath		URI of file from app root
+	 *	@return		boolean		TRUE if file was added, FALSE if not found or already added
+	 */
 	protected function addStyle( $filePath ){
 		if( !file_exists( $filePath ) )
 			return FALSE;
+		if( in_array( $filePath, $this->addedStyles ) )
+			return FALSE;
 		$style	= File_Reader::load( $filePath );
 		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
+
+		$path	= dirname( $filePath );
+		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( dirname( dirname( $path ) ) ).'/', $style );
+		$style	= str_replace( '(../../', '('.$this->env->url.dirname( dirname( $path ) ).'/', $style );
+		$style	= str_replace( '(../', '('.$this->env->url.dirname( $path ).'/', $style );
 		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/css' ) );
 		$this->page->addHead( $tag );
 		return TRUE;
@@ -175,6 +194,7 @@ abstract class Mail_Abstract{
 				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
 				$this->transport->setAuthUsername( $username );
 				$this->transport->setAuthPassword( $password );
+				$this->transport->setSecure( $options->get( 'transport.secure' ) );
 				$this->transport->setVerbose( FALSE );
 				break;
 			case 'local':
@@ -271,7 +291,7 @@ abstract class Mail_Abstract{
 		$host		= isset( $this->env->host ) ? $this->env->host : parse_url( $this->baseUrl, PHP_URL_HOST );
 		$data		= array(
 			'app'	=> array(
-				'title'	=> $this->env->title,
+				'title'	=> $this->env->getConfig()->get( 'app.name' ),
 				'host'	=> $host,
 			)
 		);

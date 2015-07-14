@@ -3,11 +3,17 @@
 	<title>UI: Map</title>
 	<description><![CDATA[Loader for Google Maps.]]></description>
 	<category>User Interface</category>
-	<version>0.1.1</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add helper class to render HTML.</log>
+	<log version="0.2.2">Allow to add markers to map.</log>
+<!--	<log version="0.2.x">Support localization (therefore load API via hook and not automatically and detect language beforehand).</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>View/Helper/Map.php5</class>
 		<script source="url" load="auto">https://maps.google.com/maps/api/js?sensor=false</script>
 		<script source="local" load="auto">map.js</script>
 		<style load="auto">module.ui.map.css</style>

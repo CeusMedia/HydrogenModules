@@ -2,57 +2,28 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.1.7</version>
+	<version>4.1.10b6</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
 		<class>View/Helper/TinyMceResourceLister.php5</class>
-		<style load="auto" source="theme">tinymce.css</style>
+		<style source="theme" load="auto">tinymce.css</style>
+		<style source="theme">tinymce.content.css</style>
+		<script source="local">TinyMCE.Config.js</script>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
 	</files>
 	<config type="boolean" protected="no" name="auto">yes</config>
-	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table</config>
+	<config type="integer" protected="no" name="auto.height">460</config>
+	<config type="string" protected="no" name="auto.mode" values="default,extended,minimal">extended</config>
+	<config type="string" protected="no" name="auto.plugins">textcolor advlist autolink link image lists charmap preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table emoticons</config>
 	<config type="string" protected="no" name="auto.selector">textarea.TinyMCE</config>
+	<config type="string" protected="no" name="auto.toolbar.default">styleselect | fontselect | fontsizeselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image</config>
+	<config type="string" protected="no" name="auto.toolbar.extended">styleselect | fontselect | fontsizeselect | forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify # cut copy paste | link unlink image | bullist numlist outdent indent | table anchor charmap hr | undo redo | searchreplace visualblocks blockquote removeformat</config>
+	<config type="string" protected="no" name="auto.toolbar.minimal">styleselect | bold italic underline | bullist numlist outdent indent | link image</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
-	<config type="string" protected="no" name="auto.baseUrl"></config>
-	<config type="string" protected="no" name="version" values="4.1.7,4.0.26,4.0.10,4.0.2">4.1.7</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-$pathLib	= $env->getConfig()->get( 'path.scripts.lib' );
-$language	= $env->getLanguage()->getLanguage();
-$version	= $config->get( 'version' );
-
-$context->js->addUrl( $pathLib.'tinymce/'.$version.'/tinymce.min.js' ); 
-$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' ); 
-
-if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
-	$helper	= new View_Helper_TinyMceResourceLister( $env );
-	$script	= '
-$(document).ready(function(){
-	var envUrl = "'.$env->url.'";
-	if($("settings.Module_JS_TinyMCE.auto_selector").size()){
-		var listImages	= '.json_encode( $helper->getImageList() ).';
-		var listLinks	= '.json_encode( $helper->getLinkList() ).';
-		if(settings.Module_JS_TinyMCE.auto_selector){
-			var baseUrl = settings.JS_TinyMCE.auto_baseUrl.match(/^http/) ? settings.JS_TinyMCE.auto_baseUrl : envUrl + settings.JS_TinyMCE.auto_baseUrl;
-			var options = {
-				document_base_url: baseUrl,
-				selector: settings.JS_TinyMCE.auto_selector,
-				plugins: settings.JS_TinyMCE.auto_plugins,
-				language: settings.JS_TinyMCE.auto_language,
-				image_list: listImages,
-				link_list: listLinks
-			};
-			if(settings.Module_JS_TinyMCE.auto_tools)
-				options.tools = settings.Module_JS_TinyMCE.auto_tools;
-			tinymce.init(options);
-		}
-	}
-})';
-	$context->js->addScript( $script );
-}
-	]]></hook>
+	<config type="string" protected="no" name="version" values="4.1.9,4.1.7,4.0.26,4.0.10,4.0.2">4.1.9</config>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMceResourceLister::___onPageApplyModules</hook>
 </module>

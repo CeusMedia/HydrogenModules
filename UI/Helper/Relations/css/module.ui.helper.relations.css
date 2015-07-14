@@ -1,0 +1,14 @@
+table.item-relation-lister {
+	table-layout: fixed;
+	}
+table.item-relation-lister ul {
+	padding: 2px 4px;
+	margin: 0px;
+	max-height: 180px;
+	overflow-y: auto;
+/*	border: 1px solid #CFCFCF;
+	border-radius: 3px;
+	background-color: #FFF7EE;
+	background-color: #FFFFFF;*/
+	}
+

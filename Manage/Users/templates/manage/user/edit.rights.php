@@ -24,7 +24,11 @@ foreach( $matrix as $controller => $actions ){
 }
 
 return '
-<h4>Info: Rechte</h4>
-'.UI_HTML_Tag::create( 'div', $list, array( 'class' => 'acl-card' ) ).'
+<div class="content-panel">
+	<h4>Info: Rechte</h4>
+	<div class="content-panel-inner">
+		'.UI_HTML_Tag::create( 'div', $list, array( 'class' => 'acl-card' ) ).'
+	</div>
+</div>
 ';
 ?>

@@ -1,22 +1,46 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: My Company</title>
-	<description>Management for company assigned to current user.</description>
-	<version>0.1.1</version>
+	<title><![CDATA[Manage: My Company & Branches]]></title>
+	<description>Management for companies and branches assigned to current user.</description>
+	<version>0.4.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Fusion with module Manage:My:Branch.</log>
+	<log version="0.4">Complete overhaul.</log>
+	<log version="0.4.1">Added support for branch images.</log>
+	<log version="0.4.2">Extracted branch image handling to own template.</log>
+	<log version="0.4.3">Use replacement for file input elements.</log>
+	<log version="0.4.4">Use module Resource:Upload to check uploaded images.</log>
+	<log version="0.4.5">Added support for company logo image.</log>
+<!--	<log version="0.4.1">Integrate map using module UI:Map.</log>-->
 	<category>Management</category>
-<!--	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
--->	<files>
+	<files>
 		<class>Controller/Manage/My/Company.php5</class>
+		<class>Controller/Manage/My/Company/Branch.php5</class>
 		<class>View/Manage/My/Company.php5</class>
+		<class>View/Manage/My/Company/Branch.php5</class>
+		<template>manage/my/company/edit.php</template>
+		<template>manage/my/company/edit.logo.php</template>
 		<template>manage/my/company/index.php</template>
+		<template>manage/my/company/branch/add.php</template>
+		<template>manage/my/company/branch/edit.php</template>
+		<template>manage/my/company/branch/edit.images.php</template>
+		<template>manage/my/company/branch/index.php</template>
 		<locale>de/manage/my/company.ini</locale>
+		<locale>de/manage/my/company/branch.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
-		<needs type="module">Manage_Company</needs>
+		<needs type="module">Resource_Companies</needs>
+		<needs type="module">Resource_Upload</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+<!--		<needs type="module">UI_Map</needs>-->
 	</relations>
-	<link path="manage/my/company" access="acl" xml:lang="de">Mein Unternehmen</link>
-	<link path="manage/my/company" access="acl" xml:lang="en">My company</link>
+	<link path="manage/my/company" access="acl" xml:lang="de" rank="64">Meine Unternehmen</link>
+	<link path="manage/my/company" access="acl" xml:lang="de" rank="65">Meine Filialen</link>
+	<link path="manage/my/company" access="acl" xml:lang="en" rank="64">My companies</link>
+	<link path="manage/my/company" access="acl" xml:lang="en" rank="65">My branches</link>
 </module>

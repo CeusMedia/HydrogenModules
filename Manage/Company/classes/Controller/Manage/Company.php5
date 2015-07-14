@@ -100,12 +100,10 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 				$this->restart( './manage/company' );
 			}
 		}
-		$company	= $modelCompany->get( $companyId );
-		$branches	= array();
-		if( $this->env->getModules()->has( 'Manage_Branch' ) ){
-			$modelBranch	= new Model_Branch( $this->env );
-			$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId );
-		}
+		$company		= $modelCompany->get( $companyId );
+		$branches		= array();
+		$modelBranch	= new Model_Branch( $this->env );
+		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId );
 		$company->branches	= $branches;
 		$users		= array();
 		if( in_array( 'companyId', $modelUser->getColumns() ) )
@@ -122,7 +120,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 	public function index(){
 		$model	= new Model_Company( $this->env );
 		$this->view->setData( array( 'companies' => $model->getAll() ) );
-		$this->setData( $model->getAll(), 'list' );
+		$this->addData( 'companies', $model->getAll() );
 	}
 }
 ?>

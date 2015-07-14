@@ -1,29 +1,40 @@
 <?php
 $w		= (object) $words['confirm'];
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm/' );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm/' ) );
 
-return '
-'.$text['top'].'
-<div class="column-left-50">
-	<div class="column-left-90">
-		<fieldset>
-			<legend>'.$w->legend.'</legend>
-			<form action="./auth/confirm" method="post">
-				<ul class="input">
-					<li>
-						<label for="input_confirm_code" class="mandatory">'.$w->labelCode.'</label><br/>
-						<input type="text" name="confirm_code" id="input_confirm_code" class="max mandatory" value="'.$request->get( 'confirm_code' ).'">
-					</li>
-				</ul>
-				<div class="buttonbar">
-					'.UI_HTML_Elements::Button( 'confirm', $w->buttonSend, 'button save' ).'
-				</div>
-			</form>
-		</fieldset>
-	</div>
-</div>
-<div class="column-left-50">
-	'.$text['info'].'
-</div>
-<div class="column-clear"></div>';
+return $textTop.
+HTML::DivClass( "row-fluid", array(
+	HTML::DivClass( "span6", array(
+		HTML::DivClass( "content-panel", array(
+			HTML::H3( $w->legend ),
+			HTML::DivClass( "content-panel-inner", array(
+				UI_HTML_Tag::create( 'form', array(
+					HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> 'text',
+						'name'		=> 'confirm_code',
+						'id'		=> 'input_confirm_code',
+						'class'		=> 'span12 mandatory',
+						'required'	=> 'required',
+						'value'		=> $pak
+					) ),
+					HTML::DivClass( "buttonbar", array(
+						UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, array(
+							'type'	=> "submit",
+							'name'	=> "confirm",
+							'class'	=> "btn btn-primary"
+						) )
+					) )
+				), array(
+					'action'	=> './auth/confirm'.( $from ? '?from='.$from : '' ),
+					'method'	=> 'POST',
+					'name'		=> 'auth-confirm'
+				) )
+			) )
+		) )
+	) ),
+	HTML::DivClass( "span6", array(
+		$textInfo
+	) )
+) );
 ?>

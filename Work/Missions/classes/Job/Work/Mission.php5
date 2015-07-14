@@ -116,7 +116,7 @@ class Job_Work_Mission extends Job_Abstract{
 				continue;
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
 			$havings	= array(																	//  apply filters after grouping
-				'ownerId = '.(int) $user->userId,													//  
+				'creatorId = '.(int) $user->userId,													//  
 				'workerId = '.(int) $user->userId,													//  
 			);
 			if( $this->env->getModules()->has( 'Manage_Projects' ) ){								//  look for module

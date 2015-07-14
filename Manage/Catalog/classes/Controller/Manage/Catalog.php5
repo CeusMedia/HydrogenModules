@@ -28,7 +28,7 @@ class Controller_Manage_Catalog extends CMF_Hydrogen_Controller{
 		$config			= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
 		$logic			= new Logic_Catalog( $env );
 
-		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
+		$words = $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
 
 		$list			= array();
@@ -42,6 +42,58 @@ class Controller_Manage_Catalog extends CMF_Hydrogen_Controller{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
+/*	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+		self::___onTinyMCE_getImageList_Covers( $env, $context, $module, $arguments );
+		self::___onTinyMCE_getImageList_Authors( $env, $context, $module, $arguments );
+	}
+
+	static public function ___onTinyMCE_getImageList_Authors( $env, $context, $module, $arguments = array() ){
+		$logic		= new Logic_Catalog( $env );
+		$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+		$pathImages	= 'contents/'.$config->get( 'path.frontend.authors' );							//  @todo resolve base path
+		$list       = array();
+		$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+		foreach( $authors as $item ){
+			if( $item->image ){
+				$label	= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
+				$list[] = (object) array(
+					'title'	=> $item->authorId.' - '.Alg_Text_Trimmer::trimCentric( $label, 60 ),
+					'value'	=> $pathImages.$item->image,
+				);
+			}
+		}
+        $context->list  = array_merge( $context->list, array(						//  extend global collection
+			(object) array(															//  by submenu with list of items
+				'title'	=> 'Covers:',//$prefixes->image,							//  label of submenu
+				'menu'	=> array_values( $list ),									//  items of submenu
+			)
+		) );
+	}
+
+	static public function ___onTinyMCE_getImageList_Covers( $env, $context, $module, $arguments = array() ){
+		$logic		= new Logic_Catalog( $env );
+		$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+		$pathCovers	= 'contents/'.$config->get( 'path.frontend.covers' );							//  @todo resolve base path
+		$list       = array();
+		$articles	= $logic->getArticles( array(), array( 'articleId' => 'DESC', 'title' => 'ASC' ) );
+		foreach( $articles as $item ){
+			if( $item->cover ){
+				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
+				$label	= Alg_Text_Trimmer::trimCentric( $item->title, 60 );
+				$list[] = (object) array(
+					'title'	=> '<small class="muted">#'.$item->articleId.'</small> '.$label,
+					'value'	=> $pathCovers.$id.'__'.$item->cover,
+				);
+			}
+		}
+        $context->list  = array_merge( $context->list, array(						//  extend global collection
+			(object) array(															//  by submenu with list of items
+				'title'	=> 'Covers:',//$prefixes->image,							//  label of submenu
+				'menu'	=> array_values( $list ),									//  items of submenu
+			)
+		) );
+	}
+*/
 	public function index(){
 	}
 

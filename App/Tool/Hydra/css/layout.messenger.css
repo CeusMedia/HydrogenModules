@@ -1,0 +1,57 @@
+/*  --  MESSENGER MESSAGES  --  */
+
+
+/*  --  messenger  --  */
+#layout-messenger>ul {
+	margin: 0em 0em 1em 0em;
+	padding: 0px;
+	list-style:none;
+	width: 980px;
+	margin: 0px auto;
+	}
+
+#layout-messenger>ul>li {
+	padding: 0.5em 1em 0.5em 3em;
+	background-repeat: no-repeat;
+	background-position: 0.9em 0.6em;
+	font-size: 1.1em;
+
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: rgba(0,0,0,0.5);
+	border-radius: 0.4em;
+	-moz-border-radius:0.4em;
+	margin-bottom: 0.5em;
+	}
+
+#layout-messenger ul li.failure {
+	background-color: #DDD;
+	background-color: #FBA;
+	background-image: url(//img.int1a.net/famfamfam/silk/cancel.png);
+	}
+#layout-messenger ul li.error {
+	background-color: #FCB;
+	background-image: url(//img.int1a.net/famfamfam/silk/error.png);
+	}
+#layout-messenger ul li.notice {
+	background-color: #FFD;
+	background-color: #DDD;
+	background-color: #EEE;
+	background-color: #FFC;
+	background-image: url(//img.int1a.net/famfamfam/silk/information.png);
+	}
+#layout-messenger ul li.success {
+	background-color: #DFB;
+	background-image: url(//img.int1a.net/famfamfam/silk/accept.png);
+	}	
+	
+#layout-messages .time {
+	}
+
+#layout-messenger div.exception-view {
+	opacity: 0.75;
+	border: 1px solid #555;
+	background: white;
+	font-size: 1.0em;
+	padding: 0.3em 0.6em;
+	}

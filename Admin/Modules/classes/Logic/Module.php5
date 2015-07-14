@@ -415,21 +415,64 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	protected function installModuleDatabase( $moduleId, $verbose = TRUE ){
-		$module		= $this->model->get( $moduleId );
-		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
-			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
-			if( $driver ){																			//  remote database connection is configured
-				if( isset( $module->sql['install@'.$driver] ) )										//  SQL for installation for specific PDO driver is given
-					$this->executeSql( $module->sql['install@'.$driver]->sql );						//  execute SQL
-				else if( isset( $module->sql['install@*'] ) )										//  fallback: general SQL for installation is available
-					$this->executeSql( $module->sql['install@*']->sql );							//  execute SQL
-				else
-					return NULL;
-				return TRUE;
+	public function getDatabaseScripts( $moduleId, $versionStart = NULL, $versionTarget = NULL ){
+		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
+			return;
+		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
+			return;
+		$list			= array();
+		$module			= $this->model->get( $moduleId );
+		$moduleSource	= $this->model->getFromSource( $moduleId );
+		$versionStart	= $versionStart ? $versionStart : $module->versionInstalled;
+		$versionTarget	= $versionTarget ? $versionTarget : $module->versionAvailable;
+		if( !$versionStart ){
+			if( isset( $moduleSource->sql['install@'.$driver] ) ){										//  SQL for installation for specific PDO driver is given
+				$versionStart	= $this->version( $moduleSource->versionAvailable );
+				if( $moduleSource->sql['install@'.$driver]->version )
+					$versionStart	= $this->version( $moduleSource->sql['install@'.$driver]->version );
+				$list[]	= $moduleSource->sql['install@'.$driver];
+			}
+			else if( isset( $moduleSource->sql['install@*'] ) ){											//  fallback: general SQL for installation is available
+				$versionStart	= $this->version( $moduleSource->versionAvailable );
+				if( $moduleSource->sql['install@'.$driver]->version )
+					$versionStart	=  $this->version($moduleSource->sql['install@'.$driver]->version );
+				$list[]	= $moduleSource->sql['install@*'];
 			}
 		}
-		return FALSE;
+		foreach( $moduleSource->sql as $key => $sql ){													//  iterate module SQL parts
+			if( $sql->event === "update" ){															//  found update
+				$versionStep	= $this->version( $sql->version );									//  target version of sql part
+				if( version_compare( $versionStep, $versionStart, '>' ) ){							//  sql part is newer than current version
+					if( version_compare( $versionStep, $versionTarget, '<=' ) ){					//  sql part is older or related to new version
+						$key	= 'update_'.$versionStart.'_'.$versionStep;							//  generate version key for list
+						if( $sql->type == $driver ){												//  update SQL is for instance database driver
+							$list[$key]	= (object) array(											//  enlist SQL to execute
+								'type'		=> $driver,
+								'event'		=> 'update',
+								'version'	=> $versionStep,
+								'sql'		=> trim( $sql->sql )
+							);
+						}
+						else if( $sql->type === '*' && !isset( $list[$key] ) ){						//  update SQL is general and no master entry available
+							$list[$key]	= (object) array(											//  enlist SQL to execute
+								'type'		=> '*',
+								'event'		=> 'update',
+								'version'	=> $versionStep,
+								'sql'		=> trim( $sql->sql )
+							);
+						}
+						$versionStart	= $versionStep;
+					}
+				}
+			}
+		}
+		return $list;
+	}
+
+	protected function installModuleDatabase( $moduleId ){
+		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
+			$this->executeSql( $step->sql );																//  execute SQL
+		}
 	}
 
 	protected function installModuleFiles( $moduleId, $installType = 0, $force = FALSE, $verbose = TRUE ){
@@ -582,31 +625,9 @@ class Logic_Module {
 	}
 
 	protected function updateModuleDatabase( $moduleId, $verbose = TRUE ){
-		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
-			return;
-		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
-			return;
-		$moduleLocal	= $this->getModule( $moduleId );											//  get installed module for local version
-		$moduleSource	= $this->getModuleFromSource( $moduleId );									//  get source module for database update
-		$versionCurrent	= $this->version( $moduleLocal->versionInstalled );							//  extract installed version
-		$versionTarget	= $this->version( $moduleSource->versionAvailable );						//  extract available version
-		$list			= array();
-		foreach( $moduleSource->sql as $key => $sql ){												//  iterate module SQL parts
-			if( $sql->event === "update" ){															//  found update
-				$versionStep	= $this->version( $sql->version );									//  target version of sql part
-				if( version_compare( $versionStep, $versionCurrent, '>' ) ){						//  sql part is newer than current version
-					if( version_compare( $versionStep, $versionTarget, '<=' ) ){					//  sql part is older or related to new version
-						$key	= $versionCurrent.'_'.$versionStep.'_'.$versionTarget;				//  generate version key for list
-						if( $sql->type == $driver )													//  update SQL is for instance database driver
-							$list[$key]	= trim( $sql->sql );										//  enlist master entry in SQL update list
-						else if( $sql->type === '*' && !isset( $list[$key] ) )						//  update SQL is general and no master entry available
-							$list[$key]	= trim( $sql->sql );										//  enlisten general entry in SQL update list
-					}
-				}
-			}
+		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
+			$this->executeSql( $step->sql );														//  execute SQL
 		}
-		foreach( $list as $sql )																	//  iterate SQL update list
-			$this->executeSql( $sql );																//  execute SQL
 	}
 
 	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){

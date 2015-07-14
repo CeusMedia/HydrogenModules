@@ -1,153 +1,196 @@
 <?php
 
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
-
 $w		= (object) $words['register'];
+
+$iconRegister	= HTML::Icon( 'plus', TRUE );
+
+$optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
+
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
 extract( $view->populateTexts( $texts, 'html/auth/register/' ) );
 
 $formTerms	= '';
-if( $view->hasContent( 'auth', 'tac', 'html/' ) ){
-	$contentTac		= $view->loadContent( 'auth', 'tac', 'html/' );
-	if( $env->getModules()->has( 'UI_Helper_Content' ) ){
-		$contentTac	= View_Helper_ContentConverter::render( $env, $contentTac );
-		$contentTac	= HTML::DivClass( 'framed column-clear max', $contentTac );
-		$formTerms		= HTML::LiClass( 'column-clear',
-			$contentTac.
-			HTML::Checkbox( 'accept_tac', 1, FALSE, 'mandatory' ).'&nbsp;'.
-			HTML::Label( 'accept_tac', $w->labelAccept, 'mandatory' )
-		);
-	}
-	else{
-		$formTerms		= HTML::LiClass( 'column-clear',
-			HTML::Label( 'conditions', $w->labelTerms, '' ).HTML::BR.
-			HTML::Text( 'conditions', $contentTac, 'max monospace', 10, TRUE )
-		).HTML::Li(
-			HTML::Checkbox( 'accept_tac', 1, FALSE ).'&nbsp;'.
-			HTML::Label( 'accept_tac', $w->labelAccept, 'mandatory' )
-		);
-	}
+$tacHtml	= '';
+$tacFile	= 'html/auth/tac';
+if( $env->getModules()->has( 'UI_Markdown') && $view->hasContentFile( $tacFile.'.md' ) ){
+	$tacMarkdown	= $view->loadContentFile( $tacFile.'.md' );
+	$tacHtml		= View_Helper_Markdown::transformStatic( $env, $tacMarkdown );
+}
+else if( $view->hasContentFile( $tacFile.'.html' ) ){
+	$tacHtml		= $view->loadContentFile( $tacFile.'.html' );
+	if( $env->getModules()->has( 'UI_Helper_Content' ) )
+		$tacHtml	= View_Helper_ContentConverter::render( $env, $tacHtml );
+}
+if( $tacHtml ){
+	$formTerms		= HTML::DivClass( 'row-fluid', array(
+		HTML::DivClass( "span12", array(
+			HTML::Label( 'conditions', $w->labelTerms, '' ),
+			UI_HTML_Tag::create( 'div', $tacHtml, array(
+				'class'	=> 'framed monospace',
+				'id'	=> 'input_conditions',
+			) )
+		) ),
+		HTML::DivClass( "span12", array(
+			HTML::Label( 'accept_tac', array(
+				HTML::Checkbox( 'accept_tac', 1, FALSE ),
+				$w->labelAccept,
+			), 'checkbox mandatory' )
+		) )
+	) );
 }
 
-$mandatoryEmail		= $config->get( 'module.users.email.mandatory' ) ? 'mandatory' : '';
-$mandatoryFirstname	= $config->get( 'module.users.firstname.mandatory' ) ? 'mandatory' : '';
-$mandatorySurname	= $config->get( 'module.users.surname.mandatory' ) ? 'mandatory' : '';
+$moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
+//print_m( $moduleConfig->getAll() );die;
 
-$panelUser	= '
-<style>
-div.framed {
-	border: 1px solid gray;
-	border-radius: 0.4em;
-	padding: 1em 2em;
-	overflow: auto;
-	height: 200px;
-	}
-input.state-good {
-	background-color: #EFFFF7;
-	}
-input.state-bad {
-	background-color: #FFDFDF;
-	}
-</style>
-<script>
-$(document).ready(function(){
-	$("#input_username").keyup(function(){
-		var lenMin = settings.Module_Users.name_length_min;
-		var lenMax = settings.Module_Users.name_length_max;
-		var length = $(this).val().length;
-		if($(this).data("last") != $(this).val()){
-			$(this).data("last", $(this).val());
-			$(this).removeClass("state-good").removeClass("state-bad");
-			if(length && lenMin <= length && length <= lenMax ){
-				$.ajax({
-					url: "./auth/ajaxUsernameExists",
-					method: "post",
-					data: {username: $(this).val()},
-					dataType: "json",
-					context: this,
-					success: function(response){
-						$(this).addClass(response ? "state-bad" : "state-good");
-					}
-				});
-			}
-		}
+$env->getPage()->js->addScriptOnReady('Auth.initUserRegistration();');
+$env->getPage()->css->theme->addUrl( 'module.resource.auth.css' );
 
-	});
-	if($("#input_accept_tac.mandatory").size()){
-		$("button.save").attr("disabled","disabled");
-		$("#input_accept_tac").change(function(){
-			if($(this).is(":checked"))
-				$("button.save").removeAttr("disabled");
-			else
-				$("button.save").attr("disabled","disabled");
-		});
-	}
-});
-</script>
-<fieldset>
-	<legend class="register">'.$w->legend.'</legend>
-	<ul class="input">
-		<li class="column-left-25">
-			<label for="input_username" class="mandatory">'.$w->labelUsername.'</label><br/>
-			<input type="text" name="username" id="input_username" class="max mandatory" autocomplete="off" value="'.$user->get( 'username' ).'"/>
-		</li>
-		<li class="column-left-25">
-			<label for="input_password" class="mandatory">'.$w->labelPassword.'</label><br/>
-			<input type="text" name="password" id="input_password" class="max mandatory" autocomplete="off" value=""/>
-		</li>
-		<li class="column-left-50">
-			<label for="input_email" class="'.$mandatoryEmail.'">'.$w->labelEmail.'</label><br/>
-			<input type="text" name="email" id="input_email" class="max '.$mandatoryEmail.'" value="'.$user->get( 'email' ).'"/>
-		</li>
+$panelUser	= HTML::DivClass( 'content-panel', array(
+	HTML::H3( $w->legend ),
+	HTML::DivClass( 'content-panel-inner',
+		HTML::DivClass( 'row-fluid', array(
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "username", $w->labelUsername, "mandatory" ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'			=> 'text',
+					'name'			=> 'username',
+					'id'			=> 'input_username',
+					'class'			=> 'span12 mandatory',
+					'value'			=> $user->get( 'username' ),
+					'required'		=> 'required',
+					'autocomplete'	=> 'off'
+				) )
+			) ),
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "password", new UI_HTML_Tag( 'abbr', $w->labelPassword, array(
+					'title'	=> sprintf( $w->labelPassword_title, $moduleConfig->get( 'password.length.min' ) )
+				) ), "mandatory" ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'			=> 'password',
+					'name'			=> 'password',
+					'id'			=> 'input_password',
+					'class'			=> 'span12 mandatory',
+					'value'			=> '',
+					'required'		=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
+					'autocomplete'	=> 'off'
+				) )
+			) ),
+			HTML::DivClass( 'span6', array(
+				HTML::Label( "email", $w->labelEmail, $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'email',
+					'id'		=> 'input_email',
+					'class'		=> 'span12 '.( $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
+					'value'		=> $user->get( 'email' ),
+					'required'	=> $moduleConfig->get( 'email.mandatory' ) ? 'required' : NULL,
+				) )
+			) ),
+		) ).
+		HTML::DivClass( 'row-fluid', array(
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "gender", $w->labelGender ),
+				UI_HTML_Tag::create( 'select', $optGender, array(
+					'name'		=> "gender",
+					'id'		=> "input_gender",
+					'class'		=> "span12"
+				) )
+			) ),
+			HTML::DivClass( 'span2', array(
+				HTML::Label( "salutation", $w->labelSalutation ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'salutation',
+					'id'		=> 'input_salutation',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'salutation' ),
+				) )
+			) ),
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "firstname", $w->labelFirstname, $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'firstname',
+					'id'		=> 'input_firstname',
+					'class'		=> 'span12 '.( $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
+					'value'		=> $user->get( 'firstname' ),
+					'required'	=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
+				) )
+			) ),
+			HTML::DivClass( 'span4', array(
+				HTML::Label( "surname", $w->labelSurname, $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'surname',
+					'id'		=> 'input_surname',
+					'class'		=> 'span12 '.( $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
+					'value'		=> $user->get( 'surname' ),
+					'required'	=> $moduleConfig->get( 'surname.mandatory' ) ? 'required' : NULL,
+				) )
+			) ),
+		) ).
+		HTML::DivClass( 'row-fluid', array(
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "street", $w->labelStreet ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'street',
+					'id'		=> 'input_street',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'street' ),
+				) )
+			) ),
+			HTML::DivClass( 'span2', array(
+				HTML::Label( "number", $w->labelNumber ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'number',
+					'id'		=> 'input_number',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'number' ),
+				) )
+			) ),
+			HTML::DivClass( 'span2', array(
+				HTML::Label( "postcode", $w->labelPostcode ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'postcode',
+					'id'		=> 'input_postcode',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'postcode' ),
+				) )
+			) ),
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "city", $w->labelCity ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'city',
+					'id'		=> 'input_city',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'city' ),
+				) )
+			) ),
+		) ).
+		HTML::HR.
+		$formTerms.
+		HTML::DivClass( 'buttonbar', array(
+			UI_HTML_Tag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, array(
+				'type'		=> 'submit',
+				'id'		=> 'button_save',
+				'class'		=> 'btn btn-primary save',
+				'name'		=> 'save',
+				'disabled'	=> 'disabled'
+			) )
+		) )
+	) )
+);
 
-		<li class="column-clear column-left-20">
-			<label for="input_gender" class="">'.$w->labelGender.'</label><br/>
-			<select name="gender" id="input_gender" class="max">'.$optGender.'"</select>
-		</li>
-		<li class="column-left-20">
-			<label for="input_salutation" class="">'.$w->labelSalutation.'</label><br/>
-			<input type="text" name="salutation" id="input_salutation" class="max" value="'.$user->get( 'salutation' ).'"/>
-		</li>
-		<li class="column-left-30">
-			<label for="input_firstname" class="'.$mandatoryFirstname.'">'.$w->labelFirstname.'</label><br/>
-			<input type="text" name="firstname" id="input_firstname" class="max '.$mandatoryFirstname.'" value="'.$user->get( 'firstname' ).'"/>
-		</li>
-		<li class="column-left-30">
-			<label for="input_surname" class="'.$mandatorySurname.'">'.$w->labelSurname.'</label><br/>
-			<input type="text" name="surname" id="input_surname" class="max '.$mandatorySurname.'" value="'.$user->get( 'surname' ).'"/>
-		</li>
-
-		<li class="column-clear column-left-20">
-			<label for="input_postcode" class="">'.$w->labelPostcode.'</label><br/>
-			<input type="text" name="postcode" id="input_postcode" class="max" value="'.$user->get( 'postcode' ).'"/>
-		</li>
-		<li class="column-left-30">
-			<label for="input_city" class="">'.$w->labelCity.'</label><br/>
-			<input type="text" name="city" id="input_city" class="max" value="'.$user->get( 'city' ).'"/>
-		</li>
-		<li class="column-left-30">
-			<label for="input_street" class="">'.$w->labelStreet.'</label><br/>
-			<input type="text" name="street" id="input_street" class="max" value="'.$user->get( 'street' ).'"/>
-		</li>
-		<li class="column-left-20">
-			<label for="input_number" class="">'.$w->labelNumber.'</label><br/>
-			<input type="text" name="number" id="input_number" class="max" value="'.$user->get( 'number' ).'"/>
-		</li>
-		'.$formTerms.'
-	</ul>
-	<div class="buttonbar">
-		'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
-	</div>
-</fieldset>';
-
-return $textTop.'
-<form name="form_auth_register" action="./auth/register" method="post">
-	<div class="column-left-66">
-		'.$panelUser.'
-	</div>
-	<div class="column-left-33">
-		'.$textInfo.'
-	</div>
-	<div class="column-clear"></div>
-</form>';
+$formUrl	= "./auth/register".( $from ? '?from='.$from : '' );
+return $textTop.
+HTML::Form( $formUrl, "form_auth_register_user",
+	HTML::DivClass( 'row-fluid', array(
+		HTML::DivClass( 'span8', $panelUser ),
+		HTML::DivClass( 'span4', $textInfo ),
+	) )
+).$textBottom;
 ?>

@@ -1,0 +1,138 @@
+
+/*  --  FORM ELEMENTS  --  */
+
+input,
+select,
+textarea {
+	color: black;
+	background: white;
+	padding: 3px;
+	border: 1px solid gray;
+	border-radius: .3em;
+	-moz-border-radius: .3em;
+	-webkit-border-radius: .3em;
+	-khtml-border-radius: .3em;
+/*	border-color: #999999 #CCCCCC #CCCCCC #999999;*/
+	border-color: #CCCCCC;
+	border-style: solid;
+	border-width: 1px;
+	}
+
+input[type=text] {
+	width: 100%;
+	}
+input.xs {
+	width: 3em;
+	}
+input.s {
+	width: 6em;
+	}
+input.m {
+	width: 12em;
+	}
+input.l {
+	width: 24em;
+	}
+input.xl {
+	width: 36em;
+	}
+input.numeric {
+	text-align: right;
+	}
+select.xs {
+	width: 3em;
+	}
+select.s {
+	width: 6em;
+	}
+select.m {
+	width: 12em;
+	}
+select.l {
+	width: 24em;
+	}
+select.xl {
+	width: 36em;
+	}
+select.numeric {
+	text-align: right;
+	}
+
+option {
+	padding: 0px 4px;
+	}
+
+textarea {
+	width: 100%;
+	border-radius: .4em;
+	-moz-border-radius: .4em;
+	-webkit-border-radius: .4em;
+	-khtml-border-radius: .4em;
+	padding: 3px;
+	}
+textarea.s-s, textarea.s-m, textarea.s-l {
+	width: 12em;
+	}
+textarea.m-s, textarea.m-m, textarea.m-l {
+	width: 24em;
+	}
+textarea.l-s, textarea.l-m, textarea.l-l {
+	width: 36em;
+	}
+textarea.xl-s, textarea.xl-m, textarea.xl-l {
+	width: 48em;
+	}
+textarea.s-s, textarea.m-s, textarea.l-s, textarea.xl-s {
+	height: 6em;
+	}
+textarea.s-m, textarea.m-m, textarea.l-m, textarea.xl-m {
+	height: 12em;
+	}
+textarea.s-l, textarea.m-l, textarea.l-l, textarea.xl-l {
+	height: 18em;
+	}
+
+ul.list li.dashboard a,
+ul.list li.message a,
+ul.list li.role a,
+ul.list li.room a,
+ul.list li.user a {
+	background-repeat: no-repeat;
+	background-position: 0px;
+	padding-left: 22px;
+	}
+
+ul.list li.dashboard a {
+	background-image: url(//img.int1a.net/famfamfam/silk/wand.png);
+	}
+ul.list li.message a {
+	background-image: url(//img.int1a.net/famfamfam/silk/comment.png);
+	}
+ul.list li.role a {
+	background-image: url(//img.int1a.net/famfamfam/silk/group.png);
+	}
+ul.list li.room a {
+	background-image: url(//img.int1a.net/famfamfam/silk/door.png);
+	}
+ul.list li.user a {
+	background-image: url(//img.int1a.net/famfamfam/silk/user_green.png);
+	}
+
+
+input.label {
+	border: 1px solid #DFDFDF;
+	background-color: #EFEFEF;
+	}
+
+
+option.direction {
+	background-repeat: no-repeat;
+	background-position: 4px 1px;
+	padding-left: 1.8em;
+	}
+option.direction.directionASC {
+	background-image: url(//img.int1a.net/famfamfam/silk/arrow_up.png);
+	}
+option.direction.directionDESC {
+	background-image: url(//img.int1a.net/famfamfam/silk/arrow_down.png);
+	}

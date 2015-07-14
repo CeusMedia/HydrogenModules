@@ -1,0 +1,23 @@
+#layout-footer {
+	position:fixed;
+	left: 0px;
+	bottom: 0px;
+	z-index: 11111;
+	width: 100%;
+	height: 2.1em;
+	background-color: white;
+	border-top: 2px solid rgba(0,0,0,0.3);
+	box-shadow: 0px -2px 20px 4px rgba(255, 255, 255, 0.6);
+	padding-top: 0.5em;
+	font-size: 0.9em;
+	color: rgba( 0,0,0,0.6);
+	}
+#layout-footer ul {
+	}
+#layout-footer ul li {
+	display: inline-block;
+	margin-right: 1em;
+	}
+#layout-footer ul li span#system-load {
+	}
+

@@ -197,7 +197,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 //		$times		= UI_HTML_Tag::create( 'div', $times, array( 'class' => 'cell-time' ) );
 
 		$modelUser	= new Model_User( $this->env );
-		$worker		= '<i class="icon-user"></i> <span>'.$modelUser->get( $event->workerId )->username.'</span>';
+		$username	= $event->workerId && $modelUser->has( $event->workerId ) ? $modelUser->get( $event->workerId )->username : "UNKNOWN";
+		$worker		= '<i class="icon-user"></i> <span>'.$username.'</span>';
 		$project	= '<i class="icon-folder-close"></i> <span>'.$project.'</span>';
 		$times		= '<i class="icon-time"></i> <span>'.$times.'</span>';
 
@@ -289,7 +290,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 
 		$modelUser	= new Model_User( $this->env );
-		$worker		= '<i class="icon-user"></i> <span>'.$modelUser->get( $task->workerId )->username.'</span>';
+		$username	= $modelUser->has( $task->workerId ) ? $modelUser->get( $task->workerId )->username : "UNKNOWN";
+		$worker		= '<i class="icon-user"></i> <span>'.$username.'</span>';
 		$project	= '<i class="icon-folder-close"></i> <span>'.$project.'</span>';
 
 //		$cells		= array();

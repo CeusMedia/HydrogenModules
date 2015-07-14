@@ -60,10 +60,11 @@ $tableBody		= UI_HTML_Tag::create( 'tbody', $tableRows );
 $listOrders		= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
 
 $pagination		= new CMM_Bootstrap_PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
+$tabs			= View_Manage_Shop::renderTabs( $env, 'order' );
 
 return '
 <div class="order-list-content">
-	'.$this->renderMainTabs().'
+	'.$tabs.'
 <!--	<h3>'.$w->heading.'</h3>-->
 	<div class="row-fluid">
 		<div class="span3">

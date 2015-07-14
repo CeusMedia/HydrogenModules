@@ -190,9 +190,9 @@ class Logic_Mail{
 	 *	@return		void
 	 */
 	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
-		if( $this->options->get( 'queue' ) && !$forceSendNow )
-			return $this->enqueueMail( $mail, $language, $receiver );
-		return $this->sendMail( $mail, $receiver );
+		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
+			$this->enqueueMail( $mail, $language, $receiver );
+		$this->sendMail( $mail, $receiver );
 	}
 
 	/**

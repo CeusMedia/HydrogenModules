@@ -1,0 +1,9 @@
+
+/**
+ *  extends tinymce/4.1.9/skins/lightgray/content.min.css
+ */
+
+.mceNonEditable{
+	background-color: rgba(127, 127, 127, 0.5);
+	opacity: 0.85;
+	}

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Info: Companies & Branches]]></title>
+	<description></description>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Integrate map module.</log>
+	<category>Info</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Company.php5</class>
+		<class>Controller/Company/Branch.php5</class>
+		<class>View/Company.php5</class>
+		<class>View/Company/Branch.php5</class>
+		<template>company/index.php</template>
+		<template>company/view.php</template>
+		<template>company/branch/index.php</template>
+		<template>company/branch/view.php</template>
+		<locale>de/company.ini</locale>
+		<locale>de/company/branch.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_Companies</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Map</needs>
+	</relations>
+	<link path="company" access="acl" xml:lang="de">Unternehmen</link>
+	<link path="company" access="acl" xml:lang="en">Companies</link>
+</module>

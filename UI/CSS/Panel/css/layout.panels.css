@@ -1,0 +1,39 @@
+
+@media (min-width: 768px) {
+
+	div.content-panel {
+		padding-left: 1.5em;
+		border-left: 5px solid #EEE;
+		margin-bottom: 2em;
+		}
+
+	div.content-panel div.content-panel-inner {}
+
+	div.content-panel div.content-panel-inner div.buttonbar {
+		padding: 0.5em 0em 0.75em 1.5em;
+		margin: 0px;
+		margin-left: -1.5em;
+		border-top: 1px solid #EEEEEE;
+		background-image: -ms-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);							/* IE10 Consumer Preview */ 
+		background-image: -moz-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);							/* Mozilla Firefox */ 
+		background-image: -o-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);							/* Opera */ 
+		background-image: -webkit-gradient(radial, left top, 0, center top, 485, color-stop(0, #F3F3F3), color-stop(1, #FFFFFF));	/* Webkit (Safari/Chrome 10) */ 
+		background-image: -webkit-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);						/* Webkit (Chrome 11+) */ 
+		background-image: radial-gradient(ellipse farthest-side at left top, #F3F3F3 0%, #FFFFFF 100%);								/* W3C Markup, IE10 Release Preview */ 
+		}
+	div.content-panel div.content-panel-inner div.buttonbar div.btn-toolbar {
+		margin-top: 0;
+		margin-bottom: 0;
+		}
+
+	div.content-panel>h2,
+	div.content-panel>h3,
+	div.content-panel>h4,
+	div.content-panel>h5 {
+		padding-left: 1.1rem;
+		margin: 0px;
+		margin-left: -1.1rem;
+		margin-bottom: 0.5rem;
+		border-bottom: 1px solid #F7F7F7;
+	}
+}

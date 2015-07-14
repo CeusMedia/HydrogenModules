@@ -10,6 +10,36 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Category::init done' );
 	}
 
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$cache		= $env->getCache();
+		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
+			$logic		= new Logic_Catalog( $env );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+			$language	= $env->getLanguage()->getLanguage();
+			$conditions	= array( 'visible' => '>0', 'parentId' => 0 );
+			$categories	= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+			foreach( $categories as $nr1 => $item ){
+				$conditions	= array( 'visible' => '>0', 'parentId' => $item->categoryId );
+				$subs		= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+				foreach( $subs as $nr2 => $sub ){
+					$subs[$nr2] = (object) array(
+						'title'	=> $sub->{"label_".$language},
+						'value'	=> 'catalog/category/'.$item->categoryId,
+					);
+				}
+				$categories[$nr1] = (object) array(
+					'title'	=> $item->{"label_".$language},
+					'menu'	=> array_values( $subs ),
+				);
+			}
+			$cache->set( 'catalog.tinymce.links.categories', $categories );
+		}
+        $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
+			'menu'	=> array_values( $categories ),									//  items of submenu
+		) ) );
+	}
+
 	public function add( $parentId = NULL ){
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );

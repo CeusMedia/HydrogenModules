@@ -1,8 +1,16 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Authentication</title>
-	<description><![CDATA[Module for authentication against local database using the Users module.]]></description>
-	<version>0.5.11</version>
+	<description><![CDATA[Module for authentication against local database using the Users module.
+
+**Attention:**
+Basic Authentication will not work, if PHP is integrated into Apache via CGI/FastCGI.
+The reason: Authorisation headers will not be included automatically.
+You need to set this header in your Apache configuration. For example in .htaccess:
+<code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
+
+]]></description>
+	<version>0.6.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -20,15 +28,28 @@
 	<log version="0.5.9">Provide current user ID to Auth script on init by hook.</log>
 	<log version="0.5.10">Let the framework run the initial JavaScript code.</log>
 	<log version="0.5.11">Moved HTML files to subfolders.</log>
+	<log version="0.5.12">Added support for module Security:CSRF.</log>
+	<log version="0.5.13">Allow to remembered login using cookies.</log>
+	<log version="0.5.14">Add configuration for remembered login.</log>
+	<log version="0.5.15">Use newer password hash for remembered login.</log>
+	<log version="0.5.16">Support CGI/FastCGI for Basic Authentication.</log>
+	<log version="0.6">Migrate registration to Bootstrap, add logic class and cleanup.</log>
+	<log version="0.6.1">Migrate confirmation to Bootstrap.</log>
+	<log version="0.6.2">Implement check of user name by regular expression.</log>
+	<log version="0.6.3">Implement check of password length and strength.</log>
+	<log version="0.6.4">Improve registration mail and handling of mail failure.</log>
+	<log version="0.6.5">Carry source URL through registration/confirmation/login process.</log> 
+	<log version="0.6.6">Migrate password recovery.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth.php5</class>
 		<class>Mail/Auth/Register.php5</class>
-<!--		<class>Mail/Auth/Password.php5</class>-->
+		<class>Mail/Auth/Password.php5</class>
 		<class>View/Auth.php5</class>
 		<class>BasicAuthentication.php5</class>
+		<class>Logic/Authentication.php5</class>
 		<template>auth/confirm.php</template>
 		<template>auth/login.php</template>
 		<template>auth/password.php</template>
@@ -47,13 +68,18 @@
 		<locale>de/html/auth/register/info.html</locale>
 		<locale>de/html/auth/register/bottom.html</locale>
 		<locale>de/html/auth/tac.html</locale>
+		<locale>de/html/auth/tac.md</locale>
+		<locale>de/mail/auth/register.txt</locale>
+		<locale>de/mail/auth/password.txt</locale>
 		<locale>en/auth.ini</locale>
 		<locale>en/html/auth/login/info.html</locale>
 		<locale>en/html/auth/tac.html</locale>
+		<style source="theme">module.resource.auth.css</style>
 		<script load="auto">Auth.js</script>
 	</files>
 	<config protected="user" type="boolean" name="session.refresh">yes</config>
 	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
+	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="user" type="boolean" name="logout.auto">yes</config>
 	<config protected="user" type="integer" name="logout.auto.minutes">30</config>
 	<config protected="no" type="string" name="logout.auto.forward.controller"></config>
@@ -63,6 +89,8 @@
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">UI_Helper_HTML</needs>
+		<supports type="module">Security_CSRF</supports>
+		<supports type="module">UI_Markdown</supports>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>
@@ -77,6 +105,7 @@
 	<link rank="99" access="public" path="auth/ajaxIsAuthenticated"></link>
 	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 	<link rank="99" access="public" path="auth/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="auth/ajaxEmailExists"></link>
 	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>
 </module>
 

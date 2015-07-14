@@ -1,10 +1,22 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: Contents: Images</title>
+	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.3.2</version>
-	<log version="0.3.2">Improved image lister for TinyMCE.</log>
+	<version>0.3.15</version>
+	<log version="0.3.3">Use frontend resource.</log>
+	<log version="0.3.4">Updated TinyMCE link collection.</log>
+	<log version="0.3.5">Updated image viewer.</log>
+	<log version="0.3.6">Support localization in controller (action messages).</log>
+	<log version="0.3.7">Generalized checking for folders and files in controller.</log>
+	<log version="0.3.8">Improved redirection on controller.</log>
+	<log version="0.3.9">Improved frontend integration.</log>
+	<log version="0.3.10">Changed extensions configuration from regex to list.</log>
+	<log version="0.3.11">Moved image list function from template to view.</log>
+	<log version="0.3.12">Moved style definitions from templates to CSS file.</log>
+	<log version="0.3.13">Extracted locale block files.</log>
+	<log version="0.3.14">Improved thumbnail cache.</log>
+	<log version="0.3.15">Applied panel module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,21 +26,27 @@
 		<class>View/Helper/Thumbnailer.php5</class>
 		<class>Resource/SqliteCache.php5</class>
 		<locale>de/manage/content/image.ini</locale>
+		<locale>de/html/manage/content/image/add.folder.right.html</locale>
+		<locale>de/html/manage/content/image/edit.folder.right.html</locale>
+		<locale>de/html/manage/content/image/edit.image.right.html</locale>
 		<style load="auto" source="theme">module.manage.content.images.css</style>
 		<template>manage/content/image/index.php</template>
 		<template>manage/content/image/addFolder.php</template>
 		<template>manage/content/image/addImage.php</template>
 		<template>manage/content/image/editFolder.php</template>
 		<template>manage/content/image/editImage.php</template>
+		<template>manage/content/image/editImage.facts.php</template>
+		<template>manage/content/image/editImage.move.php</template>
+		<template>manage/content/image/editImage.scale.php</template>
+		<template>manage/content/image/folders.php</template>
 	</files>
 	<relations>
+		<needs type="module">Resource_Frontend</needs>
 		<supports type="module">JS_TinyMCE</supports>
 	</relations>
-	<config type="string" name="frontend.path" mandatory="no" title="folder path to managed application, needs trailing slash if set">../</config>
-	<config type="string" name="frontend.url" mandatory="yes" title="net path to managed application, needs trailing slash">../</config>
 	<config type="string" name="path.images" mandatory="yes" title="path to images within managed application, needs trailing slash">contents/images/</config>
 	<config type="string" name="path.ignore" mandatory="no" title="regular expression of paths to ignore">/^(galleries|gallery)/i</config>
-	<config type="string" name="extensions" mandatory="yes" title="regular expression of accepted file extensions">/\.(gif|jpe|jpeg|jpg|png)$/i</config>
+	<config type="string" name="extensions" mandatory="yes" title="list of accepted file extensions, case insensitive">gif,jpe,jpeg,jpg,png</config>
 	<link xml:lang="de" path="manage/content/image">Bilder</link>
 	<link xml:lang="en" path="manage/content/image">Images</link>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>

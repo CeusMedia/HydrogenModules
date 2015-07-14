@@ -5,6 +5,12 @@ class View_Manage_Shop_Order extends View_Manage_Shop{
 	public function edit(){}
 	public function index(){}
 
+	public static function ___onRegisterTab( $env, $context, $module, $data ){
+		$words	= (object) $env->getLanguage()->getWords( 'manage/shop' );								//  load words
+		$context->registerTab( 'order', $words->tabs['orders'], 1 );									//  register orders tab
+//		$context->registerTab( 'shipping', $words->tabs['shipping'], 5 );								//  register shipping tab
+	}
+
 	protected function renderList( $orders, $orderId = NULL ){
 		return '[LIST]';
 		$list	= array();

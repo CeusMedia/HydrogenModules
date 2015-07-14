@@ -26,11 +26,8 @@ foreach( $words['priorities'] as $key => $value ){
 }
 $optPriority	= join( '', $optPriority );
 
-
 /*  --  USERS  --  */
-$optUser	= array( UI_HTML_Tag::create( 'option', 'alle', array(
-	'selected'	=> !$filterUser ? 'selected' : NULL,
-) ) );
+$optUser	= array();
 foreach( $users as $user ){
 	$attributes		= array(
 		'value'		=> $user->userId,
@@ -43,14 +40,19 @@ $optUser	= join( '', $optUser );
 
 $optOrder	= UI_HTML_Elements::Options( $words['filter-orders'], $filterOrder );
 
+$iconOrderAsc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
+$iconOrderDesc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
+$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
+$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+
 $disabled   = $filterDirection == 'ASC';
-$buttonUp	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', '<i class="icon-arrow-up"></i>', 'btn not-btn-small', NULL, $disabled );
-$buttonDown	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', '<i class="icon-arrow-down"></i>', 'btn not-btn-small', NULL, !$disabled );
+$buttonUp	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
+$buttonDown	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
 
-$buttonFilter	= UI_HTML_Elements::Button( 'filter', '<i class="icon-search icon-white"></i> '.$w->buttonFilter, 'btn not-btn-small btn-info' );
-$buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', '<i class="icon-zoom-out not-icon-white"></i> '.$w->buttonReset, 'btn not-btn-small not-btn-inverse' );
+$buttonFilter	= UI_HTML_Elements::Button( 'filter', $iconFilter.'&nbsp;'.$w->buttonFilter, 'btn not-btn-small btn-info' );
+$buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', $iconReset.'&nbsp;'.$w->buttonReset, 'btn btn-small btn-inverse' );
 
-return '
+$panelFilter = '
 <div class="content-panel content-panel-filter">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
@@ -108,4 +110,6 @@ return '
 		</form>
 	</div>
 </div>';
+
+return $panelFilter;
 ?>

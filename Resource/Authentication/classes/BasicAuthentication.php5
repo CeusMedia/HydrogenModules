@@ -18,7 +18,7 @@ class BasicAuthentication{
 		}
 		header( 'WWW-Authenticate: Basic realm="'.addslashes( $this->realm ).'"' ); 
 		header( 'HTTP/1.0 401 Unauthorized' ); 
-		header( '401 Forbidden' );
+//		header( '401 Forbidden' );
 		print( '<h1>Authentication failed.</h1>' );
 		exit;
 	}

@@ -36,74 +36,77 @@ $optRole	= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->r
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
 $panelAdd	= '
-<h4>'.$w->legend.'</h4>
-<form name="editUser" action="./manage/user/add" method="post">
-	<div class="row-fluid">
-		<div class="span2">
-				<label for="username" class="mandatory">'.$w->labelUsername.'</label>
-				<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'" autocomplete="off"/>
-		</div>
-		<div class="span2">
-				<label for="password" class="mandatory">'.$w->labelPassword.'</label>
-				<input type="password" name="password" id="input_password" class="span12" required="required" autocomplete="off"/>
-		</div>
-		<div class="span4">
-				<label for="email" class="mandatory">'.$w->labelEmail.'</label>
-				<input type="text" name="email" id="input_email" class="span12 mandatory" value="'.$user->email.'" required="required"/>
-		</div>
-		<div class="span2">
-				<label for="status" class="mandatory">'.$w->labelStatus.'</label>
-				<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
-		</div>
-		<div class="span2">
-				<label for="roleId" class="mandatory">'.$w->labelRole.'</label>
-				<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
-		</div>
+<div class="content-panel">
+	<h4>'.$w->legend.'</h4>
+	<div class="content-panel-inner">
+		<form name="editUser" action="./manage/user/add" method="post">
+			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
+					<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'" autocomplete="off"/>
+				</div>
+				<div class="span2">
+					<label for="input_password" class="mandatory">'.$w->labelPassword.'</label>
+					<input type="password" name="password" id="input_password" class="span12" required="required" autocomplete="off"/>
+				</div>
+				<div class="span4">
+					<label for="input_email" class="mandatory">'.$w->labelEmail.'</label>
+					<input type="text" name="email" id="input_email" class="span12 mandatory" value="'.$user->email.'" required="required"/>
+				</div>
+				<div class="span2">
+					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
+					<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
+				</div>
+				<div class="span2">
+					<label for="input_roleId" class="mandatory">'.$w->labelRole.'</label>
+					<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_gender" class="">'.$w->labelGender.'</label>
+					<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
+				</div>
+				<div class="span2">
+					<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
+					<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
+				</div>
+				<div class="span4">
+					<label for="input_firstname" class="mandatory">'.$w->labelFirstname.'</label>
+					<input type="text" name="firstname" id="input_firstname" class="span12" value="'.$user->firstname.'" required="required"/>
+				</div>
+				<div class="span4">
+					<label for="input_surname" class="mandatory">'.$w->labelSurname.'</label>
+					<input type="text" name="surname" id="input_surname" class="span12" value="'.$user->surname.'" required="required"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span1">
+					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
+					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
+				</div>
+				<div class="span5">
+					<label for="input_city" class="">'.$w->labelCity.'</label>
+					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
+				</div>
+				<div class="span4">
+					<label for="input_street" class="">'.$w->labelStreet.'</label>
+					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
+				</div>
+				<div class="span2">
+					<label for="input_number" class="">'.$w->labelNumber.'</label>
+					<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12 buttonbar">
+					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
+					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+				</div>
+			</div>
+		</form>
 	</div>
-	<div class="row-fluid">
-		<div class="span2">
-				<label for="input_gender" class="">'.$w->labelGender.'</label>
-				<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
-		</div>
-		<div class="span2">
-				<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
-				<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
-		</div>
-		<div class="span4">
-				<label for="input_firstname" class="mandatory">'.$w->labelFirstname.'</label>
-				<input type="text" name="firstname" id="input_firstname" class="span12" value="'.$user->firstname.'" required="required"/>
-		</div>
-		<div class="span4">
-				<label for="input_surname" class="mandatory">'.$w->labelSurname.'</label>
-				<input type="text" name="surname" id="input_surname" class="span12" value="'.$user->surname.'" required="required"/>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span1">
-				<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
-				<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
-		</div>
-		<div class="span5">
-				<label for="input_city" class="">'.$w->labelCity.'</label>
-				<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
-		</div>
-		<div class="span4">
-				<label for="input_street" class="">'.$w->labelStreet.'</label>
-				<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
-		</div>
-		<div class="span2">
-				<label for="input_number" class="">'.$w->labelNumber.'</label>
-				<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
-		</div>
-	</div>
-
-	<div class="row-fluid">
-		<div class="span12 buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
-			'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
-		</div>
-	</div>
-</form>
+</div>
 ';
 
 $panelInfo	= '';
@@ -111,12 +114,13 @@ $panelInfo	= '';
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
 
 return $textIndexTop.'
-<div class="column-control">
-	'.$panelInfo.'
+<div class="row-fluid">
+	<div class="span9">
+		'.$panelAdd.'
+	</div>
+	<div class="span3">
+		'.$panelInfo.'
+	</div>
 </div>
-<div class="column-main">
-	'.$panelAdd.'
-</div>
-<div style="clear: both"></div>
 '.$textIndexBottom;
 ?>

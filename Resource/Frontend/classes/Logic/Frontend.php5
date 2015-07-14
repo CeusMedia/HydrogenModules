@@ -16,19 +16,16 @@ class Logic_Frontend{
 		'themes'	=> 'themes/',
 		'logs'		=> 'logs/',
 		'locales'	=> 'locales/',
+		'templates'	=> 'templates/',
 	);
-
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
-	}
 
 	protected function __clone(){}
 
-	protected function __construct( $env ){
+	protected function __construct( $env, $path = NULL ){
 		$this->env		= $env;
-		$this->path		= $env->getConfig()->get( 'module.resource_frontend.path' );
+		$this->path		= $path;
+		if( !$path )
+			$this->path		= $env->getConfig()->get( 'module.resource_frontend.path' );
 		$this->detectConfig();
 		$this->detectModules();
 		$this->detectBaseUri();
@@ -61,8 +58,9 @@ class Logic_Frontend{
 			}
 			while( preg_match( "@/\./@", $path ) )
 				$path	= preg_replace( "@/\./@", "/", $path );
+			$path		= rtrim( $path, "\//" )."/";
+			$this->uri	= "http://".getEnv( 'HTTP_HOST' ).$path;
 		}
-		$this->uri	= "http://".getEnv( 'HTTP_HOST' ).$path;
 	}
 
 	protected function detectModules(){
@@ -77,10 +75,29 @@ class Logic_Frontend{
 	}
 
 	public function getAppConfigValues( $keys = array() ){
+		if( is_string( $keys ) && strlen( trim( $keys ) ) )
+			$keys	= array( $keys );
 		$list	= array();
 		foreach( $this->config->getAll( 'app.' ) as $key => $value ){
 			if( !$keys || in_array( $key, $keys ) )
 				$list[$key]	= $value;
+		}
+		return $list;
+	}
+
+	static public function getInstance( $env, $path = NULL ){
+		if( !self::$instance )
+			self::$instance	= new self( $env, $path );
+		return self::$instance;
+	}
+
+	public function getLanguages(){
+		$data		= $this->config->getAll( 'locale.', TRUE );
+		$list		= array( trim( $data->get( 'default' ) ) );
+		foreach( explode( ",", $data->get( 'allowed' ) ) as $locale ){
+			if( !in_array( $locale, $list ) ){
+				$list[]	= trim( $locale );
+			}
 		}
 		return $list;
 	}
@@ -93,7 +110,7 @@ class Logic_Frontend{
 		$lines	= explode( "\n", File_Reader::load( $fileName ) );
 		foreach( $lines as $nr => $line ){
 			if( preg_match( "@<config @", $line ) ){
-				print_m( $line );
+//				print_m( $line );
 				$key	= preg_replace( "@^.+name=\"(.+)\".+$@U", "\\1", $line );
 				if( !$keys || in_array( $key, $keys ) )
 					$list[$key]	= preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
@@ -109,7 +126,7 @@ class Logic_Frontend{
 	public function getPath( $key = NULL ){
 		if( !$key )
 			return $this->path;
-		if(	array_key_exists( $key, $this->paths ) )
+		if( array_key_exists( $key, $this->paths ) )
 			return $this->path.$this->paths[$key];
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}

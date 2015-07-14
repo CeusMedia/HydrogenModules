@@ -7,6 +7,7 @@ class Model_Project extends CMF_Hydrogen_Model{
 
 	protected $columns		= array(
 		'projectId',
+		'creatorId',
 		'parentId',
 		'status',
 		'priority',

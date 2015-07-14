@@ -6,9 +6,89 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	public function __onInit(){
 		parent::__onInit();
 		$this->sessionPrefix	= 'module.manage_catalog_article.filter.';
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->addData( 'frontend', $this->frontend );
 
 		if( !$this->session->get( $this->sessionPrefix.'order' ) )
 				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
+	}
+
+	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+		$cache		= $env->getCache();
+		if( !( $list = $cache->get( 'catalog.tinymce.images.articles' ) ) ){
+			$logic		= new Logic_Catalog( $env );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+			$pathCovers	= 'contents/'.$config->get( 'path.frontend.covers' );							//  @todo resolve base path
+			$list       = array();
+			$conditions	= array( 'cover' => '>0' );
+			$orders		= array( 'articleId' => 'DESC' );
+			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
+				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
+				$list[] = (object) array(
+					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 60 ),
+					'value'	=> $pathCovers.$id.'__'.$item->cover,
+				);
+			}
+			$cache->set( 'catalog.tinymce.images.articles', $list );
+		}
+        $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
+			'menu'	=> array_values( $list ),									//  items of submenu
+		) ) );
+	}
+
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@param		object		$env
+	 *	@param		object		$context
+	 *	@param		unknown		$module
+	 *	@param		unknown		$arguments
+	 *	@return		void
+	 *	@todo		kriss: add authors and categories
+	 *	@todo		kriss: code doc
+	 */
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$cache		= $env->getCache();
+		$logic		= new Logic_Catalog( $env );
+		if( !( $articles = $cache->get( 'catalog.tinymce.links.articles' ) ) ){
+			$orders		= array( 'articleId' => 'DESC' );
+			$articles	= $logic->getArticles( array(), $orders, array( 0, 200 ) );
+			foreach( $articles as $nr => $item ){
+/*				$category	= $logic->getCategoryOfArticle( $article->articleId );
+				if( $category->volume )
+					$item->title	.= ' - Band '.$category->volume;
+*/				$articles[$nr]	= (object) array(
+					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 80 ),
+					'value'	=> $logic->getArticleUri( $item ),
+				);
+			}
+			$cache->set( 'catalog.tinymce.links.articles', $articles );
+		}
+		$context->list	= array_merge( $context->list, array( (object) array(
+			'title'	=> 'Veröffentlichungen:',
+			'menu'	=> array_values( $articles ),
+		) ) );
+
+		if( !( $documents = $cache->get( 'catalog.tinymce.links.documents' ) ) ){
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+			$pathDocs	= 'contents/'.$config->get( 'path.frontend.documents' );							//  @todo resolve base path
+			$documents	= $logic->getDocuments( array(), array( 'articleDocumentId' => 'DESC' ), array( 0, 200 ) );
+			foreach( $documents as $nr => $item ){
+				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
+				$article		= $logic->getArticle( $item->articleId );
+				$documents[$nr]	= (object) array(
+					'title'	=> Alg_Text_Trimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
+					'value'	=> $pathDocs.$id.'_'.$item->url,
+				);
+			}
+			$cache->set( 'catalog.tinymce.links.documents', $documents );
+		}
+		$context->list	= array_merge( $context->list, array( (object) array(
+			'title'	=> 'Dokuments:',
+			'menu'	=> array_values( $documents ),
+		) ) );
 	}
 
 	public function add(){

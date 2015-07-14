@@ -2,8 +2,9 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
+	<log version="0.3.7">Fixed bug in database script.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -33,8 +34,8 @@ if( $env->has( 'session' ) ){												//  environment has session support
 ]]></hook>
 	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User_Setting::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>user_settings`;
-CREATE TABLE IF NOT EXISTS `<%prefix%>user_settings` (
+DROP TABLE IF EXISTS `<%?prefix%>user_settings`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_settings` (
   `userSettingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `moduleId` varchar(200) NOT NULL,
   `managerId` int(10) unsigned NOT NULL,
@@ -51,9 +52,9 @@ CREATE TABLE IF NOT EXISTS `<%prefix%>user_settings` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version-from="0.2.0" version-to="0.2.1"><![CDATA[
-RENAME TABLE `user_settings` TO `<%prefix%>user_settings`;
+RENAME TABLE `user_settings` TO `<%?prefix%>user_settings`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>user_settings`;
+DROP TABLE IF EXISTS `<%?prefix%>user_settings`;
 ]]></sql>
 </module>

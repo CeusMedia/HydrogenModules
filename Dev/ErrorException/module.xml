@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Dev: ErrorException</title>
+	<description><![CDATA[Turns PHP error messages into ErrorExceptions.]]></description>
+	<category>Dev</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Handle suppressed errors in error exception handler.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<config protected="yes" type="boolean" name="enabled">no</config>
+    <hook type="resource" resource="Page" event="applyModules"><![CDATA[
+/**
+ *	@see	http://stackoverflow.com/questions/1241728/
+ */
+function exceptionErrorHandler( $errno, $errstr, $errfile, $errline, array $errcontext ){
+	if( 0 === error_reporting() ){									// error was suppressed with the @-operator
+		return false;
+	}
+	throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
+}
+if( $env->getConfig()->get( 'module.errorexception.enabled' ) ){
+	set_error_handler( 'exceptionErrorHandler' );
+}
+]]></hook>
+</module>

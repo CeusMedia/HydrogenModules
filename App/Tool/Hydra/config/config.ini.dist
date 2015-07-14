@@ -1,0 +1,24 @@
+app.name			= "Setup"
+;app.base.url		= ""
+app.version			= "0.8"
+
+path.cache			= "tmp/cache/"
+path.module.config	= "config/modules/"
+path.module.lib		= "modules/"
+path.images			= "images/"
+path.locales		= "locales/"
+path.templates		= "templates/"
+path.themes			= "themes/"
+path.log			= "logs/"
+path.scripts		= "javascripts/"
+path.scripts.lib	= "http://js.int1a.net/"
+path.styles.lib		= "http://css.int1a.net/"
+
+layout.primer		= "petrol"
+layout.theme		= "custom"
+
+locale.allowed		= "de,en"
+locale.default		= "de"
+
+system.cache.modules		= yes
+

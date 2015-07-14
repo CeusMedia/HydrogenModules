@@ -48,6 +48,7 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 			$key		= (float) $tab->priority.'.'.str_pad( $nr, 2, '0', STR_PAD_LEFT );			//  generate order key
 			$list[$key]	= UI_HTML_Tag::create( 'li', $link, $item );								//  enlist tab
 		}
+		ksort( $list );
 		if( count( $list ) > 1 )																	//  more than 1 tab
 			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->classList ) );		//  return rendered tab list
 	}

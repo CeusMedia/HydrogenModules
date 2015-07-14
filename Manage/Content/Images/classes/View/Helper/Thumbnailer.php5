@@ -1,11 +1,16 @@
 <?php
 class View_Helper_Thumbnailer{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $maxWidth = 120, $maxHeight = 80 ){
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $maxWidth = 120, $maxHeight = 80, $cachePath = NULL, $cacheFile = "thumbs.sqlite" ){
 		$this->env			= $env;
-		$this->cache		= new Resource_SqliteCache( '.thumbs.db' );
+		$this->config		= $this->env->getconfig();
+		$this->cache		= new Resource_SqliteCache( $cachePath.$cacheFile );
+//		$this->cache		= new Resource_SqliteCache( ".thumbs.db" );
 		$this->maxWidth		= $maxWidth;
 		$this->maxHeight	= $maxHeight;
+
+//$this->env->getMessenger()->noteNotice( print_m( $this->cache->index(), NULL, NULL, TRUE ) );
+
 	}
 
 	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL ){

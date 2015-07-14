@@ -1,0 +1,9 @@
+{
+  "Hydra": {
+    "title": "Hydra AppManager",
+    "path": "",
+    "uri": "",
+    "protocol": "http:\/\/",
+    "host": "localhost"
+  }
+}

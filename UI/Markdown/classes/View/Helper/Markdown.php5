@@ -10,12 +10,16 @@ class View_Helper_Markdown extends CMF_Hydrogen_View{
 			$data->content	= Markdown::defaultTransform( $data->content );
 	}
 
-	public function transform( $markdown ){
-		return Markdown::defaultTransform( $markdown );
+	public function transform( $markdown, $wrapped = TRUE ){
+		$html	= Markdown::defaultTransform( $markdown );
+		if( $wrapped )
+			return $html;
+		return preg_replace( "/^<p>(.*)<\/p>$/s", "\\1", $html );
 	}
 
-	static public function transformStatic( $env, $markdown ){
-		return Markdown::defaultTransform( $markdown );
+	static public function transformStatic( $env, $markdown, $wrapped = TRUE ){
+		$helper	= new self( $env );
+		return $helper->transform( $markdown, $wrapped );
 	}
 }
 ?>

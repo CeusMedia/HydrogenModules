@@ -2,7 +2,12 @@
 <module>
 	<title>Manage: Companies</title>
 	<description>Management for company accounts.</description>
-	<version>0.1.1</version>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Updated templates.</log>
+	<log version="0.2.2">Use module UI:Helper:TimePhraser.</log>
+	<log version="0.3">End of life: Use Manage:Companies instead.</log>
 	<category>Management</category>
 <!--	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -18,6 +23,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<link path="manage/company" access="acl" xml:lang="de">Unternehmen</link>
 	<link path="manage/company" access="acl" xml:lang="en">Companies</link>

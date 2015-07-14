@@ -14,10 +14,21 @@ function loadMap(id){
 	var map = new google.maps.Map(document.getElementById(id), myOptions);
 	if(m.data('marker-title')){
 		var marker = new google.maps.Marker({
-			position: latlng, 
+			position: latlng,
 			map: map,
 			title: m.data('marker-title')
 		});
 	}
+	m.data('map', map);
 	return map;
+}
+
+function addMarker(map, lat, lng, title, options){
+	var options = jQuery.extend({}, options, {
+		position: new google.maps.LatLng(lat,lng),
+		map: map
+	});
+	if(typeof title !== "undefined")
+		options.title = title;
+	return marker = new google.maps.Marker(options);
 }

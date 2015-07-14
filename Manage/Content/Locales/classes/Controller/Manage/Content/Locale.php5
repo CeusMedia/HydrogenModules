@@ -14,16 +14,16 @@
  */
 class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 
+	protected $frontend;
 	protected $languages	= array();
-
-	protected $types	= array(
+	protected $types		= array(
 		'language'	=> array(
 			'folder'		=> '',
 			'extensions'	=> 'ini'
 		),
 		'html'		=> array(
 			'folder'		=> 'html/',
-			'extensions'	=> 'html'
+			'extensions'	=> 'html,md'
 		),
 		'mail'		=> array(
 			'folder'		=> 'mail/',
@@ -32,9 +32,10 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 	);
 
 	public function	__onInit(){
-		$this->config		= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
-		$this->basePath		= $this->config->get( 'basePath' );
-		$this->languages	= $this->getLanguages();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->basePath		= $this->frontend->getPath( 'locales' );
+		$this->languages	= $this->frontend->getLanguages();
 	}
 
 	public function edit( $language, $type, $fileId) {
@@ -60,23 +61,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 	}
 
 	protected function getDefaultLanguage(){
-		$language	= $this->config->get( 'language.default' );
-		if( $language === "auto" )
-			$language	= $this->env->getLanguage()->getLanguage();
-		if( !trim( $language ) )
-			$language	= array_shift( $this->getLanguages() );
-		return $language;
-	 }
-
-	protected function getLanguages(){
-		if( $this->languages )
-			return $this->languages;
-		$list	= array();
-		$index	= new Folder_Lister( $this->basePath );
-		foreach( $index->getList() as $folder )
-			$list[]	= $folder->getFilename();
-		natcasesort( $list );
-		return $list;
+		$locales	= $this->frontend->getLanguages();
+		return array_shift( $locales );
 	}
 
 	public function index( $language = NULL, $type = NULL, $fileId = NULL) {

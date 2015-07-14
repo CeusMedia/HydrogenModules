@@ -71,30 +71,31 @@ else
 	$rows	= '<tr><td colspan="5"><em>Nichts gefunden.</em></td></tr>';
 
 return '
-<h4>'.$words['indexList']['legend'].' <small class="muted">('.$total.'/'.$all.')</small></h4>
-	<table id="users" class="table not-table-condensed table-striped">
-		<colgroup>
-			<col width="32%"/>
-			<col width="17%"/>
-			<col width="15%"/>
-			<col width="12%"/>
-			<col width="12%"/>
-			<col width="12%"/>
-<!--			<col width="12%"/>-->
-		</colgroup>
-		'.$rows.'
-	</table>
-<!--	'.$pagination.'<br/>-->
-	<div class="buttonbar">
-		<div class="pull-right">
-			'.$pagination.'
-		</div>
-		<div class="pull-left">
-			'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
+<div class="content-panel">
+	<h4>'.$words['indexList']['legend'].' <small class="muted">('.$total.'/'.$all.')</small></h4>
+	<div class="content-panel-inner">
+		<table id="users" class="table not-table-condensed table-striped">
+			<colgroup>
+				<col width="32%"/>
+				<col width="17%"/>
+				<col width="15%"/>
+				<col width="12%"/>
+				<col width="12%"/>
+				<col width="12%"/>
+<!--				<col width="12%"/>-->
+			</colgroup>
+			'.$rows.'
+		</table>
+<!--		'.$pagination.'<br/>-->
+		<div class="row-fluid buttonbar">
+			<div class="pull-right">
+				'.$pagination.'
+			</div>
+			<div class="pull-left">
+				'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
+			</div>
 		</div>
 	</div>
-</fieldset>
-<style>
-</style>
+</div>
 ';
 ?>

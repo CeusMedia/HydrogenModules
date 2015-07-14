@@ -1,0 +1,17 @@
+Options -MultiViews +FollowSymLinks
+
+<Files *.inc>
+    Deny From All
+</Files>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/?$ index.php?__path=$1&%{QUERY_STRING} [L]
+
+#  AUTHENTICATION
+#AuthType Basic
+#AuthName "Hydra App Manager"
+#AuthUserFile /path/to/Hydra/.htpasswd
+#Require valid-user
+

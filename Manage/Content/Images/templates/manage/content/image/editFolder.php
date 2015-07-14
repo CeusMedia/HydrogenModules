@@ -7,12 +7,14 @@ $optFolder	= UI_HTML_Elements::Options( $optFolder, $folderPath );
 
 $listFolders	= $view->listFolders( $path );
 
+extract( $view->populateTexts( array( 'edit.folder.right' ), 'html/manage/content/image/' ) );
+
+$panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );
+
 return '
 <div class="row-fluid">
 	<div class="span3">
-		<h4>Ordner</h4>
-		'.$listFolders.'
-		<a href="./manage/content/image/addFolder?path='.$path.'" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i> neuer Ordner</a>
+		'.$panelFolders.'
 	</div>
 	<div class="span6">
 		<h4><span class="muted">Ordner: </span>'.$path.'</h4>
@@ -39,18 +41,7 @@ return '
 		</div>
 	</div>
 	<div class="span3">
-		<h3>Anleitung</h3>
-		<h4>Regeln für Ordnernamen</h4>
-		<ul>
-			<li>Keine Sonderzeichen und Umlaute.</li>
-			<li>Keine Leerzeichen.</li>
-		</ul>
-		<br/>
-		<div class="alert alert-error"><b>Achtung!</b></div>
-		<p>
-			Beim Umbennen oder Verschieben eines Ordners werden alle Bilder und Unterordner mit verschoben.
-			Sollten Bilder aus diesem Ordner oder dessen Unterordner bereits verlinkt sein, muss deren Verlinkung korrigiert werden.
-		</p>
+		'.$textEditFolderRight.'
 	</div>
 </div>
 ';

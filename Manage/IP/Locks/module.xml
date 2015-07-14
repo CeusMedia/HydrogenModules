@@ -3,12 +3,18 @@
 	<title>Manage: IP Locks</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.2.2</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Added tabs and reason management.</log>
 	<log version="0.2.2">Added filter management.</log>
-<!--	<log version="0.2.3">Added whitelist management.</log>-->
+	<log version="0.2.3">Extended lock list by timestamp columns.</log>
+	<log version="0.2.4">Added pagination in lock list.</log>
+	<log version="0.2.5">Added lock view prototype.</log>
+	<log version="0.2.6">Applied module UI:CSS:Panel.</log>
+	<log version="0.2.7">Reworked all lists and buttons.</log>
+	<log version="0.3">First production release.</log>
+<!--	<log version="0.2.6">Added whitelist management.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -22,6 +28,7 @@
 <!--		<class>View/Manage/Ip/Lock/Whitelist.php5</class>-->
 		<locale>de/manage/ip/lock.ini</locale>
 		<template>manage/ip/lock/add.php</template>
+		<template>manage/ip/lock/edit.php</template>
 		<template>manage/ip/lock/index.php</template>
 		<template>manage/ip/lock/filter/add.php</template>
 		<template>manage/ip/lock/filter/edit.php</template>

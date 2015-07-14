@@ -5,40 +5,117 @@ $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= array( new CMM_Bootstrap_LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
 
-/*if( in_array( $order->status, array( 2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-3", 'nicht bezahlt', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( 2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-2", 'storniert', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( 0 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-1", 'abbrechen', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( -6, -2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."2", 'bestellt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( -3, 2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."3", 'bezahlt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( -4, -5 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-6", 'erstattet', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( 3 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-4", 'nicht zugestellt', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( -4, 3 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."4", 'teilweise', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( -5, -4, 3, 4 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."5", 'zugestellt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( 4, 5, 6 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-5", 'reklamiert', 'btn-small btn-warning', 'arrow-left' );
-if( in_array( $order->status, array( 5 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."6", 'fertig!', 'btn-small btn-success', 'ok' );
-*/
-if( in_array( $order->status, array( 3, 5 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-6", 'erstattet', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( 2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."-2", 'storniert', 'btn-small btn-danger', 'remove' );
-if( in_array( $order->status, array( 2 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."3", 'bezahlt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( 3 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."5", 'zugestellt', 'btn-small btn-warning', 'arrow-right' );
-if( in_array( $order->status, array( 5 ) ) )
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $baseUrl."6", 'fertig!', 'btn-small btn-success', 'ok' );
+$states	= array(
+	(object) array(
+		'enabled'	=> TRUE,
+		'from'		=> array( -5, -4, 2 ),
+		'to'		=> -6,
+		'label'		=> 'erstattet',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( 4, 5, 6 ),
+		'to'		=> -5,
+		'label'		=> 'reklamiert',
+		'class'		=> 'btn-warning',
+		'icon'		=> 'arrow-left',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( 3 ),
+		'to'		=> -4,
+		'label'		=> 'nicht zugestellt',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( 2 ),
+		'to'		=> -3,
+		'label'		=> 'nicht bezahlt',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> TRUE,
+		'from'		=> array( 2 ),
+		'to'		=> -2,
+		'label'		=> 'storniert',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( 0 ),
+		'to'		=> -1,
+		'label'		=> 'abbrechen',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( 2 ),
+		'to'		=> 1,
+		'label'		=> 'nicht bezahlt',
+		'class'		=> 'btn-danger',
+		'icon'		=> 'remove',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array(  -6, -2 ),
+		'to'		=> 2,
+		'label'		=> 'bestellt',
+		'class'		=> 'btn-warning',
+		'icon'		=> 'arrow-right',
+	),
+	(object) array(
+		'enabled'	=> TRUE,
+		'from'		=> array( -3, 2 ),
+		'to'		=> 3,
+		'label'		=> 'bezahlt',
+		'class'		=> 'btn-warning',
+		'icon'		=> 'arrow-right',
+	),
+	(object) array(
+		'enabled'	=> FALSE,
+		'from'		=> array( -4, 3 ),
+		'to'		=> 4,
+		'label'		=> 'teilweise',
+		'class'		=> 'btn-warning',
+		'icon'		=> 'arrow-right',
+	),
+	(object) array(
+		'enabled'	=> TRUE,
+		'from'		=> array( 3, 4 ),
+		'to'		=> 5,
+		'label'		=> 'zugestellt',
+		'class'		=> 'btn-warning',
+		'icon'		=> 'arrow-right',
+	),
+	(object) array(
+		'enabled'	=> TRUE,
+		'from'		=> array( 5 ),
+		'to'		=> 6,
+		'label'		=> 'fertig!',
+		'class'		=> 'btn-success',
+		'icon'		=> 'ok',
+	),
+);
 
+foreach( $states as $status ){
+	if( $status->enabled ){
+		if( in_array( $order->status, $status->from ) ){
+			$buttons[]	= new CMM_Bootstrap_LinkButton(
+				$baseUrl.$status->to,
+				$status->label,
+				'btn-small '.$status->class,
+				$status->icon
+			);
+		}
+	}
+}
 $buttons	= new CMM_Bootstrap_ButtonToolbar( array( new CMM_Bootstrap_ButtonGroup( $buttons ) ) );
 
 function renderDataList( $keys, $data, $labels ){
@@ -90,12 +167,13 @@ if( $order->customer && $order->customer->alternative )
 $w		= (object) $words['positions'];
 $rows	= array();
 foreach( $order->positions as $position ){
-	$url	= './manage/catalog/article/edit/'.$position->articleId;
+	$url	= './manage/catalog/gallery/edit/'.$position->articleId;
 	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
-	$cellTitle		= UI_HTML_Tag::create( 'td', $link );
-	$cellQuantity	= UI_HTML_Tag::create( 'td', $position->quantity );
-	$cellStatus		= UI_HTML_Tag::create( 'td', new CMM_Bootstrap_ButtonGroup( array(
+	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
+	$cellTitle		= new UI_HTML_Tag( 'td', $link, array( 'class' => 'cell-position-title' ) );
+	$cellQuantity	= new UI_HTML_Tag( 'td', $position->quantity, array( 'class' => 'cell-position-quantity' ) );
+	$cellStatus		= new UI_HTML_Tag( 'td', new CMM_Bootstrap_ButtonGroup( array(
 		new CMM_Bootstrap_LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
@@ -110,20 +188,21 @@ foreach( $order->positions as $position ){
 			'ok',
 			$order->status < 1 || $position->status == 2
 		),
-	) ) );
+	) ), array( 'class' => 'cell-position-actions' ) );
 
 	$rowColor		= $position->status == 1 ? 'warning' : ( $position->status == 2 ? 'success' : 'error' );
-	$cells			= array( $cellTitle, $cellQuantity, $cellStatus );
+	$cells			= array( $cellQuantity, $cellTitle, $cellBridge, $cellStatus );
 	$attributes		= array( 'class' => $rowColor );
 	$rows[]			= UI_HTML_Tag::create( 'tr', $cells, $attributes );
 }
 
 $tableHeads		= UI_HTML_Elements::TableHeads( array(
-	$w->head_article,
 	$w->head_quantity,
+	$w->head_article,
+	$w->head_bridge,
 	$w->head_status,
 ) );
-$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '75%', '10%', '20%' ) );
+$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '150', '120' ) );
 $tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
 $tableBody		= UI_HTML_Tag::create( 'tbody', $rows );
 $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
@@ -131,13 +210,25 @@ $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBo
 $linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
 #$linkBack	= new CMM_Bootstrap_LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );
 
-return $this->renderMainTabs().'
+$tabs		= View_Manage_Shop::renderTabs( $env );
+
+return $tabs.'
 <style>
 .panels .dl-horizontal dt {
 	width: 100px;
 	}
 .panels .dl-horizontal dd {
 	margin-left: 120px;
+	}
+table.table td.cell-position-bridge {
+	font-size: 0.9em;
+	color: rgba(51, 51, 51, 0.85);
+	}
+table.table td.cell-position-quantity {
+	font-size: 1.1em;
+	text-align: right;
+	padding-right: 0.8em;
+	font-weight: bold;
 	}
 </style>
 <div>

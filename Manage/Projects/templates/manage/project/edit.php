@@ -37,6 +37,7 @@ $w			= (object) $words['edit'];
 $iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.' '.$w->buttonCancel, array(
 	'href'		=> './manage/project',
@@ -49,12 +50,17 @@ $buttonView		= UI_HTML_Tag::create( 'a', $iconView.' '.$w->buttonView, array(
 $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
-	'class'		=> 'btn btn-success',
+	'class'		=> 'btn not-btn-success btn-primary',
 	'disabled'	=> !$canEdit ? 'disabled' : NULL,
  ) );
+$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+	'href'		=> './manage/project/remove/'.$project->projectId,
+	'class'		=> 'btn btn-small btn-inverse',
+	'disabled'	=> !$canRemove ? 'disabled' : NULL,
+) );
 $panelEdit	= '
 <div class="content-panel content-panel-form">
-	<h3 class="autocut"><a href="./manage/project" class="muted">'.$w->heading.'</a> '.$project->title.'</h3>
+	<h3 class="autocut"><a href="./manage/project" class="muted">'.$w->heading.':</a> '.$project->title.'</h3>
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 			<div class="row-fluid">
@@ -70,15 +76,15 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span4">
+				<div class="span3">
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12 max">'.$optStatus.'</select>
 				</div>
-				<div class="span4">
+				<div class="span3">
 					<label for="input_priority" class="not-mandatory">'.$w->labelPriority.'</label>
 					<select name="priority" id="input_priority" class="span12 max">'.$optPriority.'</select>
 				</div>
-				<div class="span4">
+				<div class="span6">
 					<label for="input_url">'.$w->labelUrl.'</label>
 					<input type="text" name="url" id="input_url" class="span12 max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
 				</div>
@@ -86,7 +92,8 @@ $panelEdit	= '
 			<div class="buttonbar">
 				'.$buttonCancel.'
 				<!--'.$buttonView.'-->
-				<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>	
+				'.$buttonSave.'
+				'.$buttonRemove.'
 			</div>
 <!--			<li class="">
 				<label for="input_companyId">Unternehmen</label>
@@ -96,7 +103,7 @@ $panelEdit	= '
 	</div>
 </div>';
 
-$panelInfo		= $view->loadTemplateFile( 'manage/project/edit.info.php' );
+$panelInfo		= "";//$view->loadTemplateFile( 'manage/project/edit.info.php' );
 $panelUsers		= $view->loadTemplateFile( 'manage/project/edit.users.php' );
 
 return '

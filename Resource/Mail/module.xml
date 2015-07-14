@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.3</version>
+	<version>0.5.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -43,6 +43,9 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.5.1">Added language support for mail attachments.</log>
 	<log version="0.5.2">Made path to mail classes configurable for remote management.</log>
 	<log version="0.5.3">Fixed mail body line length to 76 when using base64.</log>
+	<log version="0.5.4">Added switch for secured SMTP communication.</log>
+	<log version="0.5.5">Added view helper for text mails.</log>
+	<log version="0.5.6">Added view helper for collecting facts.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -54,6 +57,8 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 		<class>Model/Mail/Attachment.php5</class>
 		<class>Logic/Mail.php5</class>
 		<class>Job/Mail.php5</class>
+		<class>View/Helper/Mail/Facts.php5</class>
+		<class>View/Helper/Mail/Text.php5</class>
 		<style>mail.min.css</style>
 		<script>mail.min.js</script>
 		<file>config/jobs/mail.xml</file>
@@ -64,6 +69,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="string" name="transport.port" mandatory="transport.type:SMTP">25</config>
 	<config protected="yes" type="string" name="transport.username" mandatory="transport.type:SMTP"></config>
 	<config protected="yes" type="string" name="transport.password" mandatory="transport.type:SMTP"></config>
+	<config protected="yes" type="boolean" name="transport.secure" values="yes,no">yes</config>
 	<config protected="yes" type="string" name="subject.prefix"></config>
 	<config protected="yes" type="string" name="subject.template"></config>
 	<config protected="yes" type="boolean" name="queue.enabled" mandatory="yes">yes</config>

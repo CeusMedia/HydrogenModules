@@ -76,7 +76,7 @@ class Logic_Upload{
 	public function checkMimeType( $allowedMimeTypes, $noteError = FALSE ){
 		if( $this->upload->error )
 			return FALSE;
-		if( !is_array( $allowedExtensions ) )
+		if( !is_array( $allowedMimeTypes ) )
 			throw new InvalidArgumentException( 'Allowed MIME types must be given as list' );
 		$allowed	= in_array( $this->upload->type, $allowedMimeTypes );
 		if( !$allowed && $noteError )
@@ -132,6 +132,12 @@ class Logic_Upload{
 			$extension		= preg_replace( "/^(jpe|jpeg)$/i", 'jpg', $extension );
 		}
 		return $extension;
+	}
+
+	public function getFileName(){
+		if( $this->upload->error === 4 )
+			throw new RuntimeException( 'No image uploaded' );
+		return $this->upload->name;
 	}
 
 	/**

@@ -26,6 +26,23 @@ if( $moduleConfig->get( 'editor' ) ){
 		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
+$attributes	= array(
+	'id'	=> 'content-container'
+);
+switch( $renderer ){
+	case 'server-ajax':
+	case 'client':
+		$attributes['style']	= 'display: none';
+		$attributes['class']	= 'markdown';
+		break;
+	case 'server-inline':
+	default:
+		break;
+}
+
+//$contentContainer	= UI_HTML_Tag::create( 'div', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributes );
+$contentContainer	= UI_HTML_Tag::create( 'div', $content, $attributes );
+
 return '
 <div class="row-fluid">
 	<div class="span3">
@@ -38,9 +55,7 @@ return '
 		<div id="content-index">
 			<div class="heading">Inhalt</div>
 		</div>
-		<div class="markdown" id="content-container" style="display: none">
-'.$content.'
-		</div>
+		'.$contentContainer.'
 		<div class="buttonbar">
 			'.$buttonEdit.'
 		</div>
@@ -49,6 +64,7 @@ return '
 </div>
 <script>
 $(document).ready(function(){
+	InfoManual.renderer = "'.$renderer.'";
 	InfoManual.init("#content-container", "#content-index");
 });
 </script>

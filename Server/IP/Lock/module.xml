@@ -3,13 +3,17 @@
 	<title>Server: IP Lock</title>
 	<description><![CDATA[]]></description>
 	<category>Server</category>
-	<version>0.2.3</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Extracted logic to class.</log>
 	<log version="0.2.2">Added reasons.</log>
 	<log version="0.2.3">Added filters.</log>
-<!--	<log version="0.2.4">Added whitelist.</log>-->
+	<log version="0.2.4">Added missing SQL.</log>
+	<log version="0.2.5">Added missing reason code column.</log>
+	<log version="0.2.6">Added URI column to lock model.</log>
+	<log version="0.2.7">Extended logic class.</log>
+<!--	<log version="0.2.8">Added whitelist.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -24,4 +28,68 @@
 		<needs type="module">Resource_Database</needs>
 	</relations>
 	<hook type="resource" resource="Env" event="init">Controller_IP_Lock::___onEnvInit</hook>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_locks` (
+  `ipLockId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `reasonId` smallint(5) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `IPv4` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `views` int(10) unsigned DEFAULT '0',
+  `lockedAt` decimal(12,0) unsigned NOT NULL,
+  `visitedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `unlockedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ipLockId`),
+  KEY `reasonId` (`reasonId`),
+  KEY `status` (`status`),
+  KEY `IPv4` (`IPv4`),
+  KEY `lockedAt` (`lockedAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_filters`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_lock_filters` (
+  `ipLockFilterId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `reasonId` smallint(5) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `lockStatus` tinyint(4) NOT NULL,
+  `method` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pattern` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `appliedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ipLockFilterId`),
+  KEY `reasonId` (`reasonId`),
+  KEY `status` (`status`),
+  KEY `lockStatus` (`lockStatus`),
+  KEY `method` (`method`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_reasons`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_lock_reasons` (
+  `ipLockReasonId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `code` decimal(3,0) unsigned DEFAULT '423',
+  `duration` decimal(6,0) unsigned DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `appliedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ipLockReasonId`),
+  KEY `status` (`status`),
+  KEY `duration` (`duration`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+]]></sql>
+	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
+ALTER TABLE `<%?prefix%>ip_locks` ADD `uri` VARCHAR(255) NOT NULL AFTER `IPv4`;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_filters`;
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_reasons`;
+]]></sql>
 </module>

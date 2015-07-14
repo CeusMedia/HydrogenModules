@@ -1,0 +1,183 @@
+button {
+	cursor: pointer;
+	}
+
+.button {
+	padding: 3px 10px;
+/*	background-color: #DDD;
+	background-image: url(../../images/nav_logo13.png);
+	background-position: 0px -192px;
+	background-repeat: repeat-x;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #CCCCCC #999999 #999999 #CCCCCC;
+	border-radius: 0.4em;
+	-moz-border-radius: 0.4em;
+*/	font-size: 1em;
+	cursor: pointer;
+	outline: none;
+/*
+	font-size: 1em;
+*/
+	}
+.button:focus,
+.button:hover {
+/*	background-position: 0 -199px;*/
+	}
+.button:active {
+/*	border-color: #999999 #CCCCCC #CCCCCC #999999;
+	background-position: 0 -199px;
+*/	}
+.button:focus {							/*  IE */
+	outline : none;
+    }
+.button::-moz-focus-inner {				/*  Firefox */
+	border: 0;
+	}
+
+/*
+.button.save {
+	background-color: #DFB;
+	}
+.button.cancel {
+	background-color: #FFD;
+	}
+.button.delete {
+	background-color: #FCB;
+	}
+*/
+
+/*  BUTTON ICONS  */
+button.accept span,
+button.ban span,
+button.decline span,
+button.disable span,
+button.kick span,
+button.add span,
+button.cancel span,
+button.close span,
+button.delete span,
+button.edit span,
+button.exit span,
+button.filter span,
+button.lock span,
+button.unlock span,
+button.open span,
+button.remove span,
+button.reset span,
+button.more span,
+button.less span,
+button.search span,
+button.to-first span,
+button.to-prev span,
+button.to-next span,
+button.to-last span,
+button.save span {
+	display: block;
+	min-height: 16px;
+	background-repeat: no-repeat;
+	background-position: -1px 0px;
+	padding-left: 20px;
+	padding-right: 4px;
+	outline: none;
+	}
+button.add span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/add.png);
+	}
+button.cancel span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_left.png);
+	}
+button.close span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_down.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/door.png);
+	}
+button.edit span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/pencil.png);
+	}
+button.exit span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/door_out.png);
+	}
+button.save span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/accept.png);
+	}
+button.search span,
+button.filter span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/magnifier.png);
+	}
+button.lock span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock.png);
+	background-position: -1px 0px;
+	}
+button.unlock span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/lock_break.png);
+	background-position: -1px 0px;
+	}
+button.open span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/arrow_up.png);
+	background-image: url(/lib/cmIcons/famfamfam/silk/door_open.png);
+	}
+button.delete span,
+button.remove span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/delete.png);
+	}
+button.reset span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/bin_closed.png);
+	}
+button.more span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/bullet_arrow_down.png);
+	}
+button.less span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/bullet_arrow_up.png);
+	}
+button.to-first span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/control_start.png);
+	}
+button.to-prev span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/control_rewind.png);
+	}
+button.to-next span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/control_fastforward.png);
+	}
+button.to-last span {
+	background-image: url(/lib/cmIcons/famfamfam/silk/control_end.png);
+	}
+
+	
+	
+
+/*  BUTTON BAR  */
+.buttonbar {
+	clear: both;
+	margin-top: 0.5em;
+	border-top: 1px solid #CCC;
+	padding-top: 0.5em;
+	}
+
+.buttonbar .right {
+	float: right;
+	}
+
+
+button[disabled] {
+	opacity: 0.5;
+	color: black;
+	cursor: default;
+	}
+
+button.tiny {
+    margin-right: 1px;
+	padding: 0px 1px;
+	}
+
+button.tiny span {
+    margin: 0;
+    padding: 0;
+    width: 15px;
+    height: 12px;
+	}
+
+button.tiny.left {
+	float: left;
+	display: block;
+	margin-right: .5em;
+	}

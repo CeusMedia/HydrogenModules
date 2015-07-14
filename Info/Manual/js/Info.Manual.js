@@ -1,15 +1,39 @@
 var InfoManual = {
+
+	renderer: "client",
+	
 	init: function(selectorContainer, selectorIndex){
 		InfoManual.renderMarkdown(selectorContainer);
 		InfoManual.renderIndex(selectorContainer, selectorIndex, [1,2,3,4,5], 'level-');
 	},
+
 	renderMarkdown: function(selectorContainer){
 		var markdown = $(selectorContainer);
 		if(markdown.size()){
-			var converter = new Markdown.Converter();
-			markdown.html(converter.makeHtml(markdown.html())).show();
+			if(this.renderer === "client"){
+				var converter = new Markdown.Converter();
+				var content = markdown.html().replace(/&gt;/, ">").replace(/&lt;/, "<");
+				markdown.html(converter.makeHtml(content)).show();
+			}
+			else if(this.renderer === "server-ajax"){
+				if(typeof AJAJ !== "undefined"){
+					AJAJ.post("./helper/markdown/ajaxRender", {content: markdown.html()}, function(data){
+						markdown.html(data).show();
+					}, function(json){});
+				}else{
+					var content = markdown.html()/*.replace(/&gt;/, ">").replace(/&lt;/, "<")*/;
+					$.ajax({
+						url: "./helper/markdown/ajaxRender",
+						dataType: "html",
+						data: {content: content},
+						method: "POST",
+						success: function(html){markdown.html(html).show();}
+					});
+				}
+			}
 		}
 	},
+
 	renderIndex: function(selectorSource, selectorTarget, levels, itemClassPrefix){
 		if(!selectorSource)
 			throw "No source selector given."

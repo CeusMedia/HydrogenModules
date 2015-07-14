@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.10</version>
+	<version>0.7.14</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -13,6 +13,10 @@
 	<log version="0.7.8">Improved format support and content editor handling.</log>
 	<log version="0.7.9">Added copy function.</log>
 	<log version="0.7.10">Added support for keywords list file for meta tags.</log>
+	<log version="0.7.11">Save codemirror content with Ctrl-S.</log>
+	<log version="0.7.12">Updated TinyMCE link collection.</log>
+	<log version="0.7.13">Extended TinyMCE by image alignment and decoration.</log>
+	<log version="0.7.14">Updated integration of TinyMCE.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

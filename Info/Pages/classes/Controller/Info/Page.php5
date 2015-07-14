@@ -20,6 +20,36 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		return TRUE;																				//  stop ongoing dispatching
 	}
 
+	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
+		try{
+			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
+			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
+				$model		= new Model_Page( $env );												//  get model of pages
+				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 'main' );		//  focus on active top pages of main navigation scope
+				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
+				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
+				foreach( $pages as $page ){															//  iterate found pages
+					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
+						$indices	= array( 'status' => '>0', 'parentId' => $page->pageId );		//  focus on active pages on sub level
+						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
+						foreach( $subpages as $subpage ){											//  iterate found pages
+							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
+							$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );			//  get timestamp of last action
+							$context->addLink( $url, $timestamp );									//  append URI to sitemap
+						}
+					}
+					else{																			//  page is static of dynamic (using a module)
+						$url	= $env->url.$page->identifier;										//  build absolute URI of top level page
+						$context->addLink( $url, max( $page->createdAt, $page->modifiedAt ) );		//  append URI to sitemap
+					}
+				}
+			}
+		}
+		catch( Exception $e ){																		//  an exception occured during data collection
+			die( $e->getMessage() );																//  display exception message and quit
+		}
+	}
+
 	public function index( $pageId = 'index' ){
 		$directAccess	= $this->env->getConfig()->get( 'module.info_page.direct' );				//  get right to directly access page controller
 		$isRedirected	= $this->env->getRequest()->get( '__redirected' );							//  check if page controller has been redirected to

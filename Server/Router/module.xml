@@ -3,16 +3,19 @@
 	<title>Server: Router</title>
 	<description/>
 	<category>Server</category>
-	<version>0.2.3</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support XML as data source.</log>
 	<log version="0.2.2">Support silent redirects.</log>
 	<log version="0.2.3">Now hooked on App:onControl.</log>
+	<log version="0.2.4">Added missing database model class.</log>
+	<log version="0.2.5">Added route status.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Router.php5</class>
+		<class>Model/Route.php5</class>
 		<file>config/routes.xml.dist</file>
 	</files>
 	<config protected="yes" type="string" name="source" values="XML,Database">Database</config>
@@ -20,10 +23,11 @@
 		<supports type="module">Resource_Database</supports>
 	</relations>
 	<hook type="resource" resource="App" event="onControl">Controller_Router::___onAppDispatch</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="0.2.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (
   `routeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
   `regex` tinyint(1) NOT NULL,
   `code` decimal(3,0) NOT NULL,
   `source` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -31,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (
   `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`routeId`),
+  KEY `status` (`status`),
   KEY `regex` (`regex`),
   KEY `code` (`code`),
   KEY `source` (`source`),
@@ -41,6 +46,10 @@ INSERT INTO `<%?prefix%>routes` (`routeId`, `regex`, `code`, `source`, `target`,
 (1, 0, 301, 'OldAddress', 'NewAddress', 'Permanently moved.', 1424946122),
 (2, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
 (3, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
+]]></sql>
+	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
+ALTER TABLE  `<%?prefix%>routes` ADD  `status` TINYINT( 1 ) NOT NULL AFTER  `routeId` ,
+ADD INDEX (  `status` ) ;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;

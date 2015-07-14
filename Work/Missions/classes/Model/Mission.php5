@@ -35,7 +35,8 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	/**	@var	$name		string		List of columns within table */
 	protected $columns		= array(
 		'missionId',
-		'ownerId',
+		'creatorId',
+		'modifierId',
 		'workerId',
 		'projectId',
 		'type',
@@ -60,7 +61,8 @@ class Model_Mission extends CMF_Hydrogen_Model{
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
 	protected $indices		= array(
-		'ownerId',
+		'creatorId',
+		'modifierId',
 		'workerId',
 		'projectId',
 		'type',

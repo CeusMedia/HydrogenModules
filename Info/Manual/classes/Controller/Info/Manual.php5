@@ -11,6 +11,18 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	protected $order;
 	protected $ext			= ".md";
 
+	protected function __callbackEncode( $matches ){
+		if( preg_match( "/^[a-z]+:\/\//i", $matches[2] ) )
+			return $matches[1].'('.$matches[2].')';
+		if( preg_match( "/^\.\/info\/manual\/view\//i", $matches[2] ) ){
+			$fileName	= str_replace( './info/manual/view/', '', $matches[2] );
+			if( file_exists( $this->path.urldecode( $fileName ).$this->ext ) )
+				return $matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).')';
+			return '<strike>'.$matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).').</strike>';
+		}
+		return '<strike>'.$matches[1].'('.urlencode( $matches[2] ).')</strike>';
+	}
+
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
@@ -26,7 +38,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->scanFiles();
 		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
-			$order			= trim( File_Reader::load( $orderFile ) ); 
+			$order			= trim( File_Reader::load( $orderFile ) );
 			$this->order	= new ADT_List_Dictionary( explode( "\n", $order ) );
 		}
 		else{
@@ -257,25 +269,21 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$content	= str_replace( "](".$entry.")", "](./info/manual/view/".$this->urlencode( $entry ).")", $content );
 			$content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/view/".$this->urlencode( $entry )."\r\n", $content );
 		}
-		$content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, 'callbackEncode' ), $content );
+		$content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $content );
+
+		/*  --  EVALUATE RENDERER  --  */
+		$renderer			= $this->config->get( 'renderer' );
+		$markdownOnServer	= $this->env->getModules()->has( 'UI_Markdown' );
+		$markdownOnClient	= $this->env->getModules()->has( 'JS_Markdown' );
+		if( !$markdownOnServer && preg_match( "/^server/", $renderer ) )
+			$renderer	= 'client';
+		if( !$markdownOnClient && $renderer === 'client' )
+			$this->env->getMessenger()->noteFailure( 'No Markdown renderer installed.' );
+
 		$this->addData( 'file', $fileName );
 		$this->addData( 'files', $this->files );
+		$this->addData( 'renderer', $renderer );
 		$this->addData( 'content', $content );
-	}
-
-#	protected function callbackEncode( $matches ){
-#	}
-
-	protected function callbackEncode( $matches ){
-		if( preg_match( "/^[a-z]+:\/\//i", $matches[2] ) )
-			return $matches[1].'('.$matches[2].')';
-		if( preg_match( "/^\.\/info\/manual\/view\//i", $matches[2] ) ){
-			$fileName	= str_replace( './info/manual/view/', '', $matches[2] );
-			if( file_exists( $this->path.urldecode( $fileName ).$this->ext ) )
-				return $matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).')';
-			return '<strike>'.$matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).').</strike>';
-		}
-		return '<strike>'.$matches[1].'('.urlencode( $matches[2] ).')</strike>';
 	}
 }
 ?>

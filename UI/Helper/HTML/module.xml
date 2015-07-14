@@ -4,7 +4,12 @@
 	<description><![CDATA[
 ]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Separation from cmClasses UI_HTML_Elements.</log>
+	<log version="0.3.1">More components.</log>
+	<log version="0.3.2">Set attributes "required" automatically if class contains "mandatory" or "required".</log>
 	<files>
 		<class>View/Helper/HTML.php5</class>
 	</files>

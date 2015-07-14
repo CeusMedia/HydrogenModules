@@ -64,7 +64,8 @@ return '
 		<div class="buttonbar">
 			<a class="btn btn-small" href="./manage/catalog/article"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
 			<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-			<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/article/remove/'.$article->articleId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</a>
+			<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/article/remove/'.$article->articleId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
+			<a href="'.$frontend->getUri().'catalog/article/'.$article->articleId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 		</div>
 	</form>
 <!--  /Manage: Catalog: Article: Details  -->

@@ -1,14 +1,23 @@
 <?php
 
 
+function renderUserLabel( $user ){
+	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$spanClass	= 'user role role'.$user->roleId;
+	$fullname	= $user->firstname.' '.$user->surname;
+	$username	= UI_HTML_Tag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$label		= $iconUser.'&nbsp;'.$username;
+	return UI_HTML_Tag::create( 'span', $label, array( 'class' => $spanClass ) );
+}
+
 $phraser	= new View_Helper_TimePhraser( $env );
 
-$infos	= array();
+$infos		= array();
 
-if( isset( $mission->owner ) )
-	$infos['owner']	= array(
+if( isset( $mission->creator ) )
+	$infos['creator']	= array(
 		'label'	=> 'Erstellt von',
-		'value'	=> '<span class="user role role'.$mission->owner->roleId.'">'.$mission->owner->username.'</span>'
+		'value'	=> renderUserLabel( $mission->creator ),
 	);
 
 $infos['state']	= array(
@@ -29,7 +38,7 @@ $infos['type']	= array(
 if( isset( $mission->worker ) )
 	$infos['worker']	= array(
 		'label'	=> 'Zugewiesen an',
-		'value'	=> '<span class="user role role'.$mission->worker->roleId.'">'.$mission->worker->username.'</span>'
+		'value'	=> renderUserLabel( $mission->worker ),
 	);
 
 if( isset( $mission->createdAt ) )
@@ -43,13 +52,20 @@ if( isset( $mission->modifiedAt ) )
 		'label'	=> 'Zuletzt geändert',
 		'value'	=> '<span class="date">vor '.$phraser->convert( $mission->modifiedAt, TRUE ).'</span>'
 	);
+if( isset( $mission->modifier ) )
+	$infos['modifier']	= array(
+		'label'	=> 'Geändert von',
+		'value'	=> renderUserLabel( $mission->modifier ),
+	);
 
 if( count( $missionUsers ) > 1 ){
 	$list	= array();
 	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
-	foreach( $missionUsers as $user )
-//		$list[]	= UI_HTML_Tag::create( 'span', $user->username, array( 'class' => 'user role role'.$user->roleId ) );
-		$list[]	= UI_HTML_Tag::create( 'span', $iconUser.' '.$user->username, array( 'class' => 'user role role'.$user->roleId ) );
+	foreach( $missionUsers as $user ){
+		$list[$user->username]	= renderUserLabel( $user );
+	}
+
+	ksort( $list, defined( 'SORT_FLAG_CASE' ) ? SORT_FLAG_CASE : SORT_REGULAR );
 	$infos['list-users-viewers']	= array(
 		'label'	=> 'Sichtbar für',
 		'value'	=> join( '<br/>', $list )
@@ -62,12 +78,20 @@ $infos['links']	= array(
 );
 
 /*
-if( isset( $mission->owner ) )
+$model		= new Model_Mission_Change( $env );
+$changes	= $model->getAllByIndex( 'missionId', $mission->missionId );
+//print_m( $mission );
+//print_m( $model->getColumns() );
+print_m( $changes );
+*/
+
+/*
+if( isset( $mission->creator ) )
 	$infos[]	= array(
 		'label'	=> '',
 		'value'	=> ''
 	);
-if( isset( $mission->owner ) )
+if( isset( $mission->creator ) )
 	$infos[]	= array(
 		'label'	=> '',
 		'value'	=> ''
@@ -75,13 +99,14 @@ if( isset( $mission->owner ) )
 */
 
 $factInfoKeys	= array(
-	'owner',
+	'date-creation',
+	'creator',
 	'state',
 	'priority',
 	'type',
-	'worker',
 	'date-modification',
-	'date-creation',
+	'modifier',
+	'worker',
 	'list-users-viewers',
 	'links',
 );

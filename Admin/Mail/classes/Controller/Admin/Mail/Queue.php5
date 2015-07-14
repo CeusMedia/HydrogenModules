@@ -5,6 +5,13 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		$this->logic	= new Logic_Mail( $this->env );
+		$frontend	= Logic_Frontend::getInstance( $this->env );
+		CMC_Loader::registerNew( 'php5', 'Mail_', $frontend->getPath().'classes/Mail/' );
+	}
+
+	public function html( $mailId ){
+		$mail		= $this->logic->getQueuedMail( $mailId );
+		$this->addData( 'mail', $mail );
 	}
 
 	public function enqueue(){
@@ -112,6 +119,20 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $mailId ){
+		$mail	= $this->logic->getQueuedMail( $mailId );
+
+		if( $mail->object ){
+			switch( substr( $mail->object, 0, 2 ) ){
+				case 'BZ':
+					$mail->object	= bzdecompress( $mail->object );
+					break;
+				case 'GZ':
+					$mail->object	= gzinflate( $mail->object );
+					break;
+			}
+			$mail->object	= @unserialize( $mail->object );
+		}
+		$this->addData( 'mail', $mail );
 	}
 }
 ?>

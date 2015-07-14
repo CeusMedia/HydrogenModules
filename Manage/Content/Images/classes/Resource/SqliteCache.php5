@@ -2,6 +2,11 @@
 class Resource_SqliteCache{
 
 	public function __construct( $cacheFile ){
+		if( !extension_loaded('pdo') )
+			throw new RuntimeException( 'PHP extension PDO is not installed' );
+		if( !extension_loaded('pdo_sqlite' ) )
+			throw new RuntimeException( 'PDO driver pdo_sqlite is not installed' );
+
 		$this->db	= new PDO( "sqlite:".$cacheFile );
 		$q	= $this->db->query( 'SELECT * FROM store LIMIT 1' );
 		if( $q === FALSE )

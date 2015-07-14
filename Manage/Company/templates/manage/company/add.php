@@ -54,9 +54,9 @@ return HTML::DivClass( 'column-left-50',
 				)
 			).
 			HTML::Buttons(
-				HTML::LinkButton( './manage/company', $w->buttonCancel, 'button cancel' ).
+				UI_HTML_Elements::LinkButton( './manage/company', $w->buttonCancel, 'button cancel' ).
 				'&nbsp;|&nbsp'.
-				HTML::Button( 'doAdd', $w->buttonSave, 'button save' )
+				UI_HTML_Elements::Button( 'doAdd', $w->buttonSave, 'button save' )
 			)
 		)
 	)

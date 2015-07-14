@@ -1,25 +1,35 @@
 <?php
+$canEditProject	= $acl->hasRight( $userRoleId, 'manage_project', 'edit' );
+
+function renderUserLabel( $user ){
+	if( !$user )
+		return "-";
+	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$spanClass	= 'user role role'.$user->roleId;
+	$fullname	= $user->firstname.' '.$user->surname;
+	$username	= UI_HTML_Tag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$label		= $iconUser.'&nbsp;'.$username;
+	return UI_HTML_Tag::create( 'span', $label, array( 'class' => $spanClass ) );
+}
 
 $viewers	= array();
 foreach( $missionUsers as $user )
-	$viewers[]	= UI_HTML_Tag::create( 'span', $user->username, array( 'class' => 'user role role'.$user->roleId ) );
+	$viewers[]	= renderUserLabel( $user );
 $viewers	= join( '<br/>', $viewers );
 
 $w	= (object) $words['view'];
 
 $priorities	= $words['priorities'];
-$optWorker	= array();
-foreach( $users as $user )
-	$optWorker[$user->userId]	= $user;
 
-$worker			= $optWorker[$mission->workerId];
 $priority		= UI_HTML_Tag::create( 'span', $words['priorities'][(string) $mission->priority], array( 'class' => 'mission priority'.$mission->priority ) );
 $status			= UI_HTML_Tag::create( 'span', $words['states'][(string) $mission->status], array( 'class' => 'mission status'.$mission->status ) );
-$worker			= UI_HTML_Tag::create( 'span', $worker->username, array( 'class' => 'user role role'.$worker->roleId ) );
+$creator		= renderUserLabel( $mission->creator );
+$worker			= renderUserLabel( $mission->worker );
+$modifier		= renderUserLabel( $mission->modifier );
 
-$project		= '';
-if( $useProjects )
-	$project	= $userProjects[$mission->projectId];
+$project		= $mission->project->title;
+if( $useProjects && $canEditProject )
+	$project	= UI_HTML_Tag::create( 'a', $project, array( 'href' => './manage/project/edit/'.$mission->projectId ) );
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, 0, STR_PAD_LEFT );
@@ -80,6 +90,8 @@ $panelFacts	= '
 				<div class="row-fluid">
 					<div style="float: left; width: 50%">
 						<dl class="not-dl-horizontal">
+							<dt>'.$w->labelProjectId.'</dt>
+							<dd>'.$project.'</dd>
 							<dt>'.$w->labelType.'</dt>
 							<dd>'.$words['types'][$mission->type].'</dd>
 							<dt>'.$w->labelPriority.'</dt>
@@ -90,29 +102,29 @@ $panelFacts	= '
 							<dd>'.date( "d.m.Y", strtotime( $mission->dayStart ) ).' '.$mission->timeStart.'</dd>
 							<dt>'.$w->labelDayEnd.' / '.$w->labelTimeEnd.'</dt>
 							<dd>'.( $mission->dayEnd ? date( "d.m.Y", strtotime( $mission->dayEnd ) ) : "" ).' '.$mission->timeEnd.'</dd>
-							<dt>'.$w->labelChanged.'</dt>
-							<dd><span class="date">'.( $mission->modifiedAt ? date( 'd.m.Y H:i', $mission->modifiedAt ) : '-' ).'</span></dd>
 							<dt>'.$w->labelHours.'</dt>
 							<dd>geplant: '.$hoursProjected.':'.$minutesProjected.'</dd>
 							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>
-							<dt>erstellt am</dt>
-							<dd>'.date( "d.m.Y", $mission->createdAt ).'</dd>
-						</dl>
-					</div>
-					<div style="float: left; width: 50%">
-						<dl class="not-dl-horizontal">
-							<dt>'.$w->labelOwner.'</dt>
-							<dd><span class="user role role'.$mission->owner->roleId.'">'.$mission->owner->username.'</span></dd>
-							<dt>'.$w->labelWorker.'</dt>
-							<dd>'.$worker.'</dd>
-							<dt>'.$w->labelProjectId.'</dt>
-							<dd>'.$project->title.'</dd>
-							<dt>'.$w->labelViewers.'</dt>
-							<dd>'.$viewers.'</dd>
 							<dt>'.$w->labelLocation.'</dt>
 							<dd>'.htmlentities( $mission->location ? $mission->location : '-', ENT_QUOTES, 'UTF-8' ).'</dd>
 							<dt>'.$w->labelReference.'</dt>
 							<dd>'.htmlentities( $mission->reference ? $mission->reference : '-', ENT_QUOTES, 'UTF-8' ).'</dd>
+						</dl>
+					</div>
+					<div style="float: left; width: 50%">
+						<dl class="not-dl-horizontal">
+							<dt>erstellt am</dt>
+							<dd>'.date( "d.m.Y", $mission->createdAt ).'</dd>
+							<dt>'.$w->labelCreator.'</dt>
+							<dd>'.$creator.'</span></dd>
+							<dt>'.$w->labelChanged.'</dt>
+							<dd><span class="date">'.( $mission->modifiedAt ? date( 'd.m.Y H:i', $mission->modifiedAt ) : '-' ).'</span></dd>
+							<dt>'.$w->labelModifier.'</dt>
+							<dd>'.$modifier.'</dd>
+							<dt>'.$w->labelWorker.'</dt>
+							<dd>'.$worker.'</dd>
+							<dt>'.$w->labelViewers.'</dt>
+							<dd>'.$viewers.'</dd>
 						</dl>
 					</div>
 				</div>

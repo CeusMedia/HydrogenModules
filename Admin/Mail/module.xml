@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description></description>
 	<category>Administration</category>
-	<version>0.3.6</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -13,6 +13,9 @@
 	<log version="0.3.4">Secured error messages of attachment management.</log>
 	<log version="0.3.5">Extracted panels for add and upload.</log>
 	<log version="0.3.6">Made attachments related to languages.</log>
+	<log version="0.3.7">Implemented queued mail view prototype.</log>
+	<log version="0.3.8">Use time phraser module.</log>
+	<log version="0.4">Finished detail view of sent mails with HTML and text body.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -28,6 +31,9 @@
 		<template>admin/mail/attachment/upload.php</template>
 		<template>admin/mail/queue/enqueue.php</template>
 		<template>admin/mail/queue/index.php</template>
+		<template>admin/mail/queue/view.php</template>
+		<template>admin/mail/queue/view.body.php</template>
+		<template>admin/mail/queue/view.facts.php</template>
 		<locale>de/admin/mail/attachment.ini</locale>
 		<locale>de/admin/mail/queue.ini</locale>
 	</files>
@@ -36,5 +42,6 @@
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 </module>

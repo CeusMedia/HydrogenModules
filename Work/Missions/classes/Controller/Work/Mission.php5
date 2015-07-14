@@ -24,6 +24,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $useIssues		= FALSE;
 	protected $useProjects		= FALSE;
 	protected $userMap			= array();
+	protected $userId;
+	protected $userRoleId;
 
 	protected $defaultFilterValues	= array(
 		'mode'		=> 'now',
@@ -44,7 +46,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		'types'			=> array(
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+	),
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
 	);
@@ -63,9 +65,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 		$this->useIssues	= $this->env->getModules()->has( 'Manage_Issues' );
 
-		$userId				= $this->session->get( 'userId' );
+		$this->userId		= $this->session->get( 'userId' );
+		$this->userRoleId	= $this->session->get( 'roleId' );
 
-//		if( !$userId || !$this->isViewer )
+//		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
 		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)
@@ -75,12 +78,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'useProjects', $this->useProjects );
 		$this->addData( 'useIssues', $this->useIssues );
+		$this->addData( 'acl', $this->acl );
+		$this->addData( 'userId', $this->userRoleId );
+		$this->addData( 'userRoleId', $this->userRoleId );
 
-		$this->userProjects		= $this->logic->getUserProjects( $userId, TRUE );
+		$this->userProjects		= $this->logic->getUserProjects( $this->userId, TRUE );
 		if( $this->hasFullAccess() )
-			$this->userProjects		= $this->logic->getUserProjects( $userId );
+			$this->userProjects		= $this->logic->getUserProjects( $this->userId );
 
-		$this->initFilters( $userId );
+		$this->initFilters( $this->userId );
 
 		if( $this->env->getModules()->has( 'Resource_Database_Lock' ) )
 			$this->lock	= new Logic_Database_Lock( $this->env );
@@ -101,6 +107,53 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return Logic_Database_Lock::release( $env, 'Work_Missions' );
 	}
 
+	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+		$modelProject	= new Model_Project( $env );
+		if( empty( $data->projectId ) ){
+			$message	= 'Hook "Work_Missions::___onListProjectRelations" is missing project ID in data.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+			$message	= 'Hook "Work_Missions::___onListProjectRelations": Invalid project ID.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$language		= $env->getLanguage();
+		$list			= array();
+		$modelMission	= new Model_Mission( $env );
+		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
+		$missions		= $modelMission->getAllByIndex( 'projectId', $data->projectId, $orders );	//  ...
+		$icons			= array(
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-wrench' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-time' ) ),
+		);
+		$words		= $language->getWords( 'work/mission' );
+		$linkable	= in_array( $project->status, array( 0, 1, 2 ) );
+		foreach( $missions as $mission ){
+			$icon		= $icons[$mission->type];
+			$isOpen		= in_array( $mission->status, array( 0, 1, 2, 3 ) );
+			$status		= '('.$words['states'][$mission->status].')';
+			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'small' ) );
+			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
+			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
+			$list[]		= (object) array(
+				'id'		=> $linkable ? $mission->missionId : NULL,
+				'label'		=> $label,
+			);
+		}
+		View_Helper_ItemRelationLister::enqueueRelations(
+			$data,																					//  hook content data
+			$module,																				//  module called by hook
+			'entity',																				//  relation type: entity or relation
+			$list,																					//  list of related items
+			'Aufgaben/Termine',																		//  label of type of related items
+			'Work_Mission',																			//  controller of entity
+			'edit'																					//  action to view or edit entity
+		);
+	}
+
+
 	/**
 	 *	Add a new mission.
 	 *	Redirects to index if editor right is missing.
@@ -111,11 +164,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function add( $copyFromMissionId = NULL ){
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'add' );
-		$userId			= $this->session->get( 'userId' );
 
 		if( !$this->isEditor ){
 			$this->messenger->noteError( $words->msgNotEditor );
 			$this->restart( NULL, TRUE, 403 );
+		}
+		if( $this->useProjects && !$this->userProjects ){
+			$this->messenger->noteNotice( $words->msgNoProjectYet );
+			$this->restart( './manage/project/add' );
 		}
 
 		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
@@ -135,7 +191,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( $words->msgNoTitle );
 			if( !$this->messenger->gotError() ){
 				$data	= array(
-					'ownerId'			=> (int) $userId,
+					'creatorId'			=> (int) $this->userId,
 					'workerId'			=> (int) $this->request->get( 'workerId' ),
 					'projectId'			=> (int) $this->request->get( 'projectId' ),
 					'type'				=> (int) $this->request->get( 'type' ),
@@ -154,7 +210,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				);
 				$missionId	= $this->model->add( $data );
 				$this->messenger->noteSuccess( $words->msgSuccess );
-				$this->logic->noteChange( 'new', $missionId, NULL, $userId );
+				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
 				$this->restart( './work/mission' );
 			}
 		}
@@ -165,10 +221,17 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$mission['priority']	= 3;
 		if( $mission['status'] === NULL )
 			$mission['status']	= 0;
+
+		//  --  set current date for all date fields  --  //
+		if( !$mission['dayStart'] )
+			$mission['dayStart']	= date( 'Y-m-d' );
+		if( !$mission['dayEnd'] )
+			$mission['dayEnd']		= date( 'Y-m-d' );
+
 		$mission['minutesProjected']	= $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) );
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
-		$this->addData( 'userId', $userId );
+		$this->addData( 'userId', $this->userId );
 		$this->addData( 'day', (int) $this->session->get( $this->filterKeyPrefix.'day' ) );
 
 		if( $this->useProjects )
@@ -194,9 +257,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 			$day		= (int) $this->session->get( 'filter.work.mission.day' );
 
-			$userId		= $this->session->get( 'userId' );
-			$missions	= $this->getFilteredMissions( $userId );
-
+			$missions	= $this->getFilteredMissions( $this->userId );
 			$missions	= array_slice( $missions, 0, 100 );										//  @todo	kriss: make configurable
 
 			$listLarge		= new View_Helper_Work_Mission_List_Days( $this->env );
@@ -235,8 +296,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function ajaxSaveContent( $missionId ){
 		$content	= $this->env->getRequest()->get( 'content' );
-		$data		= array( 'content' => $content );
-		$this->model->edit( $missionId, $data, FALSE );
+		$this->model->edit( $missionId, array(														//  store in database
+			'content'		=> $content,															//  - new content
+			'modifierId'	=> $this->userId,														//  - modifying user id
+			'modifiedAt'	=> time(),																//  - modification time
+		), FALSE );																					//  without striping tags
 		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
 		header( 'Content-length: '.strlen( $html ) );
 		header( 'Content-type: text/html' );
@@ -250,8 +314,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	protected function assignFilters(){
-		$userId		= $this->session->get( 'userId' );
-		$this->addData( 'userId', $userId );
+		$this->addData( 'userId', $this->userId );
 		$this->addData( 'viewType', (int) $this->session->get( 'work-mission-view-type' ) );
 
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
@@ -302,10 +365,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
 	 */
 	public function changeDay( $missionId ){
-		$userId		= $this->session->get( 'userId' );
 		$date		= trim( $this->request->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
-		$data		= array();
+		$data		= array(
+			'modifierId'	=> $this->userId,
+			'modifiedAt'	=> time(),
+		);
 		$change		= "";
 
 		if( preg_match( "/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]+$/", $date ) ){
@@ -330,7 +395,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				}
 			}
 			$this->model->edit( $missionId, $data );
-			$this->logic->noteChange( 'update', $missionId, $mission, $userId );
+			$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		}
 		if( $this->env->request->isAjax() )
 			$this->ajaxRenderIndex();
@@ -356,15 +421,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function close( $missionId ){
 		$this->checkIsEditor( $missionId );
-		$userId			= $this->session->get( 'userId' );
 		$words			= (object) $this->getWords( 'edit' );
-		$data			= array(
-			'status'		=> $this->request->get( 'status' ),
-			'hoursRequired'	=> $this->request->get( 'hoursRequired' ),
-		);
 		$mission		= $this->model->get( $missionId );
-		$this->model->edit( $missionId, $data );
-		$this->logic->noteChange( 'update', $missionId, $mission, $userId );
+		$this->model->edit( $missionId, array(													//  store in database
+			'status'		=> $this->request->get( 'status' ),									//  - new status
+			'hoursRequired'	=> $this->request->get( 'hoursRequired' ),							//  - number of required hours
+			'modifierId'	=> $this->userId,													//  - modifying user id
+			'modifiedAt'	=> time(),															//  - modification time
+		) );
+		$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		$this->messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
 	}
@@ -373,7 +438,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->checkIsEditor( $missionId );
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'edit' );
-		$userId			= $this->session->get( 'userId' );
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
@@ -425,19 +489,21 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'location'			=> $this->request->get( 'location' ),
 					'reference'			=> $this->request->get( 'reference' ),
 					'modifiedAt'		=> time(),
+					'modifierId'		=> $this->userId,
 				);
 				$this->model->edit( $missionId, $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
-				$this->logic->noteChange( 'update', $missionId, $mission, $userId );
+				$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 				$this->restart( './work/mission' );
 			}
 		}
 		$modelUser	= new Model_User( $this->env );
-		$mission->owner		= array_key_exists( $mission->ownerId, $this->userMap ) ? $this->userMap[$mission->ownerId] : NULL;
+		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
+		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
-		$missionUsers		= array( $mission->ownerId => $mission->owner );
+		$missionUsers		= array( $mission->creatorId => $mission->creator );
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
@@ -621,14 +687,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		if( (int) $this->session->get( 'work-mission-view-type' ) == 1 )
 //			$this->restart( './work/mission/calendar' );
 
-		$userId			= $this->session->get( 'userId' );
-		$this->addData( 'userId', $userId );
+		$this->addData( 'userId', $this->userId );
 		$this->addData( 'viewType', (int) $this->session->get( 'work-mission-view-type' ) );
 
 		$this->assignFilters();
 
 		$this->setData( array(																		//  assign data to view
-			'missions'		=> $this->getFilteredMissions( $userId ),								//  add user missions
+			'missions'		=> $this->getFilteredMissions( $this->userId ),							//  add user missions
 			'userProjects'	=> $this->userProjects,													//  add user projects
 			'users'			=> $this->userMap,														//  add user map
 			'currentDay'	=> (int) $this->session->get( $this->filterKeyPrefix.'day' ),			//  set currently selected day
@@ -727,8 +792,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		else
 			$values	= $value;
 		$this->session->set( $sessionPrefix.$name, $values );
-		$userId		= $this->session->get( 'userId' );
-		$this->saveFilters( $userId );
+		$this->saveFilters( $this->userId );
 		if( $this->env->getRequest()->isAjax() ){
 			$this->redirect( 'work/mission/ajaxRenderIndex' );
 //			header( 'Content-Type: application/json' );
@@ -740,7 +804,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function setPriority( $missionId, $priority, $showMission = FALSE ){
 		$this->checkIsEditor( $missionId );
-		$this->model->edit( $missionId, array( 'priority' => $priority ) );							//  store new priority
+		$data	= array();
+		$this->model->edit( $missionId, array(														//  store in database
+			'priority'		=> $priority,															//  - new priority
+			'modifierId'	=> $this->userId,														//  - modifying user id
+			'modifiedAt'	=> time(),																//  - modification time
+		) );
 		if( !$showMission )																			//  back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
@@ -748,7 +817,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function setStatus( $missionId, $status, $showMission = FALSE ){
 		$this->checkIsEditor( $missionId );
-		$this->model->edit( $missionId, array( 'status' => $status ) );								//  store new status
+		$this->model->edit( $missionId, array(														//  store in database
+			'status'		=> $status,																//  - new status
+			'modifierId'	=> $this->userId,														//  - modifying user id
+			'modifiedAt'	=> time(),																//  - modification time
+		) );
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
@@ -757,7 +830,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function view( $missionId ){
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'edit' );
-		$userId			= $this->session->get( 'userId' );
 
 		$mission	= $this->model->get( $missionId );
 		if( !$mission )
@@ -777,11 +849,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
 		}
 		$modelUser	= new Model_User( $this->env );
-		$mission->owner		= array_key_exists( $mission->ownerId, $this->userMap ) ? $this->userMap[$mission->ownerId] : NULL;
+		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
+		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
-		$missionUsers		= array( $mission->ownerId => $mission->owner );
+		$missionUsers		= array( $mission->creatorId => $mission->creator );
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
@@ -790,6 +863,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
 				$missionUsers[$user->userId]	= $user;
 			$this->addData( 'userProjects', $this->userProjects );
+			$mission->project	= $model->get( (int) $mission->projectId );
 		}
 		$this->addData( 'missionUsers', $missionUsers );
 
@@ -802,15 +876,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function testMail( $type, $send = FALSE ){
 		switch( $type ){
 			case "daily":																			//  
-				$userId			= $this->session->get( 'userId' );										//  
-
 				$modelUser		= new Model_User( $this->env );										//  
 				$modelMission	= new Model_Mission( $this->env );									//  
-				$user			= $modelUser->get( $userId );										//  
+				$user			= $modelUser->get( $this->userId );									//  
 
 				$groupings	= array( 'missionId' );													//  group by mission ID to apply HAVING clause
 				$havings	= array(																//  apply filters after grouping
-					'ownerId = '.(int) $user->userId,												//  
+					'creatorId = '.(int) $user->userId,												//  
 					'workerId = '.(int) $user->userId,												//  
 				);
 				if( $this->env->getModules()->has( 'Manage_Projects' ) ){							//  look for module
@@ -856,7 +928,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function testMailNew( $missionId ){
 		$data	= array(
             'mission'   => $this->model->get( $missionId ),
-            'user'      => $this->userMap[$this->session->get( 'userId' )],
+            'user'      => $this->userMap[$this->userId],
         );
 		$mail	= new Mail_Work_Mission_New( $this->env, $data );
 		print( $mail->renderBody( $data ) );
@@ -873,7 +945,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$data		= array(
 			'missionBefore'	=> $missionOld,
 			'missionAfter'	=> $missionNew,
-			'user'			=> $this->userMap[$this->session->get( 'userId' )],
+			'user'			=> $this->userMap[$this->userId],
 		);
 		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
 		print( $mail->renderBody( $data ) );

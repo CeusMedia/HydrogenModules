@@ -1,9 +1,12 @@
 var PageEditor = {
 
+	pageId: null,
 	editor: "none",
+	editors: [],
 	format: "HTML",
 	imageList: [],
 	linkList: [],
+	frontendUri: null,
 
 	init: function(format){
 		$("#tabs-page-editor .optional-trigger").trigger("change");
@@ -97,6 +100,22 @@ var PageEditor = {
 				},
 				"Esc": function(cm) {
 					if (CodeMirror.isFullScreen(cm)) CodeMirror.setFullScreen(cm, false);
+				},
+				"Ctrl-S": function(cm) {
+					$.ajax({
+						url: "./manage/page/ajaxSaveContent/",
+						data: {content: cm.getValue(), pageId: PageEditor.pageId},
+						dataType: "json",
+						method: "post",
+						success: function(json){
+							if(json){
+								textarea.next("div.CodeMirror").removeClass("changed");
+								$("#page-preview-iframe-container iframe").get(0).contentWindow.location.reload();
+							}
+							else
+								alert("Error on saving changes.");
+						}
+					});
 				}
 			}
 		};
@@ -109,27 +128,25 @@ var PageEditor = {
 		mirror.on("change", function(instance, update){
 			textarea.next("div.CodeMirror").addClass("changed");
 		});
-		textarea.data('codemirror',mirror);
+		textarea.data({codemirror: mirror, pageId: PageEditor.pageId});
 		mirror.setSize("auto",textarea.height());	//  set same size as textarea
 		$("#hint").html("Press <b>F11</b> for fullscreen editing.");
 	},
 
 	setupTinyMCE: function(){
-		tinymce.init({
+		var options = {
 			selector: "textarea#input_content",
-			plugins: "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
-			document_base_url: $("base").attr("href")+"../",
-			content_css: "http://cdn.int1a.net/css/bootstrap.css",
-			image_list: PageEditor.imageList,
-			link_list: PageEditor.linkList,
-//			external_image_list_url: "verwaltung/manage/page/getJsImageList",
-			toolbars: "emoticons",
-			height: 360,
-			language: settings.JS_TinyMCE.auto_language
-	/*		template_external_list_url : "js/template_list.js",
-			external_link_list_url : "js/link_list.js",
-			media_external_list_url : "js/media_list.js",
-	*/	});
+//			plugins: "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
+//			document_base_url: this.frontendUri,
+//			content_css: "http://cdn.int1a.net/css/bootstrap.css",
+//			image_list: PageEditor.imageList,
+//			link_list: PageEditor.linkList,
+//			height: 360,
+//			language: settings.JS_TinyMCE.auto_language,
+		};
+		if(typeof tinymce.Config !== "undefined")
+			options = tinymce.Config.apply(options, null, true);
+		tinymce.init(options);
 	}	
 };
 

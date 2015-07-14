@@ -53,7 +53,11 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 				$source		= $pathSource.$pathFileSource;
 				$target		= $pathLocal.$pathFileLocal;
-				if( $pathFileLocal && file_exists( $target ) ){
+				$fileSource	= isset( $file->source  ) ? strtolower( $file->source ) : NULL;
+				if( in_array( $fileSource, array( "url", "lib", "scripts-lib" ) ) ){
+					$status	= 5;
+				}
+				else if( $pathFileLocal && file_exists( $target ) ){
 					$status			= 1;
 					if( is_link( $target ) ){
 						$source		= $this->resolveLinkedPath( $source, $pathLinks );
@@ -69,9 +73,6 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 						if( $code == 1 )
 							$status	= 2;
 					}
-				}
-				else if( isset( $file->source ) && strtolower( $file->source ) === "url" ){
-					$status	= 5;
 				}
 				$files[]	= (object) array(
 					'moduleId'		=> $moduleId,
@@ -324,6 +325,7 @@ die;																								//  @todo handle exception without die
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modulesInstalled', $this->logic->model->getInstalled() );
 		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
+		$this->addData( 'sql', $this->logic->getDatabaseScripts( $moduleId ) );
 	}
 
 	protected function resolveLinkedPath( $path, $links = array() ){

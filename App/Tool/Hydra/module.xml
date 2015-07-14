@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<module>
+	<title>App: Tool: Hydra</title>
+	<description><![CDATA[
+Manager for Hydrogen Application instances, modules and sources.
+
+The **Hydra AppManager** is the first tool to manage:
+list>
+- sources of Hydrogen modules
+- modules within these source
+- modules installated within an Hydrogen instance
+- Hydrogen instances
+<list
+
+Use this tool to update your application installations.
+
+]]></description>
+	<category>Application</category>
+	<version>0.8.4</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>App.php5</class>
+		<class>Environment.php5</class>
+		<class>Controller/Index.php5</class>
+		<class>View/Index.php5</class>
+		<locale>de/main.ini</locale>
+		<locale>de/html/env.installing.html</locale>
+		<locale>de/html/index/home.html</locale>
+		<locale>en/main.ini</locale>
+		<locale>en/html/env.installing.html</locale>
+		<locale>en/html/index/home.html</locale>
+		<template>index/index.config.php</template>
+		<template>index/index.info.php</template>
+		<template>index/index.instance.php</template>
+		<template>index/index.instances.php</template>
+		<template>index/index.module.installed.php</template>
+		<template>index/index.module.updates.php</template>
+		<template>index/index.php</template>
+		<template>index/index.system.php</template>
+		<template>master.php</template>
+		<image source="theme">brick_64.png</image>
+		<style>font.css</style>
+		<style>form.button.css</style>
+		<style>form.css</style>
+		<style>form.fieldset.css</style>
+		<style>layout.css</style>
+		<style>layout.footer.css</style>
+		<style>layout.messenger.css</style>
+		<style>layout.navigation.sub.css</style>
+		<style>pagination.css</style>
+		<style>table.css</style>
+		<style>style.css</style>
+		<font source="theme">OpenSans/LICENSE.txt</font>
+		<font source="theme">OpenSans/OpenSans-Bold.ttf</font>
+		<font source="theme">OpenSans/OpenSans-BoldItalic.ttf</font>
+		<font source="theme">OpenSans/OpenSans-ExtraBold.ttf</font>
+		<font source="theme">OpenSans/OpenSans-ExtraBoldItalic.ttf</font>
+		<font source="theme">OpenSans/OpenSans-Italic.ttf</font>
+		<font source="theme">OpenSans/OpenSans-Light.ttf</font>
+		<font source="theme">OpenSans/OpenSans-LightItalic.ttf</font>
+		<font source="theme">OpenSans/OpenSans-Regular.ttf</font>
+		<font source="theme">OpenSans/OpenSans-Semibold.ttf</font>
+		<font source="theme">OpenSans/OpenSans-SemiboldItalic.ttf</font>
+		<file>boot.php5</file>
+		<file>index.php</file>
+		<file>.htaccess</file>
+		<file>.htpasswd</file>
+		<file>config/.htaccess</file>
+		<file>config/config.ini.dist</file>
+		<file>config/instances.json.dist</file>
+		<file>config/modules/.htaccess</file>
+		<file>config/modules/sources.json.dist</file>
+
+	</files>
+	<relations>
+		<needs type="module">Admin_Instances</needs>
+		<needs type="module">Admin_Modules</needs>
+		<needs type="module">Admin_Module_Creator</needs>
+		<needs type="module">Admin_Module_Editor</needs>
+		<needs type="module">Admin_Module_Installer</needs>
+		<needs type="module">Admin_Module_Sources</needs>
+		<needs type="module">JS_jQuery_UI</needs>
+		<needs type="module">JS_Layer</needs>
+		<needs type="module">Resource_Cache</needs>
+		<needs type="module">UI_Indicator</needs>
+		<needs type="module">UI_CSS_Reset</needs>
+		<supports type="module">UI_DevLayers_Profiler</supports>
+	</relations>
+	<hook type="event" resource="Page" event="applyModules">Controller_Index::___onCheckAccess</hook>
+</module>

@@ -1,12 +1,22 @@
 ul.friends {
+	position: absolute;
+	top: 50px;
+	right: -194px;
 	width: 180px;
 	list-style: none;
 	margin: 0px;
 	padding: 0px;
-	}
+	padding: 5px;
+	border: 2px solid #BBE832;
+	border-radius: 0.5em;
+	opacity: 0.6;
+/*	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+*/	}
 ul.friends li.user-item {
 	margin: 1px 0px;
-	background-color: rgba(255,250,240,0.5);
+/*	background-color: rgba(255,250,240,0.5);*/
+	text-align: left;
 	}
 ul.friends li.user-item span.user-label {
 	display: block;
@@ -20,6 +30,12 @@ ul.friends li.user-item span.user-label a {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	text-decoration: none;
+	}
+ul.friends li.user-item span.user-label a img {
+	float: left;
+	padding: 0;
+	margin: 0;
+	border: none;
 	}
 ul.friends li.user-item span.user-label span.user-icon {
 	display: block;

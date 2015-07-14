@@ -19,7 +19,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->baseUrl		= $env->getConfig()->get( 'app.base.url' );
+		$this->baseUrl		= $env->url;
 		$this->indicator	= new UI_HTML_Indicator();
 		$this->logic		= new Logic_Mission( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
@@ -97,10 +97,10 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Titel', array( 'class' => 'sortable', 'data-column' => 'title' ) );
 
 			$colgroup[]		= "120px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'not-sortable', 'data-column' => 'workerId' ) );
+			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'sortable', 'data-column' => 'workerId' ) );
 
 			$colgroup[]		= "120px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'not-sortable', 'data-column' => 'projectId' ) );
+			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'sortable', 'data-column' => 'projectId' ) );
 
 			if( $showPriority ){
 				$colgroup[]		= "30px";

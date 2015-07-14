@@ -2,11 +2,15 @@
 class View_Manage_Content_Image extends CMF_Hydrogen_View{
 
 	protected $path;
+	protected $frontend;
+	protected $moduleConfig;
+	protected $extensions;
 
 	public function __onInit(){
-		$config				= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$this->path			= $config->get( 'frontend.path' ).$config->get( 'path.images' );
-		$this->extensions	= $config->get( 'extensions' );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->path			= $this->frontend->getPath().$this->moduleConfig->get( 'path.images' );
+		$this->extensions	= preg_split( "/\s*,\s*/", $this->moduleConfig->get( 'extensions' ) );
 	}
 
 	public function addFolder(){}
@@ -15,14 +19,15 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 	public function editImage(){}
 	public function index(){}
 
-
 	protected function countFilesInFolder( $path ){
 		$number	= 0;
-		$index	= new DirectoryIterator( $path );
-		foreach( $index as $entry )
-			if( $entry->isFile() )
-				if( preg_match( $this->extensions, $entry->getFilename() ) )
-					$number++;
+		$index	= new DirectoryIterator( $path );													//  create folder lister
+		foreach( $index as $entry ){																//  iterate folder entries
+			if( !$entry->isDir() && $entry->isFile() ){												//  only if entry is a file
+				$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );	//  get lowercased file extension
+				$number		+= in_array( $extension, $this->extensions ) ? 1 : 0;					//  count file if extension is allowed
+			}
+		}
 		return $number;
 	}
 
@@ -33,36 +38,47 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		foreach( $folders as $folder ){
 			$name		= basename( $folder );
 			$number		= $this->countFilesInFolder( $this->path.$folder );
-			$attributes	= array( 'href' => './manage/content/image?path='.$folder );
-			$label		= $folder.' <span class="pull-right badge badge">'.$number.'</span>';
-		#	$label		= $folder.' <small class="muted" style="font-weight: normal">('.$number.')</small>';
-			$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
-			$attributes	= array( 'class' => $folder == $currentPath ? "active" : NULL );
-			$list[$folder]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$badge		= UI_HTML_Tag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
+			$badge		= UI_HTML_Tag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
+			$label		= UI_HTML_Tag::create( 'span', $folder.' '.$badge, array( 'class' => 'autocut' ) );
+			if( strlen( $folder ) > 30 )
+				$label		= UI_HTML_Tag::create( 'small', $folder.' '.$badge, array( 'class' => 'autocut' ) );
+			$link		= UI_HTML_Tag::create( 'a', $label, array(
+				'href'	=> './manage/content/image?path='.$folder,
+//				'class'	=> 'autocut',
+            ) );
+			$list[$folder]	= UI_HTML_Tag::create( 'li', $link, array(
+				'class'	=> 'not-autocut '.( $folder == $currentPath ? "active" : NULL ),
+				'title'	=> $folder,
+			) );
 		}
 		$time	= '<div class="label">'.round( ( microtime( TRUE ) - $start ) * 1000, 1 ).'ms</div>';
 		if( $list )
-			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) )/*.$time*/;
+			return UI_HTML_Tag::create( 'ul', $list, array(
+				'class'	=> 'nav nav-pills nav-stacked',
+				'id'	=> 'list-folders',
+		) );
 	}
 
 	public function listImages( $path, $maxWidth, $maxHeight ){
 		$list			= array();
 		$index			= new DirectoryIterator( $this->path.$path );
-		$thumbnailer	= new View_Helper_Thumbnailer( $this->env );
-		$extensions		= array( "jpe", "jpeg", "jpg", "png", "gif" );
+		$thumbnailer	= new View_Helper_Thumbnailer( $this->env, $maxWidth, $maxHeight, "config/" );
 		foreach( $index as $entry ){
 			if( !$entry->isFile() )
 				continue;
 			$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );
-			if( !in_array( $extension, $extensions ) )
+			if( !in_array( $extension, $this->extensions ) )
 				continue;
-			$imagePath	= substr( $entry->getPathname(), strlen( $pathImages ) );
+			$imagePath	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
 			$image		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $thumb ) );
 			$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
 			$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
-			$list[]		= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image' => addslashes( $imagePath ) ) );
+			$key		= $entry->getFilename();
+			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-path' => addslashes( $imagePath ) ) );
 		}
+		natcasesort( $list );
 		if( $list )
 			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
 	}

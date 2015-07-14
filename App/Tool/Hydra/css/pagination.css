@@ -1,0 +1,59 @@
+/*  --  PAGINATION  --  */
+
+ul.pagination {
+	font-size: 1em;
+	display: block;
+	width: auto;
+	}
+
+ul.pagination li {
+	float:left;
+	list-style: none;
+	}
+
+ul.pagination a,
+ul.pagination span {
+	display: block;
+	float: left;
+	margin: 0em 0.5em 0em 0em;
+	padding: 0.3em 0.6em 0.3em 0.6em;
+	background-color: rgba(255,250,240,0.5);
+	font-size: 1em;
+	font-weight: normal;
+	line-height: 1.3em;
+	text-decoration: none;
+	outline: none;
+	}
+
+ul.pagination a:hover {
+	background-color: #eff9ff;
+	background: url(../images/layout-button-menu-hover-gradient.png) repeat-x bottom center #eff9ff;
+	}
+
+ul.pagination a:focus {
+	border-color: #9aa6aa #cdd7dd #cdd7dd #9aa6aa;
+	color: #333;
+	background: url(../images/layout-button-menu-hover-gradient.png) repeat-x bottom center #eff9ff;
+	}
+
+ul.pagination span {
+	display: block;
+	float: left;
+	background-color: rgba(255,250,240,0.25);
+	}
+
+ul.pagination span.current {
+	}
+
+ul.pagination span.more {
+	padding-left: 0em;
+	padding-right: 0em;
+	}
+
+ul.pagination a.skip {}
+
+ul.pagination a.extreme {}
+
+ul.pagination span.disabled {
+	color: gray;
+	}

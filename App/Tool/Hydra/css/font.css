@@ -1,0 +1,49 @@
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: normal;
+	font-style: normal;
+	src: url(../fonts/OpenSans/OpenSans-Regular.ttf) format("truetype");
+	}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: normal;
+	font-style: italic;
+	src: url(../fonts/OpenSans/OpenSans-Italic.ttf) format("truetype");
+	}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: bold;
+	font-style: normal;
+	src: url(../fonts/OpenSans/OpenSans-Bold.ttf) format("truetype");
+	}
+@font-face {
+	font-family: 'OpenSans';
+	font-weight: bold;
+	font-style: italic;
+	src: url(../fonts/OpenSans/OpenSans-BoldItalic.ttf) format("truetype");
+	}
+
+@font-face {
+	font-family: 'OpenSans Italic';
+	src: url(../fonts/OpenSans/OpenSans-Italic.ttf) format("truetype");
+	}
+@font-face {
+	font-family: 'OpenSans Bold';
+	src: url(../fonts/OpenSans/OpenSans-Bold.ttf) format("truetype");
+	}
+@font-face {
+	font-family: 'OpenSans Bold Italic';
+	src: url(../fonts/OpenSans/OpenSans-BoldItalic.ttf) format("truetype");
+	}
+
+html,
+body,
+button,
+input,
+select {
+	font-family: "OpenSans", "Helvetica Neue", "Helvetica", "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif;
+	color: #333;
+	}
+body {
+	font-size: 75%
+	}

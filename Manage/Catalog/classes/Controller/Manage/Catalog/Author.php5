@@ -7,7 +7,55 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->config		= $this->env->getConfig();
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->addData( 'config', $this->config->getAll( 'module.manage_catalog.', TRUE ) );
+		$this->addData( 'frontend', $this->frontend );
+	}
+
+	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+		$cache		= $env->getCache();
+		if( !( $list = $cache->get( 'catalog.tinymce.images.authors' ) ) ){
+			$logic		= new Logic_Catalog( $env );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+			$pathImages	= 'contents/'.$config->get( 'path.frontend.authors' );							//  @todo resolve base path
+			$list		= array();
+			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			foreach( $authors as $item ){
+				if( $item->image ){
+					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
+//					$label	= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
+					$label	= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
+					$list[] = (object) array(
+						'title'	=> $label,
+						'value'	=> $pathImages.$id.'_'.$item->image,
+					);
+				}
+			}
+			$cache->set( 'catalog.tinymce.images.authors', $list );
+		}
+		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+			'title'	=> 'Autoren:',												//  label of submenu @todo extract
+			'menu'	=> array_values( $list ),								//  items of submenu
+		) ) );
+	}
+
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$cache		= $env->getCache();
+		if( !( $authors = $cache->get( 'catalog.tinymce.links.authors' ) ) ){
+			$logic		= new Logic_Catalog( $env );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			foreach( $authors as $nr => $item ){
+				$label		= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
+				$url		= $logic->getAuthorUri( $item );
+				$authors[$nr] = (object) array( 'title' => $label, 'value' => $url );
+			}
+			$cache->set( 'catalog.tinymce.links.authors', $authors );
+		}
+		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+			'title'	=> 'Autoren:',												//  label of submenu @todo extract
+			'menu'	=> array_values( $authors ),								//  items of submenu
+		) ) );
 	}
 
 	public function add(){

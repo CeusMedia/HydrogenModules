@@ -5,12 +5,13 @@ if( !$instance->configFile )
 	$instance->configFile   = 'config.ini';
 
 $fileConfig	= $instance->uri.$instance->configPath.$instance->configFile;
-
 if( file_exists( $fileConfig ) ){
 	$config	= new File_INI_Reader( $fileConfig, FALSE );
 	foreach( $config->getProperties() as $key => $value ){
 		$comment	= $config->getComment( $key );
 		$cellKey	= UI_HTML_Tag::create( 'td', $key );
+		if( is_bool( $value ) )
+			$value	= $value ? "<em>TRUE</em>" : "<em>FALSE</em>";
 		$cellValue	= UI_HTML_Tag::create( 'td', $value );
 		$list[]		= UI_HTML_Tag::create( 'tr', $cellKey.$cellValue );
 	}

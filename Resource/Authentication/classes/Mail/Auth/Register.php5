@@ -2,17 +2,17 @@
 class Mail_Auth_Register extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
-		$words			= $this->env->getLanguage()->getWords( 'auth', 'mails' );
-		$data['config']	= $this->env->getConfig()->getAll();
-		$prefix			= $this->env->getConfig()->get( 'module.resource_mail.prefix' );
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
+		$wordsMails	= $this->env->getLanguage()->getWords( 'auth', 'mails' );
 
-		$subject	= ( $prefix ? $prefix.' ' : '' ).$words['mails']['onRegister'];
-		$content	= $this->view->loadContentFile( 'mail/auth/register', $data );
-		$body		= new Net_Mail_Body( base64_encode( $content ), Net_Mail_Body::TYPE_PLAIN );
-		$body->setContentEncoding( "base64" );
+		$data['appTitle']	= $wordsMain['main']['title'];
+		$data['appBaseUrl']	= $this->env->url;
+		$data['from']		= $data['from'] ? '?from='.$data['from'] : '';
+		$data['config']		= $this->env->getConfig()->getAll();
+		$body	= $this->view->loadContentFile( 'mail/auth/register.txt', $data );
 
-		$this->mail->setSubject( $subject );
-		$this->mail->addBody( $body );
+		$this->setSubject( $wordsMails['mails']['onRegister'] );
+		$this->addTextBody( $body );
 	}
 }
 ?>

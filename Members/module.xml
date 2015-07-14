@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<module>
+	<title>Members</title>
+	<description><![CDATA[Basic index page, ready for custom content and style.]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Member.php5</class>
+		<class>Model/User/Relation.php5</class>
+		<class>View/Member.php5</class>
+		<locale>de/member.ini</locale>
+		<template>member/index.php</template>
+		<template>member/search.php</template>
+		<template>member/view.php</template>
+	</files>
+	<relations/>
+	<link xml:lang="de" access="inside" path="member/index" link="" rank="71">Mitglieder</link>
+	<link xml:lang="en" access="inside" path="member/index" link="" rank="71">Members</link>
+	<link access="inside" path="member/search"></link>
+	<link access="inside" path="member/view"></link>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_relations`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_relations` (
+  `userRelationId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `fromUserId` int(11) unsigned NOT NULL,
+  `toUserId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`userRelationId`),
+  KEY `fromUserId` (`fromUserId`),
+  KEY `toUserId` (`toUserId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_relations`;
+]]></sql>
+</module>

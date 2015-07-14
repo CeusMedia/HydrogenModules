@@ -18,6 +18,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 		$this->session		= $this->env->getSession();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+
+		$this->addData( 'frontend', $this->frontend );
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
@@ -41,12 +43,17 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				$page->title		= $parent->title.' / '.$page->title;
 			}
 			$list[$page->title.$nr]	= (object) array(
-				'title'	=> $prefixes->page.$page->title,
-				'url'	=> './'.$page->identifier,
+				'title'	=> /*$prefixes->page.*/$page->title,
+				'value'	=> './'.$page->identifier,
 			);
 		}
 		ksort( $list );
-		$context->list	= array_merge( $context->list, array_values( $list ) );
+		$list	= array( (object) array(
+			'title'	=> $prefixes->page,
+			'menu'	=> array_values( $list ),
+		) );
+//		$context->list	= array_merge( $context->list, array_values( $list ) );
+		$context->list	= array_merge( $context->list, $list );
 	}
 
 	public function add(){
@@ -91,6 +98,30 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->preparePageTree();
+	}
+
+	public function ajaxSaveContent(){
+		$content	= $this->request->get( 'content' );
+		$pageId		= $this->request->get( 'pageId' );
+		$result		= array( 'status' => FALSE );
+		try{
+			if( $pageId ){
+				if( $page = $this->model->getByIndex( 'identifier', $pageId ) ){
+					$this->model->edit( $page->pageId, array(
+						'content'		=> $content,
+						'modifiedAt'	=> time(),
+					), FALSE );
+					$result	= array( 'pageId' => $pageId, 'content' => $content );
+					$result	= array( 'status' => TRUE );
+				}
+			}
+		}
+		catch( Exception $e ){
+			$result['error']	= $e->getMessage();
+		}
+		header( "Content-Type: application/json" );
+		print( json_encode( $result ) );
+		exit;
 	}
 
 	public function ajaxSetEditor( $editor ){
@@ -216,9 +247,19 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 						$list[]	= trim( $line );
 				$meta['default.keywords']	= join( ", ", $list );
 			}
-				
 			$this->addData( 'meta', $meta );
 		}
+
+//		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
+		$script	= '
+PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+PageEditor.pageId = "'.$page->identifier.'";
+PageEditor.editor = "'.$session->get( 'module.manage_pages.editor' ).'";
+PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+PageEditor.format = "'.$page->format.'";
+PageEditor.init();
+';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
 	public function getJsImageList(){

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Relocation</title>
+	<description><![CDATA[Management for short-URL relocation to external internet resources.]]></description>
+	<category>Management</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Support localization.</log>
+	<log version="0.2.2">Use module UI:Helper:TimePhraser for timestamps.</log>
+	<log version="0.2.3">Support shortcut relocation with module Server:Router.</log>
+	<log version="0.2.4">Use module Resource:Frontend to read client shortcut configuration.</log>
+	<log version="0.2.5">Add english localization.</log>
+	<log version="0.2.6">Finish localization.</log>
+	<log version="0.2.7">Check unique title and URL.</log>
+	<log version="0.2.8">Extend filter by ID and title.</log>
+	<log version="0.3">First production version.</log>
+<!--
+	<log version="0.3.x">Check for valid URL.</log>
+	<log version="0.3.x">Record relocation requests.</log>
+-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Relocation.php5</class>
+		<class>View/Manage/Relocation.php5</class>
+		<locale>de/manage/relocation.ini</locale>
+		<locale>en/manage/relocation.ini</locale>
+		<template>manage/relocation/add.php</template>
+		<template>manage/relocation/edit.php</template>
+		<template>manage/relocation/edit.info.php</template>
+		<template>manage/relocation/index.php</template>
+		<template>manage/relocation/index.filter.php</template>
+		<template>manage/relocation/index.list.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+	</relations>
+	<link path="manage/relocation" access="acl" rank="76" xml:lang="de">Weiterleitungen</link>
+	<link path="manage/relocation" access="acl" rank="76" xml:lang="en">Relocations</link>
+</module>

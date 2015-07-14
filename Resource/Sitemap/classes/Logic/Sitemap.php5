@@ -19,6 +19,13 @@ class Logic_Sitemap{
 	protected $defaultFrequency	= 'yearly';
 	protected $defaultPriority	= 0.1;
 
+    public $providers	= array(
+//		'ask'		=> "http://submissions.ask.com/ping?sitemap=%s",
+		'bing'		=> "http://www.bing.com/ping?sitemap=%s",
+		'google'	=> "http://www.google.com/webmasters/tools/ping?sitemap=%s",
+		'moreover'	=> "http://api.moreover.com/ping?u=%s",
+    );
+
 	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
@@ -51,6 +58,26 @@ class Logic_Sitemap{
 
 	public function getLinks(){
 		return $this->links;
+	}
+
+	public function submitToProviders(){
+		$result	= array();
+		foreach( $this->providers as $key => $value ){
+			$url	= sprintf( $value, urlencode( $this->env->url.'sitemap' ) );
+//print_m( $this->env->getConfig()->getAll() );
+xmp( $url );die;
+	        try{
+				$curl   = new Net_CURL( $url );
+				$curl->exec();
+				if( (int) $curl->getInfo( Net_CURL::INFO_HTTP_CODE ) === 200 ){
+					$result[$key]	= "OK";
+				}
+			}
+			catch( Exception $e ){
+				$result[$key]	= "FAIL: ".$e->getMessage();
+			}
+		}
+		return $result;
 	}
 }
 ?>

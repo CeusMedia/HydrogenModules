@@ -8,8 +8,8 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	public function add(){}
 
 	public function edit(){
-#		xmp( $this->loadTemplate( 'manage/page', 'edit', $this->getData() ) );
-#die;
+		$captain	= $this->env->getCaptain();
+		$captain->disableHook( 'View', 'onRenderContent' );
 	}
 
 	public function index(){}
@@ -34,7 +34,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$isActive		= ($nr+1) == $current;
 			$attributes		= array( 'id' => 'page-editor-tab-'.($nr+1), 'class' => $isActive ? "active" : NULL );
 			$listTabs[]		= UI_HTML_Tag::create( 'li', $link, $attributes );
-			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$nr] );
+			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$nr], array(), FALSE );
 			$attributes		= array( 'id' => 'tab'.($nr+1), 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
 			$listPanes[]	= UI_HTML_Tag::create( 'div', $paneContent, $attributes );
 		}

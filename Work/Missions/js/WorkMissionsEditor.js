@@ -1,11 +1,11 @@
 var WorkMissionsEditor = {
-	mirror: null,
-	missionId: null,
 	markdown: null,
-	converter: null,
-	textarea: null,
+	mirror: null,
 	mission: null,
 	missionWorkerId: 0,
+	missionId: null,
+	textarea: null,
+	userId: null,
 
 	bindWorkerSelectUpdateOnProjectInputChange: function(idSelectWorker, idInputProject){
 		var selectProject = $("#"+idInputProject);
@@ -26,40 +26,8 @@ var WorkMissionsEditor = {
 		}
 	},
 
-	fallbackFormShowOptionals: function(elem){
-		var form = $(elem.form);
-		var name = $(elem).attr("name");
-		var type = $(elem).attr("type");
-//		console.log("name: "+name);
-//		console.log("type: "+type);
-		var value = name+"-"+$(elem).val();
-		if(type == "checkbox"){
-			value = name+"-"+$(elem).prop("checked");
-		}
-		var toHide = form.find(".optional."+name).not("."+value);
-		var toShow = form.find(".optional."+value);
-		if(!$(elem).data("status")){
-			toHide.hide();
-			toShow.show();
-			$(elem).data("status",1)
-			return;
-		}
-		switch($(elem).data('animation')){
-			case 'fade':
-				toHide.fadeOut();
-				toShow.fadeIn();
-				break;
-			case 'slide':
-				toHide.slideUp($(elem).data('speed-hide'));
-				toShow.slideDown($(elem).data('speed-show'));
-				break;
-			default:
-				toHide.hide();
-				toShow.show();
-		}
-	},
-
 	formUpdateWorkers: function(projectId, currentWorkerId, options){
+		currentWorkerId = parseInt(currentWorkerId, 10);
 		var options = $.extend({
 			idSelectWorker: "input_workerId",
 			urlGetProjectUsers: "./work/mission/ajaxGetProjectUsers/"+projectId,
@@ -76,17 +44,22 @@ var WorkMissionsEditor = {
 				}
 				$(json).each(function(nr){
 					var option = $("<option></option>").val(this.userId).html(this.username);
-					if(currentWorkerId === this.userId)
+					this.userId = parseInt(this.userId, 10);
+					if(currentWorkerId === this.userId || json.length === 1 || ( !currentWorkerId && this.userId === Auth.userId ) )
 						option.prop("selected", "selected");
 					selectWorker.append(option);
 				});
+				selectWorker.trigger("change");
 			}
 		});
 	},
 
 	initForms: function(){
 		$("#input_title").focus();
-		$("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd").datepicker({
+		var dateInputs = $("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd");
+		var timeInputs = $("#input_timeStart, #input_timeEnd");
+
+		dateInputs.datepicker({
 			dateFormat: "yy-mm-dd",
 		//	appendText: "(yyyy-mm-dd)",
 		//	buttonImage: "/images/datepicker.gif",
@@ -100,42 +73,22 @@ var WorkMissionsEditor = {
 			yearRange: "c:c+2",
 			monthNames: monthNames
 		});
-		$("#input_dayWork").bind("change", function(event){
-			var fieldEnd = $("#input_dayDue");
-			if(fieldEnd.val() && $(this).val() > fieldEnd.val())
-				fieldEnd.datepicker("setDate", $(this).val());
-		});
-		$("#input_dayStart").bind("change", function(event){
-			var fieldEnd = $("#input_dayEnd");
-			if(fieldEnd.val() && $(this).val() > fieldEnd.val())
-				fieldEnd.datepicker("setDate", $(this).val());
-		});
 
 		//  @link   http://trentrichardson.com/examples/timepicker/
-		$("#input_timeStart").timepicker({});
-		$("#input_timeEnd").timepicker({});
-		$("#input_type").trigger("change");
+		timeInputs.timepicker({});
+//		$("#input_type").trigger("change");
+		
+		dateInputs.add(timeInputs).bind("change", WorkMissionsEditor.sanitizeDateAndTime);
 
-		/*  mark changed inputs and selects  */
-		$("input").not("[type=checkbox]").add($("select")).each(function(){
-			var elem = $(this);
-			elem.data('original-value', elem.val());
-			elem.bind("keyup change", {elem: elem}, function(event){
-				var elem = event.data.elem;
-				var changed = elem.val() !== elem.data('original-value');
-				changed ? elem.addClass('changed') : elem.removeClass('changed');
-			});
-		});
 		this.bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
 	},
 
 	init: function(missionId){
 		"use strict";
 		this.initForms();
-//	console.log("WorkMissionsEditor.init");
 		WorkMissionsEditor.missionId = missionId;
+		WorkMissionsEditor.userId = Auth.userId;
 		WorkMissionsEditor.markdown = $("#descriptionAsMarkdown");
-		WorkMissionsEditor.converter = new Markdown.Converter();
 		WorkMissionsEditor.textarea = $("#input_content");
 		WorkMissionsEditor.mirror = CodeMirror.fromTextArea(WorkMissionsEditor.textarea.get(0), {
 			lineNumbers: true,
@@ -145,8 +98,9 @@ var WorkMissionsEditor = {
 //			viewportMarin: "Infinity",
 			fixedGutter: true,
 		});
-		if(WorkMissionsEditor.missionId){
-			WorkMissionsEditor.textarea.bindWithDelay("keyup", function(){
+		WorkMissionsEditor.textarea.bindWithDelay("keyup", function(){
+			if(WorkMissionsEditor.missionId){
+				WorkMissionsEditor.markdown.css({opacity: 0.5});
 				$.ajax({
 					url: "./work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId,
 					data: {content: WorkMissionsEditor.textarea.val()},
@@ -154,49 +108,32 @@ var WorkMissionsEditor = {
 					dataType: "html",
 					success: function(html){
 						$(".CodeMirror").removeClass("changed");
-						WorkMissionsEditor.markdown.html(html);
+						WorkMissionsEditor.markdown.html(html).css({opacity: 1});
 					}
 				});
-			}, 1000);
-		}
+			}
+			else{
+				WorkMissionsEditor.renderContent();
+				$(".CodeMirror").removeClass("changed");
+			}
+		}, 500);
 		WorkMissionsEditor.mirror.on("change", function(instance, update){
 			instance.save();																			//  apply changes of markdown editor to input element
 			WorkMissionsEditor.resizeInput();
-//			WorkMissionsEditor.renderContent();															//  render input element content to HTML using markdown
-			if(WorkMissionsEditor.missionId){															//  edit mode
-				$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
-				$(instance.getTextArea()).trigger("keyup");												//  trigger key up event for automatic rendering
-			}
+			$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
+			$(instance.getTextArea()).trigger("keyup");												//  trigger key up event for automatic rendering
 		});
 		WorkMissionsEditor.renderContent();
-
-/* --  DEPRECATED CODE --  */
-/*		$(window).bind("resize", function(){
-			$("#mirror-container").width($(".column-left-75").eq(0).width()-12);
-			$("#mirror-container").width("100%");
-		}).trigger("resize");
-		$(".tabbable .nav-tabs li a").bind("shown", function(event){
-			mirror.refresh();
-		});
-		$("input, select, textarea").each(function(){
-			$(this).data("value-original", $(this).val());
-		}).bind("change keyup", function(){
-		var input = $(this);
-		input.removeClass("changed");
-		if(input.val() != input.data("value-original"))
-			input.addClass("changed");
-		});
-*/
 	},
 	renderContent: function(){
 		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
-//		WorkMissionsEditor.markdown.html(WorkMissionsEditor.converter.makeHtml(content));				//  display content after markdown rendering
+		WorkMissionsEditor.markdown.css({opacity: 0.5});
 		$.ajax({
 			url: "./helper/markdown/ajaxRender",
 			data: {content: content},
 			method: "POST",
 			success: function(html){
-				WorkMissionsEditor.markdown.html(html);
+				WorkMissionsEditor.markdown.html(html).css({opacity: 1});
 				WorkMissionsEditor.resizeInput();
 			}
 		});
@@ -204,5 +141,31 @@ var WorkMissionsEditor = {
 	resizeInput: function(){
 		var height =  Math.max(WorkMissionsEditor.markdown.height()-30, 160);
 		WorkMissionsEditor.mirror.setSize("100%", height);
+	},
+	sanitizeDateAndTime: function(event){
+		var typeValue = parseInt($("#input_type").val(), 10);
+		var dayStart  = $(typeValue === 0 ? "#input_dayWork" : "#input_dayStart");
+		var dayEnd    = $(typeValue === 0 ? "#input_dayDue" : "#input_dayEnd");
+		var timeStart = $("#input_timeStart");
+		var timeEnd   = $("#input_timeEnd");
+		if(dayStart.val() && dayEnd.val()){
+			if(dayStart.val() > dayEnd.val()){
+				dayEnd.datepicker("setDate", dayStart.val()).trigger("change-update");
+				if(typeValue === 0)
+					UI.Messenger.noteNotice("Fälligkeit korrigiert auf: "+dayStart.val());
+				else
+					UI.Messenger.noteNotice("Endtag korrigiert auf: "+dayStart.val());
+			}
+			if(dayStart.val() === dayEnd.val()){
+				if(timeStart.val() && timeEnd.val()){
+					var timeStartValue = parseInt(timeStart.val().replace(/:/, ""), 10);
+					var timeEndValue = parseInt(timeEnd.val().replace(/:/, ""), 10);
+					if(timeStartValue >= timeEndValue){
+						timeEnd.val("").trigger("change-update");
+						UI.Messenger.noteNotice("Endzeit war ungültig und wurde geleert.");
+					}
+				}
+			}
+		}
 	}
 };

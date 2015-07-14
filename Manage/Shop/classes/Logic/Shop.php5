@@ -31,7 +31,7 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Environment_Resource_Logic{
 		$model	= new Model_Shop_Shipping_Grade( $this->env );
 		return array_shift( $model->getAll( $conditions, array ('quantity' => 'DESC' ) ) );
 	}
-	
+
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
@@ -98,7 +98,7 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getOrder( $orderId, $extended = FALSE ){
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){
-			$order->customer	= $this->getCustomer( $order->customer_id );
+			$order->customer	= $this->getCustomer( $order->customerId );
 			$order->positions	= $this->getOrderPositions( $orderId );
 		}
 		return $order;
@@ -139,7 +139,7 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getShippingGradeIdByQuantity( $quantity ){
 		return $this->getShipping()->getShippingGradeIdByQuantity( $quantity );
 	}
-	
+
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
@@ -150,7 +150,7 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getShippingPrice( $shippingZoneId, $shippingGradeId ){
 		return $this->getShipping()->getShippingPrice( $shippingzone_id, $shippinggrade_id );
 	}
-	
+
 	/**
 	 *	Returns Shipping Zone ID of Country.
 	 *	@access		public
@@ -165,7 +165,7 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function setOrderPositionStatus( $positionId, $status ){
 		return $this->modelOrderPosition->edit( $positionId, array( 'status' => (int)$status ) );
 	}
-	
+
 	public function setOrderStatus( $orderId, $status ){
 		return $this->modelOrder->edit( $orderId, array( 'status' => (int)$status ) );
 	}

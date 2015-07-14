@@ -3,6 +3,9 @@ if( !count( $files ) )
 	return "";
 
 $states	= array(
+	-3	=> 'missing',
+	-2	=> 'inaccessible',
+	-1	=> 'protected',
 	0	=> 'new',
 	1	=> 'installed',
 	2	=> 'changed',
@@ -23,10 +26,16 @@ foreach( $files as $file ){
 	) );
 	if( in_array( $file->status, array( 3, 5 ) ) )
 		$checkbox	= '';
-	if( $file->status === 2 ){
+	else if( $file->status === 2 ){
 		$url		= './admin/module/installer/diff/'.base64_encode( $file->pathLocal ).'/'.base64_encode( $file->pathSource );
 		$actions[]	= UI_HTML_Tag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
 	}
+	else if( !file_exists( $file->pathSource ) )
+		$file->status	= -3;
+	else if( !is_readable( $file->pathSource ) )
+		$file->status	= -2;
+	else if( !is_writable( $file->pathSource ) )
+		$file->status	= -1;
 
 	$statusLabel	= $words['update-file-states'][$file->status];
 	$statusDesc		= $words['update-file-state-description'][$file->status];
@@ -44,6 +53,7 @@ foreach( $files as $file ){
 		'data-file-local'	=> $file->pathLocal
 	) );
 }
+
 $checkAll	= UI_HTML_Tag::create( 'input', NULL, array(
 	'type'			=> 'checkbox',
 	'onchange'		=> 'AdminModuleUpdater.switchAllFiles()',
@@ -87,7 +97,7 @@ function onToggleUpdateFilesWithoutChanges(event){
 	var isChecked = $(this).prop("checked");
 	var table = $("#panel-module-update-files table");
 	var rows = table.find("tbody tr");
-	var rowsLinked = rows.filter(".status-linked");
+	var rowsLinked = rows.filter(".status-linked,.status-refered");
 	isChecked ? rowsLinked.addClass("hidden") : rowsLinked.removeClass("hidden");
 	var rowsHidden = rows.filter(".hidden");
 	var rowsVisible = rows.not(rowsHidden);

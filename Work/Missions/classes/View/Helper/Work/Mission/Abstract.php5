@@ -29,6 +29,8 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 		$modelUser	= new Model_User( $this->env );
 		if( !array_key_exists( (int) $userId, $this->users ) )
 			$this->users[(int) $userId] = $modelUser->get( (int) $userId );
+		if( !$this->users[(int) $userId] )
+			return "UNKNOWN";
 		$worker	= $this->users[(int) $userId];
 
 		if( !$this->useGravatar )

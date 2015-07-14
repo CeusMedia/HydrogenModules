@@ -8,7 +8,12 @@ Additionally contains editing features which need to be enabled.
 Features of viewer:	
 list>
 - Documents are existing as files and can be stored in (nested) folders 
-- Markdown syntax is rendered before display using PageDown.js
+- Markdown syntax can be rendered:
+list>
+	- before delivery using serverside Markdown renderer (server-inline)
+	- before display using AJAX and serverside Markdown renderer (server-ajax)
+	- before display using PageDown.js (client)
+<list
 <list
 Features of editor:	
 list>
@@ -16,9 +21,16 @@ list>
 - Document list order can be managed by pushing documents up or down
 - Renaming a document will adjust links to this document in others
 <list
-This module can be translated.
+This module can be localized.
 ]]></description>
-	<version>0.6.2</version>
+	<version>0.6.8</version>
+	<log version="0.6.3">Extract CSS to style file.</log>
+	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
+	<log version="0.6.5">Add configuration and detection of renderer.</log>
+	<log version="0.6.6">Load script and style only within module.</log>
+	<log version="0.6.7">Add support for new AJAJ client.</log>
+	<log version="0.6.8">Add relation to module JS:CodeMirror.</log>
+<!--	<log version="0.6.x">Use editor configuration switch for read-only mode.</log>-->
 	<category>Info</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -32,13 +44,17 @@ This module can be translated.
 		<template>info/manual/view.php</template>
 		<locale>de/info/manual.ini</locale>
 		<locale>de/info/manual/demo.syntax.md</locale>
-		<script load="auto">Info.Manual.js</script>
+		<script>Info.Manual.js</script>
+		<style>module.info.manual.css</style>
 	</files>
 	<config type="string" protected="yes" name="path">locales/de/info/manual/</config>
+	<config type="string" protected="no" name="renderer" values="client,server-ajax,server-inline">server-inline</config>
 	<config type="boolean" name="editor">1</config>
 	<config type="integer" name="editor.rows">20</config>
 	<relations>
-		<needs type="module">JS_Markdown</needs>
 		<needs type="module">JS_jQuery</needs>
+		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">JS_Markdown</needs>
+		<needs type="module">UI_Markdown</needs>
 	</relations>
 </module>

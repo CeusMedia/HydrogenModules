@@ -26,6 +26,19 @@ foreach( $words['priorities'] as $key => $value ){
 }
 $optPriority		= join( '', $optPriority );
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+	'href'	=> './manage/project',
+	'class'	=> 'btn btn-small',
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-primary'
+) );
+
 $panelAdd		= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
@@ -34,7 +47,7 @@ $panelAdd		= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12 max mandatory"/>
+					<input type="text" name="title" id="input_title" class="span12 max mandatory" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -44,22 +57,22 @@ $panelAdd		= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span4">
+				<div class="span3">
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12 max">'.$optStatus.'</select>
 				</div>
-				<div class="span4">
+				<div class="span3">
 					<label for="input_priority" class="not-mandatory">'.$w->labelPriority.'</label>
 					<select name="priority" id="input_priority" class="span12 max">'.$optPriority.'</select>
 				</div>
-				<div class="span4">
+				<div class="span6">
 					<label for="input_url">'.$w->labelUrl.'</label>
 					<input type="text" name="url" id="input_url" class="span12 max"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/project" class="btn btn-small"><i class="not-icon-arrow-left icon-list"></i> '.$w->buttonCancel.'</a>
-				<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+				'.$buttonCancel.'
+				'.$buttonSave.'
 			</div>
 		</form>
 	</div>
@@ -76,6 +89,7 @@ return '
 ';
 
 $panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
+
 return '
 <div class="row-fluid">
 	<div class="span3">

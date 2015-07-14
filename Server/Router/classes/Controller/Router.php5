@@ -19,18 +19,21 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 					return;
 				}
 				foreach( $routes as $route ){
-					$list[]	= (object) array(
-						'source'	=> (string) $route->source,
-						'target'	=> (string) $route->target,
-						'regex'		=> (bool) $route->getAttribute( 'regex' ),
-						'code'		=> (int) $route->getAttribute( 'code' ),
-					);
+					if( $route->hasAttribute( 'status' ) ){
+						if( (int) $route->getAttribute( 'status' ) > 0 ){
+							$list[]	= (object) array(
+								'source'	=> (string) $route->source,
+								'target'	=> (string) $route->target,
+								'regex'		=> (bool) $route->getAttribute( 'regex' ),
+								'code'		=> (int) $route->getAttribute( 'code' ),
+							);
+						}
+					}
 				}
 				break;
 			case 'database':
-				$controller	= new Controller_Router( $env, FALSE );
 				$model		= new Model_Route( $env );
-				$list		= $model->getAll();
+				$list		= $model->getAllByIndex( 'status', '>0' );
 				break;
 		}
 

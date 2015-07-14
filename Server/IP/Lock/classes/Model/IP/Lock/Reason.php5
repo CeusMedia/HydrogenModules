@@ -4,6 +4,7 @@ class Model_IP_Lock_Reason extends CMF_Hydrogen_Model{
 	protected $columns	= array(
 		'ipLockReasonId',
 		'status',
+		'code',
 		'duration',
 		'title',
 		'description',
@@ -13,9 +14,9 @@ class Model_IP_Lock_Reason extends CMF_Hydrogen_Model{
 	protected $primaryKey	= 'ipLockReasonId';
 	protected $indices		= array(
 		'status',
+		'code',
 		'duration',
 		'createdAt',
-		'appliedAt',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

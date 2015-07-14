@@ -41,6 +41,10 @@ class Logic_IP_Lock{
 		}
 	}
 
+	public function count( $conditions ){
+		return $this->modelLock->count( $conditions );
+	}
+
 	public function countView( $ipLockId ){
 		$lock	= $this->get( $ipLockId );
 		$this->modelLock->edit( $ipLockId, array(
@@ -85,6 +89,15 @@ class Logic_IP_Lock{
 		return self::$instance;
 	}
 
+	public function getFilters( $conditions = array(), $orders = array(), $limits = array() ){
+		return $this->modelFilter->getAll( $conditions, $orders, $limits );
+	}
+
+	public function getFiltersOfReason( $reasonId, $conditions = array(), $orders = array(), $limits = array() ){
+		$conditions['reasonId']	= $reasonId;
+		return $this->getFilters( $conditions, $orders, $limits );
+	}
+
 	public function getReasons( $conditions = array(), $orders = array(), $limits = array() ){
 		return $this->modelReason->getAll( $conditions, $orders, $limits );
 	}
@@ -118,6 +131,7 @@ class Logic_IP_Lock{
 				'reasonId'	=> (int) $reasonId ? (int) $reasonId : 0,
 				'status'	=> self::STATUS_REQUEST_LOCK,
 				'IPv4'		=> trim( $ip ),
+				'uri'		=> getEnv( 'REQUEST_URI' ),
 				'lockedAt'	=> time(),
 			) );
 			$lock	= $this->modelLock->get( $lockId );
@@ -132,9 +146,9 @@ class Logic_IP_Lock{
 
 	public function remove( $ipLockId ){
 		$lock	= $this->get( $ipLockId );
-		$states	= array( self::STATUS_REQUEST_LOCK, self::STATUS_UNLOCKED );
+		$states	= array( self::STATUS_CANCELLED );
 		if( $lock ){
-			if( in_array( $lock->status, $states ) )										//  transition is allowed
+			if( !in_array( $lock->status, $states ) )										//  transition is allowed
 				return $this->setStatus( $ipLockId, self::STATUS_CANCELLED );				//  cancel lock and return TRUE
 			return FALSE;																	//  indicate: lock exists but is not active
 		}

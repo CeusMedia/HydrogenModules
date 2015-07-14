@@ -1,67 +1,67 @@
 <?php
-$w	= (object) $words['add'];
+$w		= (object) $words['add'];
 
 $text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch.add.' );
 
-$panelAdd	= HTML::Form( './manage/my/branch/add', 'branch_add',
-	HTML::Fields(
-		HTML::Legend( $w->legend, 'branch add' ).
-		HTML::UlClass( 'input',
-			HTML::Li(
-				HTML::DivClass( 'column-left-50',
-					HTML::Label( 'title', $w->labelTitle, 'mandatory' ).HTML::BR.
-					HTML::Input( 'title', $branch->title, 'max mandatory' )
-				).
-				HTML::DivClass( 'column-clear' )
+$panelAdd	= '
+<div class="content-panel">
+	'.HTML::H3( $w->legend, 'branch add' ).'
+	<div class="content-panel-inner">
+		<form action="./manage/my/branch/add" method="post">'.
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span6',
+					HTML::Label( 'title', $w->labelTitle, 'mandatory' ).
+					HTML::Input( 'title', $branch->title, 'span12 mandatory' )
+				)
 			).
-			HTML::Li(
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'postcode', $w->labelPostcode, 'mandatory' ).HTML::BR.
-					HTML::Input( 'postcode', $branch->postcode, 'max mandatory' )
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span2',
+					HTML::Label( 'postcode', $w->labelPostcode, 'mandatory' ).
+					HTML::Input( 'postcode', $branch->postcode, 'span12 mandatory' )
 				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'city', $w->labelCity, 'mandatory' ).HTML::BR.
-					HTML::Input( 'city', $branch->city, 'max mandatory' )
+				HTML::DivClass( 'span4',
+					HTML::Label( 'city', $w->labelCity, 'mandatory' ).
+					HTML::Input( 'city', $branch->city, 'span12 mandatory' )
 				).
-				HTML::DivClass( 'column-left-30',
-					HTML::Label( 'street', $w->labelStreet, 'mandatory' ).HTML::BR.
-					HTML::Input( 'street', $branch->street, 'max mandatory' )
+				HTML::DivClass( 'span4',
+					HTML::Label( 'street', $w->labelStreet, 'mandatory' ).
+					HTML::Input( 'street', $branch->street, 'span12 mandatory' )
 				).
-				HTML::DivClass( 'column-left-20',
-					HTML::Label( 'number', $w->labelNumber, 'mandatory' ).HTML::BR.
-					HTML::Input( 'number', $branch->number, 'max mandatory' )
-				).
-				HTML::DivClass( 'column-clear' )
+				HTML::DivClass( 'span2',
+					HTML::Label( 'number', $w->labelNumber, 'mandatory' ).
+					HTML::Input( 'number', $branch->number, 'span12 mandatory' )
+				)
 			).
-			HTML::Li(
-				HTML::DivClass( 'column-left-50',
-					HTML::Label( 'url', $w->labelUrl ).HTML::BR.
-					HTML::Input( 'url', $branch->url, 'max' )
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span6',
+					HTML::Label( 'url', $w->labelUrl ).
+					HTML::Input( 'url', $branch->url, 'span12' )
 				).
-				HTML::DivClass( 'column-left-25',
-					HTML::Label( 'phone', $w->labelPhone ).HTML::BR.
-					HTML::Input( 'phone', $branch->phone, 'max' )
+				HTML::DivClass( 'span3',
+					HTML::Label( 'phone', $w->labelPhone ).
+					HTML::Input( 'phone', $branch->phone, 'span12' )
 				).
-				HTML::DivClass( 'column-left-25',
-					HTML::Label( 'fax', $w->labelFax ).HTML::BR.
-					HTML::Input( 'fax', $branch->fax, 'max' )
-				).
-				HTML::DivClass( 'column-clear' )
-			)
-		).
-		HTML::Buttons(
-			HTML::LinkButton( './manage/my/branch', $w->buttonCancel, 'button cancel' ).
-			'&nbsp;|&nbsp'.
-			HTML::Button( 'doAdd', $w->buttonSave, 'button save' )
-		)
-	)
-);
+				HTML::DivClass( 'span3',
+					HTML::Label( 'fax', $w->labelFax ).
+					HTML::Input( 'fax', $branch->fax, 'span12' )
+				)
+			).
+			HTML::DivClass( 'buttonbar', 
+				HTML::LinkButton( './manage/my/branch', $w->buttonCancel, 'button cancel' ).
+				'&nbsp;|&nbsp'.
+				HTML::Button( 'doAdd', $w->buttonSave, 'button save' )
+			).'
+		</form>
+	</div>
+</div>';
 
-return #UI_HTML_Tag::create( 'h2', $w->heading ).
-HTML::DivClass( 'column-left-60',
-	$panelAdd
-).
-HTML::DivClass( 'column-left-40',
-	$text['info']
-).HTML::DivClass( 'column-left' );
+return '
+<div class="row-fluid">
+	<div class="span8">
+		'.$panelAdd.'
+	</div>
+	<div class="span4">
+		'.$text['info'].'
+	</div>
+</div>';
 ?>

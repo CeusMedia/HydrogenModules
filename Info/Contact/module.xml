@@ -3,11 +3,14 @@
 	<title>Info: Contact</title>
 	<description><![CDATA[Simple contact form.]]></description>
 	<category>Info</category>
-	<version>0.2.2</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for static content blocks (top, right, bottom).</log>
 	<log version="0.2.2">Added support for more static content blocks (before, after).</log>
+	<log version="0.2.3">Updated locales.</log>
+	<log version="0.2.4">Integrate CAPTCHA.</log>
+	<log version="0.2.5">Integrate honey pot.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,6 +30,11 @@
 	</relations>
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
 	<config protected="yes" mandatory="yes" type="string" name="mail.receiver"></config>
+	<config protected="yes" type="boolean" name="captcha.enable">no</config>
+	<config protected="yes" type="integer" name="captcha.length">4</config>
+	<config protected="yes" type="string" name="captcha.strength" values="soft,hard">soft</config>
+	<config protected="yes" type="string" name="captcha.path">contents/images/</config>
+	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
 	<link access="public" path="info/contact" xml:lang="de" rank="80">Kontakt</link>
 	<link access="public" path="info/contact" xml:lang="en" rank="80">Contact</link>
 	<sql on="install" type="mysql"><![CDATA[

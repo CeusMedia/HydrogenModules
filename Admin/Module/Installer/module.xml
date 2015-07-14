@@ -17,16 +17,19 @@ list>
 <list
 ]]></description>
 	<category>Administration</category>
-	<version>0.2.16</version>
+	<version>0.3.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-	<log version="0.2.10">Adjusted database update handling.</log>
-	<log version="0.2.11">Added version log panel.</log>
-	<log version="0.2.12">Hide file without change by default and show by switch.</log>
-	<log version="0.2.13">Added new panel about local installation.</log>
-	<log version="0.2.14">Moved dev output of local and source module to bottom.</log>
-	<log version="0.2.15">Use module JS:CodeMirror to display database changes.</log>
-	<log version="0.2.16">Added screen for uninstallation.</log> 
+	<log version="0.3">Finished installation process with copying and linking.</log>
+	<log version="0.3.1">Adjusted database update handling.</log>
+	<log version="0.3.2">Added version log panel.</log>
+	<log version="0.3.3">Hide file without change by default and show by switch.</log>
+	<log version="0.3.4">Added new panel about local installation.</log>
+	<log version="0.3.5">Moved dev output of local and source module to bottom.</log>
+	<log version="0.3.6">Use module JS:CodeMirror to display database changes.</log>
+	<log version="0.3.7">Added screen for uninstallation.</log> 
+	<log version="0.3.8">Check file permissions before update and show problems.</log>
+	<log version="0.3.9">Fixed listing of refered sources.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

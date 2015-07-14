@@ -93,6 +93,7 @@ function showDefaultInputValues(selector){
 }
 $(document).ready(function(){
 	showDefaultInputValues("form");
+	ModuleAdminInstancesAdd.init();
 });
 </script>
 ';

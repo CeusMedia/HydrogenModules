@@ -2,10 +2,13 @@
 <module>
 	<title>UI: Markdown</title>
 	<description><![CDATA[Markdown transformation support.]]></description>
-	<version>1.4.0b-p3</version>
+	<version>1.4.0b-p5</version>
 	<log version="1.4.0b-p1">Add support for INS(++) and DEL(--).</log>
 	<log version="1.4.0b-p2">Add AJAX support.</log>
 	<log version="1.4.0b-p3">Add hook View:onRenderContent.</log>
+	<log version="1.4.0b-p4">Add support for AJAJ client.</log>
+	<log version="1.4.0b-p5">Add flag to wrap out in paragraph.</log>
+<!--	<log version="1.5.0">Update to version 1.5.0.</log>-->	
 	<category>User Interface</category>
 	<author site="http://michelf.ca/home/">Michel Fortin</author>
 	<url>http://michelf.ca/projects/php-markdown/</url>

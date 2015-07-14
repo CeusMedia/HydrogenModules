@@ -57,7 +57,9 @@ foreach( $ordersPerYear as $nr => $entry ){
 	);
 }
 
-return $this->renderMainTabs().'
+$tabs	= View_Manage_Shop::renderTabs( $env, 'report' );
+
+return $tabs.'
 <h3>Bestellungen und Umsätze über die Jahre</h3>
 <div class="row-fluid">
 	<div class="span7">

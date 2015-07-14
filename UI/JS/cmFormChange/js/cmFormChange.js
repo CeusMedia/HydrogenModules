@@ -12,7 +12,7 @@ var cmFormChange = {
 		inputs.each(function(){
 			var elem = $(this);
 			elem.data('original-value', elem.val());
-			elem.bind("keyup change", {elem: elem}, function(event){
+			elem.bind("keyup change change-update", {elem: elem}, function(event){
 				var elem = event.data.elem;
 				var changed = elem.val() !== elem.data('original-value');
 				changed ? elem.addClass('changed') : elem.removeClass('changed');

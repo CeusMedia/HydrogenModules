@@ -1,10 +1,15 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: Contents: Documents</title>
+	<title>Manage: Content: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4.3</version>
+	<version>0.4.8</version>
 	<log version="0.4.3">Added relation to time phrase helper.</log>
+	<log version="0.4.4">Use frontend resource.</log>
+	<log version="0.4.5">Updated TinyMCE link collection.</log>
+	<log version="0.4.6">Extract messages and table heads to locale.</log>
+	<log version="0.4.7">Extract add panel to own template.</log>
+	<log version="0.4.8">Updated list and panels.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,13 +21,13 @@
 		<locale>de/html/manage/content/document/bottom.html</locale>
 		<locale>de/html/manage/content/document/top.html</locale>
 		<template>manage/content/document/index.php</template>
+		<template>manage/content/document/index.add.php</template>
 	</files>
 	<relations>
+		<needs type="module">Resource_Frontend</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<supports type="module">JS_TinyMCE</supports>
 	</relations>
-	<config type="string" name="frontend.path" title="file path to managed application, needs trailing slash if set">../</config>
-	<config type="string" name="frontend.url" title="net path to managed application, needs trailing slash">../</config>
 	<config type="string" name="path.documents" title="path to documents within managed application, needs trailing slash">contents/documents/</config>
 	<link xml:lang="de" path="manage/content/document">Dokumente</link>
 	<link xml:lang="en" path="manage/content/document">Documents</link>

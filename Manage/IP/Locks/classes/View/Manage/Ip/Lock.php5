@@ -3,6 +3,8 @@ class View_Manage_IP_Lock extends CMF_Hydrogen_View{
 
 	public function add(){}
 
+	public function edit(){}
+
 	public function index(){}
 
 	public static function ___onRegisterTab( $env, $context, $module, $data ){

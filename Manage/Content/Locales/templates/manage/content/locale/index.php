@@ -46,6 +46,8 @@ if( count( $languages ) > 1 ){
 			</div>
 		</div>';
 }
+else
+	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
 $optType	= UI_HTML_Elements::Options( $words['types'], $type );
 

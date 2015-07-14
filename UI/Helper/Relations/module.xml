@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Relations</title>
+	<description><![CDATA[Lists item relations.
+
+Can be used for confirmation views to enlist entities related to an item.
+
+Uses hooks to retrieve information about related items from other modules.
+
+To append entities, you need to implement Hook::listRelations.
+]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<files>
+		<class>View/Helper/ItemRelationLister.php5</class>
+		<style>module.ui.helper.relations.css</style>
+	</files>
+	<relations/>
+</module>

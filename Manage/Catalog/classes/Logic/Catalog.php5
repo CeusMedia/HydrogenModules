@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo	extract classes Logic_Upload and Alg_UnitParser
+ */
 class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	/**	@var	CMM_SEA_Adapter_Abstract			$cache */
@@ -79,6 +82,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function addArticle( $data ){
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->remove( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
@@ -118,6 +123,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
 
 		$this->editArticle( $articleId, array( 'cover' => $imagename ) );
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
 	}
 
 	/**
@@ -148,6 +154,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'title'			=> $title,
 		);
 //		$this->clearCacheForArticle( $articleId, FALSE );											//  @todo kriss: active after second argument is implemented
+		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
 
@@ -168,6 +175,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function addAuthor( $data ){
 //		$data['createdAt']	= time();
+		$this->cache->remove( 'catalog.tinymce.links.authors' );
+//		$this->cache->remove( 'catalog.tinymce.images.authors' );
 		return  $this->modelAuthor->add( $data );
 	}
 
@@ -199,6 +208,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
+		$this->cache->remove( 'catalog.tinymce.images.authors' );
 	}
 
 	/**
@@ -223,6 +233,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function addCategory( $data ){
 //		$data['registeredAt']	= time();
+		$this->cache->remove( 'catalog.tinymce.links.categories' );
 		return $this->modelCategory->add( $data );
 	}
 
@@ -362,6 +373,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
 		$this->clearCacheForArticle( $articleId, TRUE );
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->remove( 'catalog.tinymce.links.articles' );
 //		$this->cache->remove( 'catalog.article.'.$articleId );
 	}
 
@@ -374,6 +387,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 		$this->modelAuthor->edit( $authorId, $data );
 		$this->cache->remove( 'catalog.article.author.'.$authorId );
+		$this->cache->remove( 'catalog.tinymce.images.authors' );
+		$this->cache->remove( 'catalog.tinymce.links.authors' );
 	}
 
 	/**
@@ -390,6 +405,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->cache->remove( 'catalog.categories' );
 		$this->cache->remove( 'catalog.categories.'.$old->parentId );
 		$this->cache->remove( 'catalog.categories.'.$new->parentId );
+		$this->cache->remove( 'catalog.tinymce.links.categories' );
 	}
 
 	/**
@@ -518,6 +534,22 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
+	 *	@todo		kriss: code doc
+	 */
+	public function getAuthorUri( $authorOrId, $absolute = FALSE ){
+		$author = $authorOrId;
+		if( is_int( $authorOrId ) )
+			$author	= $this->getAuthor( $authorOrId, TRUE );
+		else if( !is_object( $author ) )
+			throw new InvalidArgumentException( 'Given author data is invalid' );
+		$name	= $author->lastname;
+		if( $author->firstname )
+			$name	= $author->firstname." ".$name;
+		$uri	= 'catalog/author/'.$author->authorId.'-'.$this->getUriPart( $name );
+		return $absolute ? $this->env->url.$uri : './'.$uri;
+	}
+
+	/**
 	 *	@todo		kriss: clean up
 	 */
 	public function getCategories( $conditions = array(), $orders = array() ){
@@ -591,9 +623,14 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getCategoryOfArticle( $article ){
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
+		$category			= $this->getCategory( $relation->categoryId );							//  @todo use this line for caching and remove line above
 		$category->volume	= $relation->volume;
 		$article->volume	= $relation->volume;
 		return $category;
+	}
+
+	public function getDocuments( $conditions = array(), $orders = array(), $limits = array() ){
+		return $this->modelArticleDocument->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
@@ -676,7 +713,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$this->removeArticleImage( $articleId );
 //		$this->removeArticleCover( $articleId );
 //		$this->modelArticleDocument->removeByIndex( array( 'articleId' => $articleId ) );
-
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->remove( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
@@ -691,6 +729,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			@unlink( $this->pathArticleCovers.$id."__".$article->cover );
 			@unlink( $this->pathArticleCovers.$id."_".$article->cover );
 			$this->editArticle( $articleId, array( 'cover' => NULL ) );
+			$this->cache->remove( 'catalog.tinymce.images.articles' );
 		}
 	}
 
@@ -703,6 +742,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$document	= $this->modelArticleDocument->get( $documentId );
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
+		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
 	}
 
@@ -723,7 +763,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
+	/**
+	 *	@deprecated		use removeArticeCover instead
+	 */
 	public function removeArticleImage( $articleId ){
+		throw new Exception( 'Deprecated: use removeArticeCover instead' );
 		$article	= $this->modelArticle->get( $articleId );
 		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleCovers.$id."_".$article->cover );
@@ -773,6 +817,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$this->editAuthor( $authorId, array( 'image' => NULL ) );
 		}
 //		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
+		$this->cache->remove( 'catalog.tinymce.images.authors' );
 	}
 
 	/**
@@ -785,6 +830,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
 //		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
+		$this->cache->remove( 'catalog.tinymce.links.categories' );
 		return $this->modelCategory->remove( $categoryId );
 	}
 

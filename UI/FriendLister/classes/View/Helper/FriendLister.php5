@@ -6,7 +6,7 @@
  *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@since			01.08.2012
- *	@version		$Id$
+ *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
  */
 /**
  *	Renders list of linked friend sites.
@@ -15,7 +15,7 @@
  *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@since			01.08.2012
- *	@version		$Id$
+ *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
  */
 class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 

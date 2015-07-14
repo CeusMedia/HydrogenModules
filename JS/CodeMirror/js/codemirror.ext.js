@@ -12,7 +12,7 @@ $(document).ready(function(){
 					}
 				}
 			}
-			if(settings.settings.JS_CodeMirror.auto_option_fullscreen){
+			if(settings.JS_CodeMirror.auto_option_fullscreen){
 				options.extraKeys = {
 					"F11": function(cm) {
 						CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));

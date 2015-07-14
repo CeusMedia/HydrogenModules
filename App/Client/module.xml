@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>App: Client</title>
+	<description><![CDATA[Base container for Client Applications.]]></description>
+	<category>Application</category>
+	<version>0.1</version>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files/>
+	<relations/>
+	<config name="app.name">MyAppClient</config>
+	<config name="app.version">0.1</config>
+	<config name="app.base.url">http://example.org/myApp/</config>
+	<config name="path.cache">logs/</config>
+	<config name="path.css.lib">/lib/cmStyles/</config>
+	<config name="path.js">javascripts/</config>
+	<config name="path.js.cache">javascripts/cache/</config>
+	<config name="path.js.lib">/lib/cmScripts/</config>
+	<config name="path.locales">locales/</config>
+	<config name="path.logs">logs/</config>
+	<config name="path.scripts">javascripts/</config>
+	<config name="path.scripts.lib">/lib/cmScripts/</config>
+	<config name="path.templates">templates/</config>
+	<config name="path.images">images/</config>
+	<config name="path.themes">themes/</config>
+	<config name="layout.primer">petrol</config>
+	<config name="layout.theme">custom</config>
+	<config name="locale.allowed">de</config>
+	<config name="locale.default">de</config>
+	<config name="session.name"></config>
+</module>
+

@@ -1,6 +1,10 @@
-<Files ~ "^(config.+|.+\.inc|.*\.dist)$">
+<Files ~ "^(\..+|config.+|Makefile)$">
     Deny From All
 </Files>
+<Files ~ "(\.inc|\.dist|~)$">
+    Deny From All
+</Files>
+
 
 Options -MultiViews -Indexes +FollowSymLinks
 

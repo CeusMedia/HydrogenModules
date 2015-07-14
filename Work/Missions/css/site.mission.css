@@ -907,3 +907,10 @@ body.moduleWorkMission select.changed option:not([class]) {
 	}
 body.moduleWorkMission select.changed option:not(:checked) {
 	}
+
+
+
+.mission-day-control.empty-day{
+	opacity: 0.5;
+	}
+

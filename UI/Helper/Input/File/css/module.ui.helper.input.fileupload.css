@@ -1,0 +1,23 @@
+div.bs-input-file {
+	position: relative;
+	}
+div.bs-input-file input.bs-input-file {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	filter: alpha(opacity=0);
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	opacity:0;
+	background-color:transparent;
+	color:transparent;
+	}
+div.bs-input-file a.bs-input-file-toggle {
+	position: absolute;
+	z-index: 200;
+	top: 0;
+	right: 1px;
+	}
+input.bs-input-file-info {
+	width: 97% !important;
+	}

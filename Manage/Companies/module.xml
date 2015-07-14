@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Manage: Companies & Branches]]></title>
+	<description>Management for companies and their branches.</description>
+	<version>0.2.11</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Updated templates.</log>
+	<log version="0.2.2">Use module UI:Helper:TimePhraser.</log>
+	<log version="0.2.3">Integrated branches.</log>
+	<log version="0.2.4">Use module UI:Map.</log>
+	<log version="0.2.5">Improved all lists and forms.</log>
+	<log version="0.2.6">Support for branch images.</log>
+	<log version="0.2.7">Extend company by description.</log>
+	<log version="0.2.8">Extend company by logo image.</log>
+	<log version="0.2.9">Support for branch tags.</log>
+	<log version="0.2.10">Added description.</log>
+	<log version="0.2.11">Extended states.</log>
+	<category>Management</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Company.php5</class>
+		<class>Controller/Manage/Company/Branch.php5</class>
+		<class>View/Manage/Company.php5</class>
+		<class>View/Manage/Company/Branch.php5</class>
+		<template>manage/company/add.php</template>
+		<template>manage/company/edit.php</template>
+		<template>manage/company/edit.logo.php</template>
+		<template>manage/company/index.php</template>
+		<template>manage/company/branch/add.php</template>
+		<template>manage/company/branch/edit.php</template>
+		<template>manage/company/branch/edit.images.php</template>
+		<template>manage/company/branch/index.php</template>
+		<locale>de/manage/company.ini</locale>
+		<locale>de/manage/company/branch.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_Companies</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_HTML</needs>
+		<needs type="module">UI_Map</needs>
+	</relations>
+	<link access="acl" xml:lang="de" rank="52" path="manage/company">Unternehmen</link>
+	<link access="acl" xml:lang="de" rank="53" path="manage/company/branch">Filialen</link>
+	<link access="acl" xml:lang="en" rank="52" path="manage/company">Companies</link>
+	<link access="acl" xml:lang="en" rank="53" path="manage/company/branch">Branches</link>
+</module>

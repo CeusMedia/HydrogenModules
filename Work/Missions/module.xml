@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.49</version>
+	<version>0.8.59</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -36,6 +36,16 @@ code>
 	<log version="0.8.47">Updated JavaScript invokation.</log>
 	<log version="0.8.48">Selectable workers will change relative to project.</log>
 	<log version="0.8.49">Updated archive and future list if empty.</log>
+	<log version="0.8.50">Added markdown preview while adding a mission.</log>
+	<log version="0.8.51">Updated worker selection.</log>
+	<log version="0.8.52">Ordered users in edit mode.</log>
+	<log version="0.8.53">Renamed ownerId to creatorId and added modifiedId.</log>
+	<log version="0.8.54">Fix Bug: Invalid end date possible.</log>
+	<log version="0.8.55">Feature: Prefill all dates for new tasks or events.</log>
+	<log version="0.8.56">Use modules UI:JS:cmFormChange and UI:JS:cmFormOptionals.</log>
+	<log version="0.8.57">Sanitize date and time inputs.</log>
+	<log version="0.8.58">Added missing mail class.</log>
+	<log version="0.8.59">Day controls for empty days with lower opacity.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -64,9 +74,10 @@ code>
 		<class>View/Helper/Work/Mission/List/DayControlsSmall.php5</class>
 		<class>View/Helper/Work/Mission/List/Pagination.php5</class>
 		<class>View/Helper/Work/Mission/Mail/Daily.php5</class>
-		<class>Mail/Work/Mission/New.php5</class>
+		<class>Mail/Work/Mission/Change.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
 		<class>Mail/Work/Mission/Done.php5</class>
+		<class>Mail/Work/Mission/New.php5</class>
 		<class>Mail/Work/Mission/Update.php5</class>
 		<class>Job/Work/Mission.php5</class>
 		<template>work/mission/add.php</template>
@@ -103,6 +114,8 @@ code>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Markdown</needs>
 		<needs type="module">UI_Markdown</needs>
+		<needs type="module">UI_JS_cmFormChange</needs>
+		<needs type="module">UI_JS_cmFormOptionals</needs>
 		<supports type="module">Resource_Jobs</supports>
 		<supports type="module">Manage_Projects</supports>
 	</relations>
@@ -219,6 +232,10 @@ UPDATE `<%?prefix%>missions` SET hoursProjected = hoursProjected * 60 WHERE hour
 UPDATE `<%?prefix%>missions` SET hoursRequired = hoursRequired * 60 WHERE hoursRequired > 0;
 ALTER TABLE `<%?prefix%>missions` CHANGE `hoursProjected`  `minutesProjected` INT( 10 ) UNSIGNED DEFAULT NULL;
 ALTER TABLE `<%?prefix%>missions` CHANGE `hoursRequired`  `minutesRequired` INT( 10 ) UNSIGNED DEFAULT NULL;
+]]></sql>
+	<sql on="update" type="mysql" version="0.8.53"><![CDATA[
+ALTER TABLE `<%?prefix%>missions` CHANGE `ownerId` `creatorId` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `<%?prefix%>missions` ADD `modifierId` INT(10) UNSIGNED NULL AFTER `creatorId`, ADD INDEX (`modifierId`) ;
 ]]></sql>
 	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;

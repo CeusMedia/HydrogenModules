@@ -51,7 +51,7 @@ $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
-		<form action="./work/mission/edit/'.$mission->missionId.'" method="post">
+		<form action="./work/mission/edit/'.$mission->missionId.'" method="post" class="cmFormChange-auto">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
@@ -79,7 +79,7 @@ $panelEdit	= '
 			<div class="row-fluid">
 				<div class="span2 -column-left-20">
 					<label for="input_type">'.$w->labelType.'</label>
-					<select name="type" id="input_type" class="span12 -max" onchange="WorkMissions.fallbackFormShowOptionals(this)">'.$optType.'</select>
+					<select name="type" id="input_type" class="span12 -max has-optionals">'.$optType.'</select>
 				</div>
 				<div class="span3 -column-left-20 optional type type-0">
 					<label for="input_dayWork">'.$w->labelDayWork.'</label>
@@ -188,12 +188,5 @@ return '
 	<div class="span12">
 		'.$panelContent.'
 	</div>
-</div>
-<script>
-/*$(document).ready(function(){
-//	WorkMissionsEditor.mission = '.json_encode( $mission ).';
-//	bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
-});*/
-</script>
-';
+</div>';
 ?>

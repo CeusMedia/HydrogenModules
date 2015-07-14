@@ -10,6 +10,6 @@ return '
 	</div>
 	<div class="span9">
 		'.$panelList.'
-	</div>	
-<div class="column-clear"></div>';
+	</div>
+</div>';
 ?>

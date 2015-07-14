@@ -3,11 +3,12 @@
 	<title><![CDATA[Resource: Users & Roles]]></title>
 	<description><![CDATA[Support for users and groups stored in database.]]></description>
 	<category>Resource</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
 	<log version="0.2.2">Changed ACL right key for controllers.</log>
+	<log version="0.2.3">Updated visibility of configuration pairs.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,17 +20,17 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
-	<config type="string" name="acl" protected="yes">CMF_Hydrogen_Environment_Resource_Acl_Database</config>
-	<config type="integer" name="status.register" protected="yes" title="user status to be set on register, set to 1 for 'auto active'">1</config>
-	<config type="integer" name="name.length.min" title="lowest number of name characters">3</config>
-	<config type="integer" name="name.length.max" title="highest number of name characters">17</config>
-	<config type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]/i</config>
-	<config type="integer" name="password.length.min" title="lowest number of password characters">3</config>
-	<config type="integer" name="password.strength.min" title="highest number of password characters">0</config>
-	<config type="string" name="password.salt" protected="yes" title="string to salt password with"></config>
-	<config type="boolean" name="email.mandatory" title="user needs a mail address on register and change">yes</config>
-	<config type="boolean" name="firstname.mandatory" title="user needs a firstname">yes</config>
-	<config type="boolean" name="surname.mandatory" title="user needs a surname">yes</config>
+	<config protected="yes" type="string" name="acl">CMF_Hydrogen_Environment_Resource_Acl_Database</config>
+	<config protected="yes" type="integer" name="status.register" title="user status to be set on register, set to 1 for 'auto active'">0</config>
+	<config protected="no" type="integer" name="name.length.min" title="lowest number of name characters">3</config>
+	<config protected="no" type="integer" name="name.length.max" title="highest number of name characters">17</config>
+	<config protected="no" type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]/i</config>
+	<config protected="no" type="integer" name="password.length.min" title="lowest number of password characters">3</config>
+	<config protected="no" type="integer" name="password.strength.min" title="highest number of password characters">0</config>
+	<config protected="yes" type="string" name="password.salt" title="string to salt password with"></config>
+	<config protected="no" type="boolean" name="email.mandatory" title="user needs a mail address on register and change">yes</config>
+	<config protected="no" type="boolean" name="firstname.mandatory" title="user needs a firstname">yes</config>
+	<config protected="no" type="boolean" name="surname.mandatory" title="user needs a surname">yes</config>
 	<sql on="install" type="mysql"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";

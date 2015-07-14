@@ -1,11 +1,19 @@
 <?php
 class View_Sitemap extends CMF_Hydrogen_View{
+
 	public function index(){
-		$links	= $this->getData( 'links' );
-		$config	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
+		$logic		= Logic_Sitemap::getInstance( $this->env );
+		$sitemap	= self::render( $this->env, $logic );
+		header( 'Content-type: '.$sitemap->mimeType );
+		print( $sitemap->content );
+		exit;
+	}
+
+	static public function render( $env, Logic_Sitemap $logic ){
+		$config	= $env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
 		$root	= new XML_DOM_Node( 'urlset' );
 		$root->setAttribute( 'xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9" );
-		foreach( $links as $link ){
+		foreach( $logic->getLinks() as $link ){
 			$child	= new XML_DOM_Node( 'url' );
 			$child->addChild( new XML_DOM_Node( 'loc', $link->location ) );
 			if( $link->datetime )
@@ -29,9 +37,9 @@ class View_Sitemap extends CMF_Hydrogen_View{
 				$xml    = gzencode( $xml );
 				break;
 		}
-
-		header( 'Content-type: '.$type );
-		print( $xml );
-		exit;
+		return (object) array(
+			'mimeType'	=> $type,
+			'content'	=> $xml,
+		);
 	}
 }

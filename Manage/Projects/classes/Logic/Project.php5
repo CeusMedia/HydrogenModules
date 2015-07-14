@@ -38,6 +38,8 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		$userIds	= array_unique( $userIds );
 		$modelUser	= new Model_User( $this->env );
 		unset( $userIds[array_search( $userId, $userIds )] );
+		if( !$userIds )
+			return array();
 		return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
     }
 

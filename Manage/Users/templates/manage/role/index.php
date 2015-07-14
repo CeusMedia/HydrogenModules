@@ -60,19 +60,23 @@ table tr td blockquote {
 </style>
 <div id="site-role-index">
 	<!--<h2>Rollen</h2>-->
-	<h3>'.$wf->legend.' <small>('.count( $roles ).')</small></h3>
-	<table id="roles" class="table not-table-condensed table-striped">
-		<colgroup>
-			<col width="45%"/>
-			<col width="10%"/>
-			<col width="25%"/>
-			<col width="20%"/>
-		</colgroup>
-		'.$rows.'
-	</table>
-	<div class="row-fluid">
-		<div class="span12 buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/role/add', '<i class="icon-plus icon-white"></i> '.$wf->buttonAdd, 'btn btn-primary', NULL, !$hasRightToAdd ).'
+	<div class="content-panel">
+		<h3>'.$wf->legend.' <small>('.count( $roles ).')</small></h3>
+		<div class="content-panel-inner">
+			<table id="roles" class="table not-table-condensed table-striped">
+				<colgroup>
+					<col width="45%"/>
+					<col width="10%"/>
+					<col width="25%"/>
+					<col width="20%"/>
+				</colgroup>
+				'.$rows.'
+			</table>
+			<div class="row-fluid">
+				<div class="span12 buttonbar">
+					'.UI_HTML_Elements::LinkButton( './manage/role/add', '<i class="icon-plus icon-white"></i> '.$wf->buttonAdd, 'btn btn-primary', NULL, !$hasRightToAdd ).'
+				</div>
+			</div>
 		</div>
 	</div>
 </div>'.$textIndexBottom;

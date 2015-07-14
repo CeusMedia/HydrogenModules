@@ -23,9 +23,11 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"orderId",
 		"customerId",
 		"sessionId",
-		"options",
-		"channel",
 		"status",
+		"channel",
+		"options",
+		"price",
+		"priceTaxed",
 		"createdAt",
 		"editedAt",
 	);

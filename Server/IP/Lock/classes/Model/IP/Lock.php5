@@ -13,6 +13,7 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 		'reasonId',
 		'status',
 		'IPv4',
+		'uri',
 		'views',
 		'lockedAt',
 		'visitedAt',

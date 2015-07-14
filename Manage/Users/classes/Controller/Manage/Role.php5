@@ -18,105 +18,111 @@
  */
 class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 
+	protected $modelRole;
+	protected $modelRoleRight;
+	protected $modelUser;
+	protected $messenger;
+	protected $language;
+	protected $request;
+
+	public function __onInit(){
+		$this->modelRole		= new Model_Role( $this->env );
+		$this->modelRoleRight	= new Model_Role_Right( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+		$this->messenger		= $this->env->getMessenger();
+		$this->language			= $this->env->getLanguage();
+		$this->request			= $this->env->getRequest();
+	}
+
 	public function add() {
-		$words	= $this->env->getLanguage()->getWords( 'manage/role' );
-		if( $this->env->getRequest()->getMethod() == 'POST' ){
-			$data		= $this->env->getRequest()->getAllFromSource( 'POST' );
+		$words	= $this->language->getWords( 'manage/role' );
+		if( $this->request->getMethod() == 'POST' ){
+			$data		= $this->request->getAllFromSource( 'POST' );
 			$title		= $data->get( 'title' );
 
 			if( $title ){
-				$model		= new Model_Role( $this->env );
-				if( !$model->getByIndex( 'title', $data->get( 'title' ) ) ){
+				if( !$this->modelRole->getByIndex( 'title', $data->get( 'title' ) ) ){
 					$data				= $data->getAll();
 					$data['createdAt']	= time();
-					$roleId		= $model->add( $data );
+					$roleId		= $this->modelRole->add( $data );
 					if( $roleId )
 						$this->restart( './manage/role' );
 				}
 				else
-					$this->env->messenger->noteError( 'role_title_existing' );
-
+					$this->messenger->noteError( 'role_title_existing' );
 			}
 			else
-				$this->env->messenger->noteError( 'role_title_missing' );
+				$this->messenger->noteError( 'role_title_missing' );
 		}
 
-		$data	= $this->env->getRequest()->getAllFromSource( 'POST' );
+		$data	= $this->request->getAllFromSource( 'POST' );
 		$this->addData( 'role', $data );
 		$this->addData( 'words', $words );
 	}
 
 	public function addRight( $roleId ) {
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
-		$request	= $this->env->getRequest();
-		if( $request->getMethod() == 'POST' ){
-			$controller	= $request->getFromSource( 'controller', 'POST' );
-			$action		= $request->getFromSource( 'action', 'POST' );
+		$words		= $this->language->getWords( 'manage/role' );
+		if( $this->request->getMethod() == 'POST' ){
+			$controller	= $this->request->getFromSource( 'controller', 'POST' );
+			$action		= $this->request->getFromSource( 'action', 'POST' );
 			$data		= array(
 				'roleId'		=> $roleId,
 				'controller'	=> Model_Role_Right::minifyController( $controller ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
 			);
-			$modelRight	= new Model_Role_Right( $this->env );
-			$modelRight->add( $data );
+			$this->modelRoleRight->add( $data );
 		}
 		$this->restart( './manage/role/edit/'.$roleId );
 	}
 
 	public function ajaxChangeRight( $roleId, $controller, $action ){
-		if( $this->env->getRequest()->isAjax() ){
-			$modelRight	= new Model_Role_Right( $this->env );
+		if( $this->request->isAjax() ){
 			$indices	= array(
 				'roleId'		=> $roleId,
 				'controller'	=> Model_Role_Right::minifyController( $controller ),
 				'action'		=> $action
 			);
-			$right	= $modelRight->getByIndices( $indices );
+			$right	= $this->modelRoleRight->getByIndices( $indices );
 			if( $right )
-				$modelRight->remove( $right->roleRightId );
+				$this->modelRoleRight->remove( $right->roleRightId );
 			else{
 				$data	= array_merge( $indices, array( 'timestamp' => time() ) );
-				$modelRight->add( $data );
+				$this->modelRoleRight->add( $data );
 			}
 		}
-		$right	= $modelRight->getByIndices( $indices );
+		$right	= $this->modelRoleRight->getByIndices( $indices );
 		print( json_encode( (bool) $right ) );
 		exit;
 	}
-	
+
 	public function edit( $roleId = NULL ) {
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
 
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
-		$messenger	= $this->env->getMessenger();
+		$words		= $this->language->getWords( 'manage/role' );
 
-		$modelRole	= new Model_Role( $this->env );
-		$role		= $modelRole->get( $roleId );
+		$role		= $this->modelRole->get( $roleId );
 
-		if( $this->env->getRequest()->getMethod() == 'POST' )
+		if( $this->request->getMethod() == 'POST' )
 		{
-			$data		= $this->env->getRequest()->getAllFromSource( 'POST' )->getAll();
-			$modelRole->edit( $roleId, $data );
+			$data		= $this->request->getAllFromSource( 'POST' )->getAll();
+			$this->modelRole->edit( $roleId, $data );
 			$this->restart( './manage/role' );
 		}
-
-		$modelRight	= new Model_Role_Right( $this->env );
 		$orders		= array( 'controller' => 'ASC', 'action' => 'ASC' );
-		$this->addData( 'rights', $modelRight->getAllByIndex( 'roleId', $roleId, $orders ) );
+		$this->addData( 'rights', $this->modelRoleRight->getAllByIndex( 'roleId', $roleId, $orders ) );
 
 		$this->addData( 'roleId', $roleId );
 		$this->addData( 'role', $role );
 		$this->addData( 'words', $words );
+		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
 	}
 
 	public function index() {
-		$model	= new Model_Role( $this->env );
-		$roles	= $model->getAll();
+		$roles	= $this->modelRole->getAll();
 		foreach( $roles as $role ){
-			$model	= new Model_User( $this->env );
-			$role->users	= $model->getAllByIndex( 'roleId', $role->roleId );
+			$role->users	= $this->modelUser->getAllByIndex( 'roleId', $role->roleId );
 		}
 		$this->addData( 'roles', $roles );
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_role', 'add' ) );
@@ -124,36 +130,32 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 	}
 
 	public function remove( $roleId ) {
-		$words		= $this->env->getLanguage()->getWords( 'manage/role' );
-		$messenger	= $this->env->getMessenger();
+		$words		= $this->language->getWords( 'manage/role' );
+		$role		= $this->modelRole->get( $roleId );
 
-		$modelRole	= new Model_Role( $this->env );
-		$role		= $modelRole->get( $roleId );
-
-		$modelUser	= new Model_User( $this->env );
-		if( $modelUser->getByIndex( 'roleId', $roleId ) ){
-			$messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
+		if( $this->modelUser->getByIndex( 'roleId', $roleId ) ){
+			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
 			$this->restart( './manage/role/edit/'.$roleId );
 		}
 
-		$result		= $modelRole->remove( $roleId );
+		$result		= $this->modelRole->remove( $roleId );
 		if( $result ){
-			$messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
+			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
 			$this->restart( './manage/role' );
-		}else{
-			$messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
+		}
+		else{
+			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
 			$this->restart( './manage/role/edit/'.$roleId );
 		}
 	}
 
 	public function removeRight( $roleId, $controller, $action ){
-		$modelRight	= new Model_Role_Right( $this->env );
 		$indices	= array(
 			'roleId'		=> $roleId,
 			'controller'	=> Model_Role_Right::minifyController( $controller ),
 			'action'		=> $action
 		);
-		$modelRight->removeByIndices( $indices );
+		$this->modelRoleRight->removeByIndices( $indices );
 		$this->restart( './manage/role/edit/'.$roleId );
 	}
 }

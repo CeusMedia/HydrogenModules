@@ -15,10 +15,15 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		$max		= max( $numbers );
 		for( $i=0; $i<6; $i++ ){
 			$label		= $this->renderDayButtonLabel( $i, $numbers[$i], $max );
+			$class		= $numbers[$i] ? '' : 'empty-day';
 			$attributes	= array(
-				'href'		=> '#',
-				'onclick'	=> 'WorkMissions.showDayTable('.$i.', true, true); return false',
-				'class'		=> 'btn',
+				'href'				=> '#',
+				'onclick'			=> 'WorkMissions.showDayTable('.$i.', true, true); return false',
+				'class'				=> 'btn mission-day-control '.$class,
+				'id'				=> 'work-mission-day-control-'.$i,
+				'data-day-nr'		=> $i,
+				'data-items'		=> $numbers[$i],
+				'data-items-max'	=> $max,
 			);
 			$buttons[]	= UI_HTML_Tag::create( 'a', $label, $attributes );
 		}

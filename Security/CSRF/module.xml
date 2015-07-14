@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<module>
+	<title>Security: CSRF</title>
+	<description><![CDATA[Avoid Cross Site Request Forgery.
+
+This module provides a help against Cross Site Request Forgery.	
+The aim is to protect POST requests of HTML forms against double use or calls from a thirds.	
+Therefore you can use the helper to inject a token into form templates and check this token in controller action on form submit.
+
+Tokens will be:
+list>
+- stored in database after added to a form along with other information
+- marked as outdated after a given time
+- marked as replaced after a token for the same form has been injected
+- marked as used after token check in controller action has taken place
+- looked up in database on token check in controller action
+- only successful if unused and matching with session and IP
+<list
+Token data contains:
+list>
+- token itself
+- IP address on token generation
+- session ID on token generation
+- name of form where token has been used
+- timestamp
+<list
+**Attention: You will need to apply token generation and check for every form you want to secure.**
+]]></description>
+	<category>Security</category>
+	<version>0.2.7</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added check for outdated tokens.</log>
+	<log version="0.2.2">Added check for replaced tokens.</log>
+	<log version="0.2.3">Bound token to form name.</log>
+	<log version="0.2.4">Added language support (for DE and EN).</log>
+	<log version="0.2.4">Added check for used tokens.</log>
+	<log version="0.2.5">Return separate negative HTTP codes if token check fails.</log>
+	<log version="0.2.6">Made maximum token age configurable.</log>
+	<log version="0.2.7">Allow token to be generated and called using AJAX.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Csrf.php5</class>
+        <class>Logic/CSRF.php5</class>
+        <class>Model/CSRF/Token.php5</class>
+        <class>View/Helper/CSRF.php5</class>
+        <locale>de/csrf.ini</locale>
+        <locale>en/csrf.ini</locale>
+	</files>
+	<config protected="yes" type="integer" name="duration" title="Seconds before token gets invalid">300</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>csrf_tokens`;
+CREATE TABLE IF NOT EXISTS `dp_csrf_tokens` (
+  `tokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `sessionId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `formName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`tokenId`),
+  UNIQUE KEY `token` (`token`),
+  KEY `status` (`status`),
+  KEY `sessionId` (`sessionId`),
+  KEY `ip` (`ip`),
+  KEY `formName` (`formName`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE `<%?prefix%>csrf_tokens`;
+]]></sql>
+</module>

@@ -43,17 +43,21 @@ foreach( $facts as $nr => $fact )
 $facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
 
 return '
-<h4>Info: Konto</h4>
-<div class="row-fluid">
-	<div class="span12">
-		<dl>
-			<dt>Rolle</dt>
-			<dd><span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span></dd>
-			<dt>Status</dt>
-			<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
-		</dl>
-		<hr>
-		'.$facts.'
+<div class="content-panel">
+	<h4>Info: Konto</h4>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<div class="span12">
+				<dl>
+					<dt>Rolle</dt>
+					<dd><span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span></dd>
+					<dt>Status</dt>
+					<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
+				</dl>
+				<hr>
+				'.$facts.'
+			</div>
+		</div>
 	</div>
 </div>';
 ?>

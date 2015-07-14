@@ -1,0 +1,62 @@
+fieldset table {
+	margin: 0px;
+	}
+
+table {
+	border: 1px solid #BBB;
+	margin-top: 5px;
+	margin-bottom: 8px;
+	
+	}
+table tr {
+	}
+table th,
+table td {
+	font-size: 1em;
+/*	vertical-align: top;
+*/	}
+table tr th {
+	background: none;
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+	padding: 3px 4px 1px 4px;
+	font-size: 0.9em;
+	}
+table tr th.multiple {
+	background: none;
+	border-bottom: 1px dotted #CCC;
+	}
+table tr td {
+/*	padding: 2px 4px 2px 4px;*/
+/*	border-top: 1px solid rgba(127,127,127,0.25);*/
+	border-bottom: 1px solid rgba(127,127,127,0.25);
+	}
+table.striped tr:nth-child(2n) td{
+	background-color: #F3F3F3;
+	}
+table tr.even td {
+	background-color: #EEEEEE;
+	background-color: #FFF;
+	/* override blueprint typography setting */
+	background-repeat: no-repeat;
+	background-position: none;
+	}
+table tr.odd td {
+	background-color: #FFFFFF;
+	background-color: #F7F7F7;
+	}
+
+table button {
+	font-size: 0.8em;
+	}
+
+table tr.error td {
+	background-color: #FFBFAF;
+	}
+
+table tr.success td {
+	background-color: #9FFF8F;
+	}
+
+table tr.notice td {
+	background-color: #FFFFCC;
+	}

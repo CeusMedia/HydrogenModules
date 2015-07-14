@@ -60,104 +60,108 @@ if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
 }
 
 $panelEdit	= '
-<h4>'.$w->legend.'</h4>
-<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
-	<div class="row-fluid">
-		<div class="span2">
-			<label for="username" class="mandatory">'.$w->labelUsername.'</label>
-			<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
-		</div>
-		<div class="span2">
-			<label for="input_password" class="">'.$w->labelPassword.'</label>
-			<input type="password" name="password" id="input_password" class="span12"/>
-		</div>
-		<div class="span4">
-			<label for="email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
-			'.UI_HTML_Tag::create( 'input', NULL, array(
-				'type'		=> "text",
-				'name'		=> "email",
-				'id'		=> "input_email",
-				'class'		=> "span12 ".( $needsEmail ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
-				'required'	=> $needsEmail ? "required" : NULL
-			) ).'
-		</div>
-		<div class="span2">
-			<label for="status" class="mandatory">'.$w->labelStatus.'</label>
-			<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
-		</div>
-		<div class="span2">
-			<label for="roleId" class="mandatory">'.$w->labelRole.'</label>
-			<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span2">
-			<label for="input_gender" class="">'.$w->labelGender.'</label>
-			<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
-		</div>
-		<div class="span2">
-			<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
-			<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
-		</div>
-		<div class="span4">
-			<label for="input_firstname" class="'.( $needsFirstname ? 'mandatory' : '' ).'">'.$w->labelFirstname.'</label>
-			'.UI_HTML_Tag::create( 'input', NULL, array(
-				'type'		=> "text",
-				'name'		=> "firstname",
-				'id'		=> "input_firstname",
-				'class'		=> "span12 ".( $needsFirstname ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
-				'required'	=> $needsFirstname ? "required" : NULL
-			) ).'
-		</div>
-		<div class="span4">
-			<label for="input_surname" class="'.( $needsSurname ? 'mandatory' : '' ).'">'.$w->labelSurname.'</label>
-			'.UI_HTML_Tag::create( 'input', NULL, array(
-				'type'		=> "text",
-				'name'		=> "surname",
-				'id'		=> "input_surname",
-				'class'		=> "span12 ".( $needsSurname ? 'mandatory' : '' ),
-				'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
-				'required'	=> $needsSurname ? "required" : NULL
-			) ).'
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span1">
-			<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
-			<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
-		</div>
-		<div class="span5">
-			<label for="input_city" class="">'.$w->labelCity.'</label>
-			<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
-		</div>
-		<div class="span4">
-			<label for="input_street" class="">'.$w->labelStreet.'</label>
-			<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
-		</div>
-		<div class="span2">
-			<label for="input_number" class="">'.$w->labelNumber.'</label>
-			<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
-		</div>
-	</div>
+<div class="content-panel">
+	<h4>'.$w->legend.'</h4>
+	<div class="content-panel-inner">
+		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
+					<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="span2">
+					<label for="input_password" class="">'.$w->labelPassword.'</label>
+					<input type="password" name="password" id="input_password" class="span12"/>
+				</div>
+				<div class="span4">
+					<label for="input_email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> "text",
+						'name'		=> "email",
+						'id'		=> "input_email",
+						'class'		=> "span12 ".( $needsEmail ? 'mandatory' : '' ),
+						'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
+						'required'	=> $needsEmail ? "required" : NULL
+					) ).'
+				</div>
+				<div class="span2">
+					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
+					<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
+				</div>
+				<div class="span2">
+					<label for="input_roleId" class="mandatory">'.$w->labelRole.'</label>
+					<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_gender" class="">'.$w->labelGender.'</label>
+					<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
+				</div>
+				<div class="span2">
+					<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
+					<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
+				</div>
+				<div class="span4">
+					<label for="input_firstname" class="'.( $needsFirstname ? 'mandatory' : '' ).'">'.$w->labelFirstname.'</label>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> "text",
+						'name'		=> "firstname",
+						'id'		=> "input_firstname",
+						'class'		=> "span12 ".( $needsFirstname ? 'mandatory' : '' ),
+						'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
+						'required'	=> $needsFirstname ? "required" : NULL
+					) ).'
+				</div>
+				<div class="span4">
+					<label for="input_surname" class="'.( $needsSurname ? 'mandatory' : '' ).'">'.$w->labelSurname.'</label>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> "text",
+						'name'		=> "surname",
+						'id'		=> "input_surname",
+						'class'		=> "span12 ".( $needsSurname ? 'mandatory' : '' ),
+						'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
+						'required'	=> $needsSurname ? "required" : NULL
+					) ).'
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span1">
+					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
+					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
+				</div>
+				<div class="span5">
+					<label for="input_city" class="">'.$w->labelCity.'</label>
+					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
+				</div>
+				<div class="span4">
+					<label for="input_street" class="">'.$w->labelStreet.'</label>
+					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
+				</div>
+				<div class="span2">
+					<label for="input_number" class="">'.$w->labelNumber.'</label>
+					<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
+				</div>
+			</div>
 
-	<div class="row-fluid">
-		<div class="span12 buttonbar">
-			'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
-			'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
-			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton(
-				'./manage/user/remove/'.$userId,
-				'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
-				'btn btn-danger',
-				$w->buttonRemoveConfirm
-			).'
-			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.$buttonRole.'
-		</div>
+			<div class="row-fluid">
+				<div class="span12 buttonbar">
+					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
+					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+					&nbsp;&nbsp;|&nbsp;&nbsp;
+					'.UI_HTML_Elements::LinkButton(
+						'./manage/user/remove/'.$userId,
+						'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
+						'btn btn-danger',
+						$w->buttonRemoveConfirm
+					).'
+					&nbsp;&nbsp;|&nbsp;&nbsp;
+					'.$buttonRole.'
+				</div>
+			</div>
+		</form>
 	</div>
-</form><hr/>
+</div>
 ';
 
 
@@ -169,8 +173,11 @@ extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manag
 
 return $textIndexTop.'
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span9">
 		'.$panelEdit.'
+	</div>
+	<div class="span3">
+		'.$panelInfo.'
 	</div>
 </div>
 <div class="row-fluid">
@@ -182,7 +189,6 @@ return $textIndexTop.'
 		'.$panelRights.'
 	</div>
 	<div class="span3">
-		'.$panelInfo.'
 	</div>
 </div>
 '.$textIndexBottom;

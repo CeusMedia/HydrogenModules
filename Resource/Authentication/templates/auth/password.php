@@ -1,30 +1,48 @@
 <?php
 $w		= (object) $words['password'];
+
+$iconSend	= HTML::Icon( 'envelope', TRUE );
+
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password/' ) );
 
-return '
-'.$textTop.'
-<div class="content-panel content-panel-form">
-	<h3>'.$w->legend.'</h3>
-	<div class="content-panel-inner">
-		<div class="row-fluid">
-			<div class="span6">
-				<form action="./auth/password" method="post">
-					<div class="row-fluid">
-						<div class="span12">
-							<label for="input_password_email" class="mandatory">'.$w->labelEmail.'</label>
-							<input type="text" name="password_email" id="input_password_email" class="span12 -max mandatory" value="'.$request->get( 'password_email' ).'">
-						</div>
-					</div>
-					<div class="buttonbar">
-						<button type="submit" class="btn btn-primary" name="confirm"><i class="icon-envelope icon-white"></i> '.$w->buttonSend.'</button>
-					</div>
-				</form>
-			</div>
-			<div class="span6">
-				'.$textInfo.'
-			</div>
-		</div>
-	</div>
-</div>';
+return $textTop.
+HTML::DivClass( "row-fluid", array(
+	HTML::DivClass( "span6", array(
+		HTML::DivClass( "content-panel content-panel-form", array(
+			HTML::H3( $w->legend ),
+			HTML::DivClass( "content-panel-inner", array(
+				UI_HTML_Tag::create( 'form', array(
+					HTML::DivClass( "row-fluid", array(
+						HTML::DivClass( "span12", array(
+							UI_HTML_Tag::create( 'label', $w->labelEmail, array(
+								'for'	=> "input_password_email",
+								'class'	=> "mandatory"
+							) ),
+							UI_HTML_Tag::create( 'input', NULL, array(
+								'type'	=> "text",
+								'name'	=> "password_email",
+								'id'	=> "input_password_email",
+								'class'	=> "span12 mandatory",
+								'value'	=> htmlentities( $password_email, ENT_QUOTES, 'UTF-8' )
+							) )
+						) )
+					) ),
+					HTML::DivClass( "buttonbar", array(
+						UI_HTML_Tag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, array(
+							'type'	=> "submit",
+							'class'	=> "btn btn-primary",
+							'name'	=> "sendPassword"
+						) )
+					) )
+				), array(
+					'action'	=> "./auth/password",
+					'method'	=> "post",
+				) )
+			) ),
+		) )
+	) ),
+	HTML::DivClass( "span6", array(
+		$textInfo
+	) )
+) );
 ?>

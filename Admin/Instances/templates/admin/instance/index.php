@@ -25,8 +25,6 @@ function formatUrl( $url ){
 	return $scheme.$host.$path;
 }
 
-
-
 $rows	= array();
 foreach( $instances as $instanceId => $instance ){
 	$instance->host     = $instance->host === "localhost" ? $env->host . ( $env->port && $env->port != 80 ? ":".$env->port : "" ) : $instance->host;
@@ -45,13 +43,13 @@ foreach( $instances as $instanceId => $instance ){
 	) );
 	$cells	= array(
 		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'instance-label' ) ),
-		UI_HTML_Tag::create( 'td', $linkInstance.'<br/>'.$codeUri ),
+		UI_HTML_Tag::create( 'td', $linkInstance/*.'<br/>'.$codeUri*/ ),
 		UI_HTML_Tag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
 		UI_HTML_Tag::create( 'td', "", array( 'class' => 'status-todos' ) ),
 	);
 	$hasTodoTool	= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
 	$attributes		= array(
-		'class'				=> $uriExists ? 'notice' : 'error',
+		'class'				=> $uriExists ? '' : 'error',
 		'data-check'		=> $hasTodoTool,
 		'data-url'			=> $url,
 		'data-url-todos'	=> $url.'tools/Todos/',
@@ -68,14 +66,17 @@ $panelList	= '
 		'.join( $rows ).'
 	</table>
 	'.UI_HTML_Elements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
+	'.UI_HTML_Tag::create( 'button', 'check', array( 'class' => 'button', 'id' => 'button_check' ) ).'
 </fieldset>';
 
 return '
 <script>
 $(document).ready(function(){
-	labels = '.json_encode( $labelsStatusHttp ).';
-	ModuleAdminInstances.checkReachabilities(labels);
-	ModuleAdminInstances.loadTodos();
+	ModuleAdminInstancesIndex.labelsReachabilities = '.json_encode( $labelsStatusHttp ).';
+	$("#button_check").bind("click", function(){
+		ModuleAdminInstancesIndex.checkReachabilities();
+	//	ModuleAdminInstancesIndex.loadTodos();
+	});
 });
 </script>
 <div class="column-left-75">

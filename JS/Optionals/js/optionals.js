@@ -3,14 +3,16 @@ var FormOptionals = {
     init: function () {
         $("select.has-optionals").bind("change", FormOptionals.showOptionals);
         $("select").each(function () {
-           var name = $(this).attr("name");
-           if($(this).children("option").size()){
-               var first = $(this).children("option").eq(0).attr("value");
-               var key = name + "-" + first;
-               if($(this).closest("form").find(".optional."+key).size()){
-                   $(this).bind("change", FormOptionals.showOptionals);
-               }
-           }
+            var name = $(this).attr("name");
+            if ($(this).children("option").size()) {
+                var first = $(this).children("option").eq(0).attr("value");
+                if (first !== ".") {
+                    var key = name + "-" + first;
+                    if($(this).closest("form").find(".optional."+key).size()){
+                        $(this).bind("change", FormOptionals.showOptionals);
+                    }
+                }
+            }
         });
     },
     showOptionals: function (elem) {

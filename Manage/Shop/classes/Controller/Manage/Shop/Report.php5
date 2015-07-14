@@ -6,6 +6,13 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop{
 		$dbc	= $this->env->getDatabase();
 		$prefix	= $dbc->getPrefix();
 
+		$frontend	= Logic_Frontend::getInstance( $this->env );
+		$bridge		= new Logic_ShopBridge( $this->env );
+
+print_m( $bridge->getBridges() );
+die;
+
+
 		$queryOrdersPerYear	= "
 SELECT
 	FROM_UNIXTIME(o.createdAt, '%Y') as year,

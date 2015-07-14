@@ -1,18 +1,31 @@
 <?php
 class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 
+	protected $frontend;
+	protected $moduleConfig;
 	protected $path;
+	protected $model;
+	protected $rights;
 
 	public function __onInit(){
-		$config			= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
-		$this->path		= $config->get( 'frontend.path' ).$config->get( 'path.documents' );
-		if( !$this->path )
-			throw new RuntimeException( 'No document path set in module configuration' );
-#		$words			= $this->getWords( "exceptions", "manage/content/documents" );
-		if( !file_exists( $this->path ) || !is_dir( $this->path ) )
-			throw new RuntimeException( 'Documents folder "'.$this->path.'" is not existing' );
-		if( !is_writable( $this->path ) )
-			throw new RuntimeException( 'Documents folder "'.$this->path.'" is not writable' );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
+		$this->path			= $this->frontend->getPath().$this->moduleConfig->get( 'path.documents' );
+		$this->messenger	= $this->env->getMessenger();
+
+		$words				= (object) $this->getWords( 'msg' );
+		if( !$this->path ){
+			$this->messenger->noteFailure( $words->failureNoPathSet );
+			$this->restart();
+		}
+		if( !file_exists( $this->path ) || !is_dir( $this->path ) ){
+			$this->messenger->noteFailure( $words->failurePathNotExisting, $this->path );
+			$this->restart();
+		}
+		if( !is_writable( $this->path ) ){
+			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->path );
+			$this->restart();
+		}
 		$this->model	= new Model_Document( $this->env, $this->path );
 		$this->rights	= $this->env->getAcl()->index( 'manage/content/document' );
 		$this->addData( 'rights', $this->rights );
@@ -24,23 +37,32 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
-		$config			= $env->getConfig()->getAll( 'module.manage_content_documents.', TRUE );
-		$pathFront		= $config->get( 'frontend.path' );
-		$pathDocuments	= $config->get( 'path.documents' );
+		$frontend		= Logic_Frontend::getInstance( $env );
+		$moduleConfig	= $env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
+		$pathFront		= $frontend->getPath();
+		$pathDocuments	= $moduleConfig->get( 'path.documents' );
 
 		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
 
 		$list			= array();
-		$model			= new Model_Document( $env, $pathFront.$pathDocuments );
-		foreach( $model->index() as $nr => $entry ){
-			$list[$entry.$nr]	= (object) array(
-				'title'	=> $prefixes->document.$entry,
-				'url'	=> $pathDocuments.$entry,
-			);
+		if( file_exists( $pathFront ) && is_dir( $pathFront ) ){
+			$model			= new Model_Document( $env, $pathFront.$pathDocuments );
+			foreach( $model->index() as $nr => $entry ){
+				$list[$entry.$nr]	= (object) array(
+					'title'	=> /*$prefixes->document.*/$entry,
+					'value'	=> $pathDocuments.$entry,
+				);
+			}
 		}
 		ksort( $list );
-		$context->list	= array_merge( $context->list, array_values( $list ) );
+		$list	= array( (object) array(
+			'title'	=> $prefixes->document,
+			'menu'	=> array_values( $list ),
+		) );
+
+//		$context->list	= array_merge( $context->list, array_values( $list ) );
+		$context->list	= array_merge( $context->list, $list );
 	}
 
 	public function add(){
@@ -49,6 +71,7 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
+			$words	= (object) $this->getWords( 'msg' );
 			$upload	= (object) $request->get( 'upload' );
 			if( $request->get( 'filename' ) )
 				$upload->name	= $request->get( 'filename' );
@@ -59,9 +82,9 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 			}
 			else{
 				if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
-					$messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
+					$messenger->noteFailure( $words->errorUploadFailed );
 				else
-					$messenger->noteSuccess( 'Datei wurde hochgeladen und als "%s" abgelegt.', $upload->name );
+					$messenger->noteSuccess( $words->successDocumentUploaded, $upload->name );
 			}
 		}
 		$this->restart( NULL, TRUE );
@@ -70,10 +93,9 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	public function index(){
 		if( !in_array( 'index', $this->rights ) )
 			$this->restart();
-		$config		= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
-		$this->addData( 'frontendPath', $config->get( 'frontend.path' ) );
-		$this->addData( 'frontendUrl', $config->get( 'frontend.url' ) );
-		$this->addData( 'pathDocuments', $config->get( 'path.documents' ) );
+		$this->addData( 'frontendPath', $this->frontend->getPath() );
+		$this->addData( 'frontendUrl', $this->frontend->getUri() );
+		$this->addData( 'pathDocuments', $this->moduleConfig->get( 'path.documents' ) );
 		$this->addData( 'documents', $this->model->index() );
 	}
 
