@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.3.4</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -10,6 +10,9 @@
 	<log version="0.3.2">Fixed bug in tab system.</log>
 	<log version="0.3.3">Extracted tabs navigation to new Hydrogen module UI:Navigation:Bootstrap:Tabs.</log>
 	<log version="0.3.4">Fixed link access.</log>
+	<log version="0.3.5">Added english locale.</log>
+	<log version="0.3.6">Updated button colors.</log>
+	<log version="0.3.7">Added HTML blocks.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -21,13 +24,19 @@
 		<template>manage/my/user/index.info.php</template>
 		<template>manage/my/user/index.password.php</template>
 		<locale>de/manage/my/user.ini</locale>
+		<locale>de/html/manage/my/user/bottom.html</locale>
+		<locale>de/html/manage/my/user/top.html</locale>
+		<locale>en/manage/my/user.ini</locale>
+		<locale>en/html/manage/my/user/bottom.html</locale>
+		<locale>en/html/manage/my/user/top.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
-	<link path="manage/my/user/index" access="inside" xml:lang="de">Mein Konto</link>
-	<link path="manage/my/user/index" access="inside" xml:lang="en">My account</link>
+	<link xml:lang="de" rank="92" access="inside" path="manage/my/user/index">Mein Konto</link>
+	<link xml:lang="en" rank="92" access="inside" path="manage/my/user/index">My account</link>
 	<link path="manage/my/user/password" access="inside"></link>
+	<link path="manage/my/user/edit" access="inside"></link>
 	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User::___onRegisterTab</hook>
 </module>

@@ -13,14 +13,14 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
 
 		$helperFacts	= $this->collectFacts( $project );
 
-       //  --  RELATED ITEMS  --  //
-        $relations      = '';
-        $helperRelations    = new View_Helper_ItemRelationLister( $this->env );
-        $helperRelations->callForRelations( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
-        if( $helperRelations->hasRelations() ){
-            $relations  = $helperRelations->renderRelations();
-            $relations  = UI_HTML_Tag::create( 'h4', $w->headingRelations ).$relations;
-        }
+		//  --  RELATED ITEMS  --  //
+		$relations			= '';
+		$helperRelations	= new View_Helper_ItemRelationLister( $this->env );
+		$helperRelations->callForRelations( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+		if( $helperRelations->hasRelations() ){
+			$relations	= $helperRelations->renderRelations();
+			$relations	= UI_HTML_Tag::create( 'h4', $w->headingRelations ).$relations;
+		}
 
 		//  --  FORMAT: PLAIN TEXT  --  //
 		$helperText	= new View_Helper_Mail_Text( $this->env );

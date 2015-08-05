@@ -128,7 +128,7 @@ $panelEdit	= '
 							HTML::SpanClass( 'add-on', '<i class="icon-lock"></i>' ).
 							'<input type="password" name="password" id="input_password" class="span7" required placeholder="'.$w->labelPassword.'" value="" autocomplete="off"/>'.
 		//					HTML::Password( 'password', 'span11 mandatory' )
-							UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' )
+							UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					)
 				)
@@ -139,9 +139,8 @@ $panelEdit	= '
 </div>';
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
-//$tabs	= $view->renderTabs();
 
-return $tabs.HTML::DivClass( 'row-fluid', 
+return $tabs.HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		$panelEdit
 	).

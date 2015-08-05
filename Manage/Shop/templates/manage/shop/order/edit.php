@@ -210,7 +210,7 @@ $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBo
 $linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
 #$linkBack	= new CMM_Bootstrap_LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );
 
-$tabs		= View_Manage_Shop::renderTabs( $env );
+$tabs		= View_Manage_Shop::renderTabs( $env, 'order' );
 
 return $tabs.'
 <style>

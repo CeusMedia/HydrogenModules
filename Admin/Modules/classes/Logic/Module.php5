@@ -152,14 +152,64 @@ class Logic_Module {
 		return $this->model->getCategories();
 	}
 
+	public function getDatabaseScripts( $moduleId, $versionStart = NULL, $versionTarget = NULL ){
+		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
+			return;
+		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
+			return;
+		$list			= array();
+		$module			= $this->model->get( $moduleId );
+		$moduleSource	= $this->model->getFromSource( $moduleId );
+		$versionStart	= $versionStart ? $versionStart : $module->versionInstalled;
+		$versionTarget	= $versionTarget ? $versionTarget : $module->versionAvailable;
+		if( !$versionStart ){
+			if( isset( $moduleSource->sql['install@'.$driver] ) ){										//  SQL for installation for specific PDO driver is given
+				$versionStart	= $this->version( $moduleSource->versionAvailable );
+				if( $moduleSource->sql['install@'.$driver]->version )
+					$versionStart	= $this->version( $moduleSource->sql['install@'.$driver]->version );
+				$list[]	= $moduleSource->sql['install@'.$driver];
+			}
+			else if( isset( $moduleSource->sql['install@*'] ) ){											//  fallback: general SQL for installation is available
+				$versionStart	= $this->version( $moduleSource->versionAvailable );
+				if( $moduleSource->sql['install@'.$driver]->version )
+					$versionStart	=  $this->version($moduleSource->sql['install@'.$driver]->version );
+				$list[]	= $moduleSource->sql['install@*'];
+			}
+		}
+		foreach( $moduleSource->sql as $key => $sql ){													//  iterate module SQL parts
+			if( $sql->event === "update" ){															//  found update
+				$versionStep	= $this->version( $sql->version );									//  target version of sql part
+				if( version_compare( $versionStep, $versionStart, '>' ) ){							//  sql part is newer than current version
+					if( version_compare( $versionStep, $versionTarget, '<=' ) ){					//  sql part is older or related to new version
+						$key	= 'update_'.$versionStart.'_'.$versionStep;							//  generate version key for list
+						if( $sql->type == $driver ){												//  update SQL is for instance database driver
+							$list[$key]	= (object) array(											//  enlist SQL to execute
+								'type'		=> $driver,
+								'event'		=> 'update',
+								'version'	=> $versionStep,
+								'sql'		=> trim( $sql->sql )
+							);
+						}
+						else if( $sql->type === '*' && !isset( $list[$key] ) ){						//  update SQL is general and no master entry available
+							$list[$key]	= (object) array(											//  enlist SQL to execute
+								'type'		=> '*',
+								'event'		=> 'update',
+								'version'	=> $versionStep,
+								'sql'		=> trim( $sql->sql )
+							);
+						}
+						$versionStart	= $versionStep;
+					}
+				}
+			}
+		}
+		return $list;
+	}
+
 	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Module( $env );
 		return self::$instance;
-	}
-
-	public function getModule( $moduleId ){
-		return $this->model->get( $moduleId );
 	}
 
 	public function getLocalFileTypePath( CMF_Hydrogen_Environment_Remote $env, $fileType, $file ){
@@ -197,23 +247,8 @@ class Logic_Module {
 		}
 	}
 
-	public function getSourceFileTypePath( $fileType, $file ){
-		switch( $fileType ){
-			case 'class':
-				return 'classes/'.$file->file;
-			case 'locale':
-				return 'locales/'.$file->file;
-			case 'script':
-				return 'js/'.$file->file;
-			case 'template':
-				return 'templates/'.$file->file;
-			case 'style':
-				return 'css/'.$file->file;
-			case 'image':
-				return 'img/'.$file->file;
-			default:
-				return $file->file;
-		}
+	public function getModule( $moduleId ){
+		return $this->model->get( $moduleId );
 	}
 
 	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
@@ -244,6 +279,25 @@ class Logic_Module {
 
 	public function getModulePath( $moduleId ){
 		return $this->model->getPath( $moduleId );
+	}
+
+	public function getSourceFileTypePath( $fileType, $file ){
+		switch( $fileType ){
+			case 'class':
+				return 'classes/'.$file->file;
+			case 'locale':
+				return 'locales/'.$file->file;
+			case 'script':
+				return 'js/'.$file->file;
+			case 'template':
+				return 'templates/'.$file->file;
+			case 'style':
+				return 'css/'.$file->file;
+			case 'image':
+				return 'img/'.$file->file;
+			default:
+				return $file->file;
+		}
 	}
 
 	public function getSourceFromModuleId( $moduleId ){
@@ -415,60 +469,6 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function getDatabaseScripts( $moduleId, $versionStart = NULL, $versionTarget = NULL ){
-		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
-			return;
-		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
-			return;
-		$list			= array();
-		$module			= $this->model->get( $moduleId );
-		$moduleSource	= $this->model->getFromSource( $moduleId );
-		$versionStart	= $versionStart ? $versionStart : $module->versionInstalled;
-		$versionTarget	= $versionTarget ? $versionTarget : $module->versionAvailable;
-		if( !$versionStart ){
-			if( isset( $moduleSource->sql['install@'.$driver] ) ){										//  SQL for installation for specific PDO driver is given
-				$versionStart	= $this->version( $moduleSource->versionAvailable );
-				if( $moduleSource->sql['install@'.$driver]->version )
-					$versionStart	= $this->version( $moduleSource->sql['install@'.$driver]->version );
-				$list[]	= $moduleSource->sql['install@'.$driver];
-			}
-			else if( isset( $moduleSource->sql['install@*'] ) ){											//  fallback: general SQL for installation is available
-				$versionStart	= $this->version( $moduleSource->versionAvailable );
-				if( $moduleSource->sql['install@'.$driver]->version )
-					$versionStart	=  $this->version($moduleSource->sql['install@'.$driver]->version );
-				$list[]	= $moduleSource->sql['install@*'];
-			}
-		}
-		foreach( $moduleSource->sql as $key => $sql ){													//  iterate module SQL parts
-			if( $sql->event === "update" ){															//  found update
-				$versionStep	= $this->version( $sql->version );									//  target version of sql part
-				if( version_compare( $versionStep, $versionStart, '>' ) ){							//  sql part is newer than current version
-					if( version_compare( $versionStep, $versionTarget, '<=' ) ){					//  sql part is older or related to new version
-						$key	= 'update_'.$versionStart.'_'.$versionStep;							//  generate version key for list
-						if( $sql->type == $driver ){												//  update SQL is for instance database driver
-							$list[$key]	= (object) array(											//  enlist SQL to execute
-								'type'		=> $driver,
-								'event'		=> 'update',
-								'version'	=> $versionStep,
-								'sql'		=> trim( $sql->sql )
-							);
-						}
-						else if( $sql->type === '*' && !isset( $list[$key] ) ){						//  update SQL is general and no master entry available
-							$list[$key]	= (object) array(											//  enlist SQL to execute
-								'type'		=> '*',
-								'event'		=> 'update',
-								'version'	=> $versionStep,
-								'sql'		=> trim( $sql->sql )
-							);
-						}
-						$versionStart	= $versionStep;
-					}
-				}
-			}
-		}
-		return $list;
-	}
-
 	protected function installModuleDatabase( $moduleId ){
 		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
 			$this->executeSql( $step->sql );																//  execute SQL
@@ -566,6 +566,12 @@ class Logic_Module {
 		return $exceptions;
 	}
 
+	protected function updateModuleDatabase( $moduleId, $verbose = TRUE ){
+		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
+			$this->executeSql( $step->sql );														//  execute SQL
+		}
+	}
+
 	protected function updateModuleFiles( $moduleId, $installType = 0, $files = array(), $verbose = TRUE ){
 		$module		= $this->model->getFromSource( $moduleId );
 		$pathApp	= $this->env->getRemote()->path;
@@ -624,10 +630,17 @@ class Logic_Module {
 		return $exceptions;
 	}
 
-	protected function updateModuleDatabase( $moduleId, $verbose = TRUE ){
-		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
-			$this->executeSql( $step->sql );														//  execute SQL
+	public function uninstallModule( $moduleId, $database = TRUE, $verbose = TRUE ){
+		try{
+			if( $database )
+				$this->uninstallModuleDatabase( $moduleId, $verbose );
+			$this->uninstallModuleFiles( $moduleId, $verbose );
+			return TRUE;
 		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( 'Failed: '.$e->getMessage() );
+		}
+		return FALSE;
 	}
 
 	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){
@@ -686,19 +699,6 @@ class Logic_Module {
 			}
 		}
 		return array( $files, $folders );
-	}
-
-	public function uninstallModule( $moduleId, $database = TRUE, $verbose = TRUE ){
-		try{
-			if( $database )
-				$this->uninstallModuleDatabase( $moduleId, $verbose );
-			$this->uninstallModuleFiles( $moduleId, $verbose );
-			return TRUE;
-		}
-		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Failed: '.$e->getMessage() );
-		}
-		return FALSE;
 	}
 
 	protected function version( $version ){
@@ -800,34 +800,6 @@ class Logic_Module {
 		}
 		return $list;
 	}
-/*
-	public function listModulesMissing( $instanceId ){
-//projects_luv_migration
-		$remote		= $this->env->getRemote();
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
-		$list		= array();
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
-			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
-			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
-
-			foreach( $modulesInstalled as $module ){
-				foreach( $module->relations->needs as $need )
-					if( !array_key_exists( $need, $modulesInstalled ) )
-						$listModulesMissing[]	= $need;
-				foreach( $module->relations->supports as $support )
-					if( !array_key_exists( $support, $modulesInstalled ) )
-						$listModulesPossible[]	= $support;
-			}
-			foreach( $modulesInstalled as $module )
-				if( $module->versionInstalled && $module->versionAvailable )
-					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
-						$listModulesUpdate[]	= $module;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
-		}
-		return $list;
-	}*/
 
 	public function listSources( $activeOnly = FALSE ){
 		$list	= array();

@@ -2,14 +2,14 @@
 
 $imageThumbnailUri	= $helperThumbnailer->get( $pathImages.$imagePath );
 
-extract( $view->populateTexts( array( 'edit.image.right' ), 'html/manage/content/image/' ) );
-
 $panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $panelFacts		= $view->loadTemplateFile( 'manage/content/image/editImage.facts.php' );
 $panelMove		= $view->loadTemplateFile( 'manage/content/image/editImage.move.php' );
 $panelScale		= $view->loadTemplateFile( 'manage/content/image/editImage.scale.php' );
 
-return '
+extract( $view->populateTexts( array( 'top', 'bottom', 'edit.image.right' ), 'html/manage/content/image/' ) );
+
+return $textTop.'
 <div class="row-fluid">
 	<div class="span3">
 		'.$panelFolders.'
@@ -29,5 +29,6 @@ return '
 	<div class="span2">
 		'.$textEditImageRight.'
 	</div>
-</div>';
+</div>
+'.$textBottom;
 ?>

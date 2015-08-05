@@ -59,7 +59,7 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = array() ){
+	public function getAllInDistance( $x, $y, $z, $distance ){
 		$query		= 'SELECT *
 		FROM branches as b
 		WHERE
@@ -67,18 +67,7 @@ die( $e->getMessage() );
 			+ POWER(' . $y .' - b.y, 2)
 			+ POWER(' . $z .' - b.z, 2)
 		<= ' . pow( $distance, 2 );
-		if( $havingIds )
-			$query	.= " AND branchId IN(".join( ", ", $havingIds ).")";
-//xmp( $query );die;
-		$list	= array();
-		foreach( $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $branch ){
-			$powX	= pow( $x - $branch->x, 2);
-			$powY	= pow( $y - $branch->y, 2);
-			$powZ	= pow( $z - $branch->z, 2);
-			$branch->distance	= sqrt( $powX + $powY + $powZ );
-			$list[]	= $branch;
-		}
-		return $list;
+		return $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ );
 	}
 }
 ?>

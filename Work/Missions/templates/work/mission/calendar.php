@@ -36,6 +36,8 @@ $content	= '
 $script	= '
 <script>
 $(document).ready(function(){
+//alert('.(int) $env->getSession()->get( 'userId' ).');
+	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'userId' ).';
 	WorkMissionsCalendar.year = '.$year.';
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();

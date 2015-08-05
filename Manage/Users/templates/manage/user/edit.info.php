@@ -1,5 +1,7 @@
  <?php
 
+$w  = (object) $words['editInfo'];
+
 $roleMap	= array();
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
@@ -7,21 +9,21 @@ foreach( $roles as $role )
 $facts		= array();
 $helper		= new View_Helper_TimePhraser( $env );
 $facts[]	= array(
-	'label'	=> 'registriert',
-	'value'	=> 'vor '.$helper->convert( $user->createdAt, TRUE )
+	'label'	=> $w->labelRegisteredAt,
+	'value'	=> $helper->convert( $user->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 );
 if( $user->loggedAt ){
 	$loggedAt	= $helper->convert( $user->loggedAt );
 	$facts[]	= array(
-		'label'	=> 'zuletzt eingeloggt',
-		'value'	=> 'vor '.$helper->convert( $user->loggedAt, TRUE )
+		'label'	=> $w->labelLoggedAt,
+		'value'	=> $helper->convert( $user->loggedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 	);
 }
 if( $user->activeAt ){
 	$activeAt	= $helper->convert( $user->activeAt );
 	$facts[]	= array(
-		'label'	=> 'zuletzt aktiv',
-		'value'	=> 'vor '.$helper->convert( $user->activeAt, TRUE )
+		'label'	=> $w->labelActiveAt,
+		'value'	=> $helper->convert( $user->activeAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 	);
 }
 if( !empty( $projects ) ){
@@ -44,14 +46,14 @@ $facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
 
 return '
 <div class="content-panel">
-	<h4>Info: Konto</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span12">
 				<dl>
-					<dt>Rolle</dt>
+					<dt>'.$w->labelRole.'</dt>
 					<dd><span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span></dd>
-					<dt>Status</dt>
+					<dt>'.$w->labelStatus.'</dt>
 					<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
 				</dl>
 				<hr>

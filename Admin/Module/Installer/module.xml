@@ -17,7 +17,7 @@ list>
 <list
 ]]></description>
 	<category>Administration</category>
-	<version>0.3.9</version>
+	<version>0.3.15</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished installation process with copying and linking.</log>
@@ -30,12 +30,20 @@ list>
 	<log version="0.3.7">Added screen for uninstallation.</log> 
 	<log version="0.3.8">Check file permissions before update and show problems.</log>
 	<log version="0.3.9">Fixed listing of refered sources.</log>
+	<log version="0.3.10">Rework SQL script collecting on install and update.</log>
+	<log version="0.3.11">Show configuration key titles on update.</log>
+	<log version="0.3.12">Added view helper for SQL scripts on install and update.</log>
+    <log version="0.3.13">Added view helper for files on install and update.</log>
+	<log version="0.3.14">Extracted styles from templates to new CSS file.</log>
+	<log version="0.3.15">Extracted scripts from templates to JS file.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Module/Installer.php5</class>
 		<class>View/Admin/Module/Installer.php5</class>
+		<class>View/Helper/Module/Files.php5</class>
+		<class>View/Helper/Module/SqlScripts.php5</class>
 		<locale>de/admin/module/installer.ini</locale>
 		<locale>en/admin/module/installer.ini</locale>
 		<template>admin/module/installer/index.php</template>
@@ -47,7 +55,8 @@ list>
 		<template>admin/module/installer/update.info.php</template>
 		<template>admin/module/installer/view.php</template>
 		<script>module.admin.module.installer.js</script>
-		<style source="theme">php-diff.css</style>
+		<style source="theme" load="auto">php-diff.css</style>
+		<style source="theme" load="auto">module.admin.module.installer.css</style>
 	</files>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>

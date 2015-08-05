@@ -95,6 +95,10 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelCustomer->get( $customerId );
 	}
 
+	public function getCustomers( $conditions = array(), $orders = array(), $limits = array() ){
+		return $this->modelCustomer->getAll( $conditions, $orders, $limits );
+	}
+
 	public function getOrder( $orderId, $extended = FALSE ){
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){

@@ -42,7 +42,10 @@ class Resource_SqliteCache{
 	}
 
 	public function set( $id, $data ){
-		$this->db->query( "INSERT INTO store VALUES ('".$id."', '".addslashes( $data )."');" );
+		$q	= $this->db->query( "INSERT INTO store VALUES ('".$id."', '".addslashes( $data )."');" );
+		print_m( $q->fetch() );
+		print_m( $this->db->errorInfo() );
+		die;
 	}
 }
 ?>

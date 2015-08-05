@@ -4,21 +4,21 @@ $w				= (object) $words['index'];
 $indicator		= new UI_HTML_Indicator();
 $helperTime		= new View_Helper_TimePhraser( $env );
 
-$pagination	= "";
-if( $filterLimit && $total > $filterLimit ){
-	$uri		= './manage/project';
-	$helperPage	= new View_Helper_Pagination( $options );
-	$pagination	= $helperPage->render( $uri, $total, $filterLimit, $page );
-//xmp( $helperPage->renderNumbers( $total, count( $projects ), $filterLimit, $page ) );die;
-}
+$iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-star' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
+	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-star' ) );
+
+$pagination		= new CMM_Bootstrap_PageControl( './manage/project', $page, ceil( $total / $filterLimit ), array( 'shortenFirst' => FALSE ) );
+$pagination		= $pagination->render();
 
 $list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
 if( $projects ){
 	$rows		= array();
 	foreach( $projects as $project ){
 		$cells		= array();
-		$url		= './manage/project/edit/'.$project->projectId;
-		$link		= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url ) );
+		$url		= './manage/project/view/'.$project->projectId;
+		$label		= $project->title.( $project->isDefault ? '&nbsp;'.$iconDefault : '' );
+		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 		$users		= array();
 		foreach( $project->users as $projectUser )
 			$users[]	= $projectUser->username;
@@ -51,14 +51,14 @@ if( $projects ){
 }
 
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-plus icon-white" ) );
-$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
+$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary btn-small' );
 $buttonAddSmall	= UI_HTML_Tag::create( 'a', $iconAdd, array(
 	'href'	=> './manage/project/add',
 	'class'	=> 'btn btn-small btn-primary btn-mini',
 ) );
 
 if( !$canAdd ){
-	$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-primary disabled', NULL, TRUE );
+	$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-primary btn-small disabled', NULL, TRUE );
 	$nuttonAddSmall	= "";
 }
 
@@ -68,13 +68,8 @@ return '
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
-			<div class="pull-right">
-				'.$pagination.'
-			</div>
-			<div class="pull-left">
-				'.$buttonAdd.'
-			</div>
-			<div style="clear: both"></div>
+			'.$pagination.'
+			'.$buttonAdd.'
 		</div>
 	</div>
 </div>';

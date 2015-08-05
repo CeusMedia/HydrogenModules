@@ -9,7 +9,7 @@ return $textTop.
 HTML::DivClass( "row-fluid", array(
 	HTML::DivClass( "span6", array(
 		HTML::DivClass( "content-panel content-panel-form", array(
-			HTML::H3( $w->legend ),
+			HTML::H3( $w->heading ),
 			HTML::DivClass( "content-panel-inner", array(
 				UI_HTML_Tag::create( 'form', array(
 					HTML::DivClass( "row-fluid", array(

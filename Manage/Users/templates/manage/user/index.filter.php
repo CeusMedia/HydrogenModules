@@ -42,7 +42,7 @@ $env->page->js->addScript( $script );
 
 return '
 <div class="content-panel">
-	<h4>'.$words['indexFilter']['legend'].'</h4>
+	<h3>'.$words['indexFilter']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form id="form_filter-users" name="filterUsers" action="./manage/user/filter" method="post">
 			<div class="row-fluid">
@@ -90,7 +90,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<div class="buttonbar">
-						'.UI_HTML_Elements::Button( 'filter', '<i class="icon-zoom-in icon-white"></i> '.$words['indexFilter']['buttonFilter'], 'btn btn-small btn-info' ).'
+						'.UI_HTML_Elements::Button( 'filter', '<i class="icon-zoom-in icon-white"></i> '.$words['indexFilter']['buttonFilter'], 'btn btn-small not-btn-info btn-primary' ).'
 						'.UI_HTML_Elements::LinkButton( './manage/user/filter/reset', '<i class="icon-zoom-out"></i> '.$words['indexFilter']['buttonReset'], 'btn btn-small ' ).'
 					</div>
 				</div>

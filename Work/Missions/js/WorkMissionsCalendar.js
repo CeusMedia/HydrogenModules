@@ -4,10 +4,30 @@ var WorkMissionsCalendar = {
 	monthCurrent: 0,
 	monthShow: 0,
 	pathIcons: "http://img.int1a.net/famfamfam/silk/",
+	userId: 0,
+
+	checkForUpdate: function(){
+		$.ajax({
+			url: "./work/mission/checkForUpdate/"+WorkMissionsCalendar.userId,
+			dataType: "json",
+			success: function(json){
+				if(!json)
+					return;
+				$.ajax({
+					url: "work/mission/ajaxRenderIndex",
+					dataType: "json",
+					success: function(json){
+						WorkMissionsList.renderDayListDayControls(json);
+					}
+				});
+			}
+		});
+	},
 
 	init: function(){
 		$("#work-mission-view-type-0").removeAttr("disabled");
 		$("#work-mission-view-type-0").click(function(){WorkMissions.changeView(0);});
+//		setInterval(WorkMissionsCalendar.checkForUpdate, 10000);
 	},
 
 	initContextMenu: function(){

@@ -33,7 +33,8 @@ if( $hasUpdate && count( $configKeys ) ){
 
 		$name	= 'config['.$item->key.']';
 		$class	= ( $item->mandatory && $item->mandatory === "yes" ) ? " mandatory" : "";
-		$label	= UI_HTML_Tag::create( 'label', $key, array( 'class' => $class, 'for' => 'input_'.$name ) );
+		$label	= $itemNew->title ? UI_HTML_Tag::create( 'abbr', $key, array( 'title' => $itemNew->title ) ) : $key;
+		$label	= UI_HTML_Tag::create( 'label', $label, array( 'class' => $class, 'for' => 'input_'.$name ) );
 		$id		= str_replace( '.', '_', $key );
 		$cells	= array(
 			UI_HTML_Tag::create( 'td', $label, array() ),

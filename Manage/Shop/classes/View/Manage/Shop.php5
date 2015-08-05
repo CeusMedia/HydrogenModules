@@ -1,7 +1,8 @@
 <?php
 class View_Manage_Shop extends CMF_Hydrogen_View{
 
-	public function index(){}
+	public function index(){
+	}
 
 	public static function ___onRegisterTab( $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/shop' );									//  load words

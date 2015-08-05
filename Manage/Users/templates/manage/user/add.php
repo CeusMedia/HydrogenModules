@@ -37,13 +37,13 @@ $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
 $panelAdd	= '
 <div class="content-panel">
-	<h4>'.$w->legend.'</h4>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/add" method="post">
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
-					<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'" autocomplete="off"/>
+					<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.$user->username.'" autocomplete="off" required="required"/>
 				</div>
 				<div class="span2">
 					<label for="input_password" class="mandatory">'.$w->labelPassword.'</label>
@@ -100,8 +100,8 @@ $panelAdd	= '
 			</div>
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
+					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
 				</div>
 			</div>
 		</form>

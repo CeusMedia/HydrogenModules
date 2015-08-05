@@ -56,48 +56,5 @@ return '
 <div class="column-clear" id="panel-dev-modules">
 	'.$panelDev.'
 </div>
-<script>
-$(document).ready(function(){
-	AdminModuleUpdater.init();
-});
-</script>
-<style>
-dl.general > dt{
-	clear: left;
-	float: left;
-	width: 110px;
-	}
-dl.general > dd{
-	float: left;
-	}
-
-
-//table.module-update-files tr.status-missing {background-color: #FFBFBF}
-//table.module-update-files tr.status-inaccessible {background-color: #DF9F9F}
-//table.module-update-files tr.status-protected {background-color: #DF9F9F}
-table.module-update-files tr.status-new {background-color: #DFFFDF}
-table.module-update-files tr.status-installed {background-color: #FFFFDF; opacity: 0.75}
-table.module-update-files tr.status-changed {background-color: #FFDFDF}
-table.module-update-files tr.status-linked {background-color: #EFEFEF; opacity: 0.75}
-table.module-update-files tr.status-foreign {background-color: #DFDFFF}
-table.module-update-files tr.status-refered {background-color: #DFDFFF; opacity: 0.75}
-
-
-table.module-update-files tr.status-missing td,
-table.module-update-files tr.status-inaccessible td,
-table.module-update-files tr.status-protected td {
-	background-color: #FF7F7F;
-	color: black;
-	}
-
-
-#panel-dev-modules {
-	opacity: 0.5;
-	}
-#panel-dev-modules:hover {
-	opacity: 1;
-	}
-
-</style>
 <div class="column-clear"></div>';
 ?>

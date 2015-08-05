@@ -15,6 +15,7 @@
 	<log version="0.4.2">Extended master template by support for navigation helper for pages.</log>
 	<log version="0.4.3">Updated master template to get brand from main locale.</log>
 	<log version="0.4.4">Load index template by convention.</log>
+	<log version="0.4.5">load index HTML files by arguments.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

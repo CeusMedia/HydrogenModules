@@ -9,6 +9,7 @@
 	<log version="0.2.1">Minor fixes.</log>
 	<log version="0.2.2">Changed ACL right key for controllers.</log>
 	<log version="0.2.3">Updated visibility of configuration pairs.</log>
+	<log version="0.2.4">Fix username regular expression.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -24,7 +25,7 @@
 	<config protected="yes" type="integer" name="status.register" title="user status to be set on register, set to 1 for 'auto active'">0</config>
 	<config protected="no" type="integer" name="name.length.min" title="lowest number of name characters">3</config>
 	<config protected="no" type="integer" name="name.length.max" title="highest number of name characters">17</config>
-	<config protected="no" type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]/i</config>
+	<config protected="no" type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]*/i</config>
 	<config protected="no" type="integer" name="password.length.min" title="lowest number of password characters">3</config>
 	<config protected="no" type="integer" name="password.strength.min" title="highest number of password characters">0</config>
 	<config protected="yes" type="string" name="password.salt" title="string to salt password with"></config>

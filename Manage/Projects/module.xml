@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.20</version>
+	<version>0.3.25</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -27,6 +27,11 @@
 	<log version="0.3.18">Developed mail classes.</log>
 	<log version="0.3.19">Added creator in database table.</log>
 	<log version="0.3.20">Added status in project user relation.</log>
+	<log version="0.3.21">Use CMM_Bootstrap_PageControl for pagination.</log>
+	<log version="0.3.22">Extend by default project flag for users.</log>
+	<log version="0.3.23">Add view for setting default project.</log>
+	<log version="0.3.24">Force to set default project if none set.</log>
+	<log version="0.3.25">Add project view.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -43,12 +48,15 @@
 		<class>Model/Project/User.php5</class>
 		<class>View/Manage/Project.php5</class>
 		<template>manage/project/add.php</template>
+		<template>manage/project/default.php</template>
 		<template>manage/project/edit.php</template>
 		<template>manage/project/edit.info.php</template>
 		<template>manage/project/edit.users.php</template>
 		<template>manage/project/index.php</template>
 		<template>manage/project/index.filter.php</template>
 		<template>manage/project/index.list.php</template>
+		<template>manage/project/setDefault.php</template>
+		<template>manage/project/view.php</template>
 		<locale>de/manage/project.ini</locale>
 		<locale>de/html/manage/project/remove.panel.top.html</locale>
 		<locale>de/html/manage/project/remove.right.html</locale>
@@ -105,6 +113,9 @@ ALTER TABLE `<%?prefix%>project_users` ADD `creatorId` INT(11) UNSIGNED DEFAULT 
 ADD INDEX ( `creatorId` ) ;
 ALTER TABLE `<%?prefix%>project_users` ADD `status` TINYINT(1) DEFAULT '1' AFTER `userId` ,
 ADD INDEX ( `status` ) ;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3.22"><![CDATA[
+ALTER TABLE `project_users` ADD `isDefault` TINYINT(1) UNSIGNED NULL DEFAULT '0' AFTER `userId`, ADD INDEX `isDefault` (`isDefault`);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;

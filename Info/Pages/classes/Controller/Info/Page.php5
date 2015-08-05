@@ -14,6 +14,8 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			$controller->redirect( 'info/page', 'index', array( $pageId ) );						//  redirect to page controller
 		}
 		if( $page->type == 2 ){																		//  page is a module
+			if( !$page->module )
+				return FALSE;
 			$module	= strtolower( str_replace( "_", "/", $page->module ) );							//  get module controller path
 			$controller->redirect( $module, 'index' );												//  redirect to module
 		}

@@ -1,13 +1,35 @@
 <?php
 class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
-	
+	/**	@var		Logic_Shop			$logicShop			Instance of shop logic */
+	protected $logicShop;
+	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
+	protected $logicBridge;
+
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		$this->logicShop	= new Logic_Shop( $this->env );
+		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 	}
 
 	public function index(){
+
+
+		$orders			= array( 'orderId' => 'ASC' );
+
+		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>=2' ), $orders );
+
+		$customerIds		= array();
+		foreach( $ordersTotal as $order )
+			$customerIds[]	= $order->customerId;
+
+		$this->addData( 'ordersNotFinished', $this->logicShop->getOrders( array( 'status' => array( 2, 3, 4, 5 ) ), $orders ) );
+		$this->addData( 'ordersNotPayed', $this->logicShop->getOrders( array( 'status' => '2' ), $orders ) );
+		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( array( 'status' => array( 3, 4 ) ), $orders ) );
+		$this->addData( 'ordersTotal', $ordersTotal );
+
+		$this->addData( 'customers', $this->logicShop->getCustomers( array( 'customerId' => $customerIds ) ) );
 	}
 
 	public function setTab( $newsletterId, $tabKey ){

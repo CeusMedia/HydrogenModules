@@ -68,7 +68,7 @@ if( count( $missionUsers ) > 1 ){
 	ksort( $list, defined( 'SORT_FLAG_CASE' ) ? SORT_FLAG_CASE : SORT_REGULAR );
 	$infos['list-users-viewers']	= array(
 		'label'	=> 'Sichtbar für',
-		'value'	=> join( '<br/>', $list )
+		'value'	=> $list
 	);
 }
 
@@ -121,8 +121,17 @@ if( !count( $facts ) )
 	return '';
 
 $list		= array();
-foreach( $facts as $fact )
-	$list[]	= UI_HTML_Tag::create( 'dt', $fact->label ).UI_HTML_Tag::create( 'dd', $fact->value );
+foreach( $facts as $fact ){
+	$class	= NULL;
+	if( is_array( $fact->value ) ){
+		if( count( $fact->value ) > 5)
+			$class	= 'max-y';
+		$fact->value	= join( "<br/>", $fact->value );
+	}
+	$term	= UI_HTML_Tag::create( 'dt', $fact->label );
+	$def	= UI_HTML_Tag::create( 'dd', $fact->value, array( 'class' => $class ) );
+	$list[]	= $term.$def;
+}
 $list		= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'dl-horizontal' ) );
 
 return '

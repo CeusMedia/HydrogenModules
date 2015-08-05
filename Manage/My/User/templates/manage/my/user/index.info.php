@@ -2,10 +2,10 @@
 
 $mapInfo	= array();
 #if( $config->get( 'module.roles' ) )
-	$mapInfo['Rolle']	= '<span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span>';
+	$mapInfo[$words['info']['labelRole']]	= '<span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span>';
 if( !empty( $user->company ) ){
 	$link	= HTML::Link( './manage/my/company', $user->company->title );
-	$mapInfo['Unternehmen']	= '<span class="company">'.$link.'</span>';
+	$mapInfo[$words['info']['labelCompany']]	= '<span class="company">'.$link.'</span>';
 }
 $mapInfo['Status']	= '<span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span>';
 
@@ -17,10 +17,10 @@ $listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ), array( 'class' => 'dl-
 //  --  PANEL: INFO  --  //
 $helper			= new View_Helper_TimePhraser( $env );
 $mapTimes	= array();
-$mapTimes['registriert']		= $helper->convert( $user->createdAt, TRUE, 'vor' );
+$mapTimes[$words['info']['labelRegistration']]	= $helper->convert( $user->createdAt, TRUE, $words['info']['timePhrasePrefix'], $words['info']['timePhraseSuffix'] );
 if( $user->userId !== $currentUserId ){
-	$mapTimes['zuletzt eingeloggt']	= $helper->convert( $user->loggedAt, TRUE, 'vor' );
-	$mapTimes['zuletzt aktiv']		= $helper->convert( $user->activeAt, TRUE, 'vor' );
+	$mapTimes[$words['info']['labelLogin']]		= $helper->convert( $user->loggedAt, TRUE, $words['info']['timePhrasePrefix'], $words['info']['timePhraseSuffix'] );
+	$mapTimes[$words['info']['labelActive']]	= $helper->convert( $user->activeAt, TRUE, $words['info']['timePhrasePrefix'], $words['info']['timePhraseSuffix'] );
 }
 
 $listTimes	= array();
@@ -30,7 +30,7 @@ $listTimes	= UI_HTML_Tag::create( 'dl', join( $listTimes ), array( 'class' => 'd
 
 return '
 <div class="content-panel">
-	<h3>Kontoinformationen</h3>
+	<h3>'.$words['info']['heading'].'</h3>
 	<div class="content-panel-inner">'.
 		$listInfo.
 		'<hr/>'.

@@ -42,7 +42,7 @@ return '
 				)
 			).
 			HTML::Buttons(
-				UI_HTML_Elements::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-small btn-success' )
+				UI_HTML_Elements::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-small btn-primary' )
 			)
 		).'
 	</div>

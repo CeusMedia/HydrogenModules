@@ -8,7 +8,7 @@ $toolbar2		= new View_Helper_MultiButtonGroupMultiToolbar();
 $helperFilter	= new View_Helper_Work_Mission_Filter( $env, $defaultFilterValues, $wordsFilter );
 
 $toolbar1->addButtonGroup( 'toolbar-add', 'add', array(
-	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
+	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="icon-plus icon-white"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
 		<li><a href="./work/mission/add?type=1"><i class="icon-time"></i> Termin</a></li>
@@ -18,6 +18,10 @@ $toolbar1->addButtonGroup( 'toolbar-add', 'add', array(
 //  --  FILTER BUTTONS  --  //
 $toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTypeSwitch() );
 $toolbar1->addButton( 'toolbar-views', 'view-mode', $helperFilter->renderViewModeSwitch( $filterMode ) );
+
+$toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
+	'<a href="./work/mission/export" class="btn not-btn-info" title="Synchronisation"><i class="icon-refresh not-icon-white"></i></a>'
+) );
 
 $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilter( $filterTypes ) );
 $toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPriorityFilter( $filterPriorities ) );
@@ -30,7 +34,7 @@ $toolbar2->addButton( 'toolbar-filters', 'search', UI_HTML_Tag::create( 'div', a
     ), array( 'class' => 'input-append' ) )
 );
 
-$toolbar1->sort();
+//$toolbar1->sort();
 $toolbar2->sort();
 
 return '

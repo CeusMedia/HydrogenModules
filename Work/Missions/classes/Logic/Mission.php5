@@ -4,11 +4,13 @@ class Logic_Mission{
 	public $timeOffset			= 0; # 4 hours night shift: 14400;
 	public $generalConditions	= array();
 	public $model;
+	protected $modelVersion;
 	public $useProjects			= FALSE;
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
 		$this->model		= new Model_Mission( $env );
+		$this->modelVersion	= new Model_Mission_Version( $this->env );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 	}
 
@@ -102,16 +104,28 @@ class Logic_Mission{
 			$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );				//  get user projects from model
 			if( $userProjects )																		//  user has projects
 				$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';						//  add projects condition
-			array_unshift( $userProjects, 0 );														//  
+			array_unshift( $userProjects, 0 );														//
 			if( isset( $conditions['projectId'] ) )													//  projects have been selected
 				$userProjects	= array_intersect( $conditions['projectId'], $userProjects );		//  intersect user projectes and selected projects
-			$conditions['projectId']	= $userProjects;											//  
+			$conditions['projectId']	= $userProjects;											//
 			if( !$conditions['projectId'] )															//  no projects by filter
 				unset( $conditions['projectId'] );													//  do not filter projects then
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
 		return $this->model->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
+	}
+
+	public function getVersion( $missionId, $version ){
+		return $this->modelVersion->getByIndices( array(
+			'missionId'	=> $missionId,
+			'version'	=> $version,
+		) );
+	}
+
+	public function getVersions( $missionId ){
+		$orders	= array( 'version' => 'ASC' );
+		return $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
 	}
 
 	protected function hasFullAccess(){
@@ -131,6 +145,20 @@ class Logic_Mission{
 				'timestamp'		=> time()
 			), FALSE );
 		}
+	}
+
+	public function noteVersion( $missionId, $userId, $content ){
+		$modelVersion	= new Model_Mission_Version( $this->env );
+		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, array(), array( 'version' => 'DESC' ) );
+		if( $latest && $latest->content === $content )
+			return FALSE;
+		return $modelVersion->add( array(
+			'missionId'	=> $missionId,
+			'userId'	=> $userId,
+			'version'	=> $modelVersion->countByIndex( 'missionId', $missionId ) + 1,
+			'content'	=> $content,
+			'timestamp'	=> time(),
+		) );
 	}
 }
 ?>

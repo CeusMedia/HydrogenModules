@@ -11,6 +11,86 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
+	public function diff(){
+
+	$text1	= '### Überschrift
+
+- First
+- Second
+- Third
+
+Some old annotions...
+
+';
+
+	$text2	= '### Überschrift
+
+#### Subheading
+Now, there is some text.
+
+#### List
+
+- <del>First</del>
+- Third
+';
+
+		$text1	= View_Helper_Markdown::transformStatic( $this->env, $text1 );
+		$text2	= View_Helper_Markdown::transformStatic( $this->env, $text2 );
+
+		$diff	= new View_Helper_HtmlDiff( $this->env, $text1, $text2 );
+		$diff	= $diff->render();
+
+		$page	= new UI_HTML_PageFrame();
+		$page->setBaseHref( $this->env->url );
+		$page->addStylesheet( 'http://cdn.int1a.net/css/bootstrap.min.css' );
+		$page->addStylesheet( './themes/custom/css/module.ui.helper.html.diff.css' );
+		$page->addBody( $diff );
+		print $page->build();
+		exit;
+	}
+
+	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
+		try{
+//			if( !$this->request->isAjax() )
+//				throw new RuntimeException( "No denied" );
+			if( !( $mission	= $this->model->get( $missionId ) ) )
+				throw new InvalidArgumentException( 'Invalid mission id' );
+//			if( !projectMember )
+//				throw new InvalidArgumentException( 'No access to this mission' );
+			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
+			if( ( $version = (int) $version ) !== 0 ){
+				if( $version > 0 ){
+					if( !( $data = $this->logic->getVersion( $missionId, $version ) ) )
+						throw new InvalidArgumentException( 'Invalid version to show' );
+					$content	= View_Helper_Markdown::transformStatic( $this->env, $data->content );
+				}
+				if( ( $versionCompare = (int) $versionCompare ) > 0 ){
+					if( $version != $versionCompare ){
+						if( !( $data = $this->logic->getVersion( $missionId, $versionCompare ) ) )
+							throw new InvalidArgumentException( 'Invalid version to compare to' );
+						$compareWith = View_Helper_Markdown::transformStatic( $this->env, $data->content );
+						$content	= View_Helper_HtmlDiff::renderStatic( $this->env, $compareWith, $content );
+					}
+				}
+			}
+			$this->handleJsonResponse( "data", (string) $content );
+		}
+		catch( Exception $e ){
+			$this->handleJsonResponse( "error", $e->getMessage() );
+		}
+	}
+
+	public function checkForUpdate( $userId ){
+		if( file_exists( "update-".$userId ) ){
+			@unlink( "update-".$userId );
+			print json_encode( TRUE );
+		}
+		else{
+			print json_encode( FALSE );
+		}
+		exit;
+	}
+
 	protected $acl;
 	protected $filterKeyPrefix	= 'filter.work.mission.';
 	protected $isEditor;
@@ -19,6 +99,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $lock;
 	protected $logic;
 	protected $messenger;
+	protected $model;
 	protected $request;
 	protected $session;
 	protected $useIssues		= FALSE;
@@ -390,7 +471,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
 			if( $mission->dayEnd ){													//  mission has a duration
 				if( $mission->type == 1 ){											//  mission is an event, not a task
-					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ... 
+					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ...
 					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );  //  ... store new moved end date
 				}
 			}
@@ -493,7 +574,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				);
 				$this->model->edit( $missionId, $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
-				$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
+				if( $this->request->get( 'inform') )
+					$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
+				$this->logic->noteVersion( $missionId, $this->userId, $mission->content );
 				$this->restart( './work/mission' );
 			}
 		}
@@ -852,6 +935,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
 		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
+		$mission->versions	= $this->logic->getVersions( $missionId );
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
 		$missionUsers		= array( $mission->creatorId => $mission->creator );
@@ -875,18 +959,18 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function testMail( $type, $send = FALSE ){
 		switch( $type ){
-			case "daily":																			//  
-				$modelUser		= new Model_User( $this->env );										//  
-				$modelMission	= new Model_Mission( $this->env );									//  
-				$user			= $modelUser->get( $this->userId );									//  
+			case "daily":																			//
+				$modelUser		= new Model_User( $this->env );										//
+				$modelMission	= new Model_Mission( $this->env );									//
+				$user			= $modelUser->get( $this->userId );									//
 
 				$groupings	= array( 'missionId' );													//  group by mission ID to apply HAVING clause
 				$havings	= array(																//  apply filters after grouping
-					'creatorId = '.(int) $user->userId,												//  
-					'workerId = '.(int) $user->userId,												//  
+					'creatorId = '.(int) $user->userId,												//
+					'workerId = '.(int) $user->userId,												//
 				);
 				if( $this->env->getModules()->has( 'Manage_Projects' ) ){							//  look for module
-					$modelProject	= new Model_Project( $this->env );								//  
+					$modelProject	= new Model_Project( $this->env );								//
 					$userProjects	= $modelProject->getUserProjects( $user->userId );				//  get projects assigned to user
 					if( $userProjects )																//  projects found
 						$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';//  add to HAVING clause

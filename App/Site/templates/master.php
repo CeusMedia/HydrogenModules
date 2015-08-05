@@ -1,15 +1,13 @@
 <?php
 
-$isAuthenticated	= (bool) $env->getSession()->get( 'userId' );
-if( $env->getModules()->has( 'Resource_Authentication' ) ){
-	$auth				= Logic_Authentication::getInstance( $env );
-	$isAuthenticated	= $auth->isAuthenticated();
-}
-
 $pathCDN	= "http://cdn.int1a.net/";
 
 /*  --  NAVIGATION  --  */
-if( class_exists( 'View_Helper_Navigation' ) ){
+if( $env->getModules()->has( 'UI_Navigation' ) ){
+	$helper		= new View_Helper_Navigation( $env );
+	$navMain	= $helper->render();
+}
+else if( class_exists( 'View_Helper_Navigation' ) ){
 	$path		= $this->env->getRequest()->get( '__path' );
 	$helperNav	= new View_Helper_Navigation();
 	$helperNav->setEnv( $this->env );
@@ -21,20 +19,28 @@ else{
 		''		=> "Start",
 	);
 
-	$pagesFile	= 'config/pages.json';
-	if( file_exists( $pagesFile ) ){
+	if( file_exists( 'config/pages.json' ) ){
+		$isAuthenticated	= (bool) $env->getSession()->get( 'userId' );
+		if( $env->getModules()->has( 'Resource_Authentication' ) ){
+			$auth				= Logic_Authentication::getInstance( $env );
+			$isAuthenticated	= $auth->isAuthenticated();
+		}
 		$links	= array();
 		try{
-			$scopes	= File_JSON_Reader::load( $pagesFile );
+			$scopes	= File_JSON_Reader::load( 'config/pages.json' );
 			foreach( $scopes->main as $pageId => $page ){
-				if( empty( $page->disabled ) || $page->disabled =="no" ){
-					$public		= $page->access == "public";
-					$outside	= !$isAuthenticated && $page->access == "outside";
-					$inside		= $isAuthenticated && $page->access == "inside";
-					$acl		= $page->access == "acl" && $env->getAcl()->has( $page->path );
-					if( $public || $outside || $inside || $acl )
-						$links[$page->path]	= $page->label;
-				}
+				if( isset( $page->disabled ) && $page->disabled !== "no" )
+					continue;
+				if( isset( $page->pages ) && $page->pages )
+					continue;
+				$free		= !isset( $page->access );
+				$public		= !$free && $page->access == "public";
+				$outside	= !$free && !$isAuthenticated && $page->access == "outside";
+				$inside		= !$free && $isAuthenticated && $page->access == "inside";
+				$acl		= !$free && $page->access == "acl" && $env->getAcl()->has( $page->path );
+				$page->visible	= $free || $public || $outside || $inside || $acl;
+				if( $page->visible )
+					$links[$page->path]	= $page->label;
 			}
 		}
 		catch( Exception $e ){
@@ -53,7 +59,6 @@ else{
 	$navMain	= UI_HTML_Tag::create( 'ul', $list, array( "class" => "nav" ) );
 }
 
-
 /*  --  USER MESSAGES  --  */
 if( $env->getModules()->has( 'UI_Helper_Messenger_Bootstrap' ) )
 	$messages	= View_Helper_Messenger_Bootstrap::renderStatic( $env );
@@ -66,7 +71,6 @@ $brand	= preg_replace( "/\(.*\)/", "", $words['main']['title'] );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
 $brand	= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
-
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '

@@ -23,6 +23,11 @@ var AdminModuleInstaller = {
 			if(typeof this.labels[key] == "string")
 				this.labels[key] = this.labels[key].replace(/#AppName#/, appName);
 		this.appName = appName;
+
+//$(document).ready(function(){
+		$("#input_update_files_show_unchanged").bind("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
+		$("#input_update_files_show_unchanged").trigger("change");
+//});
 		return this;
 	},
 	start: function(){
@@ -52,6 +57,18 @@ var AdminModuleInstaller = {
 			}
 		});
 	},
+
+	toggleUpdateFilesWithoutChanges(event){
+		var isChecked = $(this).prop("checked");
+		var table = $("#panel-module-update-files table");
+		var rows = table.find("tbody tr");
+		var rowsLinked = rows.filter(".status-linked,.status-refered");
+		isChecked ? rowsLinked.addClass("hidden") : rowsLinked.removeClass("hidden");
+		var rowsHidden = rows.filter(".hidden");
+		var rowsVisible = rows.not(rowsHidden);
+		rowsVisible.size() ? table.show() : table.hide();
+	},
+
 	toggleSubmitButton: function(){
 		var button = $("button[type=submit]");
 		if(button.prop("disabled"))
@@ -88,15 +105,19 @@ var AdminModuleUpdater = {
                     button.css({opacity: 0.5});
             })
         });
+//$(document).ready(function(){
+		$("#input_update_files_show_unchanged").bind("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
+		$("#input_update_files_show_unchanged").trigger("change");
+//});
     },
     switchAllFiles: function(){
-        var status = parseInt($("#btn_switch_files").data("state"));
+        var status = parseInt($("#btn_switch_files").data("state"), 10);
         if(status === 0 ){
-            $("#file-rows input.file-check").attr("checked", "checked");
+            $("#file-rows input.file-check").prop("checked", "checked");
             $("#btn_switch_files").data("state", 1);
         }
         else{
-            $("#file-rows input.file-check").removeAttr("checked");
+            $("#file-rows input.file-check").removeProp("checked");
             $("#btn_switch_files").data("state", 0);
         }
     }

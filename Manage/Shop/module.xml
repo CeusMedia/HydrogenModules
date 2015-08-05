@@ -13,6 +13,7 @@
 	<log version="0.2.5">Reworked order position status handling.</log>
 	<log version="0.2.6">Integrated shop bridge.</log>
 	<log version="0.2.7">Use new bootstrap tab system with hooks.</log>
+	<log version="0.2.8">Add dashboard panels and map.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,6 +47,7 @@
 		<needs type="module">Resource_Library_cmModules</needs>
 		<needs type="module">Shop_Bridge</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Map</needs>
 	</relations>
 	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
 	<link xml:lang="en" path="manage/shop/report">Statistik</link>

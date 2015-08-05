@@ -21,6 +21,7 @@ class Model_Project extends CMF_Hydrogen_Model{
 	protected $primaryKey	= 'projectId';
 
 	protected $indices		= array(
+		'creatorId',
 		'parentId',
 		'status',
 		'priority',
@@ -33,15 +34,20 @@ class Model_Project extends CMF_Hydrogen_Model{
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
 		$projectIds		= array();
-		foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation )
+		$defaultProject	= 0;
+		foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation ){
+			$defaultProject	= $relation->isDefault ? $relation->projectId : $defaultProject;
 			$projectIds[]	= $relation->projectId;
+		}
 		if( !$projectIds )
 			return array();
 		$conditions['projectId']	= $projectIds;
 		$orders		= $orders ? $orders : array( 'title' => 'ASC' );
 		$projects	= array();
-		foreach( $modelProject->getAll( $conditions, $orders ) as $project )
+		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
+			$project->isDefault = $defaultProject == $project->projectId;
 			$projects[$project->projectId]	= $project;
+		}
 		return $projects;
 	}
 

@@ -249,14 +249,17 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = NULL, $page = NULL ) {
+	public function index( $page = NULL ) {
 		$session	= $this->env->getSession();
+		$limit		= abs( $session->get( 'filter-user-limit' ) );
+		$limit		= $limit ? $limit : 15;
+		$page		= max( 0, (int) $page );
 
 		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
 			$this->restart();
 
-		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
-		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
+//		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
+//		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
 		$offset		= !is_null( $page ) ? abs( $page * $limit ) : 0;						//  get offset from request or reset
 
 		$filters	= array();																//  prepare filters map

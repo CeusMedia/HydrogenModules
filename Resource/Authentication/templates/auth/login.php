@@ -10,7 +10,7 @@ extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/logi
 
 $panelLogin	=
 HTML::DivClass( "content-panel content-panel-form", array(
-	HTML::H3( $w->legend ),
+	HTML::H3( $w->heading ),
 	HTML::DivClass( "content-panel-inner",
 		HTML::DivClass( "auth-login-form",
 			UI_HTML_Tag::create( 'form', array(

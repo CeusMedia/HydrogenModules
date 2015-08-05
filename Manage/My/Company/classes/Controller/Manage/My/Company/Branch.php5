@@ -99,7 +99,34 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		catch( Exception $e ){
 			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
 		}
-		$this->restart( './manage/my/company/branch/edit/'.$branchId );
+
+/*		if( $image['error'] ){
+			$w			= (object) $this->getWords( 'upload-errors', 'main' );
+
+			$messages		= array(
+				UPLOAD_ERR_INI_SIZE		=> $w->UPLOAD_ERR_INI_SIZE,
+				UPLOAD_ERR_FORM_SIZE	=> $w->UPLOAD_ERR_FORM_SIZE,
+				UPLOAD_ERR_PARTIAL		=> $w->UPLOAD_ERR_PARTIAL,
+				UPLOAD_ERR_NO_FILE		=> $w->UPLOAD_ERR_NO_FILE,
+				UPLOAD_ERR_NO_TMP_DIR	=> $w->UPLOAD_ERR_NO_TMP_DIR,
+				UPLOAD_ERR_CANT_WRITE	=> $w->UPLOAD_ERR_CANT_WRITE,
+				UPLOAD_ERR_EXTENSION	=> $w->UPLOAD_ERR_EXTENSION,
+			);
+			$handler		= new Net_HTTP_UploadErrorHandler();
+			$handler->setMessages( $messages );
+			try{
+				$handler->handleErrorFromUpload( $image );
+			}
+			catch( Exception $e ){
+				$this->messenger->noteError( $e->getMessage() );
+				$this->restart( './manage/my/branch/edit/'.$branchId );
+			}
+		}*/
+/*		$imageName	= $branchId.'_'.md5( time() ).'.'.pathinfo( $image['name'], PATHINFO_EXTENSION );
+		$imagePath	= './images/branches/';
+		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
+			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
+*/		$this->restart( './manage/my/company/branch/edit/'.$branchId );
 	}
 
 	protected function checkBranch( $branchId ){

@@ -55,7 +55,10 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		if( $this->useCaptcha ){
 			$captcha	= new UI_Image_Captcha();
 			$captcha->useUnique	= TRUE;
-			$filePath	= $this->moduleConfig->get( 'captcha.path' )."/captcha.jpg";
+			$filePath	= $this->moduleConfig->get( 'captcha.path' );
+			$filePath	= $filePath ? $filePath : $this->env->getConfig()->get( 'path.images' );
+			$filePath	= $filePath ? $filePath : 'tmp/';
+			$filePath	= $filePath."/captcha.jpg";
 			if( $this->moduleConfig->get( 'captcha.strength' ) == 'hard' ){
 					$captcha->useDigits	= TRUE;
 					$captcha->useLarge	= TRUE;

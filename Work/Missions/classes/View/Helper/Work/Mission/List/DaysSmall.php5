@@ -171,8 +171,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
 		$url		= $this->baseUrl.'work/mission/view/'.$mission->missionId;
-		if( $this->isEditor && $edit )
-			$url	= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
+//		if( $this->isEditor && $edit )
+//			$url	= $this->baseUrl.'work/mission/edit/'.$mission->missionId;
 		$class		= 'mission-icon-label mission-type-'.$mission->type;
 		$class		= "";
 		$icon		= '<i class="icon-large icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';

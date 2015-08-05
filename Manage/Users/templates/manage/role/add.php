@@ -20,7 +20,7 @@ extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.right' ), 'h
 
 $panelAdd	= '
 <div class="content-panel">
-	<h3>'.$words['add']['legend'].'</h3>
+	<h3>'.$words['add']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form name="addRole" action="./manage/role/add" method="post">
 			<div class="row-fluid">
@@ -45,8 +45,8 @@ $panelAdd	= '
 			</div>
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn' ).'
-					'.UI_HTML_Elements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['edit']['buttonSave'], 'btn btn-success' ).'
+					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'], 'btn btn-small' ).'
+					'.UI_HTML_Elements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['add']['buttonSave'], 'btn btn-primary' ).'
 				</div>
 			</div>
 		</form>

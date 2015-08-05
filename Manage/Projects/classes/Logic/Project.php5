@@ -5,7 +5,8 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->model		= new Model_Project( $this->env );                                          //  create projects model
+		$this->modelProject		= new Model_Project( $this->env );                                          //  create projects model
+		$this->modelProjectUser	= new Model_Project_User( $this->env );
 	}
 
 	protected function hasFullAccess(){
@@ -41,14 +42,25 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( !$userIds )
 			return array();
 		return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
-    }
+	}
+
+	public function getDefaultProject( $userId ){
+		$relation	= $this->modelProjectUser->getByIndices( array(
+			'userId'	=> $userId,
+			'isDefault'	=> 1
+		) );
+		return $relation ? $relation->projectId : NULL;
+	}
 
 	public function getProject( $projectId ){
-		return $this->model->get( $projectId );
+		return $this->modelProject->get( $projectId );
 	}
 
 	public function getProjects( $conditions = array(), $orders = array(), $limits = array() ){
-		return $this->model->getAll( $conditions, $orders, $limits );
+		$projects	= $this->modelProject->getAll( $conditions, $orders, $limits );
+		foreach( $projects as $project )
+			$project->user	= $this->getProjectUsers( $project->projectId );
+		return $projects;
 	}
 
 	/**
@@ -64,13 +76,14 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		$orders			= $orders ? $orders : array( 'title' => 'ASC' );								//  sanitize project orders
 		$userProjects	= array();																		//  create empty project map
 		if( $this->hasFullAccess() ){																	//  super access
-			foreach( $this->model->getAll( $conditions, $orders ) as $project )							//  iterate all projects
+			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )					//  iterate all projects
 				$userProjects[$project->projectId]  = $project;											//  add to projects map
 		}
 		else{																							//  normal access
 			if( $activeOnly )																			//  reduce to active projects
 				$conditions['status']	= array( 0, 1, 2, 3, 4 );										//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
-			foreach( $this->model->getUserProjects( $userId, $conditions, $orders ) as $project )		//  get and iterate user assigned projects
+			$projects	= $this->modelProject->getUserProjects( $userId, $conditions, $orders );
+			foreach( $projects as $project )															//  get and iterate user assigned projects
 				$userProjects[$project->projectId]  = $project;											//  add to projects map
 		}
 		return $userProjects;																			//  return projects map
@@ -85,7 +98,24 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@return		array		Map of users assigned to project
 	 */
 	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
-		return $this->model->getProjectUsers( $projectId, $conditions, $orders );
+		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
+	}
+
+	public function setDefaultProject( $userId, $projectId ){
+		$this->modelProjectUser->editByIndices( array(
+			'userId'		=> $userId,
+			'isDefault'		=> 1
+		), array(
+			'isDefault'		=> "0",
+			'modifiedAt'	=> time()
+		) );
+		return $this->modelProjectUser->editByIndices( array(
+			'projectId'		=> $projectId,
+			'userId'		=> $userId,
+		), array(
+			'isDefault'		=> "1",
+			'modifiedAt'	=> time()
+		) );
 	}
 }
 ?>

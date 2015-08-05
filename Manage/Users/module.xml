@@ -3,11 +3,18 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user and role administration.]]></description>
 	<category>Management</category>
-	<version>0.5.5</version>
+	<version>0.6.2</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
 	<log version="0.5.5">Added info panel on role edit view.</log>
+	<log version="0.5.6">Use module UI:Helper:Pagination.</log>
+	<log version="0.5.7">Replace UI:Helper:Pagination by CMM_Bootstrap_PageControl.</log>
+	<log version="0.5.8">Add HTML blocks for index and reuse for add and edit.</log>
+	<log version="0.5.9">Updated button colors.</log>
+	<log version="0.6">Language support for english and german.</log>
+	<log version="0.6.1">Finish localization.</log>
+	<log version="0.6.2">Change button coloring.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -18,6 +25,16 @@
 		<class>View/Manage/Role.php5</class>
 		<locale>de/manage/user.ini</locale>
 		<locale>de/manage/role.ini</locale>
+		<locale>de/html/manage/role/index.bottom.html</locale>
+		<locale>de/html/manage/role/index.top.html</locale>
+		<locale>de/html/manage/user/index.bottom.html</locale>
+		<locale>de/html/manage/user/index.top.html</locale>
+		<locale>en/manage/user.ini</locale>
+		<locale>en/manage/role.ini</locale>
+		<locale>en/html/manage/role/index.bottom.html</locale>
+		<locale>en/html/manage/role/index.top.html</locale>
+		<locale>en/html/manage/user/index.bottom.html</locale>
+		<locale>en/html/manage/user/index.top.html</locale>
 		<template>manage/user/add.php</template>
 		<template>manage/user/edit.php</template>
 		<template>manage/user/edit.info.php</template>
@@ -35,6 +52,7 @@
 	<relations>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">Resource_Library_cmModules</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
 	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>

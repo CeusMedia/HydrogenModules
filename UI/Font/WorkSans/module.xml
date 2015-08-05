@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: WorkSans</title>
+	<description><![CDATA[Integration of Work Sans typeface.]]></description>
+	<category>User Interface</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<author site="http://weiweihuanghuang.github.io/Work-Sans/">Wei Huang</author>
+	<license source="http://www.fontsquirrel.com/license/work-sans">SIL Open Font License v1.10</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $config->get( 'module.ui_font_worksans.enabled' ) ){
+				$url	= $config->get( 'module.ui_font.uri' ).'WorkSans/work-sans.css';				
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+		}
+]]></hook>
+</module>

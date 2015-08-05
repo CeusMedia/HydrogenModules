@@ -9,6 +9,7 @@ class View_Work_Mission_Calendar extends CMF_Hydrogen_View{
 
 		$script	= '<script>
 $(document).ready(function(){
+	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
 	if(typeof cmContextMenu !== "undefined"){
 		WorkMissionsCalendar.initContextMenu();
 	};
@@ -43,6 +44,7 @@ $(document).ready(function(){
 //var monthNames = '.json_encode( $words['months'] ).';
 //var monthNamesShort = '.json_encode( $words['months-short'] ).';
 WorkMissions.init("calendar");
+WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
 WorkMissionsCalendar.monthCurrent	= '.date( "n" ).';
 WorkMissionsCalendar.month			= '.(int) $this->getData( 'month' ).';
 WorkMissionsCalendar.year			= '.(int) $this->getData( 'year' ).';
@@ -53,6 +55,7 @@ if(typeof cmContextMenu !== "undefined"){
 WorkMissionsList.loadCurrentListAndDayControls();
 ';
 		$page->js->addScript( $script, 'ready' );
+		$page->js->addScriptOnReady( 'setInterval(WorkMissionsCalendar.checkForUpdate, 10000)', 'ready' );
 
 		$this->addData( 'filter', $this->loadTemplateFile( 'work/mission/index.filter.php' ) );
 	}
@@ -225,7 +228,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 			$title		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $title );
-			$url		= './work/mission/edit/'.$mission->missionId;
+			$url		= './work/mission/view/'.$mission->missionId;
 			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
 			$overdue	= '';

@@ -1,11 +1,12 @@
 <?php
 $w	= (object) $words['view'];
 
-$needs	= $order;
+$graph		= "";
+
+$needs		= $order;
 unset( $needs[$moduleId] );
 
 $isInstallable	= $mainModuleId || !count( $needs );
-$graph			= "";
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
@@ -21,6 +22,7 @@ if( $mainModuleId ){
 	$needs	= array();
 }
 
+/*  --  RELATIONS  --  */
 $url	= './admin/module/viewer/index/';
 
 $relationsNeeded	= '-';
@@ -75,6 +77,7 @@ if( $module->supportedModules ){
 	$graphSupports	= '<fieldset><legend>Unterstützung</legend>'.$graph.'</fieldset>';
 }
 
+/*  --  PANEL: PROGRESS  --  */
 if( $mainModuleId ){
 	$list	= array();
 	foreach( $mainModule->neededModules as $id => $status ){
@@ -105,6 +108,7 @@ if( $mainModuleId ){
 ';
 }
 
+/*  --  PANEL: INFO  --  */
 $panelInfo	= '
 <fieldset>
 	<legend class="info">Informationen</legend>
@@ -124,6 +128,8 @@ $panelInfo	= '
 </fieldset>
 ';
 $helper	= new View_Helper_Module( $this->env );
+
+/*  --  INSTALLATION  --  */
 $tableConfig	= '';
 if( $isInstallable ){
 	if( count( $module->config ) ){
@@ -154,33 +160,36 @@ if( $isInstallable ){
 			<input type="radio" name="type" id="input_type_copy" value="copy"/>
 			<label for="input_type_copy"><acronym title="'.$w->textCopy.'">'.$w->labelCopy.'</acronym></label><br/>
 		</div>';
-
 	if( $module->sql ){
 		$a	.= '
-		<div>
+			<div>
 			<label class="checkbox">
 				<input type="checkbox" name="database" id="input_database" checked="checked">
-				Datenbank-Kommandos ausführen
+				<acronym title="'.$w->textDatabase.'">'.$w->labelDatabase.'</acronym>
 			</label>
 		</div><br/>';
 	}
-
 }
 
-$positions	= array(
-#	'Liste'		=> './admin/module',
-#	'Übersicht'	=> './admin/module/installer',
-	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
-);
-
-$urlForm	= './admin/module/installer/install/'.$module->id;
-$headingVia	= '';
-if( $mainModuleId ){
-	$urlForm	.= '/'.$mainModuleId;
-	$headingVia	= '&nbsp;<em><small>(via '.$mainModuleId.')</small></em>';
-	$positions[$mainModuleId]	= './admin/module/installer/'.$mainModuleId;
+/*  --  DATABASE SCRIPTS  --  */
+$panelDatabase	= '';
+if( $isInstallable && $module->sql ){
+	$helper		= new View_Helper_Module_SqlScripts( $this->env );
+	$table		= $helper->render( $sqlScripts );
+	$panelDatabase	= '<fieldset><legend class="database">'.$w->database.'</legend>'.$table.'</fieldset>';
 }
 
+$panelFiles	= '';
+if( $files ){
+	$helper	= new View_Helper_Module_Files( $this->env );
+	$table		= $helper->render( $files, $words, array(
+		'useCheckboxes'	=> !FALSE,
+		'useActions'	=> !FALSE,
+	) );
+	$panelFiles	= '<fieldset><legend class="database">'.$w->files.'</legend>'.$table.'</fieldset>';
+}
+
+/*  --  POSITION BAR  --  */
 function renderPositions( $positions ){
 	$list	= array();
 	foreach( $positions as $label => $url )
@@ -189,6 +198,22 @@ function renderPositions( $positions ){
 	$positions	= UI_HTML_Tag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;
 }
+
+$positions	= array(
+#	'Liste'		=> './admin/module',
+#	'Übersicht'	=> './admin/module/installer',
+	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
+);
+
+/*  --  HEADING  --  */
+$urlForm	= './admin/module/installer/install/'.$module->id;
+$headingVia	= '';
+if( $mainModuleId ){
+	$urlForm	.= '/'.$mainModuleId;
+	$headingVia	= '&nbsp;<em><small>(via '.$mainModuleId.')</small></em>';
+	$positions[$mainModuleId]	= './admin/module/installer/'.$mainModuleId;
+}
+
 
 return '
 <h3 class="position">
@@ -202,7 +227,6 @@ return '
 			<legend class="module-add">Modul installieren</legend>
 			'.$tableConfig.'
 			'.$a.'
-
 			<div class="buttonbar">
 				'.$buttonBack.'
 <!--				'.$buttonView.'
@@ -212,6 +236,8 @@ return '
 				'.$buttonInstall.'
 			</div>
 		</fieldset>
+		'.$panelFiles.'
+		'.$panelDatabase.'
 	</form>
 </div>
 <div class="column-right-30">

@@ -42,10 +42,26 @@ $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 
 
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
+$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 $iconCopy	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
+
+$checkInform	= '';
+if( count( $missionUsers ) > 1 ){
+	$checkInform	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'		=> 'checkbox',
+		'name'		=> 'inform',
+		'value'		=> 1,
+		'checked'	=> 'checked',
+	) );
+	$checkInform	= UI_HTML_Tag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, array( 'class' => 'checkbox' ) );
+}
+
+$buttonCancel	= UI_HTML_Elements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' );
+$buttonView		= UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, $iconView.' '.$w->buttonView, 'btn btn-small btn-info' );
+$buttonSave		= UI_HTML_Elements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-primary' );
+$buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-mini' );
 
 $panelEdit	= '
 <div class="content-panel content-panel-form">
@@ -125,17 +141,18 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Elements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' ).
-						UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, $iconView.' '.$w->buttonView, 'btn btn-small not-btn-info' )
-					), array( 'class' => 'btn-group' ) ).'
-				'.UI_HTML_Elements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-success' ).'
+				'.$checkInform.'
+				'.$buttonCancel.'
+				'.$buttonView.'
+<!--				'.UI_HTML_Tag::create( 'div', array(
+					), array( 'class' => 'btn-group' ) ).'-->
+				'.$buttonSave.'
 	<!--			&nbsp;|&nbsp;
 				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
 				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-3', '<i class="icon-trash icon-white"></i> '.$w->buttonRemove, 'btn btn-small btn-inverse' ).'
 	-->
 				&nbsp;&nbsp;|&nbsp;&nbsp;
-				'.UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn not-btn-info not-btn-success btn-small btn-mini' ).'
+				'.$buttonCopy.'
 			</div>
 		</form>
 	</div>

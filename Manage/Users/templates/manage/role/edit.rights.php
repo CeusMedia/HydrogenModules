@@ -60,7 +60,7 @@ $env->getPage()->js->addScript( $script );
 
 return '
 <div class="content-panel">
-	<h3>Zugriffsrechte</h3>
+	<h3>'.$words['editRights']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<div id="role-edit-rights">
 			'.$tableRights.'
