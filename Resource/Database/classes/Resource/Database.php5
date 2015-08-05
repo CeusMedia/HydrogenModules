@@ -2,7 +2,7 @@
 /**
  *	Database resource using PDO wrapper from cmClasses.
  *
- *	Copyright (c) 2011 Christian Würker (ceusmedia.com)
+ *	Copyright (c) 2011 Christian Würker (ceusmedia.de)
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
  *	@since			0.4
- *	@version		$Id: PDO.php5 591 2012-06-28 17:39:08Z christian.wuerker $
  */
 /**
  *	Database resource using PDO wrapper from cmClasses.
@@ -35,14 +34,13 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
  *	@since			0.4
- *	@version		$Id: PDO.php5 591 2012-06-28 17:39:08Z christian.wuerker $
  */
-class Resource_Database extends Database_PDO_Connection
+class Resource_Database extends DB_PDO_Connection
 {
 	protected $env;
 	/**	@var	ADT_List_Dictionary		$options	Module configuration options */
 	protected $options;
-	
+
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env		= $env;
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_database.', TRUE );
@@ -57,7 +55,7 @@ class Resource_Database extends Database_PDO_Connection
 	public function getPrefix(){
 		return $this->options->get( 'access.prefix' );
 	}
-	
+
 	/**
 	 *	Sets up connection to database, if configured with database module or main config (deprecated).
 	 *
@@ -77,7 +75,7 @@ class Resource_Database extends Database_PDO_Connection
 		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
 		if( empty( $access->driver ) )
 			throw new RuntimeException( 'No database driver set' );
-		$dsn		= new Database_PDO_DataSourceName( $access->driver, $access->name );
+		$dsn		= new DB_PDO_DataSourceName( $access->driver, $access->name );
 		!empty( $access->host )		? $dsn->setHost( $access->host ) : NULL;
 		!empty( $access->port )		? $dsn->setPort( $access->port ) : NULL;
 		!empty( $access->username )	? $dsn->setUsername( $access->username ) : NULL;
@@ -93,7 +91,7 @@ class Resource_Database extends Database_PDO_Connection
 			'MYSQL_ATTR_INIT_COMMAND'		=> "SET NAMES 'utf8';",
 		);
 		$options	+= $defaultOptions;
-		
+
 		//  --  DATABASE OPTIONS  --  //
 		$driverOptions	= array();																	//  @todo: to be implemented
 		foreach( $options as $key => $value ){														//  iterate all database options
