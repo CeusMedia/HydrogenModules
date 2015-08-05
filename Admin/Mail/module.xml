@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description></description>
 	<category>Administration</category>
-	<version>0.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -16,6 +16,11 @@
 	<log version="0.3.7">Implemented queued mail view prototype.</log>
 	<log version="0.3.8">Use time phraser module.</log>
 	<log version="0.4">Finished detail view of sent mails with HTML and text body.</log>
+	<log version="0.4.1">Start localization.</log>
+	<log version="0.4.2">Add HTML blocks.</log>
+	<log version="0.4.3">Add english locales.</log>
+	<log version="0.4.4">Use module UI:Helper:Input:File for file uploads.</log>
+	<log version="0.4.5">Integrate HTML blocks into templates.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -36,12 +41,25 @@
 		<template>admin/mail/queue/view.facts.php</template>
 		<locale>de/admin/mail/attachment.ini</locale>
 		<locale>de/admin/mail/queue.ini</locale>
+		<locale>de/html/admin/mail/attachment/bottom.html</locale>
+		<locale>de/html/admin/mail/attachment/top.html</locale>
+		<locale>de/html/admin/mail/queue/bottom.html</locale>
+		<locale>de/html/admin/mail/queue/top.html</locale>
+		<locale>en/admin/mail/attachment.ini</locale>
+		<locale>en/admin/mail/queue.ini</locale>
+		<locale>en/html/admin/mail/attachment/bottom.html</locale>
+		<locale>en/html/admin/mail/attachment/top.html</locale>
+		<locale>en/html/admin/mail/queue/bottom.html</locale>
+		<locale>en/html/admin/mail/queue/top.html</locale>
 	</files>
 	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
-	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">E-Mail-Anhänge</link>
+	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
+	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anhänge</link>
+	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
 </module>

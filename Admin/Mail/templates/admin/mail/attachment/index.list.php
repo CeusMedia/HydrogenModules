@@ -4,17 +4,29 @@ $iconDisable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ban-circle 
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 $w		= (object) $words['index'];
-$list	= '<div><em class="muted"'.$w->noEntries.'</em></div>';
-if( $attachments ){
+$list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
+if( count( $attachments ) ){
 	$list	= array();
 	foreach( $attachments as $attachment ){
-		$buttonStatus	= UI_HTML_Tag::create( 'a', $iconEnable, array( 'href' => './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/1', 'class' => 'btn btn-success not-btn-small', 'title' => 'aktivieren' ) );
+		$buttonStatus	= UI_HTML_Tag::create( 'a', $iconEnable, array(
+			'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/1',
+			'class'	=> 'btn btn-success not-btn-small',
+			'title'	=> $w->buttonActivate
+		) );
 		if( $attachment->status )
-			$buttonStatus	= UI_HTML_Tag::create( 'a', $iconDisable, array( 'href' => './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0', 'class' => 'btn btn-warning not-btn-small', 'title' => 'deaktivieren' ) );
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => '', 'class' => 'btn btn-danger not-btn-small', 'title' => 'entfernen (Dabei bleibt erhalten)' ) );
+			$buttonStatus	= UI_HTML_Tag::create( 'a', $iconDisable, array(
+				'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0',
+				'class'	=> 'btn btn-warning not-btn-small',
+				'title'	=> $w->buttonDeactivate
+			) );
+		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+			'href'	=> './admin/mail/attachment/unregister/'.$attachment->mailAttachmentId,
+			'class'	=> 'btn btn-danger not-btn-small',
+			'title'	=> $w->buttonUnregister
+		) );
 
 		$language	= UI_HTML_Tag::create( 'span', $attachment->language, array( 'class' => 'label' ) );
-		$mimeType	= UI_HTML_Tag::create( 'small', $attachment->mimeType, array( 'class' => 'muted' ) );
+		$mimeType	= UI_HTML_Tag::create( 'small', $w->labelMimeType.' '.$attachment->mimeType, array( 'class' => 'muted' ) );
 		$label		= $language.' '.UI_HTML_Tag::create( 'big', $attachment->filename ).'<br/>'.$mimeType;
 		$status		= (object) array (
 			'label'		=> $words['states'][(int) $attachment->status],
@@ -45,7 +57,8 @@ if( $attachments ){
 return '
 <!-- templates/admin/mail/attachment/index.list.php -->
 <div class="content-panel content-panel-list">
-    <div class="content-panel-inner">
+	<h3>'.$w->heading.'</h3>
+	<div class="content-panel-inner">
 		'.$list.'
 	</div>
 </div>';

@@ -3,45 +3,46 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 
 	protected $model;
 	protected $path;
+	protected $messenger;
 
 	public function __onInit(){
-		$this->model	= new Model_Mail_Attachment( $this->env );
-		$this->logic	= new Logic_Mail( $this->env );
-		$this->path		= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->path			= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->model		= new Model_Mail_Attachment( $this->env );
+		$this->logic		= new Logic_Mail( $this->env );
 	}
 
 	public function add(){
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'msg' );
-		if( $request->has( 'add' ) ){
+		if( $this->request->has( 'add' ) ){
 			$files	= $this->listFiles();
-			if( !strlen( $class = trim( $request->get( 'class' ) ) ) )
-				$messenger->noteError( $words->errorClassMissing, htmlentities( $class, ENT_QUOTES, 'UTF-8' ) );
-			if( !strlen( $file = trim( $request->get( 'file' ) ) ) )
-				$messenger->noteError( $words->errorFileMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
-			if( !strlen( $language = trim( $request->get( 'language' ) ) ) )
-				$messenger->noteError( $words->errorLanguageMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
+			if( !strlen( $class = trim( $this->request->get( 'class' ) ) ) )
+				$this->messenger->noteError( $words->errorClassMissing, htmlentities( $class, ENT_QUOTES, 'UTF-8' ) );
+			if( !strlen( $file = trim( $this->request->get( 'file' ) ) ) )
+				$this->messenger->noteError( $words->errorFileMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
+			if( !strlen( $language = trim( $this->request->get( 'language' ) ) ) )
+				$this->messenger->noteError( $words->errorLanguageMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
 			$indices	= array(
 				'className'	=> $class,
 				'filename'	=> $file,
 				'language'	=> $language
 			);
 			if( $this->model->count( $indices ) )
-				$messenger->noteError(
+				$this->messenger->noteError(
 					$words->errorAlreadyRegistered,
 					htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
 					htmlentities( $class, ENT_QUOTES, 'UTF-8' )
 				);
 			if( !array_key_exists( $file, $files ) )
-				$messenger->noteFailure(
+				$this->messenger->noteFailure(
 					$words->errorFileNotExisting,
 					htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
 					htmlentities( $class, ENT_QUOTES, 'UTF-8' )
 			);
-			if( !$messenger->gotError() ){
+			if( !$this->messenger->gotError() ){
 				$data	= array(
-					'status'	=> (int) (bool) $request->get( 'status' ),
+					'status'	=> (int) (bool) $this->request->get( 'status' ),
 					'language'	=> $language,
 					'className'	=> $class,
 					'filename'	=> $file,
@@ -49,10 +50,10 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 					'createdAt'	=> time(),
 				);
 				$this->model->add( $data );
-				$this->env->getMessenger()->noteSuccess(
+				$this->messenger->noteSuccess(
 					$words->successAdded,
-					htmlentities( $request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
-					htmlentities( $request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
+					htmlentities( $this->request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
+					htmlentities( $this->request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
 				);
 			}
 		}
@@ -76,7 +77,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$list	= array();
 		$index	= new DirectoryIterator( $this->path );
 		foreach( $index as $entry ){
-			if( $entry->isDir() || $entry->isDot() )
+			if( $entry->isDir() || $entry->isDot() || $entry->getFilename()[0] === "." )
 				continue;
 			$key	= strtolower( $entry->getFilename() );
 			$list[$entry->getFilename()]	= (object) array(
@@ -87,18 +88,27 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		return $list;
 	}
 
-	public function remove( $attachmentId ){
+	/**
+	 *	@todo	implemented but not used, yet -> show file list -> allow removal
+	 */
+	public function remove( $fileName ){
 		$words		= (object) $this->getWords( 'msg' );
-		$attachment	= $this->model->get( $attachmentId );
-		if( !$attachment )
-			$this->env->getMessenger()->noteError( $words->errorIdInvalid );
+		if( $this->model->getAllByIndex( 'filename', $fileName ) )
+			$this->messenger->noteError( $words->errorFileInUse );
+		else if( !file_exists( $this->path.$fileName ) )
+			$this->messenger->noteError( $words->errorFileNotExisting );
 		else{
-			$this->model->remove( $attachmentId );
-			$this->env->getMessenger()->noteSuccess(
-				$words->successRemoved,
-				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
-				htmlentities( $attachment->className, ENT_QUOTES, 'UTF-8' )
-			);
+			@unlink( $this->path.$fileName );
+			if( file_exists( $this->path.$fileName ) )
+				$this->messenger->noteFailure(
+					$words->failureRemoveFailed,
+					htmlentities( $fileName, ENT_QUOTES, 'UTF-8' )
+ 				);
+			else
+				$this->messenger->noteSuccess(
+					$words->successRemoved,
+					htmlentities( $fileName, ENT_QUOTES, 'UTF-8' )
+				);
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -107,10 +117,10 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
-			$this->env->getMessenger()->noteError( $words->errorIdInvalid );
+			$this->messenger->noteError( $words->errorIdInvalid );
 		else{
 			$this->model->edit( $attachmentId, array( 'status' => (int) $status ) );
-			$this->env->getMessenger()->noteSuccess(
+			$this->messenger->noteSuccess(
 				(int) $status ? $words->successEnabled : $words->successDisabled,
 				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
 				htmlentities( $attachment->className, ENT_QUOTES, 'UTF-8' )
@@ -127,21 +137,36 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	 */
 	public function upload(){
 		$words		= (object) $this->getWords( 'msg' );
-		$upload		= (object) $this->env->getRequest()->get( 'file' );
-		$messenger	= $this->env->getMessenger();
+		$upload		= (object) $this->request->get( 'file' );
 		if( $upload->error ){
 			$handler    = new Net_HTTP_UploadErrorHandler();
 			$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-			$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
+			$this->messenger->noteError( $handler->getErrorMessage( $upload->error ) );
 		}
 		else{
 			if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
-				$messenger->noteFailure( $words->errorUploadFailed );
+				$this->messenger->noteFailure( $words->failureUploadFailed );
 			else
-				$messenger->noteSuccess(
+				$this->messenger->noteSuccess(
 					$words->successUploaded,
 					htmlentities( $upload->name, ENT_QUOTES, 'UTF-8' )
 				);
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function unregister( $attachmentId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$attachment	= $this->model->get( $attachmentId );
+		if( !$attachment )
+			$this->messenger->noteError( $words->errorIdInvalid );
+		else{
+			$this->model->remove( $attachmentId );
+			$this->messenger->noteSuccess(
+				$words->successUnregistered,
+				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
+				htmlentities( $attachment->className, ENT_QUOTES, 'UTF-8' )
+			);
 		}
 		$this->restart( NULL, TRUE );
 	}
