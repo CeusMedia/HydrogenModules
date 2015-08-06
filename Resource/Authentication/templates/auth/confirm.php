@@ -6,7 +6,7 @@ return $textTop.
 HTML::DivClass( "row-fluid", array(
 	HTML::DivClass( "span6", array(
 		HTML::DivClass( "content-panel", array(
-			HTML::H3( $w->legend ),
+			HTML::H3( $w->heading ),
 			HTML::DivClass( "content-panel-inner", array(
 				UI_HTML_Tag::create( 'form', array(
 					HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),

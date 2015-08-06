@@ -1,5 +1,8 @@
 <?php
 $w	= (object) $words['upload'];
+
+$iconUpload	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+
 return '
 <!-- templates/admin/mail/attachment/upload.php -->
 <div class="content-panel content-panel-form">
@@ -9,7 +12,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_file">'.$w->labelFile.'</label>
-					<input type="file" name="file"/>
+					'.View_Helper_Input_File::render( 'file', $iconUpload ).'
 				</div>
 			</div>
 			<div class="row-fluid">

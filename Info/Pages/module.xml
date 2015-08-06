@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.5.6</version>
+	<version>0.5.8</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -11,6 +11,8 @@
 	<log version="0.5.4">Extended database table by timestamps.</log>
 	<log version="0.5.5">Added hook for sitemap data collection.</log>
 	<log version="0.5.6">Improved sitemap data collection by subpages and order.</log>
+	<log version="0.5.7">Merged SQL updates into SQL install script.</log>
+	<log version="0.5.8">Add pages navigation helper for projects without module UI:Navigation.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,6 +21,7 @@
 		<class>Logic/Page.php5</class>
 		<class>Model/Page.php5</class>
 		<class>View/Info/Page.php5</class>
+		<class>View/Helper/Navigation/Pages/Navbar.php5</class>
 		<locale>en/info/pages.ini</locale>
 		<locale>de/info/pages.ini</locale>
 	</files>

@@ -38,6 +38,8 @@ $iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-lef
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconDefault	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-star' ) );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.' '.$w->buttonCancel, array(
 	'href'		=> './manage/project',
@@ -55,9 +57,16 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, arra
  ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 	'href'		=> './manage/project/remove/'.$project->projectId,
-	'class'		=> 'btn btn-small btn-inverse',
+	'class'		=> 'btn btn-small btn-danger',
 	'disabled'	=> !$canRemove ? 'disabled' : NULL,
 ) );
+
+$buttonDefault	= UI_HTML_Tag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, array(
+	'href'		=> './manage/project/setDefault/'.$project->projectId,
+	'class'		=> 'btn btn-small',
+	'disabled'	=> $isDefault ? 'disabled' : NULL,
+) );
+
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3 class="autocut"><a href="./manage/project" class="muted">'.$w->heading.':</a> '.$project->title.'</h3>
@@ -90,10 +99,15 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.$buttonCancel.'
-				<!--'.$buttonView.'-->
-				'.$buttonSave.'
-				'.$buttonRemove.'
+				<div class="btn-toolbar pull-left">
+					'.$buttonCancel.'
+					'.$buttonView.'
+					'.$buttonSave.'
+					'.$buttonDefault.'
+				</div>
+				<div class="btn-toolbar pull-right">
+					'.$buttonRemove.'
+				</div>
 			</div>
 <!--			<li class="">
 				<label for="input_companyId">Unternehmen</label>

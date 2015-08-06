@@ -8,7 +8,8 @@
 	<log version="1.4.0b-p3">Add hook View:onRenderContent.</log>
 	<log version="1.4.0b-p4">Add support for AJAJ client.</log>
 	<log version="1.4.0b-p5">Add flag to wrap out in paragraph.</log>
-<!--	<log version="1.5.0">Update to version 1.5.0.</log>-->	
+	<log version="1.4.0b-p6">Add public link to AJAX/AJAJ rendering.</log>
+<!--	<log version="1.5.0">Update to version 1.5.0.</log>-->
 	<category>User Interface</category>
 	<author site="http://michelf.ca/home/">Michel Fortin</author>
 	<url>http://michelf.ca/projects/php-markdown/</url>
@@ -19,6 +20,7 @@
 		<class>Markdown.php5</class>
 		<file>licenses/Markdown.md</file>
 	</files>
+	<link access="public" rank="99" path="helper/markdown/ajaxRender"/>
 	<relations/>
 	<hook type="resource" resource="View" event="onRenderContent">View_Helper_Markdown::___onRenderContent</hook>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[

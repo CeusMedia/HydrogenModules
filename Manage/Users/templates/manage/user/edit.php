@@ -1,4 +1,4 @@
- <?php
+<?php
 
 $env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
 
@@ -61,7 +61,7 @@ if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
 
 $panelEdit	= '
 <div class="content-panel">
-	<h4>'.$w->legend.'</h4>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
 			<div class="row-fluid">
@@ -146,13 +146,13 @@ $panelEdit	= '
 
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-success' ).'
+					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
+					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.UI_HTML_Elements::LinkButton(
 						'./manage/user/remove/'.$userId,
 						'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
-						'btn btn-danger',
+						'btn btn-small btn-danger',
 						$w->buttonRemoveConfirm
 					).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;

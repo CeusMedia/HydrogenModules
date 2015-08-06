@@ -1,5 +1,8 @@
 $(document).ready(function(){
 	CodeMirror.apply = function(selector, options, useDataAttributes){
+		var options = $.extend({
+			extraKeys: {}
+		}, options);
 		var container = $(selector);
 		container.each(function(){
 			if(useDataAttributes){
@@ -7,25 +10,34 @@ $(document).ready(function(){
 				for(key in $(this).data()){
 					if(key.match(/^codemirror/)){
 						option = key.replace(/^codemirror/, "");
-						option = option[0].toLowerCase() + option.substr(1); 
+						option = option[0].toLowerCase() + option.substr(1);
 						options[option] = $(this).data(key);
 					}
 				}
 			}
 			if(settings.JS_CodeMirror.auto_option_fullscreen){
-				options.extraKeys = {
-					"F11": function(cm) {
-						CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));
-					},
-					"Esc": function(cm) {
-						if (CodeMirror.isFullScreen(cm))
-							CodeMirror.setFullScreen(cm, false);
+				options.extraKeys['F11'] = function(cm) {
+					CodeMirror.setFullScreen(cm, !CodeMirror.isFullScreen(cm));
+				};
+				options.extraKeys['Esc'] = function(cm) {
+					if (CodeMirror.isFullScreen(cm)) {
+						CodeMirror.setFullScreen(cm, false);
 					}
+				};
+			}
+			if(typeof options.callbackSave !== "undefined"){
+				if(typeof window[options.callbackSave] === "function"){
+					options.extraKeys['Ctrl-S'] = window[options.callbackSave];
 				}
 			}
 			var mirror = CodeMirror.fromTextArea($(this).get(0), options);
 			if(typeof options.height === "undefined")
 				mirror.setSize("100%", $(this).height());
+			if(typeof options.callbackChange !== "undefined"){
+				if(typeof window[options.callbackChange] === "function"){
+					mirror.on("change", window[options.callbackChange]);
+				}
+			}
 			$(this).data("codemirror", mirror);
 		});
 	};

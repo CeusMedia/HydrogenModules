@@ -1,38 +1,40 @@
 <?php
 
+$w	= (object) $words['editImage.scale'];
+
 $panelScale	= '
 <div class="content-panel">
-	<h4>Bildgröße ändern</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
-		<form action="./manage/content/image/scale?path='.$imagePath.'" method="post">
+		<form action="./manage/content/image/scale/'.base64_encode( $imagePath ).'" method="post">
 			<div class="row-fluid">
 				<div class="span4 input-append">
-					<label for="input_width">Breite</label>
+					<label for="input_width">'.$w->labelWidth.'</label>
 					<input class="span7" type="text" name="width" id="input_width" value="'.$imageWidth.'"/>
 					<span class="add-on">px</span>
 				</div>
 				<div class="span4 input-append">
-					<label for="input_height">Höhe</label>
+					<label for="input_height">'.$w->labelHeight.'</label>
 					<input class="span7" type="text" name="height" id="input_height" value="'.$imageHeight.'"/>
 					<span class="add-on">px</span>
 				</div>
 				<div class="span4 input-append">
-					<label for="input_quality">Qualität</label>
+					<label for="input_quality">'.$w->labelQuality.'</label>
 					<input class="span6" type="text" name="quality" id="input_quality" value="85"/>
 					<span class="add-on">%</span>
 				</div>
 			</div>
 			<label class="checkbox">
 				<input type="checkbox" name="keepRatio" id="input_keepRatio" checked="checked" value="1"/>
-				<abbr title="Bei Änderung der Breite/Höhe wird die Höhe/Breite automatisch berechnet, um die natürlichen Proportionen des Bildes zu erhalten.">Größenverhältnis beibehalten</abbr>
+				<abbr title="'.$w->labelFixRatio_title.'">'.$w->labelFixRatio.'</abbr>
 			</label>
 			<label class="checkbox">
 				<input type="checkbox" name="copy" id="input_copy" checked="checked" value="1"/>
-				<abbr title="Das skalierte Bild wird unter einem neuen Namen gespeichert. Die alte Bilddatei bleibt erhalten. Anderenfalls wird sie mit dem neuen Bild überschrieben.">Originalbild erhalten</abbr>
+				<abbr title="'.$w->labelKeepOriginal_title.'">'.$w->labelKeepOriginal.'</abbr>
 			</label>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-resize-small icon-white"></i> ändern</button>
-<!--			<button type="reset" class="btn btn-mini">zurücksetzen</button>-->
+				<button type="submit" name="save" class="btn not-btn-small not-btn-info btn-primary"><i class="icon-resize-small icon-white"></i> '.$w->buttonSave.'</button>
+<!--			<button type="reset" class="btn btn-mini">'.$w->buttonReset.'</button>-->
 			</div>
 		</form>
 	</div>

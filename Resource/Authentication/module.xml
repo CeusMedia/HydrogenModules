@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.6.6</version>
+	<version>0.6.15</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -38,8 +38,17 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.6.2">Implement check of user name by regular expression.</log>
 	<log version="0.6.3">Implement check of password length and strength.</log>
 	<log version="0.6.4">Improve registration mail and handling of mail failure.</log>
-	<log version="0.6.5">Carry source URL through registration/confirmation/login process.</log> 
+	<log version="0.6.5">Carry source URL through registration/confirmation/login process.</log>
 	<log version="0.6.6">Migrate password recovery.</log>
+	<log version="0.6.7">Add english HTML and mail files.</log>
+	<log version="0.6.8">Translated language file.</log>
+	<log version="0.6.9">Add empty terms and conditions in HTML and Markdown.</log>
+	<log version="0.6.10">Added support for auto forward after login and on index.</log>
+	<log version="0.6.11">Changed support for auto forward after logout.</log>
+	<log version="0.6.12">Removed old loginInside action and view.</log>
+	<log version="0.6.13">Added flag to allow or deny registration.</log>
+	<log version="0.6.14">Lay mails on queue but send immediately.</log>
+	<log version="0.6.15">Finish localization.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -72,19 +81,36 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<locale>de/mail/auth/register.txt</locale>
 		<locale>de/mail/auth/password.txt</locale>
 		<locale>en/auth.ini</locale>
+		<locale>en/html/auth/login/top.html</locale>
 		<locale>en/html/auth/login/info.html</locale>
+		<locale>en/html/auth/login/bottom.html</locale>
+		<locale>en/html/auth/confirm/top.html</locale>
+		<locale>en/html/auth/confirm/info.html</locale>
+		<locale>en/html/auth/confirm/bottom.html</locale>
+		<locale>en/html/auth/password/top.html</locale>
+		<locale>en/html/auth/password/info.html</locale>
+		<locale>en/html/auth/password/bottom.html</locale>
+		<locale>en/html/auth/register/top.html</locale>
+		<locale>en/html/auth/register/info.html</locale>
+		<locale>en/html/auth/register/bottom.html</locale>
 		<locale>en/html/auth/tac.html</locale>
+		<locale>en/html/auth/tac.md</locale>
+		<locale>en/mail/auth/register.txt</locale>
+		<locale>en/mail/auth/password.txt</locale>
 		<style source="theme">module.resource.auth.css</style>
 		<script load="auto">Auth.js</script>
 	</files>
-	<config protected="user" type="boolean" name="session.refresh">yes</config>
-	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
+	<config protected="yes" type="string" name="login.forward.path"></config>
+	<config protected="yes" type="boolean" name="login.forward.force">no</config>
 	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="user" type="boolean" name="logout.auto">yes</config>
 	<config protected="user" type="integer" name="logout.auto.minutes">30</config>
-	<config protected="no" type="string" name="logout.auto.forward.controller"></config>
-	<config protected="no" type="string" name="logout.auto.forward.action"></config>
-	<config protected="yes" type="boolean" name="logout.clearSession">1</config>
+	<config protected="yes" type="boolean" name="logout.clearSession">yes</config>
+	<config protected="yes" type="string" name="logout.forward.path"></config>
+	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
+	<config protected="no" type="boolean" name="register">yes</config>
+	<config protected="user" type="boolean" name="session.refresh">yes</config>
+	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
 	<relations>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Mail</needs>
@@ -106,6 +132,6 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 	<link rank="99" access="public" path="auth/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/ajaxEmailExists"></link>
+	<link rank="99" access="public" path="auth/index"></link>
 	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>
 </module>
-

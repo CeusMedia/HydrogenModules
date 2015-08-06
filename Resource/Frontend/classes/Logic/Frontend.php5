@@ -85,6 +85,10 @@ class Logic_Frontend{
 		return $list;
 	}
 
+	public function getConfigValue( $key ){
+		return $this->config->get( $key );
+	}
+
 	static public function getInstance( $env, $path = NULL ){
 		if( !self::$instance )
 			self::$instance	= new self( $env, $path );
@@ -100,6 +104,22 @@ class Logic_Frontend{
 			}
 		}
 		return $list;
+	}
+
+	public function getModuleConfigValue( $moduleId, $key ){
+		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
+		if( !file_exists( $fileName ) )
+			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
+		$list	= array();
+		$lines	= explode( "\n", File_Reader::load( $fileName ) );
+		foreach( $lines as $nr => $line ){
+			if( preg_match( "@<config @", $line ) ){
+				$lineKey	= preg_replace( "@^.+name=\"(.+)\".+$@U", "\\1", $line );
+				if( $key == $lineKey )
+					return preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
+			}
+		}
+		return NULL;
 	}
 
 	public function getModuleConfigValues( $moduleId, $keys = array() ){

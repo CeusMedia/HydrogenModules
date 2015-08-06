@@ -57,6 +57,8 @@ class View_Work_Mission_Export extends CMF_Hydrogen_View{
 		return $ical;
 	}
 
-	public function index(){}
+	public function index(){
+		return $this->loadContentFile( 'html/work/mission/export.html' );
+	}
 }
 ?>

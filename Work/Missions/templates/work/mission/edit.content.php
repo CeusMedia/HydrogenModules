@@ -22,7 +22,7 @@ $panelContentSplitted	= '
 			<div class="content-panel-inner">
 				<h3>Beschreibung / Inhalt</h3>
 				<div id="content-editor">
-					<div id="descriptionAsMarkdown"></div>
+					<div id="mission-content-html"></div>
 				</div>
 			</div>
 		</div>
@@ -42,7 +42,7 @@ $panelContentSplitted	= '
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab1">
 							<div id="content-editor">
-								<div id="descriptionAsMarkdown"></div>
+								<div id="mission-content-html"></div>
 							</div>
 						</div>
 						<div class="tab-pane" id="tab2">

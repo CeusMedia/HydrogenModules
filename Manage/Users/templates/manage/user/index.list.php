@@ -1,31 +1,12 @@
 <?php
 
 /*  --  PAGINATION  --  */
-$pagination	= "";
-if( $limit && $total > $limit )
-{
-	if( 0 ){
-	$options	= array(
-		'uri'	=> './manage/user/index/'.$limit.'/',
-		'keyRequest'	=> '',
-		'keyParam'		=> '',
-		'keyOffset'		=> '',
-		'keyAssign'		=> '',
-	);
-	$pagination	= new UI_HTML_Pagination( $options );
-	$pagination	= $pagination->build( $total, $limit, $offset );
-	}else{
-		$uri		= './manage/user/index/'.$limit;
-		$pagination	= new View_Helper_Pagination( $options );
-		$pagination	= $pagination->render( $uri, $total, $limit, $page );
-	}
-}
+$pagination	= new CMM_Bootstrap_PageControl( './manage/user', $page, ceil( $total / $limit ) );
 
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
-if( count( $total ) ){
-
+if( $total ){
 	$rows	= array();
 	$phraser	= new View_Helper_TimePhraser( $env );
 
@@ -66,36 +47,34 @@ if( count( $total ) ){
 		$rows[]	= $line;
 	}
 	$rows	= join( $rows );
+	$list	= '
+<table id="users" class="table not-table-condensed table-striped">
+	<colgroup>
+		<col width="32%"/>
+		<col width="17%"/>
+		<col width="15%"/>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="12%"/>
+<!--				<col width="12%"/>-->
+	</colgroup>
+	'.$rows.'
+</table>';
 }
 else
-	$rows	= '<tr><td colspan="5"><em>Nichts gefunden.</em></td></tr>';
+	$list	= '<div class="muted"><em>'.$words['indexList']['noEntries'].'</em></div><br/>';
 
 return '
 <div class="content-panel">
-	<h4>'.$words['indexList']['legend'].' <small class="muted">('.$total.'/'.$all.')</small></h4>
+	<h3>'.$words['indexList']['heading'].' <small class="muted">('.$total.'/'.$all.')</small></h3>
 	<div class="content-panel-inner">
-		<table id="users" class="table not-table-condensed table-striped">
-			<colgroup>
-				<col width="32%"/>
-				<col width="17%"/>
-				<col width="15%"/>
-				<col width="12%"/>
-				<col width="12%"/>
-				<col width="12%"/>
-<!--				<col width="12%"/>-->
-			</colgroup>
-			'.$rows.'
-		</table>
-<!--		'.$pagination.'<br/>-->
+		'.$list.'
 		<div class="row-fluid buttonbar">
-			<div class="pull-right">
+			<div class="btn-toolbar">
 				'.$pagination.'
-			</div>
-			<div class="pull-left">
-				'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-primary' ).'
+				'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-small btn-success' ).'
 			</div>
 		</div>
 	</div>
-</div>
-';
+</div>';
 ?>

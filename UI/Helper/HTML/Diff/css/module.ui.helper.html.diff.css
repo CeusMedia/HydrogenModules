@@ -1,0 +1,19 @@
+.htmldiff ins.mod,
+.htmldiff ins.diffmod {
+    text-decoration: none;
+    background-color: rgba(255, 255, 127, 1);
+    }
+.htmldiff ins.diffins {
+    text-decoration: none;
+    background-color: rgba(127, 255, 127, 1);
+    }
+.htmldiff del.diffmod {
+    background-color: rgba(127, 127, 255, 1);
+    background-color: rgba(255, 255, 127, 1);
+    }
+.htmldiff .diffmod del.diffmod,
+.htmldiff .diffmod del.diffdel {
+    text-decoration: none;
+    background-color: rgba(255, 127, 127, 1);
+    }
+

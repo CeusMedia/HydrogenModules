@@ -88,7 +88,7 @@ var WorkMissionsEditor = {
 		this.initForms();
 		WorkMissionsEditor.missionId = missionId;
 		WorkMissionsEditor.userId = Auth.userId;
-		WorkMissionsEditor.markdown = $("#descriptionAsMarkdown");
+		WorkMissionsEditor.markdown = $("#mission-content-html");
 		WorkMissionsEditor.textarea = $("#input_content");
 		WorkMissionsEditor.mirror = CodeMirror.fromTextArea(WorkMissionsEditor.textarea.get(0), {
 			lineNumbers: true,

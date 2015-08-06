@@ -5,14 +5,17 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop{
 
 		$dbc	= $this->env->getDatabase();
 		$prefix	= $dbc->getPrefix();
+/*
+		$frontend		= Logic_Frontend::getInstance( $this->env );
+		$logicBridge	= new Logic_ShopBridge( $this->env );
+		$bridgeId		= (int) $this->request->get( 'bridgeId' );
 
-		$frontend	= Logic_Frontend::getInstance( $this->env );
-		$bridge		= new Logic_ShopBridge( $this->env );
-
-print_m( $bridge->getBridges() );
-die;
-
-
+		foreach( $logicBridge->getBridges() as $bridge ){
+//print_m( $bridge );die;
+//			$bridge->articleTableName
+//			$bridge->articleIdColumn
+		}
+*/
 		$queryOrdersPerYear	= "
 SELECT
 	FROM_UNIXTIME(o.createdAt, '%Y') as year,
@@ -25,15 +28,14 @@ ORDER BY year ASC";
 		$years	= array();
 		foreach( $dbc->query( $queryOrdersPerYear )->fetchAll( PDO::FETCH_OBJ ) as $row ){
 			$queryYearTurnover	= "
-SELECT SUM(op.quantity * a.price) AS turnover
+SELECT
+	SUM(o.price) AS turnover,
+	SUM(o.priceTaxed) AS turnoverTaxed
 FROM
-	".$prefix."catalog_articles AS a,
-	".$prefix."shop_orders AS o,
-	".$prefix."shop_order_positions AS op
+	".$prefix."shop_orders AS o
 WHERE
-	a.articleId=op.articleId AND
-	op.orderId=o.orderId AND
 	FROM_UNIXTIME(o.createdAt, '%Y')=".(int)$row->year." AND
+	o.status >= 3 AND
 	o.customerId > 0";
 			$turnover	= $dbc->query( $queryYearTurnover )->fetch( PDO::FETCH_OBJ )->turnover;
 			$years[]	= (object) array(

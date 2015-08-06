@@ -46,7 +46,7 @@ $env->getPage()->js->addScriptOnReady('Auth.initUserRegistration();');
 $env->getPage()->css->theme->addUrl( 'module.resource.auth.css' );
 
 $panelUser	= HTML::DivClass( 'content-panel', array(
-	HTML::H3( $w->legend ),
+	HTML::H3( $w->heading ),
 	HTML::DivClass( 'content-panel-inner',
 		HTML::DivClass( 'row-fluid', array(
 			HTML::DivClass( 'span3', array(

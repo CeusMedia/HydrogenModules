@@ -13,10 +13,6 @@ class View_Auth extends CMF_Hydrogen_View {
 
 	public function login() {}
 
-	public function loginInside(){
-		return $this->loadContentFile( 'html/auth.login.inside.html' );
-	}
-
 	public function password(){}
 
 	public function register(){}

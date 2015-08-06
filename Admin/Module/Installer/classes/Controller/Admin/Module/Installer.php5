@@ -92,7 +92,10 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 	public function diff( $hashFileLocal, $hashFileSource ){
 
-		CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
+		if( !class_exists( 'Diff' ) )
+			CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
+		if( !class_exists( 'Diff' ) )
+			throw new RuntimeException( 'Package "php-diff" is not installed.' );
 
 		$fileLocal		= base64_decode( $hashFileLocal );
 		$fileSource		= base64_decode( $hashFileSource );
@@ -363,6 +366,8 @@ die;																								//  @todo handle exception without die
 		$this->addData( 'moduleMap', $this->logic->model->getAll() );
 		$this->addData( 'mainModuleId', $mainModuleId );
 		$this->addData( 'mainModule', $mainModule );
+		$this->addData( 'sqlScripts', $this->logic->getDatabaseScripts( $moduleId ) );
+		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
 	}
 }
 ?>

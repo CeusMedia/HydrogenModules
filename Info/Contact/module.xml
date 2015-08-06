@@ -3,7 +3,7 @@
 	<title>Info: Contact</title>
 	<description><![CDATA[Simple contact form.]]></description>
 	<category>Info</category>
-	<version>0.2.5</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for static content blocks (top, right, bottom).</log>
@@ -11,6 +11,8 @@
 	<log version="0.2.3">Updated locales.</log>
 	<log version="0.2.4">Integrate CAPTCHA.</log>
 	<log version="0.2.5">Integrate honey pot.</log>
+	<log version="0.2.6">Improve CAPTCHA folder detection.</log>
+	<log version="0.2.7">Applied panel style.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,8 +21,10 @@
 		<class>Mail/Info/Contact.php5</class>
 		<class>View/Info/Contact.php5</class>
 		<template>info/contact/index.php</template>
+		<locale>de/html/info/contact/top.html</locale>
 		<locale>de/info/contact.ini</locale>
 		<locale>de/mail/info/contact.html</locale>
+		<locale>en/html/info/contact/top.html</locale>
 		<locale>en/info/contact.ini</locale>
 		<locale>en/mail/info/contact.html</locale>
 		<style>module.info.contact.css</style>
@@ -33,10 +37,10 @@
 	<config protected="yes" type="boolean" name="captcha.enable">no</config>
 	<config protected="yes" type="integer" name="captcha.length">4</config>
 	<config protected="yes" type="string" name="captcha.strength" values="soft,hard">soft</config>
-	<config protected="yes" type="string" name="captcha.path">contents/images/</config>
+	<config protected="yes" type="string" name="captcha.path"></config>
 	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
-	<link access="public" path="info/contact" xml:lang="de" rank="80">Kontakt</link>
-	<link access="public" path="info/contact" xml:lang="en" rank="80">Contact</link>
+	<link xml:lang="de" rank="80" access="public" path="info/contact/index" link="info/contact">Kontakt</link>
+	<link xml:lang="en" rank="80" access="public" path="info/contact/index" link="info/contact">Contact</link>
 	<sql on="install" type="mysql"><![CDATA[
 ]]></sql>	
 	<sql on="uninstall" type="mysql"><![CDATA[

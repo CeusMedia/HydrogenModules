@@ -59,6 +59,7 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
 
 		$this->addData( 'wordsTypes', $words['types'] );
+		$this->env->getPage()->js->addScriptOnReady( 'AdminModuleUpdater.init();' );
 	}
 
 	public function view(){

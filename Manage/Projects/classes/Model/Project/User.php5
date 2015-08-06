@@ -5,6 +5,7 @@ class Model_Project_User extends CMF_Hydrogen_Model{
 		'projectUserId',
 		'projectId',
 		'userId',
+		'isDefault',
 		'createdAt',
 		'modifiedAt',
 	);
@@ -12,6 +13,7 @@ class Model_Project_User extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'projectId',
 		'userId',
+		'isDefault',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

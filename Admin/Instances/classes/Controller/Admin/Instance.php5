@@ -1,14 +1,16 @@
  <?php
 class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
+	protected $moduleConfig;
+
 	protected function __onInit(){
 		$this->model		= new Model_Instance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$this->addData( 'root', getEnv( 'DOCUMENT_ROOT' ).'/' );
 	}
 
 	public function add(){
-		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
 		if( $post->get( 'add' ) ){
 			$id			= trim( $post->get( 'id' ) );
@@ -34,15 +36,16 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !strlen( $id ) )
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
-			if( $module->get( 'lock' ) ){															//  locking is enabled
-				if( strlen( $lockProtocol = trim( $module->get( 'lock.protocol' ) ) ) )				//  a locked protocol has been set
+			if( $this->moduleConfig->get( 'lock' ) ){												//  locking is enabled
+				$lock	= $this->moduleConfig->getAll( 'lock.', TRUE );
+				if( strlen( $lockProtocol = trim( $lock->get( 'protocol' ) ) ) )					//  a locked protocol has been set
 					$protocol	= $lockProtocol;													//  override post with locked protocol
-				if( strlen( $lockHost = trim( $module->get( 'lock.host' ) ) ) )						//  a locked host has been set
+				if( strlen( $lockHost = trim( $lock->get( 'host' ) ) ) )							//  a locked host has been set
 					$host	= $lockHost;															//  override post with locked host
-				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
+				if( strlen( $lockPath = trim( $lock->get( 'path' ) ) ) )							//  a lock path has been set
 					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
-				if( strlen( $lockUri = trim( $module->get( 'lock.uri' ) ) ) )						//  a lock URI has been set
+				if( strlen( $lockUri = trim( $lock->get( 'uri' ) ) ) )								//  a lock URI has been set
 					if( substr( $uri, 0, strlen( $lockUri ) ) !== $lockUri )						//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der absolute Pfad muss mit "'.$lockUri.'" beginnen.' );
 			}
@@ -77,7 +80,6 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function createConfig( $instanceId ){
-		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
 		$instance	= $this->model->get( $instanceId );
 
 #		if( !preg_match( '/^\//', $instance->path ) )
@@ -100,8 +102,8 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 			'path.scripts.lib'		=> '',
 			'layout.primer'			=> '',
 			'layout.theme'			=> 'custom',
-			'locale.allowed'		=> $module->get( 'config.locale.allowed' ),
-			'locale.default'		=> $module->get( 'config.locale.default' ),
+			'locale.allowed'		=> $this->moduleConfig->get( 'config.locale.allowed' ),
+			'locale.default'		=> $this->moduleConfig->get( 'config.locale.default' ),
 		);
 
 		try{
@@ -202,43 +204,49 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 
 			$configPath	= $configPath ? preg_replace( '@/*$ 	@', '', $configPath ).'/' : '';			//  add trailing slash to config path
 
-			if( !strlen( $title ) )
+			if( !strlen( $title ) ){
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
-			if( !strlen( $id ) )
+				$this->restart( 'edit/'.$instanceId, TRUE );
+			}
+			if( !strlen( $id ) ){
 				$this->env->getMessenger()->noteError( 'Die ID fehlt.' );
-			if( $module->get( 'lock' ) ){															//  locking is enabled
-				if( strlen( $lockProtocol = trim( $module->get( 'lock.protocol' ) ) ) )				//  a locked protocol has been set
+				$this->restart( 'edit/'.$instanceId, TRUE );
+			}
+			if( $this->moduleConfig->get( 'lock' ) ){															//  locking is enabled
+				$lock	= $this->moduleConfig->getAll( 'lock.', TRUE );
+				if( strlen( $lockProtocol = trim( $lock->get( 'protocol' ) ) ) )					//  a locked protocol has been set
 					$protocol	= $lockProtocol;													//  override post with locked protocol
-				if( strlen( $lockHost = trim( $module->get( 'lock.host' ) ) ) )						//  a locked host has been set
+				if( strlen( $lockHost = trim( $lock->get( 'host' ) ) ) )							//  a locked host has been set
 					$host	= $lockHost;															//  override post with locked host
-				if( strlen( $lockPath = trim( $module->get( 'lock.path' ) ) ) )						//  a lock path has been set
-					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath )						//  but is not the beginning of given URI
+				if( strlen( $lockPath = trim( $lock->get( 'path' ) ) ) ){							//  a lock path has been set
+					if( substr( $path, 0, strlen( $lockPath ) ) !== $lockPath ){					//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der Pfad muss mit "'.$lockPath.'" beginnen.' );
-				if( strlen( $lockUri = trim( $module->get( 'lock.uri' ) ) ) )						//  a lock URI has been set
-					if( substr( $uri, 0, strlen( $lockUri ) ) !== $lockUri )						//  but is not the beginning of given URI
+						$this->restart( 'edit/'.$instanceId, TRUE );
+					}
+				}
+				if( strlen( $lockUri = trim( $lock->get( 'uri' ) ) ) ){								//  a lock URI has been set
+					if( substr( $uri, 0, strlen( $lockUri ) ) !== $lockUri ){						//  but is not the beginning of given URI
 						$this->env->getMessenger()->noteError( 'Der absolute Pfad muss mit "'.$lockUri.'" beginnen.' );
+						$this->restart( 'edit/'.$instanceId, TRUE );
+					}
+				}
 			}
-#			if( $path == '/' )
-#				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
-
-			if( !$this->messenger->gotError() ){
-				$data		= array(
-					'title'		=> $title,
-					'protocol'	=> $protocol,
-					'host'		=> $host,
-					'path'		=> $path,
-					'uri'		=> $uri,
-				);
-				if( $configPath != '/' && $configPath != 'config/' )
-					$data['configPath']	= $configPath;
-				if( $configFile != 'config.ini' )
-					$data['configFile']	= $configFile;
-				$this->model->edit( $instanceId, $data );
-				if( $instanceId !== $id )
-					$this->model->changeId( $instanceId, $id );
-				$this->messenger->noteSuccess( 'Die Instanz wurde gespeichert.' );
-				$this->restart( './admin/instance/edit/'.$id );
-			}
+			$data		= array(
+				'title'		=> $title,
+				'protocol'	=> $protocol,
+				'host'		=> $host,
+				'path'		=> $path,
+				'uri'		=> $uri,
+			);
+			if( $configPath != '/' && $configPath != 'config/' )
+				$data['configPath']	= $configPath;
+			if( $configFile != 'config.ini' )
+				$data['configFile']	= $configFile;
+			$this->model->edit( $instanceId, $data );
+			if( $instanceId !== $id )
+				$this->model->changeId( $instanceId, $id );
+			$this->messenger->noteSuccess( 'Die Instanz wurde gespeichert.' );
+			$this->restart( './admin/instance/edit/'.$id );
 		}
 		$instance		= $this->model->get( $instanceId );
 		$instance->id	= $instanceId;

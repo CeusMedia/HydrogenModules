@@ -17,7 +17,7 @@ $optRegister	= join( $optRegister );
 
 $panelEdit	= '
 <div class="content-panel">
-	<h3>'.$words['edit']['legend'].'</h3>
+	<h3>'.$words['edit']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form name="editRole" action="./manage/role/edit/'.$roleId.'" method="post">
 			<div class="row-fluid">
@@ -43,10 +43,10 @@ $panelEdit	= '
 			</div>
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn' ).'
-					'.UI_HTML_Elements::Button( 'saveRole', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-success' ).'
+					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
+					'.UI_HTML_Elements::Button( 'saveRole', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.UI_HTML_Elements::LinkButton( './manage/role/remove/'.$roleId, '<i class="icon-remove icon-white"></i> '.$words['edit']['buttonRemove'], 'btn btn-danger', 'Wirklich?' ).'
+					'.UI_HTML_Elements::LinkButton( './manage/role/remove/'.$roleId, '<i class="icon-remove icon-white"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.UI_HTML_Elements::LinkButton( './manage/user/add?roleId='.$roleId, '<i class="icon-plus icon-white"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
 					'.UI_HTML_Elements::LinkButton( './manage/user/filter?roleId='.$roleId, '<i class="icon-search"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
@@ -62,13 +62,13 @@ $panelRights	= $view->loadTemplateFile( 'manage/role/edit.rights.php' );
 
 $w				= (object) $words['info'];
 $helperTime	= new View_Helper_TimePhraser( $env );
-$createdAt		= 'vor '.$helperTime->convert( $role->createdAt, TRUE );
+$createdAt		= $helperTime->convert( $role->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 $modifiedAt		= $role->modifiedAt ? 'vor '.$helperTime->convert( $role->modifiedAt, TRUE ) : '-';
 $panelInfo		= '
 <div class="content-panel">
-	<h3>'.$w->legend.'</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<dl class="dl-horizontal">
+		<dl class="not-dl-horizontal">
 			<dt>'.$w->labelUserCount.'</dt>
 			<dd>'.$userCount.'</dd>
 			<dt>'.$w->labelCreatedAt.'</dt>
@@ -77,9 +77,7 @@ $panelInfo		= '
 			<dd>'.$modifiedAt.'</dd>
 		</dl>
 	</div>
-</div>
-';
-
+</div>';
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
 

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: Roboto</title>
+	<description><![CDATA[Integration of typeface "Roboto".
+
+Faces:
+list>
+- robotoregular
+- robotoitalic
+- robotothin
+- robotothin_italic
+- robotolight
+- robotobold
+- robotoblack
+- robotoblack_italic
+- roboto_condensedbold_italic
+- roboto_condensedbold_italic
+- robotolight_italic
+- robotobold_italic
+- roboto_condensedregular
+- roboto_condensedlight
+- roboto_condenseditalic
+- roboto_condensedlight_italic
+- roboto_condensedbold
+- roboto_condensedbold_italic
+- robotomedium
+- robotomedium_italic
+<list
+]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<author site="https://plus.google.com/110879635926653430880/about">Christian Robertson</author>
+	<license source="http://www.fontsquirrel.com/license/roboto">Apache License v2</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $config->get( 'module.ui_font_roboto.enabled' ) ){
+				$url	= $config->get( 'module.ui_font.uri' ).'Roboto/roboto.css';				
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+		}
+]]></hook>
+</module>

@@ -48,6 +48,9 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	}
 
 	public function view(){
+		$page			= $this->env->getPage();
+		$page->addThemeStyle( 'module.ui.helper.html.diff.css' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsViewer.js' );
 	}
 }
 ?>

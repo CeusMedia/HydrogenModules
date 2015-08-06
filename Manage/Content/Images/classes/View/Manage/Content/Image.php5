@@ -32,21 +32,25 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 	}
 
 	protected function listFolders( $currentPath ){
+		$words	= (object) $this->getWords( 'index' );
 		$start	= microtime( TRUE );
 		$list   = array();
 		$folders	= $this->getData( 'folders' );
 		foreach( $folders as $folder ){
-			$name		= basename( $folder );
+			$name		= preg_replace( "/^\.\//", "", $folder );
+			$name		= $name == "." ? '<small class="muted"><em>'.$words->labelRoot.'</em></small>' : $name;
+
 			$number		= $this->countFilesInFolder( $this->path.$folder );
 			$badge		= UI_HTML_Tag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
 			$badge		= UI_HTML_Tag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
-			$label		= UI_HTML_Tag::create( 'span', $folder.' '.$badge, array( 'class' => 'autocut' ) );
-			if( strlen( $folder ) > 30 )
-				$label		= UI_HTML_Tag::create( 'small', $folder.' '.$badge, array( 'class' => 'autocut' ) );
+
+			$label		= UI_HTML_Tag::create( 'span', $name.' '.$badge, array( 'class' => 'autocut' ) );
+			if( strlen( $folder ) > 45 )
+				$label		= UI_HTML_Tag::create( 'small', $name.' '.$badge, array( 'class' => 'autocut' ) );
 			$link		= UI_HTML_Tag::create( 'a', $label, array(
-				'href'	=> './manage/content/image?path='.$folder,
+				'href'	=> './manage/content/image/'.base64_encode( $folder ),
 //				'class'	=> 'autocut',
-            ) );
+			) );
 			$list[$folder]	= UI_HTML_Tag::create( 'li', $link, array(
 				'class'	=> 'not-autocut '.( $folder == $currentPath ? "active" : NULL ),
 				'title'	=> $folder,
@@ -63,7 +67,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 	public function listImages( $path, $maxWidth, $maxHeight ){
 		$list			= array();
 		$index			= new DirectoryIterator( $this->path.$path );
-		$thumbnailer	= new View_Helper_Thumbnailer( $this->env, $maxWidth, $maxHeight, "config/" );
+		$thumbnailer	= $this->getData( 'helperThumbnailer' );
 		foreach( $index as $entry ){
 			if( !$entry->isFile() )
 				continue;
@@ -76,7 +80,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 			$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
 			$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
 			$key		= $entry->getFilename();
-			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-path' => addslashes( $imagePath ) ) );
+			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
 		}
 		natcasesort( $list );
 		if( $list )

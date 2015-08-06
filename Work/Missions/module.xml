@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.8.59</version>
+	<version>0.9.7</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -46,6 +46,14 @@ code>
 	<log version="0.8.57">Sanitize date and time inputs.</log>
 	<log version="0.8.58">Added missing mail class.</log>
 	<log version="0.8.59">Day controls for empty days with lower opacity.</log>
+	<log version="0.9">Complete iCal synchronization.</log>
+	<log version="0.9.1">Added index view for export.</log>
+	<log version="0.9.2">Handle iCall import/export errors with log.</log>
+	<log version="0.9.3">Add mission version model.</log>
+	<log version="0.9.4">Add version difference viewer.</log>
+	<log version="0.9.5">Allow to not inform on edit.</log>
+	<log version="0.9.6">Extract view JavaScript parts into WorkMissionsViewer.</log>
+	<log version="0.9.7">Split view template into parts.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -58,6 +66,7 @@ code>
 		<class>Model/Mission.php5</class>
 		<class>Model/Mission/Change.php5</class>
 		<class>Model/Mission/Filter.php5</class>
+		<class>Model/Mission/Version.php5</class>
 		<class>Logic/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
 		<class>View/Work/Mission/Archive.php5</class>
@@ -93,16 +102,20 @@ code>
 		<template>work/mission/index.filter.php</template>
 		<template>work/mission/index.list.php</template>
 		<template>work/mission/view.php</template>
+		<template>work/mission/view.facts.php</template>
+		<template>work/mission/view.content.php</template>
 		<template>work/mission/mails/new.php</template>
 		<template>work/mission/mails/update.php</template>
 		<locale>de/work/mission.ini</locale>
 		<locale>de/html/work/mission/add.info.html</locale>
+		<locale>de/html/work/mission/export.html</locale>
 		<locale>de/html/work/mission/index.empty.html</locale>
 		<script>WorkMissions.js</script>
 		<script>WorkMissionsCalendar.js</script>
 		<script>WorkMissionsFilter.js</script>
 		<script>WorkMissionsEditor.js</script>
 		<script>WorkMissionsList.js</script>
+		<script>WorkMissionsViewer.js</script>
 		<style load="auto">site.mission.css</style>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
@@ -237,9 +250,33 @@ ALTER TABLE `<%?prefix%>missions` CHANGE `hoursRequired`  `minutesRequired` INT(
 ALTER TABLE `<%?prefix%>missions` CHANGE `ownerId` `creatorId` INT(10) UNSIGNED NOT NULL;
 ALTER TABLE `<%?prefix%>missions` ADD `modifierId` INT(10) UNSIGNED NULL AFTER `creatorId`, ADD INDEX (`modifierId`) ;
 ]]></sql>
+	<sql on="update" type="mysql" version="0.8.53"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mission_versions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_versions` (
+  `missionVersionId` int(11) unsigned NOT NULL,
+  `missionId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `version` int(6) unsigned NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+ALTER TABLE `<%?prefix%>mission_versions`
+  ADD PRIMARY KEY (`missionVersionId`),
+  ADD KEY `missionId` (`missionId`),
+  ADD KEY `userId` (`userId`),
+  ADD KEY `version` (`version`),
+  ADD KEY `timestamp` (`timestamp`);
+
+
+ALTER TABLE `<%?prefix%>mission_versions`
+  MODIFY `missionVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT;
+]]></sql>
 	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
 DROP TABLE IF EXISTS `<%?prefix%>mission_filters`;
+DROP TABLE IF EXISTS `<%?prefix%>mission_versions`;
 ]]></sql>
 </module>

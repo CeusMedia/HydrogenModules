@@ -12,7 +12,10 @@ foreach( $classes as $class )
 $optClass	= UI_HTML_Elements::Options( $optClass );
 
 $optStatus	= UI_HTML_Elements::Options( $words['states'], 1 );
-return '
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
+
+return $textTop.'
 <!-- templates/admin/mail/attachment/add.php -->
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
@@ -41,10 +44,10 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="add" class="btn btn-success"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
+				<button type="submit" name="add" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
 </div>
-';
+'.$textBottom;
 ?>

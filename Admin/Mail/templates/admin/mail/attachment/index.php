@@ -5,16 +5,12 @@ $panelUpload	= $this->loadTemplateFile( 'admin/mail/attachment/upload.php' );
 $panelList		= $this->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
 
 $w			= (object) $words['index'];
-return '
-<!--<h2>'.$w->heading.'</h2>-->
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
+
+return $textTop.'
 <div class="row-fluid">
-<!--	<div class="span3">
-		'./*$panelFilter.*/'
-	</div>
-	<div class="span9">
--->
 	<div class="span12">
-		<h3>Anhänge</h3>
 		'.$panelList.'
 	</div>
 </div>
@@ -27,4 +23,4 @@ return '
 		'.$panelUpload.'
 	</div>
 </div>
-';
+'.$textBottom;

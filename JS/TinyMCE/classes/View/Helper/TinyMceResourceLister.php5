@@ -23,7 +23,6 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		$this->pathFront	= $this->config->get( 'path' );
 	}
 
-
 	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
@@ -32,41 +31,27 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		$version	= $config->get( 'version' );
 
 		$context->js->addUrl( $pathLib.'tinymce/'.$version.'/tinymce.min.js' );
-		$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' );
+		if( $language !== "en" )
+			$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' );
 		$context->js->addUrl( $pathJs.'TinyMCE.Config.js' );
 
 		$frontend	= Logic_Frontend::getInstance( $env );
 
-/*
-$languages	= array();
-$pattern	= "/^([a-z]{2})(-([A-Z]{2}))?(;q=([0-9].?[0-9]*))?$/";
-$items		= explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) );
-foreach( $items as $item ){
-	$matches	= array();
-	preg_match( $pattern, $item, $matches );
-	$languages[]	= (object) array(
-		'language'	=> $matches[1],
-		'dialect'	=> $matches[3],
-		'quality'	=> isset( $matches[5] ) ? $matches[5] : 1,
-    );
-}
-*/
 		$labels	= array(
 			'de'	=> 'Deutsch',
 			'en'	=> 'Englisch',
 		);
 
-
 		$languages	= array();
 		$matches	= array();
 		foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){
 			preg_match( "/^([a-z]{2})(-([A-Z]{2}))?(;q=([0-9].?[0-9]*))?$/", $item, $matches );
-			$label	= $labels[$matches[1]];
-			if( !in_array( $label."=".$matches[1], $languages ) )
-				$languages[]	= $label."=".$matches[1];
+			if( isset( $matches[1] ) && isset( $labels[$matches[1]] ) ){
+				$label	= $labels[$matches[1]];
+				if( !in_array( $label."=".$matches[1], $languages ) )
+					$languages[]	= $label."=".$matches[1];
+			}
 		}
-
-
 
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 			$helper	= new View_Helper_TinyMceResourceLister( $env );
@@ -77,17 +62,21 @@ tinymce.Config.frontendUri = "'.$frontend->getUri().'";
 tinymce.Config.language = "'.$language.'";
 tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
 tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
-	if($("settings.Module_JS_TinyMCE.auto_selector").size()){
-		if(settings.Module_JS_TinyMCE.auto_selector){
+	if($(settings.JS_TinyMCE.auto_selector).size()){
+		if(settings.JS_TinyMCE.auto_selector){
 			var options = {};
-			if(settings.Module_JS_TinyMCE.auto_tools)
-				options.tools = settings.Module_JS_TinyMCE.auto_tools;
+			if(settings.JS_TinyMCE.auto_tools)
+				options.tools = settings.JS_TinyMCE.auto_tools;
 			tinymce.init(tinymce.Config.apply(options));
 console.log(options);
 		}
 	}';
 			$context->js->addScriptOnReady( $script );
 		}
+	}
+
+	protected function __compare( $a, $b ){
+		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 
 	/**
@@ -102,6 +91,7 @@ console.log(options);
 				$modules->callHook( 'TinyMCE', 'getImageList', $this, array( 'hidePrefix' => FALSE ) );								//  call related module event hooks
 			$this->listImages	= $this->list;
 		}
+		usort( $this->listImages, array( $this, "__compare" ) );
 		return $this->listImages;
 	}
 

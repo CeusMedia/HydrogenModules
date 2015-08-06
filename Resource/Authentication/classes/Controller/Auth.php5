@@ -91,9 +91,20 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function index(){
-		if( $this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'loginInside' );
-		return $this->redirect( 'auth', 'login' );
+		if( !$this->session->has( 'userId' ) )
+			return $this->redirect( 'auth', 'login' );
+
+		$from			= $this->request->get( 'from' );
+		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
+		$forwardForce	= $this->moduleConfig->get( 'login.forward.force' );
+
+		if( $forwardPath && $forwardForce )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		if( $from )
+			return $this->restart( $from );
+		if( $forwardPath )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		return $this->restart( NULL );
 	}
 
 	public function login( $username = NULL ){
@@ -152,7 +163,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						}
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './'.$from );												//  restart (or go to redirect URL)
+						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
 					}
 				}
 			}
@@ -182,17 +193,21 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 				session_destroy();																	//  completely destroy session
 		}
-		$redirectTo	= '';																			//  assume empty redirect URL
-		if( $redirectController && $redirectAction )												//  both redirect controller and action given
-			$redirectTo	= $redirectController.'/'.$redirectAction;									//  generate redirect URL
-		else if( $redirectController )																//  or only redirect controller given
-			$redirectTo	= $redirectController;														//  generate redirect URL
-		else if( $this->request->get( 'from' ) )													//  or redirect URL given via parameter "from"
-			$redirectTo	= $this->request->get( 'from' );											//  take redirect URL from parameter
-		$this->restart( './'.$redirectTo );															//  restart (to redirect URL if set)
-	}
 
-	public function loginInside(){}
+		$from			= $this->request->get( 'from' );
+		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );
+		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );
+
+		if( $forwardPath && $forwardForce )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		if( $from )
+			$this->restart( $from );
+		if( $forwardPath )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+
+		$redirectTo	= $redirectController.( $redirectAction ? '/'.$redirectAction : '' );
+		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
+	}
 
 	public function password(){
 		$words			= (object) $this->getWords( 'password' );
@@ -222,8 +237,11 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						'username'	=> $user->username,
 						'password'	=> $password,
 					);
+					$language	= $this->env->getLanguage()->getLanguage();
 					$mail		= new Mail_Auth_Password( $this->env, $data );
-					$mail->sendTo( $user );
+					$logic		= new Logic_Mail( $this->env );
+					$logic->appendRegisteredAttachments( $mail, $language );
+					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
 					$modelUser->edit( $user->userId, array( 'password' => md5( $passwordSalt.$password ) ) );
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
@@ -231,7 +249,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					$this->restart( './auth/login?login_username='.$user->username );
 				}
 				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->msgSendingMailFailed );
+					$this->messenger->noteFailure( $words->msgSendingMailFailed, $e->getMessage() );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -242,13 +260,18 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	public function register(){
 		$words		= (object) $this->getWords( 'register' );
 
+		if( !$this->moduleConfig->get( 'register' ) ){
+			$this->messenger->noteError( $words->msgRegistrationClosed );
+			$this->restart( $this->request->get( 'from' ) );
+		}
+
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
 		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 		$rolesAllowed	= array();
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
-				$rolesAllowed[]	= $role->roleId;
+			$rolesAllowed[]	= $role->roleId;
 
 		$input			= $this->request->getAllFromSource( 'post' );
 		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
@@ -315,23 +338,29 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					'createdAt'		=> time(),
 				);
 				$this->env->getDatabase()->beginTransaction();
-				$from	= $this->request->get( 'from' );
+				$from		= $this->request->get( 'from' );
+				$forward	= './auth/login'.( $from ? '?from='.$from : '' );
 				try{
 					$userId		= $modelUser->add( $data );
-					$this->messenger->noteSuccess( $words->msgSuccess );
 
-					if( $status ){
-						$this->env->getDatabase()->commit();
-						$this->restart( './auth/login'.( $from ? '?from='.$from : '' ) );
+					if( !$status ){
+						$data				= $input->getAll();
+						$data['from']		= $from;
+						$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
+
+						$language	= $this->env->getLanguage()->getLanguage();
+						$user		= $modelUser->get( $userId );
+						$mail		= new Mail_Auth_Register( $this->env, $data );
+						$logic		= new Logic_Mail( $this->env );
+						$logic->appendRegisteredAttachments( $mail, $language );
+						$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
+						$forward	= './auth/confirm'.( $from ? '?from='.$from : '' );
 					}
-					$data				= $input->getAll();
-					$data['from']		= $from;
-					$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
-					$mail				= new Mail_Auth_Register( $this->env, $data );
-					$mail->sendTo( $modelUser->get( $userId ) );
 					$this->env->getDatabase()->commit();
-					$this->messenger->noteNotice( $words->msgNoticeConfirm );
-					$this->restart( './auth/confirm'.( $from ? '?from='.$from : '' ) );
+					$this->messenger->noteSuccess( $words->msgSuccess );
+					if( !$status )
+						$this->messenger->noteNotice( $words->msgNoticeConfirm );
+					$this->restart( $forward );
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );

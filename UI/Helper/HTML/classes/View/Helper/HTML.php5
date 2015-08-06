@@ -15,13 +15,13 @@ class HTML/* extends UI_HTML_Elements*/ {
 		$attributes['type']		= 'submit';
 		$attributes['name']		= $name;
 		$attributes['class']	= $class;
-		return UI_HTML_Tag::create( 'button', $label, $attributes );
+		return self::Tag( 'button', $label, $attributes );
 	}
 
 	static public function Buttons( $content ){
-		return HTML::DivClass( 'buttonbar',
+		return self::DivClass( 'buttonbar',
 			$content.
-			HTML::DivClass( 'column-clear' )
+			self::DivClass( 'column-clear' )
 		);
 	}
 
@@ -35,7 +35,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'checked'	=> $checked ? 'checked' : NULL,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
-		return UI_HTML_Tag::create( 'input', NULL, $attributes );
+		return self::Tag( 'input', NULL, $attributes );
 	}
 
 	static public function Def( $term, $definitions ){
@@ -45,25 +45,25 @@ class HTML/* extends UI_HTML_Elements*/ {
 			$definitions[$nr]	= UI_HTML_Tag::create( 'dd', $definition );
 		$definitions	= join( $definitions );
 
-		return UI_HTML_Tag::create( 'dt', $term ).$definitions;
+		return self::Tag( 'dt', $term ).$definitions;
 	}
 
 	static public function DivClass( $class, $content = '', $attributes = array() ){
-		return UI_HTML_Tag::create( 'div', $content, array( 'class' => $class ) );
+		return self::Tag( 'div', $content, array( 'class' => $class ) );
 	}
 
 	static public function DivID( $id, $content, $attributes = array() ){
-		return UI_HTML_Tag::create( 'div', $content, array( 'id' => $id ) );
+		return self::Tag( 'div', $content, array( 'id' => $id ) );
 	}
 
 	static public function Dl( $definitions ){
 		if( is_array( $definitions ) )
 			$definitions	= join( $definitions );
-		return UI_HTML_Tag::create( 'dl', $definitions );
+		return self::Tag( 'dl', $definitions );
 	}
 
 	static public function Fields( $content, $class = NULL ){
-		return UI_HTML_Tag::create( 'fieldset', $content, array( 'class' => $class ) );
+		return self::Tag( 'fieldset', $content, array( 'class' => $class ) );
 	}
 
 	static public function File( $name, $class = NULL, $readonly = NULL ){
@@ -74,7 +74,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
-		return UI_HTML_Tag::create( 'input', NULL, $attributes );
+		return self::Tag( 'input', NULL, $attributes );
 	}
 
 	static public function Form( $url, $name, $content ){
@@ -88,7 +88,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'method'	=> "post",
 			'enctype'	=> $enctype,
 		);
-		return UI_HTML_Tag::create( 'form', $content, $attributes );
+		return self::Tag( 'form', $content, $attributes );
 	}
 
 	static public function H2( $label, $class = NULL ){
@@ -104,19 +104,19 @@ class HTML/* extends UI_HTML_Elements*/ {
 	}
 
 	static public function Heading( $level, $label, $class = NULL ){
-		return UI_HTML_Tag::create( 'h'.$level, htmlentities( $label, ENT_COMPAT, 'UTF-8' ), array( 'class' => $class ) );
+		return self::Tag( 'h'.$level, htmlentities( $label, ENT_COMPAT, 'UTF-8' ), array( 'class' => $class ) );
 	}
 
 	static public function Icon( $key, $white = NULL ){
 		$class		= "icon-".$key.( $white ? " icon-white" : "" );
-		return UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		return self::Tag( 'i', '', array( 'class' => $class ) );
 	}
 
 	static public function Image( $source, $title, $class = NULL, $attributes = array() ){
 		$attributes['class']	= htmlentities( $class, ENT_QUOTES, 'UTF-8' );
 		$attributes['src']		= htmlentities( $source, ENT_QUOTES, 'UTF-8' );
 		$attributes['alt']		= htmlentities( $title, ENT_QUOTES, 'UTF-8' );
-		return UI_HTML_Tag::create( 'img', NULL, $attributes );
+		return self::Tag( 'img', NULL, $attributes );
 	}
 
 	static public function Input( $name, $value, $class = NULL, $readonly = NULL ){
@@ -130,7 +130,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 		);
 		if( preg_match( "/(mandatory|required)/", $class ) )
 			$attributes['required']	= 'required';
-		return UI_HTML_Tag::create( 'input', NULL, $attributes );
+		return self::Tag( 'input', NULL, $attributes );
 	}
 
 	static public function Label( $inputName = NULL, $content, $class = NULL ){
@@ -138,32 +138,32 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'for'		=> $inputName === NULL ? NULL : self::$prefixIdInput.$inputName,
 			'class'		=> $class,
 		);
-		return UI_HTML_Tag::create( 'label', $content, $attributes );
+		return self::Tag( 'label', $content, $attributes );
 	}
 
 	static public function Legend( $content, $class = NULL ){
-		return UI_HTML_Tag::create( 'legend', $content, array( 'class' => $class ) );
+		return self::Tag( 'legend', $content, array( 'class' => $class ) );
 	}
 
 	static public function Li( $content, $class = NULL ){
-		return UI_HTML_Tag::create( 'li', $content, array( 'class' => $class ) );
+		return self::Tag( 'li', $content, array( 'class' => $class ) );
 	}
 
 	static public function LiClass( $class, $content ){
-		return HTML::Li( $content, $class );
+		return self::Li( $content, $class );
 	}
 
 	static public function Link( $href, $label, $class = NULL ){
 		$attributes['href']		= htmlentities( $href, ENT_QUOTES, 'UTF-8' );
 		$attributes['class']	= htmlentities( $class, ENT_QUOTES, 'UTF-8' );
-		return UI_HTML_Tag::create( 'a', $label, $attributes );
+		return self::Tag( 'a', $label, $attributes );
 	}
 
 	static public function LinkButton( $href, $label, $class = NULL ){
 		$attributes['onclick']	= 'document.location.href=\''.$href.'\'';
 		$attributes['class']	= $class;
 		$attributes['type']		= 'button';
-		return UI_HTML_Tag::create( 'button', $label, $attributes );
+		return self::Tag( 'button', $label, $attributes );
 	}
 
 	static function Options( $items, $selected = NULL, $keys = array() ){
@@ -191,7 +191,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
-		return UI_HTML_Tag::create( 'input', NULL, $attributes );
+		return self::Tag( 'input', NULL, $attributes );
 	}
 
 	static public function Select( $name, $options, $class = NULL, $readonly = NULL, $onChange = NULL ){
@@ -211,14 +211,14 @@ class HTML/* extends UI_HTML_Elements*/ {
 		);
 		if( $readonly )
 			self::addReadonlyAttributes( $attributes, $readonly );
-		return UI_HTML_Tag::create( "select", $options, $attributes );
+		return HTML::Tag( "select", $options, $attributes );
 	}
 
 	static public function SpanClass( $class, $content = '', $attributes = array() ){
-		return UI_HTML_Tag::create( 'span', $content, array( 'class' => $class ) );
+		return HTML::Tag( 'span', $content, array( 'class' => $class ) );
 	}
 
-	static public function Tag( $nodeName, $content, $attributes ){
+	static public function Tag( $nodeName, $content = NULL, $attributes = array(), $data = array() ){
 		return new UI_HTML_Tag( $nodeName, $content, $attributes );
 	}
 
@@ -231,11 +231,11 @@ class HTML/* extends UI_HTML_Elements*/ {
 			'rows'		=> $numberRows,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
-		return UI_HTML_Tag::create( 'textarea', $content, $attributes );
+		return HTML::Tag( 'textarea', $content, $attributes );
 	}
 
 	static public function UlClass( $class, $content ){
-		return UI_HTML_Tag::create( 'ul', $content, array( 'class' => $class ) );
+		return HTML::Tag( 'ul', $content, array( 'class' => $class ) );
 	}
 }
 ?>

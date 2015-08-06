@@ -3,7 +3,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.3.15</version>
+	<version>0.4.1</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -17,20 +17,37 @@
 	<log version="0.3.13">Extracted locale block files.</log>
 	<log version="0.3.14">Improved thumbnail cache.</log>
 	<log version="0.3.15">Applied panel module.</log>
+	<log version="0.3.16">Prepared english language.</log>
+	<log version="0.3.17">Finished localization.</log>
+	<log version="0.3.18">Add top and bottom text blocks.</log>
+	<log version="0.3.19">Split index into 2 panels.</log>
+	<log version="0.3.20">Replaced sqlite thumbnail database by normal database table.</log>
+	<log version="0.3.21">Improve naming of scaled image.</log>
+	<log version="0.3.22">Remove ./ from folder labels.</log>
+	<log version="0.3.23">Change button coloring.</log>
+	<log version="0.4">Change folder and file selection using base64 and session.</log>
+	<log version="0.4.1">Update HTML blocks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Content/Image.php5</class>
+		<class>Model/Image/Thumbnail.php5</class>
 		<class>View/Manage/Content/Image.php5</class>
 		<class>View/Helper/Thumbnailer.php5</class>
-		<class>Resource/SqliteCache.php5</class>
 		<locale>de/manage/content/image.ini</locale>
+		<locale>de/html/manage/content/image/bottom.html</locale>
+		<locale>de/html/manage/content/image/top.html</locale>
 		<locale>de/html/manage/content/image/add.folder.right.html</locale>
 		<locale>de/html/manage/content/image/edit.folder.right.html</locale>
 		<locale>de/html/manage/content/image/edit.image.right.html</locale>
+		<locale>en/manage/content/image.ini</locale>
+		<locale>en/html/manage/content/image/bottom.html</locale>
+		<locale>en/html/manage/content/image/top.html</locale>
 		<style load="auto" source="theme">module.manage.content.images.css</style>
 		<template>manage/content/image/index.php</template>
+		<template>manage/content/image/index.folder.php</template>
+		<template>manage/content/image/index.list.php</template>
 		<template>manage/content/image/addFolder.php</template>
 		<template>manage/content/image/addImage.php</template>
 		<template>manage/content/image/editFolder.php</template>
@@ -51,4 +68,27 @@
 	<link xml:lang="en" path="manage/content/image">Images</link>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
+	<sql on="update" type="mysql" version="0.3.20"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>image_thumbnails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>image_thumbnails` (
+  `imageThumbnailId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `imageId` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `maxWidth` decimal(5,0) unsigned NOT NULL,
+  `maxHeight` decimal(5,0) unsigned NOT NULL,
+  `realWidth` decimal(5,0) unsigned NOT NULL,
+  `realHeight` decimal(5,0) unsigned NOT NULL,
+  `data` blob NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`imageThumbnailId`),
+  KEY `imageId` (`imageId`),
+  KEY `maxWidth` (`maxWidth`),
+  KEY `maxHeight` (`maxHeight`),
+  KEY `realWidth` (`realWidth`),
+  KEY `realHeight` (`realHeight`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>image_thumbnails`;
+]]></sql>
 </module>

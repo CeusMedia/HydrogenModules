@@ -13,7 +13,7 @@ $helper	= new View_Helper_TimePhraser( $env );
 
 //$modelUser	= new Model_User( $env );
 
-$table		= UI_HTML_Tag::create( 'em', 'Keine Mails gefunden.', array( 'class' => 'muted' ) );
+$table		= UI_HTML_Tag::create( 'em', $wl->noEntries, array( 'class' => 'muted' ) );
 if( $mails ){
 	$rows	= array();
 	foreach( $mails as $mail ){
@@ -54,34 +54,42 @@ $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circl
 $buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.' '.$wf->buttonFilter, array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
 $buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true' ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/mail/' ) );
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/queue/' ) );
 
 return $textTop.'
 <div class="row-fluid">
 	<div class="span3">
-		<h3>'.$wf->heading.'</h3>
-		<form action="./admin/mail/queue/filter" method="post">
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_status">'.$wf->labelStatus.'</label>
-					<select name="status[]" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
-				</div>
+		<div class="content-panel">
+			<h3>'.$wf->heading.'</h3>
+			<div class="content-panel-inner">
+				<form action="./admin/mail/queue/filter" method="post">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_status">'.$wf->labelStatus.'</label>
+							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_limit">'.$wf->labelLimit.'</label>
+							<input type="text" name="limit" id="input_limit" class="span4" value="'.$filters->get( 'limit' ).'"/>
+						</div>
+					</div>
+					<div class="buttonbar">
+						'.$buttonFilter.'
+						'.$buttonReset.'
+					</div>
+				</form>
 			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_limit">'.$wf->labelLimit.'</label>
-					<input type="text" name="limit" id="input_limit" class="span4" value="'.$filters->get( 'limit' ).'"/>
-				</div>
-			</div>
-			<div class="buttonbar">
-				'.$buttonFilter.'
-				'.$buttonReset.'
-			</div>
-		</form>
+		</div>
 	</div>
 	<div class="span9">
-		<h3>'.$wl->heading.'</h3>
-		'.$table.'
+		<div class="content-panel">
+			<h3>'.$wl->heading.'</h3>
+			<div class="content-panel-inner">
+				'.$table.'
+			</div>
+		</div>
 	</div>
 </div>
 <style>

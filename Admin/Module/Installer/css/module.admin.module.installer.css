@@ -1,0 +1,71 @@
+
+body.moduleAdminModuleInstaller dl.general > dt{
+	clear: left;
+	float: left;
+	width: 110px;
+	}
+body.moduleAdminModuleInstaller dl.general > dd{
+	float: left;
+	}
+
+
+/*
+body.moduleAdminModuleInstaller table.module-update-files tr.status-missing {background-color: #FFBFBF}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-inaccessible {background-color: #DF9F9F}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-protected {background-color: #DF9F9F}
+*/
+body.moduleAdminModuleInstaller table.module-update-files tr.status-new {background-color: #DFFFDF}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-installed {background-color: #FFFFDF; opacity: 0.75}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-changed {background-color: #FFDFDF}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-linked {background-color: #EFEFEF; opacity: 0.75}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-foreign {background-color: #DFDFFF}
+body.moduleAdminModuleInstaller table.module-update-files tr.status-refered {background-color: #DFDFFF; opacity: 0.75}
+
+
+body.moduleAdminModuleInstaller table.module-update-files tr.status-missing td,
+body.moduleAdminModuleInstaller table.module-update-files tr.status-inaccessible td,
+body.moduleAdminModuleInstaller table.module-update-files tr.status-protected td {
+	background-color: #FF7F7F;
+	color: black;
+	}
+
+
+body.moduleAdminModuleInstaller #panel-dev-modules {
+	opacity: 0.5;
+	}
+body.moduleAdminModuleInstaller #panel-dev-modules:hover {
+	opacity: 1;
+	}
+
+
+
+/*  --  FILES TABLE  --  */
+#panel-module-update-files div {
+	max-height: 320px;
+	overflow: scroll;
+	overflow-x: hidden;
+	overflow-y: auto;
+	}
+#panel-module-update-files div table tr.hidden {
+	display: none;
+	}
+#panel-module-update-files div .panel-if-empty {
+	}
+
+
+/*  --  SQL SCRIPTS TABLE  --  */
+table.database {
+	border: none !important;
+	table-layout: fixed;
+	}
+table.database td {
+	border: none !important;
+	}
+table.database .CodeMirror {
+	height: auto;
+	}
+table.database .CodeMirror-scroll {
+	overflow-y: hidden;
+	overflow-x: auto;
+	}
+
