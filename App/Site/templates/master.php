@@ -28,10 +28,11 @@ else{
 			$scopes	= File_JSON_Reader::load( $pagesFile );
 			foreach( $scopes->main as $pageId => $page ){
 				if( empty( $page->disabled ) || $page->disabled =="no" ){
-					$public		= $page->access == "public";
-					$outside	= !$isAuthenticated && $page->access == "outside";
-					$inside		= $isAuthenticated && $page->access == "inside";
-					$acl		= $page->access == "acl" && $env->getAcl()->has( $page->path );
+					$free		= !isset( $page->access );
+					$public		= !$free && $page->access == "public";
+					$outside	= !$free && !$isAuthenticated && $page->access == "outside";
+					$inside		= !$free && $isAuthenticated && $page->access == "inside";
+					$acl		= !$free && $page->access == "acl" && $env->getAcl()->has( $page->path );
 					if( $public || $outside || $inside || $acl )
 						$links[$page->path]	= $page->label;
 				}
