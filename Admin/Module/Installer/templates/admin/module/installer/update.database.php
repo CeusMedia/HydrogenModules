@@ -8,8 +8,6 @@ function fixVersionBug( $version ){
 $remote		= $env->getRemote();
 if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) ){
 	$list	= array();
-	$versionCurrent	= fixVersionBug( $versionFrom );
-	$versionTarget	= fixVersionBug( $versionTo );
 	foreach( $sql as $key => $step ){
 		$version	= fixVersionBug( $step->version );
 		$facts		= array( 'Version: '.$step->version, 'DBMS: '.$step->type );		//  collect facts
