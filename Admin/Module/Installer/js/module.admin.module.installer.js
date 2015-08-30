@@ -58,7 +58,7 @@ var AdminModuleInstaller = {
 		});
 	},
 
-	toggleUpdateFilesWithoutChanges(event){
+	toggleUpdateFilesWithoutChanges: function(event){
 		var isChecked = $(this).prop("checked");
 		var table = $("#panel-module-update-files table");
 		var rows = table.find("tbody tr");
