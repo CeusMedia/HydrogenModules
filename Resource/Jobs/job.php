@@ -1,9 +1,4 @@
 <?php
-
-$pathLibs		= "";
-$verCMC			= 'trunk';
-$verCMF			= 'trunk';
-$verCMM			= 'trunk';
 $configFile		= "config/config.ini";								//  set (an alternative) config file
 $modes			= array(
 	'live',
@@ -12,14 +7,26 @@ $modes			= array(
 );
 
 //  --  NO NEED TO CHANGE BELOW  --  //
-require_once $pathLibs.'cmClasses/'.$verCMC.'/autoload.php5';			//  load cmClasses
-require_once $pathLibs.'cmFrameworks/'.$verCMF.'/autoload.php5';		//  load cmFrameworks
-require_once $pathLibs.'cmModules/'.$verCMM.'/autoload.php5';			//  load cmModules
+if( file_exists( "vendor" ) ){
+	require_once "vendor/autoload.php";
+	require_once "vendor/ceus-media/common/compat.php";
+	Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
+}
+else{
+	$pathLibs		= "";
+	$verCMC			= 'trunk';
+	$verCMF			= 'trunk';
+	$verCMM			= 'trunk';
 
-CMC_Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
+	require_once $pathLibs.'cmClasses/'.$verCMC.'/autoload.php5';			//  load cmClasses
+	require_once $pathLibs.'cmFrameworks/'.$verCMF.'/autoload.php5';		//  load cmFrameworks
+	require_once $pathLibs.'cmModules/'.$verCMM.'/autoload.php5';			//  load cmModules
+
+	CMC_Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
+}
+
 $request	= new Console_RequestReceiver();							//  
 $request	= new ADT_List_Dictionary( $request->getAll() );			//  
-
 $verbose	= $request->has( '--verbose' ) || $request->has( '-v' );	//  
 $test		= $request->has( '--test' ) || $request->has( '-t' );		//  
 
