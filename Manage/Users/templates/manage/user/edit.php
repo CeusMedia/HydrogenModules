@@ -126,11 +126,11 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span1">
+				<div class="span2">
 					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
 					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
 				</div>
-				<div class="span5">
+				<div class="span4">
 					<label for="input_city" class="">'.$w->labelCity.'</label>
 					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
 				</div>
@@ -161,9 +161,7 @@ $panelEdit	= '
 			</div>
 		</form>
 	</div>
-</div>
-';
-
+</div>';
 
 $panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
