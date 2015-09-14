@@ -303,20 +303,22 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'limit', $limit );
 	}
 
-	public function logout( $userId ) {
+/*	public function logout( $userId ) {
 		$server		= $this->env->getServer();
 		$user		= $server->getdata( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'auth', 'logout', array( (int) $userId ) );
 		$this->handleErrorCode( $code, $user->username );
-		$this->restart( './user/edit/'.(int) $userId );
-	}
+		$this->restart( './manage/user/edit/'.(int) $userId );
+	}*/
 
 	protected function setStatus( $userId, $status ) {
-		$server		= $this->env->getServer();
+		$model		= new Model_User( $this->env );
+		$model->edit( $userId, array( 'status' => $status ) );
+/*		$server		= $this->env->getServer();
 		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
 		$this->handleErrorCode( $code, $user->username );
-		$this->restart( './user/edit/'.(int) $userId );
+*/		$this->restart( './user/edit/'.(int) $userId );
 	}
 
 	public function remove( $userId ){

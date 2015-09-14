@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user and role administration.]]></description>
 	<category>Management</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
@@ -15,6 +15,7 @@
 	<log version="0.6">Language support for english and german.</log>
 	<log version="0.6.1">Finish localization.</log>
 	<log version="0.6.2">Change button coloring.</log>
+	<log version="0.6.3">Fix invalid form and redirect paths.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
