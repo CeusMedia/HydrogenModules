@@ -130,7 +130,27 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			) ),
 		) ).
 		HTML::DivClass( 'row-fluid', array(
-			HTML::DivClass( 'span3', array(
+			HTML::DivClass( 'span2', array(
+				HTML::Label( "postcode", $w->labelPostcode ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'postcode',
+					'id'		=> 'input_postcode',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'postcode' ),
+				) )
+			) ),
+			HTML::DivClass( 'span4', array(
+				HTML::Label( "city", $w->labelCity ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'city',
+					'id'		=> 'input_city',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'city' ),
+				) )
+			) ),
+			HTML::DivClass( 'span4', array(
 				HTML::Label( "street", $w->labelStreet ),
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'type'		=> 'text',
@@ -148,26 +168,6 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					'id'		=> 'input_number',
 					'class'		=> 'span12',
 					'value'		=> $user->get( 'number' ),
-				) )
-			) ),
-			HTML::DivClass( 'span2', array(
-				HTML::Label( "postcode", $w->labelPostcode ),
-				UI_HTML_Tag::create( 'input', NULL, array(
-					'type'		=> 'text',
-					'name'		=> 'postcode',
-					'id'		=> 'input_postcode',
-					'class'		=> 'span12',
-					'value'		=> $user->get( 'postcode' ),
-				) )
-			) ),
-			HTML::DivClass( 'span3', array(
-				HTML::Label( "city", $w->labelCity ),
-				UI_HTML_Tag::create( 'input', NULL, array(
-					'type'		=> 'text',
-					'name'		=> 'city',
-					'id'		=> 'input_city',
-					'class'		=> 'span12',
-					'value'		=> $user->get( 'city' ),
 				) )
 			) ),
 		) ).
