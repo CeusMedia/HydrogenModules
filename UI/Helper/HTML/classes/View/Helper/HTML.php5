@@ -11,6 +11,15 @@ class HTML/* extends UI_HTML_Elements*/ {
 	static $prefixIdInput	= 'input_';
 	static $prefixIdForm	= 'form_';
 
+	static public function Abbr( $label, $title = NULL ){
+		if( !strlen( trim( $title ) ) )
+			$label;
+		$attributes	= array(
+			'title'		=> $title
+		);
+		return self::Tag( 'abbr', $label, $attributes );
+	}
+
 	static public function Button( $name, $label, $class ){
 		$attributes['type']		= 'submit';
 		$attributes['name']		= $name;
