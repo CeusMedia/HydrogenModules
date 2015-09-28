@@ -46,7 +46,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 					$data['createdAt']	= time();
 					$roleId		= $this->modelRole->add( $data );
 					if( $roleId )
-						$this->restart( './manage/role' );
+						$this->restart( NULL, TRUE );
 				}
 				else
 					$this->messenger->noteError( 'role_title_existing' );
@@ -73,7 +73,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 			);
 			$this->modelRoleRight->add( $data );
 		}
-		$this->restart( './manage/role/edit/'.$roleId );
+		$this->restart( 'edit/'.$roleId, TRUE );
 	}
 
 	public function ajaxChangeRight( $roleId, $controller, $action ){
@@ -108,7 +108,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		{
 			$data		= $this->request->getAllFromSource( 'POST' )->getAll();
 			$this->modelRole->edit( $roleId, $data );
-			$this->restart( './manage/role' );
+			$this->restart( NULL, TRUE );
 		}
 		$orders		= array( 'controller' => 'ASC', 'action' => 'ASC' );
 		$this->addData( 'rights', $this->modelRoleRight->getAllByIndex( 'roleId', $roleId, $orders ) );
@@ -135,17 +135,17 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 
 		if( $this->modelUser->getByIndex( 'roleId', $roleId ) ){
 			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
-			$this->restart( './manage/role/edit/'.$roleId );
+			$this->restart( 'edit/'.$roleId, TRUE );
 		}
 
 		$result		= $this->modelRole->remove( $roleId );
 		if( $result ){
 			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
-			$this->restart( './manage/role' );
+			$this->restart( NULL, TRUE );
 		}
 		else{
 			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
-			$this->restart( './manage/role/edit/'.$roleId );
+			$this->restart( 'edit/'.$roleId, TRUE );
 		}
 	}
 
@@ -156,7 +156,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 			'action'		=> $action
 		);
 		$this->modelRoleRight->removeByIndices( $indices );
-		$this->restart( './manage/role/edit/'.$roleId );
+		$this->restart( 'edit/'.$roleId, TRUE );
 	}
 }
 ?>
