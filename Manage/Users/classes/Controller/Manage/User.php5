@@ -113,7 +113,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					'createdAt'		=> time(),
 				) );
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
-				$this->restart( './manage/user' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
@@ -324,7 +324,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
 		$this->handleErrorCode( $code, $user->username );
-*/		$this->restart( './user/edit/'.(int) $userId );
+*/		$this->restart( 'edit/'.(int) $userId, TRUE );
 	}
 
 	public function remove( $userId ){
