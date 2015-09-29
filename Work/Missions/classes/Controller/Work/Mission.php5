@@ -292,7 +292,7 @@ Now, there is some text.
 				$missionId	= $this->model->add( $data );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
-				$this->restart( './work/mission' );
+				$this->restart( './work/mission/edit/'.$missionId );
 			}
 		}
 		$mission	= array();
