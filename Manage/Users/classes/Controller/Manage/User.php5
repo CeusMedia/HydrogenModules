@@ -138,6 +138,12 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	}
 
 	public function edit( $userId ) {
+/*		$acl		= $this->env->getAcl();
+		$modules	= $this->env->getModules();
+		$canEdit	= $acl->has( 'manage/user', 'edit' );
+		if( !$canEdit && $modules->has( 'Members' ) )
+			$this->restart( './member/view/'.$userId );*/
+
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
