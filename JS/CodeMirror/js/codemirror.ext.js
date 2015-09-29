@@ -25,16 +25,34 @@ $(document).ready(function(){
 					}
 				};
 			}
+			var parts, func, obj;
 			if(typeof options.callbackSave !== "undefined"){
-				if(typeof window[options.callbackSave] === "function"){
+				parts = options.callbackSave.split(".");
+				if(parts.length > 1){
+					if(typeof window[parts[0]] === "object"){
+						if(typeof window[parts[0]][parts[1]] === "function"){
+							options.extraKeys['Ctrl-S'] = window[parts[0]][parts[1]];
+						}
+					}
+				}
+				else if(typeof window[options.callbackSave] === "function"){
 					options.extraKeys['Ctrl-S'] = window[options.callbackSave];
 				}
 			}
 			var mirror = CodeMirror.fromTextArea($(this).get(0), options);
-			if(typeof options.height === "undefined")
+			if(typeof options.height === "undefined"){
 				mirror.setSize("100%", $(this).height());
+			}
 			if(typeof options.callbackChange !== "undefined"){
-				if(typeof window[options.callbackChange] === "function"){
+				parts = options.callbackChange.split(".");
+				if(parts.length > 1){
+					if(typeof window[parts[0]] === "object"){
+						if(typeof window[parts[0]][parts[1]] === "function"){
+							mirror.on("change", window[parts[0]][parts[1]]);
+						}
+					}
+				}
+				else if(typeof window[options.callbackChange] === "function"){
 					mirror.on("change", window[options.callbackChange]);
 				}
 			}
