@@ -53,7 +53,6 @@
 	<relations>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
-		<needs type="module">Resource_Library_cmModules</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
 	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>
