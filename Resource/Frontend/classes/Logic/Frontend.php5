@@ -95,6 +95,10 @@ class Logic_Frontend{
 		return self::$instance;
 	}
 
+	public function getDefaultLanguage(){
+		return trim( $this->getConfigValue( 'locale.default' ) );
+	}
+
 	public function getLanguages(){
 		$data		= $this->config->getAll( 'locale.', TRUE );
 		$list		= array( trim( $data->get( 'default' ) ) );
