@@ -19,7 +19,7 @@
 	</files>
 	<config protected="yes" type="string" name="version" values="1.8.2,1.10.2,1.11.1">1.11.1</config>
 	<config protected="yes" type="boolean" name="load.minified">yes</config>
-	<config protected="yes" type="boolean" name="load.map">yes</config>
+	<config protected="yes" type="boolean" name="load.map">no</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
         $version    = $module->config['version']->value;
