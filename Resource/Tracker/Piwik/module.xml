@@ -37,7 +37,7 @@ list>
 	</files>
 	<relations/>
 	<config protected="yes" mandatory="no" type="boolean" name="enabled" title="main power switch for tracking">yes</config>
-	<config protected="yes" mandatory="yes" type="integer" name="ID" title="Piwik site ID">0</config>
+	<config protected="yes" mandatory="yes" type="integer" name="ID" title="Piwik site ID"></config>
 	<config protected="yes" mandatory="no" type="boolean" name="local" title="use local installation">0</config>
 	<config protected="yes" mandatory="no" type="string" name="local.path" title="path to local installation">vendor/piwik/piwik/</config>
 	<config protected="yes" mandatory="yes" type="string" name="URI" title="URI to Piwik service"></config>
