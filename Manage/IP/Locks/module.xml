@@ -3,7 +3,7 @@
 	<title>Manage: IP Locks</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Added tabs and reason management.</log>
@@ -14,6 +14,7 @@
 	<log version="0.2.6">Applied module UI:CSS:Panel.</log>
 	<log version="0.2.7">Reworked all lists and buttons.</log>
 	<log version="0.3">First production release.</log>
+	<log version="0.3.1">Add lock list filter.</log>
 <!--	<log version="0.2.6">Added whitelist management.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -30,6 +31,8 @@
 		<template>manage/ip/lock/add.php</template>
 		<template>manage/ip/lock/edit.php</template>
 		<template>manage/ip/lock/index.php</template>
+		<template>manage/ip/lock/index.filter.php</template>
+		<template>manage/ip/lock/index.list.php</template>
 		<template>manage/ip/lock/filter/add.php</template>
 		<template>manage/ip/lock/filter/edit.php</template>
 		<template>manage/ip/lock/filter/index.php</template>
