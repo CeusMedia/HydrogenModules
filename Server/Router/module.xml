@@ -47,10 +47,6 @@ INSERT INTO `<%?prefix%>routes` (`routeId`, `regex`, `code`, `source`, `target`,
 (2, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
 (3, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
 ]]></sql>
-	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
-ALTER TABLE  `<%?prefix%>routes` ADD  `status` TINYINT( 1 ) NOT NULL AFTER  `routeId` ,
-ADD INDEX (  `status` ) ;
-]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
 ]]></sql>
