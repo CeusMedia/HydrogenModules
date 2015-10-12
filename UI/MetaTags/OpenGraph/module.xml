@@ -2,10 +2,11 @@
 <module>
 	<title>UI: MetaTags: OpenGraph</title>
 	<description><![CDATA[Enables basic support for Open Graph.]]></description>
-	<version>0.2.1</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add relation to Resource:Library:cmModules.</log>
+	<log version="0.3">Use OpenGraph library from Github.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
@@ -26,6 +27,5 @@
 	]]></hook>
 	<relations>
 		<needs type="module">UI_MetaTags</needs>
-		<needs type="module">Resource_Library_cmModules</needs>
 	</relations>
 </module>
