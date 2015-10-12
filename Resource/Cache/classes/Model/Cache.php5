@@ -9,7 +9,7 @@ class Model_Cache{
 		$this->env		= $env;
 		$this->config	= (object) $this->env->getConfig()->getAll( 'module.resource_cache.' );
 
-		$factory	= new CMM_SEA_Factory();
+		$factory	= new \CeusMedia\Cache\Factory();
 		$type		= $this->config->type;
 		$resource	= $this->config->resource ? $this->config->resource : NULL;
 		$context	= $this->config->context ? $this->config->context : NULL;
