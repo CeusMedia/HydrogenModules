@@ -13,7 +13,7 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -26,6 +26,7 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 	<log version="0.3.6">Extracted locking mechanism to own model class.</log>
 	<log version="0.3.7">Fixed bug on error logging.</log>
 	<log version="0.3.8">Renamed and updated job.php.</log>
+	<log version="0.3.9">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
