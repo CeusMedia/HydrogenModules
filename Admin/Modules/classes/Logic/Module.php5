@@ -56,7 +56,7 @@ class Logic_Module {
 
 	public function configureLocalModule( $moduleId, $pairs, $installType = NULL, $sourceId = NULL ){
 		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
-		$xml	= File_Reader::load( $fileName );
+		$xml	= FS_File_Reader::load( $fileName );
 		$xml	= new XML_Element( $xml );
 		foreach( $xml->config as $nr => $node ){
 			$name	= $node->getAttribute( 'name' );
@@ -68,7 +68,7 @@ class Logic_Module {
 			$xml->version->setAttribute( 'install-source', $sourceId );
 			$xml->version->setAttribute( 'install-date', date( "c" ) );
 		};
-		return File_Writer::save( $fileName, $xml->asXml() );
+		return FS_File_Writer::save( $fileName, $xml->asXml() );
 	}
 
 	protected function copyModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
@@ -420,18 +420,18 @@ class Logic_Module {
 		if( !$messenger->gotError() ){
 			try{
 				foreach( $list as $source => $target ){
-					$result	= self::saveFile( $target, File_Reader::load( $source ) );
+					$result	= self::saveFile( $target, FS_File_Reader::load( $source ) );
 					if( $result	&& $move )
 						unlink( $source );
 	#				$messenger->noteNotice( 'Copy: '.$source.' => '.$target );
 				}
-				$xml	= File_Reader::load( $path1.'config/modules/'.$moduleId.'.xml' );
+				$xml	= FS_File_Reader::load( $path1.'config/modules/'.$moduleId.'.xml' );
 				$result	= self::saveFile( $path2.'module.xml', $xml );
 				if( $result	&& $move )
 					unlink( $source );
 
 				if( file_exists( $path1.'config/modules/'.$moduleId.'.png' ) ){
-					$icon	= File_Reader::load( $path1.'config/modules/'.$moduleId.'.png' );
+					$icon	= FS_File_Reader::load( $path1.'config/modules/'.$moduleId.'.png' );
 					$result	= self::saveFile( $path2.'icon.png', $icon );
 					if( $result	&& $move )
 						unlink( $source );
@@ -602,7 +602,7 @@ class Logic_Module {
 				$listDone[]	= $fileOut;
 				try{
 					if( file_exists( $pathApp.$fileOut ) ){
-						$backup	= new File_Backup( $pathApp.$fileOut );
+						$backup	= new FS_File_Backup( $pathApp.$fileOut );
 						$backup->store();
 					}
 					if( $type == 'link' )														//  @todo: OS check -> no links in windows <7
@@ -618,7 +618,7 @@ class Logic_Module {
 		if( count( $exceptions ) ){																	//  there have been severe problems
 			foreach( $listDone as $fileName ){														//  iterate list of updated files
 				if( file_exists( $pathApp.$fileName ) ){											//  target file exists
-					$backup	= new File_Backup( $pathApp.$fileName );								//  to target file under backup perspective
+					$backup	= new FS_File_Backup( $pathApp.$fileName );								//  to target file under backup perspective
 					if( $backup->getVersion() !== NULL )											//  there is atleast 1 backup of target file
 						$backup->restore( -1, TRUE );												//  restore backup file
 					else																			//  otherwise ...
@@ -677,10 +677,10 @@ class Logic_Module {
 			if( file_exists( dirname( $path ) ) ){
 				do{
 					$path	= dirname( $path );
-					$folder	= new Folder_Reader( $path );
+					$folder	= new FS_Folder_Reader( $path );
 					if( !( $count = $folder->getNestedCount() ) ){
 						if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
-							Folder_Editor::removeFolder( $path );
+							FS_Folder_Editor::removeFolder( $path );
 							$folders[]	= substr( $path, strlen( $pathApp ) );
 						}
 					}
@@ -814,8 +814,8 @@ class Logic_Module {
 	}
 
 	static protected function saveFile( $filePath, $content, $mode = 0777 ){
-		Folder_Editor::createFolder( dirname( $filePath ), $mode );
-		$e	= new File_Editor( $filePath );
+		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
+		$e	= new FS_File_Editor( $filePath );
 		$e->writeString( $content );
 		$e->setPermissions( 0777 );
 	}

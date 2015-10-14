@@ -97,8 +97,8 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 			$graph	= $this->getData( 'graph' );
 			@exec( "dot -V", $results, $code );
 			if( $code == 127 )
-				throw new RuntimeException( 'Missing graphViz' ); 
-			File_Writer::save( $tempFile, $graph );
+				throw new RuntimeException( 'Missing graphViz' );
+			FS_File_Writer::save( $tempFile, $graph );
 			exec( 'dot -O -Tpng '.$tempFile );
 			unlink( $tempFile );
 		}
@@ -107,7 +107,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 			exit;
 		}
 		$tempFile	.= '.png';
-		$image		= File_Reader::load( $tempFile );
+		$image		= FS_File_Reader::load( $tempFile );
 		@unlink( $tempFile );
 		header( 'Content-type: image/png' );
 		print( $image );
