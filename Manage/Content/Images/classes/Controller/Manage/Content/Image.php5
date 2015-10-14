@@ -426,7 +426,7 @@ remark( $this->path );
 			exit;
 		}
 		header( 'Content-Type: '.$mimetype );
-		print( 'FS_File_Reader::load( $this->basePath.$imagePath ) );
+		print( FS_File_Reader::load( $this->basePath.$imagePath ) );
 		exit;
 	}
 }
