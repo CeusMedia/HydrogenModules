@@ -10,8 +10,8 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 		$fileLocal	= $this->getData( 'fileLocal' );
 		$fileSource	= $this->getData( 'fileSource' );
 
-		$file1	= File_Reader::loadArray( $fileLocal );
-		$file2	= File_Reader::loadArray( $fileSource );
+		$file1	= FS_File_Reader::loadArray( $fileLocal );
+		$file2	= FS_File_Reader::loadArray( $fileSource );
 
 		$options = array(
 			'ignoreWhitespace'	=> true,
