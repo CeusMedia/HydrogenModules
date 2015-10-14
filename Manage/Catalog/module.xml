@@ -40,6 +40,7 @@
 		<class>View/Manage/Catalog/Article.php5</class>
 		<class>View/Manage/Catalog/Author.php5</class>
 		<class>View/Manage/Catalog/Category.php5</class>
+		<locale>de/catalog.ini</locale>
 		<locale>de/manage/catalog.ini</locale>
 		<locale>de/manage/catalog/article.ini</locale>
 		<locale>de/manage/catalog/author.ini</locale>
