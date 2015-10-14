@@ -730,7 +730,7 @@ Now, there is some text.
 			$this->messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
 		}
 		else{
-			$gz			= File_Reader::load( $file['tmp_name'] );
+			$gz			= FS_File_Reader::load( $file['tmp_name'] );
 			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
 			$missions	= @unserialize( $serial );
 			if( !$serial )

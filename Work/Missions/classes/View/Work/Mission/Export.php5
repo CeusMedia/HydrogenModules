@@ -51,7 +51,7 @@ class View_Work_Mission_Export extends CMF_Hydrogen_View{
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );
-		$ical	= new File_ICal_Builder();
+		$ical	= new FS_File_ICal_Builder();
 		$ical	= trim( $ical->build( $root ) );
 		error_log( date( 'Y-m-d H:i:s' ).' | '.getEnv( 'REMOTE_ADDR' ).': '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
 		return $ical;

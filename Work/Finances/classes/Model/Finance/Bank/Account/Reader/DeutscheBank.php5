@@ -20,7 +20,7 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 		exec( $command, $a, $b );
 		if( $b )
 			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= File_Reader::load( $cacheFile );
+		$html	= FS_File_Reader::load( $cacheFile );
 		unlink( $cacheFile );
 #		@unlink( 'cookies.txt' );
 #		Net_Reader::readUrl( $this->urlLogout );
@@ -69,10 +69,10 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 		if( !file_exists( $this->account->cacheFile ) ){
 			$html	= $this->fetchAccountUsingCurl();
 #			$html	= $this->fetchAccountUsingWget();
-			File_Writer::save( $this->account->cacheFile, $html );
+			FS_File_Writer::save( $this->account->cacheFile, $html );
 		}
 		else
-			$html	= File_Reader::load( $this->account->cacheFile );
+			$html	= FS_File_Reader::load( $this->account->cacheFile );
 		return $this->parseAccount( $html );
 	}
 
