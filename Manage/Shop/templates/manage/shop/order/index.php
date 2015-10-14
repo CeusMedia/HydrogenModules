@@ -59,7 +59,7 @@ $tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
 $tableBody		= UI_HTML_Tag::create( 'tbody', $tableRows );
 $listOrders		= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
 
-$pagination		= new CMM_Bootstrap_PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
+$pagination		= new \CeusMedia\Bootstrap\PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
 $tabs			= View_Manage_Shop::renderTabs( $env, 'order' );
 
 return '
