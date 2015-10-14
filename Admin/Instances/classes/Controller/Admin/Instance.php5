@@ -107,8 +107,8 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		);
 
 		try{
-			File_Writer::save( $fileName, '', 0777 );												//  @todo use file owner from Setup Tool config
-			$editor	= new File_INI_Editor( $fileName, FALSE );
+			FS_File_Writer::save( $fileName, '', 0777 );												//  @todo use file owner from Setup Tool config
+			$editor	= new FS_File_INI_Editor( $fileName, FALSE );
 			foreach( $data as $key => $value )
 				$editor->addProperty( $key, $value );
 			$this->messenger->noteSuccess( 'Die Konfigurationsdatei "'.$fileName.'" wurde erstellt.' );
@@ -145,7 +145,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		);
 
 		try{
-			$editor	= new File_INI_Editor( $fileName, FALSE );
+			$editor	= new FS_File_INI_Editor( $fileName, FALSE );
 			foreach( $data as $key => $value ){
 				if( !strlen( $data['database.driver'] ) )
 					$value	= $key == 'database' ? 'no' : '';
@@ -169,7 +169,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 #		if( !preg_match( '/^\//', $instance->path ) )
 #			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 		$path	= $instance->uri.$path;
-		if( Folder_Editor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
+		if( FS_Folder_Editor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
 			$this->messenger->noteSuccess( 'Der Pfad "'.$path.'" wurde erzeugt.' );
 		else
 			$this->messenger->noteError( 'Der Pfad "'.$path.'" konnte nicht erzeugt werden.' );

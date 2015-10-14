@@ -3,7 +3,7 @@
 	<title>Admin: Instances</title>
 	<description><![CDATA[Application instance administration for remote access to other Hydrogen applications.]]></description>
 	<category>Administration</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Migrated instances store from INI to JSON.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3.6">Extracted instance module listing to new logic class.</log>
 	<log version="0.3.7">Moved instance check on index to user interaction.</log>
 	<log version="0.3.8">Added auto ID generation on add.</log>
+	<log versiob="0.3.9">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<files>
 		<class>Controller/Admin/Instance.php5</class>
 		<class>Logic/Instance.php5</class>
