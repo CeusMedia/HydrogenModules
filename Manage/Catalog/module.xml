@@ -3,20 +3,21 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.23</version>
+	<version>0.4.7</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
 	<log version="0.3.14">Corrected use of configured image paths.</log>
 	<log version="0.3.15">Allow categories to be removed and fixed default order in article list.</log>
 	<log version="0.3.16">Improved cache management and prepared logic class for clean up.</log>
-	<log version="0.3.17">Cleanup and improved code documentation.</log>
-	<log version="0.3.18">Extended author editor by tabs and article list.</log>
-	<log version="0.3.19">Fixed bug appearing for authors without articles.</log>
-	<log version="0.3.20">Fixed bug on cache invalidation.</log>
-	<log version="0.3.21">Added list of articles on category view.</log>
-	<log version="0.3.22">TinyMCE: collect images and links of articles, authors, categories, documents.</log>
-	<log version="0.3.23">Added link to view articles and authors in frontend.</log>
+	<log version="0.4">Cleanup and improved code documentation.</log>
+	<log version="0.4.1">Extended author editor by tabs and article list.</log>
+	<log version="0.4.2">Fixed bug appearing for authors without articles.</log>
+	<log version="0.4.3">Fixed bug on cache invalidation.</log>
+	<log version="0.4.4">Added list of articles on category view.</log>
+	<log version="0.4.5">TinyMCE: collect images and links of articles, authors, categories, documents.</log>
+	<log version="0.4.6">Added link to view articles and authors in frontend.</log>
+	<log version="0.4.7">Added shop bridge class from catalog module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -33,6 +34,7 @@
 		<class>Model/Catalog/Article/Document.php5</class>
 		<class>Model/Catalog/Article/Tag.php5</class>
 		<class>Logic/Catalog.php5</class>
+		<class>Logic/ShopBridge/CatalogArticle.php5</class>
 		<class>View/Manage/Catalog.php5</class>
 		<class>View/Manage/Catalog/Article.php5</class>
 		<class>View/Manage/Catalog/Author.php5</class>
