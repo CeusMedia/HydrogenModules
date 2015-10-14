@@ -3,6 +3,9 @@ class Controller_Info extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
 		$path	= $env->getRequest()->get( '__path' );
+		if( !preg_match( "/^info/", $path ) )
+			return;
+		$path	= preg_replace( "/^info\//", "", $path );
 		$view	= new View_Info( $env );
 		if( $view->hasContentFile( 'html/info/'.$path.".html" ) ){
 			$controller	= new Controller_Info( $env, FALSE );

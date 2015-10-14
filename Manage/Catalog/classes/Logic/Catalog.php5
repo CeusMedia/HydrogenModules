@@ -84,6 +84,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$articleId	= $this->modelArticle->add( $data );
 		$this->cache->remove( 'catalog.tinymce.images.articles' );
 		$this->cache->remove( 'catalog.tinymce.links.articles' );
+		return $articleId;
 	}
 
 	/**
@@ -700,19 +701,15 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function removeArticle( $articleId ){
 		$this->removeArticleCover( $articleId );
-		$this->removeArticleImage( $articleId );
-		
 		foreach( $this->getCategoriesOfArticle( $articleId ) as $relation )
 			$this->removeArticleFromCategory( $articleId, $relation->categoryId );
-		foreach( $this->getTagsOfArticle( $article ) as $relation );
-#			$this->removeAbc();
-		foreach( $this->getAuthorsOfArticle( $article ) as $relation );
-#			$this->removeAbc();
-		
-		
-//		$this->removeArticleImage( $articleId );
-//		$this->removeArticleCover( $articleId );
-//		$this->modelArticleDocument->removeByIndex( array( 'articleId' => $articleId ) );
+		foreach( $this->getTagsOfArticle( $articleId ) as $relation )
+			$this->removeArticleTag( $relation->articleTagId );
+		foreach( $this->getAuthorsOfArticle( $articleId ) as $relation )
+			$this->removeAuthorFromArticle( $articleId, $relation->authorId );
+		foreach( $this->getDocumentsOfArticle( $articleId ) as $relation )
+			$this->removeArticleDocument( $relation->articleDocumentId );
+		$this->modelArticle->remove( $articleId );
 		$this->cache->remove( 'catalog.tinymce.images.articles' );
 		$this->cache->remove( 'catalog.tinymce.links.articles' );
 	}
@@ -992,7 +989,7 @@ class Alg_UnitParser{
 				break;
 			}
 		}
-		if( $factor !== NULL )																		//  
+		if( $factor !== NULL )																		//
 			return $factor * $string;
 		throw new DomainException( 'Given string is not matching any parser rules' );
 	}
