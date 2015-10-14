@@ -36,7 +36,7 @@ $panelFilter	= '
 
 
 function listFolder( $path, $uri, $skip = array() ){
-	$folders	= Folder_Lister::getFolderList( $path );
+	$folders	= FS_Folder_Lister::getFolderList( $path );
 	$list		= array();
 	foreach( $folders as $folder ){
 		if( in_array( $folder->getFilename(), $skip ) )
@@ -47,7 +47,7 @@ function listFolder( $path, $uri, $skip = array() ){
 	}
 	ksort( $list );
 	$list	= array_values( $list );
-	foreach( new File_RegexFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
+	foreach( new FS_File_RegexFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
 		$url		= $uri.$file->getFilename();
 		$label		= $file->getFilename();
 		$icon		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );
@@ -56,9 +56,7 @@ function listFolder( $path, $uri, $skip = array() ){
 	}
 	ksort( $list );
 	return join( $list );
-}	
-
-
+}
 
 $list	= '';
 if( $selected ){

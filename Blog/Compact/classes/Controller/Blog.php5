@@ -149,7 +149,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	public function dev( $topic = NULL ){
 		$topic		= strlen( $topic ) ? $topic : NULL;
 
-		$index	= new File_RegexFilter( 'contents/dev/', "/\.txt$/" );
+		$index	= new FS_File_RegexFilter( 'contents/dev/', "/\.txt$/" );
 		$list	= array();
 		foreach( $index as $file ){
 			$fileName	= pathinfo( $file->getFilename(), PATHINFO_FILENAME );
@@ -161,7 +161,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		if( $topic ){
 			$fileName	= 'contents/dev/'.$topic.'.txt';
 			if( file_exists( $fileName ) )
-				$this->addData( 'content', File_Reader::load( $fileName ) );
+				$this->addData( 'content', FS_File_Reader::load( $fileName ) );
 		}
 	}
 
