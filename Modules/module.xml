@@ -2,7 +2,7 @@
 <module>
 	<title>Modules</title>
 	<description>Module support and administration</description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<files>
 		<class>Controller/Admin/Module.php5</class>
 		<class>Model/Module.php5</class>

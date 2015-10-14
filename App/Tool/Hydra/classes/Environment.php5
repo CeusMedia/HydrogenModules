@@ -66,7 +66,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 			return;																					//  
 		if( !@copy( self::$configFile.'.dist', self::$configFile ) )									//  copy config file
 			die( "Missing write permissions for config folder." );
-//		$editor	= new File_INI_Editor( self::$configFile );											//  
+//		$editor	= new FS_File_INI_Editor( self::$configFile );											//  
 //		$editor->setProperty( 'app.base.url', $this->url );											//  
 	}
 
@@ -81,13 +81,13 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 				$data['Hydra']['host']	= $this->host;
 				$data['Hydra']['protocol']	= $this->scheme.'://';
 				unset( $data['Setup'] );
-				File_Writer::save( $fileName, ADT_JSON_Formater::format( json_encode( $data ) ) );
+				FS_File_Writer::save( $fileName, ADT_JSON_Formater::format( json_encode( $data ) ) );
 				@rename( 'config/instances.ini', 'config/instances.ini.old' );
 			}
 			else
-				File_Writer::save( $fileName, File_Reader::load( $fileName.'.dist' ) );
+				FS_File_Writer::save( $fileName, FS_File_Reader::load( $fileName.'.dist' ) );
 		}
-		$data	= json_decode( File_Reader::load( $fileName ), TRUE );
+		$data	= json_decode( FS_File_Reader::load( $fileName ), TRUE );
 		$self	= $data['Hydra'];
 		if( !empty( $data['Hydra'] ) )
 			if( !empty( $data['Hydra']['path'] ) )
@@ -95,7 +95,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		$data['Hydra']['path']	= dirname( getEnv( 'SCRIPT_NAME' ) ).'/';
 		$data['Hydra']['uri']	= dirname( getEnv( 'SCRIPT_FILENAME' ) ).'/';
 		$json	= ADT_JSON_Formater::format( json_encode( $data ) );
-		File_Writer::save( $fileName, $json );
+		FS_File_Writer::save( $fileName, $json );
 	}
 
 	protected function checkModules(){
@@ -178,17 +178,17 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		if( !file_exists( $fileName ) ){
 			if( file_exists( 'config/modules/sources.ini' ) ){
 				$json	= json_encode( parse_ini_file( 'config/modules/sources.ini', TRUE ) );
-				File_Writer::save( $fileName, ADT_JSON_Formater::format( $json ) );
+				FS_File_Writer::save( $fileName, ADT_JSON_Formater::format( $json ) );
 				@rename( 'config/modules/sources.ini', 'config/modules/sources.ini.old' );
 			}
 			else
 				copy( $fileName.'.dist', $fileName );
 		}
-		$data	= json_decode( File_Reader::load( $fileName ), TRUE );
+		$data	= json_decode( FS_File_Reader::load( $fileName ), TRUE );
 		if( empty( $data['Local_CM_Public']['path'] ) ){
 			$data['Local_CM_Public']['path']	= CMF_PATH.'modules/Hydrogen/';
 			$json	= ADT_JSON_Formater::format( json_encode( $data ) );
-			File_Writer::save( $fileName, $json );
+			FS_File_Writer::save( $fileName, $json );
 		}
 	}
 
@@ -197,7 +197,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 			$source	= CMF_PATH.'themes/Hydrogen/petrol';
 			$target	= $this->uri.'themes/petrol';
 			if( !file_exists( 'themes' ) )
-				Folder_Editor::createFolder( 'themes', 0770 );
+				FS_Folder_Editor::createFolder( 'themes', 0770 );
 			if( !file_exists( 'themes/petrol' ) ){
 				if( !file_exists( $source ) )
 					throw new RuntimeException( 'Could not find Hydrogen theme "petrol" in '.$source );

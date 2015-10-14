@@ -91,7 +91,7 @@ class View_Helper_Gallery{
 
 		$list		= array();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-		$index		= Folder_RecursiveLister::getFolderList( $path, $pattern );
+		$index		= FS_Folder_RecursiveLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder )
 			$list[$folder->getFilename()]	= substr( $folder->getPathname(), strlen( $path ) );
 		natcasesort( $list );

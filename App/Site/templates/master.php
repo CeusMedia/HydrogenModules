@@ -27,7 +27,7 @@ else{
 		}
 		$links	= array();
 		try{
-			$scopes	= File_JSON_Reader::load( 'config/pages.json' );
+			$scopes	= FS_File_JSON_Reader::load( 'config/pages.json' );
 			foreach( $scopes->main as $pageId => $page ){
 				if( isset( $page->disabled ) && $page->disabled !== "no" )
 					continue;
