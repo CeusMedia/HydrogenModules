@@ -35,7 +35,7 @@
  *	@link			http://code.google.com/p/cmframeworks/
  *	@since			0.4
  */
-class Resource_Database extends Database_PDO_Connection
+class Resource_Database extends \DB_PDO_Connection
 {
 	protected $env;
 	/**	@var	ADT_List_Dictionary		$options	Module configuration options */
@@ -75,7 +75,7 @@ class Resource_Database extends Database_PDO_Connection
 		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
 		if( empty( $access->driver ) )
 			throw new RuntimeException( 'No database driver set' );
-		$dsn		= new Database_PDO_DataSourceName( $access->driver, $access->name );
+		$dsn		= new \DB_PDO_DataSourceName( $access->driver, $access->name );
 		!empty( $access->host )		? $dsn->setHost( $access->host ) : NULL;
 		!empty( $access->port )		? $dsn->setPort( $access->port ) : NULL;
 		!empty( $access->username )	? $dsn->setUsername( $access->username ) : NULL;
