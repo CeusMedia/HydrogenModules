@@ -44,14 +44,14 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 			$handler->handleErrorFromUpload( $image );
 		}
 		$model	= new Model_Branch_Image( $this->env );
-		
+
 		$imageName	= $branchId.'_'.md5( time() ).'.'.pathinfo( $image['name'], PATHINFO_EXTENSION );
 		$imagePath	= './images/branches/';
-		Folder_Editor::createFolder( $imagePath, 0777 );
+		FS_Folder_Editor::createFolder( $imagePath, 0777 );
 		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
 			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
 		$data	= array(
-			'branchId'		=> $branchId, 
+			'branchId'		=> $branchId,
 			'filename'		=> $imageName,
 			'title'			=> $request->get( 'image_title' ),
 			'uploadedAt'	=> time()
@@ -74,7 +74,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		}
 		$this->restart( './manage/branch/edit/'.$branchId );
 	}
-	
+
 	public function add(){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();

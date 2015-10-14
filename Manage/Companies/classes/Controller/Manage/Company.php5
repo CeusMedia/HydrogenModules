@@ -151,7 +151,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$image		= $this->request->get( 'image' );
 		try{
 			$imagePath	= $this->frontend->getPath().'images/companies/';		//  @todo to configuration
-			Folder_Editor::createFolder( $imagePath, 0777 );
+			FS_Folder_Editor::createFolder( $imagePath, 0777 );
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )

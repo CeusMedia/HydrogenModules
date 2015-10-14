@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Avatar</title>
 	<description>Extends own user management by avatar settings.</description>
-	<version>0.1</version>
+	<version>0.2.1</version>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>

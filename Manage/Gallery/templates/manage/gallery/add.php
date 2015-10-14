@@ -21,7 +21,7 @@ foreach( $galleries as $gallery ){
 }
 
 
-$index	= Folder_RecursiveLister::getFolderList( $path );
+$index	= FS_Folder_RecursiveLister::getFolderList( $path );
 $list	= array();
 foreach( $index as $entry ){
 	$key	= substr( $entry->getPathname(), strlen( $path ) );

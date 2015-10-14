@@ -265,7 +265,7 @@ PageEditor.init();
 	public function getJsImageList(){
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
-		$index	= new File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
+		$index	= new FS_File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
 		foreach( $index as $item ){
 			$parts	= explode( "/", $item->getPathname() );
 			$file	= array_pop( $parts );

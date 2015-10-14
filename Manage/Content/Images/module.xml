@@ -3,7 +3,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -27,6 +27,7 @@
 	<log version="0.3.23">Change button coloring.</log>
 	<log version="0.4">Change folder and file selection using base64 and session.</log>
 	<log version="0.4.1">Update HTML blocks.</log>
+	<log version="0.4.2">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
