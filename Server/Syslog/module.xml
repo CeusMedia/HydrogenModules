@@ -5,9 +5,10 @@
 Sends mail to developer with exception trace if a developer mail address is defined. Also allows to send mails to developer.
 This module can extend normal or server applications but will need an installed application base with mail support.]]></description>
 	<category>Server</category>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
+	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
