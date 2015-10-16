@@ -1,7 +1,4 @@
 <?php
-$w	= (object) $words['add'];
-
-$tabs		= $this->renderMainTabs();
 
 $optParent	= array( 0 => '' );
 foreach( $categories as $item )
@@ -13,21 +10,32 @@ $optParent	= UI_HTML_Elements::Options( $optParent, (int) $category->parentId );
 $optVisible	= $words['visible'];
 $optVisible	= UI_HTML_Elements::Options( $optVisible, (int) $category->visible );
 
-$panelList	= $view->loadTemplateFile( 'manage/catalog/category/list.php' );
+$disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
+$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+	'href'	=> "./manage/catalog/category",
+	'class'	=> 'btn btn-small'
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-primary'
+) );
+$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' '.$w->buttonRemove, array(
+	'disabled'	=> $nrArticles ? 'disabled' : NULL,
+	'type'		=> 'button',
+	'class'		=> "btn btn-small btn-danger",
+	'onclick'	=> "document.location.href='./manage/catalog/category/remove/".$category->categoryId."';"
+) );
 
 return '
-'.$tabs.'
-<div class="row-fluid">
-	<div class="span6">
-		'.$panelList.'
-	</div>
-	<div class="span6">
 		<div class="content-panel">
-			<h4>'.$w->heading.'</h4>
 			<div class="content-panel-inner">
-				<form action="manage/catalog/category/add/'.htmlentities( $category->parentId, ENT_QUOTES, 'UTF-8' ).'" method="post">
+				<form action="manage/catalog/category/edit/'.$category->categoryId.'" method="post">
 					<label for="input_parentId">'.$w->labelParentId.'</label>
-					<select class="span12" name="parentId" id="input_parentId">'.$optParent.'</select>
+					<select '.$disableParent.' class="span12" name="parentId" id="input_parentId">'.$optParent.'</select>
 					<label for="input_label_de">'.$w->labelLabel.'</label>
 					<input class="span12" type="text" name="label_de" id="input_label_de" value="'.htmlentities( $category->label_de, ENT_QUOTES, 'UTF-8' ).'"/>
 					<label for="input_label_former">'.$w->labelLabelFormer.'</label>
@@ -49,13 +57,11 @@ return '
 						</div>
 					</div>
 					<div class="buttonbar">
-<!--						<a class="btn btn-small" href="./manage/catalog/category"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
-						<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+<!--						'.$buttonCancel.'-->
+						'.$buttonSave.'
+						'.$buttonRemove.'
 					</div>
 				</form>
 			</div>
 		</div>
-	</div>
-</div>
 ';
-?>

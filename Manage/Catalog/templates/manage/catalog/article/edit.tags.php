@@ -28,20 +28,25 @@ if( $articleTags ){
 
 return '
 <!--  Manage: Catalog: Article: Tags  -->
-	<div class="row-fluid">
-		<div class="span12">
-			<h4>Schlagwörter</h4>
-			'.$listTags.'
+<div class="content-panel">
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<div class="span12">
+				<h4>Schlagwörter</h4>
+				'.$listTags.'
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<h4>Schlagwort vergeben</h4>
+				<label for="input_tag">neues Schlagwort</label>
+				<input class="span12" type="text" name="tag" id="input_tag"/>
+			</div>
+		</div>
+		<div class="buttonbar">
+			<button type="button" class="btn btn-primary" onclick="ModuleManageCatalog.addArticleTag('.$article->articleId.')"><i class="icon-plus icon-white"></i> hinzufügen</button>
 		</div>
 	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<h4>Schlagwort vergeben</h4>
-			<label for="input_tag">neues Schlagwort</label>
-			<input class="span12" type="text" name="tag" id="input_tag"/><br/>
-			<button type="button" class="btn btn-small btn-success" onclick="addArticleTag('.$article->articleId.')"><i class="icon-plus icon-white"></i> hinzufügen</button>
-		</div>
-	</div>
-<!--  Manage: Catalog: Article: Tags  -->
-';
+</div>
+<!--  Manage: Catalog: Article: Tags  -->';
 ?>
