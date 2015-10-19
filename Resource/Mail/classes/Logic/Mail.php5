@@ -140,9 +140,9 @@ class Logic_Mail{
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
 		$regexExt		= "/\.php5$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new FS_File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
-			$content	= File_Reader::load( $file->getPathname() );								//  get content of class file
+			$content	= FS_File_Reader::load( $file->getPathname() );								//  get content of class file
 			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
 			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
 				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key

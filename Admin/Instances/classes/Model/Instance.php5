@@ -12,7 +12,7 @@ class Model_Instance{
 			touch( $this->fileName );
 			chmod( $this->fileName, 0770 );
 		}
-		$json		= File_Reader::load( $this->fileName );
+		$json		= FS_File_Reader::load( $this->fileName );
 		$this->data	= json_decode( $json, TRUE );
 	}
 
@@ -80,7 +80,7 @@ class Model_Instance{
 
 	protected function save(){
 		$json	= ADT_JSON_Formater::format( json_encode( $this->data ) );
-		return File_Writer::save( $this->fileName, $json );
+		return FS_File_Writer::save( $this->fileName, $json );
 	}
 }
 ?>

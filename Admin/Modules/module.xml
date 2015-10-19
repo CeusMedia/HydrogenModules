@@ -16,7 +16,7 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.3.16</version>
+	<version>0.3.17</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Adding features.</log>
@@ -29,6 +29,7 @@ This module needs other modules to be installed:
 	<log version="0.3.14">Moved templates for details panel.</log>
 	<log version="0.3.15">Extended details by list of instances using this module.</log>
 	<log version="0.3.16">Rework SQL script collecting on install and update.</log>
+	<log version="0.3.17">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

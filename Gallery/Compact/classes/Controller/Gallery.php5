@@ -32,7 +32,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
-		$index		= Folder_RecursiveLister::getFolderList( $path, $pattern );
+		$index		= FS_Folder_RecursiveLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder ){
 			$timestamp	= filemtime( $folder->getPathname() );
 			$data		= array(
@@ -43,7 +43,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 			);
 			$fileInfo	= $folder->getPathname().'/info.ini';
 			if( file_exists( $fileInfo ) ){
-				$info	= File_INI_Reader::load( $fileInfo );
+				$info	= FS_File_INI_Reader::load( $fileInfo );
 				if( isset( $info['title'] ) )
 					$data['label']	= $info['title'];
 				if( isset( $info['description'] ) )
@@ -73,8 +73,8 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 				'path'			=> $this->path,
 				'source'		=> $source ? $source.'/' : '',
 				'info'			=> $info,
-				'folders'		=> Folder_Lister::getFolderList( $path ),
-				'files'			=> Folder_Lister::getFileList( $path, '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
+				'folders'		=> FS_Folder_Lister::getFolderList( $path ),
+				'files'			=> FS_Folder_Lister::getFileList( $path, '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
 				'textBottom'	=> '',
 			)
 		);
@@ -97,7 +97,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 				'path'		=> $this->path,
 				'source'	=> $source,
 				'title'		=> $title,
-				'files'		=> Folder_Lister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
+				'files'		=> FS_Folder_Lister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
 				'exif'		=> new ADT_List_Dictionary( $exif->getAll() ),
 			)
 		);
@@ -107,7 +107,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$uri	= $this->path.$source.'/info.ini';
 		if( !file_exists( $uri ) )
 			return array();
-		$reader	= new File_INI_Reader( $uri, TRUE );
+		$reader	= new FS_File_INI_Reader( $uri, TRUE );
 		return $reader->toArray( TRUE );
 	}
 

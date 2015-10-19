@@ -53,10 +53,10 @@ class Model_Finance_Bank_Account_Reader_DKB{
 	public function getAccountValues(){
 #		if( !file_exists( $this->account->cacheFile ) ){
 			$html	= $this->fetchAccountUsingCurl();
-#			File_Writer::save( $this->account->cacheFile, $html );
+#			FS_File_Writer::save( $this->account->cacheFile, $html );
 #		}
 #		else
-#			$html	= File_Reader::load( $this->account->cacheFile );
+#			$html	= FS_File_Reader::load( $this->account->cacheFile );
 		return $this->parseAccount( $html );
 	}
 

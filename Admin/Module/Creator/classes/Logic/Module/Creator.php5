@@ -9,7 +9,7 @@ class Logic_Module_Creator extends Logic_Module{
 			'route'			=> $route
 		);
 		$xml	= UI_Template::render( 'templates/admin/module/creator/module.xml.tmpl', $data );
-		return (bool) File_Writer::save( $path.$moduleId.'.xml', $xml );
+		return (bool) FS_File_Writer::save( $path.$moduleId.'.xml', $xml );
 	}
 
 	public function scafoldLocalModule( $moduleId, $route ){
@@ -28,15 +28,15 @@ class Logic_Module_Creator extends Logic_Module{
 			$path	= "";
 			foreach( $folders as $folder ){
 				$path	.= ucfirst( $folder )."/";
-				Folder_Editor::createFolder( $this->env->pathApp.'classes/Controller/'.$path, 0770 );
-				Folder_Editor::createFolder( $this->env->pathApp.'classes/View/'.$path, 0770 );
-				Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ), 0770 );
-				Folder_Editor::createFolder( $this->env->pathApp.'locales/'.$language.strtolower( $path ), 0770 );
+				FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/Controller/'.$path, 0770 );
+				FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/View/'.$path, 0770 );
+				FS_Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ), 0770 );
+				FS_Folder_Editor::createFolder( $this->env->pathApp.'locales/'.$language.strtolower( $path ), 0770 );
 			}
 		}
-		Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ), 0770 );
+		FS_Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ), 0770 );
 		if( !file_exists( $this->env->pathApp.'classes/Logic' ) )
-			Folder_Editor::createFolder( $this->env->pathApp.'classes/Logic', 0770 );
+			FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/Logic', 0770 );
 		$classPath	= $path.$className;
 		$tmplFile	= strtolower( $classPath ).'/index.php';
 		$localFile	= strtolower( $path ).strtolower( $className ).'.ini';
@@ -62,20 +62,20 @@ class Logic_Module_Creator extends Logic_Module{
 		$codeView		= UI_Template::render( 'templates/admin/module/creator/view.tmpl', $data );
 		$codeTemplate	= UI_Template::render( 'templates/admin/module/creator/template.tmpl', $data );
 		$codeLocal		= UI_Template::render( 'templates/admin/module/creator/locale.tmpl', $data );
-	
+
 		$this->model->registerLocalFile( $moduleId, 'class', 'Logic/'.$className.'.php5' );
 		$this->model->registerLocalFile( $moduleId, 'class', 'Model/'.$className.'.php5' );
 		$this->model->registerLocalFile( $moduleId, 'class', 'Controller/'.$classPath.'.php5' );
 		$this->model->registerLocalFile( $moduleId, 'class', 'View/'.$classPath.'.php5' );
 		$this->model->registerLocalFile( $moduleId, 'template', $tmplFile );
 		$this->model->registerLocalFile( $moduleId, 'locale', $language.strtolower( $classPath).'.ini' );
-		
-		File_Writer::save( $fileLogic, $codeLogic );		
-		File_Writer::save( $fileModel, $codeModel );		
-		File_Writer::save( $fileController, $codeController );		
-		File_Writer::save( $fileView, $codeView );		
-		File_Writer::save( $fileTemplate, $codeTemplate );		
-		File_Writer::save( $fileLocale, $codeLocal );		
+
+		FS_File_Writer::save( $fileLogic, $codeLogic );
+		FS_File_Writer::save( $fileModel, $codeModel );
+		FS_File_Writer::save( $fileController, $codeController );
+		FS_File_Writer::save( $fileView, $codeView );
+		FS_File_Writer::save( $fileTemplate, $codeTemplate );
+		FS_File_Writer::save( $fileLocale, $codeLocal );
 	}
 }
 ?>

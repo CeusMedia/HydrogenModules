@@ -31,7 +31,7 @@ if( $articleCategories ){
 			<div style="font-size: 0.9em; font-weight: lighter">'.$labelVolume.'</div>
 			';
 		}
-		
+
 		$urlRemove	= './manage/catalog/article/removeCategory/'.$article->articleId.'/'.$item->categoryId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
 		$listCategories[]	= '<tr>
@@ -85,11 +85,17 @@ $optCategory	= join( $optCategory );
 
 return '
 <!--  Manage: Catalog: Article: Categories  -->
-	<div class="row-fluid">
-		<h4>Kategorien</h4>
-		'.$listCategories.'
+<div class="content-panel">
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<h4>Kategorien</h4>
+			'.$listCategories.'
+		</div>
 	</div>
-	<div class="row-fluid">
+</div>
+<hr/>
+<div class="content-panel">
+	<div class="content-panel-inner">
 		<h4>Kategorie zuweisen</h4>
 		<form action="./manage/catalog/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
@@ -101,10 +107,10 @@ return '
 				<input type="text" class="span4" name="volume" id="input_volume"/>
 			</div>
 			<div class="buttonbar">
-				<button class="btn btn-small btn-success" type="submit" name="save"><i class="icon-ok icon-white"></i> speichern</button>
+				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> speichern</button>
 			</div>
 		</form>
 	</div>
-<!--  /Manage: Catalog: Article: Categories  -->
-';
+</div>
+<!--  /Manage: Catalog: Article: Categories  -->';
 ?>

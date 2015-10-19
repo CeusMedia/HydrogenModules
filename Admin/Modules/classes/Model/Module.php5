@@ -27,7 +27,7 @@ class Model_Module{
 
 		if( !file_exists( $this->pathConfig ) ){
 			try{
-				Folder_Editor::createFolder( $this->pathConfig, 0770 );
+				FS_Folder_Editor::createFolder( $this->pathConfig, 0770 );
 			}
 			catch( Exception $e ){
 				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
@@ -241,7 +241,7 @@ class Model_Module{
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
 		if( $parse )
 			return XML_ElementReader::readFile( $moduleFile );
-		return File_Reader::load( $moduleFile );
+		return FS_File_Reader::load( $moduleFile );
 	}
 
 	public function getNeededModulesWithStatus( $moduleId ){										//  @todo	refactor to getNeededModuleIdsWithStatus
@@ -358,7 +358,7 @@ class Model_Module{
 	 */
 	public function isInstalled( $moduleId ){
 		$list	= array();
-		$index	= new File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
+		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
 		foreach( $index as $entry ){
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			if( $id == $moduleId )
@@ -412,7 +412,7 @@ class Model_Module{
 		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
-		return File_Writer::save( $moduleFile, $content );
+		return FS_File_Writer::save( $moduleFile, $content );
 	}
 }
 ?>

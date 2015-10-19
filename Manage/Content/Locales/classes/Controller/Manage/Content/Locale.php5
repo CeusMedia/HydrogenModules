@@ -48,7 +48,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 			case 'save':
 				try{
 					$content	= $request->get( 'content' );
-					$editor		= new File_Editor( $pathName );
+					$editor		= new FS_File_Editor( $pathName );
 					$editor->writeString( $content );
 					$this->env->getMessenger()->noteSuccess( $words->successFileSaved, $fileName );
 				}
@@ -102,7 +102,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$list		= array();
 		$path		= $this->basePath.$language.'/';
 		if( file_exists( $path.$folder ) ){
-			$index	= Folder_RecursiveLister::getFileList( $path.$folder );
+			$index	= FS_Folder_RecursiveLister::getFileList( $path.$folder );
 			foreach( $index as $item ){
 				$extension	= pathinfo( $item->getFilename(), PATHINFO_EXTENSION );
 				if( $extensions && !in_array( $extension, $extensions ) )

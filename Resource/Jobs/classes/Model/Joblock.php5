@@ -10,7 +10,7 @@ class Model_Joblock {
 		if( $config->get( 'path.jobs.locks' ) )
 			$this->lockPath		= $config->get( 'path.jobs.locks' );
 		if( !file_exists( $this->lockPath ) )
-			Folder_Editor::createFolder( $this->lockPath );
+			FS_Folder_Editor::createFolder( $this->lockPath );
 		$this->cleanup( 0 );
 	}
 
@@ -29,7 +29,7 @@ class Model_Joblock {
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )
 				continue;
-			$lifetime	= File_Reader::load( $entry->getPathname() );
+			$lifetime	= FS_File_Reader::load( $entry->getPathname() );
 			list( $className, $methodName, $ext ) = explode( ".", $entry->getFilename() );
 			$map[]	= (object) array(
 				'class'		=> $className,
@@ -37,7 +37,7 @@ class Model_Joblock {
 				'pathname'	=> $entry->getPathname(),
 				'filename'	=> $entry->getFilename(),
 				'filetime'	=> filemtime( $entry->getPathname() ),
-				'lifetime'	=> File_Reader::load( $entry->getPathname() ),
+				'lifetime'	=> FS_File_Reader::load( $entry->getPathname() ),
 			);
 		}
 		return $map;
@@ -46,7 +46,7 @@ class Model_Joblock {
 	public function isLocked( $className, $methodName, $maxTime = 0 ){
 		$lockFile	= $this->getLockFileName( $className, $methodName );
 		if( file_exists( $lockFile ) ){
-			$lifetime	= (int) File_Reader::load( $lockFile );
+			$lifetime	= (int) FS_File_Reader::load( $lockFile );
 			$age		= time() - filemtime( $lockFile );
 			if( $lifetime && $age >= $lifetime )
 				$this->unlock( $className, $methodName );
@@ -58,7 +58,7 @@ class Model_Joblock {
 
 	public function lock( $className, $methodName, $lifetime = 0 ){
 		$filename	= $this->getLockFileName( $className, $methodName );							//  
-		File_Writer::save( $filename, (string) $lifetime );											//  
+		FS_File_Writer::save( $filename, (string) $lifetime );											//  
 	}
 
 	/**

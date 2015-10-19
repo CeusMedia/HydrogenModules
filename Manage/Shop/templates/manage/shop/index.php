@@ -46,8 +46,11 @@ $geocoder	= new Net_API_Google_Maps_Geocoder( "" );
 $geocoder->setCachePath( 'contents/cache/' );
 $markers	= array();
 foreach( $customers as $customer ){
-	$tags		= $geocoder->getGeoTags( $customer->address.', '.$customer->city.', '.$customer->country );
-	$markers[]	= array( 'lon' => $tags['longitude'], 'lat' => $tags['latitude'] );
+	try{
+		$tags		= $geocoder->getGeoTags( $customer->address.', '.$customer->city.', '.$customer->country );
+		$markers[]	= array( 'lon' => $tags['longitude'], 'lat' => $tags['latitude'] );
+	}
+	catch( Exception $e ){}
 //	$markers[]	= array( 'lat' => "51.3417825", 'lon' => "12.3936349" );
 }
 

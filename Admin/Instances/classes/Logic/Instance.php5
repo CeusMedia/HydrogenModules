@@ -56,7 +56,7 @@ class Logic_Instance{
 	}
 
 /*	public function showTodos(){
-		$index	= new File_RecursiveTodoLister( array( 'php', 'js' ) );
+		$index	= new FS_File_RecursiveTodoLister( array( 'php', 'js' ) );
 		$index->scan( $this->env->getRemote()->path );
 		$this->addData( 'path', $this->env->getRemote()->path );
 		$this->addData( 'todos', $index->getList( TRUE ) );

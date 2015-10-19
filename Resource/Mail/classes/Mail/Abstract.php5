@@ -102,7 +102,7 @@ abstract class Mail_Abstract{
 		$filePath	= $this->env->getConfig()->get( 'path.scripts' ).$fileName;
 		if( !file_exists( $filePath ) )
 			return FALSE;
-		$script	= File_Reader::load( $filePath );
+		$script	= FS_File_Reader::load( $filePath );
 		$script	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $script );
 		$tag	= UI_HTML_Tag::create( 'script', $script, array( 'type' => 'text/javascript' ) );
 		$this->page->addHead( $tag );
@@ -121,7 +121,7 @@ abstract class Mail_Abstract{
 			return FALSE;
 		if( in_array( $filePath, $this->addedStyles ) )
 			return FALSE;
-		$style	= File_Reader::load( $filePath );
+		$style	= FS_File_Reader::load( $filePath );
 		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
 
 		$path	= dirname( $filePath );

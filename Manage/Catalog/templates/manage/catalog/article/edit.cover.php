@@ -37,25 +37,30 @@ if( $article->cover ){
 }
 
 return '
+<!--  Manage: Catalog: Article: Cover  -->
 <div class="row-fluid">
 	<div class="span6">
-		<h4>Cover-Bild</h4>
-		'.$listImages.'
+		<div class="content-panel">
+			<h4>Cover-Bild</h4>
+			<div class="content-panel-inner">
+				'.$listImages.'
+			</div>
+		</div>
 	</div>
 	<div class="span6">
-		<h4>Cover-Bild hochladen</h4>
-		<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
-			<div class="row-fluid">
-				<div class="span12">
+		<div class="content-panel">
+			<h4>Cover-Bild hochladen</h4>
+			<div class="content-panel-inner">
+				<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 					<label for="input_image">Bilddatei <small class="muted">(mindestens 240 Pixel hoch/breit; Typen: PNG, JPEG)</small></label>
 					<input type="file" name="image" id="input_image"/>
-				</div>
-				<div class="buttonbar">
-					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> speichern</button>
-				</div>
+					<div class="buttonbar">
+						<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
 	</div>
 </div>
-';
+<!--  /Manage: Catalog: Article: Cover  -->';
 ?>

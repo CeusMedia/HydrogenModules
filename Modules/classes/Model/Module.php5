@@ -58,7 +58,7 @@ class Model_Module{
 
 	public function getInstalled(){
 		$list	= array();
-		$index	= new File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
+		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
 		{
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
@@ -84,7 +84,7 @@ class Model_Module{
 		if( $this->cache )
 			return $this->cache;
 		$list	= array();
-		$index	= new File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
+		$index	= new FS_File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
 		foreach( $index as $entry ){
 			$id		= preg_replace( '@^'.$this->pathRepos.'@', '', $entry->getPath() );
 			$id		= str_replace( '/', '_', $id );

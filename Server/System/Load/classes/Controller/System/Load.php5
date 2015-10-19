@@ -30,7 +30,7 @@ class Controller_System_Load extends CMF_Hydrogen_Controller{
 			$pathLocale	= $env->getConfig()->get( 'path.locales' ).$language.'/';					//  get path of locales
 			$fileName	= $pathLocale.'html/error/503.html';										//  error page file name
 			if( file_exists( $fileName ) )															//  error page file exists
-				$message	= File_Reader::load( $fileName );										//  load error page content
+				$message	= FS_File_Reader::load( $fileName );										//  load error page content
 			print( $message );																		//  display error message
 			exit;																					//  and quit application
 		}

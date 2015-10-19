@@ -9,7 +9,7 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 		$classKey	= $request->get( 'class_key' );
 		$classKey	= preg_replace("/[^a-z0-9_]+/i", '', $classKey );
 		$this->addData( 'classKey', $classKey );
-		
+
 		if( $request->get( 'create' ) || $request->get( 'preview' ) ){
 			if( !trim( $classKey ) )
 				$messenger->noteError( 'Class key is missing' );
@@ -36,7 +36,7 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 		$classKey	= $request->get( 'class_key' );
 		$classKey	= preg_replace("/[^a-z0-9_]+/i", '', $classKey );
 		$this->addData( 'classKey', $classKey );
-		
+
 		if( $request->get( 'create' ) || $request->get( 'preview' ) ){
 			if( !trim( $classKey ) )
 				$messenger->noteError( 'Class key is missing' );
@@ -63,7 +63,7 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 		$classKey	= $request->get( 'class_key' );
 		$classKey	= preg_replace("/[^a-z0-9_]+/i", '', $classKey );
 		$this->addData( 'classKey', $classKey );
-		
+
 		if( $request->get( 'create' ) || $request->get( 'preview' ) ){
 			if( !trim( $classKey ) )
 				$messenger->noteError( 'Class key is missing' );
@@ -90,7 +90,7 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 		$classKey	= $request->get( 'class_key' );
 		$classKey	= preg_replace("/[^a-z0-9_]+/i", '', $classKey );
 		$this->addData( 'classKey', $classKey );
-		
+
 		if( $request->get( 'create' ) || $request->get( 'preview' ) ){
 			if( !trim( $classKey ) )
 				$messenger->noteError( 'Class key is missing' );
@@ -117,7 +117,7 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 		$fileKey	= $request->get( 'file_key' );
 		$fileKey	= preg_replace("/[^a-z0-9\/\.]+/i", '', strtolower( $fileKey ) );
 		$this->addData( 'fileKey', $fileKey );
-		
+
 		if( $request->get( 'create' ) || $request->get( 'preview' ) ){
 			if( !trim( $fileKey ) )
 				$messenger->noteError( 'File key is missing' );
@@ -134,14 +134,13 @@ class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
 			}
 		}
 	}
-	
+
 	public function index(){
-		
 	}
 
 	protected function saveFile( $filePath, $content, $mode = 0777 ){
-		Folder_Editor::createFolder( dirname( $filePath ), $mode );
-		$e	= new File_Editor( $filePath );
+		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
+		$e	= new FS_File_Editor( $filePath );
 		$e->writeString( $content );
 		$e->setPermissions( 0777 );
 	}

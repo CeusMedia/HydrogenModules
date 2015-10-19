@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Manage: My Company & Branches]]></title>
 	<description>Management for companies and branches assigned to current user.</description>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Fusion with module Manage:My:Branch.</log>
@@ -12,6 +12,7 @@
 	<log version="0.4.3">Use replacement for file input elements.</log>
 	<log version="0.4.4">Use module Resource:Upload to check uploaded images.</log>
 	<log version="0.4.5">Added support for company logo image.</log>
+	<log version="0.4.6">Replace file and folder class calls to use CeusMedia:Common.</log>
 <!--	<log version="0.4.1">Integrate map using module UI:Map.</log>-->
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>

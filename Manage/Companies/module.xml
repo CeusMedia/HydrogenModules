@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Manage: Companies & Branches]]></title>
 	<description>Management for companies and their branches.</description>
-	<version>0.2.11</version>
+	<version>0.2.12</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated templates.</log>
@@ -16,6 +16,7 @@
 	<log version="0.2.9">Support for branch tags.</log>
 	<log version="0.2.10">Added description.</log>
 	<log version="0.2.11">Extended states.</log>
+	<log version="0.2.12">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

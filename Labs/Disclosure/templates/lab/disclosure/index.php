@@ -13,7 +13,7 @@ $path		= realpath( $path );
 $regexClass	= '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U';
 
 $classes	= array();
-$index		= new File_RecursiveRegexFilter( $path, $regexClass );
+$index		= new FS_File_RecursiveRegexFilter( $path, $regexClass );
 foreach( $index as $entry ){
 	$fileName	= preg_replace( '@^'.$path.'/(.+)\.'.$ext.'$@', '\\1', $entry->getPathname() );
 	$className	= 'Controller_'.str_replace( '/', '_', $fileName );

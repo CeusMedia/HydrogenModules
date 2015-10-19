@@ -30,7 +30,7 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 		exec( $command, $a, $b );
 		if( $b )
 			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= File_Reader::load( $cacheFile );
+		$html	= FS_File_Reader::load( $cacheFile );
 		unlink( $cacheFile );
 #		Net_Reader::readUrl( $this->urlLogout );
 		return $html;
@@ -86,10 +86,10 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 #		if( !file_exists( $this->bank->cacheFile ) ){
 			$html	= $this->fetchAccountsUsingCurl();
 #			$html	= $this->fetchAccountsUsingWget();
-#			File_Writer::save( $this->bank->cacheFile, $html );
+#			FS_File_Writer::save( $this->bank->cacheFile, $html );
 #		}
 #		else
-#			$html	= File_Reader::load( $this->bank->cacheFile );
+#			$html	= FS_File_Reader::load( $this->bank->cacheFile );
 		return $this->parseAccounts( $html );
 	}
 }

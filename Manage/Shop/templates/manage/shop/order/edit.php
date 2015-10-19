@@ -3,7 +3,7 @@
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
-$buttons	= array( new CMM_Bootstrap_LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
+$buttons	= array( new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
 
 $states	= array(
 	(object) array(
@@ -107,7 +107,7 @@ $states	= array(
 foreach( $states as $status ){
 	if( $status->enabled ){
 		if( in_array( $order->status, $status->from ) ){
-			$buttons[]	= new CMM_Bootstrap_LinkButton(
+			$buttons[]	= new \CeusMedia\Bootstrap\LinkButton(
 				$baseUrl.$status->to,
 				$status->label,
 				'btn-small '.$status->class,
@@ -116,7 +116,8 @@ foreach( $states as $status ){
 		}
 	}
 }
-$buttons	= new CMM_Bootstrap_ButtonToolbar( array( new CMM_Bootstrap_ButtonGroup( $buttons ) ) );
+$buttons	= new \CeusMedia\Bootstrap\ButtonToolbar( array( new \CeusMedia\Bootstrap\ButtonGroup( $buttons ) ) );
+
 
 function renderDataList( $keys, $data, $labels ){
 	$list	= array();
@@ -173,15 +174,15 @@ foreach( $order->positions as $position ){
 	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
 	$cellTitle		= new UI_HTML_Tag( 'td', $link, array( 'class' => 'cell-position-title' ) );
 	$cellQuantity	= new UI_HTML_Tag( 'td', $position->quantity, array( 'class' => 'cell-position-quantity' ) );
-	$cellStatus		= new UI_HTML_Tag( 'td', new CMM_Bootstrap_ButtonGroup( array(
-		new CMM_Bootstrap_LinkButton(
+	$cellStatus		= new UI_HTML_Tag( 'td', new \CeusMedia\Bootstrap\ButtonGroup( array(
+		new \CeusMedia\Bootstrap\LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
 			'btn-small btn-warning',
 			'arrow-right',
 			$order->status < 1 || $position->status != 0
 		),
-		new CMM_Bootstrap_LinkButton(
+		new \CeusMedia\Bootstrap\LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/2',
 			'geliefert',
 			'btn-small btn-success',
@@ -208,7 +209,7 @@ $tableBody		= UI_HTML_Tag::create( 'tbody', $rows );
 $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
 
 $linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
-#$linkBack	= new CMM_Bootstrap_LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );
+#$linkBack	= new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );
 
 $tabs		= View_Manage_Shop::renderTabs( $env, 'order' );
 

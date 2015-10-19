@@ -28,8 +28,10 @@ if( $author->image ){
 }
 
 return '
+<div class="content-panel">
+	<!--<h4>'.$w->heading.'</h4>-->
+	<div class="content-panel-inner">
 		<form action="./manage/catalog/author/edit/'.$author->authorId.'" method="post" enctype="multipart/form-data">
-			<!--<h4>'.$w->heading.'</h4>-->
 			<div class="row-fluid">
 				<div class="span6">
 					<div class="row-fluid">
@@ -78,11 +80,13 @@ return '
 				<textarea class="span12" type="text" name="description" id="input_description" rows="6">'.htmlentities( $author->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 			<div class="buttonbar">
-				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+<!--				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
+				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/author/remove/'.$author->authorId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
 				<a href="'.$frontend->getUri().'catalog/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 			</div>
 		</form>
+	</div>
+</div>
 ';
 ?>

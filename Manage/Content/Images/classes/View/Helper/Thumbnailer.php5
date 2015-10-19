@@ -47,7 +47,7 @@ class View_Helper_Thumbnailer{
 	public function optimize( $pathImages ){
 		return;
 		$ids	= $this->cache->index();
-		foreach( Folder_RecursiveLister::getFileList( $pathImages ) as $entry ){
+		foreach( FS_Folder_RecursiveLister::getFileList( $pathImages ) as $entry ){
 			foreach( $ids as $nr => $id ){
 				if( strpos( $id, $entry->getPathname() ) !== FALSE )
 					unset( $ids[$nr] );

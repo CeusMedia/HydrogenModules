@@ -63,7 +63,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 		$map			= new stdClass();
 		$map->jobs		= array();
 		$map->intervals	= array();
-		$index			= new File_RegexFilter( 'config/jobs/', '/\.xml$/i' );
+		$index			= new FS_File_RegexFilter( 'config/jobs/', '/\.xml$/i' );
 		foreach( $index as $file ){
 			$xml	= XML_ElementReader::readFile( $file->getPathname() );
 			foreach( $xml->job as $job ){
