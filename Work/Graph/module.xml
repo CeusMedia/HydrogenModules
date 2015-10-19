@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Graph</title>
+	<description><![CDATA[
+]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Graph.php5</class>
+		<class>View/Work/Graph.php5</class>
+		<template>work/graph/edge.php</template>
+		<template>work/graph/index.php</template>
+		<template>work/graph/node.php</template>
+		<template>work/graph/panelAddEdge.php</template>
+		<template>work/graph/panelAddNode.php</template>
+		<template>work/graph/panelEdgeNodes.php</template>
+		<template>work/graph/panelEditEdge.php</template>
+		<template>work/graph/panelEditGraph.php</template>
+		<template>work/graph/panelEditNode.php</template>
+		<template>work/graph/panelNodeEdges.php</template>
+		<template>work/graph/panelTree.php</template>
+		<template>work/graph/modal/addEdge.php</template>
+		<template>work/graph/modal/addNode.php</template>
+		<template>work/graph/modal/editEdge.php</template>
+		<template>work/graph/modal/editGraph.php</template>
+	</files>
+	<config type="string" protected="yes" name="path" title="path to graph files"></config>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_CSS_Panel</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="work/graph">Graph-Editor</link>
+	<link xml:lang="en" access="acl" path="work/graph">Graphs</link>
+</module>
