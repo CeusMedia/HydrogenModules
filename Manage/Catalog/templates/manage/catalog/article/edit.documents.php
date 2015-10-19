@@ -28,15 +28,17 @@ if( $articleDocuments ){
 </table>';
 }
 
+$documentMaxSize	= $env->getConfig()->get( 'module.manage_catalog.article.document.maxSize' );
+$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
+$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
-$configKey	= 'module.manage_catalog.article.document.maxSize';
-$maxSize	= Logic_Upload::getMaxUploadSize( $env, $configKey, 'M' );
-$maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
 
-$configKey	= 'module.manage_catalog.article.document.extensions';
-$types		 = Logic_Upload::getTypes( $env, $configKey );
-natcasesort( $types );
-$types		= join( ", ", $types );
+$documentExtensions	= $env->getConfig()->get( 'module.manage_catalog.article.document.extensions' );
+$documentExtensions	= explode( ",", $documentExtensions );
+foreach( $documentExtensions as $nr => $type )
+	$documentExtensions[$nr]	= trim( $type );
+$documentExtensions	= join( ", ", $documentExtensions );
+
 return '
 <!--  Manage: Catalog: Article: Documents  -->
 	<div class="row-fluid">
@@ -50,9 +52,9 @@ return '
 			<h4>Dokumente hinzufügen</h4>
 			<div class="alert">
 				<b>Dateitypen: </b>
-				<span>'.$types.'</span><br/>
+				<span>'.$documentExtensions.'</span><br/>
 				<b>Größe: </b>
-				<span>max. '.$maxSize.'</span>
+				<span>max. '.$documentMaxSize.'</span>
 			</div>
 			<form action="./manage/catalog/article/addDocument/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 				<div class="row-fluid">

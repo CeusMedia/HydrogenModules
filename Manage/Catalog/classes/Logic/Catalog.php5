@@ -306,41 +306,61 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	/**
 	 *	Removes cache files related to article after changes.
+	 *	Uses clearCacheForCategory to invalidate category cache.
+	 *	Attention: MUST NO call clearCacheForAuthor.
 	 *	@access		public
 	 *	@param		integer		$articleId			ID of article to clear cache files for
 	 *	@return		void
 	 */
 	protected function clearCacheForArticle( $articleId ){
-		$article	= $this->modelArticle->get( $articleId );											//  get article
-		$this->cache->remove( 'catalog.article.'.$articleId );											//  remove article cache
-		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );			//  get related categories of article
-		foreach( $categories as $category ){															//  iterate assigned categories
-			$categoryId	= $category->categoryId;														//  get category ID of related category
-			while( $categoryId ){																		//  loop while category ID exists
-				$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
-				if( $category ){																		//  category exists
-					$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
-					$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
-					$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
-				}
-				else																					//  category is not existing
-					$categoryId	= 0;																	//  no further loops
-			}
+		$article	= $this->modelArticle->get( $articleId );										//  get article
+		$this->cache->remove( 'catalog.article.'.$articleId );										//  remove article cache
+		$this->cache->remove( 'catalog.article.author.'.$articleId );								//  remove article author cache
+		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
+		foreach( $categories as $category ){														//  iterate assigned categories
+			$categoryId	= $category->categoryId;													//  get category ID of related category
+			$this->clearCacheForCategory( $categoryId );
 		}
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->remove( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
-	 *	@todo		!implement
+	 *	Removes cache files related to article after changes.
+	 *	Uses clearCacheForArticle to invalidate article cache.
+	 *	@access		public
+	 *	@param		integer		$authorId			ID of author
+	 *	@return		void
 	 */
 	protected function clearCacheForAuthor( $authorId ){
-		throw new RuntimeException( 'Not implemented yet' );
+		$relations	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );			//  get all articles of author
+		foreach( $relations as $relation ){															//  iterate article relations
+			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
+		}
+		$this->cache->remove( 'catalog.tinymce.images.authors' );
+		$this->cache->remove( 'catalog.tinymce.links.authors' );
 	}
 
 	/**
-	 *	@todo		!implement
+	 *	Removes cache files related to categories after changes.
+	 *	Attention: MUST NO call clearCacheForArticle.
+	 *	@access		public
+	 *	@param		integer		$categoryId			ID of category
+	 *	@return		void
 	 */
 	protected function clearCacheForCategory( $categoryId ){
-		throw new RuntimeException( 'Not implemented yet' );
+		while( $categoryId ){																		//  loop while category ID exists
+			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
+			if( $category ){																		//  category exists
+				$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
+				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
+				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
+			}
+			else																					//  category is not existing
+				$categoryId	= 0;																	//  no further loops
+		}
+		$this->cache->remove( 'catalog.categories' );
+		$this->cache->remove( 'catalog.tinymce.links.categories' );
 	}
 
 	/**
@@ -374,9 +394,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
 		$this->clearCacheForArticle( $articleId, TRUE );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
-//		$this->cache->remove( 'catalog.article.'.$articleId );
 	}
 
 	/**
@@ -387,9 +404,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$data['modifiedAt']	= time();													//  @todo kriss: why is this line disabled?
 //		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
 		$this->modelAuthor->edit( $authorId, $data );
-		$this->cache->remove( 'catalog.article.author.'.$authorId );
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
-		$this->cache->remove( 'catalog.tinymce.links.authors' );
+		$this->clearCacheForAuthor( $authorId );
 	}
 
 	/**
@@ -402,11 +417,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 //		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
 		$this->modelCategory->edit( $categoryId, $data );
 		$new	= $this->modelCategory->get( $categoryId );
-		$this->cache->remove( 'catalog.category.'.$categoryId );
-		$this->cache->remove( 'catalog.categories' );
-		$this->cache->remove( 'catalog.categories.'.$old->parentId );
-		$this->cache->remove( 'catalog.categories.'.$new->parentId );
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
+		$this->clearCacheForCategory( $old->parentId );
+		$this->clearCacheForCategory( $new->parentId );
 	}
 
 	/**
@@ -474,13 +486,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$authorIds[]	= $author->authorId;
 		return $this->getArticlesFromAuthorIds( $authorIds, $returnIds );
 	}
-
-	/**
-	 *	Alias for self::getCategoryArticles()
-	 */
-/*	public function getArticlesFromCategory( $categoryId ){
-		return $this->getCategoryArticles( $categoryId );
-	}*/
 
 	/**
 	 *	@todo		kriss: code doc
@@ -691,8 +696,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 /*  -------------------------------------------------  */
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
+	 *	Removes article with cover, documents, tags and relations to authors and categories.
+	 *	Caches will be removed.
 	 *	@todo		kriss: code doc
 	 *	@todo		kriss: implement and clean up
 	 */
@@ -709,9 +714,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$this->removeAuthorFromArticle( $articleId, $relation->authorId );
 		foreach( $this->getDocumentsOfArticle( $articleId ) as $relation )
 			$this->removeArticleDocument( $relation->articleDocumentId );
+		$this->clearCacheForArticle( $articleId );
 		$this->modelArticle->remove( $articleId );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
@@ -725,13 +729,12 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( $article->cover ){
 			@unlink( $this->pathArticleCovers.$id."__".$article->cover );
 			@unlink( $this->pathArticleCovers.$id."_".$article->cover );
+			$this->clearCacheForArticle( $articleId );
 			$this->editArticle( $articleId, array( 'cover' => NULL ) );
-			$this->cache->remove( 'catalog.tinymce.images.articles' );
 		}
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
@@ -739,6 +742,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$document	= $this->modelArticleDocument->get( $documentId );
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
+		$this->clearCacheForArticle( $document->articleId );
 		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
 	}
@@ -755,34 +759,24 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 		);
-//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active after next line has been activated
-//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
+		$this->clearCacheForArticle( $articleId );													//
+		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
 	/**
-	 *	@deprecated		use removeArticeCover instead
-	 */
-	public function removeArticleImage( $articleId ){
-		throw new Exception( 'Deprecated: use removeArticeCover instead' );
-		$article	= $this->modelArticle->get( $articleId );
-		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
-		@unlink( $this->pathArticleCovers.$id."_".$article->cover );
-		return $this->modelArticle->edit( $articleId, array( 'cover' => NULL ) );
-	}
-
-	/**
-	 *	@todo		kriss: check if this method is used or deprecated
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
 	public function removeArticleTag( $articleTagId ){
-		return $this->modelArticleTag->remove( $articleTagId );
+		$relation	= $this->modelArticleTag->get( $articleTagId );
+		if( $relation ){
+			$this->clearCacheForArticle( $relation->articleId );
+			return $this->modelArticleTag->remove( $articleTagId );
+		}
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
 	public function removeAuthorFromArticle( $articleId, $authorId ){
@@ -793,10 +787,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'authorId'	=> $authorId,
 		);
 		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
-//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active and remove next line
-		$this->cache->remove( 'catalog.article.'.$articleId );
-//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
-		$this->cache->remove( 'catalog.article.author.'.$articleId );
+		$this->clearCacheForArticle( $articleId );													//
+		$this->clearCacheForAuthor( $authorId );													//
 		return $result;
 	}
 
@@ -813,27 +805,21 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			@unlink( $this->pathAuthorImages.$id."_".$author->image );
 			$this->editAuthor( $authorId, array( 'image' => NULL ) );
 		}
-//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
+		$this->clearCacheForAuthor( $authorId );													//
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
 	public function removeCategory( $categoryId ){
 		$this->checkCategoryId( $categoryId );
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
-//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
+		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelCategory->remove( $categoryId );
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
 	public function removeCategoryFromArticle( $articleId, $categoryId ){
@@ -843,7 +829,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'articleId'	=> $articleId,
 			'categoryId'	=> $categoryId,
 		);
-//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
+		$this->clearCacheForArticle( $articleId );													//
+		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
@@ -857,84 +844,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->checkAuthorId( $authorId );
 		$indices	= array( 'articleId' => $articleId, 'authorId' => $authorId );
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
-		if( $relation )
+		if( $relation ){
 			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
-	}
-
-	/*  --  DEPRECATED METHOD  --  */
-
-	/**
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function getFullCategoryName( $categoryId, $language = "de" ){
-		throw new RuntimeException( 'Catalog logic method "getFullCategoryName" is deprecated.' );
-		$data	= $this->modelCategory->get( $categoryId );
-		$name	= $data->{"label_".$language};
-		if( $data->parentId ){
-			$parent	= $this->modelCategory->get( $data->parentId );
-			$name	= $parent->{"label_".$language}." -> ".$name;
+			$this->clearCacheForArticle( $articleId );
+			$this->clearCacheForAuthor( $authorId );
 		}
-		return $name;
-	}
-
-	/**
-	 *	Indicates whether an Author is Editor of an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isArticleEditor( $articleId, $authorId )
-	{
-		throw new RuntimeException( 'Catalog logic method "isArticleEditor" is deprecated.' );
-		$model	= new Model_ArticleAuthor();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData( true );
-		if( $data )
-			return $data['editor'];
-		return null;
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isAuthorOfArticle( $articleId, $authorId  )
-	{
-		throw new RuntimeException( 'Catalog logic method "isAuthorOfArticle" is deprecated.' );
-		$model	= new Model_ArticleAuthor();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData();
-		return (bool)count( $data );
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isCategoryOfArticle( $articleId, $categoryId  )
-	{
-		throw new RuntimeException( 'Catalog logic method "isCategoryOfArticle" is deprecated.' );
-		$model	= new Model_ArticleCategory();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "categoryId", $categoryId );
-		$data	= $model->getData();
-		return (bool)count( $data );
 	}
 }
 class Logic_Upload{
@@ -960,38 +874,6 @@ class Logic_Upload{
 		foreach( explode( ",", $configValue ) as $extension )
 			$list[]	= trim( $extension );
 		return $list;
-	}
-}
-
-class Alg_UnitParser{
-
-	static public $rules	= array(
-		'/^([0-9.,]+)$/'	=> 1,
-		'/^([0-9.,]+)k$/'	=> 1000,
-		'/^([0-9.,]+)kB$/'	=> 1000,
-		'/^([0-9.,]+)K$/'	=> 1024,
-		'/^([0-9.,]+)KB$/i'	=> 1024,
-		'/^([0-9.,]+)m$/'	=> 1000000,
-		'/^([0-9.,]+)M$/'	=> 1048576,
-		'/^([0-9.,]+)MB$/i'	=> 1048576,
-	);
-
-	static public function parse( $string, $exceptedUnit = NULL ){
-		$int	= (int) $string;
-		if( $exceptedUnit && strlen( $int ) == strlen( $string ) && $int == $string )
-			$string	.= $exceptedUnit;
-		$string	= trim( $string );
-		$factor	= NULL;
-		foreach( self::$rules as $key => $value ){
-			if( preg_match( $key, $string ) ){
-				$string		= (float) preg_replace( $key, '\\1', $string );
-				$factor		= $value;
-				break;
-			}
-		}
-		if( $factor !== NULL )																		//
-			return $factor * $string;
-		throw new DomainException( 'Given string is not matching any parser rules' );
 	}
 }
 ?>
