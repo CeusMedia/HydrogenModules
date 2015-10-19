@@ -64,7 +64,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->pathArticleCovers	= $basePath.$paths->get( 'frontend.covers' );
 		$this->pathArticleDocuments	= $basePath.$paths->get( 'frontend.documents' );
 		$this->pathAuthorImages		= $basePath.$paths->get( 'frontend.authors' );
-//		$this->clean();
 
 		$cacheKey	= 'catalog.count.categories.articles';
 		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
@@ -154,7 +153,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'url'			=> $filename,
 			'title'			=> $title,
 		);
-//		$this->clearCacheForArticle( $articleId, FALSE );											//  @todo kriss: active after second argument is implemented
+		$this->clearCacheForArticle( $articleId );													//
 		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
@@ -167,7 +166,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
 		);
-//		$this->clearCacheForArticle( $articleIdId, FALSE );											//  @todo kriss: active after second argument is implemented
+		$this->clearCacheForArticle( $articleIdId );												//
 		return $this->modelArticleTag->add( $data );
 	}
 
@@ -176,8 +175,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function addAuthor( $data ){
 //		$data['createdAt']	= time();
-		$this->cache->remove( 'catalog.tinymce.links.authors' );
-//		$this->cache->remove( 'catalog.tinymce.images.authors' );
+		$this->clearCacheForAuthor( 0 );
 		return  $this->modelAuthor->add( $data );
 	}
 
@@ -208,8 +206,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
 		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$this->clearCacheForAuthor( $authorId );
 		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
 	}
 
 	/**
@@ -222,10 +220,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'editor'	=> $role,
 		);
 		$relationId	= $this->modelArticleAuthor->add( $data );
-//		$this->clearCacheForArticle( $categoryId );										//  @todo kriss: active after next line is activated
-//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
-		$this->cache->remove( 'catalog.article.'.$articleId );
-		$this->cache->remove( 'catalog.article.author.'.$articleId );
+		$this->clearCacheForArticle( $categoryId );													//
+		$this->clearCacheForAuthor( $authorId );													//
 		return $relationId;
 	}
 
@@ -234,7 +230,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function addCategory( $data ){
 //		$data['registeredAt']	= time();
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
+		$this->clearCacheForCategory( 0 );
 		return $this->modelCategory->add( $data );
 	}
 
@@ -249,8 +245,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			'categoryId'	=> $categoryId,
 			'volume'		=> $volume,
 		);
-//		$this->clearCacheForArticle( $articleId );										//  @todo kriss: active after next line is activated
-//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
+		$this->clearCacheForArticle( $articleId );													//
+		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->add( $indices );
 	}
 
@@ -285,23 +281,6 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid category ID '.$categoryId );
 		return FALSE;
-	}
-
-	/**
-	 *	Removed invalid relations between articles and categories.
-	 *	@todo		kriss: point out what this method is for and when it should be used, make not in method description
-	 *	@todo		kriss: rename method to clearInvalidRelationsOfArticlesAndCategories
-	 *	@todo		kriss: handle cache invalidation for articles and categories
-	 */
-	protected function clean(){
-		$list		= array();
-		$articles	= $this->modelArticle->getAll();
-		foreach( $articles as $article )
-			$ids[]	= $article->articleId;
-		$relations	= $this->modelArticleCategory->getAll();
-		foreach( $relations as $relation )
-			if( !in_array( $relation->articleId, $ids ) )
-				$this->modelArticleCategory->remove( $relation->articleCategoryId );
 	}
 
 	/**
@@ -401,10 +380,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function editAuthor( $authorId, $data ){
 		$this->checkAuthorId( $authorId, TRUE );
-//		$data['modifiedAt']	= time();													//  @todo kriss: why is this line disabled?
-//		$this->clearCacheForAuthor( $authorId );										//  @todo kriss: active after method is implemented
+//		$data['modifiedAt']	= time();																//
+		$this->clearCacheForAuthor( $authorId );													//
 		$this->modelAuthor->edit( $authorId, $data );
-		$this->clearCacheForAuthor( $authorId );
 	}
 
 	/**
@@ -413,10 +391,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function editCategory( $categoryId, $data ){
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
-//		$data['modifiedAt']	= time();													//  @todo kriss: why is this line disabled?
-//		$this->clearCacheForCategory( $categoryId );									//  @todo kriss: active after method is implemented
+//		$data['modifiedAt']	= time();																//
 		$this->modelCategory->edit( $categoryId, $data );
 		$new	= $this->modelCategory->get( $categoryId );
+		$this->clearCacheForCategory( $categoryId );												//
 		$this->clearCacheForCategory( $old->parentId );
 		$this->clearCacheForCategory( $new->parentId );
 	}
