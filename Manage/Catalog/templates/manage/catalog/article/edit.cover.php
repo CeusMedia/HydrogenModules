@@ -36,6 +36,19 @@ if( $article->cover ){
 	';
 }
 
+$documentMaxSize	= $env->getConfig()->get( 'module.manage_catalog.article.document.maxSize' );
+$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
+$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+
+$list				= array();
+$documentExtensions	= $env->getConfig()->get( 'module.manage_catalog.article.image.extensions' );
+foreach( explode( ",", $documentExtensions ) as $nr => $type )
+	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+		$list[$nr]	= strtoupper( trim( $type ) );
+$documentExtensions	= join( ", ", $list );
+
+$minSize		= $env->getConfig()->get( 'module.manage_catalog.article.image.maxHeight' );
+
 return '
 <!--  Manage: Catalog: Article: Cover  -->
 <div class="row-fluid">
@@ -51,9 +64,19 @@ return '
 		<div class="content-panel">
 			<h4>Cover-Bild hochladen</h4>
 			<div class="content-panel-inner">
+
+				<div class="alert">
+					<b>Dateitypen: </b>
+					<span>'.$documentExtensions.'</span><br/>
+					<b>Dateigröße: </b>
+					<span>max. '.$documentMaxSize.'</span><br/>
+					<b>Bildgröße: </b>
+					<span>min. '.$minSize.' Pixel hoch/breit</span>
+				</div>
+
 				<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
-					<label for="input_image">Bilddatei <small class="muted">(mindestens 240 Pixel hoch/breit; Typen: PNG, JPEG)</small></label>
-					<input type="file" name="image" id="input_image"/>
+					<label for="input_image">Bilddatei <small class="muted"></small></label>
+					'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
 					<div class="buttonbar">
 						<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
 					</div>

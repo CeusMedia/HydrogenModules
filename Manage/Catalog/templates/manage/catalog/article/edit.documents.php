@@ -35,11 +35,12 @@ $documentMaxSize	= $env->getConfig()->get( 'module.manage_catalog.article.docume
 $limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
 $documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
+$list				= array();
 $documentExtensions	= $env->getConfig()->get( 'module.manage_catalog.article.document.extensions' );
-$documentExtensions	= explode( ",", $documentExtensions );
-foreach( $documentExtensions as $nr => $type )
-	$documentExtensions[$nr]	= trim( $type );
-$documentExtensions	= join( ", ", $documentExtensions );
+foreach( explode( ",", $documentExtensions ) as $nr => $type )
+	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+		$list[$nr]	= strtoupper( trim( $type ) );
+$documentExtensions	= join( ", ", $list );
 
 return '
 <!--  Manage: Catalog: Article: Documents  -->
@@ -57,13 +58,13 @@ return '
 			<b>Dateitypen: </b>
 			<span>'.$documentExtensions.'</span><br/>
 			<b>Größe: </b>
-			<span>max. '.$documentMaxSize..'</span>
+			<span>max. '.$documentMaxSize.'</span>
 		</div>
 		<form action="./manage/catalog/article/addDocument/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_document">lokale Dokumentdatei <small class="muted">(max. '.$maxSize.')</small></label>
-					<input class="span12" type="file" name="document" id="input_document"/><br/>
+					<label for="input_document">lokale Dokumentdatei <small class="muted"></small></label>
+					'.View_Helper_Input_File::render( 'document', '<i class="icon-folder-open icon-white"></i>', 'Datei auswählen...' ).'
 				</div>
 			</div>
 			<div class="row-fluid">

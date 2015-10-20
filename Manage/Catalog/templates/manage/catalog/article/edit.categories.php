@@ -99,12 +99,14 @@ return '
 		<h4>Kategorie zuweisen</h4>
 		<form action="./manage/catalog/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
-				<label for="input_categoryId">Kategorie</label>
-				<select class="span12" name="categoryId" id="input_categoryId">'.$optCategory.'</select>
-			</div>
-			<div class="row-fluid">
-				<label for="input_volume">Band</label>
-				<input type="text" class="span4" name="volume" id="input_volume"/>
+				<div class="span10">
+					<label for="input_categoryId">Kategorie</label>
+					<select class="span12" name="categoryId" id="input_categoryId">'.$optCategory.'</select>
+				</div>
+				<div class="span2">
+					<label for="input_volume">Band</label>
+					<input type="text" class="span12" name="volume" id="input_volume"/>
+				</div>
 			</div>
 			<div class="buttonbar">
 				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> speichern</button>

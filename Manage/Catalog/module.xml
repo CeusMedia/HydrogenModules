@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.5.3</version>
+	<version>0.6</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -26,6 +26,9 @@
 	<log version="0.5.4">Finished cache management.</log>
 	<log version="0.5.5">Use common Alg_UnitParser.</log>
 	<log version="0.5.6">Use module Resource_Logic.</log>
+	<log version="0.5.7">Use advanced upload form input.</log>
+	<log version="0.5.8">Improve tag management.</log>
+	<log version="0.6">Finished update.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -103,6 +106,7 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Author::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Article::___onTinyMCE_getImageList</hook>

@@ -1,13 +1,5 @@
 
 var ModuleManageCatalog = {
-	addArticleTag: function(articleId){
-		"use strict";
-		var tag = $("#input_tag").val();
-		if(tag.length){
-			document.location.href = "./manage/catalog/article/addTag/"+articleId+"/"+tag;
-			$("#input_tag").val("");
-		}
-	},
 	bindListResize: function(list){
 		"use strict";
 		$(window).resize(function(){
@@ -39,7 +31,7 @@ var ModuleManageCatalog = {
 			var list = $("body.moduleManageCatalogAuthor ul.nav-pills").eq(0);
 			ModuleManageCatalog.bindListResize(list);
 			ModuleManageCatalog.scrollToActiveListItem(list);
-			$("#input_search").bind("keyup", onSearchChangeFilterList).focus();
+			$("#input_search").bind("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
 			if($("body.action-add").size())
 				$("#input_firstname").focus();
 		}
@@ -47,7 +39,7 @@ var ModuleManageCatalog = {
 			var list = $("body.moduleManageCatalogCategory ul.nav-pills.main").eq(0);
 			ModuleManageCatalog.bindListResize(list);
 			ModuleManageCatalog.scrollToActiveListItem(list);
-			$("#input_search").bind("keyup", onSearchChangeFilterList).focus();
+			$("#input_search").bind("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
 			if($("body.action-add").size())
 				$("#input_firstname").focus();
 		}

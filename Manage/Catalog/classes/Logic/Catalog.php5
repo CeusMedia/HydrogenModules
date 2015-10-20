@@ -648,39 +648,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $label;
 	}
 
-/*  -------------------------------------------------  */
-
-	/**
-	 *	Indicates whether an Article is to be releases in future.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@return		void
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
-	 */
-	public function isFuture( $articleId )
-	{
-		$tc		= new Alg_Time_Converter;
-		$model	= new Model_Article( $articleId );
-		$data	= $model->getData( true );
-		if( strpos( $data['publication'], "." ) )
-			$time	= $tc->convertToTimestamp( $data['publication'], 'date' );
-		else
-			$time	= $tc->convertToTimestamp( $data['publication'], 'year' );
-		$future	= $time > time();
-		return $future;
-	}
-/*  -------------------------------------------------  */
-
 	/**
 	 *	Removes article with cover, documents, tags and relations to authors and categories.
 	 *	Caches will be removed.
 	 *	@todo		kriss: code doc
-	 *	@todo		kriss: implement and clean up
-	 */
-	/**
-	 *	@todo	Implement!
 	 */
 	public function removeArticle( $articleId ){
 		$this->removeArticleCover( $articleId );

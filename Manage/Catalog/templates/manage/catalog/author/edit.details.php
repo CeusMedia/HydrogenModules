@@ -51,9 +51,9 @@ return '
 						</div>
 					</div>
 					<div class="row-fluid">
-						<div class="span10">
+						<div class="span12">
 							<label for="input_image">'.$w->labelImage.'</label>
-							<input class="span12" type="file" name="image" id="input_image" value=""/>
+							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
 						</div>
 						<div class="span2 pull-right">
 							<label>&nbsp;</label>
