@@ -116,6 +116,12 @@ foreach( $states as $status ){
 		}
 	}
 }
+$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-question-sign icon-white"></i>', array(
+	'class'		=> 'btn btn-info btn-small fancybox-auto',
+	'href'		=> 'images/states.png',
+	'target'	=> '_blank',
+) );
+
 $buttons	= new \CeusMedia\Bootstrap\ButtonToolbar( array( new \CeusMedia\Bootstrap\ButtonGroup( $buttons ) ) );
 
 
@@ -137,32 +143,39 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, (string)$order->status );
 $panels	= array();
 $panels[]	= '
 	<div class="span4">
-		<h4>Bestellung</h4>
-		<dl class="dl-horizontal">
-			<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
-			<dt>Kunden-ID</dt><dd>'.$order->customerId.'</dd>
-			<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
-			<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
-<!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
-		</dl>
-		'.$buttons.'
+		<div class="content-panel">
+			<h4>Bestellung</h4>
+			<div class="content-panel-inner">
+				<dl class="dl-horizontal">
+					<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
+					<dt>Kunden-ID</dt><dd>'.$order->customerId.'</dd>
+					<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
+					<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
+		<!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
+				</dl>
+				'.$buttons.'
+			</div>
+		</div>
 	</div>';
 if( $order->customer )
 	$panels[]	= '
 	<div class="span4">
-		<h4>Lieferanschrift</h4>
-		'.renderDataList( array( 'firstname', 'lastname', 'email', 'phone', 'country', 'region', 'city', 'postcode', 'address' ), $order->customer, $labelsCustomer ).'
+		<div class="content-panel">
+			<h4>Lieferanschrift</h4>
+			<div class="content-panel-inner">
+				'.renderDataList( array( 'firstname', 'lastname', 'email', 'phone', 'country', 'region', 'city', 'postcode', 'address' ), $order->customer, $labelsCustomer ).'
+			</div>
+		</div>
 	</div>';
 if( $order->customer && $order->customer->alternative )
 	$panels[]	= '
 	<div class="span4">
-		<h4>Rechnungsanschrift</h4>
-		'.renderDataList( array( 'billing_institution', 'billing_firstname', 'billing_lastname', 'billing_country', 'billing_region', 'billing_city', 'billing_postcode', 'billing_address', 'billing_tnr', 'billing_phone', 'billing_email' ), $order->customer, $labelsCustomer ).'
-	</div>
-	<div class="span4">
-		<a href="img/states.png" class="darkbox" target="_blank">
-			<img src="images/states.png"/>
-		</a>
+		<div class="content-panel">
+			<h4>Rechnungsanschrift</h4>
+			<div class="content-panel-inner">
+				'.renderDataList( array( 'billing_institution', 'billing_firstname', 'billing_lastname', 'billing_country', 'billing_region', 'billing_city', 'billing_postcode', 'billing_address', 'billing_tnr', 'billing_phone', 'billing_email' ), $order->customer, $labelsCustomer ).'
+			</div>
+		</div>
 	</div>';
 
 $w		= (object) $words['positions'];
@@ -237,7 +250,11 @@ table.table td.cell-position-quantity {
 	<div class="row-fluid panels">
 		'.join( $panels ).'
 	</div>
-	<h4>Artikel</h4>
-	'.$tableArticles.'
+	<div class="content-panel">
+		<h4>Artikel</h4>
+		<div class="content-panel-inner">
+			'.$tableArticles.'
+		</div>
+	</div>
 </div>';
 ?>

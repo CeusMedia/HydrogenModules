@@ -20,6 +20,10 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 
 	public function edit( $orderId ){
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
+		if( !$order ){
+			$this->env->getMessenger()->noteError( 'Invalid order ID.' );
+			$this->restart( NULL, TRUE );
+		}
 		foreach( $order->positions as $nr => $position ){
 			$bridgeId	= (int) $position->bridgeId;
 			$order->positions[$nr]->bridge	= $this->logicBridge->getBridge( $position->bridgeId );

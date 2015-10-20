@@ -71,8 +71,12 @@ return '
 			'.$view->loadTemplateFile( 'manage/shop/order/filter.php' ).'
 		</div>
 		<div class="span9">
-			'.$listOrders.'
-			'.$pagination.'
+			<div class="content-panel">
+				<div class="content-panel-inner">
+					'.$listOrders.'
+					'.$pagination.'
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

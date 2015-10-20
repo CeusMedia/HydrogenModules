@@ -22,14 +22,39 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 
 		$customerIds		= array();
 		foreach( $ordersTotal as $order )
-			$customerIds[]	= $order->customerId;
+			$customerIds[]	= (int) $order->customerId;
 
 		$this->addData( 'ordersNotFinished', $this->logicShop->getOrders( array( 'status' => array( 2, 3, 4, 5 ) ), $orders ) );
 		$this->addData( 'ordersNotPayed', $this->logicShop->getOrders( array( 'status' => '2' ), $orders ) );
 		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( array( 'status' => array( 3, 4 ) ), $orders ) );
 		$this->addData( 'ordersTotal', $ordersTotal );
 
-		$this->addData( 'customers', $this->logicShop->getCustomers( array( 'customerId' => $customerIds ) ) );
+		$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
+
+		//  ALTER TABLE `shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
+/*		$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
+		$geocoder->setCachePath( 'cache/' );
+		$modelCustomer	= new Model_Shop_Customer( $this->env );
+		$markers	= array();
+		foreach( $customers as $customer ){
+			if( !$customer->longitude ){
+				try{
+					$tags		= $geocoder->getGeoTags( $customer->address.', '.$customer->city.', '.$customer->country );
+					$customer->longitude	= $tags['longitude'];
+					$customer->latitude		= $tags['latitude'];
+					$modelCustomer->edit( $customer->customerId, $tags );
+				}
+				catch( Exception $e ){}
+			}
+			if( $customer->longitude )
+				$markers[]	= array( 'lon' => $customer->longitude, 'lat' => $customer->latitude );
+		}
+*/
+		foreach( $customers as $customer )
+			$markers[]	= array( 'lon' => $customer->longitude, 'lat' => $customer->latitude );
+
+		$this->addData( 'markers', $markers );
+
 	}
 
 	public function setTab( $newsletterId, $tabKey ){

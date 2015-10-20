@@ -26,6 +26,8 @@ class Model_Shop_Order_Position extends CMF_Hydrogen_Model {
 		"bridgeId",
 		"articleId",
 		"quantity",
+		"price",
+		"priceTaxed",
 		"status",
 		"createdAt",
 		"modifiedAt",
