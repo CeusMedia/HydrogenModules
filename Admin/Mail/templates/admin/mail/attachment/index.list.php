@@ -26,8 +26,10 @@ if( count( $attachments ) ){
 		) );
 
 		$language	= UI_HTML_Tag::create( 'span', $attachment->language, array( 'class' => 'label' ) );
-		$mimeType	= UI_HTML_Tag::create( 'small', $w->labelMimeType.' '.$attachment->mimeType, array( 'class' => 'muted' ) );
-		$label		= $language.' '.UI_HTML_Tag::create( 'big', $attachment->filename ).'<br/>'.$mimeType;
+		$mimeType	= UI_HTML_Tag::create( 'span', $w->labelMimeType.' '.$attachment->mimeType );
+		$fileSize	= UI_HTML_Tag::create( 'span', $w->labelFileSize.' '.Alg_UnitFormater::formatBytes( filesize( $path.$attachment->filename ) ) );
+		$info		= UI_HTML_Tag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
+		$label		= $language.' '.UI_HTML_Tag::create( 'big', $attachment->filename ).'<br/>'.$info;
 		$status		= (object) array (
 			'label'		=> $words['states'][(int) $attachment->status],
 			'icon'		=> $attachment->status > 0 ? $iconEnable : $iconDisable,

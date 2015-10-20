@@ -20,7 +20,7 @@ else{
 			$message	= 'No mail parser available.';
 		}
 		else {
-			$parts	= CMM_Mail_Parser::parseBody( $mail->object->mail->getBody() );
+			$parts	= \CeusMedia\Mail\Parser::parseBody( $mail->object->mail->getBody() );
 
 /*			print_m( $parts );
 			xmp( $mail->object->mail->getBody() );
@@ -31,7 +31,7 @@ else{
 					if( $part->getMimeType() === "text/html" )
 						$list['1-html']	= '<h4>HTML</h4><iframe src="./admin/mail/queue/html/'.$mail->mailId.'" style="width: 100%; height: 450px; border: 1px solid black" frameborder="0"></iframe>';
 					if( $part->getMimeType() === "text/plain" )
-						$list['5-text']	= '<h4>Text</h4><pre>'.$part->getContent().'</pre>';
+						$list['5-text']	= '<h4>Text</h4><pre style="width: 98%; height: 450px; border: 1px solid black; overflow: auto">'.$part->getContent().'</pre>';
 				}
 			}
 		}
