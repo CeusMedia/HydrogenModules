@@ -141,19 +141,25 @@ span.role.role5 {
 	margin-right: 2px;
 	font-size: 0.9em;
 	color: #3F3F3F;
+	opacity: 0.75;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 	}
 #role-edit-rights li.changable {
 	color: black;
+	color: white;
 	cursor: pointer;
+	opacity: 1;
 	}
 #role-edit-rights li.changable label {
 	cursor: pointer;
 	}
 #role-edit-rights li.green {
-	background-color: #BFFFBF;
+	background-color: #5FFF5F;
 	}
 #role-edit-rights li.green.changable {
-	background-color: #7FFF7F;
+	background-color: #3F7F3F;
 	}
 #role-edit-rights li.yellow {
 	background-color: #FFFF7F !important;
@@ -162,8 +168,12 @@ span.role.role5 {
 	background-color: #FFBFBF;
 	}
 #role-edit-rights li.red.changable {
-	background-color: #FF7F7F;
+	background-color: #9F3F3F;
 	}
+#role-edit-rights li.gray {
+	background-color: #AFFFAF;
+	}
+
 
 /*  --  RIGHTS MAP  --  */
 .acl-card {

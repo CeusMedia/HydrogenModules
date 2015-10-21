@@ -1,4 +1,5 @@
 <?php
+
 $rows	= array();
 foreach( $actions as $controller => $class ){
 	$list	= array();
@@ -6,25 +7,35 @@ foreach( $actions as $controller => $class ){
 		$access	= $acl->hasRight( $roleId, $controller, $action );
 		$check	= "";
 		$for	= NULL;
-		$class	= 'red';
+		$title	= $words['type-right'][$access];
 		$id		= 'input-role-right-'.$roleId.'-'.$controller.'-'.$action;
 		switch( $access ){
-			case -1:
-				$id	= NULL;
+			case -2:								//  public outside
+				$class	= "gray";
 				break;
-			case -0:
-				$class	= 'red changable';
+			case 0:									//  not allowed
+				$class	= "red changable";
 				break;
-			case 1:
-				$class	= 'green changable';
+			case 1:									//  allowed by role right
+				$class	= "green changable";
 				break;
-			case 2:
-				$class	= 'green';
-				$id	= NULL;
+			case 2:									//  full access
+			case 3:									//  public
+			case 5:									//  public inside
+				$class	= "green";
+				break;
+			case -1:								//  access denied
+			default:
+				$class	= "red";
 				break;
 		}
-		$label	= UI_HTML_Tag::create( 'label', $method->name, array() );
-		$list[]	= UI_HTML_Tag::create( 'li', $check.$label, array( 'class' => $class, 'id' => $id ) );
+		$id		= preg_match( "/changable/", $class ) ? $id : NULL;
+		$label	= UI_HTML_Tag::create( 'span', $method->name, array() );
+		$list[]	= UI_HTML_Tag::create( 'li', $check.$label, array(
+			'class'	=> $class,
+			'id'	=> $id,
+			'title'	=> $title,
+		) );
 	}
 	$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
 	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
