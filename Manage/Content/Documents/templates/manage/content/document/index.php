@@ -15,7 +15,10 @@ if( $documents ){
 		);
 		$remove		= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', $attributes );
 		$filePath	= $frontendPath.$pathDocuments.$entry;
-		$link		= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $filePath ) );
+		$link		= UI_HTML_Tag::create( 'a', $entry, array(
+			'href'		=> $filePath,
+			'target'	=> '_blank'
+		) );
 		$uploadedAt	= $helper->convert( filemtime( $filePath ), TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 		$size		= Alg_UnitFormater::formatBytes( filesize( $filePath ) );
 		$actions	= in_array( 'remove', $rights ) ? $remove : '';

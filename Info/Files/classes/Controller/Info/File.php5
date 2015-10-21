@@ -59,7 +59,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
 		else{
-			Folder_Editor::createFolder( $this->path.$path.$folder );
+			FS_Folder_Editor::createFolder( $this->path.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
 			$newId	= $this->modelFolder->add( array(
 				'parentId'	=> (int) $folderId,
@@ -133,7 +133,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$files		= 0;
 		$folders	= 0;
 		if( $recursive ){
-			$index		= Folder_RecursiveLister::getMixedList( $this->path.$path );
+			$index		= FS_Folder_RecursiveLister::getMixedList( $this->path.$path );
 			foreach( $index as $entry )
 //				if( !$entry->isDot() )
 					$entry->isDir() ? $folders++ : $files++;

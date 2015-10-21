@@ -19,7 +19,10 @@ if( $articles ){
 }
 
 return '
-<!--<h4>Veröffentlichungen</h4>-->
-'.$list.'
-';
+<div class="content-panel">
+	<!--<h4>Veröffentlichungen</h4>-->
+	<div class="content-panel-inner">
+		'.$list.'
+	</div>
+</div>';
 ?>

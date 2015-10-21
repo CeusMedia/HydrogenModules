@@ -3,20 +3,36 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.23</version>
+	<version>0.6.4</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
 	<log version="0.3.14">Corrected use of configured image paths.</log>
 	<log version="0.3.15">Allow categories to be removed and fixed default order in article list.</log>
 	<log version="0.3.16">Improved cache management and prepared logic class for clean up.</log>
-	<log version="0.3.17">Cleanup and improved code documentation.</log>
-	<log version="0.3.18">Extended author editor by tabs and article list.</log>
-	<log version="0.3.19">Fixed bug appearing for authors without articles.</log>
-	<log version="0.3.20">Fixed bug on cache invalidation.</log>
-	<log version="0.3.21">Added list of articles on category view.</log>
-	<log version="0.3.22">TinyMCE: collect images and links of articles, authors, categories, documents.</log>
-	<log version="0.3.23">Added link to view articles and authors in frontend.</log>
+	<log version="0.4">Cleanup and improved code documentation.</log>
+	<log version="0.4.1">Extended author editor by tabs and article list.</log>
+	<log version="0.4.2">Fixed bug appearing for authors without articles.</log>
+	<log version="0.4.3">Fixed bug on cache invalidation.</log>
+	<log version="0.4.4">Added list of articles on category view.</log>
+	<log version="0.4.5">TinyMCE: collect images and links of articles, authors, categories, documents.</log>
+	<log version="0.4.6">Added link to view articles and authors in frontend.</log>
+	<log version="0.4.7">Allow articles to be removed.</log>
+	<log version="0.4.8">Added shop bridge class from catalog module.</log>
+	<log version="0.5">Adjusted button coloring.</log>
+	<log version="0.5.1">Extracted lists to templates.</log>
+	<log version="0.5.2">Added tabs for category editor.</log>
+	<log version="0.5.3">Collect JavaScript methods.</log>
+	<log version="0.5.4">Finished cache management.</log>
+	<log version="0.5.5">Use common Alg_UnitParser.</log>
+	<log version="0.5.6">Use module Resource_Logic.</log>
+	<log version="0.5.7">Use advanced upload form input.</log>
+	<log version="0.5.8">Improve tag management.</log>
+	<log version="0.6">Finished user interface and usability update.</log>
+	<log version="0.6.1">Use module Resource:Frontend for flexible configuration.</log>
+	<log version="0.6.2">Add article tag filter with autocomplete.</log>
+	<log version="0.6.3">Refactor article tab views to equal look and behaviour.</log>
+	<log version="0.6.4">Use module JS:Form:Changes to mark unsaved input field changes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -33,10 +49,13 @@
 		<class>Model/Catalog/Article/Document.php5</class>
 		<class>Model/Catalog/Article/Tag.php5</class>
 		<class>Logic/Catalog.php5</class>
+		<class>Logic/ShopBridge/CatalogArticle.php5</class>
 		<class>View/Manage/Catalog.php5</class>
 		<class>View/Manage/Catalog/Article.php5</class>
 		<class>View/Manage/Catalog/Author.php5</class>
 		<class>View/Manage/Catalog/Category.php5</class>
+		<locale>de/catalog.ini</locale>
+		<locale>de/html/manage/catalog/article/index.html</locale>
 		<locale>de/manage/catalog.ini</locale>
 		<locale>de/manage/catalog/article.ini</locale>
 		<locale>de/manage/catalog/author.ini</locale>
@@ -51,14 +70,19 @@
 		<template>manage/catalog/article/edit.tags.php</template>
 		<template>manage/catalog/article/filter.php</template>
 		<template>manage/catalog/article/index.php</template>
+		<template>manage/catalog/article/list.php</template>
 		<template>manage/catalog/author/add.php</template>
 		<template>manage/catalog/author/edit.php</template>
 		<template>manage/catalog/author/edit.articles.php</template>
 		<template>manage/catalog/author/edit.details.php</template>
 		<template>manage/catalog/author/index.php</template>
+		<template>manage/catalog/author/list.php</template>
 		<template>manage/catalog/category/add.php</template>
 		<template>manage/catalog/category/edit.php</template>
+		<template>manage/catalog/category/edit.articles.php</template>
+		<template>manage/catalog/category/edit.details.php</template>
 		<template>manage/catalog/category/index.php</template>
+		<template>manage/catalog/category/list.php</template>
 		<template>manage/catalog/index.php</template>
 		<script source="lib" load="auto">jquery/cmExpr/containsIgnoreCase/0.2.js</script>
 		<script load="auto">module.manage.catalog.js</script>
@@ -78,19 +102,18 @@
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxWidth">180</config>
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.quality">85</config>
 	<config type="string" protected="yes" mandatory="yes" name="author.image.extensions">gif,jpe,jpeg,jpg,png</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend">../contents/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.authors">authors/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.documents">articles/documents/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.covers">articles/covers/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.authors" title="path to author images within frontend content folder">authors/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.covers" title="path to article cover images within frontend content folder">articles/covers/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.documents" title="path to article documents within frontend content folder">articles/documents/</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Bootstrap</needs>
-<!--		<needs type="module">Info_Catalog</needs>-->
-<!--		<supports type="module">Resource_Cache</supports>-->
+		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Author::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Article::___onTinyMCE_getImageList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Category::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Author::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Article::___onTinyMCE_getLinkList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Author::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Category::___onTinyMCE_getLinkList</hook>
 </module>

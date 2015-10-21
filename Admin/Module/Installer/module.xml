@@ -17,7 +17,7 @@ list>
 <list
 ]]></description>
 	<category>Administration</category>
-	<version>0.3.15</version>
+	<version>0.3.16</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished installation process with copying and linking.</log>
@@ -36,6 +36,7 @@ list>
     <log version="0.3.13">Added view helper for files on install and update.</log>
 	<log version="0.3.14">Extracted styles from templates to new CSS file.</log>
 	<log version="0.3.15">Extracted scripts from templates to JS file.</log>
+	<log version="0.3.16">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -60,6 +60,11 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
+	public function ajaxSetTab( $tabKey ){
+		$this->session->set( 'manage.catalog.category.tab', $tabKey );
+		exit;
+	}
+
 	public function edit( $categoryId ){
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );

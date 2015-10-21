@@ -68,7 +68,7 @@ class View_Helper_Module_CodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 		$config			= $this->env->getConfig();
 		$pathJsLib		= $config->get( 'path.scripts.lib' );
 
-		$content	= File_Reader::load( $pathFile.$fileName );
+		$content	= FS_File_Reader::load( $pathFile.$fileName );
 #		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '
 <style>

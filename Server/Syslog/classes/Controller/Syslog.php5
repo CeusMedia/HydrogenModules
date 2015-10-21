@@ -121,7 +121,7 @@ class Controller_Syslog extends Controller_Abstract {
 		if( isset( $lines[$nr] ) ){
 			unset( $lines[$nr] );
 			$fileName	= $this->env->getConfig()->get( 'log.exception' );
-			File_Writer::saveArray( $fileName, $lines );
+			FS_File_Writer::saveArray( $fileName, $lines );
 			return 1;
 		}
 		return -1;
@@ -151,7 +151,7 @@ class Controller_Syslog extends Controller_Abstract {
 		if( !file_exists( $fileName ) )
 			return array();
 #			throw new RuntimeException( 'Log not existing' );
-		return File_Reader::loadArray( $fileName );
+		return FS_File_Reader::loadArray( $fileName );
 	}
 
 	public function logTestException( $message, $code = 0 ){

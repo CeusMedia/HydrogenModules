@@ -14,13 +14,13 @@ class View_Helper_UserModuleSettings {
 		$moduleWords	= array();
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
-				$reader	= new File_INI_Reader( $path.$locale->file, TRUE );
+				$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
 				if( $reader->hasSection( 'module' ) )
 					return $reader->getProperties( TRUE, 'module' );
 			}
 		}
 		foreach( $module->files->locales as $locale ){
-			$reader	= new File_INI_Reader( $path.$locale->file, TRUE );
+			$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
 			if( $reader->hasSection( 'module' ) )
 				return $reader->getProperties( TRUE, 'module' );
 		}

@@ -82,7 +82,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );
-		$ical	= new File_ICal_Builder();
+		$ical	= new FS_File_ICal_Builder();
 		return trim( $ical->build( $root ) );
 	}
 
@@ -154,7 +154,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		foreach( $this->getUserMissions( $conditions, $orders ) as $mission )
 			$missions[md5( $mission->missionId ).'@'.$this->env->host]	= $mission;
 
-		$parser	= new File_ICal_Parser();
+		$parser	= new FS_File_ICal_Parser();
 		$tree	= $parser->parse( "test", $ical );
 		$root	= array_pop( $tree->getChildren() );
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes

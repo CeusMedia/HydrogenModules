@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.2.7</version>
+	<version>0.3.6</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added shipping.</log>
@@ -11,9 +11,13 @@
 	<log version="0.2.3">Added customer information.</log>
 	<log version="0.2.4">Designed status graph.</log>
 	<log version="0.2.5">Reworked order position status handling.</log>
-	<log version="0.2.6">Integrated shop bridge.</log>
-	<log version="0.2.7">Use new bootstrap tab system with hooks.</log>
-	<log version="0.2.8">Add dashboard panels and map.</log>
+	<log version="0.3">Integrated shop bridge.</log>
+	<log version="0.3.1">Use new bootstrap tab system with hooks.</log>
+	<log version="0.3.2">Add dashboard panels and map.</log>
+	<log version="0.3.3">Use bootstrap library from GitHub.</log>
+	<log version="0.3.4">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.3.5">Apply CSS panels.</log>
+	<log version="0.3.6">Reworked dashboard view.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -8,9 +8,12 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->path			= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
 		$this->model		= new Model_Mail_Attachment( $this->env );
 		$this->logic		= new Logic_Mail( $this->env );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->path			= $this->frontend->getPath().$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+
+		$this->addData( 'path', $this->path );
 	}
 
 	public function add(){
@@ -85,18 +88,16 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 				'mimeType'		=> $this->getMimeTypeOfFile( $entry->getFilename() )
 			);
 		}
+		ksort( $list );
 		return $list;
 	}
 
-	/**
-	 *	@todo	implemented but not used, yet -> show file list -> allow removal
-	 */
 	public function remove( $fileName ){
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->model->getAllByIndex( 'filename', $fileName ) )
-			$this->messenger->noteError( $words->errorFileInUse );
+			$this->messenger->noteError( $words->errorFileInUse, $fileName );
 		else if( !file_exists( $this->path.$fileName ) )
-			$this->messenger->noteError( $words->errorFileNotExisting );
+			$this->messenger->noteError( $words->errorFileNotExisting, $fileName );
 		else{
 			@unlink( $this->path.$fileName );
 			if( file_exists( $this->path.$fileName ) )

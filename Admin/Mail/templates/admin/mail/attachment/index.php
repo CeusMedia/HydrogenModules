@@ -3,6 +3,7 @@ $panelAdd		= $this->loadTemplateFile( 'admin/mail/attachment/add.php' );
 $panelUpload	= $this->loadTemplateFile( 'admin/mail/attachment/upload.php' );
 //$panelFilter	= $this->loadTemplateFile( 'admin/mail/attachment/index.filter.php' );
 $panelList		= $this->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
+$panelFiles		= $this->loadTemplateFile( 'admin/mail/attachment/index.files.php' );
 
 $w			= (object) $words['index'];
 
@@ -19,8 +20,9 @@ return $textTop.'
 	<div class="span6">
 		'.$panelAdd.'
 	</div>
-	<div class="span5 offset1">
+	<div class="span6">
 		'.$panelUpload.'
+		'.$panelFiles.'
 	</div>
 </div>
 '.$textBottom;

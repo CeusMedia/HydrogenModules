@@ -63,7 +63,7 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 
 	protected function listFilesInFolder( $path, $extension = "php" ) {
 		$list	= array();																			//  create empty list
-		$index	= new File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
+		$index	= new FS_File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
 		foreach( $index as $file ) {																//  iterate index
 			$name			= pathinfo( $file->getFilename(), PATHINFO_FILENAME );					//  get file name
 			$list[$name]	= $file->getPathname();

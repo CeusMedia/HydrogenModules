@@ -35,7 +35,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		}
 		else{
 			$this->folders	= array( '' => '.' );
-			foreach( Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
+			foreach( FS_Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
 				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
 				if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )
 					$this->folders[]	= './'.$path;
@@ -69,7 +69,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$list			= array();
 
 		$regexExt	= "/\.(".join( "|", $extensions ).")$/i";
-		$index		= new File_RecursiveRegexFilter( $pathImages, $regexExt );
+		$index		= new FS_File_RecursiveRegexFilter( $pathImages, $regexExt );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $pathImages ) );
 			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
@@ -135,7 +135,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 			else{
 				$target		= $this->basePath.$folder.$name;
 				try{
-					Folder_Editor::createFolder( $target, 0775 );
+					FS_Folder_Editor::createFolder( $target, 0775 );
 					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 					$this->messenger->noteSuccess( $words->successFolderCreated, $folder.$name );
 					$this->restart( base64_encode( $folder.$name ), TRUE );
@@ -328,7 +328,7 @@ remark( $this->path );
 		foreach( $index as $entry )
 			if( !$entry->isDot() )
 				$contains++;
-		if( !Folder_Editor::removeFolder( $this->basePath.$folderPath, TRUE ) ){
+		if( !FS_Folder_Editor::removeFolder( $this->basePath.$folderPath, TRUE ) ){
 			$this->messenger->noteFailure( $words->errorRemovingFolderFailed, $folderPath );
 		}
 		else{
@@ -426,7 +426,7 @@ remark( $this->path );
 			exit;
 		}
 		header( 'Content-Type: '.$mimetype );
-		print( File_Reader::load( $this->basePath.$imagePath ) );
+		print( FS_File_Reader::load( $this->basePath.$imagePath ) );
 		exit;
 	}
 }

@@ -38,7 +38,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->scanFiles();
 		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
-			$order			= trim( File_Reader::load( $orderFile ) );
+			$order			= trim( FS_File_Reader::load( $orderFile ) );
 			$this->order	= new ADT_List_Dictionary( explode( "\n", $order ) );
 		}
 		else{
@@ -66,8 +66,8 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 				if( file_exists( $filePath ) )
 					$this->messenger->noteError( $words->msgErrorFileExisting, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
 				else{
-					Folder_Editor::createFolder( dirname( $filePath ) );
-					File_Writer::save( $filePath, $this->request->get( 'content' ) );
+					FS_Folder_Editor::createFolder( dirname( $filePath ) );
+					FS_File_Writer::save( $filePath, $this->request->get( 'content' ) );
 					$this->order[]	= $fileName.$this->ext;
 					$this->saveOrder();
 					$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
@@ -85,7 +85,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
 
 		$filePath	= $this->path.$fileName.$this->ext;
-		$resource	= new File_Editor( $filePath );
+		$resource	= new FS_File_Editor( $filePath );
 		$content	= $resource->readString();
 
 		if( $this->request->has( 'save' ) ){
@@ -94,7 +94,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 				$this->messenger->noteFailure( $words->msgErrorNotWritable );
 			}
 			else{
-				$backup		= new File_Backup( $filePath );
+				$backup		= new FS_File_Backup( $filePath );
 				if( $content === $this->request->get( 'content' ) )
 					$this->messenger->noteNotice( $words->msgNoChanges );
 				else{
@@ -112,7 +112,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 					}
 					else{
 						try{
-							Folder_Editor::createFolder( dirname( $targetFile ) );
+							FS_Folder_Editor::createFolder( dirname( $targetFile ) );
 							$resource->rename( $targetFile );
 							$index		= $this->order->getKeyOf( $fileName.$this->ext );
 							$this->order->set( $index, $newName.$this->ext );
@@ -185,11 +185,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->scanFiles();
 		foreach( $this->files as $entry ){
 			$filePath	= $this->path.$entry;
-			$content	= File_Reader::load( $filePath );
+			$content	= FS_File_Reader::load( $filePath );
 			$relinked	= str_replace( "](".$oldName.")", "](".$newName.")", $content );
 			$relinked	= str_replace( "]: ".$oldName."\r\n", "]: ".$newName."\r\n", $relinked );
 			if( $relinked !== $content )
-				File_Writer::save( $filePath, $relinked );
+				FS_File_Writer::save( $filePath, $relinked );
 		}
 	}
 
@@ -217,7 +217,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		if( !file_exists( $filePath ) )
 			$this->messenger->noteError( $words->msgErrorFileMissing, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
 		else{
-			if( !File_Editor::delete( $filePath ) )
+			if( !FS_File_Editor::delete( $filePath ) )
 				$this->messenger->noteFailure( $words->msgErrorDelete, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
 			else{
 				$this->order->remove( $this->order->getKeyOf( $fileName.$this->ext ) );
@@ -230,12 +230,12 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 
 	protected function saveOrder(){
 		$orderFile	= $this->path.'order.list';
-		File_Writer::save( $orderFile, implode( "\n", $this->order->getAll() ) );
+		FS_File_Writer::save( $orderFile, implode( "\n", $this->order->getAll() ) );
 	}
 
 	public function scanFiles(){
 		$this->files	= array();
-		$index	= new File_RecursiveRegexFilter( $this->path, "/\\".$this->ext."$/" );
+		$index	= new FS_File_RecursiveRegexFilter( $this->path, "/\\".$this->ext."$/" );
 		foreach( $index as $entry ){
 			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$this->files[]	= $pathName;
@@ -262,7 +262,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 
-		$content	= File_Reader::load( $this->path.$fileName.$this->ext );
+		$content	= FS_File_Reader::load( $this->path.$fileName.$this->ext );
 
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );

@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Resource: Companies & Branches]]></title>
 	<description></description>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add branch image model.</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.4">Add branch tag model.</log>
 	<log version="0.2.5">Add company description.</log>
 	<log version="0.2.6">Extend states of companies and branches.</log>
+	<log version="0.2.7">Extend company geo coordinates.</log>
 	<category>Resource</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

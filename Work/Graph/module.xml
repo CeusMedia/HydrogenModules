@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Graph</title>
+	<description><![CDATA[
+]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Graph.php5</class>
+		<class>View/Work/Graph.php5</class>
+		<template>work/graph/edge.php</template>
+		<template>work/graph/index.php</template>
+		<template>work/graph/node.php</template>
+		<template>work/graph/panelAddEdge.php</template>
+		<template>work/graph/panelAddNode.php</template>
+		<template>work/graph/panelEdgeNodes.php</template>
+		<template>work/graph/panelEditEdge.php</template>
+		<template>work/graph/panelEditGraph.php</template>
+		<template>work/graph/panelEditNode.php</template>
+		<template>work/graph/panelNodeEdges.php</template>
+		<template>work/graph/panelTree.php</template>
+		<template>work/graph/modal/addEdge.php</template>
+		<template>work/graph/modal/addNode.php</template>
+		<template>work/graph/modal/editEdge.php</template>
+		<template>work/graph/modal/editGraph.php</template>
+	</files>
+	<config type="string" protected="yes" name="path" title="path to graph files"></config>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_CSS_Panel</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="work/graph">Graph-Editor</link>
+	<link xml:lang="en" access="acl" path="work/graph">Graphs</link>
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>graphs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>graphs` (
+  `graphId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'digraph',
+  `rankdir` varchar(3) COLLATE utf8_unicode_ci DEFAULT 'LR',
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `nodeShape` varchar(30) COLLATE utf8_unicode_ci DEFAULT 'box',
+  `nodeStyle` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nodeColor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nodeFillcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nodeWidth` float DEFAULT NULL,
+  `nodeHeight` float DEFAULT NULL,
+  `nodeFontsize` float DEFAULT NULL,
+  `nodeFontcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edgeArrowhead` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edgeArrowsize` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edgeColor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edgeFontcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edgeFontsize` float DEFAULT NULL,
+  PRIMARY KEY (`graphId`),
+  KEY `type` (`type`),
+  KEY `rankdir` (`rankdir`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>graph_edges`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>graph_edges` (
+  `edgeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `graphId` int(10) unsigned NOT NULL,
+  `fromNodeId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `toNodeId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `arrowhead` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `arrowsize` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `color` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fontcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fontsize` float DEFAULT NULL,
+  PRIMARY KEY (`edgeId`),
+  KEY `graphId` (`graphId`),
+  KEY `fromNodeId` (`fromNodeId`),
+  KEY `toNodeId` (`toNodeId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>graph_nodes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>graph_nodes` (
+  `nodeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `graphId` int(10) unsigned NOT NULL,
+  `ID` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `shape` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `style` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `color` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fillcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `width` float DEFAULT NULL,
+  `height` float DEFAULT NULL,
+  `fontsize` float DEFAULT NULL,
+  `fontcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`nodeId`),
+  KEY `graphId` (`graphId`),
+  KEY `ID` (`ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+    <sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>graphs`;
+DROP TABLE IF EXISTS `<%?prefix%>graph_edges`;
+DROP TABLE IF EXISTS `<%?prefix%>graph_nodes`;
+]]></sql>
+</module>

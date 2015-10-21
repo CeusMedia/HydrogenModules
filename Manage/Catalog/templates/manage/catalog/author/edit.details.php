@@ -7,11 +7,10 @@ $list		= $this->renderList( $authors, $author->authorId );
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
-$baseUrl	= $config->get( 'path.frontend' ).$config->get( 'path.frontend.authors' );
 $image		= "images/no_author.png";
 if( $author->image ){
 	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
-	$image	= $baseUrl.$id.'_'.$author->image;
+	$image	= $pathAuthors.$id.'_'.$author->image;
 }
 $image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 
@@ -21,15 +20,17 @@ if( $author->image ){
 	$attributes		= array(
 		'title'		=> $w->buttonRemoveImage,
 		'type'		=> "button",
-		'class'		=> "btn btn-small btn-danger",
+		'class'		=> "btn btn-danger",
 		'onclick'	=> "document.location.href='".$urlRemoveImage."';"
 	);
 	$buttonRemoveImage	= UI_HTML_Tag::create( 'button', '<i class="icon-remove icon-white"></i>', $attributes );
 }
 
 return '
+<div class="content-panel">
+	<!--<h4>'.$w->heading.'</h4>-->
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/author/edit/'.$author->authorId.'" method="post" enctype="multipart/form-data">
-			<!--<h4>'.$w->heading.'</h4>-->
 			<div class="row-fluid">
 				<div class="span6">
 					<div class="row-fluid">
@@ -51,7 +52,7 @@ return '
 					<div class="row-fluid">
 						<div class="span10">
 							<label for="input_image">'.$w->labelImage.'</label>
-							<input class="span12" type="file" name="image" id="input_image" value=""/>
+							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
 						</div>
 						<div class="span2 pull-right">
 							<label>&nbsp;</label>
@@ -78,11 +79,13 @@ return '
 				<textarea class="span12" type="text" name="description" id="input_description" rows="6">'.htmlentities( $author->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 			<div class="buttonbar">
-				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+<!--				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
+				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/author/remove/'.$author->authorId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
 				<a href="'.$frontend->getUri().'catalog/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 			</div>
 		</form>
+	</div>
+</div>
 ';
 ?>

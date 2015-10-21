@@ -92,6 +92,10 @@ if(typeof tinymce !== "undefined"){
 						classes: 'img-polaroid'
 					}]
 				}]
+			},{
+				title: 'In Fenster öffnen',
+				selector: 'a', 
+				classes: ["fancybox-auto"]
 			}]
 		}
 	};

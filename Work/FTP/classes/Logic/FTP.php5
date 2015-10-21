@@ -9,7 +9,7 @@ class Logic_FTP{
 	protected $cachePrefix;
 
 	public function __construct( $pathCache = "contents/cache/" ){
-		$this->cache	= new File_Cache( $pathCache );
+		$this->cache	= new FS_File_Cache( $pathCache );
 	}
 
 	public function setCache( $cache ){

@@ -28,6 +28,8 @@ class Logic_Mail{
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
 		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->pathAttachments	= Logic_Frontend::getInstance( $this->env )->getPath().$this->pathAttachments;
 		if( !file_exists( $this->pathAttachments ) ){
 			mkdir( $this->pathAttachments, 0755, TRUE );
 			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
@@ -75,7 +77,7 @@ class Logic_Mail{
 		}
 		if( $listConfigKeysToCheck ){
 			foreach( $listConfigKeysToCheck as $key ){
-				
+
 			}
 		}
 		return $receivers;
@@ -138,11 +140,13 @@ class Logic_Mail{
 		$list			= array();																	//  prepare empty result list
 		$matches		= array();																	//  prepare empty matches list
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$pathClasses	= Logic_Frontend::getInstance( $this->env )->getPath().$pathClasses;
 		$regexExt		= "/\.php5$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new FS_File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
-			$content	= File_Reader::load( $file->getPathname() );								//  get content of class file
+			$content	= FS_File_Reader::load( $file->getPathname() );								//  get content of class file
 			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
 			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
 				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key
@@ -284,4 +288,3 @@ class Logic_Mail{
 	}
 }
 ?>
-

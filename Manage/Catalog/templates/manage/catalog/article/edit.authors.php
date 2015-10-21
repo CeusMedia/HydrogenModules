@@ -1,16 +1,18 @@
 <?php
+
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+
 $authorRelationsByAuthorId	= array();
 foreach( $articleAuthors as $item )
 	$authorRelationsByAuthorId[$item->authorId]	= $item;
 
-$listAuthors	= '<small class="muted"><em>Noch kein(e) Autore(n) zugewiesen.</em></small>';
-$listAuthors	= '<div class="label not-label-warning">Noch kein(e) Autore(n) zugewiesen.</div>';
-$listAuthors	= '<div class="alert alert-error">Noch kein(e) Autore(n) zugewiesen.</div>';
+$panelAuthors	= '<div class="alert alert-error">Noch keine Autoren/Herausgeber zugewiesen.</div>';
 
 if( $articleAuthors ){
 	$listAuthors	= array();
 	foreach( $articleAuthors as $item ){
-		
+
 		$optRole		= $words['authorRoles'];
 		$optRole		= UI_HTML_Elements::Options( $optRole, (int) $item->editor );
 		$urlRemove		= './manage/catalog/article/removeAuthor/'.$article->articleId.'/'.(int) $item->authorId;
@@ -38,6 +40,17 @@ if( $articleAuthors ){
 			'.join( $listAuthors ).'
 		</tbody>
 	</table>';
+
+	$panelAuthors	= '
+<div class="content-panel">
+	<h4>Autoren <small class="muted">(und Herausgeber)</small></h4>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			'.$listAuthors.'
+		</div>
+	</div>
+</div>
+<hr/>';
 }
 
 $optAuthor	= array();
@@ -51,14 +64,10 @@ $optAuthor	= UI_HTML_Elements::Options( $optAuthor );
 $optRole	= $words['authorRoles'];
 $optRole	= UI_HTML_Elements::Options( $optRole );
 
-return '
-<!--  Manage: Catalog: Article: Authors  -->
-	<div class="row-fluid">
-		<h4>Autoren <small class="muted">(und Herausgeber)</small></h4>
-		'.$listAuthors.'
-	</div>
-	<div class="row-fluid">
-		<h4>Autor zuweisen</h4>
+$panelAdd	= '
+<div class="content-panel">
+	<h4>Autor zuweisen</h4>
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/article/addAuthor/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
@@ -73,11 +82,20 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a class="btn btn-small" href="./manage/catalog/article"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-				<button type="submit" class="btn btn-small btn-success" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+				'.UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+					'type'	=> 'submit',
+					'name'	=> 'save',
+					'class'	=> 'btn btn-primary',
+//					'title'	=> htmlentities( $w->buttonSave, ENT_QUOTES, 'UTF-8' ),
+				) ).'
 			</div>
 		</form>
 	</div>
-<!--  /Manage: Catalog: Article: Authors  -->
+</div>
 ';
+return '
+<!--  Manage: Catalog: Article: Authors  -->
+'.$panelAuthors.'
+'.$panelAdd.'
+<!--  /Manage: Catalog: Article: Authors  -->';
 ?>

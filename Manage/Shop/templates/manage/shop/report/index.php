@@ -15,29 +15,45 @@ $dataYearsTable	= array();
 foreach( $ordersPerYear as $nr => $entry ){
 	$sumOrders		+= (float)$entry->orders;
 	$sumTurnover	+= (float)$entry->turnover;
-	$dataYearsTable[]	= array(
-		(string)$entry->year,
-		(int)$entry->orders, array(
+	$dataYearsTable[(string)  $entry->year]	= array(
+		(string) $entry->year,
+		(int) $entry->orders,
+ 		array(
 			'v'	=> (float)$entry->turnover,
 			'f'	=> number_format( $entry->turnover, 0, ",", "." )." €"
 		)
 	);
 }
-$dataYearsTable[]	= array(
-		"Summe",
-		array(
-			'v'	=> (float)$sumOrders,
-			'f'	=> number_format( $sumOrders, 0, ",", "." )
-		),
-		array(
-			'v'	=> (float)$sumTurnover,
-			'f'	=> number_format( $sumTurnover, 0, ",", "." )." €"
-		)
-	);
+
+$factor	= ( date( "L" ) ? 366 : 365)  / date( "z" );
+
+
+$dataYearsTable["Summe"]	= array(
+	"Summe",
+	array(
+		'v'	=> (float)$sumOrders,
+		'f'	=> number_format( $sumOrders, 0, ",", "." )
+	),
+	array(
+		'v'	=> (float)$sumTurnover,
+		'f'	=> number_format( $sumTurnover, 0, ",", "." )." €"
+	)
+);
+
+$dataYearsTable["Trend"]	= array(
+	'Trend',
+	round( $dataYearsTable[$entry->year][1] * $factor ),
+	array(
+		'v'	=> (float) $dataYearsTable[$entry->year][2]['v'] * $factor,
+		'f'	=> number_format( $dataYearsTable[$entry->year][2]['v'] * $factor, 0, ",", "." )." €"
+	)
+);
 
 $sum	= 0;
 $dataYearsChartOrders	= array( array( "Jahr", "Bestellungen", "Trend" ) );
 foreach( $ordersPerYear as $nr => $entry ){
+//	if( $entry->year == date( "Y" ) )
+//		$entry->orders	*= $factor;
 	$sum		+= $entry->orders;
 	$dataYearsChartOrders[]	= array(
 		(string)$entry->year,
@@ -49,24 +65,36 @@ foreach( $ordersPerYear as $nr => $entry ){
 $sum	= 0;
 $dataYearsChartTurnover	= array( array( "Jahr", "Umsatz", "Trend" ) );
 foreach( $ordersPerYear as $nr => $entry ){
-	$sum		+= $entry->turnover;
+//	if( $entry->year == date( "Y" ) )
+//		$entry->turnover	*= $factor;
+	$sum		+= (int) $entry->turnover;
 	$dataYearsChartTurnover[]	= array(
-		(string)$entry->year,
-		(int)$entry->turnover,
-		(int)( $sum / ( $nr + 1 ) )
+		(string) $entry->year,
+		(int) $entry->turnover,
+		(int) ( $sum / ( $nr + 1 ) )
 	);
 }
 
+$selector	= '';
+/*if( count( $bridges ) > 0 ){
+	$optBridge	= UI_HTML_Elements::Options( $bridges, $bridgeId );
+	$selector	= '
+	<form action="./manage/shop/report" method="get" class="form-inline">
+		<label for="input_bridgeId">Katalog</label>
+		<select name="bridgeId" id="input_bridgeId" onchange="this.form.submit()">'.$optBridge.'</select>
+	</form>';
+}
+*/
 $tabs	= View_Manage_Shop::renderTabs( $env, 'report' );
 
-return $tabs.'
+return $tabs.$selector.'
 <h3>Bestellungen und Umsätze über die Jahre</h3>
 <div class="row-fluid">
-	<div class="span7">
+	<div class="span8">
 		<div id="chart_years_chart_orders"></div>
 		<div id="chart_years_chart_turnover"></div>
 	</div>
-	<div class="span5" style="border: 1px solid #BBBBBB;">
+	<div class="span4" data-style="border: 1px solid #BBBBBB;">
 		<div id="chart_years_table"></div>
 	</div>
 </div>
@@ -81,7 +109,7 @@ return $tabs.'
 </div>
 <script>
 
-	var dataYearsTable			= '.json_encode( $dataYearsTable ).';
+	var dataYearsTable			= '.json_encode( array_values( $dataYearsTable ) ).';
 	var dataYearsPieOrders		= '.json_encode( $dataYearsPieOrders ).';
 	var dataYearsPieTurnover	= '.json_encode( $dataYearsPieTurnover ).';
 	var dataYearsChartOrders	= '.json_encode( $dataYearsChartOrders ).';

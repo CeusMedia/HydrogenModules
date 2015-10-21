@@ -96,7 +96,7 @@ class Model_Menu {
 		if( !file_exists( $pagesFile ) )
 			throw new RuntimeException( 'Page configuration file "'.$pagesFile.'" is not existing' );
 
-		$scopes				= File_JSON_Reader::load( $pagesFile );
+		$scopes				= FS_File_JSON_Reader::load( $pagesFile );
 		$this->pages		= array();
 		$this->pageMap		= array();
 		$isAuthenticated	= (bool) $this->userId;

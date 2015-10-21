@@ -6,7 +6,7 @@ if( !$instance->configFile )
 
 $fileConfig	= $instance->uri.$instance->configPath.$instance->configFile;
 if( file_exists( $fileConfig ) ){
-	$config	= new File_INI_Reader( $fileConfig, FALSE );
+	$config	= new FS_File_INI_Reader( $fileConfig, FALSE );
 	foreach( $config->getProperties() as $key => $value ){
 		$comment	= $config->getComment( $key );
 		$cellKey	= UI_HTML_Tag::create( 'td', $key );

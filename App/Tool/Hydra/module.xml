@@ -16,7 +16,8 @@ Use this tool to update your application installations.
 
 ]]></description>
 	<category>Application</category>
-	<version>0.8.4</version>
+	<version>0.8.5</version>
+	<log version="0.8.5">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

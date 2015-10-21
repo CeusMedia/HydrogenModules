@@ -37,7 +37,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 			$responseTime,														//  in microseconds
 			getEnv( 'REDIRECT_URL' )											//  requested URL
 		);
-		$writer	= new File_Writer( 'logs/request.log' );
+		$writer	= new FS_File_Writer( 'logs/request.log' );
 		$writer->appendString( $message );
 	}
 

@@ -95,6 +95,10 @@ class Logic_Frontend{
 		return self::$instance;
 	}
 
+	public function getDefaultLanguage(){
+		return trim( $this->getConfigValue( 'locale.default' ) );
+	}
+
 	public function getLanguages(){
 		$data		= $this->config->getAll( 'locale.', TRUE );
 		$list		= array( trim( $data->get( 'default' ) ) );
@@ -111,7 +115,7 @@ class Logic_Frontend{
 		if( !file_exists( $fileName ) )
 			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
 		$list	= array();
-		$lines	= explode( "\n", File_Reader::load( $fileName ) );
+		$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
 		foreach( $lines as $nr => $line ){
 			if( preg_match( "@<config @", $line ) ){
 				$lineKey	= preg_replace( "@^.+name=\"(.+)\".+$@U", "\\1", $line );
@@ -127,7 +131,7 @@ class Logic_Frontend{
 		if( !file_exists( $fileName ) )
 			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
 		$list	= array();
-		$lines	= explode( "\n", File_Reader::load( $fileName ) );
+		$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
 		foreach( $lines as $nr => $line ){
 			if( preg_match( "@<config @", $line ) ){
 //				print_m( $line );

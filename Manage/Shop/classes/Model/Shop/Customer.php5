@@ -31,7 +31,8 @@ class Model_Shop_Customer extends CMF_Hydrogen_Model {
 		"phone",
 		"email",
 		"password",
-
+		"longitude",
+		"latitude",
 		"alternative",
 		"billing_institution",
 		"billing_firstname",

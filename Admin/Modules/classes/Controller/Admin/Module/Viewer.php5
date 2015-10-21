@@ -24,7 +24,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		foreach( $module->config as $pair )
 			if( $pair->getAttribute( 'name' ) == $key )
 				$pair->{0}	= $value;
-		return File_Editor::save( $fileName, $module->asXML() );
+		return FS_File_Editor::save( $fileName, $module->asXML() );
 	}
 
 	public function index( $moduleId = NULL ){
@@ -127,7 +127,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'filePath', $pathModule.$pathFile.$fileName );
 		$this->addData( 'pathFile', $pathFile );
 		$this->addData( 'pathModule', $pathModule );
-		$this->addData( 'content', File_Reader::load( $pathModule.$pathFile.$fileName ) );
+		$this->addData( 'content', FS_File_Reader::load( $pathModule.$pathFile.$fileName ) );
 	}
 }
 ?>

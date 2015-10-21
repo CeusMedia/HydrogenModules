@@ -10,7 +10,7 @@ class Controller_Tool_Index extends CMF_Hydrogen_Controller{
 	public function index( $predicateClassName = "Alg_Validation_Predicates" )
 	{
 		$labels		= parse_ini_file( "config.ini", TRUE );
-		$index		= Folder_Lister::getMixedList( "./tools/" );
+		$index		= FS_Folder_Lister::getMixedList( "./tools/" );
 		$list		= array();
 		foreach( $index as $entry )
 		{

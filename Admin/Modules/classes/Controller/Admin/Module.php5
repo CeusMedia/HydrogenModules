@@ -40,7 +40,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		foreach( $module->config as $pair )
 			if( $pair->getAttribute( 'name' ) == $key )
 				$pair->{0}	= $value;
-		return File_Editor::save( $fileName, $module->asXML() );
+		return FS_File_Editor::save( $fileName, $module->asXML() );
 	}
 
 	public function ajaxAddConfig( $moduleId, $key, $value ){
@@ -113,7 +113,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		}
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
-		$content	= File_Reader::load( $pathModule.$pathFile.$fileName );
+		$content	= FS_File_Reader::load( $pathModule.$pathFile.$fileName );
 		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 		$page		= new UI_HTML_PageFrame();

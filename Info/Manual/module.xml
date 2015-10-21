@@ -23,13 +23,14 @@ list>
 <list
 This module can be localized.
 ]]></description>
-	<version>0.6.8</version>
+	<version>0.6.9</version>
 	<log version="0.6.3">Extract CSS to style file.</log>
 	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
 	<log version="0.6.5">Add configuration and detection of renderer.</log>
 	<log version="0.6.6">Load script and style only within module.</log>
 	<log version="0.6.7">Add support for new AJAJ client.</log>
 	<log version="0.6.8">Add relation to module JS:CodeMirror.</log>
+	<log version="0.6.9">Replace file and folder class calls to use CeusMedia:Common.</log>
 <!--	<log version="0.6.x">Use editor configuration switch for read-only mode.</log>-->
 	<category>Info</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>

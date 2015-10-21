@@ -28,10 +28,10 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$language	= $this->env->language->getLanguage();
 		$this->path	= $locales.$language.'/';
 		if( !file_exists( $this->path ) )
-			Folder_Editor::createFolder( $this->path );
+			FS_Folder_Editor::createFolder( $this->path );
 
 		$paths	= array();
-		$index	= Folder_RecursiveLister::getFolderList( $this->path );
+		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $this->path ) );
 			if( substr( $path, 0, 4 ) != 'html' )
@@ -63,7 +63,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 					$messenger->noteError( $words->msgFileExisting, $filePath );
 				else{
 					try{
-						File_Writer::save( $fileUri, '' );
+						FS_File_Writer::save( $fileUri, '' );
 						$messenger->noteSuccess( $words->msgSuccess, $filePath );
 						$this->restart( './manage/locale/edit/'.$fileHash );
 					}
@@ -93,7 +93,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 				$messenger->noteError( $words->msgFolderExisting, $folderPath.$folderName );
 			else{
 				try{
-					Folder_Editor::createFolder( $folderUri );
+					FS_Folder_Editor::createFolder( $folderUri );
 					$messenger->noteSuccess( $words->msgSuccess, $folderPath.$folderName );
 				}
 				catch( Exception $e ){
@@ -121,7 +121,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 			$this->restart( './manage/locale' );
 		}
 
-		$content	= File_Reader::load( $fileUri );
+		$content	= FS_File_Reader::load( $fileUri );
 
 		$newName	= $request->get( 'name' );
 		$newPath	= $request->get( 'path' );
@@ -135,7 +135,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 			$newPath	= trim( $newPath ) ? $newPath.'/' : '';
 			$newFileUri	= $this->path.$newPath.$newName;
 			if( !$messenger->gotError() ){
-				$editor	= new File_Editor( $fileUri );
+				$editor	= new FS_File_Editor( $fileUri );
 				if( $content != $newContent ){
 					try{
 						$editor->writeString( $newContent);						//  @todo	kriss: security !!!
@@ -186,7 +186,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 	}
 
 	protected function loadFileTree(){
-		$files	= new File_RecursiveRegexFilter( $this->path, '/^(?!html).+\.ini$/' );
+		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/^(?!html).+\.ini$/' );
 		$this->addData( 'files', $files );
 	}
 

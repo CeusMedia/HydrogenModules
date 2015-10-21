@@ -6,7 +6,8 @@
 This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (part of cmModules).
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.3</version>
+	<version>0.4</version>
+	<log version="0.4">Use Cache library from GitHub.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -18,9 +19,7 @@ This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (par
 	<config protected="yes" type="string" name="resource"></config>
 	<config protected="yes" type="string" name="context"></config>
 	<config protected="yes" type="integer" name="expiration"></config>
-	<relations>
-		<needs type="module">Resource_Library_cmModules</needs>
-	</relations>
+	<relations/>
 	<hook type="event" resource="Env" event="initCache"><![CDATA[
         $env->set( 'cache', new Model_Cache( $env ) );
 ]]></hook>

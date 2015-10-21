@@ -88,18 +88,18 @@ class View_Helper_MetaTags{
 				$ogData	= (object) $config->getAll( 'module.ui_metatags_opengraph.', TRUE );		//  extract module data
 
 				$url	= $this->env->scheme.'://'.$this->env->host.getEnv( 'REQUEST_URI' );
-				$ogNode	= new CMM_OGP_Node( $url );
+				$ogNode	= new \CeusMedia\OpenGraph\Node( $url );
 				$ogNode->setType( 'website' );
 				$ogNode->setTitle( $title );
 				$ogNode->setDescription( $description );
 				if( $ogData->get( 'audio') ){
-					$audio	= new CMM_OGP_Audio( $ogData->get( 'audio' ) );
+					$audio	= new \CeusMedia\OpenGraph\Audio( $ogData->get( 'audio' ) );
 					if( $ogData->get( 'audio.type' ) )
 						$audio->setType( $ogData->get( 'audio.type' ) );
 					$ogNode->add( $audio );
 				}
 				if( $ogData->get( 'image') ){
-					$image	= new CMM_OGP_Image( $ogData->get( 'image' ) );
+					$image	= new \CeusMedia\OpenGraph\Image( $ogData->get( 'image' ) );
 					if( $ogData->get( 'image.width' ) )
 						$image->setWidth( $ogData->get( 'image.width' ) );
 					if( $ogData->get( 'image.height' ) )
@@ -109,7 +109,7 @@ class View_Helper_MetaTags{
 					$ogNode->add( $image );
 				}
 				if( $ogData->get( 'video') ){
-					$video	= new CMM_OGP_Video( $ogData->get( 'video' ) );
+					$video	= new \CeusMedia\OpenGraph\Video( $ogData->get( 'video' ) );
 					if( $ogData->get( 'video.width' ) )
 						$video->setWidth( $ogData->get( 'video.width' ) );
 					if( $ogData->get( 'video.height' ) )
@@ -118,8 +118,9 @@ class View_Helper_MetaTags{
 						$video->setType( $ogData->get( 'video.type' ) );
 					$ogNode->add( $video );
 				}
-				foreach( CMM_OGP_Generator::toArray( $ogNode ) as $property => $content )
-					$page->addMetaTag( 'property', $property, $content );
+				$page->addHead( \CeusMedia\OpenGraph\Renderer::render( $ogNode ) );
+//				foreach( \CeusMedia\OpenGraph\Renderer::toArray( $ogNode ) as $property => $content )
+//					$page->addMetaTag( 'property', $property, $content );
 				$page->addPrefix( "og", "http://ogp.me/ns#" );
 			}
 		}
