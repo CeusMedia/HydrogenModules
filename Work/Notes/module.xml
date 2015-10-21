@@ -30,7 +30,6 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
-		<needs type="module">Resource_Library_cmModules</needs>
 		<supports type="module">UI_Helper_Content</supports>
 		<supports type="module">JS_Markdown</supports>
 <!--		<needs type="module">Tags</needs>-->
