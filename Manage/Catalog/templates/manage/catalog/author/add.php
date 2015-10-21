@@ -17,7 +17,7 @@ return '
 	<div class="span8">
 		<div class="content-panel">
 			<h4>'.$w->heading.'</h4>
-			<div class="content-panel-inner">
+			<div class="content-panel-inner form-changes-auto">
 				<form action="./manage/catalog/author/add" method="post">
 					<div class="row-fluid">
 						<div class="span2">

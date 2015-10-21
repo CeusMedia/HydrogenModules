@@ -7,11 +7,10 @@ $list		= $this->renderList( $authors, $author->authorId );
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
-$baseUrl	= $config->get( 'path.frontend' ).$config->get( 'path.frontend.authors' );
 $image		= "images/no_author.png";
 if( $author->image ){
 	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
-	$image	= $baseUrl.$id.'_'.$author->image;
+	$image	= $pathAuthors.$id.'_'.$author->image;
 }
 $image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 
@@ -21,7 +20,7 @@ if( $author->image ){
 	$attributes		= array(
 		'title'		=> $w->buttonRemoveImage,
 		'type'		=> "button",
-		'class'		=> "btn btn-small btn-danger",
+		'class'		=> "btn btn-danger",
 		'onclick'	=> "document.location.href='".$urlRemoveImage."';"
 	);
 	$buttonRemoveImage	= UI_HTML_Tag::create( 'button', '<i class="icon-remove icon-white"></i>', $attributes );
@@ -30,7 +29,7 @@ if( $author->image ){
 return '
 <div class="content-panel">
 	<!--<h4>'.$w->heading.'</h4>-->
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/author/edit/'.$author->authorId.'" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span6">
@@ -51,7 +50,7 @@ return '
 						</div>
 					</div>
 					<div class="row-fluid">
-						<div class="span12">
+						<div class="span10">
 							<label for="input_image">'.$w->labelImage.'</label>
 							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
 						</div>

@@ -32,7 +32,7 @@ $buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' '.$w->buttonRemove,
 
 return '
 		<div class="content-panel">
-			<div class="content-panel-inner">
+			<div class="content-panel-inner form-changes-auto">
 				<form action="manage/catalog/category/edit/'.$category->categoryId.'" method="post">
 					<label for="input_parentId">'.$w->labelParentId.'</label>
 					<select '.$disableParent.' class="span12" name="parentId" id="input_parentId">'.$optParent.'</select>

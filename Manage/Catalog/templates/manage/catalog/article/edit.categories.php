@@ -1,8 +1,6 @@
 <?php
 
-$listCategories	= '<small class="muted"><em>Noch keine Kategorie(n) zugewiesen.</em></small>';
-$listCategories	= '<div class="label not-label-warning">Noch keine Kategorie(n) zugewiesen.</div>';
-$listCategories	= '<div class="alert alert-error">Noch keine Kategorie(n) zugewiesen.</div>';
+$panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
 
 if( $articleCategories ){
 	$listCategories	= array();
@@ -52,6 +50,16 @@ if( $articleCategories ){
 			'.join( $listCategories ).'
 		</tbody>
 	</table>';
+	$panelCategories	= '
+<div class="content-panel">
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<h4>Kategorien</h4>
+			'.$listCategories.'
+		</div>
+	</div>
+</div>
+<hr/>';
 }
 
 $subs	= array();
@@ -83,19 +91,9 @@ foreach( $categories as $item ){
 ksort( $optCategory );
 $optCategory	= join( $optCategory );
 
-return '
-<!--  Manage: Catalog: Article: Categories  -->
+$panelAdd	= '
 <div class="content-panel">
-	<div class="content-panel-inner">
-		<div class="row-fluid">
-			<h4>Kategorien</h4>
-			'.$listCategories.'
-		</div>
-	</div>
-</div>
-<hr/>
-<div class="content-panel">
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<h4>Kategorie zuweisen</h4>
 		<form action="./manage/catalog/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
@@ -113,6 +111,11 @@ return '
 			</div>
 		</form>
 	</div>
-</div>
+</div>';
+
+return '
+<!--  Manage: Catalog: Article: Categories  -->
+'.$panelCategories.'
+'.$panelAdd.'
 <!--  /Manage: Catalog: Article: Categories  -->';
 ?>

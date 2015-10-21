@@ -24,7 +24,7 @@ return '
 	<div class="span6">
 		<div class="content-panel">
 			<h4>'.$w->heading.'</h4>
-			<div class="content-panel-inner">
+			<div class="content-panel-inner form-changes-auto">
 				<form action="manage/catalog/category/add/'.htmlentities( $category->parentId, ENT_QUOTES, 'UTF-8' ).'" method="post">
 					<label for="input_parentId">'.$w->labelParentId.'</label>
 					<select class="span12" name="parentId" id="input_parentId">'.$optParent.'</select>

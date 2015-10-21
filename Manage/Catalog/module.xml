@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.6</version>
+	<version>0.6.4</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -28,7 +28,11 @@
 	<log version="0.5.6">Use module Resource_Logic.</log>
 	<log version="0.5.7">Use advanced upload form input.</log>
 	<log version="0.5.8">Improve tag management.</log>
-	<log version="0.6">Finished update.</log>
+	<log version="0.6">Finished user interface and usability update.</log>
+	<log version="0.6.1">Use module Resource:Frontend for flexible configuration.</log>
+	<log version="0.6.2">Add article tag filter with autocomplete.</log>
+	<log version="0.6.3">Refactor article tab views to equal look and behaviour.</log>
+	<log version="0.6.4">Use module JS:Form:Changes to mark unsaved input field changes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -98,19 +102,18 @@
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxWidth">180</config>
 	<config type="integer" protected="yes" mandatory="yes" name="author.image.quality">85</config>
 	<config type="string" protected="yes" mandatory="yes" name="author.image.extensions">gif,jpe,jpeg,jpg,png</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend">../contents/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.authors">authors/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.documents">articles/documents/</config>
-	<config type="string" protected="yes" mandatory="yes" name="path.frontend.covers">articles/covers/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.authors" title="path to author images within frontend content folder">authors/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.covers" title="path to article cover images within frontend content folder">articles/covers/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.documents" title="path to article documents within frontend content folder">articles/documents/</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Author::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Article::___onTinyMCE_getImageList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Category::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Author::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Article::___onTinyMCE_getLinkList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Author::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Category::___onTinyMCE_getLinkList</hook>
 </module>

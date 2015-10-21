@@ -1,23 +1,35 @@
 <?php
 class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 
+	protected $frontend;
+	protected $logic;
+	protected $messenger;
+	protected $request;
+	protected $session;
+
 	protected function __onInit(){
-		$this->logic		= new Logic_Catalog( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Author::init start' );
 		$this->messenger	= $this->env->getMessenger();
-		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->logic		= new Logic_Catalog( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->addData( 'config', $this->config->getAll( 'module.manage_catalog.', TRUE ) );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
 		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
+		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
+		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Author::init done' );
 	}
 
 	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.authors' ) ) ){
 			$logic		= new Logic_Catalog( $env );
+			$frontend	= Logic_Frontend::getInstance( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$pathImages	= 'contents/'.$config->get( 'path.frontend.authors' );							//  @todo resolve base path
+			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );
 			$list		= array();
 			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
 			foreach( $authors as $item ){

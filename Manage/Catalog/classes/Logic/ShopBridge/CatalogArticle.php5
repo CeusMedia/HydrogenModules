@@ -1,8 +1,12 @@
 <?php
 class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract {
 
-	/**	@var	Logic_Catalog		$logic */
+	/**	@var	Logic_Frontend			$frontend */
+	protected $frontend;
+	/**	@var	Logic_Catalog			$logic */
 	protected $logic;
+	/**	@var	Alg_List_Dictionary		$moduleConfig */
+	protected $moduleConfig;
 
 	public $path		= "catalog/article/%articleId%";
 	public $taxPercent;
@@ -10,6 +14,8 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract {
 
 	public function __onInit(){
 		$this->logic		= new Logic_Catalog( $this->env );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
 		$this->taxPercent	= $this->env->getConfig()->get( 'module.shop.tax.percent' );
 		$this->taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 	}
@@ -74,12 +80,13 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract {
 	 *	@param		integer		$articleId		ID of article
 	 *	@param		boolean		$absolute
 	 *	@return		string
+
 	 */
 	public function getPicture( $articleId, $absolute = FALSE ){
 		$uri		= $this->env->getConfig()->get( 'path.images' )."no_picture.png";
 		$article	= $this->logic->getArticle( $articleId );
 		if( $article->cover ){
-			$pathCovers	= $this->env->getConfig()->get( 'path.contents' ).'articles/covers/';
+			$pathCovers	= $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' );
 			$id			= str_pad( $article->articleId, 5, 0, STR_PAD_LEFT );
 			$uri		= $pathCovers.$id."__".$article->cover;
 		}

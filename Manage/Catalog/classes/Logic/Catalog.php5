@@ -7,6 +7,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**	@var	CMM_SEA_Adapter_Abstract			$cache */
 	protected $cache;
 
+	/**	@var	Logic_Frontend						$frontend */
+	protected $frontend;
+
 	/**	@var	Model_Catalog_Article				$modelArticle */
 	protected $modelArticle;
 
@@ -28,6 +31,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**	@var	Model_Catalog_Category				$modelCategory */
 	protected $modelCategory;
 
+	/**	@var	Alg_List_Dictionary					$moduleConfig */
+	protected $moduleConfig;
+
 	protected $countArticlesInCategories;
 
 	/**
@@ -46,6 +52,9 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	protected function __onInit( $a = NULL ){
 		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
+		$this->config				= $this->env->getConfig();
+		$this->frontend				= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
 		$this->cache				= $this->env->getCache();
 		$this->modelArticle			= new Model_Catalog_Article( $this->env );
 		$this->modelArticleAuthor	= new Model_Catalog_Article_Author( $this->env );
@@ -56,14 +65,11 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
 		$this->modelCategory		= new Model_Catalog_Category( $this->env );
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
-		$this->config				= $this->env->getConfig();
-		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
 
-		$paths						= $this->moduleConfig->getAll( 'path.', TRUE );
-		$basePath					= $paths->get( 'frontend' );
-		$this->pathArticleCovers	= $basePath.$paths->get( 'frontend.covers' );
-		$this->pathArticleDocuments	= $basePath.$paths->get( 'frontend.documents' );
-		$this->pathAuthorImages		= $basePath.$paths->get( 'frontend.authors' );
+		$basePath					= $this->frontend->getPath( 'contents' );
+		$this->pathArticleCovers	= $basePath.$this->moduleConfig->get( 'path.covers' );
+		$this->pathArticleDocuments	= $basePath.$this->moduleConfig->get( 'path.documents' );
+		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
 
 		$cacheKey	= 'catalog.count.categories.articles';
 		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
@@ -340,6 +346,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 		$this->cache->remove( 'catalog.categories' );
 		$this->cache->remove( 'catalog.tinymce.links.categories' );
+		$this->cache->remove( 'catalog.count.categories.articles' );
 	}
 
 	/**
@@ -350,12 +357,16 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	Returns number of articles within a category or its sub categories, if enabled.
+	 *	Uses cache 'catalog.count.categories.articles' in recursive mode.
+	 *	@access		public
+	 *	@param 		integer		$categoryId		ID of category to count articles for
+	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
+	 *	@return		integer						Number of found articles in category
 	 */
 	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
-		$numbers	= $this->countArticlesInCategories;
-		if( isset( $numbers[$categoryId] ) )
-			return $numbers[$categoryId];
+		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
+			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
 			$categories	= $this->getCategories( array( 'parentId' => $categoryId ) );
@@ -622,6 +633,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function getDocumentsOfArticle( $articleId ){
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
+	}
+
+	public function getTags( $conditions = array(), $orders = array(), $limits = array() ){
+		return $this->modelArticleTag->getAll( $conditions, $orders, $limits );
 	}
 
 	/**

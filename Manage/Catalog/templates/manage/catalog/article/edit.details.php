@@ -7,7 +7,7 @@ $optMark	= UI_HTML_Elements::Options( $words['marks'], $article->new );
 return '
 <!--  Manage: Catalog: Article: Details  -->
 <div class="content-panel">
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/article/edit/'.$article->articleId.'" method="post">
 			<label for="input_title">'.$w->labelTitle.'</label>
 			<input class="span12" type="text" name="title" id="input_title" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>

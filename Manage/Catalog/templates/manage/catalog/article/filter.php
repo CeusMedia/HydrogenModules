@@ -3,16 +3,17 @@ $w			= (object) $view->getWords( 'index.filter', 'manage/catalog/article' );
 
 $filterTerm		= !empty( $filters['term'] ) ? $filters['term'] : "";
 $filterAuthor	= !empty( $filters['author'] ) ? $filters['author'] : "";
+$filterTag		= !empty( $filters['tag'] ) ? $filters['tag'] : "";
 $filterNew		= !empty( $filters['new'] ) ? ' checked="checked"' : "";
 $filterCover	= !empty( $filters['cover'] ) ? ' checked="checked"' : "";
 $filterIsn		= !empty( $filters['isn'] ) ? $filters['isn'] : "";
 $filterOrder	= !empty( $filters['order'] ) ? $filters['order'] : "timestamp:DESC";
 
-$filterStatus	= strlen( isset( $filters['status'] ) && $filters['status'] ) ? $filters['status'] : "";
+$filterStatus	= isset( $filters['status'] ) && strlen( $filters['status'] ) ? $filters['status'] : "";
 
 $optStatus	= array( '' => '- alle -' );
 foreach( $words['states'] as $key => $value )
-	$optStatus[$key]	= $value;
+	$optStatus[(string)$key]	= $value;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, (string) $filterStatus );
 
 $optOrder	= array(
@@ -26,12 +27,18 @@ $optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
 return '
 <div class="content-panel">
 	<h4>'.$w->heading.'</h4>
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/article/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_term">Suchtext</label>
 					<input class="span12" type="text" name="term" id="input_term" value="'.$filterTerm.'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_tag">Schlagwort</label>
+					<input class="span12" type="text" name="tag" id="input_tag" value="'.$filterTag.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -80,5 +87,26 @@ return '
 			</div>
 		</form>
 	</div>
-</div>';
+</div>
+<script>
+$(document).ready(function(){
+	$("#input_tag").prop("autocomplete", "off").typeahead({
+		source: function (query, process) {
+			return $.get("./manage/catalog/article/ajaxGetTags", {query: query}, function(data) {
+				return process(data);
+			});
+		}
+	});
+	$("#input_isn").prop("autocomplete", "off").typeahead({
+		source: function (query, process) {
+			return $.get("./manage/catalog/article/ajaxGetIsns", {query: query}, function(data) {
+				return process(data);
+			});
+		}
+	});
+});
+
+</script>
+
+';
 ?>

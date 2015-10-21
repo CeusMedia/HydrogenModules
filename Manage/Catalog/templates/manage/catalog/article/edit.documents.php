@@ -1,18 +1,21 @@
 <?php
 
-$listDocuments	= '<small class="muted"><em>Noch keine Dokumente gespeichert.</em></small>';
-$listDocuments	= '<div class="label not-label-warning">Noch keine Dokumente gespeichert.</div>';
-$listDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
+$panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
 
 $iconRemove		= '<i class="icon-remove icon-white"></i>';
 
 if( $articleDocuments ){
 	$listDocuments	= array();
 	foreach( $articleDocuments as $item ){
+		$idPrefix		= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT ).'_';
 		$urlRemove		= './manage/catalog/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="Dokument entfernen">'.$iconRemove.'</a>';
+		$link			= UI_HTML_Tag::create( 'a', $item->title, array(
+			'href'		=> $pathDocuments.$idPrefix.$item->url,
+			'target'	=> '_blank'
+		) );
 		$listDocuments[]	= '<tr>
-	<td>'.$item->title.'</td>
+	<td>'.$link.'</td>
 	<td><div class="pull-right">'.$buttonRemove.'</div></td>
 </tr>';
 	}
@@ -29,31 +32,31 @@ if( $articleDocuments ){
 		'.join( $listDocuments ).'
 	</tbody>
 </table>';
-}
-
-$documentMaxSize	= $env->getConfig()->get( 'module.manage_catalog.article.document.maxSize' );
-$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
-
-$list				= array();
-$documentExtensions	= $env->getConfig()->get( 'module.manage_catalog.article.document.extensions' );
-foreach( explode( ",", $documentExtensions ) as $nr => $type )
-	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
-		$list[$nr]	= strtoupper( trim( $type ) );
-$documentExtensions	= join( ", ", $list );
-
-return '
-<!--  Manage: Catalog: Article: Documents  -->
+	$panelDocuments	= '
 <div class="content-panel">
 	<h4>Dokumente</h4>
 	<div class="content-panel-inner">
 		'.$listDocuments.'
 	</div>
 </div>
-<hr/>
+<hr/>';
+}
+
+$documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
+$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
+$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+
+$list				= array();
+$documentExtensions	= $moduleConfig->get( 'article.document.extensions' );
+foreach( explode( ",", $documentExtensions ) as $nr => $type )
+	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+		$list[$nr]	= strtoupper( trim( $type ) );
+$documentExtensions	= join( ", ", $list );
+
+$panelAdd	= '
 <div class="content-panel">
 	<h4>Dokumente hinzufügen</h4>
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<div class="alert">
 			<b>Dateitypen: </b>
 			<span>'.$documentExtensions.'</span><br/>
@@ -78,6 +81,11 @@ return '
 			</div>
 		</form>
 	</div>
-</div>
+</div>';
+
+return '
+<!--  Manage: Catalog: Article: Documents  -->
+'.$panelDocuments.'
+'.$panelAdd.'
 <!--  /Manage: Catalog: Article: Documents  -->';
 ?>

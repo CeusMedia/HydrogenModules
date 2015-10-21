@@ -7,9 +7,7 @@ $authorRelationsByAuthorId	= array();
 foreach( $articleAuthors as $item )
 	$authorRelationsByAuthorId[$item->authorId]	= $item;
 
-$listAuthors	= '<small class="muted"><em>Noch kein(e) Autore(n) zugewiesen.</em></small>';
-$listAuthors	= '<div class="label not-label-warning">Noch kein(e) Autore(n) zugewiesen.</div>';
-$listAuthors	= '<div class="alert alert-error">Noch kein(e) Autore(n) zugewiesen.</div>';
+$panelAuthors	= '<div class="alert alert-error">Noch keine Autoren/Herausgeber zugewiesen.</div>';
 
 if( $articleAuthors ){
 	$listAuthors	= array();
@@ -42,6 +40,17 @@ if( $articleAuthors ){
 			'.join( $listAuthors ).'
 		</tbody>
 	</table>';
+
+	$panelAuthors	= '
+<div class="content-panel">
+	<h4>Autoren <small class="muted">(und Herausgeber)</small></h4>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			'.$listAuthors.'
+		</div>
+	</div>
+</div>
+<hr/>';
 }
 
 $optAuthor	= array();
@@ -55,20 +64,10 @@ $optAuthor	= UI_HTML_Elements::Options( $optAuthor );
 $optRole	= $words['authorRoles'];
 $optRole	= UI_HTML_Elements::Options( $optRole );
 
-return '
-<!--  Manage: Catalog: Article: Authors  -->
-<div class="content-panel">
-	<h4>Autoren <small class="muted">(und Herausgeber)</small></h4>
-	<div class="content-panel-inner">
-		<div class="row-fluid">
-			'.$listAuthors.'
-		</div>
-	</div>
-</div>
-<hr/>
+$panelAdd	= '
 <div class="content-panel">
 	<h4>Autor zuweisen</h4>
-	<div class="content-panel-inner">
+	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/article/addAuthor/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
@@ -93,5 +92,10 @@ return '
 		</form>
 	</div>
 </div>
+';
+return '
+<!--  Manage: Catalog: Article: Authors  -->
+'.$panelAuthors.'
+'.$panelAdd.'
 <!--  /Manage: Catalog: Article: Authors  -->';
 ?>

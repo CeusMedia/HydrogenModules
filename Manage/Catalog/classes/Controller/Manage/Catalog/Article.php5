@@ -1,24 +1,52 @@
 <?php
-class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
+class Controller_Manage_Catalog_Article extends CMF_Hydrogen_Controller{
 
+	protected $fontend;
+	protected $logic;
+	protected $messenger;
+	protected $request;
+	protected $session;
 	protected $sessionPrefix;
 
 	public function __onInit(){
 		parent::__onInit();
-		$this->sessionPrefix	= 'module.manage_catalog_article.filter.';
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Article::init start' );
+		$this->messenger		= $this->env->getMessenger();
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->logic			= new Logic_Catalog( $this->env );
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+		$this->sessionPrefix	= 'module.manage_catalog_article.filter.';
 		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
+		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
+		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
 
 		if( !$this->session->get( $this->sessionPrefix.'order' ) )
 				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
+		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Article::init done' );
 	}
 
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@param		object		$env
+	 *	@param		object		$context
+	 *	@param		unknown		$module
+	 *	@param		unknown		$arguments
+	 *	@return		void
+	 *	@todo		kriss: code doc
+	 */
 	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.articles' ) ) ){
 			$logic		= new Logic_Catalog( $env );
+			$frontend	= Logic_Frontend::getInstance( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$pathCovers	= 'contents/'.$config->get( 'path.frontend.covers' );							//  @todo resolve base path
+			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );
 			$list       = array();
 			$conditions	= array( 'cover' => '>0' );
 			$orders		= array( 'articleId' => 'DESC' );
@@ -46,12 +74,14 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	 *	@param		unknown		$module
 	 *	@param		unknown		$arguments
 	 *	@return		void
-	 *	@todo		kriss: add authors and categories
 	 *	@todo		kriss: code doc
 	 */
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		$logic		= new Logic_Catalog( $env );
+		$frontend	= Logic_Frontend::getInstance( $env );
+		$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
+
 		if( !( $articles = $cache->get( 'catalog.tinymce.links.articles' ) ) ){
 			$orders		= array( 'articleId' => 'DESC' );
 			$articles	= $logic->getArticles( array(), $orders, array( 0, 200 ) );
@@ -72,8 +102,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		) ) );
 
 		if( !( $documents = $cache->get( 'catalog.tinymce.links.documents' ) ) ){
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$pathDocs	= 'contents/'.$config->get( 'path.frontend.documents' );							//  @todo resolve base path
+			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
 			$documents	= $logic->getDocuments( array(), array( 'articleDocumentId' => 'DESC' ), array( 0, 200 ) );
 			foreach( $documents as $nr => $item ){
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
@@ -164,6 +193,40 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
+	public function ajaxGetTags(){
+		$startsWith	= $this->request->get( 'query' );
+		$conditions	= array( 'tag' => $startsWith.'%' );
+		$orders		= array( 'tag' => 'ASC' );
+		$limits		= array( 0, 10 );
+		$tags		= $this->logic->getTags( $conditions, $orders, $limits );
+		$list		= array();
+		foreach( $tags as $tag )
+			$list[$tag->tag]	= $tag->tag;
+		ksort( $list );
+		$json	= json_encode( array_keys( $list ) );
+		header( 'Content-Type: application/json' );
+		header( 'Content-Length: '.strlen( $json ) );
+		print( $json );
+		exit;
+	}
+
+	public function ajaxGetIsns(){
+		$startsWith	= $this->request->get( 'query' );
+		$conditions	= array( 'isn' => $startsWith.'%' );
+		$orders		= array( 'isn' => 'ASC' );
+		$limits		= array( 0, 10 );
+		$articles	= $this->logic->getArticles( $conditions, $orders, $limits );
+		$list		= array();
+		foreach( $articles as $article )
+			$list[$article->isn]	= $article->isn;
+		ksort( $list );
+		$json	= json_encode( array_keys( $list ) );
+		header( 'Content-Type: application/json' );
+		header( 'Content-Length: '.strlen( $json ) );
+		print( $json );
+		exit;
+	}
+
 	public function ajaxSetTab( $tabKey ){
 		$this->session->set( 'manage.catalog.article.tab', $tabKey );
 		exit;
@@ -195,6 +258,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 	public function filter( $reset = FALSE ){
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
+		$this->session->set( $this->sessionPrefix.'tag', trim( $this->request->get( 'tag' ) ) );
 		$this->session->set( $this->sessionPrefix.'isn', trim( $this->request->get( 'isn' ) ) );
 		$this->session->set( $this->sessionPrefix.'new', $this->request->get( 'new' ) );
 		$this->session->set( $this->sessionPrefix.'cover', $this->request->get( 'cover' ) );
@@ -203,6 +267,7 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 		if( $reset ){
 			$this->session->remove( $this->sessionPrefix.'term' );
 			$this->session->remove( $this->sessionPrefix.'author' );
+			$this->session->remove( $this->sessionPrefix.'tag' );
 			$this->session->remove( $this->sessionPrefix.'isn' );
 			$this->session->remove( $this->sessionPrefix.'new' );
 			$this->session->remove( $this->sessionPrefix.'cover' );
@@ -232,9 +297,23 @@ class Controller_Manage_Catalog_Article extends Controller_Manage_Catalog{
 							$articleIds	= array();
 					}
 					break;
+				case 'tag':
+					if( strlen( trim( $filterValue ) ) ){
+						$find	= array( 'tag' => $filterValue );
+						$tags	= $this->logic->getTags( $find );
+						if( $tags ){
+							$list	= array();
+							foreach( $tags as $tag )
+								$list[]	= $tag->articleId;
+							$articleIds	= $articleIds ? array_intersect( $articleIds, $list ) : $list;
+						}
+						else
+							$articleIds	= array();
+					}
+					break;
 				case 'isn':
 					if( strlen( $filterValue ) )
-						$conditions[$filterKey]	= '%'.str_replace( array( '*', ' ', ), "%", $filterValue ).'%';
+						$conditions[$filterKey]	= str_replace( array( '*', ' ', ), "%", $filterValue );
 					break;
 				case 'new':
 				case 'status':

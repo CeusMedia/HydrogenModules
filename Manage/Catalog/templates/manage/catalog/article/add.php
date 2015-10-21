@@ -27,7 +27,7 @@ return '
 	<div class="span7">
 		<div class="content-panel">
 			<h4>'.$w->heading.'</h4>
-			<div class="content-panel-inner">
+			<div class="content-panel-inner form-changes-auto">
 				<form action="./manage/catalog/article/add" method="post">
 					<label for="input_title">'.$w->labelTitle.'</label>
 					<input class="span12" type="text" name="title" id="input_title" value="'.htmlentities( $article->title, ENT_QUOTES, 'UTF-8' ).'"/>
