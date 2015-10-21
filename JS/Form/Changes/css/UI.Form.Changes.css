@@ -1,6 +1,5 @@
 .ui-form-changes input.changed,
 .ui-form-changes select.changed,
-.ui-form-changes textarea.changed,
-.ui-form-changes label.checkbox {
+.ui-form-changes textarea.changed {
     background: #FFF7CF;
     }
