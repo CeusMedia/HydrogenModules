@@ -128,10 +128,11 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link xml:lang="en" rank="12" access="outside" path="auth/register">Rgister Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/confirm">Confirm Account</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
+	<link rank="99" access="public" path="auth/ajaxEmailExists"></link>
 	<link rank="99" access="public" path="auth/ajaxIsAuthenticated"></link>
+	<link rank="99" access="public" path="auth/ajaxPasswordStrength"/>
 	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 	<link rank="99" access="public" path="auth/ajaxUsernameExists"></link>
-	<link rank="99" access="public" path="auth/ajaxEmailExists"></link>
 	<link rank="99" access="public" path="auth/index"></link>
 	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>
 </module>
