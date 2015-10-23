@@ -154,9 +154,9 @@ class Logic_Module {
 
 	public function getDatabaseScripts( $moduleId, $versionStart = NULL, $versionTarget = NULL ){
 		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
-			return;
+			return array();
 		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
-			return;
+			return array();
 		$list			= array();
 		$module			= $this->model->get( $moduleId );
 		$moduleSource	= $this->model->getFromSource( $moduleId );
