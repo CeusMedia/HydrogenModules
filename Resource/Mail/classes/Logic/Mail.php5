@@ -47,22 +47,22 @@ class Logic_Mail{
 		}
 	}
 
-	public function collectConfiguredReceivers( $userIds, $groupIds = array(), $listConfigKeysToCheck = array() ){
+	public function collectConfiguredReceivers( $userIds, $roleIds = array(), $listConfigKeysToCheck = array() ){
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return array();
 		$receivers		= array();
 		if( is_string( $userIds ) )
 			$userIds	= explode( ",", trim( $userIds ) );
-		if( is_string( $groupIds ) )
-			$groupIds	= explode( ",", trim( $groupIds ) );
+		if( is_string( $roleIds ) )
+			$roleIds	= explode( ",", trim( $roleIds ) );
 		if( !is_array( $userIds ) )
 			throw new InvalidArgument( 'Invalid list of user IDs' );
-		if( !is_array( $groupIds ) )
-			throw new InvalidArgument( 'Invalid list of group IDs' );
+		if( !is_array( $roleIds ) )
+			throw new InvalidArgument( 'Invalid list of role IDs' );
 		$modelUser		= new Model_User( $this->env );
-		foreach( $groupIds as $groupId ){
-			if( strlen( trim( $groupId ) ) && (int) $groupId > 0 ){
-				$users	= $modelUser->getAllByIndex( 'roleId', $listIds );
+		foreach( $roleIds as $roleId ){
+			if( strlen( trim( $roleId ) ) && (int) $roleId > 0 ){
+				$users	= $modelUser->getAllByIndex( 'roleId', $roleId );
 				foreach( $users as $user )
 					$receivers[(int) $user->userId]	= $user;
 			}
