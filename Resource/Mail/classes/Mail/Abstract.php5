@@ -33,7 +33,7 @@ abstract class Mail_Abstract{
 	 */
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array(), $defaultStyle = TRUE ){
 		$this->setEnv( $env );
-		$this->mail		= new Net_Mail();
+		$this->mail		= new \CeusMedia\Mail\Message();
 		$this->view		= new CMF_Hydrogen_View( $env );
 		$this->page		= new UI_HTML_PageFrame();
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
@@ -43,7 +43,7 @@ abstract class Mail_Abstract{
 		if( !$this->baseUrl && $config->get( 'app.base.url' ) )
 			$this->baseUrl = $config->get( 'app.base.url' );
 		$this->page->setBaseHref( $this->baseUrl );
-		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
+//		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 		if( $defaultStyle )
 			$this->addThemeStyle( 'mail.min.css' );
 //		$this->addScriptFile( 'mail.min.js' );
@@ -62,7 +62,10 @@ abstract class Mail_Abstract{
 	}
 
 	public function addAttachment( $filePath, $mimeType ){
-		$this->mail->addAttachmentFile( $filePath, $mimeType );
+		$attachment	= new \CeusMedia\Mail\Part\Attachment();
+		$attachment->setFile( $filePath, $mimeType );
+//		$this->mail->addAttachmentFile( $filePath, $mimeType );
+		$this->mail->addAttachment( $attachment );
 	}
 
 	/**
@@ -73,10 +76,12 @@ abstract class Mail_Abstract{
 	 *	@see		http://wiki.apache.org/spamassassin/Rules/BASE64_LENGTH_78_79
 	 */
 	protected function addHtmlBody( $html ){
-		$base64	= base64_encode( $html );
+/*		$base64	= base64_encode( $html );
 		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_HTML, 'base64' );
 		$body->wrapWords( 76 );
 		$this->mail->addBody( $body );
+*/
+		$this->mail->setHTML( $html );
 	}
 
 	/**
@@ -86,10 +91,11 @@ abstract class Mail_Abstract{
 	 *	@return		void
 	 */
 	protected function addTextBody( $text ){
-		$base64	= base64_encode( $text );
+/*		$base64	= base64_encode( $text );
 		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_PLAIN, 'base64' );
 		$body->wrapWords( 76 );
-		$this->mail->addBody( $body );
+		$this->mail->addBody( $body );*/
+		$this->mail->setText( $text );
 	}
 
 	protected function addPrimerStyle( $fileName ){
@@ -191,16 +197,16 @@ abstract class Mail_Abstract{
 				$port		= $options->get( 'transport.port' );
 				$username	= $options->get( 'transport.username' );
 				$password	= $options->get( 'transport.password' );
-				$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
-				$this->transport->setAuthUsername( $username );
-				$this->transport->setAuthPassword( $password );
+				$this->transport	= new \CeusMedia\Mail\Transport\SMTP( $hostname, $port );
+				$this->transport->setUsername( $username );
+				$this->transport->setPassword( $password );
 				$this->transport->setSecure( $options->get( 'transport.secure' ) );
 				$this->transport->setVerbose( FALSE );
 				break;
 			case 'local':
 			case 'default':
 			case 'sendmail':
-				$this->transport	= new Net_Mail_Transport_Default();
+				$this->transport	= new \CeusMedia\Mail\Transport\Local();
 				break;
 			default:
 				throw new RuntimeException( 'No mail transport configured' );
@@ -231,7 +237,7 @@ abstract class Mail_Abstract{
 	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email ){
-		$this->mail->setReceiver( $email );
+		$this->mail->addRecipient( $email );
 		$this->transport->send( $this->mail, TRUE );
 	}
 
