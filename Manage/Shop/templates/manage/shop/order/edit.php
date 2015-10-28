@@ -181,7 +181,7 @@ if( $order->customer && $order->customer->alternative )
 $w		= (object) $words['positions'];
 $rows	= array();
 foreach( $order->positions as $position ){
-	$url	= './manage/catalog/gallery/edit/'.$position->articleId;
+	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
 	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
 	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
