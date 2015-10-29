@@ -216,7 +216,7 @@ $tableHeads		= UI_HTML_Elements::TableHeads( array(
 	$w->head_bridge,
 	$w->head_status,
 ) );
-$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '150', '120' ) );
+$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '220', '180' ) );
 $tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
 $tableBody		= UI_HTML_Tag::create( 'tbody', $rows );
 $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
