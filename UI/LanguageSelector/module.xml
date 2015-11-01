@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Language Selector</title>
+	<description><![CDATA[User interface component to select current language.]]></description>
+	<category>User Interface</category>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Support for select box and Bootstrap drop down menu.</log>
+	<log version="0.2.2">Prepare view helper for hook call on view construction.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/LanguageSelector.php5</class>
+	</files>
+	<config protected="yes" type="string" name="mode" value="select,dropdown">dropdown</config>
+<!--	<hook type="resource" resource="View" event="onConstruct"><![CDATA[
+$config	= $env->getConfig()->getAll( 'module.ui_languageselector.', TRUE );
+$helper = new View_Helper_LanguageSelector( $env );
+$mode	= View_Helper_LanguageSelector::MODE_SELECT;
+if( $config->get( 'mode' ) === "dropdown" )
+	$mode	= View_Helper_LanguageSelector::MODE_DROPDOWN;
+$helper->setMode( $mode );
+$context->addHelper( 'languageSelector', $helper );
+]]></hook>-->
+</module>
