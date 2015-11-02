@@ -3,6 +3,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 
 	protected function __onInit(){
 		parent::__onInit();
+		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
+//		$this->logPrefix	= 'work.mission.ical.export.log';
 	}
 
 	protected function exportAsIcal(){
@@ -100,7 +102,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		try{
 
 			$method		= $this->request->getMethod();
-			error_log( date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'request.method.log' );
+			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
+			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
+			error_log( $logMessage, 3, $logFile );
 			switch( strtoupper( $method ) ){
 				case 'PUT':
 //					$ical	= file_get_contents( "php://input" );							//  read PUT data
@@ -132,7 +136,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 				"Error: ".$e->getMessage(),
 				"Agent: ".getEnv( 'HTTP_USER_AGENT' ),
 			);
-			error_log( "logs/ical.error.log", 3, join( "\n", $lines )."\n" );
+			$logFile	= $this->pathLogs."work.missions.ical.error.log";
+			$logMessage	= join( "\n", $lines )."\n";
+			error_log( $logMessage, 3, $logFile );
 		}
 		exit;
 	}
