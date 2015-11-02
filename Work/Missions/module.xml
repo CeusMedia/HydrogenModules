@@ -130,6 +130,7 @@ code>
 		<needs type="module">UI_Markdown</needs>
 		<needs type="module">UI_JS_cmFormChange</needs>
 		<needs type="module">UI_JS_cmFormOptionals</needs>
+		<needs type="module">UI_Helper_HTML_Diff</needs>
 		<supports type="module">Resource_Jobs</supports>
 		<supports type="module">Manage_Projects</supports>
 	</relations>
