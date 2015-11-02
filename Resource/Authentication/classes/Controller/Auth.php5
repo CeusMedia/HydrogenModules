@@ -111,7 +111,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
-			$this->restart( NULL );
+			return $this->redirect( 'auth', 'loginInside' );
 		}
 
 		$this->tryLoginByCookie();

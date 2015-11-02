@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.6.15</version>
+	<version>0.6.16</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -49,6 +49,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.6.13">Added flag to allow or deny registration.</log>
 	<log version="0.6.14">Lay mails on queue but send immediately.</log>
 	<log version="0.6.15">Finish localization.</log>
+	<log version="0.6.16">Rearrange templates and text blocks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
