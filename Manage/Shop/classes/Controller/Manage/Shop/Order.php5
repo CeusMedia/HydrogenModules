@@ -26,8 +26,15 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		}
 		foreach( $order->positions as $nr => $position ){
 			$bridgeId	= (int) $position->bridgeId;
+			$bridge		= $this->logicBridge->getBridgeObject( $position->bridgeId );
 			$order->positions[$nr]->bridge	= $this->logicBridge->getBridge( $position->bridgeId );
-			$order->positions[$nr]->article	= $this->logicBridge->getArticle( $bridgeId, $position->articleId );
+			if( $bridge->check( $position->articleId, FALSE ) ){
+				$order->positions[$nr]->article	= $this->logicBridge->getArticle( $bridgeId, $position->articleId );
+			}
+			else{
+				$this->messenger->noteNotice( "This order contains articles, which has been removed from catalog. Therefore these articles are not shown here." );
+				unset( $order->positions[$nr] );
+			}
 		}
 		$this->addData( 'order', $order );
 	}
@@ -38,7 +45,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		$this->session->set( $sessionPrefix.'status', $this->request->get( 'status' ) );
 		$this->session->set( $sessionPrefix.'order', $this->request->get( 'order' ) );
 		if( $reset ){
-			$this->session->remove( $sessionPrefix.'customer' );
+ 			$this->session->remove( $sessionPrefix.'customer' );
 			$this->session->remove( $sessionPrefix.'status' );
 			$this->session->remove( $sessionPrefix.'order' );
 		}

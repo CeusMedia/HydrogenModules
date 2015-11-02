@@ -125,8 +125,10 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$words	= $this->getWords( 'remove' );
 		if( $this->logic->getArticlesFromAuthor( $authorId ) )
 			$this->messenger->noteError( $words->msgErrorNotEmpty );
-		else
+		else{
 			$this->logic->removeAuthor( $authorId );
+			$this->restart( 'manage/catalog/author' );
+		}
 	}
 
 	public function removeImage( $authorId ){

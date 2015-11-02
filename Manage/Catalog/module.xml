@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -33,6 +33,7 @@
 	<log version="0.6.2">Add article tag filter with autocomplete.</log>
 	<log version="0.6.3">Refactor article tab views to equal look and behaviour.</log>
 	<log version="0.6.4">Use module JS:Form:Changes to mark unsaved input field changes.</log>
+	<log version="0.6.5">Add removeAuthor in logic class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
