@@ -48,7 +48,6 @@
 		<class>Model/Project/User.php5</class>
 		<class>View/Manage/Project.php5</class>
 		<template>manage/project/add.php</template>
-		<template>manage/project/default.php</template>
 		<template>manage/project/edit.php</template>
 		<template>manage/project/edit.info.php</template>
 		<template>manage/project/edit.users.php</template>
