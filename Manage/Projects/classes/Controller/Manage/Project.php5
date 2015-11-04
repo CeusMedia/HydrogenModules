@@ -109,8 +109,11 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				) );
 			}
 			$this->messenger->noteSuccess( $words->msgSuccess );
+			if( $this->request->get( 'from' ) )
+				$this->restart( $this->request->get( 'from' ) );
 			$this->restart( './manage/project/edit/'.$projectId );
 		}
+		$this->addData( 'from', $this->request->get( 'from' ) );
 //		$this->addData( 'filterStatus', $this->session->get( 'filter_manage_project_status' ) );
 //		$this->addData( 'filterOrder', $this->session->get( 'filter_manage_project_order' ) );
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
