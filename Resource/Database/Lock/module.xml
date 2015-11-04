@@ -23,7 +23,7 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
-	<config protected="user" type="boolean" name="active">yes</config>
+	<config protected="yes" type="boolean" name="active">yes</config>
 	<link access="acl" path="database/lock" rank="85" xml:lang="de">Sperren</link>
 	<link access="acl" path="database/lock" rank="85" xml:lang="en">Locks</link>
 	<link access="acl" path="database/lock/unlock"/>
