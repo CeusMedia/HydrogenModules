@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: JS: cmFormOptionals</title>
-	<description><![CDATA[Related form input fields.]]></description>
+	<description><![CDATA[
+Related form input fields.
+
+**Deprecated:** Use module JS:Form:Optionals instead.
+]]></description>
 	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module JS:Optionals.</log>
