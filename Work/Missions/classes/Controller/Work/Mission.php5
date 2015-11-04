@@ -252,7 +252,7 @@ Now, there is some text.
 		}
 		if( $this->useProjects && !$this->userProjects ){
 			$this->messenger->noteNotice( $words->msgNoProjectYet );
-			$this->restart( './manage/project/add' );
+			$this->restart( './manage/project/add?from=work/mission/add' );
 		}
 
 		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
