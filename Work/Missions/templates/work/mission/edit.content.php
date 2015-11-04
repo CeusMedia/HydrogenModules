@@ -63,7 +63,6 @@ $panelContentSplitted	= '
 */
 
 return $panelContentSplitted.'
-<script src="javascripts/bindWithDelay.js"></script>
 <script>
 $(document).ready(function(){
 	WorkMissionsEditor.mission = '.json_encode( $mission ).';

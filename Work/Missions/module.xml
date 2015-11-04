@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.8</version>
+	<version>0.9.9</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -55,6 +55,7 @@ code>
 	<log version="0.9.6">Extract view JavaScript parts into WorkMissionsViewer.</log>
 	<log version="0.9.7">Split view template into parts.</log>
 	<log version="0.9.8">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.9.9">Replace modules UI:JS:cmFormChange and UI:JS:cmFormOptionals by JS:Form:Changes and JS:Form:Optionals.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -128,8 +129,8 @@ code>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Markdown</needs>
 		<needs type="module">UI_Markdown</needs>
-		<needs type="module">UI_JS_cmFormChange</needs>
-		<needs type="module">UI_JS_cmFormOptionals</needs>
+		<needs type="module">JS_Form_Changes</needs>
+		<needs type="module">JS_Form_Optionals</needs>
 		<needs type="module">UI_Helper_HTML_Diff</needs>
 		<supports type="module">Resource_Jobs</supports>
 		<supports type="module">Manage_Projects</supports>
@@ -164,9 +165,10 @@ code>
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ownerId` int(10) unsigned NOT NULL,
-  `workerId` int(10) unsigned NOT NULL,
   `projectId` int(10) unsigned NOT NULL DEFAULT '0',
+  `workerId` int(10) unsigned NOT NULL,
+  `creatorId` int(10) unsigned NOT NULL,
+  `modifierId` int(10) unsigned NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -185,7 +187,9 @@ CREATE TABLE `<%?prefix%>missions` (
   PRIMARY KEY (`missionId`),
   KEY `priority` (`priority`),
   KEY `type` (`type`),
-  KEY `creatorId` (`ownerId`,`workerId`),
+  KEY `workerId` (`workerId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `modifierId` (`modifierId`),
   KEY `projectId` (`projectId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

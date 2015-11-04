@@ -67,7 +67,7 @@ $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
-		<form action="./work/mission/edit/'.$mission->missionId.'" method="post" class="cmFormChange-auto">
+		<form action="./work/mission/edit/'.$mission->missionId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
@@ -97,35 +97,35 @@ $panelEdit	= '
 					<label for="input_type">'.$w->labelType.'</label>
 					<select name="type" id="input_type" class="span12 -max has-optionals">'.$optType.'</select>
 				</div>
-				<div class="span3 -column-left-20 optional type type-0">
+				<div class="span3 -column-left-20 optional type type-0" style="display: none">
 					<label for="input_dayWork">'.$w->labelDayWork.'</label>
 					<input type="text" name="dayWork" id="input_dayWork" value="'.$mission->dayStart.'" class="span12 -max" autocomplete="off"/>
 				</div>
-				<div class="span3 -column-left-20 optional type type-0">
+				<div class="span3 -column-left-20 optional type type-0" style="display: none">
 					<label for="input_dayEnd">'.$w->labelDayDue.'</label>
 					<input type="text" name="dayDue" id="input_dayDue" class="span12 -max cmClearInput" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
-				<div class="span3 -column-left-20 optional type type-1">
+				<div class="span3 -column-left-20 optional type type-1" style="display: none">
 					<label for="input_dayStart">'.$w->labelDayStart.'</label>
 					<input type="text" name="dayStart" id="input_dayStart" class="span12 -max" value="'.$mission->dayStart.'" autocomplete="off"/>
 					</div>
-				<div class="span2 -column-left-20 optional type type-1">
+				<div class="span2 -column-left-20 optional type type-1" style="display: none">
 					<label for="input_timeStart">'.$w->labelTimeStart.'</label>
 					<input type="text" name="timeStart" id="input_timeStart" class="span12 -max" value="'.$mission->timeStart.'" autocomplete="off"/>
 				</div>
-				<div class="span3 -column-left-20 optional type type-1">
+				<div class="span3 -column-left-20 optional type type-1" style="display: none">
 					<label for="dayEnd">'.$w->labelDayEnd.'</label>
 					<input type="text" name="dayEnd" id="input_dayEnd" class="span12 -max" value="'.$mission->dayEnd.'" autocomplete="off"/>
 				</div>
-				<div class="span2 -column-left-20 optional type type-1">
+				<div class="span2 -column-left-20 optional type type-1" style="display: none">
 					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 					<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 				</div>
-				<div class="span2 -column-left-10 optional type type-0">
+				<div class="span2 -column-left-10 optional type type-0" style="display: none">
 					<label for="input_hoursProjected">'.$w->labelMinutesProjected.'</label>
 					<input type="text" name="minutesProjected" id="input_minutesProjected" class="span12 -numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
 				</div>
-				<div class="span2 -column-left-10 optional type type-0">
+				<div class="span2 -column-left-10 optional type type-0" style="display: none">
 					<label for="input_minutesRequired">'.$w->labelMinutesRequired.'</label>
 					<input type="text" name="minutesRequired" id="input_minutesRequired" class="span12 -numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
 				</div>
