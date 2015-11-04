@@ -5,4 +5,11 @@ div.messenger-bootstrap alert{
 div.messenger-bootstrap label {
 	display: inline;
 	}
-	
+
+div.messenger-bootstrap .alert {
+	margin-bottom: 0;
+	}
+
+div.messenger-bootstrap > div + div {
+	margin-top: 0.5em;
+	}
