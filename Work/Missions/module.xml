@@ -118,6 +118,7 @@ code>
 		<script>WorkMissionsEditor.js</script>
 		<script>WorkMissionsList.js</script>
 		<script>WorkMissionsViewer.js</script>
+		<script load="auto">bindWithDelay.js</script>
 		<style load="auto">site.mission.css</style>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
