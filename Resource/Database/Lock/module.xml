@@ -2,12 +2,13 @@
 <module>
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module activity switch.</log>
 	<log version="0.3.0">Add index of all locks.</log>
 	<log version="0.3.1">Allow administrative unlocking from index.</log>
+	<log version="0.3.2">Add locale file.</log>
 	<category>Resource</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -17,6 +18,7 @@
 		<class>Model/Lock.php5</class>
 		<class>Logic/Database/Lock.php5</class>
 		<template>database/lock/index.php</template>
+		<locale>de/database/lock.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
