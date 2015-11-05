@@ -9,7 +9,7 @@
 	<log version="0.2.1">Improved scalability.</log>
 	<log version="0.2.2">Extended rendered output by container.</log>
 	<log version="0.2.3">Add parameter for being mandatory or not.</log>
-	<log versino="0.2.4">Add reference to module Resource:Upload.</log>
+	<log version="0.2.4">Add reference to module Resource:Upload.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
