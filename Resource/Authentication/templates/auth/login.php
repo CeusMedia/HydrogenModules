@@ -1,10 +1,54 @@
 <?php
 
+$useRegister	= 1;
+
 $w				= (object) $words['login'];
 
 $iconLogin		= HTML::Icon( 'ok', TRUE );
-$iconRegister	= HTML::Icon( 'plus' );
+$iconRegister	= HTML::Icon( 'user', TRUE );
+$iconRegister	= HTML::Icon( 'plus', TRUE );
+$iconPassword	= HTML::Icon( 'warning-sign' );
 $iconPassword	= HTML::Icon( 'envelope' );
+
+$fieldRemember	= "";
+if( $useRemember )
+	$fieldRemember	= HTML::DivClass( "row-fluid",
+		HTML::DivClass( "span12", array(
+			UI_HTML_Tag::create( 'label', array(
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> "checkbox",
+					'name'		=> "login_remember",
+					'id'		=> "input_login_remember",
+					'value'		=> "1",
+					'checked'	=> $login_remember ? 'checked' : NULL
+				) ),
+				UI_HTML_Tag::create( 'abbr', $w->labelRemember, array(
+					'title'		=> $w->labelRemember_title
+				) ),
+			), array( 'class' => "checkbox" ) )
+		)
+	), array(
+		'style'	=> $useRemember ? 'display: none' : NULL
+	) );
+
+$buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
+	'type'		=> "submit",
+	'name'		=> "doLogin",
+	'class'		=> "btn btn-primary",
+) );
+
+$buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
+	'href'		=> './auth/password',
+	'class'		=> 'btn btn-small',
+) );
+
+$buttonRegister	= "";
+if( $useRegister ){
+	$buttonRegister	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
+		'href'		=> './auth/register'.( $from ? '?from='.$from : '' ),
+		'class'		=> 'btn btn-small btn-success',
+	) );
+}
 
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login/', array( 'from' => $from ) ) );
 
@@ -47,39 +91,13 @@ HTML::DivClass( "content-panel content-panel-form", array(
 						) )
 					) )
 				),
-				HTML::DivClass( "row-fluid",
-					HTML::DivClass( "span12", array(
-						UI_HTML_Tag::create( 'label', array(
-							UI_HTML_Tag::create( 'input', NULL, array(
-								'type'		=> "checkbox",
-								'name'		=> "login_remember",
-								'id'		=> "input_login_remember",
-								'value'		=> "1",
-								'checked'	=> $login_remember ? 'checked' : NULL
-							) ),
-							UI_HTML_Tag::create( 'abbr', $w->labelRemember, array(
-								'title'		=> $w->labelRemember_title
-							) ),
-						), array( 'class' => "checkbox" ) )
-					)
-				), array(
-					'style'	=> $useRemember ? 'display: none' : NULL
-				) ),
+				$fieldRemember,
 				HTML::DivClass( "buttonbar", array(
-					UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
-						'type'		=> "submit",
-						'name'		=> "doLogin",
-						'class'		=> "btn btn-primary",
-					) ),
-					UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
-						'href'		=> './auth/password',
-						'class'		=> 'btn btn-small',
-					) ),
-					UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
-						'href'		=> './auth/register'.( $from ? '?from='.$from : '' ),
-						'class'		=> 'btn btn-small',
-						'style'		=> !$useRegister ? 'display: none' : NULL,
-					) ),
+					HTML::DivClass( "btn_toolbar", array(
+						$buttonLogin,
+						$buttonRegister,
+						$buttonPassword,
+					) )
 				) )
 			), array(
 				'action'	=> './auth/login' . ( $from ? '?from='.rawurlencode( $from ) : '' ),
@@ -90,10 +108,9 @@ HTML::DivClass( "content-panel content-panel-form", array(
 	)
 ) );
 
-return
-HTML::DivClass( "auth-login-text-top", $textTop ).
+return HTML::DivClass( "auth-login-text-top", $textTop ).
 HTML::DivClass( "row-fluid", array(
-	HTML::DivClass( "span6",
+	HTML::DivClass( "span4 offset1",
 		$panelLogin
 	),
 	HTML::DivClass( "span6",

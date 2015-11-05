@@ -138,7 +138,7 @@ $panelContent	= '
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
 return '
-<form action="./work/mission/add" method="post" class="cmFormChange-auto">
+<form action="./work/mission/add" method="post" class="form-changes-auto">
 	<div class="row-fluid">
 		<div class="span9">
 			'.$panelAdd.'
@@ -149,7 +149,6 @@ return '
 	</div>
 	'.$panelContent.'
 </form>
-<script src="javascripts/bindWithDelay.js"></script>
 <script>
 //var missionDay = '.( $day > 0 ? '+'.$day : $day ).';
 //$(document).ready(function(){$("#input_title").focus()});

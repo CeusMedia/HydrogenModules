@@ -103,7 +103,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 			$this->restart( 'edit/'.$categoryId, TRUE );
 		}
 		$this->logic->removeCategory( $categoryId );
-		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->title, ENT_QUOTES, 'UTF-8' ) );
+		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->label_de, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
 }

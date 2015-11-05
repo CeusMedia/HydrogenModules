@@ -16,7 +16,7 @@ class View_Helper_Messenger_Bootstrap{
 		$messages	= $this->env->getMessenger()->getMessages();
 		$list		= "";
 		if( $messages ){
-			foreach( $messages as $message ){
+			foreach( $messages as $nr => $message ){
 				$message	= (object) $message;
 				if( $linkResources )
 					$message->message	= preg_replace(
@@ -25,21 +25,29 @@ class View_Helper_Messenger_Bootstrap{
 						$message->message
 				);
 
-				$class	= $this->classes[$message->type];
+				$class	= $this->classes[$message->type].' messenger-message-'.$nr;
 				$message	= UI_HTML_Tag::create( 'div', $message->message, array( 'class' => 'messenger-message' ) );
 				if( $timeFormat && !empty( $message->timestamp ) ){
 					$time		= Alg_Time_Converter::convertToHuman( $message->timestamp, $timeFormat );
 					$time		= UI_HTML_Tag::create( 'span',  '['.$time.'] ', array( 'class' => 'time' ) );
 					$message	= $time.$message;
 				}
+				$buttonDismiss	= '';
 				if( $this->env->getModules()->has( 'UI_JS_Messenger' ) ){
-					$button		= UI_HTML_Tag::create( "div", '<span></span>', array(
-						'class'		=> 'button discard',
-						'onclick'	=> "UI.Messenger.discardMessage($(this).parent());",
-						'alt'		=> 'ausblenden',
-						'title'		=> 'ausblenden',
-					 ) );
-					$message	= $message.$button;
+					$buttonClose	= UI_HTML_Tag::create( 'button', "&times;", array(
+						'type'		=> 'button',
+						'onclick'	=> 'UI.Messenger.discardMessage($(this).parent());',
+						'class'		=> 'close',
+					) );
+					$message		= $buttonClose.$message;
+				}
+				else{
+					$buttonClose	= UI_HTML_Tag::create( 'button', "&times;", array(
+						'type'		=> 'button',
+						'onclick'	=> '$(this).parent().slideUp();',
+						'class'		=> 'close',
+					) );
+					$message		= $buttonClose.$message;
 				}
 				$list[] 	= UI_HTML_Tag::create( 'div', $message, array( 'class' => $class ) );
 			}

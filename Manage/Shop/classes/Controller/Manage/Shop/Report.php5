@@ -18,7 +18,7 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop{
 
 		$modelOrder		= new Model_Shop_Order( $this->env );
 		$modelPosition	= new Model_Shop_Order_Position( $this->env );
-		$modelArticle	= new Model_Catalog_Article( $this->env );
+//		$modelArticle	= new Model_Catalog_Article( $this->env );
 		$orders			= $modelOrder->getAll( array(), array( 'orderId' => 'ASC' ) );
 		foreach( $orders as $order ){
 			if( (float) $order->price > 0 )
@@ -31,9 +31,10 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop{
 			foreach( $positions as $position ){
 				if( (int) $position->quantity < 1 )
 					continue;
-				$article	= $modelArticle->get( $position->articleId ) ;
-				if( !$article )
+				$bridge	= $logicBridge->getBridgeObject( $position->bridgeId );
+				if( !$bridge->check( $position->articleId, FALSE ) )
 					continue;
+				$article	= $bridge->get( $position->articleId ) ;
 				$sum		+= $position->quantity * (float) $article->price;
 				$tax		+= round( $position->quantity * (float) $article->price * 1.07, 2 );
 				$data		= array(

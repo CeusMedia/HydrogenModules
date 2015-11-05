@@ -4,6 +4,8 @@ $w			= (object) $words['edit'];
 $tabs		= $this->renderMainTabs();
 $list		= $this->renderList( $authors, $author->authorId );
 
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
@@ -23,8 +25,15 @@ if( $author->image ){
 		'class'		=> "btn btn-danger",
 		'onclick'	=> "document.location.href='".$urlRemoveImage."';"
 	);
-	$buttonRemoveImage	= UI_HTML_Tag::create( 'button', '<i class="icon-remove icon-white"></i>', $attributes );
+	$buttonRemoveImage	= UI_HTML_Tag::create( 'button', $iconRemove, $attributes );
 }
+
+$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+	'href'		=> './manage/catalog/author/remove/'.$author->authorId,
+	'disabled'	=> $articles ? 'disabled' : NULL,
+	'class'		=> "btn btn-small btn-danger",
+	'onclick'	=> "if(!confirm('Wirklich?')) return false",
+) );
 
 return '
 <div class="content-panel">
@@ -52,7 +61,7 @@ return '
 					<div class="row-fluid">
 						<div class="span10">
 							<label for="input_image">'.$w->labelImage.'</label>
-							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
+							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', FALSE ).'
 						</div>
 						<div class="span2 pull-right">
 							<label>&nbsp;</label>
@@ -81,8 +90,8 @@ return '
 			<div class="buttonbar">
 <!--				<a class="btn btn-small" href="./manage/catalog/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
 				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<button type="button" class="btn btn-small btn-danger" disabled="disabled" onclick="document.location.href=\'./manage/catalog/author/remove/'.$author->authorId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
 				<a href="'.$frontend->getUri().'catalog/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
+				'.$buttonRemove.'
 			</div>
 		</form>
 	</div>

@@ -44,6 +44,7 @@ $panelAdd		= '
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/add" method="post">
+			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
