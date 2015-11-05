@@ -35,8 +35,11 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 			$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' );
 		$context->js->addUrl( $pathJs.'TinyMCE.Config.js' );
 
-		$frontend	= Logic_Frontend::getInstance( $env );
+		$baseUrl	= $env->url;
+		if( $env->getModules()->has( 'Resource_Frontend' ) )
+			$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
 
+		/* @todo extract to language file after rethinking this solution */
 		$labels	= array(
 			'de'	=> 'Deutsch',
 			'en'	=> 'Englisch',
@@ -58,7 +61,7 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 			$script	= '
 tinymce.Config.languages = "'.join( ',', $languages ).'";
 tinymce.Config.envUri = "'.$env->url.'";
-tinymce.Config.frontendUri = "'.$frontend->getUri().'";
+tinymce.Config.frontendUri = "'.$baseUrl.'";
 tinymce.Config.language = "'.$language.'";
 tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
 tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
@@ -68,7 +71,7 @@ tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
 			if(settings.JS_TinyMCE.auto_tools)
 				options.tools = settings.JS_TinyMCE.auto_tools;
 			tinymce.init(tinymce.Config.apply(options));
-console.log(options);
+//console.log(options);
 		}
 	}';
 			$context->js->addScriptOnReady( $script );

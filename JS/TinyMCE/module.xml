@@ -25,5 +25,8 @@
 	<config type="string" protected="no" name="auto.toolbar.minimal">styleselect | bold italic underline | bullist numlist outdent indent | link image</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<config type="string" protected="no" name="version" values="4.1.9,4.1.7,4.0.26,4.0.10,4.0.2">4.1.9</config>
+	<relations>
+		<supports type="module">Resource_Frontend</supports>
+	</relations>
 	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMceResourceLister::___onPageApplyModules</hook>
 </module>
