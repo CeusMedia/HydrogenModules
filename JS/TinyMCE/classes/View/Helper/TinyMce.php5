@@ -38,14 +38,28 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
 
 		$sourceUri	= $pathLocal.'tinymce/';
-		if( $config->get( 'cdn' ) )
-			$sourceUri	= rtrim( $config->get( 'cdn' ), '/' ).'/';
+		if( $config->get( 'CDN' ) )
+			$sourceUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
 
 		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
+		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
+
+		$languages	= self::getLanguage( $env );
 		if( $language !== "en" )
 			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
-		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
-		self::$loaded	= TRUE
+
+		self::$loaded	= TRUE;
+	}
+
+	static public function getLanguage( $env ){
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$languages	= explode( ",", $config->get( 'languages' ) );
+		if( $config->get( 'CDN' ) )
+			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
+		if( $language !== "en" && !in_array( $language, $languages ) )
+			$language = "en";
+		return $language;
 	}
 
 	/**
@@ -53,8 +67,8 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	 */
 	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
 		self::load( $env );
-		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$language	= self::getLanguage( $env );
 
 		$baseUrl	= $env->url;
 		if( $env->getModules()->has( 'Resource_Frontend' ) )
@@ -66,6 +80,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 			'en'	=> 'Englisch',
 		);
 
+		/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
 		$languages	= array();
 		$matches	= array();
 		foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){

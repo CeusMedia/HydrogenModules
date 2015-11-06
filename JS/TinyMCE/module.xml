@@ -106,7 +106,10 @@
 	<config type="string" protected="no" name="auto.toolbar.extended">styleselect | fontselect | fontsizeselect | forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify # cut copy paste | link unlink image | bullist numlist outdent indent | table anchor charmap hr | undo redo | searchreplace visualblocks blockquote removeformat</config>
 	<config type="string" protected="no" name="auto.toolbar.minimal">styleselect | bold italic underline | bullist numlist outdent indent | link image</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
-	<config type="boolean" protected="no" name="cdn">//tinymce.cachefly.net/4.2/</config>
+	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
+	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">//tinymce.cachefly.net/4.2/</config>
+	<config type="string" protected="no" name="CDN.languages" title="Comma separated list of languages available on CDN">en</config>
+	<config type="string" protected="no" name="languages" title="Comma separated list of languages available locally.">de,en</config>
 	<relations>
 		<supports type="module">Resource_Frontend</supports>
 	</relations>
