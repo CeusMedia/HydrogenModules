@@ -5,6 +5,8 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 	public $listImages	= array();
 	public $listLinks	= array();
 
+	static protected $loaded	= FALSE;
+
 	/**	@var	ADT_List_Dictionary		$config		Module configuration */
 	protected $config;
 
@@ -23,17 +25,36 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		$this->pathFront	= $this->config->get( 'path' );
 	}
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
-		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-		$pathLib	= $env->getConfig()->get( 'path.scripts.lib' );
-		$language	= $env->getLanguage()->getLanguage();
-		$version	= $config->get( 'version' );
+	/**
+	 *	@todo		extract to future View_Helper_TinyMCE
+	 */
+	static public function load( $env ){
+		if( self::$loaded )
+			return;
 
-		$context->js->addUrl( $pathLib.'tinymce/'.$version.'/tinymce.min.js' );
+		$page		= $env->getPage();
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
+
+		$sourceUri	= $pathLocal.'tinymce/';
+		if( $config->get( 'cdn' ) )
+			$sourceUri	= rtrim( $config->get( 'cdn' ), '/' ).'/';
+
+		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
 		if( $language !== "en" )
-			$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' );
-		$context->js->addUrl( $pathJs.'TinyMCE.Config.js' );
+			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
+		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
+		self::$loaded	= TRUE
+	}
+
+	/**
+	 *	@todo		extract to future View_Helper_TinyMCE
+	 */
+	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+		self::load( $env );
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
 		$baseUrl	= $env->url;
 		if( $env->getModules()->has( 'Resource_Frontend' ) )
@@ -71,7 +92,6 @@ tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
 			if(settings.JS_TinyMCE.auto_tools)
 				options.tools = settings.JS_TinyMCE.auto_tools;
 			tinymce.init(tinymce.Config.apply(options));
-//console.log(options);
 		}
 	}';
 			$context->js->addScriptOnReady( $script );
