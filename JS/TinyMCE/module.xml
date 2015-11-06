@@ -95,7 +95,7 @@
 		<script>tinymce/langs/de.js</script>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
-		<file>licenses/TinyMCE.txt</script>
+		<file>licenses/TinyMCE.txt</file>
 	</files>
 	<config type="boolean" protected="no" name="auto">yes</config>
 	<config type="integer" protected="no" name="auto.height">460</config>
