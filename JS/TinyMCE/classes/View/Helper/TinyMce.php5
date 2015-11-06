@@ -1,5 +1,5 @@
 <?php
-class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstract{
+class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public $list		= array();
 	public $listImages	= array();
@@ -78,7 +78,7 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		}
 
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
-			$helper	= new View_Helper_TinyMceResourceLister( $env );
+			$helper	= new View_Helper_TinyMce( $env );
 			$script	= '
 tinymce.Config.languages = "'.join( ',', $languages ).'";
 tinymce.Config.envUri = "'.$env->url.'";

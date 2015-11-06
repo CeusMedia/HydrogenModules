@@ -8,7 +8,7 @@
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
-		<class>View/Helper/TinyMceResourceLister.php5</class>
+		<class>View/Helper/TinyMce.php5</class>
 		<style source="theme">tinymce.css</style>
 		<style source="theme">tinymce.content.css</style>
 		<script>TinyMCE.Config.js</script>
@@ -110,5 +110,5 @@
 	<relations>
 		<supports type="module">Resource_Frontend</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMceResourceLister::___onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMce::___onPageApplyModules</hook>
 </module>
