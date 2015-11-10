@@ -54,7 +54,9 @@ return '
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">
-						<div id="mission-content-html" class="mission-content"></div>
+						<div id="mission-content-html" class="mission-content">
+							<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+						</div>
 					</div>
 				</div>
 			</div>

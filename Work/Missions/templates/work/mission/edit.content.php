@@ -1,5 +1,8 @@
 <?php
 
+if( strtoupper( $format ) === "HTML" )
+	return '';
+
 $w	= (object) $words['edit'];
 
 $panelContentSplitted	= '
@@ -9,7 +12,8 @@ $panelContentSplitted	= '
 			<div class="content-panel-inner">
 				<form>
 					<h3>Editor</h3>
-					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+					<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 					<p>
 						<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
 					</p>
@@ -30,43 +34,31 @@ $panelContentSplitted	= '
 </div>';
 
 /*
-<!--	<fieldset>
-		<legend>Beschreibung / Mitschrift</legend>
-		<div class="row-fluid">
-			<div class="span12">
--->				<div class="tabbable">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab">Ansicht</a></li>
-						<li><a href="#tab2" data-toggle="tab">Editor</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab1">
-							<div id="content-editor">
-								<div id="mission-content-html"></div>
-							</div>
-						</div>
-						<div class="tab-pane" id="tab2">
-							<div id="mirror-container">
-<!--							<label for="input_content">'.$w->labelContent.'</label>-->
-								<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-								<p>
-									<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-<!--			</div>
+$panelContentTabs = '
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab1" data-toggle="tab">Ansicht</a></li>
+		<li><a href="#tab2" data-toggle="tab">Editor</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab1">
+			<div id="content-editor">
+				<div id="mission-content-html"></div>
+			</div>
 		</div>
-	</fieldset>
---></form>
-*/
+		<div class="tab-pane" id="tab2">
+			<div id="mirror-container">
+<!--			<label for="input_content">'.$w->labelContent.'</label>-->
+				<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+				<p>
+					<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>';*/
 
-return $panelContentSplitted.'
-<script>
-$(document).ready(function(){
-	WorkMissionsEditor.mission = '.json_encode( $mission ).';
-	WorkMissionsEditor.init('.(int) $mission->missionId.');
-});
-</script>';
+return $panelContentSplitted;
+/*return $panelContentTabs;*/
+
 ?>

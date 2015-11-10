@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.10</version>
+	<version>0.9.13</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -57,6 +57,9 @@ code>
 	<log version="0.9.8">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.9.9">Replace modules UI:JS:cmFormChange and UI:JS:cmFormOptionals by JS:Form:Changes and JS:Form:Optionals.</log>
 	<log version="0.9.10">Add relation to module Members and order relations.</log>
+	<log version="0.9.11">Use TinyMCE as editor and allow user to change to Markdown.</log>
+	<log version="0.9.12">Extend database model by content format.</log>
+	<log version="0.9.13">Improve module configuration locales.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -139,6 +142,10 @@ code>
 		<needs type="module">UI_Indicator</needs>
 		<needs type="module">UI_Markdown</needs>
 	</relations>
+<!--	<config protected="user" type="integer" name="editor.height" title="height of content editor in px">460</config>-->
+	<config protected="no" type="string" name="editor.TinyMCE.toolbar">minimal</config>
+	<config protected="no" type="boolean" name="editor.TinyMCE.menubar">no</config>
+	<config protected="user" type="string" name="format" values="HTML,Markdown">HTML</config>
 	<config protected="user" type="boolean" name="mail.active">no</config>
 	<config protected="user" type="boolean" name="mail.html">yes</config>
 	<config protected="user" type="boolean" name="mail.daily">yes</config>
@@ -185,6 +192,7 @@ CREATE TABLE `<%?prefix%>missions` (
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
   `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
   `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
@@ -194,7 +202,9 @@ CREATE TABLE `<%?prefix%>missions` (
   KEY `workerId` (`workerId`),
   KEY `creatorId` (`creatorId`),
   KEY `modifierId` (`modifierId`),
-  KEY `projectId` (`projectId`)
+  KEY `projectId` (`projectId`),
+  KEY `title` (`index`)
+  KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
@@ -282,6 +292,12 @@ ALTER TABLE `<%?prefix%>mission_versions`
 
 ALTER TABLE `<%?prefix%>mission_versions`
   MODIFY `missionVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT;
+]]></sql>
+	<sql on="update" type="mysql" version="0.9.12"><![CDATA[
+ALTER TABLE  `missions` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'Markdown' AFTER  `location` ,
+ADD INDEX (  `title` ) ,
+ADD INDEX (  `format` ) ;
+ALTER TABLE  `missions` CHANGE  `format`  `format` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  'HTML';
 ]]></sql>
 	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
