@@ -109,6 +109,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 		$this->useIssues	= $this->env->getModules()->has( 'Manage_Issues' );
+		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
 		$this->userId		= $this->session->get( 'userId' );
 		$this->userRoleId	= $this->session->get( 'roleId' );
@@ -126,6 +127,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'useProjects', $this->useProjects );
+		$this->addData( 'useTimer', $this->useTimer );
 		$this->addData( 'useIssues', $this->useIssues );
 		$this->addData( 'acl', $this->acl );
 		$this->addData( 'userId', $this->userRoleId );
