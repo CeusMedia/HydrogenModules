@@ -29,40 +29,31 @@ $panelContentSplitted	= '
 	</div>
 </div>';
 
-/*
-<!--	<fieldset>
-		<legend>Beschreibung / Mitschrift</legend>
-		<div class="row-fluid">
-			<div class="span12">
--->				<div class="tabbable">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab">Ansicht</a></li>
-						<li><a href="#tab2" data-toggle="tab">Editor</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab1">
-							<div id="content-editor">
-								<div id="mission-content-html"></div>
-							</div>
-						</div>
-						<div class="tab-pane" id="tab2">
-							<div id="mirror-container">
-<!--							<label for="input_content">'.$w->labelContent.'</label>-->
-								<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-								<p>
-									<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-<!--			</div>
-		</div>
-	</fieldset>
---></form>
-*/
 
-return $panelContentSplitted.'
+$panelContentTabbed	= '
+<ul class="nav nav-tabs">
+	<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
+	<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
+</ul>
+<div class="tab-content">
+	<div class="tab-pane active" id="tab1">
+		<div id="mirror-container">
+			<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+			<p>
+				<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+			</p>
+		</div>
+	</div>
+	<div class="tab-pane" id="tab2">
+		<div id="content-editor">
+			<div id="mission-content-html"></div>
+		</div>
+	</div>
+</div>
+';
+
+
+return /*$panelContentSplitted*/$panelContentTabbed.'
 <script>
 $(document).ready(function(){
 	WorkMissionsEditor.mission = '.json_encode( $mission ).';

@@ -77,7 +77,7 @@ var WorkMissionsEditor = {
 		//  @link   http://trentrichardson.com/examples/timepicker/
 		timeInputs.timepicker({});
 //		$("#input_type").trigger("change");
-		
+
 		dateInputs.add(timeInputs).bind("change", WorkMissionsEditor.sanitizeDateAndTime);
 
 		this.bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
@@ -95,9 +95,10 @@ var WorkMissionsEditor = {
 //			theme: "neat",
 			theme: "elegant",
 			mode: "markdown",
-//			viewportMarin: "Infinity",
 			fixedGutter: true,
 		});
+//		WorkMissionsEditor.mirror.setSize("100%",600);
+
 		WorkMissionsEditor.textarea.bindWithDelay("keyup", function(){
 			if(WorkMissionsEditor.missionId){
 				WorkMissionsEditor.markdown.css({opacity: 0.5});
@@ -125,6 +126,13 @@ var WorkMissionsEditor = {
 		});
 		WorkMissionsEditor.renderContent();
 	},
+	realHeight: function(obj){
+		var clone = obj.clone().css("visibility", "hidden");
+		$('body').append(clone);
+		var height = clone.outerHeight();
+		clone.remove();
+		return height;
+	},
 	renderContent: function(){
 		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
 		WorkMissionsEditor.markdown.css({opacity: 0.5});
@@ -139,8 +147,19 @@ var WorkMissionsEditor = {
 		});
 	},
 	resizeInput: function(){
-		var height =  Math.max(WorkMissionsEditor.markdown.height()-30, 160);
-		WorkMissionsEditor.mirror.setSize("100%", height);
+		var height = WorkMissionsEditor.markdown.height();
+		var length = WorkMissionsEditor.markdown.html().length;
+		if(!height && length){
+			var clone = WorkMissionsEditor.markdown.clone().css("visibility", "hidden");
+			$('body').append(clone);
+			var height = clone.outerHeight();
+			clone.remove();
+		}
+		var maxHeight = Math.ceil($(window).height()/2);
+		var height =  Math.min(maxHeight, height);
+		height = Math.max(height-30, 160);
+		WorkMissionsEditor.markdown.css("max-height", maxHeight);
+		WorkMissionsEditor.mirror.setSize("99.5%", height);
 	},
 	sanitizeDateAndTime: function(event){
 		var typeValue = parseInt($("#input_type").val(), 10);
