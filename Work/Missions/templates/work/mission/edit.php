@@ -92,11 +92,24 @@ $buttonView		= UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->mi
 $buttonSave		= UI_HTML_Elements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-primary' );
 $buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-mini' );
 
+$fieldContent	= '';
+if( strtoupper( $format ) === "HTML" ){
+	$fieldContent	= '
+<div class="row-fluid">
+	<div class="span12">
+		<label for="input_content">'.$w->labelContent.'</label>
+		<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+		<textarea id="input_content" name="content" rows="14" class="span12 TinyMCE-minimal" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+	</div>
+</div>';
+}
+
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/mission/edit/'.$mission->missionId.'" method="post" class="form-changes-auto">
+			<input type="hidden" name="format" value="'.htmlentities( $mission->format, ENT_QUOTES, 'UTF-8' ).'"/>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
@@ -169,6 +182,7 @@ $panelEdit	= '
 					<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
+			'.$fieldContent.'
 			<div class="buttonbar">
 				'.$checkInform.'
 				'.$buttonCancel.'
@@ -235,5 +249,12 @@ return '
 <div class="row-fluid">
 	<div class="span12">
 	</div>
-</div>';
+</div>
+<script>
+$(document).ready(function(){
+	WorkMissionsEditor.mission = '.json_encode( $mission ).';
+	WorkMissionsEditor.init('.(int) $mission->missionId.');
+});
+</script>
+';
 ?>

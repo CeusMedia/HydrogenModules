@@ -1,11 +1,16 @@
-#manageMyUserModuleSettings .changed {
+#manageMyUserModuleSettings div.changed,
+#manageMyUserModuleSettings .changed input,
+#manageMyUserModuleSettings .changed select,
+#manageMyUserModuleSettings .changed textarea {
 	background-color: #DFFFDF; 
 	}
 #manageMyUserModuleSettings .modified {
 	background-color: #FFFFBF; 
 	}
+#manageMyUserModuleSettings div.input-append,
 #manageMyUserModuleSettings div.input input,
-#manageMyUserModuleSettings div.input-append {
+#manageMyUserModuleSettings div.input select,
+#manageMyUserModuleSettings div.input textarea {
 	margin-bottom: 0px;
 	}
 #manageMyUserModuleSettings div.input {
@@ -25,5 +30,5 @@
 	}
 #manageMyUserModuleSettings div.setting-label {
 	padding-top: 6px;
-	height: 24px;
+/*	height: 24px;*/
 	}

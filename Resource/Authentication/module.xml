@@ -110,7 +110,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="yes" type="string" name="logout.forward.path"></config>
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="no" type="boolean" name="register">yes</config>
-	<config protected="user" type="boolean" name="session.refresh">yes</config>
+	<config protected="no" type="boolean" name="session.refresh">yes</config>
 	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
 	<relations>
 		<needs type="module">Resource_Users</needs>

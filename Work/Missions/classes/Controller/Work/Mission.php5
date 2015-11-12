@@ -11,44 +11,6 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
-	public function diff(){
-
-	$text1	= '### Überschrift
-
-- First
-- Second
-- Third
-
-Some old annotions...
-
-';
-
-	$text2	= '### Überschrift
-
-#### Subheading
-Now, there is some text.
-
-#### List
-
-- <del>First</del>
-- Third
-';
-
-		$text1	= View_Helper_Markdown::transformStatic( $this->env, $text1 );
-		$text2	= View_Helper_Markdown::transformStatic( $this->env, $text2 );
-
-		$diff	= new View_Helper_HtmlDiff( $this->env, $text1, $text2 );
-		$diff	= $diff->render();
-
-		$page	= new UI_HTML_PageFrame();
-		$page->setBaseHref( $this->env->url );
-		$page->addStylesheet( 'http://cdn.int1a.net/css/bootstrap.min.css' );
-		$page->addStylesheet( './themes/custom/css/module.ui.helper.html.diff.css' );
-		$page->addBody( $diff );
-		print $page->build();
-		exit;
-	}
-
 	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
 		try{
 //			if( !$this->request->isAjax() )
@@ -107,6 +69,8 @@ Now, there is some text.
 	protected $userMap			= array();
 	protected $userId;
 	protected $userRoleId;
+	protected $moduleConfig;
+	protected $contentFormat;
 
 	protected $defaultFilterValues	= array(
 		'mode'		=> 'now',
@@ -149,6 +113,9 @@ Now, there is some text.
 		$this->userId		= $this->session->get( 'userId' );
 		$this->userRoleId	= $this->session->get( 'roleId' );
 
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.work_missions.', TRUE );
+		$this->contentFormat	= $this->moduleConfig->get( 'format' );
+
 //		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
@@ -157,6 +124,7 @@ Now, there is some text.
 		foreach( $model->getAll() as $user )
 			$this->userMap[$user->userId]	= $user;
 
+		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'useProjects', $this->useProjects );
 		$this->addData( 'useIssues', $this->useIssues );
 		$this->addData( 'acl', $this->acl );
@@ -243,7 +211,6 @@ Now, there is some text.
 	 *	@return		void
 	 */
 	public function add( $copyFromMissionId = NULL ){
-		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'add' );
 
 		if( !$this->isEditor ){
@@ -266,6 +233,7 @@ Now, there is some text.
 		$status		= $this->request->get( 'status' );
 		$dayStart	= !$this->request->get( 'type' ) ? $this->request->get( 'dayWork' ) : $this->request->get( 'dayStart' );
 		$dayEnd		= !$this->request->get( 'type' ) ? $this->request->get( 'dayDue' ) : $this->request->get( 'dayEnd' );
+		$format		= $this->request->get( 'format' ) ? $this->request->get( 'format' ) : $this->contentFormat;
 
 		if( $this->request->has( 'add' ) ){
 			if( !$title )
@@ -287,9 +255,10 @@ Now, there is some text.
 					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
 					'location'			=> $this->request->get( 'location' ),
 					'reference'			=> $this->request->get( 'reference' ),
+					'format'			=> $format,
 					'createdAt'			=> time(),
 				);
-				$missionId	= $this->model->add( $data );
+				$missionId	= $this->model->add( $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
 				$this->restart( './work/mission/view/'.$missionId );
@@ -308,12 +277,15 @@ Now, there is some text.
 			$mission['dayStart']	= date( 'Y-m-d' );
 		if( !$mission['dayEnd'] )
 			$mission['dayEnd']		= date( 'Y-m-d' );
+		if( !$mission['format'] )
+			$mission['format']		= $this->contentFormat;
 
 		$mission['minutesProjected']	= $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) );
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'day', (int) $this->session->get( $this->filterKeyPrefix.'day' ) );
+		$this->addData( 'format', $this->contentFormat );
 
 		if( $this->useProjects )
 			$this->addData( 'userProjects', $this->userProjects );
@@ -517,7 +489,6 @@ Now, there is some text.
 
 	public function edit( $missionId ){
 		$this->checkIsEditor( $missionId );
-		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'edit' );
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
@@ -546,6 +517,7 @@ Now, there is some text.
 			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork' ) );
 			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
 		}
+		$format		= $this->request->get( 'format' ) ? $this->request->get( 'format' ) : $this->contentFormat;
 
 		if( $this->request->get( 'edit' ) ){
 			if( !$title )
@@ -556,9 +528,8 @@ Now, there is some text.
 					'projectId'			=> (int) $this->request->get( 'projectId' ),
 					'type'				=> (int) $this->request->get( 'type' ),
 					'priority'			=> (int) $this->request->get( 'priority' ),
-					'title'				=> $title,
-//					'content'			=> $this->request->get( 'content' ),
 					'status'			=> (int) $this->request->get( 'status' ),
+					'title'				=> $title,
 					'dayStart'			=> $dayStart,
 					'dayEnd'			=> $dayEnd,
 					'timeStart'			=> $this->request->get( 'timeStart' ),
@@ -569,9 +540,13 @@ Now, there is some text.
 //					'hoursRequired'		=> $this->request->get( 'hoursRequired' ) ? $this->request->get( 'hoursRequired' ) : NULL,
 					'location'			=> $this->request->get( 'location' ),
 					'reference'			=> $this->request->get( 'reference' ),
+					'format'			=> $format,
 					'modifiedAt'		=> time(),
 					'modifierId'		=> $this->userId,
 				);
+				if( /*strtoupper( $format ) == "HTML" || */$this->request->has( 'content' ) )
+					$data['content']	= $this->request->get( 'content' );
+
 				$this->model->edit( $missionId, $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				if( $this->request->get( 'inform') )
@@ -597,6 +572,7 @@ Now, there is some text.
 			$this->addData( 'userProjects', $this->userProjects );
 		}
 		$this->addData( 'missionUsers', $missionUsers );
+		$this->addData( 'format', $mission->format ? $mission->format : $this->contentFormat );
 
 		if( $this->useIssues ){
 			$this->env->getLanguage()->load( 'work/issue' );
@@ -656,11 +632,7 @@ Now, there is some text.
 //		$this->request->isAjax() ? exit : $this->restart( '', TRUE );
 	}
 
-
 	protected function getFilteredMissions( $userId, $additionalConditions = array(), $limit = 0, $offset = 0 ){
-//		$config			= $this->env->getConfig();
-//		$userId			= $this->session->get( 'userId' );
-
 		$query		= $this->session->get( $this->filterKeyPrefix.'query' );
 		$types		= $this->session->get( $this->filterKeyPrefix.'types' );
 		$priorities	= $this->session->get( $this->filterKeyPrefix.'priorities' );
@@ -689,8 +661,6 @@ Now, there is some text.
 			$conditions['projectId']	= $projects;												//  apply project conditions
 		foreach( $additionalConditions as $key => $value )
 			$conditions[$key]			= $value;
-#print_m( $conditions );
-#die;
 		$limits	= array();
 		if( $limit !== NULL && (int) $limit >= 10 ){
 			$limits	= array( abs( $offset ), $limit );
@@ -761,7 +731,6 @@ Now, there is some text.
 		if( $mode !== 'now' )
 			$this->restart( './work/mission/'.$mode );
 
-		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'index' );
 
 		if( $this->request->has( 'view' ) )
@@ -911,7 +880,6 @@ Now, there is some text.
 	}
 
 	public function view( $missionId ){
-		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'edit' );
 
 		$mission	= $this->model->get( $missionId );

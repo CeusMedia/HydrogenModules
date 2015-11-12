@@ -1,5 +1,8 @@
 <?php
 
+if( strtoupper( $format ) === "HTML" )
+	return '';
+
 $w	= (object) $words['edit'];
 
 $panelContentSplitted	= '
@@ -9,7 +12,8 @@ $panelContentSplitted	= '
 			<div class="content-panel-inner">
 				<form>
 					<h3>Editor</h3>
-					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+					<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 					<p>
 						<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
 					</p>
@@ -49,15 +53,8 @@ $panelContentTabbed	= '
 			<div id="mission-content-html"></div>
 		</div>
 	</div>
-</div>
-';
+</div>';
 
-
-return /*$panelContentSplitted*/$panelContentTabbed.'
-<script>
-$(document).ready(function(){
-	WorkMissionsEditor.mission = '.json_encode( $mission ).';
-	WorkMissionsEditor.init('.(int) $mission->missionId.');
-});
-</script>';
+return $panelContentTabs;
+return $panelContentSplitted;
 ?>

@@ -31,6 +31,17 @@ if( $useProjects ){
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
 
+$fieldContent	= '';
+if( strtoupper( $format ) == "HTML" ){
+	$fieldContent	= '
+	<div class="row-fluid">
+		<div class="span12">
+			<label for="input_content">'.$w->labelContent.'</label>
+			<textarea id="input_content" name="content" rows="4" class="span12 TinyMCE">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+		</div>
+	</div>';
+}
+
 $panelAdd	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->legend.'</h3>
@@ -101,6 +112,7 @@ $panelAdd	= '
 				<input type="text" name="reference" id="input_reference" class="span12 -max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 		</div>
+		'.$fieldContent.'
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
 			<button type="submit" name="add" class="btn btn-success"><i class="icon-ok-circle icon-white"></i> '.$w->buttonSave.'</button>
@@ -111,7 +123,9 @@ $panelAdd	= '
 </div>
 ';
 
-$panelContent	= '
+$panelContent	= '';
+if( strtoupper( $format ) === "MARKDOWN" ){
+	$panelContent	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="content-panel content-panel-form">
@@ -132,13 +146,14 @@ $panelContent	= '
 				</div>
 			</div>
 		</div>
-	</div>
-';
+	</div>';
+}
 
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
 return '
 <form action="./work/mission/add" method="post" class="form-changes-auto">
+	<input type="hidden" name="format" value="'.htmlentities( $mission->format, ENT_QUOTES, 'UTF-8' ).'"/>
 	<div class="row-fluid">
 		<div class="span9">
 			'.$panelAdd.'

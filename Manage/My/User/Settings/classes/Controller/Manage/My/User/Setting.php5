@@ -44,7 +44,8 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 				if( !$request->has( $key ) )														//  no value for current config pair is in form request
 					continue;																		//  so skip this one
 				$value		= $this->model->castValue( $config->type, $request->get( $key ) );		//  convert sent input value to type of config value
-				if( preg_match( "/password$/", $config->key ) && !strlen( trim( $value ) ) )		//  no newer password entered
+				if( preg_match( "/password$/", $config->key."|".$config->type ) )					//  pair is a password or pair key ends with 'password'
+					if( !strlen( trim( $value ) ) )													//  no newer password entered
 					continue;																		//  do not save empty password
 
 				$indices	= array(																//  prepare indices for search for user setting in database
@@ -56,9 +57,12 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 
 				if( $value === $config->value ){													//  new value matches config value
 					if( $setting )																	//  a user setting has been stored
+						//  @todo this line make no sense - check this and skip if equal!
 						$this->model->remove( $setting->userSettingId );							//  remove user setting from database
 				}
 				else{
+					if( substr_count( $value, "\n" ) )												//  multiple lines from textarea
+						$value	= str_replace( "\n", ",", $value );									//  combine to comma separated
 					if( in_array( $config->type, array( 'bool', 'boolean' ) ) )						//  type of config value is boolean
 						$value	= (int) $value;														//  convert to integer for database
 					if( in_array( $config->type, array( 'integer', 'float' ) ) && $config->values ){	//  type of  config value is a number
