@@ -33,11 +33,11 @@ $panelContentSplitted	= '
 	</div>
 </div>';
 
-
 $panelContentTabbed	= '
 <ul class="nav nav-tabs">
 	<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
 	<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
+	<li><a href="#tab3" data-toggle="tab">Konvertieren</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane active" id="tab1">
@@ -53,8 +53,31 @@ $panelContentTabbed	= '
 			<div id="mission-content-html"></div>
 		</div>
 	</div>
+	<div class="tab-pane" id="tab3">
+		<div class="row-fluid">
+			<div class="span6">
+				<p>
+					Diese Beschreibung ist im <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>-Format.
+					Alternativ dazu kann dieser Text auch mit einem HTML-Editor bearbeitet werden.
+				</p>
+				<p>
+					Dazu kann man diese Beschreibung von Markdown in HTML.
+					Bei zukünftigen Veränderungen wird immer der HTML-Editor angezeigt.
+					Das betrifft auch ggfs. Andere, die diesen Eintrag bearbeiten können.
+				</p>
+			</div>
+			<div class="span6">
+				<div class="alert alert-danger">
+					<b>Achtung: </b>Dieser Vorgang kann nicht rückgängig gemacht werden.<br/>
+				</div>
+				<p>
+					<a href="./work/mission/convertContent/'.$mission->missionId.'/markdown/html" class="btn btn-inverse">Konvertieren: Markdown -> HTML</a>
+				</p>
+			</div>
+		</div>
+	</div>
 </div>';
 
-return $panelContentTabs;
+return $panelContentTabbed;
 return $panelContentSplitted;
 ?>

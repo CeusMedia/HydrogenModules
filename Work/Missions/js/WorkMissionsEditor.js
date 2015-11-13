@@ -127,7 +127,7 @@ var WorkMissionsEditor = {
 		}
 		var maxHeight = Math.ceil($(window).height()/2);
 		var height =  Math.min(maxHeight, height);
-		height = Math.max(height-30, 160);
+		height = Math.max(height - 19, 160);
 		WorkMissionsEditor.markdown.css("max-height", maxHeight);
 		WorkMissionsEditor.mirror.setSize("99.5%", height);
 	},

@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.14</version>
+	<version>0.9.20</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -61,6 +61,12 @@ code>
 	<log version="0.9.12">Extend database model by content format.</log>
 	<log version="0.9.13">Improve module configuration locales.</log>
 	<log version="0.9.14">Use module Work:Timer only if available.</log>
+	<log version="0.9.15">Switch to tabbed Markdown editor and viewer.</log>
+	<log version="0.9.16">Fix Markdown rendering in add view.</log>
+	<log version="0.9.17">Add converter from Markdown to HTML.</log>
+	<log version="0.9.18">Improve editor height calculation and dynamics.</log>
+	<log version="0.9.19">Use helper of Work:Timer to render work hours spans.</log>
+	<log version="0.9.20">Show tracked work hours in mission view.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -204,7 +210,7 @@ CREATE TABLE `<%?prefix%>missions` (
   KEY `creatorId` (`creatorId`),
   KEY `modifierId` (`modifierId`),
   KEY `projectId` (`projectId`),
-  KEY `title` (`index`)
+  KEY `title` (`title`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

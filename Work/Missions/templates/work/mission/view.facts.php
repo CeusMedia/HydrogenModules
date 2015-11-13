@@ -44,7 +44,78 @@ $iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-
 $iconEdit			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
 $iconCopy			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
 
+/*
+$helper			= new View_Helper_TimePhraser( $env );
+function renderDateTimePhrase( $helper, $date, $time = NULL ){
+	$stampStart		= strtotime( $date.' '.$time );
+	$futureStart	= $stampStart > time();
+	$prefixStart	= $futureStart ? 'in ' : 'vor ';
+	$phraseStart	= $prefixStart.$helper->convert( $stampStart );
+	$dateStart		= date( "d.m.Y" ).( $time ? ' '.$time : '' );
+	$labelStart		= $phraseStart.' <small class="muted">('.$dateStart.')</small>';
+	return $labelStart;
+}
+
+$dateTimeStart	= renderDateTimePhrase( $helper, $mission->dayStart, $mission->timeStart );
+$dateTimeEnd	= renderDateTimePhrase( $helper, $mission->dayEnd, $mission->timeEnd );
+//$dateTimeStart	= renderDateTimePhrase( $helper, $mission->dayStart, $mission->timeStart );
+*/
+/*
+$stampStart		= strtotime( $mission->dayStart.' '.$mission->timeStart );
+$futureStart	= $stampStart > time();
+$prefixStart	= $futureStart ? 'in ' : 'vor ';
+$phraseStart	= $prefixStart.$helper->convert( $stampStart );
+$dateStart		= date( "d.m.Y" ).( $mission->timeStart ? ' '.$mission->timeStart : '' );
+$labelStart		= $phraseStart.' <small class="muted">('.$dateStart.')</small>';
+print_m( $stampStart );
+xmp( $phraseStart );
+xmp( $dateStart );
+xmp( $labelStart );
+die;
+*/
+
+function renderDuration( $minutes, $useTimerHelper = FALSE ){
+	if( $useTimerHelper )
+		return View_Helper_Work_Time::formatSeconds( $minutes * 60 );
+	$hours	= floor( $minutes / 60 );
+	$mins	= floor( $minutes - $hours * 60 );
+	return $hours.':'.str_pad( $mins, 2, 0, STR_PAD_LEFT );
+}
+
+/*  --  FACTS: PROJECTED, TRACKED AND REQUIRED TIME */
+$list	= array();
+$totalMinsProjected	= $hoursProjected * 60 + $minutesProjected;
+$totalMinsRequired	= $hoursRequired * 60 + $minutesRequired;
+$totalMinsTracked	= 0;
+if( $useTimer ){
+	$totalMinsTracked	= floor( View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId ) / 60 );
+//	$totalMinsRequired	= max( $totalMinsTracked, $totalMinsRequired );
+}
+
+$isOverrunRequired	= $totalMinsProjected && $totalMinsRequired > $totalMinsProjected || $totalMinsTracked && $totalMinsRequired > $totalMinsTracked;
+$isOverrunTracked	= $totalMinsProjected && $totalMinsTracked > $totalMinsProjected;
+
+
+if( $totalMinsProjected )
+	$list[]	= UI_HTML_Tag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), array() );
+if( $totalMinsTracked )
+	$list[]	= UI_HTML_Tag::create( 'dd', 'erfasst: '.renderDuration( $totalMinsTracked, $useTimer ), array(
+		'class' => $isOverrunTracked ? 'warning' : NULL,
+	) );
+if( $totalMinsRequired )
+	$list[]	= UI_HTML_Tag::create( 'dd', 'benötigt: '.renderDuration( $totalMinsRequired, $useTimer ), array(
+		'class' => $isOverrunRequired ? 'warning' : NULL,
+	) );
+$factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
+
+
 return '
+<style>
+dl dd.warning {
+	color: red;
+	font-weight: bold;
+	}
+</style>
 <div class="row-fluid">
 	<div class="span12">
 		<h3><span class="muted">'.$words['types'][$mission->type].': </span> '.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'</h3>
@@ -53,7 +124,7 @@ return '
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div style="float: left; width: 50%">
-						<dl class="not-dl-horizontal">
+						<dl class="dl-horizontal">
 							<dt>'.$w->labelProjectId.'</dt>
 							<dd>'.$project.'</dd>
 							<dt>'.$w->labelType.'</dt>
@@ -62,21 +133,23 @@ return '
 							<dd>'.$priority.'</dd>
 							<dt>'.$w->labelStatus.'</dt>
 							<dd>'.$status.'</dd>
-							<dt>'.$w->labelDayStart.' / '.$w->labelTimeStart.'</dt>
+							<dt>'.$w->labelDayStart.' <small class="muted">/ '.$w->labelTimeStart.'</small></dt>
+<!--							<dd>'./*$dateTimeStart.*/'</dd>-->
 							<dd>'.date( "d.m.Y", strtotime( $mission->dayStart ) ).' '.$mission->timeStart.'</dd>
-							<dt>'.$w->labelDayEnd.' / '.$w->labelTimeEnd.'</dt>
+							<dt>'.$w->labelDayEnd.' <small class="muted">/ '.$w->labelTimeEnd.'</small></dt>
 							<dd>'.( $mission->dayEnd ? date( "d.m.Y", strtotime( $mission->dayEnd ) ) : "" ).' '.$mission->timeEnd.'</dd>
-							<dt>'.$w->labelHours.'</dt>
-							<dd>geplant: '.$hoursProjected.':'.$minutesProjected.'</dd>
-							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>
-							<dt>'.$w->labelLocation.'</dt>
+							'.$factHours.'
+<!--							<dt>'.$w->labelHours.'</dt>
+							<dd>geplant: '.( (int) $hoursProjected || (int) $minutesProjected ? $hoursProjected.':'.$minutesProjected : '-' ).'</dd>
+							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>-->
+<!--							<dt>'.$w->labelLocation.'</dt>
 							<dd>'.htmlentities( $mission->location ? $mission->location : '-', ENT_QUOTES, 'UTF-8' ).'</dd>
 							<dt>'.$w->labelReference.'</dt>
-							<dd>'.htmlentities( $mission->reference ? $mission->reference : '-', ENT_QUOTES, 'UTF-8' ).'</dd>
+							<dd>'.htmlentities( $mission->reference ? $mission->reference : '-', ENT_QUOTES, 'UTF-8' ).'</dd>-->
 						</dl>
 					</div>
 					<div style="float: left; width: 50%">
-						<dl class="not-dl-horizontal">
+						<dl class="dl-horizontal">
 							<dt>erstellt am</dt>
 							<dd>'.date( "d.m.Y", $mission->createdAt ).'</dd>
 							<dt>'.$w->labelCreator.'</dt>
