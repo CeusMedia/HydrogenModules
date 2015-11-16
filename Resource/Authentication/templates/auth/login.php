@@ -110,7 +110,7 @@ HTML::DivClass( "content-panel content-panel-form", array(
 
 return HTML::DivClass( "auth-login-text-top", $textTop ).
 HTML::DivClass( "row-fluid", array(
-	HTML::DivClass( "span4 offset1",
+	HTML::DivClass( "span4 offset2",
 		$panelLogin
 	),
 	HTML::DivClass( "span6",

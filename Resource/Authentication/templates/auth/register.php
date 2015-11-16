@@ -192,7 +192,7 @@ $formUrl	= "./auth/register".( $from ? '?from='.$from : '' );
 return HTML::DivClass( "auth-register-text-top", $textTop ).
 HTML::Form( $formUrl, "form_auth_register_user",
 	HTML::DivClass( 'row-fluid', array(
-		HTML::DivClass( 'span6 offset1', $panelUser ),
+		HTML::DivClass( 'span8 offset0', $panelUser ),
 		HTML::DivClass( 'span4', $textInfo ),
 	) )
 ).HTML::DivClass( "auth-register-text-bottom", $textBottom );
