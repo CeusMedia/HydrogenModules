@@ -59,16 +59,16 @@
 	<config protected="yes" type="boolean" name="load" values="all,core">all</config>
 	<config protected="yes" type="string" name="load.addons"></config>
 	<config protected="yes" type="string" name="load.extensions"></config>
-	<hook type="event" resource="Page" event="onBuild"><![CDATA[
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config	= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
 $pathJs	= $env->getConfig()->get( 'path.scripts' );
 if( $config->get( 'load' ) == "all" ){
 	$context->js->addUrl( $pathJs.'jquery.mmenu.all.min.js' );	
-	$context->addThemeStyle( 'jquery.menu.all.css' );
+	$context->addThemeStyle( 'jquery.mmenu.all.css' );
 }
 else{
 	$context->js->addUrl( $pathJs.'jquery.mmenu.min.js' );	
-	$context->addThemeStyle( 'jquery.menu.css' );
+	$context->addThemeStyle( 'jquery.mmenu.css' );
 }
 ]]></hook>
 </module>
