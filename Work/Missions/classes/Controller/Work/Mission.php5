@@ -109,6 +109,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 		$this->useIssues	= $this->env->getModules()->has( 'Manage_Issues' );
+		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
 		$this->userId		= $this->session->get( 'userId' );
 		$this->userRoleId	= $this->session->get( 'roleId' );
@@ -126,6 +127,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'useProjects', $this->useProjects );
+		$this->addData( 'useTimer', $this->useTimer );
 		$this->addData( 'useIssues', $this->useIssues );
 		$this->addData( 'acl', $this->acl );
 		$this->addData( 'userId', $this->userRoleId );
@@ -224,7 +226,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
 			foreach( $mission as $key => $value )
-				if( !in_array( $key, array( 'dayStart', 'dayEnd', 'status', 'created' ) ) )
+				if( !in_array( $key, array( 'dayStart', 'dayEnd', 'status', 'createdAt', 'modifiedAt' ) ) )
 					$this->request->set( $key, $value );
 			$this->request->set( 'dayStart', date( 'Y-m-d' ) );
 		}
@@ -285,7 +287,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $this->userMap );
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'day', (int) $this->session->get( $this->filterKeyPrefix.'day' ) );
-		$this->addData( 'format', $this->contentFormat );
+		$this->addData( 'format', $format );
 
 		if( $this->useProjects )
 			$this->addData( 'userProjects', $this->userProjects );
@@ -485,6 +487,25 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		$this->messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
+	}
+
+	public function convertContent( $missionId, $formatIn, $formatOut ){
+		$this->checkIsEditor( $missionId );
+		$words			= (object) $this->getWords( 'edit' );
+		$mission		= $this->model->get( $missionId );
+		if( !$mission )
+			$this->messenger->noteError( $words->msgInvalidId );
+		if( strtoupper( $formatIn ) === "MARKDOWN" && strtoupper( $formatOut ) === "HTML" ){
+			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
+			$data	= array(
+				'content'		=> $content,
+				'format'		=> 'HTML',
+				'modifiedAt'	=> time(),
+				'modifierId'	=> $this->userId,
+			);
+			$this->model->edit( $missionId, $data, FALSE );
+		}
+		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 
 	public function edit( $missionId ){

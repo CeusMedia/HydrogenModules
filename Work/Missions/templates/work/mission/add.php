@@ -1,5 +1,6 @@
 <?php
 
+
 $w	= (object) $words['add'];
 
 $optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
@@ -13,7 +14,8 @@ $optPriority	= join( $optPriority );
 
 $optStatus	= array();
 foreach( $words['states'] as $key => $value )
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+	if( $key >= 0 && $key <= 3 )
+		$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus );
 
 $optWorker	= array();
@@ -37,7 +39,7 @@ if( strtoupper( $format ) == "HTML" ){
 	<div class="row-fluid">
 		<div class="span12">
 			<label for="input_content">'.$w->labelContent.'</label>
-			<textarea id="input_content" name="content" rows="4" class="span12 TinyMCE">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+			<textarea id="input_content" name="content" rows="14" class="span12 TinyMCE-minimal" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 		</div>
 	</div>';
 }
@@ -102,7 +104,7 @@ $panelAdd	= '
 				<input type="text" name="minutesProjected" id="input_minutesProjected" class="span10 -xs numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
 			</div>
 		</div>
-		<div class="row-fluid">
+<!--		<div class="row-fluid">
 			<div class="span5 -column-left-40">
 				<label for="input_location">'.$w->labelLocation.'</label>
 				<input type="text" name="location" id="input_location" class="span12 -max" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
@@ -111,7 +113,7 @@ $panelAdd	= '
 				<label for="input_reference">'.$w->labelReference.'</label>
 				<input type="text" name="reference" id="input_reference" class="span12 -max" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
-		</div>
+		</div>-->
 		'.$fieldContent.'
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
@@ -125,7 +127,8 @@ $panelAdd	= '
 
 $panelContent	= '';
 if( strtoupper( $format ) === "MARKDOWN" ){
-	$panelContent	= '
+
+	$panelContentSplitted	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<div class="content-panel content-panel-form">
@@ -142,11 +145,36 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 			<div class="content-panel content-panel-form">
 				<div class="content-panel-inner" style="min-height: 220px">
 					<h3>Ansicht</h3>
-					<div id="descriptionAsMarkdown"></div>
+					<div id="content-editor">
+						<div id="mission-content-html"></div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>';
+
+	$panelContentTabbed	= '
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
+		<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab1">
+			<div id="mirror-container">
+				<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+				<p>
+					<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+				</p>
+			</div>
+		</div>
+		<div class="tab-pane" id="tab2">
+			<div id="content-editor">
+				<div id="mission-content-html"></div>
+			</div>
+		</div>
+	</div>';
+
+	$panelContent	= $panelContentTabbed;
 }
 
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
@@ -169,6 +197,7 @@ return '
 //$(document).ready(function(){$("#input_title").focus()});
 $("body").addClass("uses-bootstrap");
 $(document).ready(function(){
+	WorkMissionsEditor.contentFormat = "'.$format.'";
 	WorkMissionsEditor.init(0);
 //	$("#input_type").trigger("change");
 //	$("#input_title").focus();

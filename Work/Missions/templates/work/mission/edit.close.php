@@ -8,9 +8,11 @@ if( $mission->status < 0 )
 
 
 $minutes	= $mission->minutesRequired;
-$seconds	= View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId );
-if( $seconds )
-	$minutes	= ceil( $seconds / 60 );
+if( $useTimer ){
+	$seconds	= View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId );
+	if( $seconds )
+		$minutes	= ceil( $seconds / 60 );
+}
 
 $hoursRequired		= floor( $minutes / 60 );
 $minutesRequired	= str_pad( $minutes - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
