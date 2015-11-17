@@ -39,6 +39,21 @@ body.navbar-fixed .visible-desktop #logo {
 body.navbar-fixed .hidden-desktop #logo {
 	left: 1em;
 	}
+body.navbar-fixed #layout-field {
+	margin-top: 41px;
+	}
+
+
+.navbar-fixed-top .navbar-inner,
+.navbar-fixed-bottom .navbar-inner{
+	padding:0px
+	}
+@media (max-width: 979px){
+	.navbar-fixed-top,
+	.navbar-fixed-bottom {
+		position: fixed;
+		}
+	}
 
 @media (max-width: 767px){
 	body.navbar-fixed .hidden-desktop .navbar-fixed-top,
@@ -48,18 +63,3 @@ body.navbar-fixed .hidden-desktop #logo {
 		margin-left: 0px;
 	}
 }
-html.mm-opening .mm-page,
-html.mm-opening #mm-blocker,
-html.mm-opening .mm-fixed-top,
-html.mm-opening .mm-fixed-bottom {
-	left: 300px;
-	}
-
-html.mm-opening div.mm-menu {
-	width: 300px;
-	}
-
-
-body.navbar-fixed #layout-field {
-	margin-top: 41px;
-	}
