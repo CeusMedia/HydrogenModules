@@ -8,29 +8,46 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 	protected $logoIcon;
 	protected $position				= "static";
 	protected $helperAccountMenu;
+	protected $helperNavigation;
 	protected $linksToSkip			= array();
 
 	public function render(){
 		$this->env->getPage()->addBodyClass( "navbar-".$this->position );
-		$helperNavbar	= new CMF_Hydrogen_View_Helper_Navigation_SingleAutoTabs( $this->env );
-		$helperNavbar->classContainer	= "navbar navbar-".$this->position."-top";
-		$helperNavbar->classWidget		= "navbar-inner";
-		$helperNavbar->classHelper		= "nav";
-		$helperNavbar->classTab			= "";
-		$helperNavbar->classTabActive	= "active";
-		$helperNavbar->setContainer( $this->container );
-		foreach( $this->linksToSkip as $path )
-			$helperNavbar->skipLink( $path );
 
-		if( $this->inverse )
-			$helperNavbar->classContainer	.= " navbar-inverse";
+		if( $this->helperNavigation ){
+			$this->helperNavigation->setInverse( $this->inverse );
+			$this->helperNavigation->setLinksToSkip( $this->linksToSkip );
+			$links	= $this->helperNavigation->render();
+
+			if( $this->container )
+				$links	= UI_HTML_Tag::create( 'div', $links, array( 'class' => 'container' ) );
+
+			$inner	= UI_HTML_Tag::create( 'div', $links, array( 'class' => 'navbar-inner' ) );
+			$class	= "navbar navbar-".$this->position."-top";
+			if( $this->inverse )
+				$class	.= ' navbar-inverse';
+			$links	= UI_HTML_Tag::create( 'div', $inner, array( 'class' => $class ) );
+		}
+		else{
+			$helperNavbar	= new CMF_Hydrogen_View_Helper_Navigation_SingleAutoTabs( $this->env );
+			$helperNavbar->classContainer	= "navbar navbar-".$this->position."-top";
+			$helperNavbar->classWidget		= "navbar-inner";
+			$helperNavbar->classHelper		= "nav";
+			$helperNavbar->classTab			= "";
+			$helperNavbar->classTabActive	= "active";
+			$helperNavbar->setContainer( $this->container );
+			foreach( $this->linksToSkip as $path )
+				$helperNavbar->skipLink( $path );
+			if( $this->inverse )
+				$helperNavbar->classContainer	.= " navbar-inverse";
+			$links			= $helperNavbar->render();
+		}
 
 		$inverse		= $this->inverse ? 'inverse' : '';
 
 		$accountMenu	= "";
 		if( $this->helperAccountMenu )
 			$accountMenu	= $this->helperAccountMenu->render( $inverse );
-		$links			= $helperNavbar->render();
 		$content		= $this->renderLogo().$links.$accountMenu;
 		if( $this->inverse )
 			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => 'inverse' ) );
@@ -54,6 +71,10 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 
 	public function setAccountMenuHelper( View_Helper_Navigation_Bootstrap_AccountMenu $helper ){
 		$this->helperAccountMenu	= $helper;
+	}
+
+	public function setNavigationHelper( $helper ){
+		$this->helperNavigation	= $helper;
 	}
 
 	public function setContainer( $boolean = NULL ){
