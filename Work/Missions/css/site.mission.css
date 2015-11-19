@@ -914,3 +914,16 @@ dl dd.max-y {
 	background-color: rgba(127, 127, 127, 0.05);
 	border: 1px solid rgba(127, 127, 127, 0.1);
 	}
+
+
+
+body.site-work-mission-edit dl.dl-horizontal dt {
+	width: 120px;
+	font-weight: lighter;
+	font-size: 0.85em;
+/*	text-transform: uppercase;*/
+	font-style: italic;
+	}
+body.site-work-mission-edit dl.dl-horizontal dd {
+	margin-left: 130px;
+	}
