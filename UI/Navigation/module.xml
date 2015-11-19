@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -12,6 +12,7 @@
 	<log version="0.2.5">Support page icons in reader and renderer.</log>
 	<log version="0.2.6">Extend to receive and transport settings to rendering helper classes.</log>
 	<log version="0.2.7">Make light or dark theme configurable.</log>
+	<log version="0.2.8">Add mobile navigation helper for jQuery mmenu.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
