@@ -10,11 +10,12 @@ var Auth = {
 	oneMinute: 60,
 	userId: 0,
 
-	init: function(userId){
+	init: function(userId, rememberUser){
 		Auth.userId = userId;
 		Auth.config	= settings.Resource_Authentication;
 		if(userId){
-			Auth.initAutoLogout();
+			if(rememberUser)
+				Auth.initAutoLogout();
 			Auth.initSessionRefresh();
 		}
 	},

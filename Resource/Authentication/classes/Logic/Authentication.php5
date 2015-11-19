@@ -12,16 +12,6 @@ class Logic_Authentication{
 		$this->modelRole	= new Model_Role( $env );
 	}
 
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new Logic_Authentication( $env );
-		return self::$instance;
-	}
-
-	public function isAuthenticated(){
-		return $this->env->getSession()->get( 'userId' );
-	}
-
 	public function getCurrentRole( $strict = TRUE ){
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -64,6 +54,16 @@ class Logic_Authentication{
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
+		return $this->env->getSession()->get( 'userId' );
+	}
+
+	static public function getInstance( $env ){
+		if( !self::$instance )
+			self::$instance	= new Logic_Authentication( $env );
+		return self::$instance;
+	}
+
+	public function isAuthenticated(){
 		return $this->env->getSession()->get( 'userId' );
 	}
 
