@@ -35,7 +35,11 @@ class View_Helper_Navigation_Dropdown{
 				$class		= $page->active ? 'dropdown active' : 'dropdown';
 				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
 				$title		= $this->renderLabelWithIcon( $page ).' <b class="caret"></b>';
-				$link	= UI_HTML_Tag::create( 'a', $title, array( 'href' => '#', 'class' => 'dropdown-toggle', 'data-toggle' => 'dropdown' ) );
+				$link	= UI_HTML_Tag::create( 'a', $title, array(
+					'href'			=> '#',
+					'class' 		=> 'dropdown-toggle',
+					'data-toggle'	=> 'dropdown'
+				) );
 				$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => $class ) );
 			}
 			else{
