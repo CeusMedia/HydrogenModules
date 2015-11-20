@@ -21,6 +21,7 @@
 		<class>Model/Menu.php5</class>
 		<class>View/Helper/Navigation.php5</class>
 		<class>View/Helper/Navigation/Dropdown.php5</class>
+		<class>View/Helper/Navigation/Mobile.php5</class>
 	</files>
 	<config protected="yes" type="string" name="source" values="Modules,Database,Config">Config</config>
 	<config protected="yes" type="string" name="nav.class" values="View_Helper_Navigation_Dropdown">View_Helper_Navigation_Dropdown</config>
