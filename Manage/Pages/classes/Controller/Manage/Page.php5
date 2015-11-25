@@ -100,6 +100,15 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->preparePageTree();
 	}
 
+	public function ajaxOrderPages(){
+		$pageIds	= $this->request->get( 'pageIds' );
+		foreach( $pageIds as $nr => $pageId )
+			$this->model->edit( $pageId, array( 'rank' => $nr ) );
+		header( "Content-Type: application/json" );
+		print( json_encode( TRUE ) );
+		exit;
+	}
+
 	public function ajaxSaveContent(){
 		$content	= $this->request->get( 'content' );
 		$pageId		= $this->request->get( 'pageId' );

@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.15</version>
+	<version>0.7.17</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -18,6 +18,8 @@
 	<log version="0.7.13">Extended TinyMCE by image alignment and decoration.</log>
 	<log version="0.7.14">Updated integration of TinyMCE.</log>
 	<log version="0.7.15">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.7.16">Replace module JS:Optionals by JS:Form:Optionals.</log>
+	<log version="0.7.17">Apply jQuery UI sortable to page tree.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -43,13 +45,23 @@
     <config type="string" protected="user" name="editor" values="none,CodeMirror,TinyMCE">TinyMCE</config>
     <config type="string" protected="user" name="link.resources">pages,bookmarks,documents,images</config>
 	<relations>
+		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">JS_Form_Optionals</needs>
+		<needs type="module">JS_jQuery_UI</needs>
+		<needs type="module">JS_TinyMCE</needs>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Frontend</needs>
-		<needs type="module">JS_TinyMCE</needs>
-		<needs type="module">JS_CodeMirror</needs>
-		<needs type="module">JS_Optionals</needs>
 	</relations>
-	<link path="manage/page" access="inside" xml:lang="de">Seiten</link>
-	<link path="manage/page" access="inside" xml:lang="en">Pages</link>
+	<link access="inside" path="manage/page" xml:lang="de">Seiten</link>
+	<link access="inside" path="manage/page" xml:lang="en">Pages</link>
+	<link access="inside" path="manage/page/ajaxOrderPages"/>
+	<link access="inside" path="manage/page/ajaxSaveContent"/>
+	<link access="inside" path="manage/page/ajaxSetEditor"/>
+	<link access="inside" path="manage/page/ajaxSetTab"/>
+	<link access="inside" path="manage/page/copy"/>
+	<link access="inside" path="manage/page/edit"/>
+	<link access="inside" path="manage/page/getJsImageList"/>
+	<link access="inside" path="manage/page/preparePageTree"/>
+	<link access="inside" path="manage/page/setScope"/>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Page::___onTinyMCE_getLinkList</hook>
 </module>

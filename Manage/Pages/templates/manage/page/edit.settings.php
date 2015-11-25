@@ -45,7 +45,7 @@ return '
 		<label for="input_title">Rang</label>
 		<input type="text" name="rank" id="input_rank" class="span12 numeric" value="'.htmlentities( $page->rank, ENT_QUOTES, 'UTF-8' ).'" required/>
 	</div>
-	<div class="span6 optional type type-0 type-2">
+	<div class="span6 optional type type-0 type-2" style="display: none">
 		<label for="input_parentId">Unterseite von</label>
 		<select name="parentId" class="span12" id="input_parentId">'.$optParent.'</select>
 	</div>
@@ -53,13 +53,13 @@ return '
 <div class="row-fluid">
 	<div class="span6">
 		<label for="input_type">Seitentyp</label>
-		<select name="type" class="span12 optional-trigger" id="input_type" onchange="showOptionals(this);">'.$optType.'</select>
+		<select name="type" class="span12 optional-trigger has-optionals" id="input_type" data-onchange="showOptionals(this);">'.$optType.'</select>
 	</div>
-	<div class="span3 optional type type-0">
+	<div class="span3 optional type type-0" style="display: none">
 		<label for="input_format">Format</label>
 		<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 	</div>
-	<div class="span6 optional type type-2">
+	<div class="span6 optional type type-2" style="display: none">
 		<label for="input_module">Modul</label>
 		<select name="module" class="span12" id="input_module">'.$optModule.'</select>
 	</div>
