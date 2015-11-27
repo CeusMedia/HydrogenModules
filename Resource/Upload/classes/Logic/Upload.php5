@@ -141,11 +141,9 @@ class Logic_Upload{
 	}
 
 	static function getMaxUploadSize( $otherLimits = array() ){
-		$otherLimits		= array(
-			'upload'	=> Alg_UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" ),
-			'post'		=> Alg_UnitParser::parse( ini_get( 'post_max_size' ), "M" ),
-			'memory'	=> Alg_UnitParser::parse( ini_get( 'memory_limit' ), "M" ),
-		);
+		$otherLimits['upload']	= Alg_UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" );
+		$otherLimits['post']	= Alg_UnitParser::parse( ini_get( 'post_max_size' ), "M" );
+		$otherLimits['memory']	= Alg_UnitParser::parse( ini_get( 'memory_limit' ), "M" );
 		asort( $otherLimits );
 		return $otherLimits;
 	}
