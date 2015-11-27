@@ -2,12 +2,13 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
 	<log version="0.3.7">Fixed bug in database script.</log>
 	<log version="0.3.8">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.3.9">Complete locales.</log>
 	<log version="0.4">Finish user interface.</log>
+	<log version="0.4.1">Disable automatic password masking of module configurations.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -28,10 +29,10 @@
 	<link path="manage/my/user/setting" access="inside" xml:lang="de">Einstellungen</link>
 	<link path="manage/my/user/setting" access="inside" xml:lang="en">Settings</link>
 	<hook type="resource" resource="Session" event="init"><![CDATA[
-if( $env->has( 'session' ) ){												//  environment has session support
-	if( ( $userId = $env->getSession()->get( 'userId' ) ) ){				//  an user is logged in
-		$config	= Model_User_Setting::applyConfigStatic( $env, $userId );	//  apply user configuration
-		$env->set( 'config', $config, TRUE );								//  override config by user config
+if( $env->has( 'session' ) ){														//  environment has session support
+	if( ( $userId = $env->getSession()->get( 'userId' ) ) ){						//  an user is logged in
+		$config	= Model_User_Setting::applyConfigStatic( $env, $userId, FALSE );	//  apply user configuration
+		$env->set( 'config', $config, TRUE );										//  override config by user config
 	}
 }
 ]]></hook>
