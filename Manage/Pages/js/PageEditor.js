@@ -9,42 +9,62 @@ var PageEditor = {
 	frontendUri: null,
 
 	init: function(format){
-		$("#tabs-page-editor .optional-trigger").trigger("change");
-		$("#tabs-page-editor>ul>li>a").each(function(){
-			if($(this).parent().hasClass("active"))
-				$(this).parent().parent().parent().find($(this).attr("href")).addClass("active");
-		});
-		$("#tabs-page-editor>ul>li>a").bind("click", function(){
-			var key = $(this).attr("href").replace(/#tab/, "");
-			if(key == 3 && PageEditor.editor.toLowerCase() == "codemirror")
-				window.setTimeout(PageEditor.setupCodeMirror, 20);
-			if(key == 4)
-				PageEditor.loadPagePreview();
-			$.ajax({
-				url: "./manage/page/ajaxSetTab/"+key,
-				type: "post"
+		if($("#tabs-page-editor").size()){
+			$("#tabs-page-editor .optional-trigger").trigger("change");
+			$("#tabs-page-editor>ul>li>a").each(function(){
+				if($(this).parent().hasClass("active"))
+					$(this).parent().parent().parent().find($(this).attr("href")).addClass("active");
 			});
-		});
-		if(this.format.toUpperCase() === "MD" && this.editor.toLowerCase() === "tinymce")
-			this.editor = 'codemirror';
-		switch(this.editor.toLowerCase()){
-			case 'tinymce':
-				PageEditor.setupTinyMCE();
-				break;
-			case 'codemirror':
-				PageEditor.setupCodeMirror();
-				break;
-			default:
-				break;
+			$("#tabs-page-editor>ul>li>a").bind("click", function(){
+				var key = $(this).attr("href").replace(/#tab/, "");
+				if(key == 3 && PageEditor.editor.toLowerCase() == "codemirror")
+					window.setTimeout(PageEditor.setupCodeMirror, 20);
+				if(key == 4)
+					PageEditor.loadPagePreview();
+				$.ajax({
+					url: "./manage/page/ajaxSetTab/"+key,
+					type: "post"
+				});
+			});
+			if(this.format.toUpperCase() === "MD" && this.editor.toLowerCase() === "tinymce")
+				this.editor = 'codemirror';
+			switch(this.editor.toLowerCase()){
+				case 'tinymce':
+					PageEditor.setupTinyMCE();
+					break;
+				case 'codemirror':
+					PageEditor.setupCodeMirror();
+					break;
+				default:
+					break;
+			}
+			PageEditor.loadPagePreview();
+			$("#page-preview").mouseenter(function(){
+				$("#page-preview-mask").hide();
+			}).mouseleave(function(){
+				$("#page-preview-mask").show();
+			});
+			PageEditor.initDefaultMetaCopy();
+			$("#input_editor").bind("change", PageEditor.setEditor);
 		}
-		PageEditor.loadPagePreview();
-		$("#page-preview").mouseenter(function(){
-			$("#page-preview-mask").hide();
-		}).mouseleave(function(){
-			$("#page-preview-mask").show();
+		PageEditor.initSortable();
+	},
+
+	initSortable: function(){
+		$("#manage-page-tree ul").sortable({
+			stop: function(event, ui) {
+				var pageIds = [];
+				ui.item.parent().children("li").each(function(){
+					pageIds.push($(this).data("pageId"));
+				});
+				$.ajax({
+					url: "./manage/page/ajaxOrderPages",
+					data: {pageIds: pageIds},
+					method: "POST",
+					success: function(){}
+				});
+			}
 		});
-		PageEditor.initDefaultMetaCopy();
-		$("#input_editor").bind("change", PageEditor.setEditor);
 	},
 
 	initDefaultMetaCopy: function(){
@@ -141,12 +161,11 @@ var PageEditor = {
 //			content_css: "http://cdn.int1a.net/css/bootstrap.css",
 //			image_list: PageEditor.imageList,
 //			link_list: PageEditor.linkList,
-//			height: 360,
+			height: 360,
 //			language: settings.JS_TinyMCE.auto_language,
 		};
 		if(typeof tinymce.Config !== "undefined")
-			options = tinymce.Config.apply(options, null, true);
+			options = tinymce.Config.apply(options, null);
 		tinymce.init(options);
-	}	
+	}
 };
-

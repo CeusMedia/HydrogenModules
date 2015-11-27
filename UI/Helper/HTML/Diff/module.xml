@@ -9,9 +9,10 @@ https://github.com/rashid2538/php-htmldiff
 	<category>User Interface</category>
     <author email="rashid2538@gmail.com" site="https://github.com/rashid2538">Rashid Mohamad</author>
     <license source="http://www.gnu.org/licenses/gpl-2.0.html">GPL 2</license>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add helper class to wrap original code.</log>
 	<files>
 		<class>View/Helper/HtmlDiff.php5</class>
 		<style load="auto">module.ui.helper.html.diff.css</style>

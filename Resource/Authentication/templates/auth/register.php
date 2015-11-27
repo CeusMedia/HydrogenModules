@@ -40,10 +40,12 @@ if( $tacHtml ){
 }
 
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
-//print_m( $moduleConfig->getAll() );die;
 
 $env->getPage()->js->addScriptOnReady('Auth.initUserRegistration();');
 $env->getPage()->css->theme->addUrl( 'module.resource.auth.css' );
+
+//print_m( $moduleConfig->getAll() );die;
+//print_m( $w );die;
 
 $panelUser	= HTML::DivClass( 'content-panel', array(
 	HTML::H3( $w->heading ),
@@ -62,7 +64,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) )
 			) ),
 			HTML::DivClass( 'span3', array(
-				HTML::Label( "password", new UI_HTML_Tag( 'abbr', $w->labelPassword, array(
+				HTML::Label( "password", UI_HTML_Tag::create( 'abbr', $w->labelPassword, array(
 					'title'	=> sprintf( $w->labelPassword_title, $moduleConfig->get( 'password.length.min' ) )
 				) ), "mandatory" ),
 				UI_HTML_Tag::create( 'input', NULL, array(
@@ -130,27 +132,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			) ),
 		) ).
 		HTML::DivClass( 'row-fluid', array(
-			HTML::DivClass( 'span2', array(
-				HTML::Label( "postcode", $w->labelPostcode ),
-				UI_HTML_Tag::create( 'input', NULL, array(
-					'type'		=> 'text',
-					'name'		=> 'postcode',
-					'id'		=> 'input_postcode',
-					'class'		=> 'span12',
-					'value'		=> $user->get( 'postcode' ),
-				) )
-			) ),
-			HTML::DivClass( 'span4', array(
-				HTML::Label( "city", $w->labelCity ),
-				UI_HTML_Tag::create( 'input', NULL, array(
-					'type'		=> 'text',
-					'name'		=> 'city',
-					'id'		=> 'input_city',
-					'class'		=> 'span12',
-					'value'		=> $user->get( 'city' ),
-				) )
-			) ),
-			HTML::DivClass( 'span4', array(
+			HTML::DivClass( 'span3', array(
 				HTML::Label( "street", $w->labelStreet ),
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'type'		=> 'text',
@@ -170,6 +152,26 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					'value'		=> $user->get( 'number' ),
 				) )
 			) ),
+			HTML::DivClass( 'span2', array(
+				HTML::Label( "postcode", $w->labelPostcode ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'postcode',
+					'id'		=> 'input_postcode',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'postcode' ),
+				) )
+			) ),
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "city", $w->labelCity ),
+				UI_HTML_Tag::create( 'input', NULL, array(
+					'type'		=> 'text',
+					'name'		=> 'city',
+					'id'		=> 'input_city',
+					'class'		=> 'span12',
+					'value'		=> $user->get( 'city' ),
+				) )
+			) ),
 		) ).
 		HTML::HR.
 		$formTerms.
@@ -186,11 +188,12 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 );
 
 $formUrl	= "./auth/register".( $from ? '?from='.$from : '' );
-return $textTop.
+
+return HTML::DivClass( "auth-register-text-top", $textTop ).
 HTML::Form( $formUrl, "form_auth_register_user",
 	HTML::DivClass( 'row-fluid', array(
-		HTML::DivClass( 'span8', $panelUser ),
+		HTML::DivClass( 'span8 offset0', $panelUser ),
 		HTML::DivClass( 'span4', $textInfo ),
 	) )
-).$textBottom;
+).HTML::DivClass( "auth-register-text-bottom", $textBottom );
 ?>

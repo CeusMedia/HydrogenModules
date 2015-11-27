@@ -5,8 +5,10 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		$this->logic	= new Logic_Mail( $this->env );
-		$frontend	= Logic_Frontend::getInstance( $this->env );
-		CMC_Loader::registerNew( 'php5', 'Mail_', $frontend->getPath().'classes/Mail/' );
+		$path			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
+		CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 	}
 
 	public function html( $mailId ){

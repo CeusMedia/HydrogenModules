@@ -2,15 +2,17 @@
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );
 
-$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
-$iconSave	= '<i class="icon-ok icon-white"></i>';
-$buttonSave	= UI_HTML_Elements::Button( 'save', $iconSave.' '.$w->buttonSave, 'btn btn-success btn-small' );
-
-$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
-$iconSave	= '<i class="icon-ok icon-white"></i>';
-
 $panelSettings	= '<div class="muted">'.$w->noSettings.'</div>';
 if( isset( $modules ) && count( $modules ) ){
+	$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
+	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
+	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+		'type'		=> 'submit',
+		'name'		=> 'save',
+		'class'		=> 'btn btn-primary',
+		'disabled'	=> isset( $modules ) && count( $modules ) ? NULL : 'disabled',
+	) );
+
 	$panels		= array();
 	foreach( $modules as $module ){
 		$moduleWords	= $view->getModuleWords( $module );
@@ -19,12 +21,13 @@ if( isset( $modules ) && count( $modules ) ){
 		$panel ? $panels[$key]	= $panel : NULL;
 	}
 	ksort( $panels );
-	$buttonSave		= UI_HTML_Elements::Button( 'save', $iconSave.' '.$w->buttonSave, 'btn btn-success btn-small' );
 	if( $panels ){
 		$panelSettings	= '
-<form name="form-manage-my-user-settings" action="'.$formUri.'" method="post">
+<form name="form-manage-my-user-settings" action="'.$formUri.'" method="post" class="form-changes-auto">
 	<div class="row-fluid">
-		'.join( '<br/>', $panels ).'
+		<div class="span12">
+			'.join( '<br/>', $panels ).'
+		</div>
 		<br/>
 	</div>
 	<div class="buttonbar">'.$buttonSave.'</div>

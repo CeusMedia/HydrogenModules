@@ -6,8 +6,16 @@ if( $mission->status < 0 )
 	return '';
 
 
-$hoursRequired		= floor( $mission->minutesRequired / 60 );
-$minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
+
+$minutes	= $mission->minutesRequired;
+if( $useTimer ){
+	$seconds	= View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId );
+	if( $seconds )
+		$minutes	= ceil( $seconds / 60 );
+}
+
+$hoursRequired		= floor( $minutes / 60 );
+$minutesRequired	= str_pad( $minutes - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
 
 return '
 <div class="content-panel content-panel-form">

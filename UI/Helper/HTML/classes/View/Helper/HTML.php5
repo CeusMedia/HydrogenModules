@@ -88,6 +88,8 @@ class HTML/* extends UI_HTML_Elements*/ {
 
 	static public function Form( $url, $name, $content ){
 		$enctype	= NULL;
+		if( is_array( $content ) )
+			$content	= join( $content );
 		if( substr_count( $content, ' type="file"' ) )
 			$enctype	= 'multipart/form-data';
 		$attributes	= array(

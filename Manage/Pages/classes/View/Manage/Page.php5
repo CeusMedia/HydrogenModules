@@ -58,7 +58,10 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 				$url	= './manage/page/edit/'.$subitem->pageId;
 				$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
 				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-				$sublist[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => join( ' ', $classes ) ) );
+				$sublist[]	= UI_HTML_Tag::create( 'li', $link, array(
+					'class'			=> join( ' ', $classes ),
+					'data-page-id'	=> $subitem->pageId,
+				) );
 			}
 			if( $sublist )
 				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'nav nav-pills nav-stacked' ) );
@@ -72,7 +75,10 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
 			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => join( ' ', $classes ) ) );
+			$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array(
+				'class'			=> join( ' ', $classes ),
+				'data-page-id'	=> $item->pageId,
+			) );
 		}
 		if( $list )
 			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );

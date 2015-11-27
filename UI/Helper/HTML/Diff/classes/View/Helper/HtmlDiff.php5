@@ -1,4 +1,47 @@
 <?php
+class View_Helper_HtmlDiff{
+
+	protected $env;
+	protected $html1;
+	protected $html2;
+
+	public function __construct( $env = NULL, $html1 = NULL, $html2 = NULL ){
+		if( $env )
+			$this->setEnv( $env );
+		if( !is_null( $html1 ) && !is_null( $html2 ) )
+			$this->setContents( $html1, $html2 );
+	}
+
+/*	public funtion __toString(){
+		return $this->render();
+	}
+*/
+	public function render(){
+		if( !$this->env )
+			throw new RuntimeException( "No environment set" );
+		if( is_null( $this->html1 ) || is_null( $this->html2 ) )
+			throw new RuntimeException( "No contents set" );
+		$diff	= new HtmlDiff( $this->html1, $this->html2 );
+		$diff->build();
+		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
+	}
+
+	static public function renderStatic( $env, $html1, $html2 ){
+		$helper	= new View_Helper_HtmlDiff( $env );
+		$helper->setContents( $html1, $html2 );
+		return $helper->render();
+	}
+
+	public function setContents( $html1, $html2 ){
+		$this->html1	= $html1;
+		$this->html2	= $html2;
+	}
+
+	public function setEnv( $env ){
+		$this->env	= $env;
+	}
+}
+
 class HtmlDiff {
 
 	private $content;

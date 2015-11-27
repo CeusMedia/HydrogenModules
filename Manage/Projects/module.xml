@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.25</version>
+	<version>0.3.26</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -32,6 +32,7 @@
 	<log version="0.3.23">Add view for setting default project.</log>
 	<log version="0.3.24">Force to set default project if none set.</log>
 	<log version="0.3.25">Add project view.</log>
+	<log version="0.3.26">Allow redirection after a project has been created.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -48,13 +49,13 @@
 		<class>Model/Project/User.php5</class>
 		<class>View/Manage/Project.php5</class>
 		<template>manage/project/add.php</template>
-		<template>manage/project/default.php</template>
 		<template>manage/project/edit.php</template>
 		<template>manage/project/edit.info.php</template>
 		<template>manage/project/edit.users.php</template>
 		<template>manage/project/index.php</template>
 		<template>manage/project/index.filter.php</template>
 		<template>manage/project/index.list.php</template>
+		<template>manage/project/remove.php</template>
 		<template>manage/project/setDefault.php</template>
 		<template>manage/project/view.php</template>
 		<locale>de/manage/project.ini</locale>
@@ -65,6 +66,7 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Relations</needs>
 		<supports type="module">Work_Missions</supports>
 		<supports type="module">Work_Issues</supports>
 	</relations>
@@ -72,7 +74,45 @@
 	<link path="manage/project" access="acl" xml:lang="en" rank="82">Projects</link>
 	<hook type="resource" resource="Project" event="update">Controller_Manage_Project::___onUpdate</hook>
 	<hook type="resource" resource="Project" event="listRelations">Controller_Manage_Project::___onListRelations</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>projects`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
+  `projectId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) unsigned DEFAULT '0',
+  `parentId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `priority` tinyint(1) unsigned NOT NULL DEFAULT '3',
+  `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`projectId`),
+  KEY `parentId` (`parentId`),
+  KEY `status` (`status`),
+  KEY `priority` (`priority`),
+  KEY `creatorId` (`creatorId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>project_users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
+  `projectUserId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `projectId` int(10) unsigned NOT NULL,
+  `creatorId` int(11) unsigned DEFAULT '0',
+  `userId` int(10) unsigned NOT NULL,
+  `isDefault` tinyint(1) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`projectUserId`),
+  KEY `projectId` (`projectId`),
+  KEY `userId` (`userId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `isDefault` (`isDefault`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
   `projectId` int(10) unsigned NOT NULL AUTO_INCREMENT,

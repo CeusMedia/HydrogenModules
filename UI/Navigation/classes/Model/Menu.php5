@@ -118,6 +118,7 @@ class Model_Menu {
 					'rank'		=> $pageId,
 //					'active'	=> $this->current == $page->path,
 					'active'	=> FALSE,
+					'icon'		=> isset( $page->icon ) ? $page->icon : NULL,
 				);
 				$subpages	= array();
 				if( isset( $page->pages ) ){
@@ -146,6 +147,7 @@ class Model_Menu {
 							'rank'		=> $subpageId,
 //							'active'	=> $this->current == $page->path.'/'.$subpage->path,
 							'active'	=> FALSE,
+							'icon'		=> isset( $subpage->icon ) ? $subpage->icon : NULL,
 						);
 						$subpages[]	= $subitem;
 					}

@@ -51,6 +51,7 @@ class Model_Mission extends CMF_Hydrogen_Model{
 		'title',
 		'content',
 		'location',
+		'format',
 		'reference',
 		'createdAt',
 		'modifiedAt',

@@ -27,7 +27,8 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract {
 	 *	@return		object						Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId ){
+	public function check( $articleId, $strict = TRUE ){
+		$this->logic->checkArticleId( $articleId, $strict );
 		return $this->logic->getArticle( $articleId );
 	}
 

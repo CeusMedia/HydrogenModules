@@ -79,8 +79,6 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="float" name="queue.job.sleep" title="seconds to sleep after job execution">10</config>
 	<config protected="yes" type="string" name="path.attachments" title="path to attachment files">contents/attachments/</config>
 	<config protected="yes" type="string" name="path.classes" title="path to mail classes to manage">classes/Mail/</config>
-	<link access="acl" xml:lang="de" rank="88" path="mail">E-Mail-Queue</link>
-	<link access="acl" xml:lang="en" rank="88" path="mail">Mail Queue</link>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>

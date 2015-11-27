@@ -190,17 +190,17 @@ abstract class Mail_Abstract{
 	}
 
 	public function initTransport(){
-		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		switch( strtolower( $options->get( 'transport.type' ) ) ){
+		$options	= $this->options->getAll( 'transport.', TRUE );
+		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
-				$hostname	= $options->get( 'transport.hostname' );
-				$port		= $options->get( 'transport.port' );
-				$username	= $options->get( 'transport.username' );
-				$password	= $options->get( 'transport.password' );
+				$hostname	= $options->get( 'hostname' );
+				$port		= $options->get( 'port' );
+				$username	= $options->get( 'username' );
+				$password	= $options->get( 'password' );
 				$this->transport	= new \CeusMedia\Mail\Transport\SMTP( $hostname, $port );
 				$this->transport->setUsername( $username );
 				$this->transport->setPassword( $password );
-				$this->transport->setSecure( $options->get( 'transport.secure' ) );
+				$this->transport->setSecure( $options->get( 'secure' ) );
 				$this->transport->setVerbose( FALSE );
 				break;
 			case 'local':

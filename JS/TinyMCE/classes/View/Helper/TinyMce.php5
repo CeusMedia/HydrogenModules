@@ -1,9 +1,11 @@
 <?php
-class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstract{
+class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public $list		= array();
 	public $listImages	= array();
 	public $listLinks	= array();
+
+	static protected $loaded	= FALSE;
 
 	/**	@var	ADT_List_Dictionary		$config		Module configuration */
 	protected $config;
@@ -23,25 +25,62 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		$this->pathFront	= $this->config->get( 'path' );
 	}
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
-		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-		$pathLib	= $env->getConfig()->get( 'path.scripts.lib' );
+	/**
+	 *	@todo		extract to future View_Helper_TinyMCE
+	 */
+	static public function load( $env ){
+		if( self::$loaded )
+			return;
+
+		$page		= $env->getPage();
 		$language	= $env->getLanguage()->getLanguage();
-		$version	= $config->get( 'version' );
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
 
-		$context->js->addUrl( $pathLib.'tinymce/'.$version.'/tinymce.min.js' );
+		$sourceUri	= $pathLocal.'tinymce/';
+		if( $config->get( 'CDN' ) )
+			$sourceUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
+
+		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
+		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
+
+		$languages	= self::getLanguage( $env );
 		if( $language !== "en" )
-			$context->js->addUrl( $pathLib.'tinymce/'.$version.'/langs/'.$language.'.js' );
-		$context->js->addUrl( $pathJs.'TinyMCE.Config.js' );
+			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
 
-		$frontend	= Logic_Frontend::getInstance( $env );
+		self::$loaded	= TRUE;
+	}
 
+	static public function getLanguage( $env ){
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$languages	= explode( ",", $config->get( 'languages' ) );
+		if( $config->get( 'CDN' ) )
+			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
+		if( $language !== "en" && !in_array( $language, $languages ) )
+			$language = "en";
+		return $language;
+	}
+
+	/**
+	 *	@todo		extract to future View_Helper_TinyMCE
+	 */
+	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+		self::load( $env );
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$language	= self::getLanguage( $env );
+
+		$baseUrl	= $env->url;
+		if( $env->getModules()->has( 'Resource_Frontend' ) )
+			$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
+
+		/* @todo extract to language file after rethinking this solution */
 		$labels	= array(
 			'de'	=> 'Deutsch',
 			'en'	=> 'Englisch',
 		);
 
+		/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
 		$languages	= array();
 		$matches	= array();
 		foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){
@@ -54,11 +93,11 @@ class View_Helper_TinyMceResourceLister extends CMF_Hydrogen_View_Helper_Abstrac
 		}
 
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
-			$helper	= new View_Helper_TinyMceResourceLister( $env );
+			$helper	= new View_Helper_TinyMce( $env );
 			$script	= '
 tinymce.Config.languages = "'.join( ',', $languages ).'";
 tinymce.Config.envUri = "'.$env->url.'";
-tinymce.Config.frontendUri = "'.$frontend->getUri().'";
+tinymce.Config.frontendUri = "'.$baseUrl.'";
 tinymce.Config.language = "'.$language.'";
 tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
 tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
@@ -68,7 +107,6 @@ tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
 			if(settings.JS_TinyMCE.auto_tools)
 				options.tools = settings.JS_TinyMCE.auto_tools;
 			tinymce.init(tinymce.Config.apply(options));
-console.log(options);
 		}
 	}';
 			$context->js->addScriptOnReady( $script );

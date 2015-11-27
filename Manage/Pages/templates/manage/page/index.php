@@ -41,6 +41,10 @@ return '
 		</div>
 	</div>
 </div>
+<script>
+$(document).ready(function(){
+	PageEditor.init();
+});
+</script>
 ';
-
 ?>

@@ -65,8 +65,8 @@ li.filter-status.status-4,
 	background-color: rgba(127, 255, 127, 1);
 	}
 
-	
-	
+
+
 tr.row-priority.priority-1 td.cell-priority {
 	background-color: rgba(255, 31, 0, 0.5);
 	}
@@ -122,9 +122,9 @@ button.task span {
 button.task-add span {
 	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
 	}
-*/	
+*/
 
-	
+
 #input-import {
 	background-color: white;
 	font-style: italic;
@@ -135,7 +135,7 @@ button.task-add span {
 	left: -1000px;
 	}
 
-/*  --  FORM ELEMENTS @ ADD|EDIT  --  */  
+/*  --  FORM ELEMENTS @ ADD|EDIT  --  */
 #input_day,
 #input_dayWork,
 #input_dayDue,
@@ -216,7 +216,7 @@ body.controller-work-mission.action-index #day-controls-btn-group a.btn .dayDate
 	font-size: 1.6em;
 	}
 
-	
+
 	/* @deprecated */
 body.controller-work-mission.action-index #day-controls button.day {
 	position: relative;
@@ -416,7 +416,7 @@ body.controller-work-mission div.overdue {
 	-o-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 /*	margin: 2px 1em 1px 0em;
 	padding: 0px 7px 0px 6px;
-	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/	
+	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/
 	}
 body.controller-work-mission #ui-datepicker-div,
 body.controller-work-mission div.ui-timepicker-div {
@@ -606,14 +606,6 @@ ul li label span.empty {
 	float: none;
 	}
 
-/*  --  BOOTSTRAP FIX  --  */
-.navbar-fixed-top .navbar-inner,
-.navbar-fixed-bottom .navbar-inner{padding:0px}
-@media (max-width: 979px){
-	.navbar-fixed-top, .navbar-fixed-bottom {position: fixed;}
-}
-
-	
 /*  --  MAIL  --  */
 body.jobWorkMission {
 	margin: 1em 2em;
@@ -656,7 +648,7 @@ body.jobWorkMission .table-mail td.cell-time {
 	font-size: 1.1em;
 	text-align: center;
 	}
-	
+
 /*  --  MAIL: DAILY  --  */
 body.jobWorkMission.job-work-mission-mail-daily div.tasks {
 	margin-top: 1em;
@@ -727,7 +719,7 @@ body.controller-work-mission input[type="checkbox"] {
 	}
 #work-mission-buttons input.changed {
 	background-color: #FFB;
-	} 
+	}
 
 
 
@@ -803,7 +795,7 @@ body.controller-work-mission .tabbable .nav{
 	margin-bottom: 1px;
 	}
 
-	
+
 /*  --  SMALL  --  */
 body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
 	text-align: left;
@@ -921,4 +913,17 @@ dl dd.max-y {
 	max-height: 100px;
 	background-color: rgba(127, 127, 127, 0.05);
 	border: 1px solid rgba(127, 127, 127, 0.1);
+	}
+
+
+
+body.site-work-mission-edit dl.dl-horizontal dt {
+	width: 120px;
+	font-weight: lighter;
+	font-size: 0.85em;
+/*	text-transform: uppercase;*/
+	font-style: italic;
+	}
+body.site-work-mission-edit dl.dl-horizontal dd {
+	margin-left: 130px;
 	}

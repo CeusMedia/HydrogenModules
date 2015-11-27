@@ -9,11 +9,22 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
-		$this->logic		= new Logic_Mail( $this->env );
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->path			= $this->frontend->getPath().$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
-
+		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicUpload	= new Logic_Upload( $this->env );
+		$pathApp			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
+		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
 		$this->addData( 'path', $this->path );
+		$this->addData( 'files', $this->listFiles() );
+
+		$this->languages	= array();
+		$select	= "SELECT DISTINCT(language) FROM ".$this->model->getName();
+		foreach( $this->env->getDatabase()->query( $select )->fetchAll( PDO::FETCH_OBJ ) as $language )
+			$this->languages[]	= $language->language;
+
+		$this->addData( 'classes', $this->logicMail->getMailClassNames() );
+		$this->addData( 'languages', $this->languages );
 	}
 
 	public function add(){
@@ -44,21 +55,50 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 					htmlentities( $class, ENT_QUOTES, 'UTF-8' )
 			);
 			if( !$this->messenger->gotError() ){
-				$data	= array(
-					'status'	=> (int) (bool) $this->request->get( 'status' ),
-					'language'	=> $language,
-					'className'	=> $class,
-					'filename'	=> $file,
-					'mimeType'	=> $files[$file]->mimeType,
-					'createdAt'	=> time(),
-				);
-				$this->model->add( $data );
+				$languages	= explode( ",", $language );
+				foreach( $languages as $language ){
+					if( strlen( trim( $language ) ) ){
+						$data	= array(
+							'status'	=> (int) (bool) $this->request->get( 'status' ),
+							'language'	=> $language,
+							'className'	=> $class,
+							'filename'	=> $file,
+							'mimeType'	=> $files[$file]->mimeType,
+							'createdAt'	=> time(),
+						);
+					}
+					$this->model->add( $data );
+				}
 				$this->messenger->noteSuccess(
 					$words->successAdded,
 					htmlentities( $this->request->get( 'file' ), ENT_QUOTES, 'UTF-8' ),
 					htmlentities( $this->request->get( 'class' ), ENT_QUOTES, 'UTF-8' )
 				);
 			}
+		}
+//		$this->restart( NULL, TRUE );
+	}
+
+	public function filter( $reset = NULL ){
+		$session	= $this->env->getSession();
+		$prefix		= 'filter_admin_mail_attachment_';
+		if( $reset ){
+			$session->remove( $prefix.'status' );
+			$session->remove( $prefix.'file' );
+			$session->remove( $prefix.'class' );
+			$session->remove( $prefix.'language' );
+			$session->remove( $prefix.'limit' );
+			$session->remove( $prefix.'order' );
+			$session->remove( $prefix.'direction' );
+		}
+		if( $this->request->has( 'filter' ) ){
+			$session->set( $prefix.'status', $this->request->get( 'status' ) );
+			$session->set( $prefix.'file', $this->request->get( 'file' ) );
+			$session->set( $prefix.'class', $this->request->get( 'class' ) );
+			$session->set( $prefix.'language', $this->request->get( 'language' ) );
+			$session->set( $prefix.'limit', $this->request->get( 'limit' ) );
+			$session->set( $prefix.'order', $this->request->get( 'order' ) );
+			$session->set( $prefix.'direction', $this->request->get( 'direction' ) );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -70,10 +110,35 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		return finfo_file( $info, $this->path.$fileName );
 	}
 
-	public function index(){
-		$this->addData( 'attachments', $this->model->getAll() );
-		$this->addData( 'files', $this->listFiles() );
-		$this->addData( 'classes', $this->logic->getMailClassNames() );
+	public function index( $page = NULL ){
+		$session	= $this->env->getSession();
+		$prefix		= 'filter_admin_mail_attachment_';
+		$this->addData( 'filterStatus', $filterStatus = $session->get( $prefix.'status' ) );
+		$this->addData( 'filterFile', $filterFile = $session->get( $prefix.'file' ) );
+		$this->addData( 'filterClass', $filterClass = $session->get( $prefix.'class' ) );
+		$this->addData( 'filterLanguage', $filterLanguage = $session->get( $prefix.'language' ) );
+		$this->addData( 'filterLimit', $filterLimit = $session->get( $prefix.'limit' ) );
+		$this->addData( 'filterOrder', $filterOrder = $session->get( $prefix.'order' ) );
+		$this->addData( 'filterDirection', $filterDirection = $session->get( $prefix.'direction' ) );
+
+		$conditions	= array();
+		if( strlen( trim( $filterStatus ) ) )
+			$conditions['status']		= $filterStatus;
+		if( strlen( trim( $filterClass ) ) )
+			$conditions['className']	= $filterClass;
+		if( strlen( trim( $filterFile ) ) )
+			$conditions['filename']		= $filterFile;
+		if( strlen( trim( $filterLanguage ) ) )
+			$conditions['language']		= $filterLanguage;
+
+		$orders	= array();
+		$limit	= max( (int) $filterLimit, 10 );
+		$limits	= array( (int) $page * $limit, $limit );
+
+		$this->addData( 'limit', $limit );
+		$this->addData( 'page', (int) $page );
+		$this->addData( 'total', $this->model->count( $conditions ) );
+		$this->addData( 'attachments', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
 	protected function listFiles(){
@@ -111,7 +176,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 					htmlentities( $fileName, ENT_QUOTES, 'UTF-8' )
 				);
 		}
-		$this->restart( NULL, TRUE );
+		$this->restart( 'upload', TRUE );
 	}
 
 	public function setStatus( $attachmentId, $status ){
@@ -138,22 +203,32 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	 */
 	public function upload(){
 		$words		= (object) $this->getWords( 'msg' );
-		$upload		= (object) $this->request->get( 'file' );
-		if( $upload->error ){
-			$handler    = new Net_HTTP_UploadErrorHandler();
-			$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-			$this->messenger->noteError( $handler->getErrorMessage( $upload->error ) );
+		if( $this->request->has( 'upload' ) ){
+			$file		= (object) $this->request->get( 'file' );
+			$this->upload->setUpload( $this->request->get( 'file' ) );
+			$maxSize	= min( $this->upload->getMaxUploadSize() );
+			if( !$this->upload->checkSize( $maxSize ) ){
+				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
+			}
+			else if( $file->error ){
+				$handler    = new Net_HTTP_UploadErrorHandler();
+				$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
+				$this->messenger->noteError( $handler->getErrorMessage( $file->error ) );
+			}
+			else{
+				try{
+					$this->upload->saveTo( $this->path.$file->name );
+					$this->messenger->noteSuccess(
+						$words->successUploaded,
+						htmlentities( $file->name, ENT_QUOTES, 'UTF-8' )
+					);
+				}
+				catch( Exception $e ){
+					$this->messenger->noteFailure( $words->failureUploadFailed );
+				}
+			}
+			$this->restart( 'upload', TRUE );
 		}
-		else{
-			if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
-				$this->messenger->noteFailure( $words->failureUploadFailed );
-			else
-				$this->messenger->noteSuccess(
-					$words->successUploaded,
-					htmlentities( $upload->name, ENT_QUOTES, 'UTF-8' )
-				);
-		}
-		$this->restart( NULL, TRUE );
 	}
 
 	public function unregister( $attachmentId ){

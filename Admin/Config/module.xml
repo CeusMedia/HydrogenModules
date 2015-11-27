@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <module>
 	<title>Admin: Config</title>
-	<description><![CDATA[Editor for main application configuration.]]></description>
-	<version>0.2.2</version>
+	<description><![CDATA[Editor for module application configuration.]]></description>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Render table instead of list.</log>
 	<log version="0.2.2">Add english language file.</log>
+	<log version="0.2.3">Add HTML blocks.</log>
+	<log version="0.2.4">Improve template by form and input fields.</log>
+	<log version="0.3">Add function to save settings.</log>
+	<log version="0.3.1">Use file backup to backup and restore versions.</log>
 	<category>Administration</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -16,12 +20,15 @@
 		<class>View/Admin/Config.php5</class>
 		<template>admin/config/index.php</template>
 		<locale>de/admin/config.ini</locale>
+		<locale>de/html/admin/config/bottom.html</locale>
+		<locale>de/html/admin/config/top.html</locale>
 		<locale>en/admin/config.ini</locale>
+		<locale>en/html/admin/config/bottom.html</locale>
+		<locale>en/html/admin/config/top.html</locale>
 	</files>
 	<link xml:lang="de" access="acl" path="admin/config">Konfiguration</link>
 	<link xml:lang="en" access="acl" path="admin/config">Configuration</link>
 	<relations>
 		<needs type="module">App_Site</needs>
-<!--		<supports type="module">Admin_Config_Modules</supports>-->
 	</relations>
 </module>

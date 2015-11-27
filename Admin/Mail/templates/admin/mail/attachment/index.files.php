@@ -1,8 +1,10 @@
 <?php
+$w	= (object) $words['index.files'];
 
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
-$list	= '<div class="alert alert-error">Keine Dateien vorhanden.</div>';
+$list	= '<div class="alert alert-error">'.$w->noEntries.'</div>';
+
 
 if( $files ){
 	$list	= array();
@@ -16,8 +18,8 @@ if( $files ){
 			'class'		=> 'btn btn-mini btn-danger',
 		) );
 
-		$mimeType	= UI_HTML_Tag::create( 'span', 'MIME-Type: '.$file->mimeType );
-		$fileSize	= UI_HTML_Tag::create( 'span', 'Dateigröße: '.Alg_UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
+		$mimeType	= UI_HTML_Tag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
+		$fileSize	= UI_HTML_Tag::create( 'span', $w->labelFileSize.': '.Alg_UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
 		$info		= UI_HTML_Tag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
 
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
@@ -32,11 +34,10 @@ if( $files ){
 
 	$list	= '
 <div class="content-panel">
-	<h4>Dateien</h4>
+	<h3>Dateien</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>
 </div>';
 }
 return $list;
-

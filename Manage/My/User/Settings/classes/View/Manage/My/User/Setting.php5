@@ -50,7 +50,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 		$w			= (object) $words['index'];
 	}
 
-	protected function renderModuleSettingInput( $module, $config ){
+	protected function renderModuleSettingInput( $module, $config, $moduleWords ){
 		$inputKey	= $module->id.'::'.$config->key;
 		switch( $config->type ){
 			case 'bool':
@@ -68,16 +68,67 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 			case 'float':
 			case 'integer':
 				if( $config->values ){
-					$opt	= UI_HTML_Elements::Options( array_combine( $config->values, $config->values ), $config->value );
-					$input	= '<select name="'.$inputKey.'" class="input-mini numeric" id="input_'.$inputKey.'">'.$opt.'</select>';
+					$options	= UI_HTML_Elements::Options( array_combine( $config->values, $config->values ), $config->value );
+					$input		= UI_HTML_Tag::create( 'select', $options, array(
+						'name'	=> $inputKey,
+						'id'	=> 'input_'.$inputKey,
+						'class'	=> "span3 numeric",
+					) );
 				}
-				else
-					$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'" class="xs numeric"/>';
+				else{
+					$input	= UI_HTML_Tag::create( 'input', NULL, array(
+						'type'	=> "text",
+						'name'	=> $inputKey,
+						'id'	=> 'input_'.$inputKey,
+						'class'	=> "span3 numeric",
+						'value'	=> htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ),
+					) );
+				}
 				break;
 			case 'string':
-				$input	= '<input type="text" name="'.$inputKey.'" id="input_'.$inputKey.'" value="'.htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ).'"/>';
-				if( preg_match( "/password$/", $config->key ) )
-					$input	= '<input type="password" name="'.$inputKey.'" id="input_'.$inputKey.'"/>';
+			case 'password':
+				if( $config->values ){
+					$labels		= array_combine( $config->values, $config->values );
+					foreach( $config->values as $valueKey ){
+						$key	= 'config.'.$config->key.'.option'.ucFirst( $valueKey );
+						if( isset( $moduleWords[$key] ) ){
+							$labels[$valueKey]	= $moduleWords[$key];
+						}
+					}
+					$options	= UI_HTML_Elements::Options( $labels, $config->value );
+					$input		= UI_HTML_Tag::create( 'select', $options, array(
+						'name'	=> $inputKey,
+						'class'	=> 'span6',
+						'id'	=> 'input_'.$inputKey
+					) );
+				}
+				else{
+					if( preg_match( "/password$/i", $config->key."|".$config->type ) ){				//  setting is a password or key ends with 'password'
+						$input	= UI_HTML_Tag::create( 'input', NULL, array(
+							'type'	=> "password",
+							'name'	=> $inputKey,
+							'id'	=> 'input_'.$inputKey,
+							'class'	=> "span6",
+						) );
+					}
+					else if( substr_count( $config->value, "," ) ){										//  contains several values
+						$input	= UI_HTML_Tag::create( 'textarea', str_replace( ",", "\n", htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ) ), array(
+							'name'	=> $inputKey,
+							'id'	=> 'input_'.$inputKey,
+							'class'	=> "span12",
+							'rows'	=> (int) substr_count( $config->value, "," ),
+						) );
+					}
+					else{
+						$input	= UI_HTML_Tag::create( 'input', NULL, array(
+							'type'	=> $isPassword ? "password" : "text",
+							'name'	=> $inputKey,
+							'id'	=> 'input_'.$inputKey,
+							'class'	=> $isPassword ? "span6" : "span12",
+							'value'	=> $isPassword ? NULL : htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ),
+						) );
+					}
+				}
 				break;
 		}
 		return $input;
@@ -86,13 +137,31 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 	protected function renderModuleSettings( $module, $settings, $moduleWords, $from = NULL ){
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
-		$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove' ) );
+		$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 		$rows	= array();
 		$list	= array();
+
+		//  collect module settings configurable by user
 		foreach( $module->config as $config ){
 			if( $config->protected == "user" )
 				$list[$config->key]	= $config;
 		}
+
+		//  order settings by order of pairs in module related locale file
+		if( is_array( $moduleWords ) ) {										//  module has setting labels
+			$sorted	= array();													//  prepare empty list of sorted pairs
+			foreach( array_keys( $moduleWords ) as $key ){						//  iterate module related locale pairs
+				if( preg_match( "/^config\./", $key ) ){						//  if they begin with 'config.'
+					$key	= preg_replace( "/^config\./", "", $key );			//  get (possible) setting key from locale key
+					if( isset( $list[$key] ) ){									//  setting key is existing in module config
+						$sorted[$key]	= $list[$key];							//  append setting to sorted list
+						unset( $list[$key]);									//  remove setting from unsorted list
+					}
+				}
+			}
+			$list	= array_merge( $sorted, $list );							//  append all left unsorted settings to list
+		}
+
 		if( $list ){
 			$moduleLabel	= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->title;
 
@@ -123,7 +192,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 					else
 						$suffix	= '<span class="suffix">'.$moduleWords['config.'.$config->key.'_suffix'].'</span>';
 				}
-				$input	= $this->renderModuleSettingInput( $module, $config );
+				$input	= $this->renderModuleSettingInput( $module, $config, $moduleWords );
 				$class	= 'row-fluid setting-line';
 				$button	= '';
 				if( $config->changed ){
@@ -131,13 +200,15 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 					$url	= './manage/my/user/setting/reset/'.$module->id.'/'.$key;
 					if( $from )
 						$url	.= '?from='.$from;
-					$button	= UI_HTML_Tag::create( 'a', $iconReset, array( 'href' => $url, 'class' => 'btn not-btn-small', 'title' => $words->buttonResetAlt ) );
+					$button	= UI_HTML_Tag::create( 'a', $iconReset, array( 'href' => $url, 'class' => 'btn btn-inverse btn-mini', 'title' => $words->buttonResetAlt ) );
 					$button	= '<span class="button-reset">'.$button.'</span>';
 				}
 				if( $suffix )
 					$input	= '<div class="input-append">'.$input.'<span class="add-on">'.$suffix.'</span></div>';
 				$label	= '<div class="span4 setting-label">'.$keyLabel.'</div>';
 				$field	= '<div class="span8 input">'.$input.$button.'</div>';
+				if( $config->type == "boolean" )
+					$config->value	= $config->value ? 1 : 0;
 				$rows[]	= '<div class="'.$class.'" data-value="'.htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ).'">'.$label.$field.'</div>';
 			}
 		}

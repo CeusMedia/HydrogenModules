@@ -1,17 +1,21 @@
 <?php
 
+
+$urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
+
 $panelCover	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.</div>';
 
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
-	$source		= $pathCovers.$id.'_'.$article->cover;
 	$class		= 'img-polaroid';
-	$urlFull	= "...";
-	$imageFull	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source, 'class' => $class ) );
+	$uriFull	= $pathCovers.$id.'_'.$article->cover;
+	$uriThumb	= $pathCovers.$id.'__'.$article->cover;
 
-	$urlThumb	= "...";
-	$source		= $pathCovers.$id.'__'.$article->cover;
-	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source, 'class' => $class ) );
+	$urlFull	= $urlBase.$id.'_'.$article->cover;
+	$urlThumb	= $urlBase.$id.'__'.$article->cover;
+
+	$imageFull	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriFull, 'class' => $class ) );
+	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriThumb, 'class' => $class ) );
 
 	$panelCover	= '
 <div class="content-panel">
@@ -21,7 +25,7 @@ if( $article->cover ){
 			<div class="span6">
 				<div class="row-fluid">
 					<div class="span6">
-						'.$imageFull.'
+						<a href="'.$urlFull.'" target="_blank" class="fancybox-auto">'.$imageFull.'</a>
 					</div>
 					<div class="span5 offset1">
 						'.$imageThumb.'
@@ -29,13 +33,18 @@ if( $article->cover ){
 				</div>
 			</div>
 			<div class="span6">
-				<div class="row-fluid">
+				<h5>Adressen</h5>
+				<ul>
+					<li><a href="'.$urlFull.'">Vollbild</a></li>
+					<li><a href="'.$urlThumb.'">Kleinbild</a></li>
+				</ul>
+<!--				<div class="row-fluid">
 					<br/>
 					<label for="input_url_image_thumb">URL des Vollbildes</label>
 					<input class="span12" type="text" readonly="readonly" id="input_url_image_full" value="'.$urlFull.'"/><br/>
 					<label for="input_url_image_thumb">URL des Kleinbildes</label>
 					<input class="span12" type="text" readonly="readonly" id="input_url_image_thumb" value="'.$urlThumb.'"/>
-				</div>
+				</div>-->
 			</div>
 		</div>
 	</div>

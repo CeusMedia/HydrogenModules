@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.8</version>
+	<version>0.9.20</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -55,6 +55,18 @@ code>
 	<log version="0.9.6">Extract view JavaScript parts into WorkMissionsViewer.</log>
 	<log version="0.9.7">Split view template into parts.</log>
 	<log version="0.9.8">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.9.9">Replace modules UI:JS:cmFormChange and UI:JS:cmFormOptionals by JS:Form:Changes and JS:Form:Optionals.</log>
+	<log version="0.9.10">Add relation to module Members and order relations.</log>
+	<log version="0.9.11">Use TinyMCE as editor and allow user to change to Markdown.</log>
+	<log version="0.9.12">Extend database model by content format.</log>
+	<log version="0.9.13">Improve module configuration locales.</log>
+	<log version="0.9.14">Use module Work:Timer only if available.</log>
+	<log version="0.9.15">Switch to tabbed Markdown editor and viewer.</log>
+	<log version="0.9.16">Fix Markdown rendering in add view.</log>
+	<log version="0.9.17">Add converter from Markdown to HTML.</log>
+	<log version="0.9.18">Improve editor height calculation and dynamics.</log>
+	<log version="0.9.19">Use helper of Work:Timer to render work hours spans.</log>
+	<log version="0.9.20">Show tracked work hours in mission view.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -117,22 +129,30 @@ code>
 		<script>WorkMissionsEditor.js</script>
 		<script>WorkMissionsList.js</script>
 		<script>WorkMissionsViewer.js</script>
+		<script load="auto">bindWithDelay.js</script>
 		<style load="auto">site.mission.css</style>
 		<image source="theme">clearSearch.png</image>
 		<file>config/jobs/work.mission.xml</file>
 	</files>
 	<relations>
+		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">JS_Form_Changes</needs>
+		<needs type="module">JS_Form_Optionals</needs>
+		<needs type="module">JS_Markdown</needs>
+		<needs type="module">JS_TinyMCE</needs>
+		<needs type="module">Manage_Projects</needs>
+		<needs type="module">Members</needs>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">Resource_Database_Lock</needs>
+		<needs type="module">Resource_Jobs</needs>
+		<needs type="module">UI_Helper_HTML_Diff</needs>
 		<needs type="module">UI_Indicator</needs>
-		<needs type="module">JS_CodeMirror</needs>
-		<needs type="module">JS_Markdown</needs>
 		<needs type="module">UI_Markdown</needs>
-		<needs type="module">UI_JS_cmFormChange</needs>
-		<needs type="module">UI_JS_cmFormOptionals</needs>
-		<supports type="module">Resource_Jobs</supports>
-		<supports type="module">Manage_Projects</supports>
 	</relations>
+<!--	<config protected="user" type="integer" name="editor.height" title="height of content editor in px">460</config>-->
+	<config protected="no" type="string" name="editor.TinyMCE.toolbar">minimal</config>
+	<config protected="no" type="boolean" name="editor.TinyMCE.menubar">no</config>
+	<config protected="user" type="string" name="format" values="HTML,Markdown">HTML</config>
 	<config protected="user" type="boolean" name="mail.active">no</config>
 	<config protected="user" type="boolean" name="mail.html">yes</config>
 	<config protected="user" type="boolean" name="mail.daily">yes</config>
@@ -163,9 +183,10 @@ code>
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ownerId` int(10) unsigned NOT NULL,
-  `workerId` int(10) unsigned NOT NULL,
   `projectId` int(10) unsigned NOT NULL DEFAULT '0',
+  `workerId` int(10) unsigned NOT NULL,
+  `creatorId` int(10) unsigned NOT NULL,
+  `modifierId` int(10) unsigned NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -178,14 +199,19 @@ CREATE TABLE `<%?prefix%>missions` (
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
   `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
   `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`missionId`),
   KEY `priority` (`priority`),
   KEY `type` (`type`),
-  KEY `creatorId` (`ownerId`,`workerId`),
-  KEY `projectId` (`projectId`)
+  KEY `workerId` (`workerId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `modifierId` (`modifierId`),
+  KEY `projectId` (`projectId`),
+  KEY `title` (`title`),
+  KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
@@ -273,6 +299,12 @@ ALTER TABLE `<%?prefix%>mission_versions`
 
 ALTER TABLE `<%?prefix%>mission_versions`
   MODIFY `missionVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT;
+]]></sql>
+	<sql on="update" type="mysql" version="0.9.12"><![CDATA[
+ALTER TABLE  `missions` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'Markdown' AFTER  `location` ,
+ADD INDEX (  `title` ) ,
+ADD INDEX (  `format` ) ;
+ALTER TABLE  `missions` CHANGE  `format`  `format` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  'HTML';
 ]]></sql>
 	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;

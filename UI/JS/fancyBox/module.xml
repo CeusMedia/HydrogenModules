@@ -18,8 +18,8 @@ It is built on the top of the popular JavaScript framework jQuery and is both ea
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<config name="auto" type="boolean">1</config>
-	<config name="auto.class">fancybox-auto</config>
+	<config protected="no" type="boolean" name="auto">1</config>
+	<config protected="no" type="string" name="auto.class">fancybox-auto</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.ui_js_fancybox.', TRUE );
 		if( $config->get( 'auto' ) ){

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Form: Optionals</title>
+	<description><![CDATA[Related form input fields.]]></description>
+	<version>0.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module JS:Optionals.</log>
+	<log version="0.3">Improved and moved to module UI:JS:cmFormOptionals.</log>
+	<log version="0.4">Moved from UI:JS:cmFormOptions to JS:Form:Optionals.</log>
+	<category>JavaScript</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<script load="auto">FormOptionals.js</script>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+//		$config		= $env->getConfig()->getAll( 'module.js_optionals', TRUE );
+		$context->js->addScriptOnReady( 'FormOptionals.init();' );
+	]]></hook>
+</module>

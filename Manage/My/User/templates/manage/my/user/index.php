@@ -140,7 +140,9 @@ $panelEdit	= '
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
 
-return $tabs.HTML::DivClass( 'row-fluid',
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/user/' ) );
+
+return $textTop.$tabs.HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		$panelEdit
 	).
@@ -148,5 +150,5 @@ return $tabs.HTML::DivClass( 'row-fluid',
 		$panelInfo.
 		$panelPassword
 	)
-);
+).$textBottom;
 ?>

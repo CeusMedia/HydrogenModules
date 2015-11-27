@@ -32,10 +32,19 @@ if( $mission->versions ){
 			'data-version'		=> $version->version,
 		) );
 	}
+	$label	= '<strong>aktuell</strong>';
+	$link	= UI_HTML_Tag::create( 'a', $label, array(
+		'href'		=> './work/mission/view/'.$mission->missionId,
+		'onclick'	=> 'return false'
+	) );
+	$list[]	= new UI_HTML_Tag( 'li', $link, array(
+		'class'				=> 'version-list-item',
+//		'data-version'		=> 'current',
+	) );
 	$list	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 	$panelVersions		= '
 		<div class="content-panel">
-			<h4>Versions</h4>
+			<h4>Versionen</h4>
 			<div class="content-panel-inner">
 				'.$list.'
 			</div>
@@ -54,7 +63,9 @@ return '
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">
-						<div id="mission-content-html" class="mission-content"></div>
+						<div id="mission-content-html" class="mission-content">
+							<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+						</div>
 					</div>
 				</div>
 			</div>

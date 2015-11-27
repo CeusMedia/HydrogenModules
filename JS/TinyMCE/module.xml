@@ -2,18 +2,100 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.1.10b9</version>
+	<version>4.2.7</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
-		<class>View/Helper/TinyMceResourceLister.php5</class>
-		<style source="theme" load="auto">tinymce.css</style>
+		<class>View/Helper/TinyMce.php5</class>
+		<style source="theme">tinymce.css</style>
 		<style source="theme">tinymce.content.css</style>
-		<script source="local">TinyMCE.Config.js</script>
+		<script>TinyMCE.Config.js</script>
+		<script>tinymce/tinymce.min.js</script>
+		<script>tinymce/plugins/pagebreak/plugin.min.js</script>
+		<script>tinymce/plugins/print/plugin.min.js</script>
+		<script>tinymce/plugins/wordcount/plugin.min.js</script>
+		<script>tinymce/plugins/bbcode/plugin.min.js</script>
+		<script>tinymce/plugins/autosave/plugin.min.js</script>
+		<script>tinymce/plugins/example_dependency/plugin.min.js</script>
+		<script>tinymce/plugins/advlist/plugin.min.js</script>
+		<script>tinymce/plugins/directionality/plugin.min.js</script>
+		<script>tinymce/plugins/layer/plugin.min.js</script>
+		<script>tinymce/plugins/colorpicker/plugin.min.js</script>
+		<script>tinymce/plugins/imagetools/plugin.min.js</script>
+		<script>tinymce/plugins/autoresize/plugin.min.js</script>
+		<script>tinymce/plugins/tabfocus/plugin.min.js</script>
+		<script>tinymce/plugins/table/plugin.min.js</script>
+		<script>tinymce/plugins/spellchecker/plugin.min.js</script>
+		<script>tinymce/plugins/lists/plugin.min.js</script>
+		<script>tinymce/plugins/importcss/plugin.min.js</script>
+		<script>tinymce/plugins/charmap/plugin.min.js</script>
+		<script>tinymce/plugins/paste/plugin.min.js</script>
+		<script>tinymce/plugins/link/plugin.min.js</script>
+		<script>tinymce/plugins/textpattern/plugin.min.js</script>
+		<script>tinymce/plugins/image/plugin.min.js</script>
+		<script>tinymce/plugins/emoticons/plugin.min.js</script>
+		<script>tinymce/plugins/emoticons/img/smiley-surprised.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-undecided.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-cry.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-tongue-out.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-foot-in-mouth.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-frown.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-cool.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-kiss.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-yell.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-laughing.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-smile.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-embarassed.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-money-mouth.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-sealed.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-wink.gif</script>
+		<script>tinymce/plugins/emoticons/img/smiley-innocent.gif</script>
+		<script>tinymce/plugins/contextmenu/plugin.min.js</script>
+		<script>tinymce/plugins/code/plugin.min.js</script>
+		<script>tinymce/plugins/nonbreaking/plugin.min.js</script>
+		<script>tinymce/plugins/noneditable/plugin.min.js</script>
+		<script>tinymce/plugins/save/plugin.min.js</script>
+		<script>tinymce/plugins/hr/plugin.min.js</script>
+		<script>tinymce/plugins/searchreplace/plugin.min.js</script>
+		<script>tinymce/plugins/preview/plugin.min.js</script>
+		<script>tinymce/plugins/template/plugin.min.js</script>
+		<script>tinymce/plugins/media/plugin.min.js</script>
+		<script>tinymce/plugins/media/moxieplayer.swf</script>
+		<script>tinymce/plugins/autolink/plugin.min.js</script>
+		<script>tinymce/plugins/textcolor/plugin.min.js</script>
+		<script>tinymce/plugins/insertdatetime/plugin.min.js</script>
+		<script>tinymce/plugins/visualblocks/plugin.min.js</script>
+		<script>tinymce/plugins/visualblocks/css/visualblocks.css</script>
+		<script>tinymce/plugins/visualchars/plugin.min.js</script>
+		<script>tinymce/plugins/anchor/plugin.min.js</script>
+		<script>tinymce/plugins/fullpage/plugin.min.js</script>
+		<script>tinymce/plugins/legacyoutput/plugin.min.js</script>
+		<script>tinymce/plugins/fullscreen/plugin.min.js</script>
+		<script>tinymce/plugins/example/plugin.min.js</script>
+		<script>tinymce/plugins/example/dialog.html</script>
+		<script>tinymce/skins/lightgray/content.min.css</script>
+		<script>tinymce/skins/lightgray/img/object.gif</script>
+		<script>tinymce/skins/lightgray/img/trans.gif</script>
+		<script>tinymce/skins/lightgray/img/loader.gif</script>
+		<script>tinymce/skins/lightgray/img/anchor.gif</script>
+		<script>tinymce/skins/lightgray/skin.min.css</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce.woff</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce-small.svg</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce.svg</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce.ttf</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce-small.eot</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce-small.woff</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce-small.ttf</script>
+		<script>tinymce/skins/lightgray/fonts/tinymce.eot</script>
+		<script>tinymce/skins/lightgray/skin.ie7.min.css</script>
+		<script>tinymce/skins/lightgray/content.inline.min.css</script>
+		<script>tinymce/themes/modern/theme.min.js</script>
+		<script>tinymce/langs/de.js</script>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
+		<file>licenses/TinyMCE.txt</file>
 	</files>
 	<config type="boolean" protected="no" name="auto">yes</config>
 	<config type="integer" protected="no" name="auto.height">460</config>
@@ -24,6 +106,12 @@
 	<config type="string" protected="no" name="auto.toolbar.extended">styleselect | fontselect | fontsizeselect | forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify # cut copy paste | link unlink image | bullist numlist outdent indent | table anchor charmap hr | undo redo | searchreplace visualblocks blockquote removeformat</config>
 	<config type="string" protected="no" name="auto.toolbar.minimal">styleselect | bold italic underline | bullist numlist outdent indent | link image</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
-	<config type="string" protected="no" name="version" values="4.1.9,4.1.7,4.0.26,4.0.10,4.0.2">4.1.9</config>
-	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMceResourceLister::___onPageApplyModules</hook>
+	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
+	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">//tinymce.cachefly.net/4.2/</config>
+	<config type="string" protected="no" name="CDN.languages" title="Comma separated list of languages available on CDN">en</config>
+	<config type="string" protected="no" name="languages" title="Comma separated list of languages available locally.">de,en</config>
+	<relations>
+		<supports type="module">Resource_Frontend</supports>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMce::___onPageApplyModules</hook>
 </module>

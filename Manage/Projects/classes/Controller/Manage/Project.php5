@@ -85,31 +85,33 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 	public function add(){
 		$words			= (object) $this->getWords( 'add' );
 
+		$this->addData( 'from', $this->request->get( 'from' ) );
 		if( $this->request->has( 'save') ){
 			$title		= $this->request->get( 'title' );
 			if( !strlen( $title ) )
 				$this->messenger->noteError( $words->msgTitleMissing );
-			if( $this->modelProject->count( array( 'title' => $title ) ) )
+			if( $this->modelProject->count( array( 'title' => $title, 'creatorId' => $this->userId ) ) )
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
-			if( $this->messenger->gotError() )
-				return;
+			if( !$this->messenger->gotError() ){
+				$isFirstUserProject	= !$this->modelProject->countByIndex( 'creatorId', $this->userId );
 
-			$isFirstUserProject	= !$this->modelProject->countByIndex( 'creatorId', $this->userId );
+				$data				= $this->request->getAll();
+				$data['creatorId']	= $this->userId;
+				$data['createdAt']	= time();
+				$projectId			= $this->modelProject->add( $data, FALSE );
 
-			$data				= $this->request->getAll();
-			$data['creatorId']	= $this->userId;
-			$data['createdAt']	= time();
-			$projectId			= $this->modelProject->add( $data, FALSE );
-
-			if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) ) ){
-				$this->modelProjectUser->add( array(
-					'projectId'		=> $projectId,
-					'userId'		=> $this->userId,
-					'isDefault'		=> $isFirstUserProject ? 1 : 0,
-				) );
+				if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) ) ){
+					$this->modelProjectUser->add( array(
+						'projectId'		=> $projectId,
+						'userId'		=> $this->userId,
+						'isDefault'		=> $isFirstUserProject ? 1 : 0,
+					) );
+				}
+				$this->messenger->noteSuccess( $words->msgSuccess );
+				if( $this->request->get( 'from' ) )
+					$this->restart( $this->request->get( 'from' ) );
+				$this->restart( './manage/project/edit/'.$projectId );
 			}
-			$this->messenger->noteSuccess( $words->msgSuccess );
-			$this->restart( './manage/project/edit/'.$projectId );
 		}
 //		$this->addData( 'filterStatus', $this->session->get( 'filter_manage_project_status' ) );
 //		$this->addData( 'filterOrder', $this->session->get( 'filter_manage_project_order' ) );
@@ -226,6 +228,14 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		return $project;
 	}
 
+	protected function checkUserProjects(){
+		if( !$this->modelProjectUser->countByIndex( 'userId', $this->userId ) ){
+			$words		= (object) $this->getWords( 'index' );
+			$this->messenger->noteNotice( $words->msgErrorNoProjects );
+			$this->restart( 'add', TRUE );
+		}
+	}
+
 	public function edit( $projectId ){
 		$words			= (object) $this->getWords( 'edit' );
 		$project		= $this->checkProject( $projectId, TRUE );
@@ -333,6 +343,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $page = NULL ){
+
 		$this->checkDefault();
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
 		if( $page !== NULL ){																	//  page set as argument
@@ -348,13 +359,6 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		if( $this->useMissions )
 			$modelMission	= new Model_Mission( $this->env );
 
-		if( !$this->modelProjectUser->countByIndex( 'userId', $this->userId ) ){
-			if( !$this->isAdmin ){
-				$words		= (object) $this->getWords( 'index' );
-				$this->messenger->noteNotice( $words->msgErrorNoProjects );
-				$this->restart( 'add', TRUE );
-			}
-		}
 
 		$filterId			= $this->session->get( 'filter_manage_project_id' );
 		$filterQuery		= $this->session->get( 'filter_manage_project_query' );
@@ -431,6 +435,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		foreach( $this->modelProject->getAll( $conditions, $orders, $limits ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $this->modelProjectUser->getAllByIndex( 'projectId', $project->projectId );
+			$project->isDefault	= FALSE;
 			foreach( $project->users as $nr => $projectUser ){
 				if( $projectUser->userId == $this->userId )
 					$project->isDefault	= (bool) $projectUser->isDefault;
@@ -454,6 +459,44 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'canAdd', $this->env->getAcl()->has( 'manage_project', 'add' ) );
 		$this->addData( 'canFilter', $this->env->getAcl()->has( 'manage_project', 'filter' ) );
 		$this->addData( 'canEdit', $this->env->getAcl()->has( 'manage_project', 'edit' ) );
+	}
+
+	/**
+	 *	@todo		finish: implement hook on other modules and test
+	 */
+	public function remove( $projectId, $confirmed = NULL ){
+		$this->checkDefault();
+		$project	= $this->checkProject( $projectId, TRUE, TRUE, TRUE );
+
+		if( $confirmed && $this->request->has( 'remove' ) ){
+			$dbc	= $this->env->getDatabase();
+			$words	= (object) $this->getWords( 'remove' );
+			try{
+				$dbc->beginTransaction();
+				$language		= $this->env->getLanguage();
+				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
+					if( $member->userId !== $this->userId ){
+						$user	= $this->modelUser->get( $member->userId );
+						$data	= array( 'project' => $project, 'user' => $user );
+						$mail	= new Mail_Manage_Project_Removed( $this->env, $data, FALSE );
+						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
+					}
+				}
+				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, array( 'projectId' => $projectId ) );
+				$this->modelProjectUser->removeByIndex( 'projectId', $projectId );
+				$this->modelProject->remove( $projectId );
+				$dbc->commit();
+				$this->messenger->noteSuccess( $words->msgSuccessRemoved, $project->title );
+				$this->restart( NULL, TRUE );
+			}
+			catch( Exception $e ){
+				$dbc->rollBack();
+				$this->env->getCaptain()->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+				$this->messenger->noteFailure( $words->msgFailureException, $e->getMessage() );
+				$this->restart( 'edit/'.$projectId, TRUE );
+			}
+		}
+		$this->addData( 'project', $project );
 	}
 
 	public function removeUser( $projectId, $userId ){
@@ -494,47 +537,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
-	/**
-	 *	@todo		finish: implement hook on other modules and test
-	 */
-	public function remove( $projectId, $confirmed = NULL ){
-		$this->checkDefault();
-		$project	= $this->checkProject( $projectId, TRUE, TRUE, TRUE );
-
-		$this->addData( 'project', $project );
-		if( $confirmed && 0 ){
-			$dbc	= $this->env->getDatabase();
-			try{
-				$dbc->beginTransaction();
-
-				$language		= $this->env->getLanguage();
-				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
-					if( $member->userId !== $this->userId ){
-						$user	= $this->modelUser->get( $member->userId );
-						$data	= array( 'project' => $project, 'user' => $user );
-						$mail	= new Mail_Manage_Project_Removed( $this->env, $data, FALSE );
-						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-					}
-				}
-
-				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, array( 'projectId' => $projectId ) );
-				$this->messenger->noteNotice( 'Will remove: Project User' );
-				$this->messenger->noteNotice( 'Will remove: Project' );
-//				$this->modelProjectUser->removeByIndex( 'projectId', $projectId );
-//				$this->modelProject->remove( $projectId );
-				$dbc->commit();
-				$this->messenger->noteSuccess( 'Project &quot;%s&quot; has been removed with all relations.' );
-				$this->restart( NULL, TRUE );
-			}
-			catch( Exception $e ){
-				$dbc->rollBack();
-				$this->messenger->noteFailure( 'Action failed: '.$e->getMessage() );
-				$this->restart( 'edit/'.$projectId, TRUE );
-			}
-		}
-	}
-
 	public function setDefault( $projectId = NULL ){
+		$this->checkUserProjects();
 		$projectId	= $projectId ? $projectId : $this->request->get( 'projectId' );
 		if( $projectId ){
 			$this->checkProject( $projectId );

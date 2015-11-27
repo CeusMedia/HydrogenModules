@@ -13,10 +13,7 @@ $optClass	= UI_HTML_Elements::Options( $optClass );
 
 $optStatus	= UI_HTML_Elements::Options( $words['states'], 1 );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
-
-return $textTop.'
-<!-- templates/admin/mail/attachment/add.php -->
+$panelAdd	= '
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
 		<h3>'.$w->heading.'</h3>
@@ -47,6 +44,18 @@ return $textTop.'
 				<button type="submit" name="add" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
+	</div>
+</div>';
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
+
+$tabs	= View_Admin_Mail_Attachment::renderTabs( $env, 'add' );
+
+return $tabs.$textTop.'
+<!-- templates/admin/mail/attachment/add.php -->
+<div class="row-fluid">
+	<div class="span6">
+		'.$panelAdd.'
 	</div>
 </div>
 '.$textBottom;

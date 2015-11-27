@@ -14,15 +14,18 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 //		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
-		$this->cookie		= new Net_HTTP_Cookie( "/" );
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 
 	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		$userId	= (int) $env->getSession()->get( 'userId' );															//  get ID of current user (or zero)
-		$script	= 'Auth.init('.$userId.');';																			//  initialize Auth class with user ID
+		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
+		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
+		$remember	= (bool) $cookie->get( 'auth_remember' );
+		$env->getSession()->set( 'isRemembered', $remember );
+		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
 	}
 
@@ -111,7 +114,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
-			$this->restart( NULL );
+			return $this->redirect( 'auth', 'loginInside' );
 		}
 
 		$this->tryLoginByCookie();
@@ -152,15 +155,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						$this->messenger->noteSuccess( $words->msgSuccess );
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
-						if( $this->request->get( 'login_remember' ) ){
-							$expires	= strtotime( "+2 years" ) - time();
-							$passwordHash	= md5( sha1( $user->password ) );						//  hash password using SHA1 and MD5
-							if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )						//  for PHP 5.5.0+
-								$passwordHash	= password_hash( $user->password );					//  hash password using BCRYPT
-							$this->cookie->set( 'auth_remember', TRUE, $expires );
-							$this->cookie->set( 'auth_remember_id', $user->userId, $expires );
-							$this->cookie->set( 'auth_remember_pw', $passwordHash, $expires );
-						}
+						if( $this->request->get( 'login_remember' ) )
+							$this->rememberUserInCookie( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
@@ -380,6 +376,16 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
 		$this->addData( 'user', $input );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+	}
+
+	protected function rememberUserInCookie( $user ){
+		$expires	= strtotime( "+2 years" ) - time();
+		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
+		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
+			$passwordHash	= password_hash( $user->password, PASSWORD_BCRYPT );					//  hash password using BCRYPT
+		$this->cookie->set( 'auth_remember', TRUE, $expires );
+		$this->cookie->set( 'auth_remember_id', $user->userId, $expires );
+		$this->cookie->set( 'auth_remember_pw', $passwordHash, $expires );
 	}
 
 	/**

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<module>
+    <title>JS: jQuery: mmenu</title>
+    <description><![CDATA[jQuery plugin for mobile navigation.]]></description>
+    <category>JavaScript</category>
+    <version>5.5.3</version>
+    <author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
+	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
+    <url>http://mmenu.frebsite.nl/</url>
+    <license source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
+	<files>
+		<script>jquery.mmenu.dragclose.min.js</script>
+		<script>jquery.mmenu.currentitem.min.js</script>
+		<script>jquery.mmenu.sectionindexer.min.js</script>
+		<script>jquery.mmenu.dragopen.min.js</script>
+		<script>jquery.mmenu.backbutton.min.js</script>
+		<script>jquery.mmenu.offcanvas.min.js</script>
+		<script>jquery.mmenu.navbars.min.js</script>
+		<script>jquery.mmenu.searchfield.min.js</script>
+		<script>jquery.mmenu.counters.min.js</script>
+		<script>jquery.mmenu.dividers.min.js</script>
+		<script>jquery.mmenu.iconpanels.min.js</script>
+		<script>jquery.mmenu.autoheight.min.js</script>
+		<script>jquery.mmenu.toggles.min.js</script>
+		<script>jquery.mmenu.fixedelements.min.js</script>
+		<script>jquery.mmenu.min.all.js</script>
+		<script>jquery.mmenu.min.js</script>
+		<script>jquery.mmenu.oncanvas.min.js</script>
+		<style>jquery.mmenu.leftsubpanels.css</style>
+		<style>jquery.mmenu.panelshadow.css</style>
+		<style>jquery.mmenu.offcanvas.css</style>
+		<style>jquery.mmenu.counters.css</style>
+		<style>jquery.mmenu.dragopen.css</style>
+		<style>jquery.mmenu.searchfield.css</style>
+		<style>jquery.mmenu.sectionindexer.css</style>
+		<style>jquery.mmenu.navbars.css</style>
+		<style>jquery.mmenu.toggles.css</style>
+		<style>jquery.mmenu.iconpanels.css</style>
+		<style>jquery.mmenu.dividers.css</style>
+		<style>jquery.mmenu.autoheight.css</style>
+		<style>jquery.mmenu.oncanvas.css</style>
+		<style>jquery.mmenu.all.css</style>
+		<style>jquery.mmenu.css</style>
+		<style>jquery.mmenu.fullscreen.css</style>
+		<style>jquery.mmenu.iconbar.css</style>
+		<style>jquery.mmenu.tileview.css</style>
+		<style>jquery.mmenu.pageshadow.css</style>
+		<style>jquery.mmenu.widescreen.css</style>
+		<style>jquery.mmenu.effects.css</style>
+		<style>jquery.mmenu.multiline.css</style>
+		<style>jquery.mmenu.pagedim.css</style>
+		<style>jquery.mmenu.themes.css</style>
+		<style>jquery.mmenu.positioning.css</style>
+		<style>jquery.mmenu.borderstyle.css</style>
+		<file>licenses/jQuery.mmenu.license.txt</file>
+	</files>
+	<config protected="yes" type="boolean" name="auto">yes</config>
+	<config protected="yes" type="string" name="auto.selector">.mmenu-auto</config>
+	<config protected="yes" type="string" name="load" values="all,core">all</config>
+	<config protected="yes" type="string" name="load.addons"></config>
+	<config protected="yes" type="string" name="load.extensions"></config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$config	= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
+$pathJs	= $env->getConfig()->get( 'path.scripts' );
+if( $config->get( 'load' ) == "all" ){
+	$context->js->addUrl( $pathJs.'jquery.mmenu.min.all.js' );	
+	$context->addThemeStyle( 'jquery.mmenu.all.css' );
+}
+else{
+	$context->js->addUrl( $pathJs.'jquery.mmenu.min.js' );	
+	$context->addThemeStyle( 'jquery.mmenu.css' );
+}
+]]></hook>
+</module>

@@ -181,7 +181,7 @@ if( $order->customer && $order->customer->alternative )
 $w		= (object) $words['positions'];
 $rows	= array();
 foreach( $order->positions as $position ){
-	$url	= './manage/catalog/gallery/edit/'.$position->articleId;
+	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
 	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
 	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
@@ -216,7 +216,7 @@ $tableHeads		= UI_HTML_Elements::TableHeads( array(
 	$w->head_bridge,
 	$w->head_status,
 ) );
-$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '150', '120' ) );
+$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '220', '180' ) );
 $tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
 $tableBody		= UI_HTML_Tag::create( 'tbody', $rows );
 $tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
