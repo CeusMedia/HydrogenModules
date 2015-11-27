@@ -14,7 +14,7 @@ var Auth = {
 		Auth.userId = userId;
 		Auth.config	= settings.Resource_Authentication;
 		if(userId){
-			if(rememberUser)
+			if(!rememberUser)
 				Auth.initAutoLogout();
 			Auth.initSessionRefresh();
 		}
