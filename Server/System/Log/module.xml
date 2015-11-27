@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: System Log</title>
+	<description><![CDATA[System component for logging and mailing exceptions.
+
+**Features:**	
+list>
+- stores exceptions into log file
+- tries to serialize exception
+- otherwise stores trace
+- can send mails to one or more mail receivers
+<list
+
+**Invokation:**
+code>
+...
+catch( Exception $e ){
+	$this->env->getCaption()->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+}
+...
+<code
+
+
+]]></description>
+	<category>Server</category>
+	<version>0.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.1.1">Testable alpha version.</log>
+	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Adjust file logging and mail generation to standards.</log>
+	<log version="0.4">Migration of module Server:Syslog to Server:System:Log as common log component.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/System/Log.php5</class>
+		<class>View/System/Log.php5</class>
+		<class>Mail/System/Log.php5</class>
+		<class>Mail/System/Log/Exception.php5</class>
+	</files>
+	<config protected="yes" type="string" name="file.active" title="Main switch for log file">logs/exception.log</config>
+	<config protected="yes" type="string" name="file.name" title="Path of log file">logs/exception.log</config>
+	<config protected="yes" type="boolean" name="email.active" title="Main switch for sending mails">1</config>
+	<config protected="yes" type="string" name="email.receivers" title="Mail receiver address[es] (comma separated)"></config>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+	<hook type="resource" resource="Server:System" event="logException">Controller_System_Log::___onLogException</hook>
+</module>
