@@ -827,6 +827,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 	}
 }
+/*
 class Logic_Upload{
 	static function getMaxUploadSize( $env, $configKey = NULL, $exceptedUnit = NULL ){
 		$limits		= array(
@@ -851,5 +852,5 @@ class Logic_Upload{
 			$list[]	= trim( $extension );
 		return $list;
 	}
-}
+}*/
 ?>
