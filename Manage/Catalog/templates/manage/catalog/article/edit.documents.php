@@ -44,7 +44,7 @@ if( $articleDocuments ){
 
 $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
 $limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+$documentMaxSize	= Alg_UnitFormater::formatBytes( min( Logic_Upload::getMaxUploadSize( $limits ) ) );
 
 $list				= array();
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );
