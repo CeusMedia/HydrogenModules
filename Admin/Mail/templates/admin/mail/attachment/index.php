@@ -1,28 +1,22 @@
 <?php
-$panelAdd		= $this->loadTemplateFile( 'admin/mail/attachment/add.php' );
-$panelUpload	= $this->loadTemplateFile( 'admin/mail/attachment/upload.php' );
-//$panelFilter	= $this->loadTemplateFile( 'admin/mail/attachment/index.filter.php' );
+//$panelAdd		= $this->loadTemplateFile( 'admin/mail/attachment/add.php' );
+//$panelUpload	= $this->loadTemplateFile( 'admin/mail/attachment/upload.php' );
+$panelFilter	= $this->loadTemplateFile( 'admin/mail/attachment/index.filter.php' );
 $panelList		= $this->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
-$panelFiles		= $this->loadTemplateFile( 'admin/mail/attachment/index.files.php' );
 
 $w			= (object) $words['index'];
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
 
-return $textTop.'
+$tabs	= View_Admin_Mail_Attachment::renderTabs( $env, '' );
+
+return $tabs.$textTop.'
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span3">
+		'.$panelFilter.'
+	</div>
+	<div class="span9">
 		'.$panelList.'
-	</div>
-</div>
-<!--<hr/>-->
-<div class="row-fluid">
-	<div class="span6">
-		'.$panelAdd.'
-	</div>
-	<div class="span6">
-		'.$panelUpload.'
-		'.$panelFiles.'
 	</div>
 </div>
 '.$textBottom;
