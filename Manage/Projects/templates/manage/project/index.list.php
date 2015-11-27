@@ -51,14 +51,14 @@ if( $projects ){
 }
 
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-plus icon-white" ) );
-$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary btn-small' );
+$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success btn-small' );
 $buttonAddSmall	= UI_HTML_Tag::create( 'a', $iconAdd, array(
 	'href'	=> './manage/project/add',
-	'class'	=> 'btn btn-small btn-primary btn-mini',
+	'class'	=> 'btn btn-success btn-mini',
 ) );
 
 if( !$canAdd ){
-	$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-primary btn-small disabled', NULL, TRUE );
+	$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-success btn-small disabled', NULL, TRUE );
 	$nuttonAddSmall	= "";
 }
 

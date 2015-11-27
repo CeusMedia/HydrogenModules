@@ -55,6 +55,7 @@
 		<template>manage/project/index.php</template>
 		<template>manage/project/index.filter.php</template>
 		<template>manage/project/index.list.php</template>
+		<template>manage/project/remove.php</template>
 		<template>manage/project/setDefault.php</template>
 		<template>manage/project/view.php</template>
 		<locale>de/manage/project.ini</locale>
