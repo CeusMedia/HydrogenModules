@@ -1,14 +1,6 @@
 <?php
 
-$panelSearch	= '
-<div class="content-panel">
-	<h3>Filter</h3>
-	<div class="content-panel-inner">
-		...
-	</div>
-</div>';
-
-
+/*
 $list		= '<div><em><small class="muted">Noch keine vorhanden.</small></em></div>';
 if( $users ){
 	$list	= array();
@@ -16,27 +8,85 @@ if( $users ){
 		$link	= UI_HTML_Tag::create( 'a', $user->username, array(
 			'href'	=> './member/view/'.$user->userId,
 		) );
+		$relation	= $user->relation ? 'yes' : 'no';
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
+			UI_HTML_Tag::create( 'td', $relation ),
 		) );
 	}
-	$list	= UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped' ) );
+	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+	$list	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
 }
-$panelList	= '
+*/
+
+$panelSearch	= '
 <div class="content-panel">
-	<h3>Bekannte Mitglieder</h3>
+	<h3>Mitglied finden</h3>
 	<div class="content-panel-inner">
-		'.$list.'
+		<form action="./member/search" method="post">
+			<label for="input_username">Benutzername</label>
+			<input type="text" name="username" id="input_username" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+			<div class="buttonbar">
+				<button type="submit" name="view" class="btn"><i class="icon-search"></i> find</button>
+			</div>
+		</form>
 	</div>
 </div>';
 
-return '
-<h2>Mitglieder</h2>
+
+$panelList	= '';
+if( $username ){
+	$list	= '<div><em><small class="muted">Keine gefunden.</small></em></div><br/>';
+	if( $users ){
+		$list	= array();
+		$helperMember	= new View_Helper_Member( $env );
+		$helperMember->setLinkUrl( './member/view/%d' );
+		$helperMember->setMode( 'thumbnail' );
+		foreach( $users as $user ){
+			$helperMember->setUser( $user );
+			$list[]	= UI_HTML_Tag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
+		}
+		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
+	}
+
+	$panelList	= '
+	<div class="content-panel">
+		<h3>Gefunde Mitglieder</h3>
+		<div class="content-panel-inner">
+			'.$list.'
+		</div>
+	</div>';
+}
+
+$panelAdvice	= "";
+if( isset( $advices ) && $advices ){
+//	$list	= '<div><em><small class="muted">Keine.</small></em></div><br/>';
+	$list	= array();
+	foreach( $advices as $advice ){
+
+	}
+	$panelAdvice	= '
+	<div class="content-panel">
+		<h3>Vorschläge</h3>
+		<div class="content-panel-inner">
+			'.$list.'
+		</div>
+	</div>';
+}
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/member/' ) );
+
+$tabs	= View_Member::renderTabs( $env, 'search' );
+
+return $tabs.$textTop.'
 <div class="row-fluid">
 	<div class="span3">
 		'.$panelSearch.'
 	</div>
-	<div class="span9">
+	<div class="span5">
 		'.$panelList.'
 	</div>
-</div>';
+	<div class="span4">
+		'.$panelAdvice.'
+	</div>
+</div>'.$textBottom;
