@@ -56,14 +56,14 @@
 	</files>
 	<config protected="yes" type="boolean" name="auto">yes</config>
 	<config protected="yes" type="string" name="auto.selector">.mmenu-auto</config>
-	<config protected="yes" type="boolean" name="load" values="all,core">all</config>
+	<config protected="yes" type="string" name="load" values="all,core">all</config>
 	<config protected="yes" type="string" name="load.addons"></config>
 	<config protected="yes" type="string" name="load.extensions"></config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $config	= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
 $pathJs	= $env->getConfig()->get( 'path.scripts' );
 if( $config->get( 'load' ) == "all" ){
-	$context->js->addUrl( $pathJs.'jquery.mmenu.all.min.js' );	
+	$context->js->addUrl( $pathJs.'jquery.mmenu.min.all.js' );	
 	$context->addThemeStyle( 'jquery.mmenu.all.css' );
 }
 else{
