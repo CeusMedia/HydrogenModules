@@ -83,6 +83,59 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
 	</relations>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
+  `mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `senderId` int(10) unsigned NOT NULL DEFAULT '0',
+  `receiverId` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `senderAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `object` longblob NOT NULL,
+  `enqueuedAt` decimal(12,0) unsigned NOT NULL,
+  `attemptedAt` decimal(12,0) unsigned NOT NULL,
+  `sentAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailId`),
+  KEY `senderId` (`senderId`),
+  KEY `receiverId` (`receiverId`),
+  KEY `status` (`status`),
+  KEY `attempts` (`attempts`),
+  KEY `receiverAddress` (`receiverAddress`),
+  KEY `receiverName` (`receiverName`),
+  KEY `subject` (`subject`),
+  KEY `enqueuedAt` (`enqueuedAt`),
+  KEY `attemptedAt` (`attemptedAt`),
+  KEY `sentAt` (`sentAt`),
+  KEY `senderAddress` (`senderAddress`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_attachments`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
+  `mailAttachmentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `countAttached` int(11) NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`mailAttachmentId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `filename` (`filename`),
+  KEY `mimeType` (`mimeType`),
+  KEY `createdAt` (`createdAt`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+]]></sql>
 	<sql on="update" version="0.4.0" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
