@@ -96,6 +96,8 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 
 	public function index( $page = 0, $limit = 10 ){
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
+		if( $page > 0 && $page * $limit >= $this->count() )
+			$page--;
 		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 10;
 		$this->env->getSession()->set( 'filter_server_system_page', $page );
 		$this->env->getSession()->set( 'filter_server_system_limit', $limit );

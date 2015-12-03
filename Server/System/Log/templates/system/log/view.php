@@ -35,7 +35,7 @@ return '
 				'.$trace.'
 				<div class="buttonbar">
 					<a href="./system/log'.( $page ? '/'.$page : '' ).'" class="btn btn-small"><i class="icon-arrow-left"></i>&nbsp;back</a>
-					<a href="./system/log/remove/'.$exception->id.'" class="btn btn-small btn-inverse"><i class="icon-trash icon-white"></i>&nbsp;remove</a>
+					<a href="./system/log/remove/'.$exception->id.'" class="btn btn-small btn-danger"><i class="icon-trash icon-white"></i>&nbsp;remove</a>
 				</div>
 			</div>
 		</div>
