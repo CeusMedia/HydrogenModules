@@ -190,6 +190,7 @@ class Logic_Mail{
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
+	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		void
 	 */
