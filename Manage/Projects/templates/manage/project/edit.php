@@ -98,14 +98,12 @@ $panelEdit	= '
 					<input type="text" name="url" id="input_url" class="span12 max" value="'.htmlentities( $project->url, ENT_COMPAT, 'UTF-8' ).'"/>
 				</div>
 			</div>
-			<div class="buttonbar">
-				<div class="btn-toolbar pull-left">
+			<div class="buttonbar clearfix">
+				<div class="btn-toolbar">
 					'.$buttonCancel.'
 					'.$buttonView.'
 					'.$buttonSave.'
 					'.$buttonDefault.'
-				</div>
-				<div class="btn-toolbar pull-right">
 					'.$buttonRemove.'
 				</div>
 			</div>

@@ -38,8 +38,8 @@ if( !$canEdit )
 return '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
-	<form id="project-users" name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
-		<div class="content-panel-inner">
+	<div class="content-panel-inner">
+		<form id="project-users" name="" action="./manage/project/addUser/'.$project->projectId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					'.$list.'
@@ -55,7 +55,7 @@ return '
 			<div class="buttonbar">
 				'.$buttonAdd.'
 			</div>
-		</div>
-	</form>
+		</form>
+	</div>
 </div>';
 ?>
