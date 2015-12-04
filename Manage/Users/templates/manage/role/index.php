@@ -67,7 +67,7 @@ table tr td blockquote {
 		</div>-->
 		<div class="span12">
 			<div class="content-panel">
-				<h3>'.$wf->heading.' <small>('.count( $roles ).')</small></h3>
+				<h3>'.$wf->heading.' <small class="muted">('.count( $roles ).')</small></h3>
 				<div class="content-panel-inner">
 					<table id="roles" class="table not-table-condensed table-striped">
 						<colgroup>
@@ -78,8 +78,8 @@ table tr td blockquote {
 						</colgroup>
 						'.$rows.'
 					</table>
-					<div class="row-fluid">
-						<div class="span12 buttonbar">
+					<div class="buttonbar">
+						<div class="btn-toolbar">
 							'.UI_HTML_Elements::LinkButton( './manage/role/add', '<i class="icon-plus icon-white"></i> '.$wf->buttonAdd, 'btn btn-small not-btn-info btn-success', NULL, !$hasRightToAdd ).'
 						</div>
 					</div>

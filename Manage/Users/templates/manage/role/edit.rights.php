@@ -70,7 +70,7 @@ $(document).ready(function(){
 $env->getPage()->js->addScript( $script );
 
 return '
-<div class="content-panel">
+<div class="content-panel content-panel-form">
 	<h3>'.$words['editRights']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<div id="role-edit-rights">
