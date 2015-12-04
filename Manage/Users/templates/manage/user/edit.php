@@ -144,20 +144,18 @@ $panelEdit	= '
 				</div>
 			</div>
 
-			<div class="row-fluid">
-				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
-					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.UI_HTML_Elements::LinkButton(
-						'./manage/user/remove/'.$userId,
-						'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
-						'btn btn-small btn-danger',
-						$w->buttonRemoveConfirm
-					).'
-					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.$buttonRole.'
-				</div>
+			<div class="buttonbar">
+				'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
+				'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.UI_HTML_Elements::LinkButton(
+					'./manage/user/remove/'.$userId,
+					'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
+					'btn btn-small btn-danger',
+					$w->buttonRemoveConfirm
+				).'
+				&nbsp;&nbsp;|&nbsp;&nbsp;
+				'.$buttonRole.'
 			</div>
 		</form>
 	</div>
@@ -181,7 +179,6 @@ return $textIndexTop.'
 <div class="row-fluid">
 	<div class="span4">
 		'.$panelStatus.'
-		<hr/>
 	</div>
 	<div class="span5">
 		'.$panelRights.'

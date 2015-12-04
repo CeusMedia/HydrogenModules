@@ -20,14 +20,14 @@ return '
 					'.UI_HTML_Elements::Input( 'status', $words['status'][$user->status], 'span12 user-status status'.$user->status, TRUE ).'
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12 buttonbar btn-group">
+			<div class="buttonbar">
+				<div class="btn-group">
 					'.UI_HTML_Elements::LinkButton(
-						'./manage/user/disable/'.$userId,
-						'<i class="icon-remove icon-white"></i> '.$words['editStatus']['buttonDisable'],
-						'btn btn-small btn-danger',
-						$words['editStatus']['buttonDisableConfirm'],
-						$user->status == -2
+						'./manage/user/accept/'.$userId,
+						'<i class="icon-ok icon-white"></i> '.$words['editStatus']['buttonAccept'],
+						'btn btn-small btn-success',
+						$words['editStatus']['buttonAcceptConfirm'],
+						$user->status == 1
 					).'
 					'.UI_HTML_Elements::LinkButton(
 						'./manage/user/ban/'.$userId,
@@ -37,11 +37,11 @@ return '
 						$user->status != 1
 					).'
 					'.UI_HTML_Elements::LinkButton(
-						'./manage/user/accept/'.$userId,
-						'<i class="icon-ok icon-white"></i> '.$words['editStatus']['buttonAccept'],
-						'btn btn-small btn-success',
-						$words['editStatus']['buttonAcceptConfirm'],
-						$user->status == 1
+						'./manage/user/disable/'.$userId,
+						'<i class="icon-remove icon-white"></i> '.$words['editStatus']['buttonDisable'],
+						'btn btn-small btn-danger',
+						$words['editStatus']['buttonDisableConfirm'],
+						$user->status == -2
 					).'
 				</div>
 			</div>

@@ -69,7 +69,7 @@ return '
 	<h3>'.$words['indexList']['heading'].' <small class="muted">('.$total.'/'.$all.')</small></h3>
 	<div class="content-panel-inner">
 		'.$list.'
-		<div class="row-fluid buttonbar">
+		<div class="buttonbar">
 			<div class="btn-toolbar">
 				'.$pagination.'
 				'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-small btn-success' ).'

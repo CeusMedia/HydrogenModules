@@ -13,10 +13,10 @@ return $textIndexTop.'
 <div>
 	'.$heading.'
 	<div class="row-fluid">
-		<div class="span2">
+		<div class="span3">
 			'.$filter.'
 		</div>
-		<div class="span10">
+		<div class="span9">
 			'.$list.'
 		</div>
 	</div>

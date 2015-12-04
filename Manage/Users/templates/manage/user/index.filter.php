@@ -41,7 +41,7 @@ $script	= '
 $env->page->js->addScript( $script );
 
 return '
-<div class="content-panel">
+<div class="content-panel content-panel-filter">
 	<h3>'.$words['indexFilter']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form id="form_filter-users" name="filterUsers" action="./manage/user/filter" method="post">
