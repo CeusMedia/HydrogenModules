@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
 	<title>Admin: Mail</title>
-	<description></description>
+	<description/>
 	<category>Administration</category>
 	<version>0.5</version>
 	<log version="0.1">Initial prototype.</log>
@@ -59,7 +59,7 @@
 	</files>
 	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
 	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
-	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anhänge</link>
+	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anh&#xE4;nge</link>
 	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
 	<todo>Implement attachment filters</todo>
 	<relations>
@@ -67,4 +67,5 @@
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
+	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">View_Admin_Mail_Attachment::___onRegisterTab</hook>
 </module>
