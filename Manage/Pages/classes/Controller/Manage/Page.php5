@@ -154,10 +154,12 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->redirect( 'manage/page', 'add' );
 	}
 
-	public function edit( $pageId ){
+	public function edit( $pageId, $version = NULL ){
 		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
 		$words		= (object) $this->getWords( 'edit' );
+
+//		$logic		= Logic_Versions::getInstance( $this->env );
 
 		$editors	= array( 'none' );
 		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
@@ -190,6 +192,21 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 					$this->messenger->noteError( $words->msgErrorIdentifierTaken, $this->request->get( 'identifier' ) );
 			}
 			else{
+
+				if( $this->env->getModules()->has( 'Resource_Versions' ) ){					//  versioning module is installed
+					$contentNew	= $this->request->get( 'content' );
+					if( $page->content !== $contentNew ){									//  new content differs from page content
+						$logic		= Logic_Versions::getInstance( $this->env );			//  start versioning logic
+						$versions	= $logic->getAll( 'Info_Pages', $pageId );
+						$found		= FALSE;												//  init indicator if current page content is a version
+						foreach( $versions as $version )									//  iterate all page versions
+							if( $version->content === $page->content )						//  page content is a version
+								$found = TRUE;												//  note this
+						if( !$found )														//  page content is not a version
+							$logic->add( 'Info_Pages', $pageId, $page->content );			//  store current page content as version
+					}
+				}
+
 				$data		= array();
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( $column ) )
@@ -217,6 +234,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 		$page		= (object) array( 'pageId' => 0 );
 		$path		= $this->frontend->getUri();
+		$versions	= array();
 		if( $pageId ){
 			$page		= $model->get( (int) $pageId );
 			$this->session->set( 'module.manage_pages.scope', $page->scope );
@@ -225,12 +243,26 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				if( $parent )
 					$path	.= $parent->identifier.'/';
 			}
+			if( $this->env->getModules()->has( 'Resource_Versions' ) ){
+				$logic		= Logic_Versions::getInstance( $this->env );
+				$orders		= array( 'version' => 'DESC' );
+				$limits		= array( 0, 10 );
+				$versions	= $logic->getAll( 'Info_Pages', $pageId, array(), $orders, $limits );
+				if( !is_null( $version ) ){
+					$entry	= $logic->get( 'Info_Pages', $pageId, $version );
+					if( $entry )
+						$page->content	= $entry->content;
+				}
+
+			}
 		}
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pages', $pages );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
+		$this->addData( 'version', $version );
+		$this->addData( 'versions', $versions );
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier );
 		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );

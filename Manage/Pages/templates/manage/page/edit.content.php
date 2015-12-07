@@ -1,4 +1,13 @@
 <?php
+
+$optVersion	= array( '' => '- latest -' );
+foreach( $versions as $entry )
+	$optVersion[$entry->version]	= $entry->version;
+
+$optVersion	= UI_HTML_Elements::Options( $optVersion, $version );
+
+//die;
+
 if( $page->format === "MD" )
 	unset( $words['editors']['TinyMCE'] );
 $optEditor	= $words['editors'];
@@ -12,17 +21,28 @@ $optFormat	= UI_HTML_Elements::Options( $optFormat, $page->format );
 $format		= $page->format === "MD" ? "Markdown" : "HTML";
 
 $content	= '<div><small class="muted"><em>'.$words['edit']['no_editor'].'</em></small></div><br/>';
+
+$fieldVersion	= '';
+if( $versions ){
+	$fieldVersion	= '
+		<div class="span2">
+			<label for="input_version">'.$words['edit']['labelVersion'].'</label>
+			<select class="span12" name="version" id="input_version" onchange="loadVersion('.$page->pageId.', this.value);">'.$optVersion.'</select>
+		</div>';
+}
+
 if( $page->type == 0 ){
 	$content	= '
 	<div class="row-fluid">
-		<div class="span4">
+		<div class="span3">
 			<label for="input_editor">'.$words['edit']['labelEditor'].'</label>
 			<select class="span12" name="editor" id="input_editor">'.$optEditor.'</select>
 <!--			<div class="input-prepend">
 				<span class="add-on">'.$words['edit']['labelEditor'].'</span>
-				<select class="span12" name="editor" id="input_editor" onchange="PageEditor.setEditor(this)">'.$optEditor.'</select>
+				<select class="span12" name="editor" id="input_editor" onchange="PageEditor.setEditor(this);">'.$optEditor.'</select>
 			</div>-->
 		</div>
+		'.$fieldVersion.'
 <!--		<div class="span3">
 			<label class="checkbox">
 				<input type="checkbox" name="autosave" disabled="disabled"/>
@@ -40,6 +60,9 @@ if( $page->type == 0 ){
 	</div>
 	<script>
 var pageType = '.(int) $page->type.';
+function loadVersion(pageId, version){
+	document.location.href="./manage/page/edit/"+pageId+"/"+version;
+}
 	</script>';
 }
 

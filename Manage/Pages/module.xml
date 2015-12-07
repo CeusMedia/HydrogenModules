@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.17</version>
+	<version>0.7.18</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -20,6 +20,7 @@
 	<log version="0.7.15">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.7.16">Replace module JS:Optionals by JS:Form:Optionals.</log>
 	<log version="0.7.17">Apply jQuery UI sortable to page tree.</log>
+	<log version="0.7.18">Add support for module Resource:Versions.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
