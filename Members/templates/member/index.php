@@ -3,7 +3,7 @@ $helperGravatar	= new View_Helper_Gravatar( $env );
 
 
 $panelFilter	= '
-<div class="content-panel">
+<div class="content-panel content-panel-filter">
 	<h3>Filter</h3>
 	<div class="content-panel-inner">
 		<form action="./member/filter" method="post">
@@ -20,28 +20,6 @@ $panelFilter	= '
 		</form>
 	</div>
 </div>';
-
-/*
-$table	= '<div><em><small class="muted">Keine gefunden.</small></em></div>';
-if( $users ){
-	$list	= array();
-	$helperMember	= new View_Helper_Member( $env );
-	$helperMember->setLinkUrl( './member/view/%d' );
-	foreach( $users as $user ){
-		$helperMember->setUser( $user );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $helperMember->render() ),
-			UI_HTML_Tag::create( 'td', '<small>'.date( 'd.m.Y', $user->relation->createdAt ).'</small>' ),
-			UI_HTML_Tag::create( 'td', '<small>'.date( 'd.m.Y', $user->relation->modifiedAt ).'</small>' ),
-		) );
-	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "120", "120" );
-	$heads		= UI_HTML_Elements::TableHeads( array( 'Benutzer', 'angefragt', 'bestätigt' ) );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
-}
-*/
 
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 $helperPages	= new \CeusMedia\Bootstrap\PageControl( './member', $page, $pages );
@@ -105,7 +83,7 @@ if( $incoming || $outgoing ){
 }
 
 $panelPending	= '
-<div class="content-panel">
+<div class="content-panel content-panel-info">
 	<h3>Offene Anfragen</h3>
 	<div class="content-panel-inner">
 		'.$list.'
