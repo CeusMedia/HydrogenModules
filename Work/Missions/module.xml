@@ -19,7 +19,7 @@ code>
 	<log version="0.8.30">Improved AJAX request performance and day list buttons.</log>
 	<log version="0.8.31">Implemented new filter handling and improved projects filter.</log>
 	<log version="0.8.32">Changed behavior: Show mission first and allow to edit if user role right is given.</log>
-	<log version="0.8.33">Improved handling of edit requests without set user role right.</log> 
+	<log version="0.8.33">Improved handling of edit requests without set user role right.</log>
 	<log version="0.8.34">Moved context menu setup from template to JavaScript class WorkMissionsCalendar.</log>
 	<log version="0.8.35">Improved context menu on calendar view.</log>
 	<log version="0.8.36">Refactoring tense perspectives.</log>
@@ -238,6 +238,21 @@ CREATE TABLE `<%?prefix%>mission_filters` (
   PRIMARY KEY (`missionFilterId`),
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mission_versions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_versions` (
+  `missionVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `missionId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `version` int(6) unsigned NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`missionVersionId`),
+  KEY `missionId` (`missionId`),
+  KEY `userId` (`userId`),
+  KEY `version` (`version`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.8.8"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mission_changes`;
