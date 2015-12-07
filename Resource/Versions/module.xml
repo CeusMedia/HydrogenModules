@@ -26,6 +26,7 @@ $logic	= Logic_Versions::getInstance( $env );
 $logic->get( 'MyModule', 15, 3 );
 <code
 This example will load version 3 of related to module "MyModule" entry 15.
+To load the latest version skip the third parameter.
 
 ]]></description>
 	<category>Resource</category>

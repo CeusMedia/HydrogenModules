@@ -32,7 +32,7 @@ class Model_Version extends CMF_Hydrogen_Model {
 		'module',
 		'id',
 		'version',
-		'timestmap',
+		'timestamp',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
