@@ -2,7 +2,11 @@
 <module>
 	<title>Manage: My User Avatar</title>
 	<description>Extends own user management by avatar settings.</description>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Support tabs.</log>
+	<log version="0.2.2">Add helper.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
@@ -10,35 +14,38 @@
 	<files>
 		<class>Controller/Manage/My/User/Avatar.php5</class>
 		<class>Model/User/Avatar.php5</class>
+		<class>View/Manage/my/User/Avatar.php5</class>
 		<class>View/Helper/UserAvatar.php5</class>
 		<template>manage/my/user/avatar/index.php</template>
-		<style load="auto">site.manage.my.user.avatar.css</style>
+		<style load="auto">module.manage.my.user.avatar.css</style>
 		<locale>de/manage/my/user/avatar.ini</locale>
 		<locale>en/manage/my/user/avatar.ini</locale>
 	</files>
-	<relations>
-		<needs type="module">Manage_My_User</needs>
-	</relations>
+	<config type="string" name="path.images" mandatory="yes" title="path to images within managed application, needs trailing slash">contents/avatars/</config>
 	<config name="maxSize" type="float" title="maximum upload file size in MB">2</config>
 	<config name="minHeight" type="float" title="minimum image height on upload in pixels">64</config>
 	<config name="minWidth" type="float" title="minimum image width on upload in pixels">64</config>
 	<config name="useGravatar" type="boolean">yes</config>
 	<config name="useUpload" type="boolean">yes</config>
+	<relations>
+		<needs type="module">Manage_My_User</needs>
+	</relations>
+	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User_Avatar::___onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>user_avatars`;
-CREATE TABLE IF NOT EXISTS `user_avatars` (
+DROP TABLE IF EXISTS `<%?prefix%>user_avatars`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_avatars` (
   `userAvatarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(10) unsigned NOT NULL,
-  `managerId` int(10) unsigned NOT NULL,
-  `filename` varchar(200) NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`userAvatarId`),
   KEY `userId` (`userId`),
-  KEY `type` (`type`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%prefix%>user_avatars`;
+DROP TABLE IF EXISTS `<%?prefix%>user_avatars`;
 ]]></sql>
 </module>
