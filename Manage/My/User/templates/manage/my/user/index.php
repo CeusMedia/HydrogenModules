@@ -23,38 +23,38 @@ $panelEdit	= '
 			HTML::DivClass( 'row-fluid panel',
 				HTML::DivClass( 'span4',
 					HTML::Label( 'username', $w->labelUsername, 'mandatory' ).
-					HTML::DivClass( 'input-prepend',
-						HTML::SpanClass( 'add-on', '<i class="icon-user"></i>' ).
+//					HTML::DivClass( 'input-prepend',
+//						HTML::SpanClass( 'add-on', '<i class="not-icon-user fa fa-fw fa-user"></i>' ).
 		//				HTML::Input( 'username', $user->username, 'span11 mandatory' )
 						UI_HTML_Tag::create( 'input', NULL, array(
 							'name'		=> 'username',
 							'id'		=> 'input_username',
 							'value'		=> htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ),
-							'class'		=> 'span11',
+							'class'		=> 'span12',
 							'required'	=> 'required',
 							'type'		=> 'text',
 						) )
-					)
+//					)
 				).
 				HTML::DivClass( 'span8',
 					HTML::Label( 'email', $w->labelEmail, $mandatoryEmail ? 'mandatory' : '' ).
-					HTML::DivClass( 'input-prepend span12',
-						HTML::SpanClass( 'add-on', '<i class="icon-envelope"></i>' ).
+//					HTML::DivClass( 'input-prepend span12',
+//						HTML::SpanClass( 'add-on', '<i class="not-icon-envelope fa fa-fw fa-envelope"></i>' ).
 		//				HTML::Input( 'email', $user->email, 'span11 mandatory' )
 						UI_HTML_Tag::create( 'input', NULL, array(
 							'name'		=> 'email',
 							'id'		=> 'input_email',
 							'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
-							'class'		=> 'span11',
+							'class'		=> 'span12',
 							'required'	=> $mandatoryEmail ? 'required' : NULL,
 							'type'		=> 'text',
 						) )
-					)
+//					)
 				)
 			).
-			'<hr/>'.
+			HTML::HR.
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span2',
+				HTML::DivClass( 'span3',
 					HTML::Label( 'gender', $w->labelGender, '' ).
 					HTML::Select( 'gender', $optGender, 'span12' )
 				).
@@ -62,7 +62,7 @@ $panelEdit	= '
 					HTML::Label( 'salutation', $w->labelSalutation, '' ).
 					HTML::Input( 'salutation', $user->salutation, 'span12' )
 				).
-				HTML::DivClass( 'span4',
+				HTML::DivClass( 'span3',
 					HTML::Label( 'firstname', $w->labelFirstname, $mandatoryFirstname ? 'mandatory' : '' ).
 		//				HTML::Input( 'firstname', $user->firstname, 'span12' )
 					UI_HTML_Tag::create( 'input', NULL, array(
@@ -121,22 +121,32 @@ $panelEdit	= '
 					HTML::Label( 'password', $w->labelPassword, 'mandatory' ).
 				)
 			).
-		*/	HTML::Buttons(
+		*/	HTML::Buttons( array(
+				UI_HTML_Tag::create( 'small', 'Änderungen bitte mit dem Passwort bestätigen.', array( 'class' => 'not-muted' ) ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6',
+					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
-							HTML::SpanClass( 'add-on', '<i class="icon-lock"></i>' ).
+							HTML::SpanClass( 'add-on', '<i class="not-icon-lock fa fa-fw fa-lock"></i>' ).
 							'<input type="password" name="password" id="input_password" class="span7" required placeholder="'.$w->labelPassword.'" value="" autocomplete="off"/>'.
 		//					HTML::Password( 'password', 'span11 mandatory' )
 							UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
-					)
-				)
+					) )
+				) )
 		//		HTML::Button( 'saveUser', $w->buttonSave, 'button save' )
 			)
 		).'
 	</div>
-</div>';
+</div>
+<style>
+.content-panel-info .dl-horizontal dt {
+	width: 40%;
+	}
+.content-panel-info .dl-horizontal dd {
+	margin-left: 45%;
+	}
+</style>
+';
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
 

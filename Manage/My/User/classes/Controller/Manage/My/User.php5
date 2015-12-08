@@ -143,17 +143,30 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
 
 		$data = $request->getAllFromSource( 'post' );
-		if( empty( $data['passwordOld'] ) )
-			$messenger->noteError( $words->msgNoPasswordOld );
-		else if( md5( $data['passwordOld'] ) !== $user->password )
-			$messenger->noteError( $words->msgPasswordMismatch );
-		if( empty( $data['passwordNew'] ) )
-			$messenger->noteError( $words->msgNoPasswordNew );
-		else if( $pwdMinLength && strlen( $data['passwordNew'] ) < $pwdMinLength )
-			$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+		$passwordOld		= trim( $request->getFromSource( 'passwordOld', 'post' ) );
+		$passwordNew		= trim( $request->getFromSource( 'passwordNew', 'post' ) );
+		$passwordConfirm	= trim( $request->getFromSource( 'passwordConfirm', 'post' ) );
 
-		if( !$messenger->gotError() ){
-			$modelUser->edit( $userId, array( 'password' => md5( $data['passwordNew'] ) ) );
+		if( empty( $data['passwordNew'] ) )
+			$messenger->noteError( $words->msgPasswordNewMissing );
+		else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
+			$messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
+//		else if( $pwdMinStrength && ... < $pwdMinStrength )
+//			$messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
+		else if( !strlen( $passwordNew ) )
+			$messenger->noteError( $words->msgPasswordNewMissing );
+		else if( !strlen( $passwordConfirm ) )
+			$messenger->noteError( $words->msgPasswordConfirmMissing );
+		else if( $passwordNew !== $passwordConfirm )
+			$messenger->noteError( $words->msgPasswordConfirmMismatch );
+		else if( !strlen( $passwordOld ) )
+			$messenger->noteError( $words->msgPasswordOldMissing );
+		else if( $passwordOld === $passwordNew )
+			$messenger->noteError( $words->msgPasswordNewSame );
+		else if( md5( $passwordSalt.$passwordOld ) !== $user->password )
+			$messenger->noteError( $words->msgPasswordOldMismatch );
+		else{
+			$modelUser->edit( $userId, array( 'password' => md5( $passwordSalt.$passwordNew ) ) );
 			$messenger->noteSuccess( $words->msgSuccess );
 		}
 		$this->restart( './manage/my/user' );

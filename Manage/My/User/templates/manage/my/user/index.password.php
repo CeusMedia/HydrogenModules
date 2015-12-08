@@ -24,27 +24,56 @@ $(document).ready(function(){
 ';
 $env->page->js->addScript( $script );
 
-return '
-<div class="content-panel">
-	<h3>'.$w->legend.'</h3>
-	<div class="content-panel-inner">'.
-		HTML::Form( './manage/my/user/password', 'my_user_password',
+return HTML::DivClass( 'content-panel content-panel-form', array(
+	UI_HTML_Tag::create( 'h4', $w->legend ),
+	HTML::DivClass( 'content-panel-inner',
+		HTML::Form( './manage/my/user/password', 'my_user_password', array(
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span6',
-					HTML::Label( 'passwordOld', $w->labelPassword, 'mandatory' ).
-					'<input type="password" name="passwordOld" id="input_passwordOld" class="span12 mandatory" required value="" autocomplete="off"/>'
-		//			HTML::Password( 'passwordOld', 'span12 mandatory' )
-				).
-				HTML::DivClass( 'span6',
-					HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory' ).
-					'<input type="password" name="passwordNew" id="input_passwordNew" class="span12 mandatory" required value="" autocomplete="off"/>'
-		//			HTML::Input( 'passwordNew', NULL, 'span12 mandatory' )
-				)
-			).
+				HTML::DivClass( 'span8', array(
+					HTML::Label( 'passwordOld', $w->labelPasswordOld, 'mandatory', $w->labelPasswordOld_title ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> "password",
+						'name'			=> "passwordOld",
+						'id'			=> "input_passwordOld",
+						'class'			=> "span12 mandatory",
+//						'required'		=> 'required',
+						'value'			=> "",
+						'autocomplete'	=> "off"
+					) ),
+				) )
+			),
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span8', array(
+					HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory', sprintf( $w->labelPasswordNew_title, $pwdMinLength ) ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> "password",
+						'name'			=> "passwordNew",
+						'id'			=> "input_passwordNew",
+						'class'			=> "span12 mandatory",
+//						'required'		=> 'required',
+						'value'			=> "",
+						'autocomplete'	=> "off"
+					) ),
+				) )
+			),
+			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span8', array(
+					HTML::Label( 'passwordConfirm', $w->labelPasswordConfirm, 'mandatory', $w->labelPasswordConfirm_title ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> "password",
+						'name'			=> "passwordConfirm",
+						'id'			=> "input_passwordConfirm",
+						'class'			=> "span12 mandatory",
+//						'required'		=> 'required',
+						'value'			=> "",
+						'autocomplete'	=> "off"
+					) ),
+				) )
+			),
 			HTML::Buttons(
 				UI_HTML_Elements::Button( 'savePassword', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-small btn-primary' )
 			)
-		).'
-	</div>
-</div>';
+		) )
+	) )
+);
 ?>
