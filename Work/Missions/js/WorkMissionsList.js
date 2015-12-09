@@ -62,6 +62,7 @@ var WorkMissionsList = {
 		$("#day-list-large").html(data.lists.large).stop(true);
 		$("#day-list-small").html(data.lists.small).stop(true);
 		data.count ? $("#day-lists-empty").hide() : $("#day-lists-empty").show();
+		data.total ? $("#mission-folders").show() : $("#mission-folders").hide();
 		WorkMissionsList.makeTableSortable($("#layout-content table"),{
 			url: "./work/mission/filter/",
 			order: WorkMissionsList.sortBy,

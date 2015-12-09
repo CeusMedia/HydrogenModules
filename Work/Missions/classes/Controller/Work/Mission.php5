@@ -11,6 +11,11 @@
  */
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
+	public function help( $topic = NULL ){
+		$this->addData( 'topic', $topic );
+	}
+
+
 	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
 		try{
 //			if( !$this->request->isAjax() )
@@ -323,18 +328,25 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$listSmall->setMissions( $listLarge->getDayMissions( $day ) );
 			$listSmall->setWords( $words );
 
+			$allDayMissions	= $listLarge->getDayMissions();
+
 			$buttonsLarge	= new View_Helper_Work_Mission_List_DayControls( $this->env );
 			$buttonsLarge->setWords( $words );
-			$buttonsLarge->setDayMissions( $listLarge->getDayMissions() );
+			$buttonsLarge->setDayMissions( $allDayMissions );
 
 			$buttonsSmall	= new View_Helper_Work_Mission_List_DayControlsSmall( $this->env );
 			$buttonsSmall->setWords( $words );
-			$buttonsSmall->setDayMissions( $listLarge->getDayMissions() );
+			$buttonsSmall->setDayMissions( $allDayMissions );
+
+			$total	= 0;
+			foreach( $allDayMissions as $entry )
+				$total += count( $entry );
 
 			$data		= array(
 				'day'		=> $day,
-				'items'		=> $listLarge->getDayMissions( $day ),
-				'count'		=> count( $listLarge->getDayMissions( $day ) ),
+				'items'		=> $allDayMissions[$day],//$listLarge->getDayMissions( $day ),
+				'count'		=> count( $allDayMissions[$day] ),//$listLarge->getDayMissions( $day ) ),
+				'total'		=> $total,
 				'buttons'	=> array(
 					'large'	=> $buttonsLarge->render(),
 					'small'	=> $buttonsSmall->render(),

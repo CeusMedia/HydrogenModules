@@ -11,6 +11,14 @@
  */
 class View_Work_Mission extends CMF_Hydrogen_View{
 
+	public function help(){
+		$topic	= $this->getData( 'topic' );
+		if( $topic == "sync" ){
+			return $this->loadContentFile( 'html/work/mission/export.html' );
+		}
+		return "HELP";
+	}
+
 	protected function __onInit(){
 		$page			= $this->env->getPage();
 		$session		= $this->env->getSession();
