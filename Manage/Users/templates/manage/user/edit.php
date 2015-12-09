@@ -64,6 +64,7 @@ $panelEdit	= '
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
@@ -145,7 +146,7 @@ $panelEdit	= '
 			</div>
 
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
+				'.UI_HTML_Elements::LinkButton( $from ? $from : './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
 				'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				'.UI_HTML_Elements::LinkButton(

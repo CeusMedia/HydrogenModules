@@ -223,6 +223,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$config		= $this->env->getConfig();
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
+		$this->addData( 'from', $request->get( 'from' ) );
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
