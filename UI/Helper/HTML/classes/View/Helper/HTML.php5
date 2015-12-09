@@ -28,6 +28,7 @@ class HTML/* extends UI_HTML_Elements*/ {
 	}
 
 	static public function Buttons( $content ){
+		$content	= is_array( $content ) ? join( $content ) : $content;
 		return self::DivClass( 'buttonbar',
 			$content.
 			self::DivClass( 'column-clear' )
@@ -144,7 +145,11 @@ class HTML/* extends UI_HTML_Elements*/ {
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
-	static public function Label( $inputName = NULL, $content, $class = NULL ){
+	static public function Label( $inputName = NULL, $content, $class = NULL, $acronym = NULL, $suffix = NULL ){
+		if( $acronym )
+			$content	= self::Tag( 'abbr', $content, array( 'title' => $acronym ) );
+		if( $suffix )
+			$content	.= '&nbsp;'.self::Tag( 'small', '('.$suffix.')', array( 'class' => 'muted' ) );
 		$attributes	= array(
 			'for'		=> $inputName === NULL ? NULL : self::$prefixIdInput.$inputName,
 			'class'		=> $class,
