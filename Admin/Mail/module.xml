@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -25,6 +25,7 @@
 	<log version="0.4.7">Add panel to list available attachment files.</log>
 	<log version="0.4.8">Finish filter.</log>
 	<log version="0.5">Add tabs and separate views.</log>
+	<log version="0.5.1">Use module Resource:Upload.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -64,6 +65,7 @@
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>

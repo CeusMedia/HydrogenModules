@@ -9,7 +9,7 @@ $panelFiles		= $this->loadTemplateFile( 'admin/mail/attachment/index.files.php' 
 
 $tabs	= View_Admin_Mail_Attachment::renderTabs( $env, 'upload' );
 
-$maxSize	= Alg_UnitFormater::formatBytes( min( Logic_Upload::getMaxUploadSize() ) );
+$maxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
 
 return $tabs.$textTop.'
 <div class="row-fluid">
