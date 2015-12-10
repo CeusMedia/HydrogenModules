@@ -2,13 +2,14 @@
 <module>
 	<title>Members</title>
 	<description><![CDATA[Basic index page, ready for custom content and style.]]></description>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Complete basic functionality.</log>
 	<log version="0.3.1">Add tabs.</log>
 	<log version="0.3.2">Add general helper to render user label or thumbnail.</log>
 	<log version="0.3.3">Add mails.</log>
+	<log version="0.3.4">Use new user avatar helper instead of gravatar helper.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -21,7 +21,15 @@ class View_Helper_Member{
 		switch( $this->mode ){
 			case 'thumbnail':
 				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$image		= $gravatar->getImage( $this->user->email, 256 );
+				$gravatar->setUser( $this->user );
+				$gravatar->setSize( 256 );
+				$image		= $gravatar->render();
+				if( class_exists( 'View_Helper_UserAvatar' ) ){
+					$helper	= new View_Helper_UserAvatar( $this->env );
+					$helper->setUser( (int) $this->user->userId );
+					if( $helper->has() )
+						$image	= $helper->render();
+				}
 				$url		= sprintf( $this->url, $this->user->userId );
 				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array(
 					'class'	=> 'autocut'
@@ -34,20 +42,40 @@ class View_Helper_Member{
 			case 'inline':
 			default:
 				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$image		= $gravatar->getImage( $this->user->email, 20 );
-				$link		= UI_HTML_Tag::create( 'a', $this->user->username, array(
-					'href'	=> sprintf( $this->url, $this->user->userId )
-				) );
-				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$link, array(
+				$gravatar->setUser( $this->user );
+				$gravatar->setSize( 20 );
+				$image		= $gravatar->render();
+				if( class_exists( 'View_Helper_UserAvatar' ) ){
+					$helper	= new View_Helper_UserAvatar( $this->env );
+					$helper->setUser( (int) $this->user->userId );
+					if( $helper->has() )
+						$image	= $helper->render();
+				}
+				$label		= $this->user->username;
+				if( $this->url ){
+					$url		= sprintf( $this->url, $this->user->userId );
+					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array(
+						'href'	=> $url
+					) );
+					$image		= UI_HTML_Tag::create( 'a', $image, array(
+						'href'	=> $url
+					) );
+
+				}
+				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array(
 					'class'	=> 'user',
 				) );
 				break;
 		}
 	}
 
-	static public function renderStatic( $env, $userObjectOrId ){
+	static public function renderStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
+		if( $url )
+			$helper->setLinkUrl( $url );
+		if( $mode )
+			$helper->setMode( $mode );
 		return $helper->render();
 	}
 

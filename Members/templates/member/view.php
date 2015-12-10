@@ -11,10 +11,12 @@ $isRelated		= $relation && $relation->status == 2;
 
 $w	= (object) $words['view'];
 
-$helperGravatar	= new View_Helper_Gravatar( $env );
+$helperAvatar	= new View_Helper_UserAvatar( $env );
+$helperAvatar->setUser( $user );
+$helperAvatar->setSize( 256 );
 
 $image	= UI_HTML_Tag::create( 'img', NULL, array(
-	'src'	=> $helperGravatar->getUrl( $user->email, 256 ),
+	'src'	=> $helperAvatar->getImageUrl(),
 //	'class'	=> 'img-polaroid',
 ) );
 
