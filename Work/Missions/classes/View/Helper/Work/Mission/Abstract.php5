@@ -1,12 +1,12 @@
 <?php
 abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helper_Abstract{
 
-	protected $useGravatar	= FALSE;
+	protected $useAvatar	= FALSE;
 	protected $users		= array();
 
 	public function __construct( $env ){
 		$this->setEnv( $env );
-		$this->useGravatar		= $this->env->getModules()->has( 'UI_Helper_Gravatar' );
+		$this->useAvatar		= class_exists( 'View_Helper_UserAvatar' );
 	}
 
 	protected function formatDays( $days ){
@@ -33,11 +33,12 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 			return "UNKNOWN";
 		$worker	= $this->users[(int) $userId];
 
-		if( !$this->useGravatar )
+		if( !$this->useAvatar )
 			return $worker->username;
-		$gravatar	= new View_Helper_Gravatar( $this->env );
-		$workerPic	= $gravatar->getImage( $worker->email, 20 );
-		$workerPic	= UI_HTML_Tag::create( 'div', $workerPic, array( 'class' => 'user-avatar' ) );
+		$avatar	= new View_Helper_UserAvatar( $this->env );
+		$avatar->setUser( $worker );
+		$avatar->setSize( 20 );
+		$workerPic	= UI_HTML_Tag::create( 'div', $avatar->render(), array( 'class' => 'user-avatar' ) );
 		$workerName	= UI_HTML_Tag::create( 'div', $worker->username, array( 'class' => 'user-label autocut', 'style' => 'width: '.$width.'px' ) );
 		return UI_HTML_Tag::create( 'div', $workerPic.$workerName, array(
 			'class'	=> 'user not-autocut',
