@@ -1,5 +1,5 @@
 <?php
-class Mail_Member_Release extends Mail_Abstract{
+class Mail_Member_Revoke extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -9,9 +9,9 @@ class Mail_Member_Release extends Mail_Abstract{
 		$data['appBaseUrl']	= $this->env->url;
 //		$data['from']		= $data['from'] ? '?from='.$data['from'] : '';
 		$data['config']		= $this->env->getConfig()->getAll();
-		$body	= $this->view->loadContentFile( 'mail/member/release.txt', $data );
+		$body	= $this->view->loadContentFile( 'mail/member/revoke.txt', $data );
 
-		$this->setSubject( $wordsMails['mails']['onRelease'] );
+		$this->setSubject( $wordsMails['mails']['onRevoke'] );
 		$this->addTextBody( $body );
 	}
 }

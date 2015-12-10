@@ -15,9 +15,10 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 	}
 
 	public function accept( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->messenger->noteError( $words->errorRelationIdInvalid );
 			$from	= $this->getReferrer();
 			$this->restart( $from, $from ? FALSE : TRUE );
 		}
@@ -32,10 +33,10 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->modelRelation->edit( $relation->userRelationId, array(
 				'status'	=> 2,
 			) );
-			$this->messenger->noteSuccess( 'Relation request has been accepted. The other user has been informed.' );
+			$this->messenger->noteSuccess( $words->successAccepted );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Sending the mail failed. Please try again later!' );
+			$this->messenger->noteFailure( $words->failureMail );
 			$this->callHook( 'Server:System', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
@@ -105,6 +106,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 	}
 
 	public function reject( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
 			$this->messenger->noteError( 'Invalid user relation ID.' );
@@ -122,10 +124,10 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->modelRelation->edit( $relation->userRelationId, array(
 				'status'	=> -1,
 			) );
-			$this->messenger->noteSuccess( 'Relation request has been rejected. The other user has been informed.' );
+			$this->messenger->noteSuccess( $words->successRejected );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Sending the mail failed. Please try again later!' );
+			$this->messenger->noteFailure( $words->failureMail );
 			$this->callHook( 'Server:System', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
@@ -135,6 +137,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 	}
 
 	public function release( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
 			$this->messenger->noteError( 'Invalid user relation ID.' );
@@ -153,10 +156,10 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			) );
 			$logicMail->handleMail( $mail, (int) $toUserId, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
-			$this->messenger->noteSuccess( 'Relation has been revoked. The other user has been informed.' );
+			$this->messenger->noteSuccess( $words->successReleased );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Sending the mail failed. Please try again later!' );
+			$this->messenger->noteFailure( $words->failureMail );
 			$this->callHook( 'Server:System', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
@@ -166,17 +169,18 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 	}
 
 	public function request( $userId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->getByIndices( array(
 			'fromUserId'	=> $this->userId,
 			'toUserId'		=> $userId,
 		) );
 		if( $relation ){
-			if( $relation->status == 1 ){
-				$this->messenger->noteError( 'Relation already requested and confirmed.' );
+			if( $relation->status == 2 ){
+				$this->messenger->noteError( $words->errorAlreadyAccepted );
 				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 			}
-			if( $relation->status == 0 ){
-				$this->messenger->noteError( 'Relation already requested. Please wait for confirmation!' );
+			if( $relation->status == 1 ){
+				$this->messenger->noteError( $words->errorAlreadyRequested );
 				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 			}
 		}
@@ -197,10 +201,10 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				'modifiedAt'	=> time(),
 			);
 			$this->modelRelation->add( $data );
-			$this->messenger->noteSuccess( 'Relation request has been sent. Please wait for confirmation!' );
+			$this->messenger->noteSuccess( $words->successRequested );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Sending the request mail failed. Please try again later!' );
+			$this->messenger->noteFailure( $words->failureMail );
 			$this->callHook( 'Server:System', 'logException', $this, $e );
 		}
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
@@ -214,18 +218,25 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$key		= array_search( $this->userId, $userIds );
 			if( $key !== FALSE )
 				unset( $userIds[$key] );
-			$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
-			foreach( $users as $user )
-				$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
+			$knownUsers	= $this->logicMember->getRelatedUserIds( $this->userId, 2 );
+			foreach( $knownUsers as $userId )
+				if( ( $key = array_search( $userId, $userIds ) ) !== FALSE )
+					unset( $userIds[$key] );
+			if( $userIds ){
+				$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
+				foreach( $users as $user )
+					$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
+			}
 		}
 		$this->addData( 'username', $query );
 		$this->addData( 'users', $users );
 	}
 
 	public function view( $userId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$user = $this->modelUser->get( $userId );
 		if( !$user ){
-			$this->messenger->noteError( 'Invalid user ID' );
+			$this->messenger->noteError( $words->errorUserIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$relation	= $this->logicMember->getUserRelation( $this->userId, $userId );

@@ -1,0 +1,8 @@
+
+Hallo  <%?receiver.firstname%> <%?receiver.surname%>!
+
+Der Benutzer <%sender.username%> (<%?sender.firstname%> <%?sender.surname%>) hat deine Anfrage nach einer Verbindung mit dir abgelehnt.
+Es ist wohl gerade nicht der richtige Zeitpunkt. Vielleicht probierst du es in naher Zukunft noch einmal.
+
+Hier findest du noch einmal das Profil des Benutzers:
+<%appBaseUrl%>member/view/<%sender.userId%>
