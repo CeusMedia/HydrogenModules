@@ -21,7 +21,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$from	= $this->getReferrer();
 			$this->restart( $from, $from ? FALSE : TRUE );
 		}
-
 		try{
 			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
@@ -30,7 +29,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
 			) );
 			$logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
-
 			$this->modelRelation->edit( $relation->userRelationId, array(
 				'status'	=> 2,
 			) );
@@ -106,44 +104,12 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterRelation', $this->session->get( 'filter_member_relation' ) );
 	}
 
-	public function search(){
-		$query		= trim( $this->request->get( 'username' ) );
-		$users		= array();
-		if( $query ){
-			$userIds	= $this->logicMember->getUserIdsByQuery( $query );
-			$key		= array_search( $this->userId, $userIds );
-			if( $key !== FALSE )
-				unset( $userIds[$key] );
-			$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
-			foreach( $users as $user )
-				$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
-		}
-		$this->addData( 'username', $query );
-		$this->addData( 'users', $users );
-	}
-
-	public function view( $userId ){
-		$user = $this->modelUser->get( $userId );
-		if( !$user ){
-			$this->messenger->noteError( 'Invalid user ID' );
-			$this->restart( NULL, TRUE );
-		}
-		$relation	= $this->logicMember->getUserRelation( $this->userId, $userId );
-		$modelRole	= new Model_Role( $this->env );
-		$role		= $modelRole->get( $user->roleId );
-		$this->addData( 'user', $user );
-		$this->addData( 'role', $role );
-		$this->addData( 'from', $this->getReferrer() );
-		$this->addData( 'relation', $relation );
-	}
-
 	public function reject( $userRelationId ){
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
 			$this->messenger->noteError( 'Invalid user relation ID.' );
 			$this->restart( NULL, TRUE );
 		}
-
 		try{
 			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
@@ -174,7 +140,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid user relation ID.' );
 			$this->restart( NULL, TRUE );
 		}
-
 		try{
 			$toUserId	= $relation->toUserId;
 			if( $relation->toUserId == $this->userId )
@@ -187,7 +152,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				'receiver'	=> $this->modelUser->get( $toUserId ),
 			) );
 			$logicMail->handleMail( $mail, (int) $toUserId, $language );
-
 			$this->modelRelation->remove( $relation->userRelationId );
 			$this->messenger->noteSuccess( 'Relation has been revoked. The other user has been informed.' );
 		}
@@ -216,7 +180,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 			}
 		}
-
 		try{
 			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
@@ -225,7 +188,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				'receiver'	=> $this->modelUser->get( $userId ),
 			) );
 			$logicMail->handleMail( $mail, (int) $userId, $language );
-
 			$data	= array(
 				'fromUserId'	=> $this->userId,
 				'toUserId'		=> $userId,
@@ -234,7 +196,6 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			);
-		//  @todo send mail
 			$this->modelRelation->add( $data );
 			$this->messenger->noteSuccess( 'Relation request has been sent. Please wait for confirmation!' );
 		}
@@ -243,5 +204,36 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->callHook( 'Server:System', 'logException', $this, $e );
 		}
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
+	}
+
+	public function search(){
+		$query		= trim( $this->request->get( 'username' ) );
+		$users		= array();
+		if( $query ){
+			$userIds	= $this->logicMember->getUserIdsByQuery( $query );
+			$key		= array_search( $this->userId, $userIds );
+			if( $key !== FALSE )
+				unset( $userIds[$key] );
+			$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
+			foreach( $users as $user )
+				$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
+		}
+		$this->addData( 'username', $query );
+		$this->addData( 'users', $users );
+	}
+
+	public function view( $userId ){
+		$user = $this->modelUser->get( $userId );
+		if( !$user ){
+			$this->messenger->noteError( 'Invalid user ID' );
+			$this->restart( NULL, TRUE );
+		}
+		$relation	= $this->logicMember->getUserRelation( $this->userId, $userId );
+		$modelRole	= new Model_Role( $this->env );
+		$role		= $modelRole->get( $user->roleId );
+		$this->addData( 'user', $user );
+		$this->addData( 'role', $role );
+		$this->addData( 'from', $this->getReferrer() );
+		$this->addData( 'relation', $relation );
 	}
 }
