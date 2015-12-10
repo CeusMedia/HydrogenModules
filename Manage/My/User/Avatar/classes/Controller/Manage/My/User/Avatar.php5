@@ -27,22 +27,23 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 	}
 
 	public function upload(){
+		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 //		$words		= (object) $this->getWords( 'update' );
 
 		$logic		= new Logic_Upload( $this->env );
-		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'maxSize' ), 'M' );
+		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'image.file.size' ), 'M' );
 		$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
 		$logic->setUpload( $request->get( 'upload' ) );
 		if( !$logic->checkSize( $maxSize ) ){
-			$messenger->noteError( "Die Datei ist zu groß." );
+			$messenger->noteError( $words->errorFileTooLarge );
 		}
 		else{
-			$maxSize	= 256;
 			$path		= $this->moduleConfig->get( 'path.images' );
 			$fileName	= $this->userId.'_'.md5( time() ).'.'.$logic->getExtension( TRUE );
 			$logic->saveTo( $path.$fileName );
+
 			$image		= new UI_Image( $path.$fileName );
 			$processor	= new UI_Image_Processing( $image );
 			$width		= (int) $image->getWidth();
@@ -51,8 +52,9 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 			$offsetX	= (int) floor( ( $width - $size ) / 2 );
 			$offsetY	= (int) floor( ( $height - $size ) / 2 );
 			$processor->crop( $offsetX, $offsetY, $size, $size );
-			if( $size > $maxSize )
-				$processor->resize( $maxSize, $maxSize );
+			$targetSize	= $this->moduleConfig->get( 'image.size' );
+			if( $size != $targetSize )
+				$processor->resize( $targetSize, $targetSize );
 			$image->save();
 			$avatar	= $this->modelAvatar->getByIndex( 'userId', $this->userId );
 			if( $avatar ){
@@ -65,7 +67,7 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 				'createdAt'	=> time(),
 			);
 			$this->modelAvatar->add( $data );
-			$messenger->noteSuccess( 'Das Bild wurde gespeichert.' );
+			$messenger->noteSuccess( $words->successImageSaved );
 		}
 		$this->restart( NULL, TRUE );
 	}
