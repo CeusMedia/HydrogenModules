@@ -1,13 +1,17 @@
 <?php
 class View_Helper_Navigation_Bootstrap_AccountMenu{
 
-	protected $gravatar;
+	protected $env;
 	protected $user;
 	protected $useGravatar		= FALSE;
 	protected $linksInside		= array();
 	protected $linksOutside		= array();
 	public $guestLabel			= "Guest";
 	public $guestEmail			= "<em>(not logged in)</em>";
+
+	public function __construct( $env ){
+		$this->env	= $env;
+	}
 
 	public function addInsideLink( $path, $label, $icon = NULL ){
 		$this->linksInside[]	= (object)array(
@@ -66,21 +70,27 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 			else
 				$links		= $this->renderSetLinks( $this->linksOutside );
 		}
-		if( $this->useGravatar ){
-			if( !empty( $this->gravatar ) )
-				$gravatar	= 'http://www.gravatar.com/avatar/'.$this->gravatar.'?s=32&d=mm&r=g';
-			else if( !empty( $this->email ) )
-				$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $this->email ) ) ).'?s=32&d=mm&r=g';
-			else
-				$gravatar	= 'http://www.gravatar.com/avatar/?s=32&d=mm&r=g';
+		$avatar	= '';
+		if( $this->user && $this->useGravatar ){
+			if( class_exists( 'View_Helper_UserAvatar' ) ){
+				$helper		= new View_Helper_UserAvatar( $this->env );
+				$helper->setUser( $this->user );
+				$helper->setSize( 32 );
+				$avatar	= $helper->render();
+			}
+			else if( class_exists( 'View_Helper_Gravatar' ) ){
+				$helper		= new View_Helper_Gravatar( $this->env );
+				$helper->setUser( $this->user );
+				$helper->setSize( 32 );
+				$avatar	= $helper->render();
+			}
+			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );
 		}
 
 		return '
 <div id="account-menu" class="dropdown '.$classMenu.'">
 	<div id="drop-account" role="button" class="dropdown-toggle" data-toggle="dropdown">
-		<div class="avatar">
-			<img src="'.$gravatar.'"/>
-		</div>
+		'.$avatar.'
 		<div class="labels">
 			<div class="username">'.$username.'</div>
 			<div class="email">'.$email.'</div>
@@ -143,9 +153,9 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 
 	public function setUser( $user, $gravatarHash = NULL ){
 		$this->user			= $user;
-		$this->gravatar		= md5( strtolower( trim( $user->email ) ) );
+/*		$this->gravatar		= md5( strtolower( trim( $user->email ) ) );
 		if( $gravatarHash )
-			$this->gravatar		= $gravatarHash;
+			$this->gravatar		= $gravatarHash;*/
 	}
 
 	public function useGravatar( $boolean = NULL ){
