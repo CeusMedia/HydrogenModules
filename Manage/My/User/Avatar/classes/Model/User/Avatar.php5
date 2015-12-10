@@ -10,7 +10,7 @@ class Model_User_Avatar extends CMF_Hydrogen_Model{
 		'modifiedAt',
 	);
 	protected $primaryKey	= 'userAvatarId';
-	protected $indizes		= array(
+	protected $indices		= array(
 		'userId',
 		'status',
 	);

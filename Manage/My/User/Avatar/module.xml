@@ -2,11 +2,12 @@
 <module>
 	<title>Manage: My User Avatar</title>
 	<description>Extends own user management by avatar settings.</description>
-	<version>0.2.2</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support tabs.</log>
 	<log version="0.2.2">Add helper.</log>
+	<log version="0.3">Finish implementation.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
@@ -14,7 +15,7 @@
 	<files>
 		<class>Controller/Manage/My/User/Avatar.php5</class>
 		<class>Model/User/Avatar.php5</class>
-		<class>View/Manage/my/User/Avatar.php5</class>
+		<class>View/Manage/My/User/Avatar.php5</class>
 		<class>View/Helper/UserAvatar.php5</class>
 		<template>manage/my/user/avatar/index.php</template>
 		<style load="auto">module.manage.my.user.avatar.css</style>
@@ -36,7 +37,7 @@ DROP TABLE IF EXISTS `<%?prefix%>user_avatars`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_avatars` (
   `userAvatarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) unsigned DEFAULT '0',
   `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
