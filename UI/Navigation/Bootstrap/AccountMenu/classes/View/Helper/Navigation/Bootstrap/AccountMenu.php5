@@ -151,8 +151,15 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		return $links;
 	}
 
-	public function setUser( $user, $gravatarHash = NULL ){
-		$this->user			= $user;
+	public function setUser( $userObjectOrId ){
+		if( is_object( $userObjectOrId ) )
+			$this->user	= $userObjectOrId;
+		else if( is_int( $userObjectOrId ) ){
+			$model	= new Model_User( $this->env );
+			$this->user	= $model->get( $userObjectOrId );
+		}
+		else
+			throw new InvalidArgumentException( "Given data is neither an user object nor an user ID" );
 	}
 
 	public function useAvatar( $boolean = NULL ){
