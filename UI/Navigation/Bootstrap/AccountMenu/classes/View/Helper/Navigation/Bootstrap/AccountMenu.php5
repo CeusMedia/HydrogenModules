@@ -3,7 +3,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 
 	protected $env;
 	protected $user;
-	protected $useGravatar		= FALSE;
+	protected $useAvatar		= FALSE;
 	protected $linksInside		= array();
 	protected $linksOutside		= array();
 	public $guestLabel			= "Guest";
@@ -71,7 +71,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 				$links		= $this->renderSetLinks( $this->linksOutside );
 		}
 		$avatar	= '';
-		if( $this->user && $this->useGravatar ){
+		if( $this->user && $this->useAvatar ){
 			if( class_exists( 'View_Helper_UserAvatar' ) ){
 				$helper		= new View_Helper_UserAvatar( $this->env );
 				$helper->setUser( $this->user );
@@ -153,13 +153,10 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 
 	public function setUser( $user, $gravatarHash = NULL ){
 		$this->user			= $user;
-/*		$this->gravatar		= md5( strtolower( trim( $user->email ) ) );
-		if( $gravatarHash )
-			$this->gravatar		= $gravatarHash;*/
 	}
 
-	public function useGravatar( $boolean = NULL ){
-		$this->useGravatar	= (boolean)$boolean;
+	public function useAvatar( $boolean = NULL ){
+		$this->useAvatar	= (boolean) $boolean;
 	}
 }
 ?>
