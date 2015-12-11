@@ -33,7 +33,7 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 //		$words		= (object) $this->getWords( 'update' );
 
 		$logic		= new Logic_Upload( $this->env );
-		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'image.file.size' ), 'M' );
+		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
 		$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
 		$logic->setUpload( $request->get( 'upload' ) );
 		if( !$logic->checkSize( $maxSize ) ){
@@ -41,33 +41,55 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 		}
 		else{
 			$path		= $this->moduleConfig->get( 'path.images' );
-			$fileName	= $this->userId.'_'.md5( time() ).'.'.$logic->getExtension( TRUE );
-			$logic->saveTo( $path.$fileName );
+			$fileName	= md5( time() ).'.'.$logic->getExtension( TRUE );
+			$logic->saveTo( $path.$this->userId.'_'.$fileName );									//  save originally uploaded image
+			try{
+				/*  --  PROCESS AND SAVE NEW AVATAR IMAGES  -- */
+				$image		= new UI_Image( $path.$this->userId.'_'.$fileName );
+				$processor	= new UI_Image_Processing( $image );
+				$width		= (int) $image->getWidth();
+				$height		= (int) $image->getHeight();
+				$size		= min( $width, $height );
+				$offsetX	= (int) floor( ( $width - $size ) / 2 );
+				$offsetY	= (int) floor( ( $height - $size ) / 2 );
+				$processor->crop( $offsetX, $offsetY, $size, $size );
+				$sizeLarge	= $this->moduleConfig->get( 'image.size.large' );
+				$sizeMedium	= $this->moduleConfig->get( 'image.size.medium' );
+				$sizeSmall	= $this->moduleConfig->get( 'image.size.small' );
+				if( $size > $sizeLarge )
+					$processor->resize( $sizeLarge, $sizeLarge );
+				$image->save( $path.$this->userId.'_'.$fileName );
+				if( $size > $sizeMedium )
+					$processor->resize( $sizeMedium, $sizeMedium );
+				$image->save( $path.$this->userId.'__'.$fileName );
+				if( $size > $sizeSmall )
+					$processor->resize( $sizeSmall, $sizeSmall );
+				$image->save( $path.$this->userId.'___'.$fileName );
 
-			$image		= new UI_Image( $path.$fileName );
-			$processor	= new UI_Image_Processing( $image );
-			$width		= (int) $image->getWidth();
-			$height		= (int) $image->getHeight();
-			$size		= min( $width, $height );
-			$offsetX	= (int) floor( ( $width - $size ) / 2 );
-			$offsetY	= (int) floor( ( $height - $size ) / 2 );
-			$processor->crop( $offsetX, $offsetY, $size, $size );
-			$targetSize	= $this->moduleConfig->get( 'image.size' );
-			if( $size != $targetSize )
-				$processor->resize( $targetSize, $targetSize );
-			$image->save();
-			$avatar	= $this->modelAvatar->getByIndex( 'userId', $this->userId );
-			if( $avatar ){
-				unlink( $path.$avatar->filename );
-				$this->modelAvatar->remove( $avatar->userAvatarId );
+				/*  --  REMOVE OLD AVATAR IMAGES AND DATABASE ENTRY  -- */
+				if( ( $avatar	= $this->modelAvatar->getByIndex( 'userId', $this->userId ) ) ){
+					@unlink( $path.$this->userId.'_'.$avatar->filename );
+					@unlink( $path.$this->userId.'__'.$avatar->filename );
+					@unlink( $path.$this->userId.'___'.$avatar->filename );
+					$this->modelAvatar->remove( $avatar->userAvatarId );
+				}
+
+				/*  --  SAVE DATABASE ENTRY OF NEW AVATAR  -- */
+				$data		= array(
+					'userId'	=> $this->userId,
+					'filename'	=> $fileName,
+					'createdAt'	=> time(),
+				);
+				$this->modelAvatar->add( $data );
+				$messenger->noteSuccess( $words->successImageSaved );
 			}
-			$data		= array(
-				'userId'	=> $this->userId,
-				'filename'	=> $fileName,
-				'createdAt'	=> time(),
-			);
-			$this->modelAvatar->add( $data );
-			$messenger->noteSuccess( $words->successImageSaved );
+			catch( Exception $e ){
+				@unlink( $path.$this->userId.'_'.$filename );
+				$this->callHook( 'Server:System', 'logException', $this, $e );
+				$hint		= ' <small class="muted">('.$e->getMessage().')</small>';
+				$message	=  'Bei der Bildverarbeitung ist ein Fehler aufgetreten%s.';
+				$messenger->noteFailure( $message, $hint );
+			}
 		}
 		$this->restart( NULL, TRUE );
 	}

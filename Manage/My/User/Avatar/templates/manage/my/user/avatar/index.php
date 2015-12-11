@@ -12,7 +12,7 @@ $iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open ic
 $upload		= View_Helper_Input_File::render( 'upload', $iconFile, TRUE );
 
 
-$maxSize	= Alg_UnitParser::parse( $config->get( 'maxSize' ), 'M' );
+$maxSize	= Alg_UnitParser::parse( $config->get( 'image.upload.maxFileSize' ), 'M' );
 $maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
 $maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
 
@@ -22,31 +22,30 @@ $buttonRemove	= '';
 if( $avatar ){
 	$imageAvatar	= View_Helper_UserAvatar::renderStatic( $env, $user, 256 );
 	$imageAvatar	= '<div class="thumbnail" style="max-width: 256px">'.$imageAvatar.'</div>';
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 		'href'	=> './manage/my/user/avatar/remove',
 		'class'	=> 'btn btn-inverse btn-small'
 	) );
 }
 
-return $tabs.'
-<div class="row-fluid">
-	<div class="span8">
-		<div class="content-panel" id="manageMyUserAvatar">
+extract( $view->populateTexts( array( 'top', 'bottom', 'info.avatar', 'info.gravatar' ), 'html/manage/my/user/avatar/', array(
+	'maxFileSize'	=> $maxSize,
+	'minImageSize'	=> $config->get( 'image.upload.minSize' ),
+) ) );
+
+$panelAvatar	= '';
+if( $config->get( 'use.avatar' ) ){
+	$panelAvatar	= '
+		<div class="content-panel">
+			<h4>Avatar</h4>
 			<div class="content-panel-inner">
-				<h4>Avatar</h4>
 				<form action="./manage/my/user/avatar/upload" method="post" enctype="multipart/form-data">
 					<div class="row-fluid">
 						<div class="span6">
-							<p>
-								Das automatische Gravatar-Bild kann aber auch hier mit einem eigenen Bild überschrieben werden.
-							</p>
-							<div class="alert alert-info">
-								Maximale Dateigröße: '.$maxSize.'<br/>
-								Minimale Auflösung: '.$config->get( 'minWidth' ).' x '.$config->get( 'minHeight' ).' Pixel<br/>
-							</div>
+							'.$textInfoAvatar.'
 							<div class="row-fluid">
 								<div class="span12">
-									<label for="input_upload">Bild-Datei</label>
+									<label for="input_upload">'.$w->labelUpload.'</label>
 									'.$upload.'
 								</div>
 							</div>
@@ -57,27 +56,47 @@ return $tabs.'
 						</div>
 					</div>
 					<div class="buttonbar">
-						<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;speichern</button>
+						<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 					</div>
 				</form>
 			</div>
-		</div>
-	</div>
-	<div class="span4">
-		<div class="content-panel content-panel-info" id="manageMyUserAvatar">
+		</div>';
+}
+$panelGravatar	= '';
+if( $config->get( 'use.gravatar' ) ){
+	$panelGravatar	= '
+		<div class="content-panel content-panel-info">
 			<h4>Gravatar</h4>
-			<div style="float: right; padding: 0 1em 2em 2em; width: 50%; max-width: 256px">
-				<div class="thumbnail" data-style="max-width: 128px">'.$gravatar.'</div>
+			<div class="content-panel-inner">
+				<div style="float: right; padding: 0 1em 2em 2em; width: 50%; max-width: 256px">
+					<div class="thumbnail" data-style="max-width: 128px">'.$gravatar.'</div>
+				</div>
+				'.$textInfoGravatar.'
+				<div class="clearfix"></div>
 			</div>
-			<p>
-				Wenn bei <a href="https://gravatar.com/">Gravatar</a> für die verwendete E-Mail-Adresse ein Bild hinterlegt wurde, wird dieses hier automatisch eingebunden.
-			</p>
-			<p>
-				Um dieses Bild zu verändern, muss man sich bei <a href="https://gravatar.com/">Gravatar</a> einloggen.
-			</p>
-			<div class="clearfix"></div>
 		</div>
-	</div>
-</div>
-</div></div></div></div></div></div></div>';
+';
+}
+
+if( $config->get( 'use.avatar' ) && $config->get( 'use.gravatar' ) )
+	$content	= $tabs.'
+	<div class="row-fluid">
+		<div class="span8">
+			'.$panelAvatar.'
+		</div>
+		<div class="span4">
+			'.$panelGravatar.'
+		</div>
+	</div>';
+else {
+	$content	= $tabs.'
+	<div class="row-fluid">
+		<div class="span12">
+			'.$panelAvatar.'
+			'.$panelGravatar.'
+		</div>
+	</div>';
+}
+
+return $content;
 ?>
