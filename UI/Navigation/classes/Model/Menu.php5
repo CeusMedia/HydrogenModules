@@ -12,7 +12,7 @@ class Model_Menu {
 		$this->userId		= $env->getSession()->get( 'userId' );
 		$this->language		= $env->getLanguage()->getLanguage();
 		$this->useAcl		= $env->getModules()->has( 'Resource_Users' );
-		$this->source		= $this->moduleConfig->get( 'source' );
+		$this->source		= $this->moduleConfig->get( 'menu.source' );
 		if( $this->source === "Database" && !$env->getModules()->has( 'Info_Pages' ) ){
 			$this->env->getMessenger()->noteNotice( 'Navigation source "Database" is not available. Module "Info_Pages" is not installed. Falling back to navigation source "Config".' );
 			$this->source	= "Config";

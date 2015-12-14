@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Navigation_Bootstrap_Dropdown{
+class View_Helper_Navigation_Dropdown{
 
 	protected $env;
 	protected $menu;

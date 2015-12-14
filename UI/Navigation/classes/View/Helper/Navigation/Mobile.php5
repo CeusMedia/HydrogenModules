@@ -5,15 +5,23 @@ class View_Helper_Navigation_Mobile{
 	protected $menu;
 	protected $inverse			= FALSE;
 	protected $linksToSkip		= array();
+	protected $scope			= 'main';
 
 	public function __construct( $env, Model_Menu $menu ){
 		$this->env		= $env;
 		$this->menu		= $menu;
 	}
 
-	public function render( $scope ){
+	/**
+	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 */
+	public function __toString(){
+		return $this->render();
+	}
+
+	public function render(){
 		$list	= array();
-		foreach( $this->menu->getPages( $scope, FALSE ) as $page ){
+		foreach( $this->menu->getPages( $this->scope, FALSE ) as $page ){
 			if( $page->type == 'menu' ){
 				$sublist	= array();
 				foreach( $page->items as $subpage ){
@@ -36,7 +44,8 @@ class View_Helper_Navigation_Mobile{
 				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 			}
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( "class" => 'mm-listview' ) );
+		$list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => 'mm-listview' ) );
+		return UI_HTML_Tag::create( 'div', $list, array( 'id' => "menu", 'class' => "mm-hidden" ) );
 	}
 
 	protected function renderLabelWithIcon( $entry ){
@@ -55,6 +64,10 @@ class View_Helper_Navigation_Mobile{
 
 	public function setLinksToSkip( $links ){
 		$this->linksToSkip	= $links;
+	}
+
+	public function setScope( $scope ){
+		$this->scope	= $scope;
 	}
 }
 ?>
