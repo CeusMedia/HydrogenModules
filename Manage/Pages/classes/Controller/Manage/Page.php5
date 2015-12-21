@@ -20,9 +20,16 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 
 		$this->addData( 'frontend', $this->frontend );
+
+		if( !$this->frontend->hasModule( 'Info_Pages' ) ){
+			$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
+			$this->restart();
+		}
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		if( !$env->getModules()->has( 'Info_Pages' ) )
+			return;
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
 
