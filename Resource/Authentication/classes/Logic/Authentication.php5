@@ -12,6 +12,16 @@ class Logic_Authentication{
 		$this->modelRole	= new Model_Role( $env );
 	}
 
+	public function checkPassword( $userId, $password ){
+		if( $this->env->getModules()->has( 'Resource_Users' ) ){
+			$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
+			$crypt		= md5( $salt.$password );
+			$conditions	= array( 'userId' => $userId, 'password' => $crypt );
+			return $this->modelUser->count( $conditions ) === 1;
+		}
+		return FALSE;
+	}
+
 	public function getCurrentRole( $strict = TRUE ){
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
