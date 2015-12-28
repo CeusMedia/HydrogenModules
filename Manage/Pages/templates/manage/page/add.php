@@ -3,7 +3,7 @@
 $listPages		= $this->renderTree( $tree, $page );
 
 $optModule		= array( '' => '-' );
-foreach( $modules as $module )
+foreach( $controllers as $module )
 	$optModule[$module]	= $module;
 
 $optType		= UI_HTML_Elements::Options( $words['types'], $page->type );
