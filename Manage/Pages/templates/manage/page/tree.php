@@ -14,9 +14,11 @@ return '
 	<div class="content-panel-inner">
 		<div>
 			<label for="input_scope">Navigationstyp</label>
-			<a href="./manage/page/add" class="btn btn-mini btn-primary pull-right">'.$iconAdd.'</a>
-			<select class="span10" name="scope" id="input_scope" class="span10" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
+			<select class="span12" name="scope" id="input_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 		</div>
 		'.$listPages.'
+		<div class="buttonbar">
+			<a href="./manage/page/add" class="btn btn-small btn-success">'.$iconAdd.' neue Seite</a>
+		</div>
 	</div>
 </div>';
