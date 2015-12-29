@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.22</version>
+	<version>0.7.23</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -25,6 +25,7 @@
 	<log version="0.7.20">Replace module selector by controller selector.</log>
 	<log version="0.7.21">Apply panel style.</log>
 	<log version="0.7.22">Extract index text to locale HTML file.</log>
+	<log version="0.7.23">Apply module JS:Form:Changes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

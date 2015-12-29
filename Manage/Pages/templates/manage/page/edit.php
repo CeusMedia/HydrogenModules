@@ -20,7 +20,7 @@ return '
 		<div style="float: left; width: 100%">
 			<div class="content-panel">
 				<div class="content-panel-inner">
-					<form action="./manage/page/edit/'.$current.'/'.$version.'" method="post" class="cmFormChange-auto">
+					<form action="./manage/page/edit/'.$current.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
 						'.$tabs.'
 						<div class="buttonbar">
 							<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
