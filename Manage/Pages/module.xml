@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.19</version>
+	<version>0.7.20</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -22,6 +22,7 @@
 	<log version="0.7.17">Apply jQuery UI sortable to page tree.</log>
 	<log version="0.7.18">Add support for module Resource:Versions.</log>
 	<log version="0.7.19">Check for pages support in frontend environment.</log> 
+	<log version="0.7.20">Replace module selector by controller selector.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

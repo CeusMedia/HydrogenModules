@@ -209,7 +209,10 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 				$field	= '<div class="span8 input">'.$input.$button.'</div>';
 				if( $config->type == "boolean" )
 					$config->value	= $config->value ? 1 : 0;
-				$rows[]	= '<div class="'.$class.'" data-value="'.htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ).'">'.$label.$field.'</div>';
+				$data	= htmlentities( $config->value, ENT_QUOTES, 'UTF-8' );
+				if( $config->type == "string" && substr_count( $config->value, "," ) )
+					$data	= str_replace( ",", "\n", $data );
+				$rows[]	= '<div class="'.$class.'" data-value="'.$data.'">'.$label.$field.'</div>';
 			}
 		}
 		return join( $rows );
