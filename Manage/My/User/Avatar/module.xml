@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS `<%?prefix%>user_avatars`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_avatars` (
   `userAvatarId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
