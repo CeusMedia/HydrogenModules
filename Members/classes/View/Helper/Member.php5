@@ -18,55 +18,88 @@ class View_Helper_Member{
 		if( !$this->useGravatar )
 			return $this->user->username;
 
+		$image	= $this->renderImage();
+
 		switch( $this->mode ){
 			case 'thumbnail':
-				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$gravatar->setUser( $this->user );
-				$gravatar->setSize( 256 );
-				$image		= $gravatar->render();
-				if( class_exists( 'View_Helper_UserAvatar' ) ){
-					$helper	= new View_Helper_UserAvatar( $this->env );
-					$helper->setUser( (int) $this->user->userId );
-					if( $helper->has() )
-						$image	= $helper->render();
-				}
 				$url		= sprintf( $this->url, $this->user->userId );
-				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array(
-					'class'	=> 'autocut'
-				) );
+				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array( 'class'	=> 'autocut' ) );
 				$attributes	= array( 'class' => 'thumbnail' );
 				if( $this->url )
 					$attributes['onclick']	= "document.location.href='".$url."'";
 				return UI_HTML_Tag::create( 'div', $image.$link, $attributes );
 				break;
-			case 'inline':
+			case 'bar':
 			default:
-				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$gravatar->setUser( $this->user );
-				$gravatar->setSize( 20 );
-				$image		= $gravatar->render();
-				if( class_exists( 'View_Helper_UserAvatar' ) ){
-					$helper	= new View_Helper_UserAvatar( $this->env );
-					$helper->setUser( (int) $this->user->userId );
-					if( $helper->has() )
-						$image	= $helper->render();
-				}
 				$label		= $this->user->username;
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array(
-						'href'	=> $url
-					) );
-					$image		= UI_HTML_Tag::create( 'a', $image, array(
-						'href'	=> $url
-					) );
-
+					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
 				}
-				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array(
-					'class'	=> 'user',
-				) );
+				$name	= $this->user->firstname.' '.$this->user->surname;
+				$name	= UI_HTML_Tag::create( 'small', $name, array( 'class' => "muted" ) );
+				$image	= UI_HTML_Tag::create( 'div', $image, array( 'style' => 'float: left' ) );
+				$label	= '<span><b>'.$label.'</b><br/>'.$name.'</span>';
+				$label	= UI_HTML_Tag::create( 'div', $label, array( 'style' => 'float: left; margin-left: 0.5em' ) );
+				return UI_HTML_Tag::create( 'div', $image.$label, array( 'class' => 'user clearfix' ) );
+				break;
+			case 'inline':
+			default:
+				$label		= $this->user->username;
+				if( $this->url ){
+					$url		= sprintf( $this->url, $this->user->userId );
+					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
+				}
+				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
 				break;
 		}
+	}
+
+	public function renderImage(){
+		if( !$this->user )
+			return;
+		$helperGravatar	= new View_Helper_Gravatar( $this->env );
+		$helperGravatar->setUser( $this->user );
+		$helperAvatar	= NULL;
+		if( class_exists( 'View_Helper_UserAvatar' ) ){
+			$helperAvatar	= new View_Helper_UserAvatar( $this->env );
+			$helperAvatar->setUser( (int) $this->user->userId );
+		}
+
+		switch( $this->mode ){
+			case 'thumbnail':
+				$helperGravatar->setSize( 256 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+				break;
+			case 'large':
+			default:
+				$helperGravatar->setSize( 40 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+				break;
+			case 'inline':
+			default:
+				$helperGravatar->setSize( 20 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+		}
+		return $image;
+	}
+
+	static public function renderImageStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+		$helper	= new self( $env );
+		$helper->setUser( $userObjectOrId );
+		if( $url )
+			$helper->setLinkUrl( $url );
+		if( $mode )
+			$helper->setMode( $mode );
+		return $helper->renderImage();
 	}
 
 	static public function renderStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
