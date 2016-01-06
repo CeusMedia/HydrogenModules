@@ -23,7 +23,7 @@ if( $documents ){
 		$size		= Alg_UnitFormater::formatBytes( filesize( $filePath ) );
 		$actions	= in_array( 'remove', $rights ) ? $remove : '';
 		$rows[]		= UI_HTML_Tag::create( 'tr',
-			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) ).
+			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title autocut' ) ).
 			UI_HTML_Tag::create( 'td', $uploadedAt, array( 'class' => 'cell-timestamp' ) ).
 			UI_HTML_Tag::create( 'td', $size, array( 'class' => 'cell-size' ) ).
 			UI_HTML_Tag::create( 'td', $actions, array( 'class' => 'cell-actions' ) )
@@ -37,7 +37,7 @@ if( $documents ){
 			UI_HTML_Tag::create( 'th', $w->headActions )
 		)
 	);
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "67%", "15%", "10%", "8%" );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "120px", "70px", "40px" );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> 'table table-condensed table-striped',
@@ -58,15 +58,18 @@ extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/content/do
 
 return $textTop.'
 <div class="row-fluid">
-	<div class="span7">
+	<div class="span8">
 		'.$panelList.'
 	</div>
-	<div class="span5">
+	<div class="span4">
 		'.$panelAdd.'
 	</div>
 </div>
 '.$textBottom.'
 <style>
+#table-documents {
+	table-layout: fixed;
+	}
 td.cell-timestamp,
 td.cell-size {
 	font-size: 0.9em;

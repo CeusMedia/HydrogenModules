@@ -100,10 +100,12 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'module'		=> $this->request->get( 'module' ),
 			'timestamp'		=> time(),
 		);
+
 		$this->addData( 'path', $this->frontend->getUri() );
 		$this->addData( 'page', $page );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'modules', $this->frontend->getModules() );
+		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree();
 	}
 
@@ -276,6 +278,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
 		$this->addData( 'modules', $this->frontend->getModules() );
+		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree( $pageId );
 
 		$enabled		= FALSE;
@@ -308,6 +311,21 @@ PageEditor.format = "'.$page->format.'";
 PageEditor.init();
 ';
 		$this->env->getPage()->js->addScriptOnReady( $script );
+	}
+
+	protected function getFrontendControllers(){
+		$controllers	= array();
+		$modulePath		= $this->frontend->getPath( 'modules' );
+		foreach( $this->frontend->getModules() as $moduleId ){
+			$module	= CMF_Hydrogen_Environment_Resource_Module_Reader::load( $modulePath.$moduleId.'.xml', $moduleId );
+			foreach( $module->files->classes as $classFile ){
+				if( preg_match( "/^Controller/", $classFile->file ) ){
+					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $classFile->file );
+					$controllers[]	= str_replace( "/", "_", $name );
+				}
+			}
+		}
+		return array_unique( $controllers );
 	}
 
 	public function getJsImageList(){

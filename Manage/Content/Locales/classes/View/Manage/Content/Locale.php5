@@ -50,7 +50,7 @@ class View_Manage_Content_Locale extends CMF_Hydrogen_View {
 		foreach( $sub as $filePath => $fileName ){
 			if( !preg_match( "/\//", $filePath ) ){
 				$extension	= pathinfo( $fileName, PATHINFO_EXTENSION );
-				$classes	= array( 'file' );
+				$classes	= array( 'autocut', 'file' );
 				if( $extension )
 					$classes[]	= 'file-ext-'.$extension;
 				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-file' ) );

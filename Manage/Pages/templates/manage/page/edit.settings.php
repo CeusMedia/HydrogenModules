@@ -6,7 +6,7 @@ $optStatus	= $words['states'];
 $optFormat	= $words['formats'];
 
 $optModule	= array( '' => '-' );
-foreach( $modules as $module )
+foreach( $controllers as $module )
 	$optModule[$module]	= $module;
 
 $optType		= UI_HTML_Elements::Options( $optType, $page->type );
@@ -61,6 +61,7 @@ return '
 	</div>
 	<div class="span6 optional type type-2" style="display: none">
 		<label for="input_module">Modul</label>
+<!--		<input type="text" name="module" class="span12" id="input_module" value="'.$page->module.'"/>-->
 		<select name="module" class="span12" id="input_module">'.$optModule.'</select>
 	</div>
 </div>';

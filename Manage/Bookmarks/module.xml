@@ -3,8 +3,10 @@
 	<title>Manage: Bookmarks</title>
 	<description>Basic management of noted links for use on e.G. HTML-Editors or some sort of stored locations or blog article references.</description>
 	<category>Management</category>
-	<version>0.3.2</version>
+	<version>0.3.4</version>
 	<log version="0.3.2">Updated TinyMCE link collection.</log>
+	<log version="0.3.3">Apply panel style.</log>
+	<log version="0.3.4">Update button colors.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

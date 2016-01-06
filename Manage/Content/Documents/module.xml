@@ -3,13 +3,17 @@
 	<title>Manage: Content: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4.8</version>
+	<version>0.4.12</version>
 	<log version="0.4.3">Added relation to time phrase helper.</log>
 	<log version="0.4.4">Use frontend resource.</log>
 	<log version="0.4.5">Updated TinyMCE link collection.</log>
 	<log version="0.4.6">Extract messages and table heads to locale.</log>
 	<log version="0.4.7">Extract add panel to own template.</log>
 	<log version="0.4.8">Updated list and panels.</log>
+	<log version="0.4.9">Apply panel style.</log>
+    <log version="0.4.10">Update button colors.</log>
+    <log version="0.4.11">Apply autocut on table and fix columns.</log>
+    <log version="0.4.12">Use module UI:Helper:Input:File.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -26,6 +30,7 @@
 	<relations>
 		<needs type="module">Resource_Frontend</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
 		<supports type="module">JS_TinyMCE</supports>
 	</relations>
 	<config type="string" name="path.documents" title="path to documents within managed application, needs trailing slash">contents/documents/</config>

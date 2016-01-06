@@ -16,7 +16,7 @@ body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li > a {
 	padding-bottom: 4px;
 	}
 body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li > ul {
-	padding-left: 1.2em;
+	margin-left: 1.2em !important;
 	}
 body.moduleManagePage #manage-page-tree .nav-pills.nav-stacked > li.disabled a:hover {
 	background-color: #eeeeee;
@@ -70,12 +70,15 @@ body.moduleManagePage #manage-page-main {
 	}
 
 /*  --  META TAGS  --  */
+dl#meta-defaults dt {
+	width: 120px;
+	}
 dl#meta-defaults dd {
-	margin-bottom: 1em;
+	margin-left: 130px;
 	}
 
 
-	
+
 .mceLayout {
 	margin-bottom: 8px !important;
 	box-shadow: 1px 1px 4px 1px #DDD;
