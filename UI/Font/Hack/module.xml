@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: Hack</title>
+	<description><![CDATA[Integration of Hack typeface.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<company site="http://sourcefoundry.org/hack/">sourcefoundry.org/hack</company>
+	<author site="https://github.com/chrissimpkins">Chris Simpkins</author>
+	<author site="https://github.com/burodepeper">David van Gemeren</author>
+	<author site="https://github.com/jublo">JM</author>
+	<license source="https://github.com/chrissimpkins/Hack/blob/master/LICENSE.md">Hack Open Font License v2.0</license>
+	<license source="https://github.com/chrissimpkins/Hack/blob/master/LICENSE.md">Bitstream Vera License</license>
+	<config protected="yes" type="boolean" name="enabled">1</config>
+	<config protected="yes" type="boolean" name="set" values="latin1,extended">latin1</config>
+	<config protected="yes" type="boolean" name="source" values="Library,CDN">Library</config>
+	<config protected="yes" type="boolean" name="URI.CDN">//cdn.jsdelivr.net/font-hack/2.018/css/</config>
+
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$config	= $env->getConfig();
+		$moduleConfig	= $config->getAll( 'module.ui_font_hack.', TRUE );
+		if( $config->get( 'module.ui_font.enabled' ) ){
+			if( $moduleConfig->get( 'enabled' ) ){
+				$file	= $moduleConfig->get( 'set' ) === 'extended' ? 'hack-extended' : 'hack';
+				$path	= $config->get( 'module.ui_font.uri' ).'Hack/';
+				if( $moduleConfig->get( 'source' ) === 'CDN' )
+					$path	= $moduleConfig->get( 'URI.CDN' );
+				$env->getPage()->css->theme->addUrl( $path.$file.'.min.css' );
+			}
+		}
+]]></hook>
+</module>
