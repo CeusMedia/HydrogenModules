@@ -44,7 +44,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 			$badge		= UI_HTML_Tag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
 			$badge		= UI_HTML_Tag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
 
-			$label		= UI_HTML_Tag::create( 'span', $name.' '.$badge, array( 'class' => 'autocut' ) );
+			$label		= UI_HTML_Tag::create( 'span', $name.' '.$badge, array( 'class' => 'item-label autocut' ) );
 			if( strlen( $folder ) > 45 )
 				$label		= UI_HTML_Tag::create( 'small', $name.' '.$badge, array( 'class' => 'autocut' ) );
 			$link		= UI_HTML_Tag::create( 'a', $label, array(
@@ -59,7 +59,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		$time	= '<div class="label">'.round( ( microtime( TRUE ) - $start ) * 1000, 1 ).'ms</div>';
 		if( $list )
 			return UI_HTML_Tag::create( 'ul', $list, array(
-				'class'	=> 'nav nav-pills nav-stacked',
+				'class'	=> 'nav nav-pills nav-stacked nav-bordered nav-resizing',
 				'id'	=> 'list-folders',
 		) );
 	}

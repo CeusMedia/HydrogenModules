@@ -12,5 +12,6 @@ return '
 			<a href="./manage/content/image/addFolder" class="btn btn-info btn-small not-btn-info btn-success"><i class="icon-plus icon-white"></i>&nbsp;'.$w->buttonAddFolder.'</a>
 		</div>
 	</div>
-</div>';
+</div>
+';
 ?>

@@ -20,6 +20,25 @@ $(document).ready(function(){
 	});
 });
 </script>
+<script>
+function resizeNavList(selector, offsetBottom){
+	var list = $(selector);
+	if(list.size()){
+		offsetBottom = offsetBottom ? offsetBottom : 0;
+		var offset = list.offset().top;
+		var height = $(window).height();
+		var size = height - offset - offsetBottom;
+		if(list.height() > size){
+			list.height(size);
+		}
+	}
+}
+
+$(document).ready(function(){
+//	resizeNavList(".nav-resizing", 60);
+})
+
+</script>
 <div class="content-panel">
 	<h3>'.sprintf( $w->heading, $labelFolder.$linkEditFolder ).'</h4>
 	<div class="content-panel-inner">
