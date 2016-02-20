@@ -45,7 +45,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
 
 		$languages	= self::getLanguage( $env );
-		if( $language !== "en" )
+		if( !$config->get( 'CDN' ) && $language !== "en" )
 			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
 
 		self::$loaded	= TRUE;
@@ -95,20 +95,22 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 			$helper	= new View_Helper_TinyMce( $env );
 			$script	= '
-tinymce.Config.languages = "'.join( ',', $languages ).'";
-tinymce.Config.envUri = "'.$env->url.'";
-tinymce.Config.frontendUri = "'.$baseUrl.'";
-tinymce.Config.language = "'.$language.'";
-tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
-tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
-	if($(settings.JS_TinyMCE.auto_selector).size()){
-		if(settings.JS_TinyMCE.auto_selector){
-			var options = {};
-			if(settings.JS_TinyMCE.auto_tools)
-				options.tools = settings.JS_TinyMCE.auto_tools;
-			tinymce.init(tinymce.Config.apply(options));
-		}
-	}';
+
+if($(settings.JS_TinyMCE.auto_selector).size()){
+	tinymce.Config.languages = "'.join( ',', $languages ).'";
+	tinymce.Config.envUri = "'.$env->url.'";
+	tinymce.Config.frontendUri = "'.$baseUrl.'";
+	tinymce.Config.language = "'.$language.'";
+	tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
+	tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
+	var options = {};
+	if(settings.JS_TinyMCE.auto_tools)
+		options.tools = settings.JS_TinyMCE.auto_tools;
+	var mode = settings.JS_TinyMCE.auto_mode;
+	if($(settings.JS_TinyMCE.auto_selector).data("tinymce-mode"))
+		mode = $(settings.JS_TinyMCE.auto_selector).data("tinymce-mode");
+	tinymce.init(tinymce.Config.apply(options, mode));
+}';
 			$context->js->addScriptOnReady( $script );
 		}
 	}
