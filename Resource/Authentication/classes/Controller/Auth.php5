@@ -131,10 +131,17 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			if( !trim( $password = $this->request->get( 'login_password' ) ) )
 				$this->messenger->noteError( $words->msgNoPassword );
 
+			$modelUser	= new Model_User( $this->env );
+			$modelRole	= new Model_Role( $this->env );
+			$user		= $modelUser->getByIndex( 'username', $username );
+
+			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+				'username'	=> $username,
+				'password'	=> $password,
+				'userId'	=> $user ? $user->userId : 0,
+			) );
+
 			if( !$this->messenger->gotError() ){
-				$modelUser	= new Model_User( $this->env );
-				$modelRole	= new Model_Role( $this->env );
-				$user		= $modelUser->getByIndex( 'username', $username );
 				if( !$user )
 					$this->messenger->noteError( $words->msgInvalidUser );
 				else{
