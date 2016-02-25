@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>testimonials` (
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `timestamp` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`courseCommentId`),
+  PRIMARY KEY (`testimonialId`),
   KEY `status` (`status`),
   KEY `rank` (`rank`),
   KEY `rating` (`rating`),

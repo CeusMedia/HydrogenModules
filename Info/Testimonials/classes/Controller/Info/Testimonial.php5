@@ -1,5 +1,5 @@
 <?php
-class Controller_Info_Course extends CMF_Hydrogen_Controller{
+class Controller_Info_Testimonial extends CMF_Hydrogen_Controller{
 
 	protected $request;
 	protected $messenger;
@@ -11,7 +11,7 @@ class Controller_Info_Course extends CMF_Hydrogen_Controller{
 		$this->model		= new Model_Testimonial( $this->env );
 
 		$indices	= array( 'status' => 1 );
-		$orders		= array( 'rank' => 'ASC', 'createdAt' => 'DESC' );
+		$orders		= array( 'rank' => 'ASC', 'timestamp' => 'DESC' );
 		$entries	= $this->model->getAll( $indices, $orders );
 		$this->addData( 'testimonials', $entries );
 	}

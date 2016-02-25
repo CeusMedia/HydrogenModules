@@ -31,9 +31,8 @@ class Model_Testimonial extends CMF_Hydrogen_Model {
 		'description',
 		'timestamp',
 	);
-	protected $primaryKey	= 'courseCommentId';
+	protected $primaryKey	= 'testimonialId';
 	protected $indices		= array(
-		'courseId',
 		'status',
 		'rank',
 		'rating',
