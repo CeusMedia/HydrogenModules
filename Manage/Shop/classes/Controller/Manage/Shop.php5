@@ -9,7 +9,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logicShop	= new Logic_Shop( $this->env );
+		$this->logicShop	= new Logic_ShopManager( $this->env );
 		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 	}
 

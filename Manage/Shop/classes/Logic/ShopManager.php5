@@ -65,7 +65,7 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 }
 
-class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
+class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	/**	@var		Model_Shop_Customer			$modelCustomer */
 	protected $modelCustomer;
