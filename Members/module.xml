@@ -2,7 +2,7 @@
 <module>
 	<title>Members</title>
 	<description><![CDATA[Basic index page, ready for custom content and style.]]></description>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Complete basic functionality.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.5">Extract messages to locales files.</log>
 	<log version="0.3.6">Add english locales.</log>
 	<log version="0.3.7">Add new mode "bar".</log>
+	<log version="0.3.8">Finish localisation.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -22,7 +23,20 @@
 		<class>Logic/Member.php5</class>
 		<class>View/Member.php5</class>
 		<class>View/Helper/Member.php5</class>
+		<class>Mail/Member/Accept.php5</class>
+		<class>Mail/Member/Reject.php5</class>
+		<class>Mail/Member/Request.php5</class>
+		<class>Mail/Member/Revoke.php5</class>
 		<locale>de/member.ini</locale>
+		<locale>de/mail/member/accept.txt</locale>
+		<locale>de/mail/member/reject.txt</locale>
+		<locale>de/mail/member/request.txt</locale>
+		<locale>de/mail/member/revoke.txt</locale>
+		<locale>en/member.ini</locale>
+		<locale>en/mail/member/accept.txt</locale>
+		<locale>en/mail/member/reject.txt</locale>
+		<locale>en/mail/member/request.txt</locale>
+		<locale>en/mail/member/revoke.txt</locale>
 		<template>member/index.php</template>
 		<template>member/search.php</template>
 		<template>member/view.php</template>
