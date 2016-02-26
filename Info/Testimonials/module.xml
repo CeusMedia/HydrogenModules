@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Testimonials</title>
+	<description/>
+	<category>Info</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Add language support.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/Testimonial.php5</class>
+		<class>Model/Testimonial.php5</class>
+		<class>View/Info/Testimonial.php5</class>
+		<locale>de/info/testimonial.ini</locale>
+		<locale>de/html/info/testimonial/index.bottom.html</locale>
+		<locale>de/html/info/testimonial/index.top.html</locale>
+		<locale>en/info/testimonial.ini</locale>
+		<locale>en/html/info/testimonial/index.bottom.html</locale>
+		<locale>en/html/info/testimonial/index.top.html</locale>
+		<template>info/testimonial/index.php</template>
+<!--		<style source="theme" load="auto">module.info.testimonials.css</style>-->
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="public" path="info/testimonial">Kundenmeinungen</link>
+	<link xml:lang="en" access="public" path="info/testimonial">Testimonials</link>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>testimonials`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>testimonials` (
+  `testimonialId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `rank` tinyint(4) DEFAULT '0',
+  `rating` tinyint(1) DEFAULT NULL,
+  `username` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `abstract` tinytext COLLATE utf8_unicode_ci,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`testimonialId`),
+  KEY `status` (`status`),
+  KEY `rank` (`rank`),
+  KEY `rating` (`rating`),
+  KEY `username` (`username`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>testimonials`;
+]]></sql>
+</module>
