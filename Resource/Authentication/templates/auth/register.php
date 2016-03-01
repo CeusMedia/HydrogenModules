@@ -47,6 +47,9 @@ $env->getPage()->css->theme->addUrl( 'module.resource.auth.css' );
 //print_m( $moduleConfig->getAll() );die;
 //print_m( $w );die;
 
+
+$formExtensions	= $view->renderRegisterFormExtensions();
+
 $panelUser	= HTML::DivClass( 'content-panel', array(
 	HTML::H3( $w->heading ),
 	HTML::DivClass( 'content-panel-inner',
@@ -174,6 +177,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			) ),
 		) ).
 		HTML::HR.
+		$formExtensions.
 		$formTerms.
 		HTML::DivClass( 'buttonbar', array(
 			UI_HTML_Tag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, array(
