@@ -16,6 +16,10 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller{
 
 	static protected $resources	= array();
 
+	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $setupView = TRUE ){
+		parent::__construct( $env, FALSE );
+	}
+
 	public function __onInit(){
 		$this->env->getModules()->callHook( 'OAuthServer', 'registerResource', $this );
 	}
@@ -24,13 +28,13 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller{
 		$path	= '/'.implode( func_get_args() );
 		$get	= $this->env->getRequest()->getAllFromSource( 'GET' );
 		remark( "Path: ".$path );
-		print_m( $get );
+		print_m( $get->getAll() );
 		die;
 //		if( $this->env->getRequest()->getAllFromSource( 'GET' ) )
 //		foreach( self::$resources as $resource ){
 //			if( )
 //		}
-	
+
 	}
 
 	static public function registerResource( $env, $path, $class, $method, $scope = NULL ){
