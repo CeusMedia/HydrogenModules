@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Authentication: Backend: OAuth</title>
+	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial fork from module Resource:Authentication.</log>
+	<log version="0.2">Integrated OAuth client functionality.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Auth/Oauth.php5</class>
+		<class>Mail/Auth/OAuth/Password.php5</class>
+		<class>View/Auth/Oauth.php5</class>
+		<class>Logic/Authentication/Backend/Oauth.php5</class>
+		<template>auth/oauth/login.php</template>
+		<template>auth/oauth/login.form.php</template>
+		<template>auth/oauth/password.php</template>
+		<template>auth/oauth/register.php</template>
+		<locale>de/auth/oauth.ini</locale>
+		<locale>de/html/auth/oauth/login/top.html</locale>
+		<locale>de/html/auth/oauth/login/info.html</locale>
+		<locale>de/html/auth/oauth/login/bottom.html</locale>
+		<locale>de/html/auth/oauth/password/top.html</locale>
+		<locale>de/html/auth/oauth/password/info.html</locale>
+		<locale>de/html/auth/oauth/password/bottom.html</locale>
+		<locale>de/html/auth/oauth/register.html</locale>
+		<locale>de/html/auth/oauth/tac.html</locale>
+		<locale>de/html/auth/oauth/tac.md</locale>
+		<locale>de/mail/auth/oauth/password.txt</locale>
+		<locale>en/auth/oauth.ini</locale>
+		<locale>en/html/auth/oauth/login/top.html</locale>
+		<locale>en/html/auth/oauth/login/info.html</locale>
+		<locale>en/html/auth/oauth/login/bottom.html</locale>
+		<locale>en/html/auth/oauth/password/top.html</locale>
+		<locale>en/html/auth/oauth/password/info.html</locale>
+		<locale>en/html/auth/oauth/password/bottom.html</locale>
+		<locale>en/html/auth/oauth/register.html</locale>
+		<locale>en/html/auth/oauth/tac.html</locale>
+		<locale>en/html/auth/oauth/tac.md</locale>
+		<locale>en/mail/auth/oauth/password.txt</locale>
+		<style source="theme">module.resource.auth.oauth.css</style>
+	</files>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="string" name="provider.client.ID">544403c15782</config>
+	<config protected="yes" type="string" name="provider.client.secret">5e57c3b0d9e3e9c42a6158f9e25c4c40</config>
+	<config protected="yes" type="string" name="provider.URI">http://localhost/sandbox/OAuth/oauth</config>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+	<link xml:lang="de" rank="10" access="outside" path="auth/oauth/login">Login</link>
+	<link xml:lang="de" rank="11" access="outside" path="auth/oauth/password">Passwort</link>
+<!--	<link xml:lang="de" rank="12" access="outside" path="auth/oauth/register">Registrieren</link>-->
+	<link xml:lang="de" rank="99" access="inside" path="auth/oauth/logout">Logout</link>
+	<link xml:lang="en" rank="10" access="outside" path="auth/oauth/login">Login</link>
+	<link xml:lang="en" rank="11" access="outside" path="auth/password">Password</link>
+<!--	<link xml:lang="en" rank="12" access="outside" path="auth/oauth/register">Rgister Account</link>-->
+	<link xml:lang="en" rank="99" access="inside" path="auth/oauth/logout">Logout</link>
+	<link rank="99" access="public" path="auth/oauth/ajaxEmailExists"></link>
+	<link rank="99" access="public" path="auth/oauth/ajaxIsAuthenticated"></link>
+	<link rank="99" access="public" path="auth/oauth/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="auth/oauth/index"></link>
+<!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
+</module>

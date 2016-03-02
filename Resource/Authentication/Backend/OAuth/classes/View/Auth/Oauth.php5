@@ -7,7 +7,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
-class View_Auth extends CMF_Hydrogen_View {
+class View_Auth_Oauth extends CMF_Hydrogen_View {
 
 	public function confirm(){}
 

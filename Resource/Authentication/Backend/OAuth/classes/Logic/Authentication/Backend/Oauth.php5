@@ -1,5 +1,5 @@
 <?php
-class Logic_Authentication{
+class Logic_Authentication_Backend_Oauth{
 
 	static protected $instance;
 	protected $env;
@@ -11,7 +11,7 @@ class Logic_Authentication{
 		$this->modelUser	= new Model_User( $env );
 		$this->modelRole	= new Model_Role( $env );
 		$this->config		= $this->env->getConfig();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_oauth', TRUE );
+		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
 		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );

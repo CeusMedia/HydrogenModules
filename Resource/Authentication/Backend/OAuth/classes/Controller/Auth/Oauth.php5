@@ -1,15 +1,14 @@
 <?php
-class Controller_Auth extends CMF_Hydrogen_Controller {
+class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 
 	protected $clientId;
 	protected $clientSecret;
 	protected $clientUri;
 	protected $providerUri;
 
-	public function __onInit(){
-
+	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_oauth', TRUE );
+		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
 		$this->clientUri	= $this->env->url;
 		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
