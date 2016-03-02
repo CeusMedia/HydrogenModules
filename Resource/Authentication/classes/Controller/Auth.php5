@@ -84,6 +84,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
+					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
 					$this->restart( './auth/login/'.$user->username.( $from ? '?from='.$from : '' ) );
 				}
 			}
@@ -297,6 +298,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 		$errors	= $this->messenger->gotError();
 		if( $this->request->has( 'save' ) ){
+			$result	= $this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
 			if( !in_array( $roleId, $rolesAllowed ) )
 				$this->messenger->noteError( $words->msgRoleInvalid );
 			if( empty( $username ) )

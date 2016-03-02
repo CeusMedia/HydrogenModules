@@ -12,11 +12,12 @@ Authorization is implemented fully (except implicit grant) according to
 RFC 6749 (http://tools.ietf.org/html/rfc6749).
 
 ]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated application management.</log>
 	<log version="0.2.2">Module cleanup.</log>
+	<log version="0.2.3">Add locales for application management.</log>
 	<category>Server</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -32,10 +33,12 @@ RFC 6749 (http://tools.ietf.org/html/rfc6749).
 		<class>View/Oauth.php5</class>
 		<class>View/Oauth/Application.php5</class>
 		<locale>de/oauth.ini</locale>
+		<locale>de/oauth/application.ini</locale>
 		<locale>de/html/oauth/authorize.bottom.html</locale>
 		<locale>de/html/oauth/authorize.top.html</locale>
 		<locale>de/html/oauth/index.html</locale>
 		<locale>en/oauth.ini</locale>
+		<locale>en/oauth/application.ini</locale>
 		<locale>en/html/oauth/authorize.bottom.html</locale>
 		<locale>en/html/oauth/authorize.top.html</locale>
 		<locale>en/html/oauth/index.html</locale>

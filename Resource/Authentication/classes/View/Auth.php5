@@ -16,5 +16,9 @@ class View_Auth extends CMF_Hydrogen_View {
 	public function password(){}
 
 	public function register(){}
+
+	public function renderRegisterFormExtensions(){
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, array() );
+	}
 }
 ?>

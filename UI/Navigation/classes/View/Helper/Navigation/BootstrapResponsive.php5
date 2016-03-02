@@ -53,7 +53,7 @@ class View_Helper_Navigation_BootstrapResponsive{
 				$helperNavDesktop	= $helperNavbarDesktop;
 				//$helperNavbarDesktop->isCollapsable( TRUE );
 			}
-			$navbars[]	= $helperNavDesktop;
+			$navbars[]	= $helperNavDesktop->render();
 		}
 
 		if( $useMobile ){
@@ -76,8 +76,8 @@ class View_Helper_Navigation_BootstrapResponsive{
 			$helperNavbarMobile->setInverse( $configMobile->get( 'navbar.theme' ) === "dark" );
 			$helperNavbarMobile->setContainer( TRUE );
 			$helperNavbarMobile->hideOnDesktop( $useDesktop );
-			$navbars[]	= $helperNavbarMobile;
-			$navbars[]	= $helperNavMobile;
+			$navbars[]	= $helperNavbarMobile->render();
+			$navbars[]	= $helperNavMobile->render();
 		}
 		return join( $navbars );
 	}
