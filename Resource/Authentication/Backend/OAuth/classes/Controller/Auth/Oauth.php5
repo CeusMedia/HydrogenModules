@@ -5,32 +5,42 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	protected $clientSecret;
 	protected $clientUri;
 	protected $providerUri;
+	protected $config;
+	protected $session;
+	protected $reqest;
+	protected $cookie;
 
 	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
 		$this->clientUri	= $this->env->url;
 		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
+		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 
 		$this->refreshToken();
 	}
 
-/*	public function index(){
-		$request		= $this->env->getRequest();
-		$session		= $this->env->getSession();
+	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+		$context->registerBackend( 'Local' );
+	}
+
+	public function index(){
 		$messenger		= $this->env->getMessenger();
 
-		if( !$session->get( 'oauth_access_token' ) ){
+		if( !$this->session->get( 'oauth_access_token' ) ){
 		}
 		else{
-			if( $request->get( 'code' ) ){
+			if( $this->request->get( 'code' ) ){
 				$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
 				$postData		= http_build_query( array(
 					'grant_type'	=> 'authorization_code',
 					'redirect_uri'	=> $this->clientUri,
-					'code'			=> $request->get( 'code' ),
+					'code'			=> $this->request->get( 'code' ),
 					'state'			=> microtime( TRUE ),
 				) );
 				$handle	= new Net_CURL();
@@ -55,29 +65,27 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 				else{
 					$expiresIn	= (int) @$response->expires_in;
 					$expiresAt	= $expiresIn ? time() + $expiresIn : time() + 3600;
-					$session->set( 'oauth_access_token', $response->access_token );
-					$session->set( 'oauth_access_expires_in', $expiresIn );
-					$session->set( 'oauth_access_expires_at', $expiresAt );
-					$session->set( 'oauth_refresh_token', $response->refresh_token );
-					$session->set( 'oauth_scope', $response->scope );
+					$this->session->set( 'oauth_access_token', $response->access_token );
+					$this->session->set( 'oauth_access_expires_in', $expiresIn );
+					$this->session->set( 'oauth_access_expires_at', $expiresAt );
+					$this->session->set( 'oauth_refresh_token', $response->refresh_token );
+					$this->session->set( 'oauth_scope', $response->scope );
 					$this->restart( NULL, TRUE );
 				}
 			}
 		}
 	}
-*/
+
 	public function login(){
-		$request		= $this->env->getRequest();
-		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 
-		if( $request->getMethod() == "POST" ){
+		if( $this->request->getMethod() == "POST" ){
 			$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
 			$postData		= http_build_query( array(
 				'grant_type'	=> 'password',
-				'username'		=> $request->get( 'username' ),
-				'password'		=> $request->get( 'password' ),
-				'scope'			=> $request->get( 'scope' ),
+				'username'		=> $this->request->get( 'login_username' ),
+				'password'		=> $this->request->get( 'login_password' ),
+				'scope'			=> $this->request->get( 'scope' ),
 			) );
 			$handle	= new Net_CURL();
 			$handle->setUrl( $this->providerUri.'/token' );
@@ -89,50 +97,76 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 				'Content-Length: '.strlen( $postData ),
 			) );
 			$response	= $handle->exec();
-			$response	= json_decode( $response );
+			$responseData	= json_decode( $response );
 
-			if( !empty( $response->error ) ){
-				$error	= $response->error;
-				if( !empty( $response->error_description ) )
-					$error	= UI_HTML_Tag::create( 'abbr', $error, array(
-						'title' => $response->error_description
-					) );
-				$messenger->noteError( $error );
+			if( $responseData ){
+				if( !empty( $responseData->error ) ){
+					$error	= $responseData->error;
+					if( !empty( $responseData->error_description ) )
+						$error	= UI_HTML_Tag::create( 'abbr', $error, array(
+							'title' => $responseData->error_description
+						) );
+					$messenger->noteError( $error );
+				}
+
+				else{
+					$expiresIn	= (int) @$responseData->expires_in;
+					$expiresAt	= $expiresIn ? time() + $expiresIn : time() + 3600;
+					$this->session->set( 'oauth_access_token', $responseData->access_token );
+					$this->session->set( 'oauth_access_expires_in', $expiresIn );
+					$this->session->set( 'oauth_access_expires_at', $expiresAt );
+					$this->session->set( 'oauth_refresh_token', $responseData->refresh_token );
+					$this->session->set( 'oauth_scope', $responseData->scope );
+	//				$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
+	//				$this->messenger->noteSuccess( $words->msgSuccess );
+
+					$modelUser	= new Model_User( $this->env );
+					$user = $modelUser->getByIndex( 'username', $this->request->get( 'login_username' ) );
+					if( $user ){
+						$this->session->set( 'userId', $user->userId );
+						$this->session->set( 'roleId', $user->roleId );
+						if( $this->request->get( 'login_remember' ) )
+							$this->rememberUserInCookie( $user );
+					}
+					else{
+
+					}
+					$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
+					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
+					$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
+					$this->restart( NULL );
+				}
 			}
 			else{
-				$expiresIn	= (int) @$response->expires_in;
-				$expiresAt	= $expiresIn ? time() + $expiresIn : time() + 3600;
-				$session->set( 'oauth_access_token', $response->access_token );
-				$session->set( 'oauth_access_expires_in', $expiresIn );
-				$session->set( 'oauth_access_expires_at', $expiresAt );
-				$session->set( 'oauth_refresh_token', $response->refresh_token );
-				$session->set( 'oauth_scope', $response->scope );
-				$this->restart( NULL, TRUE );
+				$messenger->noteError( 'Login failed' );
 			}
 		}
+		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$this->addData( 'login_username', $username );
+		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
+		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
+		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
 	public function logout(){
-		$session		= $this->env->getSession();
-		$session->remove( 'oauth_access_token' );
-		$session->remove( 'oauth_access_expires_in' );
-		$session->remove( 'oauth_access_expires_at' );
-		$session->remove( 'oauth_refresh_token' );
-		$session->remove( 'oauth_scope' );
+		$this->session->remove( 'oauth_access_token' );
+		$this->session->remove( 'oauth_access_expires_in' );
+		$this->session->remove( 'oauth_access_expires_at' );
+		$this->session->remove( 'oauth_refresh_token' );
+		$this->session->remove( 'oauth_scope' );
 		$this->restart( NULL, TRUE );
 	}
 
 	protected function refreshToken(){
-		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 
-		if( $session->get( 'oauth_access_token' ) ){
-			if( time() >= $session->get( 'oauth_access_expires_at' ) ){
-				if( $session->get( 'oauth_refresh_token' ) ){
+		if( $this->session->get( 'oauth_access_token' ) ){
+			if( time() >= $this->session->get( 'oauth_access_expires_at' ) ){
+				if( $this->session->get( 'oauth_refresh_token' ) ){
 					$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
 					$postData		= http_build_query( array(
 						'grant_type'	=> 'refresh_token',
-						'refresh_token'	=> $session->get( 'oauth_refresh_token' ),
+						'refresh_token'	=> $this->session->get( 'oauth_refresh_token' ),
 					) );
 					$handle	= new Net_CURL();
 					$handle->setUrl( $this->providerUri.'/token' );
@@ -156,20 +190,20 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 					}
 					$expiresIn	= (int) @$response->expires_in;
 					$expiresAt	= $expiresIn ? time() + $expiresIn : time() + 3600;
-					$session->set( 'oauth_access_token', $response->access_token );
-					$session->set( 'oauth_access_expires_in', $expiresIn );
-					$session->set( 'oauth_access_expires_at', $expiresAt );
-					$session->set( 'oauth_scope', $response->scope );
+					$this->session->set( 'oauth_access_token', $response->access_token );
+					$this->session->set( 'oauth_access_expires_in', $expiresIn );
+					$this->session->set( 'oauth_access_expires_at', $expiresAt );
+					$this->session->set( 'oauth_scope', $response->scope );
 					if( !empty( $response->refresh_token ) )
-						$session->set( 'oauth_refresh_token', $response->refresh_token );
+						$this->session->set( 'oauth_refresh_token', $response->refresh_token );
 				}
 				else
 					$this->logout();
 			}
 /*			$this->setData( array(
 				'inside'	=> TRUE,
-				'token'		=> $session->get( 'oauth_access_token' ),
-				'expiresIn'	=> $session->get( 'oauth_access_expires_at' ) - time(),
+				'token'		=> $this->session->get( 'oauth_access_token' ),
+				'expiresIn'	=> $this->session->get( 'oauth_access_expires_at' ) - time(),
 			) );*/
 		}
 	}

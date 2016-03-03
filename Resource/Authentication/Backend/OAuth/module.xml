@@ -60,5 +60,6 @@
 	<link rank="99" access="public" path="auth/oauth/ajaxIsAuthenticated"></link>
 	<link rank="99" access="public" path="auth/oauth/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/oauth/index"></link>
+	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth::___onAuthRegisterBackend</hook>
 <!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
 </module>
