@@ -21,6 +21,7 @@ class Model_User extends CMF_Hydrogen_Model {
 	protected $name		= 'users';
 	protected $columns	= array(
 		'userId',
+		'accountId',
 		'roleId',
 		'roomId',
 		'companyId',
@@ -45,6 +46,7 @@ class Model_User extends CMF_Hydrogen_Model {
 	);
 	protected $primaryKey	= 'userId';
 	protected $indices		= array(
+		'accountId',
 		'roleId',
 		'roomId',
 		'companyId',
