@@ -93,7 +93,7 @@ class Logic_Authentication_Backend_Oauth{
 
 	static public function getInstance( $env ){
 		if( !self::$instance )
-			self::$instance	= new Logic_Authentication( $env );
+			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 

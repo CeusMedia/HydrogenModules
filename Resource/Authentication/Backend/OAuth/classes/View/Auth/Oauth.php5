@@ -11,6 +11,8 @@ class View_Auth_Oauth extends CMF_Hydrogen_View {
 
 	public function confirm(){}
 
+	public function index() {}
+
 	public function login() {}
 
 	public function password(){}
