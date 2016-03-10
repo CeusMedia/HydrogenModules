@@ -7,11 +7,11 @@ $iconRegister	= HTML::Icon( 'plus', TRUE );
 $optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
-extract( $view->populateTexts( $texts, 'html/auth/register/' ) );
+extract( $view->populateTexts( $texts, 'html/auth/local/register/' ) );
 
 $formTerms	= '';
 $tacHtml	= '';
-$tacFile	= 'html/auth/tac';
+$tacFile	= 'html/auth/local/tac';
 if( $env->getModules()->has( 'UI_Markdown') && $view->hasContentFile( $tacFile.'.md' ) ){
 	$tacMarkdown	= $view->loadContentFile( $tacFile.'.md' );
 	$tacHtml		= View_Helper_Markdown::transformStatic( $env, $tacMarkdown );
@@ -42,7 +42,7 @@ if( $tacHtml ){
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
 $env->getPage()->js->addScriptOnReady('Auth.initUserRegistration();');
-$env->getPage()->css->theme->addUrl( 'module.resource.auth.css' );
+$env->getPage()->css->theme->addUrl( 'module.resource.auth.local.css' );
 
 //print_m( $moduleConfig->getAll() );die;
 //print_m( $w );die;
@@ -191,7 +191,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 	) )
 );
 
-$formUrl	= "./auth/register".( $from ? '?from='.$from : '' );
+$formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
 
 return HTML::DivClass( "auth-register-text-top", $textTop ).
 HTML::Form( $formUrl, "form_auth_register_user",

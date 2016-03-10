@@ -3,7 +3,7 @@ $w		= (object) $words['password'];
 
 $iconSend	= HTML::Icon( 'envelope', TRUE );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password/' ) );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/password/' ) );
 
 $panelPassword	= HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),
@@ -32,7 +32,7 @@ $panelPassword	= HTML::DivClass( "content-panel content-panel-form", array(
 				) )
 			) )
 		), array(
-			'action'	=> "./auth/password",
+			'action'	=> "./auth/local/password",
 			'method'	=> "post",
 		) )
 	) ),

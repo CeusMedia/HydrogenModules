@@ -60,7 +60,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<locale>en/html/auth/local/tac.html</locale>
 		<locale>en/html/auth/local/tac.md</locale>
 		<locale>en/mail/auth/local/register.txt</locale>
-		<locale>en/mail/auth//localpassword.txt</locale>
+		<locale>en/mail/auth/local/password.txt</locale>
 		<style source="theme">module.resource.auth.local.css</style>
 	</files>
 	<relations>

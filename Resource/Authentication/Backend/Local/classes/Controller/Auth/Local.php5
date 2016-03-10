@@ -30,7 +30,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		$context->registerBackend( 'Local' );
+		if( $env->getConfig()->get( 'module.resource_authentication_backend_local.enabled' ) )
+			$context->registerBackend( 'Local' );
 	}
 
 	public function ajaxIsAuthenticated(){
@@ -167,6 +168,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						$this->messenger->noteSuccess( $words->msgSuccess );
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
+						$this->session->set( 'authBackend', 'Local' );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set

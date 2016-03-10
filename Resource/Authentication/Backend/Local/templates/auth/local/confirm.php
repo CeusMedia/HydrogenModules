@@ -1,6 +1,6 @@
 <?php
 $w		= (object) $words['confirm'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm/' ) );
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/confirm/' ) );
 
 $panelConfirm	= HTML::DivClass( "content-panel", array(
 	HTML::H3( $w->heading ),
@@ -23,7 +23,7 @@ $panelConfirm	= HTML::DivClass( "content-panel", array(
 				) )
 			) )
 		), array(
-			'action'	=> './auth/confirm'.( $from ? '?from='.$from : '' ),
+			'action'	=> './auth/local/confirm'.( $from ? '?from='.$from : '' ),
 			'method'	=> 'POST',
 			'name'		=> 'auth-confirm'
 		) )

@@ -5,7 +5,7 @@ Du hast dir ein Benutzerkonto bei <%appTitle%> erstellt.
 
 Bitte aktiviere das Konto, indem du diesem Link folgst:
 
-<%appBaseUrl%>auth/confirm/<%pak%><%?from%>
+<%appBaseUrl%>auth/local/confirm/<%pak%><%?from%>
 
 oder gib nach der Registrierung diesen Code ein:
 

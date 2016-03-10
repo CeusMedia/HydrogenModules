@@ -36,14 +36,14 @@ $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLog
 ) );
 
 $buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
-	'href'		=> './auth/password',
+	'href'		=> './auth/local/password',
 	'class'		=> 'btn btn-small',
 ) );
 
 $buttonRegister	= "";
 if( $useRegister ){
 	$buttonRegister	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
-		'href'		=> './auth/register'.( $from ? '?from='.$from : '' ),
+		'href'		=> './auth/local/register'.( $from ? '?from='.$from : '' ),
 		'class'		=> 'btn btn-small btn-success',
 	) );
 }
@@ -96,7 +96,7 @@ HTML::DivClass( "content-panel content-panel-form", array(
 					) )
 				) )
 			), array(
-				'action'	=> './auth/login' . ( $from ? '?from='.rawurlencode( $from ) : '' ),
+				'action'	=> './auth/local/login' . ( $from ? '?from='.rawurlencode( $from ) : '' ),
 				'name'		=> "editUser",
 				'method'	=> "post"
 			) )

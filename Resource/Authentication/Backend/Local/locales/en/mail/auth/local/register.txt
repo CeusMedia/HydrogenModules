@@ -5,7 +5,7 @@ You have registered a new user account at <%appTitle%>.
 
 Please activate this account by following this link:
 
-<%appBaseUrl%>auth/confirm/<%pak%><%?from%>
+<%appBaseUrl%>auth/local/confirm/<%pak%><%?from%>
 
 or by entering this registration code:
 
