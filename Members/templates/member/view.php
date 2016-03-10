@@ -31,7 +31,7 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel,
 ) );
 
 $buttonRequest	= '';
-$buttonRelease	= '';
+$buttonRevoke	= '';
 $buttonAccept	= '';
 $buttonReject	= '';
 
@@ -48,7 +48,7 @@ if( $user->userId !== $currentUserId ){
 			) );
 		}
 		if( $relation->status == 2 ){
-			$buttonRelease	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRelease, array(
+			$buttonRevoke	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
 				'href'		=> './member/release/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn-small btn-inverse',
 				'onclick'	=> "if(!confirm('Wirklich?')) return false;",
@@ -114,7 +114,7 @@ $panelInfo	= '
 			'.$buttonRequest.'
 			'.$buttonAccept.'
 			'.$buttonReject.'
-			'.$buttonRelease.'
+			'.$buttonRevoke.'
 		</div>
 	</div>
 </div>';
