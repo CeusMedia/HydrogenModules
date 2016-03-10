@@ -12,12 +12,13 @@ Authorization is implemented fully (except implicit grant) according to
 RFC 6749 (http://tools.ietf.org/html/rfc6749).
 
 ]]></description>
-	<version>0.2.3</version>
+	<version>0.2.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated application management.</log>
 	<log version="0.2.2">Module cleanup.</log>
 	<log version="0.2.3">Add locales for application management.</log>
+	<log version="0.2.4">Add user ID column for access tokens and codes.</log>
 	<category>Server</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -51,16 +52,28 @@ RFC 6749 (http://tools.ietf.org/html/rfc6749).
 	<config protected="yes" type="integer" name="lifetime.access" title="Seconds for access token to last (default: 3600 = 1 hour).">3600</config>
 	<config protected="yes" type="integer" name="lifetime.code" title="Seconds for authorization code to last (default: 600 = 10 minutes).">600</config>
 	<config protected="yes" type="integer" name="lifetime.refresh" title="Seconds for refresh token to last (default: 1209600 = 14 days).">1209600</config>
+	<link access="public" path="oauth/authorize"/>
+	<link access="public" path="oauth/token"/>
+<!--	<link access="acl" path="oauth/application/add"/>
+	<link access="acl" path="oauth/application/edit"/>
+	<link access="acl" path="oauth/application/enable"/>
+	<link access="acl" path="oauth/application/disable"/>
+	<link access="acl" path="oauth/application/index"/>
+	<link access="acl" path="oauth/application/remove"/>
+	<link access="acl" path="oauth/application/view"/>
+	<link access="acl" path="oauth/resource/index"/>-->
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
   `oauthAccessTokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `oauthApplicationId` int(10) unsigned NOT NULL,
+  `userId` int(11) unsigned DEFAULT NULL,
   `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `scope` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`oauthAccessTokenId`),
   KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `userId` (`userId`),
   KEY `token` (`token`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -90,12 +103,14 @@ DROP TABLE IF EXISTS `<%?prefix%>oauth_codes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
   `oauthCodeId` int(11) NOT NULL AUTO_INCREMENT,
   `oauthApplicationId` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
   `redirectUri` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `code` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `scope` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`oauthCodeId`),
   KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `userId` (`userId`),
   KEY `redirectUri` (`redirectUri`),
   KEY `code` (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
