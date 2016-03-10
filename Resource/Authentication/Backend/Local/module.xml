@@ -10,9 +10,10 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
+	<log version="0.2.1">Extend configuration.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -63,6 +64,12 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<locale>en/mail/auth/local/password.txt</locale>
 		<style source="theme">module.resource.auth.local.css</style>
 	</files>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="string" name="login.forward.path"/>
+	<config protected="yes" type="boolean" name="login.forward.force">no</config>
+	<config protected="yes" type="string" name="logout.forward.path"/>
+	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
+	<config protected="no" type="boolean" name="register">yes</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 	</relations>
