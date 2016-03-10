@@ -2,9 +2,10 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
+	<log version="0.2.1">Extend configuration.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -42,9 +43,15 @@
 		<style source="theme">module.resource.auth.oauth.css</style>
 	</files>
 	<config protected="yes" type="boolean" name="enabled">yes</config>
-	<config protected="yes" type="string" name="provider.client.ID">544403c15782</config>
-	<config protected="yes" type="string" name="provider.client.secret">5e57c3b0d9e3e9c42a6158f9e25c4c40</config>
-	<config protected="yes" type="string" name="provider.URI">http://localhost/sandbox/OAuth/oauth</config>
+	<config protected="yes" type="string" name="login.forward.path"/>
+	<config protected="yes" type="boolean" name="login.forward.force">no</config>
+	<config protected="yes" type="string" name="logout.forward.path"/>
+	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
+	<config protected="no" type="boolean" name="register">yes</config>
+	<config protected="yes" type="string" name="login.grantType" values="password,code">code</config>
+	<config protected="yes" type="string" name="provider.client.ID"></config>
+	<config protected="yes" type="string" name="provider.client.secret"></config>
+	<config protected="yes" type="string" name="provider.URI"></config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 	</relations>
