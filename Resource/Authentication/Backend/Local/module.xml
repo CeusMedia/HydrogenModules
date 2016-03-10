@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Authentication: Backend: Local</title>
+	<description><![CDATA[Module for authentication against local database using the Users module.
+
+**Attention:**
+Basic Authentication will not work, if PHP is integrated into Apache via CGI/FastCGI.
+The reason: Authorisation headers will not be included automatically.
+You need to set this header in your Apache configuration. For example in .htaccess:
+<code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
+
+]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial fork from module Resource:Authentication.</log>
+	<log version="0.2">Integrated locale backend functionality.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Auth/Local.php5</class>
+		<class>Mail/Auth/Local/Register.php5</class>
+		<class>Mail/Auth/Local/Password.php5</class>
+		<class>View/Auth/Local.php5</class>
+		<class>Logic/Authentication/Backend/Local.php5</class>
+		<template>auth/local/confirm.php</template>
+		<template>auth/local/login.php</template>
+		<template>auth/local/login.form.php</template>
+		<template>auth/local/password.php</template>
+		<template>auth/local/register.php</template>
+		<locale>de/auth/local.ini</locale>
+		<locale>de/html/auth/local/confirm/top.html</locale>
+		<locale>de/html/auth/local/confirm/info.html</locale>
+		<locale>de/html/auth/local/confirm/bottom.html</locale>
+		<locale>de/html/auth/local/login/top.html</locale>
+		<locale>de/html/auth/local/login/info.html</locale>
+		<locale>de/html/auth/local/login/bottom.html</locale>
+		<locale>de/html/auth/local/password/top.html</locale>
+		<locale>de/html/auth/local/password/info.html</locale>
+		<locale>de/html/auth/local/password/bottom.html</locale>
+		<locale>de/html/auth/local/register/top.html</locale>
+		<locale>de/html/auth/local/register/info.html</locale>
+		<locale>de/html/auth/local/register/bottom.html</locale>
+		<locale>de/html/auth/local/tac.html</locale>
+		<locale>de/html/auth/local/tac.md</locale>
+		<locale>de/mail/auth/local/register.txt</locale>
+		<locale>de/mail/auth/local/password.txt</locale>
+		<locale>en/auth/local.ini</locale>
+		<locale>en/html/auth/local/login/top.html</locale>
+		<locale>en/html/auth/local/login/info.html</locale>
+		<locale>en/html/auth/local/login/bottom.html</locale>
+		<locale>en/html/auth/local/confirm/top.html</locale>
+		<locale>en/html/auth/local/confirm/info.html</locale>
+		<locale>en/html/auth/local/confirm/bottom.html</locale>
+		<locale>en/html/auth/local/password/top.html</locale>
+		<locale>en/html/auth/local/password/info.html</locale>
+		<locale>en/html/auth/local/password/bottom.html</locale>
+		<locale>en/html/auth/local/register/top.html</locale>
+		<locale>en/html/auth/local/register/info.html</locale>
+		<locale>en/html/auth/local/register/bottom.html</locale>
+		<locale>en/html/auth/local/tac.html</locale>
+		<locale>en/html/auth/local/tac.md</locale>
+		<locale>en/mail/auth/local/register.txt</locale>
+		<locale>en/mail/auth/local/password.txt</locale>
+		<style source="theme">module.resource.auth.local.css</style>
+	</files>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+	<link xml:lang="de" rank="10" access="outside" path="auth/local/login">Login</link>
+	<link xml:lang="de" rank="11" access="outside" path="auth/local/password">Passwort</link>
+	<link xml:lang="de" rank="12" access="outside" path="auth/local/register">Registrieren</link>
+	<link xml:lang="de" rank="13" access="outside" path="auth/local/confirm">Konto bestätigen</link>
+	<link xml:lang="de" rank="99" access="inside" path="auth/local/logout">Logout</link>
+	<link xml:lang="en" rank="10" access="outside" path="auth/local/login">Login</link>
+	<link xml:lang="en" rank="11" access="outside" path="auth/local/password">Password</link>
+	<link xml:lang="en" rank="12" access="outside" path="auth/local/register">Rgister Account</link>
+	<link xml:lang="en" rank="13" access="outside" path="auth/local/confirm">Confirm Account</link>
+	<link xml:lang="en" rank="99" access="inside" path="auth/local/logout">Logout</link>
+	<link rank="99" access="public" path="auth/local/ajaxEmailExists"></link>
+	<link rank="99" access="public" path="auth/local/ajaxIsAuthenticated"></link>
+	<link rank="99" access="public" path="auth/local/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="auth/local/index"></link>
+	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Local::___onAuthRegisterBackend</hook>
+</module>

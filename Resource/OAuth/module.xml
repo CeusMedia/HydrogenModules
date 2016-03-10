@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: OAuth</title>
+	<description><![CDATA[OAuth resource client.
+
+At the moment, this client can connect ot one OAuth service, only.
+
+The configured server URI is related to the OAuth resource server, not to the OAuth authentication server.
+
+]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial fork from module Resource:Authentication.</log>
+	<log version="0.2">Integrated OAuth client functionality.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/Oauth.php5</class>
+	</files>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="string" name="server.URI"></config>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+	<link access="public" path="auth/logout"/>
+	<link access="public" path="auth/oauth/logout"/>
+<!--	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth::___onAuthRegisterBackend</hook>-->
+<!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
+</module>

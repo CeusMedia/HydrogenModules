@@ -3,13 +3,14 @@
 	<title><![CDATA[Resource: Users & Roles]]></title>
 	<description><![CDATA[Support for users and groups stored in database.]]></description>
 	<category>Resource</category>
-	<version>0.2.3</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
 	<log version="0.2.2">Changed ACL right key for controllers.</log>
 	<log version="0.2.3">Updated visibility of configuration pairs.</log>
 	<log version="0.2.4">Fix username regular expression.</log>
+	<log version="0.2.5">Add account ID for OAuth registration.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -32,13 +33,14 @@
 	<config protected="no" type="boolean" name="email.mandatory" title="user needs a mail address on register and change">yes</config>
 	<config protected="no" type="boolean" name="firstname.mandatory" title="user needs a firstname">yes</config>
 	<config protected="no" type="boolean" name="surname.mandatory" title="user needs a surname">yes</config>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 DROP TABLE IF EXISTS `<%?prefix%>users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `accountId` int(11) unsigned NULL,
   `roleId` int(11) unsigned DEFAULT NULL,
   `companyId` int(11) unsigned NOT NULL,
   `roomId` int(11) unsigned NOT NULL,
@@ -61,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `loggedAt` decimal(12,0) DEFAULT NULL,
   `activeAt` decimal(12,0) DEFAULT NULL,
   PRIMARY KEY (`userId`),
+  UNIQUE `accountId` (`accountId`),
   KEY `roleId` (`roleId`),
   KEY `status` (`status`),
   KEY `email` (`email`),
@@ -104,10 +107,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
 
 ]]>
 	</sql>
-	<sql on="install" type="sqlite"><![CDATA[
+	<sql on="install" type="sqlite" version="final"><![CDATA[
 DROP TABLE IF EXISTS "<%?prefix%>users";
 CREATE TABLE "<%?prefix%>users" (
 	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
+    "accountId" INTEGER,
 	"roleId" INTEGER,
 	"status" INTEGER,
 	"username" VARCHAR,
@@ -156,7 +160,10 @@ CREATE TABLE "<%?prefix%>role_rights" (
 
 ]]>
 	</sql>
-	
+	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
+ALTER TABLE `<%?prefix%>users` ADD `accountId` INT(11) UNSIGNED NULL AFTER `userId`, ADD UNIQUE (`accountId`) ;
+]]>
+	</sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
@@ -260,6 +267,6 @@ DROP TABLE IF EXISTS "<%?prefix%>role_rights";
 95				= "guest"
 96				= "visitor"
 97				= "surfer"
-]]>		
+]]>
 	</todo>
 </module>
