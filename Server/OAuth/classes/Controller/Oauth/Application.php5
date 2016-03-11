@@ -76,10 +76,16 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 		$this->addData( 'application', $this->model->get( $applicationId ) );
 	}
 
+	/**
+	 *	@todo 		kriss: think about the fullAccess code below - is it needed?
+	 */
 	public function index( $page = 0, $limit = 10 ){
 		$orders			= array( 'title' => 'ASC' );
 		$limits			= array( abs( $page ) * abs( $limit ), abs( $limit ) );
+
+//		if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
 		$conditions		= array( 'userId' => (int) $this->userId );
+
 		$this->addData( 'applications', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
