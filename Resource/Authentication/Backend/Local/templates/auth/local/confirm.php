@@ -19,7 +19,7 @@ $panelConfirm	= HTML::DivClass( "content-panel", array(
 				UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, array(
 					'type'	=> "submit",
 					'name'	=> "confirm",
-					'class'	=> "btn btn-primary"
+					'class'	=> "btn btn-primary btn-large"
 				) )
 			) )
 		), array(

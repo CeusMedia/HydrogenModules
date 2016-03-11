@@ -3,10 +3,14 @@
 $w				= (object) $words['login'];
 
 $iconLogin		= HTML::Icon( 'ok', TRUE );
-$iconRegister	= HTML::Icon( 'user', TRUE );
 $iconRegister	= HTML::Icon( 'plus', TRUE );
-$iconPassword	= HTML::Icon( 'warning-sign' );
 $iconPassword	= HTML::Icon( 'envelope' );
+
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconLogin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+	$iconRegister	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-plus' ) );
+	$iconPassword	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+}
 
 $fieldRemember	= "";
 if( $useRemember )
@@ -32,19 +36,19 @@ if( $useRemember )
 $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> "submit",
 	'name'		=> "doLogin",
-	'class'		=> "btn btn-primary",
+	'class'		=> "btn btn-primary btn-block",
 ) );
 
 $buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
 	'href'		=> './auth/local/password',
-	'class'		=> 'btn btn-small',
+	'class'		=> 'btn btn-block',
 ) );
 
 $buttonRegister	= "";
 if( $useRegister ){
 	$buttonRegister	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
 		'href'		=> './auth/local/register'.( $from ? '?from='.$from : '' ),
-		'class'		=> 'btn btn-small btn-success',
+		'class'		=> 'btn btn-block btn-success',
 	) );
 }
 

@@ -183,7 +183,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			UI_HTML_Tag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, array(
 				'type'		=> 'submit',
 				'id'		=> 'button_save',
-				'class'		=> 'btn btn-primary save',
+				'class'		=> 'btn btn-primary btn-large save',
 				'name'		=> 'save',
 				'disabled'	=> 'disabled'
 			) )

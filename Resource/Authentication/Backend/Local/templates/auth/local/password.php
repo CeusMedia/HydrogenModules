@@ -27,7 +27,7 @@ $panelPassword	= HTML::DivClass( "content-panel content-panel-form", array(
 			HTML::DivClass( "buttonbar", array(
 				UI_HTML_Tag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, array(
 					'type'	=> "submit",
-					'class'	=> "btn btn-primary",
+					'class'	=> "btn btn-primary btn-block",
 					'name'	=> "sendPassword"
 				) )
 			) )
@@ -40,10 +40,10 @@ $panelPassword	= HTML::DivClass( "content-panel content-panel-form", array(
 
 return HTML::DivClass( "auth-password-text-top", $textTop ).
 HTML::DivClass( "row-fluid", array(
-	HTML::DivClass( "span4 offset1", array(
+	HTML::DivClass( "span4", array(
 		$panelPassword
 	) ),
-	HTML::DivClass( "span6", array(
+	HTML::DivClass( "span8", array(
 		$textInfo
 	) ),
 ) ).HTML::DivClass( "auth-password-text-bottom", $textBottom );
