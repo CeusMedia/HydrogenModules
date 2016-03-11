@@ -44,6 +44,10 @@ class Logic_Authentication{
 		return self::$instance;
 	}
 
+	public function hasFullAccess(){
+		return $this->env->getAcl()->hasFullAccess( $this->getCurrentRoleId() );
+	}
+
 	public function isAuthenticated(){
 		return $this->backend->isAuthenticated();
 	}
