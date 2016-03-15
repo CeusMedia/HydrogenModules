@@ -340,10 +340,10 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					'salutation'	=> $input['salutation'],
 					'firstname'		=> $input['firstname'],
 					'surname'		=> $input['surname'],
+					'country'		=> $input['country'],
 					'postcode'		=> $input['postcode'],
 					'city'			=> $input['city'],
 					'street'		=> $input['street'],
-					'number'		=> $input['number'],
 					'phone'			=> $input['phone'],
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
@@ -389,8 +389,12 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 		foreach( $input as $key => $value )
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
+		if( !$input->get( 'country' ) && $this->env->getLanguage()->getLanguage() == 'de' )
+			$input->set( 'country', 'DE' );
+
 		$this->addData( 'user', $input );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
 	protected function rememberUserInCookie( $user ){

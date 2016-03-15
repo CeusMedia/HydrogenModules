@@ -135,6 +135,14 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			) ),
 		) ).
 		HTML::DivClass( 'row-fluid', array(
+			HTML::DivClass( 'span3', array(
+				HTML::Label( "country", $w->labelCountry ),
+				UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->get( 'country' ) ), array(
+					'name'			=> 'country',
+					'id'			=> 'input_country',
+					'class'			=> 'span12',
+				) )
+			) ),
 			HTML::DivClass( 'span2', array(
 				HTML::Label( "postcode", $w->labelPostcode ),
 				UI_HTML_Tag::create( 'input', NULL, array(
@@ -155,7 +163,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					'value'		=> $user->get( 'city' ),
 				) )
 			) ),
-			HTML::DivClass( 'span3', array(
+			HTML::DivClass( 'span4', array(
 				HTML::Label( "street", $w->labelStreet ),
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'type'		=> 'text',
@@ -163,16 +171,6 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					'id'		=> 'input_street',
 					'class'		=> 'span12',
 					'value'		=> $user->get( 'street' ),
-				) )
-			) ),
-			HTML::DivClass( 'span2', array(
-				HTML::Label( "number", $w->labelNumber ),
-				UI_HTML_Tag::create( 'input', NULL, array(
-					'type'		=> 'text',
-					'name'		=> 'number',
-					'id'		=> 'input_number',
-					'class'		=> 'span12',
-					'value'		=> $user->get( 'number' ),
 				) )
 			) ),
 		) ).
