@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <module>
 	<title><![CDATA[Resource: Users & Roles]]></title>
-	<description><![CDATA[Support for users and groups stored in database.]]></description>
+	<description><![CDATA[Support for users and groups stored in database.
+
+Version <0.2.6: Please run Model_User::migrate after module update and make a new database dump!
+
+]]></description>
 	<category>Resource</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -11,6 +15,7 @@
 	<log version="0.2.3">Updated visibility of configuration pairs.</log>
 	<log version="0.2.4">Fix username regular expression.</log>
 	<log version="0.2.5">Add account ID for OAuth registration.</log>
+	<log version="0.2.6">Add country column.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -52,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `salutation` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `firstname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `surname` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country` char(2) COLLATE utf8_unicode_ci DEFAULT NULL,
   `postcode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `street` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -68,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   KEY `status` (`status`),
   KEY `email` (`email`),
   KEY `username` (`username`),
-  KEY `gender` (`gender`)
+  KEY `gender` (`gender`),
+  KEY `country` (`country`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 INSERT INTO `<%?prefix%>users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
@@ -91,8 +98,8 @@ INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `descri
 (1, 128, 0, 'Entwickler', '', '1294083736', '0'),
 (2, 128, 0, 'Administrator', '', '1294083928', '0'),
 (3, 64, 0, 'Manager', '', '1294083948', '0'),
-(4, 64, 64, 'Benutzer', '', '1294083995', '0'),
-(5, 64, 128, 'Gast', '', '1294084004', '0');
+(4, 64, 128, 'Benutzer', '', '1294083995', '0'),
+(5, 64, 64, 'Gast', '', '1294084004', '0');
 
 DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
@@ -111,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
 DROP TABLE IF EXISTS "<%?prefix%>users";
 CREATE TABLE "<%?prefix%>users" (
 	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
-    "accountId" INTEGER,
+	"accountId" INTEGER,
 	"roleId" INTEGER,
 	"status" INTEGER,
 	"username" VARCHAR,
@@ -121,6 +128,7 @@ CREATE TABLE "<%?prefix%>users" (
 	"salutation" VARCHAR,
 	"firstname" VARCHAR,
 	"surname" VARCHAR,
+	"country" VARCHAR,
 	"postcode" VARCHAR,
 	"city" VARCHAR,
 	"street" VARCHAR,
@@ -146,8 +154,8 @@ CREATE TABLE "<%?prefix%>roles" (
 INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (1, 128, 0, 'Entwickler', '', '1294083736', '0');
 INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (2, 128, 0, 'Administrator', '', '1294083928', '0');
 INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (3, 64, 0, 'Manager', '', '1294083948', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (4, 64, 64, 'Benutzer', '', '1294083995', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (5, 64, 128, 'Gast', '', '1294084004', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (4, 64, 128, 'Benutzer', '', '1294083995', '0');
+INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (5, 64, 64, 'Gast', '', '1294084004', '0');
 
 DROP TABLE IF EXISTS "<%?prefix%>role_rights";
 CREATE TABLE "<%?prefix%>role_rights" (
@@ -162,6 +170,11 @@ CREATE TABLE "<%?prefix%>role_rights" (
 	</sql>
 	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
 ALTER TABLE `<%?prefix%>users` ADD `accountId` INT(11) UNSIGNED NULL AFTER `userId`, ADD UNIQUE (`accountId`) ;
+]]>
+	</sql>
+	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
+ALTER TABLE `<%?prefix%>users` ADD `country` CHAR(2) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL AFTER `surname`;
+ALTER TABLE `<%?prefix%>users` ADD INDEX(`country`);
 ]]>
 	</sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
