@@ -32,8 +32,8 @@ Editor for graph structure, stored in database.
 		<template>work/graph/panel/graphs.php</template>
 		<template>work/graph/panel/nodeEdges.php</template>
 		<template>work/graph/panel/nodes.php</template>
+		<file>config/sql/dump.graphs.sql</file>
 	</files>
-	<config type="string" protected="yes" name="path" title="path to graph files"></config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 		<needs type="module">UI_Bootstrap</needs>
@@ -41,7 +41,7 @@ Editor for graph structure, stored in database.
 	</relations>
 	<link xml:lang="de" access="acl" path="work/graph">Graph-Editor</link>
 	<link xml:lang="en" access="acl" path="work/graph">Graphs</link>
-	<sql on="install" type="mysql" version="0.2"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>graphs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>graphs` (
   `graphId` int(10) unsigned NOT NULL AUTO_INCREMENT,
