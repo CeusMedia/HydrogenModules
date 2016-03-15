@@ -35,6 +35,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->addData( 'mandatoryEmail', (int) $config->get( 'module.resource_users.email.mandatory' ) );
 		$this->addData( 'mandatoryFirstname', (int) $config->get( 'module.resource_users.firstname.mandatory' ) );
 		$this->addData( 'mandatorySurname', (int) $config->get( 'module.resource_users.surname.mandatory' ) );
+		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
 	/**
@@ -110,6 +111,10 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$messenger->noteError( $words->msgPasswordMismatch );
 
 		if( !$messenger->gotError() ){
+			if( strlen( $data['country'] ) > 2 ){
+				$countries			= array_flip( $this->env->getLanguage()->getWords( 'countries' ) );
+				$data['country']	= $countries[$data['country']];
+			}
 			$modelUser->edit( $userId, $data );
 			$messenger->noteSuccess( $words->msgSuccess );
 		};
