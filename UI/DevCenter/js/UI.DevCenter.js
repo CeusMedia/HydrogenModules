@@ -2,7 +2,6 @@ if(typeof UI === "undefined")
 	UI = {};
 UI.DevCenter = {
 	init: function(){
-		console.log("\\(°o°)/");
 		$("#DevCenterHandleTop").bind("selectstart", function(event){
 			event.stopPropagation();
 			event.preventDefault();
@@ -29,6 +28,8 @@ UI.DevCenter = {
 			event.preventDefault();
 		});
 		$(document).bind("mouseup", function(event){
+			if($(document).data("dragging") !== "#DevCenterHandleTop")
+				return;
 			$.ajax({
 				url: "./DevCenter/ajaxSetHeight",
 				data: {height: $("#DevCenter").height() / $(window).height() * 100},
@@ -40,7 +41,7 @@ UI.DevCenter = {
 			event.preventDefault();
 		});
 		$(window).bind("keyup", function(event){
-			if(event.keyCode == 121){
+			if(event.keyCode == 120){
 				if($("#DevCenter").is(":visible"))
 					UI.DevCenter.hide();
 				else
