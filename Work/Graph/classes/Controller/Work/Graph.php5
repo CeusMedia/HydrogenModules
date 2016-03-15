@@ -1,10 +1,10 @@
 <?php
 class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 
-	protected $path	= "";
-
 	protected function __onInit(){
-		$this->request	= $this->env->getRequest();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
 
 		$this->modelGraph	= new Model_Work_Graph( $this->env );
 		$this->modelNode	= new Model_Work_Graph_Node( $this->env );
@@ -27,7 +27,8 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
 		$edgeId	= $this->modelEdge->add( $data );
-		$this->renderGraphImage( $graphId, TRUE );
+		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+//		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $nodeId ? 'node/'.$nodeId : $graphId, TRUE );
 	}
 
@@ -35,6 +36,7 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
+		$data['createdAt']	= time();
 		$graphId	= $this->modelGraph->add( $data );
 		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $graphId, TRUE );
@@ -45,7 +47,8 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
 		$nodeId	= $this->modelNode->add( $data );
-		$this->renderGraphImage( $graphId, TRUE );
+		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+//		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( 'node/'.$nodeId /*$graphId*/, TRUE );
 	}
 
@@ -55,7 +58,8 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 			$data[$key]	= $value !== "" ? $value : NULL;
 		$this->modelEdge->edit( $edgeId, $data );
 		$edge	= $this->modelEdge->get( $edgeId );
-		$this->renderGraphImage( $edge->graphId, TRUE );
+		$this->modelGraph->edit( $edge->graphId, array( 'modifiedAt' => time() ) );
+//		$this->renderGraphImage( $edge->graphId, TRUE );
 		$this->restart( $nodeId ? 'node/'.$nodeId : 'edge/'.$edgeId, TRUE );
 	}
 
@@ -64,7 +68,8 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
 		$this->modelGraph->edit( $graphId, $data );
-		$this->renderGraphImage( $graphId, TRUE );
+		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+//		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $graphId, TRUE );
 	}
 
@@ -74,11 +79,15 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 			$data[$key]	= $value !== "" ? $value : NULL;
 		$this->modelNode->edit( $nodeId, $data );
 		$node	= $this->modelNode->get( $nodeId );
-		$this->renderGraphImage( $node->graphId, TRUE );
+		$this->modelGraph->edit( $node->graphId, array( 'modifiedAt' => time() ) );
+//		$this->renderGraphImage( $node->graphId, TRUE );
 		$this->restart( 'node/'.$nodeId, TRUE );
 	}
 
 	public function index( $graphId = NULL){
+		if( $graphId )
+			$this->selectGraph( $graphId );
+		$graphId	= $this->session->get( 'work_graph_id' );
 		if( !$graphId )
 			$graphId	= 1;
 		$this->addData( 'graphId', $graphId );
@@ -106,8 +115,19 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		$this->addData( 'graphId', $node->graphId );
 		$this->addData( 'graph', $graph );
 		$this->addData( 'nodes', $this->modelNode->getAllByIndex( 'graphId', $node->graphId ) );
-		$this->addData( 'edgesFrom', $this->modelEdge->getAllByIndex( 'fromNodeId', $nodeId ) );
-		$this->addData( 'edgesTo', $this->modelEdge->getAllByIndex( 'toNodeId', $nodeId ) );
+		$this->addData( 'edgesIn', $this->modelEdge->getAllByIndex( 'toNodeId', $nodeId ) );
+		$this->addData( 'edgesOut', $this->modelEdge->getAllByIndex( 'fromNodeId', $nodeId ) );
+	}
+
+	public function selectGraph( $graphId ){
+		$graph	= $this->modelGraph->get( $graphId );
+		if( !$graph ){
+			$this->messenger->noteError( 'Invalid graph ID.' );
+		}
+		else{
+			$this->session->set( 'work_graph_id', (int) $graphId );
+		}
+		$this->restart( NULL, TRUE );
 	}
 
 	protected function renderGraph( $graphId ){
@@ -115,75 +135,91 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		$nodes		= $this->modelNode->getAllByIndex( 'graphId', $graphId );
 		$edges		= $this->modelEdge->getAllByIndex( 'graphId', $graphId );
 
-		if( $graph && $nodes ){
+		if( !( $graph && $nodes ) )
+			return;
 
-			$nodeIndex	= array();
-			foreach( $nodes as $node )
-				$nodeIndex[$node->nodeId]	= $node->ID;
+		$nodeIndex	= array();
+		foreach( $nodes as $node )
+			$nodeIndex[$node->nodeId]	= $node->ID;
 
-			$indent		= '    ';
-			$lines		= array();
-			$title		= preg_replace( "/ /", "_", $graph->title );
-			$lines[]	= $graph->type.' '.$title.' {';
-			$lines[]	= $indent.'rankdir="'.$graph->rankdir.'"';
-			foreach( $nodes as $node ){
-				$attr	= array();
-				$attr['shape']		= $node->shape ? $node->shape : $graph->nodeShape;
-				$attr['style']		= $node->style ? $node->style : $graph->nodeStyle;
-				$attr['color']		= $node->color ? $node->color : $graph->nodeColor;
-				$attr['fillcolor']	= $node->fillcolor ? $node->fillcolor : $graph->nodeFillcolor;
-				$attr['fontsize']	= $node->fontsize ? $node->fontsize : $graph->nodeFontsize;
-				$attr['width']		= $node->width ? $node->width : $graph->nodeWidth;
-				$attr['height']		= $node->height ? $node->height : $graph->nodeHeight;
-				$attr['label']		= $node->label ? $node->label : $node->ID;
-				foreach( $attr as $key => $value )
-					$attr[$key]	= $key.'="'.$value.'"';
-				$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
-				$lines[]	= $indent.$node->ID.$attr;
-			}
-			$lines[]	= '';
-			foreach( $edges as $edge ){
-				$attr		= array();
-				$attr['arrowhead']	= $edge->arrowhead ? $edge->arrowhead : $graph->edgeArrowhead;
-				$attr['arrowsize']	= $edge->arrowsize ? $edge->arrowsize : $graph->edgeArrowsize;
-				$attr['color']		= $edge->color ? $edge->color : $graph->edgeColor;
-				$attr['fontcolor']	= $edge->fontcolor ? $edge->fontcolor : $graph->edgeFontcolor;
-				$attr['fontsize']	= $edge->fontsize ? $edge->fontsize : $graph->edgeFontsize;
-				$attr['label']		= $edge->label;
-				foreach( $attr as $key => $value )
-					$attr[$key]	= $key.'="'.$value.'"';
-				$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
-				$trans	= $nodeIndex[$edge->fromNodeId].'->'.$nodeIndex[$edge->toNodeId];
-				$lines[]	= $indent.$trans.$attr;
-			}
-			$lines[]	= '}';
-			$graphFile	= $this->path."graph_".rawurlencode( $graph->title );
-			File_Writer::save( $graphFile.".dot", join( "\n", $lines ) );
+		$indent		= '    ';
+		$lines		= array();
+		$lines[]	= $graph->type.' graph_'.$graph->graphId.' {';
+		$lines[]	= $indent.'rankdir="'.$graph->rankdir.'"';
+		foreach( $nodes as $node ){
+			$attr	= array();
+			$attr['shape']		= $node->shape ? $node->shape : $graph->nodeShape;
+			$attr['style']		= $node->style ? $node->style : $graph->nodeStyle;
+			$attr['color']		= $node->color ? $node->color : $graph->nodeColor;
+			$attr['fillcolor']	= $node->fillcolor ? $node->fillcolor : $graph->nodeFillcolor;
+			$attr['fontsize']	= $node->fontsize ? $node->fontsize : $graph->nodeFontsize;
+			$attr['width']		= $node->width ? $node->width : $graph->nodeWidth;
+			$attr['height']		= $node->height ? $node->height : $graph->nodeHeight;
+			$attr['label']		= $node->label ? $node->label : $node->ID;
+			foreach( $attr as $key => $value )
+				$attr[$key]	= $key.'="'.$value.'"';
+			$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
+			$lines[]	= $indent.$node->ID.$attr;
 		}
+		$lines[]	= '';
+		foreach( $edges as $edge ){
+			$attr		= array();
+			$attr['arrowhead']	= $edge->arrowhead ? $edge->arrowhead : $graph->edgeArrowhead;
+			$attr['arrowsize']	= $edge->arrowsize ? $edge->arrowsize : $graph->edgeArrowsize;
+			$attr['color']		= $edge->color ? $edge->color : $graph->edgeColor;
+			$attr['fontcolor']	= $edge->fontcolor ? $edge->fontcolor : $graph->edgeFontcolor;
+			$attr['fontsize']	= $edge->fontsize ? $edge->fontsize : $graph->edgeFontsize;
+			$attr['label']		= $edge->label;
+			foreach( $attr as $key => $value )
+				$attr[$key]	= $key.'="'.$value.'"';
+			$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
+			$trans	= $nodeIndex[$edge->fromNodeId].'->'.$nodeIndex[$edge->toNodeId];
+			$lines[]	= $indent.$trans.$attr;
+		}
+		$lines[]	= '}';
+		$this->modelGraph->edit( $graphId, array(
+			'dot'	=> join( "\n", $lines ),
+		), FALSE );
 	}
 
 	protected function renderGraphImage( $graphId, $force = NULL ){
 		$graph		= $this->modelGraph->get( $graphId );
-		if( $graph ){
-			$graphFile	= $this->path."graph_".rawurlencode( $graph->title );
-			if( !file_exists( $graphFile.".dot" ) || $force )
+		if( !$graph )
+			throw new RuntimeException( 'Invalid graph ID' );
+
+		$force		= $graph->modifiedAt > $graph->renderedAt || $force;
+		if( !strlen( $graph->image ) || $force ){
+			if( !strlen( $graph->dot ) || $force ){
 				$this->renderGraph( $graphId );
+				$graph		= $this->modelGraph->get( $graphId );
+			}
+			$graphFile	= "graph_".$graph->graphId;
+			File_Writer::save( $graphFile.".dot", $graph->dot );
 			$command	= "dot -Tpng ".$graphFile.".dot > ".$graphFile.".png";
 			exec( $command );
+			$this->modelGraph->edit( $graphId, array(
+				'image'			=> file_get_contents( $graphFile.".png" ),
+				'renderedAt'	=> time(),
+			), FALSE );
+			unlink( $graphFile.".dot" );
+			unlink( $graphFile.".png" );
 		}
 	}
 
 	public function view( $graphId, $force = NULL ){
 		$graph		= $this->modelGraph->get( $graphId );
-		if( $graph ){
-			$graphFile	= $this->path."graph_".rawurlencode( $graph->title );
-			if( !file_exists( $graphFile.".png" ) || $force )
-				$this->renderGraphImage( $graphId, $force );
-			header( "Content-Type: image/png" );
-			header( "Content-Length: ".filesize( $graphFile.".png" ) );
-			readfile( $graphFile.".png" );
-			exit;
+		if( !$graph )
+			throw new RuntimeException( 'Invalid graph ID' );
+
+		$force		= $graph->modifiedAt > $graph->renderedAt || $force;
+		if( !strlen( $graph->image ) || $force ){
+			$this->renderGraphImage( $graphId, $force );
+			$graph		= $this->modelGraph->get( $graphId );
 		}
+		header( "Content-Type: image/png" );
+		header( "Content-Length: ".strlen( $graph->image ) );
+		print( $graph->image );
+		exit;
 	}
 
 /*	protected function checkGraph( $graphId ){

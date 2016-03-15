@@ -13,11 +13,11 @@ $linkTarget	= UI_HTML_Tag::create( 'a', $nodeIndex[$edge->toNodeId], array(
 
 return '
 <div class="content-panel">
-	<h4>Node of this edge</h4>
+	<h3>Node of this edge</h3>
 	<div class="content-panel-inner">
-		<h5 class="not-muted">Source</h4>
+		<h4 class="not-muted">Source</h4>
 		'.$linkSource.'
-		<h5 class="not-muted">Target</h4>
+		<h4 class="not-muted">Target</h4>
 		'.$linkTarget.'
 	</div>
 </div>
