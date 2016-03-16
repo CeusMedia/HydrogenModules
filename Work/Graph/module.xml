@@ -4,10 +4,11 @@
 	<description><![CDATA[
 Editor for graph structure, stored in database.
 ]]></description>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separated to Hydrogen module.</log>
 	<log version="0.3">Improve UI structure.</log>
+	<log version="0.3.1">Set permissions.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -41,6 +42,14 @@ Editor for graph structure, stored in database.
 	</relations>
 	<link xml:lang="de" access="acl" path="work/graph">Graph-Editor</link>
 	<link xml:lang="en" access="acl" path="work/graph">Graphs</link>
+	<link access="acl" path="work/graph/addEdge"/>
+	<link access="acl" path="work/graph/addNode"/>
+	<link access="acl" path="work/graph/editEdge"/>
+	<link access="acl" path="work/graph/editNode"/>
+	<link access="acl" path="work/graph/editGraph"/>
+	<link access="acl" path="work/graph/edge"/>
+	<link access="acl" path="work/graph/node"/>
+	<link access="acl" path="work/graph/view"/>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>graphs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>graphs` (
