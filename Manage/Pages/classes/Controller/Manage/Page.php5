@@ -187,7 +187,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			if( !$pageId )
 				throw new OutOfRangeException( 'Invalid page ID given' );
 
-			$this->request->set( 'identifier', preg_replace( "/[^a-z0-9]/", "", $this->request->get( 'identifier' ) ) );
+			$this->request->set( 'identifier', preg_replace( "/[^a-z0-9_-]/", "", $this->request->get( 'identifier' ) ) );
 
 			$indices		= array(
 				'parentId'		=> $this->request->get( 'parentId' ),
