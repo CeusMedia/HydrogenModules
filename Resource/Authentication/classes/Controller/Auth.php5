@@ -13,6 +13,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
+		$this->logic		= Logic_Authentication::getInstance( $this->env );
 //		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		$this->messenger	= $this->env->getMessenger();
@@ -84,6 +85,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
+					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
 					$this->restart( './auth/login/'.$user->username.( $from ? '?from='.$from : '' ) );
 				}
 			}
@@ -111,6 +113,17 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function login( $username = NULL ){
+		$backends	= $this->logic->getBackends();
+		if( count( $backends ) === 1 ){
+			$path	= 'auth/'.strtolower( $backends[0] ).'/login';
+			if( $username )
+				$path	.= '/'.$username;
+			$this->restart( $path );
+		}
+
+		$this->addData( 'backends', $backends );
+/*
+
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
@@ -177,212 +190,34 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
 		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
 		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
+*/
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL ){
-		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->remove( 'userId' ) ){
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
-			if( $this->request->has( 'autoLogout' ) ){
-				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
-			}
-			else{
-				$this->cookie->remove( 'auth_remember' );
-				$this->cookie->remove( 'auth_remember_id' );
-				$this->cookie->remove( 'auth_remember_pw' );
-				$this->env->getMessenger()->noteSuccess( $words['logout']['msgSuccess'] );
-			}
-			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
-				session_destroy();																	//  completely destroy session
-		}
-
-		$from			= $this->request->get( 'from' );
-		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );
-		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );
-
-		if( $forwardPath && $forwardForce )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		if( $from )
-			$this->restart( $from );
-		if( $forwardPath )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-
-		$redirectTo	= $redirectController.( $redirectAction ? '/'.$redirectAction : '' );
-		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
+	public function logout(){
+		$backends	= $this->logic->getBackends();
+		$backend	= $this->session->get( 'authBackend' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/logout';
+		if( $from = $this->request->get( 'from' ) )
+			$path	.= '?from='.$from;
+		$this->restart( $path );
 	}
 
 	public function password(){
-		$words			= (object) $this->getWords( 'password' );
-		$modelUser		= new Model_User( $this->env );
-
-		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
-
-		if( $this->request->has( 'sendPassword' ) ){
-			if( !( $email = $this->request->get( 'password_email' ) ) ){
-				$this->messenger->noteError( $words->msgNoEmail );
-				$this->restart( 'password', TRUE );
-			}
-			if( !( $user = $modelUser->getByIndex( 'email', $email ) ) ){
-				$this->messenger->noteError( $words->msgInvalidEmail );
-			}
-			else{
-				$randomizer	= new Alg_Randomizer();
-				$randomizer->configure( TRUE, TRUE, TRUE, FALSE, 0 );
-				$password	= $randomizer->get( 8 );
-
-				$this->env->getDatabase()->beginTransaction();
-				try{
-					$data		= array(
-						'firstname'	=> $user->firstname,
-						'surname'	=> $user->surname,
-						'username'	=> $user->username,
-						'password'	=> $password,
-					);
-					$language	= $this->env->getLanguage()->getLanguage();
-					$mail		= new Mail_Auth_Password( $this->env, $data );
-					$logic		= new Logic_Mail( $this->env );
-					$logic->appendRegisteredAttachments( $mail, $language );
-					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
-					$modelUser->edit( $user->userId, array( 'password' => md5( $passwordSalt.$password ) ) );
-					$this->env->getDatabase()->commit();
-					$this->messenger->noteSuccess( $words->msgSuccess );
-	//				$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
-					$this->restart( './auth/login?login_username='.$user->username );
-				}
-				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->msgSendingMailFailed, $e->getMessage() );
-				}
-				$this->env->getDatabase()->rollBack();
-			}
-		}
-		$this->addData( 'password_email', $this->request->get( 'password_email' ) );
+		$backends	= $this->logic->getBackends();
+		$backend	= $this->session->get( 'authBackend' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/password';
+		if( $from = $this->request->get( 'from' ) )
+			$path	.= '?from='.$from;
+		$this->restart( $path );
 	}
 
 	public function register(){
-		$words		= (object) $this->getWords( 'register' );
-
-		if( !$this->moduleConfig->get( 'register' ) ){
-			$this->messenger->noteError( $words->msgRegistrationClosed );
-			$this->restart( $this->request->get( 'from' ) );
-		}
-
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
-
-		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
-		$rolesAllowed	= array();
-		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
-			$rolesAllowed[]	= $role->roleId;
-
-		$input			= $this->request->getAllFromSource( 'post' );
-		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
-
-		$nameMinLength	= $options->get( 'name.length.min' );
-		$nameMaxLength	= $options->get( 'name.length.max' );
-		$nameRegExp		= $options->get( 'name.preg' );
-		$pwdMinLength	= $options->get( 'password.length.min' );
-		$needsEmail		= $options->get( 'email.mandatory' );
-		$needsFirstname	= $options->get( 'firstname.mandatory' );
-		$needsSurname	= $options->get( 'surname.mandatory' );
-		$needsTac		= $options->get( 'tac.mandatory' );
-		$status			= (int) $options->get( 'status.register' );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
-
-		$roleId		= $this->request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;			//  use default register role if none given
-		$username	= $input->get( 'username' );
-		$password	= $input->get( 'password' );
-		$email		= $input->get( 'email' );
-
-		$errors	= $this->messenger->gotError();
-		if( $this->request->has( 'save' ) ){
-			if( !in_array( $roleId, $rolesAllowed ) )
-				$this->messenger->noteError( $words->msgRoleInvalid );
-			if( empty( $username ) )
-				$this->messenger->noteError( $words->msgNoUsername );
-			else if( $modelUser->countByIndex( 'username', $username ) )
-				$this->messenger->noteError( $words->msgUsernameExisting, $username );
-			else if( $nameRegExp )
-				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
-					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
-			if( empty( $password ) )
-				$this->messenger->noteError( $words->msgNoPassword );
-			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
-			if( $needsEmail && empty( $email ) )
-				$this->messenger->noteError( $words->msgNoEmail);
-			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
-				$this->messenger->noteError( $words->msgEmailExisting, $email );
-			if( $needsFirstname && empty( $input['firstname'] ) )
-				$this->messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $input['surname'] ) )
-				$this->messenger->noteError( $words->msgNoSurname );
-			if( $needsTac &&  empty( $input['accept_tac'] ) )
-				$this->messenger->noteError( $words->msgTermsNotAccepted  );
-
-			if( $this->messenger->gotError() - $errors == 0 ){
-				$data	= array(
-					'roleId'		=> $roleId,
-					'status'		=> $status,
-					'email'			=> $email,
-					'username'		=> $username,
-					'password'		=> md5( $passwordSalt.$password ),
-					'gender'		=> $input['gender'],
-					'salutation'	=> $input['salutation'],
-					'firstname'		=> $input['firstname'],
-					'surname'		=> $input['surname'],
-					'postcode'		=> $input['postcode'],
-					'city'			=> $input['city'],
-					'street'		=> $input['street'],
-					'number'		=> $input['number'],
-					'phone'			=> $input['phone'],
-					'fax'			=> $input['fax'],
-					'createdAt'		=> time(),
-				);
-				$this->env->getDatabase()->beginTransaction();
-				$from		= $this->request->get( 'from' );
-				$forward	= './auth/login'.( $from ? '?from='.$from : '' );
-				try{
-					$userId		= $modelUser->add( $data );
-
-					if( !$status ){
-						$data				= $input->getAll();
-						$data['from']		= $from;
-						$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
-
-						$language	= $this->env->getLanguage()->getLanguage();
-						$user		= $modelUser->get( $userId );
-						$mail		= new Mail_Auth_Register( $this->env, $data );
-						$logic		= new Logic_Mail( $this->env );
-						$logic->appendRegisteredAttachments( $mail, $language );
-						$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
-						$forward	= './auth/confirm'.( $from ? '?from='.$from : '' );
-					}
-					$this->env->getDatabase()->commit();
-					$this->messenger->noteSuccess( $words->msgSuccess );
-					if( !$status )
-						$this->messenger->noteNotice( $words->msgNoticeConfirm );
-					$this->restart( $forward );
-				}
-				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					// @todo log errors, but how and were without general logging system?
-				}
-				$this->env->getDatabase()->rollBack();
-			}
-		}
-		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
-			if( !$input->has( 'username' ) )
-				$input->set( 'username', $this->session->get( 'auth_register_oauth_username' ) );
-			if( empty( $input['email'] ) )
-				$input['email']	= $this->session->get( 'auth_register_oauth_email' );
-		}
-
-		foreach( $input as $key => $value )
-			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
-		$this->addData( 'user', $input );
-		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$backends	= $this->logic->getBackends();
+		$backend	= $this->session->get( 'authBackend' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/register';
+		if( $from = $this->request->get( 'from' ) )
+			$path	.= '?from='.$from;
+		$this->restart( $path );
 	}
 
 	protected function rememberUserInCookie( $user ){

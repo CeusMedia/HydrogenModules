@@ -2,42 +2,55 @@
 <module>
 	<title>Work: Graph</title>
 	<description><![CDATA[
+Editor for graph structure, stored in database.
 ]]></description>
-	<version>0.2</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separated to Hydrogen module.</log>
+	<log version="0.3">Improve UI structure.</log>
+	<log version="0.3.1">Set permissions.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Graph.php5</class>
+		<class>Model/Work/Graph.php5</class>
+		<class>Model/Work/Graph/Edge.php5</class>
+		<class>Model/Work/Graph/Node.php5</class>
 		<class>View/Work/Graph.php5</class>
+		<locale>de/work/graph.ini</locale>
+		<locale>en/work/graph.ini</locale>
 		<template>work/graph/edge.php</template>
 		<template>work/graph/index.php</template>
 		<template>work/graph/node.php</template>
-		<template>work/graph/panelAddEdge.php</template>
-		<template>work/graph/panelAddNode.php</template>
-		<template>work/graph/panelEdgeNodes.php</template>
-		<template>work/graph/panelEditEdge.php</template>
-		<template>work/graph/panelEditGraph.php</template>
-		<template>work/graph/panelEditNode.php</template>
-		<template>work/graph/panelNodeEdges.php</template>
-		<template>work/graph/panelTree.php</template>
 		<template>work/graph/modal/addEdge.php</template>
 		<template>work/graph/modal/addNode.php</template>
 		<template>work/graph/modal/editEdge.php</template>
 		<template>work/graph/modal/editGraph.php</template>
+		<template>work/graph/modal/editNode.php</template>
+		<template>work/graph/panel/edgeNodes.php</template>
+		<template>work/graph/panel/graphs.php</template>
+		<template>work/graph/panel/nodeEdges.php</template>
+		<template>work/graph/panel/nodes.php</template>
+		<file>config/sql/dump.graphs.sql</file>
 	</files>
-	<config type="string" protected="yes" name="path" title="path to graph files"></config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 		<needs type="module">UI_Bootstrap</needs>
-		<needs type="module">UI_CSS_Panel</needs>
+		<supports type="module">UI_CSS_Panel</supports>
 	</relations>
 	<link xml:lang="de" access="acl" path="work/graph">Graph-Editor</link>
 	<link xml:lang="en" access="acl" path="work/graph">Graphs</link>
-	<sql on="install" type="mysql" version="0.2"><![CDATA[
+	<link access="acl" path="work/graph/addEdge"/>
+	<link access="acl" path="work/graph/addNode"/>
+	<link access="acl" path="work/graph/editEdge"/>
+	<link access="acl" path="work/graph/editNode"/>
+	<link access="acl" path="work/graph/editGraph"/>
+	<link access="acl" path="work/graph/edge"/>
+	<link access="acl" path="work/graph/node"/>
+	<link access="acl" path="work/graph/view"/>
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>graphs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>graphs` (
   `graphId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -58,6 +71,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>graphs` (
   `edgeColor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `edgeFontcolor` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `edgeFontsize` float DEFAULT NULL,
+  `dot` text COLLATE utf8_unicode_ci,
+  `image` longblob,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) DEFAULT NULL,
+  `renderedAt` decimal(12,0) DEFAULT NULL,
   PRIMARY KEY (`graphId`),
   KEY `type` (`type`),
   KEY `rankdir` (`rankdir`),
@@ -88,6 +106,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>graph_nodes` (
   `graphId` int(10) unsigned NOT NULL,
   `ID` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `label` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
   `shape` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `style` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `color` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -100,8 +119,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>graph_nodes` (
   KEY `graphId` (`graphId`),
   KEY `ID` (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 ]]></sql>
-    <sql on="uninstall" type="mysql"><![CDATA[
+	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>graphs`;
 DROP TABLE IF EXISTS `<%?prefix%>graph_edges`;
 DROP TABLE IF EXISTS `<%?prefix%>graph_nodes`;

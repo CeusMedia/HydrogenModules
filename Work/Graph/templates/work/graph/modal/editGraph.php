@@ -1,8 +1,8 @@
 <?php
 
 $optGraph	= array();
-foreach( $graphs as $graph )
-	$optGraph[$graph->graphId]	= $graph->title;
+foreach( $graphs as $item )
+	$optGraph[$item->graphId]	= $item->title;
 $optGraph	= UI_HTML_Elements::Options( $optGraph );
 
 $optType	= array( "static" => "static", "graph" => "graph", "digraph" => "digraph" );
@@ -32,7 +32,7 @@ $panelDetails	= '
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_description">Description</label>
-				<input type="text" name="description" id="input_description" class="span12" value="'.htmlentities( $graph->description, ENT_QUOTES, 'UTF-8' ).'"/>
+				<textarea name="description" id="input_description" class="span12" rows="4">'.htmlentities( $graph->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 		</div>
 	</div>

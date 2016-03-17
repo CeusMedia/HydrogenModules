@@ -9,7 +9,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logicShop	= new Logic_Shop( $this->env );
+		$this->logicShop	= new Logic_ShopManager( $this->env );
 		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 	}
 
@@ -19,7 +19,6 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 		$orders			= array( 'orderId' => 'ASC' );
 
 		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>=2' ), $orders );
-
 		$customerIds		= array();
 		foreach( $ordersTotal as $order )
 			$customerIds[]	= (int) $order->customerId;
@@ -29,7 +28,9 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( array( 'status' => array( 3, 4 ) ), $orders ) );
 		$this->addData( 'ordersTotal', $ordersTotal );
 
-		$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
+		$customers	= array();
+		if( $customerIds )
+			$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
 
 		//  ALTER TABLE `shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
 /*		$geocoder	= new Net_API_Google_Maps_Geocoder( "" );

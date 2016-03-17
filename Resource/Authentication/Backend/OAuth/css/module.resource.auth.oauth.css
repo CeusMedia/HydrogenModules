@@ -1,0 +1,30 @@
+div.framed {
+	border: 1px solid gray;
+	border-radius: 0.4em;
+	padding: 1em 2em;
+	overflow: auto;
+	height: 200px;
+	}
+
+input.state-good {
+	background-color: #DFFFEF;
+	}
+
+input.state-bad {
+	background-color: #FFCFCF;
+	}
+
+textarea.monospace {
+	font-family: "Monospace";
+	fontface: "Monospace";
+	}
+
+div.framed {
+	border: 1px solid gray;
+	border-radius: 4px;
+	padding: 1em 2em;
+	overflow: auto;
+	height: 300px;
+	margin-bottom: 1em;
+	font-size: 0.9em;
+	}

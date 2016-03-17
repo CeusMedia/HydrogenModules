@@ -16,6 +16,21 @@
  *	@copyright		2014 Ceus Media
  *	@version		$Id$
  */
+/**
+DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
+  `oauthAccessTokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oauthApplicationId` int(10) unsigned NOT NULL,
+  `userId` int(11) unsigned DEFAULT NULL,
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `scope` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthAccessTokenId`),
+  KEY `oauthApplicationId` (`oauthApplicationId`),
+  KEY `userId` (`userId`),
+  KEY `token` (`token`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ */
 class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
 
 	protected $name		= 'oauth_access_tokens';
@@ -23,12 +38,14 @@ class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
 		'oauthAccessTokenId',
 		'oauthApplicationId',
 		'token',
+		'userId',
 		'scope',
 		'createdAt',
 	);
 	protected $primaryKey	= 'oauthAccessTokenId';
 	protected $indices		= array(
 		'oauthApplicationId',
+		'userId',
 		'token',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

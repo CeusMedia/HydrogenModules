@@ -14,7 +14,7 @@ class View_Helper_DevCenter{
 	}
 
 	public function render( Resource_DevCenter $resourceDevCenter, $label, $url = NULL ){
-		$tabs	= new CMM_Bootstrap_TabbableNavbar();
+		$tabs	= new \CeusMedia\Bootstrap\TabbableNavbar();
 		$tabs->setFixed( 'top' );
 		foreach( $resourceDevCenter->getResources() as $resource ){
 			$id		= preg_replace( "/[^a-z0-9 _-]/i", "", $resource->key );

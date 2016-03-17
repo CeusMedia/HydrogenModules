@@ -33,6 +33,7 @@ $panelEdit	= '
 							'class'		=> 'span12',
 							'required'	=> 'required',
 							'type'		=> 'text',
+							'disabled'	=> 'disabled',
 						) )
 //					)
 				).
@@ -48,6 +49,7 @@ $panelEdit	= '
 							'class'		=> 'span12',
 							'required'	=> $mandatoryEmail ? 'required' : NULL,
 							'type'		=> 'text',
+							'disabled'	=> 'disabled',
 						) )
 //					)
 				)
@@ -88,6 +90,23 @@ $panelEdit	= '
 				)
 			).
 			HTML::DivClass( 'row-fluid',
+				HTML::DivClass( 'span3',
+					HTML::Label( 'number', $w->labelCountry, '' ).
+					UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->country ), array(
+						'name'			=> 'country',
+						'id'			=> 'input_country',
+						'class'			=> 'span12',
+					) )
+/*					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'country',
+						'id'			=> 'input_country',
+						'value'			=> $countries[$user->country],
+						'class'			=> 'span12 typeahead',
+						'data-provide'	=> 'typeahead',
+						'autocomplete'	=> 'off'
+					) )*/
+				).
 				HTML::DivClass( 'span2',
 					HTML::Label( 'postcode', $w->labelPostcode, '' ).
 					HTML::Input( 'postcode', $user->postcode, 'span12 numeric' )
@@ -96,13 +115,9 @@ $panelEdit	= '
 					HTML::Label( 'city', $w->labelCity, '' ).
 					HTML::Input( 'city', $user->city, 'span12' )
 				).
-				HTML::DivClass( 'span5',
+				HTML::DivClass( 'span4',
 					HTML::Label( 'street', $w->labelStreet, '' ).
 					HTML::Input( 'street', $user->street, 'span12' )
-				).
-				HTML::DivClass( 'span2',
-					HTML::Label( 'number', $w->labelNumber, '' ).
-					HTML::Input( 'number', $user->number, 'span12 numeric' )
 				)
 			).
 			HTML::DivClass( 'row-fluid',
@@ -138,6 +153,16 @@ $panelEdit	= '
 		).'
 	</div>
 </div>
+<script>
+/*
+$(document).ready(function(){
+	$(".typeahead").typeahead({
+		source: '.json_encode( array_values( $countries ) ).',
+		items: 4
+	});
+});
+*/
+</script>
 <style>
 .content-panel-info .dl-horizontal dt {
 	width: 40%;

@@ -18,6 +18,8 @@
  */
 class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
+	protected $countries;
+
 	protected $filters	= array(
 		'username',
 		'roomId',
@@ -31,7 +33,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	);
 
 	public function __onInit(){
-		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( array(
 			'nameMinLength'		=> $options->get( 'name.length.min' ),
 			'nameMaxLength'		=> $options->get( 'name.length.max' ),
@@ -94,7 +97,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				$messenger->noteError( $words->msgNoSurname );
 
 			if( !$messenger->gotError() ){
-				$userId		= $modelUser->add( array(
+				$data	= array(
 					'roleId'		=> $input['roleId'],
 					'status'		=> $input['status'],
 					'username'		=> $username,
@@ -107,11 +110,16 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					'postcode'		=> $input['postcode'],
 					'city'			=> $input['city'],
 					'street'		=> $input['street'],
-					'number'		=> $input['number'],
+					'country'		=> $input['country'],
 					'phone'			=> $input['phone'],
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
-				) );
+				);
+				if( strlen( $data['country'] ) > 2 ){
+					$countries			= array_flip( $this->countries );
+					$data['country']	= $countries[$data['country']];
+				}
+				$userId		= $modelUser->add( $data );
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( NULL, TRUE );
 			}
@@ -127,6 +135,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
+		$this->addData( 'countries', $this->countries );
 	}
 
 	public function ban( $userId ) {
@@ -203,21 +212,26 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					'salutation'	=> $input['salutation'],
 					'firstname'		=> $input['firstname'],
 					'surname'		=> $input['surname'],
+					'country'		=> $input['country'],
 					'postcode'		=> $input['postcode'],
 					'city'			=> $input['city'],
 					'street'		=> $input['street'],
-					'number'		=> $input['number'],
 					'phone'			=> $input['phone'],
 					'fax'			=> $input['fax'],
 					'modifiedAt'	=> time(),
 				);
 				if( !empty( $password ) )
 					$data['password']	= md5( $passwordSalt.$password );
+				if( strlen( $data['country'] ) > 2 ){
+					$countries			= array_flip( $this->countries );
+					$data['country']	= $countries[$data['country']];
+				}
 				$modelUser->edit( $userId, $data );
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			}
 		}
 		$user		= $modelUser->get( $userId );
+		$user->country	= $this->countries[$user->country];
 		$user->role	= $modelRole->get( $user->roleId );
 
 		$config		= $this->env->getConfig();
@@ -227,6 +241,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
+		$this->addData( 'countries', $this->countries );
 
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$modelProject	= new Model_Project( $this->env );

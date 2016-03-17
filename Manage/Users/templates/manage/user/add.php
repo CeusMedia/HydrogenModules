@@ -81,21 +81,21 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span1">
+				<div class="span3">
+					<label for="input_country" class="">'.$w->labelCountry.'</label>
+					<input type="text" name="country" id="input_country" class="span12 typeahead" data-provide="typeahead" autocomplete="off" value="'.$user->country.'"/>
+				</div>
+				<div class="span2">
 					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
 					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
 				</div>
-				<div class="span5">
+				<div class="span3">
 					<label for="input_city" class="">'.$w->labelCity.'</label>
 					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
 				</div>
 				<div class="span4">
 					<label for="input_street" class="">'.$w->labelStreet.'</label>
 					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
-				</div>
-				<div class="span2">
-					<label for="input_number" class="">'.$w->labelNumber.'</label>
-					<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -107,6 +107,16 @@ $panelAdd	= '
 		</form>
 	</div>
 </div>
+<script>
+$(document).ready(function(){
+	$(".typeahead").each(function(){
+		$(this).typeahead({
+			source: '.json_encode( array_values( $countries ) ).',
+			items: 4
+		});
+	});
+});
+</script>
 ';
 
 $panelInfo	= '';
