@@ -3,10 +3,11 @@
 	<title>Info: Testimonials</title>
 	<description/>
 	<category>Info</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add language support.</log>
+	<log version="0.3.1">Add more locale blocks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -14,11 +15,21 @@
 		<class>Model/Testimonial.php5</class>
 		<class>View/Info/Testimonial.php5</class>
 		<locale>de/info/testimonial.ini</locale>
-		<locale>de/html/info/testimonial/index.bottom.html</locale>
-		<locale>de/html/info/testimonial/index.top.html</locale>
+		<locale>de/html/info/testimonial/bottom.html</locale>
+		<locale>de/html/info/testimonial/top.html</locale>
+		<locale>de/html/info/testimonial/form.bottom.html</locale>
+		<locale>de/html/info/testimonial/form.info.html</locale>
+		<locale>de/html/info/testimonial/form.top.html</locale>
+		<locale>de/html/info/testimonial/list.bottom.html</locale>
+		<locale>de/html/info/testimonial/list.top.html</locale>
 		<locale>en/info/testimonial.ini</locale>
-		<locale>en/html/info/testimonial/index.bottom.html</locale>
-		<locale>en/html/info/testimonial/index.top.html</locale>
+		<locale>en/html/info/testimonial/bottom.html</locale>
+		<locale>en/html/info/testimonial/top.html</locale>
+		<locale>en/html/info/testimonial/form.bottom.html</locale>
+		<locale>en/html/info/testimonial/form.info.html</locale>
+		<locale>en/html/info/testimonial/form.top.html</locale>
+		<locale>en/html/info/testimonial/list.bottom.html</locale>
+		<locale>en/html/info/testimonial/list.top.html</locale>
 		<template>info/testimonial/index.php</template>
 <!--		<style source="theme" load="auto">module.info.testimonials.css</style>-->
 	</files>
