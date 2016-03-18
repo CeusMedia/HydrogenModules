@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.24</version>
+	<version>0.7.26</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -27,6 +27,8 @@
 	<log version="0.7.22">Extract index text to locale HTML file.</log>
 	<log version="0.7.23">Apply module JS:Form:Changes.</log>
 	<log version="0.7.24">Allow hypen and underscore in page identifier.</log>
+	<log version="0.7.25">Finished localisation.</log>
+	<log version="0.7.26">Disable tabs for junctions or module pages.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

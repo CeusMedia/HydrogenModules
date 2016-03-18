@@ -1,4 +1,5 @@
 <?php
+$w				= (object) $words['add'];
 
 $optModule		= array( '' => '-' );
 foreach( $controllers as $module )
@@ -22,12 +23,12 @@ return '
 	</div>
 	<div class="span9">
 		<div class="content-panel">
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./manage/page/add" method="post" class="cmFormChange-auto">
-					<h4>Neue Seite</h4>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_identifier">Adresse</label>
+							<label for="input_identifier">'.$w->labelIdentifier.'</label>
 							<div class="input-prepend">
 								<span class="add-on"><small>'.$path.'</small></span>
 								<input type="text" name="identifier" class="span6 mandatory required" id="input_identifier" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
@@ -36,44 +37,44 @@ return '
 					</div>
 					<div class="row-fluid">
 						<div class="span6">
-							<label for="input_title">Titel</label>
+							<label for="input_title">'.$w->labelTitle.'</label>
 							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 						</div>
 						<div class="span3">
-							<label for="input_status" class="muted">Sichtbarkeit</label>
-							<select name="status" class="span12 disabled muted" disabled="disabled" id="input_status">'.$optStatus.'</select>
+							<label for="input_status" class="muted">'.$w->labelStatus.'</label>
+							<select name="status" class="span12 muted" id="input_status">'.$optStatus.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span5">
-							<label for="input_scope">Navigationsbereich</label>
+							<label for="input_scope">'.$w->labelScope.'</label>
 							<select name="scope" class="span12" id="input_scope">'.$optScope.'</select>
 						</div>
 						<div class="span1">
-							<label for="input_title">Rang</label>
+							<label for="input_title">'.$w->labelRank.'</label>
 							<input type="text" name="rank" id="input_rank" class="span12 numeric" value="'.htmlentities( $page->rank, ENT_QUOTES, 'UTF-8' ).'" required/>
 						</div>
 						<div class="span6 optional type type-0 type-2" style="display: none">
-							<label for="input_parentId">Unterseite von</label>
+							<label for="input_parentId">'.$w->labelParentId.'</label>
 							<select name="parentId" class="span12" id="input_parentId">'.$optParent.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span6">
-							<label for="input_type">Seitentyp</label>
+							<label for="input_type">'.$w->labelType.'</label>
 							<select name="type" class="span12 optional-trigger has-optionals" id="input_type" data-onchange="showOptionals(this);">'.$optType.'</select>
 						</div>
 						<div class="span3 optional type type-0" style="display: none">
-							<label for="input_format">Format</label>
+							<label for="input_format">'.$w->labelFormat.'</label>
 							<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 						</div>
 						<div class="span6 optional type type-2" style="display: none">
-							<label for="input_module">Modul</label>
+							<label for="input_module">'.$w->labelModule.'</label>
 							<select name="module" class="span12" id="input_module">'.$optModule.'</select>
 						</div>
 					</div>
 					<div class="buttonbar">
-						<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> speichern</button>
+						<button type="submit" name="save" class="btn btn-small btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 					</div>
 				</form>
 			</div>
