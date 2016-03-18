@@ -2,20 +2,26 @@
 class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
-		$path		= $env->getRequest()->get( '__path' );											//  get requested path
+		$request	= $env->getRequest();
+		$path		= $request->get( '__path' );											//  get requested path
 		$logic		= new Logic_Page( $env );														//  get page logic instance
 		$pageId		= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page ID is not empty
 		if( !( $page = $logic->getPageFromPath( $pageId, TRUE ) ) )									//  no page for path found
 			return FALSE;																			//  quit hook
 
+		if( $page->status < 0 ){																	//  page is deactivated
+			if( $request->get( 'preview' ) != $page->createdAt.$page->modifiedAt )					//  check for page management preview request
+				return FALSE;																		//  avoid access
+		}
+
 		$controller	= new Controller_Info_Page( $env, FALSE );										//  get controller instance
 		if( $page->type == 0 ){																		//  page is static
-			$env->getRequest()->set( '__redirected', TRUE );										//  note redirection for access check
+			$request->set( '__redirected', TRUE );													//  note redirection for access check
 			$controller->redirect( 'info/page', 'index', array( $pageId ) );						//  redirect to page controller
 		}
 		if( $page->type == 2 ){																		//  page is a module
-			if( !$page->module )
-				return FALSE;
+			if( !$page->module )																	//  but no module has been selected
+				return FALSE;																		//  avoid access
 			$module	= strtolower( str_replace( "_", "/", $page->module ) );							//  get module controller path
 			$controller->redirect( $module, 'index' );												//  redirect to module
 		}
