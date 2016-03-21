@@ -49,17 +49,40 @@ body.navbar-fixed #layout-field {
 	padding:0px
 	}
 @media (max-width: 979px){
-	.navbar-fixed-top,
-	.navbar-fixed-bottom {
+	body.navbar-fixed .navbar-fixed-top,
+	body.navbar-fixed .navbar-fixed-bottom {
 		position: fixed;
+		}
+	body.navbar-fixed .hidden-desktop .navbar-fixed-top .brand {
+		position: absolute;
+		left: 25%;
+		right: 25%;
+		top: 0;
+		text-align: center;
+		}
+	.mmenu-trigger {
+		position: absolute;
+		z-index: 1100;
+		}
+	.mmenu-trigger a {
+		float: left;
+		display: block;
+		color: rgba(0,0,0,0.66);
+		font-size: 24px;
+		padding: 8px 12px;
+		}
+	#mmenu-trigger-left {
+		top: 0;
+		width: 30px;
+		height: 30px;
 		}
 	}
 
 @media (max-width: 767px){
-	body.navbar-fixed .hidden-desktop .navbar-fixed-top,
-	body.navbar-fixed .hidden-desktop .navbar-fixed-bottom,
-	body.navbar-fixed .hidden-desktop .navbar-static-top {
+	body.navbar-fixed .navbar-fixed-top,
+	body.navbar-fixed .navbar-fixed-bottom,
+	body.navbar-fixed .navbar-static-top {
 		margin-right: 0px;
 		margin-left: 0px;
+		}
 	}
-}
