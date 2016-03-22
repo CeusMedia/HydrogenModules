@@ -39,6 +39,8 @@ class View_Helper_Navigation_BootstrapResponsive{
 			$helperNavDesktop->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
 
 			if( $configDesktop->get( 'navbar' ) ){
+				if( !$this->env->getModules()->has( 'UI_Navigation_Bootstrap_Navbar' ) )
+					throw new RuntimeException( 'Missing module "UI_Navigation_Bootstrap_Navbar"' );
 				$helperNavbarDesktop   = new View_Helper_Navigation_Bootstrap_Navbar();
 				$helperNavbarDesktop->setEnv( $this->env );
 				if( $this->helperAccountMenu )
@@ -58,26 +60,35 @@ class View_Helper_Navigation_BootstrapResponsive{
 
 		if( $useMobile ){
 			$configMobile		= $config->getAll( 'render.mobile.', TRUE );
+
 			$helperNavMobile	= new View_Helper_Navigation_Mobile( $this->env, $this->menu );
 			$helperNavMobile->setScope( $this->scope );
 			$helperNavMobile->setInverse( $configMobile->get( 'theme' ) === "dark" );
 			$helperNavMobile->setLinksToSkip( $this->linksToSkip );
 
-			$helperNavMobileTitle	= new View_Helper_Navigation_Bootstrap_NavbarMobileTitle();
-			$helperNavMobileTitle->setInverse( $configMobile->get( 'navbar.theme' ) === "dark" );
-			$helperNavMobileTitle->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
+			if( $configMobile->get( 'navbar' ) ){
+				if( !$this->env->getModules()->has( 'UI_Navigation_Bootstrap_Navbar' ) )
+					throw new RuntimeException( 'Missing module "UI_Navigation_Bootstrap_Navbar"' );
 
-			$helperNavbarMobile   = new View_Helper_Navigation_Bootstrap_NavbarMobile();
-			$helperNavbarMobile->setEnv( $this->env );
-			if( $this->helperAccountMenu )
-				$helperNavbarMobile->setAccountMenuHelper( $this->helperAccountMenu );
-			$helperNavbarMobile->setNavigationHelper( $helperNavMobileTitle );
-			$helperNavbarMobile->setPosition( "fixed" );
-			$helperNavbarMobile->setInverse( $configMobile->get( 'navbar.theme' ) === "dark" );
-			$helperNavbarMobile->setContainer( TRUE );
-			$helperNavbarMobile->hideOnDesktop( $useDesktop );
-			$navbars[]	= $helperNavbarMobile->render();
-			$navbars[]	= $helperNavMobile->render();
+				$helperNavMobileTitle	= new View_Helper_Navigation_Bootstrap_NavbarMobileTitle();
+				$helperNavMobileTitle->setInverse( $configMobile->get( 'navbar.theme' ) === "dark" );
+				$helperNavMobileTitle->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
+
+				$helperNavbarMobile   = new View_Helper_Navigation_Bootstrap_NavbarMobile();
+				$helperNavbarMobile->setEnv( $this->env );
+				if( $this->helperAccountMenu )
+					$helperNavbarMobile->setAccountMenuHelper( $this->helperAccountMenu );
+				$helperNavbarMobile->setNavigationHelper( $helperNavMobileTitle );
+				$helperNavbarMobile->setPosition( "fixed" );
+				$helperNavbarMobile->setInverse( $configMobile->get( 'navbar.theme' ) === "dark" );
+				$helperNavbarMobile->setContainer( TRUE );
+				$helperNavbarMobile->hideOnDesktop( $useDesktop );
+				$navbars[]	= $helperNavbarMobile->render();
+				$navbars[]	= $helperNavMobile->render();
+			}
+			else{
+				$navbars[]	= $helperNavMobile->render();
+			}
 		}
 		return join( $navbars );
 	}
