@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.7.26</version>
+	<version>0.9.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -12,23 +12,24 @@
 	<log version="0.7.7">Refactored page settings forms.</log>
 	<log version="0.7.8">Improved format support and content editor handling.</log>
 	<log version="0.7.9">Added copy function.</log>
-	<log version="0.7.10">Added support for keywords list file for meta tags.</log>
-	<log version="0.7.11">Save codemirror content with Ctrl-S.</log>
-	<log version="0.7.12">Updated TinyMCE link collection.</log>
-	<log version="0.7.13">Extended TinyMCE by image alignment and decoration.</log>
-	<log version="0.7.14">Updated integration of TinyMCE.</log>
-	<log version="0.7.15">Replace file and folder class calls to use CeusMedia:Common.</log>
-	<log version="0.7.16">Replace module JS:Optionals by JS:Form:Optionals.</log>
-	<log version="0.7.17">Apply jQuery UI sortable to page tree.</log>
-	<log version="0.7.18">Add support for module Resource:Versions.</log>
-	<log version="0.7.19">Check for pages support in frontend environment.</log> 
-	<log version="0.7.20">Replace module selector by controller selector.</log>
-	<log version="0.7.21">Apply panel style.</log>
-	<log version="0.7.22">Extract index text to locale HTML file.</log>
-	<log version="0.7.23">Apply module JS:Form:Changes.</log>
-	<log version="0.7.24">Allow hypen and underscore in page identifier.</log>
-	<log version="0.7.25">Finished localisation.</log>
-	<log version="0.7.26">Disable tabs for junctions or module pages.</log>
+	<log version="0.8">Added support for keywords list file for meta tags.</log>
+	<log version="0.8.1">Save codemirror content with Ctrl-S.</log>
+	<log version="0.8.2">Updated TinyMCE link collection.</log>
+	<log version="0.8.3">Extended TinyMCE by image alignment and decoration.</log>
+	<log version="0.8.4">Updated integration of TinyMCE.</log>
+	<log version="0.8.5">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.8.6">Replace module JS:Optionals by JS:Form:Optionals.</log>
+	<log version="0.8.7">Apply jQuery UI sortable to page tree.</log>
+	<log version="0.8.8">Add support for module Resource:Versions.</log>
+	<log version="0.8.9">Check for pages support in frontend environment.</log> 
+	<log version="0.9">Replace module selector by controller selector.</log>
+	<log version="0.9.1">Apply panel style.</log>
+	<log version="0.9.2">Extract index text to locale HTML file.</log>
+	<log version="0.9.3">Apply module JS:Form:Changes.</log>
+	<log version="0.9.4">Allow hypen and underscore in page identifier.</log>
+	<log version="0.9.5">Finished localisation.</log>
+	<log version="0.9.6">Disable tabs for junctions or module pages.</log>
+	<log version="0.9.7">Support sitemap information in meta editor.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

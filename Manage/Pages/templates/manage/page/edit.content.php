@@ -24,7 +24,6 @@ else if( $page->type == 0 ){
 
 	$format		= $page->format === "MD" ? "Markdown" : "HTML";
 
-
 	$fieldVersion	= '';
 	if( $versions ){
 		$fieldVersion	= '

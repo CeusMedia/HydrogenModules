@@ -73,7 +73,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 					$data[$column]	= $value;
 				}
 			}
-			$data['timestamp']	= time();
+			$data['createdAt']	= time();
 			unset( $data['pageId'] );
 
 			$indices		= array( 'parentId' => 0, 'identifier' => $data['identifier'] );
@@ -98,7 +98,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'content'		=> $this->request->get( 'content' ),
 			'format'		=> $this->request->get( 'format' ),
 			'module'		=> $this->request->get( 'module' ),
-			'timestamp'		=> time(),
+			'createdAt'		=> time(),
 		);
 
 		$this->addData( 'path', $this->frontend->getUri() );
@@ -233,7 +233,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( $column ) )
 						$data[$column]	= $this->request->get( $column );
-				$data['timestamp']	= time();
+				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );

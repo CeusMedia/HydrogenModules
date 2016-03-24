@@ -5,10 +5,14 @@ if( $page->type == 1 ){
 	return '<div class="alert alert-info"><em>'.$w->no_meta.'</em></div>';
 }
 
+$optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->changefreq );
+$optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
+
 return '
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
 		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
+			<h3>Beschreibung und Schlagwörter</h3>
 			<div class="row-fluid">
 				<div class="span6">
 					<h4>Werte für diese Seite</h4>
@@ -49,6 +53,25 @@ return '
 						<dt class="meta-default" data-key="publisher">Herausgeber</dt>
 						<dd>'.$meta['default.publisher'].'</dd>-->
 					</dl>
+				</div>
+			</div>
+			<h3>Angaben für Suchmaschinen</h3>
+			<p>
+				<small class="muted">
+					Diese Angaben sind für die <a href="https://de.wikipedia.org/wiki/Webcrawler" target="_blank">Crawler</a> der Suchmaschinen bestimmt
+					und werden bei der automatischen Erzeugung von <a href="https://de.wikipedia.org/wiki/Sitemaps-Protokoll" target="_blank">Sitemaps</a> verwendet.<br/>
+					Anhand dieser Einstellungen bestimmen die Crawler, wann sie diese Seite wieder besuchen werden.
+				</small>
+			</p>
+			<br/>
+			<div class="row-fluid">
+				<div class="span3">
+					<label for="input_changefreq">'.$w->labelChangefreq.'</label>
+					<select name="changefreq" id="input_changefreq" class="span12">'.$optChangefreq.'</select>
+				</div>
+				<div class="span3">
+					<label for="input_priority">'.$w->labelPriority.'</label>
+					<select name="priority" id="input_priority" class="span12">'.$optPriority.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
