@@ -14,10 +14,17 @@
 	</files>
 	<config protected="no" type="boolean" name="auto">1</config>
 	<config protected="no" type="string" name="auto.selector">.equalize-auto</config>
+	<config protected="no" type="string" name="auto.dimension" values="height,innerHeight,outerHeight,width,innerWidth,outerWidth">height</config>
+	<config protected="no" type="boolean" name="auto.reset">false</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		if( $module->config['enabled']->value ){
-			$selector	= $module->config['auto.selector']->value;
-			$context->js->addScriptOnReady( '$("'.$selector.'").equalize();' );
-		}
+		if( !$module->config['auto']->value )
+			return;
+		if( !( $selector = $module->config['auto.selector']->value ) )
+			return;
+		$params	= json_encode( array(
+			'equalize'	=> $module->config['auto.dimension']->value,
+			'reset'		=> $module->config['auto.reset']->value
+		) );
+		$context->js->addScriptOnReady( '$("'.$selector.'").equalize('.$params.');' );
 	]]></hook>
 </module>
