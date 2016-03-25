@@ -1,0 +1,32 @@
+div.blog-post {
+	padding-bottom: 1em;
+	}
+
+div.blog-post .blog-post-info dl.dl-inline {
+	border-top: 1px solid rgba(127,127,127,0.25);
+	border-bottom: 1px solid rgba(127,127,127,0.5);
+	padding-top: 0.5em;
+	}
+div.blog-post .blog-post-info dl.dl-inline:after {
+	clear: both;
+	content: ".";
+	visibility: hidden;
+	}
+div.blog-post .blog-post-info dl.dl-inline dt,
+div.blog-post .blog-post-info dl.dl-inline dd {
+	float: left;
+	width: auto;
+	clear: none;
+	margin: 0;
+	padding-right: 1em;
+	line-height: 1em;
+	}
+div.blog-post .blog-post-info dl.dl-inline dt {
+	border-left: 1px solid rgba(127,127,127,0.5);
+	padding-left: 1em;
+	}
+div.blog-post .blog-post-info dl.dl-inline dd {
+	}
+div.blog-post .blog-post-info dl.dl-inline dt:first-child {
+	border-left: none;
+	}

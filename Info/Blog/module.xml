@@ -3,9 +3,10 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add locales.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,16 +15,16 @@
 		<class>Model/Blog/Post.php5</class>
 		<class>View/Info/Blog.php5</class>
 		<template>info/blog/index.php</template>
-		<template>info/blog/view.php</template>
+		<template>info/blog/post.php</template>
 		<locale>de/info/blog.ini</locale>
 		<locale>de/html/info/blog/index.bottom.html</locale>
 		<locale>de/html/info/blog/index.top.html</locale>
-		<locale>de/html/info/blog/view.bottom.html</locale>
-		<locale>de/html/info/blog/view.top.html</locale>
+		<locale>de/html/info/blog/post.bottom.html</locale>
+		<locale>de/html/info/blog/post.top.html</locale>
+		<style load="auto">module.info.blog.css</style>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
-		<needs type="module">Resource_Authentication</needs>
 	</relations>
 	<link access="acl" path="info/forum" xml:lang="de" rank="51">Blog</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="51">Blog</link>
@@ -39,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_posts` (
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `abstract` tinytext COLLATE utf8_unicode_ci,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
-  `nrViews` int(11) NOT NULL,
+  `nrViews` int(11) NOT NULL DEFAULT '0',
   `createdAt` decimal(12,0) NOT NULL,
   `modifiedAt` decimal(12,0) DEFAULT NULL,
   `viewedAt` decimal(12,0) DEFAULT NULL,
