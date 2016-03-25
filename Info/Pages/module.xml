@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6</version>
+	<version>0.6.1</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -15,6 +15,7 @@
 	<log version="0.5.8">Add pages navigation helper for projects without module UI:Navigation.</log>
 	<log version="0.5.9">Add new page status "deactivated" and avoid access.</log>
 	<log version="0.6">Support sitemap information in model.</log>
+	<log version="0.6.1">Support subpage resolution of module controlled pages.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

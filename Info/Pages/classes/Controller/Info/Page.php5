@@ -3,12 +3,14 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
 		$request	= $env->getRequest();
-		$path		= $request->get( '__path' );											//  get requested path
+		$path		= $request->get( '__path' );													//  get requested path
 		$logic		= new Logic_Page( $env );														//  get page logic instance
 		$pageId		= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page ID is not empty
-		if( !( $page = $logic->getPageFromPath( $pageId, TRUE ) ) )									//  no page for path found
-			return FALSE;																			//  quit hook
 
+		$page	= $logic->getPageFromPath( $pageId, TRUE );
+
+		if( !$page )																				//  no page for path found
+			return FALSE;																			//  quit hook
 		if( $page->status < 0 ){																	//  page is deactivated
 			if( $request->get( 'preview' ) != $page->createdAt.$page->modifiedAt )					//  check for page management preview request
 				return FALSE;																		//  avoid access
@@ -23,7 +25,7 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			if( !$page->module )																	//  but no module has been selected
 				return FALSE;																		//  avoid access
 			$module	= strtolower( str_replace( "_", "/", $page->module ) );							//  get module controller path
-			$controller->redirect( $module, 'index' );												//  redirect to module
+			$controller->redirect( $module, 'index', $page->arguments );							//  redirect to module
 		}
 		return TRUE;																				//  stop ongoing dispatching
 	}

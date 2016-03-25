@@ -32,16 +32,26 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		$parts		= explode( '/', $path );
 		$parentId	= 0;
 		$parents	= array();
+		$lastPage	= NULL;
+		$way		= "";
 		if( !$parts )
 			return NULL;
 		while( $part = array_shift( $parts ) ){
+			$way		= $way ? $way.'/'.$part : $part;
 			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
 			$page		= $model->getByIndices( $indices );
-			if( !$page )
+			if( !$page ){																			//  no page found for this identifier
+				if( $lastPage && $lastPage->type == 2 ){											//  last page is a module controller
+					return $lastPage;																//  return this module controlled page
+				}
 				return NULL;
+			}
 			$parentId	= $page->pageId;
+			$page->fullpath	= $way;
 			if( $parts )
 				$parents[]	= $page;
+			$lastPage	= $page;
+			$lastPage->arguments	= $parts;
 		}
 		if( $withParents )
 			$page->parents	= $parents;
