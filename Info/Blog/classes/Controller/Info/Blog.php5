@@ -38,5 +38,22 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 			'nrViews'	=> $post->nrViews + 1,
 		) );
 		$this->addData( 'post', $post );
+
+
+		$indices	= array( 'status' => 1 );
+		$orders		= array( 'createdAt' => 'DESC' );
+		$posts		= $this->modelPost->getAllByIndices( $indices, $orders );
+		$lastPost	= NULL;
+		$nextPost	= NULL;
+		foreach( $posts as $nr => $item ){
+			if( $item->postId == $post->postId ){
+				if( isset( $posts[$nr + 1] ) )
+					$nextPost	= $posts[$nr + 1];
+				break;
+			}
+			$lastPost	= $item;
+		}
+		$this->addData( 'prevPost', $lastPost );
+		$this->addData( 'nextPost', $nextPost );
 	}
 }

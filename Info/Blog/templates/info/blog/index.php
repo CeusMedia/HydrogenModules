@@ -1,12 +1,10 @@
 <?php
 
-
-
 $list	= array();
 foreach( $posts as $post ){
 	$title	= UI_HTML_Tag::create( 'h4', $post->title );
 	$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './info/blog/post/'.$post->postId ) );
-	$abstract	= $view->renderContent( $post->abstract );
+	$abstract	= $view->renderContent( nl2br( $post->abstract ) );
 	$linkView	= UI_HTML_Tag::create( 'a', '(weiter lesen)', array(
 		'href'	=> './info/blog/post/'.$post->postId,
 	) );
