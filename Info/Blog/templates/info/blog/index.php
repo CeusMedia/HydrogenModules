@@ -9,12 +9,12 @@ foreach( $posts as $post ){
 		'href'	=> './info/blog/post/'.$post->postId,
 	) );
 	$linkView	= UI_HTML_Tag::create( 'small', $linkView );
-	$info		= $view->renderInfoBar( $post );
-	$list[]	= UI_HTML_Tag::create( 'div', $title.$abstract.'&nbsp;'.$linkView.$info, array(
+	$infobar	= $view->renderPostInfoBar( $post );
+	$list[]		= UI_HTML_Tag::create( 'div', $title.$abstract.'&nbsp;'.$linkView.$infobar, array(
 		'class'		=> 'blog-post'
 	) );
 }
-$list	= join( $list );
+$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'blog-post-list' ) );
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/blog/' ) );
 

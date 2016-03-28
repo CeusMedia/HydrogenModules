@@ -6,10 +6,10 @@ $title		= UI_HTML_Tag::create( 'h3', $post->title );
 if( strlen( $post->content ) === strlen( strip_tags( $post->content ) ) )
 	$post->content  	= nl2br( $post->content );
 $content	= $view->renderContent( $post->content, 'HTML' );
-$infobar	= $view->renderInfoBar( $post );
+$infobar	= $view->renderPostInfoBar( $post );
 
-$container	= UI_HTML_Tag::create( 'div', $title.$infobar.$content, array(
-		'class'		=> 'blog-post'
+$blogPost	= UI_HTML_Tag::create( 'div', $title.$infobar.$content, array(
+	'class'		=> 'blog-post'
 ) );
 
 $iconIndex	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -33,14 +33,28 @@ if( $nextPost ){
 	) );
 }
 
+$panelComment	= '';
+$panelComments	= '';
+if( $moduleConfig->get( 'comments' ) ){
+//	if( $post->allowComments ){																		//  @todo implement entry-based comments switch
+		$panelComments	= $view->loadTemplatefile( 'info/blog/comments.php' );
+		$panelComment	= $view->loadTemplateFile( 'info/blog/comment.php' );
+//	}
+//	else{
+//		$panelComments	= UI_HTML_Tag::create( 'div', 'Die Kommentarfunktion ist für diesen Eintrag nicht aktiviert.', array( 'class' => 'muted' ) ).'<br/>';
+//	}
+}
 
 extract( $view->populateTexts( array( 'post.top', 'post.bottom' ), 'html/info/blog/' ) );
 
 return $textPostTop.'
 	<small><a href="./info/blog">'.$iconIndex.'&nbsp;'.$w->linkIndex.'</a></small>
-	'.$container.'
+	<div class="blog-post-view">
+		'.$blogPost.'
+		'.$panelComments.'
+		'.$panelComment.'
+	</div>
 	<p>'.$linkPrev.'</p>
 	<p>'.$linkNext.'</p>
-	<br/>
 	<p>'.$linkIndex.'</p>
 '.$textPostBottom;

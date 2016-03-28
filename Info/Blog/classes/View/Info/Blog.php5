@@ -11,8 +11,16 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $listClass ) );
 	}
 
+	static public function renderCommentInfoBar( $comment ){
+		$facts	= array(
+			'Autor: '	=> $comment->username,
+			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
+		);
+		$facts		= self::renderFacts( $facts, 'dl-inline' );
+		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-comment-info' ) );
+	}
 
-	static public function renderInfoBar( $post ){
+	static public function renderPostInfoBar( $post ){
 		$facts	= array(
 			'Autor: '	=> $post->author->username,
 			'Datum: '	=> date( 'd.m.Y H:i', $post->createdAt ),
@@ -20,6 +28,6 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 //			'Kommentare: '	=> count( $post->comments ),
 		);
 		$facts		= self::renderFacts( $facts, 'dl-inline' );
-		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'blog-post-info' ) );
+		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info' ) );
 	}
 }
