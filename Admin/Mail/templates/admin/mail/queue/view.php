@@ -1,6 +1,6 @@
 <?php
 
-$env->getMessenger()->noteNotice( 'Diese Anwendung ist noch nicht vollständig implementiert.' );
+//$env->getMessenger()->noteNotice( 'Diese Anwendung ist noch nicht vollständig implementiert.' );
 
 $panelFacts		= $view->loadTemplateFile( 'admin/mail/queue/view.facts.php' );
 $panelBody		= $view->loadTemplateFile( 'admin/mail/queue/view.body.php' );
