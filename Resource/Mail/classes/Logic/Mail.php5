@@ -197,7 +197,8 @@ class Logic_Mail{
 	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
 		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
 			$this->enqueueMail( $mail, $language, $receiver );
-		$this->sendMail( $mail, $receiver );
+		else
+			$this->sendMail( $mail, $receiver );
 	}
 
 	/**
@@ -222,6 +223,8 @@ class Logic_Mail{
 */
 		if( !is_object( $receiver ) )
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
+		$mail->setEnv( $this->env );																//  override serialized environment
+		$mail->initTransport();																		//  override serialized mail transfer
 		$mail->sendTo( $receiver );
 	}
 
