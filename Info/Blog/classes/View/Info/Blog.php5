@@ -11,6 +11,15 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $listClass ) );
 	}
 
+	static public function renderComment( $comment ){
+		$infobar	= self::renderCommentInfoBar( $comment );
+		$content	= UI_HTML_Tag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
+		$html		= UI_HTML_Tag::create( 'div', $infobar.$content, array(
+			'class'		=> 'list-comments-item'
+		) );
+		return $html;
+	}
+
 	static public function renderCommentInfoBar( $comment ){
 		$facts	= array(
 			'Autor: '	=> $comment->username,

@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3">Add support for comments.</log>
 	<log version="0.3.1">Send mail to post author for new comment.</log>
 	<log version="0.3.2">Send mail to post commenters for new comment.</log>
+	<log version="0.3.3">Improve usability by AJAX commenting.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -39,6 +40,7 @@
 		<style load="auto">module.info.blog.css</style>
 	</files>
 	<config protected="yes" mandatory="yes" type="boolean" name="comments">1</config>
+	<config protected="yes" mandatory="yes" type="boolean" name="comments.ajax">1</config>
 	<config protected="yes" mandatory="yes" type="boolean" name="mail">1</config>
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
 	<relations>

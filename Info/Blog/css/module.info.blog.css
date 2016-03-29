@@ -42,3 +42,13 @@ body.moduleInfoBlog .blog-post-list .infobar dl.dl-inline {
 body.moduleInfoBlog .blog-post-view .infobar.blog-post-info dl.dl-inline {
 	margin-top: 0;
 	}
+
+
+.comment-new {
+	background-color: #FFFFBB;
+	border-color: #FFFF77;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 0.4em;
+	padding: 0.5em 1em;
+	}
