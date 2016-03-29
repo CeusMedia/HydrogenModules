@@ -26,7 +26,7 @@ return '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form id="form-info-blog-comment-add" action="./info/blog/comment/'.$post->postId.'">
+		<form id="form-info-blog-comment-add" action="./info/blog/comment/'.$post->postId.'" method="post">
 			<input type="hidden" name="postId" id="input_postId" value="'.$post->postId.'"/>
 			<div class="row-fluid">
 				<div class="span8">

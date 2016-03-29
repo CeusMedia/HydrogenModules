@@ -1,6 +1,8 @@
 <?php
 class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 
+	protected $modelCategory;
+	protected $modelComment;
 	protected $modelPost;
 	protected $modelUser;
 	protected $messenger;
