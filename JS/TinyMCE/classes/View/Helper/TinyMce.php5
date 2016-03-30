@@ -104,13 +104,19 @@ tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';';
 			$context->js->addScript( $script );
 			$script	= '
 if($(settings.JS_TinyMCE.auto_selector).size()){
-	var options = {};
-	if(settings.JS_TinyMCE.auto_tools)
-		options.tools = settings.JS_TinyMCE.auto_tools;
-	var mode = settings.JS_TinyMCE.auto_mode;
-	if($(settings.JS_TinyMCE.auto_selector).data("tinymce-mode"))
-		mode = $(settings.JS_TinyMCE.auto_selector).data("tinymce-mode");
-	tinymce.init(tinymce.Config.apply(options, mode));
+	$(settings.JS_TinyMCE.auto_selector).each(function(nr){
+		var options = {};
+		if(settings.JS_TinyMCE.auto_tools)
+			options.tools = settings.JS_TinyMCE.auto_tools;
+		var mode = settings.JS_TinyMCE.auto_mode;
+		if($(this).data("tinymce-mode"))
+			mode = $(this).data("tinymce-mode");
+		options = tinymce.Config.apply(options, mode);
+		if(!$(this).attr("id"))
+			$(this).attr("id", "TinyMCE-"+nr);
+		options.selector = "#"+$(this).attr("id");
+		tinymce.init(options);
+	});
 }';
 			$context->js->addScriptOnReady( $script );
 		}

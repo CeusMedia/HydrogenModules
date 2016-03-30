@@ -115,3 +115,4 @@
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMce::___onPageApplyModules</hook>
 </module>
+

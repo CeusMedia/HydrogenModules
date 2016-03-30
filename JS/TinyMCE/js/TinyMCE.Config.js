@@ -17,7 +17,7 @@ if(typeof tinymce !== "undefined"){
 				return this.options;
 			if(typeof mode === "undefined" || !mode)
 				mode = settings.JS_TinyMCE.auto_mode;
-			var options = this.options;
+			var options = $.extend({}, this.options);
 
 			options.selector = settings.JS_TinyMCE.auto_selector;
 			options.plugins = settings.JS_TinyMCE.auto_plugins;
