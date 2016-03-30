@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.7</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -57,7 +57,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.6.21">Add first hook: checkBeforeLogin.</log>
 	<log version="0.6.22">Add support for use of accounting.</log>
 	<log version="0.7">Enable support for several authentication backends.</log>
-<!--	<log version="0.7.1">Migrate current module files to new local authentication backend.</log>-->
+	<log version="0.7.1">Migrate current module files to new local authentication backend.</log>
 <!--	<log version="0.7.2">Start to remove deprecated files.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>

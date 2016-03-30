@@ -118,6 +118,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			$path	= 'auth/'.strtolower( $backends[0] ).'/login';
 			if( $username )
 				$path	.= '/'.$username;
+			$from		= $this->request->get( 'from' );
+			$path		= $from ? $path.'?from='.$from : $path;
 			$this->restart( $path );
 		}
 
