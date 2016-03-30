@@ -21,6 +21,13 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
+	static public function getUriPart( $label, $delimiter = "_" ){
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
+	}
+
 	public function ajaxComment(){
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
@@ -88,7 +95,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Your comment has been added.' );
 			$this->informAboutNewComment( $commentId );
 		}
-		$this->restart( 'post/'.$post->postId, TRUE );
+		$this->restart( View_Info_Blog::renderPostUrl( $post ) );
 	}
 
 	public function index( $page = NULL ){

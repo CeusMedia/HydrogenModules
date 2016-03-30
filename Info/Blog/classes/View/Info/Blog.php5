@@ -39,4 +39,9 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 		$facts		= self::renderFacts( $facts, 'dl-inline' );
 		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info' ) );
 	}
+
+	static function renderPostUrl( $post ){
+		$title	= Controller_Info_Blog::getUriPart( $post->title );
+		return './info/blog/post/'.$post->postId.'-'.$title;
+	}
 }

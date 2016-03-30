@@ -23,13 +23,13 @@ $linkIndex	= UI_HTML_Tag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, array(
 if( $prevPost ){
 	$label		= UI_HTML_Tag::create( 'span', $w->linkPrev, array( 'class' => 'muted' ) );
 	$linkPrev	= $label.UI_HTML_Tag::create( 'a', $prevPost->title, array(
-		'href'	=> './info/blog/post/'.$prevPost->postId,
+		'href'	=> View_Info_Blog::renderPostUrl( $prevPost ),
 	) );
 }
 if( $nextPost ){
 	$label		= UI_HTML_Tag::create( 'span', $w->linkNext, array( 'class' => 'muted' ) );
 	$linkNext	= $label.UI_HTML_Tag::create( 'a', $nextPost->title, array(
-		'href'	=> './info/blog/post/'.$nextPost->postId,
+		'href'	=> View_Info_Blog::renderPostUrl( $nextPost ),
 	) );
 }
 
