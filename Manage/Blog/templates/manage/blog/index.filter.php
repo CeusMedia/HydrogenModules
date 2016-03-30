@@ -10,6 +10,10 @@ return '
 					<select name="" id="input_"></select>
 				</div>
 			</div>-->
+			<div class="buttonbar">
+				<button type="submit" name="filter" value="1" class="btn btn-primary">filtern</button>
+				<a href="./manage/blog/filter/reset" class="btn btn-small btn-inverse">zurücksetzen</a>
+			</div>
 		</form>
 	</div>
 </div>';

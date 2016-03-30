@@ -5,10 +5,10 @@ $panelList		= $view->loadTemplateFile( 'manage/blog/index.list.php' );
 
 return '
 <div class="row-fluid">
-	<div class="row-span4">
+	<div class="span3">
 		'.$panelFilter.'
 	</div>
-	<div class="row-span8">
+	<div class="span9">
 		'.$panelList.'
 	</div>
 </div>';

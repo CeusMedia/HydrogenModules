@@ -5,8 +5,9 @@ $list	= '<div class=alert">'.$w->empty.'</div>';
 if( $posts ){
 	$list	= array();
 	foreach( $posts as $post ){
+		$link	= UI_HTML_Tag::create( 'a', $post->title, array( 'href' => './manage/blog/edit/'.$post->postId ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $post->title ),
+			UI_HTML_Tag::create( 'td', $link ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "100%" );

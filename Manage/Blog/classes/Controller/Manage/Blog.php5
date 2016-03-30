@@ -69,6 +69,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		foreach( $posts as $post ){
 			$post->author	= $this->modelUser->get( $post->authorId );
 		}
+
 		$this->addData( 'posts', $posts );
 		$this->addData( 'page', $page );
 	}
@@ -119,11 +120,34 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post			= $this->checkPost( $postId );
+
+		$request	= $this->env->getRequest();
+		if( $request->has( 'save' ) ){
+			$data	= array(
+				'authorId'		=> $request->get( 'authorId' ),
+				'categoryId'	=> $request->get( 'categoryId' ),
+				'status'		=> $request->get( 'status' ),
+				'language'		=> $request->get( 'language' ),
+				'title'			=> $request->get( 'title' ),
+				'content'		=> $request->get( 'content' ),
+				'abstract'		=> $request->get( 'abstract' ),
+				'modifiedAt'	=> time(),
+			);
+			$this->modelPost->edit( $post->postId, $data, FALSE );
+			$this->messenger->noteSuccess( 'Der Eintrag wurde gespeichert.' );
+			$this->restart( 'edit/'.$post->postId, TRUE );
+		}
+
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
 		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
 			'status'	=> '>=0'																	//  ... and visible
 		) );
+		$categories		= $this->modelCategory->getAllByIndices( array( 'status' => '>=0' ) );		//
+		$users			= $this->modelUser->getAll( array( 'status' => '>0' ) );
+
 		$this->addData( 'post', $post );															//  assign post data to template
+		$this->addData( 'categories', $categories );
+		$this->addData( 'users', $users );
 	}
 }
