@@ -35,11 +35,22 @@ $optStatus	= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ),
 $optRole	= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+}
+
+$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' );
+$buttonSave		= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/add" method="post">
+			<input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" style="display:none;" />
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
@@ -100,8 +111,8 @@ $panelAdd	= '
 			</div>
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
+					'.$buttonCancel.'
+					'.$buttonSave.'
 				</div>
 			</div>
 		</form>

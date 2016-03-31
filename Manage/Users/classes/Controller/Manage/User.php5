@@ -33,6 +33,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 	);
 
 	public function __onInit(){
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_users.', TRUE );
 		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( array(
@@ -44,7 +45,9 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			'needsSurname'		=> $options->get( 'surname.mandatory' ),
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
 		) );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
+
 
 	public function accept( $userId ) {
 		$this->setStatus( $userId, 1 );
@@ -230,9 +233,11 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			}
 		}
-		$user		= $modelUser->get( $userId );
+		$user			= $modelUser->get( $userId );
+		if( empty( $user->country ) )
+			$user->country	= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$user->country	= $this->countries[$user->country];
-		$user->role	= $modelRole->get( $user->roleId );
+		$user->role		= $modelRole->get( $user->roleId );
 
 		$config		= $this->env->getConfig();
 		$this->addData( 'userId', (int) $userId );
