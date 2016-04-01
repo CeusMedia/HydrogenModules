@@ -41,7 +41,7 @@ $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLog
 
 $buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
 	'href'		=> './auth/local/password',
-	'class'		=> 'btn btn-block',
+	'class'		=> 'btn btn-small btn-block',
 ) );
 
 $buttonRegister	= "";
