@@ -6,40 +6,31 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 	$iconAdd	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $list	= '<div class=alert">'.$w->empty.'</div>';
-
-
-
-if( $posts ){
+if( $categories ){
 	$list	= array();
-	foreach( $posts as $post ){
-		$link	= UI_HTML_Tag::create( 'a', $post->title, array( 'href' => './manage/blog/edit/'.$post->postId ) );
+	foreach( $categories as $item ){
+		$link	= UI_HTML_Tag::create( 'a', $item->title, array( 'href' => './manage/blog/category/edit/'.$item->categoryId ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $words['states'][$post->status] ),
-			UI_HTML_Tag::create( 'td', $post->category->title ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "15%", "20%" );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( $w->headTitle, $w->headStatus, $w->headCategory ) ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( "100%" );
+	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( $w->headTitle ) ) );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-\CeusMedia\Bootstrap\Icon::$iconSet	= 'FontAwesome';
-$pagination	= new \CeusMedia\Bootstrap\PageControl( "./manage/blog/", $page, $pages );
-
+$tabs	= $view->renderTabs( '/category' );
 
 return '
+'.$tabs.'
 <div class="content-panel content-panel-list">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
 			<div class="btn-group">
-				<a href="./manage/blog/add" class="btn btn-success">'.$iconAdd.'&nbsp;neuer Eintrag</a>
-			</div>
-			<div class="btn-group">
-				'.$pagination.'
+				<a href="./manage/blog/category/add" class="btn btn-success">'.$iconAdd.'&nbsp;'.$w->buttonAdd.'</a>
 			</div>
 		</div>
 	</div>

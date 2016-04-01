@@ -18,7 +18,17 @@ foreach( $users as $user )
 	$optAuthor[$user->userId]		= $user->username;
 $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $post->authorId );
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
+}
+
+$tabs	= $view->renderTabs();
+
 return '
+'.$tabs.'
 <div class="content-panel content-panel-form">
 	<h3><span class="muted">Eintrag: </span>'.$post->title.'</h3>
 	<div class="content-panel-inner">
@@ -26,7 +36,7 @@ return '
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $post->title, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $post->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 				<div class="span4">
 					<label for="input_categoryId">'.$w->labelCategoryId.'</label>
@@ -62,8 +72,8 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/blog" class="btn btn-small">'.$w->buttonCancel.'</a>
-				<button type="submit" name="save" value="1" class="btn btn-primary">'.$w->buttonSave.'</button>
+				<a href="./manage/blog" class="btn btn-small">'.$iconCancel.'&nbsp;'.$w->buttonCancel.'</a>
+				<button type="submit" name="save" value="1" class="btn btn-primary">'.$iconSave.'&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
