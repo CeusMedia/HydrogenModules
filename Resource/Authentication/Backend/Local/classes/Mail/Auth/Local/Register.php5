@@ -1,5 +1,5 @@
 <?php
-class Mail_Auth_Register extends Mail_Abstract{
+class Mail_Auth_Local_Register extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
