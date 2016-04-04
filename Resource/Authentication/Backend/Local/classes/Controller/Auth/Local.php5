@@ -102,10 +102,6 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 			else{																					//  @todo  remove whole block if old user password support decays
 				$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
-				remark( 'PW:Plain: '.$password );
-				remark( 'PW:Crypt: '.md5( $password.$pepper ) );
-				remark( 'DB:Hash: '.$password );
-				die;
 				if( $user->password === md5( $password.$pepper ) ){
 					$logic->migrateOldUserPassword( $user->userId, $password );
 					return TRUE;
