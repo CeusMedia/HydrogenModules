@@ -180,11 +180,13 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 			$modelUser	= new Model_User( $this->env );
 			$modelRole	= new Model_Role( $this->env );
-			$user		= $modelUser->getByIndex( 'username', $username );
+			$user		= $modelUser->getByIndex( 'username', $username );							//  find user by username
+			if( !$user )																			//  no user found by username
+				$user	= $modelUser->getByIndex( 'email', $username );								//  find user by email address
 
 			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
-				'username'	=> $username,
-				'password'	=> $password,
+				'username'	=> $user ? $user->username : $username,
+//				'password'	=> $password,															//  disabled for security
 				'userId'	=> $user ? $user->userId : 0,
 			) );
 
@@ -288,7 +290,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						'password'	=> $password,
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
-					$mail		= new Mail_Auth_Password( $this->env, $data );
+					$mail		= new Mail_Auth_Local_Password( $this->env, $data );
 					$logic		= new Logic_Mail( $this->env );
 					$logic->appendRegisteredAttachments( $mail, $language );
 					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
@@ -421,7 +423,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 						$language	= $this->env->getLanguage()->getLanguage();
 						$user		= $modelUser->get( $userId );
-						$mail		= new Mail_Auth_Register( $this->env, $data );
+						$mail		= new Mail_Auth_Local_Register( $this->env, $data );
 						$logic		= new Logic_Mail( $this->env );
 						$logic->appendRegisteredAttachments( $mail, $language );
 						$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
