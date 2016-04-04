@@ -28,7 +28,7 @@ class Model_User extends CMF_Hydrogen_Model {
 		'status',
 		'email',
 		'username',
-		'password',
+		'password',																					//  @todo remove after old user password support decayed
 		'gender',
 		'salutation',
 		'firstname',

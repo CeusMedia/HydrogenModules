@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.2.6</version>
+	<version>0.3</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -16,13 +16,16 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.2.4">Fix username regular expression.</log>
 	<log version="0.2.5">Add account ID for OAuth registration.</log>
 	<log version="0.2.6">Add country column.</log>
+	<log version="0.3">Improve password handling with own model and logic.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Model/User.php5</class>
 		<class>Model/Role.php5</class>
 		<class>Model/Role/Right.php5</class>
+		<class>Model/User.php5</class>
+		<class>Model/User/Password.php5</class>
+		<class>Logic/UserPassword</class>
 		<locale>de/countries.ini</locale>
 		<locale>en/countries.ini</locale>
 	</files>
@@ -34,12 +37,17 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<config protected="no" type="integer" name="name.length.min" title="lowest number of name characters">3</config>
 	<config protected="no" type="integer" name="name.length.max" title="highest number of name characters">17</config>
 	<config protected="no" type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]*/i</config>
-	<config protected="no" type="integer" name="password.length.min" title="lowest number of password characters">3</config>
-	<config protected="no" type="integer" name="password.strength.min" title="highest number of password characters">0</config>
-	<config protected="yes" type="string" name="password.salt" title="string to salt password with"></config>
 	<config protected="no" type="boolean" name="email.mandatory" title="user needs a mail address on register and change">yes</config>
 	<config protected="no" type="boolean" name="firstname.mandatory" title="user needs a firstname">yes</config>
 	<config protected="no" type="boolean" name="surname.mandatory" title="user needs a surname">yes</config>
+	<config protected="no" type="integer" name="password.length.min" title="lowest number of password characters">3</config>
+	<config protected="no" type="integer" name="password.strength.min" title="highest number of password characters">0</config>
+	<config protected="yes" type="boolean" name="password.salt">1</config>
+	<config protected="yes" type="integer" name="password.salt.length">32</config>
+	<config protected="yes" type="string" name="password.salt.algo" values="md5(microtime)">md5(microtime)</config>
+	<config protected="yes" type="boolean" name="password.salt.decay">1</config>
+	<config protected="yes" type="integer" name="password.salt.decay.seconds">86400</config>
+	<config protected="yes" type="string" name="password.pepper" title="string to pepper password with"></config>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -168,6 +176,21 @@ CREATE TABLE "<%?prefix%>role_rights" (
 	"timestamp" NUMERIC NOT NULL
 );
 
+DROP TABLE IF EXISTS "<%?prefix%>user_passwords";
+CREATE TABLE "<%?prefix%>user_passwords" (
+	"userPasswordId` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
+	"userId" INTEGER NOT NULL ,
+	"status" tinyint(1) NOT NULL,
+	"algo" VARCHAR NOT NULL ,
+	"salt" VARCHAR,
+	"hash" VARCHAR NOT NULL ,
+	"failsLast" INTEGER,
+	"failsTotal" INTEGER,
+	"createdAt" NUMERIC NOT NULL,
+	"failedAt" NUMERIC NOT NULL,
+	"usedAt" NUMERIC NOT NULL,
+	"revokedAt" NUMERIC NOT NULL
+);
 ]]>
 	</sql>
 	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
@@ -179,16 +202,41 @@ ALTER TABLE `<%?prefix%>users` ADD `country` CHAR(2) CHARACTER SET utf8 COLLATE 
 ALTER TABLE `<%?prefix%>users` ADD INDEX(`country`);
 ]]>
 	</sql>
+	<sql on="update" type="mysql" version="0.3"><![CDATA[
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
+  `userPasswordId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `algo` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `salt` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `failsLast` tinyint(1) unsigned DEFAULT '0',
+  `failsTotal` smallint(6) unsigned DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `failedAt` decimal(12,0) unsigned DEFAULT '0',
+  `usedAt` decimal(12,0) unsigned DEFAULT '0',
+  `revokedAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`userPasswordId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`),
+  KEY `algo` (`algo`),
+  KEY `hash` (`hash`),
+  KEY `failsLast` (`failsLast`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]>
+	</sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
 DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
 ]]>
 	</sql>
 	<sql on="uninstall" type="sqlite"><![CDATA[
 DROP TABLE IF EXISTS "<%?prefix%>users";
 DROP TABLE IF EXISTS "<%?prefix%>roles";
 DROP TABLE IF EXISTS "<%?prefix%>role_rights";
+DROP TABLE IF EXISTS "<%?prefix%>user_passwords";
 ]]>
 	</sql>
 	<todo>
