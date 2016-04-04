@@ -28,6 +28,7 @@ return '
 	<div class="span12">
 		<div class="content-panel">
 			<h3>Exception</h3>
+			<small class="muted"><a href="./system/log">&laquo;&nbsp;zurück</a></small>
 			<div class="content-panel-inner">
 				'.$list.'
 				<hr/>

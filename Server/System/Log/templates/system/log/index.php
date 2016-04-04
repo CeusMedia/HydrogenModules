@@ -29,8 +29,9 @@ if( $exceptions ){
 			UI_HTML_Tag::create( 'td', $buttons ),
 		) );
 	}
+	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "150px", "100px" );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped table-condensed' ) );
+	$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './system/log', $page, ceil( $total / $limit ) );
