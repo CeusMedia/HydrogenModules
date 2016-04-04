@@ -25,7 +25,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Model/Role/Right.php5</class>
 		<class>Model/User.php5</class>
 		<class>Model/User/Password.php5</class>
-		<class>Logic/UserPassword</class>
+		<class>Logic/UserPassword.php5</class>
 		<locale>de/countries.ini</locale>
 		<locale>en/countries.ini</locale>
 	</files>
