@@ -6,6 +6,28 @@
 class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 
 	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPasswordOnPasswordChange( $user, $password ){
+		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			if( $logic->validateUserPassword( $user->userId, $password ) )
+				return TRUE;
+		}
+		$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+		if( $user->password === md5( $password.$pepper ) )
+			return TRUE;
+		return FALSE;
+	}
+
+	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
 	public function edit(){
@@ -170,10 +192,17 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$messenger->noteError( $words->msgPasswordOldMissing );
 		else if( $passwordOld === $passwordNew )
 			$messenger->noteError( $words->msgPasswordNewSame );
-		else if( md5( $passwordSalt.$passwordOld ) !== $user->password )
+		else if( !$this->checkPasswordOnPasswordChange( $user, $passwordOld ) )
 			$messenger->noteError( $words->msgPasswordOldMismatch );
 		else{
-			$modelUser->edit( $userId, array( 'password' => md5( $passwordSalt.$passwordNew ) ) );
+			if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+				$logic			= Logic_UserPassword::getInstance( $this->env );
+				$userPasswordId	= $logic->addPassword( $user->userId, $passwordNew );
+				$logic->activatePassword( $userPasswordId );
+			}
+			else{
+				$modelUser->edit( $userId, array( 'password' => md5( $passwordSalt.$passwordNew ) ) );
+			}
 			$messenger->noteSuccess( $words->msgSuccess );
 		}
 		$this->restart( './manage/my/user' );
