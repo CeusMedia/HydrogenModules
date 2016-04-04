@@ -39,7 +39,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 	protected function count(){
 		$fileName	= $this->moduleConfig->get( 'file.name' );
 		if( !file_exists( $fileName ) )
-			return array();
+			return 0;
 #			throw new RuntimeException( 'Log not existing' );
 		$content	= trim( FS_File_Reader::load( $fileName ) );
 		$lines		= explode( "\n", $content );
