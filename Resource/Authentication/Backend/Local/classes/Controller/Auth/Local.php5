@@ -75,17 +75,62 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
+	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPasswordOnLogin( $user, $password ){
+		$words		= (object) $this->getWords( 'login' );
+		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
+			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
+				if( $logic->validateUserPassword( $user->userId, $password ) )
+					return TRUE;
+				$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
+				if( $newPassword ){
+					$logic->activatePassword( $newPassword->userPasswordId );
+					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
+					return TRUE;
+				}
+			}
+			else{																					//  @todo  remove whole block if old user password support decays
+				$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+				remark( 'PW:Plain: '.$password );
+				remark( 'PW:Crypt: '.md5( $password.$pepper ) );
+				remark( 'DB:Hash: '.$password );
+				die;
+				if( $user->password === md5( $password.$pepper ) ){
+					$logic->migrateOldUserPassword( $user->userId, $password );
+					return TRUE;
+				}
+			}
+		}
+		else{																						//  @todo  remove whole block if old user password support decays
+			$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+			if( $user->password === md5( $password.$pepper ) )
+				return TRUE;
+		}
+		return FALSE;
+	}
+
 	public function confirm( $code = NULL ){
 		$words		= (object) $this->getWords( 'confirm' );
-		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
+		$code		= $code ? $code : $this->request->get( 'confirm_code' );						//  get code from POST reqeuest if not given by GET
 		$from		= $this->request->get( 'from'  );
 
 		if( strlen( trim( (string) $code ) ) ){
-			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
+			$passwordPepper	= trim( $this->config->get( 'module.resource.users.password.pepper' ) );	//  string to pepper password with
 			$modelUser		= new Model_User( $this->env );
 			$users			= $modelUser->getAllByIndex( 'status', 0 );
 			foreach( $users as $user ){
-				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
+				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordPepper );
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
@@ -154,15 +199,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$role	= $modelRole->get( $user->roleId );
 					if( !$role->access )
 						$this->messenger->noteError( $words->msgInvalidRole );
-					else if( $user->password !== md5( $password ) )
-						$this->messenger->noteError( $words->msgInvalidPassword );
 					else if( $user->status == 0 )
 						$this->messenger->noteError( $words->msgUserUnconfirmed );
 					else if( $user->status == -1 )
 						$this->messenger->noteError( $words->msgUserLocked );
 					else if( $user->status == -2 )
 						$this->messenger->noteError( $words->msgUserDisabled );
-
+					else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
+						$this->messenger->noteError( $words->msgInvalidPassword );
 					if( !$this->messenger->gotError() ){
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 						$this->messenger->noteSuccess( $words->msgSuccess );
@@ -224,7 +268,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$modelUser		= new Model_User( $this->env );
 
 		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
 		if( $this->request->has( 'sendPassword' ) ){
 			if( !( $email = $this->request->get( 'password_email' ) ) ){
@@ -252,14 +296,23 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$logic		= new Logic_Mail( $this->env );
 					$logic->appendRegisteredAttachments( $mail, $language );
 					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
-					$modelUser->edit( $user->userId, array( 'password' => md5( $passwordSalt.$password ) ) );
+					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
+						$logic	= Logic_UserPassword::getInstance( $this->env );
+						$userPasswordId	= $logic->addPassword( $user->userId, $password );
+					}
+					else{																			//  @todo  remove whole block if old user password support decays
+						$crypt		= md5( $password.$passwordPepper );
+						$modelUser->edit( $user->userId, array( 'password' => $crypt ) );
+
+					}
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
 	//				$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
 					$this->restart( './auth/login?login_username='.$user->username );
 				}
 				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->msgSendingMailFailed, $e->getMessage() );
+					$this->messenger->noteFailure( $words->msgSendingMailFailed );
+					$this->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -295,9 +348,9 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$needsSurname	= $options->get( 'surname.mandatory' );
 		$needsTac		= $options->get( 'tac.mandatory' );
 		$status			= (int) $options->get( 'status.register' );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$roleId		= $this->request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;			//  use default register role if none given
+		$roleId		= $this->request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;	//  use default register role if none given
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
@@ -335,7 +388,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					'status'		=> $status,
 					'email'			=> $email,
 					'username'		=> $username,
-					'password'		=> md5( $passwordSalt.$password ),
+					'password'		=> md5( $password.$passwordPepper ),							//  @todo  remove if old user password support decays
 					'gender'		=> $input['gender'],
 					'salutation'	=> $input['salutation'],
 					'firstname'		=> $input['firstname'],
@@ -348,16 +401,27 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
 				);
+
+				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
+					unset( $data['password'] );
+				}
+
+
 				$this->env->getDatabase()->beginTransaction();
 				$from		= $this->request->get( 'from' );
 				$forward	= './auth/login'.( $from ? '?from='.$from : '' );
 				try{
 					$userId		= $modelUser->add( $data );
+					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
+						$logic	= Logic_UserPassword::getInstance( $this->env );
+						$userPasswordId	= $logic->addPassword( $userId, $password );
+						$logic->activatePassword( $userPasswordId );
+					}
 
 					if( !$status ){
 						$data				= $input->getAll();
 						$data['from']		= $from;
-						$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
+						$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordPepper );
 
 						$language	= $this->env->getLanguage()->getLanguage();
 						$user		= $modelUser->get( $userId );
@@ -375,7 +439,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					// @todo log errors, but how and were without general logging system?
+					$this->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
 				}
 				$this->env->getDatabase()->rollBack();
 			}

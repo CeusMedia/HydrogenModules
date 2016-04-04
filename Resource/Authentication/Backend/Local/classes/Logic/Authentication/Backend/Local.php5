@@ -12,12 +12,32 @@ class Logic_Authentication_Backend_Local{
 		$this->modelRole	= new Model_Role( $env );
 	}
 
+	/**
+	 *	@todo		remove support for old user password
+	 */
 	public function checkPassword( $userId, $password ){
 		if( $this->env->getModules()->has( 'Resource_Users' ) ){
-			$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
-			$crypt		= md5( $salt.$password );
-			$conditions	= array( 'userId' => $userId, 'password' => $crypt );
-			return $this->modelUser->count( $conditions ) === 1;
+			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+				$logic	= Logic_UserPassword::getInstance( $this->env );
+				if( $logic->hasUserPassword( $userId ) ){											//  @todo  remove line if old user password support decays
+					return $logic->validateUserPassword( $userId, $password );
+				}
+				else{																				//  @todo  remove whole block if old user password support decays
+					$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
+					$crypt		= md5( $salt.$password );
+					$conditions	= array( 'userId' => $userId, 'password' => $crypt );
+					if( $this->modelUser->count( $conditions ) === 1 ){
+						$logic->migrateOldUserPassword( $userId, $password );
+						return TRUE;
+					}
+				}
+			}
+			else{																					//  @todo  remove whole block if old user password support decays
+				$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
+				$crypt		= md5( $salt.$password );
+				$conditions	= array( 'userId' => $userId, 'password' => $crypt );
+				return $this->modelUser->count( $conditions ) === 1;
+			}
 		}
 		return FALSE;
 	}
