@@ -81,7 +81,13 @@ class Logic_UserPassword{
 	 *	@return		integer		$userPasswordId
 	 */
 	public function addPassword( $userId, $password ){
-		$salt	= $this->generateSalt();
+		$salt	= $this->generateSalt();															//  generate password salt
+		if( $other = $this->model->getByIndices( array( 'userId' => $userId, 'status' => 0 ) ) ){	//  find other new password
+			$this->model->edit( $other->userPasswordId, array(										//  and revoke it
+				'status'	=> -2,
+				'revokedAt' => time()
+			) );
+		}
 		$data	= array(
 			'userId'	=> $userId,
 			'status'	=> 0,
@@ -89,8 +95,8 @@ class Logic_UserPassword{
 			'hash'		=> $this->encryptPassword( $salt.$password ),
 			'createdAt'	=> time(),
 		);
-		$userPasswordId	= $this->model->add( $data );
-		return $userPasswordId;
+		$userPasswordId	= $this->model->add( $data );												//  add new password
+		return $userPasswordId;																		//  return user password ID
 	}
 
 	/**
