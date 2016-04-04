@@ -122,7 +122,15 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					$countries			= array_flip( $this->countries );
 					$data['country']	= $countries[$data['country']];
 				}
+				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove whole block if old user password support decays
+					unset( $data['password'] );
+				}
 				$userId		= $modelUser->add( $data );
+				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
+					$logic			= Logic_UserPassword::getInstance( $this->env );
+					$userPasswordId	= $logic->addPassword( $userId, $password );
+					$logic->activatePassword( $userPasswordId );
+				}
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( NULL, TRUE );
 			}
@@ -223,8 +231,18 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					'fax'			=> $input['fax'],
 					'modifiedAt'	=> time(),
 				);
-				if( !empty( $password ) )
+				if( !empty( $password ) ){
 					$data['password']	= md5( $passwordSalt.$password );
+
+					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove whole block if old user password support decays
+						unset( $data['password'] );
+					}
+					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
+						$logic			= Logic_UserPassword::getInstance( $this->env );
+						$userPasswordId	= $logic->addPassword( $userId, $password );
+						$logic->activatePassword( $userPasswordId );
+					}
+				}
 				if( strlen( $data['country'] ) > 2 ){
 					$countries			= array_flip( $this->countries );
 					$data['country']	= $countries[$data['country']];
