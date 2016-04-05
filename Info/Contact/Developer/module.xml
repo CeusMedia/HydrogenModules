@@ -22,8 +22,7 @@
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
-	<config protected="yes" mandatory="yes" type="string" name="mail.receiver"></config>
+	<config protected="yes" mandatory="yes" type="string" name="receiver"></config>
 	<config protected="yes" type="boolean" name="captcha.enable">no</config>
 	<config protected="yes" type="integer" name="captcha.length">4</config>
 	<config protected="yes" type="string" name="captcha.strength" values="soft,hard">soft</config>
