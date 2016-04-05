@@ -3,6 +3,11 @@
 	<title>Server: System Log</title>
 	<description><![CDATA[System component for logging and mailing exceptions.
 
+OUTDATED: Use modules Server:Log:Exception and Admin:Log:Exception instead!
+
+! END OF LIFE !
+---------------
+
 **Features:**
 list>
 - stores exceptions into log file
@@ -60,6 +65,6 @@ Please think about using the hook instead.
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<hook type="resource" resource="Server:System" event="logException">Controller_System_Log::___onLogException</hook>
+	<hook type="resource" resource="Env" event="logException">Controller_System_Log::___onLogException</hook>
 	<link path="system/log" access="acl" rank="96">Exception-Log</link>
 </module>
