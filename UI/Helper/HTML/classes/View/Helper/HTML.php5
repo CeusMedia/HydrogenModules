@@ -87,19 +87,19 @@ class HTML/* extends UI_HTML_Elements*/ {
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
-	static public function Form( $url, $name, $content ){
+	static public function Form( $url, $name, $content, $attributes = array() ){
 		$enctype	= NULL;
 		if( is_array( $content ) )
 			$content	= join( $content );
 		if( substr_count( $content, ' type="file"' ) )
 			$enctype	= 'multipart/form-data';
-		$attributes	= array(
+		$attributes		= array_merge( array(
 			'name'		=> $name,
 			'action'	=> $url,
 			'id'		=> $name === NULL ? NULL : self::$prefixIdForm.$name,
 			'method'	=> "post",
 			'enctype'	=> $enctype,
-		);
+		), $attributes );
 		return self::Tag( 'form', $content, $attributes );
 	}
 
