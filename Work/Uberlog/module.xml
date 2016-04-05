@@ -31,7 +31,7 @@
 	<link access="public" path="work/uberlog/record"/>
 	<link access="inside" path="work/uberlog/remove"/>
 	<config type="string" name="urlView"/>
-	<sql type="mysql" on="install" version="final"><[!CDATA[
+	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_categories`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_categories` (
   `logCategoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -86,11 +86,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_useragents` (
   PRIMARY KEY (`logUserAgentId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql type="mysql" on="uninstall" version="final"><[!CDATA[
+	<sql type="mysql" on="uninstall" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_categories`;
 DROP TABLE IF EXISTS `<%?prefix%>log_clients`;
 DROP TABLE IF EXISTS `<%?prefix%>log_hosts`;
 DROP TABLE IF EXISTS `<%?prefix%>log_records`;
 DROP TABLE IF EXISTS `<%?prefix%>log_useragents`;
-	<sql type="mysql" on="install" version="final"><[!CDATA[
+]]></sql>
 </module>
