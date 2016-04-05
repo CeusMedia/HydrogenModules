@@ -5,16 +5,17 @@
 Sends mail to developer with exception trace if a developer mail address is defined.
 This module can extend normal or server applications but will need an installed application base with mail support.]]></description>
 	<category>Server</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Mail/Log/Exception.php5</class>
 	</files>
-	<config protected="yes" type="string" name="file" info="where to log exceptions">exception.log</config>
-	<config protected="yes" type="string" name="email" info="where to log exceptions">dev@ceusmedia.de</config>
+	<config protected="yes" type="string" name="file" info="File name of exception log">exception.log</config>
+	<config protected="yes" type="string" name="email" info="Mail address for exception report mail"></config>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
