@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.4</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -16,6 +16,8 @@
 	<log version="0.3.8">Need to confirm new password.</log>
 	<log version="0.3.9">Extend by country support.</log>
 	<log version="0.4">Support new password handling of user resource.</log>
+	<log version="0.5">Several panels for changing username and email.</log>
+	<log version="0.5.1">Redesign password strength meter.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -24,8 +26,12 @@
 		<class>Controller/Manage/My/User.php5</class>
 		<class>View/Manage/My/User.php5</class>
 		<template>manage/my/user/index.php</template>
+		<template>manage/my/user/index.account.php</template>
+		<template>manage/my/user/index.edit.php</template>
+		<template>manage/my/user/index.email.php</template>
 		<template>manage/my/user/index.info.php</template>
 		<template>manage/my/user/index.password.php</template>
+		<template>manage/my/user/index.username.php</template>
 		<locale>de/manage/my/user.ini</locale>
 		<locale>de/html/manage/my/user/bottom.html</locale>
 		<locale>de/html/manage/my/user/top.html</locale>
@@ -37,6 +43,8 @@
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
+	<config protected="yes" type="boolean" name="email.changeable">yes</config>
+	<config protected="yes" type="boolean" name="username.changeable">no</config>
 	<link xml:lang="de" rank="92" access="inside" path="manage/my/user/index">Mein Konto</link>
 	<link xml:lang="en" rank="92" access="inside" path="manage/my/user/index">My account</link>
 	<link path="manage/my/user/password" access="inside"></link>
