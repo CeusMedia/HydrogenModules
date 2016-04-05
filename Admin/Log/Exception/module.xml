@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Log: Exception</title>
+	<description><![CDATA[Viewer for logged exceptions.]]></description>
+	<category>Administration</category>
+	<version>0.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.1.1">Testable alpha version.</log>
+	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Adjust file logging and mail generation to standards.</log>
+	<log version="0.4">Migration of module Server:Syslog to Server:System:Log as common log component.</log>
+	<log version="0.5">Add index and view.</log>
+	<log version="0.5.1">Several UI tweaks.</log>
+	<log version="0.6">Migration of module Server:System:Log to Admin:Log:Exception and Server:Log:Exception.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Admin/Log/Exception.php5</class>
+		<class>View/Admin/Log/Exception.php5</class>
+		<template>admin/log/exception/index.php</template>
+		<template>admin/log/exception/view.php</template>
+	</files>
+	<relations/>
+	<link path="admin/log/exception" access="acl" rank="96">Exception-Log</link>
+</module>
