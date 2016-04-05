@@ -2,7 +2,9 @@
 <module>
 	<title>Work: Uberlog</title>
 	<description><![CDATA[/ U B E R L O G \]]></description>
-	<version>0.1</version>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -19,13 +21,76 @@
 		<locale>de/work/uberlog.ini</locale>
 		<locale>en/work/uberlog.ini</locale>
 		<style>site.work.uberlog.css</style>
-<!--		<script>WorkUberlog.js</script>-->
+		<script>WorkUberlogView.js</script>
 	</files>
 	<relations>
-<!--		<needs type="module"></needs>
--->	</relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
 	<link xml:lang="de" access="acl" path="work/uberlog">Uberlog</link>
 	<link xml:lang="en" access="acl" path="work/uberlog">Uberlog</link>
-	<link access="public" path="work/uberlog/record"></link>
-	<config type="string" name="urlView"></config>
+	<link access="public" path="work/uberlog/record"/>
+	<link access="inside" path="work/uberlog/remove"/>
+	<config type="string" name="urlView"/>
+	<sql type="mysql" on="install" version="final"><[!CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_categories` (
+  `logCategoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `loggedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`logCategoryId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>log_clients`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_clients` (
+  `logClientId` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `loggedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`logClientId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>log_hosts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_hosts` (
+  `logHostId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned DEFAULT NULL,
+  `loggedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`logHostId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>log_records`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_records` (
+  `logRecordId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `logCategoryId` int(11) unsigned NOT NULL,
+  `logClientId` int(11) unsigned NOT NULL,
+  `logHostId` int(11) unsigned NOT NULL,
+  `logUserAgentId` int(11) unsigned NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `code` decimal(4,0) NOT NULL,
+  `category` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `source` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `line` decimal(4,0) unsigned NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `client` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`logRecordId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>log_useragents`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_useragents` (
+  `logUserAgentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `loggedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`logUserAgentId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall" version="final"><[!CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_categories`;
+DROP TABLE IF EXISTS `<%?prefix%>log_clients`;
+DROP TABLE IF EXISTS `<%?prefix%>log_hosts`;
+DROP TABLE IF EXISTS `<%?prefix%>log_records`;
+DROP TABLE IF EXISTS `<%?prefix%>log_useragents`;
+	<sql type="mysql" on="install" version="final"><[!CDATA[
 </module>
