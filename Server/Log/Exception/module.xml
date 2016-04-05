@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Syslog</title>
+	<description><![CDATA[Extends server by system log.
+Sends mail to developer with exception trace if a developer mail address is defined.
+This module can extend normal or server applications but will need an installed application base with mail support.]]></description>
+	<category>Server</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Mail/Log/Exception.php5</class>
+	</files>
+	<config protected="yes" type="string" name="file" info="where to log exceptions">exception.log</config>
+	<config protected="yes" type="string" name="email" info="where to log exceptions">dev@ceusmedia.de</config>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+	<hook type="resource" resource="Env" event="logException"><![CDATA[
+		$pathLogs	= $env->getConfig()->get( 'path.logs' );
+		$options	= $env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
+
+		$fileName	= pathLogs.$options->get( 'file' );
+		if( !isset( $data['exception'] ) )
+			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
+		$exception	= $data['exception'];
+
+		$content	= $exception->getMessage();
+		try{
+			$content	= serialize( $exception );
+		}
+		catch( Exception $e ){}
+		error_log( time().":".base64_encode( $content )."\n", 3, $fileName );
+
+		if( $options->get( 'mail' ) ){
+			$mail	= new Mail_Log_Exception( $env, array( 'exception' => $exception ) );
+			$mail->sendTo( (object) array( 'email' => $options->get( 'mail' ) ) );
+		}
+		return TRUE;
+]]></hook>
+</module>
