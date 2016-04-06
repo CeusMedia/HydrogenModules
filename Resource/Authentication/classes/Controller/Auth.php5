@@ -75,6 +75,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$words		= (object) $this->getWords( 'confirm' );
 		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
 		$from		= $this->request->get( 'from'  );
+		$from		= str_replace( "index/index", "", $from );
 
 		if( strlen( trim( (string) $code ) ) ){
 			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
@@ -99,7 +100,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		if( !$this->session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'login' );
 
-		$from			= $this->request->get( 'from' );
+		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
 		$forwardForce	= $this->moduleConfig->get( 'login.forward.force' );
 
@@ -119,6 +120,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			if( $username )
 				$path	.= '/'.$username;
 			$from		= $this->request->get( 'from' );
+			$from		= str_replace( "index/index", "", $from );
 			$path		= $from ? $path.'?from='.$from : $path;
 			$this->restart( $path );
 		}
@@ -179,9 +181,9 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						$this->session->set( 'roleId', $user->roleId );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
-						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
+						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
+						$this->restart( './auth?from='.$from );										//  restart (or go to redirect URL)
 					}
 				}
 			}
@@ -199,8 +201,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$backends	= $this->logic->getBackends();
 		$backend	= $this->session->get( 'authBackend' );
 		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/logout';
-		if( $from = $this->request->get( 'from' ) )
-			$path	.= '?from='.$from;
+		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
+		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
 	}
 
@@ -208,8 +210,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$backends	= $this->logic->getBackends();
 		$backend	= $this->session->get( 'authBackend' );
 		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/password';
-		if( $from = $this->request->get( 'from' ) )
-			$path	.= '?from='.$from;
+		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
+		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
 	}
 
@@ -217,8 +219,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$backends	= $this->logic->getBackends();
 		$backend	= $this->session->get( 'authBackend' );
 		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/register';
-		if( $from = $this->request->get( 'from' ) )
-			$path	.= '?from='.$from;
+		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
+		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
 	}
 
@@ -257,7 +259,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
 						$this->session->set( 'userId', $user->userId );								//  set user ID in session
 						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
-						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
+						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)
 					}
