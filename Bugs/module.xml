@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <module>
 	<title>BugTracker</title>
-	<description>Bug management</description>
+	<description><![CDATA[
+Bug management.
+
+DEPRECATED: Use module Work:Issues instead.
+
+! END OF LIFE !
+---------------
+
+]]></description>
 	<version>0.1</version>
 	<files>
 		<class>Controller/Bug.php5</class>
@@ -82,4 +90,3 @@ DROP TABLE IF EXISTS `<%?prefix%>bug_notes`;
 ]]>
 	</sql>
 </module>
-
