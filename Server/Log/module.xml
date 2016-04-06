@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Log</title>
+	<description><![CDATA[Simple log replacement.
+
+Supports to log:
+list>
+- errors
+- warnings-
+- notices
+- infos
+- debug infos
+<list
+into a log file in these formats:
+list>
+- PHP serial
+- JSON serial
+- Plain text with whitespace
+
+Each log level can be enabled/disabled and filtered by IPs.
+]]></description>
+	<category>Server</category>
+	<version>0.4</version>
+	<log version="0.1">Initial prototype</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extract hook to controller class.</log>
+	<log version="0.2.2">Make log file name configurable.</log>
+	<log version="0.3">Make log entry parts switchable.</log>
+	<log version="0.4">Make log levels switchable and filterable by IPs.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Server/Log.php5</class>
+	</files>
+	<relations/>
+	<config protected="yes" type="boolean" name="active">yes</config>
+	<config protected="yes" type="string" mandatory="yes" name="file">app.log</config>
+	<config protected="yes" type="string" mandatory="yes" name="format" values="PHP,JSON,Plain">Plain</config>
+	<config protected="yes" type="boolean" name="type.debug" title="Flag: log debug infos">yes</config>
+	<config protected="yes" type="string" name="type.debug.ips" title="Only for IPs (comma separated)"/>
+	<config protected="yes" type="boolean" name="type.error" title="Flag: log errors">yes</config>
+	<config protected="yes" type="string" name="type.error.ips" title="Only for IPs (comma separated)"/>
+	<config protected="yes" type="boolean" name="type.note" title="Flag: log notices">yes</config>
+	<config protected="yes" type="string" name="type.note.ips" title="Only for IPs (comma separated)"/>
+	<config protected="yes" type="boolean" name="type.warn" title="Flag: log warnings">yes</config>
+	<config protected="yes" type="string" name="type.warn.ips" title="Only for IPs (comma separated)"/>
+	<config protected="yes" type="string" name="use.date" values="datestamp,timestamp">datestamp</config>
+	<config protected="yes" type="boolean" name="use.ip">no</config>
+	<config protected="yes" type="boolean" name="use.userAgent">no</config>
+	<hook type="resource" resource="Env" event="log">Controller_Server_Log::___onEnvLog</hook>
+</module>
