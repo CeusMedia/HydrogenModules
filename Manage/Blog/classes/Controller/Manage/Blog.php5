@@ -26,6 +26,33 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
+	static public function getUriPart( $label, $delimiter = "_" ){
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
+	}
+
+	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$words		= $env->getLanguage()->getWords( 'manage/blog' );
+		$prefix		= $words['tinyMCE']['prefix'];
+		$model		= new Model_Blog_Post( $env );
+		$list		= array();
+		foreach( $model->getAllByIndex( 'status', 1 ) as $nr => $post ){
+			$list[$post->title.$nr]	= (object) array(
+				'title'	=> $post->title,
+				'value'	=> './info/blog/post/'.$post->postId.'-'.self::getUriPart( $post->title )
+			);
+		}
+		ksort( $list );
+		$list	= array( (object) array(
+			'title'	=> $prefix,
+			'menu'	=> array_values( $list ),
+		) );
+//		$context->list	= array_merge( $context->list, array_values( $list ) );
+		$context->list	= array_merge( $context->list, $list );
+	}
+
 	public function add(){
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$language		= $this->env->getLanguage();
