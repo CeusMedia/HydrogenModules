@@ -28,8 +28,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
-//		if( !$env->getModules()->has( 'Info_Pages' ) )
-//			return;
+		$frontend		= Logic_Frontend::getInstance( $env );
+		if( !$frontend->hasModule( 'Info_Pages' ) )
+			return;
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
 
