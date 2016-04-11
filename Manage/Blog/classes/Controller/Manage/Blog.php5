@@ -34,8 +34,11 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+		$frontend		= Logic_Frontend::getInstance( $env );
+		if( !$frontend->hasModule( 'Info_Blog' ) )
+			return;
+
 		$words		= $env->getLanguage()->getWords( 'manage/blog' );
-		$prefix		= $words['tinyMCE']['prefix'];
 		$model		= new Model_Blog_Post( $env );
 		$list		= array();
 		foreach( $model->getAllByIndex( 'status', 1 ) as $nr => $post ){
@@ -44,13 +47,15 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 				'value'	=> './info/blog/post/'.$post->postId.'-'.self::getUriPart( $post->title )
 			);
 		}
-		ksort( $list );
-		$list	= array( (object) array(
-			'title'	=> $prefix,
-			'menu'	=> array_values( $list ),
-		) );
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
+		if( $list ){
+			ksort( $list );
+			$list	= array( (object) array(
+				'title'	=> $words['tinyMCE']['prefix'],
+				'menu'	=> array_values( $list ),
+			) );
+	//		$context->list	= array_merge( $context->list, array_values( $list ) );
+			$context->list	= array_merge( $context->list, $list );
+		}
 	}
 
 	public function add(){
