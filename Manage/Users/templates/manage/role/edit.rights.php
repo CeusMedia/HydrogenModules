@@ -37,8 +37,10 @@ foreach( $actions as $controller => $class ){
 			'title'	=> $title,
 		) );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
-	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
+	if( $list ){
+		$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
+		$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
+	}
 }
 $tableRights	= '<table class="table table-condensed table-striped"><tr><th>Controller</th><th>Aktionen</th></tr>'.join( $rows ).'</table>';
 
