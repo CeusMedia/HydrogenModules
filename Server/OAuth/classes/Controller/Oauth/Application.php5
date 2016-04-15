@@ -23,7 +23,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 		$this->userId		= (int) $this->env->getSession()->get( 'userId' );
 	}
-	
+
 	public function add(){
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
@@ -76,10 +76,16 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 		$this->addData( 'application', $this->model->get( $applicationId ) );
 	}
 
+	/**
+	 *	@todo 		kriss: think about the fullAccess code below - is it needed?
+	 */
 	public function index( $page = 0, $limit = 10 ){
 		$orders			= array( 'title' => 'ASC' );
 		$limits			= array( abs( $page ) * abs( $limit ), abs( $limit ) );
+
+//		if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
 		$conditions		= array( 'userId' => (int) $this->userId );
+
 		$this->addData( 'applications', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
@@ -93,7 +99,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 	public function view( $applicationId ){
 		$this->checkAccess( $applicationId );
 		$this->addData( 'application', $this->model->get( $applicationId ) );
-		
+
 		$modelAccess	= new Model_Oauth_AccessToken( $this->env );
 		$modelCode		= new Model_Oauth_Code( $this->env );
 		$modelRefresh	= new Model_Oauth_RefreshToken( $this->env );
@@ -106,7 +112,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 		$this->addData( 'authCodes', $authCodes );
 		$this->addData( 'refreshTokens', $refreshTokens );
 	}
-	
+
 	public function remove( $applicationId, $removeMode = NULL, $modeResourceId = NULL ){
 		$this->checkAccess( $applicationId );
 		if( !empty( $removeMode ) ){
@@ -139,7 +145,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 	public function enable( $applicationId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
-		$this->model->edit( $applicationId, array( 'status' => 1, 'modifiedAt' => time() ) );	
+		$this->model->edit( $applicationId, array( 'status' => 1, 'modifiedAt' => time() ) );
 		$this->messenger->noteSuccess( $words->successEnabled );
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}
@@ -147,7 +153,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 	public function disable( $applicationId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
-		$this->model->edit( $applicationId, array( 'status' => 0, 'modifiedAt' => time() ) );	
+		$this->model->edit( $applicationId, array( 'status' => 0, 'modifiedAt' => time() ) );
 		$this->messenger->noteSuccess( $words->successDisabled );
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}

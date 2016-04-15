@@ -18,6 +18,10 @@
  */
 class Model_Shop_Order_Position extends CMF_Hydrogen_Model {
 
+	const STATUS_NEW		= 0;
+	const STATUS_ORDERED	= 1;
+	const STATUS_DELIVERED	= 2;
+
 	protected $name		= 'shop_order_positions';
 	protected $columns	= array(
 		"positionId",

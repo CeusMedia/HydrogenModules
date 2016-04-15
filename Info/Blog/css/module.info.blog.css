@@ -1,0 +1,54 @@
+body.moduleInfoBlog div.blog-post {
+	padding-bottom: 1em;
+	}
+
+body.moduleInfoBlog .infobar dl.dl-inline {
+	border-top: 1px solid rgba(127,127,127,0.25);
+	border-bottom: 1px solid rgba(127,127,127,0.25);
+	padding-top: 0.5em;
+	}
+body.moduleInfoBlog .infobar dl.dl-inline:after {
+	clear: both;
+	content: ".";
+	visibility: hidden;
+	}
+body.moduleInfoBlog .infobar dl.dl-inline dt,
+body.moduleInfoBlog .infobar dl.dl-inline dd {
+	float: left;
+	width: auto;
+	clear: none;
+	margin: 0;
+	padding-right: 1em;
+	line-height: 1em;
+	}
+body.moduleInfoBlog .infobar dl.dl-inline dt {
+	border-left: 1px solid rgba(127,127,127,0.5);
+	padding-left: 1em;
+	}
+body.moduleInfoBlog .infobar dl.dl-inline dd {
+	}
+body.moduleInfoBlog .infobar dl.dl-inline dt:first-child {
+	border-left: none;
+	}
+
+body.moduleInfoBlog .infobar.blog-comment-info {}
+body.moduleInfoBlog .infobar.blog-post-info {}
+
+
+
+body.moduleInfoBlog .blog-post-list .infobar dl.dl-inline {
+	border-bottom: 1px solid rgba(127,127,127,0.5);
+	}
+body.moduleInfoBlog .blog-post-view .infobar.blog-post-info dl.dl-inline {
+	margin-top: 0;
+	}
+
+
+.comment-new {
+	background-color: #FFFFBB;
+	border-color: #FFFF77;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 0.4em;
+	padding: 0.5em 1em;
+	}

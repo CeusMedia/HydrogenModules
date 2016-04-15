@@ -5,6 +5,7 @@ var WorkUberlogView = {
 	seconds: 15,
 
 	init: function(){
+		return;
 		this.interval = window.setInterval(function(){
 			$.ajax({
 				url: WorkUberlogView.baseUri+'ajaxUpdateIndex',
@@ -23,6 +24,7 @@ var WorkUberlogView = {
 	},
 
 	renderRecord: function(record, selector, speed){
+		return;
 		if(record.client.length){
 			parts = record.client.split(/ /);
 			title = parts.shift();

@@ -27,7 +27,7 @@ if( $testimonials ){
 	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'testimonial-list' ) );
 }
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/testimonial/' ) );
+extract( $view->populateTexts( array( 'top', 'bottom', 'list.top', 'list.bottom', 'form.top', 'form.bottom', 'form.info' ), 'html/info/testimonial/' ) );
 
 $button = UI_HTML_Tag::create( 'a', 'Kommentar abgeben', array(
 	'href'			=> '#modal-comment-add',
@@ -37,10 +37,14 @@ $button = UI_HTML_Tag::create( 'a', 'Kommentar abgeben', array(
 	'data-toggle'	=> "modal",
 ) );
 
-return $textIndexTop.'
-<h3>Kundenmeinungen</h3>
-'.$list.'
-<h3>Dein Feedback</h3>
+return $textTop.'
+<!--<h3>Kundenmeinungen</h3>-->
+	'.$textListTop.'
+	'.$list.'
+	'.$textListBottom.'
+'.$textFormTop.'
+<div class="row-fluid">
+	<div class="span8">
 <form action="./info/course/addComment" method="post">
 	<div class="row-fluid">
 		<div class="span12">
@@ -72,6 +76,12 @@ return $textIndexTop.'
 		<button class="btn btn-primary" name="save" value="addComment">absenden</button>
 	</div>
 </form>
+</div>
+	<div class="span4">
+		'.$textFormInfo.'
+	</div>
+</div>
+'.$textFormBottom.'
 
 <div id="modal-comment-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
@@ -133,5 +143,5 @@ div.testimonial-list div.course-details a {
 div.modal div.modal-header .myModalLabel {
 	color: #444 !important;
 	}
-</style>'.$textIndexBottom;
+</style>'.$textBottom;
 ?>

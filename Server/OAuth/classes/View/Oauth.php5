@@ -15,8 +15,8 @@
 class View_Oauth extends CMF_Hydrogen_View{
 
 	/**
-	 * 
-	 *	@todo		implement scope listing ON TOP OF login 
+	 *
+	 *	@todo		implement scope listing ON TOP OF login
 	 */
 	public function authorize(){}
 

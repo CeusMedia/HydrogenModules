@@ -1,6 +1,6 @@
 <?php
 
-$helper			= new View_Helper_TimePhraser( $env );
+$helper		= new View_Helper_TimePhraser( $env );
 
 $mapInfo	= array();
 $mapInfo[$words['info']['labelRole']]	= '<span class="role role'.$user->role->roleId.'">'.$user->role->title.'</span>';
@@ -27,5 +27,14 @@ return '
 	<div class="content-panel-inner">
 		'.$listInfo.'
 	</div>
-</div>';
+</div>
+<style>
+.content-panel-info .dl-horizontal dt {
+	width: 40%;
+	}
+.content-panel-info .dl-horizontal dd {
+	margin-left: 45%;
+	}
+</style>
+';
 ?>

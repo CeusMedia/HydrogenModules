@@ -26,6 +26,12 @@ $panelDetails	= '
 				<input type="text" name="label" id="input_label" class="span12"/>
 			</div>
 		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_description">Description</label>
+				<textarea name="description" id="input_description" class="span12" rows="4"></textarea>
+			</div>
+		</div>
 	</div>
 </div>';
 

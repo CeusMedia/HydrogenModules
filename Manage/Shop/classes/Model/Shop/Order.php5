@@ -37,9 +37,10 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"orderId",
 		"customerId",
 		"sessionId",
-		"status",
-		"channel",
+		"userId",
 		"options",
+		"channel",
+		"status",
 		"price",
 		"priceTaxed",
 		"createdAt",
@@ -49,6 +50,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		"customerId",
 		"sessionId",
+		"userId",
 		"channel",
 		"status"
 	);

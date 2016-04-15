@@ -15,24 +15,30 @@ else{
 	}
 	else {
 		$list	= array();
-		$list['9-source']	= '<h4>Source</h4><pre style="max-height: 300px; scroll-y: auto; overflow: auto">'.$mail->object->mail->getBody().'</pre>';
-		if( !class_exists( 'CMM_Mail_Parser' ) ){
-			$message	= 'No mail parser available.';
+//		$list['9-source']	= '<h4>Source</h4><pre style="max-height: 300px; scroll-y: auto; overflow: auto">'.$mail->object->mail->getBody().'</pre>';
+
+		$parts	= array();
+		if( $mail->object->mail instanceof \CeusMedia\Mail\Message ){
+			$parts	= $mail->object->mail->getParts();
 		}
-		else {
-			$parts	= \CeusMedia\Mail\Parser::parseBody( $mail->object->mail->getBody() );
+		else{
+			if( !class_exists( 'CMM_Mail_Parser' ) )												//  @todo change to \CeusMedia\Mail\Parser
+				$message	= 'No mail parser available.';
+			else
+				$parts	= \CeusMedia\Mail\Parser::parseBody( $mail->object->mail->getBody() );
+		}
 
 /*			print_m( $parts );
 			xmp( $mail->object->mail->getBody() );
 			die;
 */
-			foreach( $parts as $key => $part ){
-				if( strlen( trim( $part->getContent() ) ) ){
-					if( $part->getMimeType() === "text/html" )
-						$list['1-html']	= '<h4>HTML</h4><iframe src="./admin/mail/queue/html/'.$mail->mailId.'" style="width: 100%; height: 450px; border: 1px solid black" frameborder="0"></iframe>';
-					if( $part->getMimeType() === "text/plain" )
-						$list['5-text']	= '<h4>Text</h4><pre style="width: 98%; height: 450px; border: 1px solid black; overflow: auto">'.$part->getContent().'</pre>';
-				}
+		//  @todo implement suport for attachments and inline images
+		foreach( $parts as $key => $part ){
+			if( strlen( trim( $part->getContent() ) ) ){
+				if( $part->getMimeType() === "text/html" )
+					$list['1-html']	= '<h4>HTML</h4><iframe src="./admin/mail/queue/html/'.$mail->mailId.'" style="width: 100%; height: 450px; border: 1px solid black" frameborder="0"></iframe>';
+				if( $part->getMimeType() === "text/plain" )
+					$list['5-text']	= '<h4>Text</h4><pre style="width: 98%; height: 450px; border: 1px solid black; overflow: auto">'.$part->getContent().'</pre>';
 			}
 		}
 		ksort( $list );

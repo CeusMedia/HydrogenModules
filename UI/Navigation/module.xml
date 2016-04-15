@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.3.1</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -15,6 +15,8 @@
 	<log version="0.2.8">Add mobile navigation helper for jQuery mmenu.</log>
 	<log version="0.3">Add mobile navigation and navbar helpers.</log>
 	<log version="0.3.1">Improve configuration value titles.</log>
+	<log version="0.3.2">Support mmenu in stylesheet.</log>
+	<log version="0.3.3">Make mobile navbar configurable.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -36,9 +38,11 @@
 	<config protected="no" type="boolean" name="render.desktop.navbar" title="Switch: Enable desktop main navigation bar">1</config>
 	<config protected="no" type="string" name="render.desktop.theme" values="light,dark" title="Theme of desktop main navigation bar">light</config>
 	<config protected="no" type="boolean" name="render.mobile" title="Switch: Enable mobile menu and navbar">1</config>
-	<config protected="no" type="string" name="render.mobile.theme" values="light,dark" title="Theme of mobile main navigation bar">light</config>
+	<config protected="no" type="boolean" name="render.mobile.navbar" title="Switch: Enable mobile title navbar">0</config>
 	<config protected="no" type="string" name="render.mobile.navbar.theme" values="light,dark" title="Theme of mobile main navigation">light</config>
+	<config protected="no" type="string" name="render.mobile.theme" values="light,dark" title="Theme of mobile main navigation bar">light</config>
 	<relations>
 		<supports type="module">JS_jQuery_mmenu</supports>
+		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
 </module>

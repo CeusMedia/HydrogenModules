@@ -1,4 +1,5 @@
 <?php
+$w	= (object) $words['index'];
 
 $optStatus	= array(
 	0	=> 'nicht sichtbar',
@@ -34,7 +35,7 @@ if( $testimonials ){
 
 $panelList	= '
 <div class="content-panel">
-	<h3>Kommentare</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		'.$buttonAdd.'

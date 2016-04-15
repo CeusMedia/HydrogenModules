@@ -2,6 +2,8 @@
 
 //$w		= (object) $words['editRights'];
 
+$wordsRole	= $env->getLanguage()->getWords( 'manage/role' );
+
 $acl	= $env->getAcl();
 $matrix	= $acl->index();
 $number	= 0;
@@ -13,10 +15,19 @@ foreach( $matrix as $controller => $actions ){
 		$row	= array();
 		$row[]	= UI_HTML_Tag::create( 'div', $number, array( 'class' => 'counter' ) );
 		foreach( $actions as $action ){
-			$access	= $acl->hasRight( $user->roleId, $controller, $action );
-			$class	= $access ? 'yes' : 'no';
-			$title	= $controller.'/'.$action;
-			$attr	= array( 'class' => $class, 'style' => "width: ".$width, 'title' => $title );
+			$access		= $acl->hasRight( $user->roleId, $controller, $action );
+			$class		= $access ? 'yes' : 'no';
+			$path		= str_replace( "_", "/", $controller ).'/'.$action;
+			$title		= $controller.'/'.$action;
+			$labelC		= str_replace( " ", "->", ucwords( str_replace( "_", " ", $controller ) ) );
+			$labelS		= $wordsRole['type-right'][$access];
+			$label		= 'Controller: '.$labelC.'\nAction: '.$action.'\nAccess: '.$labelS;
+			$attr		= array(
+				'class'		=> $class,
+				'style'		=> "width: ".$width,
+				'title'		=> $title,
+				'onclick'	=> 'alert(\''.$label.'\');',
+			);
 			$row[]	= UI_HTML_Tag::create( 'div', '', $attr );
 		}
 		$list[]	= UI_HTML_Tag::create( 'div', join( $row ), array( 'class' => 'bar' ) );

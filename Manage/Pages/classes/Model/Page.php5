@@ -33,6 +33,8 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'format',
 		'description',
 		'keywords',
+		'changefreq',
+		'priority',
 		'createdAt',
 		'modifiedAt'
 	);

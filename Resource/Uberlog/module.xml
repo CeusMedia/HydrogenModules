@@ -2,7 +2,9 @@
 <module>
 	<title>Uberlog Client</title>
 	<description><![CDATA[/ U B E R L O G \]]></description>
-	<version>0.1</version>
+	<version>0.</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<category>Resource</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>

@@ -7,7 +7,11 @@ $optScope	= UI_HTML_Elements::Options( $optScope, $scope );
 
 $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
-$listPages	= $this->renderTree( $tree, NULL );
+$page		= isset( $page ) ? $page : NULL;
+
+$listPages	= $view->renderTree( $tree,
+$page
+ );
 
 return '
 <div class="content-panel">

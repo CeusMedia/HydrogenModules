@@ -28,13 +28,13 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
-		if( !$env->getModules()->has( 'Info_Pages' ) )
+		$frontend		= Logic_Frontend::getInstance( $env );
+		if( !$frontend->hasModule( 'Info_Pages' ) )
 			return;
-		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
-		$prefixes	= (object) $words['link-prefixes'];
 
-		$list  = array();
-		$model	= new Model_Page( $env );
+		$words		= $env->getLanguage()->getWords( 'manage/page' );
+		$model		= new Model_Page( $env );
+		$list		= array();
 		foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $nr => $page ){
 			$page->level		= 0;
 			if( $page->parentId ){
@@ -50,17 +50,19 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				$page->title		= $parent->title.' / '.$page->title;
 			}
 			$list[$page->title.$nr]	= (object) array(
-				'title'	=> /*$prefixes->page.*/$page->title,
+				'title'	=> $page->title,
 				'value'	=> './'.$page->identifier,
 			);
 		}
-		ksort( $list );
-		$list	= array( (object) array(
-			'title'	=> $prefixes->page,
-			'menu'	=> array_values( $list ),
-		) );
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
+		if( $list ){
+			ksort( $list );
+			$list	= array( (object) array(
+				'title'	=> $words['tinyMCE']['prefix'],
+				'menu'	=> array_values( $list ),
+			) );
+	//		$context->list	= array_merge( $context->list, array_values( $list ) );
+			$context->list	= array_merge( $context->list, $list );
+		}
 	}
 
 	public function add(){
@@ -73,7 +75,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 					$data[$column]	= $value;
 				}
 			}
-			$data['timestamp']	= time();
+			$data['createdAt']	= time();
 			unset( $data['pageId'] );
 
 			$indices		= array( 'parentId' => 0, 'identifier' => $data['identifier'] );
@@ -98,7 +100,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'content'		=> $this->request->get( 'content' ),
 			'format'		=> $this->request->get( 'format' ),
 			'module'		=> $this->request->get( 'module' ),
-			'timestamp'		=> time(),
+			'createdAt'		=> time(),
 		);
 
 		$this->addData( 'path', $this->frontend->getUri() );
@@ -152,11 +154,28 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	protected function checkPageId( $pageId, $strict = FALSE ){
+		if( !$pageId ){
+			if( $strict )
+				throw new OutOfRangeException( 'No page ID given' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorMissingPageId'] );
+			$this->restart( NULL, TRUE );
+		}
+		$page	= $this->model->get( $pageId );
+		if( !$page ){
+			if( $strict )
+				throw new OutOfRangeException( 'Invalid page ID given' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
+			$this->restart( NULL, TRUE );
+		}
+		return $page;
+	}
+
 	public function copy( $pageId ){
 		if( !$pageId )
 			throw new OutOfRangeException( 'No page ID given' );
 		$page	= $this->model->get( $pageId );
-		if( !$pageId )
+		if( !$page )
 			throw new OutOfRangeException( 'Invalid page ID given' );
 		foreach( $page as $key => $value )
 			$this->request->set( $key, $value );
@@ -164,9 +183,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $pageId, $version = NULL ){
+		$page		= $this->checkPageId( $pageId );
 		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
-		$words		= (object) $this->getWords( 'edit' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
@@ -179,15 +198,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( !$session->get( 'module.manage_pages.editor' ) )
 			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
 
-		if( !$pageId )
-			throw new OutOfRangeException( 'No page ID given' );
-
 		if( $this->request->has( 'save' ) ){
-			$page	= $this->model->get( $pageId );
-			if( !$pageId )
-				throw new OutOfRangeException( 'Invalid page ID given' );
+			$words	= (object) $this->getWords( 'msg' );
 
-			$this->request->set( 'identifier', preg_replace( "/[^a-z0-9]/", "", $this->request->get( 'identifier' ) ) );
+			if( $this->request->has( 'identifier' ) )
+				$this->request->set( 'identifier', preg_replace( "/[^a-z0-9_-]/", "", $this->request->get( 'identifier' ) ) );
 
 			$indices		= array(
 				'parentId'		=> $this->request->get( 'parentId' ),
@@ -196,9 +211,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			);
 			if( $this->model->getByIndices( $indices ) ){
 				if( $this->request->get( 'parentId' ) )
-					$this->messenger->noteError( $words->msgErrorIdentifierInParentTaken, $this->request->get( 'identifier' ) );
+					$this->messenger->noteError( $words->errorIdentifierInParentTaken, $this->request->get( 'identifier' ) );
 				else
-					$this->messenger->noteError( $words->msgErrorIdentifierTaken, $this->request->get( 'identifier' ) );
+					$this->messenger->noteError( $words->errorIdentifierTaken, $this->request->get( 'identifier' ) );
 			}
 			else{
 
@@ -220,59 +235,55 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( $column ) )
 						$data[$column]	= $this->request->get( $column );
-				$data['timestamp']	= time();
+				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
-				$this->env->getMessenger()->noteSuccess( $words->msgSuccess, $data['title'] );
+				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
 				$this->restart( './manage/page/edit/'.$pageId );
 			}
 		}
 
 		$pages	= array();
-		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $page ){
-			if( $page->parentId ){
-				$parent	= $model->get( $page->parentId );
+		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $item ){
+			if( $item->parentId ){
+				$parent	= $model->get( $item->parentId );
 				if( $parent && $parent->parentId ){
 					$grand	= $model->get( $parent->parentId );
 					$parent->identifier	= $grand->identifier.'/'.$parent->identifier;
 				}
-				$page->identifier	= $parent->identifier.'/'.$page->identifier;
+				$item->identifier	= $parent->identifier.'/'.$item->identifier;
 			}
-			$pages[]	= $page;
+			$pages[]	= $item;
 		}
 
-		$page		= (object) array( 'pageId' => 0 );
 		$path		= $this->frontend->getUri();
 		$versions	= array();
-		if( $pageId ){
-			$page		= $model->get( (int) $pageId );
-			$this->session->set( 'module.manage_pages.scope', $page->scope );
-			if( $page->parentId ){
-				$parent	= $model->get( (int) $page->parentId );
-				if( $parent )
-					$path	.= $parent->identifier.'/';
-			}
-			if( $this->env->getModules()->has( 'Resource_Versions' ) ){
-				$logic		= Logic_Versions::getInstance( $this->env );
-				$orders		= array( 'version' => 'DESC' );
-				$limits		= array( 0, 10 );
-				$versions	= $logic->getAll( 'Info_Pages', $pageId, array(), $orders, $limits );
-				if( !is_null( $version ) ){
-					$entry	= $logic->get( 'Info_Pages', $pageId, $version );
-					if( $entry )
-						$page->content	= $entry->content;
-				}
-
+		$this->session->set( 'module.manage_pages.scope', $page->scope );
+		if( $page->parentId ){
+			$parent	= $model->get( (int) $page->parentId );
+			if( $parent )
+				$path	.= $parent->identifier.'/';
+		}
+		if( $this->env->getModules()->has( 'Resource_Versions' ) ){
+			$logic		= Logic_Versions::getInstance( $this->env );
+			$orders		= array( 'version' => 'DESC' );
+			$limits		= array( 0, 10 );
+			$versions	= $logic->getAll( 'Info_Pages', $pageId, array(), $orders, $limits );
+			if( !is_null( $version ) ){
+				$entry	= $logic->get( 'Info_Pages', $pageId, $version );
+				if( $entry )
+					$page->content	= $entry->content;
 			}
 		}
 
 		$this->addData( 'current', $pageId );
+		$this->addData( 'pageId', $pageId );
 		$this->addData( 'pages', $pages );
 		$this->addData( 'page', $page );
 		$this->addData( 'path', $path );
 		$this->addData( 'version', $version );
 		$this->addData( 'versions', $versions );
-		$this->addData( 'pagePreviewUrl', $path.$page->identifier );
+		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
 		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
@@ -281,7 +292,6 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree( $pageId );
 
-		$enabled		= FALSE;
 		if( !$this->frontend->hasModule( 'UI_MetaTags' ) )
 			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
 		else{
@@ -368,6 +378,14 @@ PageEditor.init();
 		}
 		$this->addData( 'tree', $tree );
 		$this->addData( 'parentMap', $parentMap );
+	}
+
+	public function remove( $pageId ){
+		$page		= $this->checkPageId( $pageId );
+		$model		= new Model_Page( $this->env );
+		$model->remove( $pageId );
+		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $page->title );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function setScope( $scope ){

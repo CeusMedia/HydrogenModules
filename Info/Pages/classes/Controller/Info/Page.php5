@@ -2,22 +2,30 @@
 class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
-		$path		= $env->getRequest()->get( '__path' );											//  get requested path
+		$request	= $env->getRequest();
+		$path		= $request->get( '__path' );													//  get requested path
 		$logic		= new Logic_Page( $env );														//  get page logic instance
 		$pageId		= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page ID is not empty
-		if( !( $page = $logic->getPageFromPath( $pageId, TRUE ) ) )									//  no page for path found
+
+		$page	= $logic->getPageFromPath( $pageId, TRUE );
+
+		if( !$page )																				//  no page for path found
 			return FALSE;																			//  quit hook
+		if( $page->status < 0 ){																	//  page is deactivated
+			if( $request->get( 'preview' ) != $page->createdAt.$page->modifiedAt )					//  check for page management preview request
+				return FALSE;																		//  avoid access
+		}
 
 		$controller	= new Controller_Info_Page( $env, FALSE );										//  get controller instance
 		if( $page->type == 0 ){																		//  page is static
-			$env->getRequest()->set( '__redirected', TRUE );										//  note redirection for access check
+			$request->set( '__redirected', TRUE );													//  note redirection for access check
 			$controller->redirect( 'info/page', 'index', array( $pageId ) );						//  redirect to page controller
 		}
 		if( $page->type == 2 ){																		//  page is a module
-			if( !$page->module )
-				return FALSE;
+			if( !$page->module )																	//  but no module has been selected
+				return FALSE;																		//  avoid access
 			$module	= strtolower( str_replace( "_", "/", $page->module ) );							//  get module controller path
-			$controller->redirect( $module, 'index' );												//  redirect to module
+			$controller->redirect( $module, 'index', $page->arguments );							//  redirect to module
 		}
 		return TRUE;																				//  stop ongoing dispatching
 	}
@@ -37,12 +45,17 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 						foreach( $subpages as $subpage ){											//  iterate found pages
 							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
 							$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );			//  get timestamp of last action
-							$context->addLink( $url, $timestamp );									//  append URI to sitemap
+							$priority	= $subpage->priority;										//  get page priority
+							$frequency	= $subpage->changefreq;										//  get page change frequency
+							$context->addLink( $url, $timestamp, $priority, $frequency );			//  append URI to sitemap
 						}
 					}
 					else{																			//  page is static of dynamic (using a module)
 						$url	= $env->url.$page->identifier;										//  build absolute URI of top level page
-						$context->addLink( $url, max( $page->createdAt, $page->modifiedAt ) );		//  append URI to sitemap
+						$timestamp	= max( $page->createdAt, $page->modifiedAt );					//  get timestamp of last action
+						$priority	= $page->priority;												//  get page priority
+						$frequency	= $page->changefreq;											//  get page change frequency
+						$context->addLink( $url, $timestamp, $priority, $frequency );				//  append URI to sitemap
 					}
 				}
 			}

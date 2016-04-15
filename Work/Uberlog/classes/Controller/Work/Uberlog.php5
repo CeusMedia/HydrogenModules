@@ -10,8 +10,8 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 
 	public function ajaxUpdateIndex(){
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
-		$filters	= array( 'recordId' => '>'.$lastId );
-		$orders		= array( 'recordId' => 'ASC' );
+		$filters	= array( 'logRecordId' => '>'.$lastId );
+		$orders		= array( 'logRecordId' => 'ASC' );
 		print( json_encode( $this->listRecords( $filters, $orders ) ) );
 		exit;
 	}
@@ -79,14 +79,14 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		);
 		return $modelAgent->add( $data );
 	}
-	
+
 	public function index(){
 		$records	= $this->listRecords();
 		$this->addData( 'records', $records );
 	}
 
 	protected function listRecords( $filters = array(), $orders = array() ){
-		$orders				= $orders ? $orders : array( 'recordId' => 'DESC' );
+		$orders				= $orders ? $orders : array( 'logRecordId' => 'DESC' );
 		$records			= $this->model->getAll( $filters, $orders, array( 10 ,0 ) );
 		$listCategories		= array();
 		$listClients		= array();
@@ -114,12 +114,12 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		if( $listUserAgentId )
 			foreach( $modelUserAgent->getAllByIndex( 'logUserAgentId', array_keys( $listUserAgentId ) ) as $userAgent )
 				$listUserAgents[$userAgent->logUserAgentId]	= $userAgent;
-			
+
 		foreach( $records as $record ){
-			
+
 			$record->host		= (object) array( 'title' => NULL );
 			$record->userAgent	= (object) array( 'title' => NULL );
-			
+
 			if( $record->logCategoryId )
 				$record->category	= $listCategories[$record->logCategoryId];
 			if( $record->logClientId )
@@ -168,11 +168,11 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		);
 		$response	= $this->env->uberlog->report( $data );
 		$this->restart( NULL, TRUE );
-		
+
 #		if( !$this->env->getModules()->has( 'Resource_Uberlog' ) )
 #			throw new RuntimeException( 'Module "Resource:Uberlog" is not installed' );
 #		$this->env->get( 'uberlog' )->report( $data );
-		
+
 	}
 
 	public function view(){}

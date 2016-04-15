@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Blog</title>
+	<description><![CDATA[Simple blog module.]]></description>
+	<category>Info</category>
+	<version>0.3.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add locales.</log>
+	<log version="0.2.2">Add links to next and previous post.</log>
+	<log version="0.3">Add support for comments.</log>
+	<log version="0.3.1">Send mail to post author for new comment.</log>
+	<log version="0.3.2">Send mail to post commenters for new comment.</log>
+	<log version="0.3.3">Improve usability by AJAX commenting.</log>
+	<log version="0.3.4">Improve post URLs.</log>
+	<log version="0.3.5">Add category column in post model.</log>
+<!--	<log version="0.4">Add support for categories.</log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Info/Blog.php5</class>
+		<class>Model/Blog/Category.php5</class>
+		<class>Model/Blog/Comment.php5</class>
+		<class>Model/Blog/Post.php5</class>
+		<class>Mail/Info/Blog/Comment.php5</class>
+		<class>Mail/Info/Blog/FollowUp.php5</class>
+		<class>View/Info/Blog.php5</class>
+		<template>info/blog/comment.php</template>
+		<template>info/blog/comments.php</template>
+		<template>info/blog/index.php</template>
+		<template>info/blog/post.php</template>
+		<locale>de/info/blog.ini</locale>
+		<locale>de/html/info/blog/index.bottom.html</locale>
+		<locale>de/html/info/blog/index.top.html</locale>
+		<locale>de/html/info/blog/post.bottom.html</locale>
+		<locale>de/html/info/blog/post.top.html</locale>
+		<locale>de/mail/info/blog/comment.html</locale>
+		<locale>de/mail/info/blog/comment.txt</locale>
+		<locale>de/mail/info/blog/followup.html</locale>
+		<locale>de/mail/info/blog/followup.txt</locale>
+		<style load="auto">module.info.blog.css</style>
+	</files>
+	<config protected="yes" mandatory="yes" type="boolean" name="comments">1</config>
+	<config protected="yes" mandatory="yes" type="boolean" name="comments.ajax">1</config>
+	<config protected="yes" mandatory="yes" type="boolean" name="mail">1</config>
+	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link access="acl" path="info/forum" xml:lang="de" rank="51">Blog</link>
+	<link access="acl" path="info/forum" xml:lang="en" rank="51">Blog</link>
+<!--	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>-->
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_categories` (
+  `categoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `language` char(2) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `content` mediumint(9) DEFAULT NULL,
+  `nrViews` int(11) unsigned DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `viewedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`categoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>blog_comments`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_comments` (
+  `commentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `postId` int(11) unsigned NOT NULL,
+  `authorId` int(11) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `language` char(2) COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` char(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`commentId`),
+  KEY `postId` (`postId`),
+  KEY `authorId` (`authorId`),
+  KEY `status` (`status`),
+  KEY `language` (`language`),
+  KEY `username` (`username`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>blog_posts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_posts` (
+  `postId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `categoryId` int(11) unsigned NOT NULL,
+  `authorId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `language` char(2) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `abstract` mediumtext COLLATE utf8_unicode_ci,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `nrViews` int(11) NOT NULL DEFAULT '0',
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) DEFAULT NULL,
+  `viewedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`postId`),
+  KEY `categoryId` (`categoryId`),
+  KEY `authorId` (`authorId`),
+  KEY `status` (`status`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
+DROP TABLE IF EXISTS `<%?prefix%>blog_comments`;
+DROP TABLE IF EXISTS `<%?prefix%>blog_posts`;
+]]></sql>
+</module>
