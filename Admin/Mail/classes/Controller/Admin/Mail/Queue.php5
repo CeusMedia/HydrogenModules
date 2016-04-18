@@ -130,11 +130,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	public function cancel( $mailId ){
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
-		if( !$mail )
+		if( !$mail ){
 			$this->env->getMessenger->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
 		}
-		if( $mail->status > 1 )
+		if( $mail->status > 1 ){
 			$this->env->getMessenger->noteError( 'Mail already sent' );
 			$this->restart( NULL, TRUE );
 		}
