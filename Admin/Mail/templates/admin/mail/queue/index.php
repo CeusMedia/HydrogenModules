@@ -4,6 +4,7 @@ $wl		= (object) $words['index-list'];
 $wf		= (object) $words['index-filter'];
 
 $statusClasses	= array(
+	-1	=> 'info',
 	0	=> 'warning',
 	1	=> 'important',
 	2	=> 'success',
@@ -32,8 +33,13 @@ if( $mails ){
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'cell-mail-receiver' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $words['states'][$mail->status].'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
-		$rows[]		= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => 'list-item-mail '.$statusClasses[$mail->status] ) );
+
+		$class		= 'list-item-mail';
+		if( count( $filters->get( 'status' ) ) > 1 )
+			$class	.= ' '.$statusClasses[$mail->status];
+		$rows[]		= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $class ) );
 	}
+
 	$heads	= UI_HTML_Elements::TableHeads( array(
 		'Sender und Betreff',
 		'Empfänger',
