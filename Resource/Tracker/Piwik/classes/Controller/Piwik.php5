@@ -45,7 +45,18 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 			return;
 		$context->js->addUrl( rtrim( $config->get( 'URI' ), " /" ).'/piwik.js' );					//
 		$config->set( 'URI', preg_replace( "@^[a-z]+://@", "", $config->get( 'URI' ) ) );			//  remove protocol since piwik init script will add it itself
-		$context->js->addScript( 'initPiwik('.json_encode( $config->getAll() ).');' );				//  @todo kriss: maybe use addScriptOnReady?
+		$script	= '
+function initPiwik(options){
+	var pkProtocol = ("https:" == document.location.protocol) ? "https" : "http";
+	var pkBaseURL = pkProtocol + "://" + options.URI;
+	try {
+		var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", options.ID);
+		piwikTracker.trackPageView();
+		piwikTracker.enableLinkTracking();
+	} catch( err ) {}
+}
+initPiwik('.json_encode( $config->getAll() ).');';
+		$context->js->addScriptOnReady( $script );
 	}
 
 	/**

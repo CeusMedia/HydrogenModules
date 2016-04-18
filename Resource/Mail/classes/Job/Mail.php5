@@ -7,7 +7,7 @@ class Job_Mail extends Job_Abstract{
 
 	public function countQueuedMails(){
 		$logic		= new Logic_Mail( $this->env );
-		$conditions	= array( 'status' => '<2' );
+		$conditions	= array( 'status' => array( 0, 1 ) );
 		$count		= $logic->countQueue( $conditions );
 		$this->out( sprintf( "%s mails on queue.\n", $count ) );
 	}
@@ -22,11 +22,11 @@ class Job_Mail extends Job_Abstract{
 #die;
 		$this->log( 'run with config: {sleep: '.$sleep.', limit: '.$limit.'}' );
 		$logic		= new Logic_Mail( $this->env );
-		$conditions	= array( 'status' => '<2' );
+		$conditions	= array( 'status' => array( 0, 1 ) );
 		$limits		= $limit > 0 ? array( 0, $limit ) : array();
 		$listSent	= array();
 		if( ( $count = $logic->countQueue( $conditions, array(), $limits ) ) ){
-			foreach( $logic->getQueuedMails( array( 'status' => '<2' ) ) as $mail ){
+			foreach( $logic->getQueuedMails( array( 'status' => array( 0, 1 ) ) ) as $mail ){
 				try{
 					$logic->sendQueuedMail( $mail->mailId );
 					$listSent[]	= (int) $mail->mailId;

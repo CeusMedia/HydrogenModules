@@ -119,10 +119,16 @@ class Logic_Mail{
 			$serial		= gzdeflate( serialize( $mail ) );
 		else
 			$serial		= base64_encode( serialize( $mail ) );
+
+		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
+			$senderAddress	= $mail->mail->getSender()->getAddress();
+		else
+			$senderAddress	= $mail->mail->getSender()->address();
+
 		$data	= array(
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
+			'senderAddress'		=> $senderAddress,
 			'receiverId'		=> isset( $receiver->userId ) ? $receiver->userId : 0,
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,

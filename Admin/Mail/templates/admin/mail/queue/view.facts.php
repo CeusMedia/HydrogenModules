@@ -1,5 +1,20 @@
 <?php
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+
+$buttons		= array();
+$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück', array(
+	'href'	=> './admin/mail/queue/',
+	'class'	=> 'btn btn-small'
+) );
+if( $mail->status === 0 ){
+	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
+		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
+		'class'	=> 'btn btn-danger btn-small'
+	) );
+}
+$buttons	= join( ' ', $buttons );
+
 $helper	= new View_Helper_TimePhraser( $env );
 $list	= array();
 foreach( $mail as $key => $value ){
@@ -24,6 +39,9 @@ return '
 	<h4>Fakten</h4>
 	<div class="content-panel-inner">
 		'.$list.'
+		<div class="buttonbar">
+			'.$buttons.'
+		</div>
 	</div>
 </div>';
 ?>
