@@ -122,7 +122,7 @@ class Logic_Mail{
 		$data	= array(
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
+			'senderAddress'		=> $mail->mail->getSender()->address,
 			'receiverId'		=> isset( $receiver->userId ) ? $receiver->userId : 0,
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,
