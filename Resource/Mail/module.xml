@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.1</version>
+	<version>0.6.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -49,6 +49,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.5.7">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
 	<log version="0.6.1">Apply current environment and transport on waking queued mails.</log>
+	<log version="0.6.2">Support negative mail status (cancelled).</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -90,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   `mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `senderId` int(10) unsigned NOT NULL DEFAULT '0',
   `receiverId` int(10) unsigned NOT NULL DEFAULT '0',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
   `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `senderAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -195,5 +196,8 @@ UPDATE `<%?prefix%>mails` SET language="de" WHERE language="";
 ALTER TABLE  `<%?prefix%>mail_attachments` ADD `language` VARCHAR( 10 ) NOT NULL AFTER  `status` ,
 ADD INDEX (  `language` ) ;
 UPDATE `<%?prefix%>mail_attachments` SET language="de" WHERE language="";
+	]]></sql>
+	<sql on="update" version="0.6.2" type="mysql"><![CDATA[
+ALTER TABLE `<%?prefix%>mails` CHANGE `status` `status` TINYINT(1) NOT NULL DEFAULT '0';
 	]]></sql>
 </module>
