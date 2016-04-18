@@ -2,159 +2,267 @@
 /**
  *	@todo		localize
  *	@todo		integrate validation from Controller_Admin_User::edit
+ *	@todo   	validate email, check against trash mail domains
  */
 class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 
-	public function index(){
-		$config		= $this->env->getConfig();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
-		$userId		= $session->get( 'userId' );
-		$roleId		= $session->get( 'roleId' );
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
+	protected $modelUser;
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $userId;
 
-		if( !$userId ){
-			$messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
-			$this->restart( './' );
+	protected function __onInit(){
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modelUser	= new Model_User( $this->env );
+
+		$msg	= (object) $this->getWords( 'msg' );
+		if( !$this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$this->messenger->noteFailure( $msg->failureNoAuthentication );
+			$this->restart( NULL );
 		}
-		$user		= $modelUser->get( $userId );
-		if( !$user ){
-			$messenger->noteFailure( 'Zugriff verweigert.' );
-			$this->restart( './manage/my' );
+		$logic	= Logic_Authentication::getInstance( $this->env );
+		if( !( $this->userId = $logic->getCurrentUserId() ) ){
+			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
+			$this->restart( NULL );
 		}
-		$user->role	= $modelRole->get( $user->roleId );
-		if( class_exists( 'Model_Company' ) ){
-			$modelCompany	= new Model_Company( $this->env );
-			$user->company	= $modelCompany->get( $user->companyId );
+		if( !$this->modelUser->get( $this->userId ) ){
+			$this->messenger->noteError( $msg->errorInvalidUser );
+			$this->restart( NULL );
 		}
-		$this->addData( 'currentUserId', $userId );
-		$this->addData( 'user', $user );
-		$this->addData( 'pwdMinLength', (int) $config->get( 'module.resource_users.password.length.min' ) );
-		$this->addData( 'pwdMinStrength', (int) $config->get( 'module.resource_users.password.strength.min' ) );
-		$this->addData( 'mandatoryEmail', (int) $config->get( 'module.resource_users.email.mandatory' ) );
-		$this->addData( 'mandatoryFirstname', (int) $config->get( 'module.resource_users.firstname.mandatory' ) );
-		$this->addData( 'mandatorySurname', (int) $config->get( 'module.resource_users.surname.mandatory' ) );
+	}
+
+	protected function checkConfirmationPassword(){
+		$msg		= (object) $this->getWords( 'msg' );
+		$password	= trim( $this->request->get( 'password' ) );
+		if( !strlen( $password ) ){
+			$this->messenger->noteError( $msg->errorPasswordMissing );
+			$this->restart( NULL, TRUE );
+		}
+		if( !$this->checkPassword( $this->modelUser->get( $this->userId ), $password ) ){
+			$this->messenger->noteError( $msg->errorPasswordMismatch );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPassword( $user, $password ){
+		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			if( $logic->validateUserPassword( $user->userId, $password ) )
+				return TRUE;
+		}
+		$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+		if( $user->password === md5( $password.$pepper ) )
+			return TRUE;
+		return FALSE;
 	}
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
 	public function edit(){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
-		$words		= (object) $this->getWords( 'index' );
-		$userId		= $session->get( 'userId' );
-		$modelUser	= new Model_User( $this->env );
+		$this->checkConfirmationPassword();
 
-		if( !$userId ){
-			$messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
-			$this->restart( './' );
-		}
-		$user		= $modelUser->get( $userId );
-		if( !$user ){
-			$messenger->noteFailure( 'Zugriff verweigert.' );
-			$this->restart( './manage/my' );
-		}
-
-		$data		= $request->getAllFromSource( 'POST' )->getAll();
-
-		$deniedKeys	= array( 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser' );
-		foreach( $deniedKeys as $deniedKey )
-			unset( $data[$deniedKey] );
-
-		$indices	= array(
-			'username'	=> $data['username'],
-			'userId'	=> '!='.$userId,
-			'status'	=> '>=-1',
-		);
-		if( empty( $data['username'] ) )
-			$messenger->noteError( $words->msgNoUsername );
-		else if( $modelUser->getByIndices( $indices ) )
-			$messenger->noteError( $words->msgUsernameExisting, $data['username'] );
-
-		$indices	= array(
-			'email'		=> $data['email'],
-			'userId'	=> '!='.$userId,
-			'status'	=> '>=-1',
-		);
+		$words		= (object) $this->getWords( 'edit' );
+		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$needsEmail		= (int) $options->get( 'email.mandatory' );
 		$needsFirstname	= (int) $options->get( 'firstname.mandatory' );
 		$needsSurname	= (int) $options->get( 'surname.mandatory' );
 
-		if( $needsEmail && empty( $data['email'] ) )
-			$messenger->noteError( $words->msgNoEmail );
-		else if( $modelUser->getByIndices( $indices ) )
-			$messenger->noteError( $words->msgEmailExisting, $data['email'] );
+		if( !trim( $this->request->get( 'password' ) ) ){
+			$this->messenger->noteError( $words->msgPasswordMissing );
+			$this->restart( NULL, TRUE );
+		}
+		if( !$this->checkPassword( $user, $this->request->get( 'password' ) ) ){
+			$this->messenger->noteError( $words->msgPasswordMismatch );
+			$this->restart( NULL, TRUE );
+		}
+
+		$data		= $this->request->getAllFromSource( 'POST' )->getAll();
+		$deniedKeys	= array( 'username', 'email', 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser' );
+		foreach( $deniedKeys as $deniedKey )
+			unset( $data[$deniedKey] );
 
 		if( $needsFirstname && empty( $data['firstname'] ) )
-			$messenger->noteError( $words->msgNoFirstname );
+			$this->messenger->noteError( $words->msgNoFirstname );
 		if( $needsSurname && empty( $data['surname'] ) )
-			$messenger->noteError( $words->msgNoSurname );
+			$this->messenger->noteError( $words->msgNoSurname );
 
 		/*		if( empty( $data['postcode'] ) )
-			$messenger->noteError( $words->msgNoPostcode );
+			$this->messenger->noteError( $words->msgNoPostcode );
 		if( empty( $data['city'] ) )
-			$messenger->noteError( $words->msgNoCity );
+			$this->messenger->noteError( $words->msgNoCity );
 		if( empty( $data['street'] ) )
-			$messenger->noteError( $words->msgNoStreet );
+			$this->messenger->noteError( $words->msgNoStreet );
 		if( empty( $data['number'] ) )
-			$messenger->noteError( $words->msgNoNumber );*/
+			$this->messenger->noteError( $words->msgNoNumber );*/
 
-		if( !trim( $request->get( 'password' ) ) )
-			$messenger->noteError( $words->msgNoPassword );
-		else if( $user->password !== md5( $request->get( 'password' ) ) )
-			$messenger->noteError( $words->msgPasswordMismatch );
-
-		if( !$messenger->gotError() ){
-			$modelUser->edit( $userId, $data );
-			$messenger->noteSuccess( $words->msgSuccess );
+		if( !$this->messenger->gotError() ){
+//			if( strlen( $data['country'] ) > 2 ){
+//				$countries			= array_flip( $this->env->getLanguage()->getWords( 'countries' ) );
+//				if( !isset( $countries[$data['country']] ) )
+//				$data['country']	= $countries[$data['country']];
+//			}
+			$this->modelUser->edit( $this->userId, $data );
+			$this->messenger->noteSuccess( $words->msgSuccess );
 		};
 		$this->restart( './manage/my/user' );
+	}
+
+	public function index(){
+		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$roleId		= $this->session->get( 'roleId' );
+		$modelRole	= new Model_Role( $this->env );
+
+		if( !$this->userId ){
+			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
+			$this->restart( './' );
+		}
+		$user		= $this->modelUser->get( $this->userId );
+		$user->role	= $modelRole->get( $user->roleId );
+		if( class_exists( 'Model_Company' ) ){
+			$modelCompany	= new Model_Company( $this->env );
+			$user->company	= $modelCompany->get( $user->companyId );
+		}
+		$this->addData( 'currentUserId', $this->userId );
+		$this->addData( 'user', $user );
+		$this->addData( 'pwdMinLength', (int) $options->get( 'password.length.min' ) );
+		$this->addData( 'pwdMinStrength', (int) $options->get( 'password.strength.min' ) );
+		$this->addData( 'mandatoryEmail', $options->get( 'email.mandatory' ) );
+		$this->addData( 'mandatoryFirstname', $options->get( 'firstname.mandatory' ) );
+		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
+		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
+	}
+
+	/**
+	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
+	 */
+	public function email(){
+		$this->checkConfirmationPassword();
+
+		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$words		= (object) $this->getWords( 'email' );
+		$user		= $this->modelUser->get( $this->userId );
+		$email		= trim( $this->request->get( 'email' ) );
+
+		if( $email === $user->email ){
+			$this->messenger->noteNotice( $words->msgNoticeNoChanges );
+			$this->restart( NULL, TRUE );
+		}
+		if( !strlen( $email ) ){
+			if( $options->get( 'email.mandatory' ) ){
+				$this->messenger->noteError( $words->msgEmailMissing );
+				$this->restart( NULL, TRUE );
+			}
+		}
+		else{
+			$indices	= array(
+				'email'		=> $email,
+				'userId'	=> '!='.$this->userId,
+//				'status'	=> '>=-1',																//  disabled for integrity
+			);
+			if( $this->modelUser->getByIndices( $indices ) ){
+				$this->messenger->noteError( $words->msgEmailExisting, $email );
+				$this->restart( NULL, TRUE );
+			}
+		}
+		$this->modelUser->edit( $this->userId, array( 'email' => $email ) );
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$this->restart( NULL, TRUE );
+	}
+
+	/**
+	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@todo   	Redesign: Send mail with confirmation before applying new username
+	 */
+	public function username(){
+		$this->checkConfirmationPassword();
+
+		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$words		= (object) $this->getWords( 'username' );
+		$user		= $this->modelUser->get( $this->userId );
+		$username	= trim( $this->request->get( 'username' ) );
+
+		if( !strlen( $username ) ){
+			$this->messenger->noteError( $words->msgUsernameMissing );
+			$this->restart( NULL, TRUE );
+		}
+		if( $username === $user->username ){
+			$this->messenger->noteNotice( $words->msgNoticeNoChanges );
+			$this->restart( NULL, TRUE );
+		}
+		$indices	= array(
+			'username'	=> $username,
+			'userId'	=> '!='.$this->userId,
+//			'status'	=> '>=-1',																//  disabled for integrity
+		);
+		if( $this->modelUser->getByIndices( $indices ) ){
+			$this->messenger->noteError( $words->msgUsernameExisting, $username );
+			$this->restart( NULL, TRUE );
+		}
+		$this->modelUser->edit( $this->userId, array( 'username' => $username ) );
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$this->restart( NULL, TRUE );
 	}
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
 	public function password(){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'password' );
-		$userId		= $session->get( 'userId' );
-		$modelUser	= new Model_User( $this->env );
-
-		if( !$userId ){
-			$messenger->noteError( 'Nicht eingeloggt. Zugriff verweigert.' );
-			$this->restart( './' );
-		}
-		$user		= $modelUser->get( $userId );
-		if( !$user ){
-			$messenger->noteError( 'Zugriff verweigert.' );
-			$this->restart( './manage/my' );
-		}
+		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$pwdMinLength	= (int) $options->get( 'password.length.min' );
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$data = $request->getAllFromSource( 'post' );
-		if( empty( $data['passwordOld'] ) )
-			$messenger->noteError( $words->msgNoPasswordOld );
-		else if( md5( $data['passwordOld'] ) !== $user->password )
-			$messenger->noteError( $words->msgPasswordMismatch );
-		if( empty( $data['passwordNew'] ) )
-			$messenger->noteError( $words->msgNoPasswordNew );
-		else if( $pwdMinLength && strlen( $data['passwordNew'] ) < $pwdMinLength )
-			$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+		$data = $this->request->getAllFromSource( 'post' );
+		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'post' ) );
+		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'post' ) );
+		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'post' ) );
 
-		if( !$messenger->gotError() ){
-			$modelUser->edit( $userId, array( 'password' => md5( $data['passwordNew'] ) ) );
-			$messenger->noteSuccess( $words->msgSuccess );
+		if( !strlen( $passwordOld ) )
+			$this->messenger->noteError( $words->msgPasswordOldMissing );
+		else if( !strlen( $passwordNew ) )
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
+		else if( !strlen( $passwordConfirm ) )
+			$this->messenger->noteError( $words->msgPasswordConfirmMissing );
+		else if( $passwordOld === $passwordNew )
+			$this->messenger->noteError( $words->msgPasswordNewSame );
+		else if( $passwordNew !== $passwordConfirm )
+			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
+		else if( !$this->checkPassword( $user, $passwordOld ) )
+			$this->messenger->noteError( $words->msgPasswordOldMismatch );
+		else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
+			$this->messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
+//		else if( $pwdMinStrength && ... < $pwdMinStrength )
+//			$this->messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
+		else{
+			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+				$logic			= Logic_UserPassword::getInstance( $this->env );
+				$userPasswordId	= $logic->addPassword( $user->userId, $passwordNew );
+				$logic->activatePassword( $userPasswordId );
+			}
+			else{
+				$this->modelUser->edit( $this->userId, array( 'password' => md5( $passwordNew.$passwordPepper ) ) );
+			}
+			$this->messenger->noteSuccess( $words->msgSuccess );
 		}
 		$this->restart( './manage/my/user' );
 	}

@@ -140,12 +140,26 @@ class Logic_Upload{
 		return $this->upload->name;
 	}
 
+	/**
+	 *	Returns maximum supported file size of uploads in bytes.
+	 *	Gets the minimum of PHP limits 'upload_max_filesize', 'post_max_size' and 'memory_limit'.
+	 *	Take take other given limits into judgement, eg. array( 'myLimit' => '4MB' ).
+	 *	Uses Alg_UnitParser to convert limit strings like "4M" to integer.
+	 *	Uses Alg_UnitParser to convert own given limits with units to integer.
+	 *
+	 *	@static
+	 *	@access		public
+	 *	@param		array			$otherLimits		Map of other given limits
+	 *	@return		integer
+	 */
 	static function getMaxUploadSize( $otherLimits = array() ){
+		foreach( $otherLimits as $key => $value )
+			if( preg_match( "/[a-z]$/i", trim( $value ) ) )
+				$otherLimits[$key]	= Alg_UnitParser::parse( trim( $value ) );
 		$otherLimits['upload']	= Alg_UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" );
 		$otherLimits['post']	= Alg_UnitParser::parse( ini_get( 'post_max_size' ), "M" );
 		$otherLimits['memory']	= Alg_UnitParser::parse( ini_get( 'memory_limit' ), "M" );
-		asort( $otherLimits );
-		return $otherLimits;
+		return min( $otherLimits );
 	}
 
 	/**

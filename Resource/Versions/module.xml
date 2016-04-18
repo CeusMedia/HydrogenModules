@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Resource: Versions]]></title>
+	<description><![CDATA[General storage versions of module contents.
+
+The purpose of this module is to provide a general database model and table
+to save older versions of contents managed by other models.
+
+Usage to save:
+code>
+$logic	= Logic_Versions::getInstance( $env );
+$logic->add( 'MyModule', 15, "Outdated content" );
+<code
+This example will save "Outdated content" in relation to module "MyModule" entry 15.
+
+Usage to list:
+code>
+$logic	= Logic_Versions::getInstance( $env );
+$logic->getAll( 'MyModule', 15 );
+<code
+This example will list all stored versions related to module "MyModule" entry 15.
+
+Usage to load:
+code>
+$logic	= Logic_Versions::getInstance( $env );
+$logic->get( 'MyModule', 15, 3 );
+<code
+This example will load version 3 of related to module "MyModule" entry 15.
+To load the latest version skip the third parameter.
+
+]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initital prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Model/Version.php5</class>
+		<class>Logic/Versions.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<config protected="yes" type="integer" name="version.start" title="Number to start counting versions">1</config>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>versions`;
+CREATE TABLE `<%?prefix%>versions` (
+  `versionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `module` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `version` smallint(5) unsigned NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`versionId`),
+  KEY `userId` (`userId`),
+  KEY `module` (`module`),
+  KEY `id` (`id`),
+  KEY `version` (`version`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+]]>
+	</sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>versions`;
+]]>
+	</sql>
+</module>

@@ -1,0 +1,9 @@
+
+Hallo  <%?receiver.firstname%> <%?receiver.surname%>!
+
+Der Benutzer <%sender.username%> (<%?sender.firstname%> <%?sender.surname%>) hat die Verbindung mit dir aufgehoben.
+Aufgaben, an denen ihr zusammen arbeitet, bleiben für dich noch sichtbar.
+Bei neuen Aufgaben könnt ihr nicht weiter zusammen arbeiten.
+
+Hier findest du noch einmal das Profil des Benutzers:
+<%appBaseUrl%>member/view/<%sender.userId%>

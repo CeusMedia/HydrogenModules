@@ -18,36 +18,97 @@ class View_Helper_Member{
 		if( !$this->useGravatar )
 			return $this->user->username;
 
+		$image	= $this->renderImage();
+
 		switch( $this->mode ){
 			case 'thumbnail':
-				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$image		= $gravatar->getImage( $this->user->email, 256 );
 				$url		= sprintf( $this->url, $this->user->userId );
-				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array(
-					'class'	=> 'autocut'
-				) );
+				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array( 'class'	=> 'autocut' ) );
 				$attributes	= array( 'class' => 'thumbnail' );
 				if( $this->url )
 					$attributes['onclick']	= "document.location.href='".$url."'";
 				return UI_HTML_Tag::create( 'div', $image.$link, $attributes );
 				break;
+			case 'bar':
+			default:
+				$label		= $this->user->username;
+				if( $this->url ){
+					$url		= sprintf( $this->url, $this->user->userId );
+					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
+				}
+				$name	= $this->user->firstname.' '.$this->user->surname;
+				$name	= UI_HTML_Tag::create( 'small', $name, array( 'class' => "muted" ) );
+				$image	= UI_HTML_Tag::create( 'div', $image, array( 'style' => 'float: left' ) );
+				$label	= '<span><b>'.$label.'</b><br/>'.$name.'</span>';
+				$label	= UI_HTML_Tag::create( 'div', $label, array( 'style' => 'float: left; margin-left: 0.5em' ) );
+				return UI_HTML_Tag::create( 'div', $image.$label, array( 'class' => 'user clearfix' ) );
+				break;
 			case 'inline':
 			default:
-				$gravatar	= new View_Helper_Gravatar( $this->env );
-				$image		= $gravatar->getImage( $this->user->email, 20 );
-				$link		= UI_HTML_Tag::create( 'a', $this->user->username, array(
-					'href'	=> sprintf( $this->url, $this->user->userId )
-				) );
-				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$link, array(
-					'class'	=> 'user',
-				) );
+				$label		= $this->user->username;
+				if( $this->url ){
+					$url		= sprintf( $this->url, $this->user->userId );
+					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
+				}
+				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
 				break;
 		}
 	}
 
-	static public function renderStatic( $env, $userObjectOrId ){
+	public function renderImage(){
+		if( !$this->user )
+			return;
+		$helperGravatar	= new View_Helper_Gravatar( $this->env );
+		$helperGravatar->setUser( $this->user );
+		$helperAvatar	= NULL;
+		if( class_exists( 'View_Helper_UserAvatar' ) ){
+			$helperAvatar	= new View_Helper_UserAvatar( $this->env );
+			$helperAvatar->setUser( (int) $this->user->userId );
+		}
+
+		switch( $this->mode ){
+			case 'thumbnail':
+				$helperGravatar->setSize( 256 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+				break;
+			case 'large':
+			default:
+				$helperGravatar->setSize( 40 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+				break;
+			case 'inline':
+			default:
+				$helperGravatar->setSize( 20 );
+				$image		= $helperGravatar->render();
+				if( $helperAvatar && $helperAvatar->has() )
+					$image	= $helperAvatar->render();
+		}
+		return $image;
+	}
+
+	static public function renderImageStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
+		if( $url )
+			$helper->setLinkUrl( $url );
+		if( $mode )
+			$helper->setMode( $mode );
+		return $helper->renderImage();
+	}
+
+	static public function renderStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+		$helper	= new self( $env );
+		$helper->setUser( $userObjectOrId );
+		if( $url )
+			$helper->setLinkUrl( $url );
+		if( $mode )
+			$helper->setMode( $mode );
 		return $helper->render();
 	}
 

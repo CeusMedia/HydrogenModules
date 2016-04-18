@@ -1,14 +1,23 @@
 <?php
 class View_Helper_Navigation_Bootstrap_AccountMenu{
 
-	protected $gravatar;
+	protected $env;
 	protected $user;
-	protected $useGravatar		= FALSE;
+	protected $useAvatar		= FALSE;
 	protected $linksInside		= array();
 	protected $linksOutside		= array();
+	protected $imageSize		= 32;
 	public $guestLabel			= "Guest";
 	public $guestEmail			= "<em>(not logged in)</em>";
 
+	public function __construct( $env ){
+		$this->env	= $env;
+	}
+
+	/**
+	 *	@deprecated 		use menu instead
+	 *	@todo 				remove
+	 */
 	public function addInsideLink( $path, $label, $icon = NULL ){
 		$this->linksInside[]	= (object)array(
 			'icon'		=> $icon,
@@ -17,10 +26,18 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		);
 	}
 
+	/**
+	 *	@deprecated 		use menu instead
+	 *	@todo 				remove
+	 */
 	public function addInsideLinkLine(){
 		$this->linksInside[]	= 'line';
 	}
 
+	/**
+	 *	@deprecated 		use menu instead
+	 *	@todo 				remove
+	 */
 	public function addOutsideLink( $path, $label, $icon = NULL ){
 		$this->linksOutside[]	= (object)array(
 			'icon'		=> $icon,
@@ -29,65 +46,79 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		);
 	}
 
+	/**
+	 *	@deprecated 		use menu instead
+	 *	@todo 				remove
+	 */
 	public function addOutsideLinkLine(){
 		$this->linksOutside[]	= 'line';
 	}
 
-	public function setLinks( $menu, $scope ){
-		$this->menu		= $menu;
-		$this->scope	= $scope;
-	}
-
-    protected function renderLabelWithIcon( $entry ){
-        if( !isset( $entry->icon ) )
-            return $entry->label;
-        $class  = $entry->icon;
-        if( !preg_match( "/^fa/", $entry->icon ) )
-            $class  = 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-        $icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
-        return $icon.'&nbsp;'.$entry->label;
+	protected function renderLabelWithIcon( $entry ){
+		if( !isset( $entry->icon ) )
+			return $entry->label;
+		$class	= $entry->icon;
+		if( !preg_match( "/^fa/", $entry->icon ) )
+			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		return $icon.'&nbsp;'.$entry->label;
     }
 
 	public function render( $classMenu = "" ){
+		$username	= $this->guestLabel;
+		$fullname	= '';
+		$email		= $this->guestEmail;
 		if( $this->user ){
 			$username	= $this->user->username;
+			$fullname	= $this->user->firstname.' '.$this->user->surname;
 			$email		= $this->user->email;
 		}
-		else{
-			$username	= $this->guestLabel;
-			$email		= $this->guestEmail;
-		}
-		if( $this->menu ){
+		if( $this->menu ){																			//  @todo: remove
 			$links	= $this->renderMenuLinks();
 		}
-		else{
-			if( $this->user )
-				$links		= $this->renderSetLinks( $this->linksInside );
-			else
-				$links		= $this->renderSetLinks( $this->linksOutside );
-		}
-		if( $this->useGravatar ){
-			if( !empty( $this->gravatar ) )
-				$gravatar	= 'http://www.gravatar.com/avatar/'.$this->gravatar.'?s=32&d=mm&r=g';
-			else if( !empty( $this->email ) )
-				$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $this->email ) ) ).'?s=32&d=mm&r=g';
-			else
-				$gravatar	= 'http://www.gravatar.com/avatar/?s=32&d=mm&r=g';
+		else{																						//  @todo: remove
+			if( $this->user )																		//  @todo: remove
+				$links		= $this->renderSetLinks( $this->linksInside );							//  @todo: remove
+			else																					//  @todo: remove
+				$links		= $this->renderSetLinks( $this->linksOutside );							//  @todo: remove
+		}																							//  @todo: remove
+		$avatar	= '';
+		if( $this->user && $this->useAvatar ){
+			if( class_exists( 'View_Helper_UserAvatar' ) ){
+				$helper		= new View_Helper_UserAvatar( $this->env );
+//				$helper->useGravatar( )																//  @todo: implement: switch in module + gravatar module detection
+				$helper->setUser( $this->user );
+				$helper->setSize( $this->imageSize );
+				$avatar	= $helper->render();
+			}
+			else if( class_exists( 'View_Helper_Gravatar' ) ){
+				$helper		= new View_Helper_Gravatar( $this->env );
+				$helper->setUser( $this->user );
+				$helper->setSize( $this->imageSize );
+				$avatar	= $helper->render();
+			}
+			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );
 		}
 
-		return '
-<div id="account-menu" class="dropdown '.$classMenu.'">
-	<div id="drop-account" role="button" class="dropdown-toggle" data-toggle="dropdown">
-		<div class="avatar">
-			<img src="'.$gravatar.'"/>
-		</div>
-		<div class="labels">
-			<div class="username">'.$username.'</div>
-			<div class="email">'.$email.'</div>
-		</div>
-	</div>
-	'.$links.'
-</div>';
+		$labels			= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'div', $username, array( 'class' => 'username' ) ),
+			UI_HTML_Tag::create( 'div', $fullname, array( 'class' => 'fullname' ) ),
+			UI_HTML_Tag::create( 'div', $email, array( 'class' => 'email' ) ),
+		), array( 'class' => 'labels' ) );
+		$trigger		= UI_HTML_Tag::create( 'div', array(
+			$avatar,
+			$labels,
+			UI_HTML_Tag::create( 'div', '', array( 'class' => 'clearfix' ) ),
+		), array(
+			'id' 			=> 'drop-account',
+			'role'			=> 'button',
+			'class'			=> 'dropdown-toggle',
+			'data-toggle'	=> 'dropdown',
+		) );
+		return UI_HTML_Tag::create( 'div', array( $trigger, $links ), array(
+			'id' => 'account-menu',
+			'class' => 'dropdown '.$classMenu
+		) );
 	}
 
 	protected function renderMenuLinks(){
@@ -141,15 +172,28 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		return $links;
 	}
 
-	public function setUser( $user, $gravatarHash = NULL ){
-		$this->user			= $user;
-		$this->gravatar		= md5( strtolower( trim( $user->email ) ) );
-		if( $gravatarHash )
-			$this->gravatar		= $gravatarHash;
+	public function setLinks( $menu, $scope ){
+		$this->menu		= $menu;
+		$this->scope	= $scope;
 	}
 
-	public function useGravatar( $boolean = NULL ){
-		$this->useGravatar	= (boolean)$boolean;
+	public function setUser( $userObjectOrId ){
+		if( is_object( $userObjectOrId ) )
+			$this->user	= $userObjectOrId;
+		else if( is_int( $userObjectOrId ) ){
+			$model	= new Model_User( $this->env );
+			$this->user	= $model->get( $userObjectOrId );
+		}
+		else
+			throw new InvalidArgumentException( "Given data is neither an user object nor an user ID" );
+	}
+
+	public function setImageSize( $size ){
+		$this->imageSize	= $size;
+	}
+
+	public function useAvatar( $boolean = NULL ){
+		$this->useAvatar	= (boolean) $boolean;
 	}
 }
 ?>

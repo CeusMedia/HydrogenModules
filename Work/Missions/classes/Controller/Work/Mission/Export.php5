@@ -95,12 +95,14 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	}
 
 	public function ical(){
+		if( $this->request->getHeader( 'Cookie', FALSE ) ){											//  client is a browser
+			$this->restart( './work/mission/help/sync' );
+		}
 		if( !$this->userId ){
 			$auth	= new BasicAuthentication( $this->env, 'Export' );
 			$this->userId	= $auth->authenticate();
 		}
 		try{
-
 			$method		= $this->request->getMethod();
 			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
 			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
@@ -276,6 +278,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	}
 
 	public function index( $format = NULL, $debug = FALSE ){
+		$this->restart( './work/mission/help/sync' );
 /*
 		switch( $format ){
 			case 'ical':

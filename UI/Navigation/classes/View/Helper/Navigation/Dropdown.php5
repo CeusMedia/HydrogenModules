@@ -16,6 +16,13 @@ class View_Helper_Navigation_Dropdown{
 		$this->menu		= $menu;
 	}
 
+	/**
+	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 */
+	public function __toString(){
+		return $this->render();
+	}
+
 	public function render(){
 		$listClass	= 'nav';
 		if( strtolower( $this->style ) == "pills" )

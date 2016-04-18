@@ -45,7 +45,7 @@ foreach( $facts as $nr => $fact )
 $facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
 
 return '
-<div class="content-panel">
+<div class="content-panel content-panel-info">
 	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
@@ -56,7 +56,6 @@ return '
 					<dt>'.$w->labelStatus.'</dt>
 					<dd><span class="user-status status'.$user->status.'">'.$words['status'][$user->status].'</span></dd>
 				</dl>
-				<hr>
 				'.$facts.'
 			</div>
 		</div>

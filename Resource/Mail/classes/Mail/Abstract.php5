@@ -58,8 +58,12 @@ abstract class Mail_Abstract{
 	 *	@return		array		List of allowed members during serialization
 	 */
 	public function __sleep(){
-		return array( 'mail', 'transport', 'page', 'options' );
+		return array( 'mail', 'page'/*, 'transport', 'options'*/ );
 	}
+
+/*	public function __wakeup(){
+		return $this->initTransport();
+	}*/
 
 	public function addAttachment( $filePath, $mimeType ){
 		$attachment	= new \CeusMedia\Mail\Part\Attachment();
@@ -190,7 +194,7 @@ abstract class Mail_Abstract{
 	}
 
 	public function initTransport(){
-		$options	= $this->options->getAll( 'transport.', TRUE );
+		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
 				$hostname	= $options->get( 'hostname' );

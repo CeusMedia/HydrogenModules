@@ -20,7 +20,7 @@ foreach( $issues as $issue ){
 	$severity	= UI_HTML_Tag::create( 'span', $words['severities'][$issue->severity], array( 'class' => 'issue-severity severity-'.$issue->severity ) );
 	$priority	= UI_HTML_Tag::create( 'span', $words['priorities'][$issue->priority], array( 'class' => 'issue-priority priority-'.$issue->priority ) );
 	$status		= UI_HTML_Tag::create( 'span', $words['states'][$issue->status], array( 'class' => 'issue-status status-'.$issue->status ) );
-	$progress	= $issue->progress ? UI_HTML_Tag::create( 'span', $issue->progress.'%', array( 'class' => 'issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 ) ) ) : "-"; 
+	$progress	= $issue->progress ? UI_HTML_Tag::create( 'span', $issue->progress.'%', array( 'class' => 'issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 ) ) ) : "-";
 	$createdAt	= date( 'd.m.Y H:i:s', $issue->createdAt );
 	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
 	$rows[]	= '
@@ -32,8 +32,9 @@ foreach( $issues as $issue ){
 	<td><small>'.$createdAt.'</small><br/><small>'.$modifiedAt.'</small></td>
 </tr>';
 }
-$pagination	= new View_Helper_Pagination();
-$pagination	= $pagination->render( './work/issue', $number, 10, $page );
+
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/issue', $page, ceil( $number / 10 ) );
+$pagination	= $pagination->render();
 
 return '
 <div class="content-panel">

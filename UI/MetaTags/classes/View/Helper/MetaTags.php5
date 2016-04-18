@@ -29,7 +29,7 @@ class View_Helper_MetaTags{
 
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
 			$logic		= new Logic_Page( $this->env );
-			$path		= trim( $request->get( 'path' ) );
+			$path		= trim( $request->get( '__path' ) );
 			$object		= $logic->getPageFromPath( strlen( $path ) ? $path : 'index' );
 			if( $object ){
 				if( strlen( trim( $object->title ) ) )

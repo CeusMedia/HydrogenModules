@@ -4,7 +4,6 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$modules	= $this->env->getModules();
 		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
-		$this->addThemeStyle( 'layout.panels.css' );
 	}
 
 	protected function collectFacts( $project ){

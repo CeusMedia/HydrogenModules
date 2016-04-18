@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: equalize</title>
+	<description><![CDATA[Equalize height or width of floating HTML elements.]]></description>
+	<version>1.0.2</version>
+	<category>JavaScript</category>
+	<author site="http://timsvensen.com/">Tim Svensen</author>
+	<url>https://github.com/tsvensen</url>
+	<license>MIT</license>
+	<license>GPL 2</license>
+	<files>
+		<script load="auto">equalize.min.js</script>
+		<script>equalize.js</script>
+	</files>
+	<config protected="no" type="boolean" name="auto">1</config>
+	<config protected="no" type="string" name="auto.selector">.equalize-auto</config>
+	<config protected="no" type="string" name="auto.dimension" values="height,innerHeight,outerHeight,width,innerWidth,outerWidth">height</config>
+	<config protected="no" type="boolean" name="auto.reset">false</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		if( !$module->config['auto']->value )
+			return;
+		if( !( $selector = $module->config['auto.selector']->value ) )
+			return;
+		$params	= json_encode( array(
+			'equalize'	=> $module->config['auto.dimension']->value,
+			'reset'		=> $module->config['auto.reset']->value
+		) );
+		$context->js->addScriptOnReady( '$("'.$selector.'").equalize('.$params.');' );
+	]]></hook>
+</module>

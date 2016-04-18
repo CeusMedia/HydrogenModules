@@ -3,33 +3,51 @@
 	<title>Server: System Log</title>
 	<description><![CDATA[System component for logging and mailing exceptions.
 
-**Features:**	
+OUTDATED: Use modules Server:Log:Exception and Admin:Log:Exception instead!
+
+! END OF LIFE !
+---------------
+
+**Features:**
 list>
 - stores exceptions into log file
 - tries to serialize exception
 - otherwise stores trace
 - can send mails to one or more mail receivers
+- provides views to list and display logged exceptions
 <list
 
 **Invokation:**
 code>
 ...
 catch( Exception $e ){
-	$this->env->getCaption()->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+	$this->env->getCaptain()->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
 }
 ...
 <code
 
+If you are sure, that this module is installed, you can use:
+code>
+...
+catch( Exception $e ){
+	Controller_System_Log::handleException( $e );
+}
+...
+<code
+Of course, this method is not the best way, since you bind your code to this module.
+Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.4</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Adjust file logging and mail generation to standards.</log>
 	<log version="0.4">Migration of module Server:Syslog to Server:System:Log as common log component.</log>
+	<log version="0.5">Add index and view.</log>
+	<log version="0.5.1">Several UI tweaks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -37,13 +55,16 @@ catch( Exception $e ){
 		<class>View/System/Log.php5</class>
 		<class>Mail/System/Log.php5</class>
 		<class>Mail/System/Log/Exception.php5</class>
+		<template>system/log/index.php</template>
+		<template>system/log/view.php</template>
 	</files>
-	<config protected="yes" type="string" name="file.active" title="Main switch for log file">logs/exception.log</config>
+	<config protected="yes" type="boolean" name="file.active" title="Main switch for log file">1</config>
 	<config protected="yes" type="string" name="file.name" title="Path of log file">logs/exception.log</config>
 	<config protected="yes" type="boolean" name="email.active" title="Main switch for sending mails">1</config>
 	<config protected="yes" type="string" name="email.receivers" title="Mail receiver address[es] (comma separated)"></config>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<hook type="resource" resource="Server:System" event="logException">Controller_System_Log::___onLogException</hook>
+	<hook type="resource" resource="Env" event="logException">Controller_System_Log::___onLogException</hook>
+	<link path="system/log" access="acl" rank="96">Exception-Log</link>
 </module>

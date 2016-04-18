@@ -182,6 +182,8 @@ $w		= (object) $words['positions'];
 $rows	= array();
 foreach( $order->positions as $position ){
 	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
+	if( substr_count( $position->bridge->data->backendUriPath, "%s" ) )
+		$url	= './'.sprintf( $position->bridge->data->backendUriPath, (string)$position->articleId );
 	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
 	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );

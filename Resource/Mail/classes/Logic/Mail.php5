@@ -190,13 +190,15 @@ class Logic_Mail{
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
+	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		void
 	 */
 	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
 		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
 			$this->enqueueMail( $mail, $language, $receiver );
-		$this->sendMail( $mail, $receiver );
+		else
+			$this->sendMail( $mail, $receiver );
 	}
 
 	/**
@@ -221,6 +223,8 @@ class Logic_Mail{
 */
 		if( !is_object( $receiver ) )
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
+		$mail->setEnv( $this->env );																//  override serialized environment
+		$mail->initTransport();																		//  override serialized mail transfer
 		$mail->sendTo( $receiver );
 	}
 

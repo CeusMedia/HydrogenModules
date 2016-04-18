@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Testimonials</title>
+	<description/>
+	<category>Management</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add locales.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Testimonial.php5</class>
+		<class>Model/Testimonial.php5</class>
+		<class>View/Manage/Testimonial.php5</class>
+		<locale>de/manage/testimonial.ini</locale>
+		<locale>en/manage/testimonial.ini</locale>
+		<template>manage/testimonial/add.php</template>
+		<template>manage/testimonial/edit.php</template>
+		<template>manage/testimonial/index.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="manage/testimonial">Kundenmeinungen</link>
+	<link xml:lang="en" access="acl" path="manage/testimonial">Testimonials</link>
+</module>

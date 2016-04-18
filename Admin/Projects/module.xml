@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <module>
 	<title>Projects</title>
-	<description>Basic project support and administration</description>
+	<description><![CDATA[
+Basic project support and administration
+
+OUTDATED: Use module Manage:Projects instead.
+
+! END OF LIFE !
+---------------
+
+]]></description>
 	<category>Administration</category>
 	<version>0.3</version>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
@@ -58,4 +66,3 @@ DROP TABLE IF EXISTS `<%?prefix%>project_versions`;
 ]]>
 	</sql>
 </module>
-

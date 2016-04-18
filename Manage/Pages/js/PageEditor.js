@@ -9,6 +9,7 @@ var PageEditor = {
 	frontendUri: null,
 
 	init: function(format){
+//		console.log('init');
 		if($("#tabs-page-editor").size()){
 			$("#tabs-page-editor .optional-trigger").trigger("change");
 			$("#tabs-page-editor>ul>li>a").each(function(){
@@ -68,6 +69,7 @@ var PageEditor = {
 	},
 
 	initDefaultMetaCopy: function(){
+//		console.log('initDefaultMetaCopy');
 		$("#meta-defaults dt").each(function(nr, term){
 			if($(term).hasClass("meta-default")){
 				var link = $("<a></a>").attr("href", "#").html("&larr;&nbsp;kopieren");

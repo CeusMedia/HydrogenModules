@@ -206,7 +206,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'upload' ) ){
 			$file		= (object) $this->request->get( 'file' );
 			$this->upload->setUpload( $this->request->get( 'file' ) );
-			$maxSize	= min( $this->upload->getMaxUploadSize() );
+			$maxSize	= $this->upload->getMaxUploadSize();
 			if( !$this->upload->checkSize( $maxSize ) ){
 				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
 			}

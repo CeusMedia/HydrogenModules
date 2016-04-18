@@ -2,7 +2,7 @@
 //return '[uberlog::index]';
 
 $add	= '<a href="./work/uberlog/testRecord">test</a> | <button id="testRecordAjax">test AJAX</button>
-	
+
 <script>
 $(document).ready(function(){
 	UberlogClient.host = "'.getEnv( 'HTTP_HOST' ).'";
@@ -17,26 +17,26 @@ $(document).ready(function(){
 ';
 
 $panelFilter	= '
-<fieldset>
-	<legend>Filter</legend>
-	<ul class="input">
-		<li>
-			<label for="" class=""></label><br/>
-			<input type="text"/>
-		</li>
-	</ul>
-	<div class="buttonbar">
+<div class="content-panel">
+	<h4>Filter</h4>
+	<div class="content-panel-inner">
+		<ul class="input">
+			<li>
+				<label for="" class=""></label><br/>
+				<input type="text"/>
+			</li>
+		</ul>
+		<div class="buttonbar">
+		</div>
 	</div>
-</fieldset>
+</div>
 ';
-
-
 
 		$list	= array();
 		$lastId	= 0;
-		
+
 		foreach( $records as $record ){
-			$lastId	= max( $lastId, $record->recordId );
+			$lastId	= max( $lastId, $record->logRecordId );
 			if( $record->userAgent ){
 				if(is_object( $record->userAgent ) )
 					$record->userAgent	= $record->userAgent->title;
@@ -56,50 +56,56 @@ $panelFilter	= '
 				if( is_object( $record->client ) )
 					$record->client	= $record->client->title;
 			}
-			
-			$list[]	= '<tr id="record-'.$record->recordId.'" class="type'.$record->type.'">
-				<td>'.$record->message.'</td>
+
+			$list[]	= '<tr id="record-'.$record->logRecordId.'" class="type'.$record->type.'">
+				<td>'.$record->logRecordId.'</td>
+				<td><div class="autocut"><small class="muted">'.$record->code.':</small> '.$record->message.'</div><small class="muted">'.$record->source.':'.$record->line.'</small></td>
+				<td>'.$record->client.'<br/><small class="muted">'.$record->host.'</small></td>
 				<td>
-					<acronym title="'.$record->recordId.'">#</acronym>
-					<acronym title="'.$record->type.'">TY</acronym>
-					<acronym title="'.date( 'Y-m-d', $record->timestamp ).'">DA</acronym>
-					<acronym title="'.date( 'H:i:s', $record->timestamp ).'">TI</acronym>
-					<acronym title="'.$record->source.':'.$record->line.'">SF</acronym>
-					<acronym title="'.$record->client.'">CL</acronym>
-					<acronym title="'.$record->host.'">HO</acronym>
-					<acronym title="'.$record->category.'">CA</acronym>
-					<acronym title="'.$record->code.'">CO</acronym>
-					'.$record->userAgent.'
+					'.$record->category.'<br/>
+					<small class="muted">'.$record->type.'</small>
 				</td>
-				<td><button type="button" onclick="WorkUberlogView.removeRecord('.$record->recordId.');">X</button></td>
+				<td>
+					'.date( 'j.n.Y', $record->timestamp ).'<br/>
+					'.date( 'H:i:s', $record->timestamp ).'
+				</td>
+				<td><button type="button" onclick="WorkUberlogView.removeRecord('.$record->logRecordId.');" class="btn btn-small">X</button></td>
 			</tr>';
 		}
-		$list	= '<table class="uberlog">
+		$list	= '
+<div class="content-panel">
+	<h4>Einträge</h4>
+	<div class="content-panel-inner">
+		<table class="table tabe-striped">
 			<thead>
 				<tr>
+					<th>Nr</th>
 					<th>Message</th>
-					<th>Information</th>
+					<th>Client / Host</th>
+					<th>Category / Type</th>
+					<th>Date / Time</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr><td colspan="8" style="background-color: #EEE"><em>'.date( 'Y-m-d H:i' ).'</em></td></tr>
 				'.join( $list ).'
 			</tbody>
 		</table>
 		<script>
 		var lastId = '.$lastId.'
-		</script>';
+		</script>
+			</div>
+		</div>
+	';
 return '
-<div class="column-left-20">
-	'.$panelFilter.'
+<div class="row-fluid">
+<!--	<div class="span3">
+		'.$panelFilter.'
+	</div>
+	<div class="span9">-->
+	<div class="span12">
+		'.$list.'
+	</div>
 </div>
-<div class="column-right-80">
-<!--	<fieldset>
-		<legend>Liste</legend>
--->		'.$list.'
-<!--	</fieldset>-->
-</div>
-<div class="column-clear"></div>
 '.$add;
 ?>

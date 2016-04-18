@@ -83,7 +83,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 			case 'code':							//  grant type: authorization code
 				/*  --  VALIDATION OF CLIENT ID  --  */
 				if( !( $applicationId = $this->getApplicationIdFromClientId( $clientId ) ) )		//  no application found for client ID
-					$this->errorRedirect( 'invalid_client' );				
+					$this->errorRedirect( 'invalid_client' );
 				if( $this->request->getMethod() === "POST" ){
 					$modelUser	= new Model_User( $this->env );
 					if( !( $user = $modelUser->getByIndex( 'username', $this->request->get( 'username' ) ) ) )
@@ -103,7 +103,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 						$this->errorReport( 'Login failed.', $uri );*/
 					}
 					$scope	= trim( $this->request->get( 'scope' ) );
-					$code	= $this->generateAuthorizationCode( $applicationId, $redirectUri, $scope );
+					$code	= $this->generateAuthorizationCode( $applicationId, $user->userId, $redirectUri, $scope );
 					$url	= $redirectUri.'?'.http_build_query( array(
 						'code'	=> $code,
 						'state'	=> $state,
@@ -223,15 +223,17 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	Requested scopes will be stored and validated/filtered later.
 	 *	@access		public
 	 *	@param		integer		$applicationId		ID of registered application
+	 *	@param		integer		$userId				ID of authenticating user
 	 *	@param		string		$redirectUri		URI to redirect to afterwards ()
-	 *	@param		string		$scope				List of scopes asked to access to 
+	 *	@param		string		$scope				List of scopes asked to access to
 	 *	@return		sting		Authorization code to be delivered to redirect URI
 	 */
-	protected function generateAuthorizationCode( $applicationId, $redirectUri, $scope = NULL ){
+	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ){
 		$modelCode	= new Model_Oauth_Code( $this->env );
 		$code		= $modelCode->getNewCode( $applicationId, $scope );
 		$codeId		= $modelCode->add( array(
 			'oauthApplicationId'	=> $applicationId,
+			'userId'				=> $userId,
 			'redirectUri'			=> $redirectUri,
 			'code'					=> $code,
 			'scope'					=> $scope,
@@ -247,17 +249,19 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	Attention: Scopes MUST be validated/filtered by now.
 	 *	@access		protected
 	 *	@param		integer		$applicationId		ID of registered application
+	 *	@param		integer		$userId				ID of authenticated user
 	 *	@param		string		$scope				List of scopes to grant access to
 	 *	@param		string		$salt				Token hash salt (optional)
 	 *	@param		string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
 	 */
-	protected function generateAccessToken( $applicationId, $scope = NULL, $salt = NULL, $pepper = NULL ){
+	protected function generateAccessToken( $applicationId, $userId, $scope = NULL, $salt = NULL, $pepper = NULL ){
 		$modelToken	= new Model_Oauth_AccessToken( $this->env );
 		$token		= $modelToken->getNewToken( $applicationId, $scope, $salt, $pepper );
 		$tokenId	= $modelToken->add( array(
 			'oauthApplicationId'	=> $applicationId,
+			'userId'				=> $userId,
 			'token'					=> $token,
 			'scope'					=> $scope,
 			'createdAt'				=> time(),
@@ -356,7 +360,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		if( $authCode->redirectUri !== $redirectUri )
 			$this->errorResponse( 'invalid_request', 'Redirect URI is not matching redirect URI of authorization.' );
 
-		$token	= $this->generateAccessToken( $application->oauthApplicationId, $authCode->scope );	//  generate, store and get access token
+		$token	= $this->generateAccessToken( $application->oauthApplicationId, $authCode->userId, $authCode->scope );	//  generate, store and get access token
 		$data	= array(
 			'access_token'	=> $token,
 			'token_type'	=> 'bearer',
@@ -367,6 +371,9 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 			$data['refresh_token']	= $refreshToken;
 		}
 		$data['scope']		= $authCode->scope;														//  @todo implement scope filter
+		$data['user_id']	= $authCode->userId;
+		$data['user_id']	= $authCode->userId;
+
 		$modelCode->remove( $authCode->oauthCodeId );												//  remove authorization code after single use
 		$this->respondJsonData( $data );
 	}
@@ -393,9 +400,9 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		);
 		$this->respondJsonData( $data );
 	}
-	
+
 	/**
-	 *	@todo	protected against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
+	 *	@todo	protect against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
 	 */
 	protected function tokenPassword(){
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
@@ -403,7 +410,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 			$this->errorResponse( 'invalid_request', 'Missing username.' );							//  respond error
 		if( !strlen( trim( $password = $this->request->get( 'password' ) ) ) )						//  if password is not in request
 			$this->errorResponse( 'invalid_request', 'Missing password.' );							//  respond error
-		
+
 		if( ( $client = $this->decodeBasicAuthentication() ) ){										//  try to find basic authentication
 			$clientId		= $client->clientId;													//  get client ID from basic authentication
 			$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
@@ -443,6 +450,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		if( $this->flagSendRefreshTokenOnPasswordGrant )
 			$data['refresh_token']	= $this->generateRefreshToken( $applicationId, $scope );
 		$data['scope']		= $scope;																//  @todo implement scope filter
+		$data['user_id']	= $user->userId;
 		$this->respondJsonData( $data );
 	}
 
@@ -460,7 +468,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 			$this->errorResponse( 'invalid_client', 'Missing basic authentication.', NULL, 401 );
 //			if( !strlen( trim( $clientId = $this->request->get( 'client_id' ) ) ) )					//  if client ID is not in request
 //				$this->errorResponse( 'invalid_client', 'Missing client ID.' );						//  respond error
-//			if( !strlen( trim( $clientSecret = $this->request->get( 'client_secret' ) ) ) )			//  
+//			if( !strlen( trim( $clientSecret = $this->request->get( 'client_secret' ) ) ) )			//
 //				$this->errorResponse( 'invalid_client', 'Missing client secret or basic authentication.' );
 //		}
 

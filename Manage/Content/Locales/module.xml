@@ -3,12 +3,14 @@
 	<title>Manage: Content: Locales</title>
 	<description><![CDATA[Editor for language files, HTML blocks and mail templates.]]></description>
 	<category>Management</category>
-	<version>0.5.7</version>
+	<version>0.5.9</version>
 	<log version="0.5.3">Use fontend resource module.</log>
 	<log version="0.5.4">Use language resolved by frontend module.</log>
 	<log version="0.5.5">Hide language selector if only one language in frontend.</log>
 	<log version="0.5.6">Remove unused configuration values.</log>
 	<log version="0.5.7">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.5.8">Apply panel style.</log>
+	<log version="0.5.9">Update button colors.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

@@ -14,21 +14,24 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 	}
 
 	protected function getMailParts( $mail ){
-		if( !class_exists( 'CMM_Mail_Parser' ) )
-			throw new RuntimeException( 'No mail parser available.' );
 		if( !$mail->object ){
 			print 'No mail object available.';
 			exit;
 		}
-		if( substr( $mail->object, 0, 2 ) == "BZ" )
-			$mail->object	= bzdecompress( $mail->object );
-		else if( substr( $mail->object, 0, 2 ) == "GZ" )
-			$mail->object	= gzinflate( $mail->object );
-		$mail->object	= @unserialize( $mail->object );
-		if( !is_object( $mail->object ) ){
-			print 'Mail object could not by parsed.';
-			exit;
-		}
+		if( substr( $mail->object, 0, 2 ) == "BZ" )													//  BZIP compression detected
+			$mail->object	= bzdecompress( $mail->object );										//  inflate compressed mail object
+		else if( substr( $mail->object, 0, 2 ) == "GZ" )											//  GZIP compression detected
+			$mail->object	= gzinflate( $mail->object );											//  inflate compressed mail object
+		$mail->object	= @unserialize( $mail->object );											//  get mail object from serial
+		if( !is_object( $mail->object ) )															//  wake up failed
+			throw new RuntimeException( 'Mail object could not by parsed.' );						//  exit with exception
+
+		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )								//  modern mail message with parsed body parts
+			return $mail->object->mail->getParts();
+
+		//  support for older implementation using cmClasses
+		if( !class_exists( 'CMM_Mail_Parser' ) )													//  @todo change to \CeusMedia\Mail\Parser
+			throw new RuntimeException( 'No mail parser available.' );
 		return CMM_Mail_Parser::parseBody( $mail->object->mail->getBody() );
 	}
 

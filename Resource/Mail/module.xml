@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.6</version>
+	<version>0.6.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -48,6 +48,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.5.6">Added view helper for collecting facts.</log>
 	<log version="0.5.7">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
+	<log version="0.6.1">Apply current environment and transport on waking queued mails.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -83,6 +84,59 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
 	</relations>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
+  `mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `senderId` int(10) unsigned NOT NULL DEFAULT '0',
+  `receiverId` int(10) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `senderAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `object` longblob NOT NULL,
+  `enqueuedAt` decimal(12,0) unsigned NOT NULL,
+  `attemptedAt` decimal(12,0) unsigned NOT NULL,
+  `sentAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailId`),
+  KEY `senderId` (`senderId`),
+  KEY `receiverId` (`receiverId`),
+  KEY `status` (`status`),
+  KEY `attempts` (`attempts`),
+  KEY `receiverAddress` (`receiverAddress`),
+  KEY `receiverName` (`receiverName`),
+  KEY `subject` (`subject`),
+  KEY `enqueuedAt` (`enqueuedAt`),
+  KEY `attemptedAt` (`attemptedAt`),
+  KEY `sentAt` (`sentAt`),
+  KEY `senderAddress` (`senderAddress`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_attachments`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
+  `mailAttachmentId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `countAttached` int(11) NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`mailAttachmentId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `filename` (`filename`),
+  KEY `mimeType` (`mimeType`),
+  KEY `createdAt` (`createdAt`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+]]></sql>
 	<sql on="update" version="0.4.0" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (

@@ -37,8 +37,10 @@ foreach( $actions as $controller => $class ){
 			'title'	=> $title,
 		) );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
-	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
+	if( $list ){
+		$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
+		$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
+	}
 }
 $tableRights	= '<table class="table table-condensed table-striped"><tr><th>Controller</th><th>Aktionen</th></tr>'.join( $rows ).'</table>';
 
@@ -70,7 +72,7 @@ $(document).ready(function(){
 $env->getPage()->js->addScript( $script );
 
 return '
-<div class="content-panel">
+<div class="content-panel content-panel-form">
 	<h3>'.$words['editRights']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<div id="role-edit-rights">

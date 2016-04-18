@@ -10,6 +10,14 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 	protected $helperAccountMenu;
 	protected $helperNavigation;
 	protected $linksToSkip			= array();
+	protected $hideOnMobileDevice	= FALSE;
+
+	/**
+	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 */
+	public function __toString(){
+		return $this->render();
+	}
 
 	public function render(){
 		$this->env->getPage()->addBodyClass( "navbar-".$this->position );
@@ -49,8 +57,13 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		if( $this->helperAccountMenu )
 			$accountMenu	= $this->helperAccountMenu->render( $inverse );
 		$content		= $this->renderLogo().$links.$accountMenu;
+		$classes		= array();
 		if( $this->inverse )
-			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => 'inverse' ) );
+			$classes[]	= 'inverse';
+		if( $this->hideOnMobileDevice )
+			$classes[]	= 'visible-desktop';
+		if( $classes )
+			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => $classes) );
 		return $content;
 	}
 
@@ -59,17 +72,17 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 			$icon	= "";
 			if( $this->logoIcon ){
 				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-				$icon	= '<i class="'.$icon.'"></i> ';
+				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
 			}
 			$label	= $icon.$this->logoTitle;
 			if( $this->logoLink )
 				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $this->logoLink ) );
-			return '<div id="logo">'.$label.'</div>';
+			return UI_HTML_Tag::create( 'div', $label, array( 'id' => "logo" ) );
 		}
 		return '';
 	}
 
-	public function setAccountMenuHelper( View_Helper_Navigation_Bootstrap_AccountMenu $helper ){
+	public function setAccountMenuHelper( $helper ){
 		$this->helperAccountMenu	= $helper;
 	}
 
@@ -83,6 +96,10 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 
 	public function setInverse( $boolean = NULL ){
 		$this->inverse	= (boolean) $boolean;
+	}
+
+	public function hideOnMobileDevice( $hide ){
+		$this->hideOnMobileDevice	= $hide;
 	}
 
 	public function setLinksToSkip( $links ){

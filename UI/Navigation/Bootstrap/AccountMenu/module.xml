@@ -3,10 +3,13 @@
 	<title>UI: Nav: Bootstrap: Account Menu</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support links from menu model.</log>
+	<log version="0.3.1">Use new user avatar helper instead of gravatar helper.</log>
+	<log version="0.3.2">Support account image size.</log>
+	<log version="0.3.3">Show user fullname in desktop mode.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,7 +17,7 @@
 		<class>View/Helper/Navigation/Bootstrap/AccountMenu.php5</class>
 		<style load="auto">module.ui.helper.bootstrap.menu.account.css</style>
 	</files>
-	<config name="use.gravatar" type="boolean">yes</config>
+	<config name="use.avatar" type="boolean">yes</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Bootstrap</needs>

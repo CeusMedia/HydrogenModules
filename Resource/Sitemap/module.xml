@@ -3,13 +3,14 @@
 	<title>Resource: Sitemap</title>
 	<description><![CDATA[Support for sitemap generation.]]></description>
 	<category>Resource</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support for compression.</log>
 	<log version="0.3.1">Corrected MIME type on plain RSS delivery.</log>
 	<log version="0.3.2">Support to submit to providers.</log>
 	<log version="0.3.3">Refactoring for delivering MIME type next to content.</log>
+	<log version="0.3.4">Improve sitemap information handling.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

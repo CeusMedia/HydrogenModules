@@ -50,10 +50,29 @@ $optStatus  = join( $optStatus );
 
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
-$buttonRole	= '';
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+}
+
+$buttonCancel		= UI_HTML_Elements::LinkButton( $from ? $from : './manage/user', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' );
+$buttonSave			= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
+$buttonRemove		= UI_HTML_Elements::LinkButton(
+	'./manage/user/remove/'.$userId,
+	$iconRemove.'&nbsp;'.$w->buttonRemove,
+	'btn btn-small btn-danger',
+	$w->buttonRemoveConfirm
+);
+$buttonRole	= '';
 if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
-	$buttonRole	= UI_HTML_Tag::create( 'a', '<i class="icon-search"></i> '.$w->buttonRole, array(
+	$buttonRole	= UI_HTML_Tag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, array(
 		'class'	=> 'btn btn-small',
 		'href'	=> './manage/role/edit/'.$user->roleId
 	) );
@@ -64,6 +83,8 @@ $panelEdit	= '
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+			<input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" style="display:none;" />
+			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
@@ -126,11 +147,15 @@ $panelEdit	= '
 				</div>
 			</div>
 			<div class="row-fluid">
+				<div class="span3">
+					<label for="input_country" class="">'.$w->labelCountry.'</label>
+					<input type="text" name="country" id="input_country" class="span12 typeahead" data-provide="typeahead" autocomplete="off" value="'.$user->country.'"/>
+				</div>
 				<div class="span2">
 					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
 					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
 				</div>
-				<div class="span4">
+				<div class="span3">
 					<label for="input_city" class="">'.$w->labelCity.'</label>
 					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
 				</div>
@@ -138,30 +163,27 @@ $panelEdit	= '
 					<label for="input_street" class="">'.$w->labelStreet.'</label>
 					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
 				</div>
-				<div class="span2">
-					<label for="input_number" class="">'.$w->labelNumber.'</label>
-					<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
-				</div>
 			</div>
-
-			<div class="row-fluid">
-				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
-					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.UI_HTML_Elements::LinkButton(
-						'./manage/user/remove/'.$userId,
-						'<i class="icon-remove icon-white"></i> '.$w->buttonRemove,
-						'btn btn-small btn-danger',
-						$w->buttonRemoveConfirm
-					).'
-					&nbsp;&nbsp;|&nbsp;&nbsp;
+			<div class="buttonbar">
+				<div class="btn-toolbar">
+					'.$buttonCancel.'
+					'.$buttonSave.'
+					'.$buttonRemove.'
 					'.$buttonRole.'
 				</div>
 			</div>
 		</form>
 	</div>
-</div>';
+</div>
+<script>
+$(document).ready(function(){
+	$(".typeahead").typeahead({
+		source: '.json_encode( array_values( $countries ) ).',
+		items: 4
+	});
+});
+</script>
+';
 
 $panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
@@ -181,7 +203,6 @@ return $textIndexTop.'
 <div class="row-fluid">
 	<div class="span4">
 		'.$panelStatus.'
-		<hr/>
 	</div>
 	<div class="span5">
 		'.$panelRights.'

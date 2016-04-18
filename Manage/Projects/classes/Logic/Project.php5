@@ -25,6 +25,13 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 			unset( $users[$userId] );
 			return $users;
 		}
+
+		$modelUser	= new Model_User( $this->env );
+		if( $this->env->getModules()->has( 'Members' ) ){
+			$userIds	= Logic_Member::getInstance( $this->env )->getRelatedUserIds( $userId, 2 );
+			return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+		}
+
 		$modelProjectUser	= new Model_Project_User( $this->env );
 		$users		= array();
 		$projectIds	= array();
@@ -37,7 +44,6 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 			foreach( $modelProjectUser->getAll( array( 'projectId' => $projectId ) ) as $relation )
 				$userIds[]  = $relation->userId;
 		$userIds	= array_unique( $userIds );
-		$modelUser	= new Model_User( $this->env );
 		unset( $userIds[array_search( $userId, $userIds )] );
 		if( !$userIds )
 			return array();

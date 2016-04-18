@@ -2,6 +2,7 @@
 class View_Work_Mission_Export extends CMF_Hydrogen_View{
 
 	public function ical(){
+		$request	= $this->env->getRequest();
 		$root		= new XML_DOM_Node( 'event');
 		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
 		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
@@ -56,9 +57,9 @@ class View_Work_Mission_Export extends CMF_Hydrogen_View{
 		error_log( date( 'Y-m-d H:i:s' ).' | '.getEnv( 'REMOTE_ADDR' ).': '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
 		return $ical;
 	}
-
+/*
 	public function index(){
 		return $this->loadContentFile( 'html/work/mission/export.html' );
-	}
+	}*/
 }
 ?>

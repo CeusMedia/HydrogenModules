@@ -11,10 +11,12 @@ $isRelated		= $relation && $relation->status == 2;
 
 $w	= (object) $words['view'];
 
-$helperGravatar	= new View_Helper_Gravatar( $env );
+$helperAvatar	= new View_Helper_UserAvatar( $env );
+$helperAvatar->setUser( $user );
+$helperAvatar->setSize( 256 );
 
 $image	= UI_HTML_Tag::create( 'img', NULL, array(
-	'src'	=> $helperGravatar->getUrl( $user->email, 256 ),
+	'src'	=> $helperAvatar->getImageUrl(),
 //	'class'	=> 'img-polaroid',
 ) );
 
@@ -29,7 +31,7 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel,
 ) );
 
 $buttonRequest	= '';
-$buttonRelease	= '';
+$buttonRevoke	= '';
 $buttonAccept	= '';
 $buttonReject	= '';
 
@@ -46,7 +48,7 @@ if( $user->userId !== $currentUserId ){
 			) );
 		}
 		if( $relation->status == 2 ){
-			$buttonRelease	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRelease, array(
+			$buttonRevoke	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
 				'href'		=> './member/release/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn-small btn-inverse',
 				'onclick'	=> "if(!confirm('Wirklich?')) return false;",
@@ -112,7 +114,7 @@ $panelInfo	= '
 			'.$buttonRequest.'
 			'.$buttonAccept.'
 			'.$buttonReject.'
-			'.$buttonRelease.'
+			'.$buttonRevoke.'
 		</div>
 	</div>
 </div>';

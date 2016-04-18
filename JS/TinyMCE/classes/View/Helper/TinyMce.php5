@@ -45,7 +45,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
 
 		$languages	= self::getLanguage( $env );
-		if( $language !== "en" )
+		if( !$config->get( 'CDN' ) && $language !== "en" )
 			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
 
 		self::$loaded	= TRUE;
@@ -100,15 +100,24 @@ tinymce.Config.envUri = "'.$env->url.'";
 tinymce.Config.frontendUri = "'.$baseUrl.'";
 tinymce.Config.language = "'.$language.'";
 tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
-tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
-	if($(settings.JS_TinyMCE.auto_selector).size()){
-		if(settings.JS_TinyMCE.auto_selector){
-			var options = {};
-			if(settings.JS_TinyMCE.auto_tools)
-				options.tools = settings.JS_TinyMCE.auto_tools;
-			tinymce.init(tinymce.Config.apply(options));
-		}
-	}';
+tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';';
+			$context->js->addScript( $script );
+			$script	= '
+if($(settings.JS_TinyMCE.auto_selector).size()){
+	$(settings.JS_TinyMCE.auto_selector).each(function(nr){
+		var options = {};
+		if(settings.JS_TinyMCE.auto_tools)
+			options.tools = settings.JS_TinyMCE.auto_tools;
+		var mode = settings.JS_TinyMCE.auto_mode;
+		if($(this).data("tinymce-mode"))
+			mode = $(this).data("tinymce-mode");
+		options = tinymce.Config.apply(options, mode);
+		if(!$(this).attr("id"))
+			$(this).attr("id", "TinyMCE-"+nr);
+		options.selector = "#"+$(this).attr("id");
+		tinymce.init(options);
+	});
+}';
 			$context->js->addScriptOnReady( $script );
 		}
 	}

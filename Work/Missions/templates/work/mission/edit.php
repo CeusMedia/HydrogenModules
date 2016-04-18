@@ -4,37 +4,7 @@ $panelInfo		= $view->loadTemplateFile( 'work/mission/edit.info.php' );
 $panelClose		= $view->loadTemplateFile( 'work/mission/edit.close.php' );
 $panelIssue		= $view->loadTemplateFile( 'work/mission/edit.issue.php' );
 $panelContent	= $view->loadTemplateFile( 'work/mission/edit.content.php' );
-$panelTime		= '';
-
-if( $useTimer ){
-	$helperAdd		= new View_Helper_Work_Time_Modal_Add( $env );
-	$helperAdd->setMissionId( $mission->missionId );
-	$helperAdd->setProjectId( $mission->projectId );
-
-	$helperShortList	= new View_Helper_Work_Time_ShortList( $env );
-	$helperShortList->setStatus( array( 0, 1, 2, 3 ) );
-	$helperShortList->setMissionId( $mission->missionId );
-	$helperShortList->setProjectId( $mission->projectId );
-
-	$helperTimer	= new View_Helper_Work_Time_Timer( $env );
-	$helperTimer->setMissionId( $mission->missionId );
-
-	$buttonNew	= UI_HTML_Tag::create( 'button', UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) ).'&nbsp;Erfassung starten', array(
-		'type'		=> 'button',
-		'onclick'	=> '$("#myModalWorkTimeAdd").modal("toggle");',
-		'class'		=> 'btn btn-small btn-success',
-	) );
-
-	$panelTime	= '
-<div class="content-panel">
-	<h3>Zeiterfassung</h4>
-	<div class="content-panel-inner">
-		'.$helperShortList->render().'
-		'.$helperTimer->render().'
-		'.$buttonNew.'
-	</div>
-</div>'.$helperAdd->render();
-}
+$panelTime		= $view->loadTemplateFile( 'work/mission/edit.time.php' );
 
 $w	= (object) $words['edit'];
 

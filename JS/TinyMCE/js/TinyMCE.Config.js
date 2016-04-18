@@ -14,10 +14,10 @@ if(typeof tinymce !== "undefined"){
 
 		apply: function(custom, mode, verbose){
 			if(typeof custom === "undefined")
-				return tinymce_options;
+				return this.options;
 			if(typeof mode === "undefined" || !mode)
 				mode = settings.JS_TinyMCE.auto_mode;
-			var options = this.options;
+			var options = $.extend({}, this.options);
 
 			options.selector = settings.JS_TinyMCE.auto_selector;
 			options.plugins = settings.JS_TinyMCE.auto_plugins;
@@ -29,7 +29,7 @@ if(typeof tinymce !== "undefined"){
 			options.content_css += "," + this.envUri + "themes/custom/css/tinymce.content.css";
 //			options.spellchecker_languages = this.languages;
 //			options.spellchecker_rpc_url = this.frontendUri + 'spellchecker/spellchecker.php';
-			
+
 			if(!$.inArray(mode, ["default", "extended", "minimal"]))
 				mode = "default";
 			var toolbars = settings.JS_TinyMCE['auto_toolbar_'+mode].split(/#/);
@@ -96,7 +96,7 @@ if(typeof tinymce !== "undefined"){
 				}]
 			},{
 				title: 'In Fenster öffnen',
-				selector: 'a', 
+				selector: 'a',
 				classes: ["fancybox-auto"]
 			}]
 		}

@@ -827,30 +827,4 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 	}
 }
-/*
-class Logic_Upload{
-	static function getMaxUploadSize( $env, $configKey = NULL, $exceptedUnit = NULL ){
-		$limits		= array(
-			Alg_UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" ),
-			Alg_UnitParser::parse( ini_get( 'post_max_size' ), "M" ),
-			Alg_UnitParser::parse( ini_get( 'memory_limit' ), "M" ),
-		);
-		if( $configKey ){
-			$configValue	= trim( $env->getConfig()->get( $configKey ) );
-			if( strlen( $configValue ) )
-				$limits[]	= Alg_UnitParser::parse( $configValue, $exceptedUnit );
-		}
-		return min( $limits );
-	}
-
-	static function getTypes( $env, $configKey ){
-		$configValue	= trim( $env->getConfig()->get( $configKey ) );
-		if( !strlen( $configValue ) )
-			throw new DomainException( 'No value for config key "'.$configKey.'" set' );
-		$list	= array();
-		foreach( explode( ",", $configValue ) as $extension )
-			$list[]	= trim( $extension );
-		return $list;
-	}
-}*/
 ?>

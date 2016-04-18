@@ -15,17 +15,30 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 	}
 
 	public function accept( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->messenger->noteError( $words->errorRelationIdInvalid );
 			$from	= $this->getReferrer();
 			$this->restart( $from, $from ? FALSE : TRUE );
 		}
-	//  @todo send mail
-		$this->modelRelation->edit( $relation->userRelationId, array(
-			'status'	=> 2,
-		) );
-		$this->messenger->noteSuccess( 'Relation request has been accepted. The other user has been informed.' );
+		try{
+			$logicMail	= new Logic_Mail( $this->env );
+			$language	= $this->env->getLanguage()->getLanguage();
+			$mail		= new Mail_Member_Accept( $this->env, array(
+				'sender'	=> $this->modelUser->get( $this->userId ),
+				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
+			) );
+			$logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+			$this->modelRelation->edit( $relation->userRelationId, array(
+				'status'	=> 2,
+			) );
+			$this->messenger->noteSuccess( $words->successAccepted );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $words->failureMail );
+			$this->callHook( 'Server:System', 'logException', $this, $e );
+		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
 			$url	= 'view/'.$relation->toUserId;
@@ -92,6 +105,111 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterRelation', $this->session->get( 'filter_member_relation' ) );
 	}
 
+	public function reject( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$relation	= $this->modelRelation->get( $userRelationId );
+		if( !$relation ){
+			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->restart( NULL, TRUE );
+		}
+		try{
+			$logicMail	= new Logic_Mail( $this->env );
+			$language	= $this->env->getLanguage()->getLanguage();
+			$mail		= new Mail_Member_Reject( $this->env, array(
+				'sender'	=> $this->modelUser->get( $this->userId ),
+				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
+			) );
+			$logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+
+			$this->modelRelation->edit( $relation->userRelationId, array(
+				'status'	=> -1,
+			) );
+			$this->messenger->noteSuccess( $words->successRejected );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $words->failureMail );
+			$this->callHook( 'Server:System', 'logException', $this, $e );
+		}
+		$url	= 'view/'.$relation->fromUserId;
+		if( $relation->fromUserId == $this->userId )
+			$url	= 'view/'.$relation->toUserId;
+		$this->restart( $url, TRUE );
+	}
+
+	public function release( $userRelationId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$relation	= $this->modelRelation->get( $userRelationId );
+		if( !$relation ){
+			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->restart( NULL, TRUE );
+		}
+		try{
+			$toUserId	= $relation->toUserId;
+			if( $relation->toUserId == $this->userId )
+				$toUserId	= $relation->fromUserId;
+
+			$logicMail	= new Logic_Mail( $this->env );
+			$language	= $this->env->getLanguage()->getLanguage();
+			$mail		= new Mail_Member_Release( $this->env, array(
+				'sender'	=> $this->modelUser->get( $this->userId ),
+				'receiver'	=> $this->modelUser->get( $toUserId ),
+			) );
+			$logicMail->handleMail( $mail, (int) $toUserId, $language );
+			$this->modelRelation->remove( $relation->userRelationId );
+			$this->messenger->noteSuccess( $words->successReleased );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $words->failureMail );
+			$this->callHook( 'Server:System', 'logException', $this, $e );
+		}
+		$url	= 'view/'.$relation->fromUserId;
+		if( $relation->fromUserId == $this->userId )
+			$url	= 'view/'.$relation->toUserId;
+		$this->restart( $url, TRUE );
+	}
+
+	public function request( $userId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$relation	= $this->modelRelation->getByIndices( array(
+			'fromUserId'	=> $this->userId,
+			'toUserId'		=> $userId,
+		) );
+		if( $relation ){
+			if( $relation->status == 2 ){
+				$this->messenger->noteError( $words->errorAlreadyAccepted );
+				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
+			}
+			if( $relation->status == 1 ){
+				$this->messenger->noteError( $words->errorAlreadyRequested );
+				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
+			}
+		}
+		try{
+			$logicMail	= new Logic_Mail( $this->env );
+			$language	= $this->env->getLanguage()->getLanguage();
+			$mail		= new Mail_Member_Request( $this->env, array(
+				'sender'	=> $this->modelUser->get( $this->userId ),
+				'receiver'	=> $this->modelUser->get( $userId ),
+			) );
+			$logicMail->handleMail( $mail, (int) $userId, $language );
+			$data	= array(
+				'fromUserId'	=> $this->userId,
+				'toUserId'		=> $userId,
+	//			'type'			=> 1,
+				'status'		=> 1,
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
+			);
+			$this->modelRelation->add( $data );
+			$this->messenger->noteSuccess( $words->successRequested );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $words->failureMail );
+			$this->callHook( 'Server:System', 'logException', $this, $e );
+		}
+		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
+	}
+
 	public function search(){
 		$query		= trim( $this->request->get( 'username' ) );
 		$users		= array();
@@ -100,18 +218,25 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$key		= array_search( $this->userId, $userIds );
 			if( $key !== FALSE )
 				unset( $userIds[$key] );
-			$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
-			foreach( $users as $user )
-				$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
+			$knownUsers	= $this->logicMember->getRelatedUserIds( $this->userId, 2 );
+			foreach( $knownUsers as $userId )
+				if( ( $key = array_search( $userId, $userIds ) ) !== FALSE )
+					unset( $userIds[$key] );
+			if( $userIds ){
+				$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
+				foreach( $users as $user )
+					$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
+			}
 		}
 		$this->addData( 'username', $query );
 		$this->addData( 'users', $users );
 	}
 
 	public function view( $userId ){
+		$words		= (object) $this->getWords( 'msg' );
 		$user = $this->modelUser->get( $userId );
 		if( !$user ){
-			$this->messenger->noteError( 'Invalid user ID' );
+			$this->messenger->noteError( $words->errorUserIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$relation	= $this->logicMember->getUserRelation( $this->userId, $userId );
@@ -121,66 +246,5 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'role', $role );
 		$this->addData( 'from', $this->getReferrer() );
 		$this->addData( 'relation', $relation );
-	}
-
-	public function reject( $userRelationId ){
-		$relation	= $this->modelRelation->get( $userRelationId );
-		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
-			$this->restart( NULL, TRUE );
-		}
-	//  @todo send mail
-		$this->modelRelation->edit( $relation->userRelationId, array(
-			'status'	=> -1,
-		) );
-		$this->messenger->noteSuccess( 'Relation request has been rejected. The other user has been informed.' );
-		$url	= 'view/'.$relation->fromUserId;
-		if( $relation->fromUserId == $this->userId )
-			$url	= 'view/'.$relation->toUserId;
-		$this->restart( $url, TRUE );
-	}
-
-	public function release( $userRelationId ){
-		$relation	= $this->modelRelation->get( $userRelationId );
-		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
-			$this->restart( NULL, TRUE );
-		}
-	//  @todo send mail
-		$this->modelRelation->remove( $relation->userRelationId );
-		$this->messenger->noteSuccess( 'Relation has been revoked. The other user has been informed.' );
-		$url	= 'view/'.$relation->fromUserId;
-		if( $relation->fromUserId == $this->userId )
-			$url	= 'view/'.$relation->toUserId;
-		$this->restart( $url, TRUE );
-	}
-
-	public function request( $userId ){
-		$relation	= $this->modelRelation->getByIndices( array(
-			'fromUserId'	=> $this->userId,
-			'toUserId'		=> $userId,
-		) );
-		if( $relation ){
-			if( $relation->status == 1 ){
-				$this->messenger->noteError( 'Relation already requested and confirmed.' );
-				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
-			}
-			if( $relation->status == 0 ){
-				$this->messenger->noteError( 'Relation already requested. Please wait for confirmation!' );
-				$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
-			}
-		}
-		$data	= array(
-			'fromUserId'	=> $this->userId,
-			'toUserId'		=> $userId,
-//			'type'			=> 1,
-			'status'		=> 1,
-			'createdAt'		=> time(),
-			'modifiedAt'	=> time(),
-		);
-	//  @todo send mail
-		$this->modelRelation->add( $data );
-		$this->messenger->noteSuccess( 'Relation request has been sent. Please wait for confirmation!' );
-		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 	}
 }

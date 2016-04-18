@@ -64,15 +64,20 @@ if( $total ){
 else
 	$list	= '<div class="muted"><em>'.$words['indexList']['noEntries'].'</em></div><br/>';
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
+	$iconAdd		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/user/add', $iconAdd.'&nbsp;'.$words['indexList']['buttonAdd'], 'btn btn-small btn-success' );
+
 return '
 <div class="content-panel">
 	<h3>'.$words['indexList']['heading'].' <small class="muted">('.$total.'/'.$all.')</small></h3>
 	<div class="content-panel-inner">
 		'.$list.'
-		<div class="row-fluid buttonbar">
+		<div class="buttonbar">
 			<div class="btn-toolbar">
 				'.$pagination.'
-				'.UI_HTML_Elements::LinkButton( './manage/user/add', '<i class="icon-plus icon-white"></i> '.$words['indexList']['buttonAdd'], 'btn btn-small btn-success' ).'
+				'.$buttonAdd.'
 			</div>
 		</div>
 	</div>

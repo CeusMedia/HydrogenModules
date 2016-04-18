@@ -8,7 +8,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 
 	protected function __onInit(){
 		parent::__onInit();
-		$this->logicShop	= new Logic_Shop( $this->env );
+		$this->logicShop	= new Logic_ShopManager( $this->env );
 		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 
 		$sessionPrefix		= 'module.manage_shop_order.filter.';

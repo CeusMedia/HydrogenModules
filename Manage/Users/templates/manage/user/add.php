@@ -35,11 +35,22 @@ $optStatus	= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ),
 $optRole	= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+}
+
+$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' );
+$buttonSave		= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/add" method="post">
+			<input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" style="display:none;" />
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
@@ -81,11 +92,15 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span1">
+				<div class="span3">
+					<label for="input_country" class="">'.$w->labelCountry.'</label>
+					<input type="text" name="country" id="input_country" class="span12 typeahead" data-provide="typeahead" autocomplete="off" value="'.$user->country.'"/>
+				</div>
+				<div class="span2">
 					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
 					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
 				</div>
-				<div class="span5">
+				<div class="span3">
 					<label for="input_city" class="">'.$w->labelCity.'</label>
 					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
 				</div>
@@ -93,20 +108,26 @@ $panelAdd	= '
 					<label for="input_street" class="">'.$w->labelStreet.'</label>
 					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
 				</div>
-				<div class="span2">
-					<label for="input_number" class="">'.$w->labelNumber.'</label>
-					<input type="text" name="number" id="input_number" class="span12" value="'.$user->number.'"/>
-				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12 buttonbar">
-					'.UI_HTML_Elements::LinkButton( './manage/user', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn btn-small' ).'
-					'.UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' ).'
+					'.$buttonCancel.'
+					'.$buttonSave.'
 				</div>
 			</div>
 		</form>
 	</div>
 </div>
+<script>
+$(document).ready(function(){
+	$(".typeahead").each(function(){
+		$(this).typeahead({
+			source: '.json_encode( array_values( $countries ) ).',
+			items: 4
+		});
+	});
+});
+</script>
 ';
 
 $panelInfo	= '';

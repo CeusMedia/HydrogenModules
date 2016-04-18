@@ -1,0 +1,10 @@
+
+Hallo  <%?receiver.firstname%> <%?receiver.surname%>!
+
+Der Benutzer <%sender.username%> (<%?sender.firstname%> <%?sender.surname%>) fragt nach einer Verbindung zu dir.
+Mit dieser Verbindung könntet ihr dann zusammen an Aufgaben arbeiten.
+
+Bitte überlege, ob du diese Verbindung eingehen möchtest und bestätige oder lehne die Anfrage ab.
+
+Hier findest du das Profil des anfragenden Benutzers und die Anfrage:
+<%appBaseUrl%>member/view/<%sender.userId%>

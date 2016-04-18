@@ -1,0 +1,18 @@
+
+Neuer Kommentar
+===============
+
+Zum Blog-Eintrag "<%post.title%>", gibt es einen neuen Kommentar.
+Du bekommst diese Nachricht, weil du diesen Eintrag auch kommentiert hast.
+
+-------------------------------------------------
+
+Dein Kommentar vom <%myComment.date%> um <%myComment.time%>:
+
+<%myComment.content%>
+
+-------------------------------------------------
+
+<%comment.username%> sagte dazu am <%comment.date%> um <%comment.time%>:
+
+<%comment.content%>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
 	<title>Admin: Mail</title>
-	<description></description>
+	<description/>
 	<category>Administration</category>
-	<version>0.5</version>
+	<version>0.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -25,6 +25,9 @@
 	<log version="0.4.7">Add panel to list available attachment files.</log>
 	<log version="0.4.8">Finish filter.</log>
 	<log version="0.5">Add tabs and separate views.</log>
+	<log version="0.5.1">Use module Resource:Upload.</log>
+	<log version="0.5.2">Use helper for Bootstap tabs.</log>
+	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -59,12 +62,15 @@
 	</files>
 	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
 	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
-	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anhänge</link>
+	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anh&#xE4;nge</link>
 	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
+	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">View_Admin_Mail_Attachment::___onRegisterTab</hook>
 </module>

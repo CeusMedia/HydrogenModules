@@ -19,7 +19,7 @@ extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.right' ), 'h
 
 
 $panelAdd	= '
-<div class="content-panel">
+<div class="content-panel content-panel-form">
 	<h3>'.$words['add']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form name="addRole" action="./manage/role/add" method="post">
@@ -43,8 +43,8 @@ $panelAdd	= '
 					'.UI_HTML_Tag::create( 'textarea', $role->get( 'description' ), array( 'class' => 'span12', 'name' => 'description', 'rows' => 4 ) ).'
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12 buttonbar">
+			<div class="buttonbar">
+				<div class="btn-toolbar">
 					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'], 'btn btn-small' ).'
 					'.UI_HTML_Elements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['add']['buttonSave'], 'btn btn-primary' ).'
 				</div>

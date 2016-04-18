@@ -23,17 +23,18 @@ if( $projects ){
 		foreach( $project->users as $projectUser )
 			$users[]	= $projectUser->username;
 	//	$desc		= trim( $project->description );
-		$graph		= $indicator->build( $project->status + 2, 5, 65 );
+		$graph		= $indicator->build( $project->status + 2, 5, "100%" );
 		$status		= htmlentities( $words['states'][$project->status], ENT_QUOTES, 'utf-8' );
 		$priority	= htmlentities( $words['priorities'][$project->priority], ENT_QUOTES, 'utf-8' );
+		$priority	= UI_HTML_Tag::create( 'abbr', $project->priority, array( 'title' => $priority ) );
 
 		$dateChange	= max( $project->createdAt, $project->modifiedAt );
 
-		$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-status', 'title' => $status ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $graph.'<br/>', array( 'class' => 'cell-status', 'title' => $status ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', join( ', ', $users ), array( 'class' => 'cell-users' ) );
 	#	$cells[]	= UI_HTML_Tag::create( 'td', $status, array( 'class' => 'project status'.$project->status ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $project->priority, array( 'title' => $priority, 'class' => 'cell-priority priority-'.$project->priority ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'title' => $priority, 'class' => 'cell-priority priority-'.$project->priority ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $helperTime->convert( $dateChange, TRUE, 'vor' ), array( 'class' => 'cell-change' ) );
 		$rows[]		= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => count( $rows ) % 2 ? 'even' : 'odd' ) );
 	}
@@ -72,5 +73,12 @@ return '
 			'.$buttonAdd.'
 		</div>
 	</div>
-</div>';
+</div>
+<style>
+td.cell-priority,
+td.cell-change {
+	font-size: 0.9em;
+	}
+</style>
+';
 ?>

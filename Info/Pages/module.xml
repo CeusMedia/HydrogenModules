@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.5.8</version>
+	<version>0.6.1</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -13,6 +13,9 @@
 	<log version="0.5.6">Improved sitemap data collection by subpages and order.</log>
 	<log version="0.5.7">Merged SQL updates into SQL install script.</log>
 	<log version="0.5.8">Add pages navigation helper for projects without module UI:Navigation.</log>
+	<log version="0.5.9">Add new page status "deactivated" and avoid access.</log>
+	<log version="0.6">Support sitemap information in model.</log>
+	<log version="0.6.1">Support subpage resolution of module controlled pages.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -35,7 +38,37 @@
 	<hook type="resource" resource="App" event="onDispatch">Controller_Info_Page::___onAppDispatch</hook>
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Page::___onRenderContent</hook>
 	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Page::___onRegisterSitemapLinks</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>pages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
+  `pageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `type` tinyint(4) DEFAULT '0',
+  `scope` int(10) unsigned DEFAULT '0',
+  `rank` tinyint(1) NOT NULL,
+  `identifier` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `module` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
+  `description` text COLLATE utf8_unicode_ci,
+  `keywords` text COLLATE utf8_unicode_ci,
+  `changefreq` varchar(8) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'weekly',
+  `priority` float unsigned NOT NULL DEFAULT '0.5',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`pageId`),
+  KEY `scope` (`scope`),
+  KEY `key` (`identifier`),
+  KEY `parentId` (`parentId`),
+  KEY `type` (`type`),
+  KEY `module` (`module`),
+  KEY `status` (`status`),
+  KEY `format` (`format`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `pageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -62,5 +95,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   KEY `module` (`module`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.6"><![CDATA[
+ALTER TABLE `<%?prefix%>pages` ADD `changefreq` VARCHAR(8) NOT NULL DEFAULT 'weekly' AFTER `keywords`, ADD `priority` FLOAT UNSIGNED NOT NULL DEFAULT '0.5' AFTER `changefreq`;
 ]]></sql>
 </module>

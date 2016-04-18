@@ -15,20 +15,23 @@ if( $fileId && isset( $content ) ){
 		'type'	=> 'submit',
 		'name'	=> 'do',
 		'value'	=> 'save',
-		'class'	=> 'button save btn btn-success',
+		'class'	=> 'button save btn btn-primary',
 	);
 	$textarea	= UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributesTextarea );
 	$buttonSave	= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], $attributesButton );
 
 	$panelEdit	= '
+<div class="content-panel">
 	<h3>'.$words['edit']['heading'].'</h3>
-	<form id="form_content-editor" name="editContent" action="./manage/content/locale/edit/'.$language.'/'.$type.'/'.$fileId.'" method="post">
-		'.$textarea.'
-		<div class="buttonbar">
-			'.$buttonSave.'
-		</div>
-	</form>
-	';
+	<div class="content-panel-inner">
+		<form id="form_content-editor" name="editContent" action="./manage/content/locale/edit/'.$language.'/'.$type.'/'.$fileId.'" method="post">
+			'.$textarea.'
+			<div class="buttonbar">
+				'.$buttonSave.'
+			</div>
+		</form>
+	</div>
+</div>';
 }
 else if( $language ){
 //	$panelAddFolder	= '[AddFolder]';
@@ -52,23 +55,27 @@ else
 $optType	= UI_HTML_Elements::Options( $words['types'], $type );
 
 $panelFilter	= '
-<form name="form_content-selector" id="file-selector" action="./manage/content/locale" method="post">
+<div class="content-panel">
 	<h3>'.$words['index']['heading'].'</h3>
-	'.$filterLanguage.'
-	<div class="row-fluid">
-		<div class="span12">
-			<label for="input_type">'.$words['index']['labelType'].'</label>
-			<select name="type" id="input_type" class="span12" onchange="this.form.submit()">'.$optType.'</select>
-		</div>
+	<div class="content-panel-inner">
+		<form name="form_content-selector" id="file-selector" action="./manage/content/locale" method="post">
+			'.$filterLanguage.'
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_type">'.$words['index']['labelType'].'</label>
+					<select name="type" id="input_type" class="span12" onchange="this.form.submit()">'.$optType.'</select>
+				</div>
+			</div>
+			'.$fileTree.'
+		</form>
 	</div>
-	'.$fileTree.'
-</form>';
+</div>';
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/content' ) );
 
 return $textIndexTop.'
 <div class="row-fluid">
-	<div class="not-column-left-20 span3">
+	<div class="span3">
 		'.$panelFilter.'
 	</div>
 	<div class="not-column-left-80 span9">

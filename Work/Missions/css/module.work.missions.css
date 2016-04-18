@@ -1,0 +1,926 @@
+/*	@todo		kriss: fix UNKNOWN */
+
+/*  --  PERSPECTIVE BUTTONS  --  */
+button.icon.list span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
+	}
+button.icon.calendar span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/calendar_view_month.png);
+	}
+
+
+/*  --  LIST: PRIORITIES  --  */
+.mission.priority1,
+li.filter-priority.priority-1 {
+	background-color: rgba(255, 31, 0, 0.5);
+	}
+.mission.priority2,
+li.filter-priority.priority-2 {
+	background-color: rgba(255, 127, 0, 0.5);
+	}
+.mission.priority3,
+li.filter-priority.priority-3 {
+	background-color: rgba(255, 255, 63, 0.5);
+	}
+.mission.priority4,
+li.filter-priority.priority-4 {
+	background-color: rgba(127, 255, 0, 0.4);
+	}
+.mission.priority5,
+li.filter-priority.priority-5 {
+	background-color: rgba(31, 240, 0, 0.6);
+	}
+
+/*  --  LIST: STATES  --  */
+li.filter-status.status--3,
+.mission.status-3 {
+	background-color: rgba(191, 191, 191, 1);
+	}
+li.filter-status.status--2,
+.mission.status-2 {
+	background-color: rgba(255, 127, 127, 1);
+	}
+li.filter-status.status--1,
+.mission.status-1 {
+	background-color: rgba(255, 191, 191, 1);
+	}
+li.filter-status.status-0,
+.mission.status0 {
+	background-color: rgba(255, 255, 255, 1);
+	}
+li.filter-status.status-1,
+.mission.status1 {
+	background-color: rgba(255, 223, 192, 1);
+	}
+li.filter-status.status-2,
+.mission.status2 {
+	background-color: rgba(255, 255, 191, 1);
+	}
+li.filter-status.status-3,
+.mission.status3 {
+	background-color: rgba(191, 255, 191, 1);
+	}
+li.filter-status.status-4,
+.mission.status4 {
+	background-color: rgba(127, 255, 127, 1);
+	}
+
+
+
+tr.row-priority.priority-1 td.cell-priority {
+	background-color: rgba(255, 31, 0, 0.5);
+	}
+tr.row-priority.priority-2 td.cell-priority {
+	background-color: rgba(255, 127, 0, 0.5);
+	}
+tr.row-priority.priority-3 td.cell-priority {
+	background-color: rgba(255, 255, 63, 0.5);
+	}
+tr.row-priority.priority-4 td.cell-priority {
+	background-color: rgba(127, 255, 0, 0.4);
+	}
+tr.row-priority.priority-5 td.cell-priority {
+	background-color: rgba(31, 240, 0, 0.6);
+	}
+
+/*  -- DAY LIST - SMALL  --  */
+.row-priority.priority-1 .cell-priority {
+	background-color: rgba(255, 31, 0, 0.25);
+	}
+.row-priority.priority-2 .cell-priority {
+	background-color: rgba(255, 127, 0, 0.25);
+	}
+.row-priority.priority-3 .cell-priority {
+	background-color: rgba(255, 255, 63, 0.25);
+	}
+.row-priority.priority-4 .cell-priority {
+	background-color: rgba(127, 255, 0, 0.2);
+	}
+.row-priority.priority-5 .cell-priority {
+	background-color: rgba(31, 240, 0, 0.3);
+	}
+
+.mission-row-small td {
+	padding: 0;
+	margin: 0;
+	}
+
+
+
+/*  --  MISSION LISTS  --  */
+/*	@deprecated		not used anymore */
+/*	@todo			to be deleted */
+/*button.event span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+button.event-add span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/date_add.png);
+	}
+button.task span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script.png);
+	}
+button.task-add span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
+	}
+*/
+
+
+#input-import {
+	background-color: white;
+	font-style: italic;
+	font-weight: bold;
+	}
+#input-serial {
+	position: absolute;
+	left: -1000px;
+	}
+
+/*  --  FORM ELEMENTS @ ADD|EDIT  --  */
+#input_day,
+#input_dayWork,
+#input_dayDue,
+#input_dayStart,
+#input_dayEnd,
+input.datepicker {
+	background-image: url(http://img.int1a.net/famfamfam/silk/calendar.png);
+	background-repeat: no-repeat;
+	background-position: 5px 50%;
+	text-indent: 22px;
+	}
+#input_timeStart,
+#input_timeEnd {
+	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
+	background-repeat: no-repeat;
+	background-position: 5px 50%;
+	text-indent: 22px;
+	}
+
+
+/*  table.sort.css  */
+#day-lists table.work-mission-list tr th {
+	padding: 6px 2px 4px 2px;
+	}
+#day-lists table.work-mission-list tr th.sortable {
+	cursor: pointer;
+	text-decoration: underline;
+	}
+#day-lists table.work-mission-list tr th.sortable.ordered {
+	}
+#day-lists table.work-mission-list tr th.sortable.ordered.direction-asc {
+	}
+#day-lists table.work-mission-list tr th.sortable.ordered.direction-desc {
+	}
+
+/*  --  BUTTONS  --  */
+button.export.ical span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+button.export.archive span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
+	}
+legend.icon.export {
+	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
+	}
+legend.icon.mission-add {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
+	}
+legend.icon.mission-edit {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script_edit.png);
+	}
+legend.icon.mission-close {
+	background-image: url(http://img.int1a.net/famfamfam/silk/accept.png);
+	}
+
+
+/*  --  DAY TABLES  -- */
+body.controller-work-mission.action-index .work-mission-list {
+	overflow: hidden;
+	}
+
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group {
+	width: 100%;
+	}
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group a.btn {
+	width:16.67%; box-sizing: border-box
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn div.mission-number {
+	position: absolute;
+	top: 10px;
+	right: 11px;
+	display: block;
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+
+	/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day {
+	position: relative;
+	min-width: 80px;
+	width: 12%;
+	height: 50px;
+	padding: 0px;
+	margin: 0px 0.5% 0px 0px;
+	border-radius: 0.5em;
+	background: #f2f5f6; /* Old browsers */
+	background: -moz-linear-gradient(top, #f2f5f6 0%, #EDEDED 37%, #D7D7D7 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#EDEDED), color-stop(100%,#D7D7D7)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#D7D7D7',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #8F8F8F;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.active {
+	border-width: 2px;
+	border-style: solid;
+	border-color: green;
+	background: #EFE;
+	color: #000;
+/*	color: #23738F;
+*/	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.active div.mission-number {
+	background-color: green;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.important {
+	width: 16%;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.empty {
+	min-width: 80px !important;
+	background: #EFEFEF;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.important.empty {
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day .mission-number {
+	position: relative;
+	float: none !important;
+	display: inline !important;
+	margin: 0px 0.8em 0px 0px !important;
+	top: 0px;
+	right: 0px;
+	}
+body.controller-work-mission.action-index #day-controls .progress {
+	height: 6px;
+	margin: 4px 2px 2px 2px;
+	padding: 0px;
+	}
+body.controller-work-mission.action-index #day-controls li {
+	width: 16.666666667%;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls li .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+body.controller-work-mission.action-index #day-controls .navbar .nav li {
+	position: relative;
+	}
+
+body.controller-work-mission.action-index #day-controls .navbar .nav li a {
+	position: relative;
+	padding-left: 6px;
+	padding-right: 7px;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls .navbar .nav li a div.mission-number {
+	position: absolute;
+	top: 10px;
+	right: 11px;
+	display: block;
+	}
+
+
+body.controller-work-mission.action-index #day-lists {
+	margin-top: 1em;
+	}
+
+/*body.controller-work-mission.action-index #work_mission_tense_1 #day-lists .table-day {
+	display: none;
+	}*/
+body.controller-work-mission.action-index #day-list-large .table-day table,
+body.controller-work-mission.action-index #day-list-small .table-day-small table {
+	table-layout: fixed;
+	}
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-graph div.cell-graph,
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-time div.cell-time,
+body.controller-work-mission.action-index #day-lists .table-day table tr td.cell-title {
+	position: relative;
+	}
+body.controller-work-mission.action-index .autocut,
+body.controller-work-mission.action-index #day-list-large .table-day table tr td.autocut,
+body.controller-work-mission.action-index #day-list-small .table-day table tr td.autocut,
+body.controller-work-mission.action-index #day-list-large .table-day table tr td.cell-title,
+body.controller-work-mission.action-index #day-list-small .table-day table tr td.cell-title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 5px 2px 1px 6px;
+	}
+/*#work-mission-index */#day-lists .table-day table tr td span.badge {
+	float: right;
+	margin-top: -2px;
+/*	position: absolute;
+	right: 4px;
+	top: 4px;
+	float: none;
+	margin: 0px;
+*/	}
+
+
+table tr.mission-row {
+	min-height: 22px;
+	}
+table tr.mission-row:hover td {
+	background-color: #FFF0D0;
+	}
+table tr.mission-row td {
+	padding: 2px 2px;
+	vertical-align: top;
+	border-bottom: 1px solid rgba(127,127,127,0.25);
+	}
+table tr.mission-row td.cell-graph div.cell-graph {
+	padding: 6px 2px 2px 4px;
+	}
+table tr.mission-row td.cell-time div.cell-time {
+	padding: 3px 2px 2px 5px;
+	}
+table tr.mission-row td.cell-workerId,
+table tr.mission-row td.cell-project,
+table tr.mission-row td.cell-priority {
+	font-size: 0.9em;
+/*	text-shadow: 1px 1px 1px white;*/
+	padding: 4px 2px 2px 2px;
+	}
+table tr.mission-row td.cell-priority {
+	text-align: center;
+	}
+#day-lists table tr td.cell-workerId .user-avatar {
+	float: left;
+	display: block;
+	}
+#day-lists table tr td.cell-workerId .user-label {
+	float: left;
+	display: block;
+	margin-left: 5px;
+	margin-top: 1px;
+	padding-top: 1px;
+	}
+
+#day-lists table tr.mission-row td.cell-actions {
+	padding: 1px 2px;
+	text-align: right;
+	}
+#day-lists table tr.mission-row td.cell-title {
+	font-size: 1.1em;
+	}
+#day-lists table tr.mission-row td.cell-title a {
+	text-decoration: none;
+	text-shadow: 1px 1px 1px white;
+	}
+#day-lists table tr.mission-row td.cell-title a i {
+/*	margin-top: 2px;*/
+	}
+
+body.controller-work-mission div.overdue {
+	float: right;
+	display: block;
+	margin: 1px 4px 1px 6px;
+	padding: 0px 6px 0px 6px;
+	background-color: rgba(255,0,0,0.85);
+	border-radius: 12px;
+	color: rgba(255,255,255,0.85);
+	font-size: 0.9em;
+	font-weight: bold;
+	z-index: 1000;
+	text-shadow: 0 -1px rgba(0, 0, 0, 0.15), 1px 0 rgba(0, 0, 0, 0.15), 0 1px rgba(0, 0, 0, 0.15), -1px 0 rgba(0, 0, 0, 0.15);
+	-webkit-text-shadow: 0 -1px rgba(0, 0, 0, 0.15), 1px 0 rgba(0, 0, 0, 0.15), 0 1px rgba(0, 0, 0, 0.15), -1px 0 rgba(0, 0, 0, 0.15);
+	-moz-text-shadow: 0 -1px rgba(0, 0, 0, 0.15), 1px 0 rgba(0, 0, 0, 0.15), 0 1px rgba(0, 0, 0, 0.15), -1px 0 rgba(0, 0, 0, 0.15);
+	-o-text-shadow: 0 -1px rgba(0, 0, 0, 0.15), 1px 0 rgba(0, 0, 0, 0.15), 0 1px rgba(0, 0, 0, 0.15), -1px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+	-o-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+/*	margin: 2px 1em 1px 0em;
+	padding: 0px 7px 0px 6px;
+	box-shadow: 0px 1px 1px white, 0px -1px 1px black;*/
+	}
+body.controller-work-mission #ui-datepicker-div,
+body.controller-work-mission div.ui-timepicker-div {
+	font-size: 1em;
+	width: 14em;
+	}
+body.controller-work-mission #ui-datepicker-div th {
+	padding: 0.2em 0.2em 0.1em 0.2em;
+	}
+body.controller-work-mission #ui-datepicker-div td span,
+body.controller-work-mission #ui-datepicker-div td a {
+	padding: 0em 0.1em;
+	}
+
+table tr th .sortable.right {
+	text-align: right;
+	}
+
+.invisible {
+	display: none;
+	}
+
+/*  --  MISSION CALENDAR  --  */
+#mission-calendar table {
+	position: relative;
+	border: 1px solid #7F7F7F;
+	table-layout: fixed;
+/*	border-collapse: collapse;*/
+	}
+#mission-calendar tr th {
+	border: none;
+	text-align: left;
+	}
+#mission-calendar tr td {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	padding: 0px 0px !important;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	height: 90px;
+	}
+#mission-calendar tr th.week-number {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	text-align: center;
+	vertical-align: middle;
+	}
+#mission-calendar tr th.week-number span {
+	display: block;
+	width: 100%;
+/*	padding: 1em 0px;
+*/	text-align: center;
+	color: #BFBFBF;
+	font-size: 1.2em;
+	font-weight: bold;
+	letter-spacing: 1px;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	}
+#mission-calendar tr td:last-child {
+	border-width: 1px 0px 0px 0px;
+	}
+#mission-calendar tr td.inactive,
+#mission-calendar tr td.past {
+	height: 55px;
+	}
+#mission-calendar tr td.past {
+	background-color: #F7F7F7;
+	}
+#mission-calendar tr td.inactive {
+	background-color: #DFDFDF !important;
+	opacity: 0.75;
+/*	color: #7F7F7F;*/
+	}
+#mission-calendar tr td.today {
+/*	border-color: black;
+*/	background-color: rgb(255,255,170);
+	}
+#mission-calendar tr td div.date-label {
+	font-size: 1.1em;
+	padding: 2px 6px;
+	background-image: linear-gradient(bottom, rgba(255,255,255,0.1), rgba(127,127,127,0.8));
+	background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0.01), rgba(127,127,127,0.25));
+	}
+#mission-calendar tr td.today div.date-label {
+	font-weight: bold;
+	color: black;
+	}
+#mission-calendar tr td.inactive div.date-label {
+	background-image: none;
+	}
+#mission-calendar tr td ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	max-height: 150px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	}
+#mission-calendar tr td ul li {
+	position: relative;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 2px 3px;
+	}
+
+#mission-calendar tr td ul li div.overdue {
+	position: absolute;
+	top: 3px;
+	right: 4px;
+	padding: 0px 4px 0px 4px;
+	background-color: rgba(255, 0, 0, 0.95);
+	border-radius: 13px;
+	box-shadow: 0px 0px 2px white;
+	-webkit-box-shadow: 0px 0px 1px 2px white;
+	font-size: 0.8em;
+	font-weight: bold;
+	color: white;
+	z-index: 100;
+	}
+#mission-calendar tr td ul li a.icon-label {
+	text-decoration: none;
+	background-color: transparent;
+	}
+#mission-calendar li.priority-1 {
+	background-color: rgba(255,0,0,0.20);
+	}
+#mission-calendar li.priority-2 {
+	background-color: rgba(255,127,0,0.20);
+	}
+#mission-calendar li.priority-3 {
+	background-color: rgba(255,255,63,0.20);
+	}
+#mission-calendar li.priority-4 {
+	background-color: rgba(127,255,0,0.20);
+	}
+#mission-calendar li.priority-5 {
+	background-color: rgba(0,255,0,0.20);
+	}
+#mission-calendar-control {
+	margin-bottom: 0.5em;
+	}
+#mission-calendar-control-label {
+	display: inline-block;
+	padding-left: 1em;
+	}
+#mission-calendar-control-label .month-label,
+#mission-calendar-control-label .year-label {
+	font-weight: lighter;
+	font-size: 1.4em;
+	}
+
+ul li label span.empty {
+	color: #666;
+	font-size: 0.9em;
+	}
+
+
+#layout-content div.navbar {
+	margin-bottom: 5px;
+	}
+#layout-content div.navbar div.navbar-inner {
+	padding: 0px;
+	}
+#layout-content div.navbar ul.nav li a {
+/*	font-weight: bold;
+*/	text-align: center;
+/*	border-left: 1px solid rgba(255,255,255,.75);
+*/	border-right: 1px solid rgba(0,0,0,.1);
+	}
+#layout-content div.navbar ul.nav {
+	margin: 0;
+	display: table;
+	width: 100%;
+	}
+
+#layout-content div.navbar ul.nav li {
+	display: table-cell;
+	width: 1%;
+	float: none;
+	}
+
+/*  --  MAIL  --  */
+body.jobWorkMission {
+	margin: 1em 2em;
+	}
+body.jobWorkMission .table-mail {
+	width: 500px;
+	overflow: hidden;
+	table-layout: fixed;
+/*	border: 1px solid gray;
+*/	border-radius: 0.4em;
+	box-shadow: 2px 2px 3px #BBB
+	}
+body.jobWorkMission .table-mail tr td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
+body.jobWorkMission .table-mail td.cell-title a {
+	text-decoration: none;
+	font-size: 1.0em;
+	}
+body.jobWorkMission table tr.mission-row td.cell-graph {
+	vertical-align: top;
+	padding: 0px;
+	}
+body.jobWorkMission table tr.mission-row td.cell-graph div.cell-graph {
+	position: relative;
+	padding: 2px 2px 2px 4px !important;
+	}
+body.jobWorkMission td.cell-graph div.cell-graph div.indicator {
+	margin-top: 4px;
+	}
+body.jobWorkMission td.cell-graph div.cell-graph span.badge {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	}
+body.jobWorkMission .table-mail td.cell-time {
+	font-weight: bold;
+	font-size: 1.1em;
+	text-align: center;
+	}
+
+/*  --  MAIL: DAILY  --  */
+body.jobWorkMission.job-work-mission-mail-daily div.tasks {
+	margin-top: 1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.events {
+	clear: both;
+	margin-top: 1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-greeting {
+	font-size: 1.2em;
+/*	font-weight: bold;*/
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-full {
+	font-size: 1.2em;
+	font-weight: bold;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-date-short {
+	font-size: 0.9em;
+	font-weight: lighter;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-salute {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.1em;
+	}
+body.jobWorkMission.job-work-mission-mail-daily div.text-signature {
+	font-style: italic;
+	font-weight: lighter;
+	font-size: 1.0em;
+	}
+
+/*
+body.controller-work-mission input[type="checkbox"] {
+	margin: 0px;
+	}
+*/
+
+.dropdown .btn-group ul.dropdown-menu {
+	padding: 3px 6px 3px 6px;
+	}
+.dropdown .btn-group ul.dropdown-menu li {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-left: 6px;
+	border-radius: 4px;
+	}
+.dropdown .btn-group ul.dropdown-menu li input[type=checkbox] {
+	}
+
+
+/*  --  TOOLBAR  --  */
+#work-mission-buttons {
+/*	float: left;*/
+	margin-top: -5px;
+	margin-bottom: 10px;
+	}
+#work-mission-buttons ul.dropdown-menu li.selectable a{
+	padding-left: 8px;
+	}
+#work-mission-buttons .btn-toolbar {
+	margin-top: 0px;
+	margin-right: 5px;
+	margin-bottom: 15px;
+	}
+#work-mission-buttons .input-append {
+	margin: 0px;
+	}
+#work-mission-buttons input.changed {
+	background-color: #FFB;
+	}
+#work-mission-buttons .btn-group ul.dropdown-menu {
+	max-height: 250px;
+	overflow-x: hidden;
+	overflow-y: auto;
+/*	width: 150px;
+	min-width: 150px;
+	max-width: 150px;*/
+	}
+#work-mission-buttons .btn-group ul.dropdown-menu li.selectable a {
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+/*	padding: 3px 0px;*/
+	}
+#work-mission-buttons label {
+	margin-left: 4px;
+}
+
+
+/*  --  MISSION EDITOR  --  */
+
+/*body.controller-work-mission input.changed,
+body.controller-work-mission select.changed,
+body.controller-work-mission textarea.changed {
+	background-color: #FFFFDF;
+	}*/
+body.controller-work-mission .CodeMirror {
+	border: 1px solid rgb(204, 204, 204);
+	background-color: white;
+	border-radius: 4px;
+	z-index: 0;
+	}
+body.controller-work-mission #mission-content-html {
+/*	padding: 0.5em 1.5em;
+	border: 1px solid rgba(127,127,127,0.75);
+	box-shadow: 2px 2px 2px rgba(127,127,127,0.5);
+	border-radius: 0.3em;
+	background-color: #F7F7F7;*/
+	}
+body.controller-work-mission #mission-content-html h1,
+body.controller-work-mission #mission-content-html h2,
+body.controller-work-mission #mission-content-html h3,
+body.controller-work-mission #mission-content-html h4,
+body.controller-work-mission #mission-content-html h5 {
+	line-height: 1.5em;
+	padding: 0px;
+	border-bottom: 1px solid rgba(127,127,127,0.125);
+	}
+body.controller-work-mission #mission-content-html h1 {
+	font-size: 2em;
+	}
+body.controller-work-mission #mission-content-html h2 {
+	font-size: 1.6em;
+	}
+body.controller-work-mission #mission-content-html h3 {
+	font-size: 1.4em;
+	}
+body.controller-work-mission #mission-content-html h4 {
+	font-size: 1.2em;
+	}
+body.controller-work-mission #mission-content-html h5 {
+	font-size: 1.1em;
+	}
+body.controller-work-mission #mission-content-html del {
+	color: #777;
+	}
+
+body.controller-work-mission .tabbable .nav{
+	margin-bottom: 1px;
+	}
+
+
+/*  --  SMALL  --  */
+body.controller-work-mission.action-index #day-lists .table-day table tr td span.badge {
+	text-align: left;
+/*	top: -3px;
+	right: 0px;
+*/	}
+span.user-avatar img {
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	}
+span.user-label {
+	font-size: 0.9em;
+	}
+
+
+/*  --  PHONE LISTS  --  */
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td {
+	padding-left: 9px;
+	}
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.cell-title {
+	position: relative;
+	padding-left: 28px;
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 0.9em;
+	}
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.UNKNOWN {
+	position: absolute;
+	right: auto;
+	left: 2px;
+	top: 2px;
+	font-size: 0.9em;
+	padding-left: 4px;
+	padding-right: 4px;
+	}
+.cell-workerId>div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
+body.controller-work-mission.action-index #day-list-small .table-day-small table.mission-row-small tr td.UNKNOWN {
+	text-align: left;
+	}
+
+@media (max-width: 767px) {
+	.progress {
+		height: 4px;
+		margin-bottom: 0px;
+		}
+	}
+@media (max-width: 767px) {
+	#day-controls-small ul.nav {
+		margin-bottom: 0px;
+		}
+	}
+
+
+
+#day-lists table.work-mission-list tbody tr td.cell-title a.btn {
+	opacity: 0;
+	}
+#day-lists table.work-mission-list tbody tr:hover td.cell-title a.btn {
+	opacity: 1;
+	}
+
+
+
+
+/*  --  FILTERS  --  */
+#work-mission-buttons {}
+#work-mission-buttons ul.dropdown-menu {}
+#work-mission-buttons ul.dropdown-menu li {}
+#work-mission-buttons ul.dropdown-menu li:hover {
+	background-color: blue !important;
+	color: white !important;
+	}
+#work-mission-buttons ul.dropdown-menu li label{
+	width: 120px;
+	margin-bottom: 0px !important;
+	padding-top: 4px;
+	padding-bottom: 3px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 0.9em !important;
+	}
+#work-mission-buttons ul.dropdown-menu.condensed-width li label {
+	font-size: 0.86em !important;
+	letter-spacing: -0.08333px;
+	}
+#work-mission-buttons ul.dropdown-menu.condensed-height li label {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	}
+
+
+body.moduleWorkMission input.changed,
+body.moduleWorkMission select.changed {
+	background: #FFF7CF;
+	}
+body.moduleWorkMission select.changed option:not([class]) {
+	background-color: white;
+	}
+body.moduleWorkMission select.changed option:not(:checked) {
+	}
+
+
+
+.mission-day-control.empty-day{
+	opacity: 0.5;
+	}
+
+
+
+dl dd.max-y {
+	overflow-y: auto;
+	max-height: 100px;
+	background-color: rgba(127, 127, 127, 0.05);
+	border: 1px solid rgba(127, 127, 127, 0.1);
+	}
+
+
+
+body.site-work-mission-edit dl.dl-horizontal dt {
+	width: 120px;
+	font-weight: lighter;
+	font-size: 0.85em;
+/*	text-transform: uppercase;*/
+	font-style: italic;
+	}
+body.site-work-mission-edit dl.dl-horizontal dd {
+	margin-left: 130px;
+	}

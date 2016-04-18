@@ -7,6 +7,8 @@ foreach( $documents as $entry )
 	$optFilename[$entry]	= $entry;
 $optFilename	= UI_HTML_Elements::Options( $optFilename );
 
+$iconUpload     = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+
 if( !in_array( 'add', $rights ) )
 	return;
 return '
@@ -17,17 +19,17 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_upload">'.$w->labelFile.'</label>
-					<input type="file" name="upload" id="input_upload"/>
+					'.View_Helper_Input_File::render( 'upload', $iconUpload, TRUE ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_filename">'.$w->labelFilename.'</label>
-					<select name="filename" id="input_filename">'.$optFilename.'</select>
+					<select name="filename" id="input_filename" class="span12">'.$optFilename.'</select>
 				</div>
-				<div class="buttonbar">
-					<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> '.$w->buttonSave.'</button>
-				</div>
+			</div>
+			<div class="buttonbar">
+				<button type="submit" name="save" class="btn btn-small btn-primary"><i class="icon-plus icon-white"></i> '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

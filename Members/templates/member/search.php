@@ -25,7 +25,7 @@ $panelSearch	= '
 	<div class="content-panel-inner">
 		<form action="./member/search" method="post">
 			<label for="input_username">Benutzername</label>
-			<input type="text" name="username" id="input_username" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+			<input type="text" name="username" id="input_username" class="span12" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 			<div class="buttonbar">
 				<button type="submit" name="view" class="btn"><i class="icon-search"></i> find</button>
 			</div>

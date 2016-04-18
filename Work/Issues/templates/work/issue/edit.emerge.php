@@ -134,7 +134,7 @@ $(document).ready(function(){
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['edit']['labelContent'].'</label>
-				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror', 'rows' => 8 ) ).'
+				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8 ) ).'
 			</div>
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>

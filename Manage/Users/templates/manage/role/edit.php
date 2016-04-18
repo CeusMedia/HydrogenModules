@@ -16,7 +16,7 @@ foreach( $words['type-register'] as $key => $label ){
 $optRegister	= join( $optRegister );
 
 $panelEdit	= '
-<div class="content-panel">
+<div class="content-panel content-panel-form">
 	<h3>'.$words['edit']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<form name="editRole" action="./manage/role/edit/'.$roleId.'" method="post">
@@ -41,8 +41,8 @@ $panelEdit	= '
 					'.UI_HTML_Tag::create( 'textarea', $role->description, array( 'class' => 'span12', 'name' => 'description', 'rows' => 4 ) ).'
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12 buttonbar">
+			<div class="buttonbar">
+				<div class="btn-toolbar">
 					'.UI_HTML_Elements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
 					'.UI_HTML_Elements::Button( 'saveRole', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -65,7 +65,7 @@ $helperTime	= new View_Helper_TimePhraser( $env );
 $createdAt		= $helperTime->convert( $role->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 $modifiedAt		= $role->modifiedAt ? 'vor '.$helperTime->convert( $role->modifiedAt, TRUE ) : '-';
 $panelInfo		= '
-<div class="content-panel">
+<div class="content-panel content-panel-info">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<dl class="not-dl-horizontal">

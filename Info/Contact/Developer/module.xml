@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Contact: Developer</title>
+	<description><![CDATA[Contact developer via mail form.]]></description>
+	<category>Info</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Info/Contact/Developer.php5</class>
+		<class>Mail/Info/Contact/Developer.php5</class>
+		<class>View/Info/Contact/Developer.php5</class>
+		<template>info/contact/developer/index.php</template>
+		<locale>de/html/info/contact/developer/top.html</locale>
+		<locale>de/html/info/contact/developer/bottom.html</locale>
+		<locale>de/info/contact/developer.ini</locale>
+		<locale>de/mail/info/contact/developer.html</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+	<config protected="yes" mandatory="yes" type="string" name="receiver"></config>
+	<config protected="yes" type="boolean" name="captcha.enable">no</config>
+	<config protected="yes" type="integer" name="captcha.length">4</config>
+	<config protected="yes" type="string" name="captcha.strength" values="soft,hard">soft</config>
+	<config protected="yes" type="string" name="captcha.path"></config>
+	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
+<!--	<link xml:lang="de" rank="89" access="public" path="info/contact/developer/index" link="info/contact/developer">Probleme</link>
+	<link xml:lang="en" rank="89" access="public" path="info/contact/developer/index" link="info/contact/developer">Contact</link>-->
+</module>

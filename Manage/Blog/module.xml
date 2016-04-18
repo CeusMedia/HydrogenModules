@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Blog</title>
+	<description><![CDATA[Simple blog management.]]></description>
+	<category>Management</category>
+	<version>0.2.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Apply TinyMCE as editor.</log>
+	<log version="0.2.2">Add pagination using CeusMedia/Bootstrap.</log>
+	<log version="0.2.3">Add filter for posts.</log>
+	<log version="0.2.4">Add support and editor for categories.</log>
+	<log version="0.2.5">Add hook to render content from shortcode.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Blog.php5</class>
+		<class>Controller/Manage/Blog/Category.php5</class>
+		<class>Model/Blog/Category.php5</class>
+		<class>Model/Blog/Comment.php5</class>
+		<class>Model/Blog/Post.php5</class>
+		<class>View/Manage/Blog.php5</class>
+		<class>View/Manage/Blog/Category.php5</class>
+		<locale>de/manage/blog.ini</locale>
+		<locale>de/manage/blog/category.ini</locale>
+		<template>manage/blog/add.php</template>
+		<template>manage/blog/edit.php</template>
+		<template>manage/blog/index.php</template>
+		<template>manage/blog/index.filter.php</template>
+		<template>manage/blog/index.list.php</template>
+		<template>manage/blog/category/add.php</template>
+		<template>manage/blog/category/edit.php</template>
+		<template>manage/blog/category/index.php</template>
+		<style>module.manage.blog.css</style>
+	</files>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="manage/blog">Blog</link>
+	<link xml:lang="de" access="acl" path="manage/blog/edit"/>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Blog::___onTinyMCE_getLinkList</hook>
+</module>

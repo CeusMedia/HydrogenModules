@@ -135,7 +135,7 @@ foreach( $facts as $fact ){
 $list		= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'dl-horizontal' ) );
 
 return '
-<div class="content-panel content-panel-form">
+<div class="content-panel content-panel-info">
 	<h3>Informationen</h3>
 	<div class="content-panel-inner">
 		'.$list.'
