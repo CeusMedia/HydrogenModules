@@ -80,7 +80,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $offset = NULL ){
+	public function index( $page = 0 ){
 		$session	= $this->env->getSession();
 		if( !$session->get( 'filter_mail_status' ) )
 			$session->set( 'filter_mail_status', array( 0 ) );
@@ -92,13 +92,20 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$session->set( 'filter_mail_direction', 'DESC' );
 		$filters	= $session->getAll( 'filter_mail_', TRUE );
 
+		$page		= max( 0, (int) $page );
+		$offset		= $page * $filters->get( 'limit' );
 		$conditions	= array();
 		if( $filters->get( 'status' ) )
 			$conditions	= array( 'status' => $filters->get( 'status' ) );
 		$orders		= array( $filters->get( 'order' ) => $filters->get( 'direction' ) );
-		$limits		= array( min( 0, (int) $offset ), $filters->get( 'limit' ) );
+		$limits		= array( $offset, $filters->get( 'limit' ) );
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );
+		$total		= $this->logic->countQueue( $conditions );
 		$this->addData( 'mails', $mails );
+		$this->addData( 'offset', $offset );
+		$this->addData( 'page', $page );
+		$this->addData( 'total', $total );
+		$this->addData( 'limit', $filters->get( 'limit' ) );
 		$this->addData( 'filters', $filters );
 	}
 

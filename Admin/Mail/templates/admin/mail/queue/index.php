@@ -56,6 +56,8 @@ $buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$wf->buttonReset, array(
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/queue/' ) );
 
+$pagination		= new \CeusMedia\Bootstrap\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
+
 return $textTop.'
 <div class="row-fluid">
 	<div class="span3">
@@ -88,6 +90,7 @@ return $textTop.'
 			<h3>'.$wl->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$table.'
+				'.$pagination.'
 			</div>
 		</div>
 	</div>
