@@ -241,7 +241,10 @@ abstract class Mail_Abstract{
 	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email ){
-		$this->mail->addRecipient( $email );
+		if( $this->mail instanceof \CeusMedia\Mail\Message )
+			$this->mail->addRecipient( $email );
+		else
+			$this->mail->setReceiver( $email );
 		$this->transport->send( $this->mail, TRUE );
 	}
 
