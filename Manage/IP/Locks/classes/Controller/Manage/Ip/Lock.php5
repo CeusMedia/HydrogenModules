@@ -55,6 +55,7 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$limits	= array( $page * $limit, $limit );
 		$locks	= $this->logic->getAll( $conditions, $orders, $limits );
 		$total	= $this->logic->count( $conditions );
+
 		if( $page * $limit > $total )
 			$this->restart( NULL, TRUE );
 

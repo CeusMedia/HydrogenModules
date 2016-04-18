@@ -139,7 +139,7 @@ $uri			= './manage/ip/lock/'.$limit;
 //$helperPages	= new View_Helper_Pagination( $env, $total, $limit, $page, $count );
 //$pagination		= $helperPages->render( $uri, $total, $limit, $page, FALSE );
 //$listNumbers	= $helperPages->renderListNumbers( $total, $limit, $page, $count );
-$helperPages	= new \CeusMedia\Bootstrap\PageControl( './manage/ip/lock/15', $page, $count );
+$helperPages	= new \CeusMedia\Bootstrap\PageControl( './manage/ip/lock/15', $page, ceil( $total / 15 ) );
 $pagination		= $helperPages->render();
 $listNumbers	= renderListNumbers( $page, $limit, $count, $total );
 
