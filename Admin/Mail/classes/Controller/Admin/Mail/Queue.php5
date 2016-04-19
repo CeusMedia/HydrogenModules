@@ -66,24 +66,31 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		if( $reset ){
+			$session->remove( 'filter_mail_receiverAddress' );
 			$session->remove( 'filter_mail_status' );
 			$session->remove( 'filter_mail_limit' );
 			$session->remove( 'filter_mail_order' );
 			$session->remove( 'filter_mail_direction' );
 		}
 		else{
+			$session->set( 'filter_mail_receiverAddress', $request->get( 'receiverAddress' ) );
 			$session->set( 'filter_mail_status', $request->get( 'status' ) );
 			$session->set( 'filter_mail_limit', $request->get( 'limit' ) );
 			$session->set( 'filter_mail_order', $request->get( 'order' ) );
 			$session->set( 'filter_mail_direction', $request->get( 'direction' ) );
+
+			if( count( $states = $session->get( 'filter_mail_status' ) ) === 1 )
+				if( $states[0] === '' )
+					$session->remove( 'filter_mail_status' );
+
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function index( $page = 0 ){
 		$session	= $this->env->getSession();
-		if( !$session->get( 'filter_mail_status' ) )
-			$session->set( 'filter_mail_status', array( 0 ) );
+//		if( !$session->get( 'filter_mail_status' ) )
+//			$session->set( 'filter_mail_status', array( 0 ) );
 		if( !$session->get( 'filter_mail_limit' ) )
 			$session->set( 'filter_mail_limit', 10 );
 		if( !$session->get( 'filter_mail_order' ) )
@@ -95,8 +102,10 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$page		= max( 0, (int) $page );
 		$offset		= $page * $filters->get( 'limit' );
 		$conditions	= array();
+		if( $filters->get( 'receiverAddress' ) )
+			$conditions['receiverAddress'] = '%'.$filters->get( 'receiverAddress' ).'%';
 		if( $filters->get( 'status' ) )
-			$conditions	= array( 'status' => $filters->get( 'status' ) );
+			$conditions['status'] = $filters->get( 'status' );
 		$orders		= array( $filters->get( 'order' ) => $filters->get( 'direction' ) );
 		$limits		= array( $offset, $filters->get( 'limit' ) );
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );
@@ -130,11 +139,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	public function cancel( $mailId ){
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
-		if( !$mail )
+		if( !$mail ){
 			$this->env->getMessenger->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
 		}
-		if( $mail->status > 1 )
+		if( $mail->status > 1 ){
 			$this->env->getMessenger->noteError( 'Mail already sent' );
 			$this->restart( NULL, TRUE );
 		}
