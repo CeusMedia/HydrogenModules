@@ -24,11 +24,11 @@
 		<style>bootstrap/3.3.6/css/bootstrap-theme.css.map</style>
 		<style>bootstrap/3.3.6/css/bootstrap-theme.min.css</style>
 		<style>bootstrap/3.3.6/css/bootstrap-theme.min.css.map</style>
-		<style>bootstrap/3.3.6/font/glyphicons-halflings-regular.eot</style>
-		<style>bootstrap/3.3.6/font/glyphicons-halflings-regular.svg</style>
-		<style>bootstrap/3.3.6/font/glyphicons-halflings-regular.ttf</style>
-		<style>bootstrap/3.3.6/font/glyphicons-halflings-regular.woff</style>
-		<style>bootstrap/3.3.6/font/glyphicons-halflings-regular.woff2</style>
+		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot</style>
+		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg</style>
+		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
+		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
+		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
 		<script>bootstrap/3.3.6/bootstrap.js</script>
