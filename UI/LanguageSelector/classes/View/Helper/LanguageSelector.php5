@@ -13,6 +13,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->current		= $this->language->getLanguage();
 		$this->words		= $this->language->getWords( 'language' );
 		$this->labels		= $this->words['languages'];
+		$this->mode			= (int) ( $this->env->getConfig()->get( 'module.ui_languageselector.mode' ) !== "select" );
 
 		$path				= $this->env->getRequest()->get( '__path' );			//  @todo use path key from App or Env
 		$this->path			= rtrim( $path ? $path : "./", "/" )."/";
@@ -59,6 +60,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 	}
 
 	protected function renderSelect(){
+die("renderSel");
 		$options	= array();
 		foreach( $this->languages as $entry )
 			if( isset( $this->labels[$entry] ) )

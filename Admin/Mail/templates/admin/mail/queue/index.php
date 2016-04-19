@@ -52,7 +52,8 @@ if( $mails ){
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $filters->get( 'status' ) );
+$optStatus		= array( '' => '- alle -' ) + $words['states'];
+$optStatus		= UI_HTML_Elements::Options( $optStatus, $filters->get( 'status' ) );
 
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
@@ -73,8 +74,14 @@ return $textTop.'
 				<form action="./admin/mail/queue/filter" method="post">
 					<div class="row-fluid">
 						<div class="span12">
+							<label for="input_receiverAddress">'.$wf->labelReceiverAddress.'</label>
+							<input type="text" name="receiverAddress" id="input_receiverAddress" class="span12" value="'.htmlentities( $filters->get( 'receiverAddress' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
 							<label for="input_status">'.$wf->labelStatus.'</label>
-							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
+							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="6">'.$optStatus.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">
