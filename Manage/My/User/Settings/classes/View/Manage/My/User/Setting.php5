@@ -17,7 +17,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 			if( $localeFile == $locale->file ){
 				if( file_exists( $path.$locale->file ) ){
 					$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
-					if( $reader->hasSection( 'module' ) )
+					if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 						return $reader->getProperties( TRUE, 'module' );
 				}
 			}
@@ -25,7 +25,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 		foreach( $module->files->locales as $locale ){
 			if( file_exists( $path.$locale->file ) ){
 				$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
-				if( $reader->hasSection( 'module' ) )
+				if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 					return $reader->getProperties( TRUE, 'module' );
 			}
 		}

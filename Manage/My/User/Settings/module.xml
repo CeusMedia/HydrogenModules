@@ -2,13 +2,14 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
 	<log version="0.3.7">Fixed bug in database script.</log>
 	<log version="0.3.8">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.3.9">Complete locales.</log>
 	<log version="0.4">Finish user interface.</log>
 	<log version="0.4.1">Disable automatic password masking of module configurations.</log>
+	<log version="0.4.2">Remove deprecated helper class and rename CSS file.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -17,17 +18,18 @@
 		<class>Controller/Manage/My/User/Setting.php5</class>
 		<class>Model/User/Setting.php5</class>
 		<class>View/Manage/My/User/Setting.php5</class>
-		<class>View/Helper/UserModuleSettings.php5</class>
 		<template>manage/my/user/setting/index.php</template>
-		<style load="auto">site.manage.my.user.setting.css</style>
+		<style load="auto">module.manage.my.user.setting.css</style>
 		<locale>de/manage/my/user/setting.ini</locale>
 		<locale>en/manage/my/user/setting.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Manage_My_User</needs>
 	</relations>
-	<link path="manage/my/user/setting" access="inside" xml:lang="de">Einstellungen</link>
-	<link path="manage/my/user/setting" access="inside" xml:lang="en">Settings</link>
+	<link access="inside" xml:lang="de" path="manage/my/user/setting/index" link="manage/my/user/setting">Einstellungen</link>
+	<link access="inside" xml:lang="en" path="manage/my/user/setting/index" link="manage/my/user/setting">Settings</link>
+	<link access="inside" path="manage/my/user/setting/reset"></link>
+	<link access="inside" path="manage/my/user/setting/update"></link>
 	<hook type="resource" resource="Session" event="init"><![CDATA[
 if( $env->has( 'session' ) ){														//  environment has session support
 	if( ( $userId = $env->getSession()->get( 'userId' ) ) ){						//  an user is logged in
