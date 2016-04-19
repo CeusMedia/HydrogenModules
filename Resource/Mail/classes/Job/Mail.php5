@@ -13,13 +13,10 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function sendQueuedMails(){
-		$sleep		= (float) $this->options->get( 'job.sleep' );
-		$limit		= (integer) $this->options->get( 'job.limit' );
+		$sleep		= (float) $this->options->get( 'queue.job.sleep' );
+		$limit		= (integer) $this->options->get( 'queue.job.limit' );
 		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );
-#remark( function_exists( 'bzcompress') );
-#remark( "time limit: ".$timeLimit );
-#print_m( $this->options->getAll() );
-#die;
+
 		$this->log( 'run with config: {sleep: '.$sleep.', limit: '.$limit.'}' );
 		$logic		= new Logic_Mail( $this->env );
 		$conditions	= array( 'status' => array( 0, 1 ) );
