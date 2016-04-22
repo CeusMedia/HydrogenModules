@@ -15,8 +15,8 @@ return $tabs.$textTop.'
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel content-panel-form">
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
-				<h3>'.$w->heading.'</h3>
 				<form action="./admin/mail/attachment/upload" method="post" enctype="multipart/form-data">
 					<div class="row-fluid">
 						<div class="span12">

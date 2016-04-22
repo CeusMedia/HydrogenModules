@@ -4,6 +4,9 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	protected $model;
 	protected $path;
 	protected $messenger;
+	protected $languages;
+	protected $logicMail;
+	protected $logicUpload;
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
@@ -77,6 +80,11 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 			}
 		}
 //		$this->restart( NULL, TRUE );
+	}
+
+	public function download( $fileName ){
+		$fileName	= urldecode( $fileName );
+		Net_HTTP_Download::sendFile( $this->path.$fileName, $fileName );
 	}
 
 	public function filter( $reset = NULL ){
@@ -205,9 +213,9 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'upload' ) ){
 			$file		= (object) $this->request->get( 'file' );
-			$this->upload->setUpload( $this->request->get( 'file' ) );
-			$maxSize	= $this->upload->getMaxUploadSize();
-			if( !$this->upload->checkSize( $maxSize ) ){
+			$this->logicUpload->setUpload( $this->request->get( 'file' ) );
+			$maxSize	= $this->logicUpload->getMaxUploadSize();
+			if( !$this->logicUpload->checkSize( $maxSize ) ){
 				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
 			}
 			else if( $file->error ){
@@ -217,7 +225,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 			}
 			else{
 				try{
-					$this->upload->saveTo( $this->path.$file->name );
+					$this->logicUpload->saveTo( $this->path.$file->name );
 					$this->messenger->noteSuccess(
 						$words->successUploaded,
 						htmlentities( $file->name, ENT_QUOTES, 'UTF-8' )
