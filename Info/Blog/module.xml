@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -14,6 +14,7 @@
 	<log version="0.3.3">Improve usability by AJAX commenting.</log>
 	<log version="0.3.4">Improve post URLs.</log>
 	<log version="0.3.5">Add category column in post model.</log>
+	<log version="0.3.6">Require module Resource:Users for author resolution.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -47,6 +48,7 @@
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Users</needs>
 	</relations>
 	<link access="acl" path="info/forum" xml:lang="de" rank="51">Blog</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="51">Blog</link>
