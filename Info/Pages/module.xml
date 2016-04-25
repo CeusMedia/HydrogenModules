@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6.1</version>
+	<version>0.6.2</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -16,6 +16,7 @@
 	<log version="0.5.9">Add new page status "deactivated" and avoid access.</log>
 	<log version="0.6">Support sitemap information in model.</log>
 	<log version="0.6.1">Support subpage resolution of module controlled pages.</log>
+	<log version="0.6.2">Add default page content (which is empty) for empty pages.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -25,8 +26,10 @@
 		<class>Model/Page.php5</class>
 		<class>View/Info/Page.php5</class>
 		<class>View/Helper/Navigation/Pages/Navbar.php5</class>
-		<locale>en/info/pages.ini</locale>
 		<locale>de/info/pages.ini</locale>
+		<locale>de/html/info/page/empty.html</locale>
+		<locale>en/info/pages.ini</locale>
+		<locale>en/html/info/page/empty.html</locale>
 	</files>
 	<config type="string" protected="yes" name="title.separator"> - </config>
 	<config type="string" protected="yes" name="direct" values="allowed,denied">denied</config>

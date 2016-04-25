@@ -33,7 +33,11 @@ class View_Info_Page extends CMF_Hydrogen_View{
 			if( !strlen( $content = trim( $object->content ) ) ){								//  page has HTML content
 				$words	= $this->getWords( 'index', 'info/pages' );
 				$this->env->getMessenger()->noteNotice( $words->msgEmptyContent );
+				if( $this->hasContentFile( 'info/page/empty.html' ) )
+					$object->content	= $this->loadContentFile( 'info/page/empty.html' );
 			}
+			if( !strlen( trim( $object->content ) ) )
+				$object->content  	= " ";
 			return $this->renderContent( $object->content, $object->format );
 		}
 	}
