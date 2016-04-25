@@ -12,13 +12,14 @@ Authorization is implemented fully (except implicit grant) according to
 RFC 6749 (http://tools.ietf.org/html/rfc6749).
 
 ]]></description>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated application management.</log>
 	<log version="0.2.2">Module cleanup.</log>
 	<log version="0.2.3">Add locales for application management.</log>
 	<log version="0.2.4">Add user ID column for access tokens and codes.</log>
+	<log version="0.2.5">Improve templates.</log>
 	<category>Server</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

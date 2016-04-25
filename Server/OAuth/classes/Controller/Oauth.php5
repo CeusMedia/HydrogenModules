@@ -110,6 +110,9 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 					) );
 					$this->restart( $url, FALSE, 302, TRUE );
 				}
+				$model			= new Model_Oauth_Application( $this->env );
+				$application	= $model->getByIndex( 'clientId', $clientId );
+				$this->addData( 'application', $application );
 				$this->addData( 'clientId', $clientId );
 				$this->addData( 'responseType', $responseType );
 				$this->addData( 'redirectUri', $redirectUri );
