@@ -15,8 +15,8 @@ $optStatus	= UI_HTML_Elements::Options( $words['states'], 1 );
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<h3>'.$w->heading.'</h3>
 		<form action="./admin/mail/attachment/add" metod="post">
 			<div class="row-fluid">
 				<div class="span12">

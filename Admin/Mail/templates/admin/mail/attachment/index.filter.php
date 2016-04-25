@@ -22,8 +22,8 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 return '
 <!-- templates/admin/mail/attachment/index.filter.php -->
 <div class="content-panel content-panel-form">
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<h3>'.$w->heading.'</h3>
 		<form action="./admin/mail/attachment/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
@@ -53,10 +53,6 @@ return '
 				<div class="span12">
 					<label for="input_language">'.$w->labelLanguage.'</label>
 					<select name="language" id="input_language" class="span12">'.$optLanguage.'</select>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
 				</div>
 			</div>
 			<div class="buttonbar">

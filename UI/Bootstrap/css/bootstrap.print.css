@@ -1,0 +1,11 @@
+@media print {
+	a[href]:after {
+		content: none !important;
+	}
+	abbr[title]:after {
+		content: " <small>(" attr(title) ")</small>";
+	}
+	i[class^=icon-] {
+		display: none;
+	}
+}

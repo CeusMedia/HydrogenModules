@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>3.3.6</version>
+	<version>3.3.6-p1</version>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -29,6 +29,7 @@
 		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
 		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
 		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
+		<style>bootstrap.print.css</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
 		<script>bootstrap/3.3.6/bootstrap.js</script>
@@ -86,5 +87,6 @@ if( $options->get( 'local.theme' ) ){
 	$script	= 'css/bootstrap-'.$options->get( 'local.theme' ).$suffix.'.css';
 	$context->addThemeStyle( $pathLocal.$script, 'top' );
 }
+$context->addThemeStyle( 'bootstrap.print.css', 'top' );
 	]]></hook>
 </module>

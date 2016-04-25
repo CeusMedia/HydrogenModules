@@ -8,6 +8,10 @@ if( !empty( $path ) ){
 if( $view->hasContentFile( 'html/index.html' ) ){
 	return $view->loadContentFile( 'html/index.html' );
 }
+if( $view->hasContentFile( 'html/index/index.html' ) ){
+    return $view->loadContentFile( 'html/index/index.html' );
+}
+
 
 //  --  OR RETURN TEMPLATE CONTENT --  //
 return '
