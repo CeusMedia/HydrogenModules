@@ -18,6 +18,12 @@
  */
 class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 
+	protected $modelPage;
+
+	public function __onInit(){
+		$this->modelPage		= new Model_Page( $this->env );
+	}
+
 	/**
 	 *	Tries to resolves URI path and returns found page.
 	 *	@access		public
@@ -28,7 +34,6 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getPageFromPath( $path, $withParents = FALSE ){
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
-		$model		= new Model_Page( $this->env );
 		$parts		= explode( '/', $path );
 		$parentId	= 0;
 		$parents	= array();
@@ -39,7 +44,7 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		while( $part = array_shift( $parts ) ){
 			$way		= $way ? $way.'/'.$part : $part;
 			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
-			$page		= $model->getByIndices( $indices );
+			$page		= $this->modelPage->getByIndices( $indices );
 			if( !$page ){																			//  no page found for this identifier
 				if( $lastPage && $lastPage->type == 2 ){											//  last page is a module controller
 					return $lastPage;																//  return this module controlled page
@@ -58,6 +63,16 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $page;
 	}
 
+	public function getChildren( $pageId, $activeOnly = TRUE ){
+		$page	= $this->modelPage->get( $pageId );
+		if( !$page )
+			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
+		$indices	= array( 'parentId'	=> $pageId );
+		if( $activeOnly )
+			$indices['status']	= 1;
+		return $this->modelPage->getAllByIndices( $indices );
+	}
+
 	/**
 	 *	Tries to find page related to module and returns found page.
 	 *	@access		public
@@ -68,8 +83,7 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getPageFromModule( $module ){
 		if( !strlen( trim( $module ) ) )
 			throw new InvalidArgumentException( 'No module ID given' );
-		$model	= new Model_Page( $this->env );
-		$page	= $model->getByIndex( 'module', $module );
+		$page	= $this->modelPage->getByIndex( 'module', $module );
 		return $page ? $page : NULL;
 	}
 
@@ -81,7 +95,6 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
 	 */
 	public function hasPage( $path ){
-		$model		= new Model_Page( $this->env );
 		return (bool) $this->getPageFromPath( $path );
 	}
 }

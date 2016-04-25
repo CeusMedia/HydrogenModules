@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -17,6 +17,7 @@
 	<log version="0.6">Support sitemap information in model.</log>
 	<log version="0.6.1">Support subpage resolution of module controlled pages.</log>
 	<log version="0.6.2">Add default page content (which is empty) for empty pages.</log>
+	<log version="0.6.3">Allow page resolution of empty node page and redirect to first child.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

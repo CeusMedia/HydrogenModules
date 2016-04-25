@@ -5,27 +5,40 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		$request	= $env->getRequest();
 		$path		= $request->get( '__path' );													//  get requested path
 		$logic		= new Logic_Page( $env );														//  get page logic instance
-		$pageId		= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page ID is not empty
+		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
+		$page		= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
 
-		$page	= $logic->getPageFromPath( $pageId, TRUE );
+		if( !$page )																				//  no page found for called page path
+			return FALSE;																			//  quit hook call and return without result
 
-		if( !$page )																				//  no page for path found
-			return FALSE;																			//  quit hook
 		if( $page->status < 0 ){																	//  page is deactivated
-			if( $request->get( 'preview' ) != $page->createdAt.$page->modifiedAt )					//  check for page management preview request
-				return FALSE;																		//  avoid access
+			if( ( $previewCode = $request->get( 'preview' ) ) ){									//  page has been requested for preview
+				if( $previewCode != $page->createdAt.$page->modifiedAt )							//  not a valid preview request (from page management)
+					return FALSE;																	//  quit hook call and return without result
+			}
 		}
 
 		$controller	= new Controller_Info_Page( $env, FALSE );										//  get controller instance
-		if( $page->type == 0 ){																		//  page is static
-			$request->set( '__redirected', TRUE );													//  note redirection for access check
-			$controller->redirect( 'info/page', 'index', array( $pageId ) );						//  redirect to page controller
-		}
-		if( $page->type == 2 ){																		//  page is a module
-			if( !$page->module )																	//  but no module has been selected
-				return FALSE;																		//  avoid access
-			$module	= strtolower( str_replace( "_", "/", $page->module ) );							//  get module controller path
-			$controller->redirect( $module, 'index', $page->arguments );							//  redirect to module
+		switch( (int) $page->type ){
+			case 0:																					//  page is static
+				$request->set( '__redirected', TRUE );												//  note redirection for access check
+				$controller->redirect( 'info/page', 'index', array( $pagePath ) );					//  redirect to page controller
+				break;
+			case 1:																					//  page is node (and has no content)
+				$children	= $logic->getChildren( $page->pageId );									//  get direct child pages
+				if( $children )																		//  idetified node has children
+					if( $children[0]->status > 0 )													//  child page is active (hidden or visible)
+						$controller->restart( $page->identifier.'/'.$children[0]->identifier );		//  redirect to child page
+				return FALSE;																		//  otherwise quit hook call and return without result
+				break;
+			case 2:																					//  page is a module
+				if( !$page->module )																//  but no module has been selected
+					return FALSE;																	//  quit hook call and return without result
+				$module	= strtolower( str_replace( "_", "/", $page->module ) );						//  get module controller path
+				$controller->redirect( $module, 'index', $page->arguments );						//  redirect to module
+				break;
+			default:
+				throw new RangeException( 'Page type '.$page->type.' is unsupported' );
 		}
 		return TRUE;																				//  stop ongoing dispatching
 	}
