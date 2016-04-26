@@ -70,7 +70,7 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		$indices	= array( 'parentId'	=> $pageId );
 		if( $activeOnly )
 			$indices['status']	= 1;
-		return $this->modelPage->getAllByIndices( $indices );
+		return $this->modelPage->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 	}
 
 	/**
