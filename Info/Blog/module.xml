@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3.4">Improve post URLs.</log>
 	<log version="0.3.5">Add category column in post model.</log>
 	<log version="0.3.6">Require module Resource:Users for author resolution.</log>
+	<log version="0.3.7">Support hook View::onRenderContent by abtract blog post panel.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -54,6 +55,7 @@
 	<link access="acl" path="info/forum" xml:lang="en" rank="51">Blog</link>
 <!--	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>-->
+	<hook type="resource" resource="View" event="onRenderContent">View_Info_Blog::___onRenderContent</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_categories` (

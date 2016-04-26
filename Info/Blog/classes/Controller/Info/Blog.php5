@@ -12,7 +12,6 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$this->modelComment		= new Model_Blog_Comment( $this->env );
 		$this->modelPost		= new Model_Blog_Post( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
-		$this->messenger		= $this->env->getMessenger();
 
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
 		if( $this->moduleConfig->get( 'mail' ) )
@@ -95,7 +94,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Your comment has been added.' );
 			$this->informAboutNewComment( $commentId );
 		}
-		$this->restart( View_Info_Blog::renderPostUrl( $post ) );
+		$this->restart( View_Info_Blog::renderPostUrlStatic( $env, $post ) );
 	}
 
 	public function index( $page = NULL ){
