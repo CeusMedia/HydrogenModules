@@ -45,8 +45,9 @@ class Controller_Manage_Catalog_Article extends CMF_Hydrogen_Controller{
 		if( !( $list = $cache->get( 'catalog.tinymce.images.articles' ) ) ){
 			$logic		= new Logic_Catalog( $env );
 			$frontend	= Logic_Frontend::getInstance( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );				//  focus module configuration
+			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
+			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list       = array();
 			$conditions	= array( 'cover' => '>0' );
 			$orders		= array( 'articleId' => 'DESC' );

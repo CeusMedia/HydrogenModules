@@ -28,8 +28,9 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		if( !( $list = $cache->get( 'catalog.tinymce.images.authors' ) ) ){
 			$logic		= new Logic_Catalog( $env );
 			$frontend	= Logic_Frontend::getInstance( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );
+			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );				//  focus module configuration
+			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
+			$pathImages	= substr( $pathImages, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list		= array();
 			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
 			foreach( $authors as $item ){
