@@ -15,7 +15,7 @@ This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (par
 	<files>
 		<class>Model/Cache.php5</class>
 		<class>Job/Cache.php5</class>
-		<file>config/jobs/mail.xml</file>
+		<file>config/jobs/cache.xml</file>
 	</files>
 	<config protected="yes" type="boolean" name="enabled">yes</config>
 	<config protected="yes" type="string" name="type" mandatory="yes" values="Folder,Memcache,Memory,Noop,PDO,Session">Noop</config>
