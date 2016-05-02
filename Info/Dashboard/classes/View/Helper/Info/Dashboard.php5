@@ -12,11 +12,7 @@ class View_Helper_Info_Dashboard{
 	}
 
 	public function render( $columns = 4 ){
-		return self::renderStatic( $this->env, $columns );
-	}
-
-	public function renderStatic( $env, $columns = 4 ){
-		$env->getCaptain()->callHook( 'Dashboard', 'renderPanels', $this );
+		$this->env->getCaptain()->callHook( 'Dashboard', 'renderPanels', $this );
 		$panels			= array();
 		$panelChunks	= array_chunk( $this->panels, $columns );
 		foreach( $panelChunks as $panelChunk ){
@@ -27,6 +23,13 @@ class View_Helper_Info_Dashboard{
 			$panels[]	= UI_HTML_Tag::create( 'div', $list, array( 'class' =>'row-fluid' ) );
 		}
 		return join( '', $panels );
+	}
+
+	public function unregisterPanel( $key ){
+		if( !isset( $this->panels[$key] ) )
+			return FALSE;
+		unset( $this->panels[$key] );
+		return TRUE;
 	}
 }
 ?>
