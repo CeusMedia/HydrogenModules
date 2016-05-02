@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.6.4</version>
+	<version>0.6.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -32,6 +32,9 @@
 	<log version="0.6.2">Add button to cancel unsent mail.</log>
 	<log version="0.6.3">Add filter for receiver address.</log>
 	<log version="0.6.4">Add file download and lock folder against browser access.</log>
+	<log version="0.6.5">Add button to resend sent mail.</log>
+	<log version="0.6.6">Add locales for mail facts.</log>
+	<log version="0.6.7">Add prototype of dashboard support.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -77,4 +80,5 @@
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">View_Admin_Mail_Attachment::___onRegisterTab</hook>
+	<hook type="resource" resource="Dashboard" event="renderPanels">View_Admin_Mail_Queue::___onRenderDashboardPanels</hook>
 </module>
