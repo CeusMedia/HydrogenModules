@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Dashboard</title>
+	<description><![CDATA[]]></description>
+	<category>Info</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add locale HTML blocks.</log>
+<!--	<log version="0.2.x"></log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/Dashboard.php5</class>
+		<class>View/Info/Dashboard.php5</class>
+		<class>View/Helper/Info/Dashboard.php5</class>
+<!--		<locale>de/info/dashboard.ini</locale>-->
+		<locale>de/html/info/dashboard/bottom.html</locale>
+		<locale>de/html/info/dashboard/top.html</locale>
+<!--		<locale>en/info/dashboard.ini</locale>-->
+		<locale>en/html/info/dashboard/bottom.html</locale>
+		<locale>en/html/info/dashboard/top.html</locale>
+		<template>info/dashboard/index.php</template>
+<!--		<style>module.info.dashboard.css</style>-->
+	</files>
+	<config protected="yes" type="integer" name="columns" values="3,4"></config>
+	<relations/>
+	<hook type="resource" resource="View" event="renderContent">View_Info_Dashboard::___onRenderContent</hook>
+</module>

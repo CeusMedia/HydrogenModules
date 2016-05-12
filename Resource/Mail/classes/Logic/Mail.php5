@@ -123,7 +123,7 @@ class Logic_Mail{
 		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
 			$senderAddress	= $mail->mail->getSender()->getAddress();
 		else
-			$senderAddress	= $mail->mail->getSender()->address();
+			$senderAddress	= $mail->mail->getSender()->address;
 
 		$data	= array(
 			'language'			=> strtolower( trim( $language ) ),

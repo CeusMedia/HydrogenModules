@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="countCache">
+		<class>Cache</class>
+		<method>countObjects</method>
+		<interval>minute</interval>
+		<mode>live</mode>
+	</job>
+	<job id="clearCache">
+		<class>Cache</class>
+		<method>clearObjects</method>
+		<interval>minute</interval>
+		<mode>live</mode>
+	</job>
+</jobs>

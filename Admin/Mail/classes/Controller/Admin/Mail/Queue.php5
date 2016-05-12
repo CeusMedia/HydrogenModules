@@ -68,6 +68,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		if( $reset ){
 			$session->remove( 'filter_mail_receiverAddress' );
 			$session->remove( 'filter_mail_status' );
+//			$session->remove( 'filter_mail_way' );
 			$session->remove( 'filter_mail_limit' );
 			$session->remove( 'filter_mail_order' );
 			$session->remove( 'filter_mail_direction' );
@@ -75,6 +76,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		else{
 			$session->set( 'filter_mail_receiverAddress', $request->get( 'receiverAddress' ) );
 			$session->set( 'filter_mail_status', $request->get( 'status' ) );
+//			$session->set( 'filter_mail_way', $request->get( 'way' ) );
 			$session->set( 'filter_mail_limit', $request->get( 'limit' ) );
 			$session->set( 'filter_mail_order', $request->get( 'order' ) );
 			$session->set( 'filter_mail_direction', $request->get( 'direction' ) );
@@ -149,6 +151,23 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		}
 		$model->edit( $mailId, array(
 			'status'	=> -1
+		) );
+		$this->restart( 'view/'.$mailId, TRUE );
+	}
+
+	public function resend( $mailId ){
+		$model	= new Model_Mail( $this->env );
+		$mail	= $model->get( $mailId );
+		if( !$mail ){
+			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->restart( NULL, TRUE );
+		}
+/*		if( $mail->status > 1 ){
+			$this->env->getMessenger->noteError( 'Mail already sent' );
+			$this->restart( NULL, TRUE );
+		}*/
+		$model->edit( $mailId, array(
+			'status'	=> 0
 		) );
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
