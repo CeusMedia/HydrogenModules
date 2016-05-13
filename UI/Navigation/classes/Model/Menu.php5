@@ -45,12 +45,11 @@ class Model_Menu {
 			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
 		$matches	= array();																		//  empty array to regular matching
 		$selected	= array();																		//  list of possibly selected links
-		foreach( $this->pageMap as $page ){															//  iterate link map
-			if( $page->link == $path ){
-				$selected[$page->path]	= 99;														//  ...
+		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
+			if( $pagePath == $path ){																//  page path matches requested path
+				$selected[$pagePath]	= strlen( $path );											//  note page with highest conformity (longest match length)
 				continue;
 			}
-
 			$regExp	= '';																			//  prepare empty regular expression
 			$parts	= explode( '/', $path );														//  split currently requested path into parts
 			while( count( $parts ) ){																//  iterate parts
@@ -63,8 +62,8 @@ class Model_Menu {
 					$selected[$page->path]	= strlen( $matches[0][0] );								//  note link path and its length @todo WRONG! note DEPTH, not length
 		}
 		arsort( $selected );																		//  sort link paths by its length, longest on top
-		$selected	= array_keys( $selected );
-		if( $selected && $first = array_shift( $selected ) ){
+		$paths	= array_keys( $selected );
+		if( $paths && $first = array_shift( $paths ) ){
 			$page		= $this->pageMap[$first];
 			$this->pageMap[$first]->active	= TRUE;
 			if( $page->parent )
@@ -206,7 +205,8 @@ class Model_Menu {
 						if( $subpage->status == 0 )
 							continue;
 						$subitem	= (object) array(
-							'parent'	=> $item,
+//							'parent'	=> $item,
+							'parent'	=> $page->identifier,
 							'type'		=> 'item',
 							'scope'		=> $scope,
 							'path'		=> $page->identifier.'/'.$subpage->identifier,
@@ -218,7 +218,7 @@ class Model_Menu {
 							'active'	=> FALSE,
 						);
 						$item->items[]	= $subitem;
-						$this->pageMap[$page->identifier.'/'.$subpage->identifier]	= $item;
+						$this->pageMap[$page->identifier.'/'.$subpage->identifier]	= $subitem;
 					}
 				}
 				$this->pages[$scope][]	= $item;

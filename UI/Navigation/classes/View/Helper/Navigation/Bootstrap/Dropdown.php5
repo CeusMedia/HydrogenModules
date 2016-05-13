@@ -29,7 +29,8 @@ class View_Helper_Navigation_Bootstrap_Dropdown{
 			$listClass	.= ' nav-pills';
 
 		$list	= array();
-		foreach( $this->menu->getPages( $this->scope, FALSE ) as $page ){
+		$pages	= $this->menu->getPages( $this->scope, FALSE );
+		foreach( $pages as $page ){
 			if( $page->type == 'menu' ){
 				$sublist	= array();
 				foreach( $page->items as $subpage ){
