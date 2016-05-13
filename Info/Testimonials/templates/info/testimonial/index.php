@@ -29,7 +29,9 @@ if( $testimonials ){
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'list.top', 'list.bottom', 'form.top', 'form.bottom', 'form.info' ), 'html/info/testimonial/' ) );
 
-$button = UI_HTML_Tag::create( 'a', 'Kommentar abgeben', array(
+$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+
+$button 	= UI_HTML_Tag::create( 'a', 'Kommentar abgeben', array(
 	'href'			=> '#modal-comment-add',
 	'class'			=> 'btn',
 	'onclick'		=> 'selectCourse(0);',
@@ -45,38 +47,42 @@ return $textTop.'
 '.$textFormTop.'
 <div class="row-fluid">
 	<div class="span8">
-<form action="./info/course/addComment" method="post">
-	<div class="row-fluid">
-		<div class="span12">
-			<label for="input_title">Deine Meinung <small class="muted">(Überschrift)</small></label>
-			<input type="text" name="title" id="input_title" class="span12" required="required"/>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<label for="input_description">Ausfühlicher Kommentar</label>
-			<textarea name="description" id="input_description" rows="6" class="span12" required="required"></textarea>
-		</div>
-	</div>
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="row-fluid">
-				<div class="span4">
-					<label for="input_username">Dein Name</label>
-					<input type="text" name="username" id="input_username" class="span12" required="required"/>
-				</div>
-				<div class="span8">
-					<label for="input_email">E-Mail-Adresse <small class="muted">(optional, wird nicht angezeigt)</small></label>
-					<input type="text" name="email" id="input_email" class="span12"/>
-				</div>
+		<div class="content-panel content-panel-form">
+			<div class="content-panel-inner">
+				<form action="./info/course/addComment" method="post">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_title">Deine Meinung <small class="muted">(Überschrift)</small></label>
+							<input type="text" name="title" id="input_title" class="span12" required="required"/>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_description">Ausfühlicher Kommentar</label>
+							<textarea name="description" id="input_description" rows="6" class="span12" required="required"></textarea>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="row-fluid">
+								<div class="span4">
+									<label for="input_username">Dein Name</label>
+									<input type="text" name="username" id="input_username" class="span12" required="required"/>
+								</div>
+								<div class="span8">
+									<label for="input_email">E-Mail-Adresse <small class="muted">(optional, wird nicht angezeigt)</small></label>
+									<input type="text" name="email" id="input_email" class="span12"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="buttonbar">
+						<button class="btn btn-primary" name="save" value="addComment">'.$iconSave.'&nbsp;absenden</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
-	<div class="buttonbar">
-		<button class="btn btn-primary" name="save" value="addComment">absenden</button>
-	</div>
-</form>
-</div>
 	<div class="span4">
 		'.$textFormInfo.'
 	</div>
