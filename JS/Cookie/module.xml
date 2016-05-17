@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Cookie</title>
+	<description><![CDATA[A simple, lightweight JavaScript API for handling browser cookies.]]></description>
+	<category>JavaScript</category>
+	<version>2.1.1</version>
+	<source url="https://github.com/js-cookie/js-cookie">Github</source>
+	<license source="https://github.com/js-cookie/js-cookie/blob/master/MIT-LICENSE.txt">MIT</license>
+	<files>
+		<script source="local" load="auto">js.cookie.js</script>
+	</files>
+</module>
