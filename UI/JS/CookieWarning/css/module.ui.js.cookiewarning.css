@@ -1,0 +1,16 @@
+#cookie-warning {
+	color: white;
+	background-color: rgba(0,0,0,1);
+	text-align: center;
+	}
+#cookie-warning #cookie-warning-inner {
+	padding: 12px 20px 10px 20px;
+	}
+
+#cookie-warning.absolute {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2000;
+	}
