@@ -72,6 +72,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="yes" type="boolean" name="login.forward.force">no</config>
 	<config protected="yes" type="string" name="logout.forward.path"/>
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
+	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="no" type="boolean" name="register">yes</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
