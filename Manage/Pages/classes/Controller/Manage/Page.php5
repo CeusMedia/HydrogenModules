@@ -186,6 +186,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$page		= $this->checkPageId( $pageId );
 		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
+		$scope		= (int) $session->get( 'module.manage_pages.scope' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
@@ -205,6 +206,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				$this->request->set( 'identifier', preg_replace( "/[^a-z0-9_-]/", "", $this->request->get( 'identifier' ) ) );
 
 			$indices		= array(
+				'scope'			=> $scope,
 				'parentId'		=> $this->request->get( 'parentId' ),
 				'pageId'		=> '!='.$pageId,
 				'identifier'	=> $this->request->get( 'identifier' )
