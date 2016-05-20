@@ -31,7 +31,8 @@ class View_Helper_Navigation{
 		$helper->setLinksToSkip( $this->linksToSkip );
 		$helper->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
 		$helper->setScope( $scope );
-		return $helper->render( $scope, $style );
+		$helper->setStyle( $style );
+		return $helper->render();
 	}
 
 	public function setInverse( $boolean = NULL ){
