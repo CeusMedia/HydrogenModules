@@ -70,7 +70,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( 'Post abstract is missing.' );
 			else{
 				$data		= array(
-					'authorId'		=> $logicAuth->getCurrentUserId(),
+					'authorId'		=> $this->request->get( 'authorId' ),
 					'categoryId'	=> (int) $this->request->get( 'categoryId' ),
 					'status'		=> $this->request->get( 'status' ),
 					'language'		=> $this->request->get( 'language' ),
@@ -79,7 +79,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 					'abstract'		=> $this->request->get( 'abstract' ),
 					'createdAt'		=> time(),
 				);
-				$postId	= $this->modelPost->add( $data );
+				$postId	= $this->modelPost->add( $data, FALSE );
 				$this->messenger->noteSuccess( 'Der neue Eintrag wurde gespeichert.' );
 				$this->messenger->noteNotice( 'Bitte überarbeite jetzt deinen Eintrag!<br/>Wenn du fertig bist, kannst du den Eintrag mit dem Status "öffentlich" sichtbar machen.' );
 				$this->restart( './manage/blog/edit/'.$postId );
