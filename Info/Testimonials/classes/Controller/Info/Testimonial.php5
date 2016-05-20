@@ -19,6 +19,7 @@ class Controller_Info_Testimonial extends CMF_Hydrogen_Controller{
 	public function addComment(){
 		if( $this->request->get( 'save' ) ){
 			$data	= $this->request->getAll();
+			$data['timestamp']	= time();
 			$this->model->add( $data );
 			$this->messenger->noteSuccess( 'Der Kommentar wurde gespeichert.<br/>Er wird angezeigt, nachdem er geprüft und frei geschaltet wurde.' );
 		}

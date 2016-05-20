@@ -49,7 +49,7 @@ return $textTop.'
 	<div class="span8">
 		<div class="content-panel content-panel-form">
 			<div class="content-panel-inner">
-				<form action="./info/course/addComment" method="post">
+				<form action="./info/testimonial/addComment" method="post">
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">Deine Meinung <small class="muted">(Überschrift)</small></label>
