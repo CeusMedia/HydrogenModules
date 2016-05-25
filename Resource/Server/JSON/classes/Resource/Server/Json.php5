@@ -63,7 +63,7 @@ class Resource_Server_Json {
 
 		$this->serverUri	= $module->get( 'uri' );
 		if( empty( $this->serverUri ) )
-			throw new RuntimeException( 'No server URI set in config (server.uri)' );
+			throw new RuntimeException( 'No server URI set in module config (Resource_Server_JSON:uri)' );
 
 		if( $module->get( 'userAgent' ) )
 			$this->userAgent		= $module->get( 'userAgent' );
