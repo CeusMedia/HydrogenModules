@@ -3,12 +3,13 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
 	<log version="0.2.5">Lint JavaScript.</log>
 	<log version="0.2.6">Translate to english.</log>
+	<log versino="0.2.7">Add relation to module Manage:Projects.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -56,6 +57,7 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Users</needs>
+		<needs type="module">Manage_Projects</needs>
 		<supports type="module">UI_Markdown</supports>
 	</relations>
 	<link xml:lang="de" access="acl" rank="80" path="work/issue">Probleme</link>
