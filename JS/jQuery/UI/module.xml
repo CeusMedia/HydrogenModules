@@ -2,27 +2,30 @@
 <module>
 	<title>JS: jQuery UI</title>
 	<description><![CDATA[jQuery User Interface]]></description>
-	<version>1.9.2-p1</version>
+	<version>1.9.2-p2</version>
+	<log version="1.9.2">Add jQuery UI v1.9.2.</log>
+	<log version="1.9.2-p1">Realize theme 'smoothness' is style files.</log>
+	<log version="1.9.2-p2">Install styles and images in common theme folder.</log>
 	<category>JavaScript</category>
 	<author>jQuery UI Team</author>
 	<url>http://jqueryui.com/</url>
 	<license source="http://jquery.org/license">MIT / GPL 2</license>
 	<files>
 		<script load="auto">jquery-ui-1.9.2.min.js</script>
-		<style load="auto">jquery-ui-smoothness.css</style>
-		<image source="theme">smoothness/ui-bg_flat_0_aaaaaa_40x100.png</image>
-		<image source="theme">smoothness/ui-bg_flat_75_ffffff_40x100.png</image>
-		<image source="theme">smoothness/ui-bg_glass_55_fbf9ee_1x400.png</image>
-		<image source="theme">smoothness/ui-bg_glass_65_ffffff_1x400.png</image>
-		<image source="theme">smoothness/ui-bg_glass_75_dadada_1x400.png</image>
-		<image source="theme">smoothness/ui-bg_glass_75_e6e6e6_1x400.png</image>
-		<image source="theme">smoothness/ui-bg_glass_95_fef1ec_1x400.png</image>
-		<image source="theme">smoothness/ui-bg_highlight-soft_75_cccccc_1x100.png</image>
-		<image source="theme">smoothness/ui-icons_2e83ff_256x240.png</image>
-		<image source="theme">smoothness/ui-icons_222222_256x240.png</image>
-		<image source="theme">smoothness/ui-icons_454545_256x240.png</image>
-		<image source="theme">smoothness/ui-icons_888888_256x240.png</image>
-		<image source="theme">smoothness/ui-icons_cd0a0a_256x240.png</image>
+		<style load="auto" source="common">jquery-ui-smoothness.css</style>
+		<image source="common">smoothness/ui-bg_flat_0_aaaaaa_40x100.png</image>
+		<image source="common">smoothness/ui-bg_flat_75_ffffff_40x100.png</image>
+		<image source="common">smoothness/ui-bg_glass_55_fbf9ee_1x400.png</image>
+		<image source="common">smoothness/ui-bg_glass_65_ffffff_1x400.png</image>
+		<image source="common">smoothness/ui-bg_glass_75_dadada_1x400.png</image>
+		<image source="common">smoothness/ui-bg_glass_75_e6e6e6_1x400.png</image>
+		<image source="common">smoothness/ui-bg_glass_95_fef1ec_1x400.png</image>
+		<image source="common">smoothness/ui-bg_highlight-soft_75_cccccc_1x100.png</image>
+		<image source="common">smoothness/ui-icons_2e83ff_256x240.png</image>
+		<image source="common">smoothness/ui-icons_222222_256x240.png</image>
+		<image source="common">smoothness/ui-icons_454545_256x240.png</image>
+		<image source="common">smoothness/ui-icons_888888_256x240.png</image>
+		<image source="common">smoothness/ui-icons_cd0a0a_256x240.png</image>
 	</files>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
