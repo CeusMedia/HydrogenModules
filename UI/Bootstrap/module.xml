@@ -3,93 +3,58 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>3.3.6-p2</version>
+	<version>3.3.6-p4</version>
+	<log version="2.3.2">Add Bootstrap v2.3.2.</log>
+	<log version="3.3.6">Add Bootstrap v3.3.6 and option to set used version.</log>
+	<log version="3.3.6-p1">Improve file handling in hook.</log>
+	<log version="3.3.6-p2">Add support for Bootstrap themes.</log>
+	<log version="3.3.6-p3">Install files into common theme path.</log>
+	<log version="3.3.6-p4">Extract hook to new view helper class.</log>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
 	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
 	<license source="https://github.com/twbs/bootstrap/blob/master/LICENSE" title="MIT License">MIT</license>
 	<files>
-		<style>bootstrap/2.3.2/css/bootstrap.css</style>
-		<style>bootstrap/2.3.2/css/bootstrap.min.css</style>
-		<style>bootstrap/2.3.2/css/bootstrap-responsive.css</style>
-		<style>bootstrap/2.3.2/css/bootstrap-responsive.min.css</style>
-		<style>bootstrap/2.3.2/img/glyphicons-halflings.png</style>
-		<style>bootstrap/2.3.2/img/glyphicons-halflings-white.png</style>
-		<style>bootstrap/3.3.6/css/bootstrap.css</style>
-		<style>bootstrap/3.3.6/css/bootstrap.css.map</style>
-		<style>bootstrap/3.3.6/css/bootstrap.min.css</style>
-		<style>bootstrap/3.3.6/css/bootstrap.min.css.map</style>
-		<style>bootstrap/3.3.6/css/bootstrap-theme.css</style>
-		<style>bootstrap/3.3.6/css/bootstrap-theme.css.map</style>
-		<style>bootstrap/3.3.6/css/bootstrap-theme.min.css</style>
-		<style>bootstrap/3.3.6/css/bootstrap-theme.min.css.map</style>
-		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot</style>
-		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg</style>
-		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
-		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
-		<style>bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
-		<style>bootstrap.print.css</style>
+		<class>View/Helper/Bootstrap.php5</class>
+		<style source="common">bootstrap/2.3.2/css/bootstrap.css</style>
+		<style source="common">bootstrap/2.3.2/css/bootstrap.min.css</style>
+		<style source="common">bootstrap/2.3.2/css/bootstrap-responsive.css</style>
+		<style source="common">bootstrap/2.3.2/css/bootstrap-responsive.min.css</style>
+		<style source="common">bootstrap/2.3.2/img/glyphicons-halflings.png</style>
+		<style source="common">bootstrap/2.3.2/img/glyphicons-halflings-white.png</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap.css</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap.css.map</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap.min.css</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap.min.css.map</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap-theme.css</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap-theme.css.map</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap-theme.min.css</style>
+		<style source="common">bootstrap/3.3.6/css/bootstrap-theme.min.css.map</style>
+		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot</style>
+		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg</style>
+		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
+		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
+		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
+		<style source="common">bootstrap.print.css</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
 		<script>bootstrap/3.3.6/bootstrap.js</script>
 		<script>bootstrap/3.3.6/bootstrap.min.js</script>
 	</files>
-	<config protected="no" type="boolean" name="enabled">no</config>
+	<config protected="no" type="boolean" name="enabled">yes</config>
 	<config protected="no" type="boolean" name="cdn">no</config>
 	<config protected="no" type="string" name="cdn.path">https://maxcdn.bootstrapcdn.com/bootstrap/%s/</config>
 	<config protected="no" type="boolean" name="local">yes</config>
 	<config protected="no" type="string" name="local.path">bootstrap/%s/</config>
 	<config protected="no" type="string" name="local.theme"></config>
 	<config protected="no" type="boolean" name="map">no</config>
-	<config protected="no" type="boolean" name="minified">no</config>
+	<config protected="no" type="boolean" name="minified">yes</config>
 	<config protected="no" type="boolean" name="responsive">yes</config>
 	<config protected="no" type="string" name="version" values="2.3.2,3.3.6">2.3.2</config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 		<supports type="module">UI_Helper_Messenger_Bootstrap</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$context->addBodyClass( 'uses-bootstrap' );
-$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
-if( !$options->get( 'enabled' ) )
-	return;
-$majorVersion	= (int) substr( $options->get( 'version' ), 0, 1 );
-$pathCdn		= sprintf( $options->get( 'cdn.path' ), $options->get( 'version' ) );
-$pathLocal		= sprintf( $options->get( 'local.path' ), $options->get( 'version' ) );
-$suffix			= $options->get( 'minified' ) ? '.min' : '';
-$script			= 'css/bootstrap'.$suffix.'.css';
-
-if( $options->get( 'cdn' ) ){
-	$context->addThemeStyle( $pathCdn.$script, 'top', array( 'crossorigin' => 'anonymous' ) );
-	$context->js->addUrl( $pathCdn.'js/bootstrap'.$suffix.'.js' );
-	if( $majorVersion === 3 ){
-		if( $options->get( 'map' ) ){
-			$script	= 'css/bootstrap'.$suffix.'.css.map';
-			$context->addThemeStyle( $pathCdn.$script, 'top', array( 'crossorigin' => 'anonymous' ) );
-		}
-	}
-}
-else if( $options->get( 'local' ) ){
-	$context->addThemeStyle( $pathLocal.$script, 'top' );
-	$context->js->addUrl( $env->getConfig()->get( 'path.scripts' ).$pathLocal.'bootstrap'.$suffix.'.js' );
-	if( $majorVersion === 2 ){
-		if( $options->get( 'responsive' ) ){
-			$script	= 'css/bootstrap-responsive'.$suffix.'.css';
-			$context->addThemeStyle( $pathLocal.$script, 'top' );
-		}
-	}
-	else if( $majorVersion === 3 ){
-		if( $options->get( 'map' ) ){
-			$script	= 'css/bootstrap'.$suffix.'.css.map';
-			$context->addThemeStyle( $pathCdn.$script, 'top' );
-		}
-	}
-}
-if( $options->get( 'local.theme' ) ){
-	$script	= 'css/bootstrap-'.$options->get( 'local.theme' ).$suffix.'.css';
-	$context->addThemeStyle( $pathLocal.$script, 'top' );
-}
-$context->addThemeStyle( 'bootstrap.print.css', 'top' );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_Bootstrap::___onPageApplyModules</hook>
 </module>
