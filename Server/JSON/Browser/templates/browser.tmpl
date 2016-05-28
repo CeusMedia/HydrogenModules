@@ -1,63 +1,82 @@
-
-
-
-
-<h2><%config.app.name%></h2>
-<div style="float: left; width: 35em;">
-	<h3>Request</h3>
-	<form id="form_browser" action="" method="post">
-		<fieldset>
-			<ul class="input">
-				<li class="column-left-30">
-					<label>Controller</label>
-					<select name="controller" id="input_controller"><%optController%></select>
-				</li>
-				<li class="column-right-70">
-					<label>Action</label>
-					<select name="action" id="input_action"><%optAction%></select>
-				</li>
-				<li class="column-clear">
-					<label>Token</label>
-					<input name="token" id="input_token" value="<%?token%>"/>
-				</li>
-				<li>
-					<label>Arguments: <%?arguments%></label>
-					<input name="path" id="input_path" value="<%?path%>"/>
-				</li>
-			</ul>
-			<button type="submit">anfragen</button>
-			<br/>
-			<br/>
-			<ul class="input">
-				<li>
-					<label>POST Data</label>
-					<textarea name="post" id="input_post"><%?post%></textarea><br/>
-				</li>
-			</ul>
-			<button type="submit">absenden</button>
-		</fieldset>
-	</form>
-	<br/>
-	<br/>
-<!--	<h3>Response: JSON</h3>
-	<xmp class="js" style="max-height: 200px"><%?json.raw%></xmp>-->
-</div>
-<div style="margin-left: 38em;">
-	<h3>Response</h3>
-	<div id="response-data">
-		<%?data.view%>
+<div class="container">
+	<h2><%config.app.name%></h2>
+	<div class="row-fluid">
+		<div class="span4">
+			<div class="content-panel content-panel-form">
+				<h3>Request</h3>
+				<div class="content-panel-inner">
+					<form id="form_browser" action="" method="post">
+						<div class="row-fluid">
+							<div class="span6">
+								<label>Controller</label>
+								<select name="controller" id="input_controller" class="span12"><%optController%></select>
+							</div>
+							<div class="span6">
+								<label>Action</label>
+								<select name="action" id="input_action" class="span12"><%optAction%></select>
+							</div>
+						</div>
+						<div class="row-fluid">
+							<div class="span12">
+								<label>Token</label>
+								<input type="text" name="token" id="input_token" class="span12" value="<%?token%>"/>
+							</div>
+						</div>
+						<div class="row-fluid">
+							<div class="span12">
+								<label>Arguments: <%?arguments%></label>
+								<input type="text" name="path" id="input_path" class="span12" value="<%?path%>"/>
+							</div>
+						</div>
+						<div class="row-fluid">
+							<div class="span12">
+								<label>POST Data</label>
+								<textarea name="post" id="input_post" class="span12" rows="5"><%?post%></textarea><br/>
+							</div>
+						</div>
+						<div class="buttonbar">
+							<button type="submit" class="btn">absenden</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="content-panel content-panel-form">
+				<h3>Execution</h3>
+				<div class="content-panel-inner">
+					<div id="request-data">
+						<dl class="not-dl-horizontal">
+							<dt>Time Init</dt>
+							<dd><%?time_init%> ms</dd>
+							<dt>Time Render</dt>
+							<dd><%?time_render%> ms</dd>
+							<dt>URL</dt>
+							<dd id="data-url"><%?url%></dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="span8">
+			<div class="content-panel content-panel-form">
+				<h3>Response</h3>
+				<div class="content-panel-inner">
+					<div id="response-data">
+						<%?data.view%>
+					</div>
+					<%?data.exception%>
+					<%?data.debug%>
+				</div>
+			</div>
+			<div class="content-panel content-panel-form">
+				<h3>Raw Response</h3>
+				<div class="content-panel-inner">
+					<div id="response-raw">
+						<xmp class="js"><%?json.raw%></xmp>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<%?data.exception%>
-	<%?data.debug%>
-	<div id="request-data">
-		<dl>
-			<dt>Time Init</dt>
-			<dd><%?time_init%> ms</dd>
-			<dt>Time Render</dt>
-			<dd><%?time_render%> ms</dd>
-			<dt>URL</dt>
-			<dd id="data-url"><%?url%></dd>
-		</dl>
-	</div>
+
+	<!--	<h3>Response: JSON</h3>
 </div>
-<div class="column-clear"></div>

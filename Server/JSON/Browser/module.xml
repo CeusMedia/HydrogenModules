@@ -10,7 +10,11 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 <b>Attention</b>: You will need to <u>secure</u> this server user interface if you face anonymous access.
 ]]></description>
 	<category>Server</category>
-	<version>0.2.1</version>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improve exception handling.</log>
+	<log version="0.3">Migrate single template to panels.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<todo>implement power switch: on - show browser | off - show pure response</todo>
@@ -18,7 +22,13 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 	<todo>implement IP access filter (define IPs in config which are allowed, block all others)</todo>
 	<files>
 		<class>Browser.php5</class>
-		<template>browser.tmpl</template>
+		<template>browser/index.php</template>
+		<template>browser/panel.debug.php</template>
+		<template>browser/panel.error.php</template>
+		<template>browser/panel.form.php</template>
+		<template>browser/panel.info.php</template>
+		<template>browser/panel.json.php</template>
+		<template>browser/panel.response.php</template>
 		<script>LocalServerFrontendController.js</script>
 		<script>LocalServerFrontendController.min.js</script>
 		<script>browser.js</script>
@@ -28,6 +38,7 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 		<needs type="module">JS_jQuery_deparam</needs>
 		<needs type="module">Server_Info_Disclosure</needs>
 		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_CSS_Panel</needs>
 	</relations>
    <config type="boolean" name="enabled" protected="yes">yes</config>
 </module>
