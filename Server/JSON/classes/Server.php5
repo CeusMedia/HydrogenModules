@@ -62,7 +62,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$data		= NULL;
 		$debug		= NULL;
 		$exception	= NULL;
-		
+
 		error_log( getEnv( 'HTTP_REFERER' )."\n", 3, 'logs/referer.log' );
 		if( !$this->validateReferer() )
 			$this->throw403();
@@ -94,6 +94,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		$data	= array(																			//  prepare return data
 			'appName'		=> $config->get( 'app.name' ),
 			'appVersion'	=> $config->get( 'app.version' ),
+			'time'			=> microtime( TRUE ),
 			'data'			=> $data																//  ...append message list
 		);
 		if( $debug )

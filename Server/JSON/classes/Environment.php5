@@ -36,7 +36,8 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 		$this->initRequest();																		//  setup HTTP request handler
 		$this->initResponse();																		//  setup HTTP response handler
 		$this->initRouter();																		//  setup request router
-#		$this->initLanguage();																		//  [DO NOT] setup language support
+		$this->initLanguage();																		//  [DO NOT] setup language support
+		$this->initPage();
 		$this->__onInit();																			//  call init event (implemented by extending classes)
 		if( $this->getModules()->has( 'Resource_Database' ) )
 			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
