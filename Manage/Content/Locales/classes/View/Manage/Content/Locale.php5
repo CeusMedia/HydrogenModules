@@ -18,17 +18,31 @@ class View_Manage_Content_Locale extends CMF_Hydrogen_View {
 		$language	= $this->getData( 'language' );
 		$type		= $this->getData( 'type' );
 		$types		= $this->getData( 'types' );
+		$fileId		= $this->getData( 'fileId', '' );
 
 		$fileTree	= '';
 		if( $language && $type ){
-			$current	= base64_decode( $this->getData( 'fileId', '' ) );
+			$current	= base64_decode( $fileId );
 			$files		= $this->getData( 'files' );
 			$folder		= $types[$type]['folder'];
 			$baseUrl	= './manage/content/locale/'.$language.'/'.$type.'/';
 			$fileTree	= $this->renderTree( $baseUrl, $files, $current, $folder );
+
+
 		}
 		$this->addData( 'fileTree', $fileTree );
-		$this->env->getPage()->addThemeStyle( 'module.manage.content.locales.css' );
+
+		$page	= $this->env->getPage();
+		$page->addThemeStyle( 'module.manage.content.locales.css' );
+		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'LocaleEditor.js' );
+
+		$script	= '
+LocaleEditor.language	= "'.$language.'";
+LocaleEditor.type		= "'.$type.'";
+LocaleEditor.fileId		= "'.$fileId.'";
+LocaleEditor.setupCodeMirror();';
+		if( $fileId )
+			$page->js->addScriptOnReady( $script, 9 );
 	}
 
 	protected function getFolders( $files ){

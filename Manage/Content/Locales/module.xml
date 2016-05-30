@@ -3,7 +3,7 @@
 	<title>Manage: Content: Locales</title>
 	<description><![CDATA[Editor for language files, HTML blocks and mail templates.]]></description>
 	<category>Management</category>
-	<version>0.5.9</version>
+	<version>0.6.1</version>
 	<log version="0.5.3">Use fontend resource module.</log>
 	<log version="0.5.4">Use language resolved by frontend module.</log>
 	<log version="0.5.5">Hide language selector if only one language in frontend.</log>
@@ -11,6 +11,8 @@
 	<log version="0.5.7">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.5.8">Apply panel style.</log>
 	<log version="0.5.9">Update button colors.</log>
+	<log version="0.6">Extend code editor by AJAX-save with Ctrl-S.</log>
+	<log version="0.6.1">Extract code mirror call to JavaScript file.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -21,6 +23,7 @@
 		<locale>de/html/manage/content/locale/index.top.html</locale>
 		<locale>de/html/manage/content/locale/index.bottom.html</locale>
 		<style source="theme">module.manage.content.locales.css</style>
+		<script>LocaleEditor.js</script>
 	</files>
 	<link xml:lang="de" access="acl" path="manage/content/locale">Sprachinhalte</link>
 	<link xml:lang="en" access="acl" path="manage/content/locale">Locales</link>

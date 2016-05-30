@@ -9,12 +9,13 @@ if( $fileId && isset( $content ) ){
 		'style'	=> 'width: 100%; height: 400px; font-size: 0.9em; padding: 0.5em 1em;',
 		'name'	=> 'content',
 		'id'	=> 'input_content',
-		'class'	=> 'max CodeMirror CodeMirror-auto',
+		'class'	=> 'max not-CodeMirror not-CodeMirror-auto',
 	);
 	$attributesButton	= array(
 		'type'	=> 'submit',
 		'name'	=> 'do',
 		'value'	=> 'save',
+		'id'	=> 'input_content',
 		'class'	=> 'button save btn btn-primary',
 	);
 	$textarea	= UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributesTextarea );
@@ -31,7 +32,8 @@ if( $fileId && isset( $content ) ){
 			</div>
 		</form>
 	</div>
-</div>';
+</div>
+';
 }
 else if( $language ){
 //	$panelAddFolder	= '[AddFolder]';

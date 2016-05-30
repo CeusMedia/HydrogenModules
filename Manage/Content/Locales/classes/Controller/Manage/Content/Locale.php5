@@ -38,6 +38,25 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$this->languages	= $this->frontend->getLanguages();
 	}
 
+	public function ajaxSaveContent(){
+		$request	= $this->env->getRequest();
+		$language	= $request->get( 'language' );
+		$fileId		= base64_decode( $request->get( 'fileId' ) );
+		if( $language && $fileId ){
+			$pathName	= $this->basePath.$language.'/'.$fileId;
+			try{
+				$content	= $request->get( 'content' );
+				$editor		= new FS_File_Editor( $pathName );
+				$editor->writeString( $content );
+				$this->handleJsonResponse( 'data', TRUE );
+			}
+			catch( Exception $e ){
+				$this->handleJsonResponse( 'error', $e->getMessage() );
+			}
+		}
+		exit;
+	}
+
 	public function edit( $language, $type, $fileId) {
 		$request	= $this->env->getRequest();
 		$filePath	= base64_decode( $fileId );
