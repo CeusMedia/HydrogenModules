@@ -114,7 +114,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	public function ajaxOrderPages(){
 		$pageIds	= $this->request->get( 'pageIds' );
 		foreach( $pageIds as $nr => $pageId )
-			$this->model->edit( $pageId, array( 'rank' => $nr ) );
+			$this->model->edit( $pageId, array( 'rank' => $nr + 1 ) );
 		header( "Content-Type: application/json" );
 		print( json_encode( TRUE ) );
 		exit;
@@ -237,6 +237,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( $column ) )
 						$data[$column]	= $this->request->get( $column );
+				if( $data['scope'] != $page->scope )										//  switched scope
+					$data['parentId']	= 0;												//  clear parent page
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
