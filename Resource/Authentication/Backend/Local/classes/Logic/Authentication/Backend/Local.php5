@@ -16,8 +16,11 @@ class Logic_Authentication_Backend_Local{
 	 *	@todo		remove support for old user password
 	 */
 	public function checkPassword( $userId, $password ){
+
 		if( $this->env->getModules()->has( 'Resource_Users' ) ){
-			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+			$hasPasswordLogic	= class_exists( 'Logic_UserPassword' );
+			$isMinimumVersion	= version_compare( PHP_VERSION, '5.5.0', '>=' );
+			if( $isMinimumVersion && $hasPasswordLogic ){											//  @todo  remove line if old user password support decays
 				$logic	= Logic_UserPassword::getInstance( $this->env );
 				if( $logic->hasUserPassword( $userId ) ){											//  @todo  remove line if old user password support decays
 					return $logic->validateUserPassword( $userId, $password );
