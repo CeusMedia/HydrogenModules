@@ -4,7 +4,7 @@
 	<description><![CDATA[Standalone JSON answering server application base.]]></description>
 This module installs the main classes needed to run a server application which is requested using REST and answering in JSON.
 	<category>Server</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype in project Chat:Server.</log>
 	<log version="0.2">Separated into this Hydrogen module.</log>
 	<log version="0.2.3">Added Piwik as tracker.</log>
@@ -17,6 +17,7 @@ This module installs the main classes needed to run a server application which i
 	<log version="0.3">Updated environment strictness.</log>
 	<log version="0.3.1">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.3.2">Load support for page in environment for browser.</log>
+	<log version="0.3.3">Enable environment self detection.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

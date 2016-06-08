@@ -19,7 +19,6 @@
  */
 class Environment extends CMF_Hydrogen_Environment_Web {
 
-
 	/**
 	 *	Constructor, sets up all resources.
 	 *	@access		public
@@ -28,6 +27,7 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 	public function __construct() {
 		self::$classRouter	= 'CMF_Hydrogen_Environment_Router_Recursive';
 		self::$configFile	= "config/config.ini";
+		$this->detectSelf( FALSE );
 		$this->initClock();																			//  setup clock
 		$this->initConfiguration();																	//  setup configuration
 		$this->initModules();																		//  setup module support
