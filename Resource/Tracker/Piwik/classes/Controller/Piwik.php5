@@ -84,5 +84,8 @@ initPiwik('.json_encode( $config->getAll() ).');';
 		) );
 		$context->addBody( $noscript );																//  append noscript tag to body
 	}
+
+	public function index(){
+	}
 }
 ?>
