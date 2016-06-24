@@ -3,7 +3,8 @@
     <title>JS: jQuery: mmenu</title>
     <description><![CDATA[jQuery plugin for mobile navigation.]]></description>
     <category>JavaScript</category>
-    <version>5.5.3</version>
+    <version>5.5.3-p1</version>
+	<log version="5.5.3-p1">Moved theme from custom to common.</log>
     <author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
 	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
     <url>http://mmenu.frebsite.nl/</url>
@@ -26,32 +27,32 @@
 		<script>jquery.mmenu.min.all.js</script>
 		<script>jquery.mmenu.min.js</script>
 		<script>jquery.mmenu.oncanvas.min.js</script>
-		<style>jquery.mmenu.leftsubpanels.css</style>
-		<style>jquery.mmenu.panelshadow.css</style>
-		<style>jquery.mmenu.offcanvas.css</style>
-		<style>jquery.mmenu.counters.css</style>
-		<style>jquery.mmenu.dragopen.css</style>
-		<style>jquery.mmenu.searchfield.css</style>
-		<style>jquery.mmenu.sectionindexer.css</style>
-		<style>jquery.mmenu.navbars.css</style>
-		<style>jquery.mmenu.toggles.css</style>
-		<style>jquery.mmenu.iconpanels.css</style>
-		<style>jquery.mmenu.dividers.css</style>
-		<style>jquery.mmenu.autoheight.css</style>
-		<style>jquery.mmenu.oncanvas.css</style>
-		<style>jquery.mmenu.all.css</style>
-		<style>jquery.mmenu.css</style>
-		<style>jquery.mmenu.fullscreen.css</style>
-		<style>jquery.mmenu.iconbar.css</style>
-		<style>jquery.mmenu.tileview.css</style>
-		<style>jquery.mmenu.pageshadow.css</style>
-		<style>jquery.mmenu.widescreen.css</style>
-		<style>jquery.mmenu.effects.css</style>
-		<style>jquery.mmenu.multiline.css</style>
-		<style>jquery.mmenu.pagedim.css</style>
-		<style>jquery.mmenu.themes.css</style>
-		<style>jquery.mmenu.positioning.css</style>
-		<style>jquery.mmenu.borderstyle.css</style>
+		<style source="common">jquery.mmenu.leftsubpanels.css</style>
+		<style source="common">jquery.mmenu.panelshadow.css</style>
+		<style source="common">jquery.mmenu.offcanvas.css</style>
+		<style source="common">jquery.mmenu.counters.css</style>
+		<style source="common">jquery.mmenu.dragopen.css</style>
+		<style source="common">jquery.mmenu.searchfield.css</style>
+		<style source="common">jquery.mmenu.sectionindexer.css</style>
+		<style source="common">jquery.mmenu.navbars.css</style>
+		<style source="common">jquery.mmenu.toggles.css</style>
+		<style source="common">jquery.mmenu.iconpanels.css</style>
+		<style source="common">jquery.mmenu.dividers.css</style>
+		<style source="common">jquery.mmenu.autoheight.css</style>
+		<style source="common">jquery.mmenu.oncanvas.css</style>
+		<style source="common">jquery.mmenu.all.css</style>
+		<style source="common">jquery.mmenu.css</style>
+		<style source="common">jquery.mmenu.fullscreen.css</style>
+		<style source="common">jquery.mmenu.iconbar.css</style>
+		<style source="common">jquery.mmenu.tileview.css</style>
+		<style source="common">jquery.mmenu.pageshadow.css</style>
+		<style source="common">jquery.mmenu.widescreen.css</style>
+		<style source="common">jquery.mmenu.effects.css</style>
+		<style source="common">jquery.mmenu.multiline.css</style>
+		<style source="common">jquery.mmenu.pagedim.css</style>
+		<style source="common">jquery.mmenu.themes.css</style>
+		<style source="common">jquery.mmenu.positioning.css</style>
+		<style source="common">jquery.mmenu.borderstyle.css</style>
 		<file>licenses/jQuery.mmenu.license.txt</file>
 	</files>
 	<config protected="yes" type="boolean" name="auto">yes</config>
@@ -63,12 +64,12 @@
 $config	= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
 $pathJs	= $env->getConfig()->get( 'path.scripts' );
 if( $config->get( 'load' ) == "all" ){
-	$context->js->addUrl( $pathJs.'jquery.mmenu.min.all.js' );	
-	$context->addThemeStyle( 'jquery.mmenu.all.css' );
+	$context->js->addUrl( $pathJs.'jquery.mmenu.min.all.js' );
+	$context->addCommonStyle( 'jquery.mmenu.all.css' );
 }
 else{
-	$context->js->addUrl( $pathJs.'jquery.mmenu.min.js' );	
-	$context->addThemeStyle( 'jquery.mmenu.css' );
+	$context->js->addUrl( $pathJs.'jquery.mmenu.min.js' );
+	$context->addCommonStyle( 'jquery.mmenu.css' );
 }
 ]]></hook>
 </module>
