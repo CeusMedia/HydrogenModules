@@ -86,9 +86,9 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 	 *	@return		integer
 	 */
 	public function run() {
-		$request	= new Console_RequestReceiver();												//  
-		$parameters	= $request->getAll();															//  
-		array_shift( $parameters );																	//  
+		$request	= new Console_RequestReceiver();												//
+		$parameters	= $request->getAll();															//
+		array_shift( $parameters );																	//
 
 		if( count( $parameters ) < 1 ){	 															//  no job key given
 			$this->logError( 'Job ID needed.' );													//  log error
@@ -107,7 +107,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 		}
 		$job		= $this->jobs[$jobId];															//  get job data from job list by job ID
 		$classArgs	= array( $this->env, $this );													//  prepare job class instance arguments
-		$arguments	= array_keys( $parameters );													//  
+		$arguments	= array_keys( $parameters );													//
 		$className	= 'Job_'.$job->class;															//  build job class name
 		if( !class_exists( $className ) ){															//  job class is not existing
 			$this->logError( 'Job class "'.$className.'" is not existing.' );						//  log error

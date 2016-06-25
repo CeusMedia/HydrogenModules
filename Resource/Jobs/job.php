@@ -25,10 +25,10 @@ else{
 	CMC_Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
 }
 
-$request	= new Console_RequestReceiver();							//  
-$request	= new ADT_List_Dictionary( $request->getAll() );			//  
-$verbose	= $request->has( '--verbose' ) || $request->has( '-v' );	//  
-$test		= $request->has( '--test' ) || $request->has( '-t' );		//  
+$request	= new Console_RequestReceiver();							//
+$request	= new ADT_List_Dictionary( $request->getAll() );			//
+$verbose	= $request->has( '--verbose' ) || $request->has( '-v' );	//
+$test		= $request->has( '--test' ) || $request->has( '-t' );		//
 
 function handleError( $errno, $errstr, $errfile, $errline, array $errcontext ){
     if( error_reporting() === 0 )									    // error was suppressed with the @-operator
