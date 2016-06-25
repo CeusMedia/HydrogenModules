@@ -50,6 +50,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
 	<log version="0.6.1">Apply current environment and transport on waking queued mails.</log>
 	<log version="0.6.2">Support negative mail status (cancelled).</log>
+	<log version="0.6.3">Rewrite mail sending job loop and improve sleep time handling.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -1,14 +1,16 @@
 <?php
 class Job_Mail extends Job_Abstract{
 
+	protected $logic;
+
 	public function __onInit(){
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->logic	= new Logic_Mail( $this->env );
 	}
 
 	public function countQueuedMails(){
-		$logic		= new Logic_Mail( $this->env );
 		$conditions	= array( 'status' => array( 0, 1 ) );
-		$count		= $logic->countQueue( $conditions );
+		$count		= $this->logic->countQueue( $conditions );
 		$this->out( sprintf( "%s mails on queue.\n", $count ) );
 	}
 
@@ -18,24 +20,28 @@ class Job_Mail extends Job_Abstract{
 		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );
 
 		$this->log( 'run with config: {sleep: '.$sleep.', limit: '.$limit.'}' );
-		$logic		= new Logic_Mail( $this->env );
-		$conditions	= array( 'status' => array( 0, 1 ) );
-		$limits		= $limit > 0 ? array( 0, $limit ) : array();
+
+		$counter	= 0;
 		$listSent	= array();
-		if( ( $count = $logic->countQueue( $conditions, array(), $limits ) ) ){
-			foreach( $logic->getQueuedMails( array( 'status' => array( 0, 1 ) ) ) as $mail ){
+		$conditions	= array( 'status' => array( 0, 1 ) );
+		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
+		$count		= $this->logic->countQueue( $conditions, array() );
+		while( $count && $counter < $count && $counter < $limit ){
+			if( $counter > 0 && $sleep > 0 )
+				$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
+			$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
+			if( $mails && $mail = array_pop( $mails ) ){
+				$counter++;
 				try{
-					$logic->sendQueuedMail( $mail->mailId );
+					$this->logic->sendQueuedMail( $mail->mailId );
 					$listSent[]	= (int) $mail->mailId;
-					if( $sleep > 0 )
-						$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
 				}
 				catch( Exception $e ){
 					$this->logException( $e );
 				}
 			}
-			$this->log( '{count: '.$count.', sent: '.count( $listSent ).', ids: ['.join( ',', $listSent ).']}' );
 		}
+		$this->log( '{count: '.$count.', sent: '.count( $listSent ).', ids: ['.join( ',', $listSent ).']}' );
 	}
 }
 ?>
