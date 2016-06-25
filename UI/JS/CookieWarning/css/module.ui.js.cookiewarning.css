@@ -9,8 +9,13 @@
 
 #cookie-warning.absolute {
 	position: fixed;
-	top: 0;
 	left: 0;
 	width: 100%;
 	z-index: 2000;
+	}
+#cookie-warning.absolute.top {
+	top: 0;
+	}
+#cookie-warning.absolute.bottom {
+	bottom: 0;
 	}

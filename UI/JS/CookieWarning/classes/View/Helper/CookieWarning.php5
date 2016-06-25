@@ -25,7 +25,7 @@ class View_Helper_CookieWarning{
 					'id'	=> 'cookie-warning-inner'
 				) );
 				$bar		= UI_HTML_Tag::create( 'div', $content, array(
-					'class'	=> $options->get( 'absolute' ) ? 'absolute' : 'static',
+					'class'	=> $options->get( 'absolute' ) ? 'absolute '.$options->get( 'absolute.position' ) : 'static',
 					'id'	=> 'cookie-warning',
 				) );
 				$script		= 'function acceptCookies(){Cookies.set("acceptCookies",true); $("#cookie-warning").slideUp()};';
