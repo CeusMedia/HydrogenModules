@@ -202,8 +202,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
 
-			if( $this->request->has( 'identifier' ) )
-				$this->request->set( 'identifier', preg_replace( "/[^a-z0-9_-]/", "", $this->request->get( 'identifier' ) ) );
+			if( $this->request->has( 'identifier' ) ){
+				$identifier	= $this->request->get( 'identifier' );
+				$pattern	= '/[^a-z0-9_-]/';
+				$this->request->set( 'identifier', preg_replace( $pattern, "", $identifier ) );
+			}
 
 			$indices		= array(
 				'scope'			=> $scope,
@@ -212,24 +215,30 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				'identifier'	=> $this->request->get( 'identifier' )
 			);
 			if( $this->model->getByIndices( $indices ) ){
-				if( $this->request->get( 'parentId' ) )
-					$this->messenger->noteError( $words->errorIdentifierInParentTaken, $this->request->get( 'identifier' ) );
-				else
-					$this->messenger->noteError( $words->errorIdentifierTaken, $this->request->get( 'identifier' ) );
+				if( $this->request->get( 'parentId' ) ){
+					$message	= $words->errorIdentifierInParentTaken;
+					$identifier	= $this->request->get( 'identifier' );
+					$this->messenger->noteError( $message, $identifier );
+				}
+				else{
+					$message	= $words->errorIdentifierTaken;
+					$identifier	= $this->request->get( 'identifier' );
+					$this->messenger->noteError( $message, $identifier );
+				}
 			}
 			else{
 
-				if( $this->env->getModules()->has( 'Resource_Versions' ) ){					//  versioning module is installed
+				if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
 					$contentNew	= $this->request->get( 'content' );
-					if( $page->content !== $contentNew ){									//  new content differs from page content
-						$logic		= Logic_Versions::getInstance( $this->env );			//  start versioning logic
+					if( $page->content !== $contentNew ){											//  new content differs from page content
+						$logic		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
 						$versions	= $logic->getAll( 'Info_Pages', $pageId );
-						$found		= FALSE;												//  init indicator if current page content is a version
-						foreach( $versions as $version )									//  iterate all page versions
-							if( $version->content === $page->content )						//  page content is a version
-								$found = TRUE;												//  note this
-						if( !$found )														//  page content is not a version
-							$logic->add( 'Info_Pages', $pageId, $page->content );			//  store current page content as version
+						$found		= FALSE;														//  init indicator if current page content is a version
+						foreach( $versions as $version )											//  iterate all page versions
+							if( $version->content === $page->content )								//  page content is a version
+								$found = TRUE;														//  note this
+						if( !$found )																//  page content is not a version
+							$logic->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
 					}
 				}
 
@@ -237,8 +246,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( $column ) )
 						$data[$column]	= $this->request->get( $column );
-				if( $data['scope'] != $page->scope )										//  switched scope
-					$data['parentId']	= 0;												//  clear parent page
+				if( $scope != $page->scope )														//  switched scope
+					$data['parentId']	= 0;														//  clear parent page
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
