@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -17,6 +17,7 @@
 	<log version="0.3.1">Improve configuration value titles.</log>
 	<log version="0.3.2">Support mmenu in stylesheet.</log>
 	<log version="0.3.3">Make mobile navbar configurable.</log>
+	<log version="0.3.4">Track current page for other navigation components.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

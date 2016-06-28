@@ -3,7 +3,7 @@ class Model_Menu {
 
 	protected $pages	= array();
 	protected $pageMap	= array();
-	protected $current;
+	protected $current	= NULL;
 	public static $pathRequestKey		= "__path";
 
 	public function __construct( $env ){
@@ -24,6 +24,10 @@ class Model_Menu {
 		$this->readUserPages();
 	}
 
+	public function getCurrent(){
+		return $this->current;
+	}
+
 	public function getPages( $scope = NULL, $strict = TRUE ){
 		if( is_null( $scope ) )
 			return $this->pages;
@@ -32,6 +36,10 @@ class Model_Menu {
 		if( $strict )
 			throw new OutOfRangeException( 'Invalid scope: '.$scope );
 		return array();
+	}
+
+	public function getPageMap(){
+		return $this->pageMap;
 	}
 
 	/**
@@ -46,6 +54,7 @@ class Model_Menu {
 		$matches	= array();																		//  empty array to regular matching
 		$selected	= array();																		//  list of possibly selected links
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
+			$page->active = FALSE;
 			if( $pagePath == $path ){																//  page path matches requested path
 				$selected[$pagePath]	= strlen( $path );											//  note page with highest conformity (longest match length)
 				continue;
@@ -66,6 +75,7 @@ class Model_Menu {
 		if( $paths && $first = array_shift( $paths ) ){
 			$page		= $this->pageMap[$first];
 			$this->pageMap[$first]->active	= TRUE;
+			$this->current	= $this->pageMap[$first];
 			if( $page->parent )
 				$this->pageMap[$page->parent]->active = TRUE;
 			return $page->path;																		//  return longest link path
@@ -285,7 +295,8 @@ class Model_Menu {
 	}
 
 	public function setCurrent( $path ){
-		$this->current	= $path;
+//		$this->current	= $path;
+		$this->identifyActive( $path );
 	}
 }
 ?>
