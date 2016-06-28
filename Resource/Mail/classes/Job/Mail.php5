@@ -26,7 +26,7 @@ class Job_Mail extends Job_Abstract{
 		$conditions	= array( 'status' => array( 0, 1 ) );
 		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
 		$count		= $this->logic->countQueue( $conditions, array() );
-		while( $count && $counter < $count && $counter < $limit ){
+		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
 			if( $counter > 0 && $sleep > 0 )
 				$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
 			$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
