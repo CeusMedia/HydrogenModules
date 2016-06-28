@@ -39,6 +39,8 @@ $(document).ready(function(){
 					options.extraKeys['Ctrl-S'] = window[options.callbackSave];
 				}
 			}
+			if($(this).prop('readonly') || $(this).prop('disabled'))								//  if readonly or disabled
+				options.readOnly = $(this).prop('disabled') ? "nocursor" : true;					//  set mode to readonly or readonly-nocursor
 			var mirror = CodeMirror.fromTextArea($(this).get(0), options);
 			if(typeof options.height === "undefined"){
 				mirror.setSize("100%", $(this).height());
