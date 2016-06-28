@@ -35,7 +35,8 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 				if( !$page->module )																//  but no module has been selected
 					return FALSE;																	//  quit hook call and return without result
 				$module	= strtolower( str_replace( "_", "/", $page->module ) );						//  get module controller path
-				$controller->redirect( $module, 'index', $page->arguments );						//  redirect to module
+				if( substr( $pagePath, 0, strlen( $module ) ) !== $module )							//  module has not been addresses by page link
+					$controller->redirect( $module, 'index', $page->arguments );					//  redirect to module
 				break;
 			default:
 				throw new RangeException( 'Page type '.$page->type.' is unsupported' );
