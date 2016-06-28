@@ -4,3 +4,6 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	}
+.table-fixed {
+	table-layout: fixed;
+	}
