@@ -1,4 +1,4 @@
-<Files ~ "^(\..+|config.+|Makefile)$">
+<Files ~ "^(\..+|config\.+|Makefile)$">
     Deny From All
 </Files>
 <Files ~ "(\.inc|\.dist|~)$">
