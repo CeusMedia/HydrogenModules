@@ -77,7 +77,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 			$label	= $icon.$this->logoTitle;
 			if( $this->logoLink )
 				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $this->logoLink ) );
-			return UI_HTML_Tag::create( 'div', $label, array( 'id' => "logo" ) );
+			return UI_HTML_Tag::create( 'div', $label, array( 'id' => "navbar-logo" ) );
 		}
 		return '';
 	}

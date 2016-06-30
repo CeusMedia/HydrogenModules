@@ -1,5 +1,5 @@
 /*  --  LOGO  --  */
-#logo {
+#navbar-logo {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -11,20 +11,20 @@
 	margin-left: 20px;
 	font-weight: lighter;
 	}
-.inverse #logo {
+.inverse #navbar-logo {
 	text-shadow: 1px 1px 2px gray;
 	color: #FFF;
 	}
 
-#logo i {
+#navbar-logo i {
 	margin: 5px 5px 0px 0px;
 	}
 
-#logo a {
+#navbar-logo a {
 	color: black !important;
 	text-decoration: none;
 	}
-.inverse #logo a {
+.inverse #navbar-logo a {
 	color: white !important;
 	}
 
@@ -33,10 +33,10 @@
 	}
 
 /*  --  FIXED NAVBAR  --  */
-body.navbar-fixed .visible-desktop #logo {
+body.navbar-fixed .visible-desktop #navbar-logo {
 	position: fixed;
 	}
-body.navbar-fixed .hidden-desktop #logo {
+body.navbar-fixed .hidden-desktop #navbar-logo {
 	left: 1em;
 	}
 body.navbar-fixed #layout-field {

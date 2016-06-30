@@ -3,13 +3,14 @@
 	<title>UI: Nav: Bootstrap: Navbar</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Prepared CSS for use with jquery.mmenu.</log>
 	<log version="0.2.2">Set width to 300px.</log>
 	<log version="0.2.3">Allow injection of navigation helper.</log>
 	<log version="0.2.4">Add option to hide on mobile devices.</log>
+	<log version="0.2.5">Changed logo ID to navbar-logo to avoid conflict with header logo.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
