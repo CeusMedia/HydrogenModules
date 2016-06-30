@@ -51,6 +51,7 @@ class Model_Menu {
 	protected function identifyActive( $path = NULL ){
 		if( isset( $_REQUEST[self::$pathRequestKey] ) && $path === NULL )
 			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
+		$path		= $path ? $path : 'index';
 		$matches	= array();																		//  empty array to regular matching
 		$selected	= array();																		//  list of possibly selected links
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
@@ -70,6 +71,7 @@ class Model_Menu {
 				if( strlen( $matches[0][0] ) )														//  match has length
 					$selected[$page->path]	= strlen( $matches[0][0] );								//  note link path and its length @todo WRONG! note DEPTH, not length
 		}
+
 		arsort( $selected );																		//  sort link paths by its length, longest on top
 		$paths	= array_keys( $selected );
 		if( $paths && $first = array_shift( $paths ) ){

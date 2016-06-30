@@ -65,7 +65,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 					$subitem->title	= '<strike>'.$subitem->title.'</strike>';
 				$url	= './manage/page/edit/'.$subitem->pageId;
 				$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
-				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
 				$sublist[]	= UI_HTML_Tag::create( 'li', $link, array(
 					'class'			=> join( ' ', $classes ),
 					'data-page-id'	=> $subitem->pageId,
@@ -75,7 +75,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'nav nav-pills nav-stacked' ) );
 			else
 				$sublist	= '';
-			$classes	= array();
+			$classes	= array( 'autocut' );
 			if( $currentPage && $currentPage->pageId == $item->pageId )
 				$classes[]	= 'active';
 			if( $item->status == 0 )
