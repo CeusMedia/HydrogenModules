@@ -49,7 +49,31 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
 				$model		= new Model_Page( $env );												//  get model of pages
-				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 'main' );		//  focus on active top pages of main navigation scope
+				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 0 );				//  focus on active top pages of main navigation scope
+				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
+				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
+				foreach( $pages as $page ){															//  iterate found pages
+					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
+						$indices	= array( 'status' => '>0', 'parentId' => $page->pageId );		//  focus on active pages on sub level
+						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
+						foreach( $subpages as $subpage ){											//  iterate found pages
+							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
+							$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );			//  get timestamp of last action
+							$priority	= $subpage->priority;										//  get page priority
+							$frequency	= $subpage->changefreq;										//  get page change frequency
+							$context->addLink( $url, $timestamp, $priority, $frequency );			//  append URI to sitemap
+						}
+					}
+					else{																			//  page is static of dynamic (using a module)
+						$url	= $env->url.$page->identifier;										//  build absolute URI of top level page
+						$timestamp	= max( $page->createdAt, $page->modifiedAt );					//  get timestamp of last action
+						$priority	= $page->priority;												//  get page priority
+						$frequency	= $page->changefreq;											//  get page change frequency
+						$context->addLink( $url, $timestamp, $priority, $frequency );				//  append URI to sitemap
+					}
+				}
+
+				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 1 );				//  focus on active top pages of main navigation scope
 				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
