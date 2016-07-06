@@ -21,6 +21,7 @@ class View_Helper_CookieWarning{
 					) );
 				}
 				$buttons	= join( '&nbsp;', $buttons );
+				$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
 				$content	= UI_HTML_Tag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, array(
 					'id'	=> 'cookie-warning-inner'
 				) );
