@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -19,6 +19,7 @@
 	<log version="0.6.2">Add default page content (which is empty) for empty pages.</log>
 	<log version="0.6.3">Allow page resolution of empty node page and redirect to first child.</log>
 	<log version="0.6.4">Redirect module page only if module path is not within linked page.</log>
+	<log version="0.6.5">Set relation to module UI:MetaTags from optional to mandatory.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -38,7 +39,7 @@
 	<config type="boolean" protected="yes" name="sitemap">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
-		<supports type="module">UI_MetaTags</supports>
+		<needs type="module">UI_MetaTags</needs>
 	</relations>
 	<hook type="resource" resource="App" event="onDispatch">Controller_Info_Page::___onAppDispatch</hook>
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Page::___onRenderContent</hook>
