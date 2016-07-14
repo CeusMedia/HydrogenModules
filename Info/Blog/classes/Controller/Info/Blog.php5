@@ -157,6 +157,10 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post			= $this->checkPost( $postId );
+		$this->modelPost->edit( $postId, array(														//  save in post
+			'nrViews'	=> $post->nrViews + 1,														//  ... increased views
+			'viewedAt'	=> time(),																	//  ... last view timestamp
+		) );
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
 		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
@@ -179,5 +183,6 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'prevPost', $lastPost );
 		$this->addData( 'nextPost', $nextPost );
+
 	}
 }
