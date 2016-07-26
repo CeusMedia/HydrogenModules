@@ -25,7 +25,7 @@ return '
 	<h3>Zeiterfassung</h4>
 	<div class="content-panel-inner">
 		'.$helperShortList->render().'
-		'.$helperTimer->render().'
+<!--		'.$helperTimer->render().'-->
 		<div class="buttonbar">
 			'.$buttonNew.'
 		</div>

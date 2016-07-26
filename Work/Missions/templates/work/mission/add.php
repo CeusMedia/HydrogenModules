@@ -154,22 +154,27 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 	</div>';
 
 	$panelContentTabbed	= '
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
-		<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
-	</ul>
-	<div class="tab-content">
-		<div class="tab-pane active" id="tab1">
-			<div id="mirror-container">
-				<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
-				<p>
-					<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
-				</p>
-			</div>
-		</div>
-		<div class="tab-pane" id="tab2">
-			<div id="content-editor">
-				<div id="mission-content-html"></div>
+	<div class="content-panel">
+		<h4>Inhalt / Beschreibung</h4>
+		<div class="content-panel-inner">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#tab1" data-toggle="tab">Editor</a></li>
+				<li><a href="#tab2" data-toggle="tab">Ansicht</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab1">
+					<div id="mirror-container">
+						<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+						<p>
+							<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+						</p>
+					</div>
+				</div>
+				<div class="tab-pane" id="tab2">
+					<div id="content-editor">
+						<div id="mission-content-html"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>';
