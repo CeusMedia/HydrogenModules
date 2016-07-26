@@ -8,9 +8,9 @@ div.content-panel-inner form {
 /*  --  STYLE 1  --  */
 body.content-panel-style-1 div.content-panel {
 	padding: 0.2em 1.5em;
-	border-left: 5px solid #EEE;
 	margin-bottom: 2em;
 	overflow: hidden;
+	border-left: 5px solid #EEE;
 	background-color: rgba(255,255,255,1);
 	}
 body.content-panel-style-1 div.content-panel div.content-panel-inner {}
@@ -47,16 +47,16 @@ body.content-panel-style-1 div.content-panel>h5 {
 
 /*  --  STYLE 2  --  */
 body.content-panel-style-2 div.content-panel {
+	display: block;
 	padding: 3px;
+	margin-bottom: 20px;
+	overflow: hidden;
 	background: #EEE;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	display: block;
-	margin-bottom: 20px;
 /*	font-size: 12px;*/
 	border: 0;
-	overflow: hidden;
 	}
 body.content-panel-style-2 div.content-panel > div.content-panel-inner {
 	background: #fafafb;
@@ -100,14 +100,13 @@ body.content-panel-style-2 div.content-panel div.content-panel-inner div.buttonb
 
 /*  --  STYLE 3  --  */
 body.content-panel-style-3 div.content-panel {
+	display: block;
+	margin-bottom: 20px;
+	overflow: hidden;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	display: block;
-	margin-bottom: 20px;
-	font-size: 12px;
 	border: 0;
-	overflow: hidden;
 	}
 body.content-panel-style-3 div.content-panel > div.content-panel-inner {
 	background: #fafafb;
