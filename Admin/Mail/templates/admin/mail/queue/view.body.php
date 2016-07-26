@@ -1,7 +1,11 @@
 <?php
 
-$frontend	= Logic_Frontend::getInstance( $env );
-CMC_Loader::registerNew( 'php5', 'Mail_', $frontend->getPath().'classes/Mail/' );
+$path	= "";
+if( $env->getModules()->has( 'Resource_Frontend' ) ){
+	$frontend	= Logic_Frontend::getInstance( $env );
+	$path		= $frontend->getPath();
+}
+CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 
 
 $message	= '';
