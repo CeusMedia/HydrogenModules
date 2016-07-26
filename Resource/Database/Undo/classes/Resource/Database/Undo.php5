@@ -100,7 +100,7 @@ class Resource_Database_Undo{
 			$primaryKey	= $action->primaryKey;
 			$columns	= array_keys( $values[0] );
 			$dbc->beginTransaction();
-			$table		= new Database_PDO_TableWriter( $dbc, $tableName, $columns, $primaryKey );
+			$table		= new DB_PDO_TableWriter( $dbc, $tableName, $columns, $primaryKey );
 			switch( $action->mode ){
 				case Model_Undo_Log::MODE_DELETE:
 					foreach( $values as $data )
