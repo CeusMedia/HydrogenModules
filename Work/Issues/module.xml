@@ -3,13 +3,14 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
 	<log version="0.2.5">Lint JavaScript.</log>
 	<log version="0.2.6">Translate to english.</log>
-	<log versino="0.2.7">Add relation to module Manage:Projects.</log>
+	<log version="0.2.7">Add relation to module Manage:Projects.</log>
+	<log version="0.2.8">Use new Work:Timer integration with hooks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -62,6 +63,7 @@
 	</relations>
 	<link xml:lang="de" access="acl" rank="80" path="work/issue">Probleme</link>
 	<link xml:lang="en" access="acl" rank="80" path="work/issue">Issues</link>
+	<hook type="resource" resource="Work_Timer" event="registerModule">Controller_Work_Issue::___onRegisterTimerModule</hook>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (

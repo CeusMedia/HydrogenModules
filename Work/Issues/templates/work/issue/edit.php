@@ -47,12 +47,13 @@ if( $env->getModules()->has( 'UI_Markdown' ) )
 
 $main	= '
 <div class="content-panel" id="issue-details">
-<!--	<h3 class="autocut">Beschreibung</h3>-->
+	<h3>Beschreibung</h3>
 	<div class="content-panel-inner">
 		<form action="./work/issue/edit/'.$issue->issueId.'" method="post">
-<!--			<div class="issue-id"><small class="muted">Eintrag #'.$issue->issueId.'</small></div>-->
+			<div class="issue-id"><small class="muted">Eintrag #'.$issue->issueId.'</small></div>
 			<div id="panel-mode-0">
-<!--				<div class="issue-title">'.$issue->title.'</div>-->
+				<div class="issue-title">'.$issue->title.'</div>
+				<hr/>
 				<div class="issue-content">'.$content.'</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="not-icon-arrow-left icon-list"></i>&nbsp;'.$words['edit']['buttonCancel'].'</a>
@@ -91,7 +92,7 @@ $main		.= $view->loadTemplateFile( 'work/issue/edit.changes.php' );
 $main		.= $view->loadTemplateFile( 'work/issue/edit.emerge.php' );
 
 return '
-<h2 class="autocut"><span class="muted">Problem: </span>'.$issue->title.'</h2>
+<!--<h2 class="autocut"><span class="muted">Problem: </span>'.$issue->title.'</h2>-->
 <div class="issue-edit row-fluid">
 	<div class="span9">
 		'.$main.'
