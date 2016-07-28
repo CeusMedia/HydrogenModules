@@ -2,11 +2,12 @@
 
 if( !$useIssues )
 	return '';
+
 return '
 <div class="content-panel content-panel-form">
 	<h3>Zum Problem machen</h3>
 	<div class="content-panel-inner">
-		<form action="./work/mission/convert/'.$mission->missionId.'/issue" method="post">
+		<form action="./work/mission/convertToIssue/'.$mission->missionId.'/issue" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title">Titel des Problems</label>
