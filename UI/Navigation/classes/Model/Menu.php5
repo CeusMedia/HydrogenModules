@@ -214,7 +214,7 @@ class Model_Menu {
 					$indices	= array( 'parentId' => $page->pageId, 'scope' => 0 );
 					$subpages	= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 					foreach( $subpages as $subpage ){
-						if( $subpage->status == 0 )
+						if( $subpage->status < 1 )
 							continue;
 						$subitem	= (object) array(
 //							'parent'	=> $item,
