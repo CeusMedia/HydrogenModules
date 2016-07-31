@@ -19,7 +19,7 @@ UI.Messenger	= {
 					$("#layout-messenger>ul>li").each(function(){
 						UI.Messenger.autoRemoveMessage(this);
 					});
-				});	
+				});
 			}
 			UI.Messenger.status = 2;
 		}
@@ -47,19 +47,19 @@ UI.Messenger	= {
 				$("#layout-messenger>ul").remove();
 		})
 	},
-	noteSuccess: function(message){
-		return UI.Messenger.renderMessage(message,'success');
+	noteSuccess: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'success', sticky);
 	},
-	noteNotice: function(message){
-		return UI.Messenger.renderMessage(message,'notice');
+	noteNotice: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'notice', sticky);
 	},
-	noteError: function(message){
-		return UI.Messenger.renderMessage(message,'error');
+	noteError: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'error', sticky);
 	},
-	noteFailure: function(message){
-		return UI.Messenger.renderMessage(message,'failure');
+	noteFailure: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'failure', sticky);
 	},
-	renderMessage: function(message,typeClass){
+	renderMessage: function(message, typeClass, sticky){
 		UI.Messenger.__init();
 		container = $("#layout-messenger");
 		if(!$("ul",container).size())
@@ -68,7 +68,8 @@ UI.Messenger	= {
 		item = $("<li></li>").addClass(typeClass).html(message);
 		list.append(item.hide());
 		item.slideDown(UI.Messenger.timeSlideDown);
-		UI.Messenger.autoRemoveMessage(item);
+		if(UI.Messenger.timeRemove && !sticky)
+			UI.Messenger.autoRemoveMessage(item);
 	}
 };
 UI.Messenger.__init();
