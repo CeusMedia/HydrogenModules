@@ -47,19 +47,19 @@ UI.Messenger	= {
 				$("#layout-messenger>div").remove();
 		})
 	},
-	noteSuccess: function(message){
-		return UI.Messenger.renderMessage(message,'success');
+	noteSuccess: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'success', sticky);
 	},
-	noteNotice: function(message){
-		return UI.Messenger.renderMessage(message,'notice');
+	noteNotice: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'notice', sticky);
 	},
-	noteError: function(message){
-		return UI.Messenger.renderMessage(message,'error');
+	noteError: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'error', sticky);
 	},
-	noteFailure: function(message){
-		return UI.Messenger.renderMessage(message,'failure');
+	noteFailure: function(message, sticky){
+		return UI.Messenger.renderMessage(message, 'failure', sticky);
 	},
-	renderMessage: function(message,typeClass){
+	renderMessage: function(message, typeClass, sticky){
 		var list;
 		UI.Messenger.__init();
 		container = $("#layout-messenger");
@@ -73,7 +73,8 @@ UI.Messenger	= {
 		item.addClass("messenger-"+typeClass+" alert-"+typeClass);
 		list.append(item.hide());
 		item.slideDown(UI.Messenger.timeSlideDown);
-		UI.Messenger.autoRemoveMessage(item);
+		if(!sticky)
+			UI.Messenger.autoRemoveMessage(item);
 	}
 };
 UI.Messenger.__init();

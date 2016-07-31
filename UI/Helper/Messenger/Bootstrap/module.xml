@@ -6,8 +6,9 @@
 **Do not use with module UI:JS:Messenger.**
 
 ]]></description>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.4.1">Add script from module UI:JS:Messenger.</log>
+	<log version="0.4.2">Add sticky attribute to avoid automatic removal of message.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
