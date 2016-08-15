@@ -138,7 +138,7 @@ span.role.role5 {
 	float: left;
 	display: block;
 	padding: 0px 4px;
-	margin-right: 2px;
+	margin: 1px 2px 1px 0px;
 	font-size: 0.9em;
 	color: #3F3F3F;
 	opacity: 0.75;
@@ -171,7 +171,10 @@ span.role.role5 {
 	background-color: #9F3F3F;
 	}
 #role-edit-rights li.gray {
-	background-color: #AFFFAF;
+	background-color: #AFAFAF;
+	opacity: 0.5;
+	font-size: 0.9em;
+/*	display: none;*/
 	}
 
 
