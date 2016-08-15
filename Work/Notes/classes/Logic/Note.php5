@@ -229,10 +229,12 @@ class Logic_Note{
 		}
 		arsort( $tagIds );
 		$tagIds		= array_slice( $tagIds, $offset, $limit, TRUE );
-		$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
-		foreach( $tags as $nr => $tag ){
-			$tag->relations	= $tagIds[$tag->tagId];
-			$tagIds[$tag->tagId]	= $tag;
+		if( $tagIds ){
+			$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
+			foreach( $tags as $nr => $tag ){
+				$tag->relations	= $tagIds[$tag->tagId];
+				$tagIds[$tag->tagId]	= $tag;
+			}
 		}
 		return array_values( $tagIds );
 	}

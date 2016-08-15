@@ -62,10 +62,10 @@ return $textTop.'
 							<label for="input_link_title">'.$w->labelLinkTitle.'</label>
 							<input type="text" id="input_link_title" name="link_title" class="span12" value="'.htmlentities( $note->link_title, ENT_QUOTES ).'"/>
 						</div>
-						<div class="buttonbar">
-							<a href="./work/note" class="btn not-btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-							<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonAdd.'</button>
-						</div>
+					</div>
+					<div class="buttonbar">
+						<a href="./work/note" class="btn not-btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+						<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i> '.$w->buttonAdd.'</button>
 					</div>
 				</form>
 			</div>
