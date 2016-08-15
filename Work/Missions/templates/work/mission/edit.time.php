@@ -3,7 +3,8 @@ if( !$useTimer )
 	return '';
 
 $helperAdd		= new View_Helper_Work_Time_Modal_Add( $env );
-$helperAdd->setMissionId( $mission->missionId );
+$helperAdd->setModule( 'Work_Missions' );
+$helperAdd->setModuleId( $mission->missionId );
 $helperAdd->setProjectId( $mission->projectId );
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );
