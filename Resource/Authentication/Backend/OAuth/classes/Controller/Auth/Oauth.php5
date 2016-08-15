@@ -36,6 +36,16 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 //		if( $this->session->get( 'oauth_access_token' ) ){
 //		}
 //		else{
+		if( $this->request->get( 'error' ) ){
+			$messenger	= $this->env->getMessenger();
+			$words		= $this->getWords();
+			switch( $this->request->get( 'error' ) ){
+				case 'access_denied':
+					$messenger->noteError( $words['index']['msgAccessDenied'] );
+					break;
+			}
+		}
+		else{
 			if( $this->request->get( 'code' ) ){
 				$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
 				$postData		= http_build_query( array(
@@ -102,7 +112,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 					$this->restart( NULL );
 				}
 			}
-//		}
+		}
 	}
 
 	public function login(){
