@@ -3,7 +3,16 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Support projects.</log>
+	<log version="0.3.1">Add note links.</log>
+	<log version="0.3.2">Add note tags.</log>
+	<log version="0.3.3">Support Markdown syntax.</log>
+	<log version="0.3.4">Use JS_Markdown for quick rendering.</log>
+	<log version="0.3.5">Improve filters.</log>
+	<log version="0.3.6">Updated SQL.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -36,7 +45,7 @@
 	</relations>
 	<link xml:lang="de" access="acl" path="work/note" rank="44">Notizen</link>
 	<link xml:lang="en" access="acl" path="work/note" rank="44">Notes</link>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>links` (
   `linkId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -55,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
   `projectId` int(10) unsigned DEFAULT '0',
   `status` tinyint(1) unsigned NOT NULL,
   `public` int(1) unsigned DEFAULT '0',
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'plaintext',
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
   `numberViews` int(10) unsigned NOT NULL,
@@ -64,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
   KEY `userId` (`userId`),
   KEY `status` (`status`),
   KEY `projectId` (`projectId`),
-  KEY `public` (`public`)
+  KEY `public` (`public`),
+  KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>note_links`;
@@ -111,10 +122,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>term_log` (
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-<!--	<sql on="update" version-from="0.3.2" version-to="0.3.3"><![CDATA[
-ALTER TABLE  `notes` ADD  `format` VARCHAR( 20 ) NULL AFTER  `public` ,
-ADD INDEX (  `format` ) ;
-]]></sql>-->
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;
 DROP TABLE IF EXISTS `<%?prefix%>notes`;
