@@ -153,6 +153,24 @@ body.content-panel-style-3 div.content-panel div.content-panel-inner div.buttonb
 	background-image: linear-gradient(top, #e1e1e1, #f1f1f1);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e1e1e1', EndColorStr='#f1f1f1');
 	}
+/*body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner  {
+	padding: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner div.buttonbar  {
+	margin: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table {
+	margin: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr th:first-child,
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr td:first-child {
+	padding-left: 16px;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr th:last-child,
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr td:last-child {
+	padding-right: 16px;
+	}*/
+
 
 
 /*  --  STYLE 4  --  */
