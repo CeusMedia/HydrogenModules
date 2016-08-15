@@ -1,5 +1,5 @@
 <?php
 
-$view->loadContentFile( 'html/piwik/index.html' );
+return $view->loadContentFile( 'html/piwik/index.html' );
 
 ?>
