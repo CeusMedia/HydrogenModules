@@ -1,21 +1,50 @@
 <?php
 class Logic_Note{
 
+	static protected $instance;
+
 	protected $projectId	= 0;
 	protected $userId		= 0;
 	protected $roleId		= 0;
 	protected $visibility	= 0;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected $userNoteIds	= array();
+	protected $userProjects	= array();
+
+	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
 		$this->modelNote	= new Model_Note( $env );
 		$this->prefix		= $env->getConfig()->get( 'database.prefix' );
+	}
+
+	protected function __clone(){}
+
+	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+		if( !self::$instance )
+			self::$instance	= new Logic_Note( $env );
+		return self::$instance;
 	}
 
 	public function setContext( $userId, $roleId, $projectId ){
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;
 		$this->projectId		= $projectId;
+		$this->userNoteIds		= array();
+		$this->userProjects		= array();
+		if( $this->userId ){
+			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+				$logicProject	= new Logic_Project( $this->env );
+				$userProjects	= $logicProject->getUserProjects( $this->userId );
+				foreach( $userProjects as $userProject )
+					$this->userProjects[$userProject->projectId]	= $userProject;
+				$projectIds	= array_merge( array( 0 ), array_keys( $this->userProjects ) );
+				if( strlen( trim( $this->projectId ) ) )
+					$projectIds	= array_merge( array( $this->projectId ) );
+				$userNotes	= $this->modelNote->getAll( array( 'projectId' => $projectIds ) );
+				foreach( $userNotes as $userNote )
+					$this->userNoteIds[]	= $userNote->noteId;
+			}
+		}
 	}
 
 	protected function sharpenConditions( $conditions ){
@@ -23,17 +52,17 @@ class Logic_Note{
 			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
 				return $conditions;
 
-		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )
-			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
-				$conditions['public']	= 1;
+//		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )
+//			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
+//				$conditions['public']	= 1;
 
-		$logic			= new Logic_Project( $this->env );
+/*		$logic			= new Logic_Project( $this->env );
 		$userProjects	= array( 0 );
 		foreach( $logic->getUserProjects( $this->userId ) as $relation )
 			$userProjects[]	= $relation->projectId;
 		if( !array_key_exists( 'projectId', $conditions ) || !in_array( $conditions['projectId'], $userProjects ) )
 			$conditions['projectId']	= $userProjects;
-		return $conditions;
+*/		return $conditions;
 	}
 
 	public function countNoteView( $noteId ){
@@ -171,6 +200,8 @@ class Logic_Note{
 			}
 		}
 		arsort( $relatedNoteIds );
+		if( $this->userId && $this->userProjects )
+			$relatedNoteIds	= array_intersect( $relatedNoteIds, $this->userNoteIds );
 		return $relatedNoteIds;
 	}
 
@@ -208,21 +239,33 @@ class Logic_Note{
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 	}
 
-	public function getTopTags( $limit = 10, $offset = 0, $tagIds = array() ){
-		$modelTag	= new Model_Tag( $this->env );
-		if( $tagIds ){
-			$noteIds	= $this->getNoteIdsFromTagIds( $tagIds, !TRUE );
-			$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $tagIds );
-			$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
-			$tags		= array_slice( $tags, $offset, $limit, TRUE );
-			foreach( $tags as $nr => $tag )
-				$tags[$nr]->relations	= $tagIds[$tag->tagId];
+	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() ){
+		$modelNotes		= new Model_Note( $this->env );
+		$modelTag		= new Model_Tag( $this->env );
+
+		if( $notTagIds ){
+			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
+			if( $this->userId && $this->userProjects )
+				$noteIds	= array_intersect( $noteIds, $this->userNoteIds );
+			if( $noteIds ){
+				$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $notTagIds );
+				$tags		= array();
+				if( $tagIds ){
+					$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
+					$tags		= array_slice( $tags, $offset, $limit, TRUE );
+					foreach( $tags as $nr => $tag )
+						$tags[$nr]->relations	= $tagIds[$tag->tagId];
+				}
+			}
 			return $tags;
 		}
 
 		$tagIds	= array();
 		$modelRel	= new Model_Note_Tag( $this->env );
-		foreach( $modelRel->getAll() as $relation ){
+		$conditions	= array();
+		if( $this->userId && $this->userProjects )
+			$conditions['noteId']	= array_merge( array( 0 ), $this->userNoteIds );
+		foreach( $modelRel->getAll( $conditions ) as $relation ){
 			if( !isset( $tagIds[$relation->tagId] ) )
 				$tagIds[$relation->tagId]	= 0;
 			$tagIds[$relation->tagId]++;
@@ -285,8 +328,7 @@ class Logic_Note{
 			'title'			=> 'ASC',
 		);
 		$conditions	= $this->sharpenConditions( $conditions );
-
-		$number	= $model->count( $conditions );
+		$number		= $model->count( $conditions );
 		if( $number < $offset )
 			$offset	= 0;
 		$notes	= $model->getAll( $conditions, $orders, array( $offset, $limit ) );
@@ -301,12 +343,12 @@ class Logic_Note{
 
 	/**
 	 *	Returns list of note IDs related to tag IDs.
-	 *	@access		protected
+	 *	@access		public
 	 *	@param		array		$tagIds		List of tag IDs
 	 *	@param		boolean		$strict		Notes must be related to ALL tag IDs (slower)
 	 *	@return		array					List of note IDs related to tag IDs
 	 */
-	protected function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
+	public function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
@@ -340,14 +382,30 @@ class Logic_Note{
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
-	public function searchNotes( $query, $tags = array(), $offset = 0, $limit = 10 ){
+	public function searchNotes( $query, $conditions, $tags = array(), $offset = 0, $limit = 10 ){
 		if( !strlen( trim( $query ) ) && !$tags )
 			throw new Exception( 'Neither query nor tags to search for given' );
 
-		$conditions	= array();
-		if( $tags )
-			foreach( $tags as $tag )
-				$query	.= ' '.$tag->content;
+		$cond		= array();
+		$pattern	= '/^(<=|>=|<|>|!=)(.+)/';
+		foreach( $conditions as $column => $value ){
+			if( is_array( $value ) )
+				$cond[]	= "n.".$column.' IN ('.join( ',', $value ).')';
+			else if( preg_match( '/^%/', $value ) )
+				$cond[]	= "n.".$column." LIKE '".$value."'";
+			else if( preg_match( $pattern, $value ) ){
+				$matches	= array();
+				preg_match_all( $pattern, $value, $matches );
+				$operation	= ' '.$matches[1][0].' ';
+				$cond[]	= "n.".$column.$operation."'".$matches[2][0]."'";
+			}
+			else
+				$cond[]	= "n.".$column." = '".$value."'";
+		}
+		$conditions	= $cond;
+//		if( $tags )
+//			foreach( $tags as $tag )
+//				$query	.= ' '.$tag->content;
 
 		if( $query ){
 			$terms 	= explode( ' ', trim( $query ) );
@@ -355,11 +413,12 @@ class Logic_Note{
 				$conditions[]	= '(n.title LIKE "%'.$term.'%" OR n.content LIKE "%'.$term.'%" OR l.url LIKE "%'.$term.'%" OR nl.title LIKE "%'.$term.'%")';
 		}
 		$conditions	= implode ( ' AND ', $conditions );
-		if( $tags ){
-			$noteIds		= $this->getNoteIdsFromTagIds( array_keys( $tags ), TRUE );
-			if( $noteIds )
-				$conditions	.= ($query ? ' OR ' : '' ).' n.noteId IN('.join( ',', $noteIds ).')';
-		}
+//		if( $tags ){
+//			$noteIds		= $this->getNoteIdsFromTagIds( array_keys( $tags ), TRUE );
+//			if( $noteIds )
+//				$conditions	.= ($query ? ' AND ' : '' ).' n.noteId IN('.join( ',', $noteIds ).')';
+//		}
+//xmp( $conditions );
 		$query	= '
 SELECT
 	DISTINCT(n.noteId),

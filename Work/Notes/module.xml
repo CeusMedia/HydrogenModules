@@ -3,7 +3,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[]]></description>
 	<category>Work</category>
-	<version>0.3.6</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support projects.</log>
@@ -13,6 +13,11 @@
 	<log version="0.3.4">Use JS_Markdown for quick rendering.</log>
 	<log version="0.3.5">Improve filters.</log>
 	<log version="0.3.6">Updated SQL.</log>
+	<log version="0.3.7">Refactore logic class by context.</log>
+	<log version="0.4">Refactoring.</log>
+	<log version="0.4.1">Disable note attribute "public".</log>
+	<log version="0.4.2">Make notes without project relation the new "public" notes.</log>
+	<log version="0.4.3">Show tags only related to user project notes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

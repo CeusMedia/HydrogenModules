@@ -3,7 +3,7 @@
 $w		= (object) $words['add'];
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' ) );
 
-$optProject	= array( '' => '' );
+$optProject	= array( '0' => '- ohne Projektbezug -' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
@@ -29,13 +29,13 @@ return $textTop.'
 							<label for="input_note_projectId">'.$w->labelProjectId.'</label>
 							<select id="input_note_projectId" name="note_projectId" class="span12">'.$optProject.'</select>
 						</div>
-						<div class="span3">
+<!--						<div class="span3">
 							<br/>
 							<label for="input_note_public">
 								<input type="checkbox" id="input_note_public" name="note_public" value="1" '.( $note->public ? 'checked="checked"' : '' ).'/>
 								&nbsp;'.$w->labelPublic.'
 							</label>
-						</div>
+						</div>-->
 					</div>
 					<div class="row-fluid">
 						<div class="span3">
