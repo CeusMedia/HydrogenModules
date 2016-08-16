@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.27</version>
+	<version>0.3.28</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -34,6 +34,7 @@
 	<log version="0.3.25">Add project view.</log>
 	<log version="0.3.26">Allow redirection after a project has been created.</log>
 	<log version="0.3.27">Add support for module Members.</log>
+	<log version="0.3.28">Combine related members and related projected users correctly.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

@@ -25,15 +25,21 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 			unset( $users[$userId] );
 			return $users;
 		}
+		$users		= array();
 
+		//  --  ADD RELATED MEMBERS OF THIS USER  --  //
 		$modelUser	= new Model_User( $this->env );
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$userIds	= Logic_Member::getInstance( $this->env )->getRelatedUserIds( $userId, 2 );
-			return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+			if( $userIds ){
+				$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+				foreach( $relatedUsers as $relatedUser )
+					$users[$relatedUser->userId]	= $relatedUser;
+			}
 		}
 
+		//  --  ADD RELATED USERS OF OTHER PROJECT  --  //
 		$modelProjectUser	= new Model_Project_User( $this->env );
-		$users		= array();
 		$projectIds	= array();
 		$userIds	= array( -1 );
 		$myProjects	= $modelProjectUser->getAll( array( 'userId' => $userId ) );
@@ -47,7 +53,10 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		unset( $userIds[array_search( $userId, $userIds )] );
 		if( !$userIds )
 			return array();
-		return $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+		$projectUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+		foreach( $projectUsers as $projectUser )
+			$users[$projectUser->userId]	= $projectUser;
+		return $users;
 	}
 
 	public function getDefaultProject( $userId ){
