@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Mangopay</title>
+	<description><![CDATA[...]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Resource/Mangopay.php5</class>
+	</files>
+	<config protected="yes" mandatory="yes" type="string" name="client.id"></config>
+	<config protected="yes" mandatory="yes" type="string" name="client.password"></config>
+	<config protected="yes" mandatory="yes" type="string" name="api.mode" values="sandbox,production">sandbox</config>
+	<config protected="yes" mandatory="yes" type="string" name="api.url.sandbox" title="URL of Mangopay API sandbox environment">https://api.sandbox.mangopay.com</config>
+	<config protected="yes" mandatory="yes" type="string" name="api.url.production" title="URL of Mangopay API production environment">https://api.mangopay.com</config>
+	<relations/>
+</module>
