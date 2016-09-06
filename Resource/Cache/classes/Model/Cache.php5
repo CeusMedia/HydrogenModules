@@ -18,7 +18,8 @@ class Model_Cache{
 		if( $type === 'PDO' ){
 			if( !$this->env->getDatabase() )
 				throw new RuntimeException( 'A database connection is needed for PDO cache adapter' );
-			$resource	= array( $this->env->getDatabase(), $this->dbc->getPrefix().$resource );
+			$dbc		= $this->env->getDatabase();
+			$resource	= array( $dbc, $dbc->getPrefix().$resource );
 		}
 		$this->model	= $factory->newStorage( $type, $resource, $context, $expiration );
 		$this->env->set( 'cache', $this );
