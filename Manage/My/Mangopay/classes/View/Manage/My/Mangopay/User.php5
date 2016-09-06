@@ -1,5 +1,5 @@
 <?php
-class View_Manage_My_Mangopay_User extends CMF_Hydrogen_View{
+class View_Manage_My_Mangopay_User extends View_Manage_My_Mangopay{
 
 	public function index(){}
 

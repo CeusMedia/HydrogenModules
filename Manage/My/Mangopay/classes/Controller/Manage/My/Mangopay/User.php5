@@ -1,26 +1,34 @@
 <?php
-class Controller_Manage_My_Mangopay_User extends CMF_Hydrogen_Controller{
+class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay{
 
 	public function index(){
-		$mangopay		= Resource_Mangopay::getInstance( $this->env );
-
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
 		$sorting->AddField( 'CreationDate', 'DESC' );
-		$this->addData( 'users', $mangopay->Users->GetAll( $pagination, $sorting ));
+		$this->addData( 'users', $this->mangopay->Users->GetAll( $pagination, $sorting ));
 	}
 
 	public function view( $userId ){
-		$mangopay		= Resource_Mangopay::getInstance( $this->env );
 		try{
-			$user	= $mangopay->Users->Get( $userId );
+			$user	= $this->mangopay->Users->Get( $userId );
 			$this->addData( 'userId', $userId );
 			$this->addData( 'user', $user );
 
-			$pagination	= $mangopay->getDefaultPagination();
-			$sorting	= $mangopay->getDefaultSorting();
+			$pagination	= $this->mangopay->getDefaultPagination();
+			$sorting	= $this->mangopay->getDefaultSorting();
 			$sorting->AddField( 'CreationDate', 'ASC' );
-			$this->addData( 'bankAccounts', $mangopay->Users->GetBankAccounts( $userId, $pagination, $sortings ) );
+			$this->addData( 'bankAccounts', $this->mangopay->Users->GetBankAccounts( $userId, $pagination, $sorting ) );
+
+			$pagination	= $this->mangopay->getDefaultPagination();
+			$sorting	= $this->mangopay->getDefaultSorting();
+			$sorting->AddField( 'CreationDate', 'ASC' );
+			$this->addData( 'transactions', $this->mangopay->Users->GetTransactions( $userId, $pagination, $sorting ) );
+
+			$pagination	= $this->mangopay->getDefaultPagination();
+			$sorting	= $this->mangopay->getDefaultSorting();
+			$sorting->AddField( 'CreationDate', 'ASC' );
+			$this->addData( 'wallets', $this->mangopay->Users->GetWallets( $userId, $pagination, $sorting ) );
+
 		}
 		catch( Exception $e ){
 			$this->env->getMessenger()->noteError( 'Invalid User ID' );
