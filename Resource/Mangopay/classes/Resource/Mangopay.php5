@@ -14,8 +14,9 @@ class Resource_Mangopay{
 		$this->api->Config->ClientId		= $config->get( 'client.id' );
 		$this->api->Config->ClientPassword	= $config->get( 'client.password' );
 		$this->api->Config->TemporaryFolder	= sys_get_temp_dir();
-		$this->defaultSorting		= new MangoPay\Sorting();
 		$this->defaultPagination	= new MangoPay\Pagination();
+		$this->defaultSorting		= new MangoPay\Sorting();
+		$this->defaultSorting->AddField( 'CreationDate', 'DESC' );
 	}
 
 	public function __get( $name ){
