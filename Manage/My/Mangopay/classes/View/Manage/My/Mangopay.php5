@@ -1,5 +1,5 @@
 <?php
-abstract class View_Manage_My_Mangopay extends CMF_Hydrogen_View{
+class View_Manage_My_Mangopay extends CMF_Hydrogen_View{
 
 	static public function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 ){
 		$price		= number_format( $money->Amount / 100, $accuracy, ',', '.' );
@@ -9,4 +9,5 @@ abstract class View_Manage_My_Mangopay extends CMF_Hydrogen_View{
 		return sprintf( $pattern, $money->Currency, $price );
 	}
 
+	public function index(){}
 }

@@ -3,10 +3,12 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
+	<log version="0.3.1">Add panels.</log>
+	<log version="0.3.2">Add dashboard.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -15,13 +17,19 @@
 		<class>Controller/Manage/My/Mangopay/Card.php5</class>
 		<class>Controller/Manage/My/Mangopay/User.php5</class>
 		<class>Controller/Manage/My/Mangopay/Wallet.php5</class>
+		<class>View/Helper/Accordion.php5</class>
+		<class>View/Helper/Panel.php5</class>
+		<class>View/Helper/Panel/Mangopay.php5</class>
+		<class>View/Helper/Panel/Mangopay/BankAccounts.php5</class>
+		<class>View/Helper/Panel/Mangopay/Cards.php5</class>
+		<class>View/Helper/Panel/Mangopay/Wallets.php5</class>
+		<class>View/Helper/Panel/Mangopay/Transactions.php5</class>
 		<class>View/Manage/My/Mangopay.php5</class>
 		<class>View/Manage/My/Mangopay/Bank.php5</class>
 		<class>View/Manage/My/Mangopay/Card.php5</class>
 		<class>View/Manage/My/Mangopay/User.php5</class>
 		<class>View/Manage/My/Mangopay/Wallet.php5</class>
-		<class>View/Helper/Accordion.php5</class>
-		<class>View/Helper/Panel.php5</class>
+		<template>manage/my/mangopay/index.php</template>
 		<template>manage/my/mangopay/bank/index.php</template>
 		<template>manage/my/mangopay/card/add.php</template>
 		<template>manage/my/mangopay/card/index.php</template>

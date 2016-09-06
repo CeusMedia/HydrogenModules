@@ -2,7 +2,8 @@
 
 $optWallet	= array();
 foreach( $wallets as $item )
-	$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
+	if( $item->Currency == $card->Currency )
+		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 
 $optWallet	= UI_HTML_Elements::Options( $optWallet, $walletId );
 
@@ -23,6 +24,7 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
+				<a href="./manage/my/mangopay/card" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
 				<button type="submit" name="save" value="payin" class="btn btn-primary"><b class="fa fa-check"></b> einzahlen</button>
 			</div>
 		</form>

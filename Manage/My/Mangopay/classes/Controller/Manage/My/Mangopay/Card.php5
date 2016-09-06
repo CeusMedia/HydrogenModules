@@ -1,18 +1,33 @@
 <?php
 class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 
-	public function add(){
-		$this->addData( 'returnUrl', $this->env->url.'manage/my/mangopay/card/finishCardRegistration' );
+	public function add( $type = NULL ){
 
-		$cardRegister = new \MangoPay\CardRegistration();
-		$cardRegister->UserId	= $this->userId;
-		$cardRegister->Currency	= $this->currency;
-		$cardRegister->CardType	= "CB_VISA_MASTERCARD";
+		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
+		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 
-		$registration = $this->mangopay->CardRegistrations->Create( $cardRegister );
+		if( ( $cardType = $this->request->get( 'cardType' ) ) ){
+			$param	= array();
+			if( $this->request->get( 'backwardTo' ) )
+				$param[]	= 'backwardTo='.$this->request->get( 'backwardTo' );
+			if( $this->request->get( 'forwardTo' ) )
+				$param[]	= 'forwardTo='.$this->request->get( 'forwardTo' );
+			$param			= $param ? '?'.http_build_query( $param, NULL, '&' ) : '';
 
-		$this->env->getSession()->set( 'cardRegisterId', $registration->Id );
-		$this->addData( 'registration', $registration );
+			$returnUrl	= $this->env->url.'manage/my/mangopay/card/finishCardRegistration';
+			$this->addData( 'returnUrl', $returnUrl.$param );
+
+			$cardRegister = new \MangoPay\CardRegistration();
+			$cardRegister->UserId	= $this->userId;
+			$cardRegister->Currency	= $this->currency;
+			$cardRegister->CardType	= $cardType;
+
+			$registration = $this->mangopay->CardRegistrations->Create( $cardRegister );
+
+			$this->env->getSession()->set( 'cardRegisterId', $registration->Id );
+			$this->addData( 'registration', $registration );
+		}
+		$this->addData( 'cardType', $cardType );
 
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
@@ -65,6 +80,13 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 		$this->restart( 'add', TRUE );
 	}
 
+	public function deactivate( $cardId ){
+		$card	= $this->checkIsOwnCard( $cardId );
+		$card->Active	= FALSE;
+		$this->mangopay->Cards->Update( $card );
+		$this->restart( NULL, TRUE );
+	}
+
 	public function handleSecureMode(){
 		print_m( $this->request->getAll() );
 		die;
@@ -73,12 +95,26 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 	public function index(){
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
-		$cards	= $this->mangopay->Users->GetCards( $this->userId, $pagination, $sorting );
-		$this->addData( 'cards', $cards );
+		try{
+			$cacheKey	= 'user_'.$this->userId.'_cards';
+			if( is_null( $cards = $this->cache->get( $cacheKey ) ) ){
+				$cards	= $this->mangopay->Users->GetCards( $this->userId, $pagination, $sorting );
+				$this->cache->set( $cacheKey, $cards );
+			}
+			$this->addData( 'cards', $cards );
+		}
+		catch( \MangoPay\ResponseException $e ){
+			$this->handleMangopayResponseException( $e );
+			$this->restart( 'manage/my/mangopay' );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( "Exception: ".$e->getMessage() );
+			$this->restart( 'manage/my/mangopay' );
+		}
 	}
 
 	public function payIn( $cardId ){
+		$card	= $this->checkIsOwnCard( $cardId );
 		if( $this->request->has( 'save' ) ){
 
 			$walletId	= $this->request->get( 'walletId' );
@@ -112,12 +148,14 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 
 			// create Pay-In
 			$createdPayIn = $this->mangopay->PayIns->Create( $payIn );
-
+/*			$resultMessage	= $createdPayIn->ResultCode;
+			print_m( $createdPayIn );die;
+*/
 			// if created Pay-in object has status SUCCEEDED it's mean that all is fine
 			$price	= View_Manage_My_Mangopay::formatMoney( (object) array( 'Amount' => $amount, 'Currency' => $this->currency ) );
 			if( $createdPayIn->Status !== \MangoPay\PayInStatus::Succeeded ){
-				$this->messenger->noteError( 'Paying in %s into Wallet "%s" failed', $price, $wallet->Description );
-				if( ( $from = $request->get( 'from' ) ) )
+				$this->messenger->noteError( 'Paying in %s into Wallet "%s" failed: %s', $price, $wallet->Description, $createdPayIn->ResultMessage );
+				if( ( $from = $this->request->get( 'from' ) ) )
 					$this->restart( $from );
 				$this->restart( 'payin/'.$cardId, TRUE );
 			}
@@ -135,6 +173,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 		$this->addData( 'wallets', $wallets );
 		$this->addData( 'walletId', $this->request->get( 'walletId' ) );
 		$this->addData( 'cardId', $cardId );
+		$this->addData( 'card', $this->mangopay->Cards->Get( $cardId ) );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
@@ -144,16 +183,11 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 	}
 
 	public function view( $cardId ){
-		try{
-			$card	= $this->mangopay->Cards->Get( $cardId );
-			$this->addData( 'cardId', $cardId );
-			$this->addData( 'userId', $userId );
-			$this->addData( 'card', $card );
-		}
-		catch( Exception $e ){
-			$this->env->getMessenger()->noteError( 'Invalid User ID' );
-			$this->restart( NULL, TRUE );
-		}
+		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
+		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 
+		$card	= $this->checkIsOwnCard( $cardId );
+		$this->addData( 'cardId', $cardId );
+		$this->addData( 'card', $card );
 	}
 }

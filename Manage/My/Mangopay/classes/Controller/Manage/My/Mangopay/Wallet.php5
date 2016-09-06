@@ -77,6 +77,9 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 	}
 
 	public function view( $walletId ){
+		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
+		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+
 		$wallet			= $this->checkWalletIsOwn( $walletId );
 		try{
 			$this->addData( 'walletId', $walletId );
