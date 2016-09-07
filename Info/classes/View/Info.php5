@@ -13,7 +13,7 @@ class View_Info extends CMF_Hydrogen_View{
 				case 'html':
 					$fileKey	= 'html/info/'.$site.".html";
 					if( $this->hasContentFile( $fileKey ) )
-						return $this->loadContentFile( $fileKey );
+						return $this->renderContent( $this->loadContentFile( $fileKey ) );
 					break;
 				case 'md':
 				case 'markdown':
@@ -21,7 +21,8 @@ class View_Info extends CMF_Hydrogen_View{
 						$fileKey	= 'html/info/'.$site.".md";
 						if( $this->hasContentFile( $fileKey ) ){
 							$content	= $this->loadContentFile( $fileKey );
-							return View_Helper_Markdown::transformStatic( $this->env, $content );
+							$content	= View_Helper_Markdown::transformStatic( $this->env, $content );
+							return $this->renderContent( $content );
 						}
 					}
 					break;
