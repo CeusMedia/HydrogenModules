@@ -322,6 +322,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		foreach( $relations as $relation ){															//  iterate article relations
 			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
 		}
+		$this->cache->remove( 'catalog.search.authors' );
 		$this->cache->remove( 'catalog.tinymce.images.authors' );
 		$this->cache->remove( 'catalog.tinymce.links.authors' );
 	}
