@@ -17,5 +17,4 @@
 	<link access="acl" xml:lang="de" rank="95" path="admin/route">Routes</link>
 	<link access="acl" xml:lang="en" rank="95" path="admin/route">Routen</link>
 	<relations/>
-	</relations>
 </module>
