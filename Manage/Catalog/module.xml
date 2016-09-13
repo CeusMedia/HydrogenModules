@@ -3,7 +3,7 @@
 	<title>Manage: Catalog</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.6.6</version>
+	<version>0.6.7</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -35,6 +35,7 @@
 	<log version="0.6.4">Use module JS:Form:Changes to mark unsaved input field changes.</log>
 	<log version="0.6.5">Add removeAuthor in logic class.</log>
 	<log version="0.6.6">Correct collection if TinyMCE images.</log>
+	<log version="0.6.7">Add tag list and tab.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -43,6 +44,7 @@
 		<class>Controller/Manage/Catalog/Article.php5</class>
 		<class>Controller/Manage/Catalog/Author.php5</class>
 		<class>Controller/Manage/Catalog/Category.php5</class>
+		<class>Controller/Manage/Catalog/Tag.php5</class>
 		<class>Model/Catalog/Article.php5</class>
 		<class>Model/Catalog/Author.php5</class>
 		<class>Model/Catalog/Category.php5</class>
@@ -56,6 +58,7 @@
 		<class>View/Manage/Catalog/Article.php5</class>
 		<class>View/Manage/Catalog/Author.php5</class>
 		<class>View/Manage/Catalog/Category.php5</class>
+		<class>View/Manage/Catalog/Tag.php5</class>
 		<locale>de/catalog.ini</locale>
 		<locale>de/html/manage/catalog/article/index.html</locale>
 		<locale>de/manage/catalog.ini</locale>
@@ -85,6 +88,7 @@
 		<template>manage/catalog/category/edit.details.php</template>
 		<template>manage/catalog/category/index.php</template>
 		<template>manage/catalog/category/list.php</template>
+		<template>manage/catalog/tag/index.php</template>
 		<template>manage/catalog/index.php</template>
 		<script source="lib" load="auto">jquery/cmExpr/containsIgnoreCase/0.2.js</script>
 		<script load="auto">module.manage.catalog.js</script>
