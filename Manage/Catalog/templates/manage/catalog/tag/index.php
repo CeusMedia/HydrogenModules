@@ -1,35 +1,9 @@
 <?php
 
-$w			= (object) $words['index'];
-
-$tabs		= $this->renderMainTabs();
-
-extract( $view->populateTexts( array( 'top', 'bottom', 'index' ), 'html/manage/catalog/tag/' ) );
-
-//print_m( $tags );die;
-
-/*
-$list	= array();
-foreach( $tags as $tag ){
-	$id	= $tags->articleTagId;
-	if( !isset( $list[$id] ) )
-		$list[$id]	= (object) array(
-			'label'			=> $tag->tag,
-			'articleIds'	=> array(),
-		);
-	$list[$id]->articleIds[]	= $tag->articleId;
-}
-*/
-
-//print_m( $articles[0] );die;
-
-//$tags	= array_slice( $tags, $page * $limit, $limit );
-
+$w			= (object) $words['index.filter'];
 
 $helperPages    = new \CeusMedia\Bootstrap\PageControl( './manage/catalog/tag/'.$limit, $page, ceil( $total / $limit ) );
 $pagination     = $helperPages->render();
-
-//$helper			= new View_Helper_Catalog( $env );
 
 $rows	= array();
 foreach( $tags as $tag ){
@@ -47,32 +21,47 @@ $list	= UI_HTML_Tag::create( 'table', array(
 	UI_HTML_Tag::create( 'tbody', $rows ),
 ), array( 'class' => 'table table-striped' ) );
 
-return $tabs.'
-<h2>Schlagwörter</h2>
-<div class="row-fluid">
-	<div class="span3">
+
+$panelFilter	= '
 		<div class="content-panel content-panel-filter">
-			<h3>Filter</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./manage/catalog/tag/filter" method="post">
-					<label for="input_search">Suchwort</label>
+					<label for="input_search">'.$w->heading.'</label>
 					<input type="text" name="search" id="input_search" value="'.htmlentities( $filterSearch, ENT_QUOTES, 'UTF-8' ).'"/>
 					<div class="buttonbar">
-						<a href="./manage/catalog/tag/filter/reset" class="btn btn-small btn-inverse">leeren</a>
-						<button type="submit" name="filter" class="btn btn-small btn-primary">suchen</button>
+						<a href="./manage/catalog/tag/filter/reset" class="btn btn-small btn-inverse">'.$w->buttonReset.'</a>
+						<button type="submit" name="filter" class="btn btn-small btn-primary">'.$w->buttonFilter.'</button>
 					</div>
 				</form>
 			</div>
 		</div>
-	</div>
-	<div class="span9">
+';
+
+$w			= (object) $words['index.list'];
+
+$panelList	= '
 		<div class="content-panel content-panel-table">
-			<h3>Verwendung</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$list.'
 				'.$pagination.'
 			</div>
 		</div>
+';
+
+$tabs		= $this->renderMainTabs();
+
+extract( $view->populateTexts( array( 'top', 'bottom', 'index' ), 'html/manage/catalog/tag/' ) );
+
+return $tabs.'
+<!--<h2>Schlagwörter</h2>-->
+<div class="row-fluid">
+	<div class="span3">
+		'.$panelFilter.'
+	</div>
+	<div class="span9">
+		'.$panelList.'
 	</div>
 </div>
 ';

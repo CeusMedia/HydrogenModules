@@ -65,6 +65,7 @@
 		<locale>de/manage/catalog/article.ini</locale>
 		<locale>de/manage/catalog/author.ini</locale>
 		<locale>de/manage/catalog/category.ini</locale>
+		<locale>de/manage/catalog/tag.ini</locale>
 		<template>manage/catalog/article/add.php</template>
 		<template>manage/catalog/article/edit.php</template>
 		<template>manage/catalog/article/edit.authors.php</template>
