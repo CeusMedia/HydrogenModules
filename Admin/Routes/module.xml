@@ -12,11 +12,7 @@
 	<files>
 		<class>Controller/Admin/Route.php5</class>
 		<class>View/Admin/Route.php5</class>
-<<<<<<< Updated upstream
-		<template>admin/mail/route/index.php</template>
-=======
 		<template>admin/route/index.php</template>
->>>>>>> Stashed changes
 	</files>
 	<link access="acl" xml:lang="de" rank="95" path="admin/route">Routes</link>
 	<link access="acl" xml:lang="en" rank="95" path="admin/route">Routen</link>
