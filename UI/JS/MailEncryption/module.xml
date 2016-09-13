@@ -5,12 +5,13 @@
 This is the second step for protecting mail addresses against harvesting bots.<br/>The first part is to store mail addresses encrypted within HTML contents, like this:
 code:html><span class="encrypted-mail" data-name="john" data-host="example.net">John Doe</span><code
 ]]></description>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Changed syntax.</log>
 	<log version="0.3.1">Let the framework run the initial JavaScript code.</log>
 	<log version="0.4">Add view helper and hook to encrypt automatically.</log>
+	<log version="0.4.1">Support mail subject attribute.</log>
 	<category>JavaScript</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
