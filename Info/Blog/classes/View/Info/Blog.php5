@@ -110,7 +110,7 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 //			'Kommentare: '	=> count( $post->comments ),
 		);
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
-		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info' ) );
+		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
 	}
 
 	static public function renderPostUrlStatic( $env, $post ){
