@@ -191,11 +191,12 @@ class Model_Menu {
 		$this->pageMap		= array();
 		foreach( $scopes as $scopeId => $scope ){
 			$this->pages[$scope]	= array();
-			$indices	= array( 'parentId' => 0, 'scope' => $scopeId );
-			$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+			$pages		= $model->getAllByIndices( array(
+				'parentId'	=> 0,
+				'scope'		=> $scopeId,
+				'status'	=> '>0',
+			), array( 'rank' => 'ASC' ) );
 			foreach( $pages as $page ){
-				if( $page->status < 1 )
-					continue;
 				$item	= (object) array(
 					'parent'	=> NULL,
 					'type'		=> 'item',
@@ -211,8 +212,11 @@ class Model_Menu {
 				if( $page->type == 1 ){
 					$item->type		= 'menu';
 					$item->items	= array();
-					$indices	= array( 'parentId' => $page->pageId, 'scope' => 0 );
-					$subpages	= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+					$subpages		= $model->getAllByIndices( array(
+						'parentId'	=> $page->pageId,
+						'scope'		=> 0,
+						'status'	=> '>0',
+					), array( 'rank' => 'ASC' ) );
 					foreach( $subpages as $subpage ){
 						if( $subpage->status < 1 )
 							continue;
