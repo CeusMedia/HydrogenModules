@@ -201,8 +201,6 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		if( !file_exists( $this->basePath.$folderPath ) ){
 			$words		= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorFolderNotExisting, $folderPath );
-remark( $folderPath );
-remark( $this->path );
 
 			if( $folderPath === $this->path )
 				$this->setPathFromHash( base64_encode( './' ) );
