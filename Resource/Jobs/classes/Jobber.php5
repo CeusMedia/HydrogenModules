@@ -22,7 +22,7 @@ class Jobber extends CMF_Hydrogen_Application_Console {
 	protected $jobs	= array();
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env = NULL ){
-		parent::__construct( $env );
+		parent::__construct( $env, TRUE );											//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->lock			= new Model_Joblock( $this->env );
