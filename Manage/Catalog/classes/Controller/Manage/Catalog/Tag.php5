@@ -53,19 +53,18 @@ class Controller_Manage_Catalog_Tag extends CMF_Hydrogen_Controller{
 			}
 			$tags[$item->tag]->articleIds[]	= $item->articleId;
 		}
-//print_m( $tags );die;
 		foreach( $list as $item ){
 			if( !array_key_exists( $item->articleId, $articleIds ) )
 				$articleIds[$item->articleId]	= array();
 			$articleIds[$item->articleId][]	= $item->tag;
 		}
-//print_m( $articleIds );die;
-		$list		= $modelArticle->getAll( array( 'articleId' => array_keys( $articleIds ) ) );
 		$articles	= array();
-		foreach( $list as $item ){
-			$articles[$item->articleId]	= $item;
+		if( $articleIds ){
+			$list		= $modelArticle->getAll( array( 'articleId' => array_keys( $articleIds ) ) );
+			foreach( $list as $item ){
+				$articles[$item->articleId]	= $item;
+			}
 		}
-//print_m( $articles );die;
 
 		$total		= count( $tags );
 		$tags		= array_slice( $tags, $page * $limit, $limit );
