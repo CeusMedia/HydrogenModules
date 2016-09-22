@@ -88,8 +88,9 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 
 			$pagination	= $this->mangopay->getDefaultPagination();
 			$sorting	= $this->mangopay->getDefaultSorting();
-			$sorting->AddField( 'CreationDate', 'ASC' );
-			$transactions	= $this->mangopay->Wallets->GetTransactions( $walletId, $pagination, $sorting );
+//			$sorting->AddField( 'CreationDate', 'ASC' );
+			$filter		= new \MangoPay\FilterTransactions();
+			$transactions	= $this->mangopay->Wallets->GetTransactions( $walletId, $pagination, $filter, $sorting );
 			$this->addData( 'transactions', $transactions );
 		}
 		catch( \MangoPay\Libraries\ResponseException $e ){

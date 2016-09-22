@@ -20,6 +20,12 @@ abstract class View_Helper_Panel_Mangopay{
 
 	abstract public function render();
 
+	static public function renderCardNumber( $number ){
+		$pattern	= '/^([^x]+)(x+)(.+)$/i';
+		$number		= preg_replace( $pattern, '\\1<small class="muted">\\2</small>\\3', $number );
+		return '<tt>'.$number.'</tt>';
+	}
+
 	static public function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 ){
 		$price		= number_format( $money->Amount / 100, $accuracy, ',', '.' );
 //		$pattern	= '{Amount}&nbsp;{Currency}';

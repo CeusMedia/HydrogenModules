@@ -17,6 +17,10 @@ if( $cardType ){
 					<label for="input_cardType">Card Type</label>
 					<select name="cardType" id="input_cardType" class="span12" readonly="readonly">'.$optType.'</select>
 				</div>
+				<div class="span9">
+					<label for="input_title">Bezeichnung <small class="muted">(z.B. "Meine VISA-Karte")</small></label>
+					<input type="text" name="title" id="input_title" class="span12" readonly="readonly" value="'.htmlentities( $cardTitle, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
 			</div>
 			<hr/>
 			<div class="row-fluid">
@@ -48,6 +52,10 @@ else{
 				<div class="span3">
 					<label for="input_cardType">Card Type</label>
 					<select name="cardType" id="input_cardType" class="span12">'.$optType.'</select>
+				</div>
+				<div class="span9">
+					<label for="input_title">Bezeichnung <small class="muted">(z.B. "Meine VISA-Karte")</small></label>
+					<input type="text" name="title" id="input_title" class="span12" required="required"/>
 				</div>
 			</div>
 			<div class="buttonbar">

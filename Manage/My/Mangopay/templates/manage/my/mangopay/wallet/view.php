@@ -18,6 +18,10 @@ $panelTransactions	= '
 
 $linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
 
+$buttonCancel	= '<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>';
+$buttonPayIn	= '<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
+$buttonPayOut	= '<a href="./manage/my/mangopay/wallet/payout/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
+
 return '
 <div class="row-fluid">
 	<div class="span6">
@@ -26,8 +30,9 @@ return '
 			<div class="content-panel-inner">
 				'.print_m( $wallet, NULL, NULL, TRUE ).'
 				<div class="buttonbar">
-					<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
-					<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'" class="btn btn-small"><b class="fa fa-sign-in"></b> einzahlen</a>
+					'.$buttonCancel.'
+					'.$buttonPayIn.'
+					'.$buttonPayOut.'
 				</div>
 			</div>
 		</div>

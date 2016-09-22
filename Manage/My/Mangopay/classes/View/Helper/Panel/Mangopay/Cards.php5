@@ -15,7 +15,7 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 		//	if( !$item->Active )
 		//		continue;
 			$link	= UI_HTML_Tag::create( 'a', $item->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $item->Id ) ) );
-			$number	= preg_replace( '/^([^x]+)(x+)(.+)$/i', '\\1<small class="muted">\\2</small>\\3', $item->Alias );
+			$number	= View_Helper_Panel_Mangopay::renderCardNumber( $item->Alias );
 			$rows[]	= UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create(' td', $link, array( 'class' => 'cell-card-id' ) ),
 				UI_HTML_Tag::create(' td', $item->CardProvider, array( 'class' => 'cell-card-provider' ) ),
@@ -34,7 +34,8 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 			<div class="content-panel-inner">
 				'.$table.'
 				<div class="buttonbar">
-					<a href="'.$this->options->get( 'linkAdd' ).'" class="btn btn-success"><b class="fa fa-plus"></b> add</a>
+					<a href="'.$this->options->get( 'linkAdd' ).'" class="btn btn-success"><b class="fa fa-plus"></b>&nbsp;add</a>
+					<a href="./manage/my/mangopay/card/refresh" class="btn btn-small"><b class="fa fa-refresh"></b>&nbsp;reload</a>
 				</div>
 			</div>
 		</div>';

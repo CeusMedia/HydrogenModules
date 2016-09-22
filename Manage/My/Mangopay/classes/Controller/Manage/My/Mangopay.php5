@@ -100,7 +100,7 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 			$this->addData( 'wallets', $wallets );
 
 			$cacheKey	= 'user_'.$this->userId.'_transactions';
-			if( is_null( $transactions = $this->cache->get( $cacheKey ) ) ){
+			if( 1 || is_null( $transactions = $this->cache->get( $cacheKey ) ) ){
 				$pagination	= $this->mangopay->getDefaultPagination();
 				$sorting	= $this->mangopay->getDefaultSorting();
 				$sorting->AddField( 'CreationDate', 'ASC' );
