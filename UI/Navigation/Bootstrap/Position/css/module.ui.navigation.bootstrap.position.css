@@ -1,5 +1,18 @@
+#layout-position {
+	}
+.position-bar {
+	border-bottom: 1px solid #EEE;
+	padding-bottom: 0.5em;
+	margin-bottom: 0.5em;
+	}
 .position-bar-label {
 	display: inline;
-	font-weight: normal;
 	text-align: left;
+	color: rgba( 127, 127, 127, 0.5);
+	font-weight: bold;
+	}
+.position-bar-label::after {
+	content: ": ",
+	}
+.position-bar-path-list {
 	}
