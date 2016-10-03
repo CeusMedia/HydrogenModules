@@ -522,7 +522,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		foreach( $data as $entry ){
 			$author	= $this->modelAuthor->get( $entry->authorId );
 			$author->editor	= $entry->editor;
-			$list[$author->lastname]	= $author;
+			$list[$author->lastname.'_'.$author->firstname]	= $author;
 		}
 //		ksort( $list );
 		$this->cache->set( 'catalog.article.author.'.$articleId, $list );
