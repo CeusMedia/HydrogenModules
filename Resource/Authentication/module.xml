@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.7.2</version>
+	<version>0.8.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added text block support for every page (german only).</log>
@@ -42,24 +42,26 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.6.6">Migrate password recovery.</log>
 	<log version="0.6.7">Add english HTML and mail files.</log>
 	<log version="0.6.8">Translated language file.</log>
-	<log version="0.6.9">Add empty terms and conditions in HTML and Markdown.</log>
-	<log version="0.6.10">Added support for auto forward after login and on index.</log>
-	<log version="0.6.11">Changed support for auto forward after logout.</log>
-	<log version="0.6.12">Removed old loginInside action and view.</log>
-	<log version="0.6.13">Added flag to allow or deny registration.</log>
-	<log version="0.6.14">Lay mails on queue but send immediately.</log>
-	<log version="0.6.15">Finish localization.</log>
-	<log version="0.6.16">Rearrange templates and text blocks.</log>
-	<log version="0.6.17">Extend logic by role related methods.</log>
-	<log version="0.6.18">No auto logout if user is remembered.</log>
-	<log version="0.6.19">Extract login form into own template.</log>
-	<log version="0.6.20">Add new method checkPassword.</log>
-	<log version="0.6.21">Add first hook: checkBeforeLogin.</log>
-	<log version="0.6.22">Add support for use of accounting.</log>
-	<log version="0.7">Enable support for several authentication backends.</log>
-	<log version="0.7.1">Migrate current module files to new local authentication backend.</log>
-	<log version="0.7.2">Avoid to carry from path "index/index".</log>
-<!--	<log version="0.7.3">Start to remove deprecated files.</log>-->
+	<log version="0.7.0">Add empty terms and conditions in HTML and Markdown.</log>
+	<log version="0.7.1">Added support for auto forward after login and on index.</log>
+	<log version="0.7.2">Changed support for auto forward after logout.</log>
+	<log version="0.7.3">Removed old loginInside action and view.</log>
+	<log version="0.7.4">Added flag to allow or deny registration.</log>
+	<log version="0.7.5">Lay mails on queue but send immediately.</log>
+	<log version="0.7.6">Finish localization.</log>
+	<log version="0.7.7">Rearrange templates and text blocks.</log>
+	<log version="0.7.8">Extend logic by role related methods.</log>
+	<log version="0.7.9">No auto logout if user is remembered.</log>
+	<log version="0.7.10">Extract login form into own template.</log>
+	<log version="0.7.11">Add new method checkPassword.</log>
+	<log version="0.7.12">Add first hook: checkBeforeLogin.</log>
+	<log version="0.7.13">Add support for use of accounting.</log>
+	<log version="0.8.0">Enable support for several authentication backends.</log>
+	<log version="0.8.1">Migrate current module files to new local authentication backend.</log>
+	<log version="0.8.2">Avoid to carry from path "index/index".</log>
+	<log version="0.8.3">Extract registration JavaScript to local auth module.</log>
+	<log version="0.8.4">Extend backend registration.</log>
+<!--	<log version="0.8.5">Start to remove deprecated files.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

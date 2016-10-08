@@ -39,63 +39,6 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->ajaxIsAuthenticated();
 	}
 
-	public function ajaxUsernameExists(){
-		$username	= trim( $this->request->get( 'username' ) );
-		$result		= FALSE;
-		if( strlen( $username ) ){
-			$modelUser		= new Model_User( $this->env );
-			$result			= (bool) $modelUser->countByIndex( 'username', $username );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxEmailExists(){
-		$email	= trim( $this->request->get( 'email' ) );
-		$result		= FALSE;
-		if( strlen( $email ) ){
-			$modelUser		= new Model_User( $this->env );
-			$result			= (bool) $modelUser->countByIndex( 'email', $email );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxPasswordStrength(){
-		$password	= trim( $this->request->get( 'password' ) );
-		$result		= 0;
-		if( strlen( $password ) ){
-			$result			= Alg_Crypt_PasswordStrength::getStrength( $password );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function confirm( $code = NULL ){
-		$words		= (object) $this->getWords( 'confirm' );
-		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
-		$from		= $this->request->get( 'from'  );
-		$from		= str_replace( "index/index", "", $from );
-
-		if( strlen( trim( (string) $code ) ) ){
-			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
-			$modelUser		= new Model_User( $this->env );
-			$users			= $modelUser->getAllByIndex( 'status', 0 );
-			foreach( $users as $user ){
-				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
-				if( $pak === $code ){
-					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
-					$this->messenger->noteSuccess( $words->msgSuccess );
-					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
-					$this->restart( './auth/login/'.$user->username.( $from ? '?from='.$from : '' ) );
-				}
-			}
-			$this->messenger->noteError( $words->msgInvalidCode );
-		}
-		$this->addData( 'pak', $code );
-		$this->addData( 'from', $from );									//  forward redirect URL to form action
-	}
-
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'login' );
@@ -116,7 +59,10 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	public function login( $username = NULL ){
 		$backends	= $this->logic->getBackends();
 		if( count( $backends ) === 1 ){
-			$path	= 'auth/'.strtolower( $backends[0] ).'/login';
+	//		reset( $backends );
+			$first		= key( $backends );
+			$path	= 'auth/'.strtolower( $first ).'/login';
+//			$path	= 'auth/'.$backends[$first]->path.'/login';										//  @todo use this line later
 			if( $username )
 				$path	.= '/'.$username;
 			$from		= $this->request->get( 'from' );
@@ -126,75 +72,6 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		}
 
 		$this->addData( 'backends', $backends );
-/*
-
-		if( $this->session->has( 'userId' ) ){
-			if( $this->request->has( 'from' ) )
-				$this->restart( $from );
-			return $this->redirect( 'auth', 'loginInside' );
-		}
-
-		$this->tryLoginByCookie();
-		$words		= (object) $this->getWords( 'login' );
-
-		if( $this->request->has( 'doLogin' ) ) {
-
-			if( $this->useCsrf ){
-				$controller	= new Controller_Csrf( $this->env );
-				$controller->checkToken();
-			}
-			if( !trim( $username = $this->request->get( 'login_username' ) ) )
-				$this->messenger->noteError( $words->msgNoUsername );
-			if( !trim( $password = $this->request->get( 'login_password' ) ) )
-				$this->messenger->noteError( $words->msgNoPassword );
-
-			$modelUser	= new Model_User( $this->env );
-			$modelRole	= new Model_Role( $this->env );
-			$user		= $modelUser->getByIndex( 'username', $username );
-
-			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
-				'username'	=> $username,
-				'password'	=> $password,
-				'userId'	=> $user ? $user->userId : 0,
-			) );
-
-			if( !$this->messenger->gotError() ){
-				if( !$user )
-					$this->messenger->noteError( $words->msgInvalidUser );
-				else{
-					$role	= $modelRole->get( $user->roleId );
-					if( !$role->access )
-						$this->messenger->noteError( $words->msgInvalidRole );
-					else if( $user->password !== md5( $password ) )
-						$this->messenger->noteError( $words->msgInvalidPassword );
-					else if( $user->status == 0 )
-						$this->messenger->noteError( $words->msgUserUnconfirmed );
-					else if( $user->status == -1 )
-						$this->messenger->noteError( $words->msgUserLocked );
-					else if( $user->status == -2 )
-						$this->messenger->noteError( $words->msgUserDisabled );
-
-					if( !$this->messenger->gotError() ){
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
-						$this->messenger->noteSuccess( $words->msgSuccess );
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
-						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
-						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './auth?from='.$from );										//  restart (or go to redirect URL)
-					}
-				}
-			}
-		}
-//		$this->cookie->remove( 'auth_remember' );
-		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
-		$this->addData( 'login_username', $username );
-		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
-		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
-		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
-*/
 	}
 
 	public function logout(){
