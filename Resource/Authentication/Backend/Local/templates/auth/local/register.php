@@ -41,7 +41,7 @@ if( $tacHtml ){
 
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
-$env->getPage()->js->addScriptOnReady('Auth.initUserRegistration();');
+$env->getPage()->js->addScriptOnReady('Auth.Registration.init();');
 $env->getPage()->css->theme->addUrl( 'module.resource.auth.local.css' );
 
 //print_m( $moduleConfig->getAll() );die;
