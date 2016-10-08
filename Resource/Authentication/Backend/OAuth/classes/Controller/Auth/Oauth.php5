@@ -9,11 +9,13 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	protected $session;
 	protected $reqest;
 	protected $cookie;
+	protected $messenger;
 
 	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
 		$this->clientUri	= $this->env->url;
@@ -26,13 +28,13 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	}
 
 	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_oauth.enabled' ) )
-			$context->registerBackend( 'Oauth' );
+		if( $env->getConfig()->get( 'module.resource_authentication_backend_oauth.enabled' ) ){
+			$words	= $env->getLanguage()->getWords( 'auth/oauth' );
+			$context->registerBackend( 'Oauth', 'oauth', $words['backend']['title'] );
+		}
 	}
 
 	public function index(){
-		$messenger		= $this->env->getMessenger();
-
 //		if( $this->session->get( 'oauth_access_token' ) ){
 //		}
 //		else{
@@ -41,7 +43,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 			$words		= $this->getWords();
 			switch( $this->request->get( 'error' ) ){
 				case 'access_denied':
-					$messenger->noteError( $words['index']['msgAccessDenied'] );
+					$this->messenger->noteError( $words['index']['msgAccessDenied'] );
 					break;
 			}
 		}
@@ -71,7 +73,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 						$error	= UI_HTML_Tag::create( 'abbr', $error, array(
 							'title' => $response->error_description
 						) );
-					$messenger->noteError( $error );
+					$this->messenger->noteError( $error );
 				}
 				else{
 					$expiresIn	= (int) @$response->expires_in;
@@ -91,31 +93,37 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 //							$this->rememberUserInCookie( $user );
 					}
 					else{																			//  register new user
-						$modelRole	= new Model_Role( $this->env );
-						$client		= new Resource_Oauth( $this->env );
-						$response	= $client->read( 'me' );
-						$data		= $response->user;
-						$data->accountId	= $data->userId;
-						$data->roleId		= $modelRole->getByIndex( 'register', 128, 'roleId' );
-						unset( $data->userId );
-						$userId				= $modelUser->add( (array) $data );
-						$this->session->set( 'userId', $userId );
-						$this->session->set( 'roleId', $data->roleId );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+						if( $this->env->getModules()->has( 'Resource_Authentication_Backend_Local' ) ){
+							$modelRole	= new Model_Role( $this->env );
+							$client		= new Resource_Oauth( $this->env );
+							$response	= $client->read( 'me' );
+							$data		= $response->user;
+							$data->accountId	= $data->userId;
+							$data->roleId		= $modelRole->getByIndex( 'register', 128, 'roleId' );
+							unset( $data->userId );
+							$userId				= $modelUser->add( (array) $data );
+							$this->session->set( 'userId', $userId );
+							$this->session->set( 'roleId', $data->roleId );
+							if( $this->request->get( 'login_remember' ) )
+								$this->rememberUserInCookie( $user );
+						}
 					}
 /*					$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
 					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';					//  exclude logout from redirect request
 					$this->restart( './auth?from='.$from );											//  restart (or go to redirect URL)
 					$this->restart( NULL );
 */
-					$this->restart( NULL );
 				}
 			}
+			$this->restart( NULL );
 		}
 	}
 
 	public function login(){
+		if( $this->moduleConfig->get( 'login.grantType' ) === 'password' ){
+			$this->messenger->noteFailure( 'Grant type "password" is not implemented, yet.' );
+			$this->restart( NULL, TRUE );
+		}
 		if( $this->moduleConfig->get( 'login.grantType' ) === 'code' ){
 			$params	= http_build_query( array(
 				'client_id'		=> $this->clientId,
@@ -127,8 +135,6 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 			$url	= $this->moduleConfig->get( 'provider.URI' ).'/authorize?'.$params;
 			$this->restart( $url );
 		}
-
-		$messenger		= $this->env->getMessenger();
 
 		if( $this->request->getMethod() == "POST" ){
 			$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
@@ -157,7 +163,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 						$error	= UI_HTML_Tag::create( 'abbr', $error, array(
 							'title' => $responseData->error_description
 						) );
-					$messenger->noteError( $error );
+					$this->messenger->noteError( $error );
 				}
 
 				else{
@@ -199,13 +205,12 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 				}
 			}
 			else{
-				$messenger->noteError( 'Login failed' );
+				$this->messenger->noteError( 'Login failed' );
 			}
 		}
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
 		$this->addData( 'login_username', $this->request->get( 'login_username' ) );
 		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
-		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
 		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
@@ -221,13 +226,13 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
 			if( $this->request->has( 'autoLogout' ) ){
-				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
+				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
 			}
 			else{
 				$this->cookie->remove( 'auth_remember' );
 				$this->cookie->remove( 'auth_remember_id' );
 				$this->cookie->remove( 'auth_remember_pw' );
-				$this->env->getMessenger()->noteSuccess( $words['logout']['msgSuccess'] );
+				$this->messenger->noteSuccess( $words['logout']['msgSuccess'] );
 			}
 //			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 //				session_destroy();																	//  completely destroy session
@@ -249,8 +254,6 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	}
 
 	protected function refreshToken(){
-		$messenger		= $this->env->getMessenger();
-
 		if( $this->session->get( 'oauth_access_token' ) ){
 			if( time() >= $this->session->get( 'oauth_access_expires_at' ) ){
 				if( $this->session->get( 'oauth_refresh_token' ) ){
@@ -276,7 +279,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 							$error	= UI_HTML_Tag::create( 'abbr', $error, array(
 								'title' => $response->error_description
 							) );
-						$messenger->noteError( $error );
+						$this->messenger->noteError( $error );
 						$this->logout();
 					}
 					$expiresIn	= (int) @$response->expires_in;
