@@ -3,15 +3,16 @@
 	<title>UI: Font</title>
 	<description><![CDATA[Support for fonts provided by Ceus Media Font Repository.]]></description>
 	<category>User Interface</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separated to Hydrogen module.</log>
+	<log version="0.2.1">Switch to HTTPS.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files/>
 	<config protected="no" type="boolean" name="enabled">1</config>
-	<config protected="no" type="string" name="uri">http://cdn.int1a.net/font/</config>
+	<config protected="no" type="string" name="uri">https://cdn.int1a.net/font/</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig();
 		if( $config->get( 'module.ui_font.enabled' ) ){
