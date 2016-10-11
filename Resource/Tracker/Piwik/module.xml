@@ -20,7 +20,7 @@ list>
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -30,6 +30,7 @@ list>
 	<log version="0.3.4">Reintegrate script into helper to avoid load block of browser plugins.</log>
 	<log version="0.4">Add view for deactivation-by-user.</log>
 	<log version="0.4.1">Add public link to index in module configuration.</log>
+	<log version="0.4.2">Switch to HTTPS.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -45,7 +46,7 @@ list>
 	<config protected="yes" mandatory="yes" type="integer" name="ID" title="Piwik site ID"></config>
 	<config protected="yes" mandatory="no" type="boolean" name="local" title="use local installation">0</config>
 	<config protected="yes" mandatory="no" type="string" name="local.path" title="path to local installation">vendor/piwik/piwik/</config>
-	<config protected="yes" mandatory="yes" type="string" name="URI" title="URI to Piwik service"></config>
+	<config protected="yes" mandatory="yes" type="string" name="URI" title="URI to Piwik service">https://stats.ceusmedia.de/</config>
 	<link access="public" path="piwik/index"/>
 	<hook type="resource" resource="Env" event="init">Controller_Piwik::___onEnvInit</hook>
 	<hook type="resource" resource="Page" event="applyModules">Controller_Piwik::___onPageApplyModules</hook>
