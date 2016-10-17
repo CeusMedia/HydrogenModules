@@ -1,9 +1,11 @@
 <?php
 
-$env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
-
+/*
+ *	@deprecated		not used. nice feature but no styling done.
+ *	@todo			style and apply or remove
+#$pwdMinLength		= 3;
+#$pwdMinStrength	= 20;
 $script		= '
-$(document).ready(function(){
 	if('.$pwdMinLength.'||'.$pwdMinStrength.'){
 		$("form :input#password").pstrength({
 			minChar: '.$pwdMinLength.',
@@ -18,10 +20,10 @@ $(document).ready(function(){
 			],
 			colors: ["#f00", "#f60", "#cc0", "#3c0", "#3f0"]
 		});
-	}
-});
-';
-$env->page->js->addScript( $script );
+	}';
+$env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
+$env->page->js->addScriptOnReady( $script );
+*/
 
 $roleMap	= array();
 foreach( $roles as $role )
@@ -36,7 +38,6 @@ $ind1		= $indicator->build( 75, 100 );
 $helper	= new View_Helper_TimePhraser( $env );
 
 $w	= (object) $words['edit'];
-
 
 $optRole	= array();
 foreach( array_reverse( $roles, TRUE ) as $role )

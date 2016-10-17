@@ -58,7 +58,7 @@ class View_Helper_Work_Mission_Calendar{
 			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "14%", "14%", "14%", "14%", "14%", "13%", "12%" );
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
 		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
 		$thead		= UI_HTML_Tag::create( 'thead', $heads );
 		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
@@ -85,7 +85,7 @@ class View_Helper_Work_Mission_Calendar{
 					$date	= $showYear.'-'.$showMonth.'-'.$day;
 					$row[]	= '<tr>'.$this->renderDay( $userId, new DateTime( $date ), $orders, $class ).'</tr>';
   				}
-/*					
+/*
 					$class	= "inactive";
 					$day	-= $monthDays;
 					$showMonth++;
@@ -246,7 +246,7 @@ $(document).ready(function(){
 	 *	Render overdue container.
 	 *	@access		public
 	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string 
+	 *	@return		string		DIV container with number of overdue days or empty string
 	 */
 	public function renderOverdue( $mission ){
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date

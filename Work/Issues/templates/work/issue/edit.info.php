@@ -30,7 +30,7 @@ return '
 <div class="content-panel">
 	<h3>Informationen</h3>
 	<div class="content-panel-inner">
-		<dl class="info list">
+		<dl class="not-info not-list facts-vertical">
 			<dt>'.$words['edit']['labelId'].'</dt>
 			<dd><big>#'.$issue->issueId.'</big></dd>
 			<dt>'.$words['edit']['labelProject'].'</dt>

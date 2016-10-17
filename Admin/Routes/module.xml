@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Routes</title>
+	<description><![CDATA[Editor for frontend routes.]]></description>
+	<category>Administration</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Route.php5</class>
+		<class>View/Admin/Route.php5</class>
+		<template>admin/route/index.php</template>
+	</files>
+	<link access="acl" xml:lang="de" rank="95" path="admin/route">Routes</link>
+	<link access="acl" xml:lang="en" rank="95" path="admin/route">Routen</link>
+	<relations/>
+</module>

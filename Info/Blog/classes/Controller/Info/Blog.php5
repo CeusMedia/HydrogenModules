@@ -12,11 +12,15 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$this->modelComment		= new Model_Blog_Comment( $this->env );
 		$this->modelPost		= new Model_Blog_Post( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
+		$this->messenger		= $this->env->getMessenger();
 
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
-		if( $this->moduleConfig->get( 'mail' ) )
-			if( !$this->env->getModules()->has( 'Resource_Mail' ) )
-				$this->messenger->noteFailure( 'Module Info:Blog has mails enabled, but module Resource:Mail is missing.' );
+		if( $this->moduleConfig->get( 'mail' ) ){
+			if( !$this->env->getModules()->has( 'Resource_Mail' ) ){
+				$words		= (object )$this->getWords( 'msg' );
+				$this->messenger->noteFailure( $words->failureMailModuleMissing );
+			}
+		}
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
@@ -67,7 +71,8 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		if( !$post ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid post ID' );
-			$this->messenger->noteError( 'Invalid post ID.' );
+			$words		= (object )$this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorInvalidPostId );
 			$this->restart( NULL, TRUE );
 		}
 		return $post;
@@ -91,7 +96,8 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 				'createdAt'	=> time(),
 			);
 			$commentId	= $this->modelComment->add( $data );
-			$this->messenger->noteSuccess( 'Your comment has been added.' );
+			$words		= (object )$this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 			$this->informAboutNewComment( $commentId );
 		}
 		$this->restart( View_Info_Blog::renderPostUrlStatic( $env, $post ) );
@@ -107,6 +113,9 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		foreach( $posts as $post ){
 			$post->author	= $this->modelUser->get( $post->authorId );
 		}
+		$words		= $this->getWords( 'comment' );
+//print_m( $words );die;
+
 		$this->addData( 'posts', $posts );
 		$this->addData( 'page', $page );
 	}

@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.24</version>
+	<version>0.9.26</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -71,6 +71,8 @@ code>
 	<log version="0.9.22">Improve list performance and provide number of missions in all days.</log>
 	<log version="0.9.23">Handle sync link in browser with new help view.</log>
 	<log version="0.9.24">Extracted timer panel.</log>
+	<log version="0.9.25">Update calendar.</log>
+	<log version="0.9.26">Use new Work:Timer integration with hooks.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -184,6 +186,7 @@ code>
 	<link access="inside" path="work/mission/future/ajaxRenderIndex"/>
 	<link access="inside" path="work/mission/future/index"/>
 	<hook type="resource" resource="Database_Lock" event="checkRelease">Controller_Work_Mission::___onDatabaseLockReleaseCheck</hook>
+	<hook type="resource" resource="Work_Timer" event="registerModule">Controller_Work_Mission::___onRegisterTimerModule</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (

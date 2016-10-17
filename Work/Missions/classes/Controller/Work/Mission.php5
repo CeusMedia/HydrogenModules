@@ -113,7 +113,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
-		$this->useIssues	= $this->env->getModules()->has( 'Manage_Issues' );
+		$this->useIssues	= $this->env->getModules()->has( 'Work_Issues' );
 		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
 		$this->userId		= $this->session->get( 'userId' );
@@ -148,6 +148,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->lock	= new Logic_Database_Lock( $this->env );
 
 		$this->env->getModules()->callHook( 'Test', 'test', array() );
+	}
+
+	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
+		$context->registerModule( (object) array(
+			'moduleId'		=> 'Work_Missions',
+			'typeLabel'		=> 'Aufgabe',
+			'modelClass'	=> 'Model_Mission',
+			'linkDetails'	=> 'work/mission/view/{id}',
+		) );
 	}
 
 	static public function ___onDatabaseLockReleaseCheck( $env, $context, $module, $data = array() ){
@@ -499,6 +508,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		$this->messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
+	}
+
+	public function convertToIssue( $missionId ){
+		die( "Not implemented yet" );
 	}
 
 	public function convertContent( $missionId, $formatIn, $formatOut ){

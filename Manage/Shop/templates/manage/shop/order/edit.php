@@ -163,7 +163,7 @@ if( $order->customer )
 		<div class="content-panel">
 			<h4>Lieferanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( array( 'firstname', 'lastname', 'email', 'phone', 'country', 'region', 'city', 'postcode', 'address' ), $order->customer, $labelsCustomer ).'
+				'.renderDataList( array( 'institution', 'firstname', 'lastname', 'email', 'phone', 'country', 'region', 'city', 'postcode', 'address' ), $order->customer, $labelsCustomer ).'
 			</div>
 		</div>
 	</div>';

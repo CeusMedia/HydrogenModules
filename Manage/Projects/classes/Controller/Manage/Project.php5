@@ -286,7 +286,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$missions		= $modelMission->getAllByIndex( 'projectId', $projectId );
 			$this->addData( 'missions', $missions );
 		}
-
+		$this->addData( 'currentUserId', $this->userId );
 		$this->addData( 'users', $this->logic->getCoworkers( $this->userId ) );
 		$this->addData( 'project', $project );
 		$this->addData( 'projectUsers', $projectUsers );
@@ -534,12 +534,20 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				}
 			}
 		}
+		if( $userId == $this->userId )
+			$this->restart( NULL, TRUE );
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
 	public function setDefault( $projectId = NULL ){
 		$this->checkUserProjects();
 		$projectId	= $projectId ? $projectId : $this->request->get( 'projectId' );
+
+		$projects	= $this->modelProject->getUserProjects( $this->userId );
+		if( count( $projects ) === 1 ){
+			$first		= array_slice( $projects, 0, 1 );
+			$projectId	= $first[0]->projectId;
+		}
 		if( $projectId ){
 			$this->checkProject( $projectId );
 			$this->logic->setDefaultProject( $this->userId, $projectId );
@@ -547,7 +555,6 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$this->restart( $from );
 			$this->restart( 'edit/'.$projectId, TRUE );
 		}
-		$projects	= $this->modelProject->getUserProjects( $this->userId );
 		$this->addData( 'projects', $projects );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 	}

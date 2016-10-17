@@ -54,7 +54,7 @@ $(document).ready(function(){
 						Issues.renderIssues($("#list-similar tbody"), response);
 					}
 				});
-	//		
+	//
 		}, 250);
 	});
 });
@@ -66,24 +66,24 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="type">'.$words['add']['labelType'].'</label>
-					'.UI_HTML_Elements::Select( 'type', $optType, 'max' ).'
+					'.UI_HTML_Elements::Select( 'type', $optType, 'span12' ).'
 				</div>
 				<div class="span3">
 					<label for="priority">'.$words['add']['labelPriority'].'</label>
-					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12' ).'
 				</div>
 	<!--			<div class="column-left-25">
 					<label for="severity">'.$words['add']['labelSeverity'].'</label>
-					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
+					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12' ).'
 				</div>-->
 				<div class="span3">
 					<label for="input_projectId">'.$words['add']['labelProject'].'</label>
-					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12' ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<label for="input_title" class="mandatory">'.$words['add']['labelTitle'].'</label>
-				<input type="text" name="title" id="input_title" class="span12 -max mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
+				<input type="text" name="title" id="input_title" class="span12 mandatory" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'"/>
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['add']['labelContent'].'</label>
@@ -128,4 +128,3 @@ return '
 	</div>
 </div>';
 ?>
-

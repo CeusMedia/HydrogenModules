@@ -7,15 +7,18 @@ div.content-panel-inner form {
 
 /*  --  STYLE 1  --  */
 body.content-panel-style-1 div.content-panel {
-	padding-left: 1.5em;
-	border-left: 5px solid #EEE;
+	padding: 0.2em 1.5em;
 	margin-bottom: 2em;
+	overflow: hidden;
+	border-left: 5px solid #EEE;
+	background-color: rgba(255,255,255,1);
 	}
 body.content-panel-style-1 div.content-panel div.content-panel-inner {}
 body.content-panel-style-1 div.content-panel div.content-panel-inner div.buttonbar {
 	padding: 0.5em 0em 0.75em 1.5em;
 	margin: 0px;
 	margin-left: -1.5em;
+	margin-right: -1.5em;
 	border-top: 1px solid #EEEEEE;
 	background-image: -ms-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);							/* IE10 Consumer Preview */
 	background-image: -moz-radial-gradient(left top, ellipse farthest-side, #F3F3F3 0%, #FFFFFF 100%);							/* Mozilla Firefox */
@@ -37,18 +40,21 @@ body.content-panel-style-1 div.content-panel>h5 {
 	margin-left: -1.1rem;
 	margin-bottom: 0.5rem;
 	border-bottom: 1px solid #F7F7F7;
+	font-size: 18px;
+	line-height: 2em;
 	}
 
 
 /*  --  STYLE 2  --  */
 body.content-panel-style-2 div.content-panel {
+	display: block;
 	padding: 3px;
+	margin-bottom: 20px;
+	overflow: hidden;
 	background: #EEE;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	display: block;
-	margin-bottom: 20px;
 /*	font-size: 12px;*/
 	border: 0;
 	}
@@ -94,12 +100,12 @@ body.content-panel-style-2 div.content-panel div.content-panel-inner div.buttonb
 
 /*  --  STYLE 3  --  */
 body.content-panel-style-3 div.content-panel {
+	display: block;
+	margin-bottom: 20px;
+	overflow: hidden;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
-	display: block;
-	margin-bottom: 20px;
-	font-size: 12px;
 	border: 0;
 	}
 body.content-panel-style-3 div.content-panel > div.content-panel-inner {
@@ -121,7 +127,7 @@ body.content-panel-style-3 div.content-panel > h4 {
 	text-shadow: 1px 1px 0px #fff;
 	border: 1px solid #CACACA;
 	border-bottom: 0;
-	font-size: 14px;
+	font-size: 16px;
 	background-color: #e1e1e1;
 	background-image: -moz-linear-gradient(top, #f1f1f1, #e1e1e1);
 	background-image: -ms-linear-gradient(top, #f1f1f1, #e1e1e1);
@@ -131,7 +137,8 @@ body.content-panel-style-3 div.content-panel > h4 {
 	background-image: linear-gradient(top, #f1f1f1, #e1e1e1);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f1f1f1', EndColorStr='#e1e1e1');
 /*	text-align: center;*/
-	padding: 8px 14px;
+	padding: 1px 14px;
+	line-height: 2em;
 	}
 body.content-panel-style-3 div.content-panel div.content-panel-inner div.buttonbar {
 	padding: 6px 16px 9px 16px;
@@ -146,8 +153,77 @@ body.content-panel-style-3 div.content-panel div.content-panel-inner div.buttonb
 	background-image: linear-gradient(top, #e1e1e1, #f1f1f1);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e1e1e1', EndColorStr='#f1f1f1');
 	}
+/*body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner  {
+	padding: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner div.buttonbar  {
+	margin: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table {
+	margin: 0 0;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr th:first-child,
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr td:first-child {
+	padding-left: 16px;
+	}
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr th:last-child,
+body.content-panel-style-3 div.content-panel.content-panel-list > div.content-panel-inner table tr td:last-child {
+	padding-right: 16px;
+	}*/
 
 
+
+/*  --  STYLE 4  --  */
+body.content-panel-style-4 div.content-panel {
+	margin-bottom: 2em;
+	padding: 0.5rem 1rem;
+	background-color: rgba(255,255,255,0.5);
+	border-radius: 4px;
+	box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.25);
+	border: none;
+	overflow: hidden;
+	}
+body.content-panel-style-4 div.content-panel.content-panel-info {
+	background-color: rgba(255,255,255,0.75);
+	}
+body.content-panel-style-4 div.content-panel.content-panel-filter {
+	background-color: rgba(255,255,255,0.25);
+	}
+body.content-panel-style-4 div.content-panel.content-panel-list {}
+body.content-panel-style-4 div.content-panel.content-panel-form {}
+body.content-panel-style-4 div.content-panel > div.content-panel-inner {}
+body.content-panel-style-4 div.content-panel > h3,
+body.content-panel-style-4 div.content-panel > h4 {
+	color: rgba(0,0,0,0.66);
+	border: none;
+	font-size: 16px;
+	margin: 8px 0px 12px 0px;
+	line-height: 1em;
+
+	color: rgba(0,0,0,0.5);
+	font-weight: lighter;
+	text-transform: uppercase;
+	}
+body.content-panel-style-4 div.content-panel > div.content-panel-inner div.buttonbar {
+	background-color: rgba(255,255,255,1);
+	border-top: 1px solid rgba(0,0,0,0.1);
+	margin: 1rem -1rem -0.5rem -1rem;
+	padding: 0.5rem 1rem;
+	border-radius: 0;
+	}
+
+
+
+/*  --  STYLE X (Template)  --  */
+body.content-panel-style-x div.content-panel {}
+body.content-panel-style-x div.content-panel.content-panel-info {}
+body.content-panel-style-x div.content-panel.content-panel-list {}
+body.content-panel-style-x div.content-panel.content-panel-filter {}
+body.content-panel-style-x div.content-panel.content-panel-form {}
+body.content-panel-style-x div.content-panel > div.content-panel-inner {}
+body.content-panel-style-x div.content-panel > h3,
+body.content-panel-style-x div.content-panel > h4 {}
+body.content-panel-style-x div.content-panel div.content-panel-inner div.buttonbar {}
 
 
 @media (min-width: 768px) {

@@ -14,7 +14,7 @@ foreach( $issues as $issue ){
 	}
 	$notes		= count( $issue->notes );
 	$changes	= count( $issue->changes );
-	$changes	= ( $notes || $changes ) ? ' mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)' : '';
+	$changes	= ( $notes || $changes ) ? '<small class="muted">mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)</small>' : '';
 	$link		= UI_HTML_Elements::Link( './work/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
 	$type		= UI_HTML_Tag::create( 'span', $words['types'][$issue->type], array( 'class' => 'issue-type type-'.$issue->type ) );
 	$severity	= UI_HTML_Tag::create( 'span', $words['severities'][$issue->severity], array( 'class' => 'issue-severity severity-'.$issue->severity ) );
@@ -37,11 +37,11 @@ $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/issue', $page, ceil(
 $pagination	= $pagination->render();
 
 return '
-<div class="content-panel">
+<div class="content-panel content-panel-list"">
 	<h3>Probleme</h3>
-	<div class="content-panel-inner">
+	<div class="content-panel-inner content-panel-table">
 <!--		<legend>Einträge ('.$number.' von '.$total.')</legend>-->
-		<table class="table table-condensed">
+		<table class="table table-condensed table-striped">
 			<colgroup>
 				<col width="47%"/>
 				<col width="10%"/>

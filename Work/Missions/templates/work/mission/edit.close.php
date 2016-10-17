@@ -32,16 +32,18 @@ return '
 					<span class="add-on">'.$w->suffixHours.'</span>
 				</div>
 			</div>
-			<div class="buttonbar btn-group">
-				<button type="button" onclick="closeMission(4, \''.$w->buttonCloseConfirm.'\');" class="btn btn-small btn-success">
-					<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonClose.'
-				</button>
-				<button type="button" onclick="closeMission(-2, \''.$w->buttonCancelConfirm.'\');" class="btn btn-small btn-danger">
-					<i class="icon-remove icon-white"></i>&nbsp;'.$w->buttonCancel.'
-				</button>
-				<button type="button" onclick="closeMission(-3, \''.$w->buttonRemoveConfirm.'\');" class="btn btn-small btn-inverse">
-					<i class="icon-trash icon-white"></i>&nbsp;'.$w->buttonRemove.'
-				</button>
+			<div class="buttonbar">
+				<div class="not-btn-group">
+					<button type="button" onclick="closeMission(4, \''.$w->buttonCloseConfirm.'\');" class="btn btn-small btn-success">
+						<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonClose.'
+					</button>
+					<button type="button" onclick="closeMission(-2, \''.$w->buttonCancelConfirm.'\');" class="btn btn-small btn-danger">
+						<i class="icon-remove icon-white"></i>&nbsp;'.$w->buttonCancel.'
+					</button>
+					<button type="button" onclick="closeMission(-3, \''.$w->buttonRemoveConfirm.'\');" class="btn btn-small btn-inverse">
+						<i class="icon-trash icon-white"></i>&nbsp;'.$w->buttonRemove.'
+					</button>
+				</div>
 			</div>
 		</form>
 	</div>

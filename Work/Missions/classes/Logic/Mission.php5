@@ -124,8 +124,12 @@ class Logic_Mission{
 	}
 
 	public function getVersions( $missionId ){
-		$orders	= array( 'version' => 'ASC' );
-		return $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
+		$orders		= array( 'version' => 'ASC' );
+		$versions	= $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
+		$modelUser	= new Model_User( $this->env );											//  create projects model
+		foreach( $versions as $version )
+			$version->user = $modelUser->get( $version->userId );
+		return $versions;
 	}
 
 	protected function hasFullAccess(){

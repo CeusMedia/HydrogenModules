@@ -11,7 +11,8 @@ class Logic_Authentication{
 		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
 		if( !$this->backends )
 			throw new RuntimeException( 'No authentication backend installed' );
-		$this->setBackend( @array_shift( $this->getBackends() ) );
+		$backends	= array_keys( $this->getBackends() );
+		$this->setBackend( @array_shift( $backends ) );
 	}
 
 	public function checkPassword( $userId, $password ){
@@ -56,18 +57,30 @@ class Logic_Authentication{
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
 	}
 
-	public function registerBackend( $backend ){
-		if( !in_array( $backend, $this->backends ) )
-			$this->backends[]	= $backend;
+	public function registerBackend( $key, $path, $label ){
+		if( array_key_exists( $key, $this->backends ) )
+			throw new RangeException( 'Backend "'.$key.'" is already registered' );
+		$backend	= (object) array(
+			'key'		=> $key,
+			'path'		=> $path,
+			'label'		=> $label,
+			'module'	=> 'Resource_Authentication_Backend_'.$key,
+			'classes'	=> (object) array(
+				'logic'		=> NULL,
+			),
+		);
+		$this->backends[$key]	= $backend;
+		$classLogic		= 'Logic_Authentication_Backend_'.$key;
+		if( !class_exists( $classLogic ) )
+			throw new BadFunctionCallException( 'Authentication logic class for backend "'.$key.'" is not existing' );
+		$backend->classes->logic = $classLogic;
 	}
 
-	public function setBackend( $backend ){
-		if( !in_array( $backend, $this->backends ) )
-			throw new OutOfRangeException( 'Authentication backend "'.$backend.'" is not registered' );
-		$className		= 'Logic_Authentication_Backend_'.$backend;
-		if( !class_exists( $className ) )
-			throw new BadFunctionCallException( 'Authentication backend logic class "'.$backend.'" is not existing' );
-		$factory		= new ReflectionMethod( $className, 'getInstance' );
+	public function setBackend( $key ){
+		if( !array_key_exists( $key, $this->backends ) )
+			throw new OutOfRangeException( 'Authentication backend "'.$key.'" is not registered' );
+		$backend		= $this->backends[$key];
+		$factory		= new ReflectionMethod( $backend->classes->logic, 'getInstance' );
 		$this->backend	= $factory->invokeArgs( NULL, array( $this->env ) );
 //		$this->backend	= call_user_func_array( array( $className, 'getInstance' ), array( $this->env ) );
 	}

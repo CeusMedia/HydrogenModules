@@ -26,6 +26,15 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->logic		= new Logic_Issue( $this->env );
 	}
 
+	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
+		$context->registerModule( (object) array(
+			'moduleId'		=> 'Work_Issues',
+			'typeLabel'		=> 'Problem',
+			'modelClass'	=> 'Model_Issue',
+			'linkDetails'	=> 'work/issue/edit/{id}',
+		) );
+	}
+
 	public function add(){
 		$request	= $this->env->request;
 		if( $request->has( 'save' ) ){

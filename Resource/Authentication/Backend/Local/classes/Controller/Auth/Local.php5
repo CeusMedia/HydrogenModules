@@ -30,17 +30,10 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_local.enabled' ) )
-			$context->registerBackend( 'Local' );
-	}
-
-	public function ajaxIsAuthenticated(){
-		print( json_encode( $this->session->has( 'userId' ) ) );
-		exit;
-	}
-
-	public function ajaxRefreshSession(){
-		$this->ajaxIsAuthenticated();
+		if( $env->getConfig()->get( 'module.resource_authentication_backend_local.enabled' ) ){
+			$words	= $env->getLanguage()->getWords( 'auth/local' );
+			$context->registerBackend( 'Local', 'local', $words['backend']['title'] );
+		}
 	}
 
 	public function ajaxUsernameExists(){
@@ -118,15 +111,16 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 	public function confirm( $code = NULL ){
 		$words		= (object) $this->getWords( 'confirm' );
-		$code		= $code ? $code : $this->request->get( 'confirm_code' );						//  get code from POST reqeuest if not given by GET
+		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
 		$from		= $this->request->get( 'from'  );
+		$from		= str_replace( "index/index", "", $from );
 
 		if( strlen( trim( (string) $code ) ) ){
-			$passwordPepper	= trim( $this->config->get( 'module.resource.users.password.pepper' ) );	//  string to pepper password with
+			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
 			$modelUser		= new Model_User( $this->env );
 			$users			= $modelUser->getAllByIndex( 'status', 0 );
 			foreach( $users as $user ){
-				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordPepper );
+				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );

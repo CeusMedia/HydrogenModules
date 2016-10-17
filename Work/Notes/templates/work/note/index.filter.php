@@ -16,8 +16,7 @@ $not	= array();
 foreach( $tags as $tag )
 	$not[]	= $tag->tagId;
 
-$logic	= new Logic_Note( $env );
-$tags	= $logic->getTopTags( 3, 0, $not );
+$tags	= $logicNote->getTopTags( 3, 0, $filterProjectId, $not );
 
 $tagsMore	= "";
 if( $tags ){
@@ -56,7 +55,7 @@ $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $filterAuthor );
 $optPublic		= $words['filter-public'];
 $optPublic		= UI_HTML_Elements::Options( $optPublic, $filterPublic );
 
-$optProject		= array( '' => '- alle -' );
+$optProject		= array( '' => '- alle -', '0' => '- ohne Projektbezug -' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject		= UI_HTML_Elements::Options( $optProject, $filterProjectId );
@@ -78,19 +77,19 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span6">
-					<label for="input_filter_public">'.$w->labelPublic.'</label>
-					<select id="input_filter_public" name="filter_public" class="span12" onchange="this.form.submit();">'.$optPublic.'</select>
-				</div>
-				<div class="span6">
-					<label for="input_filter_author">'.$w->labelAuthor.'</label>
-					<select id="input_filter_author" name="filter_author" class="span12" onchange="this.form.submit();">'.$optAuthor.'</select>
-				</div>
-			</div>
-			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_filter_projectId">'.$w->labelProjectId.'</label>
 					<select id="input_filter_projectId" name="filter_projectId" class="span12" onchange="this.form.submit();">'.$optProject.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+<!--				<div class="span6">
+					<label for="input_filter_public">'.$w->labelPublic.'</label>
+					<select id="input_filter_public" name="filter_public" class="span12" onchange="this.form.submit();">'.$optPublic.'</select>
+				</div>-->
+				<div class="span6">
+					<label for="input_filter_author">'.$w->labelAuthor.'</label>
+					<select id="input_filter_author" name="filter_author" class="span12" onchange="this.form.submit();">'.$optAuthor.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">

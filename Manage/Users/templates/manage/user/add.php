@@ -3,13 +3,15 @@ $w				= (object) $words['add'];
 
 $optStatus		= $words['status'] + array( '_selected' => $user->status );
 
-$jsHelper		= CMF_Hydrogen_View_Helper_JavaScript::getInstance();
-$jsHelper->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js', TRUE );
 
-$script		= '
-$(document).ready(function(){
-	if('.$pwdMinLength.'||'.$pwdMinStrength.'){
-		$("form :input#password").pstrength({
+/*
+ *	@deprecated		not used. nice feature but no styling done.
+ *	@todo			style and apply or remove
+#$pwdMinLength		= 3;
+#$pwdMinStrength	= 20;
+$script	= '
+	if('.(int) $pwdMinLength.'||'.(int) $pwdMinStrength.'){
+		$("#input_password").pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: '.$pwdMinLength.',
 			minCharText:  "'.$words['pstrength']['mininumLength'].'",
@@ -23,9 +25,12 @@ $(document).ready(function(){
 			colors: ["#f00", "#f60", "#cc0", "#3c0", "#3f0"]
 		});
 	}
-});
 ';
-$jsHelper->addScript( $script );
+
+$page	= $env->getPage();
+$page->js->addUrl( 'http://cdn.int1a.net/js/jquery/pstrength/2.1.0.min.js', TRUE );
+$page->js->addScriptOnReady( $script );
+*/
 
 $roleMap	= array();
 foreach( $roles as $role )
@@ -109,11 +114,9 @@ $panelAdd	= '
 					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12 buttonbar">
-					'.$buttonCancel.'
-					'.$buttonSave.'
-				</div>
+			<div class="buttonbar">
+				'.$buttonCancel.'
+				'.$buttonSave.'
 			</div>
 		</form>
 	</div>

@@ -156,20 +156,23 @@ var WorkMissionsEditor = {
 					method: "POST",
 					dataType: "html",
 					success: function(html){
-						$(".CodeMirror").removeClass("changed");
+						if(missionId)
+							$(".CodeMirror").removeClass("changed");
 						WorkMissionsEditor.markdown.html(html).css({opacity: 1});
 					}
 				});
 			}
 			else{
 				WorkMissionsEditor._renderContentOfMarkdownEditor();
-				$(".CodeMirror").removeClass("changed");
+				if(missionId)
+					$(".CodeMirror").removeClass("changed");
 			}
 		}, 500);
 		WorkMissionsEditor.mirror.on("change", function(instance, update){
 			instance.save();																			//  apply changes of markdown editor to input element
 			WorkMissionsEditor._resizeMarkdownEditor();
-			$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
+			if(missionId)
+				$(".CodeMirror").addClass("changed").trigger("keyup");									//  trigger key up event for automatic save
 			$(instance.getTextArea()).trigger("keyup");												//  trigger key up event for automatic rendering
 		});
 		WorkMissionsEditor._renderContentOfMarkdownEditor();

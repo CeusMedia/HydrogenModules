@@ -11,7 +11,6 @@ $useMembers		= $env->getModules()->has( 'Members' );
 if( $useMembers )
 	$helperMember	= new View_Helper_Member( $env );
 
-
 $list	= array();
 foreach( $projectUsers as $user ){
 	$class	= 'role role'.$user->roleId;
@@ -21,7 +20,8 @@ foreach( $projectUsers as $user ){
 		if( $canEditUsers )
 			$url	= './manage/user/edit/'.$user->userId;
 		$helperMember->setUser( $user );
-		$helperMember->setLinkUrl( $url.$from );
+		if( $user->userId !== $currentUserId )
+			$helperMember->setLinkUrl( $url.$from );
 		$label	= $helperMember->render();
 	}
 	else{

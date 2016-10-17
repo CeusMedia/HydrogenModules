@@ -136,6 +136,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 				}
 			}
 		}
+		$this->restart( NULL, TRUE );
 	}
 
 	public function cancel( $mailId ){

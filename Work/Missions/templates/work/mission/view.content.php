@@ -18,12 +18,12 @@ function renderUserLabel( $user ){
 */
 
 $panelVersions		= '';
-if( $mission->versions ){
+if( 1 || $mission->versions ){
 	$list	= array();
 	foreach( $mission->versions as $version ){
 		$date	= date( 'Y-m-d H:i:s', $version->timestamp );
 		$date	= $phraser->convert( $version->timestamp, TRUE );
-		$label	= '#'.$version->version.' <small class="muted">('.$date.')</small>';
+		$label	= '#'.$version->version.' <small class="muted">('.$date.') von '.$version->user->username.'</small>';
 		$link	= UI_HTML_Tag::create( 'a', $label, array(
 			'href'	=> './work/mission/view/'.$mission->missionId.'#version-'.$version->version,
 		) );
@@ -38,7 +38,7 @@ if( $mission->versions ){
 		'onclick'	=> 'return false'
 	) );
 	$list[]	= new UI_HTML_Tag( 'li', $link, array(
-		'class'				=> 'version-list-item',
+		'class'				=> 'version-list-item active',
 //		'data-version'		=> 'current',
 	) );
 	$list	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
