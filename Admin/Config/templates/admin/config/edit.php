@@ -3,7 +3,9 @@
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/' ) );
 
 $panelList	= $view->loadTemplateFile( 'admin/config/list.php' );
-$panelEdit	= $view->loadTemplateFile( 'admin/config/edit.php' );
+//$panelEdit	= $view->loadTemplateFile( 'admin/config/edit.php' );
+
+$panelEdit		= "...";
 
 return $textTop.'
 <div class="row-fluid">
