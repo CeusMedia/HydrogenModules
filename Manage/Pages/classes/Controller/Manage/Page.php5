@@ -204,7 +204,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 			if( $this->request->has( 'identifier' ) ){
 				$identifier	= $this->request->get( 'identifier' );
-				$pattern	= '/[^a-z0-9_-]/';
+				$pattern	= '/[^a-z0-9_\/-]/';
 				$this->request->set( 'identifier', preg_replace( $pattern, "", $identifier ) );
 			}
 
