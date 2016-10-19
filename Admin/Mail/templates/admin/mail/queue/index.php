@@ -18,7 +18,12 @@ $table		= UI_HTML_Tag::create( 'em', $wl->noEntries, array( 'class' => 'muted' )
 if( $mails ){
 	$rows	= array();
 	foreach( $mails as $mail ){
-		$timestamp	= $mail->status == 2 ? ( $mail->status == 1 ? $mail->attemptedAt : $mail->enqueuedAt ) : $mail->sentAt;
+/*		$timestamp	= $mail->enqueuedAt;
+		if( (int) $mail->status === 1 )
+			$timestamp	= $mail->attemptedAt;
+		if( (int) $mail->status === 2 )
+			$timestamp	= $mail->sentAt;*/
+		$timestamp	= $mail->status == 2 ? $mail->sentAt : ( $mail->status == 1 ? $mail->attemptedAt : $mail->enqueuedAt );
 		$datetime	= date( $wl->formatDate, $timestamp );
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 			$datetime	= $helper->convert( $timestamp, TRUE, 'vor' );
