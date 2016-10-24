@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.3</version>
+	<version>0.6.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -51,6 +51,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6.1">Apply current environment and transport on waking queued mails.</log>
 	<log version="0.6.2">Support negative mail status (cancelled).</log>
 	<log version="0.6.3">Rewrite mail sending job loop and improve sleep time handling.</log>
+	<log version="0.6.4">Send mails encoded in base64 by default.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

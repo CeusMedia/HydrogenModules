@@ -85,7 +85,7 @@ abstract class Mail_Abstract{
 		$body->wrapWords( 76 );
 		$this->mail->addBody( $body );
 */
-		$this->mail->setHTML( $html );
+		$this->mail->addHTML( $html, 'UTF-8', 'base64' );
 	}
 
 	/**
@@ -99,7 +99,7 @@ abstract class Mail_Abstract{
 		$body	= new Net_Mail_Body( $base64, Net_Mail_Body::TYPE_PLAIN, 'base64' );
 		$body->wrapWords( 76 );
 		$this->mail->addBody( $body );*/
-		$this->mail->setText( $text );
+		$this->mail->addText( $text, 'UTF-8', 'base64' );
 	}
 
 	protected function addPrimerStyle( $fileName ){
