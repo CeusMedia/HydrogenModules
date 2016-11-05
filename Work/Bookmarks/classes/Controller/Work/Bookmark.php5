@@ -15,7 +15,7 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		$this->modelTag		= new Model_Bookmark_Tag( $this->env );
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuthentication	= TRUE;
-			$this->userId	= (int) Logic_Authentication::getInstance()->getCurrentUserId();
+			$this->userId	= (int) Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		}
 	}
 
@@ -128,10 +128,10 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 				$this->model->edit( $bookmark->bookmarkId, array( 'fulltext' => $text ) );
 			}
 			$bookmark->comments	= $this->modelComment->getAll( array(
-				'bookmarkId'	=> $bookmarkId,
+				'bookmarkId'	=> $bookmark->bookmarkId,
 			), array( 'createdAt' => 'ASC' ) );
 			$bookmark->tags	= $this->modelTag->getAll( array(
-				'bookmarkId'	=> $bookmarkId,
+				'bookmarkId'	=> $bookmark->bookmarkId,
 			), array( 'title' => 'ASC' ) );
 		}
 		$this->addData( 'bookmarks', $bookmarks );

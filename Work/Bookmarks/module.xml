@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <module>
 	<title>Work: Bookmarks</title>
-	<description><![CDATA[Simple bookmark collection with tags.]]></description>
-	<version>0.2</version>
+	<description><![CDATA[Simple bookmark collection with tags.
+
+Needs composer package "paquettg/php-html-parser": "^1.7".
+]]></description>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add composer package.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
