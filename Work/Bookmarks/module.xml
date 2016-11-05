@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Bookmarks</title>
+	<description><![CDATA[Simple bookmark collection with tags.]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<category>Work</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Work/Bookmark.php5</class>
+		<class>Model/Bookmark.php5</class>
+		<class>Model/Bookmark/Comment.php5</class>
+		<class>Model/Bookmark/Tag.php5</class>
+		<class>View/Work/Bookmark.php5</class>
+		<template>work/bookmark/index.php</template>
+		<template>work/bookmark/view.php</template>
+		<locale>de/work/bookmark.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="work/bookmark" rank="47">Lesezeichen</link>
+	<link xml:lang="en" access="acl" path="work/bookmark" rank="47">Bookmarks</link>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+<%?prefix%>
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bookmarks` (
+  `bookmarkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `visits` int(10) unsigned DEFAULT '0',
+  `url` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `pageTitle` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pageDescription` text COLLATE utf8_unicode_ci,
+  `fulltext` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) DEFAULT NULL,
+  `visitedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`bookmarkId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bookmark_comments` (
+  `bookmarkCommentId` int(11) NOT NULL AUTO_INCREMENT,
+  `bookmarkId` int(10) unsigned NOT NULL,
+  `userId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `votes` int(11) NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(10,0) unsigned NOT NULL,
+  `modifiedAt` decimal(10,0) unsigned DEFAULT NULL,
+  `votedAt` decimal(10,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bookmarkCommentId`),
+  KEY `bookmarkId` (`bookmarkId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `<%?prefix%>bookmark_tags` (
+  `bookmarkTagId` int(11) NOT NULL AUTO_INCREMENT,
+  `bookmarkId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `relatedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `usedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bookmarkTagId`),
+  KEY `bookmarkId` (`bookmarkId`),
+  KEY `userId` (`userId`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
+DROP TABLE IF EXISTS `<%?prefix%>bookmark_comments`;
+DROP TABLE IF EXISTS `<%?prefix%>bookmark_tags`;
+]]></sql>
+</module>
