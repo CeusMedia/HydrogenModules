@@ -34,6 +34,16 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		}
 	}
 
+/*	public function ajaxEmailExists(){
+		print( json_encode( NULL ) );
+		exit;
+	}
+
+	public function ajaxUsernameExists(){
+		print( json_encode( NULL ) );
+		exit;
+	}
+*/
 	public function index(){
 //		if( $this->session->get( 'oauth_access_token' ) ){
 //		}

@@ -67,7 +67,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		print( json_encode( $result ) );
 		exit;
 	}
-
+*/
 	/**
 	 *	Check given user password against old and newer password storage.
 	 *	If newer password store is supported and old password has been found, migration will apply.
