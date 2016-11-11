@@ -1,5 +1,5 @@
 <?php
-class Controller_Auth_JSON extends CMF_Hydrogen_Controller {
+class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 
 	protected $config;
 	protected $request;
@@ -32,7 +32,7 @@ class Controller_Auth_JSON extends CMF_Hydrogen_Controller {
 	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		if( $env->getConfig()->get( 'module.resource_authentication_backend_json.enabled' ) ){
 			$words	= $env->getLanguage()->getWords( 'auth/json' );
-			$context->registerBackend( 'JSON', 'json', $words['backend']['title'] );
+			$context->registerBackend( 'Json', 'json', $words['backend']['title'] );
 		}
 	}
 

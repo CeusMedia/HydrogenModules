@@ -7,7 +7,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
-class View_Auth_Local extends CMF_Hydrogen_View {
+class View_Auth_Json extends CMF_Hydrogen_View {
 
 	public function login() {}
 

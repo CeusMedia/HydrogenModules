@@ -1,5 +1,5 @@
 <?php
-class Logic_Authentication_Backend_JSON{
+class Logic_Authentication_Backend_Json{
 
 	static protected $instance;
 	protected $env;

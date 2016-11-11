@@ -16,9 +16,9 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth/JSON.php5</class>
-		<class>View/Auth/JSON.php5</class>
-		<class>Logic/Authentication/Backend/JSON.php5</class>
+		<class>Controller/Auth/Json.php5</class>
+		<class>View/Auth/Json.php5</class>
+		<class>Logic/Authentication/Backend/Json.php5</class>
 		<template>auth/json/login.php</template>
 		<template>auth/json/login.form.php</template>
 		<locale>de/auth/json.ini</locale>
