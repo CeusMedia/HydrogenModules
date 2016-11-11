@@ -126,8 +126,6 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="session.refresh">yes</config>
 	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
 	<relations>
-<!-- -->		<needs type="module">Resource_Users</needs>
-<!-- -->		<needs type="module">Resource_Mail</needs>
 <!-- -->		<needs type="module">UI_Helper_HTML</needs>
 <!-- -->		<supports type="module">Security_CSRF</supports>
 <!-- -->		<supports type="module">UI_Markdown</supports>

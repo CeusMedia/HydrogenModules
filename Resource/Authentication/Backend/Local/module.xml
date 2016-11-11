@@ -19,6 +19,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.4">Support new password handling in user resource.</log>
 	<log version="0.2.5">Check PHP version (>= 5.5.0) before using password_verify.</log>
 	<log version="0.2.6">Add JavaScript from abstract module.</log>
+	<log version="0.2.7">Add relation to modules Resource:Users and Resource:Mail.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -79,6 +80,8 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="register">yes</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">Resource_Users</needs>
+		<needs type="module">Resource_Mail</needs>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/local/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/local/password">Passwort</link>
