@@ -81,34 +81,14 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
 	 */
 	protected function checkPasswordOnLogin( $user, $password ){
-		$words		= (object) $this->getWords( 'login' );
-		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
-			$logic			= Logic_UserPassword::getInstance( $this->env );
-			$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
-			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
-				if( $logic->validateUserPassword( $user->userId, $password ) )
-					return TRUE;
-				$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
-				if( $newPassword ){
-					$logic->activatePassword( $newPassword->userPasswordId );
-					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
-					return TRUE;
-				}
-			}
-			else{																					//  @todo  remove whole block if old user password support decays
-				$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
-				if( $user->password === md5( $password.$pepper ) ){
-					$logic->migrateOldUserPassword( $user->userId, $password );
-					return TRUE;
-				}
-			}
-		}
-		else{																						//  @todo  remove whole block if old user password support decays
-			$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
-			if( $user->password === md5( $password.$pepper ) )
-				return TRUE;
-		}
-		return FALSE;
+		$data	= array(
+			'filters'	=> array(
+				'userId'	=> $user->userId,
+				'password'	=> md5( $password )
+			)
+		);
+		$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+		return count( $result ) === 1;
 	}
 
 	public function index(){
@@ -152,10 +132,11 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 			$data	= array(
 				'filters'	=> array(
 					'username'	=> $username,
-					'password'	=> md5( $password )
+//					'password'	=> md5( $password )
 				)
 			);
-			$user = $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+			$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+			$user	= count( $result ) === 1 ? $result[0] : NULL;
 
 			if( !$this->messenger->gotError() ){
 				if( !$user )
@@ -178,13 +159,12 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 					else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
 						$this->messenger->noteError( $words->msgInvalidPassword );
 					if( !$this->messenger->gotError() ){
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 						$this->messenger->noteSuccess( $words->msgSuccess );
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
-						$this->session->set( 'authBackend', 'JSON' );
+						$this->session->set( 'authBackend', 'Json' );
 						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+							$this->rememberUserInCookie( $user->userId, $password );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
@@ -233,13 +213,13 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	protected function rememberUserInCookie( $user ){
+	protected function rememberUserInCookie( $userId, $password ){
 		$expires	= strtotime( "+2 years" ) - time();
-		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
+		$passwordHash	= md5( sha1( $password ) );													//  hash password using SHA1 and MD5
 		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
-			$passwordHash	= password_hash( $user->password, PASSWORD_BCRYPT );					//  hash password using BCRYPT
+			$passwordHash	= password_hash( $password, PASSWORD_BCRYPT );							//  hash password using BCRYPT
 		$this->cookie->set( 'auth_remember', TRUE, $expires );
-		$this->cookie->set( 'auth_remember_id', $user->userId, $expires );
+		$this->cookie->set( 'auth_remember_id', $userId, $expires );
 		$this->cookie->set( 'auth_remember_pw', $passwordHash, $expires );
 	}
 
