@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Mail Check</title>
+	<description/>
+	<category>Work</category>
+	<version install-type="1" install-source="Local_CM_Public" install-date="2016-10-11T19:00:44+02:00">0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Mail/Check.php5</class>
+		<class>View/Work/Mail/Check.php5</class>
+		<class>Model/Mail/Address.php5</class>
+		<class>Model/Mail/Address/Check.php5</class>
+		<class>Model/Mail/Group.php5</class>
+		<template>work/mail/check/export.php</template>
+		<template>work/mail/check/group.php</template>
+		<template>work/mail/check/index.php</template>
+		<template>work/mail/check/import.php</template>
+		<locale>de/work/mail/check.ini</locale>
+	</files>
+	<link access="acl" xml:lang="de" rank="76" path="admin/mail/queue">E-Mail-Check</link>
+	<link access="acl" xml:lang="en" rank="76" path="admin/mail/queue">Email check</link>
+	<relations>
+		<needs type="module">Resource_Upload</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="WorkMailCheck" event="registerTabs">View_Work_Mail_Check::___onRegisterTab</hook>
+</module>
