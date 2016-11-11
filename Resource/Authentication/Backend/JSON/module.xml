@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Authentication: Backend: JSON</title>
+	<description><![CDATA[Module for authentication against a JSON server.
+
+**Attention:**
+Basic Authentication will not work, if PHP is integrated into Apache via CGI/FastCGI.
+The reason: Authorisation headers will not be included automatically.
+You need to set this header in your Apache configuration. For example in .htaccess:
+<code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
+
+]]></description>
+	<version>0.1</version>
+	<log version="0.1">Initial fork from module Auth:JSON.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Auth/JSON.php5</class>
+		<class>View/Auth/JSON.php5</class>
+		<class>Logic/Authentication/Backend/JSON.php5</class>
+		<template>auth/json/login.php</template>
+		<template>auth/json/login.form.php</template>
+		<locale>de/auth/json.ini</locale>
+		<locale>de/html/auth/json/login/top.html</locale>
+		<locale>de/html/auth/json/login/info.html</locale>
+		<locale>de/html/auth/json/login/bottom.html</locale>
+		<locale>en/auth/json.ini</locale>
+		<locale>en/html/auth/json/login/top.html</locale>
+		<locale>en/html/auth/json/login/info.html</locale>
+		<locale>en/html/auth/json/login/bottom.html</locale>
+		<style source="theme">module.resource.auth.json.css</style>
+		<script load="auto">Auth.JSON.js</script>
+	</files>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="string" name="login.forward.path"/>
+	<config protected="yes" type="boolean" name="login.forward.force">no</config>
+	<config protected="yes" type="string" name="logout.forward.path"/>
+	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
+	<config protected="yes" type="boolean" name="login.remember">yes</config>
+	<config protected="no" type="boolean" name="register">yes</config>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+	<link xml:lang="de" rank="10" access="outside" path="auth/json/login">Login</link>
+	<link xml:lang="de" rank="99" access="inside" path="auth/json/logout">Logout</link>
+	<link xml:lang="en" rank="10" access="outside" path="auth/json/login">Login</link>
+	<link xml:lang="en" rank="99" access="inside" path="auth/json/logout">Logout</link>
+	<link rank="99" access="public" path="auth/json/ajaxEmailExists"></link>
+	<link rank="99" access="public" path="auth/json/ajaxIsAuthenticated"></link>
+	<link rank="99" access="public" path="auth/json/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="auth/json/index"></link>
+	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_JSON::___onAuthRegisterBackend</hook>
+</module>
