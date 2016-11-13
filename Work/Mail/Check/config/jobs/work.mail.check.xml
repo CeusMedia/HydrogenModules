@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="checkMailAddresses">
+		<class>Work_Mail_Check</class>
+		<method>run</method>
+		<interval>minute</interval>
+		<mode>live</mode>
+	</job>
+</jobs>
