@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version install-type="1" install-source="Local_CM_Public" install-date="2016-10-11T19:00:44+02:00">0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
