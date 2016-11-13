@@ -33,4 +33,46 @@
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="WorkMailCheck" event="registerTabs">View_Work_Mail_Check::___onRegisterTab</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_addresses`;
+CREATE TABLE IF NOT EXISTS `mail_addresses` (
+  `mailAddressId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `checkedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`mailAddressId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `status` (`status`),
+  KEY `address` (`address`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_address_checks`;
+CREATE TABLE IF NOT EXISTS `mail_address_checks` (
+  `mailAddressCheckId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailAddressId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `error` tinyint(1) unsigned NOT NULL,
+  `code` decimal(3,0) unsigned NOT NULL,
+  `message` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailAddressCheckId`),
+  KEY `mailAddressId` (`mailAddressId`),
+  KEY `status` (`status`),
+  KEY `error` (`error`),
+  KEY `code` (`code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
+CREATE TABLE IF NOT EXISTS `mail_groups` (
+  `mailGroupId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `columns` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `mailColumn` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailGroupId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 </module>
