@@ -76,7 +76,7 @@ $panelList	= '
 		'.$table.'
 		'.$pagination.'
 		<div class="buttonbar">
-			<a href="./work/mail/check/checkAll" class="btn btn-primary">testAll</a>
+			<a href="./work/mail/check/checkAll" class="btn btn-primary" onclick="return confirm(\'Wirklich?\')">testAll</a>
 			<a href="./work/mail/check/'.$page.'" class="btn btn-small"><i class="fa fa-fw fa-refresh"></i>&nbsp;refresh</a>
 		</div>
 	</div>

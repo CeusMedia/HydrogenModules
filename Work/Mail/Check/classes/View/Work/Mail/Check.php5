@@ -19,6 +19,8 @@ class View_Work_Mail_Check extends CMF_Hydrogen_View{
 
 	public function import(){}
 
+	public function status(){}
+
 	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/mail/check/' );

@@ -124,9 +124,10 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		foreach( $this->modelAddress->getAll( $conditions ) as $address ){
 			$this->modelAddress->edit( $address->mailAddressId, array( 'status' => 1 ) );
 		}
-		if( $this->request->get( 'from' ) )
+		$this->restart( 'status/'.$filterGroupId, TRUE );
+/*		if( $this->request->get( 'from' ) )
 			$this->restart( $this->request->get( 'from' ) );
-		$this->restart( NULL, TRUE );
+		$this->restart( NULL, TRUE );*/
 	}
 
 	public function filter( $reset = NULL ){
@@ -175,6 +176,25 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterGroupId', $filterGroupId );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterQuery', $filterQuery );
+	}
+
+	public function status( $groupId ){
+		$group	= $this->modelGroup->get( $groupId );
+		if( !$group )
+			$this->restart( NULL, TRUE );
+		$indices	= array( 'mailGroupId' => $groupId );
+		$this->setData( array(
+			'total'		=> $this->modelAddress->countByIndices( $indices ),
+			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+				'status'	=> 1,
+			) ) ),
+			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+				'status'	=> -1,
+			) ) ),
+			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+				'status'	=> 2,
+			) ) ),
+		) );
 	}
 
 	public function export(){
