@@ -37,7 +37,18 @@ class Job_Work_Mail_Check extends Job_Abstract{
 				) );
 			}
 			catch( Exception $e ){
-				print( PHP_EOL.'Exception: '.$e->getMessage().PHP_EOL );
+				$modelCheck->add( array(
+					'mailAddressId'	=> $address->mailAddressId,
+					'status'		=> -2,
+					'error'			=> NULL,
+					'code'			=> NULL,
+					'message'		=> NULL,
+					'createdAt'		=> time(),
+				) );
+				$modelAddress->edit( $address->mailAddressId, array(
+					'status'	=> -1,
+					'checkedAt'	=> time(),
+				) );
 			}
 		}
 		$this->out( 'Done checking '.count( $addresses ).' mail address(es)' );
