@@ -25,6 +25,7 @@
 		<class>Model/Mail/Address/Check.php5</class>
 		<class>Model/Mail/Group.php5</class>
 		<class>Job/Work/Mail/Check.php5</class>
+		<template>work/mail/check/ajaxAddress.php</template>
 		<template>work/mail/check/export.php</template>
 		<template>work/mail/check/group.php</template>
 		<template>work/mail/check/index.php</template>
