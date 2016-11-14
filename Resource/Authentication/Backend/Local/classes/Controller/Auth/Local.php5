@@ -79,8 +79,9 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
 	 */
 	protected function checkPasswordOnLogin( $user, $password ){
-		$words		= (object) $this->getWords( 'login' );
-		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+		$words				= (object) $this->getWords( 'login' );
+		$isMinimumVersion	= version_compare( PHP_VERSION, '5.5.0', '>=' );
+		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
 			$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
 			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays

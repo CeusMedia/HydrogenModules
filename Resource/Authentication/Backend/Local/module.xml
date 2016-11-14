@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2.6</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -20,6 +20,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.5">Check PHP version (>= 5.5.0) before using password_verify.</log>
 	<log version="0.2.6">Add JavaScript from abstract module.</log>
 	<log version="0.2.7">Add relation to modules Resource:Users and Resource:Mail.</log>
+	<log version="0.2.8">Check for PHP 5.5+ for password hash support.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
