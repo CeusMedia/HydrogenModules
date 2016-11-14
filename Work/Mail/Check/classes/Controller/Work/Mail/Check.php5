@@ -41,6 +41,22 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	public function ajaxEditAddress(){
+		$addressId	= $this->request->get( 'id' );
+		$address	= $this->request->get( 'address' );
+
+		$result	= FALSE;
+		if( $this->modelAddress->get( $addressId ) ){
+			$this->modelAddress->edit( $addressId, array(
+				'address'	=> $address,
+				'status'	=> 0
+			) );
+			$result	= TRUE;
+		}
+		print( json_encode( $result ) );
+		exit;
+	}
+
 	public function check(){
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
@@ -86,15 +102,11 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 
 	public function checkAll(){
 		$conditions		= array();
-		$filterGroupId	= $this->session->set( 'work_mail_check_filter_groupId' );
+		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		if( $filterGroupId )
 			$conditions['mailGroupId']	= $filterGroupId;
 
-		$orders			= array( 'address' => 'ASC' );
-		$limits			= array( $page * $limit, $limit );
-		$addresses		= $this->modelAddress->getAll( $conditions, $orders, $limits );
-
-		foreach( $addresses as $address ){
+		foreach( $this->modelAddress->getAll( $conditions ) as $address ){
 			$this->modelAddress->edit( $address->mailAddressId, array( 'status' => 1 ) );
 		}
 		if( $this->request->get( 'from' ) )
@@ -111,7 +123,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $page = 0 ){
-		$limit			= 15;
+		$limit			= 20;
 		$conditions		= array();
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		if( $filterGroupId )

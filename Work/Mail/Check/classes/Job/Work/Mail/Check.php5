@@ -16,19 +16,13 @@ class Job_Work_Mail_Check extends Job_Abstract{
 
 		$conditions	= array( 'status' => 1 );
 		$orders		= array( 'address' => 'ASC' );
-		$limits		= array( 0, $this->options->get( 'job.limit' );
+		$limits		= array( 0, $this->options->get( 'job.limit' ) );
 		$addresses	= $modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
 			$this->out( "Checking: ".$address->address );
-
 			try{
 				$result		= $checker->test( new \CeusMedia\Mail\Participant( $address->address ) );
 				$response	= $checker->getLastResponse();
-/*				if( 0 ){
-					print_m( $response );
-					die;
-				}*/
-
 				$modelCheck->add( array(
 					'mailAddressId'	=> $address->mailAddressId,
 					'status'		=> $result ? 1 : -1,
@@ -43,8 +37,7 @@ class Job_Work_Mail_Check extends Job_Abstract{
 				) );
 			}
 			catch( Exception $e ){
-
-
+				print( PHP_EOL.'Exception: '.$e->getMessage().PHP_EOL );
 			}
 		}
 		$this->out( 'Done checking '.count( $addresses ).' mail address(es)' );

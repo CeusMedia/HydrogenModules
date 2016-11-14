@@ -1,6 +1,7 @@
 <?php
 $rows	= array();
 
+$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 $iconTest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-circle' ) );
 $iconInfo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-question-circle' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times-circle' ) );
@@ -11,11 +12,14 @@ foreach( $addresses as $address ){
 		'class'		=> 'btn btn-mini btn-primary',
 		'href'		=> './work/mail/check/check?addressId='.$address->mailAddressId.'&from=./work/mail/check/'.$page
 	) );
-	$buttonInfo		= UI_HTML_Tag::create( 'a', $iconInfo.'&nbsp;info', array(
-		'class'		=> 'btn btn-mini btn-info disabled',
+	$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit, array(
+		'class'		=> 'btn btn-mini',
+		'onclick'	=> 'editAddress('.$address->mailAddressId.', \''.htmlentities( $address->address, ENT_QUOTES, 'UTF-8' ).'\')'
 	) );
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+
+	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 		'class'		=> 'btn btn-mini btn-inverse',
+		'title'		=> 'entfernen',
 		'href'		=> './work/mail/check/remove?addressId='.$address->mailAddressId
 	) );
 
@@ -39,26 +43,28 @@ foreach( $addresses as $address ){
 		$rowClass		= 'error';
 		$description	= \CeusMedia\Mail\Transport\SMTP\Code::getText( $address->check->code );
 		$status		 	= UI_HTML_Tag::create( 'abbr', $address->check->code, array( 'title' => $description ) );
-		$buttonInfo		= UI_HTML_Tag::create( 'a', $iconInfo.'&nbsp;info', array(
-			'class'		=> 'btn btn-mini btn-info',
+		$buttonInfo		= UI_HTML_Tag::create( 'a', $iconInfo, array(
+			'class'		=> 'btn btn-mini not-btn-info',
+			'title'		=> 'info',
 			'onclick'	=> 'alert("'.htmlentities( $address->check->message, ENT_QUOTES, 'UTF-8' ).'")',
 		) );
+		$status			.= '&nbsp;'.$buttonInfo;
 	}
-	$buttons	= UI_HTML_Tag::create( 'div', array( $buttonTest, $buttonInfo, $buttonRemove ), array( 'class' => 'btn-group' ) );
+	$buttons	= UI_HTML_Tag::create( 'div', array( $buttonEdit, $buttonTest, $buttonRemove ), array( 'class' => 'btn-group' ) );
 	$rows[]		= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $address->address ),
+		UI_HTML_Tag::create( 'td', $address->address, array( 'class' => 'cell-address' ) ),
 		UI_HTML_Tag::create( 'td', $status ),
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $timestamp ) ),
 		UI_HTML_Tag::create( 'td', $buttons ),
-	), array( 'class' => $rowClass ) );
+	), array( 'class' => $rowClass, 'data-id' => $address->mailAddressId ) );
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "10%", "20%", "30%" ) );
+$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "10%", "20%", "20%" ) );
 $heads	= UI_HTML_Elements::TableHeads( array( 'Adresse', 'Status', 'Zeitpunkt', '' ) );
 
 $thead	= UI_HTML_Tag::create( 'thead', $heads );
 $tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/mail/check', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
@@ -75,7 +81,6 @@ $panelList	= '
 		</div>
 	</div>
 </div>';
-
 
 $panelAdd	= '
 <div class="content-panel">
@@ -125,5 +130,25 @@ return $tabs.'
 	<div class="span9">
 		'.$panelList.'
 	</div>
-</div>';
+</div>
+<script>
+function editAddress(id, address){
+	edited = prompt("What?", address);
+	if(edited){
+		$.ajax({
+			url: "./work/mail/check/ajaxEditAddress",
+			method: "POST",
+			data: {id: id, address: edited},
+			dataType: "JSON",
+			success: function(json){
+				document.location.reload();
+			}
+		});
+		alert("save: "+output);
+	}
+	else{
+		alert("cancelled");
+	}
+}
+</script>';
 ?>
