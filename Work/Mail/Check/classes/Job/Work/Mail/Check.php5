@@ -31,8 +31,14 @@ class Job_Work_Mail_Check extends Job_Abstract{
 					'message'		=> $response->message,
 					'createdAt'		=> time(),
 				) );
+				$status	= 2;
+				if( !$result ){
+					$status	= -2;
+					if( substr( $response->code, 0, 1 ) == "4" )
+						$status	= -1;
+				}
 				$modelAddress->edit( $address->mailAddressId, array(
-					'status'	=> $result ? 2 : -1,
+					'status'	=> $status,
 					'checkedAt'	=> time(),
 				) );
 			}
@@ -46,7 +52,7 @@ class Job_Work_Mail_Check extends Job_Abstract{
 					'createdAt'		=> time(),
 				) );
 				$modelAddress->edit( $address->mailAddressId, array(
-					'status'	=> -1,
+					'status'	=> -2,
 					'checkedAt'	=> time(),
 				) );
 			}

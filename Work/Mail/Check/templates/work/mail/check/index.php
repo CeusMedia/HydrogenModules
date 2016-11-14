@@ -23,6 +23,11 @@ foreach( $addresses as $address ){
 		'title'		=> 'entfernen',
 		'href'		=> './work/mail/check/remove?addressId='.$address->mailAddressId
 	) );
+	$buttonInfo		= UI_HTML_Tag::create( 'a', $iconInfo, array(
+		'class'			=> 'btn btn-mini not-btn-info modal-trigger',
+		'title'			=> 'info',
+		'href'			=> './work/mail/check/ajaxAddress/'.$address->mailAddressId,
+	) );
 
 	$rowClass	= '';
 	$status		= '-';
@@ -44,13 +49,8 @@ foreach( $addresses as $address ){
 		$rowClass		= 'error';
 		$description	= \CeusMedia\Mail\Transport\SMTP\Code::getText( $address->check->code );
 		$status		 	= UI_HTML_Tag::create( 'abbr', $address->check->code, array( 'title' => $description ) );
-		$buttonInfo		= UI_HTML_Tag::create( 'a', $iconInfo, array(
-			'class'		=> 'btn btn-mini not-btn-info',
-			'title'		=> 'info',
-			'onclick'	=> 'alert("'.htmlentities( $address->check->message, ENT_QUOTES, 'UTF-8' ).'")',
-		) );
-		$status			.= '&nbsp;'.$buttonInfo;
 	}
+	$status			.= '&nbsp;'.$buttonInfo;
 	$buttons	= UI_HTML_Tag::create( 'div', array( $buttonEdit, $buttonTest, $buttonRemove ), array( 'class' => 'btn-group' ) );
 	$rows[]		= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $address->address, array( 'class' => 'cell-address' ) ),
@@ -120,7 +120,8 @@ $optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
 
 $statuses	= array(
 	''	=> '- alle -',
-	-1	=> 'nicht erreichbar',
+	-2	=> 'nicht erreichbar',
+	-1	=> 'abgelehnt',
 	0	=> 'ungetestet',
 	1	=> 'wird getestet',
 	2	=> 'erreichbar',
@@ -176,6 +177,17 @@ return $tabs.'
 		'.$panelList.'
 	</div>
 </div>
+<div class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 860px; margin-left: -430px;">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">&times;</a>
+		<h3>Informationen</h3>
+	</div>
+	<div class="modal-body"></div>
+	<div class="modal-footer">
+		<a class="btn" data-dismiss="modal">Okay</a>
+	</div>
+</div>
+
 <script>
 function startTest(elem){
 	var icon = $(elem).children("i");
@@ -201,5 +213,20 @@ function editAddress(id, address){
 		alert("cancelled");
 	}
 }
+
+$(document).ready(function() {
+	$("a.modal-trigger").click(function(e) {
+		e.preventDefault();
+		$.ajax({
+			url: $(this).attr("href"),
+			dataType: "HTML",
+			method: "GET",
+ 			success: function(data) {
+				var div = $(".modal-body");
+				div.html(data).parent().modal();
+			}
+		});
+	});
+});
 </script>';
 ?>

@@ -11,6 +11,13 @@ class View_Work_Mail_Check extends CMF_Hydrogen_View{
 
 	public function add(){}
 
+	public function ajaxAddress(){
+
+		$html	= $this->loadTemplateFile( 'work/mail/check/ajaxAddress.php' );
+		print( $html );
+		exit;
+	}
+
 	public function export(){}
 
 	public function group(){}

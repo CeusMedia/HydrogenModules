@@ -67,6 +67,15 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( 'group', TRUE );
 	}
 
+	public function ajaxAddress( $addressId ){
+		$address	= $this->modelAddress->get( $addressId );
+		if( $address ){
+			$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, array( 'createdAt' => 'DESC' ) );
+			$this->addData( 'addressId', $addressId );
+			$this->addData( 'address', $address );
+		}
+	}
+
 	public function ajaxEditAddress(){
 		$addressId	= $this->request->get( 'id' );
 		$address	= $this->request->get( 'address' );
@@ -112,8 +121,14 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 					'message'		=> $response->message,
 					'createdAt'		=> time(),
 				) );
+				$status	= 2;
+				if( !$result ){
+					$status	= -2;
+					if( substr( $response->code, 0, 1 ) == "4" )
+						$status	= -1;
+				}
 				$this->modelAddress->edit( $addressId, array(
-					'status'	=> $result ? 2 : -1,
+					'status'	=> $status,
 					'checkedAt'	=> time(),
 				) );
 		//		$this->messenger->noteSuccess( 'Checked.' );
@@ -128,7 +143,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 					'createdAt'		=> time(),
 				) );
 				$this->modelAddress->edit( $addressId, array(
-					'status'	=> -1,
+					'status'	=> -2,
 					'checkedAt'	=> time(),
 				) );
 		//		$this->messenger->noteError( 'Check failed: '.$e->getMessage() );

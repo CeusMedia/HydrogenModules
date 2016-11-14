@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.2.8</version>
+	<version>0.2.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -14,6 +14,7 @@
 	<log version="0.2.6">Extend filter by status and query.</log>
 	<log version="0.2.7">Add view to show testing progress.</log>
 	<log version="0.2.8">Allow to add a group manually.</log>
+	<log version="0.2.9">Add modal dialog with address and check details.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
