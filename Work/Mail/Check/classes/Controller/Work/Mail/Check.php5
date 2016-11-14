@@ -22,6 +22,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			$addresses	= $this->request->get( 'address' );
+			$groupId	= $this->request->get( 'groupId' );
 			if( !is_array( $addresses ) )
 				$addresses	= array( $addresses );
 			foreach( $addresses as $address ){
@@ -30,9 +31,10 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				}
 				else{
 					$addressId	= $this->modelAddress->add( array(
-						'address' => $address,
-						'status'	=> 0,
-						'createdAt'	=> time(),
+						'mailGroupId'	=> $groupId,
+						'address'		=> $address,
+						'status'		=> 0,
+						'createdAt'		=> time(),
 					) );
 					$this->messenger->noteSuccess( 'Added "'.htmlentities( $address, ENT_QUOTES, 'UTF-8' ).'".' );
 				}
@@ -74,26 +76,39 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			}
 			$this->modelAddress->edit( $addressId, array( 'status' => 1 ) );
 
-			$result		= $checker->test( new \CeusMedia\Mail\Participant( $address->address ) );
-			$response	= $checker->getLastResponse();
-			if( 0 ){
-				print_m( $response );
-				die;
-			}
+			try{
+				$result		= $checker->test( new \CeusMedia\Mail\Participant( $address->address ) );
+				$response	= $checker->getLastResponse();
 
-			$this->modelCheck->add( array(
-				'mailAddressId'	=> $addressId,
-				'status'		=> $result ? 1 : -1,
-				'error'			=> $response->error,
-				'code'			=> $response->code,
-				'message'		=> $response->message,
-				'createdAt'		=> time(),
-			) );
-			$this->modelAddress->edit( $addressId, array(
-				'status'	=> $result ? 2 : -1,
-				'checkedAt'	=> time(),
-			) );
-			$this->messenger->noteSuccess( 'Checked.' );
+				$this->modelCheck->add( array(
+					'mailAddressId'	=> $addressId,
+					'status'		=> $result ? 1 : -1,
+					'error'			=> $response->error,
+					'code'			=> $response->code,
+					'message'		=> $response->message,
+					'createdAt'		=> time(),
+				) );
+				$this->modelAddress->edit( $addressId, array(
+					'status'	=> $result ? 2 : -1,
+					'checkedAt'	=> time(),
+				) );
+				$this->messenger->noteSuccess( 'Checked.' );
+			}
+			catch( Exception $e ){
+				$this->modelCheck->add( array(
+					'mailAddressId'	=> $addressId,
+					'status'		=> -2,
+					'error'			=> 0,
+					'code'			=> $e->getCode(),
+					'message'		=> $e->getMessage(),
+					'createdAt'		=> time(),
+				) );
+				$this->modelAddress->edit( $addressId, array(
+					'status'	=> -1,
+					'checkedAt'	=> time(),
+				) );
+				$this->messenger->noteError( 'Check failed: '.$e->getMessage() );
+			}
 		}
 		if( $this->request->get( 'from' ) )
 			$this->restart( $this->request->get( 'from' ) );
@@ -117,8 +132,12 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	public function filter( $reset = NULL ){
 		if( $reset ){
 			$this->session->remove( 'work_mail_check_filter_groupId' );
+			$this->session->remove( 'work_mail_check_filter_status' );
+			$this->session->remove( 'work_mail_check_filter_query' );
 		}
 		$this->session->set( 'work_mail_check_filter_groupId', $this->request->get( 'groupId' ) );
+		$this->session->set( 'work_mail_check_filter_status', $this->request->get( 'status' ) );
+		$this->session->set( 'work_mail_check_filter_query', $this->request->get( 'query' ) );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -126,8 +145,14 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$limit			= 20;
 		$conditions		= array();
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
+		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
+		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
 		if( $filterGroupId )
 			$conditions['mailGroupId']	= $filterGroupId;
+		if( $filterStatus && $filterStatus[0] !== '' )
+			$conditions['status']		= $filterStatus;
+		if( $filterQuery && strlen( $filterQuery ) )
+			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
 		$orders			= array( 'address' => 'ASC' );
 		$limits			= array( $page * $limit, $limit );
@@ -148,6 +173,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->addData( 'total', $total );
 		$this->addData( 'groups', $this->modelGroup->getAll() );
 		$this->addData( 'filterGroupId', $filterGroupId );
+		$this->addData( 'filterStatus', $filterStatus );
+		$this->addData( 'filterQuery', $filterQuery );
 	}
 
 	public function export(){

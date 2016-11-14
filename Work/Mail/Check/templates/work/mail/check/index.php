@@ -82,15 +82,32 @@ $panelList	= '
 	</div>
 </div>';
 
+$optGroup	= array();
+foreach( $groups as $group )
+	$optGroup[$group->mailGroupId]	= $group->title;
+$optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>Add</h3>
 	<div class="content-panel-inner">
 		<form action="./work/mail/check/add" method="post">
-			<label for="input_address">Address</label>
-			<input type="text" name="address" id="input_address" class="span12"/>
-			<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;add</button>
-			<a href="./work/mail/check/import" class="btn btn-small">Datei importieren</a>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_groupId">Gruppe</label>
+					<select name="groupId" id="input_groupId" class="span12">'.$optGroup.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_address">Address</label>
+					<input type="text" name="address" id="input_address" class="span12"/>
+				</div>
+			</div>
+			<div class="buttonbar">
+				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;add</button>
+<!--				<a href="./work/mail/check/import" class="btn btn-small">Datei importieren</a>-->
+			</div>
 		</form>
 	</div>
 </div>';
@@ -100,6 +117,19 @@ foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
 $optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
 
+$statuses	= array(
+	''	=> '- alle -',
+	-1	=> 'nicht erreichbar',
+	0	=> 'ungetestet',
+	1	=> 'wird getestet',
+	2	=> 'erreichbar',
+);
+
+$optStatus	= array();
+foreach( $statuses as $key => $label )
+	$optStatus[$key]	= $label;
+$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+
 $panelFilter	= '
 <div class="content-panel">
 	<h3>Filter</h3>
@@ -108,9 +138,23 @@ $panelFilter	= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_groupId">Gruppe</label>
-					<select name="groupId" id="input_groupId">'.$optGroup.'</select>
+					<select name="groupId" id="input_groupId" class="span12">'.$optGroup.'</select>
 				</div>
 			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_status">Zustand</label>
+					<select name="status[]" id="input_status" class="span12" multiple="multiple" size="5">'.$optStatus.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_query">beinhaltet</label>
+					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
+
+
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-search"></i>&nbsp;filtern</button>
 				<a href="./work/mail/check/filter/reset" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-search-minus"></i>&nbsp;leeren</a>
