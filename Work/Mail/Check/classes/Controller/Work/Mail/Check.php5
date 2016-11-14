@@ -1,6 +1,14 @@
 <?php
 class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $modelAddress;
+	protected $modelCheck;
+	protected $modelGroup;
+	protected $options;
+
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -8,6 +16,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->modelAddress	= new Model_Mail_Address( $this->env );
 		$this->modelCheck	= new Model_Mail_Address_Check( $this->env );
 		$this->modelGroup	= new Model_Mail_Group( $this->env );
+		$this->options		= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 	}
 
 	public function add(){
@@ -37,7 +46,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		if( !is_array( $addressIds ) )
 			$addressIds	= array( $addressIds );
 
-		$sender		= new \CeusMedia\Mail\Participant( "dev@ceusmedia.de" );
+		$sender		= new \CeusMedia\Mail\Participant( $this->options->get( 'sender' ) );
 		$checker	= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
 		$checker->setVerbose( TRUE );
 

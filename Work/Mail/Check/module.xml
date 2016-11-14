@@ -3,10 +3,12 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.2.1</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
+	<log version="0.2.2">Organize panels in tabs.</log>
+	<log version="0.2.3">Make sender configurable.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -24,6 +26,8 @@
 		<locale>de/work/mail/check.ini</locale>
 		<file>config/jobs/work.mail.check.xml</file>
 	</files>
+	<config protected="yes" type="integer" mandatory="yes" name="job.limit" title="Maximum number for checks per job call.">10000</config>
+	<config protected="yes" type="string" mandatory="yes" name="sender" title="Sender email address, only needed for HELO"/>
 	<link access="acl" xml:lang="de" rank="76" path="admin/mail/queue">E-Mail-Check</link>
 	<link access="acl" xml:lang="en" rank="76" path="admin/mail/queue">Email check</link>
 	<relations>
