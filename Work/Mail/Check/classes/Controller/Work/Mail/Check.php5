@@ -118,12 +118,16 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	public function checkAll(){
 		$conditions		= array();
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
+		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
+		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
 		if( $filterGroupId )
 			$conditions['mailGroupId']	= $filterGroupId;
+		if( $filterStatus && $filterStatus[0] !== '' )
+			$conditions['status']		= $filterStatus;
+		if( $filterQuery && strlen( $filterQuery ) )
+			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
-		foreach( $this->modelAddress->getAll( $conditions ) as $address ){
-			$this->modelAddress->edit( $address->mailAddressId, array( 'status' => 1 ) );
-		}
+		foreach( $this->modelAddress->editByIndices( $conditions, array( 'status' => 1 ) );
 		$this->restart( 'status/'.$filterGroupId, TRUE );
 /*		if( $this->request->get( 'from' ) )
 			$this->restart( $this->request->get( 'from' ) );
