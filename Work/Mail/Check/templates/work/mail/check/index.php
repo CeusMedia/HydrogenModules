@@ -10,6 +10,7 @@ foreach( $addresses as $address ){
 	$timestamp	= $address->checkedAt ? date( "Y-m-d H:i:s", $address->checkedAt ) : '-';
 	$buttonTest	= UI_HTML_Tag::create( 'a', $iconTest.'&nbsp;testen', array(
 		'class'		=> 'btn btn-mini btn-primary',
+		'onclick'	=> 'startTest(this)',
 		'href'		=> './work/mail/check/check?addressId='.$address->mailAddressId.'&from=./work/mail/check/'.$page
 	) );
 	$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit, array(
@@ -176,6 +177,12 @@ return $tabs.'
 	</div>
 </div>
 <script>
+function startTest(elem){
+	var icon = $(elem).children("i");
+	icon.removeClass("fa-check-circle");
+	icon.addClass("fa-spin fa-spinner");
+	$(elem).attr("disabled", "disabled");
+}
 function editAddress(id, address){
 	edited = prompt("What?", address);
 	if(edited){
