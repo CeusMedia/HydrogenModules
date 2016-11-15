@@ -1,6 +1,5 @@
 <?php
 
-
 $errors	= array(
 	0	=> 'NONE',
 	1	=> 'MX_RESOLUTION_FAILED',
@@ -21,19 +20,47 @@ function renderFacts( $facts ){
 	return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 }
 
+
+function renderCodeBadge( $check, $label = NULL ){
+	$code	= $check->code;
+	switch( (int) substr( $check->code, 0, 1 ) ){
+		case 0:
+			$code		= str_pad( $check->error, 3, "0", STR_PAD_LEFT );
+			$labelCode	= 'label-inverse';
+			break;
+		case 1:
+		case 2:
+		case 3:
+			$labelCode	 = 'label-success';
+			break;
+		case 4:
+			$labelCode	 = 'label-warning';
+			break;
+		case 5:
+			$labelCode	= 'label-important';
+			break;
+		default:
+			$labelCode	= '<em>unknown</em>';
+			break;
+	}
+	$label	= strlen( trim( $label ) ) ? trim( $label ) : $code;
+	return UI_HTML_Tag::create( 'span', $label, array( 'class' => 'label '.$labelCode ) );
+}
+
 $checks		= UI_HTML_Tag::create( 'div', 'Keine Prüfungen bisher.', array( 'class' => 'text text-info' ) );
 if( $address->checks ){
 	$rows	= array();
 	foreach( $address->checks as $check ){
 		$description	= \CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code );
-		$status		 	= UI_HTML_Tag::create( 'abbr', $check->code, array( 'title' => $description ) );
+		$labelCode		= renderCodeBadge( $check );
+		$status		 	= UI_HTML_Tag::create( 'abbr', $labelCode, array( 'title' => $description ) );
 		$error			= ucwords( strtolower( str_replace( "_", " ", $errors[$check->error] ) ) );
 
 		$facts	= renderFacts( array(
-			'SMTP-Code'			=> $check->code .' <small class="muted">'.$description.'</small>',
+			'SMTP-Code'			=> $labelCode.' <small class="muted">'.$description.'</small>',
 			'Fehler'			=> ucwords( strtolower( str_replace( "_", " ", $errors[$check->error] ) ) ),
+			'Servermeldung'		=> '<not-pre>'.$check->message.'</not-pre>',
 			'Datum / Uhrzeit'	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
-			'Servermeldung'		=> '<pre>'.$check->message.'</pre>',
 		) );
 
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(

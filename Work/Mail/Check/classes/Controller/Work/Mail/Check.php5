@@ -1,43 +1,77 @@
 <?php
 class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 
-	protected $request;
-	protected $session;
 	protected $messenger;
 	protected $modelAddress;
 	protected $modelCheck;
 	protected $modelGroup;
 	protected $options;
+	protected $request;
+	protected $session;
 
 	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modelAddress	= new Model_Mail_Address( $this->env );
-		$this->modelCheck	= new Model_Mail_Address_Check( $this->env );
-		$this->modelGroup	= new Model_Mail_Group( $this->env );
-		$this->options		= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
+
+		//  --  PREPARE MODELS  --  //
+		$this->modelAddress		= new Model_Mail_Address( $this->env );
+		$this->modelCheck		= new Model_Mail_Address_Check( $this->env );
+		$this->modelGroup		= new Model_Mail_Group( $this->env );
+	}
+
+
+	/**
+	 *	Checks whether a group ID is existing and returns data entity.
+	 *	Otherwise, in default strict mode, an exception will be thrown.
+	 *	Otherwise a user message will be noted followed by a redirection.
+	 *	The default redirection is to the root of this module.
+	 *	Redirections can be set by third "from" parameter.
+	 *	Disabling the fourth "withinModule" parameter will unlock the module scope for redirections.
+	 *
+	 *	@access		protected
+	 *	@param		integer		$groupId		ID of mail check group to check
+	 *	@param		boolean		$strict			Flag: throw exception it not existing
+	 *	@param		string		$from			Path to redirect to
+	 *	@param		boolean		$withinModule	Flag: reduce scope of redirection to current module
+	 *	@return		object|array				Group data entity
+	 *	@throws		InvalidArgumentException	if group is not existing and strict mode is enabled
+	 *	@todo		kriss: implement OAuth user focus for ASP solution
+	 */
+	protected function checkGroupId( $groupId, $strict = TRUE, $from = NULL, $withinModule = TRUE ){
+		if( $group = $this->modelGroup->get( $groupId ) )
+			return $group;
+		if( $strict )
+			throw new InvalidArgumentException( 'Invalid group ID' );
+		$this->messenger->noteError( 'Invalid group ID.' );
+		if( $from )
+			$this->restart( $from, $withinModule );
+		$this->restart( NULL, $withinModule );
 	}
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			$addresses	= $this->request->get( 'address' );
 			$groupId	= $this->request->get( 'groupId' );
+			$group		= $this->checkGroupId( $groupId, FALSE, 'group' );
 			if( !is_array( $addresses ) )
 				$addresses	= array( $addresses );
 			foreach( $addresses as $address ){
-				if( $this->modelAddress->getByIndex( 'address', $address ) ){
-					$this->messenger->noteError( 'Already existing: '.htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
+				if( !strlen( trim( $address ) ) )
+					continue;
+				$indices	= array( 'mailGroupId' => $groupId, 'address' => $address );
+				if( $this->modelAddress->getByIndices( $indices ) ){
+					$this->messenger->noteError( 'Address &quot;%s&quot; is already existing in group &quot;%s&quot;.', $address, $group->title );
+					$this->restart( NULL, TRUE );
 				}
-				else{
-					$addressId	= $this->modelAddress->add( array(
-						'mailGroupId'	=> $groupId,
-						'address'		=> $address,
-						'status'		=> 0,
-						'createdAt'		=> time(),
-					) );
-					$this->messenger->noteSuccess( 'Added "'.htmlentities( $address, ENT_QUOTES, 'UTF-8' ).'".' );
-				}
+				$addressId	= $this->modelAddress->add( array(
+					'mailGroupId'	=> $groupId,
+					'address'		=> $address,
+					'status'		=> 0,
+					'createdAt'		=> time(),
+				) );
+				$this->messenger->noteSuccess( 'Added address "%s".', htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 			}
 		}
 		$this->restart( NULL, TRUE );
@@ -62,7 +96,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				'columns'		=> json_encode( $columns ),
 				'createdAt'		=> time(),
 			) );
-			$this->messenger->noteSuccess( 'Group "%s" added.', htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
+	//		$this->messenger->noteSuccess( 'Group "%s" added.', htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
+			$this->messenger->noteSuccess( 'Group "%s" added.', $title );
 		}
 		$this->restart( 'group', TRUE );
 	}
@@ -97,7 +132,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		if( !is_array( $addressIds ) )
 			$addressIds	= array( $addressIds );
 
-		$sender		= new \CeusMedia\Mail\Participant( $this->options->get( 'sender' ) );
+		$sender		= new \CeusMedia\Mail\Participant( $this->moduleOptions->get( 'sender' ) );
 		$checker	= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
 		$checker->setVerbose( TRUE );
 
@@ -201,7 +236,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			$date	= date( 'Y-m-d' );
 			Net_HTTP_Download::sendFile( $fileName, $group->title.'_'.$date.$ext, TRUE );
 		}
-		$this->addData( 'groups', $this->modelGroup->getAll() );
+		$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
 	}
 
 	public function filter( $reset = NULL ){
@@ -209,15 +244,17 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			$this->session->remove( 'work_mail_check_filter_groupId' );
 			$this->session->remove( 'work_mail_check_filter_status' );
 			$this->session->remove( 'work_mail_check_filter_query' );
+			$this->session->remove( 'work_mail_check_filter_limit' );
 		}
 		$this->session->set( 'work_mail_check_filter_groupId', $this->request->get( 'groupId' ) );
 		$this->session->set( 'work_mail_check_filter_status', $this->request->get( 'status' ) );
 		$this->session->set( 'work_mail_check_filter_query', $this->request->get( 'query' ) );
+		$this->session->set( 'work_mail_check_filter_limit', (int) $this->request->get( 'limit' ) );
 		$this->restart( NULL, TRUE );
 	}
 
 	public function group(){
-		$groups	= $this->modelGroup->getAll();
+		$groups	= $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) );
 		foreach( $groups as $group ){
 			$addresses	= $this->modelAddress->getAll( array( 'mailGroupId' => $group->mailGroupId ) );
 			$group->numbers	= (object) array(
@@ -300,29 +337,36 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			$this->addData( 'size', $data->size );
 			$this->addData( 'count', $data->count );
 			$this->addData( 'columns', $data->columns );
-			$this->addData( 'groups', $this->modelGroup->getAll() );
+			$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
 		}
 	}
 
 	public function index( $page = 0 ){
-		$limit			= 20;
-		$conditions		= array();
+		$limit			= 20;															//  @todo	kriss: replace by configurable default limit (not existing in config atm)
+		if( !$this->session->get( 'work_mail_check_filter_limit' ) )
+			$this->session->set( 'work_mail_check_filter_limit', $limit );
+
+		$groups	= $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) );
+		if( !$this->session->get( 'work_mail_check_filter_groupId' ) && count( $groups ) )
+			$this->session->set( 'work_mail_check_filter_groupId', $groups[0]->mailGroupId );
+
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
 		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
-		if( $filterGroupId )
-			$conditions['mailGroupId']	= $filterGroupId;
+		$filterLimit	= $this->session->get( 'work_mail_check_filter_limit' );
+
+		$conditions		= array( 'mailGroupId' => $filterGroupId );
 		if( $filterStatus && $filterStatus[0] !== '' )
 			$conditions['status']		= $filterStatus;
 		if( $filterQuery && strlen( $filterQuery ) )
 			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
 		$orders			= array( 'address' => 'ASC' );
-		$limits			= array( $page * $limit, $limit );
+		$limits			= array( $page * $filterLimit, $filterLimit );
 		$total			= $this->modelAddress->count( $conditions );
 		$addresses		= $this->modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
-			if( !in_array( $address->status, array( 0, 1 ) ) ){
+			if( !in_array( $address->status, array( 0, 1 ) ) ){											//  @todo	kriss: why exclude status 1 aswell? a retesting address has a history eventually
 				$address->check	= $this->modelCheck->getByIndices(
 					array( 'mailAddressId' => $address->mailAddressId ),
 					"",
@@ -331,13 +375,32 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'addresses', $addresses );
-		$this->addData( 'limit', $limit );
+
+		$indices		= array();
+		if( $filterGroupId )
+			$indices['mailGroupId']	= $filterGroupId;
+		$countByStatus	= array(
+			-2	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => -2 ) ) ),
+			-1	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => -1 ) ) ),
+			0	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 0 ) ) ),
+			1	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 1 ) ) ),
+			2	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 2 ) ) ),
+		);
+
+		$countByGroup	= array();
+		foreach( $groups as $group )
+			$countByGroup[$group->mailGroupId]	= $this->modelAddress->countByIndex( 'mailGroupId', $group->mailGroupId );
+
+		$this->addData( 'limit', $filterLimit );
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $total );
-		$this->addData( 'groups', $this->modelGroup->getAll() );
 		$this->addData( 'filterGroupId', $filterGroupId );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterQuery', $filterQuery );
+		$this->addData( 'filterLimit', $filterLimit );
+		$this->addData( 'countByStatus', $countByStatus );
+		$this->addData( 'countByGroup', $countByGroup );
+		$this->addData( 'groups', $groups );
 	}
 
 	public function remove(){
@@ -353,6 +416,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	}
 
 	public function removeGroup( $groupId ){
+		$group	= $this->checkGroupId( $groupId );
 		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
 			$this->modelCheck->removeByIndex( 'mailAddressId', $address->mailAddressId );
 		$this->modelAddress->removeByIndex( 'mailGroupId', $groupId );
@@ -361,9 +425,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	}
 
 	public function status( $groupId ){
-		$group	= $this->modelGroup->get( $groupId );
-		if( !$group )
-			$this->restart( NULL, TRUE );
+		$group		= $this->checkGroupId( $groupId );
 		$indices	= array( 'mailGroupId' => $groupId );
 		$this->setData( array(
 			'total'		=> $this->modelAddress->countByIndices( $indices ),

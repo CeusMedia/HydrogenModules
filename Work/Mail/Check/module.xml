@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.2.9</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -15,6 +15,7 @@
 	<log version="0.2.7">Add view to show testing progress.</log>
 	<log version="0.2.8">Allow to add a group manually.</log>
 	<log version="0.2.9">Add modal dialog with address and check details.</log>
+	<log version="0.3">Improve user interface usability.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -32,6 +33,7 @@
 		<template>work/mail/check/import.php</template>
 		<template>work/mail/check/status.php</template>
 		<locale>de/work/mail/check.ini</locale>
+		<style source="theme" load="auto" level="end">module.work.mail.check.css</style>
 		<file>config/jobs/work.mail.check.xml</file>
 	</files>
 	<config protected="yes" type="integer" mandatory="yes" name="job.limit" title="Maximum number for checks per job call.">10000</config>

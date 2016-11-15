@@ -1,0 +1,40 @@
+/*  --  ADDRESS STAUS FILTER OPTIONS  --  */
+body.moduleWorkMailCheck select#input_status{
+	padding: 0;
+	overflow: hidden;
+	}
+body.moduleWorkMailCheck select#input_status > option{
+	padding: 2px 6px;
+	}
+body.moduleWorkMailCheck select#input_status > option[value="-2"]{
+	background-color: #f2bdbd;
+	}
+body.moduleWorkMailCheck select#input_status > option[value="-1"]{
+	background-color: #fce3c3;
+	}
+body.moduleWorkMailCheck select#input_status > option[value="0"]{
+	background-color: #ffffff;
+	}
+body.moduleWorkMailCheck select#input_status > option[value="1"]{
+	background-color: #e3e3e3;
+	}
+body.moduleWorkMailCheck select#input_status > option[value="2"]{
+	background-color: rgba(159, 240, 168, 1);
+	}
+
+/*  --  ADDRESS TABLE BY STATUS  --  */
+body.moduleWorkMailCheck table tr.mail-check-address-status--2 td{
+	background-color: rgba(242, 189, 189, 0.5);
+	}
+body.moduleWorkMailCheck table tr.mail-check-address-status--1 td{
+	background-color: rgba(252, 227, 195, 0.5);
+	}
+body.moduleWorkMailCheck table tr.mail-check-address-status-0 td{
+	background-color: rgba(255, 255, 255, 0.5);
+	}
+body.moduleWorkMailCheck table tr.mail-check-address-status-1 td{
+	background-color: rgba(227, 227, 227, 0.5);
+	}
+body.moduleWorkMailCheck table tr.mail-check-address-status-2 td{
+	background-color: rgba(159, 240, 168, 0.5);
+	}

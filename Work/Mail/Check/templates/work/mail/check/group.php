@@ -40,26 +40,33 @@ foreach( $groups as $group ){
 	$percentTested	= 0;
 	$percentSuccess	= 0;
 	if( $group->numbers->total ){
-		$percentTested	= round( $group->numbers->tested / $group->numbers->total * 100, 1 );
-		$percentSuccess	= round( $group->numbers->positive / $group->numbers->total * 100, 1 );
+		$percentTested	= floor( $group->numbers->tested / $group->numbers->total * 1000 ) / 10;
+		$percentSuccess	= floor( $group->numbers->positive / $group->numbers->total * 1000 ) / 10;
 	}
 
 	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 		'href'		=> './work/mail/check/removeGroup/'.$group->mailGroupId,
 		'class'		=> 'btn btn-small btn-inverse',
+		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
 	) );
 	$buttons	= UI_HTML_Tag::create( 'div', $buttonRemove, array( 'class' => 'btn-group' ) );
+	$link		= UI_HTML_Tag::create( 'a', $group->title, array(
+		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailGroupId,
+		'class'	=> '',
+	) );
+	$link		.= '&nbsp;'.UI_HTML_Tag::create( 'small', '('.$group->numbers->total.')', array( 'class' => 'muted' ) );
+	$createdAt	= UI_HTML_Tag::create( 'small', date( 'd.m.Y', $group->createdAt ) );
 
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $group->title, array( 'class' => 'cell-group-' ) ),
-		UI_HTML_Tag::create( 'td', $percentTested.'% ('.$group->numbers->tested.'/'.$group->numbers->total.')', array( 'class' => 'cell-group-addresses' ) ),
-		UI_HTML_Tag::create( 'td', $percentSuccess.'% ('.$group->numbers->positive.'/'.$group->numbers->total.')', array( 'class' => 'cell-group-addresses' ) ),
-		UI_HTML_Tag::create( 'td', date( 'd.m.Y', $group->createdAt ), array( 'class' => 'cell-group-createdAt' ) ),
+		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-group-title' ) ),
+		UI_HTML_Tag::create( 'td', $percentTested.'% ('.$group->numbers->tested.')', array( 'class' => 'cell-group-tested' ) ),
+		UI_HTML_Tag::create( 'td', $percentSuccess.'% ('.$group->numbers->positive.')', array( 'class' => 'cell-group-success' ) ),
+		UI_HTML_Tag::create( 'td', $createdAt, array( 'class' => 'cell-group-createdAt' ) ),
 		UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-group-createdAt' ) ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
-$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Name', 'Fortschritt', 'Qualtität', 'Erstellung' ) ) );
+$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Name', 'Getested', 'Qualität', 'Erstellung' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 
