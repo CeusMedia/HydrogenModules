@@ -1,16 +1,4 @@
 <?php
-
-$errors	= array(
-	0	=> 'NONE',
-	1	=> 'MX_RESOLUTION_FAILED',
-	2	=> 'SOCKET_FAILED',
-	3	=> 'SOCKET_EXCEPTION',
-	4	=> 'CONNECTION_FAILED',
-	5	=> 'HELO_FAILED',
-	6	=> 'SENDER_NOT_ACCEPTED',
-	7	=> 'RECEIVER_NOT_ACCEPTED',
-);
-
 function renderFacts( $facts ){
 	$list	= array();
 	foreach( $facts as $term => $definition ){
@@ -51,14 +39,15 @@ $checks		= UI_HTML_Tag::create( 'div', 'Keine Prüfungen bisher.', array( 'class
 if( $address->checks ){
 	$rows	= array();
 	foreach( $address->checks as $check ){
-		$description	= \CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code );
-		$labelCode		= renderCodeBadge( $check );
-		$status		 	= UI_HTML_Tag::create( 'abbr', $labelCode, array( 'title' => $description ) );
-		$error			= ucwords( strtolower( str_replace( "_", " ", $errors[$check->error] ) ) );
+		$codeLabel		= renderCodeBadge( $check );
+		$codeDesc		= \CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code );
+
+		$errorLabel		= ucwords( strtolower( str_replace( "_", " ", $words['errorCodes'][$check->error] ) ) );
+		$errorDesc		= $words['errorLabels'][$check->error];
 
 		$facts	= renderFacts( array(
-			'SMTP-Code'			=> $labelCode.' <small class="muted">'.$description.'</small>',
-			'Fehler'			=> ucwords( strtolower( str_replace( "_", " ", $errors[$check->error] ) ) ),
+			'SMTP-Code'			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
+			'Fehler'			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
 			'Servermeldung'		=> '<not-pre>'.$check->message.'</not-pre>',
 			'Datum / Uhrzeit'	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
 		) );
