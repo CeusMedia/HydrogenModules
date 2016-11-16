@@ -90,6 +90,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				$mailColumn	= "Email";
 			foreach( explode( "\n", $columns ) as $nr => $column )
 				$columns[$nr]	= trim( $column );
+			array_unshift( $columns, $mailColumn );
 			$this->modelGroup->add( array(
 				'title'			=> $title,
 				'mailColumn'	=> $mailColumn,
@@ -208,30 +209,61 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );*/
 	}
 
-	public function export(){
+	public function export( $show = FALSE ){
 		if( $this->request->has( 'save' ) ){
+
+			$words	= $this->getWords();
+
 			$type		= $this->request->get( 'type' );
 			$groupId	= $this->request->get( 'groupId' );
+			if( !$groupId ){
+				$this->messenger->noteError( 'Group ID is missing.' );
+				$this->restart( 'export', TRUE );
+			}
 			$group		= $this->modelGroup->get( $groupId );
 			$conditions	= array(
-				'status'	=> $this->request->get( 'status' )
+				'status'		=> $this->request->get( 'status' ),
+				'mailGroupId'	=> $groupId,
 			);
 			$addresses	= $this->modelAddress->getAll( $conditions, array( 'address' => 'ASC' ), array( 10, 0 ) );
 			$data		= array();
+
+			$columns	= array_merge( json_decode( $group->columns ), array(
+				'Code',
+				'Code-Beschreibung',
+				'Fehler',
+				'Fehler-Beschreibung',
+				'Server-Meldung',
+			) );
 			foreach( $addresses as $address ){
+				$check	= $this->modelCheck->getByIndices(
+					array( 'mailAddressId' => $address->mailAddressId ),
+					'',
+					array( 'mailAddressCheckId' => 'DESC' )
+				);
+				if( !strlen( $address->data ) )
+					$address->data	= '[]';
 				$additionalData	= json_decode( $address->data, TRUE );
 				$data[]			= array_merge(
-					array( $group->mailColumn => $address->address ),
-	 				$additionalData
+					array( trim( $address->address ) ),
+	 				array_values( $additionalData ),
+					array(
+						$check->code,
+						\CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code ),
+						$check->error,
+						$words['errorCodes'][$check->error],
+						$words['errorLabels'][$check->error],
+						$check->message,
+					)
 				);
 			}
 			switch( $type ){
 				case 'CSV':
 				default:
 					$extension	= '.csv';
-					$fileName	= tempnam( sys_get_temp_dir(), 'export' );
+					$fileName	= tempnam( sys_get_temp_dir(), 'export' ).$extension;
 					$writer		= new FS_File_CSV_Writer( $fileName, ';' );
-					$writer->write( $data, $group->columns );
+					$writer->write( $data, $columns, TRUE );
 			}
 			$date	= date( 'Y-m-d' );
 			Net_HTTP_Download::sendFile( $fileName, $group->title.'_'.$date.$ext, TRUE );
