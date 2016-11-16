@@ -261,12 +261,12 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				case 'CSV':
 				default:
 					$extension	= '.csv';
-					$fileName	= tempnam( sys_get_temp_dir(), 'export' ).$extension;
+					$fileName	= tempnam( sys_get_temp_dir(), 'export' );
 					$writer		= new FS_File_CSV_Writer( $fileName, ';' );
 					$writer->write( $data, $columns, TRUE );
 			}
 			$date	= date( 'Y-m-d' );
-			Net_HTTP_Download::sendFile( $fileName, $group->title.'_'.$date.$ext, TRUE );
+			Net_HTTP_Download::sendFile( $fileName, $group->title.'_'.$date.$extension, TRUE );
 		}
 		$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
 	}
@@ -297,7 +297,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				'tested'	=> 0,
 			);
 			foreach( $addresses as $address ){
-				if( $address->status == -1 )
+				if( in_array( $address->status, array( -2, -1 ) ) )
 					$group->numbers->negative++;
 				else if( in_array( $address->status, array( 0, 1 ) ) )
 					$group->numbers->untested++;
@@ -465,7 +465,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 				'status'	=> 1,
 			) ) ),
 			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
-				'status'	=> -1,
+				'status'	=> array( -2, -1 ),
 			) ) ),
 			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
 				'status'	=> 2,
