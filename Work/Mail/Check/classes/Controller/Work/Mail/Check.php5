@@ -119,7 +119,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$result	= FALSE;
 		if( $this->modelAddress->get( $addressId ) ){
 			$this->modelAddress->edit( $addressId, array(
-				'address'	=> $address,
+				'address'	=> trim( $address ),
 				'status'	=> 0
 			) );
 			$result	= TRUE;
@@ -135,7 +135,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 
 		$sender		= new \CeusMedia\Mail\Participant( $this->moduleOptions->get( 'sender' ) );
 		$checker	= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
-		$checker->setVerbose( TRUE );
+		$checker->setVerbose( !TRUE );
 
 		foreach( $addressIds as $addressId ){
 			$address	= $this->modelAddress->get( $addressId );
@@ -280,7 +280,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		}
 		$this->session->set( 'work_mail_check_filter_groupId', $this->request->get( 'groupId' ) );
 		$this->session->set( 'work_mail_check_filter_status', $this->request->get( 'status' ) );
-		$this->session->set( 'work_mail_check_filter_query', $this->request->get( 'query' ) );
+		$this->session->set( 'work_mail_check_filter_query', trim( $this->request->get( 'query' ) ) );
 		$this->session->set( 'work_mail_check_filter_limit', (int) $this->request->get( 'limit' ) );
 		$this->restart( NULL, TRUE );
 	}

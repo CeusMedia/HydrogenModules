@@ -47,8 +47,8 @@ class Job_Work_Mail_Check extends Job_Abstract{
 					'mailAddressId'	=> $address->mailAddressId,
 					'status'		=> -2,
 					'error'			=> NULL,
-					'code'			=> NULL,
-					'message'		=> NULL,
+					'code'			=> $e->getCode(),
+					'message'		=> $e->getMessage(),
 					'createdAt'		=> time(),
 				) );
 				$modelAddress->edit( $address->mailAddressId, array(
