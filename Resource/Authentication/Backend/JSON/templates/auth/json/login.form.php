@@ -13,6 +13,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 }
 
 $fieldRemember	= "";
+/*
 if( $useRemember )
 	$fieldRemember	= HTML::DivClass( "row-fluid",
 		HTML::DivClass( "span12", array(
@@ -32,6 +33,7 @@ if( $useRemember )
 	), array(
 		'style'	=> $useRemember ? 'display: none' : NULL
 	) );
+*/
 
 $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> "submit",

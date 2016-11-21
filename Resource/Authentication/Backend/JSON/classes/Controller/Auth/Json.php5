@@ -23,9 +23,9 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
-		$remember	= (bool) $cookie->get( 'auth_remember' );
-		$env->getSession()->set( 'isRemembered', $remember );
-		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
+//		$remember	= (bool) $cookie->get( 'auth_remember' );
+//		$env->getSession()->set( 'isRemembered', $remember );
+		$script		= 'Auth.init('.$userId.', false'./*json_encode( $remember ).*/');';											//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
 	}
 
@@ -93,7 +93,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'login' );
+			return $this->redirect( 'auth/json', 'login' );
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
@@ -112,10 +112,10 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
-			return $this->redirect( 'auth', 'loginInside' );
+			$this->restart( NULL, TRUE );
 		}
 
-		$this->tryLoginByCookie();
+//		$this->tryLoginByCookie();
 		$words		= (object) $this->getWords( 'login' );
 
 		if( $this->request->has( 'doLogin' ) ) {
@@ -163,11 +163,11 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
 						$this->session->set( 'authBackend', 'Json' );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user->userId, $password );
+//						if( $this->request->get( 'login_remember' ) )
+//							$this->rememberUserInCookie( $user->userId, $password );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
+						$this->restart( './auth/json?from='.$from );												//  restart (or go to redirect URL)
 					}
 				}
 			}
@@ -175,24 +175,25 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
 		$this->addData( 'login_username', $username );
-		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
+//		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
 		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
-		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
+//		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
-		$words		= $this->env->getLanguage()->getWords( 'auth' );
+		$words		= (object) $this->getWords( 'logout' );
+
 		if( $this->session->remove( 'userId' ) ){
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
 			if( $this->request->has( 'autoLogout' ) ){
-				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
+				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
 			else{
-				$this->cookie->remove( 'auth_remember' );
-				$this->cookie->remove( 'auth_remember_id' );
-				$this->cookie->remove( 'auth_remember_pw' );
-				$this->env->getMessenger()->noteSuccess( $words['logout']['msgSuccess'] );
+//				$this->cookie->remove( 'auth_remember' );
+//				$this->cookie->remove( 'auth_remember_id' );
+//				$this->cookie->remove( 'auth_remember_pw' );
+				$this->env->getMessenger()->noteSuccess( $words->msgSuccess );
 			}
 			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 				session_destroy();																	//  completely destroy session
@@ -213,7 +214,11 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	protected function rememberUserInCookie( $userId, $password ){
+	/**
+	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
+	 *	This method is deactivated because the currently only available JSON server auth controller (@App_Chat_Server) does not support relogin.
+	 */
+/*	protected function rememberUserInCookie( $userId, $password ){
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $password ) );													//  hash password using SHA1 and MD5
 		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
@@ -221,9 +226,10 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		$this->cookie->set( 'auth_remember', TRUE, $expires );
 		$this->cookie->set( 'auth_remember_id', $userId, $expires );
 		$this->cookie->set( 'auth_remember_pw', $passwordHash, $expires );
-	}
+	}*/
 
 	/**
+	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	Tries to relogin user if remembered in cookie.
 	 *	Retrieves user ID and password from cookie.
 	 *	Checks user, its password and access per role.
@@ -232,7 +238,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function tryLoginByCookie(){
+/*	protected function tryLoginByCookie(){
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
 			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
@@ -255,6 +261,6 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 				}
 			}
 		}
-	}
+	}*/
 }
 ?>
