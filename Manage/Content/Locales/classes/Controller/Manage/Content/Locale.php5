@@ -98,7 +98,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 			$this->restart( $language.'/', TRUE );
 		}
 		if( is_null( $type ) ){
-			$type	= array_shift( array_keys( $this->types ) );
+			$types	= array_keys( $this->types );
+			$type	= array_shift( $types );
 			$this->restart( $language.'/'.$type.'/', TRUE );
 		}
 		if( $fileId ){
@@ -114,6 +115,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 				else
 					$this->addData( 'content', file_get_contents( $fileUri ) );
 			}
+			$this->addData( 'filePath', $filePath );
+			$this->addData( 'fileName', basename( $filePath ) );
 		}
 
 		$folder		= $this->types[$type]['folder'];
@@ -138,8 +141,6 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$this->addData( 'language', $language );
 		$this->addData( 'type', $type );
 		$this->addData( 'fileId', $fileId );
-		$this->addData( 'filePath', $filePath );
-		$this->addData( 'fileName', basename( $filePath ) );
 	}
 }
 ?>
