@@ -40,6 +40,8 @@ class View_Helper_Navigation_Bootstrap_Dropdown{
 					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
 					$sublist[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 				}
+				if( !$sublist )
+					continue;
 				$class		= $page->active ? 'dropdown active' : 'dropdown';
 				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
 				$title		= $this->renderLabelWithIcon( $page ).' <b class="caret"></b>';

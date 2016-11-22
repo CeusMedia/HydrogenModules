@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -19,6 +19,7 @@
 	<log version="0.3.3">Make mobile navbar configurable.</log>
 	<log version="0.3.4">Track current page for other navigation components.</log>
 	<log version="0.3.5">Hide disabled or hidden pages or subpages.</log>
+	<log version="0.3.6">Skip menu links if there are no nested links available/allowed.</log> 
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
