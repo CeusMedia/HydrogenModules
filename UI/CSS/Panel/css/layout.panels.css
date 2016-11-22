@@ -214,6 +214,112 @@ body.content-panel-style-4 div.content-panel > div.content-panel-inner div.butto
 
 
 
+/*  --  STYLE 5  --  */
+body.content-panel-style-5 div.content-panel {
+	display: block;
+	margin-bottom: 20px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #999;
+	}
+body.content-panel-style-5 div.content-panel > div.content-panel-inner {
+	border-radius: 0px 0px 4px 4px;
+	background: rgba(255,255,255,1);
+	padding: 12px 16px;
+	margin: 0px;
+	display: block;
+	line-height: 1.4em;
+	overflow: hidden;
+	}
+body.content-panel-style-5 div.content-panel > h3,
+body.content-panel-style-5 div.content-panel > h4 {
+	margin: 0px;
+	color: #FFF;
+	text-shadow: 1px 1px 1px #444, 0px 0px 3px #AAA;
+	border-bottom: 0;
+	font-size: 18px;
+	background-color: rgba(0,0,0,0.20);
+/*	text-align: center;*/
+	padding: 1px 14px;
+	line-height: 2em;
+	border-bottom: 1px solid #999;
+	border-radius: 4px 4px 0px 0px;
+	}
+body.content-panel-style-5 div.content-panel div.content-panel-inner div.buttonbar {
+	padding: 6px 16px 9px 16px;
+	margin: 12px -16px -12px -16px;
+	border-top: 1px solid #999;
+	background-color: rgba(0,0,0,0.20);
+	overflow: hidden;
+	border-radius: 0px 0px 4px 4px;
+	}
+
+body.content-panel-style-5 div.content-panel > h3 small,
+body.content-panel-style-5 div.content-panel > h4 small,
+body.content-panel-style-5 div.content-panel > h3 .muted,
+body.content-panel-style-5 div.content-panel > h4 .muted {
+	color: #FFF;
+	opacity: 0.5;
+	}
+
+
+
+/*  --  STYLE 6  --  */
+body.content-panel-style-6 div.content-panel {
+	display: block;
+	margin-bottom: 20px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: #999;
+	}
+body.content-panel-style-6 div.content-panel > div.content-panel-inner {
+	border-radius: 0px 0px 4px 4px;
+	background: rgba(255,255,255,0.8);
+	padding: 12px 16px;
+	margin: 0px;
+	display: block;
+	line-height: 1.4em;
+	overflow: hidden;
+	}
+body.content-panel-style-6 div.content-panel > h3,
+body.content-panel-style-6 div.content-panel > h4 {
+	margin: 0px;
+	color: #FFF;
+	text-shadow: 1px 1px 0px #000;
+	border-bottom: 0;
+	font-size: 16px;
+	background-color: rgba(0,0,0,0.20);
+/*	text-align: center;*/
+	padding: 1px 14px;
+	line-height: 2em;
+	border-bottom: 0px solid #999;
+	border-radius: 4px 4px 0px 0px;
+	}
+body.content-panel-style-6 div.content-panel div.content-panel-inner div.buttonbar {
+	padding: 6px 16px 9px 16px;
+	margin: 12px -16px -12px -16px;
+	border-top: 0px solid #999;
+	background-color: rgba(0,0,0,0.20);
+	overflow: hidden;
+	border-radius: 0px 0px 4px 4px;
+	}
+
+body.content-panel-style-6 div.content-panel > h3 small,
+body.content-panel-style-6 div.content-panel > h4 small,
+body.content-panel-style-6 div.content-panel > h3 .muted,
+body.content-panel-style-6 div.content-panel > h4 .muted {
+	color: #FFF;
+	opacity: 0.5;
+	}
+
+
+
 /*  --  STYLE X (Template)  --  */
 body.content-panel-style-x div.content-panel {}
 body.content-panel-style-x div.content-panel.content-panel-info {}

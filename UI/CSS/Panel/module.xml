@@ -3,7 +3,7 @@
 	<title>UI: CSS: Panel</title>
 	<description><![CDATA[Simple panel style.]]></description>
 	<category>User Interface</category>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Removed deprecated style definitions.</log>
@@ -13,6 +13,7 @@
 	<log version="0.2.5">Add fourth style and style template.</log>
 	<log version="0.2.6">Check all styles and cleanup.</log>
 	<log version="0.2.7">Add panel support for third style.</log>
+	<log version="0.2.8">Add fifth style and prototype of sixth.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -20,7 +21,7 @@
 		<style source="common">layout.panels.css</style>
 	</files>
 	<config protected="no" type="boolean" name="enabled">yes</config>
-	<config protected="no" type="string" name="style" values="1,2,3,4">2</config>
+	<config protected="no" type="string" name="style" values="1,2,3,4,5,6">2</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 	$options	= $env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
 	if( $options->get( 'enabled' ) ){
