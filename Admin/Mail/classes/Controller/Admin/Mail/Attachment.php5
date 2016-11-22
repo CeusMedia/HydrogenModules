@@ -26,7 +26,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		foreach( $this->env->getDatabase()->query( $select )->fetchAll( PDO::FETCH_OBJ ) as $language )
 			$this->languages[]	= $language->language;
 
-		$this->addData( 'classes', $this->logicMail->getMailClassNames() );
+		$this->addData( 'classes', $this->logicMail->getMailClassNames( FALSE ) );
 		$this->addData( 'languages', $this->languages );
 	}
 
