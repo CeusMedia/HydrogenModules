@@ -52,6 +52,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6.2">Support negative mail status (cancelled).</log>
 	<log version="0.6.3">Rewrite mail sending job loop and improve sleep time handling.</log>
 	<log version="0.6.4">Send mails encoded in base64 by default.</log>
+	<log version="0.6.5">Tolerate lack of mail classes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

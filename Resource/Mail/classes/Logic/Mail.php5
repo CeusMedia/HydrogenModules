@@ -142,12 +142,17 @@ class Logic_Mail{
 	/**
 	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
 	 */
-	public function getMailClassNames(){
+	public function getMailClassNames( $strict = TRUE ){
 		$list			= array();																	//  prepare empty result list
 		$matches		= array();																	//  prepare empty matches list
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$pathClasses	= Logic_Frontend::getInstance( $this->env )->getPath().$pathClasses;
+		if( !file_exists( $pathClasses ) ){
+			if( $strict )
+				throw new RuntimeException( 'Path to mail classes invalid or not existing' );
+			return $list;
+		}
 		$regexExt		= "/\.php5$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
 		$index			= new FS_File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
