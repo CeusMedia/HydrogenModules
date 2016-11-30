@@ -29,7 +29,7 @@ div.cmSelectBox div.options ol {
 	list-style: none;
 	overflow: visible;
 	}
-div.cmSelectBox.inverted div.options ol {
+div.cmSelectBox.inverted div.options {
 	top: auto;
 	bottom: 23px;
 	box-shadow: none;
