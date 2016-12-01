@@ -9,13 +9,14 @@ This module configures and enables this compression.
 Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Added more options.</log>
 	<log version="0.3.1">Added flush action to clear cache.</log>
 	<log version="0.4">Refactored module hook.</log>
 	<log version="0.4.1">Extracted module hook to controller class.</log>
+	<log version="0.4.2">Support (new) common styles folder.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
