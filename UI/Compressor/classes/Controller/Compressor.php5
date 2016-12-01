@@ -11,19 +11,24 @@ class Controller_Compressor extends CMF_Hydrogen_Controller{
 		$page->js->setCachePath( $config->jsCachePath ? $config->jsCachePath : $pathCache );
 		$page->js->setCompression( $config->jsMinify );
 
-		$page->css->primer->setPrefix( $config->cssPrefix );
+		$page->css->primer->setPrefix( $config->cssPrefix.'primer.' );
 		$page->css->primer->setSuffix( $config->cssSuffix );
 		$page->css->primer->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
 		$page->css->primer->setCompression( $config->cssMinify );
 
-		$page->css->theme->setPrefix( $config->cssPrefix );
+		$page->css->common->setPrefix( $config->cssPrefix.'common.' );
+		$page->css->common->setSuffix( $config->cssSuffix );
+		$page->css->common->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
+		$page->css->common->setCompression( $config->cssMinify );
+
+		$page->css->theme->setPrefix( $config->cssPrefix.$env->getConfig()->get( 'layout.theme' ).'.' );
 		$page->css->theme->setSuffix( $config->cssSuffix );
 		$page->css->theme->setCachePath( $config->cssCachePath ? $config->cssCachePath : $pathCache );
 		$page->css->theme->setCompression( $config->cssMinify );
 
 		$page->setPackaging( FALSE, $config->cssMinify );
 	}
-		
+
 	public function flush(){
 		$page	= $this->env->getPage();
 		$page->js->clearCache();
