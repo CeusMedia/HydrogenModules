@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: easing</title>
+	<description><![CDATA[Animation easing functions for other transitions than linear.
+
+See http://easings.net/en for visuals.
+]]></description>
+	<version>1.3</version>
+	<category>JavaScript</category>
+	<author site="http://gsgd.co.uk/">George McGinley Smith</author>
+	<url>http://gsgd.co.uk/sandbox/jquery/easing/</url>
+	<license>BSD</license>
+	<files>
+		<script load="auto">jquery.easing.js</script>
+	</files>
+</module>
