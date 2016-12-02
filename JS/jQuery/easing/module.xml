@@ -11,6 +11,7 @@ See http://easings.net/en for visuals.
 	<url>http://gsgd.co.uk/sandbox/jquery/easing/</url>
 	<license>BSD</license>
 	<files>
-		<script load="auto">jquery.easing.js</script>
+		<script load="auto">jquery.easing.min.js</script>
+		<script>jquery.easing.js</script>
 	</files>
 </module>
