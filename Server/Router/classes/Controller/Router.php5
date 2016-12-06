@@ -40,7 +40,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 		if( !$list )
 			return;
 		foreach( $list as $route ){
-			$match	= $route->source === $path;
+			$match	= $route->source === (string) $path;
 			if( $route->regex ){
 				$match	= preg_match( $route->source, $path );
 				$route->target	= preg_replace( $route->source, $route->target, $path );
