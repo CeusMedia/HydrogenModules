@@ -10,7 +10,7 @@ $modes			= array(
 if( file_exists( "vendor" ) ){
 	require_once "vendor/autoload.php";
 	require_once "vendor/ceus-media/common/compat.php";
-	Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
+	\Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
 }
 else{
 	$pathLibs		= "";
@@ -25,28 +25,31 @@ else{
 	CMC_Loader::registerNew( 'php5', NULL, 'classes/' );					//  register new autoloader
 }
 
-$request	= new Console_RequestReceiver();							//
-$request	= new ADT_List_Dictionary( $request->getAll() );			//
+$request	= new \Console_RequestReceiver();							//
+$request	= new \ADT_List_Dictionary( $request->getAll() );			//
+
 $verbose	= $request->has( '--verbose' ) || $request->has( '-v' );	//
 $test		= $request->has( '--test' ) || $request->has( '-t' );		//
 
 function handleError( $errno, $errstr, $errfile, $errline, array $errcontext ){
-    if( error_reporting() === 0 )									    // error was suppressed with the @-operator
-        return FALSE;
-    throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
+	if( error_reporting() === 0 )									    // error was suppressed with the @-operator
+		return FALSE;
+	throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
 }
 set_error_handler( 'handleError' );
 
-if( class_exists( 'Environment' ) )										//  an individual environment class is available
-	Jobber::$classEnvironment	= 'Environment';						//  set individual environment class
+if( class_exists( '\Environment_Console' ) )							//  an individual console environment class is available
+	\Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
+else if( class_exists( '\Environment' ) )								//  an individual environment class is available
+	\Jobber::$classEnvironment	= '\Environment';						//  set individual environment class
 if( isset( $configFile ) )												//  an alternative config file is set
-	CMF_Hydrogen_Environment_Console::$configFile	= $configFile;		//  set alternative config file
+	\CMF_Hydrogen_Environment_Console::$configFile	= $configFile;		//  set alternative config file
 try{
-	$jobber	= new Jobber();												//  start job handler
-	$jobber->loadJobs( $modes );										//  load jobs configured in XML files
+	$jobber	= new \Jobber();											//  start job handler
+	$jobber->loadJobs( $modes, FALSE );									//  load jobs configured in XML or JSON files, allowing JSON to override
 	$jobber->run( $request );											//  execute found jobs
 }
-catch( Exception $e ){
+catch( \Exception $e ){
 	#UI_HTML_Exception_Page::display( $e );
 	die( $e->getMessage().'@'.$e->getFile().'@'.$e->getLine() );
 }
