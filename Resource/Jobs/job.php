@@ -40,8 +40,8 @@ set_error_handler( 'handleError' );
 
 if( class_exists( '\Environment_Console' ) )							//  an individual console environment class is available
 	\Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
-else if( class_exists( '\Environment' ) )								//  an individual environment class is available
-	\Jobber::$classEnvironment	= '\Environment';						//  set individual environment class
+//else if( class_exists( '\Environment' ) )								//  an individual environment class is available
+//	\Jobber::$classEnvironment	= '\Environment';						//  set individual environment class
 if( isset( $configFile ) )												//  an alternative config file is set
 	\CMF_Hydrogen_Environment_Console::$configFile	= $configFile;		//  set alternative config file
 try{
