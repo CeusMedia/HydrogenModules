@@ -14,12 +14,12 @@ foreach( $issue->notes as $note ){
 			case 2:
 				$from	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 				$to		= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
-				if( $change->from ){
+				if( $change->from && $modelUser->get( $change->from ) ){
 					$from	= $modelUser->get( $change->from )->username;
 					$from	= UI_HTML_Tag::create( 'a', $from, array( 'href' => './user/view/'.$change->from ) );
 					$from	= UI_HTML_Tag::create( 'span', $from, array( 'class' => 'issue-user' ) );
 				}
-				if( $change->to ){
+				if( $change->to && $modelUser->get( $change->to ) ){
 					$to		= $modelUser->get( $change->to )->username;
 					$to		= UI_HTML_Tag::create( 'a', $to, array( 'href' => './user/view/'.$change->from ) );
 					$to		= UI_HTML_Tag::create( 'span', $to, array( 'class' => 'issue-user' ) );

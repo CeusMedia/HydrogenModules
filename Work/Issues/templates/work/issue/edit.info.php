@@ -8,9 +8,11 @@ foreach( $issue->notes as $note )
 				$changers[$change->userId]	= $change->user;
 
 foreach( $changers as $userId => $changer ){
-	$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
-	$roled	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
-	$changers[$userId]	= UI_HTML_Tag::create( 'li', $roled );
+	if( $changer ){
+		$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
+		$roled	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
+		$changers[$userId]	= UI_HTML_Tag::create( 'li', $roled );
+	}
 }
 $changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
 
@@ -24,6 +26,13 @@ $manager	= '-';
 if( $issue->managerId ){
 	$manager	= UI_HTML_Elements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
 	$manager	= UI_HTML_Tag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
+}
+
+if( empty( $issue->project ) ){
+	$issue->project	= (object) array(
+		'status'	=> '',
+		'title'		=> '<em><small class="muted">unbekannt</small></em>',
+	);
 }
 
 return '

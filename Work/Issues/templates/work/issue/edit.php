@@ -94,10 +94,10 @@ $main		.= $view->loadTemplateFile( 'work/issue/edit.emerge.php' );
 return '
 <!--<h2 class="autocut"><span class="muted">Problem: </span>'.$issue->title.'</h2>-->
 <div class="issue-edit row-fluid">
-	<div class="span9">
+	<div class="span8">
 		'.$main.'
 	</div>
-	<div class="span3">
+	<div class="span4">
 		'.$control.'
 	</div>
 </div>

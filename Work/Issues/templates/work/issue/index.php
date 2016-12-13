@@ -1,5 +1,4 @@
 <?php
-
 $layout	= "control";				//  layout: control|top
 
 $list	= 1 || $numberFilters ? 'list' : 'graphs';

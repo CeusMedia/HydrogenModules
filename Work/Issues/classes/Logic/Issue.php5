@@ -125,9 +125,11 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 		foreach( $usersProject as $user )															//  iterate users of issue project
 			$users[$user->userId]->isInProject	= TRUE;												//  mark user as assigned to project
 		foreach( $issue->notes as $note ){															//  iterate issue notes
-			$users[$note->userId]->isWorker	= TRUE;													//  mark user as worker
+			if( isset( $users[$note->userId] ) )
+				$users[$note->userId]->isWorker	= TRUE;												//  mark user as worker
 			foreach( $note->changes as $change )													//  note user ID of change author
-				$users[$change->userId]->isWorker	= TRUE;											//  mark user as worker
+				if( isset( $users[$change->userId] ) )
+					$users[$change->userId]->isWorker	= TRUE;										//  mark user as worker
 		}
 		return $users;
 	}

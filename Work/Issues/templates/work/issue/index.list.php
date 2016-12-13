@@ -1,14 +1,16 @@
 <?php
 
+$helper	= new View_Helper_TimePhraser( $env );
+
 $rows	= array();
 foreach( $issues as $issue ){
 	$reporter	= '';
 	$manager	= '';
-	if( $issue->reporterId ){
+	if( $issue->reporterId && isset( $users[$issue->reporterId] ) ){
 		$link		= UI_HTML_Tag::create( 'a', $users[$issue->reporterId]->username, array( 'href' => './manage/user/edit/'.$issue->reporterId ) );
 		$reporter	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$users[$issue->reporterId]->roleId ) );
 	}
-	if( $issue->managerId ){
+	if( $issue->managerId && isset( $users[$issue->managerId] ) ){
 		$link		= UI_HTML_Tag::create( 'a', $users[$issue->managerId]->username, array( 'href' => './manage/user/edit/'.$issue->managerId ) );
 		$manager	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$users[$issue->managerId]->roleId ) );
 	}
@@ -21,8 +23,10 @@ foreach( $issues as $issue ){
 	$priority	= UI_HTML_Tag::create( 'span', $words['priorities'][$issue->priority], array( 'class' => 'issue-priority priority-'.$issue->priority ) );
 	$status		= UI_HTML_Tag::create( 'span', $words['states'][$issue->status], array( 'class' => 'issue-status status-'.$issue->status ) );
 	$progress	= $issue->progress ? UI_HTML_Tag::create( 'span', $issue->progress.'%', array( 'class' => 'issue-progress progress-'.( floor( $issue->progress / 25 ) * 25 ) ) ) : "-";
-	$createdAt	= date( 'd.m.Y H:i:s', $issue->createdAt );
-	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
+//	$createdAt	= date( 'd.m.Y H:i:s', $issue->createdAt );
+	$createdAt	= $helper->convert( $issue->createdAt, TRUE, 'vor' );
+//	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
+	$modifiedAt	= $helper->convert( $issue->modifiedAt, TRUE, 'vor' );
 	$rows[]	= '
 <tr>
 	<td>'.$link.'<br/>'.$changes.'</td>

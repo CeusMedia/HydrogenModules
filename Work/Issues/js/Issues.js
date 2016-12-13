@@ -9,7 +9,8 @@ var Issues = {
             item = items[i];
             link = $("<a></a>").html(item.title);
             link.attr("href", "./work/issue/edit/" + item.issueId);
-            title = $("<td></td>").html(link);
+//			link.addClass("autocut");
+            title = $("<td></td>").addClass("autocut").html(link);
             status = $("<td></td>").addClass("cell-status").html(item.priority);
             age = Math.max(item.createdAt, item.modifiedAt);
             age = Math.round(new Date().getTime() / 1000) - age;
