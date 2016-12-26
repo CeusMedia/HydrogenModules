@@ -35,6 +35,7 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'keywords',
 		'changefreq',
 		'priority',
+		'icon',
 		'createdAt',
 		'modifiedAt'
 	);

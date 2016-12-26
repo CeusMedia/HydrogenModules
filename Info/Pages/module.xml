@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6.5</version>
+	<version>0.6.6</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -20,6 +20,7 @@
 	<log version="0.6.3">Allow page resolution of empty node page and redirect to first child.</log>
 	<log version="0.6.4">Redirect module page only if module path is not within linked page.</log>
 	<log version="0.6.5">Set relation to module UI:MetaTags from optional to mandatory.</log>
+	<log version="0.6.6">Support page icons.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -62,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `keywords` text COLLATE utf8_unicode_ci,
   `changefreq` varchar(8) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'weekly',
   `priority` float unsigned NOT NULL DEFAULT '0.5',
+  `icon` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`pageId`),
@@ -104,5 +106,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
 ]]></sql>
 	<sql on="update" type="mysql" version="0.6"><![CDATA[
 ALTER TABLE `<%?prefix%>pages` ADD `changefreq` VARCHAR(8) NOT NULL DEFAULT 'weekly' AFTER `keywords`, ADD `priority` FLOAT UNSIGNED NOT NULL DEFAULT '0.5' AFTER `changefreq`;
+]]></sql>
+	<sql on="update" type="mysql" version="0.6.6"><![CDATA[
+ALTER TABLE `<%?prefix%>pages` ADD `icon` VARCHAR(30) DEFAULT NULL AFTER `priority`;
 ]]></sql>
 </module>
