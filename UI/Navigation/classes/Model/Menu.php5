@@ -208,6 +208,7 @@ class Model_Menu {
 					'rank'		=> $page->rank,
 //					'active'	=> $this->current == $page->identifier,
 					'active'	=> FALSE,
+					'icon'		=> @$page->icon,
 				);
 				if( $page->type == 1 ){
 					$item->type		= 'menu';
@@ -232,6 +233,7 @@ class Model_Menu {
 							'rank'		=> $subpage->rank,
 //							'active'	=> $this->current == $page->identifier.'/'.$subpage->identifier,
 							'active'	=> FALSE,
+							'icon'		=> @$subpage->icon,
 						);
 						$item->items[]	= $subitem;
 						$this->pageMap[$page->identifier.'/'.$subpage->identifier]	= $subitem;
