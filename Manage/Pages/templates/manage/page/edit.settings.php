@@ -39,6 +39,10 @@ return '
 					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" class="span12" id="input_status">'.$optStatus.'</select>
 				</div>
+				<div class="span3">
+					<label for="input_icon">'.$w->labelIcon.'</label>
+					<input type="text" name="icon" id="input_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span5">

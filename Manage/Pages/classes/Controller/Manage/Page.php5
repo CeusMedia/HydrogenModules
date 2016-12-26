@@ -100,6 +100,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'content'		=> $this->request->get( 'content' ),
 			'format'		=> $this->request->get( 'format' ),
 			'module'		=> $this->request->get( 'module' ),
+			'icon'			=> $this->request->get( 'icon' ),
 			'createdAt'		=> time(),
 		);
 

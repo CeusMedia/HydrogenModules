@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>0.9.8</version>
+	<version>0.9.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -31,6 +31,7 @@
 	<log version="0.9.6">Disable tabs for junctions or module pages.</log>
 	<log version="0.9.7">Support sitemap information in meta editor.</log>
 	<log version="0.9.8">Reset parent ID when switch page's scope.</log>
+	<log version="0.9.9">Support page icons.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
