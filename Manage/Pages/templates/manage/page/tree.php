@@ -5,13 +5,21 @@ foreach( $words['scopes'] as $key => $value )
 	$optScope[$key]	= $value;
 $optScope	= UI_HTML_Elements::Options( $optScope, $scope );
 
+$urlAdd		= './manage/page/add';
 $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+if( !empty( $pageId ) && isset( $page ) )
+	$urlAdd	.= "/".( $page->parentId > 0 ? $page->parentId : $pageId );
+else if( !empty( $parentId ) && isset( $page ) )
+	$urlAdd	.= "/".$parentId;
 
-$page		= isset( $page ) ? $page : NULL;
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
+	'href'		=> $urlAdd,
+	'class'		=> 'btn btn-small btn-success',
+) );
 
-$listPages	= $view->renderTree( $tree,
-$page
- );
+$currentId	= !empty( $pageId ) ? $pageId : $parentId;
+
+$listPages	= $view->renderTree( $tree, $currentId );
 
 return '
 <div class="content-panel">
@@ -22,7 +30,7 @@ return '
 		</div>
 		'.$listPages.'
 		<div class="buttonbar">
-			<a href="./manage/page/add" class="btn btn-small btn-success">'.$iconAdd.' neue Seite</a>
+			'.$buttonAdd.'
 		</div>
 	</div>
 </div>';

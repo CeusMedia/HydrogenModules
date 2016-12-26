@@ -65,8 +65,10 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function add(){
+	public function add( $parentId = 0 ){
+		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
+			$data	= array();
 			foreach( $this->model->getColumns() as $column ){
 				if( $this->request->has( $column ) ){
 					$value	= $this->request->get( $column );
@@ -90,7 +92,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 		$page	= (object) array(
 			'pageId'		=> 0,
-			'parentId'		=> (int) $this->request->get( 'parentId' ),
+			'parentId'		=> $parentId ? $parentId : (int) $this->request->get( 'parentId' ),
 			'type'			=> (int) $this->request->get( 'type' ),
 			'scope'			=> (int) $this->request->get( 'scope' ),
 			'status'		=> 0,
@@ -104,8 +106,15 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'createdAt'		=> time(),
 		);
 
-		$this->addData( 'path', $this->frontend->getUri() );
+		$path		= $this->frontend->getUri();
+		if( $parentId && $parent )
+			$path	.= $parent->identifier.'/';
+
+
+		$this->addData( 'path', $path );
 		$this->addData( 'page', $page );
+		$this->addData( 'parentId', $parentId );
+		$this->addData( 'parent', $parent );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
@@ -374,6 +383,7 @@ PageEditor.init();
 	public function index(){
 		$this->preparePageTree();
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
+		$this->addData( 'parentId', 0 );
 	}
 
 	protected function preparePageTree( $currentPageId = NULL ){

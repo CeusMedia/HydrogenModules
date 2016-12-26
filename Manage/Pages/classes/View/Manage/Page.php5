@@ -51,13 +51,13 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'div', $listTabs.$listPanes, $attributes );
 	}
 
-	public function renderTree( $tree, $currentPage = NULL ){
+	public function renderTree( $tree, $currentPageId = NULL ){
 		$list	= array();
 		foreach( $tree as $item ){
 			$sublist	= array();
 			foreach( $item->subpages as $subitem ){
 				$classes	= array();
-				if( $currentPage && $currentPage->pageId == $subitem->pageId )
+				if( $currentPageId && $currentPageId == $subitem->pageId )
 					$classes[]	= 'active';
 				if( $subitem->status < 1 )
 					$classes[]	= 'disabled';
@@ -76,7 +76,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			else
 				$sublist	= '';
 			$classes	= array( 'autocut' );
-			if( $currentPage && $currentPage->pageId == $item->pageId )
+			if( $currentPageId && $currentPageId == $item->pageId )
 				$classes[]	= 'active';
 			if( $item->status == 0 )
 				$classes[]	= 'disabled';
