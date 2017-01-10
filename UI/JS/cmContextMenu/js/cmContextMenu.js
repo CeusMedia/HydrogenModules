@@ -25,14 +25,12 @@ var cmContextMenu = {
 		this.container.find("ul").append($("<li></li>").html(label).addClass("item-label"));
 	},
 	addLinkItem: function(url, label, icon){
-		var item = $("<li></li>").bind("click",{url: url},function(event){
+		var icon = $("<i></i>").attr("class", icon);
+		var button = $("<a></a>").attr({href: url, class: 'btn btn-small btn-success link-icon'}).bind('click', function(event){
 			cmContextMenu.hide(event, true);
-			document.location.href = event.data.url;
-		});
-		var icon = $("<img/>").attr("src", icon);
-		var span = $("<span></span>").addClass("link-icon").append(icon).appendTo(item);
-		$("<span></span>").addClass("link-label").html(label).appendTo(item);
-		this.container.find("ul").append(item.addClass("item-link"));
+		}).append(icon).append('&nbsp;').append(label);
+		var item = $("<li></li>").append(button);
+		this.container.find("ul").append(item);
 	},
 	render: function(elem){},
 	show: function(event, elem, renderer){

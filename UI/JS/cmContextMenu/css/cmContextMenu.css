@@ -9,6 +9,7 @@
 	box-shadow: 1px 2px 8px gray;
 	-moz-box-shadow: 1px 2px 8px gray;
 	-webkit-box-shadow: 1px 2px 8px gray;
+	z-index: 1000;
 	}
 #contextMenu ul {
 	list-style: none;
@@ -43,7 +44,7 @@
 #contextMenu ul li.item-label input,
 #contextMenu ul li.item-label select {
 	margin: 0px;
-	width: 60px;
+	width: 80px;
 	font-size: 1em;
 	background-color: #FFFFFF;
 	padding: 1px 3px;
