@@ -422,7 +422,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						$logic		= new Logic_Mail( $this->env );
 						$logic->appendRegisteredAttachments( $mail, $language );
 						$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
-						$forward	= './auth/confirm'.( $from ? '?from='.$from : '' );
+						$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
 					}
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
