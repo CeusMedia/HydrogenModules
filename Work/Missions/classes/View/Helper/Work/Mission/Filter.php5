@@ -151,6 +151,29 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	public function renderViewTypeSwitch(){
+		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
+		$items	= array();
+		$mode	= $this->env->getSession()->get( 'filter.work.mission.mode' );
+
+		$wordsViewTypes	= (object) $this->words['viewTypes'];
+
+		$current	= '';
+		foreach( $this->words['viewTypes'] as $typeKey => $typeLabel ){
+			$link		= UI_HTML_Tag::create( 'a', $typeLabel, array( 'href' => './work/mission/'.$typeKey ) );
+			$items[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $mode === $typeKey ? 'active' : NULL ) );
+			$current	= $mode === $typeKey ? $typeLabel : $current;
+		}
+
+/*		$label	= $caret.' Ansicht: <b>'.$current.'</b>';
+		$list	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) );
+		return UI_HTML_Tag::create( 'button', $label, array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ).$list;
+*/
+		return UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'button', '<span class="not-muted">Ansicht:</span> <b>'.$current.'</b>', array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ),
+			UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+			UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
+		), array( 'class' => 'btn-group' ) );
+
 		$badgeIcon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh icon-white' ) );
 		$badge      = UI_HTML_Tag::create( 'span', $badgeIcon, array(
 			'id'	=> "number-total",
@@ -171,6 +194,12 @@ class View_Helper_Work_Mission_Filter{
 			UI_HTML_Tag::create( 'button', '<i class="icon-tasks"></i> Liste', array(
 				'type'		=> "button",
 				'id'		=> "work-mission-view-type-1",
+				'disabled'	=> "disabled",
+				'class'		=> "btn -btn-small",
+			) ),
+			UI_HTML_Tag::create( 'button', '<i class="icon-clock"></i> Kanban', array(
+				'type'		=> "button",
+				'id'		=> "work-mission-view-type-2",
 				'disabled'	=> "disabled",
 				'class'		=> "btn -btn-small",
 			) )
@@ -211,4 +240,3 @@ class View_Helper_Work_Mission_Filter{
 	}
 }
 ?>
-

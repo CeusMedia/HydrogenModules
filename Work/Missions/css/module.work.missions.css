@@ -439,6 +439,7 @@ table tr th .sortable.right {
 	display: none;
 	}
 
+
 /*  --  MISSION CALENDAR  --  */
 #mission-calendar table {
 	position: relative;
@@ -589,6 +590,56 @@ table tr th .sortable.right {
 	}
 
 
+/*  --  MISSION KANBAN  --  */
+#mission-kanban ul.sortable,
+#mission-kanban div.droppable {
+	border: 1px dotted rgba(127,127,127,0.25);
+	min-height: 200px;
+	}
+#mission-kanban .mission-block {
+	border: 1px solid rgba(127,127,127,0.75);
+	min-height: 80px;
+	border-radius: 4px;
+	box-shadow: 0px 2px 2px rgba(127,127,127,0.5);
+	box-sizing: border-box;
+	padding: 0.5em 1em;
+	overflow: hidden;
+	margin: -1px -1px 4px -1px;
+	}
+#mission-kanban ul.sortable-status-0 {
+	background-yellow: red;
+	}
+#mission-kanban ul.sortable-status-1 {
+	background-yellow: red;
+	}
+#mission-kanban ul.sortable-status-2 {
+	background-yellow: red;
+	}
+#mission-kanban ul.sortable-status-3 {
+	background-yellow: red;
+	}
+#mission-kanban .mission-block.priority-1 {
+	background-color: rgba(255, 31, 0, 0.5);
+	}
+#mission-kanban .mission-block.priority-2 {
+	background-color: rgba(255, 127, 0, 0.5);
+	}
+#mission-kanban .mission-block.priority-3 {
+	background-color: rgba(255, 255, 63, 0.5);
+	}
+#mission-kanban .mission-block.priority-4 {
+	background-color: rgba(127, 255, 0, 0.4);
+	}
+#mission-kanban .mission-block.priority-5 {
+	background-color: rgba(31, 240, 0, 0.6);
+	}
+#mission-kanban .mission-block .mission-title {
+	font-weight: bold;
+	font-size: 1.1em;
+	}
+
+
+/*  --  OTHERS  --  */
 ul li label span.empty {
 	color: #666;
 	font-size: 0.9em;

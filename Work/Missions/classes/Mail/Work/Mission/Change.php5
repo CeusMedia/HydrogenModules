@@ -53,10 +53,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Abstract{
 		$this->addThemeStyle( 'indicator.css' );
 
 		$html					= $this->renderBody( $data );
-		$body					= chunk_split( base64_encode( $html ), 78 );
-		$mailBody				= new Net_Mail_Body( $body, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$this->mail->addBody( $mailBody );
+		$this->mail->addHtml( $html, 'utf-8', 'base64' );
 		return $html;
 	}
 

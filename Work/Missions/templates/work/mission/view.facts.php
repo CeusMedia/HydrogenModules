@@ -20,7 +20,7 @@ foreach( $missionUsers as $user )
 	$viewers[]	= renderUserLabel( $user );
 $viewers	= join( '<br/>', $viewers );
 
-$w	= (object) $words['view'];
+$w	= (object) $words['view-facts'];
 
 $priorities	= $words['priorities'];
 
@@ -120,7 +120,7 @@ dl dd.warning {
 	<div class="span12">
 		<h3><span class="muted">'.$words['types'][$mission->type].': </span> '.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'</h3>
 		<div class="content-panel">
-			<h4>'.$w->legend.'</h4>
+			<h4>'.$w->heading.'</h4>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div style="float: left; width: 50%">

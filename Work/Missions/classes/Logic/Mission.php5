@@ -3,13 +3,13 @@ class Logic_Mission{
 
 	public $timeOffset			= 0; # 4 hours night shift: 14400;
 	public $generalConditions	= array();
-	public $model;
+	public $modelMission;
 	protected $modelVersion;
 	public $useProjects			= FALSE;
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
-		$this->model		= new Model_Mission( $env );
+		$this->modelMission	= new Model_Mission( $env );
 		$this->modelVersion	= new Model_Mission_Version( $this->env );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 	}
@@ -45,6 +45,11 @@ class Logic_Mission{
 		}
 		return date( "Y-m-d", $time );
 	}
+
+/*	public function getDocumentsOfMission( $missionId, $orders ){
+		$model		= new Model_Mission_Document( $this->env );
+		return $model->getAllByIndex( 'missionId', $missionId, $orders );
+	}*/
 
 	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = array() ){
 		$session	= $this->env->getSession();
@@ -94,7 +99,7 @@ class Logic_Mission{
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access
-			return $this->model->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions
+			return $this->modelMission->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions
 
 		$havings	= array(																		//  additional conditions
 			'creatorId = '.(int) $userId,															//  user is creator
@@ -113,7 +118,7 @@ class Logic_Mission{
 		}
 		$groupings	= array( 'missionId' );															//  HAVING needs grouping
 		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
-		return $this->model->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
+		return $this->modelMission->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
 	}
 
 	public function getVersion( $missionId, $version ){
@@ -148,6 +153,15 @@ class Logic_Mission{
 				'data'			=> serialize( $data ),
 				'timestamp'		=> time()
 			), FALSE );
+		}
+		else{
+			$mission	= (array) $this->modelMission->get( $missionId );
+			$lastChange	= $model->getByIndex( 'missionId', $missionId );
+			$lastData	= (array) unserialize( $lastChange->data );
+			unset( $lastData['modifiedAt'] );
+			unset( $mission['modifiedAt'] );
+			if( json_encode( $mission ) === json_encode( $lastData ) )
+				$model->remove( $lastChange->missionChangeId );
 		}
 	}
 

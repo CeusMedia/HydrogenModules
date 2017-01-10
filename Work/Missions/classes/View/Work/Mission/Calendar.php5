@@ -42,8 +42,8 @@ $(document).ready(function(){
 		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
 
 		$script		= '
-//var monthNames = '.json_encode( $words['months'] ).';
-//var monthNamesShort = '.json_encode( $words['months-short'] ).';
+WorkMissionsCalendar.monthNames = '.json_encode( $words['months'] ).';
+WorkMissionsCalendar.monthNamesShort = '.json_encode( $words['months-short'] ).';
 WorkMissions.init("calendar");
 WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
 WorkMissionsCalendar.monthCurrent	= '.date( "n" ).';
@@ -191,12 +191,36 @@ WorkMissionsList.loadCurrentListAndDayControls();
 
 		$label			= $this->renderLabel( $year, $month );
 
-		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
-			'href'		=> './work/mission/export/ical',
-			'target'	=> '_blank',
-			'class'		=> 'btn not-btn-small btn-warning',
-			'style'		=> 'font-weight: normal',
-		) );
+		$btnExport		= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'a', 'Export <span class="caret"></span>', array( 'href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown' ) ),
+			UI_HTML_Tag::create( 'ul', array(
+				UI_HTML_Tag::create( 'li', array(
+					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', array(
+						'href'		=> './work/mission/export/ical',
+						'target'	=> '_blank',
+					) ),
+				), array( 'style' => 'text-align: left' ) ),
+				UI_HTML_Tag::create( 'li', array(
+					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', array(
+						'href'		=> './work/mission/export/csv',
+						'target'	=> '_blank',
+					) ),
+				), array( 'style' => 'text-align: left' ) ),
+				UI_HTML_Tag::create( 'li', array(
+					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', array(
+						'href'		=> './work/mission/export/xml',
+						'target'	=> '_blank',
+					) ),
+				), array( 'style' => 'text-align: left' ) ),
+				UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider' ) ),
+				UI_HTML_Tag::create( 'li', array(
+					UI_HTML_Tag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', array(
+						'href'		=> './work/mission/export/help',
+						'target'	=> '_blank',
+					) )
+				), array( 'style' => 'text-align: left' ) )
+			), array( 'class' => 'dropdown-menu pull-right' ) )
+		), array( 'class' => 'btn-group' ) );
 		return '
 	<div id="mission-calendar-control" class="row-fluid">
 		<div class="span8">

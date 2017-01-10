@@ -112,15 +112,15 @@ class Job_Work_Mission extends Job_Abstract{
 			$isActiveUser	= (int) $user->status > 0 && strlen( trim( $user->email ) );			//  user is active and has mail address
 			$isMailReceiver	= $config->get( 'active' ) && $config->get( 'changes' );				//  mails are enabled
 			$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
-			if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//  
+			if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//
 				continue;
 			$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
 			$havings	= array(																	//  apply filters after grouping
-				'creatorId = '.(int) $user->userId,													//  
-				'workerId = '.(int) $user->userId,													//  
+				'creatorId = '.(int) $user->userId,													//
+				'workerId = '.(int) $user->userId,													//
 			);
 			if( $this->env->getModules()->has( 'Manage_Projects' ) ){								//  look for module
-				$modelProject	= new Model_Project( $this->env );									//  
+				$modelProject	= new Model_Project( $this->env );									//
 				$userProjects	= $modelProject->getUserProjects( $user->userId );					//  get projects assigned to user
 				if( $userProjects )																	//  projects found
 					$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';	//  add to HAVING clause

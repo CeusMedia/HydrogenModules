@@ -453,7 +453,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$date	= strtotime( $date );
 			$diff	= ( $date - strtotime( $mission->dayStart ) ) / ( 24 * 3600 );
 			$sign	= $diff >= 0 ? "+" : "-";
-			$number	= abs( $diff );
+			$number	= round( abs( $diff ) );
 			$change	= $sign." ".$number."day";
 		}
 		else if( preg_match( "/^[+-][0-9]+$/", $date ) ){
@@ -850,6 +850,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	public function kanban(){
+		$this->session->set( 'filter.work.mission.mode', 'kanban' );
+		$this->restart( NULL, TRUE );
+	}
+
 	protected function recoverFilters( $userId ){
 		$model	= new Model_Mission_Filter( $this->env );
 		$serial	= $model->getByIndex( 'userId', $userId, 'serial' );
@@ -969,6 +974,92 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->env->getLanguage()->load( 'work/issue' );
 			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
 		}
+
+		$model		= new Model_Mission_Document( $this->env );
+		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
+		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
+		$this->addData( 'documents', $documents );
+	}
+
+	public function addDocument( $missionId ){
+
+		$upload		= (object) $this->env->getRequest()->get( 'document' );
+		$model		= new Model_Mission_Document( $this->env );
+
+		$path		= 'contents/documents/missions/';
+		$document	= $model->getByIndices( array(
+			'missionId'	=> $missionId,
+			'filename'	=> $upload->name,
+		) );
+		$hashname	= $document ? $document->hashname : Alg_ID::uuid();
+		$logic		= new Logic_Upload( $this->env );
+//		$logic->checkMimeType( array() );
+//		$logic->checkSize();
+		$logic->setUpload( $upload );
+		$logic->saveTo( $path.$hashname );
+
+		if( $document ){
+			$model->edit( $document->missionDocumentId, array(
+				'userId'		=> $this->userId,
+				'size'			=> $upload->size,
+				'modifiedAt'	=> time(),
+			) );
+		}
+		else{
+			$model->add( array(
+				'missionId'		=> $missionId,
+				'userId'		=> $this->userId,
+				'size'			=> $upload->size,
+				'mimeType'		=> $upload->type,
+				'filename'		=> $upload->name,
+				'hashname'		=> $hashname,
+				'createdAt'		=> time(),
+			) );
+		}
+
+//		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
+		$this->restart( 'view/'.$missionId, TRUE );
+	}
+
+	public function viewDocument( $missionId, $missionDocumentId ){
+		$this->deliverDocument( $missionId, $missionDocumentId, FALSE );
+	}
+
+	public function downloadDocument( $missionId, $missionDocumentId ){
+		$this->deliverDocument( $missionId, $missionDocumentId, TRUE );
+	}
+
+	/**
+	 *	@todo  			check sanity, see below
+	 */
+	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE ){
+	//	check missionId against user
+	//	check missionDocumentId against missionId
+
+		$model		= new Model_Mission_Document( $this->env );
+		$document	= $model->get( $missionDocumentId );
+		if( !$document ){
+			$this->messenger->noteError( 'Document ID is invalid' );
+			$this->restart( './view/'.$missionId );
+		}
+		$pathname	= "contents/documents/missions/".$document->hashname;
+		if( !file_exists( $pathname ) ){
+			$this->messenger->noteError( 'Document is not existing' );
+			$this->restart( './view/'.$missionId );
+		}
+		$timestamp	= max( $document->createdAt, $document->modifiedAt );
+		$disposition	= $download ? 'attachment' : 'inline';
+		header( 'Content-Type: '.$document->mimeType );
+		header( 'Content-Length: '.$document->size );
+		header( 'Last-Modified: '.date( 'r', $timestamp ) );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Content-Disposition: '.$disposition.'; filename='.$document->filename );
+
+		$fp = @fopen( $pathname, "rb" );
+		if( !$fp )
+			header("HTTP/1.0 500 Internal Server Error");
+		fpassthru( $fp );
+		exit;
 	}
 
 	public function testMail( $type, $send = FALSE ){

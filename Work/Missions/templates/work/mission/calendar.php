@@ -36,13 +36,11 @@ $content	= '
 $script	= '
 <script>
 $(document).ready(function(){
-//alert('.(int) $env->getSession()->get( 'userId' ).');
 	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'userId' ).';
 	WorkMissionsCalendar.year = '.$year.';
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();
-	WorkMissions.init(1);
-/*	$(".cmContextMenu").cmContextMenu({"timeSlideDown":150,"timeSlideUp":100}).show();*/
+	WorkMissions.init("calendar");
 });
 </script>';
 $env->getPage()->addHead( $script );

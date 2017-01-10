@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.26</version>
+	<version>0.9.28</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -73,6 +73,8 @@ code>
 	<log version="0.9.24">Extracted timer panel.</log>
 	<log version="0.9.25">Update calendar.</log>
 	<log version="0.9.26">Use new Work:Timer integration with hooks.</log>
+	<log version="0.9.27">Add Kanban perspective.</log>
+	<log version="0.9.28">Add support for mission documents.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -192,9 +194,9 @@ DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `projectId` int(10) unsigned NOT NULL DEFAULT '0',
-  `workerId` int(10) unsigned NOT NULL,
   `creatorId` int(10) unsigned NOT NULL,
   `modifierId` int(10) unsigned NOT NULL,
+  `workerId` int(10) unsigned NOT NULL,
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -235,6 +237,25 @@ CREATE TABLE `<%?prefix%>mission_changes` (
   KEY `userId` (`userId`),
   KEY `type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mission_documents`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_documents` (
+  `missionDocumentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `missionId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `size` decimal(12,0) unsigned NOT NULL,
+  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `hashname` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `accessedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`missionDocumentId`),
+  KEY `missionId` (`missionId`),
+  KEY `userId` (`userId`),
+  KEY `mimeType` (`mimeType`),
+  KEY `filename` (`filename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mission_filters`;
 CREATE TABLE `<%?prefix%>mission_filters` (
@@ -328,6 +349,26 @@ ALTER TABLE  `missions` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'Markdown' AFT
 ADD INDEX (  `title` ) ,
 ADD INDEX (  `format` ) ;
 ALTER TABLE  `missions` CHANGE  `format`  `format` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  'HTML';
+]]></sql>
+	<sql on="update" type="mysql" version="0.9.28"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mission_documents`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mission_documents` (
+  `missionDocumentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `missionId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `size` decimal(12,0) unsigned NOT NULL,
+  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `hashname` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `accessedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`missionDocumentId`),
+  KEY `missionId` (`missionId`),
+  KEY `userId` (`userId`),
+  KEY `mimeType` (`mimeType`),
+  KEY `filename` (`filename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;

@@ -3,6 +3,8 @@ var WorkMissionsCalendar = {
 	month: null,
 	monthCurrent: 0,
 	monthShow: 0,
+	monthNames: [],
+	monthNamesShort: [],
 	pathIcons: "http://img.int1a.net/famfamfam/silk/",
 	userId: 0,
 
@@ -35,12 +37,41 @@ var WorkMissionsCalendar = {
 		cmContextMenu.containment = "#mission-calendar";
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
-			var url = "./work/mission/add/?type=0&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neue Aufgabe", WorkMissionsCalendar.pathIcons+"script_add.png");
-			var url = "./work/mission/add/?type=1&dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			menu.addLinkItem(url, "neuer Termin", WorkMissionsCalendar.pathIcons+"date_add.png");
+			var urlAdd = "./work/mission/add/?dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
+			var types = [{
+				url: urlAdd+'&type=0',
+				icon: "icon-wrench",
+				icon: "fa fa-fw fa-wrench",
+				label: "neue Aufgabe"
+			},{
+				url: urlAdd+'&type=1',
+//				icon: "icon-time",
+				icon: "fa fa-fw fa-clock-o",
+				label: "neuer Termin"
+			}];
+			$(types).each(function(nr){
+				menu.addLinkItem(types[nr].url, types[nr].label, types[nr].icon);
+			});
 		});
-		cmContextMenu.onShow = function(contextMenu){contextMenu.find("#context-date input").datepicker();};
+		cmContextMenu.onShow = function(contextMenu){
+			contextMenu.find("#context-date input").datepicker({
+				dateFormat: "yy-mm-dd",
+			//	appendText: "(yyyy-mm-dd)",
+			//	buttonImage: "/images/datepicker.gif",
+			//	changeMonth: true,
+			//	changeYear: true,
+			//	gotoCurrent: true,
+			//	autoSize: true,
+				showWeek: true,
+				weekHeader: "KW",
+				gotoCurrent: false,
+				firstDay: 1,
+				nextText: "nächster Monat",
+				prevText: "vorheriger Monat",
+				yearRange: "c:c+2",
+				monthNames: WorkMissionsCalendar.monthNames
+			});
+		};
 		cmContextMenu.onChange = function(){$("#mission-calendar").css({opacity: 0.5});};
 		cmContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
 			var missionId = elem.data("id");
@@ -51,7 +82,7 @@ var WorkMissionsCalendar = {
 			if(elem.data("date")){
 				var div = $("<div></div>").attr("id", "context-date");
 				var value = elem.data("date").replace(/ /,"");
-				var input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small", readonly: "readonly"});
+				var input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small"/*, readonly: "readonly"*/});
 				input.on("change", function(event){
 					cmContextMenu.hide(event, true);
 					document.location.href = "./work/mission/changeDay/"+missionId+"?date="+$(this).val();
@@ -137,4 +168,3 @@ var WorkMissionsCalendar = {
 		});
 	}
 }
-

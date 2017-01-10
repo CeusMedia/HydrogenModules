@@ -1,6 +1,6 @@
 <?php
 
-$w  = (object) $words['view'];
+$w  = (object) $words['view-content'];
 
 $phraser    = new View_Helper_TimePhraser( $env );
 
@@ -44,7 +44,7 @@ if( 1 || $mission->versions ){
 	$list	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 	$panelVersions		= '
 		<div class="content-panel">
-			<h4>Versionen</h4>
+			<h4>'.$w->headingVersions.'</h4>
 			<div class="content-panel-inner">
 				'.$list.'
 			</div>
@@ -59,7 +59,7 @@ return '
 <div class="row-fluid">
 	<div class="span9">
 		<div class="content-panel">
-			<h4>'.$w->legend.'</h4>
+			<h4>'.$w->headingContent.'</h4>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">

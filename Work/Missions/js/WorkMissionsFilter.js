@@ -30,7 +30,7 @@ var WorkMissionsFilter = {
 			});
 		});
 
-		button0 = $("#work-mission-view-type-0");
+/*		button0 = $("#work-mission-view-type-0");
 		button1 = $("#work-mission-view-type-1");
 		button0.removeAttr("disabled").removeClass("disabled");
 		button1.removeAttr("disabled").removeClass("disabled");
@@ -46,7 +46,7 @@ var WorkMissionsFilter = {
 			button0.bind("click", function(){
 				document.location.href = "./work/mission/calendar";
 			});
-		}
+		}*/
 
 		$("#filter_query").bind("keydown", function(event){
 			if(event.keyCode == 13)
