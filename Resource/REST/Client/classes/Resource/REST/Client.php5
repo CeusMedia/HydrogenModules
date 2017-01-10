@@ -25,6 +25,7 @@ class Resource_REST_Client{
 		$config				= $this->moduleConfig()->getAll( 'server.', TRUE );
 		$options			= array();
 		$this->client		= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
+		$this->client->expectFormat( $config->get( 'format' ) );
 		if( $config->get( 'username' ) )
 			$client->setBasicAuth( $config->get( 'username' ), $config->get( 'password' ) );
 	}
