@@ -93,19 +93,20 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 				$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Datum', array( 'class' => 'sortable', 'data-column' => 'dayStart' ) );
 			}
 
-			$colgroup[]		= "";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Titel', array( 'class' => 'sortable', 'data-column' => 'title' ) );
-
-			$colgroup[]		= "120px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'sortable', 'data-column' => 'workerId' ) );
-
-			$colgroup[]		= "120px";
-			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'sortable', 'data-column' => 'projectId' ) );
-
 			if( $showPriority ){
 				$colgroup[]		= "30px";
 				$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Prio'/*'Priorität'*/, array( 'class' => 'sortable', 'data-column' => 'priority' ) );
 			}
+
+			$colgroup[]		= "";
+			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Titel', array( 'class' => 'sortable', 'data-column' => 'title' ) );
+
+			$colgroup[]		= "160px";
+			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'class' => 'sortable', 'data-column' => 'workerId' ) );
+
+			$colgroup[]		= "160px";
+			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'class' => 'sortable', 'data-column' => 'projectId' ) );
+
 			if( $showActions && $tense ){
 				$colgroup[]		= "65px";
 				$tableHeads[]	= UI_HTML_Tag::create( 'div', ''/*'Aktion'*/, array( 'class' => 'not-sortable right', 'data-column' => NULL ) );
@@ -131,10 +132,10 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$colgroup[]		= "";
 			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Titel', array( 'data-column' => 'title' ) );
 
-			$colgroup[]		= "120px";
+			$colgroup[]		= "160px";
 			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'data-column' => 'workerId' ) );
 
-			$colgroup[]		= "120px";
+			$colgroup[]		= "160px";
 			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'data-column' => 'projectId' ) );
 
 			if( $showPriority ){

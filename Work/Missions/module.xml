@@ -84,8 +84,10 @@ code>
 		<class>Controller/Work/Mission/Calendar.php5</class>
 		<class>Controller/Work/Mission/Export.php5</class>
 		<class>Controller/Work/Mission/Future.php5</class>
+		<class>Controller/Work/Mission/Kanban.php5</class>
 		<class>Model/Mission.php5</class>
 		<class>Model/Mission/Change.php5</class>
+		<class>Model/Mission/Document.php5</class>
 		<class>Model/Mission/Filter.php5</class>
 		<class>Model/Mission/Version.php5</class>
 		<class>Logic/Mission.php5</class>
@@ -94,6 +96,7 @@ code>
 		<class>View/Work/Mission/Calendar.php5</class>
 		<class>View/Work/Mission/Export.php5</class>
 		<class>View/Work/Mission/Future.php5</class>
+		<class>View/Work/Mission/Kanban.php5</class>
 		<class>View/Helper/Work/Mission/Abstract.php5</class>
 		<class>View/Helper/Work/Mission/Calendar.php5</class>
 		<class>View/Helper/Work/Mission/Filter.php5</class>
@@ -126,6 +129,8 @@ code>
 		<template>work/mission/view.php</template>
 		<template>work/mission/view.facts.php</template>
 		<template>work/mission/view.content.php</template>
+		<template>work/mission/view.documents.php</template>
+		<template>work/mission/kanban/index.php</template>
 		<template>work/mission/mails/new.php</template>
 		<template>work/mission/mails/update.php</template>
 		<locale>de/work/mission.ini</locale>
@@ -136,6 +141,7 @@ code>
 		<script>WorkMissionsCalendar.js</script>
 		<script>WorkMissionsFilter.js</script>
 		<script>WorkMissionsEditor.js</script>
+		<script>WorkMissionsKanban.js</script>
 		<script>WorkMissionsList.js</script>
 		<script>WorkMissionsViewer.js</script>
 		<script load="auto">bindWithDelay.js</script>
@@ -193,10 +199,10 @@ code>
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
   `missionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `projectId` int(10) unsigned NOT NULL DEFAULT '0',
   `creatorId` int(10) unsigned NOT NULL,
   `modifierId` int(10) unsigned NOT NULL,
   `workerId` int(10) unsigned NOT NULL,
+  `projectId` int(10) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(1) unsigned NOT NULL,
   `priority` tinyint(1) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -208,18 +214,18 @@ CREATE TABLE `<%?prefix%>missions` (
   `minutesRequired` int(10) unsigned DEFAULT '0',
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
-  `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
+  `location` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`missionId`),
-  KEY `priority` (`priority`),
-  KEY `type` (`type`),
-  KEY `workerId` (`workerId`),
   KEY `creatorId` (`creatorId`),
   KEY `modifierId` (`modifierId`),
+  KEY `workerId` (`workerId`),
   KEY `projectId` (`projectId`),
+  KEY `priority` (`priority`),
+  KEY `type` (`type`),
   KEY `title` (`title`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -345,7 +351,7 @@ ALTER TABLE `<%?prefix%>mission_versions`
   MODIFY `missionVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.9.12"><![CDATA[
-ALTER TABLE  `missions` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'Markdown' AFTER  `location` ,
+ALTER TABLE  `missions` ADD  `format` VARCHAR( 20 ) NULL DEFAULT  'Markdown' AFTER  `content` ,
 ADD INDEX (  `title` ) ,
 ADD INDEX (  `format` ) ;
 ALTER TABLE  `missions` CHANGE  `format`  `format` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  'HTML';
