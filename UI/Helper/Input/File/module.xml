@@ -3,13 +3,14 @@
 	<title>UI: Helper: Input: File</title>
 	<description><![CDATA[Replacement for HTML file input.]]></description>
 	<category>User Interface</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improved scalability.</log>
 	<log version="0.2.2">Extended rendered output by container.</log>
 	<log version="0.2.3">Add parameter for being mandatory or not.</log>
 	<log version="0.2.4">Add reference to module Resource:Upload.</log>
+	<log version="0.2.5">Add parameter for button class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

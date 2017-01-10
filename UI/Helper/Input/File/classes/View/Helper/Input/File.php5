@@ -1,6 +1,6 @@
 <?php
 class View_Helper_Input_File{
-	static public function render( $name, $label, $required = FALSE ){
+	static public function render( $name, $label, $required = FALSE, $buttonClass = 'btn-primary' ){
 		$input		= UI_HTML_Tag::create( 'input', NULL, array(
 			'type'		=> "file",
 			'name'		=> $name,
@@ -8,7 +8,7 @@ class View_Helper_Input_File{
 			'id'		=> 'input_'.$name,
 		) );
 		$toggle		= UI_HTML_Tag::create( 'a', $label, array(
-			'class'		=> 'btn btn-primary bs-input-file-toggle',
+			'class'		=> 'btn '.$buttonClass.' bs-input-file-toggle',
 			'href'		=> "javascript:;"
 		) );
 		$info		= UI_HTML_Tag::create( 'input', NULL, array(
