@@ -2,13 +2,14 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
 	<log version="0.2.2">Fix migration bugs.</log>
 	<log version="0.2.3">Handle failed remote login with message.</log>
 	<log version="0.2.4">Remove locales for register and password.</log>
+	<log version="0.2.5">Handle forwarding on login or logout by module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

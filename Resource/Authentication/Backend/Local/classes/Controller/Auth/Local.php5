@@ -153,11 +153,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	public function login( $username = NULL ){
-		if( $this->session->has( 'userId' ) ){
-			if( $this->request->has( 'from' ) )
-				$this->restart( $from );
-			return $this->redirect( 'auth', 'loginInside' );
-		}
+		if( $this->session->has( 'userId' ) )
+			$this->redirectAfterLogin();
 
 		$this->tryLoginByCookie();
 		$words		= (object) $this->getWords( 'login' );
@@ -178,42 +175,42 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			$user		= $modelUser->getByIndex( 'username', $username );							//  find user by username
 			if( !$user )																			//  no user found by username
 				$user	= $modelUser->getByIndex( 'email', $username );								//  find user by email address
+			if( !$user )
+				$this->messenger->noteError( $words->msgInvalidUser );
+			if( $this->messenger->gotError() )
+				$this->restart( 'login?username='.$username, TRUE );
 
 			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
 				'username'	=> $user ? $user->username : $username,
 //				'password'	=> $password,															//  disabled for security
 				'userId'	=> $user ? $user->userId : 0,
 			) );
+			if( $this->messenger->gotError() )
+				$this->restart( 'login?username='.$username, TRUE );
 
-			if( !$this->messenger->gotError() ){
-				if( !$user )
-					$this->messenger->noteError( $words->msgInvalidUser );
-				else{
-					$role	= $modelRole->get( $user->roleId );
-					if( !$role->access )
-						$this->messenger->noteError( $words->msgInvalidRole );
-					else if( $user->status == 0 )
-						$this->messenger->noteError( $words->msgUserUnconfirmed );
-					else if( $user->status == -1 )
-						$this->messenger->noteError( $words->msgUserLocked );
-					else if( $user->status == -2 )
-						$this->messenger->noteError( $words->msgUserDisabled );
-					else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
-						$this->messenger->noteError( $words->msgInvalidPassword );
-					if( !$this->messenger->gotError() ){
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
-						$this->messenger->noteSuccess( $words->msgSuccess );
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
-						$this->session->set( 'authBackend', 'Local' );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
-						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
-						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './auth?from='.$from );												//  restart (or go to redirect URL)
-					}
-				}
-			}
+			$role	= $modelRole->get( $user->roleId );
+			if( !$role->access )
+				$this->messenger->noteError( $words->msgInvalidRole );
+			else if( $user->status == 0 )
+				$this->messenger->noteError( $words->msgUserUnconfirmed );
+			else if( $user->status == -1 )
+				$this->messenger->noteError( $words->msgUserLocked );
+			else if( $user->status == -2 )
+				$this->messenger->noteError( $words->msgUserDisabled );
+			else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
+				$this->messenger->noteError( $words->msgInvalidPassword );
+
+			if( $this->messenger->gotError() )
+				$this->restart( 'login?username='.$username, TRUE );
+
+			$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
+			$this->messenger->noteSuccess( $words->msgSuccess );
+			$this->session->set( 'userId', $user->userId );
+			$this->session->set( 'roleId', $user->roleId );
+			$this->session->set( 'authBackend', 'Local' );
+			if( $this->request->get( 'login_remember' ) )
+				$this->rememberUserInCookie( $user );
+			$this->redirectAfterLogin();
 		}
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
@@ -224,36 +221,23 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
-		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->remove( 'userId' ) ){
+		$words		= (object) $this->getWords( 'logout' );
+		if( $this->session->has( 'userId' ) ){
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
 			if( $this->request->has( 'autoLogout' ) ){
-				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
+				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
 			else{
 				$this->cookie->remove( 'auth_remember' );
 				$this->cookie->remove( 'auth_remember_id' );
 				$this->cookie->remove( 'auth_remember_pw' );
-				$this->env->getMessenger()->noteSuccess( $words['logout']['msgSuccess'] );
+				$this->env->getMessenger()->noteSuccess( $words->msgSuccess );
 			}
 			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 				session_destroy();																	//  completely destroy session
 		}
-
-		$from			= $this->request->get( 'from' );
-		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );
-		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );
-
-		if( $forwardPath && $forwardForce )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		if( $from )
-			$this->restart( $from );
-		if( $forwardPath )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-
-		$redirectTo	= $redirectController.( $redirectAction ? '/'.$redirectAction : '' );
-		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
+		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
 	public function password(){
@@ -311,6 +295,64 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 		}
 		$this->addData( 'password_email', $this->request->get( 'password_email' ) );
+	}
+
+	/**
+	 *	Dispatch next route after login, by these rules:
+	 *	1. Given controller and action
+	 *	2. Forced forward path of this auth module
+	 *	3. Request paramter 'from'
+	 *	4. Forward path of this auth module
+	 *	5. Redirect to base auth module index for further dispatching
+	 *	ATM this is the same method for each auth module.
+	 *	@access		protected
+	 *	@return		void
+	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
+	 */
+	protected function redirectAfterLogin( $controller = NULL, $action = NULL ){
+		if( $controller )																			//  a redirect contoller has been argumented
+			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
+		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
+		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
+		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );							//  get forward path for this module
+		$forwardForce	= $this->moduleConfig->get( 'login.forward.force' );						//  check if forwarding is forced
+		if( $forwardPath && $forwardForce )															//  forward path given and forced
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );							//  redirect to forced forward path of this auth module
+		if( $from )																					//  redirect target is given
+			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
+		if( $forwardPath )																			//  fallback: forward path given
+			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
+		$this->restart( 'auth' );																	//  fallback: redirect to base auth module dispatcher
+	}
+
+	/**
+	 *	Dispatch next route after logout, by these rules:
+	 *	1. Given controller and action
+	 *	2. Forced forward path of this auth module
+	 *	3. Request paramter 'from'
+	 *	4. Forward path of this auth module
+	 *	5. Go to index (empty path)
+	 *	ATM this is the same method for each auth module.
+	 *	@access		protected
+	 *	@return		void
+	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
+	 */
+	protected function redirectAfterLogout( $controller = NULL, $action = NULL ){
+		if( $controller )																			//  a redirect contoller has been argumented
+			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
+//		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
+		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
+		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );						//  get forward path for this module
+		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );						//  check if forwarding is forced
+		if( $forwardPath && $forwardForce )															//  forward path given and forced
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );							//  redirect to forced forward path of this auth module
+		if( $from )																					//  redirect target is given
+			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
+		if( $forwardPath )																			//  fallback: forward path given
+			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
+		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
 	public function register(){

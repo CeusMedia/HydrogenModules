@@ -39,24 +39,46 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->ajaxIsAuthenticated();
 	}
 
-	public function index(){
-		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'login' );
-
+	protected function redirectAfterLogin(){
+		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
-		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
-		$forwardForce	= $this->moduleConfig->get( 'login.forward.force' );
+		$forwardPath	= $moduleConfig->get( 'login.forward.path' );
+		$forwardForce	= $moduleConfig->get( 'login.forward.force' );
 
 		if( $forwardPath && $forwardForce )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
 		if( $from )
-			return $this->restart( $from );
+			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		return $this->restart( NULL );
+		$this->restart( NULL );
+	}
+
+	protected function redirectAfterLogout(){
+		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
+		$from			= $this->request->get( 'from' );
+		$forwardPath	= $moduleConfig->get( 'logout.forward.path' );
+		$forwardForce	= $moduleConfig->get( 'logout.forward.force' );
+
+		if( $forwardPath && $forwardForce )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		if( $from )
+			$this->restart( $from );
+		if( $forwardPath )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		$this->restart( NULL );
+
+	}
+
+	public function index(){
+		if( !$this->session->has( 'userId' ) )
+			return $this->redirect( 'auth', 'login' );
+		$this->redirectAfterLogin();
 	}
 
 	public function login( $username = NULL ){
+		if( $this->session->has( 'userId' ) )
+			$this->redirectAfterLogin();
 		$backends	= $this->logic->getBackends();
 		if( count( $backends ) === 1 ){
 	//		reset( $backends );

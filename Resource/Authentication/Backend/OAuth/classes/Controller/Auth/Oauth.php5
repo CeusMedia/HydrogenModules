@@ -130,6 +130,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	}
 
 	public function login(){
+		if( $this->session->has( 'userId' ) )
+			$this->redirectAfterLogin();
 		if( $this->moduleConfig->get( 'login.grantType' ) === 'password' ){
 			$this->messenger->noteFailure( 'Grant type "password" is not implemented, yet.' );
 			$this->restart( NULL, TRUE );
@@ -208,10 +210,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
 					}
-					$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
-					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';					//  exclude logout from redirect request
-					$this->restart( './auth?from='.$from );											//  restart (or go to redirect URL)
-					$this->restart( NULL );
+					$this->redirectAfterLogin();
 				}
 			}
 			else{
@@ -247,20 +246,65 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 //			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 //				session_destroy();																	//  completely destroy session
 		}
+		$this->redirectAfterLogout( $redirectController, $redirectAction );
+	}
 
-		$from			= $this->request->get( 'from' );
-		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );
-		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );
+	/**
+	 *	Dispatch next route after login, by these rules:
+	 *	1. Given controller and action
+	 *	2. Forced forward path of this auth module
+	 *	3. Request paramter 'from'
+	 *	4. Forward path of this auth module
+	 *	5. Redirect to base auth module index for further dispatching
+	 *	ATM this is the same method for each auth module.
+	 *	@access		protected
+	 *	@return		void
+	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
+	 */
+	protected function redirectAfterLogin( $controller = NULL, $action = NULL ){
+		if( $controller )																			//  a redirect contoller has been argumented
+			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
+		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
+		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
+		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );							//  get forward path for this module
+		$forwardForce	= $this->moduleConfig->get( 'login.forward.force' );						//  check if forwarding is forced
+		if( $forwardPath && $forwardForce )															//  forward path given and forced
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );							//  redirect to forced forward path of this auth module
+		if( $from )																					//  redirect target is given
+			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
+		if( $forwardPath )																			//  fallback: forward path given
+			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
+		$this->restart( 'auth' );																	//  fallback: redirect to base auth module dispatcher
+	}
 
-		if( $forwardPath && $forwardForce )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		if( $from )
-			$this->restart( $from );
-		if( $forwardPath )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-
-		$redirectTo	= $redirectController.( $redirectAction ? '/'.$redirectAction : '' );
-		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
+	/**
+	 *	Dispatch next route after logout, by these rules:
+	 *	1. Given controller and action
+	 *	2. Forced forward path of this auth module
+	 *	3. Request paramter 'from'
+	 *	4. Forward path of this auth module
+	 *	5. Go to index (empty path)
+	 *	ATM this is the same method for each auth module.
+	 *	@access		protected
+	 *	@return		void
+	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
+	 */
+	protected function redirectAfterLogout( $controller = NULL, $action = NULL ){
+		if( $controller )																			//  a redirect contoller has been argumented
+			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
+//		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
+		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
+		$forwardPath	= $this->moduleConfig->get( 'logout.forward.path' );						//  get forward path for this module
+		$forwardForce	= $this->moduleConfig->get( 'logout.forward.force' );						//  check if forwarding is forced
+		if( $forwardPath && $forwardForce )															//  forward path given and forced
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );							//  redirect to forced forward path of this auth module
+		if( $from )																					//  redirect target is given
+			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
+		if( $forwardPath )																			//  fallback: forward path given
+			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
+		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
 	protected function refreshToken(){
