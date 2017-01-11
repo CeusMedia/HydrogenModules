@@ -1,13 +1,27 @@
 <?php
 
+/*
+	@deprecated		seems to be unused
+	@todo			find/clarify out which component is handling this approach
+	@todo			remove this file from module
+*/
 return "----";
+
+/*
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
+
+$iconAddEvent   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-time' ) );
+$iconAddTask    = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+    $iconAddEvent   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
+    $iconAddTask    = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+}
 
 $toolbar->addButtonGroup( 'tb_0', 'add', array(
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
 	<ul class="dropdown-menu">
-		<li><a href="./work/mission/add?type=0"><i class="icon-wrench"></i> Aufgabe</a></li>
-		<li><a href="./work/mission/add?type=1"><i class="icon-time"></i> Termin</a></li>
+		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
+		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
 	</ul>'
 ) );
 
@@ -46,4 +60,5 @@ $(document).ready(function(){
 $env->getPage()->addHead( $script );
 
 return $buttons.$content;
+*/
 ?>

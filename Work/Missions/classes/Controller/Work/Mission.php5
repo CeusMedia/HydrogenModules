@@ -411,8 +411,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'small'	=> $buttonsSmall->render(),
 				),
 				'lists'		=> array(
-					'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE ),
-					'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE )
+					'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, !TRUE ),
+					'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, !TRUE )
 				)
 			);
 			print( json_encode( $data ) );

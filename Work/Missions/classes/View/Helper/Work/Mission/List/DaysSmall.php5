@@ -309,6 +309,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 //			$priority	= $this->words['priorities'][$task->priority];
 //			$cells[]	= UI_HTML_Tag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
 //		}
+		$buttons	= '';
 		if( $showActions ){
 			$buttons	= $this->renderRowButtons( $task, $days );
 //			$cells[]	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );

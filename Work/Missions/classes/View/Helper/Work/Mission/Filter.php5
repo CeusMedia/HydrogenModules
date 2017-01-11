@@ -18,6 +18,13 @@ class View_Helper_Work_Mission_Filter{
 			0	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-wrench" ) ),
 			1	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "icon-time" ) ),
 		);
+		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+			$typeIcons	= array(
+				0	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "fa fa-fw fa-thumb-tack" ) ),
+				1	=> UI_HTML_Tag::create( 'i', "", array( 'class' => "fa fa-fw fa-clock-o" ) ),
+			);
+		}
+
 		$list	= array();
 		foreach( $types as $type ){
 			$input	= UI_HTML_Tag::create( 'input', NULL, array(
@@ -31,10 +38,13 @@ class View_Helper_Work_Mission_Filter{
 			$label	= UI_HTML_Tag::create( 'label', $label, array( 'class' => 'checkbox' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-type type-'.$type ) );
 		}
+		$buttonIcon			= '';
+		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
+			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-filter' ) ).'&nbsp;';
 		$buttonLabel	= 'Aufgabentypen <span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedTypes ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
 			UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group', 'id' => 'types' ) );
 	}
@@ -52,13 +62,16 @@ class View_Helper_Work_Mission_Filter{
 				'value'		=> $priority,
 				'checked'	=> in_array( $priority, $filteredPriorities ) ? "checked" : NULL
 			) );
-			$label	= UI_HTML_Tag::create( 'label', $input.' '.$priority.' - '.$this->words['priorities'][$priority], array( 'class' => 'checkbox' ) );
+			$label	= UI_HTML_Tag::create( 'label', $input.' './*$priority.' - '.*/$this->words['priorities'][$priority], array( 'class' => 'checkbox' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-priority priority-'.$priority ) );
 		}
+		$buttonIcon			= '';
+		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
+			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ).'&nbsp;';
 		$buttonLabel		= 'Prioritäten <span class="caret"></span>';
 		$buttonClass		= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
 			UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group', 'id' => 'priorities' ) );
 	}
@@ -79,10 +92,13 @@ class View_Helper_Work_Mission_Filter{
 			$label	= UI_HTML_Tag::create( 'label', $input.' '.$this->words['states'][$status], array( 'class' => 'checkbox' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-status status-'.$status ) );
 		}
+		$buttonIcon			= '';
+		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
+			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-spinner' ) ).'&nbsp;';
 		$buttonLabel	= 'Zustände <span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedStates ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', $buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
+			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
 			UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group', 'id' => 'states' ) );
 	}
@@ -108,11 +124,14 @@ class View_Helper_Work_Mission_Filter{
 			if( count( $userProjects ) > 9 )
 				$listClass	.= ' condensed-height';
 			$listAttr		= array( 'class' => $listClass );
+			$buttonIcon			= '';
+			if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
+				$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
 			$buttonLabel	= 'Projekte <span class="caret"></span>';
 			$buttonClass	= 'dropdown-toggle btn '.( $changedProjects ? "btn-info" : "" );
 			$buttonAttr		= array( 'class' => $buttonClass, 'data-toggle' => 'dropdown' );
 			return UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'button', $buttonLabel, $buttonAttr ),
+				UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, $buttonAttr ),
 				UI_HTML_Tag::create( 'ul', $list, $listAttr ),
 			), array( 'class' => 'btn-group', 'id' => 'projects' ) );
 		}
@@ -158,8 +177,25 @@ class View_Helper_Work_Mission_Filter{
 		$wordsViewTypes	= (object) $this->words['viewTypes'];
 
 		$current	= '';
+		$hasFontAwesome	= $this->env->getModules()->has( 'UI_Font_FontAwesome' );
 		foreach( $this->words['viewTypes'] as $typeKey => $typeLabel ){
-			$link		= UI_HTML_Tag::create( 'a', $typeLabel, array( 'href' => './work/mission/'.$typeKey ) );
+			$iconClass	= NULL;
+			switch( $typeKey ){
+				case 'now':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-list' : 'icon-wrench';
+					break;
+				case 'calendar':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-calendar' : 'icon-calendar';
+					break;
+				case 'kanban':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-thumb-tack' : 'icon-note';
+					break;
+				case 'gantt':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-signal fa-rotate-90' : 'not-icon-any';
+					break;
+			}
+			$icon		= $iconClass ? UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
+			$link		= UI_HTML_Tag::create( 'a', $icon.$typeLabel, array( 'href' => './work/mission/'.$typeKey ) );
 			$items[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $mode === $typeKey ? 'active' : NULL ) );
 			$current	= $mode === $typeKey ? $typeLabel : $current;
 		}
