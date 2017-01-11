@@ -65,6 +65,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
     }
 
 	public function render( $classMenu = "" ){
+		$config		= $this->env->getConfig();
 		$username	= $this->guestLabel;
 		$fullname	= '';
 		$email		= $this->guestEmail;
@@ -83,21 +84,25 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 				$links		= $this->renderSetLinks( $this->linksOutside );							//  @todo: remove
 		}																							//  @todo: remove
 		$avatar	= '';
-		if( $this->user && $this->useAvatar ){
-			if( class_exists( 'View_Helper_UserAvatar' ) ){
-				$helper		= new View_Helper_UserAvatar( $this->env );
-//				$helper->useGravatar( )																//  @todo: implement: switch in module + gravatar module detection
-				$helper->setUser( $this->user );
-				$helper->setSize( $this->imageSize );
-				$avatar	= $helper->render();
+		if( $this->user && $this->useAvatar ){														//  user is available and avatars enabled
+			if( $this->env->getModules()->has( 'Manage_My_User_Avatar' ) ){							//  use user avatar helper module
+				$helper			= new View_Helper_UserAvatar( $this->env );							//  create helper
+				$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );			//  get module config
+				$helper->useGravatar( $moduleConfig->get( 'use.gravatar' ) );						//  use gravatar as fallback
+				$helper->setUser( $this->user );													//  set user data
+				$helper->setSize( $this->imageSize );												//  set image size
+				$avatar	= $helper->render();														//  render avatar
 			}
-			else if( class_exists( 'View_Helper_Gravatar' ) ){
-				$helper		= new View_Helper_Gravatar( $this->env );
-				$helper->setUser( $this->user );
-				$helper->setSize( $this->imageSize );
-				$avatar	= $helper->render();
+			else if( $this->env->getModules()->has( 'UI_Helper_Gravatar' ) ){					//  use gravatar helper module
+				$helper		= new View_Helper_Gravatar( $this->env );								//  create helper
+				$helper->setUser( $this->user );													//  set user data
+				$helper->setSize( $this->imageSize );												//  set image size
+				$avatar	= $helper->render();														//  render avatar
 			}
-			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );
+			else if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+				$avatar	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user fa-3x' ) );
+			}
+			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
 		}
 
 		$labels			= UI_HTML_Tag::create( 'div', array(
