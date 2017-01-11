@@ -307,6 +307,56 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->addData( 'userProjects', $this->userProjects );
 	}
 
+	public function addDocument( $missionId ){
+		$upload		= (object) $this->env->getRequest()->get( 'document' );
+		$model		= new Model_Mission_Document( $this->env );
+
+		$path		= 'contents/documents/missions/';
+		$document	= $model->getByIndices( array(
+			'missionId'	=> $missionId,
+			'filename'	=> $upload->name,
+		) );
+		$hashname	= $document ? $document->hashname : Alg_ID::uuid();
+		$logic		= new Logic_Upload( $this->env );
+//		$logic->checkMimeType( array() );
+//		$logic->checkSize();
+		$logic->setUpload( $upload );
+		$logic->saveTo( $path.$hashname );
+
+		if( $document ){
+			$model->edit( $document->missionDocumentId, array(
+				'userId'		=> $this->userId,
+				'size'			=> $upload->size,
+				'modifiedAt'	=> time(),
+			) );
+		}
+		else{
+			$model->add( array(
+				'missionId'		=> $missionId,
+				'userId'		=> $this->userId,
+				'size'			=> $upload->size,
+				'mimeType'		=> $upload->type,
+				'filename'		=> $upload->name,
+				'hashname'		=> $hashname,
+				'createdAt'		=> time(),
+			) );
+		}
+
+//		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
+		$this->restart( 'view/'.$missionId, TRUE );
+	}
+
+	public function ajaxGetProjectUsers( $projectId ){
+		$list	= array();
+		if( $this->useProjects ){
+			$model	= new Model_Project( $this->env );
+			foreach( $model->getProjectUsers( (int) $projectId ) as $user )
+				$list[$user->username]    = $user;
+		}
+		ksort( $list );
+		print( json_encode( array_values( $list ) ) );
+	}
+
 	public function ajaxRenderContent(){
 		$content	= $this->env->getRequest()->get( 'content' );
 		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
@@ -533,6 +583,43 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 
+	/**
+	 *	@todo  			check sanity, see below
+	 */
+	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE ){
+	//	check missionId against user
+	//	check missionDocumentId against missionId
+
+		$model		= new Model_Mission_Document( $this->env );
+		$document	= $model->get( $missionDocumentId );
+		if( !$document ){
+			$this->messenger->noteError( 'Document ID is invalid' );
+			$this->restart( './view/'.$missionId );
+		}
+		$pathname	= "contents/documents/missions/".$document->hashname;
+		if( !file_exists( $pathname ) ){
+			$this->messenger->noteError( 'Document is not existing' );
+			$this->restart( './view/'.$missionId );
+		}
+		$timestamp	= max( $document->createdAt, $document->modifiedAt );
+		$disposition	= $download ? 'attachment' : 'inline';
+		header( 'Content-Type: '.$document->mimeType );
+		header( 'Content-Length: '.$document->size );
+		header( 'Last-Modified: '.date( 'r', $timestamp ) );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Content-Disposition: '.$disposition.'; filename='.$document->filename );
+
+		$fp = @fopen( $pathname, "rb" );
+		if( !$fp )
+			header("HTTP/1.0 500 Internal Server Error");
+		fpassthru( $fp );
+		exit;
+	}
+
+	public function downloadDocument( $missionId, $missionDocumentId ){
+		$this->deliverDocument( $missionId, $missionDocumentId, TRUE );
+	}
+
 	public function edit( $missionId ){
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
@@ -624,17 +711,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->env->getLanguage()->load( 'work/issue' );
 			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
 		}
-	}
-
-	public function ajaxGetProjectUsers( $projectId ){
-		$list	= array();
-		if( $this->useProjects ){
-			$model	= new Model_Project( $this->env );
-			foreach( $model->getProjectUsers( (int) $projectId ) as $user )
-				$list[$user->username]    = $user;
-		}
-		ksort( $list );
-		print( json_encode( array_values( $list ) ) );
 	}
 
 	public function filter(){
@@ -845,13 +921,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function now(){
-		$this->session->set( 'filter.work.mission.mode', 'now' );
+	public function kanban(){
+		$this->session->set( 'filter.work.mission.mode', 'kanban' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function kanban(){
-		$this->session->set( 'filter.work.mission.mode', 'kanban' );
+	public function now(){
+		$this->session->set( 'filter.work.mission.mode', 'now' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -868,6 +944,17 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$this->session->set( 'filter.work.mission.'.$key, $value );
 			$this->env->getMessenger()->noteNotice( 'Filter für Aufgaben aus der letzten Sitzung wurden reaktiviert.' );
 			$this->restart( NULL, TRUE );
+		}
+	}
+
+	public function removeDocument( $missionId, $missionDocumentId ){
+		$model		= new Model_Mission_Document( $this->env );
+		$document	= $model->get( $missionDocumentId );
+		if( $document ){
+			$path		= 'contents/documents/missions/';
+			@unlink( $path.$document->hashname );
+			$model->remove( $missionDocumentId );
+			$this->restart( 'view/'.$missionId, TRUE );
 		}
 	}
 
@@ -928,138 +1015,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
-	}
-
-	public function view( $missionId ){
-		$words			= (object) $this->getWords( 'edit' );
-
-		$mission	= $this->model->get( $missionId );
-		if( !$mission )
-			$this->messenger->noteError( $words->msgInvalidId );
-		if( $this->useProjects ){
-			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
-				$this->messenger->noteError( $words->msgInvalidProject );
-		}
-		if( $this->messenger->gotError() )
-			$this->restart( NULL, TRUE );
-
-		$title		= $this->request->get( 'title' );
-		$dayStart	= $this->request->get( 'dayStart' );
-		$dayEnd		= $this->request->get( 'dayEnd' );
-		if( $this->request->get( 'type' ) == 0 ){
-			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork' ) );
-			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
-		}
-		$modelUser	= new Model_User( $this->env );
-		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
-		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
-		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
-		$mission->versions	= $this->logic->getVersions( $missionId );
-		$this->addData( 'mission', $mission );
-		$this->addData( 'users', $this->userMap );
-		$missionUsers		= array( $mission->creatorId => $mission->creator );
-		if( $mission->workerId )
-			$missionUsers[$mission->workerId]	= $mission->worker;
-
-		if( $this->useProjects ){
-			$model		= new Model_Project( $this->env );
-			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
-				$missionUsers[$user->userId]	= $user;
-			$this->addData( 'userProjects', $this->userProjects );
-			$mission->project	= $model->get( (int) $mission->projectId );
-		}
-		$this->addData( 'missionUsers', $missionUsers );
-
-		if( $this->useIssues ){
-			$this->env->getLanguage()->load( 'work/issue' );
-			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
-		}
-
-		$model		= new Model_Mission_Document( $this->env );
-		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
-		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
-		$this->addData( 'documents', $documents );
-	}
-
-	public function addDocument( $missionId ){
-
-		$upload		= (object) $this->env->getRequest()->get( 'document' );
-		$model		= new Model_Mission_Document( $this->env );
-
-		$path		= 'contents/documents/missions/';
-		$document	= $model->getByIndices( array(
-			'missionId'	=> $missionId,
-			'filename'	=> $upload->name,
-		) );
-		$hashname	= $document ? $document->hashname : Alg_ID::uuid();
-		$logic		= new Logic_Upload( $this->env );
-//		$logic->checkMimeType( array() );
-//		$logic->checkSize();
-		$logic->setUpload( $upload );
-		$logic->saveTo( $path.$hashname );
-
-		if( $document ){
-			$model->edit( $document->missionDocumentId, array(
-				'userId'		=> $this->userId,
-				'size'			=> $upload->size,
-				'modifiedAt'	=> time(),
-			) );
-		}
-		else{
-			$model->add( array(
-				'missionId'		=> $missionId,
-				'userId'		=> $this->userId,
-				'size'			=> $upload->size,
-				'mimeType'		=> $upload->type,
-				'filename'		=> $upload->name,
-				'hashname'		=> $hashname,
-				'createdAt'		=> time(),
-			) );
-		}
-
-//		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
-		$this->restart( 'view/'.$missionId, TRUE );
-	}
-
-	public function viewDocument( $missionId, $missionDocumentId ){
-		$this->deliverDocument( $missionId, $missionDocumentId, FALSE );
-	}
-
-	public function downloadDocument( $missionId, $missionDocumentId ){
-		$this->deliverDocument( $missionId, $missionDocumentId, TRUE );
-	}
-
-	/**
-	 *	@todo  			check sanity, see below
-	 */
-	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE ){
-	//	check missionId against user
-	//	check missionDocumentId against missionId
-
-		$model		= new Model_Mission_Document( $this->env );
-		$document	= $model->get( $missionDocumentId );
-		if( !$document ){
-			$this->messenger->noteError( 'Document ID is invalid' );
-			$this->restart( './view/'.$missionId );
-		}
-		$pathname	= "contents/documents/missions/".$document->hashname;
-		if( !file_exists( $pathname ) ){
-			$this->messenger->noteError( 'Document is not existing' );
-			$this->restart( './view/'.$missionId );
-		}
-		$timestamp	= max( $document->createdAt, $document->modifiedAt );
-		$disposition	= $download ? 'attachment' : 'inline';
-		header( 'Content-Type: '.$document->mimeType );
-		header( 'Content-Length: '.$document->size );
-		header( 'Last-Modified: '.date( 'r', $timestamp ) );
-		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-		header( 'Content-Disposition: '.$disposition.'; filename='.$document->filename );
-
-		$fp = @fopen( $pathname, "rb" );
-		if( !$fp )
-			header("HTTP/1.0 500 Internal Server Error");
-		fpassthru( $fp );
-		exit;
 	}
 
 	public function testMail( $type, $send = FALSE ){
@@ -1139,6 +1094,61 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
 		print( $mail->renderBody( $data ) );
 		die;
+	}
+
+	public function view( $missionId ){
+		$words			= (object) $this->getWords( 'edit' );
+
+		$mission	= $this->model->get( $missionId );
+		if( !$mission )
+			$this->messenger->noteError( $words->msgInvalidId );
+		if( $this->useProjects ){
+			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
+				$this->messenger->noteError( $words->msgInvalidProject );
+		}
+		if( $this->messenger->gotError() )
+			$this->restart( NULL, TRUE );
+
+		$title		= $this->request->get( 'title' );
+		$dayStart	= $this->request->get( 'dayStart' );
+		$dayEnd		= $this->request->get( 'dayEnd' );
+		if( $this->request->get( 'type' ) == 0 ){
+			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork' ) );
+			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
+		}
+		$modelUser	= new Model_User( $this->env );
+		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
+		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
+		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
+		$mission->versions	= $this->logic->getVersions( $missionId );
+		$this->addData( 'mission', $mission );
+		$this->addData( 'users', $this->userMap );
+		$missionUsers		= array( $mission->creatorId => $mission->creator );
+		if( $mission->workerId )
+			$missionUsers[$mission->workerId]	= $mission->worker;
+
+		if( $this->useProjects ){
+			$model		= new Model_Project( $this->env );
+			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
+				$missionUsers[$user->userId]	= $user;
+			$this->addData( 'userProjects', $this->userProjects );
+			$mission->project	= $model->get( (int) $mission->projectId );
+		}
+		$this->addData( 'missionUsers', $missionUsers );
+
+		if( $this->useIssues ){
+			$this->env->getLanguage()->load( 'work/issue' );
+			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
+		}
+
+		$model		= new Model_Mission_Document( $this->env );
+		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
+		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
+		$this->addData( 'documents', $documents );
+	}
+
+	public function viewDocument( $missionId, $missionDocumentId ){
+		$this->deliverDocument( $missionId, $missionDocumentId, FALSE );
 	}
 }
 ?>

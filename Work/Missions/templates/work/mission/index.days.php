@@ -25,14 +25,14 @@ switch( $filterMode ){
 */
 		$content	= '
 <div>
-<!--	<div id="message-loading-list" class="muted"><em><small>'.$w->messageLoadingList.'</small></em></div>-->
-<!--	<div id="message-loading-list" class="not-muted"><em><i class="icon-refresh"></i> '.$w->messageLoadingList.'</em></div>-->
-	<div id="message-loading-list" class="alert alert-info">'.$w->messageLoadingList.'</div>
 	<div id="day-controls">
 		<div id="day-controls-large" class="hidden-phone">'./*$helperDayButtons->render().*/'</div>
 		<div id="day-controls-small" class="visible-phone">'./*$helperDayButtons2->render().*/'</div>
 	</div>
 	<div id="day-lists">
+<!--		<div id="message-loading-list" class="muted"><em><small>'.$w->messageLoadingList.'</small></em></div>-->
+<!--		<div id="message-loading-list" class="not-muted"><em><i class="icon-refresh"></i> '.$w->messageLoadingList.'</em></div>-->
+		<div id="message-loading-list" class="alert alert-info">'.$w->messageLoadingList.'</div>
 		<div id="day-list-large" class="hidden-phone">'./*$helperDays->render().*/'</div>
 		<div id="day-list-small" class="visible-phone">'./*$helperDays2->render().*/'</div>
 	</div>

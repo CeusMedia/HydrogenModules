@@ -1,5 +1,18 @@
 <?php
 
+/**
+ *	This feature is not finished yet.
+ *	Current state:
+ *	- form is missing options and buttons
+ *	- controller action is not implemented
+ *	- question is: how to convert content?
+ *	- think about:
+ *	  - a general way for conversion
+ *	  - also for notes
+ *	  - and backwards from issue or note to task
+ */
+return;
+
 if( !$useIssues )
 	return '';
 
