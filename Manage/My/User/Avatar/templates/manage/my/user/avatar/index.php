@@ -2,15 +2,9 @@
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );
 
-$gravatar	= new View_Helper_Gravatar( $env );
-$gravatar->setUser( $user );
-$gravatar->setSize( 256 );
-$gravatar	= $gravatar->render();
-
 $iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
 $upload		= View_Helper_Input_File::render( 'upload', $iconFile, TRUE );
-
 
 $maxSize	= Alg_UnitParser::parse( $config->get( 'image.upload.maxFileSize' ), 'M' );
 $maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
@@ -63,7 +57,12 @@ if( $config->get( 'use.avatar' ) ){
 		</div>';
 }
 $panelGravatar	= '';
-if( $config->get( 'use.gravatar' ) ){
+if( $config->get( 'use.gravatar' ) && $env->getModules()->has( 'UI_Helper_Gravatar' ) ){
+	$gravatar	= new View_Helper_Gravatar( $env );
+	$gravatar->setUser( $user );
+	$gravatar->setSize( 256 );
+	$gravatar	= $gravatar->render();
+
 	$panelGravatar	= '
 		<div class="content-panel content-panel-info">
 			<h4>Gravatar</h4>
