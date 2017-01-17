@@ -22,7 +22,7 @@ class Resource_REST_Client{
 	}
 
 	protected function __initClient(){
-		$config				= $this->moduleConfig()->getAll( 'server.', TRUE );
+		$config				= $this->moduleConfig->getAll( 'server.', TRUE );
 		$options			= array();
 		$this->client		= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
 		$this->client->expectFormat( $config->get( 'format' ) );
@@ -73,9 +73,17 @@ class Resource_REST_Client{
 	 *	@deprecated	use module configuration instead
 	 *	@todo		to be removed
 	 */
-	public function enableCache( $status = TRUE ){
-//		$this->enabled = (bool) $status;
-		$this->moduleConfig->set( 'cache.enabled', (bool) $status )
+	public function disableCache(){
+		$this->enabled = FALSE;
+		$this->__initCache();
+	}
+
+	/**
+	 *	@deprecated	use module configuration instead
+	 *	@todo		to be removed
+	 */
+	public function enableCache(){
+		$this->enabled = TRUE;
 		$this->__initCache();
 	}
 
@@ -102,8 +110,8 @@ class Resource_REST_Client{
 	 *	@return		mixed		Resource content
 	 */
 	public function get( $path, $parameters = array() ){
-		$isEnabled	= $this->moduleConfig->get( 'cache.enabled' )					//  shortcut cache status
-		$isCachable	= $isEnabled && !count( $parameters ) );						//  also request has no GET parameters
+		$isEnabled	= $this->moduleConfig->get( 'cache.enabled' );					//  shortcut cache status
+		$isCachable	= $isEnabled && !count( $parameters );							//  also request has no GET parameters
 		$cacheKey	= $this->getCacheKey( $path );									//  render cache key
 		if( $isCachable && ( $cached = $this->cache->get( $cacheKey ) ) !== NULL )	//  cache hit by cache key
 			return $cached;															//  return cached content
@@ -157,6 +165,16 @@ class Resource_REST_Client{
 	 */
 	public function setBasicAuth( $username, $password ){
 		$this->client->setBasicAuth( $username, $password );
+	}
+
+	/**
+	 *  @deprecated use module configuration instead
+     *  @todo       to be removed
+     */
+	public function useCache( $status = TRUE ){
+		$this->enabled = (bool) $status;
+		$this->moduleConfig->set( 'cache.enabled', (bool) $status );
+		$this->__initCache();
 	}
 }
 ?>
