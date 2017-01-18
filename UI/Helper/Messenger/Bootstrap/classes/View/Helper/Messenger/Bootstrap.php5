@@ -23,7 +23,7 @@ class View_Helper_Messenger_Bootstrap{
 						'/(http.+)("|\'| )/U',
 						'<a href="\\1">\\1</a>\\2',
 						$message->message
-				);
+					);
 
 				$class	= $this->classes[$message->type].' messenger-message-'.$nr;
 				$message	= UI_HTML_Tag::create( 'div', $message->message, array( 'class' => 'messenger-message' ) );
