@@ -45,6 +45,39 @@ class Logic_Authentication{
 		return self::$instance;
 	}
 
+	/**
+	 *	Returns all users connected to a user by its ID.
+	 *	Related users will be collected by calling hook Resource:Users::getRelatedUsers.
+	 *	All listing modules will report a list of users related to given user it their ways.
+	 *
+	 *	This method will return a plain map of user IDs and theirs users, by default.
+	 *	For advanced uses, a list of reporting modules and their collected user relations can be returned instead.
+	 *
+	 *	@access		public
+	 *	@param		integer		$userId			ID of user to get related users for
+	 *	@param		boolean		$groupByModules	Flag: group related users by reporting modules
+	 *	@return		array		Map of related users or list of reporting modules with related users
+	 *	@triggers	Resource:User::getRelatedUsers
+	 */
+	public function getRelatedUsers( $userId, $groupByModules = FALSE ){
+		$payload	= (object) array( 'userId' => $userId, 'list' => array() );
+		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
+		if( $groupByModules )
+			return $payload->list;
+
+		$list		= array();
+		$map		= array();
+		foreach( $payload->list as $group ){
+			if( $group->count )
+				foreach( $group->list as $user )
+					$list[$user->username]	= $user;
+		}
+		ksort( $list, SORT_NATURAL | SORT_FLAG_CASE );
+		foreach( $list as $user )
+			$map[$user->userId]	= $user;
+		return $map;
+	}
+
 	public function hasFullAccess(){
 		return $this->env->getAcl()->hasFullAccess( $this->getCurrentRoleId() );
 	}
