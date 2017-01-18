@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2.9</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -20,8 +20,10 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.5">Check PHP version (>= 5.5.0) before using password_verify.</log>
 	<log version="0.2.6">Add JavaScript from abstract module.</log>
 	<log version="0.2.7">Add relation to modules Resource:Users and Resource:Mail.</log>
-	<log version="0.2.8">Check for PHP 5.5+ for password hash support.</log>
-	<log version="0.2.9">Handle forwarding on login or logout by module.</log>
+	<log version="0.3">Check for PHP 5.5+ for password hash support.</log>
+	<log version="0.3.1">Handle forwarding on login or logout by module.</log>
+	<log version="0.3.2">Implement hook Resource:Users::getRelatedUsers.</log>
+	<log version="0.3.3">Add config flag to allow relating to all known users.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -80,6 +82,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="no" type="boolean" name="register">yes</config>
+	<config protected="yes" type="boolean" name="relateToAllUsers">no</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">Resource_Users</needs>
@@ -100,4 +103,5 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/local/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/local/index"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Local::___onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Controller_Auth_Local::___onGetRelatedUsers</hook>
 </module>

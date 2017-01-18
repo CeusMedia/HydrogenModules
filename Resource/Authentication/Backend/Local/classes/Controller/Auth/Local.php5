@@ -36,6 +36,23 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		}
 	}
 
+	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
+		$moduleId	= 'Resource_Authentication_Backend_Local';
+		if( !$env->getConfig()->get( 'module.'.strtolower( $moduleId ).'.relateToAllUsers' ) )
+			return;
+		$modelUser	= new Model_User( $env );
+		$words		= $env->getLanguage()->getWords( 'auth/local' );
+		$conditions	= array( 'status' => '>0' );
+		$users		= $modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
+		$data->list	= array( (object) array(
+			'module'		=> $moduleId,
+			'label'			=> $words['hook-getRelatedUsers']['label'],
+			'count'			=> count( $users ),
+			'list'			=> $users,
+		) );
+		return TRUE;
+	}
+
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
@@ -212,11 +229,15 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$this->rememberUserInCookie( $user );
 			$this->redirectAfterLogin();
 		}
+
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
 		$this->addData( 'login_username', $username );
 		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
-		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) );
+
+		$motherModuleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
+
+		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' ) );
 		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
