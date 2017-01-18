@@ -3,7 +3,7 @@
 	<title>UI: Nav: Bootstrap: Account Menu</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support links from menu model.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3.2">Support account image size.</log>
 	<log version="0.3.3">Show user fullname in desktop mode.</log>
 	<log version="0.3.4">Improve handling of user avatar and gravatar.</log>
+	<log version="0.3.5">Hide menu if not having any links.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

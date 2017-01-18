@@ -76,6 +76,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		}
 		if( $this->menu ){																			//  @todo: remove
 			$links	= $this->renderMenuLinks();
+			if( !$links )
+				return;
 		}
 		else{																						//  @todo: remove
 			if( $this->user )																		//  @todo: remove
@@ -129,6 +131,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	protected function renderMenuLinks(){
 		$list	= array();
 		$pages	= $this->menu->getPages( $this->scope );
+		if( !$pages )
+			return;
 		foreach( $pages as $page ){
 			$class	= $page->active ? 'active' : NULL;
 //			$href	= $page->path == "index" ? './' : './'.$page->link;
