@@ -11,14 +11,34 @@ $isRelated		= $relation && $relation->status == 2;
 
 $w	= (object) $words['view'];
 
+$helperAvatar	= NULL;
+if( $env->getModules()->has( 'Manage_My_User_Avatar' ) ){									//  use user avatar helper module
+	$helperAvatar			= new View_Helper_UserAvatar( $env );							//  create helper
+	$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );				//  get module config
+	$helperAvatar->useGravatar( $moduleConfig->get( 'use.gravatar' ) );						//  use gravatar as fallback
+	$helperAvatar->setUser( $user );														//  set user data
+	$helperAvatar->setSize( 256 );															//  set image size
+//	$avatar	= $helperAvatar->render();														//  render avatar
+}
+else if( $this->env->getModules()->has( 'UI_Helper_Gravatar' ) ){							//  use gravatar helper module
+	$helperAvatar		= new View_Helper_Gravatar( $env );									//  create helper
+	$helperAvatar->setUser( $user );														//  set user data
+	$helperAvatar->setSize( 256 );															//  set image size
+//	$avatar	= $helperAvatar->render();														//  render avatar
+}
+
+$image	= '';
+if( $helperAvatar ){
+	$image	= UI_HTML_Tag::create( 'img', NULL, array(
+		'src'	=> $helperAvatar->getImageUrl(),
+	//	'class'	=> 'img-polaroid',
+	) );
+}
+
 $helperAvatar	= new View_Helper_UserAvatar( $env );
 $helperAvatar->setUser( $user );
 $helperAvatar->setSize( 256 );
 
-$image	= UI_HTML_Tag::create( 'img', NULL, array(
-	'src'	=> $helperAvatar->getImageUrl(),
-//	'class'	=> 'img-polaroid',
-) );
 
 $modelRole	= new Model_Role( $env );
 $role		= $modelRole->get( $user->roleId );
@@ -34,6 +54,9 @@ $buttonRequest	= '';
 $buttonRevoke	= '';
 $buttonAccept	= '';
 $buttonReject	= '';
+
+
+$helperTime		= new View_Helper_TimePhraser( $env );
 
 if( $user->userId !== $currentUserId ){
 	if( $relation ){
@@ -71,26 +94,26 @@ function renderFacts( $facts, $class = 'dl-horizontal' ){
 }
 
 $facts	= array();
-$facts['Bentzername']	= array( '<big><strong>'.$user->username.'</strong></big>' );
+$facts[$w->labelUsername]	= array( '<big><strong>'.$user->username.'</strong></big>' );
 if( $isRelated || $isCurrentUser ){
-	$facts['Vor- und Nachname']	= array( $user->firstname.' '.$user->surname );
-	$facts['Rolle']	= array( $role->title );
-	$facts['E-Mail-Adresse']	= array( '<a href="mailto:'.$user->email.'">'.$user->email.'</a>' );
+	$facts[$w->labelName]	= array( $user->firstname.' '.$user->surname );
+	$facts[$w->labelRole]	= array( $role->title );
+	$facts[$w->labelEmail]	= array( '<a href="mailto:'.$user->email.'">'.$user->email.'</a>' );
 	if( $user->phone )
-		$facts['Telefon']	= array( $user->phone );
+		$facts[$w->labelPhone]	= array( $user->phone );
 	if( $user->fax )
-		$facts['Telefax']	= array( $user->fax );
+		$facts[$w->labelFax]	= array( $user->fax );
 }
 
-$facts['registriert am']	= array( date( 'd.m.Y', $user->createdAt ).'&nbsp;<small class="muted">'.date( 'H:i:s', $user->createdAt ).'</small>' );
+$facts[$w->labelRegisteredAt]	= array( $helperTime->convert( $user->createdAt, TRUE, $w->labelRegisteredAt_prefix, $w->labelRegisteredAt_suffix ) );
 if( $user->loggedAt )
-	$facts['zuletzt eingeloggt am']	= array( date( 'd.m.Y', $user->loggedAt ).'&nbsp;<small class="muted">'.date( 'H:i:s', $user->loggedAt ).'</small>' );
+	$facts[$w->labelLoggedAt]	= array( $helperTime->convert( $user->loggedAt, TRUE, $w->labelLoggedAt_prefix, $w->labelLoggedAt_suffix ) );
 if( $user->activeAt )
-	$facts['zuletzt aktiv am']	= array( date( 'd.m.Y', $user->activeAt ).'&nbsp;<small class="muted">'.date( 'H:i:s', $user->activeAt ).'</small>' );
-$facts['Status']		= array( $words['user-states'][$user->status] );
+	$facts[$w->labelActiveAt]	= array( $helperTime->convert( $user->activeAt, TRUE, $w->labelActiveAt_prefix, $w->labelActiveAt_suffix ) );
+$facts[$w->labelStatus]			= array( $words['user-states'][$user->status] );
 if( !$relation )
 	$relation	= (object) array( 'status' => 0 );
-$facts['Verbindung']	= array( $words['relation-states'][$relation->status] );
+$facts[$w->labelRelation]	= array( $words['relation-states'][$relation->status] );
 
 $helperMember	= new View_Helper_Member( $env );
 $helperMember->setMode( 'thumbnail' );

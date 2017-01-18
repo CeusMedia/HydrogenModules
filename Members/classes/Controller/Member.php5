@@ -14,6 +14,24 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->logicMember		= Logic_Member::getInstance( $this->env );
 	}
 
+	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
+		$modelUser	= new Model_User( $env );
+		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $data->userId, 2 );
+		$list		= array();
+		if( $userIds ){
+			$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+			foreach( $relatedUsers as $relatedUser )
+				$list[$relatedUser->userId]	= $relatedUser;
+		}
+		$words	= $env->getLanguage()->getWords( 'member' );
+		$data->list[]	= (object) array(
+			'module'		=> 'Members',
+			'label'			=> $words['hook-getRelatedUsers']['label'],
+			'count'			=> count( $list ),
+			'list'			=> $list,
+		);
+	}
+
 	public function accept( $userRelationId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );

@@ -2,7 +2,7 @@
 <module>
 	<title>Members</title>
 	<description><![CDATA[Basic index page, ready for custom content and style.]]></description>
-	<version>0.3.8</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Complete basic functionality.</log>
@@ -14,6 +14,9 @@
 	<log version="0.3.6">Add english locales.</log>
 	<log version="0.3.7">Add new mode "bar".</log>
 	<log version="0.3.8">Finish localisation.</log>
+	<log version="0.4">Improve avatar and facts display.</log>
+	<log version="0.4.1">Improve localization.</log>
+	<log version="0.4.2">Implement hook Resource:Users::getRelatedUsers.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -53,6 +56,7 @@
 	<link access="inside" path="member/search"/>
 	<link access="inside" path="member/view"/>
 	<hook type="resource" resource="Member" event="registerTabs">View_Member::___onRegisterTab</hook>
+	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Controller_Member::___onGetRelatedUsers</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_relations`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_relations` (
