@@ -4,7 +4,7 @@ return '
 	'.$filter.'
 	<div id="work-mission-index-content">
 		<div id="mission-kanban" class="content-panel content-panel-list">
-			<h3><span class="muted">Aufgaben: </span>Kanban</h3>
+			<h3><span class="muted">Aufgaben: </span>Pinwand</h3>
 			<div id="mission-folders" class="content-panel-inner">
 				<div id="message-loading-list" class="alert alert-info">Loading...</div>
 				<div id="day-lists">

@@ -41,6 +41,11 @@ var WorkMissionsKanban = {
 				$("#message-loading-list").remove();
 				$("#day-lists .visible-desktop").html(json.lists.large);
 				$("#day-lists .hidden-desktop").html(json.lists.large);
+				$("#mission-folders").equalize({
+					equalize: 'height',
+			//		reset: true,
+					children: 'ul.sortable'
+				});
 				onSuccess();
 			},
 			error: function(a, b, c){

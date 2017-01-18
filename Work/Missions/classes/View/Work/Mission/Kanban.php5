@@ -86,7 +86,11 @@ WorkMissionsKanban.loadCurrentList();
 
 		$columns	= array();
 		foreach( $statuses as $status => $statusLabel ){
-			$missions	= $this->logic->getUserMissions( $userId, array( 'status' => $status ), array( 'priority' => 'ASC' ) );
+
+			$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.kanban.' );
+			$conditions['status']	= $status;
+
+			$missions	= $this->logic->getUserMissions( $userId, $conditions, array( 'priority' => 'ASC' ) );
 			$rows	= array();
 			foreach( $missions as $mission ){
 				$buttonView	= UI_HTML_Tag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(

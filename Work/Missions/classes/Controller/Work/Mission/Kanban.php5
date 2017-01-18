@@ -93,14 +93,14 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
 		exit;
 	}
 
+	public function index( $year = NULL, $month = NULL ){
+		$this->assignFilters();
+	}
+
 	protected function initDefaultFilters(){
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
-	}
-
-	public function index( $year = NULL, $month = NULL ){
-		$this->assignFilters();
 	}
 
 	protected function initFilters( $userId ){

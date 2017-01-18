@@ -36,7 +36,8 @@ $toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
 if( $useProjects && !empty( $userProjects ) )
 	$toolbar2->addButton( 'toolbar-filters', 'projects', $helperFilter->renderProjectFilter( $filterProjects, $userProjects ) );
 $toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPriorityFilter( $filterPriorities ) );
-$toolbar2->addButton( 'toolbar-filters', 'states', $helperFilter->renderStateFilter( $filterStates ) );
+if( $filterMode !== "kanban" )
+	$toolbar2->addButton( 'toolbar-filters', 'states', $helperFilter->renderStateFilter( $filterStates ) );
 $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilter( $filterTypes ) );
 $toolbar2->addButton( 'toolbar-filters', 'search', UI_HTML_Tag::create( 'div', array(
         $helperFilter->renderSearch( $filterQuery ),
