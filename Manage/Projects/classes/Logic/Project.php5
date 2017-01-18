@@ -25,38 +25,7 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 			unset( $users[$userId] );
 			return $users;
 		}
-		$users		= array();
-
-		//  --  ADD RELATED MEMBERS OF THIS USER  --  //
-		$modelUser	= new Model_User( $this->env );
-		if( $this->env->getModules()->has( 'Members' ) ){
-			$userIds	= Logic_Member::getInstance( $this->env )->getRelatedUserIds( $userId, 2 );
-			if( $userIds ){
-				$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
-				foreach( $relatedUsers as $relatedUser )
-					$users[$relatedUser->userId]	= $relatedUser;
-			}
-		}
-
-		//  --  ADD RELATED USERS OF OTHER PROJECT  --  //
-		$modelProjectUser	= new Model_Project_User( $this->env );
-		$projectIds	= array();
-		$userIds	= array( -1 );
-		$myProjects	= $modelProjectUser->getAll( array( 'userId' => $userId ) );
-		foreach( $myProjects as $relation )
-			$projectIds[]   = $relation->projectId;
-		array_unique( $projectIds );
-		foreach( $projectIds as $projectId )
-			foreach( $modelProjectUser->getAll( array( 'projectId' => $projectId ) ) as $relation )
-				$userIds[]  = $relation->userId;
-		$userIds	= array_unique( $userIds );
-		unset( $userIds[array_search( $userId, $userIds )] );
-		if( !$userIds )
-			return array();
-		$projectUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
-		foreach( $projectUsers as $projectUser )
-			$users[$projectUser->userId]	= $projectUser;
-		return $users;
+		return Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $userId );
 	}
 
 	public function getDefaultProject( $userId ){
@@ -76,6 +45,18 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		foreach( $projects as $project )
 			$project->user	= $this->getProjectUsers( $project->projectId );
 		return $projects;
+	}
+
+	/**
+	 *	Returns list of users assigned to a projects.
+	 *	@access		public
+	 *	@param		integer		$projectId		Project ID
+	 *	@param		array       $conditions     Map of conditions for users to follow
+	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
+	 *	@return		array		Map of users assigned to project
+	 */
+	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
+		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
 	}
 
 	/**
@@ -102,18 +83,6 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 				$userProjects[$project->projectId]  = $project;											//  add to projects map
 		}
 		return $userProjects;																			//  return projects map
-	}
-
-	/**
-	 *	Returns list of users assigned to a projects.
-	 *	@access		public
-	 *	@param		integer		$projectId		Project ID
-	 *	@param		array       $conditions     Map of conditions for users to follow
-	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
-	 *	@return		array		Map of users assigned to project
-	 */
-	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
-		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
 	}
 
 	public function setDefaultProject( $userId, $projectId ){

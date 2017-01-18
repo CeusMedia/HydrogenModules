@@ -31,7 +31,34 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
 
 		if( !$this->session->get( 'filter_manage_project_limit' ) )
-			$this->session->set( 'filter_manage_project_limit', 10 );
+			$this->session->set( 'filter_manage_project_limit', 15 );
+	}
+
+	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
+		$modelUser			= new Model_User( $env );
+		$modelProjectUser	= new Model_Project_User( $env );
+		$projectIds			= array();
+		$userIds			= array( -1 );
+		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
+		foreach( $myProjects as $relation )
+			$projectIds[]   = $relation->projectId;
+		array_unique( $projectIds );
+		foreach( $projectIds as $projectId )
+			foreach( $modelProjectUser->getAll( array( 'projectId' => $projectId ) ) as $relation )
+				$userIds[]  = $relation->userId;
+		$userIds	= array_unique( $userIds );
+		unset( $userIds[array_search( $data->userId, $userIds )] );
+
+		$projectUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+		foreach( $projectUsers as $projectUser )
+			$users[$projectUser->userId]	= $projectUser;
+		$words	= $env->getLanguage()->getWords( 'manage/project' );
+		$data->list[]	= (object) array(
+			'module'		=> 'Manage_Projects',
+			'label'			=> $words['hook-getRelatedUsers']['label'],
+			'count'			=> count( $users ),
+			'list'			=> $users,
+		);
 	}
 
 	static public function ___onUpdate( $env, $context, $module, $data = array() ){
