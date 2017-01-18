@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Meta Tags: Viewport</title>
+	<description><![CDATA[Apply viewport settings for mobile devices.]]></description>
+	<category>UI</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="no" type="string" name="width" title="The width of the virtual viewport of the device.">device-width</config>
+	<config protected="no" type="string" name="height" title="The height of the virtual viewport of the device."></config>
+	<config protected="no" type="string" name="device-width" title="The physical width of the device's screen."></config>
+	<config protected="no" type="string" name="device-height" title="The physical height of the device's screen."></config>
+	<config protected="no" type="string" name="initial-scale" title="The initial zoom when visiting the page. 1.0 does not zoom.">1.0</config>
+	<config protected="no" type="string" name="minimum-scale" title="The minimum amount the visitor can zoom on the page. 1.0 does not zoom.">1.0</config>
+	<config protected="no" type="string" name="maximum-scale" title="The maximum amount the visitor can zoom on the page. 1.0 does not zoom.">1.0</config>
+	<config protected="no" type="boolean" name="user-scalable" title="Allows the device to zoom in and out. Values are yes or no.">no</config>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_metatags_viewport.', TRUE );
+		if( !$moduleConfig->get( 'enabled' ) )
+			return;
+		$options		= array();
+		foreach( $moduleConfig->getAll() as $key => $value )
+			if( strlen( trim( $value ) ) )
+				if( $key !== 'enabled' )
+					$options[]	= $key.'='.htmlentities( $value, ENT_QUOTES, 'UTF-8' );
+		$context->addMetaTag( 'name', 'viewport', join( ', ', $options ) );
+	]]></hook>
+</module>
