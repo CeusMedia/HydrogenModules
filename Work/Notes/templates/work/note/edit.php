@@ -39,14 +39,16 @@ $panelTags	= '
 	<h3>Tags</h3>
 	<div class="content-panel-inner">
 		'.$listTags.'
+		<br/>
 		<form action="./work/note/addTag/'.$note->noteId.'" method="post">
 			<div class="row-fluid">
-				<div class="span6">
+				<div class="span12">
+					<label for="input_tag_content">Tag</label>
 					<input type="text" name="tag_content" id="input_tag_content" class="span12">
 				</div>
-				<div class="span3">
-					<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-white"></i><!-- '.$w->buttonAddTag.'--></button>
-				</div>
+			</div>
+			<div class="buttonbar">
+				<button type="submit" name="save" class="btn not-btn-small btn-success"><i class="icon-ok icon-plus icon-white"></i>&nbsp;'.$w->buttonAddTag.'</button>
 			</div>
 		</form>
 		'.$listRelatedTags.'
@@ -81,8 +83,9 @@ $panelLinks	= '
 <div class="content-panel content-panel-form">
 	<h3>Links</h3>
 	<div class="content-panel-inner">
+		'.$listLinks.'
+		<br/>
 		<form action="./work/note/addLink/'.$note->noteId.'" method="post">
-			'.$listLinks.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_link_url" class="mandatory">Link-Adresse</label>

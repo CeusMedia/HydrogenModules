@@ -3,7 +3,49 @@ $helper		= new View_Helper_TimePhraser( $this->env );
 
 $panelLinks	= '';
 if( count( $note->links ) ){
-	$list	= array();
+	$rows	= array();
+	foreach( $note->links as $item ){
+		$link	= UI_HTML_Tag::create( 'div',
+			UI_HTML_Tag::create( 'small',
+				UI_HTML_Tag::create( 'a', htmlentities( $item->url, ENT_QUOTES, 'UTF-8' ), array(
+					'href'		=> $item->url,
+					'target'	=> '_blank',
+				) )
+			),
+			array( 'class' => 'autocut' )
+		);
+
+		$label	= UI_HTML_Tag::create( 'div',
+			UI_HTML_Tag::create( 'big', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+				'class'	=> 'muted',
+			) ),
+			array( 'class' => 'autocut' )
+		);
+		if( $item->title ){
+			$label	= UI_HTML_Tag::create( 'div',
+				UI_HTML_Tag::create( 'big',
+					UI_HTML_Tag::create( 'a', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+						'href'		=> $item->url,
+						'target'	=> '_blank',
+					) )
+				),
+				array( 'class' => 'autocut' )
+			);
+		}
+		$rows[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', $label.$link, array( 'class' => 'autocut' ) )
+		) );
+	}
+	$thead	= UI_HTML_Tag::create( 'thead', $rows, array() );
+	$table	= UI_HTML_Tag::create( 'table', array( $thead ), array( 'class' => 'table table-striped table-condensed table-fixed' ) );
+	$panelLinks	= UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'h3', 'Links' ),
+		UI_HTML_Tag::create( 'div', $table, array(
+			'class'	=> 'content-panel-inner'
+		) ),
+	), array( 'class' => 'content-panel content-panel-table' ) );
+
+/*	$list	= array();
 	foreach( $note->links as $item ){
 		$label	= '<span class="link untitled">'.$item->url.'</span>';
 		if( $item->title )
@@ -19,7 +61,7 @@ if( count( $note->links ) ){
 			<div class="content-panel-inner">
 				<div class="note-links">'.$listLinks.'</div>
 			</div>
-		</div>';
+		</div>';*/
 }
 
 $panelTags	= '';
@@ -72,6 +114,8 @@ $panelInfo	= '
 				<dl class="dl-horizontal">
 					<dt>erstellt</dt>
 					<dd>vor '.$helper->convert( $note->createdAt, TRUE ).'</dd>
+					<dt>von</dt>
+					<dd> '.$note->user->username.'</dd>
 					<dt>zuletzt verändert</dt>
 					<dd>vor '.$helper->convert( $note->modifiedAt, TRUE ).'</dd>
 					<dt><a href="./work/note/view/'.$note->noteId.'">Link</a></dt>

@@ -12,6 +12,7 @@ $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
 $optOrder	= UI_HTML_Elements::Options( array( 'touchedAt' => 'letzte Änderung' ) );
 
+/*
 $not	= array();
 foreach( $tags as $tag )
 	$not[]	= $tag->tagId;
@@ -48,7 +49,7 @@ if( $tags ){
 	$tagsSearch	= '<ul class="tags-list">'.join( $list ).'</ul>';
 	$tagsSearch	= '<h4>'.$w->labelTagsActive.'</h4>'.$label.$tagsSearch;
 }
-
+*/
 $optAuthor		= $words['filter-author'];
 $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $filterAuthor );
 
@@ -103,8 +104,8 @@ return '
 				</div>
 			</div>
 		</form>
-		'.$tagsSearch.'
-		'.$tagsMore.'
+		'./*$tagsSearch.*/'
+		'./*$tagsMore.*/'
 	</div>
 </div>';
 ?>

@@ -24,19 +24,13 @@ foreach( $notes['list'] as $note ){
 	$listLinks	= join( ' | ', $listLinks );
 	$listTags	= array();
 	foreach( $note->tags as $tag ){
-/*		$class		= in_array( $tag, $tags ) ? 'active' : '';
-		$action		= in_array( $tag, $tags ) ? 'forgetTag' : 'addSearchTag';
-		$label		= htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' );
-		$attributes	= array(
-			'class'			=> 'btn btn-small '.$class,
-			'data-toggle'	=> 'button',
-			'href'			=> './work/note/'.$action.'/'.$tag->tagId.'/'.$page,
-		);
-		$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', $iconTag.' '.$label, $attributes );
-*/
 		if( !in_array( $tag, $tags ) ){
-			$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
-				'href' => './work/note/addSearchTag/'.$tag->tagId.'/'.$page
+/*			$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+				'href'	=> './work/note/addSearchTag/'.$tag->tagId.'/'.$page,
+				'class'	=> 'list-item-tag-link',
+			) );*/
+			$listTags[$tag->content]	= UI_HTML_Tag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+				'class'	=> 'list-item-tag',
 			) );
 		}
 		else

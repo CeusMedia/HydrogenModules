@@ -177,6 +177,10 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'filter_limit' ) )
 			$this->session->set( 'filter_notes_limit', $this->request->get( 'filter_limit' ) );
 
+		if( $this->request->has( 'filter_query' ) )
+			$this->session->set( 'filter_notes_term', $this->request->get( 'filter_query' ) );
+
+/*		//  strip found tags from query, disabled for now
 		if( $this->request->has( 'filter_query' ) ){
 			if( trim( $query = $this->request->get( 'filter_query' ) ) ){
 				$tags		= $this->session->get( 'filter_notes_tags' );
@@ -197,7 +201,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 				$this->session->set( 'filter_notes_tags', $tags );																	//  store tag list in session
 			}
 			$this->session->set( 'filter_notes_term', $query );																		//  store query in session
-		}
+		}*/
 		$this->restart( NULL, TRUE );
 	}
 
@@ -226,7 +230,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$order		= 'modifiedAt';
 			$direction	= 'DESC';
 		}
-
 		if( $this->request->has( 'offset' ) )
 			$this->session->set( 'filter_notes_offset', (int) $this->request->get( 'offset' ) );
 
@@ -239,7 +242,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$logic		= new Logic_Project( $this->env );
 			$projects	= $logic->getUserProjects( $userId );
 		}
-
 		$notes		= array();
 		$conditions	= array();
 //		if( $filterPublic > 0 )
@@ -251,22 +253,15 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		else if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$conditions['projectId']	= array_merge( array( 0 ), array_keys( $projects ) );
 		}
-		if( count( $tags ) ){
-//print_m( $tags );die;
-			$noteIds		= $this->logic->getNoteIdsFromTagIds( array_keys( $tags ), TRUE );
-			$noteIds		= array_merge( array( 0 ), $noteIds );
-			$conditions['noteId']	= $noteIds;
-		}
-
-
 
 		$offset	= $page * $limit;
-		if( $query || count( $tags ) ){
-			$notes	= $this->logic->searchNotes( $query, $conditions, $tags, $offset, $limit );
+		if( $query ){
+			$notes	= $this->logic->searchNotes( $query, $conditions, $offset, $limit );
 		}
 		else{
 			$notes	= $this->logic->getTopNotes( $conditions, $offset, $limit );
 		}
+//print_m( $notes );die;
 		$modelUser	= new Model_User( $this->env );
 		foreach( $notes['list'] as $nr => $note )
 			$notes['list'][$nr]->user	= $modelUser->get( $note->userId );
@@ -315,8 +310,10 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $noteId ){
+		$modelUser	= new Model_User( $this->env );
 		$this->logic->countNoteView( $noteId );
 		$note		= $this->logic->getNoteData( $noteId );
+		$note->user	= $modelUser->get( $note->userId );
 		if( !$note ){
 			$this->env->getMessenger()->noteError( 'Invalid Note ID');
 			$this->restart( './work/note/' );

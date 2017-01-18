@@ -11,6 +11,12 @@ var FormNoteFilter = {
 		$("li.note .note-title a").each(function(){
 			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
 		})
+		$("li.note a.list-item-tag-link").each(function(){
+			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
+		})
+		$("li.note span.list-item-tag").each(function(){
+			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
+		})
 
 		$("ul.tags-list-inline button.tag-add").bind("click",function(){
 			document.location.href = "./work/note/addSearchTag/"+$(this).data("tag-id");
@@ -46,7 +52,7 @@ var FormNoteFilter = {
 		suffix = typeof suffix !== 'undefined' ? suffix : '</b>';
 		if(!search.length)
 			return data;
-		return data.replace( new RegExp( search.pregQuote(), 'gi' ), prefix + search + suffix );
+		return data.replace( new RegExp( search.pregQuote(), 'gi' ), function(term){return prefix + term + suffix});
 	},
 
 	highlightQuery: function(string,query){

@@ -382,9 +382,11 @@ class Logic_Note{
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
-	public function searchNotes( $query, $conditions, $tags = array(), $offset = 0, $limit = 10 ){
-		if( !strlen( trim( $query ) ) && !$tags )
-			throw new Exception( 'Neither query nor tags to search for given' );
+	public function searchNotes( $query, $conditions, $offset = 0, $limit = 10 ){
+//		if( !strlen( trim( $query ) ) && !$tags )
+//			throw new Exception( 'Neither query nor tags to search for given' );
+		if( !strlen( trim( $query ) ) )
+			throw new Exception( 'No search termed given' );
 
 		$cond		= array();
 		$pattern	= '/^(<=|>=|<|>|!=)(.+)/';
@@ -403,22 +405,21 @@ class Logic_Note{
 				$cond[]	= "n.".$column." = '".$value."'";
 		}
 		$conditions	= $cond;
-//		if( $tags )
-//			foreach( $tags as $tag )
-//				$query	.= ' '.$tag->content;
 
 		if( $query ){
 			$terms 	= explode( ' ', trim( $query ) );
-			foreach( $terms as $term )
-				$conditions[]	= '(n.title LIKE "%'.$term.'%" OR n.content LIKE "%'.$term.'%" OR l.url LIKE "%'.$term.'%" OR nl.title LIKE "%'.$term.'%")';
+			foreach( $terms as $term ){
+				$ors	= array(
+					'n.title LIKE "%'.$term.'%"',
+					'n.content LIKE "%'.$term.'%"',
+					'l.url LIKE "%'.$term.'%"',
+					'nl.title LIKE "%'.$term.'%"',
+					't.content="'.$term.'"'
+				);
+				$conditions[]	= '('.join( ' OR ', $ors ).')';
+			}
 		}
 		$conditions	= implode ( ' AND ', $conditions );
-//		if( $tags ){
-//			$noteIds		= $this->getNoteIdsFromTagIds( array_keys( $tags ), TRUE );
-//			if( $noteIds )
-//				$conditions	.= ($query ? ' AND ' : '' ).' n.noteId IN('.join( ',', $noteIds ).')';
-//		}
-//xmp( $conditions );
 		$query	= '
 SELECT
 	DISTINCT(n.noteId),
@@ -427,12 +428,15 @@ SELECT
 FROM
 	'.$this->prefix.'notes as n LEFT OUTER JOIN
 	'.$this->prefix.'note_links as nl ON(n.noteId=nl.noteId) LEFT OUTER JOIN
-	'.$this->prefix.'links as l ON(nl.linkId=l.linkId)
+	'.$this->prefix.'note_tags as nt ON(n.noteId=nt.noteId) LEFT OUTER JOIN
+	'.$this->prefix.'links as l ON(nl.linkId=l.linkId) LEFT OUTER JOIN
+	'.$this->prefix.'tags as t ON(nt.tagId=t.tagId)
 WHERE
 	'.$conditions.'
 ORDER BY
 	touchedAt DESC
 ';
+//xmp( $query );die;
 		$clock		= new Alg_Time_Clock();
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
