@@ -66,9 +66,9 @@ return '
 				'.join( $rows ).'
 			</tbody>
 		</table>
-		'.$pagination.'
 		<div class="buttonbar">
 			<a class="btn btn-small btn-success" href="./work/issue/add"><i class="icon-plus icon-white"></i> neuer Eintrag</a>
+			'.$pagination.'
 		</div>
 	</div>
 </div>
