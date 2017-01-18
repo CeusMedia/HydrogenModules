@@ -73,6 +73,7 @@ class Resource_REST_Client{
 	 *	@deprecated	use module configuration instead
 	 *	@todo		to be removed
 	 */
+<<<<<<< HEAD
 	public function disableCache(){
 		$this->enabled = FALSE;
 		$this->__initCache();
@@ -84,6 +85,11 @@ class Resource_REST_Client{
 	 */
 	public function enableCache(){
 		$this->enabled = TRUE;
+=======
+	public function enableCache( $status = TRUE ){
+//		$this->enabled = (bool) $status;
+		$this->moduleConfig->set( 'cache.enabled', (bool) $status );
+>>>>>>> Fix syntax error.
 		$this->__initCache();
 	}
 
