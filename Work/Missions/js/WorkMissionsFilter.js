@@ -17,7 +17,7 @@ var WorkMissionsFilter = {
 */
 
 		/*  --  MODES  --  */
-		var i, button;
+/*		var i, button;
 		var mode = mode;
 		$(['archive','now','future']).each(function(nr, entry){
 			button = $("#work-mission-view-mode-"+entry);
@@ -28,7 +28,7 @@ var WorkMissionsFilter = {
 				button.bind("click", {mode: entry}, function(event){
 					document.location.href = "./work/mission/"+event.data.mode;
 			});
-		});
+		});*/
 
 /*		button0 = $("#work-mission-view-type-0");
 		button1 = $("#work-mission-view-type-1");

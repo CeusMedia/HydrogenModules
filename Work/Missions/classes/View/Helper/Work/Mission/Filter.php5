@@ -41,7 +41,8 @@ class View_Helper_Work_Mission_Filter{
 		$buttonIcon			= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-filter' ) ).'&nbsp;';
-		$buttonLabel	= 'Aufgabentypen <span class="caret"></span>';
+		$labelFilter	= $this->words['filters']['type'];
+		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedTypes ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
@@ -65,11 +66,12 @@ class View_Helper_Work_Mission_Filter{
 			$label	= UI_HTML_Tag::create( 'label', $input.' './*$priority.' - '.*/$this->words['priorities'][$priority], array( 'class' => 'checkbox' ) );
 			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'filter-priority priority-'.$priority ) );
 		}
-		$buttonIcon			= '';
+		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
-			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ).'&nbsp;';
-		$buttonLabel		= 'Prioritäten <span class="caret"></span>';
-		$buttonClass		= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
+			$buttonIcon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ).'&nbsp;';
+		$labelFilter	= $this->words['filters']['priority'];
+		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
+		$buttonClass	= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
 			UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
@@ -95,7 +97,8 @@ class View_Helper_Work_Mission_Filter{
 		$buttonIcon			= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-spinner' ) ).'&nbsp;';
-		$buttonLabel	= 'Zustände <span class="caret"></span>';
+		$labelFilter	= $this->words['filters']['status'];
+		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedStates ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
@@ -127,7 +130,8 @@ class View_Helper_Work_Mission_Filter{
 			$buttonIcon			= '';
 			if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 				$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
-			$buttonLabel	= 'Projekte <span class="caret"></span>';
+			$labelFilter	= $this->words['filters']['project'];
+			$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 			$buttonClass	= 'dropdown-toggle btn '.( $changedProjects ? "btn-info" : "" );
 			$buttonAttr		= array( 'class' => $buttonClass, 'data-toggle' => 'dropdown' );
 			return UI_HTML_Tag::create( 'div', array(
@@ -200,70 +204,53 @@ class View_Helper_Work_Mission_Filter{
 			$current	= $mode === $typeKey ? $typeLabel : $current;
 		}
 
-/*		$label	= $caret.' Ansicht: <b>'.$current.'</b>';
-		$list	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) );
-		return UI_HTML_Tag::create( 'button', $label, array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ).$list;
-*/
+		$labelFilter	= $this->words['filters']['viewType'];
 		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', '<span class="not-muted">Ansicht:</span> <b>'.$current.'</b>', array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ),
+			UI_HTML_Tag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ),
 			UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
 			UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
-		), array( 'class' => 'btn-group' ) );
-
-		$badgeIcon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh icon-white' ) );
-		$badge      = UI_HTML_Tag::create( 'span', $badgeIcon, array(
-			'id'	=> "number-total",
-			'class'	=> "badge badge-success",
-		) );
-		return UI_HTML_Tag::create( 'div', array(
-/*			UI_HTML_Tag::create( 'button', $badge, array(
-				'type'		=> "button",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) ),*/
-			UI_HTML_Tag::create( 'button', '<i class="icon-calendar"></i> Monat', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-type-0",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) ),
-			UI_HTML_Tag::create( 'button', '<i class="icon-tasks"></i> Liste', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-type-1",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) ),
-			UI_HTML_Tag::create( 'button', '<i class="icon-clock"></i> Kanban', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-type-2",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) )
 		), array( 'class' => 'btn-group' ) );
 	}
 
 	public function renderViewModeSwitch( $mode ){
 		if( !in_array( $mode, array( 'archive', 'now', 'future' ) ) )
 			return "";
+		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
+		$items	= array();
+
+		$wordsViewTypes	= (object) $this->words['modeTypes'];
+
+		$current	= '';
+		$hasFontAwesome	= $this->env->getModules()->has( 'UI_Font_FontAwesome' );
+		foreach( $this->words['modeTypes'] as $modeKey => $modeLabel ){
+			$iconClass	= NULL;
+			switch( $modeKey ){
+				case 'archive':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-arrow-left' : 'icon-arrow-left';
+					$url		= "...";
+					$id			= "work-mission-view-mode-archive";
+					break;
+				case 'now':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-star' : 'icon-star';
+					$url		= "...";
+					$id			= "work-mission-view-mode-now";
+					break;
+				case 'future':
+					$iconClass	= $hasFontAwesome ? 'fa fa-fw fa-arrow-right' : 'icon-arrow-right';
+					$url		= "...";
+					$id			= "work-mission-view-mode-future";
+					break;
+			}
+			$icon		= $iconClass ? UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
+			$link		= UI_HTML_Tag::create( 'a', $icon.$modeLabel, array( 'href' => './work/mission/'.$modeKey ) );
+			$items[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $mode === $modeKey ? 'active' : NULL ) );
+			$current	= $mode === $modeKey ? $modeLabel : $current;
+		}
+		$labelFilter	= $this->words['filters']['modeType'];
 		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', '<i class="icon-arrow-left"></i> Archiv', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-mode-archive",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) ),
-			UI_HTML_Tag::create( 'button', '<i class="icon-star"></i> Aktuell', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-mode-now",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) ),
-			UI_HTML_Tag::create( 'button', '<i class="icon-arrow-right"></i> Zukunft', array(
-				'type'		=> "button",
-				'id'		=> "work-mission-view-mode-future",
-				'disabled'	=> "disabled",
-				'class'		=> "btn -btn-small",
-			) )
+			UI_HTML_Tag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn', 'data-toggle' => "dropdown" ) ),
+			UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+			UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group' ) );
 	}
 
