@@ -167,7 +167,7 @@ class Logic_Mission{
 
 	public function noteVersion( $missionId, $userId, $content ){
 		$modelVersion	= new Model_Mission_Version( $this->env );
-		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, array(), array( 'version' => 'DESC' ) );
+		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, "", array( 'version' => 'DESC' ) );
 		if( $latest && $latest->content === $content )
 			return FALSE;
 		return $modelVersion->add( array(
