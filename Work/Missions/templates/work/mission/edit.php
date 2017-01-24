@@ -19,7 +19,11 @@ foreach( $priorities as $key => $value )
 $optPriority	= join( $optPriority, $mission->priority );
 
 $optStatus	= array();
-foreach( $words['states'] as $key => $value )
+$wordsStatus	= $words['states'];
+unset( $wordsStatus[-3] );
+unset( $wordsStatus[-2] );
+unset( $wordsStatus[4] );
+foreach( $wordsStatus as $key => $value )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus, $mission->status );
 
@@ -83,25 +87,25 @@ $panelEdit	= '
 		<form action="./work/mission/edit/'.$mission->missionId.'" method="post" class="form-changes-auto">
 			<input type="hidden" name="format" value="'.htmlentities( $mission->format, ENT_QUOTES, 'UTF-8' ).'"/>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span9">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12 -max" value="'.htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' ).'" required/>
 				</div>
-			</div>
-			<div class="row-fluid">
 				<div class="span3 -column-left-20">
 					<label for="input_priority">'.$w->labelPriority.'</label>
 					<select name="priority" id="input_priority" class="span12">'.$optPriority.'</select>
 				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span3 -column-left-20">
 					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
-				<div class="span4 -column-left-40">
+				<div class="span6 -column-left-40">
 					<label for="input_projectId">'.$w->labelProjectId.'</label>
 					<select name="projectId" id="input_projectId" class="span12">'.$optProject.'</select>
 				</div>
-				<div class="span2 -column-left-20">
+				<div class="span3 -column-left-20">
 					<label for="input_workerId" class="mandatory required">'.$w->labelWorker.'</label>
 					<select name="workerId" id="input_workerId" class="span12" required="required">'.$optWorker.'</select>
 				</div>
@@ -139,12 +143,12 @@ $panelEdit	= '
 					<label for="input_hoursProjected">'.$w->labelMinutesProjected.'</label>
 					<input type="text" name="minutesProjected" id="input_minutesProjected" class="span12 -numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
 				</div>
-				<div class="span2 -column-left-10 optional type type-0" style="display: none">
+<!--				<div class="span2 -column-left-10 optional type type-0" style="display: none">
 					<label for="input_minutesRequired">'.$w->labelMinutesRequired.'</label>
 					<input type="text" name="minutesRequired" id="input_minutesRequired" class="span12 -numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
-				</div>
+				</div>-->
 			</div>
-			<div class="row-fluid">
+<!--			<div class="row-fluid">
 				<div class="span5 -column-left-40">
 					<label for="input_location">'.$w->labelLocation.'</label>
 					<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
@@ -153,7 +157,7 @@ $panelEdit	= '
 					<label for="input_reference">'.$w->labelReference.'</label>
 					<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-			</div>
+			</div>-->
 			'.$fieldContent.'
 			<div class="buttonbar">
 				'.$checkInform.'

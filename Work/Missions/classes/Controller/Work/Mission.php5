@@ -12,7 +12,7 @@
 class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function help( $topic = NULL ){
-		$this->addData( 'topic', $topic );
+		$this->addData( 'topic', (string) $topic );
 	}
 
 
@@ -710,6 +710,16 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $this->useIssues ){
 			$this->env->getLanguage()->load( 'work/issue' );
 			$this->addData( 'wordsIssue', $this->env->getLanguage()->getWords( 'work/issue' ) );
+		}
+
+		if( $this->useTimer ){
+			$logic	= Logic_Work_Timer::getInstance( $this->env );
+			$conditions	= array(
+				'module'	=> 'Work_Missions',
+				'moduleId'	=> $mission->missionId,
+				'status'	=> array( 0, 1, 2 ),
+			);
+			$this->addData( 'openTimers', $logic->countTimers( $conditions ) );
 		}
 	}
 

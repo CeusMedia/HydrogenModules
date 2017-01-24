@@ -13,18 +13,19 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAddEvent	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
 	$iconAddTask	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
 }
-$toolbar1->addButtonGroup( 'toolbar-add', 'add', array(
-	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="icon-plus icon-white"></i></button>
+$toolbar1->addButton( 'toolbar-views', 'view-type', UI_HTML_Tag::create( 'div', array(
+	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="fa fa-fw fa-plus"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
 		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
 	</ul>'
-) );
+), array( 'class' => 'btn-group' ) ) );
 
 //  --  FILTER BUTTONS  --  //
-$toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTypeSwitch() );
-$toolbar1->addButton( 'toolbar-views', 'view-mode', $helperFilter->renderViewModeSwitch( $filterMode ) );
+$toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTypeSwitch( $filterMode ) );
+$toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewModeSwitch( $filterMode ) );
 
+/*
 $toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
 	'<a href="./work/mission/help/sync" class="btn not-btn-info" title="Synchronisation"><i class="icon-refresh not-icon-white"></i></a>'
 ) );
@@ -32,6 +33,7 @@ $toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
 $toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
 	'<a href="./work/mission/help" class="btn btn-info" title="Hilfe"><i class="icon-question-sign icon-white"></i></a>'
 ) );
+*/
 
 if( $useProjects && !empty( $userProjects ) )
 	$toolbar2->addButton( 'toolbar-filters', 'projects', $helperFilter->renderProjectFilter( $filterProjects, $userProjects ) );

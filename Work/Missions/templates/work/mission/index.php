@@ -9,8 +9,8 @@ switch( $filterMode ){
 		break;
 	case 'now':
 //		if( count( $missions ) ){
-			$panelList		= $view->loadTemplateFile( 'work/mission/index.days.php' );
-			$panelContent	= '<div id="mission-folders" style="position: relative; width: 100%; display: none;">'.$panelList.'</div>';
+			$panelContent		= $view->loadTemplateFile( 'work/mission/index.days.php' );
+//			$panelContent	= '<div id="mission-folders" style="position: relative; width: 100%; display: none;">'.$panelList.'</div>';
 //		}
 //		else
 		$panelEmpty		= $view->loadContentFile( 'html/work/mission/index.empty.html' );

@@ -5,13 +5,17 @@ $w	= (object) $words['edit-panel-close'];
 if( $mission->status < 0 )
 	return '';
 
-
+$hint	= '';
 
 $minutes	= $mission->minutesRequired;
 if( $useTimer ){
 	$seconds	= View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId );
 	if( $seconds )
 		$minutes	= ceil( $seconds / 60 );
+
+	if( $openTimers ){
+		$hint		= UI_HTML_Tag::create( 'div', 'Bitte vorher die Aktivitäten beenden!', array( 'class' => 'alert alert-danger' ) );
+	}
 }
 
 $hoursRequired		= floor( $minutes / 60 );
@@ -23,6 +27,7 @@ return '
 	<div class="content-panel-inner">
 		<form action="./work/mission/close/'.$mission->missionId.'" method="post" id="form-mission-close">
 			<input type="hidden" name="status" id="input_close_status" value="'.$mission->status.'"/>
+			'.$hint.'
 			<div class="row-fluid">
 				<div class="span7">
 					<label for="input_close_hoursRequired">'.$w->labelHours.'</label>

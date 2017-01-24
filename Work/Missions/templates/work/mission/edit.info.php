@@ -20,19 +20,32 @@ if( isset( $mission->creator ) )
 		'value'	=> renderUserLabel( $mission->creator ),
 	);
 
+$typeIcons	= array(
+	0 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+	1 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+);
+$infos['type']	= array(
+	'label'	=> 'Missionstyp',
+	'value'	=> '<span class="mission mission-type type'.$mission->type.'">'.$typeIcons[$mission->type].'&nbsp;'.$words['types'][$mission->type].'</span>'
+);
+
+$typeIcons	= array(
+	0 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+	1 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+);
+$infos['type']	= array(
+	'label'	=> 'Typ',
+	'value'	=> '<span class="mission mission-type type'.$mission->type.'">'.$typeIcons[$mission->type].'&nbsp;'.$words['types'][$mission->type].'</span>'
+);
+
 $infos['state']	= array(
 	'label'	=> 'aktueller Zustand',
-	'value'	=> '<span class="mission-status status'.$mission->status.'">'.$words['states'][$mission->status].'</span>'
+	'value'	=> '<span class="mission mission-status status'.$mission->status.'">'.$words['states'][$mission->status].'</span>'
 );
 
 $infos['priority']	= array(
 	'label'	=> 'Priorität',
-	'value'	=> '<span class="mission-priority priority'.$mission->priority.'">'.$words['priorities'][$mission->priority].'</span>'
-);
-
-$infos['type']	= array(
-	'label'	=> 'Missionstyp',
-	'value'	=> '<span class="mission-type type'.$mission->type.'">'.$words['types'][$mission->type].'</span>'
+	'value'	=> '<span class="mission mission-priority priority'.$mission->priority.'">'.$words['priorities'][$mission->priority].'</span>'
 );
 
 if( isset( $mission->worker ) )
@@ -99,13 +112,13 @@ if( isset( $mission->creator ) )
 */
 
 $factInfoKeys	= array(
-	'date-creation',
-	'creator',
+	'type',
 	'state',
 	'priority',
-	'type',
-	'date-modification',
+	'creator',
+	'date-creation',
 	'modifier',
+	'date-modification',
 	'worker',
 	'list-users-viewers',
 	'links',
