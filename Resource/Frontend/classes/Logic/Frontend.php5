@@ -43,7 +43,7 @@ class Logic_Frontend{
 	protected function detectBaseUri(){
 		if( $this->config->get( 'app.baseHref' ) )
 			$this->uri	= $this->config->get( 'app.baseHref' );
-		if( $this->config->get( 'app.base.url' ) )
+		else if( $this->config->get( 'app.base.url' ) )
 			$this->uri	= $this->config->get( 'app.base.url' );
 		else{
 			$path	= dirname( getEnv( 'SCRIPT_NAME' ) ).'/'.$this->path;
