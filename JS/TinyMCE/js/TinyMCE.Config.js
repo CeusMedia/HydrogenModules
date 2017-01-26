@@ -49,7 +49,7 @@ if(typeof tinymce !== "undefined"){
 //			theme_advanced_resizing: true,
 //			theme_advanced_resizing_use_cookie: false,
 			content_css: [
-					"http://cdn.int1a.net/css/bootstrap.css"
+					"//cdn.ceusmedia.de/css/bootstrap.css"
 				].join(","),
 //			toolbar: "undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
 //			toolbar: "styleselect | fontselect | fontsizeselect | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
