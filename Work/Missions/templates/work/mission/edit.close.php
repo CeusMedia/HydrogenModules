@@ -32,9 +32,8 @@ return '
 				<div class="span7">
 					<label for="input_close_hoursRequired">'.$w->labelHours.'</label>
 				</div>
-				<div class="span5 input-append">
+				<div class="span5">
 					<input type="text" name="hoursRequired" id="input_close_hoursRequired" class="span8 -xs numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
-					<span class="add-on">'.$w->suffixHours.'</span>
 				</div>
 			</div>
 			<div class="buttonbar">
