@@ -97,27 +97,33 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function logout(){
-		$backends	= $this->logic->getBackends();
+		$backends	= array_values( $this->logic->getBackends() );
 		$backend	= $this->session->get( 'authBackend' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/logout';
+		if( !$backend && !$backends )
+			throw new RuntimeException( 'No authentication backend available' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/logout';
 		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
 		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
 	}
 
 	public function password(){
-		$backends	= $this->logic->getBackends();
+		$backends	= array_values( $this->logic->getBackends() );
 		$backend	= $this->session->get( 'authBackend' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/password';
+		if( !$backend && !$backends )
+			throw new RuntimeException( 'No authentication backend available' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/password';
 		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
 		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
 	}
 
 	public function register(){
-		$backends	= $this->logic->getBackends();
+		$backends	= array_values( $this->logic->getBackends() );
 		$backend	= $this->session->get( 'authBackend' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0] ).'/register';
+		if( !$backend && !$backends )
+			throw new RuntimeException( 'No authentication backend available' );
+		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/register';
 		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
 		$path		= $from ? $path.'?from='.$from : $path;
 		$this->restart( $path );
