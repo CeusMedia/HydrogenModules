@@ -1,0 +1,17 @@
+
+New Customster Opinion
+======================
+
+Please check and activate!
+
+Name:
+<%entry.username%>
+
+Email:
+<%?entry.email%>
+
+Subject:
+<%entry.title%>
+
+Comment:
+<%entry.description%>

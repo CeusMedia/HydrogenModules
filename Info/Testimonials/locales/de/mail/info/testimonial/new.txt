@@ -1,0 +1,17 @@
+
+Neue Kundenmeinung
+==================
+
+Bitte überprüfen und freischalten!
+
+Name:
+<%entry.username%>
+
+E-Mail:
+<%?entry.email%>
+
+Überschrift:
+<%entry.title%>
+
+Kommentar:
+<%entry.description%>

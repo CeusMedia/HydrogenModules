@@ -3,15 +3,17 @@
 	<title>Info: Testimonials</title>
 	<description/>
 	<category>Info</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add language support.</log>
 	<log version="0.3.1">Add more locale blocks.</log>
+	<log version="0.3.2">Inform about new visitor opinion by mail.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Testimonial.php5</class>
+		<class>Mail/Info/Testimonial/New.php5</class>
 		<class>Model/Testimonial.php5</class>
 		<class>View/Info/Testimonial.php5</class>
 		<locale>de/info/testimonial.ini</locale>
@@ -22,6 +24,8 @@
 		<locale>de/html/info/testimonial/form.top.html</locale>
 		<locale>de/html/info/testimonial/list.bottom.html</locale>
 		<locale>de/html/info/testimonial/list.top.html</locale>
+		<locale>de/mail/info/testimonial/new.html</locale>
+		<locale>de/mail/info/testimonial/new.txt</locale>
 		<locale>en/info/testimonial.ini</locale>
 		<locale>en/html/info/testimonial/bottom.html</locale>
 		<locale>en/html/info/testimonial/top.html</locale>
@@ -30,12 +34,15 @@
 		<locale>en/html/info/testimonial/form.top.html</locale>
 		<locale>en/html/info/testimonial/list.bottom.html</locale>
 		<locale>en/html/info/testimonial/list.top.html</locale>
+		<locale>en/mail/info/testimonial/new.html</locale>
+		<locale>en/mail/info/testimonial/new.txt</locale>
 		<template>info/testimonial/index.php</template>
 <!--		<style source="theme" load="auto">module.info.testimonials.css</style>-->
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
+	<config protected="yes" mandatory="yes" type="string" name="mail.receiver"></config>
 	<link xml:lang="de" access="public" path="info/testimonial">Kundenmeinungen</link>
 	<link xml:lang="en" access="public" path="info/testimonial">Testimonials</link>
 	<sql on="install" type="mysql" version="final"><![CDATA[
