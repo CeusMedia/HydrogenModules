@@ -3,7 +3,10 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 
 	protected $env;
 	protected $user;
-	protected $useAvatar		= FALSE;
+	protected $showAvatar		= TRUE;
+	protected $showEmail		= FALSE;
+	protected $showFullname		= TRUE;
+	protected $showUsername		= TRUE;
 	protected $linksInside		= array();
 	protected $linksOutside		= array();
 	protected $imageSize		= 32;
@@ -11,14 +14,20 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	public $guestEmail			= "<em>(not logged in)</em>";
 	protected $menu;
 	protected $scope;
+	protected $moduleConfig;
 
 	public function __construct( $env ){
 		$this->env	= $env;
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.ui_navigation_bootstrap_accountmenu.', TRUE );
+		$this->showAvatar		= $this->moduleConfig->get( 'show.avatar' );
+		$this->showEmail		= $this->moduleConfig->get( 'show.email' );
+		$this->showFullname		= $this->moduleConfig->get( 'show.fullname' );
+		$this->showUsername		= $this->moduleConfig->get( 'show.username' );
 	}
 
 	/**
-	 *	@deprecated 		use menu instead
-	 *	@todo 				remove
+	 *	@deprecated 	use menu instead by calling setLinks
+	 *	@todo   		to be removed in version 0.8
 	 */
 	public function addInsideLink( $path, $label, $icon = NULL ){
 		$this->linksInside[]	= (object)array(
@@ -29,16 +38,16 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	}
 
 	/**
-	 *	@deprecated 		use menu instead
-	 *	@todo 				remove
+	 *	@deprecated 	use menu instead by calling setLinks
+	 *	@todo   		to be removed in version 0.8
 	 */
 	public function addInsideLinkLine(){
 		$this->linksInside[]	= 'line';
 	}
 
 	/**
-	 *	@deprecated 		use menu instead
-	 *	@todo 				remove
+	 *	@deprecated 	use menu instead by calling setLinks
+	 *	@todo   		to be removed in version 0.8
 	 */
 	public function addOutsideLink( $path, $label, $icon = NULL ){
 		$this->linksOutside[]	= (object)array(
@@ -49,8 +58,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	}
 
 	/**
-	 *	@deprecated 		use menu instead
-	 *	@todo 				remove
+	 *	@deprecated 	use menu instead by calling setLinks
+	 *	@todo   		to be removed in version 0.8
 	 */
 	public function addOutsideLinkLine(){
 		$this->linksOutside[]	= 'line';
@@ -88,7 +97,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 				$links		= $this->renderSetLinks( $this->linksOutside );							//  @todo: remove
 		}																							//  @todo: remove
 		$avatar	= '';
-		if( $this->user && $this->useAvatar ){														//  user is available and avatars enabled
+		if( $this->user && $this->showAvatar ){														//  user is available and avatars enabled
 			if( $this->env->getModules()->has( 'Manage_My_User_Avatar' ) ){							//  use user avatar helper module
 				$helper			= new View_Helper_UserAvatar( $this->env );							//  create helper
 				$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );			//  get module config
@@ -109,11 +118,19 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
 		}
 
-		$labels			= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', $username, array( 'class' => 'username' ) ),
-			UI_HTML_Tag::create( 'div', $fullname, array( 'class' => 'fullname' ) ),
-			UI_HTML_Tag::create( 'div', $email, array( 'class' => 'email' ) ),
-		), array( 'class' => 'labels' ) );
+		$labels	= array();
+		if( $this->showUsername )
+			$labels[]	= UI_HTML_Tag::create( 'div', $username, array( 'class' => 'username' ) );
+		if( $this->showFullname )
+			$labels[]	= UI_HTML_Tag::create( 'div', $fullname, array( 'class' => 'fullname' ) );
+		if( $this->showEmail )
+			$labels[]	= UI_HTML_Tag::create( 'div', $email, array( 'class' => 'email' ) );
+
+		if( $labels )
+			$labels		= UI_HTML_Tag::create( 'div', $labels, array( 'class' => 'labels' ) );
+		else
+			$labels		= "";
+
 		$trigger		= UI_HTML_Tag::create( 'div', array(
 			$avatar,
 			$labels,
@@ -203,8 +220,28 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		$this->imageSize	= $size;
 	}
 
+	/**
+	 *	@deprecated		use method showAvatar instead
+	 *	@todo   		to be removed in version 0.8
+	 */
 	public function useAvatar( $boolean = NULL ){
-		$this->useAvatar	= (boolean) $boolean;
+		$this->showAvatar( $boolean );
+	}
+
+	public function showAvatar( $boolean = NULL ){
+		$this->showAvatar		= (boolean) $boolean;
+	}
+
+	public function showEmail( $boolean = NULL ){
+		$this->showEmail		= (boolean) $boolean;
+	}
+
+	public function showFullname( $boolean = NULL ){
+		$this->showFullname		= (boolean) $boolean;
+	}
+
+	public function showUsername( $boolean = NULL ){
+		$this->showUsername		= (boolean) $boolean;
 	}
 }
 ?>
