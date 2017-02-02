@@ -71,25 +71,31 @@ if( $threads ){
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
+$panelList	= '
+<div class="content-panel">
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+</div>';
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/topic.add.php' );
 
 
-$iconHome	= new CMM_Bootstrap_Icon( 'home' );
-$iconFolder	= new CMM_Bootstrap_Icon( 'folder-open', TRUE );
+$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home' );
+$iconFolder	= new \CeusMedia\Bootstrap\Icon( 'folder-open', TRUE );
 $url		= './info/forum/';
 $buttons	= array(
-	new CMM_Bootstrap_LinkButton( $url, $iconHome ),
-	new CMM_Bootstrap_Button( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
+	new \CeusMedia\Bootstrap\LinkButton( $url, $iconHome ),
+	new \CeusMedia\Bootstrap\Button( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
 );
-$position	= new CMM_Bootstrap_ButtonGroup( $buttons );
+$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
 
 return $textTop.'
 <!--<h3><a href="./info/forum"><span class="muted">'.$words['topic']['heading'].':</span></a> '.$topic->title.'</h3>-->
-'.$position.'
+<div>'.$position.'</div><br/>
 <div class="row-fluid">
 	<div class="span12">
-		'.$table.'
+		'.$panelList.'
 		<br/>
 	</div>
 </div>

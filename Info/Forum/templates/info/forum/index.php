@@ -9,7 +9,6 @@ $iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) 
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
 
-
 $rows	= array();
 foreach( $topics as $topic ){
 	$buttons	= array();
@@ -39,11 +38,11 @@ foreach( $topics as $topic ){
 			'title'	=> $words['index']['buttonRemove'],
 		) );
 	}
-	$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+	$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 	$url		= './info/forum/topic/'.$topic->topicId;
 	$link		= UI_HTML_Tag::create( 'a', $topic->title, array( 'href' => $url ) );
 	$modifiedAt	= $helper->convert( $topic->createdAt, TRUE );
-	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Latest: vor '.$modifiedAt;
+	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Letzter Beitrag: vor '.$modifiedAt;
 	$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
 	$cells		= array(
 		UI_HTML_Tag::create( 'td', $label, array( 'class' => 'topic-label') ),
@@ -53,25 +52,31 @@ foreach( $topics as $topic ){
 }
 $heads	= UI_HTML_Elements::TableHeads( array(
 	$words['index']['headTitle'],
-	$words['index']['headFacts'],
+	'',//$words['index']['headFacts'],
 ) );
-$colgroup	= UI_HTML_Elements::ColumnGroup( '90%', '10%' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '90%', '20%' );
 $thead		= UI_HTML_Tag::create( 'thead', $heads );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
+$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed table-fixed' ) );
+$panelList	= '
+<div class="content-panel">
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+</div>';
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/index.add.php' );
 
-$iconHome	= new CMM_Bootstrap_Icon( 'home', TRUE );
-$buttons	= array( new CMM_Bootstrap_Button( $iconHome, 'btn-inverse', NULL, TRUE ) );
-$position	= new CMM_Bootstrap_ButtonGroup( $buttons );
+$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', TRUE );
+$buttons	= array( new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE ) );
+$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
 
 return $textTop.'
 <!--<h3>'.$words['index']['heading'].'</h3>-->
-'.$position.'
+<div>'.$position.'</div><br/>
 <div class="row-fluid">
 	<div class="span12">
-		'.$table.'
+		'.$panelList.'
 		<br/>
 	</div>
 </div>

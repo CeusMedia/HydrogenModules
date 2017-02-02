@@ -3,17 +3,20 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.3.14</version>
+	<version>0.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.5">Extended thread addition handling.</log>
 	<log version="0.3.6">Added mail on new post answer.</log>
 	<log version="0.3.7">Added option for mail sender.</log>
 	<log version="0.3.8">Use AJAX to show hint if posts have been updated.</log>
 	<log version="0.3.9">Fixed bug: Topic addition form always points to last category.</log>
-	<log version="0.3.10">Extracted mail style of answer mail for further use.</log>
-	<log version="0.3.11">Added daily mail to manager.</log>
-	<log version="0.3.12">Added job for daily mail to manager.</log>
-	<log version="0.3.13">Several tiny improvements and bug fixes.</log>
-	<log version="0.3.14">Added support for news list via hook.</log>
+	<log version="0.4">Extracted mail style of answer mail for further use.</log>
+	<log version="0.4.1">Added daily mail to manager.</log>
+	<log version="0.4.2">Added job for daily mail to manager.</log>
+	<log version="0.4.3">Several tiny improvements and bug fixes.</log>
+	<log version="0.4.4">Added support for news list via hook.</log>
+	<log version="0.5">Apply module UI:CSS:Panel.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
