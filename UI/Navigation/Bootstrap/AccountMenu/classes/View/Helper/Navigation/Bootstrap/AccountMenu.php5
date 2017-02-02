@@ -9,6 +9,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	protected $imageSize		= 32;
 	public $guestLabel			= "Guest";
 	public $guestEmail			= "<em>(not logged in)</em>";
+	protected $menu;
+	protected $scope;
 
 	public function __construct( $env ){
 		$this->env	= $env;
