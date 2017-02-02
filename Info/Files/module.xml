@@ -3,8 +3,11 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2.11</version>
-	<log version="0.2.11">Added support for news list via hook.</log>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydroge module.</log>
+	<log version="0.2.1">Added support for news list via hook.</log>
+	<log version="0.3">Apply module UI:CSS:Panel.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -32,7 +35,7 @@
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_File::___onPageCollectNews</hook>
-	<sql on="update" type="mysql" version-from="0.2.7" version-to="0.2.8"><![CDATA[
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
   `downloadFileId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -64,11 +67,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
   KEY `parentId` (`parentId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="update" type="mysql" version-from="0.2.8" version-to="0.2.9"><![CDATA[
-ALTER TABLE  `dp_download_files` ADD  `size` INT UNSIGNED NOT NULL AFTER  `rank`;
-ALTER TABLE  `dp_download_files` ADD INDEX ( `title` );
-ALTER TABLE  `dp_download_folders` ADD INDEX ( `type` );
-ALTER TABLE  `dp_download_folders` ADD INDEX ( `rank` );
-ALTER TABLE  `dp_download_folders` ADD INDEX ( `title` );
+	<sql on="update" type="mysql" version="0.2.9"><![CDATA[
+ALTER TABLE `<%?prefix%>download_files` ADD  `size` INT UNSIGNED NOT NULL AFTER  `rank`;
+ALTER TABLE `<%?prefix%>download_files` ADD INDEX ( `title` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `type` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `rank` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `title` );
 ]]></sql>
 </module>

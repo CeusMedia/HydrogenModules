@@ -111,6 +111,13 @@ if( $rows ){
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
+$panelList	= '
+<div class="content-panel">
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+</div>';
+
 
 $panels		= array();
 if( 0 )
@@ -124,29 +131,29 @@ if( in_array( 'scan', $rights ) )
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
-$iconHome	= new CMM_Bootstrap_Icon( 'home', !$folderPath );
-$buttonHome	= new CMM_Bootstrap_LinkButton( './info/file/index', $iconHome );
+$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', !$folderPath );
+$buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './info/file/index', $iconHome );
 if( !$folderPath )
-	$buttonHome	= new CMM_Bootstrap_Button( $iconHome, 'btn-inverse', NULL, TRUE );
+	$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
 $buttons	= array( $buttonHome );
 foreach( $steps as $nr => $stepFolder ){
 	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 	$url		= './info/file/index/'.$stepFolder->downloadFolderId;
-	$icon		= new CMM_Bootstrap_Icon( 'folder-open', $isCurrent );
+	$icon		= new \CeusMedia\Bootstrap\Icon( 'folder-open', $isCurrent );
 	$class		= $isCurrent ? 'btn-inverse' : NULL;
-	$buttons[]	= new CMM_Bootstrap_LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
+	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 }
-$position	= new CMM_Bootstrap_ButtonGroup( $buttons );
+$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
 
 return $textIndexTop.'
 <!--<h3>Dateien</h3>-->
-<div>'.$position.'</div>
+<div>'.$position.'</div><br/>
 <div class="row-fluid">
 	<div class="span9">
-		'.$table.'
+		'.$panelList.'
 	</div>
 	<div class="span3">
 		'.join( '<hr/>', $panels ).'
