@@ -9,7 +9,7 @@
 	<log version="0.2.1">Support HTTP Basic Authentication.</log>
 	<log version="0.2.2">Support caching using module Resource:Cache.</log>
 	<log version="0.2.3">Support server format configuration.</log>
-	<log version="0.2.4">Deprecate cache methods.</log>
+	<log version="0.2.4">Disable cache for development.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
