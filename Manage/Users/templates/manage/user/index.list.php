@@ -1,7 +1,7 @@
 <?php
 
 /*  --  PAGINATION  --  */
-$pagination	= new CMM_Bootstrap_PageControl( './manage/user', $page, ceil( $total / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/user', $page, ceil( $total / $limit ) );
 
 $heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
