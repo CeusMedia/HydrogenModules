@@ -1,6 +1,8 @@
 <?php
 $w			= (object) $words['index-list'];
 
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
+
 $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
 $iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
@@ -31,7 +33,7 @@ if( $relocations ){
 		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonEdit, $buttonGo ), array( 'class' => 'btn-group' ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $relocation->relocationId ),
-			UI_HTML_Tag::create( 'td', $link.'<br/><small class="autocut">'.$relocation->url.'</small>' ),
+			UI_HTML_Tag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', $relocation->views ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		), array(
@@ -44,7 +46,7 @@ if( $relocations ){
 	$heads	= UI_HTML_Elements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headActions ) );
 	$thead	= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table' ) );
+	$table	= UI_HTML_Tag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
 $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
@@ -60,7 +62,10 @@ return '
 			<h3>Einträge <small>('.$abbrCount.'/'.$abbrTotal.')</small></h3>
 			<div class="content-panel-inner">
 				'.$table.'
+				<div class="btn-toolbar">
+					'.$pagination.'
+					'.$buttonAdd.'
+				</div>
 			</div>
-			'.$buttonAdd.'
 		</div>
 ';

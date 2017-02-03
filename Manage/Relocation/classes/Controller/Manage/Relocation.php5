@@ -103,7 +103,7 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index( $page = 0 ){
 		$conditions		= array();
 		$orders			= array();
 
@@ -119,9 +119,14 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 				$conditions['title']	= '%'.$filterTitle.'%';
 		}
 
+		$limit	= 10;
+		$limits	= array( $page * $limit, $limit );
+
+		$this->addData( 'limit', $limit );
+		$this->addData( 'page', $page );
 		$this->addData( 'total', $this->model->count() );
 		$this->addData( 'count', $this->model->count( $conditions ) );
-		$this->addData( 'relocations', $this->model->getAll( $conditions, $orders ) );
+		$this->addData( 'relocations', $this->model->getAll( $conditions, $orders, $limits ) );
 		$this->addData( 'filterId', $filterId );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterTitle', $filterTitle );
