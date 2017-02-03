@@ -145,6 +145,7 @@ foreach( $steps as $nr => $stepFolder ){
 	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 }
 $position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position->setClass( 'position-bar' );
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
 
