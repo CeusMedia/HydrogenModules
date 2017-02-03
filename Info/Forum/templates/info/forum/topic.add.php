@@ -28,7 +28,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_content">'.$words['topic-add']['labelContent'].'</label>
-					<textarea name="content" id="input_content" class="span12" rows="8" required="required"></textarea>
+					<textarea name="content" id="input_content" class="span12 TinyMCE" data-tinymce-mode="minimal" rows="8"></textarea>
 				</div>
 			</div>
 			<div class="buttonbar">

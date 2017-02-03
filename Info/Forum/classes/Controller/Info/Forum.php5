@@ -146,7 +146,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$data['type']	= 1;
 		}
 
-		$postId	= $this->modelPost->add( $data );
+		$postId	= $this->modelPost->add( $data, FALSE );
 		$this->messenger->noteSuccess( $words->successPostAdded, $postId );
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
@@ -210,7 +210,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$data		= $request->getAll();
 		$data['authorId']	= $this->env->getSession()->get( 'userId' );
 		$data['createdAt']	= time();
-		$threadId	= $this->modelThread->add( $data );
+		$threadId	= $this->modelThread->add( $data, FALSE );
 		$thread		= $this->modelThread->get( $threadId );
 		$this->messenger->noteSuccess( $words->successThreadAdded, $data['title'] );
 		$request->set( 'threadId', $threadId );

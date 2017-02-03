@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.5">Extended thread addition handling.</log>
@@ -17,6 +17,7 @@
 	<log version="0.4.3">Several tiny improvements and bug fixes.</log>
 	<log version="0.4.4">Added support for news list via hook.</log>
 	<log version="0.5">Apply module UI:CSS:Panel.</log>
+	<log version="0.5.1">Use module JS:TinyMCE for thread and post content.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -58,6 +59,7 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">Resource_Jobs</needs>
+		<supports type="module">JS_TinyMCE</supports>
 	</relations>
 	<link access="acl" path="info/forum" xml:lang="de" rank="55">Forum</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="55">Forum</link>
@@ -119,12 +121,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_topics` (
 
 INSERT INTO `<%?prefix%>forum_topics` (`topicId`, `parentId`, `type`, `rank`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
 (1, 0, 0, 0, 'General', NULL, 1390623328, NULL);
-]]></sql>	
+]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
 DROP TABLE IF EXISTS `<%?prefix%>forum_threads`;
 DROP TABLE IF EXISTS `<%?prefix%>forum_topics`;
-]]></sql>	
+]]></sql>
 </module>
-
-

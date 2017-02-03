@@ -14,7 +14,7 @@ return '
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab1">
 							<label for="input_content">'.$w->labelContent.'</label>
-							<textarea name="content" id="input_content" rows="10" class="span12">'.$request->get( 'content' ).'</textarea>
+							<textarea name="content" id="input_content" rows="10" class="span12 TinyMCE" data-tinymce-mode="minimal">'.$request->get( 'content' ).'</textarea>
 						</div>
 						<div class="tab-pane" id="tab2">
 							<div class="row-fluid">

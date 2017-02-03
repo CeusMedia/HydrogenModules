@@ -89,6 +89,7 @@ $buttons	= array(
 	new \CeusMedia\Bootstrap\Button( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
 );
 $position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position->setClass( 'position-bar' );
 
 return $textTop.'
 <!--<h3><a href="./info/forum"><span class="muted">'.$words['topic']['heading'].':</span></a> '.$topic->title.'</h3>-->

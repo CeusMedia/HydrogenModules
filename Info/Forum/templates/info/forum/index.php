@@ -70,6 +70,7 @@ $panelAdd	= $view->loadTemplateFile( 'info/forum/index.add.php' );
 $iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', TRUE );
 $buttons	= array( new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE ) );
 $position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position->setClass( 'position-bar' );
 
 return $textTop.'
 <!--<h3>'.$words['index']['heading'].'</h3>-->

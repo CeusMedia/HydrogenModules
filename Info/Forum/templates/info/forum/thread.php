@@ -74,7 +74,7 @@ if( $posts ){
 		}
 		$cells	= array(
 			UI_HTML_Tag::create( 'td', $user ),
-			UI_HTML_Tag::create( 'td', $content, array( 'class' => 'content autocut' ) ),
+			UI_HTML_Tag::create( 'td', $content, array( 'class' => 'content' ) ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		);
 		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array(
@@ -108,6 +108,7 @@ $buttons	= array(
 	new \CeusMedia\Bootstrap\Button( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
 );
 $position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position->setClass( 'position-bar' );
 
 return $textTop.'
 <!--<h3><a href="./info/forum"><span class="muted">'.$words['topic']['heading'].':</span></a> '.$topic->title.'</h3>
