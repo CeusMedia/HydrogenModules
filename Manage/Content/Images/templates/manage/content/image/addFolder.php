@@ -22,7 +22,7 @@ return $textTop.'
 			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
-					<div class="span10">
+					<div class="span12">
 						<form action="./manage/content/image/addFolder?path='.$path.'" method="post">
 							<div class="row-fluid">
 								<div class="span12">

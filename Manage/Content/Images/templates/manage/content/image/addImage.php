@@ -17,33 +17,34 @@ return $textTop.'
 	<div class="span3">
 		'.$panelFolders.'
 	</div>
-	<div class="span9">
+	<div class="span6">
 		<div class="content-panel">
 			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
-				<div class="row-fluid">
-					<div class="span6">
-						<form action="./manage/content/image/addImage" method="post" enctype="multipart/form-data">
-							<div class="row-fluid">
-								<div class="span12">
-									<label for="input_file">'.$w->labelFile.'</label>
-									'.View_Helper_Input_File::render( 'file', $iconUpload, 'Datei auswählen...' ).'
-								</div>
-							</div>
-							<div class="row-fluid">
-								<div class="span12">
-									<label for="input_folder">'.$w->labelFolder.'</label>
-									<select class="span12" name="folder" id="input_folder">'.$optFolder.'</select>
-								</div>
-							</div>
-							<div class="buttonbar">
-								<a class="btn btn-small" href="./manage/content/image"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-								<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-							</div>
-						</form>
+				<form action="./manage/content/image/addImage" method="post" enctype="multipart/form-data">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_file">'.$w->labelFile.'</label>
+							'.View_Helper_Input_File::render( 'file', $iconUpload, 'Datei auswählen...' ).'
+						</div>
 					</div>
-				</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_folder">'.$w->labelFolder.'</label>
+							<select class="span12" name="folder" id="input_folder">'.$optFolder.'</select>
+						</div>
+					</div>
+					<div class="buttonbar">
+						<a class="btn btn-small" href="./manage/content/image"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+						<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+					</div>
+				</form>
 			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span3">
+			'.$textAddImageRight.'
 		</div>
 	</div>
 </div>

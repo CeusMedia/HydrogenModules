@@ -3,7 +3,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -30,6 +30,7 @@
 	<log version="0.4.2">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.4.3">Use module UI_Helper_Input_File.</log>
 	<log version="0.4.4">Update folder list.</log>
+	<log version="0.4.5">Fix panel bugs.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -42,6 +43,7 @@
 		<locale>de/html/manage/content/image/bottom.html</locale>
 		<locale>de/html/manage/content/image/top.html</locale>
 		<locale>de/html/manage/content/image/add.folder.right.html</locale>
+		<locale>de/html/manage/content/image/add.image.right.html</locale>
 		<locale>de/html/manage/content/image/edit.folder.right.html</locale>
 		<locale>de/html/manage/content/image/edit.image.right.html</locale>
 		<locale>en/manage/content/image.ini</locale>
