@@ -44,6 +44,28 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		return TRUE;																				//  stop ongoing dispatching
 	}
 
+	static public function ___onControllerDetectPath( $env, $context, $module, $data ){
+		$modelPage			= new Model_Page( $env );
+		$controllerPages	= $modelPage->getAllByIndex( 'module', $data['moduleClassName'] );
+		if( $controllerPages ){
+			$pages				= array();
+			foreach( $controllerPages as $page ){
+				$page->fullpath	= $page->identifier;
+				if( $page->parentId ){
+					do{
+						$parent	= $modelPage->get( $page->parentId );
+						$page->fullpath	= $parent->identifier.'/'.$page->fullpath;
+					}
+					while( $parent->parentId );
+				}
+				$pages[]	= $page;
+			}
+			return $pages[0]->fullpath;
+		}
+		return FALSE;
+	}
+
+
 	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
 		try{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
