@@ -176,7 +176,11 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
 		$words		= (object) $this->getWords( 'logout' );
 
-		if( $this->session->remove( 'userId' ) ){
+		if( $this->session->has( 'userId' ) ){
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+				'userId'	=> $this->session->get( 'userId' ),
+				'roleId'	=> $this->session->get( 'roleId' ),
+			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
 			if( $this->request->has( 'autoLogout' ) ){

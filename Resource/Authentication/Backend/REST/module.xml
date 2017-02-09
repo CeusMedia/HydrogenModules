@@ -11,7 +11,8 @@ You need to set this header in your Apache configuration. For example in .htacce
 
 ]]></description>
 	<version>0.1</version>
-	<log version="0.1">Initial fork from module Auth:REST.</log>
+	<log version="0.1">Initial fork from module Auth:JSON.</log>
+	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
