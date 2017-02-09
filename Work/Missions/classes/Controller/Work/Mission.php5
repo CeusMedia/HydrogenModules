@@ -647,6 +647,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
+		if( !in_array( $mission->status, array( -1, 0, 1, 2, 3 ) ) ){
+			$this->messenger->noteError( $words->msgArchived );
+			$this->restart( 'view/'.$missionId, TRUE );
+		}
+
+
 		if( $this->useProjects ){
 			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
 				$this->messenger->noteError( $words->msgInvalidProject );
@@ -1135,17 +1141,19 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $missionId ){
-		$words			= (object) $this->getWords( 'edit' );
+		$words		= (object) $this->getWords( 'edit' );
 
 		$mission	= $this->model->get( $missionId );
-		if( !$mission )
+		if( !$mission ){
 			$this->messenger->noteError( $words->msgInvalidId );
-		if( $this->useProjects ){
-			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
-				$this->messenger->noteError( $words->msgInvalidProject );
-		}
-		if( $this->messenger->gotError() )
 			$this->restart( NULL, TRUE );
+		}
+		if( $this->useProjects ){
+			if( !array_key_exists( $mission->projectId, $this->userProjects ) ){
+				$this->messenger->noteError( $words->msgInvalidProject );
+				$this->restart( NULL, TRUE );
+			}
+		}
 
 		$title		= $this->request->get( 'title' );
 		$dayStart	= $this->request->get( 'dayStart' );

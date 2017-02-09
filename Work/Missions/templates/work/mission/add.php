@@ -101,9 +101,13 @@ $panelAdd	= '
 				<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 				<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 			</div>
-			<div class="span2 -column-left-20 optional type type-0" style="display: none">
+<!--			<div class="span2 -column-left-20 optional type type-0" style="display: none">
 				<label for="input_minutesProjected">'.$w->labelMinutesProjected.'</label>
 				<input type="text" name="minutesProjected" id="input_minutesProjected" class="span10 -xs numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
+			</div>-->
+			<div class="span2 -column-left-20 optional type type-0" style="display: none">
+				<label for="input_timeProjected">'.$w->labelTimeProjected.'</label>
+				<input type="text" name="timeProjected" id="input_timeProjected" class="span10 -xs numeric" value="'.$timeProjected.'"/>
 			</div>
 		</div>
 <!--		<div class="row-fluid">

@@ -36,7 +36,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 		$userId		= $this->session->get( 'userId' );
 
 		//  get list limit and page filters and sanitize them
-		$limitMin	= 10;
+		$limitMin	= 20;
 		$limitMax	= 100;
 		$limit		= (int) $this->session->get( $this->filterKeyPrefix.'limit' );
 		$limit		= max( $limitMin, min( 100, abs( $limit ) ) );
@@ -52,7 +52,6 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 			$this->session->set( $this->filterKeyPrefix.'page', $page = 0 );
 		$offset		= $page * $limit;
 		$missions	= array_slice( $missions, $offset, $limit );
-
 		$this->setData( array(
 			'limit'		=> $limit,
 			'page'		=> $page,

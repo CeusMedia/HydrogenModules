@@ -40,9 +40,10 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
 
-$iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconEdit			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconCopy			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
+$iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconEdit			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconCopy			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) );
+$iconRevamp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-recycle' ) );
 
 /*
 $helper			= new View_Helper_TimePhraser( $env );
@@ -98,16 +99,33 @@ $isOverrunTracked	= $totalMinsProjected && $totalMinsTracked > $totalMinsProject
 
 if( $totalMinsProjected )
 	$list[]	= UI_HTML_Tag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), array() );
-if( $totalMinsTracked )
-	$list[]	= UI_HTML_Tag::create( 'dd', 'erfasst: '.renderDuration( $totalMinsTracked, $useTimer ), array(
+if( $totalMinsTracked ){
+	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) );
+	$diff	= UI_HTML_Tag::create( 'small', '('.$diff.')', array( 'class' => 'muted' ) );
+	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked );
+	$list[]	= UI_HTML_Tag::create( 'dd', 'erfasst: '.$time.' '.$diff, array(
 		'class' => $isOverrunTracked ? 'warning' : NULL,
 	) );
-if( $totalMinsRequired )
-	$list[]	= UI_HTML_Tag::create( 'dd', 'benötigt: '.renderDuration( $totalMinsRequired, $useTimer ), array(
+}
+if( $totalMinsRequired ){
+	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsRequired ) );
+	$diff	= UI_HTML_Tag::create( 'small', '('.$diff.')', array( 'class' => 'muted' ) );
+	$time	= View_Work_Mission::formatSeconds( $totalMinsRequired );
+	$list[]	= UI_HTML_Tag::create( 'dd', 'benötigt: '.$time.' '.$diff, array(
 		'class' => $isOverrunRequired ? 'warning' : NULL,
 	) );
+}
 $factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
 
+$buttonCancel	= UI_HTML_Elements::LinkButton( './work/mission', $iconCancel.' '.$w->buttonCancel, 'btn btn-small' );
+$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' );
+$buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-small' );
+$buttonRevamp	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/2/1', $iconRevamp.' '.$w->buttonRevamp, 'btn btn-small' );
+
+if( in_array( $mission->status, array( -1, 0, 1, 2, 3 ) ) )
+	$buttonRevamp	= "";
+else
+	$buttonEdit		= "";
 
 return '
 <style>
@@ -166,10 +184,11 @@ dl dd.warning {
 					</div>
 				</div>
 				<div class="buttonbar">
-					'.UI_HTML_Elements::LinkButton( './work/mission', $iconCancel.' '.$w->buttonCancel, 'btn btn-small' ).'
-					'.UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' ).'
+					'.$buttonCancel.'
+					'.$buttonEdit.'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn not-btn-info not-btn-success btn-small btn-mini' ).'
+					'.$buttonRevamp.'
+					'.$buttonCopy.'
 				</div>
 			</div>
 		</div>

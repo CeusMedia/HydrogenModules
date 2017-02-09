@@ -4,7 +4,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
-	protected $pathIcons		= 'http://img.int1a.net/famfamfam/silk/';
 	protected $projects			= array();
 	protected $titleLength		= 80;
 	protected $today;
@@ -15,7 +14,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $badgesShowPast	= TRUE;
 	protected $badgesShowFuture	= TRUE;
 	protected $badgesColored	= TRUE;
-
 
 	public function __construct( $env ){
 		parent::__construct( $env );
@@ -98,11 +96,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Bearbeiter', array( 'data-column' => 'workerId' ) );
 		$colgroup[]		= "160px";
 		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Projekt', array( 'data-column' => 'projectId' ) );
-		$colgroup[]		= "120px";
 		if( $showDate ){
 			$colgroup[]		= "80px";
 			$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Datum', array( 'data-column' => 'dayStart' ) );
 		}
+		$colgroup[]		= "120px";
 		$tableHeads[]	= UI_HTML_Tag::create( 'div', 'Zeit', array( 'data-column' => 'time' ) );
 		if( $showActions && $tense ){
 			$colgroup[]		= "65px";
@@ -237,11 +235,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			'value'	=> $event->missionId,
 		) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $checkbox );*/
-		if( $showDate ){
-			$date		= date( "d.m", strtotime( $event->dayStart ) );
-			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
-			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
-		}
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $event->priority, array( 'class' => 'cell-priority', 'title' => $priority ) );
@@ -249,6 +242,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$cells[]	= UI_HTML_Tag::create( 'td', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project autocut', 'title' => $project ) );
+		if( $showDate ){
+			$date		= date( "d.m", strtotime( $event->dayStart ) );
+			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
+			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
+		}
 		if( $showStatus )
 			$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 		if( $showActions ){
@@ -312,7 +310,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 				$list[$key]	= $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions );
 			}
 		}
-		ksort( $list );
+//		ksort( $list );
 		return join( $list );
 	}
 
