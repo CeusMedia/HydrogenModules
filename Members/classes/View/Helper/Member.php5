@@ -30,7 +30,6 @@ class View_Helper_Member{
 				return UI_HTML_Tag::create( 'div', $image.$link, $attributes );
 				break;
 			case 'bar':
-			default:
 				$label		= $this->user->username;
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
@@ -76,7 +75,6 @@ class View_Helper_Member{
 					$image	= $helperAvatar->render();
 				break;
 			case 'large':
-			default:
 				$helperGravatar->setSize( 40 );
 				$image		= $helperGravatar->render();
 				if( $helperAvatar && $helperAvatar->has() )
