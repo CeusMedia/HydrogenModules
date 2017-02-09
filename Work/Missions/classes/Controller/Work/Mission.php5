@@ -331,6 +331,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$model		= new Model_Mission_Document( $this->env );
 
 		$path		= 'contents/documents/missions/';
+		if( !file_exists( $path ) )
+			mkdir( $path, 0777, TRUE );
 		$document	= $model->getByIndices( array(
 			'missionId'	=> $missionId,
 			'filename'	=> $upload->name,
