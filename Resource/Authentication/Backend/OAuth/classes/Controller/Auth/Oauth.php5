@@ -231,7 +231,11 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->session->remove( 'oauth_scope' );
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->remove( 'userId' ) ){
+		if( $this->session->has( 'userId' ) ){
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+				'userId'	=> $this->session->get( 'userId' ),
+				'roleId'	=> $this->session->get( 'roleId' ),
+			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
 			if( $this->request->has( 'autoLogout' ) ){
