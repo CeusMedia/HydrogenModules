@@ -343,7 +343,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 
 //		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
-		$this->restart( 'view/'.$missionId, TRUE );
+		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 
 	public function ajaxGetProjectUsers( $projectId ){
@@ -721,6 +721,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			);
 			$this->addData( 'openTimers', $logic->countTimers( $conditions ) );
 		}
+
+		$model		= new Model_Mission_Document( $this->env );
+		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
+		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
+		$this->addData( 'documents', $documents );
 	}
 
 	public function filter(){

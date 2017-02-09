@@ -9,6 +9,7 @@ $helperAdd->setProjectId( $mission->projectId );
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );
 $helperShortList->setStatus( array( 0, 1, 2, 3 ) );
+$helperShortList->setButtons( array( 'edit', 'start', 'pause', 'stop' ) );
 $helperShortList->setModule( 'Work_Missions' );
 $helperShortList->setModuleId( $mission->missionId );
 $helperShortList->setProjectId( $mission->projectId );

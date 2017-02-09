@@ -5,6 +5,7 @@ $panelClose		= $view->loadTemplateFile( 'work/mission/edit.close.php' );
 $panelIssue		= $view->loadTemplateFile( 'work/mission/edit.issue.php' );
 $panelContent	= $view->loadTemplateFile( 'work/mission/edit.content.php' );
 $panelTime		= $view->loadTemplateFile( 'work/mission/edit.time.php' );
+$panelDocuments	= $view->loadTemplateFile( 'work/mission/edit.documents.php' );
 
 $w	= (object) $words['edit'];
 
@@ -224,6 +225,7 @@ return '
 </div>
 <div class="row-fluid">
 	<div class="span12">
+		'.$panelDocuments.'
 	</div>
 </div>
 <script>

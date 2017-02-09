@@ -80,6 +80,7 @@ code>
 	<log version="0.9.31">Use module JS:jQuery:equalize for drop columns in Kanban mode.</log>
 	<log version="0.9.32">Change type of view type filter.</log>
 	<log version="0.9.33">Reorder form fields.</log>
+	<log version="0.9.34">Add document handling in edit mode.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
