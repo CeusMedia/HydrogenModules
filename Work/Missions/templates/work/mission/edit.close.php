@@ -9,7 +9,7 @@ $hint	= '';
 
 $minutes	= $mission->minutesRequired;
 if( $useTimer ){
-	$seconds	= View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId );
+	$seconds	= View_Helper_Work_Time::sumTimersOfModuleId( $env, 'Work_Missions', $mission->missionId );
 	if( $seconds )
 		$minutes	= ceil( $seconds / 60 );
 
@@ -21,6 +21,8 @@ if( $useTimer ){
 $hoursRequired		= floor( $minutes / 60 );
 $minutesRequired	= str_pad( $minutes - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
 
+$timeRequired		= View_Work_Mission::formatSeconds( $minutes * 60 );
+
 return '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
@@ -29,11 +31,17 @@ return '
 			<input type="hidden" name="status" id="input_close_status" value="'.$mission->status.'"/>
 			'.$hint.'
 			<div class="row-fluid">
-				<div class="span7">
+<!--				<div class="span7">
 					<label for="input_close_hoursRequired">'.$w->labelHours.'</label>
 				</div>
 				<div class="span5">
 					<input type="text" name="hoursRequired" id="input_close_hoursRequired" class="span8 -xs numeric" value="'.$hoursRequired.':'.$minutesRequired.'"/>
+				</div>-->
+				<div class="span7">
+					<label for="input_close_timeRequired">'.$w->labelTimeRequired.'</label>
+				</div>
+				<div class="span5">
+					<input type="text" name="timeRequired" id="input_close_timeRequired" class="span8 -xs numeric" value="'.$timeRequired.'"/>
 				</div>
 			</div>
 			<div class="buttonbar">

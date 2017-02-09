@@ -40,12 +40,14 @@ if( $useProjects ){
 	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
 }
 
+$timeProjected		= View_Work_Mission::formatSeconds( $mission->minutesProjected * 60 );
+
+
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, "0", STR_PAD_LEFT );
-
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
@@ -140,9 +142,13 @@ $panelEdit	= '
 					<label for="input_timeEnd">'.$w->labelTimeEnd.'</label>
 					<input type="text" name="timeEnd" id="input_timeEnd" class="span12 -max" value="'.$mission->timeEnd.'" autocomplete="off"/>
 				</div>
-				<div class="span2 -column-left-10 optional type type-0" style="display: none">
+<!--				<div class="span2 -column-left-10 optional type type-0" style="display: none">
 					<label for="input_hoursProjected">'.$w->labelMinutesProjected.'</label>
 					<input type="text" name="minutesProjected" id="input_minutesProjected" class="span12 -numeric" value="'.$hoursProjected.':'.$minutesProjected.'"/>
+				</div>-->
+				<div class="span2 -column-left-10 optional type type-0" style="display: none">
+					<label for="input_timeProjected">'.$w->labelTimeProjected.'</label>
+					<input type="text" name="timeProjected" id="input_timeProjected" class="span12 -numeric" value="'.$timeProjected.'"/>
 				</div>
 <!--				<div class="span2 -column-left-10 optional type type-0" style="display: none">
 					<label for="input_minutesRequired">'.$w->labelMinutesRequired.'</label>

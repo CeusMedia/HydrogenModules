@@ -40,6 +40,46 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$this->messenger	= $this->env->getMessenger();
 */	}
 
+	static public function formatSeconds( $duration, $space = ' ' ){
+		$seconds 	= $duration % 60;
+		$duration	= ( $duration - $seconds ) / 60;
+		$minutes	= $duration % 60;
+		$duration	= ( $duration - $minutes ) / 60;
+		$hours		= $duration % 24;
+		$days		= ( $duration - $hours ) / 24;
+		$duration	= ( $seconds ? $space.str_pad( $seconds, 2, 0, STR_PAD_LEFT ).'s' : '' );
+		$duration	= ( $minutes ? $space.( $hours ? str_pad( $minutes, 2, 0, STR_PAD_LEFT ).'m' : $minutes.'m' ) : '' ).$duration;
+		$duration	= ( $hours ? $space.( $days ? str_pad( $hours, 2, 0, STR_PAD_LEFT ).'h' : $hours.'h' ) : '' ).$duration;
+		$duration	= ( $days ? $space.$days.'d' : '' ).$duration;
+		return ltrim( $duration, $space );
+	}
+
+	static public function parseTime( $time ){
+		$regexDays	= '@([0-9]+)d\s*@';
+		$regexHours	= '@([0-9]+)h\s*@';
+		$regexMins	= '@([0-9]+)m\s*@';
+		$regexSecs	= '@([0-9]+)s\s*@';
+		$seconds	= 0;
+		$matches	= array();
+		if( preg_match( $regexDays, $time, $matches ) ){
+			$time		= preg_replace( $regexDays, '', $time );
+			$seconds	+= (int) $matches[1] * 24 * 60 * 60;
+		}
+		if( preg_match( $regexHours, $time, $matches ) ){
+			$time		= preg_replace( $regexHours, '', $time );
+			$seconds	+= (int) $matches[1] * 60 * 60;
+		}
+		if( preg_match( $regexMins, $time, $matches ) ){
+			$time		= preg_replace( $regexMins, '', $time );
+			$seconds	+= (int) $matches[1] * 60;
+		}
+		if( preg_match( $regexSecs, $time, $matches ) ){
+			$time	= preg_replace( $regexSecs, '', $time );
+			$seconds	+= (int) $matches[1];
+		}
+		return $seconds;
+	}
+
 	public function add(){
 	}
 

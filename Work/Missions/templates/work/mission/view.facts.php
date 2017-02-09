@@ -88,7 +88,7 @@ $totalMinsProjected	= $hoursProjected * 60 + $minutesProjected;
 $totalMinsRequired	= $hoursRequired * 60 + $minutesRequired;
 $totalMinsTracked	= 0;
 if( $useTimer ){
-	$totalMinsTracked	= floor( View_Helper_Work_Time::sumTimersOfMission( $env, $mission->missionId ) / 60 );
+	$totalMinsTracked	= ceil( View_Helper_Work_Time::sumTimersOfModuleId( $env, 'Work_Missions', $mission->missionId ) / 60 );
 //	$totalMinsRequired	= max( $totalMinsTracked, $totalMinsRequired );
 }
 

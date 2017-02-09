@@ -218,6 +218,24 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		);
 	}
 
+	static public function ___onStartTimer( $env, $context, $module, $data ){
+		$timer	= $data['timer'];
+		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
+			$model		= new Model_Mission( $env );
+			$mission	= $model->get( $timer->moduleId );
+			if( in_array( $mission->status, array( -2, -1, 0, 1, 3, 4 ) ) ){
+				$model->edit( $timer->moduleId, array( 'status' => 2 ) );
+			}
+		}
+	}
+
+	static public function ___onPauseTimer( $env, $context, $module, $data ){
+//		self::___onStartTimer( $env, $context, $module, $data );
+	}
+
+	static public function ___onStopTimer( $env, $context, $module, $data ){
+//		self::___onStartTimer( $env, $context, $module, $data );
+	}
 
 	/**
 	 *	Add a new mission.
@@ -268,7 +286,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'dayEnd'			=> $this->logic->getDate( $dayEnd ),
 					'timeStart'			=> $this->request->get( 'timeStart' ),
 					'timeEnd'			=> $this->request->get( 'timeEnd' ),
-					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
+//					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
+					'minutesProjected'	=> round( View_Work_Mission::parseTime( $this->request->get( 'timeProjected' ) ) / 60 ),
 					'location'			=> $this->request->get( 'location' ),
 					'reference'			=> $this->request->get( 'reference' ),
 					'format'			=> $format,
@@ -296,7 +315,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( !$mission['format'] )
 			$mission['format']		= $this->contentFormat;
 
-		$mission['minutesProjected']	= $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) );
+//		$mission['minutesProjected']	= $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) );
 		$this->addData( 'mission', (object) $mission );
 		$this->addData( 'users', $this->userMap );
 		$this->addData( 'userId', $this->userId );
@@ -547,13 +566,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function close( $missionId ){
 		$this->checkIsEditor( $missionId );
-		$words			= (object) $this->getWords( 'edit' );
-		$mission		= $this->model->get( $missionId );
-		$this->model->edit( $missionId, array(													//  store in database
-			'status'		=> $this->request->get( 'status' ),									//  - new status
-			'hoursRequired'	=> $this->request->get( 'hoursRequired' ),							//  - number of required hours
-			'modifierId'	=> $this->userId,													//  - modifying user id
-			'modifiedAt'	=> time(),															//  - modification time
+		$words		= (object) $this->getWords( 'edit' );
+		$mission	= $this->model->get( $missionId );
+		$minutes	= ceil( View_Work_Mission::parseTime( $this->request->get( 'timeRequired' ) ) / 60 );
+		$this->model->edit( $missionId, array(														//  store in database
+			'status'			=> $this->request->get( 'status' ),									//  - new status
+//			'hoursRequired'		=> $this->request->get( 'hoursRequired' ),							//  - number of required hours
+			'minutesRequired'	=> $minutes,														//  - number of required minutes
+			'modifierId'		=> $this->userId,													//  - modifying user id
+			'modifiedAt'		=> time(),															//  - modification time
 		) );
 		$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		$this->messenger->noteSuccess( $words->msgSuccessClosed );
@@ -667,8 +688,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'dayEnd'			=> $dayEnd,
 					'timeStart'			=> $this->request->get( 'timeStart' ),
 					'timeEnd'			=> $this->request->get( 'timeEnd' ),
-					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
-					'minutesRequired'	=> $this->getMinutesFromInput( $this->request->get( 'minutesRequired' ) ),
+//					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
+					'minutesProjected'	=> round( View_Work_Mission::parseTime( $this->request->get( 'timeProjected' ) ) / 60 ),
+//					'minutesRequired'	=> $this->getMinutesFromInput( $this->request->get( 'minutesRequired' ) ),
 //					'hoursProjected'	=> $this->request->get( 'hoursProjected' ) ? $this->request->get( 'hoursProjected' ) : NULL,
 //					'hoursRequired'		=> $this->request->get( 'hoursRequired' ) ? $this->request->get( 'hoursRequired' ) : NULL,
 					'location'			=> $this->request->get( 'location' ),
@@ -692,6 +714,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
 		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
+
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
 		$missionUsers		= array( $mission->creatorId => $mission->creator );
