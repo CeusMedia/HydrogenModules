@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -24,6 +24,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.3.1">Handle forwarding on login or logout by module.</log>
 	<log version="0.3.2">Implement hook Resource:Users::getRelatedUsers.</log>
 	<log version="0.3.3">Add config flag to allow relating to all known users.</log>
+	<log version="0.3.4">Add hook call Auth::onBeforeLogin.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
