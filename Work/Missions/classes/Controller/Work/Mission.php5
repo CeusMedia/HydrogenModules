@@ -15,7 +15,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'topic', (string) $topic );
 	}
 
-
 	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
 		try{
 //			if( !$this->request->isAjax() )
@@ -654,7 +653,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( 'view/'.$missionId, TRUE );
 		}
 
-
 		if( $this->useProjects ){
 			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
 				$this->messenger->noteError( $words->msgInvalidProject );
@@ -1000,7 +998,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$path		= 'contents/documents/missions/';
 			@unlink( $path.$document->hashname );
 			$model->remove( $missionDocumentId );
-			$this->restart( 'view/'.$missionId, TRUE );
+			$this->restart( 'edit/'.$missionId, TRUE );
 		}
 	}
 
