@@ -127,6 +127,7 @@ code>
 		<template>work/mission/edit.php</template>
 		<template>work/mission/edit.close.php</template>
 		<template>work/mission/edit.content.php</template>
+		<template>work/mission/edit.documents.php</template>
 		<template>work/mission/edit.info.php</template>
 		<template>work/mission/edit.issue.php</template>
 		<template>work/mission/edit.time.php</template>

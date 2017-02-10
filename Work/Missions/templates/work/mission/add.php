@@ -32,6 +32,7 @@ if( $useProjects ){
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
+$timeProjected		= View_Work_Mission::formatSeconds( $mission->minutesProjected * 60 );
 
 $fieldContent	= '';
 if( strtoupper( $format ) == "HTML" ){
