@@ -48,7 +48,7 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
-	 *	Returns list of users assigned to a projects.
+	 *	Returns list of users assigned to a project.
 	 *	@access		public
 	 *	@param		integer		$projectId		Project ID
 	 *	@param		array       $conditions     Map of conditions for users to follow
@@ -57,6 +57,18 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
 		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
+	}
+
+	/**
+	 *	Returns list of users assigned to projects.
+	 *	@access		public
+	 *	@param		array		$projectIds		List of Project IDs
+	 *	@param		array       $conditions     Map of conditions for users to follow
+	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
+	 *	@return		array		Map of users assigned to project
+	 */
+	public function getProjectsUsers( $projectIds, $conditions = array(), $orders = array() ){
+		return $this->modelProject->getProjectUsers( $projectIds, $conditions, $orders );
 	}
 
 	/**

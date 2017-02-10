@@ -1,8 +1,9 @@
+
 <?xml version="1.0"?>
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.29</version>
+	<version>0.3.30</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -36,6 +37,7 @@
 	<log version="0.3.27">Add support for module Members.</log>
 	<log version="0.3.28">Combine related members and related projected users correctly.</log>
 	<log version="0.3.29">Implement hook Resource:Users::getRelatedUsers.</log>
+	<log version="0.3.30">Add new logic method getProjectsUsers.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
