@@ -9,18 +9,19 @@ div.indicator span.indicator-outer {
 */	border: 1px solid rgba(0, 0, 0, 0.75);
 	border-radius: 5px;
 	overflow: hidden;
-	}	
+	}
 div.indicator div.indicator-inner {
 	height: 12px;
 	overflow: hidden;
-	}	
+	background-color: rgba(127,127,127,0.33);
+	}
 div.indicator span.indicator-percentage {
 	display: none;
 	font-family: tahoma;
 	font-size: 11px;
 	position: absolute;
 	top: 4px;
-	right: 8px;	
+	right: 8px;
 	}
 
 
@@ -51,7 +52,7 @@ div.indicator-small div.indicator-inner {
 	height: 12px;
 /*	background-image: url(../../images/indicator/bar3.png);
 	background-position: left bottom;
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
 	opacity: 0.8;*/
 	}
 div.indicator-small span.indicator-percentage,
