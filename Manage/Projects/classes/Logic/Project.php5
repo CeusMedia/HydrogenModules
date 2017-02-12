@@ -42,6 +42,10 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 
 	public function getProjects( $conditions = array(), $orders = array(), $limits = array() ){
 		$projects	= $this->modelProject->getAll( $conditions, $orders, $limits );
+//		@todo   	replace the last 3 lines below by this more performant code after testing
+//		$projectIds	= array();
+//		foreach( $projects as $project )
+//			$projectIds[]	= $project->projectId;
 		foreach( $projects as $project )
 			$project->user	= $this->getProjectUsers( $project->projectId );
 		return $projects;
@@ -81,20 +85,45 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@return		array		List of projects of user
 	 */
 	public function getUserProjects( $userId, $activeOnly = FALSE, $conditions = array(), $orders = array() ){
-		$orders			= $orders ? $orders : array( 'title' => 'ASC' );								//  sanitize project orders
-		$userProjects	= array();																		//  create empty project map
-		if( $this->hasFullAccess() ){																	//  super access
-			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )					//  iterate all projects
-				$userProjects[$project->projectId]  = $project;											//  add to projects map
+		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
+		$userProjects	= array();																	//  create empty project map
+		if( $this->hasFullAccess() ){																//  super access
+			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )				//  iterate all projects
+				$userProjects[$project->projectId]  = $project;										//  add to projects map
 		}
-		else{																							//  normal access
-			if( $activeOnly )																			//  reduce to active projects
-				$conditions['status']	= array( 0, 1, 2, 3, 4 );										//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
+		else{																						//  normal access
+			if( $activeOnly )																		//  reduce to active projects
+				$conditions['status']	= array( 0, 1, 2 );											//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
 			$projects	= $this->modelProject->getUserProjects( $userId, $conditions, $orders );
-			foreach( $projects as $project )															//  get and iterate user assigned projects
-				$userProjects[$project->projectId]  = $project;											//  add to projects map
+			foreach( $projects as $project )														//  get and iterate user assigned projects
+				$userProjects[$project->projectId]  = $project;										//  add to projects map
 		}
-		return $userProjects;																			//  return projects map
+		return $userProjects;																		//  return projects map
+	}
+	/**
+	 *	Returns projects where users (by their ID) are assigned to.
+	 *	@access		public
+	 *	@param		array		$userIds		List of user IDs
+	 *	@param		boolean		$activeOnly		Flag: List only active projects
+	 *	@param		array		$conditions		Map of conditions for projects to follow
+	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
+	 *	@return		array		List of projects of user
+	 */
+	public function getUsersProjects( $userIds, $activeOnly = FALSE, $conditions = array(), $orders = array() ){
+		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
+		$userProjects	= array();																	//  create empty project map
+		if( $this->hasFullAccess() ){																//  super access
+			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )				//  iterate all projects
+				$userProjects[$project->projectId]  = $project;										//  add to projects map
+		}
+		else{																						//  normal access
+			if( $activeOnly )																		//  reduce to active projects
+				$conditions['status']	= array( 0, 1, 2 );											//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
+			$projects	= $this->modelProject->getUserProjects( $userIds, $conditions, $orders );
+			foreach( $projects as $project )														//  get and iterate user assigned projects
+				$userProjects[$project->projectId]  = $project;										//  add to projects map
+		}
+		return $userProjects;																		//  return projects map
 	}
 
 	public function setDefaultProject( $userId, $projectId ){
