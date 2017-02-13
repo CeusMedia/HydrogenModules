@@ -44,8 +44,6 @@ abstract class Mail_Work_Mission_Change extends Mail_Abstract{
 		$this->modelUser		= new Model_User( $this->env );
 
 		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'bootstrap.css' );
-		$this->addThemeStyle( 'bootstrap.responsive.css' );
 		$this->addThemeStyle( 'layout.css' );
 		$this->addThemeStyle( 'layout.panels.css' );
 		$this->addThemeStyle( 'site.user.css' );
