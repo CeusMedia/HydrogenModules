@@ -20,9 +20,10 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getCoworkers( $userId, $projectId = 0 ){
 		if( $projectId ){
 			$users	= $this->getProjectUsers( $projectId );
-			if( !isset( $users[$userId] ) )
+			if( isset( $users[$userId] ) )
+				unset( $users[$userId] );
+			else if( !$this->hasFullAccess() )
 				throw new RuntimeException( 'User with ID '.$userId.' is not member of project with ID '.$projectId );
-			unset( $users[$userId] );
 			return $users;
 		}
 		return Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $userId );
