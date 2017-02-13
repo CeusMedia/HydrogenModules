@@ -204,6 +204,7 @@ code>
 	<link access="inside" path="work/mission/future/ajaxRenderIndex"/>
 	<link access="inside" path="work/mission/future/index"/>
 	<hook type="resource" resource="Database_Lock" event="checkRelease">Controller_Work_Mission::___onDatabaseLockReleaseCheck</hook>
+	<hook type="resource" resource="Project" event="listRelations">Controller_Work_Mission::___onListProjectRelations</hook>
 	<hook type="resource" resource="Work_Timer" event="registerModule">Controller_Work_Mission::___onRegisterTimerModule</hook>
 	<hook type="resource" resource="Work_Timer" event="onStartTimer">Controller_Work_Mission::___onStartTimer</hook>
 	<hook type="resource" resource="Work_Timer" event="onPauseTimer">Controller_Work_Mission::___onPauseTimer</hook>
