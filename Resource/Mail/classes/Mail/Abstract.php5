@@ -44,8 +44,17 @@ abstract class Mail_Abstract{
 			$this->baseUrl = $config->get( 'app.base.url' );
 		$this->page->setBaseHref( $this->baseUrl );
 //		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
-		if( $defaultStyle )
+
+		if( $this->env->getModules()->has( 'UI_Bootstrap' ) ){
+			$localPath	= $this->env->getConfig()->get( 'module.ui_bootstrap.local.path' );
+			$version	= $this->env->getConfig()->get( 'module.ui_bootstrap.version' );
+			$path		= sprintf( $localPath, $version );
+			$this->addCommonStyle( $path.'/css/bootstrap.min.css' );
+			$this->addCommonStyle( $path.'/css/bootstrap.responsive.min.css' );
+		}
+		else if( $defaultStyle )
 			$this->addThemeStyle( 'mail.min.css' );
+
 //		$this->addScriptFile( 'mail.min.js' );
 		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
@@ -141,6 +150,12 @@ abstract class Mail_Abstract{
 		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/css' ) );
 		$this->page->addHead( $tag );
 		return TRUE;
+	}
+
+	protected function addCommonStyle( $fileName ){
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.themes' ).'/common/css/';
+		return $this->addStyle( $path.$fileName );
 	}
 
 	protected function addThemeStyle( $fileName ){
