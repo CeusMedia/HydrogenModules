@@ -1,0 +1,53 @@
+body.moduleAdminConfig table .radio,
+body.moduleAdminConfig table .checkbox {
+	padding-left: 0;
+	padding-right: 1em;
+	}
+body.moduleAdminConfig table input[class*="span"],
+body.moduleAdminConfig table select[class*="span"],
+body.moduleAdminConfig table textarea[class*="span"] {
+	min-height: 25px !important;
+	}
+body.moduleAdminConfig table input[type="text"],
+body.moduleAdminConfig table select,
+body.moduleAdminConfig table textarea {
+	margin: 0px;
+/*	padding: 2px 4px;*/
+	font-size: 0.9em;
+	min-height: 1.2em;
+	}
+body.moduleAdminConfig table select {
+	min-height: 1.2em;
+	height: auto;
+	}
+body.moduleAdminConfig table .radio.inline,
+body.moduleAdminConfig table .checkbox.inline {
+	padding-top: 2px;
+	padding-bottom: 4px;
+	}
+body.moduleAdminConfig table td.cell-value {
+	padding: 4px 5px;
+	}
+
+
+
+body.moduleAdminConfig ul.nav.nav-pills li {
+	position: relative;
+	}
+body.moduleAdminConfig ul.nav.nav-pills li a.autocut {
+	box-sizing: border-box;
+	padding-right: 40px;
+	font-size: 0.9em;
+	}
+body.moduleAdminConfig ul.nav.nav-pills li .badge {
+	position: absolute;
+	right: 0.5em;
+	top: 0.5em;
+	}
+body.moduleAdminConfig ul.nav.nav-pills li a span.prefix {
+	font-size: 0.9em;
+	}
+body.moduleAdminConfig ul.nav.nav-pills li a span.main {
+	font-weight: bold;
+/*	display: block;*/
+	}

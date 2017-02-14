@@ -2,7 +2,7 @@
 <module>
 	<title>Admin: Config</title>
 	<description><![CDATA[Editor for module application configuration.]]></description>
-	<version>0.4</version>
+	<version>0.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Render table instead of list.</log>
@@ -13,6 +13,8 @@
 	<log version="0.3.1">Use file backup to backup and restore versions.</log>
 	<log version="0.3.2">Update user interface.</log>
 	<log version="0.4">Split view into list and module config editor.</log>
+	<log version="0.4.1">Extract style definitions to CSS file.</log>
+	<log version="0.5">Add filter and extract labels to locales.</log>
 	<category>Administration</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -22,16 +24,21 @@
 		<class>View/Admin/Config.php5</class>
 		<template>admin/config/edit.php</template>
 		<template>admin/config/index.php</template>
-		<template>admin/config/list.php</template>
+		<template>admin/config/index.filter.php</template>
+		<template>admin/config/index.list.php</template>
 		<locale>de/admin/config.ini</locale>
-		<locale>de/html/admin/config/bottom.html</locale>
-		<locale>de/html/admin/config/top.html</locale>
+		<locale>de/html/admin/config/edit/bottom.html</locale>
+		<locale>de/html/admin/config/edit/top.html</locale>
+		<locale>de/html/admin/config/index/bottom.html</locale>
+		<locale>de/html/admin/config/index/top.html</locale>
 		<locale>en/admin/config.ini</locale>
 		<locale>en/html/admin/config/bottom.html</locale>
 		<locale>en/html/admin/config/top.html</locale>
+		<style>module.admin.config.css</style>
 	</files>
 	<link xml:lang="de" access="acl" path="admin/config">Konfiguration</link>
 	<link xml:lang="en" access="acl" path="admin/config">Configuration</link>
+	<hook type="resource" resource="Admin_Config" event="registerTabs">View_Admin_Config::___onRegisterTab</hook>
 	<relations>
 		<needs type="module">App_Site</needs>
 	</relations>
