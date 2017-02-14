@@ -142,17 +142,17 @@ button.task-add span {
 #input_dayStart,
 #input_dayEnd,
 input.datepicker {
-	background-image: url(http://img.int1a.net/famfamfam/silk/calendar.png);
+/*	background-image: url(http://img.int1a.net/famfamfam/silk/calendar.png);
 	background-repeat: no-repeat;
 	background-position: 5px 50%;
-	text-indent: 22px;
+	text-indent: 22px;*/
 	}
 #input_timeStart,
 #input_timeEnd {
-	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
+/*	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
 	background-repeat: no-repeat;
 	background-position: 5px 50%;
-	text-indent: 22px;
+	text-indent: 22px;*/
 	}
 
 
