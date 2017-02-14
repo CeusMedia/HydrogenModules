@@ -194,7 +194,7 @@ legend.icon.mission-close {
 
 /*  --  DAY TABLES  -- */
 body.controller-work-mission.action-index .work-mission-list {
-	overflow: hidden;
+/*	overflow: hidden;*/
 	}
 
 body.controller-work-mission.action-index #day-controls #day-controls-btn-group {
@@ -383,6 +383,9 @@ table tr.mission-row td.cell-priority {
 #day-lists table tr.mission-row td.cell-actions {
 	padding: 1px 2px;
 	text-align: right;
+	}
+#day-lists table tr.mission-row td.cell-actions ul li {
+	text-align: left;
 	}
 #day-lists table tr.mission-row td.cell-title {
 	font-size: 1.1em;

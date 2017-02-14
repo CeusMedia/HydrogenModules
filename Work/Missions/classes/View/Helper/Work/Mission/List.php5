@@ -174,6 +174,30 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	}
 
 	public function renderRowButtons( $mission, $days ){
+		$buttonToggle	= UI_HTML_Tag::create( 'button', UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-caret-down' ) ), array(
+			'type'				=> 'button',
+			'class'				=> 'btn btn-small dropdown-toggle',
+			'data-toggle'		=> 'dropdown',
+			'data-mission-id'	=> $mission->missionId,
+		) );
+
+		$link	= UI_HTML_Tag::create( 'a', $this->icons['right'].'&nbsp;'.$this->words['list-actions']['moveRight'], array(
+			'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'+1'); return false;",
+			'href'		=> '#',
+		) );
+		$list[]	= UI_HTML_Tag::create( 'li', $link );
+
+		if( $days ){
+			$link	= UI_HTML_Tag::create( 'a', $this->icons['left'].'&nbsp;'.$this->words['list-actions']['moveLeft'], array(
+				'href'		=> '#',
+				'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'-1'); return false;",
+				'title'		=> $this->words['list-actions']['moveLeft'],
+			) );
+			$list[]	= UI_HTML_Tag::create( 'li', $link );
+		}
+		$dropdown		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) );
+		$buttonGroup	= UI_HTML_Tag::create( 'div', array( $buttonToggle.$dropdown ), array( 'class' => 'btn-group pull-right' ) );
+		return $buttonGroup;
 		$buttons	= array();
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
 		if( $days ){
@@ -196,8 +220,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	}
 
 	public function renderRowLabel( $mission, $edit = TRUE ){
-		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
-		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
+//		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
+		$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
 		$url		= $this->baseUrl.'work/mission/view/'.$mission->missionId;
 		if( $this->isEditor && $edit )
@@ -239,7 +263,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$priority	= $this->words['priorities'][$event->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $event->priority, array( 'class' => 'cell-priority', 'title' => $priority ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'div', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'autocut' ) ), array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project autocut', 'title' => $project ) );
 		if( $showDate ){
