@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
 	<title>Work: Notes</title>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[Note storage with editor supporting several formats.]]></description>
 	<category>Work</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support projects.</log>
@@ -19,6 +19,7 @@
 	<log version="0.4.2">Make notes without project relation the new "public" notes.</log>
 	<log version="0.4.3">Show tags only related to user project notes.</log>
 	<log version="0.4.4">Disabled tags for more simple usage.</log>
+	<log version="0.4.5">Support hook Project::onListRelations.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -51,6 +52,7 @@
 	</relations>
 	<link xml:lang="de" access="acl" path="work/note" rank="44">Notizen</link>
 	<link xml:lang="en" access="acl" path="work/note" rank="44">Notes</link>
+	<hook type="resource" resource="Project" event="listRelations">Controller_Work_Note::___onListProjectRelations</hook>
 	<sql on="install" type="mysql" version="0.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>links`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>links` (

@@ -19,6 +19,58 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
+	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+		$modelProject	= new Model_Project( $env );
+		if( empty( $data->projectId ) ){
+			$message	= 'Hook "Work_Notes::___onListProjectRelations" is missing project ID in data.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+			$message	= 'Hook "Work_Notes::___onListProjectRelations": Invalid project ID.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
+		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$language		= $env->getLanguage();
+//		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
+		$list			= array();
+		$modelNote		= new Model_Note( $env );
+		$indices		= array( 'projectId' => $data->projectId );
+//		if( $data->activeOnly )
+//			$indices['status']	= $statusesActive;
+		$orders			= array( 'status' => 'ASC', 'title' => 'ASC' );
+		$notes			= $modelNote->getAllByIndices( $indices, $orders );	//  ...
+/*		$icons			= array(
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
+		);*/
+		$words		= $language->getWords( 'work/note' );
+		foreach( $notes as $note ){
+			$icon		= '';//$icons[$note->type];
+			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
+//			$status		= '('.$words['states'][$issue->status].')';
+//			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $note->title : UI_HTML_Tag::create( 'del', $note->title );
+			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
+			$list[]		= (object) array(
+				'id'		=> $data->linkable ? $note->noteId : NULL,
+				'label'		=> $label,
+			);
+		}
+		View_Helper_ItemRelationLister::enqueueRelations(
+			$data,																					//  hook content data
+			$module,																				//  module called by hook
+			'entity',																				//  relation type: entity or relation
+			$list,																					//  list of related items
+			$words['hook-relations']['label'],														//  label of type of related items
+			'Work_Note',																			//  controller of entity
+			'view'																					//  action to view or edit entity
+		);
+	}
+
 	public function add(){
 		$model		= new Model_Note( $this->env );
 		$words		= (object) $this->getWords( 'add' );
