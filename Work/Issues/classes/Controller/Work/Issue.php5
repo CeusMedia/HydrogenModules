@@ -35,6 +35,58 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		) );
 	}
 
+	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+		$modelProject	= new Model_Project( $env );
+		if( empty( $data->projectId ) ){
+			$message	= 'Hook "Work_Issues::___onListProjectRelations" is missing project ID in data.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+			$message	= 'Hook "Work_Issues::___onListProjectRelations": Invalid project ID.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
+		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$language		= $env->getLanguage();
+		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
+		$list			= array();
+		$modelIssue		= new Model_Issue( $env );
+		$indices		= array( 'projectId' => $data->projectId );
+		if( $data->activeOnly )
+			$indices['status']	= $statusesActive;
+		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
+		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
+		$icons			= array(
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
+		);
+		$words		= $language->getWords( 'work/issue' );
+		foreach( $issues as $issue ){
+			$icon		= $icons[$issue->type];
+			$isOpen		= in_array( $issue->status, $statusesActive );
+			$status		= '('.$words['states'][$issue->status].')';
+			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $issue->title : UI_HTML_Tag::create( 'del', $issue->title );
+			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
+			$list[]		= (object) array(
+				'id'		=> $data->linkable ? $issue->issueId : NULL,
+				'label'		=> $label,
+			);
+		}
+		View_Helper_ItemRelationLister::enqueueRelations(
+			$data,																					//  hook content data
+			$module,																				//  module called by hook
+			'entity',																				//  relation type: entity or relation
+			$list,																					//  list of related items
+			$words['hook-relations']['label'],														//  label of type of related items
+			'Work_Issue',																			//  controller of entity
+			'edit'																					//  action to view or edit entity
+		);
+	}
+
 	public function add(){
 		$request	= $this->env->request;
 		if( $request->has( 'save' ) ){
@@ -150,7 +202,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$modelIssue		= new Model_Issue( $this->env );
 		$issues		= $modelIssue->getAll( $filters, $orders, array( $offset, $limit ) );
 		print( json_encode( $issues ) );
-		die;
+		exit;
 	}
 
 	public function filter( $mode = NULL, $modeValue = 0 ){
@@ -291,7 +343,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			if( $number == count( $terms ) )
 				$list[]	= $issues[$id];
 		print( json_encode( $list ) );
-		die;
+		exit;
 	}
 }
 ?>
