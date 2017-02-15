@@ -34,6 +34,11 @@ if( isset( $projectCompanies ) ){
 	$optCompany	= UI_HTML_Elements::Options( $optCompany, $projectId );
 }
 
+$optCreatorId	= array();
+foreach( $projectUsers as $user )
+	$optCreatorId[$user->userId]	= $user->username;
+$optCreatorId	= UI_HTML_Elements::Options( $optCreatorId, $project->creatorId );
+
 $w			= (object) $words['edit'];
 
 $iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
@@ -82,9 +87,13 @@ $panelEdit	= '
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span9">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12 max mandatory" value="'.htmlentities( $project->title, ENT_COMPAT, 'UTF-8' ).'"/>
+				</div>
+				<div class="span3">
+					<label for="input_creatorId">'.$w->labelCreatorId.'</label>
+					<select name="creatorId" id="input_creatorId" class="span12">'.$optCreatorId.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">

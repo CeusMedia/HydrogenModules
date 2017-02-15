@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.6.5</version>
+	<version>0.6.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -39,6 +39,7 @@
 	<log version="0.6.3">Add new logic method getProjectsUsers.</log>
 	<log version="0.6.4">Improve performance by using less database requests.</log>
 	<log version="0.6.5">Rework support for hook Project::onListRelations.</log>
+	<log version="0.6.6">Make project creator changable.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
