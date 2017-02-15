@@ -46,9 +46,14 @@ class View_Helper_Member{
 			case 'inline':
 			default:
 				$label		= $this->user->username;
+				$fullname	= $this->user->firstname.' '.$this->user->surname;
+				if( strlen( trim( $fullname ) ) && $fullname !== $this->user->username ){
+					$fullname	= UI_HTML_Tag::create( 'small', '('.$fullname.')', array( 'class' => "muted" ) );
+					$label		= $label.'&nbsp;'.$fullname;
+				}
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
 				}
 				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
@@ -74,7 +79,7 @@ class View_Helper_Member{
 				if( $helperAvatar && $helperAvatar->has() )
 					$image	= $helperAvatar->render();
 				break;
-			case 'large':
+			case 'bar':
 				$helperGravatar->setSize( 40 );
 				$image		= $helperGravatar->render();
 				if( $helperAvatar && $helperAvatar->has() )
