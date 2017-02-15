@@ -70,6 +70,17 @@ if( isset( $mission->modifier ) )
 		'label'	=> 'Geändert von',
 		'value'	=> renderUserLabel( $mission->modifier ),
 	);
+if( isset( $mission->projectId ) ){
+	$value		= $projects[$mission->projectId]->title;
+	if( $env->getAcl()->has( 'manage/project', 'view' ) ){
+		$url	= './manage/project/view/'.$mission->projectId;
+		$value	= UI_HTML_Tag::create( 'a', $value, array( 'href' => $url ) );
+	}
+	$infos['project']	= array(
+		'label'	=> 'Projekt',
+		'value'	=> $value,
+	);
+}
 
 if( count( $missionUsers ) > 1 ){
 	$list	= array();
@@ -121,6 +132,7 @@ $factInfoKeys	= array(
 	'date-modification',
 	'worker',
 	'list-users-viewers',
+	'project',
 	'links',
 );
 

@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.36</version>
+	<version>0.9.38</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -84,6 +84,7 @@ code>
 	<log version="0.9.35">Update mission status if a related timer has been started.</log>
 	<log version="0.9.36">Change input and display format of planned and required times.</log>
 	<log version="0.9.37">Rework large day list actions to dropdown list.</log>
+	<log version="0.9.38">Rework support for hook Project::onListRelations.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -186,6 +187,7 @@ code>
 	<config protected="user" type="boolean" name="mail.changes">yes</config>
 	<link xml:lang="de" access="acl" path="work/mission" rank="41">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission" rank="41">Missions</link>
+	<link access="inside" path="work/mission/ajaxGetProjectUsers"/>
 	<link access="inside" path="work/mission/ajaxRenderContent"/>
 	<link access="inside" path="work/mission/ajaxRenderIndex"/>
 	<link access="inside" path="work/mission/ajaxSelectDay"/>

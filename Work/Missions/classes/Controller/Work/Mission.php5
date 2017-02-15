@@ -15,48 +15,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'topic', (string) $topic );
 	}
 
-	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
-		try{
-//			if( !$this->request->isAjax() )
-//				throw new RuntimeException( "No denied" );
-			if( !( $mission	= $this->model->get( $missionId ) ) )
-				throw new InvalidArgumentException( 'Invalid mission id' );
-//			if( !projectMember )
-//				throw new InvalidArgumentException( 'No access to this mission' );
-			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
-			if( ( $version = (int) $version ) !== 0 ){
-				if( $version > 0 ){
-					if( !( $data = $this->logic->getVersion( $missionId, $version ) ) )
-						throw new InvalidArgumentException( 'Invalid version to show' );
-					$content	= View_Helper_Markdown::transformStatic( $this->env, $data->content );
-				}
-				if( ( $versionCompare = (int) $versionCompare ) > 0 ){
-					if( $version != $versionCompare ){
-						if( !( $data = $this->logic->getVersion( $missionId, $versionCompare ) ) )
-							throw new InvalidArgumentException( 'Invalid version to compare to' );
-						$compareWith = View_Helper_Markdown::transformStatic( $this->env, $data->content );
-						$content	= View_Helper_HtmlDiff::renderStatic( $this->env, $compareWith, $content );
-					}
-				}
-			}
-			$this->handleJsonResponse( "data", (string) $content );
-		}
-		catch( Exception $e ){
-			$this->handleJsonResponse( "error", $e->getMessage() );
-		}
-	}
-
-	public function checkForUpdate( $userId ){
-		if( file_exists( "update-".$userId ) ){
-			@unlink( "update-".$userId );
-			print json_encode( TRUE );
-		}
-		else{
-			print json_encode( FALSE );
-		}
-		exit;
-	}
-
 	protected $acl;
 	protected $filterKeyPrefix	= 'filter.work.mission.';
 	protected $isEditor;
@@ -124,10 +82,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
+		$this->logicProject	= new Logic_Project( $this->env );
+		$this->userMap		= $this->logicProject->getCoworkers( $this->userId );
+
 		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)
-		$model			= new Model_User( $this->env );
-		foreach( $model->getAll() as $user )
-			$this->userMap[$user->userId]	= $user;
+//		$model			= new Model_User( $this->env );
+//		foreach( $model->getAll() as $user )
+//			$this->userMap[$user->userId]	= $user;
 
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'useProjects', $this->useProjects );
@@ -140,6 +101,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->userProjects		= $this->logic->getUserProjects( $this->userId, TRUE );
 		if( $this->hasFullAccess() )
 			$this->userProjects		= $this->logic->getUserProjects( $this->userId );
+		$this->addData( 'projects', $this->userProjects );
 
 		$this->initFilters( $this->userId );
 
@@ -183,26 +145,32 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
+		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
+		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$language		= $env->getLanguage();
+		$statusesActive	= array( 0, 1, 2, 3 );
 		$list			= array();
 		$modelMission	= new Model_Mission( $env );
-		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
-		$missions		= $modelMission->getAllByIndex( 'projectId', $data->projectId, $orders );	//  ...
+		$indices		= array( 'projectId' => $data->projectId );
+		if( $data->activeOnly )
+			$indices['status']	= $statusesActive;
+		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
+		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
+
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-wrench' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-time' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
 		);
 		$words		= $language->getWords( 'work/mission' );
-		$linkable	= in_array( $project->status, array( 0, 1, 2 ) );
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
-			$isOpen		= in_array( $mission->status, array( 0, 1, 2, 3 ) );
+			$isOpen		= in_array( $mission->status, $statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'small' ) );
+			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
 			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
-				'id'		=> $linkable ? $mission->missionId : NULL,
+				'id'		=> $data->linkable ? $mission->missionId : NULL,
 				'label'		=> $label,
 			);
 		}
@@ -211,7 +179,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$module,																				//  module called by hook
 			'entity',																				//  relation type: entity or relation
 			$list,																					//  list of related items
-			'Aufgaben/Termine',																		//  label of type of related items
+			$words['hook-relations']['label'],														//  label of type of related items
 			'Work_Mission',																			//  controller of entity
 			'edit'																					//  action to view or edit entity
 		);
@@ -295,7 +263,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$missionId	= $this->model->add( $data, FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
-				$this->restart( './work/mission/view/'.$missionId );
+				$this->restart( 'view/'.$missionId, TRUE );
 			}
 		}
 		$mission	= array();
@@ -370,11 +338,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$list	= array();
 		if( $this->useProjects ){
 			$model	= new Model_Project( $this->env );
-			foreach( $model->getProjectUsers( (int) $projectId ) as $user )
-				$list[$user->username]    = $user;
+			$users	= $model->getProjectUsers( (int) $projectId );
+			if( array_key_exists( $this->userId, $users ) || $this->hasFullAccess() ){
+				foreach( $users as $user )
+					$list[$user->username]    = $user;
+			}
 		}
 		ksort( $list );
 		print( json_encode( array_values( $list ) ) );
+		exit;
 	}
 
 	public function ajaxRenderContent(){
@@ -384,8 +356,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		header( "Content-type: text/html" );
 		print( $html );
 		exit;
-    }
-
+	}
 
 	public function ajaxRenderIndex(){
 		$mode	= $this->session->get( 'filter.work.mission.mode' );
@@ -437,6 +408,37 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			);
 			print( json_encode( $data ) );
 			exit;
+		}
+	}
+
+	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
+		try{
+//			if( !$this->request->isAjax() )
+//				throw new RuntimeException( "No denied" );
+			if( !( $mission	= $this->model->get( $missionId ) ) )
+				throw new InvalidArgumentException( 'Invalid mission id' );
+//			if( !projectMember )
+//				throw new InvalidArgumentException( 'No access to this mission' );
+			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
+			if( ( $version = (int) $version ) !== 0 ){
+				if( $version > 0 ){
+					if( !( $data = $this->logic->getVersion( $missionId, $version ) ) )
+						throw new InvalidArgumentException( 'Invalid version to show' );
+					$content	= View_Helper_Markdown::transformStatic( $this->env, $data->content );
+				}
+				if( ( $versionCompare = (int) $versionCompare ) > 0 ){
+					if( $version != $versionCompare ){
+						if( !( $data = $this->logic->getVersion( $missionId, $versionCompare ) ) )
+							throw new InvalidArgumentException( 'Invalid version to compare to' );
+						$compareWith = View_Helper_Markdown::transformStatic( $this->env, $data->content );
+						$content	= View_Helper_HtmlDiff::renderStatic( $this->env, $compareWith, $content );
+					}
+				}
+			}
+			$this->handleJsonResponse( "data", (string) $content );
+		}
+		catch( Exception $e ){
+			$this->handleJsonResponse( "error", $e->getMessage() );
 		}
 	}
 
@@ -546,6 +548,20 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $this->env->request->isAjax() )
 			$this->ajaxRenderIndex();
 		$this->restart( NULL, TRUE );
+	}
+
+	/**
+	 *	@todo			check if this method is needed anymore
+	 */
+	public function checkForUpdate( $userId ){
+		if( file_exists( "update-".$userId ) ){
+			@unlink( "update-".$userId );
+			print json_encode( TRUE );
+		}
+		else{
+			print json_encode( FALSE );
+		}
+		exit;
 	}
 
 	protected function checkIsEditor( $missionId = NULL, $strict = TRUE, $status = 403 ){
@@ -722,7 +738,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
 
 		$this->addData( 'mission', $mission );
-		$this->addData( 'users', $this->userMap );
+		$this->addData( 'users', $this->logicProject->getProjectUsers( $mission->projectId ) );
 		$missionUsers		= array( $mission->creatorId => $mission->creator );
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
