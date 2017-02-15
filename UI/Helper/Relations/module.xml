@@ -10,9 +10,10 @@ Uses hooks to retrieve information about related items from other modules.
 To append entities, you need to implement Hook::listRelations.
 ]]></description>
 	<category>User Interface</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Rework to match view helper interface.</log>
 	<files>
 		<class>View/Helper/ItemRelationLister.php5</class>
 		<style>module.ui.helper.relations.css</style>
