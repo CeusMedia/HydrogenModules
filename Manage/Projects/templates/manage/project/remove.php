@@ -4,12 +4,15 @@ $w	= (object) $words['remove'];
 
 extract( $view->populateTexts( array( 'remove.right', 'remove.panel.top' ), 'html/manage/project/', array( 'project' => $project ) ) );
 
-$helper	 = new View_Helper_ItemRelationLister( $env );
-$helper->callForRelations( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
-
-$relations  = '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
-if( $helper->hasRelations() ){
-	$relations  = $helper->renderRelations();
+$relations			= '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
+$helperRelations	= new View_Helper_ItemRelationLister( $env );
+$helperRelations->setHook( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+$helperRelations->setLinkable( TRUE );
+$helperRelations->setActiveOnly( FALSE );
+//$helperRelations->setTableClass( 'limited' );
+$helperRelations->setMode( 'list' );
+if( $helperRelations->hasRelations() ){
+	$relations	= $helperRelations->render();
 }
 
 //$iconCancel   = HTML::Icon( 'icon-arrow-left' );
@@ -17,6 +20,10 @@ if( $helper->hasRelations() ){
 
 $iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+}
 
 return HTML::DivClass( 'row-fluid', array(
 	HTML::DivClass( 'span8', array(

@@ -6,19 +6,33 @@ $iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-list' ) );
 $iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
 $iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-star' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-//	$iconList	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-list fa-fw' ) );
-	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-star fa-fw' ) );
-	$iconEdit		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-pencil fa-fw' ) );
+	$iconList		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-star' ) );
+	$iconEdit		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 }
 
-function renderUserBlock( $user ){
+function renderUserBlock( $env, $user ){
+	if( $env->getModules()->has( 'Members' ) ){
+		$helper	= new View_Helper_Member( $env );
+		$helper->setUser( $user );
+		$helper->setMode( 'bar' );
+		$helper->setLinkUrl( 'member/view/%d' );
+		return $helper->render();
+	}
 	$label	= $user->username;
 	$sub	= '<br/><small class="muted">'.$user->firstname.'&nbsp;'.$user->surname.'</small>';
 	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './user/edit/'.$user->userId ) );
 	return UI_HTML_Tag::create( 'div', $link.$sub );
 }
 
-function renderUserInline( $user ){
+function renderUserInline( $env, $user ){
+	if( $env->getModules()->has( 'Members' ) ){
+		$helper	= new View_Helper_Member( $env );
+		$helper->setUser( $user );
+		$helper->setMode( 'inline' );
+		$helper->setLinkUrl( 'member/view/%d' );
+		return $helper->render();
+	}
 	$icon	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-user' ) );
 	$label	= $user->username;
 	$sub	= '<small class="muted">('.$user->firstname.'&nbsp;'.$user->surname.')</small>';
@@ -33,9 +47,8 @@ $list	= '<div class="muted"><em>'.$words['view.coworkers']['noEntries'].'</em><b
 if( $project->users ){
 	$list	= array();
 	foreach( $project->users as $worker ){
-//print_m( $coworker );die;
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', renderUserBlock( $worker ) ),
+			UI_HTML_Tag::create( 'td', renderUserBlock( $env, $worker ) ),
 		) );
 	}
 	$list	= new UI_HTML_Tag( 'table', $list, array( 'class' => 'table table-condensed table-striped' ) );
@@ -52,7 +65,7 @@ $panelWorkers	= '
 
 $buttonList		= new UI_HTML_Tag( 'a', $iconList.'&nbsp'.$words['view']['buttonList'], array(
 	'href'		=> './manage/project',
-	'class'		=> 'btn btn-small',
+	'class'		=> 'btn not-btn-small',
 ) );
 
 $buttonEdit		= new UI_HTML_Tag( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
@@ -94,7 +107,7 @@ $panelFacts		= '
 			<dt>'.$words['view']['labelPriority'].'</dt>
 			<dd>'.$priority.'</dd>
 			<dt>'.$words['view']['labelCreator'].'</dt>
-			<dd>'.( $project->creator ? renderUserInline( $project->creator ) : '-' ).'&nbsp;</dd>
+			<dd>'.( $project->creator ? renderUserInline( $env, $project->creator ) : '-' ).'&nbsp;</dd>
 			<dt>'.$words['view']['labelCreatedAt'].'</dt>
 			<dd>'.$helperTime->convert( $project->createdAt, TRUE, $words['view']['labelCreatedAt_prefix'], $words['view']['labelCreatedAt_suffix'] ).'&nbsp;</dd>
 			<dt>'.$words['view']['labelChangedAt'].'</dt>
@@ -114,9 +127,13 @@ $panelFacts		= '
 //  --  RELATED ITEMS  --  //
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $this->env );
-$helperRelations->callForRelations( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+$helperRelations->setHook( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+$helperRelations->setLinkable( TRUE );
+$helperRelations->setActiveOnly( TRUE );
+//$helperRelations->setTableClass( 'limited' );
+//$helperRelations->setMode( 'list' );
 if( $helperRelations->hasRelations() ){
-	$relations	= $helperRelations->renderRelations();
+	$relations	= $helperRelations->render();
 	$panelRelations	= '<div class="content-panel">
 	<h4>'.$words['view.relations']['heading'].'</h4>
 	<div class="content-panel-inner">
@@ -143,11 +160,4 @@ return '
 		'.$panelRelations.'
 	</div>
 </div>';
-/*
-remark( "Users: ".count( $project->users ) );
-remark( "Coworkers: ".count( $project->coworkers ) );
-
-print_m( $project );
-die;
-*/
 ?>

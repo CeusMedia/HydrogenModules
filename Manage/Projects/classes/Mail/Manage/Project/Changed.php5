@@ -16,9 +16,13 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
 		//  --  RELATED ITEMS  --  //
 		$relations			= '';
 		$helperRelations	= new View_Helper_ItemRelationLister( $this->env );
-		$helperRelations->callForRelations( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+		$helperRelations->setHook( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+		$helperRelations->setLinkable( TRUE );
+		$helperRelations->setActiveOnly( TRUE );
+		//$helperRelations->setTableClass( 'limited' );
+		//$helperRelations->setMode( 'list' );
 		if( $helperRelations->hasRelations() ){
-			$relations	= $helperRelations->renderRelations();
+			$relations	= $helperRelations->render();
 			$relations	= UI_HTML_Tag::create( 'h4', $w->headingRelations ).$relations;
 		}
 

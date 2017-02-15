@@ -81,26 +81,10 @@ $panelAdd		= '
 
 return '
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span8">
 		'.$panelAdd.'
 	</div>
-	<div class="span3">
+	<div class="span4">
 	</div>
-</div>
-';
-
-$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
-
-return '
-<div class="row-fluid">
-	<div class="span3">
-		'.$panelFilter.'
-	</div>
-	<div class="span6">
-		'.$panelAdd.'
-	</div>
-	<div class="span3">
-	</div>
-</div>
-';
+</div>';
 ?>

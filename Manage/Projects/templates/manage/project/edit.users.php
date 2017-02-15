@@ -8,8 +8,10 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-
 $canEditUsers	= $env->getAcl()->has( 'manage/user', 'edit' );
 
 $useMembers		= $env->getModules()->has( 'Members' );
-if( $useMembers )
+if( $useMembers ){
 	$helperMember	= new View_Helper_Member( $env );
+	$helperMember->setMode( 'inline' );
+}
 
 $list	= array();
 foreach( $projectUsers as $user ){
@@ -20,7 +22,7 @@ foreach( $projectUsers as $user ){
 		if( $canEditUsers )
 			$url	= './manage/user/edit/'.$user->userId;
 		$helperMember->setUser( $user );
-		if( $user->userId !== $currentUserId )
+//		if( $user->userId !== $currentUserId )
 			$helperMember->setLinkUrl( $url.$from );
 		$label	= $helperMember->render();
 	}
@@ -32,10 +34,12 @@ foreach( $projectUsers as $user ){
 		}
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;
-	$remove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
+	$remove	= UI_HTML_Tag::create( 'button', $iconRemove, array( 'type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled' ) );
+	if( $user->userId !== $currentUserId )
+		$remove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
 	if( count( $projectUsers ) === 1 )
 		$remove	= '';
-	$list[$user->username]	= UI_HTML_Tag::create( 'li', $remove.$label );
+	$list[$user->username]	= UI_HTML_Tag::create( 'li', $remove.$label, array( 'class' => 'autocut' ) );
 }
 ksort( $list );
 $list	= UI_HTML_Tag::create( 'ul', $list );

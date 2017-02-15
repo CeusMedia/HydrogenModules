@@ -1,5 +1,7 @@
 <?php
 
+//print_m( $project );die;
+
 /*  --  STATES  --  */
 $optStatus	= array();
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
@@ -38,8 +40,15 @@ $iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-lef
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 $iconDefault	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-star' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+	$iconDefault	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+}
+
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.' '.$w->buttonCancel, array(
 	'href'		=> './manage/project',
@@ -120,26 +129,10 @@ $panelUsers		= $view->loadTemplateFile( 'manage/project/edit.users.php' );
 
 return '
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span8">
 		'.$panelEdit.'
 	</div>
-	<div class="span3">
-		'.$panelUsers.'
-		'.$panelInfo.'
-	</div>
-</div>';
-
-
-$panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
-return '
-<div class="row-fluid">
-	<div class="span3">
-		'.$panelFilter.'
-	</div>
-	<div class="span6">
-		'.$panelEdit.'
-	</div>
-	<div class="span3">
+	<div class="span4">
 		'.$panelUsers.'
 		'.$panelInfo.'
 	</div>

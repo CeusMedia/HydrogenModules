@@ -73,23 +73,39 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
+		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
+		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 
 		$modelUser			= new Model_User( $env );
-		$modelProjectUser	= new Model_Project_User( $env );
-		$projectUsers		= $modelProjectUser->getAllByIndex( 'projectId', $data->projectId );
+
+		$conditions		= array();
+		if( $data->activeOnly )
+			$conditions['status']	= 1;
+
+		$logic			= new Logic_Project( $env );
+		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, array( 'username' => 'ASC' ) );
+
 		$list				= array();
-		$iconUser			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
-		foreach( $projectUsers as $projectUser ){
-//			if( $projectUser->userId === $env->getSession()->get( 'userId' ) )
-//				continue;
-			if( ( $user = $modelUser->get( $projectUser->userId ) ) ){
+		$iconUser			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+		foreach( $projectUsers as $user ){
+			if( $env->getModules()->has( 'Members' ) ){
+				$helper	= new View_Helper_Member( $env );
+				$helper->setUser( $user );
+				$helper->setMode( 'inline' );
+				$helper->setLinkUrl( 'member/view/'.$user->userId );
+				$link	= $helper->render();
+			}
+			else{
 				$fullname	= '('.$user->firstname.' '.$user->surname.')';
 				$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
-				$list[]		= (object) array(
-					'id'		=> $projectUser->userId,
-					'label'		=> $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname,
-				);
+				$link		= UI_HTML_Tag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
+					'href'	=> 'member/view/'.$user->userId,
+				) );
 			}
+			$list[]		= (object) array(
+				'id'		=> $data->linkable ? $user->userId : NULL,
+				'label'		=> $link,
+			);
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data
@@ -100,6 +116,26 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			'Manage_User',																			//  controller of entity
 			'edit'																					//  action to view or edit entity
 		);
+	}
+
+	public function acceptInvite( $projectId ){
+		$indices	= array(
+			'projectId'	=> $projectId,
+			'userId'	=> $this->userId,
+			'status'	=> 0,
+		);
+		$relation	= $this->modelProjectUser->getByIndices( $indices );
+		if( !$relation ){
+			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
+		}
+		else{
+			$this->modelProjectUser->edit( $relation->projectUserId, array(
+				'status'		=> 1,
+				'modifiedAt'	=> time(),
+			) );
+			$this->messenger->noteSuccess( 'Die Einladung wurde zu einer Mitgliedschaft am Projekt umgewandelt.' );
+		}
+		$this->restart( NULL, TRUE );
 	}
 
 	public function add(){
@@ -130,52 +166,12 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				if( $this->request->get( 'from' ) )
 					$this->restart( $this->request->get( 'from' ) );
-				$this->restart( './manage/project/edit/'.$projectId );
+				$this->restart( 'edit/'.$projectId, TRUE );
 			}
 		}
 //		$this->addData( 'filterStatus', $this->session->get( 'filter_manage_project_status' ) );
 //		$this->addData( 'filterOrder', $this->session->get( 'filter_manage_project_order' ) );
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
-	}
-
-	public function acceptInvite( $projectId ){
-		$indices	= array(
-			'projectId'	=> $projectId,
-			'userId'	=> $this->userId,
-			'status'	=> 0,
-		);
-		$relation	= $this->modelProjectUser->getByIndices( $indices );
-		if( !$relation ){
-			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
-		}
-		else{
-			$this->modelProjectUser->edit( $relation->projectUserId, array(
-				'status'		=> 1,
-				'modifiedAt'	=> time(),
-			) );
-			$this->messenger->noteSuccess( 'Die Einladung wurde zu einer Mitgliedschaft am Projekt umgewandelt.' );
-		}
-		$this->restart( NULL, TRUE );
-	}
-
-	public function declineInvite( $projectId ){
-		$indices	= array(
-			'projectId'	=> $projectId,
-			'userId'	=> $this->userId,
-			'status'	=> 0,
-		);
-		$relation	= $this->modelProjectUser->getByIndices( $indices );
-		if( !$relation ){
-			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
-		}
-		else{
-			$this->modelProjectUser->edit( $relation->projectUserId, array(
-				'status'		=> -1,
-				'modifiedAt'	=> time(),
-			) );
-			$this->messenger->noteSuccess( 'Die Einladung zum Projekt wurde abgelehnt.' );
-		}
-		$this->restart( NULL, TRUE );
 	}
 
 	public function addUser( $projectId, $userId = NULL ){
@@ -256,6 +252,26 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function declineInvite( $projectId ){
+		$indices	= array(
+			'projectId'	=> $projectId,
+			'userId'	=> $this->userId,
+			'status'	=> 0,
+		);
+		$relation	= $this->modelProjectUser->getByIndices( $indices );
+		if( !$relation ){
+			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
+		}
+		else{
+			$this->modelProjectUser->edit( $relation->projectUserId, array(
+				'status'		=> -1,
+				'modifiedAt'	=> time(),
+			) );
+			$this->messenger->noteSuccess( 'Die Einladung zum Projekt wurde abgelehnt.' );
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	public function edit( $projectId ){
 		$words			= (object) $this->getWords( 'edit' );
 		$project		= $this->checkProject( $projectId, TRUE );
@@ -270,31 +286,35 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgInvalidId );
 			$this->restart( NULL, TRUE );
 		}
-		if( $this->request->has( 'save') ){
+		if( $this->request->has( 'save' ) ){
 			$title		= $this->request->get( 'title' );
-			if( !strlen( $title ) )
+			if( !strlen( $title ) ){
 				$this->messenger->noteError( $words->msgTitleMissing );
-			$found	= $this->modelProject->getByIndex( 'title', $title );
-			if( $found && $found->projectId != $projectId )
+				$this->restart( 'edit/'.$projectId, TRUE );
+			}
+			$found	= $this->modelProject->getByIndices( array(
+				'title'		=> $title,
+				'creatorId'	=> $this->user,
+			) );
+			if( $found && $found->projectId != $projectId ){
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
-			if( $this->messenger->gotError() )
-				return;
+				$this->restart( 'edit/'.$projectId, TRUE );
+			}
 			$data				= $this->request->getAll();
 			$data['modifiedAt']	= time();
 			$this->modelProject->edit( $projectId, $data , FALSE );
 			$this->messenger->noteSuccess( $words->msgSuccess );
 
-			$language		= $this->env->getLanguage();
-			foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
-				if( $member->userId !== $this->userId ){
-					$user	= $this->modelUser->get( $member->userId );
-					$data	= array( 'project' => $project, 'user' => $user );
-					$mail	= new Mail_Manage_Project_Changed( $this->env, $data, FALSE );
-					$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-				}
+			$language		= $this->env->getLanguage();											//  get language support
+			$projectUsers	= $this->logic->getProjectUsers( $projectId );							//  get projects users
+			foreach( $projectUsers as $user ){														//  iterate project users
+				if( $user->userId == $this->userId )												//  project user is current user
+					continue;																		//  skip
+				$data	= array( 'project' => $project, 'user' => $user );
+				$mail	= new Mail_Manage_Project_Changed( $this->env, $data, FALSE );
+				$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
 			}
-
-			$this->restart( './manage/project/edit/'.$projectId );
+			$this->restart( 'edit/'.$projectId, TRUE );
 		}
 
 		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );

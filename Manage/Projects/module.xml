@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.3.31</version>
+	<version>0.6.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -16,28 +16,29 @@
 	<log version="0.3.7">Fixed SQL query bug if no project is assigned, yet.</log>
 	<log version="0.3.8">Let user create a project if none available, yet.</log>
 	<log version="0.3.9">Add second add button in list.</log>
-	<log version="0.3.10">Add relation to module UI:Helper:TimePhraser.</log>
-	<log version="0.3.11">Aovid removal of last project user.</log>
-	<log version="0.3.12">Extracted more locales from templates.</log>
-	<log version="0.3.13">Improved code syntax of controller and templates.</log>
-	<log version="0.3.14">Check project membership in controller.</log>
-	<log version="0.3.15">Update button color schema.</log>
-	<log version="0.3.16">Use module UI:Helper:Relations for remove confirmation.</log>
-	<log version="0.3.17">Added empty mail classes for development.</log>
-	<log version="0.3.18">Developed mail classes.</log>
-	<log version="0.3.19">Added creator in database table.</log>
-	<log version="0.3.20">Added status in project user relation.</log>
-	<log version="0.3.21">Use CMM_Bootstrap_PageControl for pagination.</log>
-	<log version="0.3.22">Extend by default project flag for users.</log>
-	<log version="0.3.23">Add view for setting default project.</log>
-	<log version="0.3.24">Force to set default project if none set.</log>
-	<log version="0.3.25">Add project view.</log>
-	<log version="0.3.26">Allow redirection after a project has been created.</log>
-	<log version="0.3.27">Add support for module Members.</log>
-	<log version="0.3.28">Combine related members and related projected users correctly.</log>
-	<log version="0.3.29">Implement hook Resource:Users::getRelatedUsers.</log>
-	<log version="0.3.30">Add new logic method getProjectsUsers.</log>
-	<log version="0.3.31">Improve performance by using less database requests.</log>
+	<log version="0.4">Add relation to module UI:Helper:TimePhraser.</log>
+	<log version="0.4.1">Aovid removal of last project user.</log>
+	<log version="0.4.2">Extracted more locales from templates.</log>
+	<log version="0.4.3">Improved code syntax of controller and templates.</log>
+	<log version="0.4.4">Check project membership in controller.</log>
+	<log version="0.4.5">Update button color schema.</log>
+	<log version="0.4.6">Use module UI:Helper:Relations for remove confirmation.</log>
+	<log version="0.4.7">Added empty mail classes for development.</log>
+	<log version="0.4.8">Developed mail classes.</log>
+	<log version="0.5">Added creator in database table.</log>
+	<log version="0.5.1">Added status in project user relation.</log>
+	<log version="0.5.2">Use CMM_Bootstrap_PageControl for pagination.</log>
+	<log version="0.5.3">Extend by default project flag for users.</log>
+	<log version="0.5.4">Add view for setting default project.</log>
+	<log version="0.5.5">Force to set default project if none set.</log>
+	<log version="0.5.6">Add project view.</log>
+	<log version="0.5.7">Allow redirection after a project has been created.</log>
+	<log version="0.6">Add support for module Members.</log>
+	<log version="0.6.1">Combine related members and related projected users correctly.</log>
+	<log version="0.6.2">Implement hook Resource:Users::getRelatedUsers.</log>
+	<log version="0.6.3">Add new logic method getProjectsUsers.</log>
+	<log version="0.6.4">Improve performance by using less database requests.</log>
+	<log version="0.6.5">Rework support for hook Project::onListRelations.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

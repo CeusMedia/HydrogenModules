@@ -62,8 +62,10 @@ class Model_Project extends CMF_Hydrogen_Model{
 		$conditions['userId']	= $userIds;
 		$orders		= $orders ? $orders : array( /*'roleId' => 'ASC', */'username' => 'ASC' );
 		$users		= array();
-		foreach( $modelUser->getAll( $conditions, $orders ) as $user )
+		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
+			unset( $user->password );
 			$users[$user->userId]	= $user;
+		}
 		return $users;
 	}
 }
