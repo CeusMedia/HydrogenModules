@@ -3,7 +3,6 @@
 
 $session	= $this->env->getSession();
 
-
 //$script	= '$(document).ready(function(){});';
 //$this->env->page->js->addScript( $script );
 
@@ -27,7 +26,6 @@ $optDirection	= join( $optDirection );
 $mode	= (int) $session->get( 'issue-filter-panel-mode' );
 
 if( $mode == 1 ){
-
 	$words['types']			= array( '' => '- alle -' ) + $words['types'];
 	$words['severities']	= array( '' => '- alle -' ) + $words['severities'];
 	$words['priorities']	= array( '' => '- alle -' ) + $words['priorities'];
@@ -69,7 +67,14 @@ if( $mode == 1 ){
 				<tr>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'status[]', $optStatus, 'm rows-8', NULL, 'filter-issues' ).'
+						'.UI_HTML_Tag::create( 'select', $optStatus, array(
+							'name'		=> 'status[]',
+							'id'		=> 'input_status',
+							'multiple'	=> 'multiples',
+							'class'		=> 'span12',
+							'rows'		=> 8
+						) ).'
+<!--						'.UI_HTML_Elements::Select( 'status[]', $optStatus, 'm rows-8', NULL, 'filter-issues' ).'-->
 					</td>
 					<td>
 						<label for="priority">'.$words['indexFilter']['labelPriority'].'</label><br/>

@@ -69,7 +69,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 		'name'		=> 'status[]',
 		'multiple'	=> 'multiple',
 		'class'		=> 'span12',
-		'size'		=> 9,
+		'size'		=> 8,
 		'onchange'	=> 'this.form.submit()' )
 	)
 );
@@ -81,7 +81,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 		'name'		=> 'priority[]',
 		'multiple'	=> 'multiple',
 		'class'		=> 'span12',
-		'size'		=> 8,
+		'size'		=> 7,
 		'onchange'	=> 'this.form.submit()' )
 	)
 );
@@ -93,20 +93,28 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 		'name'		=> 'type[]',
 		'multiple'	=> 'multiple',
 		'class'		=> 'span12',
-		'size'		=> 5,
+		'size'		=> 4,
 		'onchange'	=> 'this.form.submit()' )
 	)
 );
 if( !empty( $projects ) ){
 	$optProject	= array();
 	foreach( $projects as $project )
-		$optProject[$project->projectId]	= $project->title;
+		if( $numberProjects[$project->projectId] > 0 )
+			$optProject[$project->projectId]	= $project->title;
 	$optProject		= numerizeWords( array( '' => '- alle -' ) + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
-	$filters[]	= HTML::DivClass( 'row-fluid',
+	$filters[]	= HTML::DivClass( 'row-fluid', array(
 		HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).
-		HTML::Select( 'projectId[]', $optProject, '-max span12 rows-4', NULL, 'this.form.submit()' )
+		UI_HTML_Tag::create( 'select', $optProject, array(
+			'id'		=> 'input_projectId',
+			'name'		=> 'projectId[]',
+			'multiple'	=> 'multiple',
+			'class'		=> 'span12',
+			'size'		=> 6,
+			'onchange'	=> 'this.form.submit()',
+		) ) )
 	);
 }
 
