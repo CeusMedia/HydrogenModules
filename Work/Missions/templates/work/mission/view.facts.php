@@ -117,7 +117,7 @@ if( $totalMinsRequired ){
 }
 $factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
 
-$buttonCancel	= UI_HTML_Elements::LinkButton( './work/mission', $iconCancel.' '.$w->buttonCancel, 'btn btn-small' );
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array( 'href' => './work/mission', 'class' => 'btn btn-small' ) );
 $buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' );
 $buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-small' );
 $buttonRevamp	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/2/1', $iconRevamp.' '.$w->buttonRevamp, 'btn btn-small' );

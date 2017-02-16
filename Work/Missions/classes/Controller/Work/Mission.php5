@@ -22,6 +22,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $hasFullAccess	= FALSE;
 	protected $lock;
 	protected $logic;
+	protected $logicProject;
 	protected $messenger;
 	protected $model;
 	protected $request;
@@ -131,6 +132,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
 		return Logic_Database_Lock::release( $env, 'Work_Missions' );
+	}
+
+	static public function ___onProjectRemove( $env, $context, $module, $data ){
+		$projectId	= $data['projectId'];
+		foreach( $this->model->getAllByIndex( 'projectId', $projectId ) as $mission ){
+			$this->logic->removeMission( $mission->missionId );
+		}
 	}
 
 	static public function ___onListProjectRelations( $env, $context, $module, $data ){
@@ -273,6 +281,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$mission['priority']	= 3;
 		if( $mission['status'] === NULL )
 			$mission['status']	= 0;
+		if( $mission['projectId'] === NULL )
+			$mission['projectId']	= $this->logicProject->getDefaultProject( $this->userId );
 
 		//  --  set current date for all date fields  --  //
 		if( !$mission['dayStart'] )
@@ -289,8 +299,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'day', (int) $this->session->get( $this->filterKeyPrefix.'day' ) );
 		$this->addData( 'format', $format );
 
-		if( $this->useProjects )
+		if( $this->useProjects ){
 			$this->addData( 'userProjects', $this->userProjects );
+		}
 	}
 
 	public function addDocument( $missionId ){
@@ -668,6 +679,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgArchived );
 			$this->restart( 'view/'.$missionId, TRUE );
 		}
+		if( $mission->status < 0 || $mission->status > 3 )
+			$this->session->set( 'filter.work.mission.mode', 'archive' );
+		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' )
+			$this->session->set( 'filter.work.mission.mode', 'now' );
 
 		if( $this->useProjects ){
 			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
@@ -1008,14 +1023,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function removeDocument( $missionId, $missionDocumentId ){
-		$model		= new Model_Mission_Document( $this->env );
-		$document	= $model->get( $missionDocumentId );
-		if( $document ){
-			$path		= 'contents/documents/missions/';
-			@unlink( $path.$document->hashname );
-			$model->remove( $missionDocumentId );
-			$this->restart( 'edit/'.$missionId, TRUE );
-		}
+		$this->logic->removeDocument( $missionDocumentId );
+		$this->restart( 'edit/'.$missionId, TRUE );
 	}
 
 	protected function saveFilters( $userId ){
@@ -1170,6 +1179,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$this->restart( NULL, TRUE );
 			}
 		}
+
+		if( $mission->status < 0 || $mission->status > 3 )
+			$this->session->set( 'filter.work.mission.mode', 'archive' );
+		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' )
+			$this->session->set( 'filter.work.mission.mode', 'now' );
 
 		$title		= $this->request->get( 'title' );
 		$dayStart	= $this->request->get( 'dayStart' );

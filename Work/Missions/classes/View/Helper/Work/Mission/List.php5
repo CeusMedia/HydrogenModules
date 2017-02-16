@@ -198,25 +198,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$dropdown		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) );
 		$buttonGroup	= UI_HTML_Tag::create( 'div', array( $buttonToggle.$dropdown ), array( 'class' => 'btn-group pull-right' ) );
 		return $buttonGroup;
-		$buttons	= array();
-		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
-		if( $days ){
-			$attributes	= array(
-				'type'		=> 'button',
-				'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'-1')",
-				'class'		=> 'btn btn-mini',
-				'title'		=> $this->words['list-actions']['moveLeft'],
-			);
-			$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['left'], $attributes );
-		}
-		$attributes	= array(
-			'type'		=> 'button',
-			'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'+1')",
-			'class'		=> 'btn btn-mini',
-			'title'		=> $this->words['list-actions']['moveRight'],
-		);
-		$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['right'], $attributes );
-		return '<div class="btn-group">'.join( '', $buttons ).'</div>';
 	}
 
 	public function renderRowLabel( $mission, $edit = TRUE ){
@@ -250,7 +231,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$times		= UI_HTML_Tag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId, 120 );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
-		$buttonEdit	= $this->renderRowButtonEdit( $event );
+		$buttonEdit	= $showActions ? $this->renderRowButtonEdit( $event ) : '';
 		$cells		= array();
 
 /*		$checkbox	= UI_HTML_Tag::create( 'input', '', array(
@@ -263,7 +244,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$priority	= $this->words['priorities'][$event->priority];
 			$cells[]	= UI_HTML_Tag::create( 'td', $event->priority, array( 'class' => 'cell-priority', 'title' => $priority ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'div', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'autocut' ) ), array( 'class' => 'cell-title' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $link.'&nbsp;'.$buttonEdit, array( 'class' => 'cell-title autocut' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project autocut', 'title' => $project ) );
 		if( $showDate ){

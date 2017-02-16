@@ -8,9 +8,11 @@ class Logic_Mission{
 	public $useProjects			= FALSE;
 
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env			= $env;
-		$this->modelMission	= new Model_Mission( $env );
-		$this->modelVersion	= new Model_Mission_Version( $this->env );
+		$this->env				= $env;
+		$this->modelMission		= new Model_Mission( $env );
+		$this->modelVersion		= new Model_Mission_Version( $this->env );
+		$this->modelChange		= new Model_Mission_Change( $this->env );
+		$this->modelDocument	= new Model_Mission_Document( $this->env );
 		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
 	}
 
@@ -178,5 +180,24 @@ class Logic_Mission{
 			'timestamp'	=> time(),
 		) );
 	}
+
+	public function removeDocument( $documentId ){
+		$document	= $this->modelDocument->get( $documentId );
+		if( !$document )
+			return FALSE;
+		$path		= 'contents/documents/missions/';
+		@unlink( $path.$document->hashname );
+		$this->modelDocument->remove( $documentId );
+		return TRUE;
+	}
+
+	public function removeMission( $missionId ){
+		$this->modelChange->removeByIndex( 'missionId', $missionId );
+		$this->modelVersion->removeByIndex( 'missionId', $missionId );
+		foreach( $this->modelDocument->getAllByIndex( 'projectId', $projectId ) )
+			$this->removeDocument( $documentId );
+		$this->modelMission->remove( $missionId );
+	}
+
 }
 ?>
