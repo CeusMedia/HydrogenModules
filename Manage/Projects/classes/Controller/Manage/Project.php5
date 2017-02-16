@@ -61,6 +61,12 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
 	}
 
+	static public function ___onProjectRemove( $env, $context, $module, $data ){
+		$projectId	= $data['projectId'];
+		$model		= new Model_Project_User( $env );
+		$model->removeByIndices( array( 'projectId' => $projectId ) );
+	}
+
 	static public function ___onListRelations( $env, $context, $module, $data ){
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Project::___onListRelations" is missing project ID in data';
@@ -382,23 +388,11 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		return $this->logic->getCoworkers( $this->userId );
 	}
 
-	public function index( $page = NULL ){
-
+	public function index( $page = 0 ){
 		$this->checkDefault();
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
-		if( $page !== NULL ){																	//  page set as argument
-			$this->session->set( 'filter_manage_project_page', $page );							//  store page in session (will be validated later)
-			if( $page === "0" )																	//  page was set to 0 explicitly
-				$this->restart( NULL, TRUE );													//  redirect to nicer URI
-		}
-		else{																					//  no page as argument
-			if( preg_match( "@manage/project/[0-9]+$@", getEnv( 'HTTP_REFERER' ) ) )			//  last request was index, too
-				$this->session->set( 'filter_manage_project_page', 0 );							//  assume first page and store in session
-			$page	= (int) $this->session->get( 'filter_manage_project_page' );				//  get page from session
-		}
 		if( $this->useMissions )
 			$modelMission	= new Model_Mission( $this->env );
-
 
 		$filterId			= $this->session->get( 'filter_manage_project_id' );
 		$filterQuery		= $this->session->get( 'filter_manage_project_query' );

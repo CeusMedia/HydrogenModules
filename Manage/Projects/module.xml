@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.6.6</version>
+	<version>0.6.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -40,6 +40,7 @@
 	<log version="0.6.4">Improve performance by using less database requests.</log>
 	<log version="0.6.5">Rework support for hook Project::onListRelations.</log>
 	<log version="0.6.6">Make project creator changable.</log>
+	<log version="0.6.7">Support hook Project::onRemove.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -81,6 +82,7 @@
 	<link path="manage/project" access="acl" xml:lang="en" rank="82">Projects</link>
 	<hook type="resource" resource="Project" event="update">Controller_Manage_Project::___onUpdate</hook>
 	<hook type="resource" resource="Project" event="listRelations">Controller_Manage_Project::___onListRelations</hook>
+	<hook type="resource" resource="Project" event="onRemove">Controller_Manage_Project::___onProjectRemove</hook>
 	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Controller_Manage_Project::___onGetRelatedUsers</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
