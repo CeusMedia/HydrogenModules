@@ -283,11 +283,10 @@ class Logic_Note{
 	}
 
 	public function removeNote( $noteId ){
-		$note	= $this->getNoteData( $noteId );
-		foreach( $note->tags as $tag )
-			$this->removeTagFromNote( $tag->tagId, $noteId );
-		foreach( $note->links as $link )
-			$this->removeNoteLink( $link->noteLinkId );
+		$modelNoteTag	= new Model_Note_Tag( $this->env );
+		$modelNoteLink	= new Model_Note_Link( $this->env );
+		$modelNoteTag->removeByIndex( 'noteId', $noteId );
+		$modelNoteLink->removeByIndex( 'noteId', $noteId );
 		$this->modelNote->remove( $noteId );
 	}
 
@@ -301,20 +300,20 @@ class Logic_Note{
 
 	public function removeLinkFromNote( $linkId, $noteId ){
 		$modelNoteLink	= new Model_Note_Link( $this->env );
-		$modelLink			= new Model_Link( $this->env );
-		$indices			= array( 'noteId' => $noteId, 'linkId' => $linkId );				//  focus on note and link
+		$modelLink		= new Model_Link( $this->env );
+		$indices		= array( 'noteId' => $noteId, 'linkId' => $linkId );						//  focus on note and link
 		$modelNoteLink->removeByIndices( $indices );												//  remove note link relation
-		$relations	= $modelNoteLink->getAllByIndex( 'linkId', $linkId );						//  find other link relations
+		$relations	= $modelNoteLink->getAllByIndex( 'linkId', $linkId );							//  find other link relations
 		if( !count( $relations ) )																	//  link is unrelated now
 			$modelLink->remove( $linkId );															//  remove link
 	}
 
 	public function removeTagFromNote( $tagId, $noteId ){
 		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelTag			= new Model_Tag( $this->env );
-		$indices			= array( 'noteId' => $noteId, 'tagId' => $tagId );				//  focus on note and tag
-		$modelNoteTag->removeByIndices( $indices );												//  remove note tag relation
-		$relations	= $modelNoteTag->getAllByIndex( 'tagId', $tagId );							//  find other tag relations
+		$modelTag		= new Model_Tag( $this->env );
+		$indices		= array( 'noteId' => $noteId, 'tagId' => $tagId );							//  focus on note and tag
+		$modelNoteTag->removeByIndices( $indices );													//  remove note tag relation
+		$relations	= $modelNoteTag->getAllByIndex( 'tagId', $tagId );								//  find other tag relations
 		if( !count( $relations ) )																	//  tag is unrelated now
 			$modelTag->remove( $tagId );															//  remove tag
 	}

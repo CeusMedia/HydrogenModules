@@ -19,6 +19,15 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
+	static public function ___onProjectRemove( $env, $context, $module, $data ){
+		$projectId	= $data['projectId'];
+		$model		= new Model_Note( $env );
+		$logic		= Logic_Note::getInstance( $env );
+		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $note ){
+			$logic->removeNote( $note->noteId );
+		}
+	}
+
 	static public function ___onListProjectRelations( $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
