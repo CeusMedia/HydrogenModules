@@ -128,7 +128,7 @@ WorkMissionsKanban.loadCurrentList();
 			}
 			$columns[]	= UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
-				UI_HTML_Tag::create( 'ul', $rows, array( 'class' => 'sortable unstyled', 'id' => 'sortable-status-'.$status ) ),
+				UI_HTML_Tag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
 			), array( 'class' => 'span3' ) );
 		}
 

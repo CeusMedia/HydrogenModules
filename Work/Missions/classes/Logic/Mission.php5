@@ -194,8 +194,8 @@ class Logic_Mission{
 	public function removeMission( $missionId ){
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );
-		foreach( $this->modelDocument->getAllByIndex( 'projectId', $projectId ) )
-			$this->removeDocument( $documentId );
+		foreach( $this->modelDocument->getAllByIndex( 'projectId', $projectId ) as $document )
+			$this->removeDocument( $document->missionDocumentId );
 		$this->modelMission->remove( $missionId );
 	}
 
