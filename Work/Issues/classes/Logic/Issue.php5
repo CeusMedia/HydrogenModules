@@ -146,5 +146,12 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 		);
 		return $this->modelIssueChange->add( $data );
 	}
+
+	public function remove( $issueId ){
+		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
+		$this->modelIssueChange->removeByIndex( 'issueId', $issueId );
+		$this->modelIssue->remove( $issueId );
+	}
+
 }
 ?>

@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -13,6 +13,8 @@
 	<log version="0.2.8">Use new Work:Timer integration with hooks.</log>
 	<log version="0.2.9">Improve stability and views.</log>
 	<log version="0.3">Support hook Project::onListRelations.</log>
+	<log version="0.3.1">Support hook Project::onRemove.</log>
+	<log version="0.3.2">Support hook Dashboard::renderPanels.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -66,6 +68,9 @@
 	<link xml:lang="de" access="acl" rank="80" path="work/issue">Probleme</link>
 	<link xml:lang="en" access="acl" rank="80" path="work/issue">Issues</link>
 	<hook type="resource" resource="Work_Timer" event="registerModule">Controller_Work_Issue::___onRegisterTimerModule</hook>
+	<hook type="resource" resource="Dashboard" event="renderPanels">View_Work_Issue::___onRenderDashboardPanels</hook>
+	<hook type="resource" resource="Project" event="listRelations">Controller_Work_Issue::___onListProjectRelations</hook>
+	<hook type="resource" resource="Project" event="onRemove">Controller_Work_Issue::___onProjectRemove</hook>
 	<sql on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (

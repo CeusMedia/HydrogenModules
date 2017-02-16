@@ -8,6 +8,19 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	public function index(){
 	}
 
+	static public function ___onRenderDashboardPanels( $env, $context, $module, $data ){
+		$panel	= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'h4', 'Probleme' ),
+			UI_HTML_Tag::create( 'div', '...', array(
+				'class' => 'content-panel-inner'
+			) )
+		), array(
+			'class' => 'content-panel content-panel-info'
+		) );
+		$context->registerPanel( 'work-issues', $panel );
+		$data['panels'][]	= $panel;
+	}
+
 	public function renderOptions( $options, $key, $values, $class = '' ){
 		$list		= array();
 		if( !is_array( $values ) )
@@ -36,14 +49,14 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	public function buildGraph( $data, $words, $type ){
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
-		
+
 		$graphConfig	= array_merge(
 			$config->getAll( 'module.work_issues.graph.all.' ),
 			$config->getAll( 'module.work_issues.graph.'.$type.'.' )
 		);
 
 		$statistics		= $data[$type];
-		
+
 		$data	= array();
 		$legend	= array();
 		$targ	= array();
@@ -61,7 +74,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 			return "No bugs found";
 		$graph = new PieGraph( $graphConfig['width'], $graphConfig['height'], 'graph_'.$type );
 		$graph->SetFrame( !true, array(255,255,255), 10);
-				
+
 		$graph->SetShadow( $graphConfig['shadow'] );
 		$graph->SetAntiAliasing( $graphConfig['antialias'] );
 		$graph->title->Set( utf8_decode( $words['graph']['title'.ucFirst( $type )] ) );
@@ -96,7 +109,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		$graph->Stroke( $uri );
 		$map	= $graph->GetHTMLImageMap( 'graph-'.$type, 0, 50 );
 		$image	= "<img src='./".$uri."?".time()."' ISMAP USEMAP='#graph-".$type."' border='0'>";
-		
+
 		if( !( empty( $graphConfig['cropX'] ) && empty( $graphConfig['cropY'] ) ) ){
 			$offsetX	= (int) $graphConfig['cropX'];
 			$offsetY	= (int) $graphConfig['cropY'];

@@ -35,6 +35,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		) );
 	}
 
+	static public function ___onProjectRemove( $env, $context, $module, $data ){
+		$projectId	= $data['projectId'];
+		$model		= new Model_Issue( $env );
+		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $issue ){
+			$this->logic->remove( $issue->issueId );
+		}
+	}
+
 	static public function ___onListProjectRelations( $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
