@@ -17,7 +17,18 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->getProject( $projectId );
 	}
 
-	public function getCoworkers( $userId, $projectId = 0 ){
+	/**
+	 *	Returns map of related users of a given user ID.
+	 *	Either related to a given project ID (project members) or related by other modules (calling a hook).
+	 *	Returned map will not contain the user itself.
+	 *
+	 *	@access		public
+	 *	@param		integer		$userId			User ID to get coworkers for
+	 *	@param		integer		$projectId		Project ID to get coworkers of
+	 *	@return		array		Map of related users
+	 *	@throws		RuntimeException			if user is neither in project nor has full access
+	 */
+	public function getCoworkers( $userId, $projectId = NULL ){
 		if( $projectId ){
 			$users	= $this->getProjectUsers( $projectId );
 			if( isset( $users[$userId] ) )
@@ -26,7 +37,10 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 				throw new RuntimeException( 'User with ID '.$userId.' is not member of project with ID '.$projectId );
 			return $users;
 		}
-		return Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $userId );
+		$users	= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $userId );
+		if( isset( $users[$userId] ) )
+			unset( $users[$userId] );
+		return $users;
 	}
 
 	public function getDefaultProject( $userId ){
