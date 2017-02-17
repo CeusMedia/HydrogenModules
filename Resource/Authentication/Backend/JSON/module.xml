@@ -10,9 +10,10 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
+	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
