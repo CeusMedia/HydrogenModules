@@ -79,6 +79,12 @@ class Logic_Authentication_Backend_Rest{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
+	/**
+	 *	@todo		implement if possible, for example by using available REST resource
+	 */
+	protected function noteUserActivity(){
+	}
+
 /*	public function setCurrentUser( $userId ){
 
 
