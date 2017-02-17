@@ -105,6 +105,12 @@ class Logic_Authentication_Backend_Oauth{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
+	/**
+	 *	@todo		implement if possible
+	 */
+	protected function noteUserActivity(){
+	}
+
 /*	public function setCurrentUser( $userId ){
 
 
