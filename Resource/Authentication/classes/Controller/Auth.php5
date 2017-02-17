@@ -23,11 +23,13 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
-		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
-		$remember	= (bool) $cookie->get( 'auth_remember' );
-		$env->getSession()->set( 'isRemembered', $remember );
-		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
-		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
+		if( $userId ){
+			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
+			$remember	= (bool) $cookie->get( 'auth_remember' );
+			$env->getSession()->set( 'isRemembered', $remember );
+			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
+			$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
+		}
 	}
 
 	public function ajaxIsAuthenticated(){

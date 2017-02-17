@@ -13,6 +13,7 @@ class Logic_Authentication{
 			throw new RuntimeException( 'No authentication backend installed' );
 		$backends	= array_keys( $this->getBackends() );
 		$this->setBackend( @array_shift( $backends ) );
+		$this->noteUserActivity();
 	}
 
 	public function checkPassword( $userId, $password ){
@@ -88,6 +89,15 @@ class Logic_Authentication{
 
 	public function isCurrentUserId( $userId ){
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
+	}
+
+	/**
+	 *	Note this point of time as latest user activity if implemented by backend.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function noteUserActivity(){
+		$this->backend->noteUserActivity();
 	}
 
 	public function registerBackend( $key, $path, $label ){
