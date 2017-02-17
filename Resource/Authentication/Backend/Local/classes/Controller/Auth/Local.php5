@@ -20,14 +20,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+/*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
 		$remember	= (bool) $cookie->get( 'auth_remember' );
 		$env->getSession()->set( 'isRemembered', $remember );
 		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
-	}
+	}*/
 
 	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		if( $env->getConfig()->get( 'module.resource_authentication_backend_local.enabled' ) ){

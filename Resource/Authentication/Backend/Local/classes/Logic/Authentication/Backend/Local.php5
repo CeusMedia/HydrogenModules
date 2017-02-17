@@ -103,6 +103,12 @@ class Logic_Authentication_Backend_Local{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
+	public function noteUserActivity(){
+		if( $userId = $this->getCurrentUserId() ){													//  get ID of current user (or zero)
+			$this->modelUser->edit( $userId, array( 'activeAt' => time() ) );
+		}
+	}
+
 /*	public function setCurrentUser( $userId ){
 
 
