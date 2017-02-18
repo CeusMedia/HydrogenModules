@@ -26,7 +26,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
 //		$remember	= (bool) $cookie->get( 'auth_remember' );
 //		$env->getSession()->set( 'isRemembered', $remember );
-		$script		= 'Auth.init('.$userId.', false'./*json_encode( $remember ).*/');';											//  initialize Auth class with user ID
+		$script		= 'Auth.init('.$userId.', false);';											//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
 	}
 */
