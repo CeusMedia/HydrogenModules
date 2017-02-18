@@ -58,6 +58,7 @@ HTML::DivClass( "content-panel content-panel-form", array(
 		HTML::DivClass( "auth-login-form",
 			UI_HTML_Tag::create( 'form', array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
+				UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'from', 'value' => htmlentities( $from, ENT_QUOTES, 'UTF-8' ) ) ),
 				HTML::DivClass( "row-fluid",
 					HTML::DivClass( "span12", array(
 						UI_HTML_Tag::create( 'label', $w->labelUsername, array(
@@ -99,7 +100,7 @@ HTML::DivClass( "content-panel content-panel-form", array(
 					) )
 				) )
 			), array(
-				'action'	=> './auth/rest/login' . ( $from ? '?from='.rawurlencode( $from ) : '' ),
+				'action'	=> './auth/rest/login',
 				'name'		=> "editUser",
 				'method'	=> "post"
 			) )

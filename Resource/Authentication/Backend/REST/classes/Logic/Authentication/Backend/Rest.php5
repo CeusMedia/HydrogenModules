@@ -9,15 +9,13 @@ class Logic_Authentication_Backend_Rest{
 		$this->client		= $this->env->get( 'restClient' );
 	}
 
-	public function checkPassword( $userId, $password ){
+	public function checkPassword( $username, $password ){
 		$parameters	= array(
 			'username'	=> $username,
-			'password'	=> password_hash( $password ),
+			'password'	=> $password,
 		);
-		$result	= $this->client->get( 'auth/authenticate', $parameters );
-		print_m( $result );die;
-		$result = $this->env->getServer()->postData( 'user', 'index', NULL, $data );
-		return count( $result ) === 1;
+		$result	= $this->client->post( 'authenticate', $parameters );
+		return $result;
 	}
 
 	public function getCurrentRole( $strict = TRUE ){

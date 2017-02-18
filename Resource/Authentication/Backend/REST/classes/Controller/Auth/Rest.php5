@@ -18,6 +18,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_rest.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+		$this->logic		= Logic_Authentication_Backend_Rest::getInstance( $this->env );
 	}
 
 /*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
@@ -119,51 +120,37 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 			}
 			if( !trim( $username = $this->request->get( 'login_username' ) ) )
 				$this->messenger->noteError( $words->msgNoUsername );
-			if( !trim( $password = $this->request->get( 'login_password' ) ) )
+			else if( !trim( $password = $this->request->get( 'login_password' ) ) )
 				$this->messenger->noteError( $words->msgNoPassword );
-
-			$data	= array(
-				'filters'	=> array(
-					'username'	=> $username,
-//					'password'	=> md5( $password )
-				)
-			);
-			$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
-			$user	= count( $result ) === 1 ? $result[0] : NULL;
-
-			if( !$this->messenger->gotError() ){
-				if( !$user )
+			else{
+				$user	= $this->logic->checkPassword( $username, $password );
+				if( $user == -10 )
 					$this->messenger->noteError( $words->msgInvalidUser );
-				else{
-					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+				else if( $user == -11 )
+					$this->messenger->noteError( $words->msgInvalidPassword );
+				else if( $user == -12 )
+					$this->messenger->noteError( $words->msgUserDisabled );
+				else if( isset( $user->data->userId ) ){
+					$this->messenger->noteSuccess( $words->msgSuccess );
+					$this->session->set( 'accountId', $user->data->accountId );
+					$this->session->set( 'userId', $user->data->userId );
+					$this->session->set( 'roleId', $user->data->roleId );
+					$this->session->set( 'rights', $user->data->rights );
+					$this->session->set( 'authBackend', 'Rest' );
+	//				if( $this->request->get( 'login_remember' ) )
+	//					$this->rememberUserInCookie( $user->userId, $password );
+					$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
+					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
+					$this->restart( './auth/rest?from='.$from );								//  restart (or go to redirect URL)
+				}
+			}
+
+
+/*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
-					) );
-					$role	= $this->env->getServer()->postData( 'role', 'get', array( $user->roleId ) );
-					if( !$role->access )
-						$this->messenger->noteError( $words->msgInvalidRole );
-					else if( $user->status == 0 )
-						$this->messenger->noteError( $words->msgUserUnconfirmed );
-					else if( $user->status == -1 )
-						$this->messenger->noteError( $words->msgUserLocked );
-					else if( $user->status == -2 )
-						$this->messenger->noteError( $words->msgUserDisabled );
-					else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
-						$this->messenger->noteError( $words->msgInvalidPassword );
-					if( !$this->messenger->gotError() ){
-						$this->messenger->noteSuccess( $words->msgSuccess );
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
-						$this->session->set( 'authBackend', 'Rest' );
-//						if( $this->request->get( 'login_remember' ) )
-//							$this->rememberUserInCookie( $user->userId, $password );
-						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
-						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './auth/rest?from='.$from );								//  restart (or go to redirect URL)
-					}
-				}
-			}
+					) );*/
 		}
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
