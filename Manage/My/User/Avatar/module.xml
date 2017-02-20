@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Avatar</title>
 	<description>Extends own user management by avatar settings.</description>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support tabs.</log>
@@ -15,6 +15,7 @@
 	<log version="0.4.2">Support 3 image sizes.</log>
 	<log version="0.4.3">Extends configuration by switches for local avatar and Gravatar.</log>
 	<log version="0.4.4">Check for module UI_Helper_Gravatar.</log>
+	<log version="0.4.5">Add tab icon.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
