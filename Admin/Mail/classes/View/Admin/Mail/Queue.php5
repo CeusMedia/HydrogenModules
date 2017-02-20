@@ -4,27 +4,6 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 	public function __onInit(){
 	}
 
-	static public function ___onRenderDashboardPanels( $env, $context, $module, $data = array() ){
-		$model	= new Model_Mail( $env );
-		$count	= $model->count( array( 'status' => 1 ) );
-
-		$facts	= UI_HTML_Tag::create( 'dl', array(
-			UI_HTML_Tag::create( 'dt', 'nicht versendet' ),
-			UI_HTML_Tag::create( 'dd', $count )
-		), array( 'class' => 'not-dl-horizontal' ) );
-
-		$panel	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', 'Mail Queue' ),
-			UI_HTML_Tag::create( 'div', $facts, array(
-				'class' => 'content-panel-inner'
-			) )
-		), array(
-			'class' => 'content-panel content-panel-info'
-		) );
-		$context->registerPanel( 'admin-mail-queue', 'E-Mail-Queue', $panel, '1col-fixed', 90 );
-//		$data['panels'][]	= $panel;
-	}
-
 	public function ajaxRenderDashboardPanel(){
 		$model	= new Model_Mail( $this->env );
 		$count	= $model->count( array( 'status' => 1 ) );

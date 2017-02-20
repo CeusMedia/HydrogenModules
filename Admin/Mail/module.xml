@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.7</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -37,7 +37,8 @@
 	<log version="0.6.7">Add prototype of dashboard support.</log>
 	<log version="0.6.8">Use frontend logic only of module Resource:Frontend is installed.</log>
 	<log version="0.6.9">Tolerate lack of frontend mail classes.</log>
-	<log version="0.7">Upgrade support for dasboard module.</log>
+	<log version="0.7">Upgrade support for new dasboard module.</log>
+	<log version="0.7.1">Remove support for old dasboard module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -83,5 +84,5 @@
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">View_Admin_Mail_Attachment::___onRegisterTab</hook>
-	<hook type="resource" resource="Dashboard" event="renderPanels">View_Admin_Mail_Queue::___onRenderDashboardPanels</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Admin_Mail_Queue::___onRegisterDashboardPanels</hook>
 </module>
