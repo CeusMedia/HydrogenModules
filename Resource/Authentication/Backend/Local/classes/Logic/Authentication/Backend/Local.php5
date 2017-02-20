@@ -8,6 +8,7 @@ class Logic_Authentication_Backend_Local{
 
 	protected function __construct( $env ){
 		$this->env			= $env;
+		$this->session		= $this->env->getSession();
 		$this->modelUser	= new Model_User( $env );
 		$this->modelRole	= new Model_Role( $env );
 	}
@@ -62,7 +63,7 @@ class Logic_Authentication_Backend_Local{
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->env->getSession()->get( 'roleId');
+		return $this->env->getSession()->get( 'roleId' );
 	}
 
 	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
@@ -104,7 +105,7 @@ class Logic_Authentication_Backend_Local{
 	}
 
 	public function noteUserActivity(){
-		if( $userId = $this->getCurrentUserId() ){													//  get ID of current user (or zero)
+		if( $userId = $this->getCurrentUserId( FALSE ) ){													//  get ID of current user (or zero)
 			$this->modelUser->edit( $userId, array( 'activeAt' => time() ) );
 		}
 	}
