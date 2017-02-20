@@ -35,7 +35,7 @@ foreach( $projectUsers as $user ){
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;
 	$remove	= UI_HTML_Tag::create( 'button', $iconRemove, array( 'type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled' ) );
-	if( $user->userId !== $currentUserId )
+	if( ( $project->creatorId && $user->userId !== $project->creatorId ) || ( !$project->creatorId && $user->userId !== $currentUserId ) )
 		$remove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
 	if( count( $projectUsers ) === 1 )
 		$remove	= '';

@@ -20,9 +20,16 @@ if( $projects ){
 		$label		= $project->title.( $project->isDefault ? '&nbsp;'.$iconDefault : '' );
 		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 		$users		= array();
-		foreach( $project->users as $projectUser )
-			$users[]	= $projectUser->username;
-	//	$desc		= trim( $project->description );
+		foreach( $project->users as $projectUser ){
+			if( $projectUser->userId === $project->creatorId )
+				$users[]	= UI_HTML_Tag::create( 'u', $projectUser->username );
+			else
+				$users[]	= $projectUser->username;
+		}
+
+//		$desc	= explode( "\n", trim( strip_tags( $project->description ) ) );
+//		if( $desc )
+//			$desc	= UI_HTML_Tag::create( 'small', $desc[0], array( 'class' => 'not-muted' ) );
 		$graph		= $indicator->build( $project->status + 2, 5, "100%" );
 		$status		= htmlentities( $words['states'][$project->status], ENT_QUOTES, 'utf-8' );
 		$priority	= htmlentities( $words['priorities'][$project->priority], ENT_QUOTES, 'utf-8' );
@@ -30,24 +37,24 @@ if( $projects ){
 
 		$dateChange	= max( $project->createdAt, $project->modifiedAt );
 
-		$cells[]	= UI_HTML_Tag::create( 'td', $graph.'<br/>', array( 'class' => 'cell-status', 'title' => $status ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'title' => $priority, 'class' => 'cell-priority priority-'.$project->priority ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', join( ', ', $users ), array( 'class' => 'cell-users' ) );
 	#	$cells[]	= UI_HTML_Tag::create( 'td', $status, array( 'class' => 'project status'.$project->status ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'title' => $priority, 'class' => 'cell-priority priority-'.$project->priority ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $graph.'<br/>', array( 'class' => 'cell-status', 'title' => $status ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $helperTime->convert( $dateChange, TRUE, 'vor' ), array( 'class' => 'cell-change' ) );
 		$rows[]		= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => count( $rows ) % 2 ? 'even' : 'odd' ) );
 	}
 	$heads		= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', $w->headStatus, array( 'class' => 'row-status' ) ),
+		UI_HTML_Tag::create( 'th', $w->headPriority, array( 'class' => 'row-priority' ) ),
 		UI_HTML_Tag::create( 'th', $w->headTitle, array( 'class' => 'row-title' ) ),
 		UI_HTML_Tag::create( 'th', $w->headUsers, array( 'class' => 'row-users' ) ),
-		UI_HTML_Tag::create( 'th', $w->headPriority, array( 'class' => 'row-priority' ) ),
+		UI_HTML_Tag::create( 'th', $w->headStatus, array( 'class' => 'row-status' ) ),
 		UI_HTML_Tag::create( 'th', $w->headChanged, array( 'class' => 'row-changed' ) ),
 	) );
 	$thead		= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', join( $rows ) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '10%', '35%', '25%', '30px', '15%' ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '30px', '35%', '25%', '10%', '15%' ) );
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
