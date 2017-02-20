@@ -100,9 +100,9 @@ $isOverrunTracked	= $totalMinsProjected && $totalMinsTracked > $totalMinsProject
 if( $totalMinsProjected )
 	$list[]	= UI_HTML_Tag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), array() );
 if( $totalMinsTracked ){
-	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) );
+	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) * 60 );
 	$diff	= UI_HTML_Tag::create( 'small', '('.$diff.')', array( 'class' => 'muted' ) );
-	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked );
+	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked * 60 );
 	$list[]	= UI_HTML_Tag::create( 'dd', 'erfasst: '.$time.' '.$diff, array(
 		'class' => $isOverrunTracked ? 'warning' : NULL,
 	) );
