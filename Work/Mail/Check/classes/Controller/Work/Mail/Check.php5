@@ -238,7 +238,6 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			foreach( $addresses as $address ){
 				$check	= $this->modelCheck->getByIndices(
 					array( 'mailAddressId' => $address->mailAddressId ),
-					'',
 					array( 'mailAddressCheckId' => 'DESC' )
 				);
 				if( !strlen( $address->data ) )
@@ -401,7 +400,6 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			if( !in_array( $address->status, array( 0, 1 ) ) ){											//  @todo	kriss: why exclude status 1 aswell? a retesting address has a history eventually
 				$address->check	= $this->modelCheck->getByIndices(
 					array( 'mailAddressId' => $address->mailAddressId ),
-					"",
 					array( 'mailAddressCheckId' => 'DESC' )
 				);
 			}

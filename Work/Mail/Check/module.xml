@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -17,6 +17,7 @@
 	<log version="0.2.9">Add modal dialog with address and check details.</log>
 	<log version="0.3">Improve user interface usability.</log>
 	<log version="0.3.1">Extend export data by check information.</log>
+	<log version="0.3.2">Migrate to use newer database classes.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
