@@ -1,9 +1,9 @@
 
-ul.thumbnails li div.thumbnail {
+body.module-members ul.thumbnails li div.thumbnail {
 	cursor: pointer;
 	}
 
-ul.thumbnails li div.thumbnail>div {
+body.module-members ul.thumbnails li div.thumbnail>div {
 	font-size: 0.9em;
 	text-align: center;
 	margin-top: 0.3em;
