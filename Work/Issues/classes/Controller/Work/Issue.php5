@@ -35,6 +35,27 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		) );
 	}
 
+	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+		$context->registerPanel( 'work-issues-3-1-flex', array(
+			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
+			'title'			=> 'Probleme (breit)',
+			'heading'		=> 'Probleme',
+			'mode'			=> 'flex',
+			'cols'			=> 3,
+			'rows'			=> 1,
+			'rank'			=> 20,
+		) );
+		$context->registerPanel( 'work-issues-1-1-fix', array(
+			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
+			'title'			=> 'Probleme (schmal)',
+			'heading'		=> 'Probleme',
+			'mode'			=> 'fixed',
+			'cols'			=> 1,
+			'rows'			=> 1,
+			'rank'			=> 20,
+		) );
+	}
+
 	static public function ___onProjectRemove( $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
 		$model		= new Model_Issue( $env );
@@ -67,9 +88,9 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
 		);
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
@@ -124,6 +145,10 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'title', $request->get( 'title' ) );
 		$this->addData( 'content', $request->get( 'content' ) );
 		$this->addData( 'projects', $this->logic->getUserProjects() );
+	}
+
+	public function ajaxRenderDashboardPanel( $panelId ){
+		return UI_HTML_Tag::create( 'div', '...' );
 	}
 
 	public function edit( $issueId ){

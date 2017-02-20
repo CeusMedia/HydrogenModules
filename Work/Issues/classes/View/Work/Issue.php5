@@ -1,13 +1,6 @@
 <?php
 class View_Work_Issue extends CMF_Hydrogen_View{
 
-	public function add(){
-	}
-	public function edit(){
-	}
-	public function index(){
-	}
-
 	static public function ___onRenderDashboardPanels( $env, $context, $module, $data ){
 		$panel	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'h4', 'Probleme' ),
@@ -17,8 +10,46 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		), array(
 			'class' => 'content-panel content-panel-info'
 		) );
-		$context->registerPanel( 'work-issues', $panel );
-		$data['panels'][]	= $panel;
+		$context->registerPanel( 'work-issues', 'Probleme', $panel, '1col-fixed', 20 );
+	}
+
+	public function add(){
+	}
+
+	public function ajaxRenderDashboardPanel(){
+		$logicProject	= new Logic_Project( $this->env );
+		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		$modelIssue		= new Model_Issue( $this->env );
+		$userProjects	= $logicProject->getUserProjects( $currentUserId );
+		if( !$userProjects )
+			return UI_HTML_Tag::create( 'div', 'Keine Projekte vorhanden.', array( 'alert' => 'alert-info' ) );
+		$issues	= $modelIssue->getAll( array(
+			'status'	=> array( 0, 1, 2, 3 ),
+		 	'projectId'	=> array_keys( $userProjects ),
+		), array( 'type' => 'ASC', 'priority' => 'ASC' )/*, array( 0, 20 )*/ );
+		$rows	= array();
+		$icons			= array(
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
+			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+		);
+		foreach( $issues as $issue ) {
+			$icon	= $icons[$issue->type];
+			$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$issue->title, array(
+				'href'	=> './work/issue/edit/'.$issue->issueId
+			) );
+			$rows[]	= UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			) );
+		}
+		$table	= UI_HTML_Tag::create( 'table', $rows, array( 'class' => 'table table-condensed table-fixed' ) );
+		return UI_HTML_Tag::create( 'div', $table );
+	}
+
+	public function edit(){
+	}
+
+	public function index(){
 	}
 
 	public function renderOptions( $options, $key, $values, $class = '' ){

@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3">Support hook Project::onListRelations.</log>
 	<log version="0.3.1">Support hook Project::onRemove.</log>
 	<log version="0.3.2">Support hook Dashboard::renderPanels.</log>
+	<log version="0.3.3">Upgrade support for dasboard module.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
