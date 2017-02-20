@@ -49,7 +49,7 @@ class Logic_Versions{
 			'module'	=> $module,
 			'id'		=> $id,
 		);
-		return $this->model->getByIndices( $conditions, "", array( 'version' => 'DESC' ) );
+		return $this->model->getByIndices( $conditions, array( 'version' => 'DESC' ) );
 	}
 
 	public function getAll( $module, $id, $conditions = array(), $orders = array(), $limits = array() ){
@@ -74,12 +74,10 @@ class Logic_Versions{
 	}
 
 	protected function getNextVersionNr( $module, $id ){
-		$conditions	= array(
+		$latest		= $this->model->getByIndices( array(
 			'module'	=> $module,
 			'id'		=> $id,
-		);
-		$orders		= array( 'version' => 'DESC' );
-		$latest		= $this->model->getByIndices( $conditions, "", $orders );
+		), array( 'version' => 'DESC' ) );
 		if( $latest )
 			return (int) $latest->version + 1;
 		return 0;
