@@ -1,18 +1,6 @@
 <?php
 class View_Work_Issue extends CMF_Hydrogen_View{
 
-	static public function ___onRenderDashboardPanels( $env, $context, $module, $data ){
-		$panel	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', 'Probleme' ),
-			UI_HTML_Tag::create( 'div', '...', array(
-				'class' => 'content-panel-inner'
-			) )
-		), array(
-			'class' => 'content-panel content-panel-info'
-		) );
-		$context->registerPanel( 'work-issues', 'Probleme', $panel, '1col-fixed', 20 );
-	}
-
 	public function add(){
 	}
 
