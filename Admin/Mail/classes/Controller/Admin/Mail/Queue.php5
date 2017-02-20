@@ -11,6 +11,23 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 	}
 
+	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+		$context->registerPanel( 'admin-mail-queue', array(
+			'url'			=> 'admin/mail/queue/ajaxRenderDashboardPanel',
+			'title'			=> 'E-Mail-Queue',
+			'heading'		=> 'E-Mail-Queue',
+			'mode'			=> 'fixed',
+			'cols'			=> 1,
+			'rows'			=> 1,
+			'rank'			=> 70,
+			'refresh'		=> 10,
+		) );
+	}
+
+	public function ajaxRenderDashboardPanel( $panelId ){
+		return $this->view->ajaxRenderDashboardPanel();
+	}
+
 	public function html( $mailId ){
 		$mail		= $this->logic->getQueuedMail( $mailId );
 		$this->addData( 'mail', $mail );
