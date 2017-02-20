@@ -3,27 +3,48 @@
 	<title>Info: Dashboard</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2.1</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
-<!--	<log version="0.2.x"></log>-->
+	<log version="0.2.2">Prepare changes in hook calls.</log>
+	<log version="0.3">Use database to store user dashboards.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Dashboard.php5</class>
+		<class>Model/Dashboard.php5</class>
 		<class>View/Info/Dashboard.php5</class>
 		<class>View/Helper/Info/Dashboard.php5</class>
-<!--		<locale>de/info/dashboard.ini</locale>-->
+		<locale>de/info/dashboard.ini</locale>
 		<locale>de/html/info/dashboard/bottom.html</locale>
 		<locale>de/html/info/dashboard/top.html</locale>
-<!--		<locale>en/info/dashboard.ini</locale>-->
+		<locale>en/info/dashboard.ini</locale>
 		<locale>en/html/info/dashboard/bottom.html</locale>
 		<locale>en/html/info/dashboard/top.html</locale>
 		<template>info/dashboard/index.php</template>
-<!--		<style>module.info.dashboard.css</style>-->
+		<style load="auto">module.info.dashboard.css</style>
 	</files>
 	<config protected="yes" type="integer" name="columns" values="3,4"></config>
 	<relations/>
 	<hook type="resource" resource="View" event="renderContent">View_Info_Dashboard::___onRenderContent</hook>
+	<sql type="mysql" on="install" version="0.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>dashboards` (
+  `dashboardId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `isCurrent` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `panels` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`dashboardId`),
+  KEY `userId` (`userId`),
+  KEY `isCurrent` (`isCurrent`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
+]]></sql>
 </module>

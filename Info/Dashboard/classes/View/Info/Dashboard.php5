@@ -14,10 +14,12 @@ class View_Info_Dashboard extends CMF_Hydrogen_View{
 	}
 
 	public function index(){
+/*
+
 //		$dashboard	= new View_Helper_Info_Dashboard( $this->env );
 		$data		= (object) array( 'content' => '[info:dashboard]' );
 		$this->env->captain->callHook( 'View', 'renderContent', $this, $data );
 		$this->addData( 'dashboard', $data->content );
-	}
+*/	}
 }
 ?>
