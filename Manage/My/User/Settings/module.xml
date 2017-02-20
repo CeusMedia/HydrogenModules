@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
 	<log version="0.3.7">Fixed bug in database script.</log>
 	<log version="0.3.8">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -10,6 +10,7 @@
 	<log version="0.4">Finish user interface.</log>
 	<log version="0.4.1">Disable automatic password masking of module configurations.</log>
 	<log version="0.4.2">Remove deprecated helper class and rename CSS file.</log>
+	<log version="0.4.3">Add tab icon.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
