@@ -29,15 +29,17 @@ var InfoDashboard = {
 			});
 		}
 
+		jQuery("#input_dashboardId").bind("change", function(){
+			InfoDashboard.select(jQuery(this).val());
+		});
 		jQuery(".trigger-myModalInfoDashboardAdd").bind("click", function(){
 			$("#myModalInfoDashboardAdd").modal("toggle");
 			return false;
-		})
+		});
 		jQuery(".trigger-myModalInfoDashboardAddPanel").bind("click", function(){
 			$("#myModalInfoDashboardAddPanel").modal("toggle");
 			return false;
-		})
-
+		});
 		jQuery(".button-rename-board").bind("click", function(){
 			var title = prompt('Neuen Titel', jQuery(this).data('title'));
 			var dashboardId = jQuery(this).data('dashboard-id');
