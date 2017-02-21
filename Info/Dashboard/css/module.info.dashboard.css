@@ -1,0 +1,38 @@
+.dashboard-panel {}
+.dashboard-panel .dashboard-panel-handle {
+	background: #EEE;
+	padding: 0.2em 0.4em;
+	margin-bottom: 0.5em;
+	border-radius: 0.2em;
+	cursor: move;
+	}
+.dashboard-panel .dashboard-panel-handle h4 {
+	padding: 0;
+	margin: 0;
+	font-size: 1.2em;
+	font-weight: lighter;
+	}
+.dashboard-panel .dashboard-panel-container {
+	height: 240px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	}
+
+.dashboard-panel .dashboard-panel-handle .handle-icon {
+	float: right;
+	display: none;
+	}
+.dashboard-panel .dashboard-panel-handle:hover .handle-icon {
+	display: inline;
+	}
+.dashboard-panel .dashboard-panel-handle .handle-icon.handle-button-move {
+	float: right;
+	margin-right: 0.5em;
+	}
+.sortable-placeholder {
+	background-color: rgba(127, 127, 127, 0.15);
+	height: 280px;
+	width: 30.5%;
+	border: 1px dashed rgba(127, 127, 127, 0.25);
+	display: block;
+}
