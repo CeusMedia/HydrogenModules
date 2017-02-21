@@ -11,6 +11,7 @@ if(typeof tinymce !== "undefined"){
 		languages: "English=en",
 		listImages: [],
 		listLinks: [],
+		styleFormats: '',
 
 		apply: function(custom, mode, verbose){
 			if(typeof custom === "undefined")
@@ -26,6 +27,7 @@ if(typeof tinymce !== "undefined"){
 			options.document_base_url = this.frontendUri;
 			options.image_list = this.listImages;
 			options.link_list = this.listLinks;
+			options.style_formats = this.styleFormats;
 			options.content_css += "," + this.envUri + "themes/custom/css/tinymce.content.css";
 //			options.spellchecker_languages = this.languages;
 //			options.spellchecker_rpc_url = this.frontendUri + 'spellchecker/spellchecker.php';
@@ -35,7 +37,8 @@ if(typeof tinymce !== "undefined"){
 			var toolbars = settings.JS_TinyMCE['auto_toolbar_'+mode].split(/#/);
 			for(var i=1; i<=toolbars.length; i++)
 				options["toolbar"+i] = toolbars[i-1];
-
+			if(mode === "minimal")
+				options['menubar'] = false;
 			custom = $.extend(options, custom);
 
 			if(typeof verbose !== "undefined" && verbose)
@@ -59,46 +62,7 @@ if(typeof tinymce !== "undefined"){
 			fontsize_formats: "80% 90% 100% 110% 120% 150% 200% 300%",
 			browser_spellcheck: true,
 			style_formats_merge: true,
-			style_formats: [{
-				title: 'Bildformatierung',
-				items: [{
-					title: 'Ausrichtung',
-					items: [{
-						title: 'links',
-						selector: 'img',
-						styles: {
-							'float': 'left',
-							'margin': '0 20px 10px 0px'
-						}
-					},{
-						title: 'rechts',
-						selector: 'img',
-						styles: {
-							'float': 'right',
-							'margin': '0 0 10px 20px'
-						}
-					}]
-				},{
-					title: 'Dekoration',
-					items: [{
-						title: 'abgerundet',
-						selector: 'img',
-						classes: 'img-rounded'
-					},{
-						title: 'kreisrund',
-						selector: 'img',
-						classes: 'img-circle'
-					},{
-						title: 'Polaroid',
-						selector: 'img',
-						classes: 'img-polaroid'
-					}]
-				}]
-			},{
-				title: 'In Fenster öffnen',
-				selector: 'a',
-				classes: ["fancybox-auto"]
-			}]
+			style_formats_autohide: true
 		}
 	};
 }

@@ -94,13 +94,107 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
 			$helper	= new View_Helper_TinyMce( $env );
+
+			$styleFormats	= array(
+				array(
+					'title'		=> 'Blöcke',
+					'items'		=> array(
+						array(
+							'title'				=> 'Absatz',
+							'block'				=> 'p',
+						),
+						array(
+							'title'				=> 'Textblock',
+							'block'				=> 'div',
+						),
+						array(
+							'title'				=> 'Zitatblock',
+							'block'				=> 'blockquote',
+							'wrapper'			=> TRUE,
+						),
+						array(
+							'title'				=> 'vorformatierter Text',
+							'block'				=> 'pre',
+						),
+						array(
+							'title'				=> 'Abbildung',
+							'block'				=> 'figure',
+							'wrapper'			=> TRUE,
+						),
+						array(
+							'title'				=> 'HTML5: Sektion',
+							'block'				=> 'section',
+							'wrapper'			=> TRUE,
+							'merge_siblings'	=> FALSE,
+						),
+						array(
+							'title'				=> 'HTML5: Artikel',
+							'block'				=> 'article',
+							'wrapper'			=> TRUE,
+							'merge_siblings'	=> FALSE,
+						),
+						array(
+							'title'				=> 'HTML5: Marginale',
+							'block'				=> 'aside',
+							'wrapper'			=> TRUE,
+						),
+					)
+				),
+				array(
+					'title'		=> 'Bildformatierung',
+					'items'		=> array(
+						array(
+							'title'		=> 'Ausrichtung',
+							'items'		=> array(
+								array(
+									'title'		=> 'links',
+									'selector'	=> 'img',
+									'styles'	=> array( 'float' => 'left', 'margin' => '0 20px 10px 0px'),
+								),
+								array(
+									'title'		=> 'rechts',
+									'selector'	=> 'img',
+									'styles'	=> array( 'float' => 'right', 'margin' => '0 0 10px 20px'),
+								),
+							)
+						),
+						array(
+							'title'		=> 'Dekoration',
+							'items'		=> array(
+								array(
+									'title'		=> 'abgerundet',
+									'selector'	=> 'img',
+									'classes'	=> 'img-rounded',
+								),
+								array(
+									'title'		=> 'kreisrund',
+									'selector'	=> 'img',
+									'classes'	=> 'img-circle',
+								),
+								array(
+									'title'		=> 'Polaroid',
+									'selector'	=> 'img',
+									'classes'	=> 'img-polaroid',
+								),
+							)
+						),
+						array(
+							'title'				=> 'In Lightbox öffnen',
+							'selector'			=> 'a',
+							'classes'			=> 'fancybox-auto',
+						),
+					)
+				)
+			);
+
 			$script	= '
 tinymce.Config.languages = "'.join( ',', $languages ).'";
 tinymce.Config.envUri = "'.$env->url.'";
 tinymce.Config.frontendUri = "'.$baseUrl.'";
 tinymce.Config.language = "'.$language.'";
 tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
-tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';';
+tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
+tinymce.Config.styleFormats = '.json_encode( $styleFormats ).';';
 			$context->js->addScript( $script );
 			$script	= '
 if($(settings.JS_TinyMCE.auto_selector).size()){

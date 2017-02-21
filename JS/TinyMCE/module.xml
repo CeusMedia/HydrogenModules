@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.2.7</version>
+	<version>4.5.3</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -16,12 +16,14 @@
 		<script>tinymce/plugins/pagebreak/plugin.min.js</script>
 		<script>tinymce/plugins/print/plugin.min.js</script>
 		<script>tinymce/plugins/wordcount/plugin.min.js</script>
+		<script>tinymce/plugins/toc/plugin.min.js</script>
 		<script>tinymce/plugins/bbcode/plugin.min.js</script>
 		<script>tinymce/plugins/autosave/plugin.min.js</script>
 		<script>tinymce/plugins/example_dependency/plugin.min.js</script>
+		<script>tinymce/plugins/codesample/plugin.min.js</script>
+		<script>tinymce/plugins/codesample/css/prism.css</script>
 		<script>tinymce/plugins/advlist/plugin.min.js</script>
 		<script>tinymce/plugins/directionality/plugin.min.js</script>
-		<script>tinymce/plugins/layer/plugin.min.js</script>
 		<script>tinymce/plugins/colorpicker/plugin.min.js</script>
 		<script>tinymce/plugins/imagetools/plugin.min.js</script>
 		<script>tinymce/plugins/autoresize/plugin.min.js</script>
@@ -62,7 +64,6 @@
 		<script>tinymce/plugins/preview/plugin.min.js</script>
 		<script>tinymce/plugins/template/plugin.min.js</script>
 		<script>tinymce/plugins/media/plugin.min.js</script>
-		<script>tinymce/plugins/media/moxieplayer.swf</script>
 		<script>tinymce/plugins/autolink/plugin.min.js</script>
 		<script>tinymce/plugins/textcolor/plugin.min.js</script>
 		<script>tinymce/plugins/insertdatetime/plugin.min.js</script>
@@ -75,6 +76,8 @@
 		<script>tinymce/plugins/fullscreen/plugin.min.js</script>
 		<script>tinymce/plugins/example/plugin.min.js</script>
 		<script>tinymce/plugins/example/dialog.html</script>
+		<script>tinymce/license.txt</script>
+		<script>tinymce/jquery.tinymce.min.js</script>
 		<script>tinymce/skins/lightgray/content.min.css</script>
 		<script>tinymce/skins/lightgray/img/object.gif</script>
 		<script>tinymce/skins/lightgray/img/trans.gif</script>
@@ -91,7 +94,9 @@
 		<script>tinymce/skins/lightgray/fonts/tinymce.eot</script>
 		<script>tinymce/skins/lightgray/skin.ie7.min.css</script>
 		<script>tinymce/skins/lightgray/content.inline.min.css</script>
+		<script>tinymce/themes/inlite/theme.min.js</script>
 		<script>tinymce/themes/modern/theme.min.js</script>
+		<script>tinymce/langs/readme.md</script>
 		<script>tinymce/langs/de.js</script>
 		<locale>de/js/tinymce.ini</locale>
 		<locale>en/js/tinymce.ini</locale>
@@ -107,7 +112,8 @@
 	<config type="string" protected="no" name="auto.toolbar.minimal">styleselect | bold italic underline | bullist numlist outdent indent | link image</config>
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
-	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">//tinymce.cachefly.net/4.2/</config>
+	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">//cloud.tinymce.com/stable/</config>
+	<config type="string" protected="yes" name="CDN.ApiKey"></config>
 	<config type="string" protected="no" name="CDN.languages" title="Comma separated list of languages available on CDN">en</config>
 	<config type="string" protected="no" name="languages" title="Comma separated list of languages available locally.">de,en</config>
 	<relations>
