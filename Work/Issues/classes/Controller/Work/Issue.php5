@@ -36,6 +36,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 	}
 
 	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
+			return;
 		$context->registerPanel( 'work-issues-3-1-flex', array(
 			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
 			'title'			=> 'Probleme (breit)',
