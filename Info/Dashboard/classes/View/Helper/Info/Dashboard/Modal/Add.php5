@@ -12,10 +12,9 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 	}
 
 	public function render(){
-		$words		= $this->getWords( NULL, 'info/dashboard' );
-		$w			= (object) $words['add'];
+		$w			= (object) $this->getWords( 'add', 'info/dashboard' );
 
-		$list			= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
+		$list		= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
 		if( $this->panels ){
 			$list	= array();
 			foreach( $this->panels as $panelId => $panel ){
@@ -45,12 +44,12 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 					<input type="text" name="title" id="input_title" class="span12" required="required" placeholder="'.$w->placeholderTitle.'"/>
 				</div>
 			</div>
-			<div class="row-fluid">
+<!--			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_description">'.$w->labelDescription.'</label>
-					<textarea name="description" id="input_description" rows="3" class="span12"></textarea>
+					<textarea name="description" id="input_description" rows="3" class="span12 not-TinyMCE" data-tinymce-mode="minimal"></textarea>
 				</div>
-			</div>
+			</div>-->
 			<div class="row-fluid">
 				<div class="span12">
 					'.UI_HTML_Tag::create( 'h5', $w->labelPanels ).'

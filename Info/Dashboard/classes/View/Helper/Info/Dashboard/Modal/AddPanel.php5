@@ -8,15 +8,9 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 		$this->setEnv( $env );
 	}
 
-	public function setDashboard( $dashboard ){
-		$this->dashboard	= $dashboard;
-	}
-
-	public function setPanels( $panels ){
-		$this->panels		= $panels;
-	}
-
 	public function render(){
+		$w				= (object) $this->getWords( 'add-panel', 'info/dashboard' );
+
 		$fieldPanels	= UI_HTML_Tag::create( 'div', 'Keine Panels vorhanden.', array( 'class' => 'alert alert-info' ) );
 		$panelsInBoard	= explode( ',', $this->dashboard->panels );
 		if( $this->panels ){
@@ -48,10 +42,7 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 			}
 		}
 
-		$words		= $this->getWords( NULL, 'info/dashboard' );
-		$w			= (object) $words['add-panel'];
-
-$iconAddBoard	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+		$iconAddBoard	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 		$iconAddPanel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 
 		return '
@@ -70,5 +61,13 @@ $iconAddBoard	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th'
 		</div>
 	</div>
 </form>';
+	}
+
+	public function setDashboard( $dashboard ){
+		$this->dashboard	= $dashboard;
+	}
+
+	public function setPanels( $panels ){
+		$this->panels		= $panels;
 	}
 }

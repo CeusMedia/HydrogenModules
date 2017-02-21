@@ -1,16 +1,17 @@
 <?php
-class View_Helper_Info_Dashboard{
+class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract{
 
+	protected $columns		= 3;
+	protected $dashboard;
 	protected $panels;
 
 	public function __construct( $env ){
 		$this->env	= $env;
 	}
 
-	public function render( $columns = 3 ){
-//		print_m( $this->dashboard );
-//		print_m( $this->panels );
-//		die;
+	public function render(){
+		$w	= (object) $this->getWords( 'board', 'info/dashboard' );
+
 		$list	= array();
 		foreach( explode( ',', $this->dashboard->panels ) as $panelId ){
 			if( !array_key_exists( $panelId, $this->panels ) )
@@ -24,7 +25,8 @@ class View_Helper_Info_Dashboard{
 				UI_HTML_Tag::create( 'a', $iconRemove, array(
 					'class'		=> 'btn btn-mini btn-inverse handle-icon',
 					'href'		=> './info/dashboard/removePanel/'.$panel->id,
-					'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;'
+					'onclick'	=> 'if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;',
+					'title'		=> $w->buttonRemove,
 				) ),
 				UI_HTML_Tag::create( 'a', $iconMove, array(
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
@@ -41,7 +43,7 @@ class View_Helper_Info_Dashboard{
 					'class'		=> 'thumbnail',
 				) )
 			), array(
-				'class'			=> 'dashboard-panel span'.( 12 * $panel->cols / $columns ),
+				'class'			=> 'dashboard-panel span'.( 12 * $panel->cols / $this->columns ),
 				'data-panel-id'	=> $panel->id,
 				'id'			=> 'dashboard-panel-'.$panel->id,
 			) );
@@ -52,53 +54,15 @@ class View_Helper_Info_Dashboard{
 				$this->env->getPage()->js->addScriptOnReady( $script );
 			}
 		}
+		$desc	= $this->dashboard->description ? UI_HTML_Tag::create( 'p', nl2br( $this->dashboard->description ) ) : '';
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails sortable' ) );
-		$board	= UI_HTML_Tag::create( 'div', $list, array( 'class' => '', 'id' => 'dashboard' ) );
-		return $board;
-
-		$this->env->getCaptain()->callHook( 'Dashboard', 'renderPanels', $this );
-		$listSmall		= array();
-		$listFull		= array();
-
-		foreach( $this->panels as $panel ){
-			$heading		= UI_HTML_Tag::create( 'h4', $panel->title );
-			if( $panel->size == '3col-flex' ){
-				$thumbnail		= UI_HTML_Tag::create( 'div', $heading.$panel->content, array( 'class' => 'thumbnail' ) );
-				$listSmall[]	= UI_HTML_Tag::create( 'li', $thumbnail, array(
-					'class'		=> 'span'.( 24 / $columns ),
-					'data-key'	=> $panel->key,
-				) );
-//				$listFull[]	= $panel->content;
-			}
-			else if( $panel->size == '1col-fixed' || 1 ){
-				$thumbnail		= UI_HTML_Tag::create( 'div', $heading.$panel->content, array( 'class' => 'thumbnail' ) );
-				$listSmall[]	= UI_HTML_Tag::create( 'li', $thumbnail, array(
-					'class'		=> 'span'.( 12 / $columns ),
-					'data-key'	=> $panel->key,
-				) );
-			}
-		}
-		$listSmall	= UI_HTML_Tag::create( 'ul', $listSmall, array( 'class' =>'thumbnails sortable' ) );
-		$script	= '<script>
-jQuery(document).ready(function(){
-	jQuery(".thumbnails.sortable").sortable({
-		containment: "parent",
-		stop: function( event, ui ) {
-			var list = [];
-			$("ul.thumbnails>li").each(function(){
-				list.push($(this).data("key"))
-				console.log(list);
-			});
-		}
-	});
-});</script>';
-		$style	= '<style>
-ul.thumbnails div.thumbnail {
-	text-align: left;
-	height: 300px;
+		return UI_HTML_Tag::create( 'div', $desc.$list, array( 'id' => 'dashboard-board' ) );
 	}
-</style>';
-		return $listSmall.join( '', $listFull ).$script.$style;
+
+	public function setColumns( $columns ){
+		if( !in_array( $columns, array( 1, 2, 3, 4, 6 ) ) )
+			$columns	= 3;
+		$this->setColumns	= $columns;
 	}
 
 	public function setDashboard( $dashboard ){

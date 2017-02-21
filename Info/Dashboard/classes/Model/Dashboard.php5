@@ -7,6 +7,7 @@ class Model_Dashboard extends CMF_Hydrogen_Model{
 		'userId',
 		'isCurrent',
 		'title',
+		'description',
 		'panels',
 		'createdAt',
 		'modifiedAt',

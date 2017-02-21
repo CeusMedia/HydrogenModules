@@ -38,7 +38,7 @@ var InfoDashboard = {
 			return false;
 		})
 
-		jQuery("#button-rename-board").bind("click", function(){
+		jQuery(".button-rename-board").bind("click", function(){
 			var title = prompt('Neuen Titel', jQuery(this).data('title'));
 			var dashboardId = jQuery(this).data('dashboard-id');
 			if(title) InfoDashboard.rename(dashboardId, title);

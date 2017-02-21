@@ -18,60 +18,15 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 	public function add(){
 		if( $this->request->has( 'save' ) ){
 			$title	= trim( $this->request->get( 'title' ) );
+			$desc	= trim( $this->request->get( 'description' ) );
 			$panels	= $this->request->get( 'panels' );
 			if( !( is_array( $panels ) && count( $panels ) ) )
 				$panels	= array();
 			$select	= $this->request->has( 'select' );
-			$this->addUserDashboard( $this->userId, $title, $panels, $select );
+			$this->addUserDashboard( $this->userId, $title, $desc, $panels, $select );
 			$this->messenger->noteSuccess( 'Dashboard "%s" has been created.', $title );
 			$this->restart( NULL, TRUE );
 		}
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function addUserDashboard( $userId, $title, $panels = array(), $select = FALSE ){
-		$dashboardId	= $this->model->add( array(
-			'userId'		=> $userId,
-			'title'			=> $title,
-			'panels'		=> join( ',', $panels ),
-			'createdAt'		=> time(),
-			'modifiedAt'	=> time(),
-		) );
-		if( count( $this->getUserDashboard( $userId ) ) === 1 || $select )
-			$this->setUserDashboard( $userId, $dashboardId );
-		return $dashboardId;
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function addPanelToUserDashboard( $userId, $panelId, $position = 'bottom' ){
-		$dashboard	= $this->getUserDashboard( $userId );
-		if( !$dashboard )
-			throw new RuntimeException( 'No active dashboard available for user' );
-		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
-		switch( $position ){
-			case 'top':
-				array_unshift( $panels, $panelId );
-				break;
-			case 'bottom':
-			default:
-				array_push( $panels, $panelId );
-				break;
-		}
-		$this->model->edit( $dashboard->dashboardId, array(
-			'panels'		=> implode( ',', $panels ),
-			'modifiedAt'	=> time()
-		) );
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function getUserDashboard( $userId ){
-		return $this->model->getByIndices( array( 'userId' => $userId, 'isCurrent' => 1  ) );
 	}
 
 	public function addPanels(){
@@ -132,12 +87,6 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		catch( Exception $e ){
 			$this->messenger->noteError( $e->getMessage() );
 		}
-	}
-
-	protected function getUserDashboards( $userId ){
-		return $this->model->getAllByIndices( array(
-			'userId' => $userId
-		), array( 'modifiedAt'	=> 'DESC' ) );
 	}
 
 	public function registerPanel( $panelId, $data ){
@@ -216,6 +165,62 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			$this->env->getMessenger()->noteError( 'Invalid dashboard ID.' );
 		}
 		$this->restart( NULL, TRUE );
+	}
+
+	/**
+	 *	@todo  			move to (yet not existing) logic class
+	 */
+	protected function addUserDashboard( $userId, $title, $description, $panels = array(), $select = FALSE ){
+		$dashboardId	= $this->model->add( array(
+			'userId'		=> $userId,
+			'title'			=> $title,
+			'description'	=> $description,
+			'panels'		=> join( ',', $panels ),
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		) );
+		if( count( $this->getUserDashboard( $userId ) ) === 1 || $select )
+			$this->setUserDashboard( $userId, $dashboardId );
+		return $dashboardId;
+	}
+
+	/**
+	 *	@todo  			move to (yet not existing) logic class
+	 */
+	protected function addPanelToUserDashboard( $userId, $panelId, $position = 'bottom' ){
+		$dashboard	= $this->getUserDashboard( $userId );
+		if( !$dashboard )
+			throw new RuntimeException( 'No active dashboard available for user' );
+		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
+		switch( $position ){
+			case 'top':
+				array_unshift( $panels, $panelId );
+				break;
+			case 'bottom':
+			default:
+				array_push( $panels, $panelId );
+				break;
+		}
+		$this->model->edit( $dashboard->dashboardId, array(
+			'panels'		=> implode( ',', $panels ),
+			'modifiedAt'	=> time()
+		) );
+	}
+
+	/**
+	 *	@todo  			move to (yet not existing) logic class
+	 */
+	protected function getUserDashboard( $userId ){
+		return $this->model->getByIndices( array( 'userId' => $userId, 'isCurrent' => 1  ) );
+	}
+
+	/**
+	 *	@todo  			move to (yet not existing) logic class
+	 */
+	protected function getUserDashboards( $userId ){
+		return $this->model->getAllByIndices( array(
+			'userId' => $userId
+		), array( 'modifiedAt'	=> 'DESC' ) );
 	}
 
 	/**
