@@ -34,7 +34,7 @@ Calls hook Dashboard::onRegisterPanels.
 		<locale>en/html/info/dashboard/top.html</locale>
 		<template>info/dashboard/index.php</template>
 		<style>module.info.dashboard.css</style>
-		<script>InfoDashboard.js</style>
+		<script>InfoDashboard.js</script>
 	</files>
 	<config protected="yes" type="integer" name="columns" values="3,4"></config>
 	<relations/>
