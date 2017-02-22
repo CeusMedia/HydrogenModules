@@ -160,6 +160,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			'cols'		=> 1,
 			'rows'		=> 1,
 			'rank'		=> '50',
+			'icon'		=> NULL,
 			'refresh'	=> 0
 		), $data );
 		$this->panels[$panelId]	= (object) $data;
@@ -216,7 +217,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
 		) );
-		if( count( $this->getUserDashboard( $userId ) ) === 1 || $select )
+		if( count( $this->getUserDashboards( $userId ) ) === 1 || $select )
 			$this->setUserDashboard( $userId, $dashboardId );
 		return $dashboardId;
 	}

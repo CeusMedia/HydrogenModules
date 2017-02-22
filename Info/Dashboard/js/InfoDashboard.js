@@ -4,7 +4,7 @@ var InfoDashboard = {
 			/* @see http://api.jqueryui.com/sortable/ */
 			jQuery(".thumbnails.sortable").sortable({
 				containment_: "parent",
-				opacity: 0.25,
+				opacity: 0.75,
 				revert: 250,
 				tolerance: "pointer",
 				cursor: "move",

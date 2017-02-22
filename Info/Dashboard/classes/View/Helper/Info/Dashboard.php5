@@ -21,6 +21,9 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract{
 			$iconMove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows' ) );
 			$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
+			$icon		= '';
+			if( $panel->icon )
+				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $panel->icon ) ).'&nbsp;';
 			$handle		= UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'a', $iconRemove, array(
 					'class'		=> 'btn btn-mini btn-inverse handle-icon',
@@ -28,10 +31,10 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract{
 					'onclick'	=> 'if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;',
 					'title'		=> $w->buttonRemove,
 				) ),
-				UI_HTML_Tag::create( 'a', $iconMove, array(
+/*				UI_HTML_Tag::create( 'a', $iconMove, array(
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
-				) ),
-				UI_HTML_Tag::create( 'h4', $panel->heading ),
+				) ),*/
+				UI_HTML_Tag::create( 'h4', $icon.$panel->heading ),
 			), array( 'class' => 'dashboard-panel-handle' ) );
 			$container	= UI_HTML_Tag::create( 'div', '', array(
 				'class'	=> 'dashboard-panel-container',

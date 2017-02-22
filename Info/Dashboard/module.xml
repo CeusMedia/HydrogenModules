@@ -6,7 +6,7 @@
 Calls hook Dashboard::onRegisterPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
@@ -17,6 +17,7 @@ Calls hook Dashboard::onRegisterPanels.
 	<log version="0.3.3">Migrate add forms to modals.</log>
 	<log version="0.3.4">Extend model by board description.</log>
 	<log version="0.3.5">Add switch and limits for user boards.</log>
+	<log version="0.3.6">Support panel icons.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
