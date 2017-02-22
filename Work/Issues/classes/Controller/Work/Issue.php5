@@ -38,22 +38,11 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
 		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'work-issues-3-1-flex', array(
+		$context->registerPanel( 'work-issues', array(
 			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
-			'title'			=> 'Probleme (breit)',
-			'heading'		=> 'Probleme',
-			'mode'			=> 'flex',
-			'cols'			=> 3,
-			'rows'			=> 1,
-			'rank'			=> 20,
-		) );
-		$context->registerPanel( 'work-issues-1-1-fix', array(
-			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
-			'title'			=> 'Probleme (schmal)',
-			'heading'		=> 'Probleme',
-			'mode'			=> 'fixed',
-			'cols'			=> 1,
-			'rows'			=> 1,
+			'title'			=> 'offene Probleme',
+			'heading'		=> 'offene Probleme',
+			'icon'			=> 'fa fa-fw fa-exclamation',
 			'rank'			=> 20,
 		) );
 	}
