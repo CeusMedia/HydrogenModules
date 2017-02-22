@@ -18,9 +18,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			'url'			=> 'admin/mail/queue/ajaxRenderDashboardPanel',
 			'title'			=> 'E-Mail-Queue',
 			'heading'		=> 'E-Mail-Queue',
-			'mode'			=> 'fixed',
-			'cols'			=> 1,
-			'rows'			=> 1,
+			'icon'			=> 'fa fa-fw fa-envelope',
 			'rank'			=> 70,
 			'refresh'		=> 10,
 		) );
