@@ -1,14 +1,11 @@
 <?php
 class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abstract{
 
+	protected $dashboards	= array();
 	protected $panels		= array();
 
 	public function __construct( $env ){
 		$this->setEnv( $env );
-	}
-
-	public function setPanels( $panels ){
-		$this->panels		= $panels;
 	}
 
 	public function render(){
@@ -30,6 +27,19 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 			$list	= UI_HTML_Tag::create( 'div', $list, array( 'style' => "padding: 0 0.5em 1em 0.5em;" ) );
 		}
 
+		$fieldSelect	= '';
+		if( count( !$this->dashboards ) > 0 )
+			$fieldSelect	= '
+			<div class="row-fluid">
+				<div class="span12">
+					<label class="checkbox">
+						<input type="checkbox" name="select" id="input_select" value="1" checked="checked"/>
+						'.$w->labelSelect.'
+					</label>
+				</div>
+			</div>';
+
+
 		return '
 <form action="./info/dashboard/add" method="post">
 	<div id="myModalInfoDashboardAdd" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -44,12 +54,14 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 					<input type="text" name="title" id="input_title" class="span12" required="required" placeholder="'.$w->placeholderTitle.'"/>
 				</div>
 			</div>
-<!--			<div class="row-fluid">
+			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_description">'.$w->labelDescription.'</label>
-					<textarea name="description" id="input_description" rows="3" class="span12 not-TinyMCE" data-tinymce-mode="minimal"></textarea>
+<!--					<textarea name="description" id="input_description" rows="3" class="span12 not-TinyMCE" data-tinymce-mode="minimal"></textarea>-->
+					<input type="text" name="description" id="input_description" class="span12"/>
 				</div>
-			</div>-->
+			</div>
+			'.$fieldSelect.'
 			<div class="row-fluid">
 				<div class="span12">
 					'.UI_HTML_Tag::create( 'h5', $w->labelPanels ).'
@@ -63,5 +75,25 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 		</div>
 	</div>
 </form>';
+	}
+
+	/**
+	 *	Set list of user dashboards.
+	 *	@access		public
+	 *	@param		array		$dashboards			List of user dashboards
+	 *	@return		void
+	 */
+	public function setDashboards( $dashboards ){
+		$this->dashboards	= $dashboards;
+	}
+
+	/**
+	 *	Set map of registered panels.
+	 *	@access		public
+	 *	@param		array		$panels				Map of registered panels
+	 *	@return		void
+	 */
+	public function setPanels( $panels ){
+		$this->panels		= $panels;
 	}
 }

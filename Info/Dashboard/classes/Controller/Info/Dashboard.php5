@@ -1,72 +1,114 @@
 <?php
 class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 
-	protected $panels	= array();
+	protected $logic;
+	protected $messenger;
+	protected $model;
+	protected $moduleConfig;
+	protected $panels			= array();
+	protected $request;
+	protected $session;
+	protected $userId			= 0;
 
 	public function __onInit(){
+		/*  --  ENV RESOURCES  --  */
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+
+		/*  --  MODULE RESOURCES  --  */
+		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
 		$this->model		= new Model_Dashboard( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
-		$logicAuth		= Logic_Authentication::getInstance( $this->env );
-		$this->userId	= $logicAuth->getCurrentUserId( FALSE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->messages	= (object) $this->getWords( 'msg', 'info/dashboard' );
+
+		/*  --  USER SUPPORT  --  */
+		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$logicAuth		= Logic_Authentication::getInstance( $this->env );
+			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
+		}
 		$this->addData( 'currentUserId', $this->userId );
+
+		/*  --  REGISTER PANELS  --  */
 		$this->env->getCaptain()->callHook( 'Dashboard', 'registerPanels', $this );
 		$this->addData( 'panels', $this->panels );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
+	}
+
+	protected function checkUserDashboardsEnabled( $strict = TRUE ){
+		if( $this->logic->checkUserDashboardsEnabled( FALSE ) )
+			return TRUE;
+		if( $strict ){
+			$this->messenger->noteError( $this->messages->errorUserDashboardsDisabled );
+			$this->restart( NULL, TRUE );
+		}
+		return FALSE;
 	}
 
 	public function add(){
-		if( $this->request->has( 'save' ) ){
-			$title	= trim( $this->request->get( 'title' ) );
-			$desc	= trim( $this->request->get( 'description' ) );
-			$panels	= $this->request->get( 'panels' );
-			if( !( is_array( $panels ) && count( $panels ) ) )
-				$panels	= array();
-			$select	= $this->request->has( 'select' );
-			$this->addUserDashboard( $this->userId, $title, $desc, $panels, $select );
-			$this->messenger->noteSuccess( 'Dashboard "%s" has been created.', $title );
+		try{
+			$this->checkUserDashboardsEnabled();
+			if( $this->request->has( 'save' ) ){
+				$title	= trim( $this->request->get( 'title' ) );
+				$desc	= trim( $this->request->get( 'description' ) );
+				$panels	= $this->request->get( 'panels' );
+				if( !( is_array( $panels ) && count( $panels ) ) )
+					$panels	= array();
+				$select	= $this->request->has( 'select' );
+				$this->logic->addUserDashboard( $this->userId, $title, $desc, $panels, $select );
+				$this->messenger->noteSuccess( $this->messages->successDashboardAdded, $title );
+				$this->restart( NULL, TRUE );
+			}
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
 
 	public function addPanels(){
-		$this->checkUserDashboardsEnabled();
-		$dashboard	= $this->getUserDashboard( $this->userId );
-		if( !$dashboard ){
-			$this->env->getMessenger()->noteError( 'No dashboard available. Please create one first!' );
+		try{
+			$this->checkUserDashboardsEnabled();
+			if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
+				$this->env->getMessenger()->noteError( $this->messages->errorNoActiveUserDashboard );
+				$this->restart( NULL, TRUE );
+			}
+			$panels		= $this->request->get( 'panels' );
+			$positions	= $this->request->get( 'positions' );
+			$panels		= is_array( $panels ) ? $panels : array();
+			if( strlen( trim( $dashboard->panels ) ) )
+				$dashboard->panels	= explode( ',', $dashboard->panels );
+			else
+				$dashboard->panels	= array();
+			$count	= 0;
+			foreach( $panels as $panelId ){
+				$panelId	= trim( $panelId );
+				if( in_array( $panelId, $this->panels ) )
+					continue;
+				$position	= isset( $positions[$panelId] ) ? $positions[$panelId] : NULL;
+				try{
+					$this->logic->addPanelToUserDashboard( $this->userId, $panelId, $position );
+					$count++;
+				}
+				catch( RangeException $e ){
+					$this->messenger->noteError( $this->messages->errorPanelLimitReached );
+					break;
+				}
+			}
+			if( $count > 1 )
+				$this->messenger->noteSuccess( $this->messages->successPanelsAdded, $count );
+			else if( $count )
+				$this->messenger->noteSuccess( $this->messages->successPanelAdded, $this->panels[$panelId]->title );
 			$this->restart( NULL, TRUE );
 		}
-		$panels		= $this->request->get( 'panels' );
-		$positions	= $this->request->get( 'positions' );
-		$panels		= is_array( $panels ) ? $panels : array();
-		if( strlen( trim( $dashboard->panels ) ) )
-			$dashboard->panels	= explode( ',', $dashboard->panels );
-		else
-			$dashboard->panels	= array();
-		$count	= 0;
-		foreach( $panels as $panelId ){
-			$panelId	= trim( $panelId );
-			if( in_array( $panelId, $this->panels ) )
-				continue;
-			$position	= isset( $positions[$panelId] ) ? $positions[$panelId] : NULL;
-			try{
-				$this->addPanelToUserDashboard( $this->userId, $panelId, $position );
-				$count++;
-			}
-			catch( RangeException $e ){
-				$message	= 'Maximale Anzahl an Panels erreicht. Weitere werden nicht gespeichert.';
-				$this->messenger->noteError( $message );
-				break;
-			}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->restart( NULL, TRUE );
 		}
-		if( $count )
-			$this->env->getMessenger()->noteSuccess( '%s Panel(s) hinzugefügt.', $count );
-		$this->restart( NULL, TRUE );
 	}
 
 	public function ajaxRename(){
+		$this->checkUserDashboardsEnabled();
 		$dashboardId	= trim( $this->request->get( 'dashboardId' ) );
 		$title			= trim( $this->request->get( 'title' ) );
 		$result			= FALSE;
@@ -74,47 +116,38 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			print( json_encode( -1 ) );
 			exit;
 		}
-		foreach( $this->getUserDashboards( $this->userId ) as $entry ){
+		if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
+			print( json_encode( -11 ) );
+			exit;
+		}
+		foreach( $this->logic->getUserDashboards( $this->userId ) as $entry ){
 			if( $entry->title === $title ){
 				print( json_encode( -2 ) );
 				exit;
 			}
 		}
-		$dashboard	= $this->getUserDashboard( $this->userId );
-		if( !$dashboard ){
-			print( json_encode( -3 ) );
-			exit;
-		}
-		$this->model->edit( $dashboard->dashboardId, array(
+		print( json_encode( (bool) $this->model->edit( $dashboard->dashboardId, array(
 			'title'			=> $title,
 			'modifiedAt'	=> time(),
-		) );
-		print( json_encode( TRUE ) );
+		) ) ) );
 		exit;
 	}
 
 	public function ajaxSaveOrder(){
-		$dashboard	= $this->getUserDashboard( $this->userId );
-		if( !$dashboard ){
-			$this->env->getMessenger()->noteError( 'No dashboard available. Please create one first!' );
-			$this->restart( NULL, TRUE );
+		if( !$this->checkUserDashboardsEnabled( FALSE ) ){
+			print( json_encode( -11 ) );
+			exit;
 		}
-		$this->model->edit( $dashboard->dashboardId, array(
-			'panels'		=> $this->request->get( 'list' ),
-			'modifiedAt'	=> time(),
-		) );
-		print( json_encode( TRUE ) );
+		if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
+			print( json_encode( -3 ) );
+			exit;
+		}
+		$list	= array();
+		foreach( $this->request->get( 'list' ) as $panelId )
+			if( array_key_exists( $panelId, $this->panels ) )
+				$list[]	= $panelId;
+		print( json_encode( $this->logic->setUserPanels( $this->userId, $list ) ) );
 		exit;
-	}
-
-	protected function checkUserDashboardsEnabled( $strict = TRUE ){
-		if( $this->moduleConfig->get( 'perUser' ) )
-			return TRUE;
-		if( $strict ){
-			$this->env->getMessenger()->noteError( 'User dashboards are not enabled.' );
-			$this->restart( NULL, TRUE );
-		}
-		return FALSE;
 	}
 
 	public function index(){
@@ -122,7 +155,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			if( $this->checkUserDashboardsEnabled( FALSE ) && $this->userId ){
 				if( $this->moduleConfig->get( 'perUser.autoCreate' ) ){
 					if( !$this->getUserDashboards( $this->userId ) ){
-						$this->addUserDashboard(
+						$this->logic->addUserDashboard(
 							$this->userId,
 							'Standard-Dashboard',
 							'',
@@ -131,8 +164,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 						);
 					}
 				}
-				$this->addData( 'dashboard', $this->getUserDashboard( $this->userId ) );
-				$this->addData( 'dashboards', $this->getUserDashboards( $this->userId ) );
+				$this->addData( 'dashboard', $this->logic->getUserDashboard( $this->userId ) );
+				$this->addData( 'dashboards', $this->logic->getUserDashboards( $this->userId ) );
 			}
 			else{
 				$this->addData( 'dashboard', (object) array(
@@ -146,7 +179,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( $e->getMessage() );
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
 		}
 	}
 
@@ -167,116 +200,69 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $dashboardId ){
-		$this->checkUserDashboardsEnabled();
-		$this->model->remove( $dashboardId );
-		$dashboard	= $this->model->getByIndices( array(
-			'userId'		=> $this->userId,
-		), array( 'modifiedAt' => 'DESC' ) );
-		if( $dashboard )
-			$this->setUserDashboard( $this->userId, $dashboard->dashboardId );
-		$this->restart( NULL, TRUE );
+		try{
+			$this->checkUserDashboardsEnabled();
+			if( !( $dashboard = $this->logic->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
+				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
+				$this->restart( NULL, TRUE );
+			}
+			$this->model->remove( $dashboardId );
+			$dashboard	= $this->model->getByIndices( array(
+				'userId'		=> $this->userId,
+			), array( 'modifiedAt' => 'DESC' ) );
+			if( $dashboard )
+				$this->logic->setUserDashboard( $this->userId, $dashboard->dashboardId );
+			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboart->title );
+			$this->restart( NULL, TRUE );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->restart( NULL, TRUE );
+		}
 	}
 
 	public function removePanel( $panelId ){
-		$this->checkUserDashboardsEnabled();
-		$dashboard	= $this->getUserDashboard( $this->userId );
-		if( !$dashboard ){
-			$this->env->getMessenger()->noteError( 'No dashboard available. Please create one first!' );
+		try{
+			$this->checkUserDashboardsEnabled();
+			if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
+				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
+				$this->restart( NULL, TRUE );
+			}
+			$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
+			if( !array_key_exists( $panelId, $this->panels ) ){
+				$this->messenger->noteError( $this->messages->errorPanelDiscontinued, $panelId );
+				$this->restart( NULL, TRUE );
+			}
+
+			$panel		= $this->panels[$panelId];
+			unset( $panels[array_search( $panelId, $panels )] );
+			$this->model->edit( $dashboard->dashboardId, array(
+				'panels'		=> implode( ',', $panels ),
+				'modifiedAt'	=> time()
+			) );
+			$this->messenger->noteSuccess( $this->messages->successPanelRemoved, $panel->title );
 			$this->restart( NULL, TRUE );
 		}
-		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
-		unset( $panels[array_search( $panelId, $panels )] );
-		$this->model->edit( $dashboard->dashboardId, array(
-			'panels'		=> implode( ',', $panels ),
-			'modifiedAt'	=> time()
-		) );
-		$this->env->getMessenger()->noteSuccess( 'Panel removed.' );
-		$this->restart( NULL, TRUE );
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->restart( NULL, TRUE );
+		}
 	}
 
 	public function select( $dashboardId ){
-		$this->checkUserDashboardsEnabled();
 		try{
-			$this->setUserDashboard( $this->userId, $dashboardId );
+			$this->checkUserDashboardsEnabled();
+			if( !( $dashboard = $this->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
+				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
+				$this->restart( NULL, TRUE );
+			}
+			$this->logic->setUserDashboard( $this->userId, $dashboardId );
+			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->env->getMessenger()->noteError( 'Invalid dashboard ID.' );
+			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->restart( NULL, TRUE );
 		}
-		$this->restart( NULL, TRUE );
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function addUserDashboard( $userId, $title, $description, $panels = array(), $select = FALSE ){
-		$dashboardId	= $this->model->add( array(
-			'userId'		=> $userId,
-			'title'			=> $title,
-			'description'	=> $description,
-			'panels'		=> join( ',', $panels ),
-			'createdAt'		=> time(),
-			'modifiedAt'	=> time(),
-		) );
-		if( count( $this->getUserDashboards( $userId ) ) === 1 || $select )
-			$this->setUserDashboard( $userId, $dashboardId );
-		return $dashboardId;
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function addPanelToUserDashboard( $userId, $panelId, $position = 'bottom' ){
-		$dashboard	= $this->getUserDashboard( $userId );
-		if( !$dashboard )
-			throw new RuntimeException( 'No active dashboard available for user' );
-		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
-		if( count( $panels ) >= $this->moduleConfig->get( 'perUser.maxPanels' ) )
-			throw new RangeException( 'Maximum panels limit reached.' );
-		switch( $position ){
-			case 'top':
-				array_unshift( $panels, $panelId );
-				break;
-			case 'bottom':
-			default:
-				array_push( $panels, $panelId );
-				break;
-		}
-		$this->model->edit( $dashboard->dashboardId, array(
-			'panels'		=> implode( ',', $panels ),
-			'modifiedAt'	=> time()
-		) );
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function getUserDashboard( $userId ){
-		return $this->model->getByIndices( array( 'userId' => $userId, 'isCurrent' => 1  ) );
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function getUserDashboards( $userId ){
-		return $this->model->getAllByIndices( array(
-			'userId' => $userId
-		), array( 'modifiedAt'	=> 'DESC' ) );
-	}
-
-	/**
-	 *	@todo  			move to (yet not existing) logic class
-	 */
-	protected function setUserDashboard( $userId, $dashboardId ){
-		$dashboard	= $this->model->getByIndices( array(
-			'dashboardId'	=> $dashboardId,
-			'userId'		=> $userId
-		) );
-		if( !$dashboard )
-			throw new RangeException( 'Invalid dashboard ID' );
-		$current	= $this->getUserDashboard( $userId );
-		if( $current )
-			$this->model->edit( $current->dashboardId, array( 'isCurrent' => 0 ) );
-		$this->model->edit( $dashboard->dashboardId, array( 'isCurrent' => 1 ) );
 	}
 }
 ?>

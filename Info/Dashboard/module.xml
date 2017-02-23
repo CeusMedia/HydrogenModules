@@ -3,10 +3,10 @@
 	<title>Info: Dashboard</title>
 	<description><![CDATA[Overview with panels collected from other modules.
 
-Calls hook Dashboard::onRegisterPanels.
+Calls hook Dashboard::registerPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.3.6</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
@@ -18,10 +18,13 @@ Calls hook Dashboard::onRegisterPanels.
 	<log version="0.3.4">Extend model by board description.</log>
 	<log version="0.3.5">Add switch and limits for user boards.</log>
 	<log version="0.3.6">Support panel icons.</log>
+	<log version="0.3.7">Extract controller messages to locales.</log>
+	<log version="0.4">Extract logic to class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Dashboard.php5</class>
+		<class>Logic/Dashboard.php5</class>
 		<class>Model/Dashboard.php5</class>
 		<class>View/Info/Dashboard.php5</class>
 		<class>View/Helper/Info/Dashboard.php5</class>

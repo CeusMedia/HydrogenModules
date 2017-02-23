@@ -23,7 +23,7 @@ var InfoDashboard = {
 						url: "./info/dashboard/ajaxSaveOrder",
 						mathodType: "post",
 						dataType: "json",
-						data: {list: list.join(",")}
+						data: {list: list}
 					});
 				}
 			});

@@ -12,6 +12,7 @@ try{
 	$formControl	= '';
 	if( $moduleConfig->get( 'perUser' ) ){
 		$helperAdd	= new View_Helper_Info_Dashboard_Modal_Add( $env );
+		$helperAdd->setDashboards( $dashboards );
 		$helperAdd->setPanels( $panels );
 		$modalAdd	= $helperAdd->render();
 
