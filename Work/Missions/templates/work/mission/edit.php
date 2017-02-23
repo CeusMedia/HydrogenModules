@@ -78,7 +78,7 @@ if( strtoupper( $format ) === "HTML" ){
 	<div class="span12">
 		<label for="input_content">'.$w->labelContent.'</label>
 		<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
-		<textarea id="input_content" name="content" rows="14" class="span12 TinyMCE-minimal" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+		<textarea id="input_content" name="content" rows="14" class="span12 TinyMCE" data-tinymce-mode="minimal" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 	</div>
 </div>';
 }
@@ -208,6 +208,10 @@ foreach( $priorities as $priority => $label )
 	) );
 $priorities	= join( $priorities );
 
+$baseUrl	= $env->url;
+if( $env->getModules()->has( 'Resource_Frontend' ) )
+	$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
+
 return '
 <div class="row-fluid">
 	<div class="span8">
@@ -238,6 +242,8 @@ return '
 $(document).ready(function(){
 	WorkMissionsEditor.mission = '.json_encode( $mission ).';
 	WorkMissionsEditor.init('.(int) $mission->missionId.');
+	WorkMissionsEditor.urlEnv = "'.$env->url.'";
+	WorkMissionsEditor.urlFrontend = "'.$baseUrl.'";
 });
 </script>
 ';

@@ -7,6 +7,8 @@ var WorkMissionsEditor = {
 	missionId: null,
 	textarea: null,
 	userId: null,
+	urlEnv: null,
+	urlFrontend: null,
 
 	init: function(missionId){
 		"use strict";
@@ -184,6 +186,8 @@ var WorkMissionsEditor = {
 			selector: ".TinyMCE-minimal",
 //			height: settings.Work_Missions.editor_height,					//  @todo not working right now
 			menubar: settings.Work_Missions.editor_TinyMCE_menubar,
+			envUri: this.urlEnv,
+			frontendUri: this.urlFrontend,
 			toolbar: settings.JS_TinyMCE['auto_toolbar_'+settings.Work_Missions.editor_TinyMCE_toolbar]
 		});
 		$("#work-missions-loader").remove();
