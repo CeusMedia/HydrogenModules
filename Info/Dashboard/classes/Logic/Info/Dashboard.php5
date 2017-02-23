@@ -13,10 +13,10 @@ class Logic_Info_Dashboard{
 	/**
 	 *	Constructor. Protected to force singleton use.
 	 *	@access		protected
-	 *	@param		object			$env		Hydrogen framework environment object
+	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Hydrogen framework environment object
 	 *	@return		void
 	 */
-	protected function __construct( $env ){
+	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env			= $env;
 		$this->model		= new Model_Dashboard( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
