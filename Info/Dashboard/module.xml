@@ -24,7 +24,7 @@ Calls hook Dashboard::registerPanels.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Dashboard.php5</class>
-		<class>Logic/Dashboard.php5</class>
+		<class>Logic/Info/Dashboard.php5</class>
 		<class>Model/Dashboard.php5</class>
 		<class>View/Info/Dashboard.php5</class>
 		<class>View/Helper/Info/Dashboard.php5</class>
