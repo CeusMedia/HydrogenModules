@@ -19,7 +19,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		parent::__construct( $env );
 		$this->baseUrl		= $env->url;
 		$this->indicator	= new UI_HTML_Indicator();
-		$this->logic		= new Logic_Mission( $env );
+		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->projects		= array();
 		$modelProject		= new Model_Project( $this->env );

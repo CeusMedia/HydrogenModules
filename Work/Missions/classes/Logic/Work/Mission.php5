@@ -1,5 +1,7 @@
 <?php
-class Logic_Mission{
+class Logic_Work_Mission{
+
+	static protected $instance;
 
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
 	public $generalConditions	= array();
@@ -7,15 +9,39 @@ class Logic_Mission{
 	protected $modelVersion;
 	protected $modelChange;
 	protected $modelDocument;
-	public $useProjects			= FALSE;
+	public $useProjects			= TRUE;																//  @deprecated: projects module is required by now
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	/**
+	 *	Constructor. Protected to force singleton use.
+	 *	@access		protected
+	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Hydrogen framework environment object
+	 *	@return		void
+	 */
+	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env				= $env;
 		$this->modelMission		= new Model_Mission( $env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );
 		$this->modelChange		= new Model_Mission_Change( $this->env );
 		$this->modelDocument	= new Model_Mission_Document( $this->env );
-		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
+	}
+
+	/**
+	 *	Cloning is disabled to force singleton use.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __clone(){}
+
+	/**
+	 *	Get singleton instance of logic.
+	 *	@static
+	 *	@access		public
+	 *	@return		object			Singleton instance of logic
+	 */
+	static public function getInstance( $env ){
+		if( !self::$instance )
+			self::$instance	= new self( $env );
+		return self::$instance;
 	}
 
 	public function getDate( $string ){
@@ -144,8 +170,6 @@ class Logic_Mission{
 	protected function hasFullAccess(){
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
-
-	public function moveDate(){}
 
 	public function noteChange( $type, $missionId, $data, $currentUserId ){
 		$model	= new Model_Mission_Change( $this->env );

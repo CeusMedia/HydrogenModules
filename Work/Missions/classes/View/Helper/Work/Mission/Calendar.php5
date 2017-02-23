@@ -9,7 +9,7 @@ class View_Helper_Work_Mission_Calendar{
 
 	public function __construct( $env ){
 		$this->env		= $env;
-		$this->logic	= new Logic_Mission( $this->env );
+		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 	}

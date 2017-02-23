@@ -3,7 +3,7 @@ class View_Work_Mission_Kanban extends CMF_Hydrogen_View{
 
 	public function ajaxRenderIndex(){
 		extract( $this->getData() );
-		$this->logic	= new Logic_Mission( $this->env );
+		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 

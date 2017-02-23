@@ -21,14 +21,14 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
-		
+
 		$tableBody		= UI_HTML_Tag::create( 'tbody', $list1.$list0 );
 		$table			= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
 		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day", 'id' => 'table-'.$day ) );
 	}
 */
-	
-/*	
+
+/*
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
@@ -44,7 +44,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		parent::__construct( $env );
 		$this->baseUrl		= $env->getConfig()->get( 'app.base.url' );
 		$this->indicator	= new UI_HTML_Indicator();
-		$this->logic		= new Logic_Mission( $env );
+		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->projects		= array();
 		$modelProject		= new Model_Project( $this->env );
