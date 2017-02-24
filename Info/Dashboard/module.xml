@@ -43,8 +43,8 @@ Calls hook Dashboard::registerPanels.
 		<script>InfoDashboard.js</script>
 	</files>
 	<config protected="yes" type="integer" name="columns" values="1,2,3,4,6">3</config>
-	<config protected="yes" type="string" name="panels">work-timer-my</config>
-	<config protected="yes" type="boolean" name="perUser">no</config>
+	<config protected="yes" type="string" name="panels"></config>
+	<config protected="yes" type="boolean" name="perUser">yes</config>
 	<config protected="yes" type="boolean" name="perUser.autoCreate">no</config>
 	<config protected="yes" type="integer" name="perUser.maxBoards">5</config>
 	<config protected="yes" type="integer" name="perUser.maxPanels">12</config>
