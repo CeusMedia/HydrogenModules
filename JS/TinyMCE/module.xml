@@ -76,7 +76,6 @@
 		<script>tinymce/plugins/fullscreen/plugin.min.js</script>
 		<script>tinymce/plugins/example/plugin.min.js</script>
 		<script>tinymce/plugins/example/dialog.html</script>
-		<script>tinymce/license.txt</script>
 		<script>tinymce/jquery.tinymce.min.js</script>
 		<script>tinymce/skins/lightgray/content.min.css</script>
 		<script>tinymce/skins/lightgray/img/object.gif</script>
