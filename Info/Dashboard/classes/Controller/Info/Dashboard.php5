@@ -51,7 +51,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -92,7 +92,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -212,11 +212,11 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			), array( 'modifiedAt' => 'DESC' ) );
 			if( $dashboard )
 				$this->logic->setUserDashboard( $this->userId, $dashboard->dashboardId );
-			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboart->title );
+			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboard->title );
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -244,7 +244,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -260,7 +260,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
