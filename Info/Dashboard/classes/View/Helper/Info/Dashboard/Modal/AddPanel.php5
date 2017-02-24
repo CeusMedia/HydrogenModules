@@ -11,10 +11,10 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 	public function render(){
 		$w				= (object) $this->getWords( 'add-panel', 'info/dashboard' );
 
-		$fieldPanels	= UI_HTML_Tag::create( 'div', 'Keine Panels vorhanden.', array( 'class' => 'alert alert-info' ) );
+		$fieldPanels	= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-info' ) );
 		$panelsInBoard	= explode( ',', $this->dashboard->panels );
 		if( $this->panels ){
-			$fieldPanels	= UI_HTML_Tag::create( 'div', 'Keine weiteren Panels vorhanden.', array( 'class' => 'alert alert-info' ) );
+			$fieldPanels	= UI_HTML_Tag::create( 'div', $w->noMorePanels, array( 'class' => 'alert alert-info' ) );
 			$list	= array();
 			foreach( $this->panels as $panelId => $panel ){
 				if( in_array( $panelId, $panelsInBoard ) )
@@ -24,12 +24,14 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 					'name'	=> 'panels[]',
 					'value'	=> $panelId,
 				) );
-				$list[]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
+				$list[$key]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
 					'class'	=> 'checkbox',
 				) );
 			}
+			ksort( $list );
 			if( $list ){
-				$heading	= UI_HTML_Tag::create( 'h4', 'Panels to add right now' );
+				$heading	= UI_HTML_Tag::create( 'h4', $w->labelPanels );
 				$fieldPanels	= '
 				<div class="row-fluid">
 					<div class="span12">
