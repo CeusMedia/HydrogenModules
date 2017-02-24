@@ -35,16 +35,6 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		$this->addData( 'panels', $this->panels );
 	}
 
-	protected function checkUserDashboardsEnabled( $strict = TRUE ){
-		if( $this->logic->checkUserDashboardsEnabled( FALSE ) )
-			return TRUE;
-		if( $strict ){
-			$this->messenger->noteError( $this->messages->errorUserDashboardsDisabled );
-			$this->restart( NULL, TRUE );
-		}
-		return FALSE;
-	}
-
 	public function add(){
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -150,6 +140,16 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	protected function checkUserDashboardsEnabled( $strict = TRUE ){
+		if( $this->logic->checkUserDashboardsEnabled( FALSE ) )
+			return TRUE;
+		if( $strict ){
+			$this->messenger->noteError( $this->messages->errorUserDashboardsDisabled );
+			$this->restart( NULL, TRUE );
+		}
+		return FALSE;
+	}
+
 	public function index(){
 		try{
 			if( $this->checkUserDashboardsEnabled( FALSE ) && $this->userId ){
@@ -164,7 +164,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 						);
 					}
 				}
-				$this->addData( 'dashboard', $this->logic->getUserDashboard( $this->userId ) );
+				$this->addData( 'dashboard', $this->logic->getUserDashboard( $this->userId, FALSE ) );
 				$this->addData( 'dashboards', $this->logic->getUserDashboards( $this->userId ) );
 			}
 			else{
@@ -179,7 +179,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $this->message->errorException, $e->getMessage() );
+			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 		}
 	}
 
