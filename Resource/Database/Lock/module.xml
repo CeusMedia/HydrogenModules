@@ -2,13 +2,14 @@
 <module>
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module activity switch.</log>
 	<log version="0.3.0">Add index of all locks.</log>
 	<log version="0.3.1">Allow administrative unlocking from index.</log>
 	<log version="0.3.2">Add locale file.</log>
+	<log version="0.3.3">Add dashboard panel.</log>
 	<category>Resource</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -27,7 +28,9 @@
 	<link access="acl" path="database/lock" rank="85" xml:lang="de">Sperren</link>
 	<link access="acl" path="database/lock" rank="85" xml:lang="en">Locks</link>
 	<link access="acl" path="database/lock/unlock"/>
+	<link access="acl" path="database/lock/ajaxRenderDashboardPanel"/>
 	<hook type="resource" resource="Page" event="applyModules">Logic_Database_Lock::___onAutoModuleLockRelease</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Database_Lock::___onRegisterDashboardPanels</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>locks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>locks` (
