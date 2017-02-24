@@ -218,7 +218,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'title'		=> 'Heute & Termine',
 			'heading'	=> 'Heute & Termine',
 			'icon'		=> 'fa fa-fw fa-calendar-o',
-			'refresh'	=> 20,
+			'rank'		=> 10,
+			'refresh'	=> 60,
 		) );
 	}
 
