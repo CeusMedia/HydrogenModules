@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.8.9</version>
+	<version>0.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added text block support for every page (german only).</log>
@@ -67,6 +67,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.8.7">Add method to note latest user activity, called on logic construction.</log>
 	<log version="0.8.8">Avoid to carry from path "index/index".</log>
 	<log version="0.8.9">Add login template again for having several authentication backends.</log>
+	<log version="0.9">Support newer password hash logic in basic authentication.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

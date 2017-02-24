@@ -24,8 +24,15 @@ class BasicAuthentication{
 		if( strlen( $username ) ){
 			$model		= new Model_User( $this->env );
 			$user		= $model->getByIndex( 'username', $username );
-			if( $user && $user->password == md5( $password ) )
-				return $user->userId;
+			if( $user ){
+				if( class_exists( 'Logic_UserPassword' ) ){
+					$logic	= Logic_UserPassword::getInstance( $this->env );
+					if( $logic->validateUserPassword( $user->userId, $password ) )
+						return $user->userId;
+				}
+				if( $user->password == md5( $password ) )
+					return $user->userId;
+			}
 		}
 		header( 'WWW-Authenticate: Basic realm="'.addslashes( $this->realm ).'"' );
 		header( 'HTTP/1.0 401 Unauthorized' );
