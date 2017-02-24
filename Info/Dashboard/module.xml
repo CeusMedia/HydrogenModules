@@ -6,7 +6,7 @@
 Calls hook Dashboard::registerPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
@@ -20,6 +20,7 @@ Calls hook Dashboard::registerPanels.
 	<log version="0.3.6">Support panel icons.</log>
 	<log version="0.3.7">Extract controller messages to locales.</log>
 	<log version="0.4">Extract logic to class.</log>
+	<log version="0.4.1">Preselect default panels on new user dashboard.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

@@ -12,18 +12,25 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 		$w			= (object) $this->getWords( 'add', 'info/dashboard' );
 
 		$list		= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
+
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
+		$defaultPanels	= explode( ',', $moduleConfig->get( 'panels' ) );
+
 		if( $this->panels ){
 			$list	= array();
 			foreach( $this->panels as $panelId => $panel ){
 				$input	= UI_HTML_Tag::create( 'input', NULL, array(
-					'type'	=> 'checkbox',
-					'name'	=> 'panels[]',
-					'value'	=> $panelId,
+					'type'		=> 'checkbox',
+					'name'		=> 'panels[]',
+					'value'		=> $panelId,
+					'checked'	=> in_array( $panelId, $defaultPanels ) ? "checked" : NULL,
 				) );
-				$list[]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
+				$list[$key]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
 					'class'	=> 'checkbox',
 				) );
 			}
+			ksort( $list );
 			$list	= UI_HTML_Tag::create( 'div', $list, array( 'style' => "padding: 0 0.5em 1em 0.5em;" ) );
 		}
 
