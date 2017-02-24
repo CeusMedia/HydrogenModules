@@ -51,7 +51,7 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 						) ),
 					), array( 'style' => 'text-align: center' ) ),
 				) );
-				$content	= UI_HTML_Tag::create( 'div', 'Keine Termine.', array( 'alert alert-info' ) );
+				$content	= UI_HTML_Tag::create( 'div', 'Keine Termine.', array( 'class' => 'alert alert-info' ) );
 				if( $events ){
 					$rows	= array();
 					foreach( $events as $event ){

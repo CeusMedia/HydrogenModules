@@ -222,24 +222,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ){
-		$this->addData( 'panelId', $panelId );
-		switch( $panelId ){
-			case 'work-mission-my-today':
-			default:
-				$logic	= Logic_Work_Mission::getInstance( $this->env );
-				$userId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
-				$this->addData( 'events', $logic->getUserMissions( $userId, array(
-					'type'			=> 1,
-					'status'		=> array( 0, 1, 2, 3 ),
-					'dayStart'		=> date( 'Y-m-d' ),
-//					'workerId'		=> $userId,
-				), array( 'timeStart' => 'ASC' ) ) );
-				break;
-		}
-		return $this->view->ajaxRenderDashboardPanel();
-	}
-
 	/**
 	 *	Add a new mission.
 	 *	Redirects to index if editor right is missing.
@@ -276,11 +258,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			if( !$title )
 				$this->messenger->noteError( $words->msgNoTitle );
 			if( !$this->messenger->gotError() ){
+				$type		= (int) $this->request->get( 'type' );
 				$data	= array(
 					'creatorId'			=> (int) $this->userId,
 					'workerId'			=> (int) $this->request->get( 'workerId' ),
 					'projectId'			=> (int) $this->request->get( 'projectId' ),
-					'type'				=> (int) $this->request->get( 'type' ),
+					'type'				=> $type,
 					'priority'			=> (int) $this->request->get( 'priority' ),
 					'status'			=> $status,
 					'title'				=> $title,
@@ -297,6 +280,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'createdAt'			=> time(),
 				);
 				$missionId	= $this->model->add( $data, FALSE );
+				$message	= $type == 1 ? $words->msgSuccessEvent : $words->msgSuccessTask;
 				$this->messenger->noteSuccess( $words->msgSuccess );
 				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
 				$this->restart( 'view/'.$missionId, TRUE );
@@ -395,6 +379,24 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		header( "Content-type: text/html" );
 		print( $html );
 		exit;
+	}
+
+	public function ajaxRenderDashboardPanel( $panelId ){
+		$this->addData( 'panelId', $panelId );
+		switch( $panelId ){
+			case 'work-mission-my-today':
+			default:
+				$logic	= Logic_Work_Mission::getInstance( $this->env );
+				$userId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+				$this->addData( 'events', $logic->getUserMissions( $userId, array(
+					'type'			=> 1,
+					'status'		=> array( 0, 1, 2, 3 ),
+					'dayStart'		=> date( 'Y-m-d' ),
+//					'workerId'		=> $userId,
+				), array( 'timeStart' => 'ASC' ) ) );
+				break;
+		}
+		return $this->view->ajaxRenderDashboardPanel();
 	}
 
 	public function ajaxRenderIndex(){
