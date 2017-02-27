@@ -8,8 +8,7 @@ return '
 		<form action="./info/file/upload/'.$folderId.'" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_upload">'.$words['upload']['labelFile'].'</label>
-					<input type="file" name="upload" id="input_upload"/>
+					'.View_Helper_Input_File::render( 'upload', $words['upload']['labelFile'], TRUE ).'
 				</div>
 			</div>
 			<div class="buttonbar">

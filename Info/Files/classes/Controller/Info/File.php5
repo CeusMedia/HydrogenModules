@@ -34,16 +34,17 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
 		foreach( $files as $file ){
-			$context->news[]    = (object) array(
+			$context->add( (object) array(
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
+				'typeLabel'	=> 'Datei',
 				'id'		=> $file->downloadFolderId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFolderId,
-    	    );
+			) );
 		}
-    }
+	}
 
 
 	public function addFolder( $folderId = NULL ){
@@ -142,6 +143,23 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			die( "no implemented yet" );
 		}
 		return array( 'folders' => $folders, 'files' => $files );
+	}
+
+	public function deliver( $fileId = NULL ){
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$mimeType	= mime_content_type( $path.$file->title );
+		header( 'Content-Type: '.$mimeType );
+		header( 'Content-Length: '.filesize( $path.$file->title ) );
+		$fp = @fopen( $path.$file->title, "rb" );
+		if( !$fp )
+			header("HTTP/1.0 500 Internal Server Error");
+		fpassthru( $fp );
+		exit;
 	}
 
 	public function download( $fileId ){
@@ -386,6 +404,21 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->restart( 'index/'.$folderId, TRUE );
+	}
+
+	public function view( $fileId = NULL ){
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$this->addData( 'file', $file );
+		$this->addData( 'path', $path );
+		$this->addData( 'rights', $this->rights );
+		$this->addData( 'filesize', filesize( $path.$file->title ) );
+		$this->addData( 'type', pathinfo( $file->title, PATHINFO_EXTENSION ) );
+		$this->addData( 'mimeType', mime_content_type( $path.$file->title ) );
 	}
 }
 ?>

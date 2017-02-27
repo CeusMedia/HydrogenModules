@@ -3,11 +3,13 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
 	<log version="0.3">Apply module UI:CSS:Panel.</log>
+	<log version="0.3.1">Use module UI:Helper:Input:File.</log>
+	<log version="0.3.2">Start implementing a file view.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -33,6 +35,7 @@
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_File::___onPageCollectNews</hook>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[

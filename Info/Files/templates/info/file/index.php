@@ -1,17 +1,20 @@
 <?php
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconOpenFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down icon-white' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
-$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
+$iconOpenFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
+$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
 $rows			= array( 'folders' => array(), 'files' => array() );
 
 foreach( $files as $file ){
 	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->uploadedAt ) );
 	$size			= Alg_UnitFormater::formatBytes( filesize( $pathBase.$folderPath.$file->title ) );
+	$urlView		= './info/file/view/'.$file->downloadFileId;
 	$urlDownload	= './info/file/download/'.$file->downloadFileId;
 	$urlRemove		= './info/file/remove/'.$file->downloadFileId;
 	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
@@ -20,7 +23,10 @@ foreach( $files as $file ){
 	$label			= $file->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
-	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $urlDownload, 'class' => 'name' ) );
+
+	$url			= in_array( 'view', $rights ) ? $urlView : $urlDownload;
+	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
+	$buttonView	= "";
 	$buttonDownload	= "";
 	$buttonRemove	= "";
 	if( in_array( 'download', $rights ) ){
@@ -38,7 +44,7 @@ foreach( $files as $file ){
 		) );
 	}
 	$buttons		= $buttonDownload.'&nbsp;'.$buttonRemove;
-	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
+	$actions		= UI_HTML_Tag::create( 'div', $buttonView.$buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
 //	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells			= array(
 		UI_HTML_Tag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
