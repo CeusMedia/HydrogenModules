@@ -4,7 +4,9 @@
 /*	height: 300px;*/
 	}
 
-#dashboard-board .dashboard-panel {}
+#dashboard-board .dashboard-panel {
+	height: 290px;
+	}
 #dashboard-board .dashboard-panel .dashboard-panel-handle {
 	background: #EEE;
 	padding: 0.2em 0.4em;
@@ -39,8 +41,8 @@
 #dashboard-board .sortable-placeholder {
 	background-color: rgba(127, 127, 127, 0.15);
 	background-color: rgba(255, 255, 255, 0.5);
-	height: 285px;
-	width: 30.65%;
+/*	width: 30.65%;*/
+	height: 290px;
 	border: 1px dashed rgba(127, 127, 127, 0.25);
-	display: block;
+	box-sizing: border-box;
 	}

@@ -10,11 +10,16 @@ var InfoDashboard = {
 				cursor: "move",
 				forceHelperSize: true,
 				forcePlaceholderSize: true,
-				placeholder: "sortable-placeholder",
+				placeholder: "dashboard-panel span4 sortable-placeholder",
 				items: "> li",
 			//	handle: ".dashboard-panel-handle .handle-button-move",
 				handle: ".dashboard-panel-handle",
-				stop: function( event, ui ) {
+/*				start: function(event, ui) {
+					var placeholder	= jQuery("li.sortable-placeholder");
+					placeholder.width(ui.helper.width()-2);
+					placeholder.height(ui.helper.height()-3);
+				},*/
+				stop: function(event, ui) {
 					var list = [];
 					$("ul.thumbnails>li").each(function(){
 						list.push($(this).data("panel-id"))
