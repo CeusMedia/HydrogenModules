@@ -110,6 +110,23 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		$this->env->getModules()->callHook( 'Test', 'test', array() );
 	}
 
+	static public function ___onCollectNovelties( $env, $context, $module, $data = array() ){
+		$model		= new Model_Mission_Document( $env );
+		$conditions	= array( 'modifiedAt' => '>'.( time() - 30 * 24 * 60 * 60 ) );
+		$orders		= array( 'modifiedAt' => 'DESC' );
+		foreach( $model->getAll( $conditions, $orders ) as $item ){
+			$context->add( (object) array(
+				'module'	=> 'Work_Missions',
+				'type'		=> 'document',
+				'typeLabel'	=> 'Dokument',
+				'id'		=> $item->missionDocumentId,
+				'title'		=> $item->filename,
+				'timestamp'	=> max( $item->createdAt, $item->modifiedAt ),
+				'url'		=> './work/mission/downloadDocument/'.$item->missionId.'/'.$item->missionDocumentId,
+			) );
+		}
+	}
+
 	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Missions',
@@ -357,6 +374,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				'filename'		=> $upload->name,
 				'hashname'		=> $hashname,
 				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
 			) );
 		}
 

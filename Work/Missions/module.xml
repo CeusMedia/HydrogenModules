@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.42</version>
+	<version>0.9.43</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -89,6 +89,7 @@ code>
 	<log version="0.9.40">Add dashboard panel to show current date and todays events.</log>
 	<log version="0.9.41">Add dashboard panel to show current tasks.</log>
 	<log version="0.9.42">Extract days badge to view helper.</log>
+	<log version="0.9.43">Support module Info:Novelties by hook Novelties::collect.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -223,6 +224,7 @@ code>
 	<hook type="resource" resource="Work_Timer" event="onPauseTimer">Controller_Work_Mission::___onPauseTimer</hook>
 	<hook type="resource" resource="Work_Timer" event="onStopTimer">Controller_Work_Mission::___onStopTimer</hook>
 	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Work_Mission::___onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="Novelties" event="collect">Controller_Work_Mission::___onCollectNovelties</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
