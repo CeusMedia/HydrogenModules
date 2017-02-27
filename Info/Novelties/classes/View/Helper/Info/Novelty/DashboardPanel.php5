@@ -1,7 +1,7 @@
 <?php
-class View_Helper_NewsList extends CMF_Hydrogen_View_Helper_Abstract{
+class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_Abstract{
 
-	public $news	= array();
+	protected $news	= array();
 
 	public function __construct( $env ){
 		$this->env	= $env;
@@ -11,7 +11,8 @@ class View_Helper_NewsList extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->news[]	= $item;
 	}
 
-	public function render( $limit = 15 ){
+	public function render(){
+		$options	= array();
 		$this->env->getCaptain()->callHook( 'Novelties', 'collect', $this, $options );
 		if( !$this->news )
 			return '';
@@ -58,7 +59,7 @@ class View_Helper_NewsList extends CMF_Hydrogen_View_Helper_Abstract{
 			) );
 			krsort( $list );
 		}
-		$list	= array_slice( $list, 0, $limit );
+		$list	= array_slice( $list, 0, $this->limit );
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "45", "", "50" );
 		$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 		$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array(
@@ -68,11 +69,11 @@ $script	= '
 <script>
 var InfoNoveltyDashboardPanel = {
 	init: function(){
-		jQuery("#dashboard-panel-info-newslist button.btn").bind("click", function(){
+		jQuery("#dashboard-panel-info-novelty button.btn").bind("click", function(){
 			var _this = jQuery(this);
 			_this.parent().parent().fadeOut();
 			jQuery.ajax({
-				url:  "./info/newslist/ajaxDismiss/",
+				url:  "./info/novelty/ajaxDismiss/",
 				data: jQuery(this).data(),
 				method: "POST",
 				dataType: "json",
@@ -87,6 +88,10 @@ InfoNoveltyDashboardPanel.init();
 </script>
 ';
 		return $list.$script;
+	}
+
+	public function setLimit( $limit ){
+		$this->limit	= min( 100, max( 0, abs( $limit ) ) );
 	}
 }
 ?>

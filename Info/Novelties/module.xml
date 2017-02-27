@@ -20,9 +20,9 @@
 	</relations>
 	<link access="acl" path="ajaxDismiss"/>
 	<link access="acl" path="ajaxRenderDashboardPanel"/>
-	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Info_Newslist::___onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Info_Novelty::___onRegisterDashboardPanels</hook>
 	<sql on="install" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix.%>novelties`;
+DROP TABLE IF EXISTS `<%?prefix%>novelties`;
 CREATE TABLE `<%?prefix%>novelties` (
   `noveltyId` int(11) UNSIGNED NOT NULL,
   `userId` int(11) UNSIGNED NOT NULL,
@@ -30,8 +30,8 @@ CREATE TABLE `<%?prefix%>novelties` (
   `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `timestamp` decimal(12,0) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]>
+]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix.%>novelties`;
-]]>
+]]></sql>
 </module>
