@@ -113,6 +113,8 @@ code>
 		<class>View/Work/Mission/Kanban.php5</class>
 		<class>View/Helper/Work/Mission/Abstract.php5</class>
 		<class>View/Helper/Work/Mission/Calendar.php5</class>
+		<class>View/Helper/Work/Mission/Dashboard/MyEvents.php5</class>
+		<class>View/Helper/Work/Mission/Dashboard/MyTasks.php5</class>
 		<class>View/Helper/Work/Mission/Filter.php5</class>
 		<class>View/Helper/Work/Mission/List.php5</class>
 		<class>View/Helper/Work/Mission/List/Days.php5</class>
