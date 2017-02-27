@@ -57,7 +57,7 @@ try{
 
 		$optDashboardId	= array();
 		foreach( $dashboards as $entry )
-		$optDashboardId[$entry->dashboardId]	= $entry->title;
+			$optDashboardId[$entry->dashboardId]	= $entry->title;
 		$optDashboardId	= UI_HTML_Elements::Options( $optDashboardId, $dashboard->dashboardId );
 
 		$helperAddPanel	= new View_Helper_Info_Dashboard_Modal_AddPanel( $env );
