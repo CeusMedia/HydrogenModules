@@ -67,6 +67,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$this->model		= new Model_Mission( $this->env );
 		$this->logic		= Logic_Work_Mission::getInstance( $this->env );
+		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
@@ -74,8 +75,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->useIssues	= $this->env->getModules()->has( 'Work_Issues' );
 		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
-		$this->userId		= $this->session->get( 'userId' );
-		$this->userRoleId	= $this->session->get( 'roleId' );
+		$this->userId		= $this->logicAuth->getCurrentUserId();
+		$this->userRoleId	= $this->logicAuth->getCurrentRoleId();
 
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.work_missions.', TRUE );
 		$this->contentFormat	= $this->moduleConfig->get( 'format' );
@@ -217,6 +218,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			'icon'		=> 'fa fa-fw fa-calendar-o',
 			'rank'		=> 10,
 			'refresh'	=> 60,
+		) );
+		$context->registerPanel( 'work-mission-my-tasks', array(
+			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
+			'title'		=> 'Aufgaben: Meine - Heute',
+			'heading'	=> 'Meine heutigen Aufgaben',
+			'icon'		=> 'fa fa-fw fa-thumb-tack',
+			'rank'		=> 20,
+			'refresh'	=> 120,
 		) );
 	}
 
@@ -381,17 +390,33 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function ajaxRenderDashboardPanel( $panelId ){
 		$this->addData( 'panelId', $panelId );
+		$logic		= Logic_Work_Mission::getInstance( $this->env );
 		switch( $panelId ){
+			case 'work-mission-my-tasks':
+				$conditions		= array(
+					'status'	=> array( 0, 1, 2, 3 ),
+					'type'		=> 0,
+					'dayStart'	=> '<='.date( 'Y-m-d', time() ),
+//					'dayEnd'	=> '>='.date( 'Y-m-d', time() ),
+					'workerId'	=> $this->userId,
+				);
+				$orders		= array(
+					'priority'	=> 'ASC',
+					'title'		=> 'ASC',
+				);
+				$missions	= $logic->getUserMissions( $this->userId, $conditions, $orders );
+				$this->addData( 'tasks', $missions );
+				break;
 			case 'work-mission-my-today':
 			default:
-				$logic	= Logic_Work_Mission::getInstance( $this->env );
-				$userId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
-				$this->addData( 'events', $logic->getUserMissions( $userId, array(
+				$conditions	= array(
 					'type'			=> 1,
 					'status'		=> array( 0, 1, 2, 3 ),
 					'dayStart'		=> date( 'Y-m-d' ),
-//					'workerId'		=> $userId,
-				), array( 'timeStart' => 'ASC' ) ) );
+				);
+				$orders	= array( 'timeStart' => 'ASC' );
+				$events	= $logic->getUserMissions( $this->userId, $conditions, $orders );
+				$this->addData( 'events', $events );
 				break;
 		}
 		return $this->view->ajaxRenderDashboardPanel();

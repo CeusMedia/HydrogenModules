@@ -20,64 +20,24 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	}
 
 	public function ajaxRenderDashboardPanel(){
-		$panelId	= $this->getData( 'panelId' );
-		switch( $panelId ){
-			case 'work-mission-my-today':
-			default:
-				$words			= $this->getWords();
-				$events			= $this->getData( 'events' );
-				$userProjects	= $this->getData( 'projects' );
-				$today			= UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'small', UI_HTML_Tag::create( 'abbr', 'KW', array( 'title' => "Kalenderwoche" ) ) ),
-						UI_HTML_Tag::create( 'br' ),
-						UI_HTML_Tag::create( 'span', (int) date( 'W' ), array(
-							'style' => 'font-size: 2em;'
-						) ),
-					), array( 'style' => 'text-align: center; float: right; width: 50px' ) ),
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'span', $words['days'][date( 'w' )], array( 'style' => 'font-size: 1.8em' ) ),
-						UI_HTML_Tag::create( 'br' ),
-						UI_HTML_Tag::create( 'span', date( 'd' ).'. '.$words['months'][date( 'n' )].' '.date( 'Y' ), array(
-							'style' => 'font-size: 1.1em'
-						) ),
-					), array( 'style' => 'text-align: center' ) ),
-				) );
-				$content	= UI_HTML_Tag::create( 'div', 'Keine Termine.', array( 'class' => 'alert alert-info' ) );
-				if( $events ){
-					$rows	= array();
-					foreach( $events as $event ){
-						$labelProject	= UI_HTML_Tag::create( 'span', $userProjects[$event->projectId]->title, array(
-							'style'		=> 'font-size: smaller'
-						) );
-						$link			= UI_HTML_Tag::create( 'a', $event->title, array(
-							'href'		=> './work/mission/view/'.$event->missionId,
-							'style'		=> 'font-size: larger'
-						) );
-						$label	= $link.'<br/>'.$labelProject;
-						$rows[]	= UI_HTML_Tag::create( 'tr', array(
-							UI_HTML_Tag::create( 'td', $this->renderNiceTime( $event->timeStart ).'<br/><small class="muted">'.$this->renderNiceTime( $event->timeEnd ).'</small>' ),
-							UI_HTML_Tag::create( 'td', $label, array( 'class' => 'autocut' ) ),
-//							UI_HTML_Tag::create( 'td', '#'.$event->priority ),
-						) );
-					};
-					$colgroup	= UI_HTML_Elements::ColumnGroup( array(
-						'50px',
-//						'20px',
-						'',
-					) );
-					$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-					$content	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array(
-						'class'	=> 'table table-condensed table-fixed'
-					) );
-				}
-				$buttonAdd	= UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neuer Termin', array(
-					'href'	=> './work/mission/add?type=1',
-					'class'	=> 'btn btn-block btn-success',
-				) );
-				$content	= '<br/>'.$today.'<br/>'.$content.$buttonAdd;
+		try{
+			switch( $this->getData( 'panelId' ) ){
+				case 'work-mission-my-tasks':
+					$helper		= new View_Helper_Work_Mission_Dashboard_MyTasks( $this->env );
+					$helper->setTasks( $this->getData( 'tasks' ) );
+					break;
+				case 'work-mission-my-today':
+				default:
+					$helper		= new View_Helper_Work_Mission_Dashboard_MyEvents( $this->env );
+					$helper->setEvents( $this->getData( 'events' ) );
+					break;
+			}
+			$helper->setProjects( $this->getData( 'projects' ) );
+			return $helper->render();
 		}
-		return $content;
+		catch( Exception $e ){
+			return $e->getMessage();
+		}
 	}
 
 	protected function __onInit(){
