@@ -95,23 +95,18 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	}
 
 	public function ical(){
-		if( $this->request->getHeader( 'Cookie', FALSE ) ){											//  client is a browser
-			$this->restart( './work/mission/help/sync' );
-		}
 		if( !$this->userId ){
-			$auth	= new BasicAuthentication( $this->env, 'Export' );
+			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
 			$this->userId	= $auth->authenticate();
 		}
 		try{
 			$method		= $this->request->getMethod();
 			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
 			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
-			error_log( $logMessage, 3, $logFile );
 			switch( strtoupper( $method ) ){
 				case 'PUT':
 //					$ical	= file_get_contents( "php://input" );							//  read PUT data
 					$ical	= $this->request->getBody();									//  get PUT content from request body
-//file_put_contents( "test.ical", $ical );
 					$this->importFromIcal( $ical );											//  import
 					break;
 				case 'GET':

@@ -19,14 +19,6 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		return "HELP";
 	}
 
-	protected function renderNiceTime( $time ){
-		list( $hours, $minutes ) = explode( ':', $time );
-		return UI_HTML_Tag::create( 'span', array(
-			UI_HTML_Tag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
-			UI_HTML_Tag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
-		), array( 'class' => 'time-nice' ) );
-	}
-
 	public function ajaxRenderDashboardPanel(){
 		$panelId	= $this->getData( 'panelId' );
 		switch( $panelId ){
@@ -162,6 +154,16 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 	}
 
 	public function remove(){
+	}
+
+	protected function renderNiceTime( $time ){
+		if( !strlen( $time ) )
+			return '-';
+		list( $hours, $minutes ) = explode( ':', $time );
+		return UI_HTML_Tag::create( 'span', array(
+			UI_HTML_Tag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
+			UI_HTML_Tag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
+		), array( 'class' => 'time-nice' ) );
 	}
 
 	public function view(){

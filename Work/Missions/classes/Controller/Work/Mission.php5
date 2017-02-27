@@ -103,13 +103,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $this->hasFullAccess() )
 			$this->userProjects		= $this->logic->getUserProjects( $this->userId );
 		$this->addData( 'projects', $this->userProjects );
-
-		$this->initFilters( $this->userId );
-
 		if( $this->env->getModules()->has( 'Resource_Database_Lock' ) )
 			$this->lock	= new Logic_Database_Lock( $this->env );
 
-		$this->env->getModules()->callHook( 'Test', 'test', array() );
+//		$this->env->getModules()->callHook( 'Test', 'test', array() );
 	}
 
 	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
@@ -282,7 +279,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				);
 				$missionId	= $this->model->add( $data, FALSE );
 				$message	= $type == 1 ? $words->msgSuccessEvent : $words->msgSuccessTask;
-				$this->messenger->noteSuccess( $words->msgSuccess );
+				$this->messenger->noteSuccess( $message );
 				$this->logic->noteChange( 'new', $missionId, NULL, $this->userId );
 				$this->restart( 'view/'.$missionId, TRUE );
 			}
@@ -955,6 +952,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( trim( $missionId ) )
 			$this->restart( 'view/'.$missionId, TRUE );
 
+		$this->initFilters( $this->userId );
 		$mode	= $this->session->get( 'filter.work.mission.mode' );
 		if( $mode !== 'now' )
 			$this->restart( './work/mission/'.$mode );
