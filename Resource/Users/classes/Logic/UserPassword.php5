@@ -229,7 +229,7 @@ class Logic_UserPassword{
 			$this->activatePassword( $userPasswordId );
 		}
 		$model	= new Model_User( $this->env );
-		$model->edit( $userId, array( 'password' => NULL ) );
+		$model->edit( $userId, array( 'password' => '' ) );
 	}
 
 	/**
