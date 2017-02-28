@@ -91,8 +91,9 @@ class Logic_UserPassword{
 		$data	= array(
 			'userId'	=> $userId,
 			'status'	=> 0,
+			'algo'		=> PASSWORD_BCRYPT,
 			'salt'		=> $salt,
-			'hash'		=> $this->encryptPassword( $salt.$password ),
+			'hash'		=> $this->encryptPassword( $salt.$password, PASSWORD_BCRYPT ),
 			'createdAt'	=> time(),
 		);
 		$userPasswordId	= $this->model->add( $data );												//  add new password
