@@ -118,7 +118,7 @@ foreach( $states as $status ){
 }
 $buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-question-sign icon-white"></i>', array(
 	'class'		=> 'btn btn-info btn-small fancybox-auto',
-	'href'		=> 'images/states.png',
+	'href'		=> $env->getConfig()->get( 'path.images' ).'states.png',
 	'target'	=> '_blank',
 ) );
 
