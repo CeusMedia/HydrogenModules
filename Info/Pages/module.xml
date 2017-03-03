@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.6.7</version>
+	<version>0.6.8</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -22,6 +22,7 @@
 	<log version="0.6.5">Set relation to module UI:MetaTags from optional to mandatory.</log>
 	<log version="0.6.6">Support page icons.</log>
 	<log version="0.6.7">Add hook to help controller classes to detect their URI path.</log>
+	<log version="0.6.8">Allow pages modules to call controller method by requested path.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
