@@ -22,9 +22,12 @@ class Resource_REST_Client{
 	}
 
 	protected function __initClient(){
-		$config				= $this->moduleConfig->getAll( 'server.', TRUE );
-		$options			= array();
-		$this->client		= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
+		$config			= $this->moduleConfig->getAll( 'server.', TRUE );
+		$options		= array(
+			CURLOPT_SSL_VERIFYHOST	=> $config->get( 'verifyHost' ),
+			CURLOPT_SSL_VERIFYPEER	=> $config->get( 'verifyPeer' ),
+		);
+		$this->client	= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
 		$this->client->expectFormat( $config->get( 'format' ) );
 		if( $config->get( 'username' ) )
 			$this->client->setBasicAuth( $config->get( 'username' ), $config->get( 'password' ) );
