@@ -76,21 +76,27 @@ class View_Helper_Member{
 			case 'thumbnail':
 				$helperGravatar->setSize( 256 );
 				$image		= $helperGravatar->render();
-				if( $helperAvatar && $helperAvatar->has() )
+				if( $helperAvatar && $helperAvatar->has() ){
+					$helperAvatar->setSize( 256 );
 					$image	= $helperAvatar->render();
+				}
 				break;
 			case 'bar':
 				$helperGravatar->setSize( 40 );
 				$image		= $helperGravatar->render();
-				if( $helperAvatar && $helperAvatar->has() )
+				if( $helperAvatar && $helperAvatar->has() ){
+					$helperAvatar->setSize( 40 );
 					$image	= $helperAvatar->render();
+				}
 				break;
 			case 'inline':
 			default:
 				$helperGravatar->setSize( 20 );
 				$image		= $helperGravatar->render();
-				if( $helperAvatar && $helperAvatar->has() )
+				if( $helperAvatar && $helperAvatar->has() ){
+					$helperAvatar->setSize( 20 );
 					$image	= $helperAvatar->render();
+				}
 		}
 		return $image;
 	}
