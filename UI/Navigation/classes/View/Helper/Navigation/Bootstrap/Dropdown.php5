@@ -67,7 +67,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown{
 	}
 
 	protected function renderLabelWithIcon( $entry ){
-		if( !isset( $entry->icon ) )
+		if( empty( $entry->icon ) )
 			return $entry->label;
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
