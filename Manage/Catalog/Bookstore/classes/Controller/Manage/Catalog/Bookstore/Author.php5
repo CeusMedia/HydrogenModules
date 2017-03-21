@@ -55,7 +55,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
-			$logic		= new Logic_Catalog( $env );
+			$logic		= new Logic_Catalog_Bookstore( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
 			foreach( $authors as $nr => $item ){
