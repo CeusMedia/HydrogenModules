@@ -21,7 +21,7 @@
 	<log version="0.8.6">Replace module JS:Optionals by JS:Form:Optionals.</log>
 	<log version="0.8.7">Apply jQuery UI sortable to page tree.</log>
 	<log version="0.8.8">Add support for module Resource:Versions.</log>
-	<log version="0.8.9">Check for pages support in frontend environment.</log> 
+	<log version="0.8.9">Check for pages support in frontend environment.</log>
 	<log version="0.9">Replace module selector by controller selector.</log>
 	<log version="0.9.1">Apply panel style.</log>
 	<log version="0.9.2">Extract index text to locale HTML file.</log>
@@ -56,7 +56,6 @@
     <config type="string" protected="yes" name="site.domain">localhost</config>
     <config type="string" protected="yes" name="site.path">/</config>
     <config type="string" protected="user" name="editor" values="none,CodeMirror,TinyMCE">TinyMCE</config>
-    <config type="string" protected="user" name="link.resources">pages,bookmarks,documents,images</config>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Form_Optionals</needs>
@@ -65,16 +64,16 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Frontend</needs>
 	</relations>
-	<link access="inside" path="manage/page" xml:lang="de">Seiten</link>
-	<link access="inside" path="manage/page" xml:lang="en">Pages</link>
-	<link access="inside" path="manage/page/ajaxOrderPages"/>
-	<link access="inside" path="manage/page/ajaxSaveContent"/>
-	<link access="inside" path="manage/page/ajaxSetEditor"/>
-	<link access="inside" path="manage/page/ajaxSetTab"/>
-	<link access="inside" path="manage/page/copy"/>
-	<link access="inside" path="manage/page/edit"/>
-	<link access="inside" path="manage/page/getJsImageList"/>
-	<link access="inside" path="manage/page/preparePageTree"/>
-	<link access="inside" path="manage/page/setScope"/>
+	<link access="acl" path="manage/page" xml:lang="de">Seiten</link>
+	<link access="acl" path="manage/page" xml:lang="en">Pages</link>
+	<link access="acl" path="manage/page/ajaxOrderPages"/>
+	<link access="acl" path="manage/page/ajaxSaveContent"/>
+	<link access="acl" path="manage/page/ajaxSetEditor"/>
+	<link access="acl" path="manage/page/ajaxSetTab"/>
+	<link access="acl" path="manage/page/copy"/>
+	<link access="acl" path="manage/page/edit"/>
+	<link access="acl" path="manage/page/getJsImageList"/>
+	<link access="acl" path="manage/page/preparePageTree"/>
+	<link access="acl" path="manage/page/setScope"/>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Page::___onTinyMCE_getLinkList</hook>
 </module>
