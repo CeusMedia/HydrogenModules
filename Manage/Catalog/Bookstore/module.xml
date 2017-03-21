@@ -55,11 +55,11 @@
 		<class>Model/Catalog/Bookstore/Article/Tag.php5</class>
 		<class>Logic/Catalog/Bookstore.php5</class>
 		<class>Logic/ShopBridge/Bookstore.php5</class>
-		<class>View/Manage/Catalog.php5</class>
-		<class>View/Manage/Catalog/Article.php5</class>
-		<class>View/Manage/Catalog/Author.php5</class>
-		<class>View/Manage/Catalog/Category.php5</class>
-		<class>View/Manage/Catalog/Tag.php5</class>
+		<class>View/Manage/Catalog/Bookstore.php5</class>
+		<class>View/Manage/Catalog/Bookstore/Article.php5</class>
+		<class>View/Manage/Catalog/Bookstore/Author.php5</class>
+		<class>View/Manage/Catalog/Bookstore/Category.php5</class>
+		<class>View/Manage/Catalog/Bookstore/Tag.php5</class>
 		<locale>de/catalog.ini</locale>
 		<locale>de/html/manage/catalog/bookstore/article/index.html</locale>
 		<locale>de/manage/catalog/bookstore.ini</locale>
