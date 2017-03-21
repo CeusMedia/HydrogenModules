@@ -1,0 +1,79 @@
+
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked,
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked li {
+	list-style: none;
+	}
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked.main {
+	margin: 0px 1000px 0px -2000px;
+	}
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked li {
+	font-weight: bold;
+	}
+
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked > li > a {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	margin-bottom: 0px;
+	padding-bottom: 5px;
+	}
+
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked {
+	margin-left: 1em;
+	}
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked  > li {
+	font-weight: normal;
+	}
+body.moduleManageCatalogBookstoreCategory ul.nav-pills.nav-stacked li > ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	}
+
+body.moduleManageCatalogBookstoreAuthor ul.nav-pills.nav-stacked,
+body.moduleManageCatalogBookstoreAuthor ul.nav-pills.nav-stacked li {
+	list-style: none;
+	}
+body.moduleManageCatalogBookstoreAuthor ul.nav-pills.nav-stacked.main {
+	margin: 0px 1000px 0px -2000px;
+	}
+body.moduleManageCatalogBookstoreAuthor ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	}
+
+
+body.moduleManageCatalogBookstoreArticle ul.nav-pills.nav-stacked,
+body.moduleManageCatalogBookstoreArticle ul.nav-pills.nav-stacked li {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	}
+body.moduleManageCatalogBookstoreArticle ul.nav-pills.nav-stacked {
+	margin: 0px 1000px 0px -2000px;
+	overflow: scroll;
+	}
+body.moduleManageCatalogBookstoreArticle ul.nav-pills.nav-stacked > li > a {
+	padding: 2px 8px;
+	margin: 0px 0px 0px 0px;
+	font-size: 0.9em;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	}
+
+
+body.moduleManageCatalogBookstoreAuthor #input_search,
+body.moduleManageCatalogBookstoreCategory #input_search {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	margin-bottom: -1px;
+	width: 32%;
+	display: none;
+	}
+body.moduleManageCatalogBookstoreAuthor #input_search + ul,
+body.moduleManageCatalogBookstoreCategory #input_search + ul {
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+	}

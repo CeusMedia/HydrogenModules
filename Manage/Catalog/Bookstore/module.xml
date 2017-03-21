@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Catalog: Bookstore</title>
+	<description><![CDATA[]]></description>
+	<category>Management</category>
+	<version>0.7</version>
+	<log version="0.3.11">Made paths to images and documents configurable.</log>
+	<log version="0.3.12">Made images dimensions configurable.</log>
+	<log version="0.3.13">Fixed bug in language file.</log>
+	<log version="0.3.14">Corrected use of configured image paths.</log>
+	<log version="0.3.15">Allow categories to be removed and fixed default order in article list.</log>
+	<log version="0.3.16">Improved cache management and prepared logic class for clean up.</log>
+	<log version="0.4">Cleanup and improved code documentation.</log>
+	<log version="0.4.1">Extended author editor by tabs and article list.</log>
+	<log version="0.4.2">Fixed bug appearing for authors without articles.</log>
+	<log version="0.4.3">Fixed bug on cache invalidation.</log>
+	<log version="0.4.4">Added list of articles on category view.</log>
+	<log version="0.4.5">TinyMCE: collect images and links of articles, authors, categories, documents.</log>
+	<log version="0.4.6">Added link to view articles and authors in frontend.</log>
+	<log version="0.4.7">Allow articles to be removed.</log>
+	<log version="0.4.8">Added shop bridge class from catalog module.</log>
+	<log version="0.5">Adjusted button coloring.</log>
+	<log version="0.5.1">Extracted lists to templates.</log>
+	<log version="0.5.2">Added tabs for category editor.</log>
+	<log version="0.5.3">Collect JavaScript methods.</log>
+	<log version="0.5.4">Finished cache management.</log>
+	<log version="0.5.5">Use common Alg_UnitParser.</log>
+	<log version="0.5.6">Use module Resource_Logic.</log>
+	<log version="0.5.7">Use advanced upload form input.</log>
+	<log version="0.5.8">Improve tag management.</log>
+	<log version="0.6">Finished user interface and usability update.</log>
+	<log version="0.6.1">Use module Resource:Frontend for flexible configuration.</log>
+	<log version="0.6.2">Add article tag filter with autocomplete.</log>
+	<log version="0.6.3">Refactor article tab views to equal look and behaviour.</log>
+	<log version="0.6.4">Use module JS:Form:Changes to mark unsaved input field changes.</log>
+	<log version="0.6.5">Add removeAuthor in logic class.</log>
+	<log version="0.6.6">Correct collection if TinyMCE images.</log>
+	<log version="0.6.7">Add tag list and tab.</log>
+	<log version="0.7">Migration from module Manage:Catalog.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Catalog/Bookstore.php5</class>
+		<class>Controller/Manage/Catalog/Bookstore/Article.php5</class>
+		<class>Controller/Manage/Catalog/Bookstore/Author.php5</class>
+		<class>Controller/Manage/Catalog/Bookstore/Category.php5</class>
+		<class>Controller/Manage/Catalog/Bookstore/Tag.php5</class>
+		<class>Model/Catalog/Bookstore/Article.php5</class>
+		<class>Model/Catalog/Bookstore/Author.php5</class>
+		<class>Model/Catalog/Bookstore/Category.php5</class>
+		<class>Model/Catalog/Bookstore/Article/Author.php5</class>
+		<class>Model/Catalog/Bookstore/Article/Category.php5</class>
+		<class>Model/Catalog/Bookstore/Article/Document.php5</class>
+		<class>Model/Catalog/Bookstore/Article/Tag.php5</class>
+		<class>Logic/Catalog/Bookstore.php5</class>
+		<class>Logic/ShopBridge/Bookstore.php5</class>
+		<class>View/Manage/Catalog.php5</class>
+		<class>View/Manage/Catalog/Article.php5</class>
+		<class>View/Manage/Catalog/Author.php5</class>
+		<class>View/Manage/Catalog/Category.php5</class>
+		<class>View/Manage/Catalog/Tag.php5</class>
+		<locale>de/catalog.ini</locale>
+		<locale>de/html/manage/catalog/bookstore/article/index.html</locale>
+		<locale>de/manage/catalog/bookstore.ini</locale>
+		<locale>de/manage/catalog/bookstore/article.ini</locale>
+		<locale>de/manage/catalog/bookstore/author.ini</locale>
+		<locale>de/manage/catalog/bookstore/category.ini</locale>
+		<locale>de/manage/catalog/bookstore/tag.ini</locale>
+		<template>manage/catalog/bookstore/article/add.php</template>
+		<template>manage/catalog/bookstore/article/edit.php</template>
+		<template>manage/catalog/bookstore/article/edit.authors.php</template>
+		<template>manage/catalog/bookstore/article/edit.categories.php</template>
+		<template>manage/catalog/bookstore/article/edit.cover.php</template>
+		<template>manage/catalog/bookstore/article/edit.details.php</template>
+		<template>manage/catalog/bookstore/article/edit.documents.php</template>
+		<template>manage/catalog/bookstore/article/edit.tags.php</template>
+		<template>manage/catalog/bookstore/article/filter.php</template>
+		<template>manage/catalog/bookstore/article/index.php</template>
+		<template>manage/catalog/bookstore/article/list.php</template>
+		<template>manage/catalog/bookstore/author/add.php</template>
+		<template>manage/catalog/bookstore/author/edit.php</template>
+		<template>manage/catalog/bookstore/author/edit.articles.php</template>
+		<template>manage/catalog/bookstore/author/edit.details.php</template>
+		<template>manage/catalog/bookstore/author/index.php</template>
+		<template>manage/catalog/bookstore/author/list.php</template>
+		<template>manage/catalog/bookstore/category/add.php</template>
+		<template>manage/catalog/bookstore/category/edit.php</template>
+		<template>manage/catalog/bookstore/category/edit.articles.php</template>
+		<template>manage/catalog/bookstore/category/edit.details.php</template>
+		<template>manage/catalog/bookstore/category/index.php</template>
+		<template>manage/catalog/bookstore/category/list.php</template>
+		<template>manage/catalog/bookstore/tag/index.php</template>
+		<template>manage/catalog/bookstore/index.php</template>
+		<script source="lib" load="auto">jquery/cmExpr/containsIgnoreCase/0.2.js</script>
+		<script load="auto">module.manage.catalog.bookstore.js</script>
+		<style load="auto">module.manage.catalog.bookstore.css</style>
+	</files>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.maxSize" title="Maximum document file site in MB." value="1,2,4,8,16,32">4</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxHeight">240</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxWidth">180</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.image.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.maxHeight">120</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.maxWidth">90</config>
+	<config type="integer" protected="yes" mandatory="yes" name="article.image.thumb.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.image.thumb.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxHeight">240</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.maxWidth">180</config>
+	<config type="integer" protected="yes" mandatory="yes" name="author.image.quality">85</config>
+	<config type="string" protected="yes" mandatory="yes" name="author.image.extensions">gif,jpe,jpeg,jpg,png</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.authors" title="path to author images within frontend content folder">bookstore/authors/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.covers" title="path to article cover images within frontend content folder">bookstore/articles/covers/</config>
+	<config type="string" protected="yes" mandatory="yes" name="path.documents" title="path to article documents within frontend content folder">bookstore/articles/documents/</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Upload</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+	</relations>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Bookstore_Article::___onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Bookstore_Author::___onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Article::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Author::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Category::___onTinyMCE_getLinkList</hook>
+</module>
