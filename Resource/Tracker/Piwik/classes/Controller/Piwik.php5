@@ -12,14 +12,14 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 */
 	static public function ___onEnvInit( $env, $context, $module, $arguments = array() ){
-		$config	= $env->getConfig()->getAll( 'modules.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
+		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
 		if( !$config->get( 'enabled' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;
 		if( !( $uri = $config->get( 'URI' ) ) )														//  URI to piwik is not defined
 			return;
 		if( !$config->get( 'local' ) || !( $path = $config->get( 'local.path' ) ) )					//  no local installation available
 			return;
-		$classFile	= rtrim( $path, " /" ).'libs/PiwikTracker/PiwikTracker.php';					//  calculate piwik tracker class file
+		$classFile	= rtrim( $path, " /" ).'/libs/PiwikTracker/PiwikTracker.php';					//  calculate piwik tracker class file
 		@include_once $classFile;																	//  include piwik tracker class file
 		if( !class_exists( 'PiwikTracker' ) )														//  include was NOT successful
 			throw new RuntimeException( 'Piwik tracker inclusion failed ('.$classFile.')' );
