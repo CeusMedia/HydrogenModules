@@ -1,7 +1,7 @@
 
 var FormOptionals = {
     init: function () {
-        $("select.has-optionals").bind("change change-update", function () {
+        $(":input.has-optionals").bind("change change-update", function () {
             FormOptionals.showOptionals(this);
 		}).trigger("change-update");
     },
@@ -35,7 +35,7 @@ var FormOptionals = {
             toShow.show();
         }
     }
-    
+
 };
 
 /* @deprecated by hook
