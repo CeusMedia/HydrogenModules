@@ -16,6 +16,7 @@ class Resource_REST_Client{
 	 */
 	public function __construct( $env ){
 		$this->env			= $env;
+		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );
 		$this->__initClient();
 		$this->__initCache();
@@ -29,6 +30,8 @@ class Resource_REST_Client{
 		);
 		$this->client	= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
 		$this->client->expectFormat( $config->get( 'format' ) );
+		if( $this->session->has( 'token' ) )
+			$this->client->addRequestHeader( 'X-REST-Token', $this->session->get( 'token' ) );
 		if( $config->get( 'username' ) )
 			$this->client->setBasicAuth( $config->get( 'username' ), $config->get( 'password' ) );
 	}
