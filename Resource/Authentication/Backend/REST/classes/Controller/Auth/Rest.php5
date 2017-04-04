@@ -124,17 +124,22 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 				$this->messenger->noteError( $words->msgNoPassword );
 			else{
 				$user	= $this->logic->checkPassword( $username, $password );
-				if( $user == -10 )
+				if( $user == -9 )
+					$this->messenger->noteError( $words->msgInvalidDomain );
+				else if( $user == -10 )
 					$this->messenger->noteError( $words->msgInvalidUser );
 				else if( $user == -11 )
 					$this->messenger->noteError( $words->msgInvalidPassword );
 				else if( $user == -12 )
 					$this->messenger->noteError( $words->msgUserDisabled );
+				else if( $user == -13 )
+					$this->messenger->noteError( $words->msgDomainDisabled );
 				else if( isset( $user->data->userId ) ){
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->session->set( 'accountId', $user->data->accountId );
 					$this->session->set( 'userId', $user->data->userId );
 					$this->session->set( 'roleId', $user->data->roleId );
+					$this->session->set( 'token', $user->data->token );
 					$this->session->set( 'rights', $user->data->rights );
 					$this->session->set( 'authBackend', 'Rest' );
 	//				if( $this->request->get( 'login_remember' ) )
@@ -170,6 +175,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
+			$this->session->remove( 'token' );
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
