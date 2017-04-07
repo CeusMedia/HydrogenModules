@@ -43,6 +43,8 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'kanban' );
 
+		$this->initFilters( $this->session->get( 'userId' ) );
+
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
 		$this->setData( array(
 			'userId'	=> $this->session->get( 'userId' ),
