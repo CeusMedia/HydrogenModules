@@ -41,6 +41,8 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 
 	protected function __onInit(){
 		parent::__onInit();
+		$this->initFilters( $this->session->get( 'userId' ) );
+
 		$this->session->set( 'filter.work.mission.mode', 'calendar' );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );

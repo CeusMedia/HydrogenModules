@@ -859,9 +859,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'documents', $documents );
 	}
 
-	public function filter(){
+	public function filter( $reset = NULL){
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
-		if( $this->request->has( 'reset' ) ){
+		if( $this->request->has( 'reset' ) || $reset ){
 			$this->session->remove( $sessionPrefix.'query' );
 			$this->session->remove( $sessionPrefix.'types' );
 			$this->session->remove( $sessionPrefix.'priorities' );
