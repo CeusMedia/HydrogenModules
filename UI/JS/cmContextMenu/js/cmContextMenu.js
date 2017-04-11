@@ -9,7 +9,11 @@ var cmContextMenu = {
 		this.container = $("<div></div>").attr("id","contextMenu").hide();
 		this.container.attr("oncontextmenu","cmContextMenu.hide(); return false;").appendTo("body");
 		this.container.bind("click", function(event){event.stopPropagation();});
-		$(this.containment).bind("click contextmenu", function(event){cmContextMenu.hide(event, false);});
+		$(this.containment).bind("mouseup contextmenu", function(event){
+			cmContextMenu.hide(event, false);
+			event.stopPropagation();
+			return false;
+		});
 	},
 	assignRenderer: function(selector, callback){
 		$(selector).attr("oncontextmenu","return false;").mouseup(function(event){
@@ -38,7 +42,7 @@ var cmContextMenu = {
 		event.stopPropagation();
 		if(this.status !== 0)
 			return false;
-		this.status = 1;
+//		this.status = 1;
 		this.container.html("<ul></ul>");
 		renderer(this, $(elem));
 		var posX = event.pageX - 1;
@@ -47,7 +51,9 @@ var cmContextMenu = {
 		var posX = event.pageX + (outX ? - this.container.width() + 1 : - 1);
 		var posY = event.pageY + (outY ? - this.container.height() + 1 : - 1);
 		this.container.css({left: posX, top: posY});
-		$("#contextMenu").stop(true, true).fadeIn(250);
+		$("#contextMenu").stop(true, true).fadeIn(200,function(){
+			cmContextMenu.status = 1;
+		});
 		cmContextMenu.onShow($("#contextMenu"), elem);
 	},
 	hide: function(event, changed){
@@ -56,7 +62,7 @@ var cmContextMenu = {
 		this.status = 0;
 		if(changed)
 			cmContextMenu.onChange();
-		$("#contextMenu").stop(true, true).fadeOut(150);
+		$("#contextMenu").stop(true, true).fadeOut(75);
 		return true;
 /*	},
 	toggle: function(event){
