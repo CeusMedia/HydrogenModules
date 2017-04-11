@@ -107,7 +107,12 @@ return '
 		<div class="content-panel">
 			<h4>Ähnliche Einträge</h4>
 			<div class="content-panel-inner">
-				<table id="list-similar" class="issues">
+				<table id="list-similar" class="issues table table-condensed table-striped table-fixed">
+					<colgroup>
+						<col width="30px">
+						<col width="">
+						<col width="50px">
+					</colgroup>
 					<tbody>
 						<tr><td colspan="3">-</td></tr>
 					</tbody>
@@ -118,7 +123,12 @@ return '
 		<div class="content-panel">
 			<h4>Letzte Einträge</h4>
 			<div class="content-panel-inner">
-				<table id="list-latest" class="issues">
+				<table id="list-latest" class="issues table table-condensed table-striped table-fixed">
+					<colgroup>
+						<col width="30px">
+						<col width="">
+						<col width="50px">
+					</colgroup>
 					<tbody>
 						<tr><td colspan="3">-</td></tr>
 					</tbody>
