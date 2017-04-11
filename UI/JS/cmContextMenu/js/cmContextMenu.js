@@ -8,7 +8,7 @@ var cmContextMenu = {
 	init: function(){
 		this.container = $("<div></div>").attr("id","contextMenu").hide();
 		this.container.attr("oncontextmenu","cmContextMenu.hide(); return false;").appendTo("body");
-		this.container.bind("click", function(event){event.stopPropagation();});
+		this.container.bind("mouseup", function(event){event.stopPropagation();});
 		$(this.containment).bind("mouseup contextmenu", function(event){
 			cmContextMenu.hide(event, false);
 			event.stopPropagation();
