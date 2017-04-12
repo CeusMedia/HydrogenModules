@@ -157,8 +157,12 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			);
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
+			$userId				= $this->env->getSession()->get( 'userId' );
+			$this->logic->informAboutChange( $issueId, $userId );
 			$this->restart( './work/issue/edit/'.$issueId );							//  reload back into edit view
 		}
+//		$userId				= $this->env->getSession()->get( 'userId' );
+//		$this->logic->informAboutChange( $issueId, $userId );
 		$this->addData( 'issue', $this->logic->get( $issueId, TRUE ) );
 		$this->addData( 'projects', $this->logic->getUserProjects() );
 		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
@@ -203,6 +207,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 					}
 				}
 				$modelIssue->edit( $issueId, $changes, FALSE );
+
 				$this->env->getMessenger()->noteSuccess( 'Die Veränderungen wurden gespeichert.' );
 			}
 			else
