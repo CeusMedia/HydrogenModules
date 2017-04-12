@@ -134,6 +134,22 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 		return $users;
 	}
 
+	public function informAboutNew( $issueId, $currentUserId ){
+		$users	= $this->getParticitatingUsers( $issueId );
+		if( isset( $users[$currentUserId] ) )
+			unset( $users[$currentUserId] );
+		if( count( $users ) ){
+			$logicMail	= new Logic_Mail( $this->env );
+			$mail		= new Mail_Work_Issue_New( $this->env, array(
+				'issue'	=> $this->get( $issueId, TRUE ),
+			) );
+			foreach( $users as $user ){
+				$logicMail->sendMail( $mail, $user, 'de' );
+			}
+		}
+		return $users;
+	}
+
 	public function informAboutChange( $issueId, $currentUserId ){
 		$users	= $this->getParticitatingUsers( $issueId );
 		if( isset( $users[$currentUserId] ) )

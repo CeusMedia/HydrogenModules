@@ -13,7 +13,6 @@ class Mail_Work_Issue_Change extends Mail_Abstract{
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.work.issue.css' );
 
-
 		$modelIssue		= new Model_Issue( $this->env );
 		$issue			= $modelIssue->get( $data['issue']->issueId );
 
@@ -68,7 +67,6 @@ class Mail_Work_Issue_Change extends Mail_Abstract{
 </div>';
 		$this->page->setBody( $body );
 		$html	= $this->page->build();
-print( $html );die;
 		return $html;
 	}
 }

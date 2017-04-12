@@ -125,6 +125,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
 				$issueId	= $model->add( $data, FALSE );
+				$userId		= $this->env->getSession()->get( 'userId' );
+				$this->logic->informAboutNew( $issueId, $userId );
 				if( $issueId )
 					$this->restart( './work/issue/edit/'.$issueId );
 			}
@@ -155,9 +157,9 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				'content'		=> $request->get( 'content' ),
 				'modifiedAt'	=> time()
 			);
+			$userId				= $this->env->getSession()->get( 'userId' );
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
-			$userId				= $this->env->getSession()->get( 'userId' );
 			$this->logic->informAboutChange( $issueId, $userId );
 			$this->restart( './work/issue/edit/'.$issueId );							//  reload back into edit view
 		}

@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -19,12 +19,14 @@
 	<log version="0.3.4">Remove support for old dasboard module.</log>
 	<log version="0.3.5">Split note change view into several view helpers.</log>
 	<log version="0.3.6">Send mail on every issue change.</log>
+	<log version="0.3.7">Send mail on every new issue.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Issue.php5</class>
 		<class>Mail/Work/Issue/Change.php5</class>
+		<class>Mail/Work/Issue/New.php5</class>
 		<class>Model/Issue.php5</class>
 		<class>Model/Issue/Note.php5</class>
 		<class>Model/Issue/Change.php5</class>
