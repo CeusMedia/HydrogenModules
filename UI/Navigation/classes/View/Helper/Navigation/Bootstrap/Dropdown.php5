@@ -73,7 +73,9 @@ class View_Helper_Navigation_Bootstrap_Dropdown{
 		if( !preg_match( "/^fa/", $entry->icon ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
-		return $icon.'&nbsp;'.$entry->label;
+		if( strlen( $entry->label ) )
+			return $icon.'&nbsp;'.$entry->label;
+		return $icon;
 	}
 
 	public function renderLogo(){
