@@ -194,62 +194,77 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$email		= $input->get( 'email' );
 
 		if( $request->getMethod() == 'POST' ){
-			if( empty( $username ) )																//  no username given
+			if( empty( $username ) ){																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
-			else if( $modelUser->countByIndex( 'username', $username ) )
-				if( $modelUser->getByIndex( 'username', $username, 'userId' ) != $userId )			//  username is already used
-				$messenger->noteError( $words->msgUsernameExisting, $username );
-			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$messenger->noteError( $words->msgPasswordTooShort );
-
-			if( $needsEmail && empty( $email ) )
-				$messenger->noteError( $words->msgNoEmail );
-			else if( !empty( $email ) )
-				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!='.$userId ) ) )
-					$messenger->noteError( $words->msgEmailExisting, $email );
-
-			if( $needsFirstname && empty( $input['firstname'] ) )
-				$messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $input['surname'] ) )
-				$messenger->noteError( $words->msgNoSurname );
-
-			if( !$messenger->gotError() ){
-				$data	= array(
-					'roleId'		=> $input['roleId'],
-					'status'		=> $input['status'],
-					'username'		=> $username,
-					'email'			=> $email,
-					'gender'		=> $input['gender'],
-					'salutation'	=> $input['salutation'],
-					'firstname'		=> $input['firstname'],
-					'surname'		=> $input['surname'],
-					'country'		=> $input['country'],
-					'postcode'		=> $input['postcode'],
-					'city'			=> $input['city'],
-					'street'		=> $input['street'],
-					'phone'			=> $input['phone'],
-					'fax'			=> $input['fax'],
-					'modifiedAt'	=> time(),
-				);
-				if( !empty( $password ) ){
-					$data['password']	= md5( $passwordSalt.$password );
-
-					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove whole block if old user password support decays
-						unset( $data['password'] );
-					}
-					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
-						$logic			= Logic_UserPassword::getInstance( $this->env );
-						$userPasswordId	= $logic->addPassword( $userId, $password );
-						$logic->activatePassword( $userPasswordId );
-					}
-				}
-				if( strlen( $data['country'] ) > 2 ){
-					$countries			= array_flip( $this->countries );
-					$data['country']	= $countries[$data['country']];
-				}
-				$modelUser->edit( $userId, $data );
-				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+				$this->restart( 'edit/'.$userId, TRUE );
 			}
+			if( $modelUser->countByIndex( 'username', $username ) ){
+				$foundUser	= $modelUser->getByIndex( 'username', $username );
+				if( $foundUser->userId != $userId ){													//  username is already used
+					$messenger->noteError( $words->msgUsernameExisting, $username );
+					$this->restart( 'edit/'.$userId, TRUE );
+				}
+			}
+			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength ){
+				$messenger->noteError( $words->msgPasswordTooShort );
+				$this->restart( 'edit/'.$userId, TRUE );
+			}
+			if( $needsEmail && empty( $email ) ){
+				$messenger->noteError( $words->msgNoEmail );
+				$this->restart( 'edit/'.$userId, TRUE );
+			}
+			if( !empty( $email ) ){
+				$foundUser	= $modelUser->getByIndex( 'email', strtolower( $email ) );
+				if( $foundUser->userId != $userId ){
+					$messenger->noteError( $words->msgEmailExisting, $email );
+					$this->restart( 'edit/'.$userId, TRUE );
+				}
+			}
+			if( $needsFirstname && empty( $input['firstname'] ) ){
+				$messenger->noteError( $words->msgNoFirstname );
+				$this->restart( 'edit/'.$userId, TRUE );
+			}
+			if( $needsSurname && empty( $input['surname'] ) ){
+				$messenger->noteError( $words->msgNoSurname );
+				$this->restart( 'edit/'.$userId, TRUE );
+			}
+
+			$data	= array(
+				'roleId'		=> $input['roleId'],
+				'status'		=> $input['status'],
+				'username'		=> $username,
+				'email'			=> strtolower( $email ),
+				'gender'		=> $input['gender'],
+				'salutation'	=> $input['salutation'],
+				'firstname'		=> $input['firstname'],
+				'surname'		=> $input['surname'],
+				'country'		=> $input['country'],
+				'postcode'		=> $input['postcode'],
+				'city'			=> $input['city'],
+				'street'		=> $input['street'],
+				'phone'			=> $input['phone'],
+				'fax'			=> $input['fax'],
+				'modifiedAt'	=> time(),
+			);
+			if( !empty( $password ) ){
+				$data['password']	= md5( $passwordSalt.$password );
+
+				if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove whole block if old user password support decays
+					unset( $data['password'] );
+				}
+				if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
+					$logic			= Logic_UserPassword::getInstance( $this->env );
+					$userPasswordId	= $logic->addPassword( $userId, $password );
+					$logic->activatePassword( $userPasswordId );
+				}
+			}
+			if( strlen( $data['country'] ) > 2 ){
+				$countries			= array_flip( $this->countries );
+				$data['country']	= $countries[$data['country']];
+			}
+			$modelUser->edit( $userId, $data );
+			$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+			$this->restart( 'edit/'.$userId, TRUE );
 		}
 		$user			= $modelUser->get( $userId );
 		if( empty( $user->country ) )
