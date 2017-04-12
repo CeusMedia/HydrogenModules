@@ -100,8 +100,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	}
 
 	public function rename( $documentId ){
-		$document	= $this->env->getRequest()->get( 'document' ) );
-		$name		= $this->env->getRequest()->get( 'name' ) );
+		$document	= $this->env->getRequest()->get( 'document' );
+		$name		= $this->env->getRequest()->get( 'name' );
 		$path		= $this->moduleConfig->get( 'path.documents' );
 		if( !file_exists( $path.$document ) ){
 			$this->messenger->noteError( "Dokument nicht gefunden." );
