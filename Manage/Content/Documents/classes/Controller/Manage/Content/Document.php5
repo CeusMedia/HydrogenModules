@@ -74,7 +74,7 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 			$words	= (object) $this->getWords( 'msg' );
 			$upload	= (object) $request->get( 'upload' );
 			if( $request->get( 'filename' ) )
-				$upload->name	= $request->get( 'filename' );
+				$upload->name	= str_replace( " ", "_", $request->get( 'filename' ) );
 			if( $upload->error ){
                 $handler    = new Net_HTTP_UploadErrorHandler();
                 $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
@@ -97,6 +97,18 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		$this->addData( 'frontendUrl', $this->frontend->getUri() );
 		$this->addData( 'pathDocuments', $this->moduleConfig->get( 'path.documents' ) );
 		$this->addData( 'documents', $this->model->index() );
+	}
+
+	public function rename( $documentId ){
+		$document	= $this->env->getRequest()->get( 'document' ) );
+		$name		= $this->env->getRequest()->get( 'name' ) );
+		$path		= $this->moduleConfig->get( 'path.documents' );
+		if( !file_exists( $path.$document ) ){
+			$this->messenger->noteError( "Dokument nicht gefunden." );
+			$this->restart( NULL, TRUE );
+		}
+		rename( $path.$document, str_replace( " ", "_", $name ) );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function remove(){
