@@ -851,6 +851,12 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				'status'	=> array( 0, 1, 2 ),
 			);
 			$this->addData( 'openTimers', $logic->countTimers( $conditions ) );
+
+			$conditions	= array(
+				'moduleId'	=> 0,
+				'userId'	=> $this->userId,
+			);
+			$this->addData( 'unrelatedTimers', $logic->index( $conditions, array( 'title' => 'ASC' ) ) );
 		}
 
 		$model		= new Model_Mission_Document( $this->env );
