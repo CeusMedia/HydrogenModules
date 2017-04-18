@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -19,8 +19,9 @@
 	<log version="0.3.3">Make mobile navbar configurable.</log>
 	<log version="0.3.4">Track current page for other navigation components.</log>
 	<log version="0.3.5">Hide disabled or hidden pages or subpages.</log>
-	<log version="0.3.6">Skip menu links if there are no nested links available/allowed.</log> 
+	<log version="0.3.6">Skip menu links if there are no nested links available/allowed.</log>
 	<log version="0.3.7">Support page icons.</log>
+	<log version="0.3.8">Add prototype of sidebar navigation.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -31,13 +32,15 @@
 		<class>View/Helper/Navigation/Bootstrap/Dropdown.php5</class>
 		<class>View/Helper/Navigation/Bootstrap/NavbarMobile.php5</class>
 		<class>View/Helper/Navigation/Bootstrap/NavbarMobileTitle.php5</class>
+		<class>View/Helper/Navigation/Bootstrap/Sidebar.php5</class>
 		<class>View/Helper/Navigation/BootstrapResponsive.php5</class>
 		<class>View/Helper/Navigation/Mobile.php5</class>
+		<style source="common" load="auto">module.ui.navigation.css</style>
 	</files>
 	<config protected="yes" type="string" name="menu.source" values="Modules,Database,Config" title="Source to collect navigation links from">Config</config>
 	<config protected="yes" type="string" name="render.class" values="View_Helper_Navigation,View_Helper_Navigation_BootstrapResponsive">View_Helper_Navigation_BootstrapResponsive</config>
 	<config protected="no" type="boolean" name="render.desktop" title="Switch: Enable default desktop menu and navbar">1</config>
-	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown">View_Helper_Navigation_Bootstrap_Dropdown</config>
+	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown,View_Helper_Navigation_Bootstrap_Sidebar">View_Helper_Navigation_Bootstrap_Dropdown</config>
 	<config protected="no" type="string" name="render.desktop.style" values="Default,Pills" title="Style of main links in desktop main navigation bar.">Pills</config>
 	<config protected="no" type="boolean" name="render.desktop.navbar" title="Switch: Enable desktop main navigation bar">1</config>
 	<config protected="no" type="string" name="render.desktop.theme" values="light,dark" title="Theme of desktop main navigation bar">light</config>

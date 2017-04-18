@@ -1,0 +1,35 @@
+html,
+body.nav-sidebar,
+body.nav-sidebar #layout-container {
+	height: 100%;
+	}
+body.nav-sidebar #layout-nav {
+	float: left;
+	width: 240px;
+	height: 100%;
+	background-color: #F7F7F7;
+	border-right: 2px solid #DDD;
+	}
+body.nav-sidebar #layout-field {
+	margin-left: 260px;
+	margin-right: 20px;
+	}
+body.nav-sidebar .nav.nav-list {
+	height: 100%;
+	padding-top: 0.5em;
+	border-top: 1px solid rgba(127, 127, 127, 0.5);
+	margin-left: 0.5em;
+	margin-right: 0.6em;
+	}
+body.nav-sidebar .nav.nav-list .nav-list-sub-item {
+	padding-left: 20px;
+	}
+body.nav-sidebar .nav.nav-list .nav-header {
+	font-size: 1em;
+	color: inherited;
+	}
+body.nav-sidebar div.brand {
+	text-align: center;
+	font-size: 2em;
+	line-height: 1.5em;
+	}
