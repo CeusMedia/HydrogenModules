@@ -3,7 +3,7 @@
 	<title>Manage: Content: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.4.12</version>
+	<version>0.5</version>
 	<log version="0.4.3">Added relation to time phrase helper.</log>
 	<log version="0.4.4">Use frontend resource.</log>
 	<log version="0.4.5">Updated TinyMCE link collection.</log>
@@ -14,6 +14,7 @@
     <log version="0.4.10">Update button colors.</log>
     <log version="0.4.11">Apply autocut on table and fix columns.</log>
     <log version="0.4.12">Use module UI:Helper:Input:File.</log>
+	<log version="0.5">Use module Resource:Upload.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -29,6 +30,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 		<supports type="module">JS_TinyMCE</supports>

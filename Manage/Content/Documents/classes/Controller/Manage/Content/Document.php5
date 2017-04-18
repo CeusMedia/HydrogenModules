@@ -71,20 +71,33 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
-			$words	= (object) $this->getWords( 'msg' );
-			$upload	= (object) $request->get( 'upload' );
-			if( $request->get( 'filename' ) )
-				$upload->name	= str_replace( " ", "_", $request->get( 'filename' ) );
-			if( $upload->error ){
-                $handler    = new Net_HTTP_UploadErrorHandler();
-                $handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-				$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
-			}
-			else{
-				if( !@move_uploaded_file( $upload->tmp_name, $this->path.$upload->name ) )
+			$words		= (object) $this->getWords( 'msg' );
+			$upload		= $request->get( 'upload' );
+			$filename	= $request->get( 'filename' );
+
+			if( $request->get( 'upload' ) ){
+				if( $filename )
+					$upload['name']	= $filename;
+				try{
+					$logic	= new Logic_Upload( $this->env );
+					$logic->setUpload( $upload );
+					$logic->sanitizeFileName();
+					if( $logic->getError() ){
+						$handler    = new Net_HTTP_UploadErrorHandler();
+						$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
+						$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
+					}
+					else{
+						if( $filename )
+							unlink( $this->path.$filename );
+						$filename	= $logic->getFileName();
+						$logic->saveTo( $this->path.$filename );
+						$messenger->noteSuccess( $words->successDocumentUploaded, $filename );
+					}
+				}
+				catch( Exception $e ){
 					$messenger->noteFailure( $words->errorUploadFailed );
-				else
-					$messenger->noteSuccess( $words->successDocumentUploaded, $upload->name );
+				}
 			}
 		}
 		$this->restart( NULL, TRUE );
