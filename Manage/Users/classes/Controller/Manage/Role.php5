@@ -32,6 +32,44 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		$this->messenger		= $this->env->getMessenger();
 		$this->language			= $this->env->getLanguage();
 		$this->request			= $this->env->getRequest();
+		$this->addData( 'modules', $this->env->getModules()->getAll() );
+	}
+
+
+	protected function getModuleWords( $module ){
+		$path		= $this->env->getConfig()->get( 'path.locales' );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$moduleKey	= $this->getSingular( str_replace( '_', '/', strtolower( $module->id ) ) );
+		$localeFile	= $language.'/'.$moduleKey.'.ini';
+		$moduleWords	= array();
+		foreach( $module->files->locales as $locale ){
+			if( $localeFile == $locale->file ){
+				if( file_exists( $path.$locale->file ) ){
+					$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+					if( $reader->usesSections() && $reader->hasSection( 'module' ) )
+						return $reader->getProperties( TRUE, 'module' );
+				}
+			}
+		}
+		foreach( $module->files->locales as $locale ){
+			if( file_exists( $path.$locale->file ) ){
+				$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+				if( $reader->usesSections() && $reader->hasSection( 'module' ) )
+					return $reader->getProperties( TRUE, 'module' );
+			}
+		}
+	}
+
+	protected function getSingular( $string ){
+		if( preg_match( "/des$/", $string ) )
+			$string	= preg_replace( "/des$/", "de", $string );
+		else if( preg_match( "/ies$/", $string ) )
+			$string	= preg_replace( "/ies$/", "y", $string );
+		else if( preg_match( "/es$/", $string ) )
+			$string	= preg_replace( "/es$/", "", $string );
+		else if( preg_match( "/s$/", $string ) )
+			$string	= preg_replace( "/s$/", "", $string );
+		return $string;
 	}
 
 	public function add() {
@@ -117,6 +155,38 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		$this->addData( 'role', $role );
 		$this->addData( 'words', $words );
 		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
+		$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
+		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
+
+		$list		= array();
+		$actions	= $disclosure->reflect( 'classes/Controller/', $options );
+		foreach( $actions as $controllerName => $controller ){
+			$module	= $this->getModuleFromControllerClassName( $controllerName );
+			$list[]	= (object) array(
+				'name'			=> $controllerName,
+				'className'		=> $controller->name,
+				'methods'		=> $controller->methods,
+				'module'		=> $module,
+				'moduleWords'	=> $this->getModuleWords( $module ),
+			);
+
+		}
+
+		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
+		$this->addData( 'controllerActions', $list );
+		$this->addData( 'acl', $this->env->getAcl() );
+	}
+
+	protected function getModuleFromControllerClassName( $controller ){
+		$controllerPathName	= "Controller/".str_replace( "_", "/", $controller );
+		foreach( $this->env->getModules()->getAll() as $module ){
+			foreach( $module->files->classes as $file ){
+				$path	= pathinfo( $file->file, PATHINFO_DIRNAME ).'/';
+				$base	= pathinfo( $file->file, PATHINFO_FILENAME );
+				if( $path.$base === $controllerPathName )
+					return $module;
+			}
+		}
 	}
 
 	public function index() {

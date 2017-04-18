@@ -72,18 +72,18 @@ input.user-activity {
 	width: 150px;
 	}
 
-	
+
 legend.user-add {
 	background-image:  url(///img.int1a.net/famfamfam/silk/user_add.png);
 	}
-	
+
 legend.user-edit {
 	background-image:  url(///img.int1a.net/famfamfam/silk/user_edit.png);
 	}
 
-	
-	
-	
+
+
+
 /*  --  ROLES  --  */
 
 span.role.role1,
@@ -134,7 +134,7 @@ span.role.role5 {
 	padding: 0px;
 	margin: 0px;
 	}
-#role-edit-rights li {
+#role-edit-rights li.action {
 	float: left;
 	display: block;
 	padding: 0px 4px;
@@ -146,31 +146,31 @@ span.role.role5 {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	}
-#role-edit-rights li.changable {
+#role-edit-rights li.action.changable {
 	color: black;
 	color: white;
 	cursor: pointer;
 	opacity: 1;
 	}
-#role-edit-rights li.changable label {
+#role-edit-rights li.action.changable label {
 	cursor: pointer;
 	}
 #role-edit-rights li.green {
 	background-color: #5FFF5F;
 	}
-#role-edit-rights li.green.changable {
+#role-edit-rights li.action.green.changable {
 	background-color: #3F7F3F;
 	}
-#role-edit-rights li.yellow {
+#role-edit-rights li.action.yellow {
 	background-color: #FFFF7F !important;
 	}
-#role-edit-rights li.red {
+#role-edit-rights li.action.red {
 	background-color: #FFBFBF;
 	}
-#role-edit-rights li.red.changable {
+#role-edit-rights li.action.red.changable {
 	background-color: #9F3F3F;
 	}
-#role-edit-rights li.gray {
+#role-edit-rights li.action.gray {
 	background-color: #AFAFAF;
 	opacity: 0.5;
 	font-size: 0.9em;

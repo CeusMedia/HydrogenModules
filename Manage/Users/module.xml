@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user and role administration.]]></description>
 	<category>Management</category>
-	<version>0.6.8</version>
+	<version>0.7</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
@@ -21,6 +21,7 @@
 	<log version="0.6.6">Improve buttons by support for UI:Font:FontAwesome.</log>
 	<log version="0.6.7">Support new password handling of user resource.</log>
 	<log version="0.6.8">Improve usability and information density of role rights editor.</log>
+	<log version="0.7">Improve role right management.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
