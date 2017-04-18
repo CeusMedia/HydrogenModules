@@ -174,6 +174,31 @@ class Logic_Upload{
 		return $this->upload->type;
 	}
 
+	public function sanitizeFileName(){
+		if( $this->upload->error === 4 )
+			throw new RuntimeException( 'No file uploaded' );
+		$filename = preg_replace(
+			'~
+			[<>:"/\\|?*]|            # file system reserved https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+			[\x00-\x1F]|             # control characters http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
+			[\x7F\xA0\xAD]|          # non-printing characters DEL, NO-BREAK SPACE, SOFT HYPHEN
+			[#\[\]@!$&\'()+,;=]|     # URI reserved https://tools.ietf.org/html/rfc3986#section-2.2
+			[{}^\~`]                 # URL unsafe characters https://www.ietf.org/rfc/rfc1738.txt
+			~x',
+			'-', $this->upload->name );
+		$filename	= str_replace( ' ', '_', $filename );											// replace whitespace by underscore
+		$filename	= ltrim( $filename, '.-' );														// avoids ".", ".." or ".hiddenFiles"
+
+		// maximise filename length to 255 bytes http://serverfault.com/a/9548/44086
+		$ext		= pathinfo( $filename, PATHINFO_EXTENSION );
+		$ext		= $ext ? '.'.$ext : '';
+		$filename	= pathinfo( $filename, PATHINFO_FILENAME );
+		$encoding	= mb_detect_encoding( $filename );
+		$filename	= mb_strcut( $filename, 0, 255 - strlen( $ext ), $encoding ).$ext;
+		return $this->upload->name = $filename;
+	}
+
+
 	/**
 	 *	Copies uploaded file to target file.
 	 *	@access		public
@@ -225,6 +250,7 @@ class Logic_Upload{
 		$this->upload	= $uploadData;
 		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;
+		$this->sanitizeFileName();
 	}
 }
 ?>
