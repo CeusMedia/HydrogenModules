@@ -1,35 +1,44 @@
-html,
-body.nav-sidebar,
+
+body #layout-container #layout-field {
+	margin-top: 45px;
+	}
+
+
 body.nav-sidebar #layout-container {
 	height: 100%;
 	}
-body.nav-sidebar #layout-nav {
-	float: left;
+body.nav-sidebar #layout-container #layout-nav {
+	position: fixed;
+	left: 0;
+	top: 0;
 	width: 240px;
 	height: 100%;
 	background-color: #F7F7F7;
 	border-right: 2px solid #DDD;
 	}
-body.nav-sidebar #layout-field {
-	margin-left: 260px;
-	margin-right: 20px;
-	}
-body.nav-sidebar .nav.nav-list {
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	height: 100%;
 	padding-top: 0.5em;
 	border-top: 1px solid rgba(127, 127, 127, 0.5);
 	margin-left: 0.5em;
 	margin-right: 0.6em;
 	}
-body.nav-sidebar .nav.nav-list .nav-list-sub-item {
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-list-sub-item {
 	padding-left: 20px;
 	}
-body.nav-sidebar .nav.nav-list .nav-header {
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-header {
 	font-size: 1em;
 	color: inherited;
 	}
-body.nav-sidebar div.brand {
-	text-align: center;
-	font-size: 2em;
-	line-height: 1.5em;
+body.nav-sidebar #layout-container #layout-nav div.brand {
+	text-align: left;
+	margin-left: 0.65em;
+	font-size: 1.5em;
+	line-height: 2.5em;
+	}
+
+body.nav-sidebar #layout-container #layout-field {
+	margin-left: 260px;
+	margin-right: 1.5em;;
+	margin-top: 1em;
 	}
