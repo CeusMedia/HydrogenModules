@@ -21,7 +21,7 @@ body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	padding-top: 0.5em;
 	border-top: 1px solid rgba(127, 127, 127, 0.5);
 	margin-left: 0.5em;
-	margin-right: 0.6em;
+	margin-right: 0.75em;
 	}
 body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-list-sub-item {
 	padding-left: 20px;
@@ -32,13 +32,21 @@ body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-header {
 	}
 body.nav-sidebar #layout-container #layout-nav div.brand {
 	text-align: left;
+	margin-top: 0.5em;
 	margin-left: 0.65em;
-	font-size: 1.5em;
-	line-height: 2.5em;
+	font-size: 1.4em;
+	line-height: 2em;
+	}
+body.nav-sidebar #layout-container #layout-nav div.brand > a,
+body.nav-sidebar #layout-container #layout-nav div.brand > a:active,
+body.nav-sidebar #layout-container #layout-nav div.brand > a:hover,
+body.nav-sidebar #layout-container #layout-nav div.brand > a:visited {
+	color: #444;
+	text-decoration: none;
 	}
 
 body.nav-sidebar #layout-container #layout-field {
 	margin-left: 260px;
-	margin-right: 1.5em;;
+	margin-right: 1.5em;
 	margin-top: 1em;
 	}
