@@ -102,6 +102,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			if( !$messenger->gotError() ){
 				$data	= array(
 					'roleId'		=> $input['roleId'],
+					'companyId'		=> (int) $input->get( 'companyId' ),
+					'roomId'		=> 0,
 					'status'		=> $input['status'],
 					'username'		=> $username,
 					'password'		=> md5( $passwordSalt.$password ),
@@ -117,13 +119,14 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 					'phone'			=> $input['phone'],
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
+					'modifiedAt'	=> time(),
 				);
 				if( strlen( $data['country'] ) > 2 ){
 					$countries			= array_flip( $this->countries );
 					$data['country']	= $countries[$data['country']];
 				}
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove whole block if old user password support decays
-					unset( $data['password'] );
+					$data['password'] = '';
 				}
 				$userId		= $modelUser->add( $data );
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays

@@ -70,33 +70,22 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span7">
 					<label for="direction">'.$words['indexFilter']['labelDirection'].'</label>
 					'.UI_HTML_Elements::Select( 'direction', $optDirection, 'span12', NULL, '' ).'
 				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
+				<div class="span5">
 					<div class="row-fluid">
-						<div class="span7">
-							<label for="limit">'.$words['indexFilter']['labelLimit'].'</label>
-						</div>
-						<div class="span5">
+						<label for="limit">'.$words['indexFilter']['labelLimit'].'</label>
 						'.UI_HTML_Elements::Input( 'limit', $limit, 'span12 numeric' ).'
-						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<div class="buttonbar">
-						'.UI_HTML_Elements::Button( 'filter', '<i class="icon-zoom-in icon-white"></i> '.$words['indexFilter']['buttonFilter'], 'btn btn-small not-btn-info btn-primary' ).'
-						'.UI_HTML_Elements::LinkButton( './manage/user/filter/reset', '<i class="icon-zoom-out"></i> '.$words['indexFilter']['buttonReset'], 'btn btn-small ' ).'
-					</div>
-				</div>
+			<div class="buttonbar">
+				'.UI_HTML_Elements::Button( 'filter', '<i class="icon-zoom-in icon-white"></i> '.$words['indexFilter']['buttonFilter'], 'btn btn-small not-btn-info btn-primary' ).'
+				'.UI_HTML_Elements::LinkButton( './manage/user/filter/reset', '<i class="icon-zoom-out icon-white"></i> '.$words['indexFilter']['buttonReset'], 'btn btn-small btn-inverse' ).'
 			</div>
 		</form>
 	</div>
-</div>
-';
+</div>';
 ?>

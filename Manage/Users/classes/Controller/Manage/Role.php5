@@ -82,6 +82,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 				if( !$this->modelRole->getByIndex( 'title', $data->get( 'title' ) ) ){
 					$data				= $data->getAll();
 					$data['createdAt']	= time();
+					$data['modifiedAt']	= time();
 					$roleId		= $this->modelRole->add( $data );
 					if( $roleId )
 						$this->restart( NULL, TRUE );

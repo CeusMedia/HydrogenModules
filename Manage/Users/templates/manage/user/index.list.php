@@ -75,10 +75,8 @@ return '
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
-			<div class="btn-toolbar">
-				'.$pagination.'
-				'.$buttonAdd.'
-			</div>
+			'.$pagination.'
+			'.$buttonAdd.'
 		</div>
 	</div>
 </div>';
