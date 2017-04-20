@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -17,6 +17,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.2.5">Add account ID for OAuth registration.</log>
 	<log version="0.2.6">Add country column.</log>
 	<log version="0.3">Improve password handling with own model and logic.</log>
+	<log version="0.3.1">Change default values of user indices.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -55,10 +56,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 DROP TABLE IF EXISTS `<%?prefix%>users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `accountId` int(11) unsigned NULL,
-  `roleId` int(11) unsigned DEFAULT NULL,
-  `companyId` int(11) unsigned NOT NULL,
-  `roomId` int(11) unsigned NOT NULL,
+  `accountId` int(11) unsigned DEFAULT '0',
+  `roleId` int(11) unsigned NOT NULL,
+  `companyId` int(11) unsigned DEFAULT '0',
+  `roomId` int(11) unsigned DEFAULT '0',
   `status` tinyint(1) NOT NULL,
   `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
@@ -149,6 +150,8 @@ CREATE TABLE "<%?prefix%>users" (
 	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
 	"accountId" INTEGER,
 	"roleId" INTEGER,
+	"companyId" INTEGER,
+	"roomId" INTEGER,
 	"status" INTEGER,
 	"username" VARCHAR,
 	"password" VARCHAR,
@@ -240,6 +243,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
   KEY `hash` (`hash`),
   KEY `failsLast` (`failsLast`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3.1"><![CDATA[
+ALTER TABLE `<%?prefix%>users`
+  CHANGE `accountId` `accountId` INT(11) UNSIGNED NULL DEFAULT '0',
+  CHANGE `roleId` `roleId` INT(11) UNSIGNED NOT NULL,
+  CHANGE `companyId` `companyId` INT(11) UNSIGNED NULL DEFAULT '0',
+  CHANGE `roomId` `roomId` INT(11) UNSIGNED NULL DEFAULT '0';
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
