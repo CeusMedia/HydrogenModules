@@ -18,13 +18,13 @@ return '
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_url">Internet-Adresse <small class="muted">(vollständige URL)</small></label>
-							<input class="span12" type="text" name="url" id="input_url" value="'.htmlentities( $bookmark->url, ENT_QUOTES, 'UTF-8' ).'">
+							<input class="span12" type="text" name="url" id="input_url" required="required" value="'.htmlentities( $bookmark->url, ENT_QUOTES, 'UTF-8' ).'">
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">Titel</label>
-							<input class="span12" type="text" name="title" id="input_title" value="'.htmlentities( $bookmark->title, ENT_QUOTES, 'UTF-8' ).'">
+							<input class="span12" type="text" name="title" id="input_title" required="required" value="'.htmlentities( $bookmark->title, ENT_QUOTES, 'UTF-8' ).'">
 						</div>
 					</div>
 					<div class="buttonbar">
