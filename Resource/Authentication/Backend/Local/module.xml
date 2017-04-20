@@ -103,6 +103,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/local/ajaxEmailExists"></link>
 	<link rank="99" access="public" path="auth/local/ajaxIsAuthenticated"></link>
 	<link rank="99" access="public" path="auth/local/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="auth/local/ajaxPasswordStrength"></link>
 	<link rank="99" access="public" path="auth/local/index"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Local::___onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Controller_Auth_Local::___onGetRelatedUsers</hook>
