@@ -38,7 +38,7 @@ class Logic_Mail{
 	}
 
 	public function abortMailsWithTooManyAttempts(){
-		$model		= new new Model_Mail( $this->env );
+		$model		= new Model_Mail( $this->env );
 		$mails		= $model->getAll( array(
 			'status'	=> Model_Mail::STATUS_RETRY,
 			'attempts'	=> '>='.$this->options->get( 'retry.attempts' ),
