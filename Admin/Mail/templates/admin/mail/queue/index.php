@@ -19,11 +19,11 @@ if( $mails ){
 	$rows	= array();
 	foreach( $mails as $mail ){
 /*		$timestamp	= $mail->enqueuedAt;
-		if( (int) $mail->status === 1 )
+		if( (int) $mail->status === Model_Mail::STATUS_SENDING )
 			$timestamp	= $mail->attemptedAt;
-		if( (int) $mail->status === 2 )
+		if( (int) $mail->status === Model_Mail::STATUS_SENT )
 			$timestamp	= $mail->sentAt;*/
-		$timestamp	= $mail->status == 2 ? $mail->sentAt : ( $mail->status == 1 ? $mail->attemptedAt : $mail->enqueuedAt );
+		$timestamp	= $mail->status == Model_Mail::STATUS_SENT ? $mail->sentAt : ( $mail->status == 1 ? $mail->attemptedAt : $mail->enqueuedAt );
 		$datetime	= date( $wl->formatDate, $timestamp );
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 			$datetime	= $helper->convert( $timestamp, TRUE, 'vor' );
@@ -57,7 +57,9 @@ if( $mails ){
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$optStatus		= array( '' => '- alle -' ) + $words['states'];
+$optStatus		= array( '' => '- alle -' );
+foreach( $words['states'] as $key => $value )
+	$optStatus[$key]	= $key.': '.$value;
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $filters->get( 'status' ) );
 
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
@@ -86,7 +88,7 @@ return $textTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_status">'.$wf->labelStatus.'</label>
-							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="6">'.$optStatus.'</select>
+							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="11">'.$optStatus.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">

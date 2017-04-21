@@ -8,7 +8,7 @@ $buttons[]	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;zurück', array(
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
 ) );
-if( $mail->status == 0 ){
+if( in_array( $mail->status, array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY ) ) ){
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
 		'class'	=> 'btn btn-danger btn-small'

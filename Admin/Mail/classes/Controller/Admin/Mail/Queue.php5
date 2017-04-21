@@ -138,11 +138,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function send(){
-		$count	= $this->logic->countQueue( array( 'status' => '<2' ) );
+		$count	= $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) );
 		if( $count ){
 			$this->env->getMessenger()->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
-			if( $this->logic->countQueue( array( 'status' => '<2' ) ) ){
-				foreach( $this->logic->getQueuedMails( array( 'status' => '<2' ) ) as $mail ){
+			if( $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) ){
+				foreach( $this->logic->getQueuedMails( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) as $mail ){
 					try{
 						$this->logic->sendQueuedMail( $mail->mailId );
 						$this->env->getMessenger()->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
@@ -168,7 +168,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$model->edit( $mailId, array(
-			'status'	=> -1
+			'status'	=> Model_Mail::STATUS_ABORTED,
 		) );
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
@@ -185,7 +185,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}*/
 		$model->edit( $mailId, array(
-			'status'	=> 0
+			'status'	=> Model_Mail::STATUS_NEW,
 		) );
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
