@@ -18,6 +18,17 @@
  */
 class Model_Mail extends CMF_Hydrogen_Model {
 
+	const STATUS_ABORTED	= -3;
+	const STATUS_FAILED		= -2;
+	const STATUS_RETRY		= -1;
+	const STATUS_NEW		= 0;
+	const STATUS_SENDING	= 1;
+	const STATUS_SENT		= 2;
+	const STATUS_RECEIVED	= 3;
+	const STATUS_OPENED		= 4;
+	const STATUS_REPLIED	= 5;
+	const STATUS_ARCHIVED	= 6;
+
 	protected $name		= 'mails';
 	protected $columns	= array(
 		"mailId",

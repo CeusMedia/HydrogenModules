@@ -37,9 +37,21 @@ class Logic_Mail{
 		}
 	}
 
+	public function abortMailsWithTooManyAttempts(){
+		$model		= new new Model_Mail( $this->env );
+		$mails		= $model->getAll( array(
+			'status'	=> Model_Mail::STATUS_RETRY,
+			'attempts'	=> '>='.$this->options->get( 'retry.attempts' ),
+		) );
+		foreach( $mails as $mail )
+			$model->edit( $mail->mailId, array( 'status' => Model_Mail::STATUS_FAILED ) );
+		return count( $mails );
+	}
+
+
 	public function appendRegisteredAttachments( Mail_Abstract $mail, $language ){
 		$class			= get_class( $mail );
-		$indices		= array( 'className' => $class, 'status' => 1, 'language' => $language );
+		$indices		= array( 'className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language );
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
 			$fileName	= $this->pathAttachments.$attachment->filename;
@@ -248,7 +260,7 @@ class Logic_Mail{
 	 */
 	public function sendQueuedMail( $mailId, $forceResent = FALSE ){
 		$mail		= $this->getQueuedMail( $mailId );
-		if( (int) $mail->status > 1 && !$forceResent )
+		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new Exception( 'Mail already has been sent' );
 		if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
 			$object		= bzdecompress( $mail->object );
@@ -262,24 +274,32 @@ class Logic_Mail{
 		$object->setEnv( $this->env );
 		$object->initTransport();
 		$this->modelQueue->edit( $mailId, array(
-			'status'		=> 1,
+			'status'		=> Model_Mail::STATUS_SENDING,
 			'attempts'		=> $mail->attempts + 1,
 			'attemptedAt'	=> time()
 		) );
-		if( !empty( $mail->receiverId ) ){
-			$object->sendToUser( $mail->receiverId );
+		try{
+			if( !empty( $mail->receiverId ) ){
+				$object->sendToUser( $mail->receiverId );
+			}
+			else{
+				$receiver	= (object) array(
+					'email'		=> $mail->receiverAddress,
+					'username'	=> $mail->receiverName,
+				);
+				$object->sendTo( $receiver );
+			}
+			$this->modelQueue->edit( $mailId, array(
+				'status'		=> Model_Mail::STATUS_SENT,
+				'sentAt'		=> time()
+			) );
 		}
-		else{
-			$receiver	= (object) array(
-				'email'		=> $mail->receiverAddress,
-				'username'	=> $mail->receiverName,
-			);
-			$object->sendTo( $receiver );
+		catch( Exception $e ){
+		remark( $e->getMessage() );
+			$this->modelQueue->edit( $mailId, array(
+				'status'		=> Model_Mail::STATUS_RETRY,
+			) );
 		}
-		$this->modelQueue->edit( $mailId, array(
-			'status'		=> 2,
-			'sentAt'		=> time()
-		) );
 	}
 
 	protected function _repairQueue(){

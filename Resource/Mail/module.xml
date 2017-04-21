@@ -14,9 +14,9 @@ list>
 - supports a queue and allows to enqueue mails for async sending via job
 - holds a register of attachment files for mails by mail class
 <list
-Modules can send mails on (user) request or use the mail queue.	
-Using the queue, provided by mail logic, will result in better web request performance. 
-To enable queued mails you need to set a cron job: 
+Modules can send mails on (user) request or use the mail queue.
+Using the queue, provided by mail logic, will result in better web request performance.
+To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
@@ -54,6 +54,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6.4">Send mails encoded in base64 by default.</log>
 	<log version="0.6.5">Tolerate lack of mail classes.</log>
 	<log version="0.6.6">Automatically include bootstrap into abstract mail if available.</log>
+	<log version="0.6.7">Support greylisting.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -85,6 +86,8 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="float" name="queue.job.sleep" title="seconds to sleep after job execution">10</config>
 	<config protected="yes" type="string" name="path.attachments" title="path to attachment files">contents/attachments/</config>
 	<config protected="yes" type="string" name="path.classes" title="path to mail classes to manage">classes/Mail/</config>
+	<config protected="yes" type="integer" name="retry.attempts" title="Maximum number of attempts before sending has failed">10</config>
+	<config protected="yes" type="integer" name="retry.delay" title="Seconds until new attempt to send">900</config>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>

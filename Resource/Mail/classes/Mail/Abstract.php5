@@ -235,15 +235,15 @@ abstract class Mail_Abstract{
 	/**
 	 *	Sends mail to an email address.
 	 *	@access		public
-	 *	@param		stdClass		$user		User model object
-	 *	@return		void
+	 *	@param		stdClass	$user		User model object
+	 *	@return		boolean		TRUE if success
 	 */
 	public function sendTo( $user ){
 		if( is_array( $user ) )
 			$user	= (object) $user;
 		if( empty( $user->email ) )
 			throw new RuntimeException( 'User object invalid: no email address' );
-		$this->sendToAddress( $user->email );
+		return $this->sendToAddress( $user->email );
 	}
 
 	/**
@@ -252,7 +252,7 @@ abstract class Mail_Abstract{
 	 *	Please use one of these methods instead: sendToUser(int $userId), sendTo(obj $user)
 	 *	@access		protected
 	 *	@param		string		$email		Target email address
-	 *	@return		void
+	 *	@return		boolean			TRUE if success
 	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email ){
@@ -260,7 +260,7 @@ abstract class Mail_Abstract{
 			$this->mail->addRecipient( $email );
 		else
 			$this->mail->setReceiver( $email );
-		$this->transport->send( $this->mail, TRUE );
+		return $this->transport->send( $this->mail, TRUE );
 	}
 
 	/**
@@ -268,7 +268,7 @@ abstract class Mail_Abstract{
 	 *	Attention: Module "Users" must be installed to use this feature.
 	 *	@access		public
 	 *	@param		integer		$userId		ID of user to send mail to
-	 *	@return		void
+	 *	@return		boolean		TRUE if success
 	 */
 	public function sendToUser( $userId ){
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
@@ -277,7 +277,7 @@ abstract class Mail_Abstract{
 		$user	= $model->get( $userId );
 		if( !$user )
 			throw new RuntimeException( 'User with ID '.$userId.' is not existing' );
-		$this->sendTo( $user );
+		return $this->sendTo( $user );
 	}
 
 	public function setEnv( CMF_Hydrogen_Environment_Abstract $env ){
