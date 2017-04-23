@@ -41,6 +41,7 @@ class Logic_Upload{
 			throw new RuntimeException( 'No upload set' );
 		if( !is_array( $allowedExtensions ) )
 			throw new InvalidArgumentException( 'Allowed extensions must be given as list' );
+		$this->upload->allowedExtensions	= $allowedExtensions;
 //		if( $this->upload->error )
 //			return FALSE;
 		$extension		= $this->getExtension( TRUE );
@@ -62,7 +63,7 @@ class Logic_Upload{
 		$extension  = $this->getExtension( TRUE );
 		$isImage    = preg_match( "/^(jpg|png)$/i", $extension );
 		if( !$isImage && $noteError )
-			$this->upload->error	= 12;
+			$this->upload->error	= 13;
 		return $isImage;
 	}
 
@@ -78,9 +79,11 @@ class Logic_Upload{
 			return FALSE;
 		if( !is_array( $allowedMimeTypes ) )
 			throw new InvalidArgumentException( 'Allowed MIME types must be given as list' );
+		$this->upload->allowedMimeTypes	= $allowedMimeTypes;
+
 		$allowed	= in_array( $this->upload->type, $allowedMimeTypes );
 		if( !$allowed && $noteError )
-			$this->upload->error	= 13;
+			$this->upload->error	= 12;
 		return $allowed;
 	}
 
@@ -95,6 +98,10 @@ class Logic_Upload{
 	public function checkSize( $maxSize, $noteError = FALSE ){
 		if( $this->upload->error )
 			return FALSE;
+		$maxSize	= Alg_UnitParser::parse( $maxSize, 'B' );
+		$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
+		$this->upload->allowedSize	= $maxSize;
+
 		if( $maxSize <= 0 )
 			throw new InvalidArgumentException( 'Invalid size' );
 //		$size	= filesize( $this->upload->tmp_name );
@@ -138,6 +145,10 @@ class Logic_Upload{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
 		return $this->upload->name;
+	}
+
+	public function getObject(){
+		return $this->upload;
 	}
 
 	/**
@@ -254,7 +265,6 @@ class Logic_Upload{
 	 *	@throws		InvalidArgumentException			if given upload data is missing error property
 	 */
 	public function setUpload( $uploadData, $maxSize = 0, $allowedExtensions = array() ){
-//		$this->env->getMessenger()->noteNotice( print_m( $uploadData, NULL, NULL, TRUE ) );
 		if( is_array( $uploadData ) )
 			$uploadData	= (object) $uploadData;
 		if( !is_object( $uploadData ) )
@@ -262,6 +272,10 @@ class Logic_Upload{
 		if( !isset( $uploadData->error ) )
 			throw new InvalidArgumentException( 'No valid upload data given' );
 		$this->upload	= $uploadData;
+		$this->upload->allowedMimeTypes		= array();
+		$this->upload->allowedExtensions	= $allowedExtensions;
+		$this->upload->allowedSize			= $maxSize;
+
 		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;
 		$this->sanitizeFileName();
