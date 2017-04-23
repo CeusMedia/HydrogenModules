@@ -3,19 +3,21 @@
 
 $urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
-$panelCover	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.</div>';
+$panelCover	= '<div class="alert alert-info">Noch kein Cover-Bild hochgeladen.</div>';
 
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
 	$class		= 'img-polaroid';
-	$uriFull	= $pathCovers.$id.'_'.$article->cover;
-	$uriThumb	= $pathCovers.$id.'__'.$article->cover;
+	$uriLarge	= $pathCovers.'l/'.$id.'_'.$article->cover;
+	$uriMedium	= $pathCovers.'m/'.$id.'_'.$article->cover;
+	$uriSmall	= $pathCovers.'s/'.$id.'_'.$article->cover;
 
-	$urlFull	= $urlBase.$id.'_'.$article->cover;
-	$urlThumb	= $urlBase.$id.'__'.$article->cover;
+	$urlLarge	= $urlBase.'l/'.$id.'_'.$article->cover;
+	$urlMedium	= $urlBase.'m/'.$id.'_'.$article->cover;
+	$urlSmall	= $urlBase.'s/'.$id.'_'.$article->cover;
 
-	$imageFull	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriFull, 'class' => $class ) );
-	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriThumb, 'class' => $class ) );
+	$imageMedium	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlMedium, 'class' => $class ) );
+	$imageSmall		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlSmall, 'class' => $class ) );
 
 	$panelCover	= '
 <div class="content-panel">
@@ -25,44 +27,48 @@ if( $article->cover ){
 			<div class="span6">
 				<div class="row-fluid">
 					<div class="span6">
-						<a href="'.$urlFull.'" target="_blank" class="fancybox-auto">'.$imageFull.'</a>
+						<a href="'.$urlLarge.'" target="_blank" class="fancybox-auto">'.$imageMedium.'</a>
 					</div>
 					<div class="span5 offset1">
-						'.$imageThumb.'
+						'.$imageSmall.'
 					</div>
 				</div>
 			</div>
 			<div class="span6">
 				<h5>Adressen</h5>
 				<ul>
-					<li><a href="'.$urlFull.'">Vollbild</a></li>
-					<li><a href="'.$urlThumb.'">Kleinbild</a></li>
+					<li><a target="_blank" href="'.$urlLarge.'">Vollbild</a></li>
+					<li><a target="_blank" href="'.$urlMedium.'">Normalbild</a></li>
+					<li><a target="_blank" href="'.$urlSmall.'">Kleinbild</a></li>
 				</ul>
 <!--				<div class="row-fluid">
 					<br/>
 					<label for="input_url_image_thumb">URL des Vollbildes</label>
-					<input class="span12" type="text" readonly="readonly" id="input_url_image_full" value="'.$urlFull.'"/><br/>
+					<input class="span12" type="text" readonly="readonly" id="input_url_image_medium" value="'.$urlMedium.'"/><br/>
 					<label for="input_url_image_thumb">URL des Kleinbildes</label>
-					<input class="span12" type="text" readonly="readonly" id="input_url_image_thumb" value="'.$urlThumb.'"/>
+					<input class="span12" type="text" readonly="readonly" id="input_url_image_small" value="'.$urlSmall.'"/>
 				</div>-->
 			</div>
+		</div>
+		<div class="buttonbar">
+			<a href="./manage/catalog/bookstore/article/removeCover/'.$article->articleId.'" class="btn btn-small btn-inverse"><i class="icon-remove icon-white"></i>&nbsp;entfernen</a>
 		</div>
 	</div>
 </div>';
 }
 
-$documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+$imageMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.image.size' ), "M" );
+$imageMaxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $imageMaxSize ) );
+$imageMaxSize	= Alg_UnitFormater::formatBytes( $imageMaxSize );
 
 $list				= array();
-$documentExtensions	= $moduleConfig->get( 'article.image.extensions' );
-foreach( explode( ",", $documentExtensions ) as $nr => $type )
+$imageExtensions	= $moduleConfig->get( 'article.image.extensions' );
+foreach( explode( ",", $imageExtensions ) as $nr => $type )
 	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
 		$list[$nr]	= strtoupper( trim( $type ) );
-$documentExtensions	= join( ", ", $list );
+$imageExtensions	= join( ", ", $list );
 
-$minSize		= $moduleConfig->get( 'article.image.maxHeight' );
+$minSize		= $moduleConfig->get( 'article.image.medium.height' );
 
 $panelUpload	= '
 <div class="content-panel">
@@ -70,9 +76,9 @@ $panelUpload	= '
 	<div class="content-panel-inner form-changes-auto">
 		<div class="alert">
 			<b>Dateitypen: </b>
-			<span>'.$documentExtensions.'</span><br/>
+			<span>'.$imageExtensions.'</span><br/>
 			<b>Dateigröße: </b>
-			<span>max. '.$documentMaxSize.'</span><br/>
+			<span>max. '.$imageMaxSize.'</span><br/>
 			<b>Bildgröße: </b>
 			<span>min. '.$minSize.' Pixel hoch/breit</span>
 		</div>

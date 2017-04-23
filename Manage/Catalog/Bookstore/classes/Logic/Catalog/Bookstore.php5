@@ -95,46 +95,6 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleCover( $articleId, $file ){
-		if( !is_array( $file ) )
-			throw new InvalidArgumentException( 'File must be an upload array' );
-		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
-			throw new InvalidArgumentException( 'File must be a valid upload array' );
-		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
-		$file		= (object) $file;
-		$info		= (object) pathinfo( $file->name );
-		$imagename	= $info->basename;
-		$extension	= $info->extension;
-
-		/*  --  STORE UPLOADED IMAGE  --  */
-		$imagename	= md5( base64_encode( $file->name ) );
-		$imagename	.= ".".$extension;
-		$uriSource	= $this->pathArticleCovers.$id."_".$imagename;
-		if( !move_uploaded_file( $file->tmp_name, $uriSource ) )
-			throw new RuntimeException( 'Storing uploaded file failed' );
-
-		/*  --  SCALE MAIN IMAGE  --  */
-		$imageWidth		= $this->moduleConfig->get( 'article.image.maxWidth' );
-		$imageHeight	= $this->moduleConfig->get( 'article.image.maxHeight' );
-		$imageQuality	= $this->moduleConfig->get( 'article.image.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
-
-		/*  --  CREATE THUMBNAIL IMAGE  --  */
-		$uriThumb		= $this->pathArticleCovers.$id."__".$imagename;
-		$thumbWidth		= $this->moduleConfig->get( 'article.image.thumb.maxWidth' );
-		$thumbHeight	= $this->moduleConfig->get( 'article.image.thumb.maxHeight' );
-		$thumbQuality	= $this->moduleConfig->get( 'article.image.thumb.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriThumb );
-		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
-
-		$this->editArticle( $articleId, array( 'cover' => $imagename ) );
-		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
-	}
-
-	/**
-	 *	@todo		kriss: code doc
-	 */
 	public function addArticleDocument( $articleId, $file, $title ){
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
@@ -692,8 +652,9 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$article	= $this->getArticle( $articleId );
 		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
 		if( $article->cover ){
-			@unlink( $this->pathArticleCovers.$id."__".$article->cover );
-			@unlink( $this->pathArticleCovers.$id."_".$article->cover );
+			@unlink( $this->pathArticleCovers.'l/'.$id."_".$article->cover );
+			@unlink( $this->pathArticleCovers.'m/'.$id."_".$article->cover );
+			@unlink( $this->pathArticleCovers.'s/'.$id."_".$article->cover );
 			$this->clearCacheForArticle( $articleId );
 			$this->editArticle( $articleId, array( 'cover' => NULL ) );
 		}
@@ -826,6 +787,61 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 			$this->clearCacheForArticle( $articleId );
 			$this->clearCacheForAuthor( $authorId );
 		}
+	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
+	public function setArticleCover( $articleId, $fileName ){
+		if( !file_exists( $fileName ) )
+			throw new RuntimeException( 'File is not existing' );
+		if( !is_readable( $fileName ) )
+			throw new RuntimeException( 'File is not readable' );
+
+		$image		= new UI_Image( $fileName );
+		$processor	= new UI_Image_Processing( $image );
+		$options	= $this->moduleConfig->getAll( 'article.image.', TRUE );
+
+		$info		= (object) pathinfo( $fileName );
+		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
+
+		$targetFileName	= $info->filename.".".$info->extension;
+		$width			= $image->getWidth();
+		$height			= $image->getHeight();
+
+		//  --  DETECT LARGE IMAGE  --  //
+		if( $width > $options->get( 'medium.width' ) || $height > $options->get( 'medium.height' ) ){
+			$fileLarge	= $this->pathArticleCovers.'l/'.$id.'_'.$targetFileName;
+			if( $width > $options->get( 'large.width' ) || $height > $options->get( 'large.height' ) ){
+				$processor->scaleDownToLimit(
+					$options->get( 'large.width' ),
+					$options->get( 'large.height' ),
+					$options->get( 'large.quality' )
+				);
+			}
+			$image->save( $fileLarge );
+		}
+
+		//  --  CREATE MEDIUM IMAGE  --  //
+		$fileMedium	= $this->pathArticleCovers.'m/'.$id.'_'.$targetFileName;
+		$processor->scaleDownToLimit(
+			$options->get( 'medium.width' ),
+			$options->get( 'medium.height' ),
+			$options->get( 'medium.quality' )
+		);
+		$image->save( $fileMedium );
+
+		//  --  CREATE SMALL IMAGE  --  //
+		$fileSmall	= $this->pathArticleCovers.'s/'.$id.'_'.$targetFileName;
+		$processor->scaleDownToLimit(
+			$options->get( 'small.width' ),
+			$options->get( 'small.height' ),
+			$options->get( 'small.quality' )
+		);
+		$image->save( $fileSmall );
+
+		$this->editArticle( $articleId, array( 'cover' => $targetFileName ) );
+		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
 	}
 }
 ?>

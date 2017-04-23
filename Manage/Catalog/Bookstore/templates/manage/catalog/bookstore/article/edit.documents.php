@@ -42,9 +42,9 @@ if( $articleDocuments ){
 <hr/>';
 }
 
-$documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+$documentMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.document.size' ), "M" );
+$documentMaxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $documentMaxSize ) );
+$documentMaxSize	= Alg_UnitFormater::formatBytes( $documentMaxSize );
 
 $list				= array();
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );

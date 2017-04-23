@@ -372,6 +372,11 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
+	public function removeCover( $articleId ){
+		$this->logic->removeArticleCover( $articleId );
+		$this->restart( 'edit/'.$articleId, TRUE );
+	}
+
 	public function removeDocument( $articleId, $articleDocumentId ){
 		$this->logic->removeArticleDocument( $articleDocumentId );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
@@ -391,30 +396,33 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$file		= $this->request->get( 'image' );
 		$words		= (object) $this->getWords( 'upload' );
 		if( isset( $file['name'] ) && !empty( $file['name'] ) ){
-			if( $file['error']	!= 0 ){
-				$handler	= new Net_HTTP_UploadErrorHandler();
-				$handler->setMessages( $this->getWords( 'uploadErrors' ) );
-				$this->messenger->noteError( $file['error'].': '.$handler->getErrorMessage( $file['error'] ) );
-			}
-			else{
-				/*  --  CHECK NEW IMAGE  --  */
-				$info		= pathinfo( $file['name'] );
-				$extension	= $info['extension'];
-				$extensions	= array( 'jpe', 'jpeg', 'jpg', 'png', 'gif' );
-				if( !in_array( strtolower( $extension ), $extensions ) )
-					$this->messenger->noteError( $words->msgErrorExtensionInvalid );
+			$path		= $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' );
+			$extensions	= $this->moduleConfig->get( 'article.image.extensions' );
+			$logic		= new Logic_Upload( $this->env );
+			try{
+				$logic->setUpload( $file );
+				$logic->checkExtension( preg_split( '/\s*,\s*/', $extensions ), TRUE );
+				$logic->checkIsImage( TRUE );
+				$logic->checkSize( $this->moduleConfig->get( 'article.image.size' )."M", TRUE );
+				$logic->sanitizeFileName();
+				if( $logic->getError() ){
+					$helper	= new View_Helper_UploadError( $this->env );
+					$helper->setUpload( $logic );
+					$this->messenger->noteError( $helper->render() );
+				}
 				else{
-					try{
-						$this->logic->removeArticleCover( $articleId );
-						$this->logic->addArticleCover( $articleId, $file );					//  set newer image
-					}
-					catch( Exception $e ){
-						$this->messenger->noteFailure( $words->msgErrorUpload );
-					}
+					$targetFile		= $path.'/'.$logic->getFileName();
+					$logic->saveTo( $targetFile );
+					$this->logic->removeArticleCover( $articleId );									//  remove previously set cover
+					$this->logic->setArticleCover( $articleId, $targetFile );						//  set newer image
 				}
 			}
+			catch( Exception $e ){
+				$this->messenger->noteFailure( 'Upload Error: '.$e->getMessage() );
+			}
+			@unlink( $targetFile );																	//  remove original
 		}
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+		$this->restart( 'edit/'.$articleId, TRUE );
 	}
 }
 ?>
