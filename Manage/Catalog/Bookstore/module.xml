@@ -98,9 +98,9 @@
 		<style load="auto">module.manage.catalog.bookstore.css</style>
 	</files>
 	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc</config>
-	<config type="string" protected="yes" mandatory="yes" name="article.document.size" title="Maximum document file site in MB." value="1,2,4,8,16,32">4</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.size" title="Maximum document file size in MB." value="1,2,4,8,16,32">4</config>
 	<config type="string" protected="yes" mandatory="yes" name="article.image.extensions">gif,jpe,jpeg,jpg,png</config>
-	<config type="string" protected="yes" mandatory="yes" name="article.image.size" title="Maximum document file site in MB." value="1,2,4,8,16,32">4</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.image.size" title="Maximum image file size in MB." value="1,2,4,8,16,32">4</config>
 	<config type="integer" protected="yes" mandatory="yes" name="article.image.large.height">1024</config>
 	<config type="integer" protected="yes" mandatory="yes" name="article.image.large.width">768</config>
 	<config type="integer" protected="yes" mandatory="yes" name="article.image.large.quality">90</config>
