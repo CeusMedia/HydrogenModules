@@ -42,11 +42,11 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
 		foreach( $myProjects as $relation )
 			$projectIds[]   = $relation->projectId;
-		$logic		= new Logic_Project( $env );
-		$users		= $logic->getProjectsUsers( array_unique( $projectIds ) );
-		unset( $users[$data->userId] );
-		$words	= $env->getLanguage()->getWords( 'manage/project' );
-		$data->list[]	= (object) array(
+		$logic				= new Logic_Project( $env );
+		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), array( 'status' => '>0' ) );
+//		unset( $users[$data->userId] );
+		$words				= $env->getLanguage()->getWords( 'manage/project' );
+		$data->list[]		= (object) array(
 			'module'		=> 'Manage_Projects',
 			'label'			=> $words['hook-getRelatedUsers']['label'],
 			'count'			=> count( $users ),
