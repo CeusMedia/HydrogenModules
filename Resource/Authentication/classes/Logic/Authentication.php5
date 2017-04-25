@@ -49,7 +49,7 @@ class Logic_Authentication{
 	/**
 	 *	Returns all users connected to a user by its ID.
 	 *	Related users will be collected by calling hook Resource:Users::getRelatedUsers.
-	 *	All listing modules will report a list of users related to given user it their ways.
+	 *	All listing modules will report a list of users related to given user in their ways.
 	 *
 	 *	This method will return a plain map of user IDs and theirs users, by default.
 	 *	For advanced uses, a list of reporting modules and their collected user relations can be returned instead.
