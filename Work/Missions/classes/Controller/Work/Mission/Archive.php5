@@ -33,8 +33,6 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 	}
 
 	public function ajaxRenderIndex(){
-		$userId		= $this->session->get( 'userId' );
-
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 20;
 		$limitMax	= 100;
@@ -44,7 +42,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 		$page		= abs( $page );
 
 		//  get all filtered user missions and count them
-		$missions	= $this->getFilteredMissions( $userId );
+		$missions	= $this->getFilteredMissions( $this->userId );
 		$total		= count( $missions );
 
 		//  correct page if invalid and cut missions to limit and offset
@@ -66,6 +64,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 	public function index( $missionId = NULL ){
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
+		$this->initFilters( $this->userId );
 		$this->assignFilters();
 	}
 

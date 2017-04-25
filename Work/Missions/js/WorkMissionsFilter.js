@@ -63,10 +63,11 @@ var WorkMissionsFilter = {
 		$("#button_filter_reset").bind("click", function(){
 			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
 		});
-		this.initFilter("projects");
-		this.initFilter("states");
-		this.initFilter("priorities");
-		this.initFilter("types");
+		this.initFilter("projects", "filter-work-missions-projects-list", "modal-work-mission-filter-projects-trigger");
+		this.initFilter("states", "states");
+		this.initFilter("priorities", "priorities");
+		this.initFilter("types", "types");
+		this.initFilter("workers", "workers");
 		this.initFilterOptionIconsHover();
 		this.updateFilterReset(true);
 	},
@@ -91,15 +92,49 @@ var WorkMissionsFilter = {
 		return true;
 	},
 
-	initFilter: function(filterName){
-		var container	= $("#"+filterName);
-		var inputs		= container.find("ul li input");
-		var button		= container.find("button");
+	initFilter: function(filterName, listId, buttonId){
+		var container	= $("#"+listId);
+		var checkboxes	= container.find("input[type=checkbox]");
+		var button		= container.find("button.dropdown-toggle");
+		if(buttonId)
+			button		= $("#"+buttonId);
 		container.find("ul").bind("click", function(event){							//  bind click event on dropdown list
 			event.stopPropagation();												//  to stop propagation to avoid close event of bootstrap
 		});
-		inputs.bind("change", function(event){										//  bind change event on every checkbox
+		container.find(".trigger-select-this").bind("click", function(event){						//  bind click event on ...
 			WorkMissionsList.blendOut(100);
+			var id = $(this).data("id");
+			checkboxes.each(function(nr){
+				$(this).prop("checked", $(this).val() == id ? "checked" : null);
+			});
+			WorkMissionsFilter.updateButtonClass(button, checkboxes);
+			$.ajax({																//  store action using AJAX
+				url: "./work/mission/setFilter/"+filterName+"/"+id+"/1/1",			//  URL to reset all any only set this value
+				dataType: "json",
+				success: function(json){											//  on response
+					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				}
+			});
+			return false;
+		});
+		container.find(".trigger-select-all").bind("click", function(event){						//  bind click event on ...
+			WorkMissionsList.blendOut(100);
+			checkboxes.each(function(nr){
+				$(this).prop("checked", "checked");
+			});
+			WorkMissionsFilter.updateButtonClass(button, checkboxes);
+			$.ajax({																//  store action using AJAX
+				url: "./work/mission/setFilter/"+filterName,						//  URL to reset changed filter to force all
+				dataType: "json",
+				success: function(json){											//  on response
+					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				}
+			});
+			return false;
+		});
+		checkboxes.bind("change.clicked", function(event){							//  bind change event on every checkbox
+			WorkMissionsList.blendOut(100);
+			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			//  store changed filter
 			var value = event.target.checked ? 1 : 0;								//  get check status as integer
 			var id = event.target.value;											//  get ID of filter to set
@@ -107,34 +142,10 @@ var WorkMissionsFilter = {
 				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
 				dataType: "json",
 				success: function(json){											//  on response
-//					WorkMissionsList.loadCurrentListAndDayControls();			//  reload day lists and controls
-					WorkMissionsList.renderDayListDayControls(json);			//  render day lists and controls
+//					WorkMissionsList.loadCurrentListAndDayControls();				//  reload day lists and controls
+					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
 				}
 			});
-
-			//  count checked and unchecked checkboxes
-			var i, value;
-			var countChecked = 0;
-			var countUnchecked = 0;
-			for(i=0; i<inputs.size(); i++){											//  iterate checkboxes
-				value = inputs.eq(i).prop("checked") ? 1 : 0;						//  get check state
-				countChecked += value;												//  count if checked
-				countUnchecked -= value - 1;										//  count if unchecked
-			}
-
-			//  check all checkboxes if none is checked anymore, since the backend will automatically enable all, too
-			if(!countChecked){														//  no checkbox is checked
-				inputs.prop("checked", "checked");									//  check all checkboxes
-				countUnchecked = 0;													//  reset number of unchecked checkboxes
-				countChecked = inputs.size();										//  reset number if checked checkboxes
-			}
-
-			//  mark filter button if filters have changed
-			if(countUnchecked)														//  atleast one checkbox is unchecked
-				button.addClass("btn-info")											//  mark filter as changed
-			else																	//  no checkbox is unchecked
-				button.removeClass("btn-info");										//  mark filter as unchanged
-			WorkMissionsFilter.updateFilterReset(true);
 		});
 	},
 
@@ -155,12 +166,40 @@ var WorkMissionsFilter = {
 		);
 	},
 
+	updateButtonClass: function(button, checkboxes){
+		console.log(button);
+		console.log(checkboxes);
+		//  count checked and unchecked checkboxes
+		var i, value;
+		var countChecked = 0;
+		var countUnchecked = 0;
+		for(i=0; i<checkboxes.size(); i++){											//  iterate checkboxes
+			value = checkboxes.eq(i).prop("checked") ? 1 : 0;						//  get check state
+			countChecked += value;													//  count if checked
+			countUnchecked -= value - 1;											//  count if unchecked
+		}
+
+		//  check all checkboxes if none is checked anymore, since the backend will automatically enable all, too
+		if(!countChecked){															//  no checkbox is checked
+			checkboxes.prop("checked", "checked");									//  check all checkboxes
+			countUnchecked = 0;														//  reset number of unchecked checkboxes
+			countChecked = checkboxes.size();										//  reset number if checked checkboxes
+		}
+
+		//  mark filter button if filters have changed
+		if(countUnchecked)															//  atleast one checkbox is unchecked
+			button.addClass("btn-info")												//  mark filter as changed
+		else																		//  no checkbox is unchecked
+			button.removeClass("btn-info");											//  mark filter as unchanged
+		WorkMissionsFilter.updateFilterReset(true);
+	},
+
 	updateFilterReset: function(colored){
 		var btn = $("#work-mission-buttons #button_filter_reset");					//  get reset button
 		btn.prop("disabled", "disabled");											//  disable it by default
 		if(colored)																	//  button uses colors
 			btn.removeClass('btn-inverse').children("i").removeClass("icon-white");	//  remove color and icon paint
-		if($("#work-mission-buttons #toolbar-filters button.btn-info").size()){		//  at least one filter is set
+		if($("#work-mission-buttons #toolbar-filters .btn-info").size()){		//  at least one filter is set
 			btn.prop("disabled", null);												//  enabled button
 			if(colored)																//  button uses colors
 				btn.addClass('btn-inverse').children("i").addClass("icon-white");	//  set button color and icon paint

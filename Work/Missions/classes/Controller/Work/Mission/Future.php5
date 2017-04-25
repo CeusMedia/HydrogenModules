@@ -71,6 +71,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 	public function index( $missionId = NULL ){
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
+		$this->initFilters( $this->userId );
 		$this->assignFilters();
 	}
 }

@@ -54,7 +54,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		'types'			=> array(
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-	),
+		),
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
 	);
@@ -85,7 +85,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //			$this->restart( NULL, FALSE, 401 );
 
 		$this->logicProject	= new Logic_Project( $this->env );
-		$this->userMap		= $this->logicProject->getCoworkers( $this->userId );
+		$this->userMap		= $this->logicProject->getCoworkers( $this->userId, NULL, TRUE );
 
 		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)
 //		$model			= new Model_User( $this->env );
@@ -569,7 +569,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterDirection', $direction );
 		$this->addData( 'filterMode', $this->session->get( 'filter.work.mission.mode' ) );
 		$this->addData( 'filterQuery', $this->session->get( $this->filterKeyPrefix.'query' ) );
+		$this->addData( 'filterWorkers', $this->session->get( $this->filterKeyPrefix.'workers' ) );
 		$this->addData( 'defaultFilterValues', $this->defaultFilterValues );
+//		$this->addData( 'coworkers', $this->userMap )
 		$this->addData( 'wordsFilter', $this->env->getLanguage()->getWords( 'work/mission' ) );
 	}
 
@@ -876,6 +878,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->session->remove( $sessionPrefix.'order' );
 			$this->session->remove( $sessionPrefix.'direction' );
 			$this->session->remove( $sessionPrefix.'day' );
+			$this->session->remove( $sessionPrefix.'workers' );
 		}
 		if( $this->request->has( 'access' ) )
 			$this->session->set( $sessionPrefix.'access', $this->request->get( 'access' ) );
@@ -889,6 +892,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->session->set( $sessionPrefix.'states', $this->request->get( 'states' ) );
 		if( $this->request->has( 'projects' ) )
 			$this->session->set( $sessionPrefix.'projects', $this->request->get( 'projects' ) );
+		if( $this->request->has( 'workers' ) )
+			$this->session->set( $sessionPrefix.'workers', $this->request->get( 'workers' ) );
 		if( $this->request->has( 'order' ) )
 			$this->session->set( $sessionPrefix.'order', $this->request->get( 'order' ) );
 		if( $this->request->has( 'direction' ) )
@@ -912,6 +917,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$priorities	= $this->session->get( $this->filterKeyPrefix.'priorities' );
 		$states		= $this->session->get( $this->filterKeyPrefix.'states' );
 		$projects	= $this->session->get( $this->filterKeyPrefix.'projects' );
+		$workers	= $this->session->get( $this->filterKeyPrefix.'workers' );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
 		$order		= $this->session->get( $this->filterKeyPrefix.'order' );
 		$orders		= array(					//  collect order pairs
@@ -933,6 +939,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
 			$conditions['projectId']	= $projects;												//  apply project conditions
+		if( is_array( $workers ) && count( $workers ) )												//  if filtered by workers
+			$conditions['workerId']		= $workers;													//  apply project workers
 		foreach( $additionalConditions as $key => $value )
 			$conditions[$key]			= $value;
 		$limits	= array();
@@ -1041,6 +1049,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 		if( !$this->session->get( $this->filterKeyPrefix.'projects' ) )
 			$this->session->set( $this->filterKeyPrefix.'projects', array_keys( $this->userProjects ) );
+		if( !$this->session->get( $this->filterKeyPrefix.'workers' ) )
+			$this->session->set( $this->filterKeyPrefix.'workers', array_keys( $this->userMap ) );
 		if( $this->session->get( $this->filterKeyPrefix.'order' ) === NULL ){
 			if( $this->session->get( $this->filterKeyPrefix.'direction' ) === NULL ){
 //				$tense		= $this->session->get( $this->filterKeyPrefix.'tense' );
@@ -1119,18 +1129,27 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$model->add( $data + $indices );
 	}
 
-	public function setFilter( $name, $value = NULL, $set = FALSE ){
+	public function setFilter( $name, $value = NULL, $set = FALSE, $onlyThisOne = FALSE ){
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
-		$values			= $this->session->get( $sessionPrefix.$name );
-		if( is_array( $values ) ){
-			if( $set )
-				$values[]	= $value;
-			else if( ( $pos = array_search( $value, $values ) ) >= 0 )
-				unset( $values[$pos] );
+		$storedValues	= $this->session->get( $sessionPrefix.$name );
+		$newValues		= $value;
+		if( is_array( $storedValues ) ){
+			$newValues	= $storedValues;
+			if( is_null( $value ) )																	//  no value given at all
+				$newValues	= array();																//  resest values, will be set to all by controller
+			else if( $onlyThisOne )																	//  otherwise: only set this value
+				$newValues	= array( $value );														//  replace all by just this value
+			else{																					//  otherwise: specific mode
+				if( $set )																			//  new value to be set
+					$newValues[]	= $value;														//  append new value
+				else{																				//  stored value to be removed
+					$pos = array_search( $value, $newValues );										//  find value position in stored values list
+					if( $pos >= 0 )																	//  value is within stored values
+						unset( $newValues[$pos] );													//  remove value
+				}
+			}
 		}
-		else
-			$values	= $value;
-		$this->session->set( $sessionPrefix.$name, $values );
+		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
 		if( $this->env->getRequest()->isAjax() ){
 			$this->redirect( 'work/mission/ajaxRenderIndex' );

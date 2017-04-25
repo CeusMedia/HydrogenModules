@@ -4,6 +4,13 @@ $phraser    = new View_Helper_TimePhraser( $env );
 
 $canEditProject	= $acl->hasRight( $userRoleId, 'manage_project', 'edit' );
 
+/*
+print_m( $mission );
+print_m( $mission->creator );
+print_m( $mission->worker );
+die;
+*/
+
 function renderUserLabel( $user ){
 	if( !$user )
 		return "-";
