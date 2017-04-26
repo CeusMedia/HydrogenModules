@@ -2,52 +2,6 @@ var WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
 	form: null,
 	__init: function(mode){
-/*		this.form = $("#form_mission_filter");
-		if(!this.form.size())
-			return false;
-
-		this.form.find(".optional-trigger").trigger("change");
-		this.form.find("#filter_query").bind("change",function(){
-			this.form.submit();
-		});
-		if(this.form.find("#filter_query").val().length)
-			this.form.find("#reset-button-container").show();
-		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
-		return true;
-*/
-
-		/*  --  MODES  --  */
-/*		var i, button;
-		var mode = mode;
-		$(['archive','now','future']).each(function(nr, entry){
-			button = $("#work-mission-view-mode-"+entry);
-			button.removeAttr("disabled").removeClass("disabled");
-			if(entry === mode)
-				button.addClass("active").css("cursor", "default");
-			else
-				button.bind("click", {mode: entry}, function(event){
-					document.location.href = "./work/mission/"+event.data.mode;
-			});
-		});*/
-
-/*		button0 = $("#work-mission-view-type-0");
-		button1 = $("#work-mission-view-type-1");
-		button0.removeAttr("disabled").removeClass("disabled");
-		button1.removeAttr("disabled").removeClass("disabled");
-		if(mode === 'calendar'){
-			button0.addClass("active").css("cursor", "default");
-			button1.bind("click", function(){
-				document.location.href = "./work/mission/now";
-			});
-		}
-		else{
-			button1.addClass("active").css("cursor", "default");
-			button0.removeAttr("disabled").removeClass("disabled");
-			button0.bind("click", function(){
-				document.location.href = "./work/mission/calendar";
-			});
-		}*/
-
 		$("#filter_query").bind("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");
@@ -67,7 +21,7 @@ var WorkMissionsFilter = {
 		this.initFilter("states", "states");
 		this.initFilter("priorities", "priorities");
 		this.initFilter("types", "types");
-		this.initFilter("workers", "workers");
+		this.initFilter("workers", "filter-work-missions-workers-list", "modal-work-mission-filter-workers-trigger");
 		this.initFilterOptionIconsHover();
 		this.updateFilterReset(true);
 	},
@@ -102,7 +56,7 @@ var WorkMissionsFilter = {
 			event.stopPropagation();												//  to stop propagation to avoid close event of bootstrap
 		});
 		container.find(".trigger-select-this").bind("click", function(event){						//  bind click event on ...
-			WorkMissionsList.blendOut(100);
+			WorkMissionsList.blendOut(250);
 			var id = $(this).data("id");
 			checkboxes.each(function(nr){
 				$(this).prop("checked", $(this).val() == id ? "checked" : null);
@@ -113,12 +67,15 @@ var WorkMissionsFilter = {
 				dataType: "json",
 				success: function(json){											//  on response
 					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				},
+				error: function(a,b){
+					console.log(b);
 				}
 			});
 			return false;
 		});
 		container.find(".trigger-select-all").bind("click", function(event){						//  bind click event on ...
-			WorkMissionsList.blendOut(100);
+			WorkMissionsList.blendOut(250);
 			checkboxes.each(function(nr){
 				$(this).prop("checked", "checked");
 			});
@@ -128,12 +85,15 @@ var WorkMissionsFilter = {
 				dataType: "json",
 				success: function(json){											//  on response
 					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				},
+				error: function(a,b){
+					console.log(b);
 				}
 			});
 			return false;
 		});
 		checkboxes.bind("change.clicked", function(event){							//  bind change event on every checkbox
-			WorkMissionsList.blendOut(100);
+			WorkMissionsList.blendOut(250);
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			//  store changed filter
 			var value = event.target.checked ? 1 : 0;								//  get check status as integer
@@ -142,8 +102,10 @@ var WorkMissionsFilter = {
 				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
 				dataType: "json",
 				success: function(json){											//  on response
-//					WorkMissionsList.loadCurrentListAndDayControls();				//  reload day lists and controls
 					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				},
+				error: function(a,b){
+					console.log(b);
 				}
 			});
 		});
@@ -167,8 +129,6 @@ var WorkMissionsFilter = {
 	},
 
 	updateButtonClass: function(button, checkboxes){
-		console.log(button);
-		console.log(checkboxes);
 		//  count checked and unchecked checkboxes
 		var i, value;
 		var countChecked = 0;

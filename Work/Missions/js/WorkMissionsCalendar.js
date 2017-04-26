@@ -8,6 +8,11 @@ var WorkMissionsCalendar = {
 	pathIcons: "http://img.int1a.net/famfamfam/silk/",
 	userId: 0,
 
+/*	blendOut: function(duration){
+		var duration = typeof duration == "undefined" ? 500 : duration;
+		$("#mission-calendar").stop(true).animate({opacity: 0.5}, duration);
+	},*/
+
 	checkForUpdate: function(){
 		$.ajax({
 			url: "./work/mission/checkForUpdate/"+WorkMissionsCalendar.userId,
@@ -33,8 +38,8 @@ var WorkMissionsCalendar = {
 	},
 
 	initContextMenu: function(){
-		cmContextMenu.init("#mission-calendar tbody ul li");
 		cmContextMenu.containment = "#mission-calendar";
+		cmContextMenu.init("#mission-calendar tbody ul li");
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
 			var urlAdd = "./work/mission/add/?dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");

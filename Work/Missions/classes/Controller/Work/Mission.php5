@@ -912,37 +912,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	protected function getFilteredMissions( $userId, $additionalConditions = array(), $limit = 0, $offset = 0 ){
-		$query		= $this->session->get( $this->filterKeyPrefix.'query' );
-		$types		= $this->session->get( $this->filterKeyPrefix.'types' );
-		$priorities	= $this->session->get( $this->filterKeyPrefix.'priorities' );
-		$states		= $this->session->get( $this->filterKeyPrefix.'states' );
-		$projects	= $this->session->get( $this->filterKeyPrefix.'projects' );
-		$workers	= $this->session->get( $this->filterKeyPrefix.'workers' );
+		$conditions	= $this->logic->getFilterConditions( $this->filterKeyPrefix, $additionalConditions );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
 		$order		= $this->session->get( $this->filterKeyPrefix.'order' );
 		$orders		= array(					//  collect order pairs
 			$order		=> $direction,			//  selected or default order and direction
-//			'dayStart'	=> 'ASC',
 			'timeStart'	=> 'ASC',				//  order events by start time
 		);
 		if( $order != "title" )					//  if not ordered by title
 			$orders['title']	= 'ASC';		//  order by title at last
-
-		$conditions	= array();
-		if( is_array( $types ) && count( $types ) )
-			$conditions['type']	= $types;
-		if( is_array( $priorities ) && count( $priorities ) )
-			$conditions['priority']	= $priorities;
-		if( is_array( $states ) && count( $states ) )
-			$conditions['status']	= $states;
-		if( strlen( $query ) )
-			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
-		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
-			$conditions['projectId']	= $projects;												//  apply project conditions
-		if( is_array( $workers ) && count( $workers ) )												//  if filtered by workers
-			$conditions['workerId']		= $workers;													//  apply project workers
-		foreach( $additionalConditions as $key => $value )
-			$conditions[$key]			= $value;
 		$limits	= array();
 		if( $limit !== NULL && (int) $limit >= 10 ){
 			$limits	= array( abs( $offset ), $limit );
@@ -1279,10 +1257,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			}
 		}
 
-		if( $mission->status < 0 || $mission->status > 3 )
-			$this->session->set( 'filter.work.mission.mode', 'archive' );
-		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' )
+/*		$mode	= $this->session->get( 'filter.work.mission.mode' );
+		if( $mission->status < 0 || $mission->status > 3 ){
+			if( in_array( $mode, array( 'now', 'future' ) ) )
+				$this->session->set( 'filter.work.mission.mode', 'archive' );
+		}
+		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' ){
 			$this->session->set( 'filter.work.mission.mode', 'now' );
+		}*/
 
 		$title		= $this->request->get( 'title' );
 		$dayStart	= $this->request->get( 'dayStart' );

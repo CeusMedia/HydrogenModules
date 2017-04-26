@@ -3,7 +3,7 @@ var WorkMissionsList = {
 	sortDir: 'ASC',
 	blendOut: function(duration){
 		var duration = typeof duration == "undefined" ? 500 : duration;
-		$("#day-lists div.table-day").stop(true).animate({opacity: 0.5}, duration);
+		$("#day-list-large>*, #day-list-small>*").stop(true).animate({opacity: 0.33}, duration);
 
 	},
 	init: function(){
@@ -17,7 +17,7 @@ var WorkMissionsList = {
 	},
 	loadCurrentListAndDayControls: function(onSuccess){
 		var onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
-		WorkMissionsList.blendOut(100);
+		WorkMissionsList.blendOut(250);
 		$("#day-lists-empty").hide();
 		$.ajax({
 			url: "./work/mission/ajaxRenderIndex",
@@ -28,10 +28,8 @@ var WorkMissionsList = {
 				WorkMissions.showTotalDayMissionCount();
 				onSuccess();
 			},
-			error: function(a, b, c){
-				console.log(a);
-				console.log(b);
-				console.log(c);
+			error: function(xhr, error){
+				console.log(error);
 			}
 		});
 	},
@@ -59,8 +57,8 @@ var WorkMissionsList = {
 		});
 	},
 	renderDayListDayControls: function(data){
-		$("#day-list-large").html(data.lists.large).stop(true);
-		$("#day-list-small").html(data.lists.small).stop(true);
+		$("#day-list-large").html(""+data.lists.large).stop(true);
+		$("#day-list-small").html(""+data.lists.small).stop(true);
 		data.count ? $("#day-lists-empty").hide() : $("#day-lists-empty").show();
 		data.total ? $("#mission-folders").show() : $("#mission-folders").hide();
 		WorkMissionsList.makeTableSortable($("#layout-content table"),{

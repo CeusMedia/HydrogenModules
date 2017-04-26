@@ -37,8 +37,8 @@ $toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
 
 if( $useProjects && !empty( $userProjects ) )
 	$toolbar2->addButton( 'toolbar-filters', 'projects', $helperFilter->renderProjectFilter( $filterProjects, $userProjects ) );
-$toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPriorityFilter( $filterPriorities ) );
 $toolbar2->addButton( 'toolbar-filters', 'workers', $helperFilter->renderWorkerFilter( $filterWorkers, $users ) );
+$toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPriorityFilter( $filterPriorities ) );
 if( $filterMode !== "kanban" )
 	$toolbar2->addButton( 'toolbar-filters', 'states', $helperFilter->renderStateFilter( $filterStates ) );
 $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilter( $filterTypes ) );

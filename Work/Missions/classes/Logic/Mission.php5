@@ -1,4 +1,8 @@
 <?php
+/**
+ *	@deprecated		use Logic_Work_Mission instead
+ *	@todo			remove
+ */
 class Logic_Mission{
 
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
@@ -61,6 +65,7 @@ class Logic_Mission{
 		$types		= $session->get( $sessionFilterKeyPrefix.'types' );
 		$priorities	= $session->get( $sessionFilterKeyPrefix.'priorities' );
 		$states		= $session->get( $sessionFilterKeyPrefix.'states' );
+		$workers	= $session->get( $sessionFilterKeyPrefix.'workers' );
 		$projects	= $session->get( $sessionFilterKeyPrefix.'projects' );
 		$direction	= $session->get( $sessionFilterKeyPrefix.'direction' );
 		$order		= $session->get( $sessionFilterKeyPrefix.'order' );
@@ -75,6 +80,8 @@ class Logic_Mission{
 			$conditions['priority']	= $priorities;
 		if( is_array( $states ) && count( $states ) )
 			$conditions['status']	= $states;
+		if( is_array( $workers ) && count( $workers ) )
+			$conditions['workerId']	= $workers;
 		if( strlen( $query ) )
 			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects

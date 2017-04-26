@@ -41,13 +41,12 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 
 	protected function __onInit(){
 		parent::__onInit();
-		$this->initFilters( $this->session->get( 'userId' ) );
 
 		$this->session->set( 'filter.work.mission.mode', 'calendar' );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
 		$this->setData( array(
-			'userId'	=> $this->session->get( 'userId' ),
+			'userId'	=> $this->userId,
 			'year'		=> $date[0],
 			'month'		=> $date[1],
 		) );
@@ -64,6 +63,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 	}
 
 	public function index( $year = NULL, $month = NULL ){
+		$this->initFilters( $this->userId );
 		$this->assignFilters();
 
 /*		if( $year === NULL || $month === NULL ){

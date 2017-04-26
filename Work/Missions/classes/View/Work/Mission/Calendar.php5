@@ -1,11 +1,14 @@
 <?php
 class View_Work_Mission_Calendar extends CMF_Hydrogen_View{
 
+	public function __onInit(){
+		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
+		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
+		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
+	}
+
 	public function ajaxRenderIndex(){
 		extract( $this->getData() );
-		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
-		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 
 		$script	= '<script>
 $(document).ready(function(){
@@ -257,7 +260,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
 			$overdue	= '';
-			if( $isPast )
+			if( 0 && $isPast )
 				$overdue	= $this->renderOverdue( $mission );
 			$list[]	= UI_HTML_Tag::create( 'li', $overdue.$title, array(
 				"class"			=> 'priority-'.$mission->priority,

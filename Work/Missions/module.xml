@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.46</version>
+	<version>0.9.48</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -93,6 +93,8 @@ code>
 	<log version="0.9.44">Use modal of module Work:Timer to assign unrelated timers.</log>
 	<log version="0.9.45">Add worker filter.</log>
 	<log version="0.9.46">Replace projects filter dropdown by modal.</log> 
+	<log version="0.9.47">Replace workers filter dropdown by modal.</log> 
+	<log version="0.9.48">Extract filters to view helpers.</log> 
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -118,12 +120,18 @@ code>
 		<class>View/Work/Mission/Kanban.php5</class>
 		<class>View/Helper/Modal.php5</class>
 		<class>View/Helper/ModalTrigger.php5</class>
+		<class>View/Helper/ModalRegistry.php5</class>
 		<class>View/Helper/Work/Mission/Abstract.php5</class>
 		<class>View/Helper/Work/Mission/Calendar.php5</class>
 		<class>View/Helper/Work/Mission/Dashboard/MyEvents.php5</class>
 		<class>View/Helper/Work/Mission/Dashboard/MyTasks.php5</class>
 		<class>View/Helper/Work/Mission/DaysBadge.php5</class>
 		<class>View/Helper/Work/Mission/Filter.php5</class>
+		<class>View/Helper/Work/Mission/Priority.php5</class>
+		<class>View/Helper/Work/Mission/Project.php5</class>
+		<class>View/Helper/Work/Mission/Status.php5</class>
+		<class>View/Helper/Work/Mission/Type.php5</class>
+		<class>View/Helper/Work/Mission/Worker.php5</class>
 		<class>View/Helper/Work/Mission/List.php5</class>
 		<class>View/Helper/Work/Mission/List/Days.php5</class>
 		<class>View/Helper/Work/Mission/List/DaysSmall.php5</class>

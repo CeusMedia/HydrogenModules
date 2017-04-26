@@ -88,12 +88,7 @@ class Logic_Work_Mission{
 		$priorities	= $session->get( $sessionFilterKeyPrefix.'priorities' );
 		$states		= $session->get( $sessionFilterKeyPrefix.'states' );
 		$projects	= $session->get( $sessionFilterKeyPrefix.'projects' );
-		$direction	= $session->get( $sessionFilterKeyPrefix.'direction' );
-		$order		= $session->get( $sessionFilterKeyPrefix.'order' );
-		$orders		= array(					//  collect order pairs
-			$order		=> $direction,			//  selected or default order and direction
-			'timeStart'	=> 'ASC',				//  order events by start time
-		);
+		$workers	= $session->get( $sessionFilterKeyPrefix.'workers' );
 		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
@@ -101,6 +96,8 @@ class Logic_Work_Mission{
 			$conditions['priority']	= $priorities;
 		if( is_array( $states ) && count( $states ) )
 			$conditions['status']	= $states;
+		if( is_array( $workers ) && count( $workers ) )
+			$conditions['workerId']	= $workers;
 		if( strlen( $query ) )
 			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
@@ -129,7 +126,7 @@ class Logic_Work_Mission{
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access
-			return $this->modelMission->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions
+			return $this->modelMission->getAll( $conditions, $orders, $limits );					//  return all missions matched by conditions
 
 		$havings	= array(																		//  additional conditions
 			'creatorId = '.(int) $userId,															//  user is creator
@@ -146,9 +143,14 @@ class Logic_Work_Mission{
 			if( !$conditions['projectId'] )															//  no projects by filter
 				unset( $conditions['projectId'] );													//  do not filter projects then
 		}
-		$groupings	= array( 'missionId' );															//  HAVING needs grouping
-		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
-		return $this->modelMission->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
+		return $this->modelMission->getAll(															//  return missions matched by conditions
+			$conditions,
+			$orders,
+			$limits,
+			array_diff( $this->modelMission->getColumns(), array( 'content' ) ),					//  all columns except content
+			array( 'missionId' ),																	//  HAVING needs grouping
+			array( join( ' OR ', $havings ) )														//  combine havings with OR
+		);
 	}
 
 	public function getVersion( $missionId, $version ){
