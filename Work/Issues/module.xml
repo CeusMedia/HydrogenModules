@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.3.7</version>
+	<version>0.4.1</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -11,15 +11,17 @@
 	<log version="0.2.6">Translate to english.</log>
 	<log version="0.2.7">Add relation to module Manage:Projects.</log>
 	<log version="0.2.8">Use new Work:Timer integration with hooks.</log>
-	<log version="0.2.9">Improve stability and views.</log>
-	<log version="0.3">Support hook Project::onListRelations.</log>
-	<log version="0.3.1">Support hook Project::onRemove.</log>
-	<log version="0.3.2">Support hook Dashboard::renderPanels.</log>
-	<log version="0.3.3">Upgrade support for new dasboard module.</log>
-	<log version="0.3.4">Remove support for old dasboard module.</log>
-	<log version="0.3.5">Split note change view into several view helpers.</log>
-	<log version="0.3.6">Send mail on every issue change.</log>
-	<log version="0.3.7">Send mail on every new issue.</log>
+	<log version="0.3">Improve stability and views.</log>
+	<log version="0.3.1">Support hook Project::onListRelations.</log>
+	<log version="0.3.2">Support hook Project::onRemove.</log>
+	<log version="0.3.3">Support hook Dashboard::renderPanels.</log>
+	<log version="0.3.4">Upgrade support for new dasboard module.</log>
+	<log version="0.3.5">Remove support for old dasboard module.</log>
+	<log version="0.3.6">Split note change view into several view helpers.</log>
+	<log version="0.3.7">Send mail on every issue change.</log>
+	<log version="0.3.8">Send mail on every new issue.</log>
+	<log version="0.4">Add relation filter to show my issues.</log>
+	<log version="0.4.1">Adjust behaviour of filters.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

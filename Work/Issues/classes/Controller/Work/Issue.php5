@@ -19,11 +19,18 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		'title',
 		'order',
 		'direction',
-		'limit'
+		'limit',
+		'relation',
 	);
+
+	protected $logic;
+	protected $userProjects;
+	protected $userId;
 
 	public function __onInit(){
 		$this->logic		= new Logic_Issue( $this->env );
+		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->userProjects	= $this->logic->getUserProjects();
 	}
 
 	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
@@ -112,7 +119,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		if( $request->has( 'save' ) ){
 			$model		= new Model_Issue( $this->env );
 			$data		= array(
-				'reporterId'	=> $this->env->getSession()->get( 'userId' ),
+				'reporterId'	=> $this->userId,
 				'projectId'		=> (int) $request->get( 'projectId' ),
 				'type'			=> (int) $request->get( 'type' ),
 				'severity'		=> (int) $request->get( 'severity' ),
@@ -125,8 +132,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
 				$issueId	= $model->add( $data, FALSE );
-				$userId		= $this->env->getSession()->get( 'userId' );
-				$this->logic->informAboutNew( $issueId, $userId );
+				$this->logic->informAboutNew( $issueId, $this->userId );
 				if( $issueId )
 					$this->restart( './work/issue/edit/'.$issueId );
 			}
@@ -137,7 +143,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'projectId', $request->get( 'projectId' ) );
 		$this->addData( 'title', $request->get( 'title' ) );
 		$this->addData( 'content', $request->get( 'content' ) );
-		$this->addData( 'projects', $this->logic->getUserProjects() );
+		$this->addData( 'projects', $this->userProjects );
 	}
 
 	public function ajaxRenderDashboardPanel( $panelId ){
@@ -157,16 +163,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				'content'		=> $request->get( 'content' ),
 				'modifiedAt'	=> time()
 			);
-			$userId				= $this->env->getSession()->get( 'userId' );
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
-			$this->logic->informAboutChange( $issueId, $userId );
+			$this->logic->informAboutChange( $issueId, $this->userId );
 			$this->restart( './work/issue/edit/'.$issueId );							//  reload back into edit view
 		}
-//		$userId				= $this->env->getSession()->get( 'userId' );
-//		$this->logic->informAboutChange( $issueId, $userId );
+//		$this->logic->informAboutChange( $issueId, $this->userId );
 		$this->addData( 'issue', $this->logic->get( $issueId, TRUE ) );
-		$this->addData( 'projects', $this->logic->getUserProjects() );
+		$this->addData( 'projects', $this->userProjects );
 		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
 	}
 
@@ -197,7 +201,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			if( count( $changes ) > 1 || $request->get( 'note') ){
 				$data	= array(
 					'issueId'	=> $issueId,
-					'userId'	=> $this->env->getSession()->get( 'userId' ),
+					'userId'	=> $this->userId,
 					'note'		=> $request->get( 'note'),
 					'timestamp'	=> time(),
 				);
@@ -262,20 +266,27 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 	public function index( $page = 0 ){
 		$session	= $this->env->getSession();
 		$filters	= array();
-		foreach( $session->getAll() as $key => $value )
-			if( preg_match( '/^filter-issue-/', $key ) ){
-				$column	= preg_replace( '/^filter-issue-/', '', $key );
-				if( $column == 'title' )
-					$filters[$column] = '%'.str_replace( ' ', '%', trim( $value ) ).'%';
-				else if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
-					$filters[$column] = $value;
-			}
+		$setFilters	= $session->getAll( 'filter-issue-' );
+		foreach( $setFilters as $key => $value ){
+			if( $key == 'title' )
+				$filters[$key] = '%'.str_replace( ' ', '%', trim( $value ) ).'%';
+			else if( !in_array( $key, array( 'order', 'direction', 'limit', 'relation' ) ) )
+				$filters[$key] = $value;
+		}
+//		if( !isset( $filters['projectId'] ) || !$filters['projectId'] )
+//			$filters['projectId']	= array_keys( $this->userProjects );
+		if( isset( $setFilters['relation'] ) && $setFilters['relation'] ){
+			if( $setFilters['relation'] == 1 )
+				$filters['reporterId']	= $this->userId;
+			else if( $setFilters['relation'] == 2 )
+				$filters['managerId']	= $this->userId;
+		}
 
 		$orders	= array();
 		$order	= $session->get( 'filter-issue-order' );
 		$dir	= $session->get( 'filter-issue-direction' );
 		$limit	= $session->get( 'filter-issue-limit' );
-		$limit	= $limit > 0 ? $limit : 10;
+		$limit	= $limit > 0 ? $limit : 15;
 		if( $order && $dir )
 			$orders	= array( $order => $dir );
 
@@ -314,8 +325,10 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		);
 
 		$numberProjects	= array();
-		foreach( $this->logic->getUserProjects() as $project )
-			$numberProjects[$project->projectId]	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
+		foreach( $this->userProjects as $project ){
+			$count	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
+			$numberProjects[$project->projectId]	= $count;
+		}
 		$this->addData( 'numberProjects', $numberProjects );
 
 		$userIds	= array();
@@ -331,6 +344,12 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 				$userIds[]	= $change->userId;
 		}
 
+		$projects	= $this->userProjects;
+		foreach( $projects as $project ){
+			if( !$modelIssue->count( array( 'projectId' => $project->projectId ) ) )
+				unset( $projects[$project->projectId] );
+		}
+
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $modelIssue->count() );
 		$this->addData( 'number', $modelIssue->count( $filters ) );
@@ -339,7 +358,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'numberPriorities', $numberPriorities );
 		$this->addData( 'numberFilters', count( $filters ) );
 		$this->addData( 'issues', $issues );
-		$this->addData( 'projects', $this->logic->getUserProjects() );
+		$this->addData( 'projects', $projects );
 
 		$users	= array();
 		if( $userIds )
