@@ -87,13 +87,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 		if( $this->request->has( 'save' ) ){
 			$data		= array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'projectId'	=> $this->request->get( 'note_projectId' ),
-				'title'		=> $this->request->get( 'note_title' ),
-				'public'	=> (int) $this->request->get( 'note_public' ),
-				'format'	=> $this->request->get( 'note_format' ),
-				'content'	=> $this->request->get( 'note_content' ),
-				'createdAt'	=> time(),
+				'userId'		=> $this->session->get( 'userId' ),
+				'projectId'		=> $this->request->get( 'note_projectId' ),
+				'title'			=> $this->request->get( 'note_title' ),
+				'public'		=> (int) $this->request->get( 'note_public' ),
+				'format'		=> $this->request->get( 'note_format' ),
+				'content'		=> $this->request->get( 'note_content' ),
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
 			);
 			if( !strlen( trim( $data['title'] ) ) )
 				$this->messenger->noteError( $words->msgNoTitle );
@@ -225,7 +226,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$this->session->remove( 'filter_notes_projectId' );
 			$this->session->remove( 'filter_notes_tags' );
 			$this->session->remove( 'filter_notes_limit' );
-//			$this->session->remove( 'filter_notes_order' );
+			$this->session->remove( 'filter_notes_order' );
 		}
 		if( $this->request->has( 'filter_visibility' ) )
 			$this->session->set( 'filter_notes_visibility', $this->request->get( 'filter_visibility' ) );
@@ -235,9 +236,10 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 //			$this->session->set( 'filter_notes_public', $this->request->get( 'filter_public' ) );
 		if( $this->request->has( 'filter_projectId' ) )
 			$this->session->set( 'filter_notes_projectId', $this->request->get( 'filter_projectId' ) );
+		if( $this->request->has( 'filter_order' ) )
+			$this->session->set( 'filter_notes_order', $this->request->get( 'filter_order' ) );
 		if( $this->request->has( 'filter_limit' ) )
 			$this->session->set( 'filter_notes_limit', $this->request->get( 'filter_limit' ) );
-
 		if( $this->request->has( 'filter_query' ) )
 			$this->session->set( 'filter_notes_term', $this->request->get( 'filter_query' ) );
 
@@ -279,20 +281,22 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function index( $page = 0 ){
 		$tags				= $this->session->get( 'filter_notes_tags' );
 		$query				= $this->session->get( 'filter_notes_term');
-		$order				= $this->session->get( 'filter_notes_order' );
-		$direction			= $this->session->get( 'filter_notes_direction' );
-		$limit				= $this->session->get( 'filter_notes_limit' );
+		$filterOrder		= $this->session->get( 'filter_notes_order' );
+		$filterDirection	= $this->session->get( 'filter_notes_direction' );
+		$filterLimit		= $this->session->get( 'filter_notes_limit' );
 		$filterAuthor		= $this->session->get( 'filter_notes_author' );
 		$filterPublic		= $this->session->get( 'filter_notes_public' );
 		$filterProjectId	= $this->session->get( 'filter_notes_projectId' );
 		$visibility			= $this->session->get( 'filter_notes_visibility' );
-		$limit				= $limit ? $limit  : 10;
-		if( !$order || !$direction ){
-			$order		= 'modifiedAt';
-			$direction	= 'DESC';
-		}
+		$filterLimit		= $filterLimit ? $filterLimit  : 10;
+		if( !$filterOrder )
+			$filterOrder		= 'modifiedAt';
+		if( !$filterDirection )
+			$filterDirection	= 'DESC';
+
+		$filterOffset	= $page * $filterLimit;
 		if( $this->request->has( 'offset' ) )
-			$this->session->set( 'filter_notes_offset', (int) $this->request->get( 'offset' ) );
+			$this->session->set( 'filter_notes_offset', (int) $filterOffset );
 
 		if( !is_array( $tags ) )
 			$tags	= array();
@@ -305,6 +309,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		}
 		$notes		= array();
 		$conditions	= array();
+		$orders		= array( $filterOrder => $filterDirection );
 //		if( $filterPublic > 0 )
 //			$conditions['public']		= $filterPublic == 2 ? 0 : 1;
 		if( $filterAuthor > 0 )
@@ -315,25 +320,27 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$conditions['projectId']	= array_merge( array( 0 ), array_keys( $projects ) );
 		}
 
-		$offset	= $page * $limit;
+		$offset	= $page * $filterLimit;
+		$limits		= array( $offset, $filterLimit );
 		if( $query ){
-			$notes	= $this->logic->searchNotes( $query, $conditions, $offset, $limit );
+			$notes	= $this->logic->searchNotes( $query, $conditions, $orders, $limits );
 		}
 		else{
-			$notes	= $this->logic->getTopNotes( $conditions, $offset, $limit );
+			$notes	= $this->logic->getTopNotes( $conditions, $orders, $limits );
 		}
 //print_m( $notes );die;
 		$modelUser	= new Model_User( $this->env );
 		foreach( $notes['list'] as $nr => $note )
 			$notes['list'][$nr]->user	= $modelUser->get( $note->userId );
 
-		$this->addData( 'offset', $offset );
-		$this->addData( 'limit', $limit );
+		$this->addData( 'filterOffset', $filterOffset );
+		$this->addData( 'filterLimit', $filterLimit );
 		$this->addData( 'page', $page );
 		$this->addData( 'filterVisibility', $visibility );
 		$this->addData( 'filterAuthor', $filterAuthor );
 		$this->addData( 'filterPublic', $filterPublic );
 		$this->addData( 'filterProjectId', $filterProjectId );
+		$this->addData( 'filterOrder', $filterOrder );
 		$this->addData( 'projects', $projects );
 		$this->addData( 'notes', $notes );
 	}

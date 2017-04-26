@@ -318,19 +318,22 @@ class Logic_Note{
 			$modelTag->remove( $tagId );															//  remove tag
 	}
 
-	public function getTopNotes( $conditions = array(), $offset = 0, $limit = 10 ){
+	public function getTopNotes( $conditions = array(), $orders = array(), $limits = array() ){
 		$model		= new Model_Note( $this->env );
 		$clock		= new Alg_Time_Clock();
-		$orders		= array(
-			'modifiedAt'	=> 'DESC',
-			'createdAt'		=> 'DESC',
-			'title'			=> 'ASC',
-		);
+		if( !$orders )
+			$orders		= array(
+				'modifiedAt'	=> 'DESC',
+				'createdAt'		=> 'DESC',
+				'title'			=> 'ASC',
+			);
+		if( !$limits )
+			$limits		= array( 0, 10 );
 		$conditions	= $this->sharpenConditions( $conditions );
 		$number		= $model->count( $conditions );
-		if( $number < $offset )
-			$offset	= 0;
-		$notes	= $model->getAll( $conditions, $orders, array( $offset, $limit ) );
+		if( $number < $limits[0] )
+			$limits[0]	= 0;
+		$notes	= $model->getAll( $conditions, $orders, $limits );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		return array(
@@ -381,11 +384,14 @@ class Logic_Note{
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
-	public function searchNotes( $query, $conditions, $offset = 0, $limit = 10 ){
+	public function searchNotes( $query, $conditions, $orders = array(), $limits = array() ){
 //		if( !strlen( trim( $query ) ) && !$tags )
 //			throw new Exception( 'Neither query nor tags to search for given' );
 		if( !strlen( trim( $query ) ) )
 			throw new Exception( 'No search termed given' );
+
+		if( !$limits )
+			$limits	= array( 0, 10 );
 
 		$cond		= array();
 		$pattern	= '/^(<=|>=|<|>|!=)(.+)/';
@@ -440,7 +446,7 @@ ORDER BY
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
 		$number		= count( $notes );
-		$notes	= array_slice( $notes, $offset, $limit );
+		$notes	= array_slice( $notes, $limits[0], $limit[1] );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		return array(

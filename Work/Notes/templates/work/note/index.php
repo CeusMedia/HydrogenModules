@@ -10,7 +10,7 @@ if( !is_array( $tags ) )
 	$tags	= array();
 
 $indicator	= new UI_HTML_Indicator();
-$pagination	= new CMM_Bootstrap_PageControl( './work/note', $page, ceil( $notes['number'] / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/note', $page, ceil( $notes['number'] / $filterLimit ) );
 $helper		= new View_Helper_TimePhraser( $this->env );
 $list	= array();
 foreach( $notes['list'] as $note ){
@@ -52,9 +52,6 @@ if( $list )
 	$list	= '<ul class="results">'.join( $list ).'</ul>';
 else
 	$list	= '<p><em>Nichts gefunden.</em></p>';
-
-#$pagination	= new UI_HTML_Pagination( array( 'uri' => 'work/note/' ) );
-#$p = $pagination->build( $notes['number'], $limit, $offset );
 
 $pagination	= $pagination->render();
 

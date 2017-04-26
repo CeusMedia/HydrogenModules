@@ -10,7 +10,8 @@ if( !is_array( $tags ) )
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
-$optOrder	= UI_HTML_Elements::Options( array( 'touchedAt' => 'letzte Änderung' ) );
+$optOrder	= array( '' => '-', 'modifiedAt' => 'letzte Änderung', 'createdAt' => 'Erstellungsdatum' );
+$optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
 
 /*
 $not	= array();
@@ -96,7 +97,7 @@ return '
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_filter_limit">'.$w->labelLimit.'</label>
-					<input type="text" id="input_filter_limit" name="filter_limit" class="span12" onchange="this.form.submit();" value="'.$limit.'"/>
+					<input type="text" id="input_filter_limit" name="filter_limit" class="span12" onchange="this.form.submit();" value="'.$filterLimit.'"/>
 				</div>
 				<div class="span9">
 					<label for="input_filter_order">'.$w->labelOrder.'</label>
