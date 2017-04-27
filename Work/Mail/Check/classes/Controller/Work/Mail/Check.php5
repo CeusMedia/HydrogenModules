@@ -231,7 +231,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			$columns	= array_merge( json_decode( $group->columns ), array(
 				'Code',
 				'Code-Beschreibung',
-				'Fehler',
+				'Fehler-Code',
 				'Fehler-Beschreibung',
 				'Server-Meldung',
 			) );
@@ -249,7 +249,6 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 					array(
 						$check->code,
 						\CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code ),
-						$check->error,
 						$words['errorCodes'][$check->error],
 						$words['errorLabels'][$check->error],
 						$check->message,
