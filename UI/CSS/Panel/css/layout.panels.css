@@ -117,7 +117,7 @@ body.content-panel-style-3 div.content-panel > div.content-panel-inner {
 	display: block;
 	line-height: 1.4em;
 	border-radius: 0px 0px 6px 6px;
-	overflow: hidden;
+/*	overflow: hidden;*/
 	}
 body.content-panel-style-3 div.content-panel > h3,
 body.content-panel-style-3 div.content-panel > h4 {
