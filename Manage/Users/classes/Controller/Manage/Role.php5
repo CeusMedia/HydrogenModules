@@ -163,6 +163,8 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 		$actions	= $disclosure->reflect( 'classes/Controller/', $options );
 		foreach( $actions as $controllerName => $controller ){
 			$module	= $this->getModuleFromControllerClassName( $controllerName );
+			if( !$module )																			//  controller without module
+				continue;																			//  ignore for now
 			$list[]	= (object) array(
 				'name'			=> $controllerName,
 				'className'		=> $controller->name,
@@ -170,9 +172,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller {
 				'module'		=> $module,
 				'moduleWords'	=> $this->getModuleWords( $module ),
 			);
-
 		}
-
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );

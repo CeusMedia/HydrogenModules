@@ -364,6 +364,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'users', $list );
 		$this->addData( 'page', $page );
 		$this->addData( 'limit', $limit );
+		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_user', 'add' ) );
+		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'manage_user', 'edit' ) );
 	}
 
 /*	public function logout( $userId ) {

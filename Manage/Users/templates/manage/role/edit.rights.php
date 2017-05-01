@@ -129,7 +129,7 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 		$module	= $controller->module ? $controller->module->title : 'local';
 		if( $controller->module ){
 			$module	= $controller->module->title;
-			if( $controller->moduleWords )
+			if( $controller->moduleWords && isset( $controller->moduleWords['title'] ) )
 				$module	= $controller->moduleWords['title'];
 			if( $controller->module->description ){
 				$description	= array_slice( explode( "\n", $controller->module->description ), 0, 1 );

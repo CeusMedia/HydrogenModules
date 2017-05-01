@@ -196,19 +196,17 @@ return $textIndexTop.'
 <div class="row-fluid">
 	<div class="span9">
 		'.$panelEdit.'
+		<div class="row-fluid">
+			<div class="span6">
+				'.$panelStatus.'
+			</div>
+			<div class="span6">
+				'.$panelRights.'
+			</div>
+		</div>
 	</div>
 	<div class="span3">
 		'.$panelInfo.'
-	</div>
-</div>
-<div class="row-fluid">
-	<div class="span4">
-		'.$panelStatus.'
-	</div>
-	<div class="span5">
-		'.$panelRights.'
-	</div>
-	<div class="span3">
 	</div>
 </div>
 '.$textIndexBottom;
