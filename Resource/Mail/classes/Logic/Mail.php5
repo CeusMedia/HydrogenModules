@@ -147,6 +147,8 @@ class Logic_Mail{
 			'subject'			=> $mail->getSubject(),
 			'object'			=> $serial,
 			'enqueuedAt'		=> time(),
+			'attemptedAt'		=> 0,
+			'sentAt'			=> 0,
 		);
 		return $this->modelQueue->add( $data, FALSE );
 	}
