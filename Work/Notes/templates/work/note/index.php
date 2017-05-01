@@ -40,7 +40,9 @@ foreach( $notes['list'] as $note ){
 //	$listTags	= '<div class="pull-right">'.join( ' ', $listTags ).'</div>';
 	$listTags	= $listTags ? '<i class="icon-tags"></i> '.join( ', ', $listTags ) : '<em><small class="muted">Keine Tags.</small></em>';
 	$spanTags	= '<span class="">'.$listTags.'</span>';
-	$spanAuthor	= '<span class=""><i class="icon-user"></i> '.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</span>';
+	$spanAuthor	= '';
+	if( $note->user )
+		$spanAuthor	= '<span class=""><i class="icon-user"></i> '.htmlentities( $note->user->username, ENT_QUOTES, 'UTF-8' ).'</span>';
 	$timestamp	= max( $note->createdAt, $note->modifiedAt, 0 );
 	$time		= $helper->convert( $timestamp, TRUE );
 	$spanDate	= $timestamp ? '<span class=""><i class="icon-time"></i> '.$time.'</span>' : '';
