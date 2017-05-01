@@ -30,7 +30,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->logic		= new Logic_Issue( $this->env );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
-		$this->userProjects	= $this->logic->getUserProjects();
+		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
 	}
 
 	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
@@ -281,6 +281,9 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 			else if( $setFilters['relation'] == 2 )
 				$filters['managerId']	= $this->userId;
 		}
+		else if( !isset( $filters['projectId'] ) ){
+			$filters['projectId']	= array_keys( $this->userProjects );
+		}
 
 		$orders	= array();
 		$order	= $session->get( 'filter-issue-order' );
@@ -345,10 +348,10 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		}
 
 		$projects	= $this->userProjects;
-		foreach( $projects as $project ){
+/*		foreach( $projects as $project ){
 			if( !$modelIssue->count( array( 'projectId' => $project->projectId ) ) )
 				unset( $projects[$project->projectId] );
-		}
+		}*/
 
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $modelIssue->count() );
