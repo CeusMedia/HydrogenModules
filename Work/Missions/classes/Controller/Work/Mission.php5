@@ -1074,13 +1074,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	protected function recoverFilters( $userId ){
 		$model	= new Model_Mission_Filter( $this->env );
-		$serial	= $model->getByIndex( 'userId', $userId, 'serial' );
+		$serial	= $model->getByIndex( 'userId', $userId, array(), 'serial' );
 //	print_m( $serial );
 //	print_m( unserialize( $serial ) );
 //	die;
 //	$this->env->getMessenger()->noteNotice( '<xmp>'.$serial.'</xmp>' );
-		if( !strlen( $serial ) )
-			return;
+//		if( !strlen( $serial ) )
+//			return;
 		$serial	= $serial ? unserialize( $serial ) : NULL;
 		if( is_array( $serial ) ){
 			foreach( $serial as $key => $value )
