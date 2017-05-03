@@ -24,4 +24,28 @@ Files can be assigned to modules and virtual paths.
 	<link access="public" path="file/index"/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 	]]></hook>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>files`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>files` (
+  `fileId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) UNSIGNED DEFAULT '0',
+  `moduleId` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hash` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `mimeType` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `fileSize` decimal(20,0) NOT NULL,
+  `filePath` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `fileName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  `viewedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `viewCount` int(11) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`fileId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `hash` (`hash`),
+  KEY `mimeType` (`mimeType`),
+  KEY `fileSize` (`fileSize`),
+  KEY `filePath` (`filePath`),
+  KEY `fileName` (`fileName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 </module>
