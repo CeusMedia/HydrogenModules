@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: FileBucket</title>
+	<description><![CDATA[Local storage of hashed files.
+
+Indices add files in database and stores file by hash names.
+Files can be assigned to modules and virtual paths.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/File.php5</class>
+		<class>Logic/FileBucket.php5</class>
+		<class>Model/File.php5</class>
+		<class>View/File.php5</class>
+	</files>
+	<config protected="yes" type="string" name="path" title="path to hashed files within contents folder">files/</config>
+	<relations/>
+	<link access="public" path="file/index"/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+</module>
