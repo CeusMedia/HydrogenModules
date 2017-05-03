@@ -805,7 +805,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$info		= (object) pathinfo( $fileName );
 		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
 
-		$targetFileName	= $info->filename.".".$info->extension;
+		$targetFileName	= md5( $info->filename ).".".$info->extension;
 		$width			= $image->getWidth();
 		$height			= $image->getHeight();
 
