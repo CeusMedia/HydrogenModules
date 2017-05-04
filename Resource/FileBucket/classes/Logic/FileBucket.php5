@@ -41,6 +41,7 @@ class Logic_FileBucket{
 		$hash		= $this->getNewHash();
 		if( !@copy( $sourceFilePath, $this->filePath.$hash ) )
 			throw new RuntimeException( 'Copying file to bucket failed' );
+		clearstatcache();
 		$data	= array(
 //			'creatorId'		=> 0,
 			'moduleId'		=> $moduleId,
@@ -115,12 +116,39 @@ class Logic_FileBucket{
 		return $hash;
 	}
 
-	public function replace( $fileId, $sourceFilePath, $uriPath = NULL ){
+	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality ){
+		$file		= $this->get( $fileId );
+		if( !in_array( $file->mimeType, arary( 'image/png', 'image/gif', 'image/jpeg' ) ) )
+			throw new Exception( 'File is not an image' );
+		$image		= new UI_Image( $this->getPath().$file->hash );
+		if( $image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight )
+			return FALSE;
+		$processor->scaleDownToLimit( $maxWidth, $maxHeight, $quality );
+		$image->save();
+		$this->model->edit( $fileId, filesize( $this->getPath().$file->hash ) );
+		return TRUE;
+	}
 
+	public function replace( $fileId, $sourceFilePath, $mimeType ){
+		$file	= $this->get( $fileId );
+		if( !$file )
+			throw new DomainException( 'Given source file is not existing' );
+		if( !file_exists( $sourceFilePath ) )
+			throw new RuntimeException( 'Given source file is not existing' );
+		if( !is_readable( $sourceFilePath ) )
+			throw new RuntimeException( 'Given source file is not readable' );
+
+		$this->remove( $fileId );
+		$uriPath	= $file->filePath ? $file->filePath.'/'.$file->fileName : $file->fileName;
+		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
 	}
 
 	public function remove( $fileId ){
-
+		$file	= $this->get( $fileId );
+		if( !$file )
+			throw new DomainException( 'Given source file is not existing' );
+		@unlink( $this->getPath().$file->hash );
+		return $this->model->remove( $fileId );
 	}
 
 	public function setHashFunction( $function ){

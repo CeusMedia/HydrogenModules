@@ -40,12 +40,12 @@ class View_File extends CMF_Hydrogen_View{
 
 		header( 'Content-Type: '.$file->mimeType );
 		header( 'Content-Length: '.$file->fileSize );
-		header( 'Cache-Control: max-age=2592000, public' );
+//		header( 'Cache-Control: max-age=2592000, public' );
 		header( 'Last-Modified: '.date( 'r', $file->modifiedAt ) );
-		header( 'Expires: '.date( 'r', time() + 2592000 ) );
+//		header( 'Expires: '.date( 'r', time() + 2592000 ) );
 		$handle	= fopen( $sourceFilePath, 'rb' );
 		while( !feof( $handle ) )
-			print( fread( $handle, 1024 * 4 ) );
+			print( fread( $handle, 1024 ) );
 		exit;
 	}
 
