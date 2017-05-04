@@ -3,7 +3,7 @@
 	<title>Manage: Catalog: Bookstore</title>
 	<description><![CDATA[Bookstore Catalog Management.]]></description>
 	<category>Management</category>
-	<version>0.7.1</version>
+	<version>0.7.2</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -38,6 +38,7 @@
 	<log version="0.6.7">Add tag list and tab.</log>
 	<log version="0.7">Migration from module Manage:Catalog.</log>
 	<log version="0.7.1">Add support for large article images.</log>
+	<log version="0.7.2">Integrate module Resource:FileBucket.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -97,7 +98,7 @@
 		<script load="auto">module.manage.catalog.bookstore.js</script>
 		<style load="auto">module.manage.catalog.bookstore.css</style>
 	</files>
-	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc,docx,xls,xlsx,odt,ods</config>
 	<config type="string" protected="yes" mandatory="yes" name="article.document.size" title="Maximum document file size in MB." value="1,2,4,8,16,32">4</config>
 	<config type="string" protected="yes" mandatory="yes" name="article.image.extensions">gif,jpe,jpeg,jpg,png</config>
 	<config type="string" protected="yes" mandatory="yes" name="article.image.size" title="Maximum image file size in MB." value="1,2,4,8,16,32">4</config>
@@ -119,6 +120,7 @@
 	<config type="string" protected="yes" mandatory="yes" name="path.documents" title="path to article documents within frontend content folder">bookstore/articles/documents/</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_FileBucket</needs>
 		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_Input_File</needs>

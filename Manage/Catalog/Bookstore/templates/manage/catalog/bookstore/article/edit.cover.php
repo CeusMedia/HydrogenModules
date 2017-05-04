@@ -16,6 +16,11 @@ if( $article->cover ){
 	$urlMedium	= $urlBase.'m/'.$id.'_'.$article->cover;
 	$urlSmall	= $urlBase.'s/'.$id.'_'.$article->cover;
 
+	$urlLarge	= 'file/bookstore/article/l/'.$article->cover;
+	$urlMedium	= 'file/bookstore/article/m/'.$article->cover;
+	$urlSmall	= 'file/bookstore/article/s/'.$article->cover;
+
+
 	$imageMedium	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlMedium, 'class' => $class ) );
 	$imageSmall		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlSmall, 'class' => $class ) );
 

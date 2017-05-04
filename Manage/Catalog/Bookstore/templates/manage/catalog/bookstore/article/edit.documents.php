@@ -11,7 +11,7 @@ if( $articleDocuments ){
 		$urlRemove		= './manage/catalog/bookstore/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="Dokument entfernen">'.$iconRemove.'</a>';
 		$link			= UI_HTML_Tag::create( 'a', $item->title, array(
-			'href'		=> $pathDocuments.$idPrefix.$item->url,
+			'href'		=> 'file/bookstore/document/'.$item->url,
 			'target'	=> '_blank'
 		) );
 		$listDocuments[]	= '<tr>

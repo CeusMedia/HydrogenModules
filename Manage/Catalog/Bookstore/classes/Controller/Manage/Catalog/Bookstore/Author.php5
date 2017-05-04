@@ -40,7 +40,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 					$label	= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
 					$list[] = (object) array(
 						'title'	=> $label,
-						'value'	=> $pathImages.$id.'_'.$item->image,
+//						'value'	=> $pathImages.$id.'_'.$item->image,
+						'value'	=> 'file/bookstore/author/'.$item->image,
 					);
 				}
 			}
@@ -141,25 +142,27 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 		$words		= (object) $this->getWords( 'upload' );
 		if( !isset( $file['name'] ) || empty( $file['name'] ) )
 			return;
-		if( $file['error']	!= 0 ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
-			$handler->setMessages( $this->getWords( 'uploadErrors' ) );
-			$this->messenger->noteError( $handler->getErrorMessage( $file['error'] ) );
-			return FALSE;
-		}
 
-		/*  --  CHECK NEW IMAGE  --  */
-		$info		= pathinfo( $file['name'] );
-		$extension	= $info['extension'];
-		$extensions	= array( 'jpe', 'jpeg', 'jpg', 'png', 'gif' );
-		if( !in_array( strtolower( $extension ), $extensions ) ){
-			$this->messenger->noteError( $words->msgErrorExtensionInvalid );
-			return FALSE;
-		}
-
+		$extensions	= $this->moduleConfig->get( 'author.image.extensions' );
+		$logic		= new Logic_Upload( $this->env );
 		try{
-			$this->logic->removeAuthorImage( $authorId );											//  remove older image if set
-			$this->logic->addAuthorImage( $authorId, $file );										//  set newer image
+			$logic->setUpload( $file );
+			$logic->checkExtension( preg_split( '/\s*,\s*/', $extensions ), TRUE );
+			$logic->checkIsImage( TRUE );
+//			$logic->checkSize( $this->moduleConfig->get( 'article.image.size' )."M", TRUE );
+//			$logic->sanitizeFileName();
+			if( $logic->getError() ){
+				$helper	= new View_Helper_UploadError( $this->env );
+				$helper->setUpload( $logic );
+				$this->messenger->noteError( $helper->render() );
+			}
+			else{
+				$targetFile		= uniqid().'.'.$logic->getExtension( TRUE );
+				$logic->saveTo( $targetFile );
+				$this->logic->removeAuthorImage( $authorId );										//  remove older image if set
+				$this->logic->addAuthorImage( $authorId, $targetFile, $logic->getMimeType() );		//  set newer image
+				@unlink( $targetFile );																//  remove original
+			}
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->msgErrorUpload, $e->getMessage() );

@@ -95,29 +95,25 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleDocument( $articleId, $file, $title ){
-		if( !is_array( $file ) )
-			throw new InvalidArgumentException( 'File must be an upload array' );
-		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
-			throw new InvalidArgumentException( 'File must be a valid upload array' );
-		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
-		$file		= (object) $file;
-		$info		= (object) pathinfo( $file->name );
-		$imagename	= $info->basename;
-		$extension	= $info->extension;
+	public function addArticleDocument( $articleId, $sourceFile, $title, $mimeType ){
+		if( !file_exists( $sourceFile ) )
+			throw new RuntimeException( 'File is not existing' );
+		if( !is_readable( $sourceFile ) )
+			throw new RuntimeException( 'File is not readable' );
 
-		/*  --  STORE UPLOADED DOCUMENT  --  */
-		$filename	= md5( base64_encode( $file->name.time() ) );
-		$filename	.= ".".$extension;
-		$uri		= $this->pathArticleDocuments.$id."_".$filename;
-		if( !move_uploaded_file( $file->tmp_name, $uri ) )
-			throw new RuntimeException( 'Storing uploaded file failed' );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		$options		= $this->moduleConfig->getAll( 'article.document.', TRUE );
+		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
+		$article		= $this->getArticle( $articleId );
+		$fileName		= Logic_Upload::sanitizeFileNameStatic( $article->title.' - '.$title.'.'.$extension );
+		$logicBucket->add( $sourceFile, 'bookstore/document/'.$fileName, $mimeType, 'catalog_bookstore' );
 
 		$data	= array(
 			'articleId'	=> $articleId,
-			'type'			=> $extension,
-			'url'			=> $filename,
-			'title'			=> $title,
+			'status'	=> 0,
+			'type'		=> 0,
+			'url'		=> $fileName,
+			'title'		=> $title,
 		);
 		$this->clearCacheForArticle( $articleId );													//
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.documents' );
@@ -148,32 +144,31 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthorImage( $authorId, $file ){
-		if( !is_array( $file ) )
-			throw new InvalidArgumentException( 'File must be an upload array' );
-		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
-			throw new InvalidArgumentException( 'File must be a valid upload array' );
-		$id			= str_pad( $authorId, 5, 0, STR_PAD_LEFT );
-		$file		= (object) $file;
-		$info		= (object) pathinfo( $file->name );
-		$imagename	= $info->basename;
-		$extension	= $info->extension;
+	public function addAuthorImage( $authorId, $sourceFile, $mimeType ){
+		if( !file_exists( $sourceFile ) )
+			throw new RuntimeException( 'File is not existing' );
+		if( !is_readable( $sourceFile ) )
+			throw new RuntimeException( 'File is not readable' );
 
-		/*  --  STORE UPLOADED IMAGE  --  */
-		$imagename	= md5( base64_encode( $file->name ) );
-		$imagename	.= ".".$extension;
-		$uriSource	= $this->pathAuthorImages.$id."_".$imagename;
-		if( !move_uploaded_file( $file->tmp_name, $uriSource ) )
-			throw new RuntimeException( 'Storing uploaded file failed' );
+		$image			= new UI_Image( $sourceFile );
+		$processor		= new UI_Image_Processing( $image );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		$options		= $this->moduleConfig->getAll( 'author.image.', TRUE );
+		$author			= $this->getAuthor( $authorId );
+		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
+		$fileName		= $author->firstname.' '.$author->lastname;
+		$title			= Logic_Upload::sanitizeFileNameStatic( $fileName.'.'.$extension );
 
-		/*  --  SCALE MAIN IMAGE  --  */
-		$imageWidth		= $this->moduleConfig->get( 'author.image.maxWidth' );
-		$imageHeight	= $this->moduleConfig->get( 'author.image.maxHeight' );
-		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$processor->scaleDownToLimit(
+			$options->get( 'width' ),
+			$options->get( 'height' ),
+			$options->get( 'quality' )
+		);
+		$image->save( $sourceFile );
+		$logicBucket->add( $sourceFile, 'bookstore/author/'.$title, $mimeType, 'catalog_bookstore' );
+
 		$this->clearCacheForAuthor( $authorId );
-		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
+		$this->editAuthor( $authorId, array( 'image' => $title ) );
 	}
 
 	/**
@@ -649,15 +644,18 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	public function removeArticleCover( $articleId ){
-		$article	= $this->getArticle( $articleId );
-		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
-		if( $article->cover ){
-			@unlink( $this->pathArticleCovers.'l/'.$id."_".$article->cover );
-			@unlink( $this->pathArticleCovers.'m/'.$id."_".$article->cover );
-			@unlink( $this->pathArticleCovers.'s/'.$id."_".$article->cover );
-			$this->clearCacheForArticle( $articleId );
-			$this->editArticle( $articleId, array( 'cover' => NULL ) );
-		}
+		$article		= $this->getArticle( $articleId );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		$prefix			= 'bookstore/article/';
+		$moduleId		= 'catalog_bookstore';
+		if( $fileLarge = $logicBucket->getByPath( $prefix.'l/'.$article->cover, $moduleId ) )
+			$logicBucket->remove( $fileLarge->fileId );
+		if( $fileMedium = $logicBucket->getByPath( $prefix.'m/'.$article->cover, $moduleId ) )
+			$logicBucket->remove( $fileMedium->fileId );
+		if( $fileSmall = $logicBucket->getByPath( $prefix.'s/'.$article->cover, $moduleId ) )
+			$logicBucket->remove( $fileSmall->fileId );
+		$this->clearCacheForArticle( $articleId );
+		$this->editArticle( $articleId, array( 'cover' => NULL ) );
 	}
 
 	/**
@@ -665,9 +663,12 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	public function removeArticleDocument( $documentId ){
-		$document	= $this->modelArticleDocument->get( $documentId );
-		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
-		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
+		$document		= $this->modelArticleDocument->get( $documentId );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		$prefix			= 'bookstore/document/';
+		$moduleId		= 'catalog_bookstore';
+		if( $file = $logicBucket->getByPath( $prefix.$document->url, $moduleId ) )
+			$logicBucket->remove( $file->fileId );
 		$this->clearCacheForArticle( $document->articleId );
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
@@ -710,6 +711,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$articles	= $this->getArticlesFromAuthorIds( array( $authorId ) );
 		foreach( $articles as $article )
 			$this->removeAuthorFromArticle( $article->articleId, $authorId );
+		$this->removeAuthorImage( $authorId );
 		$this->modelAuthor->remove( $authorId );
 		$this->clearCacheForAuthor( $authorId );													//
 	}
@@ -736,13 +738,13 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	public function removeAuthorImage( $authorId ){
-		$author		= $this->getAuthor( $authorId );
-		$id			= str_pad( $authorId, 5, 0, STR_PAD_LEFT );
-		if( $author->image ){
-			@unlink( $this->pathAuthorImages.$id."__".$author->image );
-			@unlink( $this->pathAuthorImages.$id."_".$author->image );
-			$this->editAuthor( $authorId, array( 'image' => NULL ) );
-		}
+		$author			= $this->getAuthor( $authorId );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		$prefix			= 'bookstore/author/';
+		$moduleId		= 'catalog_bookstore';
+		if( $file = $logicBucket->getByPath( $prefix.$author->image, $moduleId ) )
+			$logicBucket->remove( $file->fileId );
+		$this->editAuthor( $authorId, array( 'image' => NULL ) );
 		$this->clearCacheForAuthor( $authorId );													//
 	}
 
@@ -792,55 +794,48 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function setArticleCover( $articleId, $fileName ){
-		if( !file_exists( $fileName ) )
+	public function setArticleCover( $articleId, $sourceFile, $mimeType ){
+		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
-		if( !is_readable( $fileName ) )
+		if( !is_readable( $sourceFile ) )
 			throw new RuntimeException( 'File is not readable' );
 
-		$image		= new UI_Image( $fileName );
-		$processor	= new UI_Image_Processing( $image );
-		$options	= $this->moduleConfig->getAll( 'article.image.', TRUE );
-
-		$info		= (object) pathinfo( $fileName );
-		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
-
-		$targetFileName	= md5( $info->filename ).".".$info->extension;
+		$image			= new UI_Image( $sourceFile );
+		$processor		= new UI_Image_Processing( $image );
+		$logicBucket	= new Logic_FileBucket( $this->env );
 		$width			= $image->getWidth();
 		$height			= $image->getHeight();
-
-		//  --  DETECT LARGE IMAGE  --  //
+		$options		= $this->moduleConfig->getAll( 'article.image.', TRUE );
+		$article		= $this->getArticle( $articleId );
+		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
+		$title			= Logic_Upload::sanitizeFileNameStatic( $article->title.'.'.$extension );
 		if( $width > $options->get( 'medium.width' ) || $height > $options->get( 'medium.height' ) ){
-			$fileLarge	= $this->pathArticleCovers.'l/'.$id.'_'.$targetFileName;
 			if( $width > $options->get( 'large.width' ) || $height > $options->get( 'large.height' ) ){
 				$processor->scaleDownToLimit(
 					$options->get( 'large.width' ),
 					$options->get( 'large.height' ),
 					$options->get( 'large.quality' )
 				);
+				$image->save( $sourceFile );
 			}
-			$image->save( $fileLarge );
+			$logicBucket->add( $sourceFile, 'bookstore/article/l/'.$title, $mimeType, 'catalog_bookstore' );
 		}
-
-		//  --  CREATE MEDIUM IMAGE  --  //
-		$fileMedium	= $this->pathArticleCovers.'m/'.$id.'_'.$targetFileName;
 		$processor->scaleDownToLimit(
 			$options->get( 'medium.width' ),
 			$options->get( 'medium.height' ),
 			$options->get( 'medium.quality' )
 		);
-		$image->save( $fileMedium );
+		$image->save( $sourceFile );
+		$logicBucket->add( $sourceFile, 'bookstore/article/m/'.$title, $mimeType, 'catalog_bookstore' );
 
-		//  --  CREATE SMALL IMAGE  --  //
-		$fileSmall	= $this->pathArticleCovers.'s/'.$id.'_'.$targetFileName;
 		$processor->scaleDownToLimit(
 			$options->get( 'small.width' ),
 			$options->get( 'small.height' ),
 			$options->get( 'small.quality' )
 		);
-		$image->save( $fileSmall );
-
-		$this->editArticle( $articleId, array( 'cover' => $targetFileName ) );
+		$image->save( $sourceFile );
+		$logicBucket->add( $sourceFile, 'bookstore/article/s/'.$title, $mimeType, 'catalog_bookstore' );
+		$this->editArticle( $articleId, array( 'cover' => $title ) );
 		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
 	}
 }

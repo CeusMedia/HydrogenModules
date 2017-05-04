@@ -11,8 +11,7 @@ $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
 
 $image		= "images/no_author.png";
 if( $author->image ){
-	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
-	$image	= $pathAuthors.$id.'_'.$author->image;
+	$image	= 'file/bookstore/author/'.$author->image;
 }
 $image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 
