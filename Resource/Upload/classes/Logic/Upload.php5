@@ -186,15 +186,12 @@ class Logic_Upload{
 	}
 
 	static public function sanitizeFileNameStatic( $filename, $urlEncode = FALSE, $maxLength = 256 ){
-//		$filename	= str_replace( '–', '-', $filename );											//  replace minus by hyphen
-		$filename	= preg_replace( '/\x96/', '-', $filename );										//  replace minus by hyphen
 		$filename	= str_replace( ' ', '_', $filename );											//  replace whitespace by underscore
 		$filename	= str_replace( '/', ',', $filename );											//  replace whitespace by underscore
-		$filename = preg_replace(
+		$filename	= preg_replace(
 			'~
 			[<>:"/\\|?*]|            # file system reserved https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
 			[\x00-\x1F]|             # control characters http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247%28v=vs.85%29.aspx
-			[\x7F\xA0\xAD]|          # non-printing characters DEL, NO-BREAK SPACE, SOFT HYPHEN
 			[#\[\]@!$&\'()+,;=]|     # URI reserved https://tools.ietf.org/html/rfc3986#section-2.2
 			[{}^\~`]                 # URL unsafe characters https://www.ietf.org/rfc/rfc1738.txt
 			~x',
@@ -239,6 +236,19 @@ class Logic_Upload{
 		if( !$result )
 			throw new RuntimeException( 'File cannot be created: '.$targetFile );
 		return TRUE;
+	}
+
+	public function saveToBucket( $uriPath, $moduleId = NULL ){
+		if( !$this->env->getModules()->has( 'Resource_FileBucket' ) )
+			throw new RuntimeException( 'Module Resource:FileBucket is not installed' );
+		$logicBucket	= new Logic_FileBucket( $this->env );
+		return $logicBucket->get( $logicBucket->add(
+			$this->upload->tmp_name,
+			$uriPath,
+			$this->getMimeType(),
+			$moduleId
+		) );
+
 	}
 
 	public function scaleImage( $targetFile, $maxWidth, $maxHeight, $quality = NULL ){
