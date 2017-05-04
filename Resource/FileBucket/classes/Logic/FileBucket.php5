@@ -12,14 +12,14 @@ class Logic_FileBucket{
 	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
 		$this->env		= $env;
 		$this->model	= new Model_File( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_file.', TRUE );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
 		switch( strtoupper( $this->moduleConfig->get( 'hash' ) ) ){
 			case 'UUID':
-				$this->setHashFunction( Logic_File::HASH_UUID );
+				$this->setHashFunction( self::HASH_UUID );
 				break;
 			case 'MD5':
 			default:
-				$this->setHashFunction( Logic_File::HASH_MD5 );
+				$this->setHashFunction( self::HASH_MD5 );
 		}
 		$basePath	= $this->env->getConfig()->get( 'path.contents' );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
@@ -39,7 +39,8 @@ class Logic_FileBucket{
 
 		$parts		= $this->getFilePartsFromUriPath( $uriPath );
 		$hash		= $this->getNewHash();
-		copy( $sourceFilePath, $this->filePath.$hash );
+		if( !@copy( $sourceFilePath, $this->filePath.$hash ) )
+			throw new RuntimeException( 'Copying file to bucket failed' );
 		$data	= array(
 //			'creatorId'		=> 0,
 			'moduleId'		=> $moduleId,
@@ -52,6 +53,10 @@ class Logic_FileBucket{
 			'modifiedAt'	=> filemtime( $sourceFilePath ),
 		);
 		return $this->model->add( $data );
+	}
+
+	public function get( $fileId ){
+		return $this->model->get( $fileId );
 	}
 
 	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = array(), $limits = array() ){
@@ -79,12 +84,15 @@ class Logic_FileBucket{
 		return $this->model->getByIndex( 'hash', $hash );
 	}
 
-	public function getByPath( $uriPath ){
+	public function getByPath( $uriPath, $moduleId = NULL ){
 		$parts		= $this->getFilePartsFromUriPath( $uriPath );
-		return $this->model->getByIndices( array(
-			'filePath'		=> $parts->filePath,
-			'fileName'		=> $parts->fileName,
-		) );
+		$indices	= array(
+			'filePath'	=> $parts->filePath,
+			'fileName'	=> $parts->fileName,
+		);
+		if( $moduleId )
+			$indices['moduleId']	= $moduleId;
+		return $this->model->getByIndices( $indices );
 	}
 
 	protected function getFilePartsFromUriPath( $uriPath ){
