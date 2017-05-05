@@ -7,6 +7,8 @@ class Model_Branch extends CMF_Hydrogen_Model{
 	const STATUS_CHANGED	= 1;
 	const STATUS_ACTIVE		= 2;
 
+	protected $radiusEarth  = 6371;
+
 	protected $name			= 'branches';
 	protected $columns		= array(
 		'branchId',
@@ -80,5 +82,15 @@ die( $e->getMessage() );
 		}
 		return $list;
 	}
+
+	/**
+	 *	@todo		move to branch module and remove
+	 */
+	public function getBranchesInRangeOf( $point, $radius, $havingIds = array() ){
+		$list		= array();
+		$model		= new Model_Branch( $this->env );
+		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
+		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );
+	}/**/
 }
 ?>
