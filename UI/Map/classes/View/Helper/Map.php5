@@ -13,7 +13,7 @@ class View_Helper_Map {
 		}
 		$url	= 'https://developers.google.com/maps/documentation/javascript/get-api-key';
 		$msg	= 'Module <b>UI_Map</b> has no Google API key. Please <a href="'.$url.'" target="_blank">create</a> one and set in module configuration!';
-		$env->getMessenger()->noteFailure( $msg );
+		$env->getMessenger()->noteNotice( $msg );
 	}
 
 	public function build( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ){
