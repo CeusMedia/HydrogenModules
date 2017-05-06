@@ -122,7 +122,7 @@ $buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-question-sign icon-white"
 	'target'	=> '_blank',
 ) );
 
-$buttons	= new \CeusMedia\Bootstrap\ButtonToolbar( array( new \CeusMedia\Bootstrap\ButtonGroup( $buttons ) ) );
+$buttons	= new \CeusMedia\Bootstrap\Button\Toolbar( array( new \CeusMedia\Bootstrap\ButtonGroup( $buttons ) ) );
 
 
 function renderDataList( $keys, $data, $labels ){
