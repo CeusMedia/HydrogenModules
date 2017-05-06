@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (
   KEY `target` (`target`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `<%?prefix%>routes` (`routeId`, `regex`, `code`, `source`, `target`, `title`, `createdAt`) VALUES
-(1, 0, 301, 'OldAddress', 'NewAddress', 'Permanently moved.', 1424946122),
-(2, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
-(3, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
+INSERT INTO `<%?prefix%>routes` (`routeId`, `status`, `regex`, `code`, `source`, `target`, `title`, `createdAt`) VALUES
+(1, 0, 0, 301, 'OldAddress', 'NewAddress', 'Permanently moved.', 1424946122),
+(2, 0, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
+(3, 0, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
