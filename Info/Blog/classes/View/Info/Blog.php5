@@ -103,12 +103,16 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 			$modelUser		= new Model_User( $env );
 			$post->author	= $modelUser->get( $post->authorId );
 		}
+		$authorName	= $post->author->username;
+		if( isset( $post->author->firstname ) && isset( $post->author->surname ) )
+			$authorName	= $post->author->firstname.' '.$post->author->surname;
 		$facts	= array(
-			'Autor: '	=> $post->author->username,
+			'Autor: '	=> $authorName,
 			'Datum: '	=> date( 'd.m.Y H:i', $post->createdAt ),
 			'Gelesen: '	=> $post->nrViews.' mal',
 //			'Kommentare: '	=> count( $post->comments ),
 		);
+
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
 		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
 	}
