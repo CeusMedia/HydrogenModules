@@ -102,6 +102,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 			throw new RuntimeException( 'File is not readable' );
 
 		$logicBucket	= new Logic_FileBucket( $this->env );
+		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
 		$options		= $this->moduleConfig->getAll( 'article.document.', TRUE );
 		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
 		$article		= $this->getArticle( $articleId );
@@ -153,6 +154,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$image			= new UI_Image( $sourceFile );
 		$processor		= new UI_Image_Processing( $image );
 		$logicBucket	= new Logic_FileBucket( $this->env );
+		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
 		$options		= $this->moduleConfig->getAll( 'author.image.', TRUE );
 		$author			= $this->getAuthor( $authorId );
 		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
@@ -803,6 +805,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$image			= new UI_Image( $sourceFile );
 		$processor		= new UI_Image_Processing( $image );
 		$logicBucket	= new Logic_FileBucket( $this->env );
+		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
 		$width			= $image->getWidth();
 		$height			= $image->getHeight();
 		$options		= $this->moduleConfig->getAll( 'article.image.', TRUE );
