@@ -31,6 +31,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->logic		= new Logic_Issue( $this->env );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
 		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
+		if( !$this->userProjects )
+			$this->restart( './manage/project' );
 	}
 
 	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
