@@ -124,17 +124,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 				$this->messenger->noteError( $words->msgNoPassword );
 			else{
 				$user	= $this->logic->checkPassword( $username, $password );
-				if( $user == -9 )
-					$this->messenger->noteError( $words->msgInvalidDomain );
-				else if( $user == -10 )
-					$this->messenger->noteError( $words->msgInvalidUser );
-				else if( $user == -11 )
-					$this->messenger->noteError( $words->msgInvalidPassword );
-				else if( $user == -12 )
-					$this->messenger->noteError( $words->msgUserDisabled );
-				else if( $user == -13 )
-					$this->messenger->noteError( $words->msgDomainDisabled );
-				else if( isset( $user->data->userId ) ){
+				if( isset( $user->data->userId ) ){
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->session->set( 'accountId', $user->data->accountId );
 					$this->session->set( 'userId', $user->data->userId );
@@ -148,6 +138,16 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 					$this->restart( './auth/rest?from='.$from );								//  restart (or go to redirect URL)
 				}
+				if( $user->data == -9 )
+					$this->messenger->noteError( $words->msgInvalidDomain );
+				else if( $user->data == -10 )
+					$this->messenger->noteError( $words->msgInvalidUser );
+				else if( $user->data == -11 )
+					$this->messenger->noteError( $words->msgInvalidPassword );
+				else if( $user->data == -12 )
+					$this->messenger->noteError( $words->msgUserDisabled );
+				else if( $user->data == -13 )
+					$this->messenger->noteError( $words->msgDomainDisabled );
 			}
 
 
