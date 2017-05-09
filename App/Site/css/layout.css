@@ -7,3 +7,7 @@
 .table-fixed {
 	table-layout: fixed;
 	}
+
+abbr[title], abbr[data-original-title] {
+	text-decoration: none;
+	}
