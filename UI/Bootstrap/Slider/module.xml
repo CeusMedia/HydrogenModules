@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Bootstrap: Slider</title>
+	<description><![CDATA[Slider input for bootstrap.]]></description>
+	<category>User Interface</category>
+	<version>9.8.0</version>
+	<author site="http://seiyria.com/">Kyle J. Kemp</author>
+	<license source="https://github.com/seiyria/bootstrap-slider/blob/master/LICENSE.md" title="MIT License">MIT</license>
+	<files>
+		<style source="common" load="auto">bootstrap-slider.min.css</style>
+		<script load="auto">bootstrap-slider.min.js</script>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Bootstrap</needs>
+	</relations>
+</module>
