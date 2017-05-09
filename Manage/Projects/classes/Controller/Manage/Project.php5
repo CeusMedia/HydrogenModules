@@ -42,6 +42,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
 		foreach( $myProjects as $relation )
 			$projectIds[]   = $relation->projectId;
+		if( !$projectIds )
+			return;
 		$logic				= new Logic_Project( $env );
 		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), array( 'status' => '>0' ) );
 //		unset( $users[$data->userId] );
