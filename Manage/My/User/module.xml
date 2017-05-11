@@ -43,6 +43,7 @@
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<config protected="yes" type="boolean" name="email.changeable">yes</config>
 	<config protected="yes" type="boolean" name="username.changeable">no</config>
