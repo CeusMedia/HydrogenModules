@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Events</title>
+	<description><![CDATA[]]></description>
+	<category>Info</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/Event.php5</class>
+		<class>Model/Address.php5</class>
+		<class>Model/Event.php5</class>
+		<class>View/Info/Event.php5</class>
+		<class>View/Helper/Info/Event/Calendar.php5</class>
+		<locale>de/info/event.ini</locale>
+		<template>info/event/calendar.php</template>
+		<template>info/event/index.php</template>
+		<template>info/event/view.php</template>
+		<template>info/event/view.modal.php</template>
+		<style>module.info.event.css</style>
+	</files>
+	<relations>
+		<needs type="module">Resource_Geolocation</needs>
+		<needs type="module">UI_Map</needs>
+	</relations>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>addresses`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>addresses` (
+  `addressId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `country` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `longitude` double NOT NULL,
+  `latitude` double NOT NULL,
+  `x` double NOT NULL,
+  `y` double NOT NULL,
+  `z` double NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`addressId`),
+  KEY `companyId` (`status`,`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>events`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>events` (
+  `eventId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `addressId` int(11) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `dateStart` date NOT NULL,
+  `dateEnd` date NOT NULL,
+  `timeStart` time NOT NULL,
+  `timeEnd` time NOT NULL,
+  `title` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`eventId`),
+  KEY `addressId` (`addressId`),
+  KEY `status` (`status`),
+  KEY `dateStart` (`dateStart`),
+  KEY `dateEnd` (`dateEnd`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>addresses`;
+DROP TABLE IF EXISTS `<%?prefix%>events`;
+]]></sql>
+</module>

@@ -1,0 +1,302 @@
+/*	@todo		kriss: fix UNKNOWN */
+
+/*  --  PERSPECTIVE BUTTONS  --  */
+button.icon.list span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
+	}
+button.icon.calendar span {
+	background-image: url(http://img.int1a.net/famfamfam/silk/calendar_view_month.png);
+	}
+
+
+
+.mission-row-small td {
+	padding: 0;
+	margin: 0;
+	}
+
+
+
+
+/*  --  BUTTONS  --  */
+button.export.ical span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	}
+button.export.archive span{
+	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
+	}
+legend.icon.export {
+	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
+	}
+legend.icon.mission-add {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
+	}
+legend.icon.mission-edit {
+	background-image: url(http://img.int1a.net/famfamfam/silk/script_edit.png);
+	}
+legend.icon.mission-close {
+	background-image: url(http://img.int1a.net/famfamfam/silk/accept.png);
+	}
+
+
+/*  --  DAY TABLES  -- */
+body.controller-work-mission.action-index .work-mission-list {
+/*	overflow: hidden;*/
+	}
+
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group {
+	width: 100%;
+	}
+body.controller-work-mission.action-index #day-controls #day-controls-btn-group a.btn {
+	width:16.67%; box-sizing: border-box
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn div.mission-number {
+	position: absolute;
+	top: 10px;
+	right: 11px;
+	display: block;
+	}
+body.controller-work-mission.action-index #day-controls-btn-group a.btn .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+
+	/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day {
+	position: relative;
+	min-width: 80px;
+	width: 12%;
+	height: 50px;
+	padding: 0px;
+	margin: 0px 0.5% 0px 0px;
+	border-radius: 0.5em;
+	background: #f2f5f6; /* Old browsers */
+	background: -moz-linear-gradient(top, #f2f5f6 0%, #EDEDED 37%, #D7D7D7 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#EDEDED), color-stop(100%,#D7D7D7)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f2f5f6 0%,#EDEDED 37%,#D7D7D7 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#D7D7D7',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #8F8F8F;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.active {
+	border-width: 2px;
+	border-style: solid;
+	border-color: green;
+	background: #EFE;
+	color: #000;
+/*	color: #23738F;
+*/	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.active div.mission-number {
+	background-color: green;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.important {
+	width: 16%;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.empty {
+	min-width: 80px !important;
+	background: #EFEFEF;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day.important.empty {
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls button.day .mission-number {
+	position: relative;
+	float: none !important;
+	display: inline !important;
+	margin: 0px 0.8em 0px 0px !important;
+	top: 0px;
+	right: 0px;
+	}
+body.controller-work-mission.action-index #day-controls .progress {
+	height: 6px;
+	margin: 4px 2px 2px 2px;
+	padding: 0px;
+	}
+body.controller-work-mission.action-index #day-controls li {
+	width: 16.666666667%;
+	}
+/* @deprecated */
+body.controller-work-mission.action-index #day-controls li .dayDate {
+	display: block;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1.6em;
+	}
+
+
+
+table tr th .sortable.right {
+	text-align: right;
+	}
+
+.invisible {
+	display: none;
+	}
+
+
+/*  --  MISSION CALENDAR  --  */
+#mission-calendar table {
+	position: relative;
+	border: 1px solid #7F7F7F;
+	table-layout: fixed;
+/*	border-collapse: collapse;*/
+	}
+#mission-calendar tr th {
+	border: none;
+	text-align: left;
+	}
+#mission-calendar tr td {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	padding: 0px 0px !important;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	height: 100px;
+	vertical-align: top;
+	}
+#mission-calendar tr th.week-number {
+	border-width: 1px 1px 0px 0px;
+	border-style: solid;
+	border-color: #9F9F9F;
+	text-align: center;
+	vertical-align: middle;
+	}
+#mission-calendar tr th.week-number span {
+	display: block;
+	width: 100%;
+/*	padding: 1em 0px;
+*/	text-align: center;
+	color: #BFBFBF;
+	font-size: 1.2em;
+	font-weight: bold;
+	letter-spacing: 1px;
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+	}
+#mission-calendar tr td:last-child {
+	border-width: 1px 0px 0px 0px;
+	}
+#mission-calendar tr td.inactive,
+#mission-calendar tr td.past {
+/*	height: 55px;*/
+	}
+#mission-calendar tr td.past {
+	background-color: #F7F7F7;
+	}
+#mission-calendar tr td.inactive {
+	background-color: #DFDFDF !important;
+	opacity: 0.75;
+/*	color: #7F7F7F;*/
+	}
+#mission-calendar tr td.today {
+/*	border-color: black;
+*/	background-color: rgb(255,255,170);
+	}
+/*#mission-calendar tr td div.date-label {
+	font-size: 1.1em;
+	padding: 2px 6px;
+	background-image: linear-gradient(bottom, rgba(255,255,255,0.1), rgba(127,127,127,0.8));
+	background-image: -webkit-linear-gradient(bottom, rgba(255,255,255,0.01), rgba(127,127,127,0.25));
+	}
+#mission-calendar tr td.today div.date-label {
+	font-weight: bold;
+	color: black;
+	}
+#mission-calendar tr td.inactive div.date-label {
+	background-image: none;
+	}*/
+
+#mission-calendar tr td ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	max-height: 150px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	}
+#mission-calendar tr td ul li {
+	position: relative;
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 2px 3px;
+	}
+
+#mission-calendar tr td ul li a.icon-label {
+	text-decoration: none;
+	background-color: transparent;
+	}
+#mission-calendar li.priority-1 {
+	background-color: rgba(255,0,0,0.20);
+	}
+#mission-calendar li.priority-2 {
+	background-color: rgba(255,127,0,0.20);
+	}
+#mission-calendar li.priority-3 {
+	background-color: rgba(255,255,63,0.20);
+	}
+#mission-calendar li.priority-4 {
+	background-color: rgba(127,255,0,0.20);
+	}
+#mission-calendar li.priority-5 {
+	background-color: rgba(0,255,0,0.20);
+	}
+#mission-calendar-control {
+	margin-bottom: 0.5em;
+	}
+#mission-calendar-control-label {
+	display: inline-block;
+	padding-left: 1em;
+	}
+#mission-calendar-control-label .month-label,
+#mission-calendar-control-label .year-label {
+	font-weight: lighter;
+	font-size: 1.4em;
+	}
+
+#mission-calendar-large,
+#mission-calendar-small {
+	width: 100%;
+	}
+#mission-calendar-large thead tr th {
+	text-align: center;
+	font-weight: normal;
+	font-size: 1.1em;
+	line-height: 1.5em;
+
+	}
+#mission-calendar-large tbody tr th {
+	width: 2%;
+	}
+#mission-calendar-large tbody tr td {
+	position: relative;
+	width: 14%;
+	}
+
+
+#mission-calendar-large tbody tr td .date-label{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	font-size: 5em;
+	color: rgba(191, 191, 191, 0.2);
+	text-align: center;
+	line-height: 1.5em;
+	font-weight: bold;
+	font-weight: lighter;
+	}
