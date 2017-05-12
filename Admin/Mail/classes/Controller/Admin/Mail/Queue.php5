@@ -4,8 +4,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	protected $logic;
 
 	public function __onInit(){
-		$this->logic	= new Logic_Mail( $this->env );
-		$path			= '';
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= new Logic_Mail( $this->env );
+		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
 		CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
@@ -28,30 +31,45 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		return $this->view->ajaxRenderDashboardPanel();
 	}
 
+	public function cancel( $mailId ){
+		$model	= new Model_Mail( $this->env );
+		$mail	= $model->get( $mailId );
+		if( !$mail ){
+			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->restart( NULL, TRUE );
+		}
+		if( $mail->status > 1 ){
+			$this->env->getMessenger->noteError( 'Mail already sent' );
+			$this->restart( NULL, TRUE );
+		}
+		$model->edit( $mailId, array(
+			'status'	=> Model_Mail::STATUS_ABORTED,
+		) );
+		$this->restart( 'view/'.$mailId, TRUE );
+	}
+
 	public function html( $mailId ){
 		$mail		= $this->logic->getQueuedMail( $mailId );
 		$this->addData( 'mail', $mail );
 	}
 
 	public function enqueue(){
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$language	= $this->env->getLanguage()->getLanguage();
-		if( $request->has( 'add' ) ){
-			if( !strlen( $class	= trim( $request->get( 'class' ) ) ) )
+		if( $this->request->has( 'add' ) ){
+			if( !strlen( $class	= trim( $this->request->get( 'class' ) ) ) )
 				$messenger->noteError( 'Mail class is missing.' );
-			if( !strlen( $sender	= trim( $request->get( 'sender' ) ) ) )
+			if( !strlen( $sender	= trim( $this->request->get( 'sender' ) ) ) )
 				$messenger->noteError( 'Sender address is missing.' );
-			if( !strlen( $receiver	= trim( $request->get( 'receiver' ) ) ) )
+			if( !strlen( $receiver	= trim( $this->request->get( 'receiver' ) ) ) )
 				$messenger->noteError( 'Receiver address is missing.' );
-			if( !strlen( $subject	= trim( $request->get( 'subject' ) ) ) )
+			if( !strlen( $subject	= trim( $this->request->get( 'subject' ) ) ) )
 				$messenger->noteError( 'Mail subject is missing.' );
-			if( !strlen( $body		= trim( $request->get( 'body' ) ) ) )
+			if( !strlen( $body		= trim( $this->request->get( 'body' ) ) ) )
 				$messenger->noteError( 'Mail body is missing.' );
 			if( !$messenger->gotError() ){
 				try{
 					$receiver	= array( 'email' => $receiver );
-					$mail	= new Mail_Test( $this->env, $request->getAll() );
+					$mail	= new Mail_Test( $this->env, $this->request->getAll() );
 					$mail->setSubject( $subject );
 					$mail->setSender( $sender );
 
@@ -72,51 +90,48 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$this->restart( 'enqueue', TRUE );
 		}
 		$this->addData( 'classes', $this->logic->getMailClassNames() );
-		$this->addData( 'class', $request->get( 'class' ) );
-		$this->addData( 'subject', $request->get( 'subject' ) );
-		$this->addData( 'body', $request->get( 'body' ) );
-		$this->addData( 'sender', $request->get( 'sender' ) ? $request->get( 'sender' ) : "kriss@localhost" );
-		$this->addData( 'receiver', $request->get( 'receiver' ) ? $request->get( 'receiver' ) : "dev@ceusmedia.de" );
+		$this->addData( 'class', $this->request->get( 'class' ) );
+		$this->addData( 'subject', $this->request->get( 'subject' ) );
+		$this->addData( 'body', $this->request->get( 'body' ) );
+		$this->addData( 'sender', $this->request->get( 'sender' ) ? $this->request->get( 'sender' ) : "kriss@localhost" );
+		$this->addData( 'receiver', $this->request->get( 'receiver' ) ? $this->request->get( 'receiver' ) : "dev@ceusmedia.de" );
 	}
 
 	public function filter( $reset = NULL ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
 		if( $reset ){
-			$session->remove( 'filter_mail_receiverAddress' );
-			$session->remove( 'filter_mail_status' );
-//			$session->remove( 'filter_mail_way' );
-			$session->remove( 'filter_mail_limit' );
-			$session->remove( 'filter_mail_order' );
-			$session->remove( 'filter_mail_direction' );
+			$this->session->remove( 'filter_mail_receiverAddress' );
+			$this->session->remove( 'filter_mail_status' );
+//			$this->session->remove( 'filter_mail_way' );
+			$this->session->remove( 'filter_mail_limit' );
+			$this->session->remove( 'filter_mail_order' );
+			$this->session->remove( 'filter_mail_direction' );
 		}
 		else{
-			$session->set( 'filter_mail_receiverAddress', $request->get( 'receiverAddress' ) );
-			$session->set( 'filter_mail_status', $request->get( 'status' ) );
-//			$session->set( 'filter_mail_way', $request->get( 'way' ) );
-			$session->set( 'filter_mail_limit', $request->get( 'limit' ) );
-			$session->set( 'filter_mail_order', $request->get( 'order' ) );
-			$session->set( 'filter_mail_direction', $request->get( 'direction' ) );
+			$this->session->set( 'filter_mail_receiverAddress', $this->request->get( 'receiverAddress' ) );
+			$this->session->set( 'filter_mail_status', $this->request->get( 'status' ) );
+//			$this->session->set( 'filter_mail_way', $this->request->get( 'way' ) );
+			$this->session->set( 'filter_mail_limit', $this->request->get( 'limit' ) );
+			$this->session->set( 'filter_mail_order', $this->request->get( 'order' ) );
+			$this->session->set( 'filter_mail_direction', $this->request->get( 'direction' ) );
 
-			if( count( $states = $session->get( 'filter_mail_status' ) ) === 1 )
+			if( count( $states = $this->session->get( 'filter_mail_status' ) ) === 1 )
 				if( $states[0] === '' )
-					$session->remove( 'filter_mail_status' );
+					$this->session->remove( 'filter_mail_status' );
 
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function index( $page = 0 ){
-		$session	= $this->env->getSession();
-//		if( !$session->get( 'filter_mail_status' ) )
-//			$session->set( 'filter_mail_status', array( 0 ) );
-		if( !$session->get( 'filter_mail_limit' ) )
-			$session->set( 'filter_mail_limit', 10 );
-		if( !$session->get( 'filter_mail_order' ) )
-			$session->set( 'filter_mail_order', 'enqueuedAt' );
-		if( !$session->get( 'filter_mail_direction' ) )
-			$session->set( 'filter_mail_direction', 'DESC' );
-		$filters	= $session->getAll( 'filter_mail_', TRUE );
+//		if( !$this->session->get( 'filter_mail_status' ) )
+//			$this->session->set( 'filter_mail_status', array( 0 ) );
+		if( !$this->session->get( 'filter_mail_limit' ) )
+			$this->session->set( 'filter_mail_limit', 10 );
+		if( !$this->session->get( 'filter_mail_order' ) )
+			$this->session->set( 'filter_mail_order', 'enqueuedAt' );
+		if( !$this->session->get( 'filter_mail_direction' ) )
+			$this->session->set( 'filter_mail_direction', 'DESC' );
+		$filters	= $this->session->getAll( 'filter_mail_', TRUE );
 
 		$page		= max( 0, (int) $page );
 		$offset		= $page * $filters->get( 'limit' );
@@ -156,28 +171,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function cancel( $mailId ){
-		$model	= new Model_Mail( $this->env );
-		$mail	= $model->get( $mailId );
-		if( !$mail ){
-			$this->env->getMessenger->noteError( 'Invalid mail ID' );
-			$this->restart( NULL, TRUE );
-		}
-		if( $mail->status > 1 ){
-			$this->env->getMessenger->noteError( 'Mail already sent' );
-			$this->restart( NULL, TRUE );
-		}
-		$model->edit( $mailId, array(
-			'status'	=> Model_Mail::STATUS_ABORTED,
-		) );
-		$this->restart( 'view/'.$mailId, TRUE );
-	}
-
 	public function resend( $mailId ){
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
-			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
 		}
 /*		if( $mail->status > 1 ){
@@ -191,18 +189,12 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $mailId ){
-		$mail	= $this->logic->getQueuedMail( $mailId );
-
-		if( $mail->object ){
-			switch( substr( $mail->object, 0, 2 ) ){
-				case 'BZ':
-					$mail->object	= bzdecompress( $mail->object );
-					break;
-				case 'GZ':
-					$mail->object	= gzinflate( $mail->object );
-					break;
-			}
-			$mail->object	= @unserialize( $mail->object );
+		try{
+			$mail	= $this->logic->get( $mailId );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( 'Parsing of this mail failed.' );
+			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'mail', $mail );
 	}
