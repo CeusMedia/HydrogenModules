@@ -20,10 +20,9 @@ class Logic_Mail{
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
-//		$this->options->set( 'queue', TRUE );
 
-		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled == "0.4.7" )
-			$this->_repairQueue();
+		$this->phpHasGzip	= function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
+		$this->phpHasBzip	= function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
 
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
@@ -125,19 +124,14 @@ class Logic_Mail{
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
-		if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
-			$serial		= bzcompress( serialize( $mail ) );
-		else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
-			$serial		= gzdeflate( serialize( $mail ) );
-		else
-			$serial		= base64_encode( serialize( $mail ) );
 
 		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
 			$senderAddress	= $mail->mail->getSender()->getAddress();
 		else
 			$senderAddress	= $mail->mail->getSender()->address;
 
-		$data	= array(
+		$encoding	= $this->encodeMailObject( $mail );
+		$data		= array(
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $senderAddress,
@@ -145,7 +139,8 @@ class Logic_Mail{
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,
 			'subject'			=> $mail->getSubject(),
-			'object'			=> $serial,
+			'compression'		=> $encoding->compression,
+			'object'			=> $encoding->code,
 			'enqueuedAt'		=> time(),
 			'attemptedAt'		=> 0,
 			'sentAt'			=> 0,
@@ -179,6 +174,89 @@ class Logic_Mail{
 			}
 		}
 		return $list;																				//  return map of found mail classes by their files
+	}
+
+	public function decodeMailObject( $mail, $apply = TRUE ){
+		switch( $mail->compression ){
+			case Model_Mail::COMPRESSION_NONE:
+				$serial	= $mail->object;
+				break;
+			case Model_Mail::COMPRESSION_BASE64:
+				$serial	= base64_decode( $mail->object );
+				break;
+			case Model_Mail::COMPRESSION_GZIP:
+				if( !$this->phpHasGzip )
+					throw new RuntimeException( 'Extension for gzip is not installed' );
+				$serial	= gzinflate( $mail->object );
+				break;
+			case Model_Mail::COMPRESSION_BZIP2:
+				if( !$this->phpHasBzip )
+					throw new RuntimeException( 'Extension for bzip2 is not installed' );
+				$serial	= bzdecompress( $mail->object );
+				break;
+			default:
+				throw new RangeException( 'Compression mode is not supported' );
+		}
+		$object	= @unserialize( $serial );
+		if( gettype( $object ) !== "object" )
+			throw new RuntimeException( 'Decoding mail object failed ('.$mail->mailId.')' );
+
+		if( $apply ){
+			$mail->serial	= $serial;
+			$mail->object	= $object;
+		}
+		return $object;
+	}
+
+	public function encodeMailObject( $mailObject ){
+		$order	= array(
+			Model_Mail::COMPRESSION_GZIP,
+			Model_Mail::COMPRESSION_BZIP2,
+			Model_Mail::COMPRESSION_BASE64,
+			Model_Mail::COMPRESSION_NONE,
+		);
+		$code		= NULL;
+		$serial		= @serialize( $mailObject );
+		if( !$serial )
+			throw new RuntimeException( 'Serializing mail object failed' );
+//		xmp( $serial );
+		foreach( $order as $compression ){
+			switch( $compression ){
+				case Model_Mail::COMPRESSION_NONE:
+					$code	= $serial;
+					break;
+				case Model_Mail::COMPRESSION_BASE64:
+					$code	= base64_encode( $serial );
+					break;
+				case Model_Mail::COMPRESSION_GZIP:
+					if( $this->phpHasGzip )
+						$code	= gzdeflate( $serial );
+					break;
+				case Model_Mail::COMPRESSION_BZIP2:
+					if( $this->phpHasBzip )
+						$code	= bzcompress( $serial );
+					break;
+			}
+			if( $code )
+				break;
+		}
+//		if( !$code )
+//			throw new RuntimeException( 'Encoding mail object failed' );
+		return (object) array(
+			'compression'	=> $compression,
+			'code'			=> $code,
+		);
+	}
+
+	public function get( $mailIdOrObject ){
+		if( !is_object( $mailIdOrObject ) )
+			$mailIdOrObject		= $this->modelQueue->get( $mailIdOrObject );
+		if( !is_object( $mailIdOrObject ) )
+			throw new OutOfRangeException( 'Invalid mail ID: '.$mailIdOrObject );
+		$mail		= $mailIdOrObject;
+		$firstTwo	= substr( $mail->object, 0, 2 );
+		$this->decodeMailObject( $mail, TRUE );														//  decompress & unserialize mail object serial and apply to mail data object
+		return $mail;
 	}
 
 	/**
@@ -240,12 +318,6 @@ class Logic_Mail{
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
 		}
-/*		$serial		= serialize( $mail );
-		if( function_exists( 'bzcompress' ) )
-			$serial		= bzcompress( $serial );
-		else if( function_exists( 'gzcompress' ) )
-			$serial		= gzcompress( $serial );
-*/
 		if( !is_object( $receiver ) )
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		$mail->setEnv( $this->env );																//  override serialized environment
@@ -264,17 +336,10 @@ class Logic_Mail{
 		$mail		= $this->getQueuedMail( $mailId );
 		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new Exception( 'Mail already has been sent' );
-		if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
-			$object		= bzdecompress( $mail->object );
-		else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
-			$object		= gzinflate( $mail->object );
-		else
-			$object		= base64_decode( $mail->object );
-		$object = unserialize( $object );
-		if( !is_object( $object ) )
-			throw new RuntimeException( 'Deserialization of mail failed' );
-		$object->setEnv( $this->env );
-		$object->initTransport();
+
+		$this->decodeMailObject( $mail, TRUE );														//  decompress & unserialize mail object serial and apply to mail data object
+		$mail->object->setEnv( $this->env );
+		$mail->object->initTransport();
 		$this->modelQueue->edit( $mailId, array(
 			'status'		=> Model_Mail::STATUS_SENDING,
 			'attempts'		=> $mail->attempts + 1,
@@ -289,7 +354,7 @@ class Logic_Mail{
 					'email'		=> $mail->receiverAddress,
 					'username'	=> $mail->receiverName,
 				);
-				$object->sendTo( $receiver );
+				$mail->object->sendTo( $receiver );
 			}
 			$this->modelQueue->edit( $mailId, array(
 				'status'		=> Model_Mail::STATUS_SENT,
@@ -304,24 +369,21 @@ class Logic_Mail{
 		}
 	}
 
-	protected function _repairQueue(){
-//		$mails	=  $this->modelQueue->getAll();
-		foreach( $this->modelQueue->getAll() as $mail ){
-			if( empty( $mail->senderAddress ) ){
-				if( function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' ) )
-					$object		= bzdecompress( $mail->object );
-				else if( function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' ) )
-					$object		= gzinflate( $mail->object );
-				else
-					$object		= base64_decode( $mail->object );
-				$object = @unserialize( $object );
-				if( is_object( $object ) ){
-					if( method_exists( $object->mail, 'getSender' ) ){
-						$this->modelQueue->edit( $mail->mailId, array( 'senderAddress' => $object->mail->getSender() ) );
-					}
-				}
-			}
-		}
+	/**
+	 *	Enable or disable use of queue or return current state.
+	 *	Returns current state of no new state is given.
+	 *	@access		public
+	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
+	 *	@return		boolean|NULL	Current state if no new state is given
+	 */
+	public function useQueue( $toggle = NULL ){
+		if( $toggle === NULL )
+			return $this->options->get( 'queue' );
+		$this->options->set( 'queue', (bool) $toggle );
 	}
 }
+if( !class_exists( 'PHP_Incomplete_Class' ) ){
+	class PHP_Incomplete_Class{}
+}
+
 ?>

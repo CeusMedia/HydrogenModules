@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <jobs>
+
+	<!--  OLD JOB DESCRIPTION  -->
 	<job id="sendQueuedMails">
 		<class>Mail</class>
 		<method>sendQueuedMails</method>
@@ -9,6 +11,29 @@
 	<job id="countQueuedMails">
 		<class>Mail</class>
 		<method>countQueuedMails</method>
+		<mode>live</mode>
+	</job>
+
+	<!--  NEW JOB DESCRIPTION  -->
+	<job id="Resource.Mail.Queue.count">
+		<class>Mail</class>
+		<method>countQueuedMails</method>
+		<mode>live</mode>
+	</job>
+	<job id="Resource.Mail.Queue.clean">
+		<class>Mail</class>
+		<method>cleanUp</method>
+		<mode>live</mode>
+	</job>
+	<job id="Resource.Mail.Queue.migrate">
+		<class>Mail</class>
+		<method>migrate</method>
+		<mode>live</mode>
+	</job>
+	<job id="Resource.Mail.Queue.send">
+		<class>Mail</class>
+		<method>sendQueuedMails</method>
+		<interval>minute</interval>
 		<mode>live</mode>
 	</job>
 </jobs>
