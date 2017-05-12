@@ -3,9 +3,10 @@
 	<title>Info: Events</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Integrate event map.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -17,9 +18,12 @@
 		<locale>de/info/event.ini</locale>
 		<template>info/event/calendar.php</template>
 		<template>info/event/index.php</template>
+		<template>info/event/map.php</template>
+		<template>info/event/panel.search.php</template>
 		<template>info/event/view.php</template>
 		<template>info/event/view.modal.php</template>
 		<style>module.info.event.css</style>
+		<script>module.info.event.js</script>
 	</files>
 	<relations>
 		<needs type="module">Resource_Geolocation</needs>

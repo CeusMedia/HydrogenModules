@@ -30,9 +30,9 @@ return	'
 <!--	<hr/>-->
 <!--	'.print_m( $this->getData( 'event' ), NULL, NULL, TRUE ).'-->
 <!--	<div class="buttonbar">
-		<a href="./event/view/'.$event->eventId.'?from=event/calender" class="btn btn-info">'.$iconDetails.'&nbsp;weitere Informationen</a>
-		<a href="./event/setParticipation/'.$event->eventId.'/1?from=event/calender" class="btn">'.$iconParticipate.'&nbsp;teilnehmen</a>
-		<a href="./event/setNotice/'.$event->eventId.'/1?from=event/calender" class="btn">'.$iconNotice.'&nbsp;merken</a>
+		<a href="./info/event/view/'.$event->eventId.'?from=info/event/calender" class="btn btn-info">'.$iconDetails.'&nbsp;weitere Informationen</a>
+		<a href="./info/event/setParticipation/'.$event->eventId.'/1?from=info/event/calender" class="btn">'.$iconParticipate.'&nbsp;teilnehmen</a>
+		<a href="./info/event/setNotice/'.$event->eventId.'/1?from=info/event/calender" class="btn">'.$iconNotice.'&nbsp;merken</a>
 		<button data-dismiss="modal" class="btn btn-inverse" aria-hidden="true">'.$iconClose.'</button>
 	</div>-->
 </div>

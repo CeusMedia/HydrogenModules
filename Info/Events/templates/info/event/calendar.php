@@ -9,7 +9,9 @@ $helper	= new View_Helper_Info_Event_Calendar( $this->env );
 $helper->setEvents( $this->getData( 'events' ) );
 $helper->setMonth( $this->getData( 'year' ), $this->getData( 'month' ) );
 
-return $helper->render().'
+$panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', array( 'from' => 'info/event/calendar' ) );
+
+return $panelSearch.$helper->render().'
 <form id="form-modal-event" action="./info/event/modal" method="post">
 	<input type="hidden" name="eventId" value="0"/>
 	<input type="hidden" name="do" value=""/>
