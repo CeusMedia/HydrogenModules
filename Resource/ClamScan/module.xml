@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: ClamScan</title>
+	<description><![CDATA[Scan files using ClamAV.
+
+This modules allows to scan local file for viruses. 
+Therefore it connects to a ClamAV daemon installed on server. 
+
+*Attention:* Needs ClamAV installed on server and a running ClamAV daemon. 
+*Attention:* Will only work on UNIX-like operating systems.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+<!--	<log version="0.2.1">Support to scan a folder, also recursivly.</log>-->
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/ClamScan.php5</class>
+	</files>
+	<relations/>
+</module>
