@@ -114,9 +114,30 @@ class Logic_Upload{
 	/**
 	 *	@todo	implement using clamav
 	 */
-	public function checkVirus(){
-		$isClean	= 0;
-		return $isClean;
+	public function checkVirus( $noteError = FALSE ){
+		try{
+			$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
+			copy( realpath( $this->upload->tmp_name ), $copy );
+			$scanner	= new ClamSocketScan();
+			$result		= $scanner->scanFile( $copy );
+		}
+		catch( Exception $e ){
+			$result		= (object) array(
+				'clean'		=> NULL,
+				'status'	=> 'EXCEPTION',
+				'message'	=> $e->getMessage(),
+			);
+		}
+		unlink( $copy );
+		$result->file	= $this->upload->name;
+		if( !$result->clean && $noteError )
+			$this->upload->error	= 14;
+		$this->upload->clamscan		= $result;
+		return $result;
+	}
+
+	public function getContent(){
+		return file_get_contents( $this->upload->tmp_name );
 	}
 
 	public function getError(){
