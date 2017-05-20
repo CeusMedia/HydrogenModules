@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Downloads</title>
+	<description><![CDATA[]]></description>
+	<category>Management</category>
+	<version>0.3.4</version>
+	<log version="0.3.4">Cloned from module Info:Files.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Download.php5</class>
+		<class>View/Manage/Download.php5</class>
+		<class>Model/Download/File.php5</class>
+		<class>Model/Download/Folder.php5</class>
+		<locale>de/manage/download.ini</locale>
+		<locale>de/html/manage/download/index.bottom.html</locale>
+		<locale>de/html/manage/download/index.top.html</locale>
+		<template>manage/download/index.php</template>
+		<template>manage/download/index.folder.php</template>
+		<template>manage/download/index.info.php</template>
+		<template>manage/download/index.scan.php</template>
+		<template>manage/download/index.upload.php</template>
+		<style>module.manage.downloads.css</style>
+		<script load="auto">module.manage.downloads.js</script>
+	</files>
+	<link xml:lang="de" access="acl" rank="21" path="manage/file">Downloads</link>
+	<link xml:lang="en" access="acl" rank="21" path="manage/file">Downloads</link>
+	<relations>
+		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+	</relations>
+</module>
