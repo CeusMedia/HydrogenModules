@@ -16,63 +16,59 @@
 		<locale>de/html/info/download/index.bottom.html</locale>
 		<locale>de/html/info/download/index.top.html</locale>
 		<template>info/download/index.php</template>
-		<template>info/download/index.folder.php</template>
 		<template>info/download/index.info.php</template>
-		<template>info/download/index.scan.php</template>
-		<template>info/download/index.upload.php</template>
 		<style>module.info.downloads.css</style>
 		<script load="auto">module.info.downloads.js</script>
 		<file>contents/downloads/.htaccess</file>
 	</files>
 	<config protected="yes" type="string" name="path">contents/downloads/</config>
-	<link xml:lang="de" access="acl" rank="21" path="info/file">Downloads</link>
-	<link xml:lang="en" access="acl" rank="21" path="info/file">Downloads</link>
+	<link xml:lang="de" access="acl" rank="21" path="info/download">Downloads</link>
+	<link xml:lang="en" access="acl" rank="21" path="info/download">Downloads</link>
+	<link access="acl" path="info/download/deliver"></link>
+	<link access="acl" path="info/download/download"></link>
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
-		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Download::___onPageCollectNews</hook>
 	<hook type="resource" resource="Novelties" event="collect">Controller_Info_Download::___onCollectNovelties</hook>
-	<sql on="install" type="mysql" version="0.3.4"><![CDATA[
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
-  `downloadFileId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `downloadFolderId` int(10) UNSIGNED NOT NULL,
+  `downloadFileId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `downloadFolderId` int(10) unsigned NOT NULL,
   `rank` smallint(6) NOT NULL,
-  `size` int(10) UNSIGNED NOT NULL,
   `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `nrDownloads` smallint(5) UNSIGNED NOT NULL,
-  `uploadedAt` decimal(12,0) UNSIGNED NOT NULL,
-  `downloadedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `nrDownloads` smallint(5) unsigned NOT NULL,
+  `uploadedAt` decimal(12,0) unsigned NOT NULL,
+  `downloadedAt` decimal(12,0) unsigned DEFAULT '0',
   PRIMARY KEY (`downloadFileId`),
   KEY `downloadFolderId` (`downloadFolderId`),
-  KEY `rank` (`rank`),
-  KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `rank` (`rank`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
-  `downloadFolderId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `parentId` int(10) UNSIGNED NOT NULL,
-  `type` tinyint(1) UNSIGNED NOT NULL,
-  `rank` smallint(5) UNSIGNED NOT NULL,
+  `downloadFolderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(10) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `rank` smallint(5) unsigned NOT NULL,
   `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `nrFolders` smallint(5) UNSIGNED DEFAULT '0',
-  `nrFiles` smallint(5) UNSIGNED DEFAULT '0',
-  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
-  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `nrFolders` smallint(5) unsigned DEFAULT '0',
+  `nrFiles` smallint(5) unsigned DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT '0',
   PRIMARY KEY (`downloadFolderId`),
-  KEY `parentId` (`parentId`),
-  KEY `type` (`type`),
-  KEY `rank` (`rank`),
-  KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `parentId` (`parentId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>download_files`;
-DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
+	<sql on="update" type="mysql" version="0.2.9"><![CDATA[
+ALTER TABLE `<%?prefix%>download_files` ADD  `size` INT UNSIGNED NOT NULL AFTER  `rank`;
+ALTER TABLE `<%?prefix%>download_files` ADD INDEX ( `title` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `type` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `rank` );
+ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `title` );
 ]]></sql>
 </module>

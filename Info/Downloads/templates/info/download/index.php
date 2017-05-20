@@ -128,12 +128,6 @@ $panelList	= '
 $panels		= array();
 if( 0 )
 	$panels[]	= $view->loadTemplateFile( 'info/download/index.info.php' );
-if( in_array( 'upload', $rights ) )
-	$panels[]	= $view->loadTemplateFile( 'info/download/index.upload.php' );
-if( in_array( 'addFolder', $rights ) )
-	$panels[]	= $view->loadTemplateFile( 'info/download/index.folder.php' );
-if( in_array( 'scan', $rights ) )
-	$panels[]	= $view->loadTemplateFile( 'info/download/index.scan.php' );
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
