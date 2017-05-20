@@ -3,13 +3,14 @@
 	<title>Resource: JSON Server</title>
 	<description><![CDATA[Access to JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.2.3</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype in project Client:Chat.</log>
 	<log version="0.2">Separation into this module.</log>
 	<log version="0.2.1">Added response code handler.</log>
 	<log version="0.2.2">Updated configuration.</log>
 	<log version="0.2.3">Updated configuration by mandatory and title.</log>
-<!--	<log version="0.2.4">Using hook for automatic configuration.</log>-->
+	<log version="0.3">Use hook for automatic initialization and configuration.</log>
+<!--	<log version="0.3.1">Allow multiple instances.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -23,4 +24,5 @@
 	<config protected="yes" mandatory="no" type="boolean" name="log" title="Enable request log"></config>
 	<config protected="yes" mandatory="no" type="string" name="log.file" title="Filename of server request log">server.json.log</config>
 	<config protected="no" mandatory="yes" type="string" name="uri" title="URL of JSON server"></config>
+	<hook type="resource" resource="Env" event="init">Resource_Server_Json::___onEnvInit</hook>
 </module>

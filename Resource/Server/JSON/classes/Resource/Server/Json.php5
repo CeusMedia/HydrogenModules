@@ -83,6 +83,40 @@ class Resource_Server_Json {
 		$this->clientIp		= getEnv( 'REMOTE_ADDR' );
 	}
 
+	/**
+	 *	@todo			make environment resource key configurable
+	 *	@todo			allow multiple instances
+	 *	@todo			localization of messages
+	 *	@todo			allow other auth methods than 'shared secred'
+	 */
+	static public function ___onEnvInit( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+		$server		= new Resource_Server_Json( $context );
+		$context->set( 'server', $server );
+		$config		= $context->getConfig();
+		$session	= $context->getSession();
+		try{
+			$token		= $session->get( 'token' );
+			if( $token && !$server->postData( 'auth', 'validateToken' ) )
+				$session->set( 'token', $token = NULL );
+			if( !$token ) {																				//  client has no token yet
+				$session->set( 'ip', getEnv( 'REMOTE_ADDR' ) );											//  store ip address in session
+				$data	= array(
+					'credentials'	=> array(															//  prepare POST data
+						'secret'	=> $config->get( 'module.resource_server_json.auth.secret' ),		//  with known secret
+					)
+				);
+				$token	= $server->postData( 'auth', 'getToken', NULL, $data );							//  request token from server using POST request
+				$session->set( 'token', $token );														//  store token in session
+			}
+		}
+		catch( Exception $e ){
+			$message	= "Der Chat-Server ist momentan nicht erreichbar.";
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+
+	}
+
 	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = array(), $parameters = array() ) {
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		if( is_null( $parameters ) )
