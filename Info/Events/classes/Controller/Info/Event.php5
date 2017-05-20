@@ -106,7 +106,7 @@ class Controller_Info_Event extends CMF_Hydrogen_Controller{
 			try{
 				$parts		= preg_split( "/\s+/", $location );
 				$center		= $geocoder->getPointByPostcodeAndCity( $parts[0], $parts[1] );
-				$this->messenger->noteNotice( "Map Center: ".$center->lat.", ".$center->lon );
+//				$this->messenger->noteNotice( "Map Center: ".$center->lat.", ".$center->lon );
 				$spaceRange	= new SpaceRange( $center->x, $center->y, $center->z, $range );
 				$timeRange	= new TimeRange( "2017-05-01", "2017-0601" );
 				$events		= $this->modelEvent->getAllWithinTimeAndSpaceRanges( $spaceRange, $timeRange );
