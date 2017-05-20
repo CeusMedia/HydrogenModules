@@ -21,6 +21,7 @@ class Model_Blog_Comment extends CMF_Hydrogen_Model {
 	protected $name		= 'blog_comments';
 	protected $columns	= array(
 		'commentId',
+		'parentId',
 		'postId',
 		'authorId',
 		'status',
@@ -29,13 +30,15 @@ class Model_Blog_Comment extends CMF_Hydrogen_Model {
 		'email',
 		'title',
 		'content',
-		'nrViews',
+		'nrLikes',
+		'nrDislikes',
 		'createdAt',
 		'modifiedAt',
-		'viewedAt',
+		'repliedAt',
 	);
 	protected $primaryKey	= 'commentId';
 	protected $indices		= array(
+		'parentId',
 		'postId',
 		'authorId',
 		'status',

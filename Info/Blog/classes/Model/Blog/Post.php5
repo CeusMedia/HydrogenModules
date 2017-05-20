@@ -21,6 +21,7 @@ class Model_Blog_Post extends CMF_Hydrogen_Model {
 	protected $name		= 'blog_posts';
 	protected $columns	= array(
 		'postId',
+		'parentId',
 		'authorId',
 		'categoryId',
 		'status',
@@ -29,12 +30,16 @@ class Model_Blog_Post extends CMF_Hydrogen_Model {
 		'abstract',
 		'content',
 		'nrViews',
+		'nrLikes',
+		'nrDislikes',
 		'createdAt',
 		'modifiedAt',
 		'viewedAt',
+		'commentedAt',
 	);
 	protected $primaryKey	= 'postId';
 	protected $indices		= array(
+		'parentId',
 		'authorId',
 		'categoryId',
 		'status',

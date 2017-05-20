@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.3.9</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -18,6 +18,7 @@
 	<log version="0.3.7">Support hook View::onRenderContent by abtract blog post panel.</log>
 	<log version="0.3.8">Reset locales.</log>
 	<log version="0.3.9">Extract messages to locales.</log>
+	<log version="0.4">Extend models by columns for parents, likes, dislikes and more timestamps.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -58,7 +59,7 @@
 <!--	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>-->
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Blog::___onRenderContent</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_categories` (
   `categoryId` int(11) NOT NULL AUTO_INCREMENT,
@@ -97,8 +98,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_comments` (
 DROP TABLE IF EXISTS `<%?prefix%>blog_posts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_posts` (
   `postId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `categoryId` int(11) unsigned NOT NULL,
   `authorId` int(11) unsigned NOT NULL,
+  `categoryId` int(11) unsigned NOT NULL,
   `status` tinyint(1) DEFAULT '0',
   `language` char(2) COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -109,11 +110,32 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_posts` (
   `modifiedAt` decimal(12,0) DEFAULT NULL,
   `viewedAt` decimal(12,0) DEFAULT NULL,
   PRIMARY KEY (`postId`),
-  KEY `categoryId` (`categoryId`),
   KEY `authorId` (`authorId`),
+  KEY `categoryId` (`categoryId`),
   KEY `status` (`status`),
   KEY `language` (`language`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.4"><![CDATA[
+
+ALTER TABLE `blog_posts` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `postId`, ADD INDEX (`parentId`);
+ALTER TABLE `blog_posts` ADD `nrLikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrViews`;
+ALTER TABLE `blog_posts` ADD `nrDislikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrLikes`;
+ALTER TABLE `blog_posts` ADD `commentedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `viewedAt`;
+
+ALTER TABLE `blog_comments` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `commentId`, ADD INDEX (`parentId`);
+ALTER TABLE `blog_comments` ADD `nrLikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `content`;
+ALTER TABLE `blog_comments` ADD `nrDislikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrLikes`;
+ALTER TABLE `blog_comments` ADD `repliedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `viewedAt`;
+ALTER TABLE `blog_comments` DROP `viewedAt`;
+
+ALTER TABLE `blog_categories` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `categoryId`, ADD INDEX (`parentId`);
+ALTER TABLE `blog_categories` CHANGE `nrViews` `nrPosts` INT(11) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `blog_categories` ADD `nrComments` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrPosts`;
+ALTER TABLE `blog_categories` CHANGE `modifiedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `blog_categories` CHANGE `viewedAt` `postedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `blog_categories` ADD `commentedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `postedAt`;
+
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
