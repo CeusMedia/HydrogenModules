@@ -21,17 +21,21 @@ class Model_Blog_Category extends CMF_Hydrogen_Model {
 	protected $name		= 'blog_categories';
 	protected $columns	= array(
 		'categoryId',
+		'parentId',
 		'status',
 		'language',
 		'title',
 		'content',
-		'nrViews',
+		'nrPosts',
+		'nrComments',
 		'createdAt',
 		'modifiedAt',
-		'viewedAt',
+		'postedAt',
+		'commentedAt',
 	);
 	protected $primaryKey	= 'categoryId';
 	protected $indices		= array(
+		'parentId',
 		'status',
 		'language',
 	);
