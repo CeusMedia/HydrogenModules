@@ -32,20 +32,20 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 				return FALSE;																		//  otherwise quit hook call and return without result
 				break;
 			case 2:																					//  page is a module
-				if( !$page->module )																//  but no module has been selected
+				if( !$page->controller )															//  but no module controller has been selected
 					return FALSE;																	//  quit hook call and return without result
-				$module	= strtolower( str_replace( "_", "/", $page->module ) );						//  get module controller path
-				if( substr( $pagePath, 0, strlen( $module ) ) === $module )							//  module has been addresses by page link
+				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
+				if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )			//  module has been addresses by page link
 					return TRUE;																	//  nothing to do here
-				$action	= 'index';																	//  default action is 'index'
+				$action	= $page->action ? $page->action : 'index';									//  default action is 'index'
 				if( $page->arguments ){																//  but there are path arguments
-					$classMethods	= get_class_methods( 'Controller_'.$page->module );				//  get methods of module controller class
+					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
 					if( in_array( $page->arguments[0], $classMethods ) ){							//  first argument seems to be a controller method
 						$action	= $page->arguments[0];												//  set first argument as action
 						array_shift( $page->arguments );											//  remove first argument from argument list
 					}
 				}
-				$controller->redirect( $module, $action, $page->arguments );						//  redirect to module
+				$controller->redirect( $controllerName, $action, $page->arguments );				//  redirect to module controller action
 				break;
 			default:
 				throw new RangeException( 'Page type '.$page->type.' is unsupported' );
@@ -55,7 +55,7 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onControllerDetectPath( $env, $context, $module, $data ){
 		$modelPage			= new Model_Page( $env );
-		$controllerPages	= $modelPage->getAllByIndex( 'module', $data['moduleClassName'] );
+		$controllerPages	= $modelPage->getAllByIndex( 'controller', $data['controllerName'] );
 		if( $controllerPages ){
 			$pages				= array();
 			foreach( $controllerPages as $page ){
