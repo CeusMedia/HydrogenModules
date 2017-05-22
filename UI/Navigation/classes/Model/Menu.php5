@@ -58,8 +58,10 @@ class Model_Menu {
 			$page->active = FALSE;
 			if( $pagePath == $path ){																//  page path matches requested path
 				$selected[$pagePath]	= strlen( $path );											//  note page with highest conformity (longest match length)
-				continue;
+				break;
 			}
+
+/*			//  @todo replace by better algorithm
 			$regExp	= '';																			//  prepare empty regular expression
 			$parts	= explode( '/', $path );														//  split currently requested path into parts
 			while( count( $parts ) ){																//  iterate parts
@@ -69,9 +71,23 @@ class Model_Menu {
 			preg_match_all( '@^'.str_replace( '@', '\@', $regExp ).'@', $page->link, $matches );	//  match expression against link path
 			if( isset( $matches[0] ) && !empty( $matches[0] ) )										//  found something
 				if( strlen( $matches[0][0] ) )														//  match has length
-					$selected[$page->path]	= strlen( $matches[0][0] );								//  note link path and its length @todo WRONG! note DEPTH, not length
-		}
+					$selected[$page->path]	= strlen( $matches[0][0] ) / count( $parts );			//  note link path and its length @todo WRONG! note DEPTH, not length
+*/
 
+			//  new algorithm
+			//  count matching characters
+			//  qualify against number of page link parts
+			$parts	= explode( '/', $page->link );													//  parts of menu page link
+			for( $i=0; $i<strlen( $path ); $i++ ){													//  iterate requested path
+				if( !isset( $page->link[$i] ) )														//  menu page link is finished
+					break;																			//  break scan here
+				if( $path[$i] !== $page->link[$i] )													//  requested path and menu page path are not matching anymore
+					break;																			//  break scan here
+				$selected[$page->path]	= $i / count( $parts );										//  qualification = number of matching characters relative to page link parts
+			}
+
+		}
+//print_m( $selected );die;
 		arsort( $selected );																		//  sort link paths by its length, longest on top
 		$paths	= array_keys( $selected );
 		if( $paths && $first = array_shift( $paths ) ){

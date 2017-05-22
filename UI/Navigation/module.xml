@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Navigation</title>
 	<description><![CDATA[...]]></description>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -22,6 +22,7 @@
 	<log version="0.3.6">Skip menu links if there are no nested links available/allowed.</log>
 	<log version="0.3.7">Support page icons.</log>
 	<log version="0.3.8">Add prototype of sidebar navigation.</log>
+	<log version="0.3.9">Replace algorithm for indentification of current link.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
