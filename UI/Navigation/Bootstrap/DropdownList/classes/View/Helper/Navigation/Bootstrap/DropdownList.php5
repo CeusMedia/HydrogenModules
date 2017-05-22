@@ -81,7 +81,10 @@ class View_Helper_Navigation_Bootstrap_DropdownList{
 	static protected function renderLabelWithIcon( $entry ){
 		if( !isset( $entry->icon ) )
 			return $entry->label;
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-'.$entry->icon ) );
+		if( preg_match( '/^fa /', $entry->icon ) )
+			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $entry->icon ) );
+		else
+			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-'.$entry->icon ) );
 		return $icon.'&nbsp;'.$entry->label;
 	}
 
