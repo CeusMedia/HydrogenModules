@@ -19,24 +19,24 @@ return '
 					<p><small class="muted">Wenn keine Werte gespeichert wurden, werden die Standartwerte benutzt.</small></p>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_description">Beschreibung</label>
-							<textarea class="span12" rows="4" name="description" id="input_description">'.htmlentities( $page->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+							<label for="input_page_description">Beschreibung</label>
+							<textarea class="span12" rows="4" name="page_description" id="input_page_description">'.htmlentities( $page->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
-							<textarea class="span12" rows="6" name="keywords" id="input_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
+							<label for="input_page_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
+							<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 			<!--		<div class="row-fluid">
 						<div class="span6">
-							<label for="input_author">Autor</label>
-							<input class="span12" type="text" name="author" id="input_author" value="'.htmlentities( ""/*$page->author*/, ENT_QUOTES, 'UTF-8' ).'"/>
+							<label for="input_page_author">Autor</label>
+							<input class="span12" type="text" name="page_author" id="input_page_author" value="'.htmlentities( ""/*$page->author*/, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span6">
-							<label for="input_publisher">Herausgeber</label>
-							<input class="span12" type="text" name="publisher" id="input_publisher" value="'.htmlentities( ""/*$page->publisher*/, ENT_QUOTES, 'UTF-8' ).'"/>
+							<label for="input_page_publisher">Herausgeber</label>
+							<input class="span12" type="text" name="page_publisher" id="input_page_publisher" value="'.htmlentities( ""/*$page->publisher*/, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>-->
 				</div>
@@ -66,12 +66,12 @@ return '
 			<br/>
 			<div class="row-fluid">
 				<div class="span3">
-					<label for="input_changefreq">'.$w->labelChangefreq.'</label>
-					<select name="changefreq" id="input_changefreq" class="span12">'.$optChangefreq.'</select>
+					<label for="input_page_changefreq">'.$w->labelChangefreq.'</label>
+					<select name="page_changefreq" id="input_page_changefreq" class="span12">'.$optChangefreq.'</select>
 				</div>
 				<div class="span3">
-					<label for="input_priority">'.$w->labelPriority.'</label>
-					<select name="priority" id="input_priority" class="span12">'.$optPriority.'</select>
+					<label for="input_page_priority">'.$w->labelPriority.'</label>
+					<select name="page_priority" id="input_page_priority" class="span12">'.$optPriority.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">

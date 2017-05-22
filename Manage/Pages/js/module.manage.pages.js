@@ -1,4 +1,5 @@
-var PageEditor = {
+var ModuleManagePages = {};
+var ModuleManagePages.PageEditor = {
 
 	pageId: null,
 	editor: "none",
@@ -18,10 +19,10 @@ var PageEditor = {
 			});
 			$("#tabs-page-editor>ul>li>a").bind("click", function(){
 				var key = $(this).attr("href").replace(/#tab/, "");
-				if(key == 3 && PageEditor.editor.toLowerCase() == "codemirror")
-					window.setTimeout(PageEditor.setupCodeMirror, 20);
+				if(key == 3 && ModuleManagePages.PageEditor.editor.toLowerCase() == "codemirror")
+					window.setTimeout(ModuleManagePages.PageEditor.setupCodeMirror, 20);
 				if(key == 4)
-					PageEditor.loadPagePreview();
+					ModuleManagePages.PageEditor.loadPagePreview();
 				$.ajax({
 					url: "./manage/page/ajaxSetTab/"+key,
 					type: "post"
@@ -31,24 +32,24 @@ var PageEditor = {
 				this.editor = 'codemirror';
 			switch(this.editor.toLowerCase()){
 				case 'tinymce':
-					PageEditor.setupTinyMCE();
+					ModuleManagePages.PageEditor.setupTinyMCE();
 					break;
 				case 'codemirror':
-					PageEditor.setupCodeMirror();
+					ModuleManagePages.PageEditor.setupCodeMirror();
 					break;
 				default:
 					break;
 			}
-			PageEditor.loadPagePreview();
+			ModuleManagePages.PageEditor.loadPagePreview();
 			$("#page-preview").mouseenter(function(){
 				$("#page-preview-mask").hide();
 			}).mouseleave(function(){
 				$("#page-preview-mask").show();
 			});
-			PageEditor.initDefaultMetaCopy();
-			$("#input_editor").bind("change", PageEditor.setEditor);
+			ModuleManagePages.PageEditor.initDefaultMetaCopy();
+			$("#input_page_editor").bind("change", ModuleManagePages.PageEditor.setEditor);
 		}
-		PageEditor.initSortable();
+		ModuleManagePages.PageEditor.initSortable();
 	},
 
 	initSortable: function(){
@@ -94,18 +95,18 @@ var PageEditor = {
 
 	setEditor: function(event){
 		event.stopPropagation();
-		var value = $("#input_editor").val();
+		var value = $("#input_page_editor").val();
 		$.ajax({
 			url: "./manage/page/ajaxSetEditor/"+value,
 			success: function(){
-				$("#input_editor").data("original-value", value).trigger("keyup.FormChanges");
+				$("#input_page_editor").data("original-value", value).trigger("keyup.FormChanges");
 				document.location.reload();
 			}
 		});
 	},
 
 	setupCodeMirror: function(){
-		var mode = PageEditor.format.toUpperCase() === "HTML" ? "htmlmixed" : "markdown";
+		var mode = ModuleManagePages.PageEditor.format.toUpperCase() === "HTML" ? "htmlmixed" : "markdown";
 		var options = {
 			gutter: true,
 			fixedGutter: true,
@@ -126,7 +127,7 @@ var PageEditor = {
 				"Ctrl-S": function(cm) {
 					$.ajax({
 						url: "./manage/page/ajaxSaveContent/",
-						data: {content: cm.getValue(), pageId: PageEditor.pageId},
+						data: {content: cm.getValue(), pageId: ModuleManagePages.PageEditor.pageId},
 						dataType: "json",
 						method: "post",
 						success: function(json){
@@ -143,26 +144,26 @@ var PageEditor = {
 		};
 		if(mode === "markdown")
 			options.extraKeys['Enter']	= "newlineAndIndentContinueMarkdownList";
-		var textarea = $("textarea#input_content");
+		var textarea = $("textarea#input_page_content");
 		if(!textarea.is(":visible"))
 			return;
 		var mirror = CodeMirror.fromTextArea(textarea.get(0), options);
 		mirror.on("change", function(instance, update){
 			textarea.next("div.CodeMirror").addClass("changed");
 		});
-		textarea.data({codemirror: mirror, pageId: PageEditor.pageId});
+		textarea.data({codemirror: mirror, pageId: ModuleManagePages.PageEditor.pageId});
 		mirror.setSize("auto",textarea.height());	//  set same size as textarea
 		$("#hint").html("Press <b>F11</b> for fullscreen editing.");
 	},
 
 	setupTinyMCE: function(){
 		var options = {
-			selector: "textarea#input_content",
+			selector: "textarea#input_page_content",
 //			plugins: "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
 //			document_base_url: this.frontendUri,
 //			content_css: "http://cdn.int1a.net/css/bootstrap.css",
-//			image_list: PageEditor.imageList,
-//			link_list: PageEditor.linkList,
+//			image_list: ModuleManagePages.PageEditor.imageList,
+//			link_list: ModuleManagePages.PageEditor.linkList,
 			height: 360,
 //			language: settings.JS_TinyMCE.auto_language,
 		};

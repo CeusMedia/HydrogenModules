@@ -25,8 +25,8 @@ return '
 <div class="content-panel">
 	<div class="content-panel-inner">
 		<div>
-			<label for="input_scope">Navigationstyp</label>
-			<select class="span12" name="scope" id="input_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
+			<label for="input_page_scope">Navigationstyp</label>
+			<select class="span12" name="page_scope" id="input_page_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 		</div>
 		'.$listPages.'
 		<div class="buttonbar">

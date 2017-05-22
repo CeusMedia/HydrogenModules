@@ -7,6 +7,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	protected $session;
 	protected $words;
 	protected $frontend;
+	protected $patternIdentifier	= '@[^a-z0-9_/-]@';
 
 	protected function __onInit(){
 		$config		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
@@ -70,10 +71,10 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$data	= array();
 			foreach( $this->model->getColumns() as $column ){
-				if( $this->request->has( $column ) ){
-					$value	= $this->request->get( $column );
+				if( $this->request->has( 'page_'.$column ) ){
+					$value	= $this->request->get( 'page_'.$column );
 					if( $column == 'identifier' )
-						$value	= preg_replace( "/[^a-z0-9]/", "", $value );
+						$value	= preg_replace( $this->patternIdentifier, '', $value );
 					$data[$column]	= $value;
 				}
 			}
@@ -92,22 +93,23 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 		$page	= (object) array(
 			'pageId'		=> 0,
-			'parentId'		=> $parentId ? $parentId : (int) $this->request->get( 'parentId' ),
-			'type'			=> (int) $this->request->get( 'type' ),
-			'scope'			=> (int) $this->request->get( 'scope' ),
+			'parentId'		=> $parentId ? $parentId : (int) $this->request->get( 'page_parentId' ),
+			'type'			=> (int) $this->request->get( 'page_type' ),
+			'scope'			=> (int) $this->request->get( 'page_scope' ),
 			'status'		=> 0,
-			'rank'			=> (int) $this->request->get( 'rank' ),
-			'identifier'	=> $this->request->get( 'identifier' ),
-			'title'			=> $this->request->get( 'title' ),
-			'content'		=> $this->request->get( 'content' ),
-			'format'		=> $this->request->get( 'format' ),
-			'module'		=> $this->request->get( 'module' ),
-			'icon'			=> $this->request->get( 'icon' ),
+			'rank'			=> (int) $this->request->get( 'page_rank' ),
+			'identifier'	=> $this->request->get( 'page_identifier' ),
+			'title'			=> $this->request->get( 'page_title' ),
+			'content'		=> $this->request->get( 'page_content' ),
+			'format'		=> $this->request->get( 'page_format' ),
+			'controller'	=> $this->request->get( 'page_controller' ),
+			'action'		=> $this->request->get( 'page_action' ),
+			'icon'			=> $this->request->get( 'page_icon' ),
 			'createdAt'		=> time(),
 		);
 
 		$path		= $this->frontend->getUri();
-		if( $parentId && $parent )
+		if( $parentId && $parent->type && $parent->type == 1 )
 			$path	.= $parent->identifier.'/';
 
 
@@ -188,7 +190,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( !$page )
 			throw new OutOfRangeException( 'Invalid page ID given' );
 		foreach( $page as $key => $value )
-			$this->request->set( $key, $value );
+			$this->request->set( 'page_'.$key, $value );
 		$this->redirect( 'manage/page', 'add' );
 	}
 
@@ -212,34 +214,34 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
 
-			if( $this->request->has( 'identifier' ) ){
-				$identifier	= $this->request->get( 'identifier' );
-				$pattern	= '/[^a-z0-9_\/-]/';
-				$this->request->set( 'identifier', preg_replace( $pattern, "", $identifier ) );
+			if( $this->request->has( 'page_identifier' ) ){
+				$identifier	= $this->request->get( 'page_identifier' );
+				$identifier	= preg_replace( $this->patternIdentifier, '', $identifier );
+				$this->request->set( 'page_identifier', $identifier );
 			}
 
 			$indices		= array(
 				'scope'			=> $scope,
-				'parentId'		=> $this->request->get( 'parentId' ),
+				'parentId'		=> $this->request->get( 'page_parentId' ),
 				'pageId'		=> '!='.$pageId,
-				'identifier'	=> $this->request->get( 'identifier' )
+				'identifier'	=> $this->request->get( 'page_identifier' )
 			);
 			if( $this->model->getByIndices( $indices ) ){
-				if( $this->request->get( 'parentId' ) ){
+				if( $this->request->get( 'page_parentId' ) ){
 					$message	= $words->errorIdentifierInParentTaken;
-					$identifier	= $this->request->get( 'identifier' );
+					$identifier	= $this->request->get( 'page_identifier' );
 					$this->messenger->noteError( $message, $identifier );
 				}
 				else{
 					$message	= $words->errorIdentifierTaken;
-					$identifier	= $this->request->get( 'identifier' );
+					$identifier	= $this->request->get( 'page_identifier' );
 					$this->messenger->noteError( $message, $identifier );
 				}
 			}
 			else{
 
 				if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
-					$contentNew	= $this->request->get( 'content' );
+					$contentNew	= $this->request->get( 'page_content' );
 					if( $page->content !== $contentNew ){											//  new content differs from page content
 						$logic		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
 						$versions	= $logic->getAll( 'Info_Pages', $pageId );
@@ -254,8 +256,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 				$data		= array();
 				foreach( $this->model->getColumns() as $column )
-					if( $this->request->has( $column ) )
-						$data[$column]	= $this->request->get( $column );
+					if( $this->request->has( 'page_'.$column ) )
+						$data[$column]	= $this->request->get( 'page_'.$column );
 				if( $scope != $page->scope )														//  switched scope
 					$data['parentId']	= 0;														//  clear parent page
 				$data['modifiedAt']	= time();
@@ -336,12 +338,12 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 //		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
 		$script	= '
-PageEditor.frontendUri = "'.$this->frontend->getUri().'";
-PageEditor.pageId = "'.$page->identifier.'";
-PageEditor.editor = "'.$session->get( 'module.manage_pages.editor' ).'";
-PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
-PageEditor.format = "'.$page->format.'";
-PageEditor.init();
+ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+ModuleManagePages.PageEditor.pageId = "'.$page->identifier.'";
+ModuleManagePages.PageEditor.editor = "'.$session->get( 'module.manage_pages.editor' ).'";
+ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+ModuleManagePages.PageEditor.format = "'.$page->format.'";
+ModuleManagePages.PageEditor.init();
 ';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}

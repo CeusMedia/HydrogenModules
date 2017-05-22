@@ -28,8 +28,8 @@ else if( $page->type == 0 ){
 	if( $versions ){
 		$fieldVersion	= '
 				<div class="span2">
-					<label for="input_version">'.$words['edit']['labelVersion'].'</label>
-					<select class="span12" name="version" id="input_version" onchange="loadVersion('.$page->pageId.', this.value);">'.$optVersion.'</select>
+					<label for="input_page_version">'.$words['edit']['labelVersion'].'</label>
+					<select class="span12" name="page_version" id="input_page_version" onchange="loadVersion('.$page->pageId.', this.value);">'.$optVersion.'</select>
 				</div>';
 		}
 
@@ -39,17 +39,17 @@ else if( $page->type == 0 ){
 		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
 			<div class="row-fluid">
 				<div class="span3">
-					<label for="input_editor">'.$words['edit']['labelEditor'].'</label>
-					<select class="span12" name="editor" id="input_editor">'.$optEditor.'</select>
+					<label for="input_page_editor">'.$words['edit']['labelEditor'].'</label>
+					<select class="span12" name="page_editor" id="input_page_editor">'.$optEditor.'</select>
 		<!--			<div class="input-prepend">
 						<span class="add-on">'.$words['edit']['labelEditor'].'</span>
-						<select class="span12" name="editor" id="input_editor" onchange="PageEditor.setEditor(this);">'.$optEditor.'</select>
+						<select class="span12" name="page_editor" id="input_page_editor" onchange="ModuleManagePages.PageEditor.setEditor(this);">'.$optEditor.'</select>
 					</div>-->
 				</div>
 				'.$fieldVersion.'
 		<!--		<div class="span3">
 					<label class="checkbox">
-						<input type="checkbox" name="autosave" disabled="disabled"/>
+						<input type="checkbox" name="page_autosave" disabled="disabled"/>
 						automatisch speichern
 					</label>
 				</div>-->
@@ -59,7 +59,7 @@ else if( $page->type == 0 ){
 				</div>
 			</div>
 			<div class="row-fluid">
-				<textarea name="content" id="input_content" class="span12" rows="20">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea name="page_content" id="input_page_content" class="span12" rows="20">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				<div id="hint"></div>
 			</div>
 			<div class="buttonbar">
