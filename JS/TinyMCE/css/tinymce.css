@@ -1,16 +1,16 @@
-iv.mce-container.mce-panel.mce-menu > div.mce-container-body.mce-stack-layout {
+div.mce-container.mce-panel.mce-menu > div.mce-container-body.mce-stack-layout {
 	max-height: 280px;
 	overflow: auto;
 	}
 
 /*
 div.mce-stack-layout-item .mce-text {
-    font-size: 0.9em;
-    }
+	font-size: 0.9em;
+	}
 */
 
 /* hack to force a height */
 /*.mceEditor > table {
-    width: 123px !important;
+	width: 123px !important;
 }
 */
