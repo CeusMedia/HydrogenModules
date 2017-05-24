@@ -241,7 +241,7 @@ body.content-panel-style-5 div.content-panel > div.content-panel-inner {
 	margin: 0px;
 	display: block;
 	line-height: 1.4em;
-	overflow: hidden;
+/*	overflow: hidden;*/
 	}
 body.content-panel-style-5 div.content-panel > h3,
 body.content-panel-style-5 div.content-panel > h4 {
