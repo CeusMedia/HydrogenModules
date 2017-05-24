@@ -16,6 +16,9 @@ body.nav-sidebar #layout-container #layout-nav {
 	background-color: #F7F7F7;
 	border-right: 2px solid #DDD;
 	}
+body.nav-sidebar #layout-container #nav-sidebar-toggle {
+	display: none;
+	}
 body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	height: 100%;
 	padding-top: 0.5em;
@@ -23,7 +26,7 @@ body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	margin-left: 0.5em;
 	margin-right: 0.75em;
 	}
-body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-list-sub-item {
+bdy.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-list-sub-item {
 	padding-left: 20px;
 	}
 body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-header {
@@ -50,3 +53,28 @@ body.nav-sidebar #layout-container #layout-field {
 	margin-right: 1.5em;
 	margin-top: 1em;
 	}
+
+
+@media (min-width: 768px) {
+}
+@media (max-width: 767px) {
+	body.nav-sidebar #layout-container #layout-field {
+		margin-left: 1.5em;
+		margin-right: 1.5em;
+		margin-top: 1em;
+		}
+	body.nav-sidebar #layout-container #layout-nav {
+		position: fixed;
+		top: 0;
+		left: -242px;
+		height; 100%;
+		}
+	body.nav-sidebar #layout-container #nav-sidebar-toggle {
+		display: block;
+		position: fixed;
+		top: 0.25em;
+		left: -0.5em;
+		padding: 0.5em;
+		font-size: 2em;
+	}
+}

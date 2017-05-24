@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Navigation</title>
-	<description><![CDATA[...]]></description>
-	<version>0.3.9</version>
+	<description><![CDATA[Responsive navigation composite.
+
+This module combines several navigation types to provide a standard navigation composition.
+]]></description>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -22,7 +25,8 @@
 	<log version="0.3.6">Skip menu links if there are no nested links available/allowed.</log>
 	<log version="0.3.7">Support page icons.</log>
 	<log version="0.3.8">Add prototype of sidebar navigation.</log>
-	<log version="0.3.9">Replace algorithm for indentification of current link.</log>
+	<log version="0.3.9">Replace algorithm for identification of current link.</log>
+	<log version="0.4">Add responsive design for sidebar navigation.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -37,12 +41,13 @@
 		<class>View/Helper/Navigation/BootstrapResponsive.php5</class>
 		<class>View/Helper/Navigation/Mobile.php5</class>
 		<style source="common" load="auto">module.ui.navigation.css</style>
+		<script>module.ui.navigation.sidebar.js</script>
 	</files>
 	<config protected="yes" type="string" name="menu.source" values="Modules,Database,Config" title="Source to collect navigation links from">Config</config>
 	<config protected="yes" type="string" name="render.class" values="View_Helper_Navigation,View_Helper_Navigation_BootstrapResponsive">View_Helper_Navigation_BootstrapResponsive</config>
 	<config protected="no" type="boolean" name="render.desktop" title="Switch: Enable default desktop menu and navbar">1</config>
-	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown,View_Helper_Navigation_Bootstrap_Sidebar">View_Helper_Navigation_Bootstrap_Dropdown</config>
-	<config protected="no" type="string" name="render.desktop.style" values="Default,Pills" title="Style of main links in desktop main navigation bar.">Pills</config>
+	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown,View_Helper_Navigation_Bootstrap_Sidebar">View_Helper_Navigation_Bootstrap_Sidebar</config>
+	<config protected="no" type="string" name="render.desktop.style" values="Default,Pills" title="Style of main links in desktop main navigation bar.">Default</config>
 	<config protected="no" type="boolean" name="render.desktop.navbar" title="Switch: Enable desktop main navigation bar">1</config>
 	<config protected="no" type="string" name="render.desktop.theme" values="light,dark" title="Theme of desktop main navigation bar">light</config>
 	<config protected="no" type="boolean" name="render.mobile" title="Switch: Enable mobile menu and navbar">1</config>
@@ -53,4 +58,5 @@
 		<supports type="module">JS_jQuery_mmenu</supports>
 		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
+	<hook type="resource" resource="Page" event="applyModules">View_Helper_Navigation::___setupSidebar</hook>
 </module>
