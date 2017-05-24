@@ -60,5 +60,10 @@ ModuleUiNavigation.Sidebar = {
 		if(ModuleUiNavigation.Sidebar.verbose)
 			console.log("ModuleUiNavigationSidebar: onWindowResize");
 		ModuleUiNavigation.Sidebar.isPhone = jQuery(window).width() < 768;
+		var left = 0;
+		if(ModuleUiNavigation.Sidebar.isPhone)
+			if(!ModuleUiNavigation.Sidebar.isOpen())
+				left	= "-"+ModuleUiNavigation.Sidebar.width+"px"
+		jQuery("#layout-nav").css({left: left});
 	}
 }
