@@ -1,5 +1,5 @@
 var ModuleManagePages = {};
-var ModuleManagePages.PageEditor = {
+ModuleManagePages.PageEditor = {
 
 	pageId: null,
 	editor: "none",
