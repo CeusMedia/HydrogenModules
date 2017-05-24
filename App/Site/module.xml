@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.4.9</version>
+	<version>0.5</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -20,6 +20,7 @@
 	<log version="0.4.7">Removed app version and public index link.</log>
 	<log version="0.4.8">Add style definition for fixed table layout.</log>
 	<log version="0.4.9">Enable gzip compression in .htaccess by default.</log>
+	<log version="0.5">Scan for public links in pages file, if available.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -53,7 +54,7 @@
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 			$messenger	= $context->env->getMessenger();									//  shortcut messenger
-	        $config		= $module->config;													//  shortcut module configuration pairs
+			$config		= $module->config;													//  shortcut module configuration pairs
 			if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
 				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
 					if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
@@ -75,4 +76,45 @@
 			}
 		}
 	]]></hook>
+	<hook type="resource" resource="Env" event="constructEnd"><![CDATA[
+		if( !$env->getModules()->has( 'Resource_Authentication' ) )
+			return;
+		if( !file_exists( 'config/pages.json' ) )
+			return;
+		$acl	= $env->getAcl();
+		$scopes	= json_decode( file_get_contents( 'config/pages.json' ) );
+		foreach( $scopes as $scope => $pages ){
+			foreach( $pages as $page ){
+				//  @todo adding subpages is not stable because parent page could be not visible
+				if( isset( $page->pages ) ){
+					foreach( $page->pages as $subpage ){
+						if( isset( $subpage->access ) ){
+							$path	= isset( $subpage->link ) ? $subpage->link : $subpage->path;
+							$path	= str_replace( '/', '_', $path );
+							if( $subpage->access == "public" ){
+								$acl->setPublicLinks( array( $path ), 'append' );
+								$acl->setPublicLinks( array( $path.'_index' ), 'append' );
+							}
+							else if( $subpage->access == "outside" ){
+								$acl->setPublicOutsideLinks( array( $path ), 'append' );
+								$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
+							}
+						}
+					}
+				}
+				if( isset( $page->access ) ){
+					$path	= isset( $page->link ) ? $page->link : $page->path;
+					$path	= str_replace( '/', '_', $path );
+					if( $page->access == "public" ){
+						$acl->setPublicLinks( array( $path ), 'append' );
+						$acl->setPublicLinks( array( $path.'_index' ), 'append' );
+					}
+					else if( $page->access == "outside" ){
+						$acl->setPublicOutsideLinks( array( $path ), 'append' );
+						$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
+					}
+				}
+			}
+		}
+]]></hook>
 </module>
