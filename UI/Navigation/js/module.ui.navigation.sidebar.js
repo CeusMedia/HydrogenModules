@@ -56,14 +56,17 @@ ModuleUiNavigation.Sidebar = {
 	isOpen: function(){
 		return ModuleUiNavigation.Sidebar.status > 0;
 	},
-	onWindowResize: function(){
+	onWindowResize: function(event){
 		if(ModuleUiNavigation.Sidebar.verbose)
 			console.log("ModuleUiNavigationSidebar: onWindowResize");
-		ModuleUiNavigation.Sidebar.isPhone = jQuery(window).width() < 768;
-		var left = 0;
-		if(ModuleUiNavigation.Sidebar.isPhone)
-			if(!ModuleUiNavigation.Sidebar.isOpen())
-				left	= "-"+ModuleUiNavigation.Sidebar.width+"px"
-		jQuery("#layout-nav").css({left: left});
+		var width = Math.round(window.outerWidth / window.devicePixelRatio);
+		ModuleUiNavigation.Sidebar.isPhone = width < 768;
+		if(event){
+			var left = 0;
+			if(ModuleUiNavigation.Sidebar.isPhone)
+				if(!ModuleUiNavigation.Sidebar.isOpen())
+					left	= "-"+ModuleUiNavigation.Sidebar.width+"px"
+			jQuery("#layout-nav").css({left: left});
+		}
 	}
 }

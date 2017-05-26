@@ -60,35 +60,23 @@ class Model_Menu {
 				$selected[$pagePath]	= strlen( $path );											//  note page with highest conformity (longest match length)
 				break;
 			}
+			$pathLength	= min( 1, strlen( $path ) );
 
-/*			//  @todo replace by better algorithm
-			$regExp	= '';																			//  prepare empty regular expression
-			$parts	= explode( '/', $path );														//  split currently requested path into parts
-			while( count( $parts ) ){																//  iterate parts
-				$part = array_pop( $parts );														//  backwards
-				$regExp	= count( $parts ) ? '(/'.$part.$regExp.')?' : '('.$part.$regExp.')';		//  insert part into regular expression
-			}
-			preg_match_all( '@^'.str_replace( '@', '\@', $regExp ).'@', $page->link, $matches );	//  match expression against link path
-			if( isset( $matches[0] ) && !empty( $matches[0] ) )										//  found something
-				if( strlen( $matches[0][0] ) )														//  match has length
-					$selected[$page->path]	= strlen( $matches[0][0] ) / count( $parts );			//  note link path and its length @todo WRONG! note DEPTH, not length
-*/
-
-			//  new algorithm
-			//  count matching characters
-			//  qualify against number of page link parts
 			$parts	= explode( '/', $page->link );													//  parts of menu page link
 			for( $i=0; $i<strlen( $path ); $i++ ){													//  iterate requested path
-				if( !isset( $page->link[$i] ) )														//  menu page link is finished
+				if( !isset( $page->link[$i] ) ){													//  menu page link is finished
+					if( $path[$i] === "/" )															//  but path goes on
+						$i	+= 3;																	//  add bonus to rank of this page with if rest of path is action, only
 					break;																			//  break scan here
+				}
 				if( $path[$i] !== $page->link[$i] )													//  requested path and menu page path are not matching anymore
 					break;																			//  break scan here
-				$selected[$page->path]	= $i / count( $parts );										//  qualification = number of matching characters relative to page link parts
 			}
-
+			if($i)
+				$selected[$page->path]	= $i / $pathLength;												//  qualification = number of matching characters relative to page link parts
 		}
-//print_m( $selected );die;
 		arsort( $selected );																		//  sort link paths by its length, longest on top
+//print_m( $selected );die;
 		$paths	= array_keys( $selected );
 		if( $paths && $first = array_shift( $paths ) ){
 			$page		= $this->pageMap[$first];

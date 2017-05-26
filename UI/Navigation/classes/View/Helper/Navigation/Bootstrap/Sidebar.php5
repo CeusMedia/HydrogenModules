@@ -1,5 +1,6 @@
 <?php
 class View_Helper_Navigation_Bootstrap_Sidebar{
+
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
