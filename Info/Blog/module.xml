@@ -125,8 +125,7 @@ ALTER TABLE `<%?prefix%>blog_posts` ADD `commentedAt` DECIMAL(12) UNSIGNED NULL 
 ALTER TABLE `<%?prefix%>blog_comments` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `commentId`, ADD INDEX (`parentId`);
 ALTER TABLE `<%?prefix%>blog_comments` ADD `nrLikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `content`;
 ALTER TABLE `<%?prefix%>blog_comments` ADD `nrDislikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrLikes`;
-ALTER TABLE `<%?prefix%>blog_comments` ADD `repliedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `viewedAt`;
-ALTER TABLE `<%?prefix%>blog_comments` DROP `viewedAt`;
+ALTER TABLE `<%?prefix%>blog_comments` ADD `repliedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `createdAt`;
 
 ALTER TABLE `<%?prefix%>blog_categories` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `categoryId`, ADD INDEX (`parentId`);
 ALTER TABLE `<%?prefix%>blog_categories` CHANGE `nrViews` `nrPosts` INT(11) UNSIGNED NULL DEFAULT '0';
