@@ -117,7 +117,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_posts` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.4"><![CDATA[
-
 ALTER TABLE `<%?prefix%>blog_posts` ADD `parentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `postId`, ADD INDEX (`parentId`);
 ALTER TABLE `<%?prefix%>blog_posts` ADD `nrLikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrViews`;
 ALTER TABLE `<%?prefix%>blog_posts` ADD `nrDislikes` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `nrLikes`;
@@ -135,7 +134,6 @@ ALTER TABLE `<%?prefix%>blog_categories` ADD `nrComments` INT(11) UNSIGNED NULL 
 ALTER TABLE `<%?prefix%>blog_categories` CHANGE `modifiedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>blog_categories` CHANGE `viewedAt` `postedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>blog_categories` ADD `commentedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `postedAt`;
-
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
