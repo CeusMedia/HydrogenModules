@@ -12,13 +12,14 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 
 		$list		= array();
 		$model		= new Model_Bookmark( $env );
-		foreach( $model->getAll() as $nr => $link ){
-			$list[$link->title.$nr]	= (object) array(
+		$orders		= array( 'title' => 'ASC' );
+		foreach( $model->getAll( array(), $orders ) as $nr => $link ){
+			$list[]	= (object) array(
 				'title'	=> /*$prefixes->bookmark.*/$link->title,
+				'type'	=> 'link:bookmark',
 				'value'	=> $link->url,
 			);
 		}
-		ksort( $list );
 		$list	= array( (object) array(
 			'title'	=> $prefixes->bookmark,
 			'menu'	=> array_values( $list ),
