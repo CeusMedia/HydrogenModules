@@ -81,7 +81,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 			$path	= implode( '/', $parts );
 			$label	= $path ? $path.'/'.$file : $file;
 			$uri	= substr( $item->getPathname(), strlen( $frontend->getPath() ) );
-			$key	= $level.'_'.str_replace( "/", "_", strtolower( $label ) );
+			$key	= str_replace( "/", "_", strtolower( $label ) );
 			$list[$key]	= (object) array( 'label' => $label, 'uri' => $uri );
 		}
 		ksort( $list );
@@ -109,6 +109,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		foreach( $index as $item ){
 			$list[]	= (object) array(
 				'title'	=> $hidePrefix ? $item->label : $prefixes->image.$item->label,
+				'type'	=> 'image',
 				'value'	=> $item->uri,
 			);
 		}
