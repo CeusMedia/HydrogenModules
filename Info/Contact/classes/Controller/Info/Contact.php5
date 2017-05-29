@@ -48,7 +48,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$path	= "./info/contact";
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
 			$model	= new Model_Page( $this->env );
-			$page	= $model->getByIndex( 'module', 'Info_Contact' );
+			$page	= $model->getByIndex( 'controller', 'Info_Contact' );
 			$path	= "./".$page->identifier;
 		}
 
