@@ -46,7 +46,7 @@ This module combines several navigation types to provide a standard navigation c
 	<config protected="yes" type="string" name="menu.source" values="Modules,Database,Config" title="Source to collect navigation links from">Config</config>
 	<config protected="yes" type="string" name="render.class" values="View_Helper_Navigation,View_Helper_Navigation_BootstrapResponsive">View_Helper_Navigation_BootstrapResponsive</config>
 	<config protected="no" type="boolean" name="render.desktop" title="Switch: Enable default desktop menu and navbar">1</config>
-	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown,View_Helper_Navigation_Bootstrap_Sidebar">View_Helper_Navigation_Bootstrap_Sidebar</config>
+	<config protected="yes" type="string" name="render.desktop.class" values="View_Helper_Navigation_Bootstrap_Dropdown,View_Helper_Navigation_Bootstrap_Sidebar">View_Helper_Navigation_Bootstrap_Dropdown</config>
 	<config protected="no" type="string" name="render.desktop.style" values="Default,Pills" title="Style of main links in desktop main navigation bar.">Default</config>
 	<config protected="no" type="boolean" name="render.desktop.navbar" title="Switch: Enable desktop main navigation bar">1</config>
 	<config protected="no" type="string" name="render.desktop.theme" values="light,dark" title="Theme of desktop main navigation bar">light</config>
