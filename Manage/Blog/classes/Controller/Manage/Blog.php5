@@ -41,14 +41,16 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$words		= $env->getLanguage()->getWords( 'manage/blog' );
 		$model		= new Model_Blog_Post( $env );
 		$list		= array();
-		foreach( $model->getAllByIndex( 'status', 1 ) as $nr => $post ){
-			$list[$post->title.$nr]	= (object) array(
-				'title'	=> $post->title,
+		$conditions	= array( 'status' => 1 );
+		$orders		= array( 'createdAt'	=> 'DESC' );
+		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
+			$list[$post->postId]	= (object) array(
+				'title'	=> str_replace( '/', '-', $post->title ),
+				'type'	=> 'link:page',
 				'value'	=> './info/blog/post/'.$post->postId.'-'.self::getUriPart( $post->title )
 			);
 		}
 		if( $list ){
-			ksort( $list );
 			$list	= array( (object) array(
 				'title'	=> $words['tinyMCE']['prefix'],
 				'menu'	=> array_values( $list ),
