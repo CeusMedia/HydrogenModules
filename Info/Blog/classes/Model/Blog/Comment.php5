@@ -33,7 +33,6 @@ class Model_Blog_Comment extends CMF_Hydrogen_Model {
 		'nrLikes',
 		'nrDislikes',
 		'createdAt',
-		'modifiedAt',
 		'repliedAt',
 	);
 	protected $primaryKey	= 'commentId';
