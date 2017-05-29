@@ -25,12 +25,17 @@ if(typeof tinymce !== "undefined"){
 //			options.height = settings.JS_TinyMCE.auto_height;			//  @todo not working right now
 			options.language = tinymce.Config.language;
 			options.document_base_url = this.frontendUri;
-			options.image_list = this.listImages;
-			options.link_list = this.listLinks;
 			options.style_formats = this.styleFormats;
 			options.content_css += "," + this.envUri + "themes/custom/css/tinymce.content.css";
-//			options.spellchecker_languages = this.languages;
-//			options.spellchecker_rpc_url = this.frontendUri + 'spellchecker/spellchecker.php';
+
+			if(typeof tinymce.FileBrowser !== "undefined"){
+				tinymce.FileBrowser.initOpener({});
+				options.file_browser_callback = tinymce.FileBrowser.open;
+			}
+			else{
+				options.image_list = this.listImages;
+				options.link_list = this.listLinks;
+			}
 
 			if(!$.inArray(mode, ["default", "extended", "minimal"]))
 				mode = "default";

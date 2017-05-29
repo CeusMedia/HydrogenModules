@@ -14,3 +14,73 @@ div.mce-stack-layout-item .mce-text {
 	width: 123px !important;
 }
 */
+
+
+#container-tinymce-file-browser #container-list-items {
+/*	display: none;*/
+	}
+
+#container-tinymce-file-browser ul.grid {}
+#container-tinymce-file-browser ul.grid li.grid-item {
+	display: inline-block;
+	float: left;
+	width: 140px;
+	height: 158px;
+	border: 1px solid #ddd;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	padding: 4px;
+	box-sizing: border-box;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-icon {
+	display: block;
+	width: 128px;
+	height: 128px;
+	border: 1px solid #DDD;
+	background-color: rgba(191,191,191,0.2);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-icon:hover {
+/*	opacity: 0.85;*/
+	background-color: rgba(191,191,191,0.3) !important;
+	border-color: #AAA;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item.grid-item-folder {
+	cursor: pointer;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label {
+	text-align: center;
+	font-size: 0.9em;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item.grid-item-folder .grid-item-icon {
+	font-size: 4.5em;
+	text-align: center;
+	line-height: 2em;
+	background-color: rgba(191,191,191,0.2);
+	color: #08c;
+	color: #DBA901;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item.grid-item-link .grid-item-icon {
+	font-size: 4.5em;
+	text-align: center;
+	line-height: 2em;
+	color: #084d6f;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item.grid-item-file .grid-item-icon {
+	font-size: 4.5em;
+	text-align: center;
+	line-height: 2em;
+	background-color: rgba(191,191,191,0.1);
+	color: rgba(127,127,127,0.5);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	}

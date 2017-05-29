@@ -28,72 +28,34 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	/**
 	 *	@todo		extract to future View_Helper_TinyMCE
 	 */
-	static public function load( $env ){
-		if( self::$loaded )
-			return;
-
-		$page		= $env->getPage();
-		$language	= $env->getLanguage()->getLanguage();
-		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
-
-		$sourceUri	= $pathLocal.'tinymce/';
-		if( $config->get( 'CDN' ) )
-			$sourceUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
-
-		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
-		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
-
-		$languages	= self::getLanguage( $env );
-		if( !$config->get( 'CDN' ) && $language !== "en" )
-			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
-
-		self::$loaded	= TRUE;
-	}
-
-	static public function getLanguage( $env ){
-		$language	= $env->getLanguage()->getLanguage();
-		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$languages	= explode( ",", $config->get( 'languages' ) );
-		if( $config->get( 'CDN' ) )
-			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
-		if( $language !== "en" && !in_array( $language, $languages ) )
-			$language = "en";
-		return $language;
-	}
-
-	/**
-	 *	@todo		extract to future View_Helper_TinyMCE
-	 */
 	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
 		self::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$language	= self::getLanguage( $env );
-
-		$baseUrl	= $env->url;
-		if( $env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
-
-		/* @todo extract to language file after rethinking this solution */
-		$labels	= array(
-			'de'	=> 'Deutsch',
-			'en'	=> 'Englisch',
-		);
-
-		/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
-		$languages	= array();
-		$matches	= array();
-		foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){
-			preg_match( "/^([a-z]{2})(-([A-Z]{2}))?(;q=([0-9].?[0-9]*))?$/", $item, $matches );
-			if( isset( $matches[1] ) && isset( $labels[$matches[1]] ) ){
-				$label	= $labels[$matches[1]];
-				if( !in_array( $label."=".$matches[1], $languages ) )
-					$languages[]	= $label."=".$matches[1];
-			}
-		}
 
 		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) ){
-			$helper	= new View_Helper_TinyMce( $env );
+			$language	= self::getLanguage( $env );
+
+			$baseUrl	= $env->url;
+			if( $env->getModules()->has( 'Resource_Frontend' ) )
+				$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
+
+			/* @todo extract to language file after rethinking this solution */
+			$labels	= array(
+				'de'	=> 'Deutsch',
+				'en'	=> 'Englisch',
+			);
+
+			/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
+			$languages	= array();
+			$matches	= array();
+			foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){
+				preg_match( "/^([a-z]{2})(-([A-Z]{2}))?(;q=([0-9].?[0-9]*))?$/", $item, $matches );
+				if( isset( $matches[1] ) && isset( $labels[$matches[1]] ) ){
+					$label	= $labels[$matches[1]];
+					if( !in_array( $label."=".$matches[1], $languages ) )
+						$languages[]	= $label."=".$matches[1];
+				}
+			}
 
 			$styleFormats	= array(
 				array(
@@ -187,33 +149,57 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 				)
 			);
 
-			$script	= '
-tinymce.Config.languages = "'.join( ',', $languages ).'";
-tinymce.Config.envUri = "'.$env->url.'";
-tinymce.Config.frontendUri = "'.$baseUrl.'";
-tinymce.Config.language = "'.$language.'";
-tinymce.Config.listImages = '.json_encode( $helper->getImageList() ).';
-tinymce.Config.listLinks = '.json_encode( $helper->getLinkList() ).';
-tinymce.Config.styleFormats = '.json_encode( $styleFormats ).';';
-			$context->js->addScript( $script );
-			$script	= '
-if($(settings.JS_TinyMCE.auto_selector).size()){
-	$(settings.JS_TinyMCE.auto_selector).each(function(nr){
-		var options = {};
-		if(settings.JS_TinyMCE.auto_tools)
-			options.tools = settings.JS_TinyMCE.auto_tools;
-		var mode = settings.JS_TinyMCE.auto_mode;
-		if($(this).data("tinymce-mode"))
-			mode = $(this).data("tinymce-mode");
-		options = tinymce.Config.apply(options, mode);
-		if(!$(this).attr("id"))
-			$(this).attr("id", "TinyMCE-"+nr);
-		options.selector = "#"+$(this).attr("id");
-		tinymce.init(options);
-	});
-}';
-			$context->js->addScriptOnReady( $script );
+			$options	= array(
+				'languages'		=> $languages,
+				'envUri'		=> $env->url,
+				'frontendUri'	=> $baseUrl,
+				'language'		=> $language,
+				'styleFormats'	=> $styleFormats,
+			);
+			if(0){
+				$helper	= new View_Helper_TinyMce( $env );
+				$options['listImages']	= json_encode( $helper->getImageList() );
+				$options['listLinks']	= json_encode( $helper->getLinkList() );
+			}
+			$context->js->addScript( 'ModuleJsTinyMce.configAuto('.json_encode( $options ).')' );
+			$context->js->addScriptOnReady( 'ModuleJsTinyMce.applyAuto()' );
 		}
+	}
+
+	static public function load( $env ){
+		if( self::$loaded )
+			return;
+
+		$page		= $env->getPage();
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
+
+		$sourceUri	= $pathLocal.'tinymce/';
+		if( $config->get( 'CDN' ) )
+			$sourceUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
+
+		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
+		$page->js->addUrl( $pathLocal.'module.js.tinymce.js' );
+		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
+		$page->js->addUrl( $pathLocal.'TinyMCE.FileBrowser.js' );
+
+		$languages	= self::getLanguage( $env );
+		if( !$config->get( 'CDN' ) && $language !== "en" )
+			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
+
+		self::$loaded	= TRUE;
+	}
+
+	static public function getLanguage( $env ){
+		$language	= $env->getLanguage()->getLanguage();
+		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$languages	= explode( ",", $config->get( 'languages' ) );
+		if( $config->get( 'CDN' ) )
+			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
+		if( $language !== "en" && !in_array( $language, $languages ) )
+			$language = "en";
+		return $language;
 	}
 
 	protected function __compare( $a, $b ){
@@ -248,6 +234,8 @@ if($(settings.JS_TinyMCE.auto_selector).size()){
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks
 			$this->listLinks	= $this->list;
 		}
+		usort( $this->listLinks, array( $this, "__compare" ) );
+		return $this->listLinks;
 		$list	= array();
 		foreach( $this->listLinks as $key => $value )
 			$list[$value->title.'_'.$key]	= $value;
