@@ -12,7 +12,10 @@ class Mail_Auth_Local_Register extends Mail_Abstract{
 		$body	= $this->view->loadContentFile( 'mail/auth/local/register.txt', $data );
 
 		$this->setSubject( $wordsMails['mails']['onRegister'] );
-		$this->addTextBody( $body );
+		$this->setText( $body );
+
+		$body	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $body );
+		$this->setHtml( nl2br( $body ) );
 	}
 }
 ?>
