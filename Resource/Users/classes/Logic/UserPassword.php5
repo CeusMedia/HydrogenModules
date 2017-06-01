@@ -40,27 +40,23 @@ class Logic_UserPassword{
 		$new		= $this->model->get( $userPasswordId );
 		if( !$new )
 			throw new OutOfRangeException( 'Invalid user password ID' );
-		if( $new->status != 0 )
+		if( $new->status != Model_User_Password::STATUS_NEW )
 			throw new OutOfRangeException( 'User password cannot be activated' );
 
-		$old	= $this->model->getByIndices( array( 'userId' => $new->userId, 'status' => 1 ) );
+		$old	= $this->model->getByIndices( array(
+			'userId'	=> $new->userId,
+			'status'	=> Model_User_Password::STATUS_ACTIVE,
+		) );
 		if( $old ){
 			$this->model->edit( $old->userPasswordId, array(
-				'status'	=> -2,
+				'status'	=> Model_User_Password::STATUS_REVOKED,
 				'revokedAt'	=> time(),
 			) );
 		}
 		$this->model->edit( $userPasswordId, array(
-			'status'		=> 1,
+			'status'		=> Model_User_Password::STATUS_ACTIVE,
 			'activatedAt'	=> time(),
 		) );
-/*		$others	= $this->model->getAllByIndices( array( 'userId' => $userId, 'status' => 0 ) );
-		foreach( $others as $item ){
-			$this->model->edit( $item->userPasswordId, array(
-				'status'	=> -1,
-				'revokedAt'	=> time(),
-			) );
-		}*/
 		return TRUE;
 	}
 
@@ -82,15 +78,19 @@ class Logic_UserPassword{
 	 */
 	public function addPassword( $userId, $password ){
 		$salt	= $this->generateSalt();															//  generate password salt
-		if( $other = $this->model->getByIndices( array( 'userId' => $userId, 'status' => 0 ) ) ){	//  find other new password
+		$other	= $this->model->getByIndices( array(
+			'userId'	=> $userId,
+			'status'	=> Model_User_Password::STATUS_NEW,
+		) );
+		if( $other ){																				//  find other new password
 			$this->model->edit( $other->userPasswordId, array(										//  and revoke it
-				'status'	=> -2,
+				'status'	=> Model_User_Password::STATUS_REVOKED,
 				'revokedAt' => time()
 			) );
 		}
 		$data	= array(
 			'userId'	=> $userId,
-			'status'	=> 0,
+			'status'	=> Model_User_Password::STATUS_NEW,
 			'algo'		=> PASSWORD_BCRYPT,
 			'salt'		=> $salt,
 			'hash'		=> $this->encryptPassword( $salt.$password, PASSWORD_BCRYPT ),
@@ -114,10 +114,10 @@ class Logic_UserPassword{
 	public function clearOutdatedPasswordReplacements(){
 		$count	= 0;
 		if( $this->maxAgeBeforeDecay ){
-			foreach( $this->model->getAllByIndex( 'status', 0 ) as $item ){
+			foreach( $this->model->getAllByIndex( 'status', Model_User_Password::STATUS_NEW ) as $item ){
 				if( time() - $item->createdAt > $this->maxAgeBeforeDecay ){
 					$data	= array(
-						'status'	=> -1,
+						'status'	=> Model_User_Password::STATUS_OUTDATED,
 						'revokedAt'	=> time(),
 					);
 					$count	+= (int) (bool) $this->model->edit( $userPasswordId, $data );
@@ -132,10 +132,10 @@ class Logic_UserPassword{
 		$password		= $this->model->get( $userPasswordId );
 		if( !$password )
 			throw new OutOfRangeException( 'Invalid user password ID' );
-		if( $password->status != 0 )
+		if( $password->status != Model_User_Password::STATUS_NEW )
 			throw new OutOfRangeException( 'User password cannot be decayed' );
 		return (bool) $this->model->edit( $userPasswordId, array(
-			'status'	=> -1,
+			'status'	=> Model_User_Password::STATUS_OUTDATED,
 			'revokedAt'	=> time(),
 		) );
 	}
@@ -188,7 +188,7 @@ class Logic_UserPassword{
 	public function getActivableUserPassword( $userId, $password ){
 		$indices	= array(
 			'userId'	=> $userId,
-			'status'	=> 0,
+			'status'	=> Model_User_Password::STATUS_NEW,
 		);
 		foreach( $this->model->getAllByIndices( $indices ) as $item )
 			if( $this->validatePassword( $item->salt.$password, $item->hash ) )
@@ -218,7 +218,7 @@ class Logic_UserPassword{
 	public function hasUserPassword( $userId ){
 		$indices	= array(
 			'userId'	=> $userId,
-			'status'	=> 1,
+			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		);
 		return (bool) $this->model->count( $indices );
 	}
@@ -255,7 +255,7 @@ class Logic_UserPassword{
 	public function validateUserPassword( $userId, $password ){
 		$item	= $this->model->getByIndices( array(
 			'userId'	=> $userId,
-			'status'	=> 1,
+			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		) );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
 			$this->model->edit( $item->userPasswordId, array(

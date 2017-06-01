@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -19,6 +19,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3">Improve password handling with own model and logic.</log>
 	<log version="0.3.1">Change default values of user indices.</log>
 	<log version="0.3.2">Soften index type of account ID from unique to index.</log>
+	<log version="0.3.3">Use status constants.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

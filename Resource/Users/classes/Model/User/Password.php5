@@ -18,6 +18,11 @@
  */
 class Model_User_Password extends CMF_Hydrogen_Model {
 
+	const STATUS_REVOKED		= -2;
+	const STATUS_OUTDATED		= -1;
+	const STATUS_NEW			= 0;
+	const STATUS_ACTIVE			= 1;
+
 	protected $name		= 'user_passwords';
 	protected $columns	= array(
 		'userPasswordId',
