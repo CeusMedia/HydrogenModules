@@ -134,6 +134,30 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	static public function ___onRenderSearchResults( $env, $context, $module, $data ){
+		$logic		= new Logic_Page( $env );
+		$options	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );
+		$words		= $env->getLanguage()->getWords( 'main' );
+
+		foreach( $data->documents as $resultDocument  ){
+			if( isset( $resultDocument->facts ) )
+				continue;
+			$page	= $logic->getPageFromPath( $resultDocument->path );
+			if( !$page )
+				continue;
+
+			$suffix	= $options->get( 'title.separator' ).$words['main']['title'];
+			$title	= preg_replace( '/'.preg_quote( $suffix, '/' ).'$/', '', $resultDocument->title );
+
+			$resultDocument->facts	= (object) array(
+				'category'		=> 'Seite:',
+				'title'			=> $title,
+				'link'			=> $resultDocument->path,
+				'image'			=> NULL,
+			);
+		}
+	}
+
 	public function index( $pageId = 'index' ){
 		$directAccess	= $this->env->getConfig()->get( 'module.info_page.direct' );				//  get right to directly access page controller
 		$isRedirected	= $this->env->getRequest()->get( '__redirected' );							//  check if page controller has been redirected to
