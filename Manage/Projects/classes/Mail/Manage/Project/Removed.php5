@@ -38,20 +38,21 @@ $text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
 
 		//  --  FORMAT: HTML  --  //
 		$body	= '
-<div class="container">
-	<h2 class="muted">'.$config->get( 'app.name' ).'</h2>
-	<div class="content-panel">
-		<h3>'.sprintf( $w->headingHtml, $project->title ).'</h3>
-		<div class="content-panel-inner">
-			<h4>'.$w->headingFacts.'</h4>
-			'.$helperFacts->render().'
-			'.$relations.'
-			</dl>
-		</div>
+<div class="alert alert-danger">'.sprintf( $w->headingHtml, $project->title ).'</div>
+<div class="content-panel">
+	<h3>'.sprintf( $w->headingHtml, $project->title ).'</h3>
+	<div class="content-panel-inner">
+		<h4>'.$w->headingFacts.'</h4>
+		'.$helperFacts->render().'
+		'.$relations.'
+		</dl>
 	</div>
 </div>';
-		$this->page->addBody( $body );
-		$this->addHtmlBody( $this->page->build() );
+		return $this->setHtml( $body );
+/*		return array(
+			'contentText'	=> '',
+			'contentHtml'	=> '',
+		);*/
 	}
 }
 ?>

@@ -28,30 +28,32 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
 
 		//  --  FORMAT: PLAIN TEXT  --  //
 		$helperText	= new View_Helper_Mail_Text( $this->env );
-$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
-
-'.sprintf( $w->headingText, $project->title ).'
-
-'.$helperText->underscore( $w->headingFacts ).'
-'.$helperFacts->renderAsText();
-		$this->addTextBody( $text );
+		$title	= $helperText->underscore( $config->get( 'app.name' ), '=' );
+		$text	= $title.PHP_EOL.
+			PHP_EOL.
+			sprintf( $w->headingText, $project->title ).PHP_EOL.
+			PHP_EOL.
+			$helperText->underscore( $w->headingFacts ).
+			$helperFacts->renderAsText();
+		$this->setText( $text );
 
 		//  --  FORMAT: HTML  --  //
 		$body	= '
-<div class="container">
-	<h2 class="muted">'.$config->get( 'app.name' ).'</h2>
-	<div class="content-panel">
-		<h3>'.sprintf( $w->headingHtml, $project->title ).'</h3>
-		<div class="content-panel-inner">
-			<h4>'.$w->headingFacts.'</h4>
-			'.$helperFacts->render().'
-			'.$relations.'
-			</dl>
-		</div>
+<div class="alert alert-info">'.sprintf( $w->headingHtml, $project->title ).'</div>
+<div class="content-panel">
+	<h3>Aktuelle Projektinformationen</h3>
+	<div class="content-panel-inner">
+		<h4>'.$w->headingFacts.'</h4>
+		'.$helperFacts->render().'
+		'.$relations.'
+		</dl>
 	</div>
 </div>';
-		$this->page->addBody( $body );
-		$this->addHtmlBody( $this->page->build() );
+		return $this->setHtml( $body );
+/*		return array(
+			'contentText'	=> '',
+			'contentHtml'	=> '',
+		);*/
 	}
 }
 ?>

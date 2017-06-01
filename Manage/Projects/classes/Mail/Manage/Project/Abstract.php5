@@ -2,8 +2,14 @@
 abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
-		$modules	= $this->env->getModules();
-		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
+//		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
+/*		if( $this->env->getModules()->has( 'UI_CSS_Panel' ) ){
+			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
+			if( $options->get( 'enabled' ) ){
+				$this->page->addBodyClass( 'content-panel-style-'.$options->get( 'style' ) );
+				$this->addCommonStyle( 'layout.panels.css' );
+			}
+		}*/
 	}
 
 	protected function collectFacts( $project ){
