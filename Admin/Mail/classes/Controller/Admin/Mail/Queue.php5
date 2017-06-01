@@ -33,7 +33,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function cancel( $mailId ){
 		$model	= new Model_Mail( $this->env );
-		$mail	= $model->get( $mailId );
+		$mail	= $model->getMail( $mailId );
 		if( !$mail ){
 			$this->env->getMessenger->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
@@ -49,7 +49,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function html( $mailId ){
-		$mail		= $this->logic->getQueuedMail( $mailId );
+		$mail		= $this->logic->getMail( $mailId );
 		$this->addData( 'mail', $mail );
 	}
 
@@ -72,10 +72,6 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 					$mail	= new Mail_Test( $this->env, $this->request->getAll() );
 					$mail->setSubject( $subject );
 					$mail->setSender( $sender );
-
-#xmp( $mail->mail->getBody() );
-#die("!");
-
 					$this->logic->appendRegisteredAttachments( $mail, $language );
 					if( 1 )
 						$mail->sendTo( $receiver );
@@ -190,7 +186,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function view( $mailId ){
 		try{
-			$mail	= $this->logic->get( $mailId );
+			$mail	= $this->logic->getMail( $mailId );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteError( 'Parsing of this mail failed.' );

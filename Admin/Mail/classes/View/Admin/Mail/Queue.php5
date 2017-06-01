@@ -61,15 +61,10 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 
 
 	protected function getMailParts( $mail ){
-		if( !$mail->object ){
-			print 'No mail object available.';
-			exit;
-		}
-		$logic		= new Logic_Mail( $this->env );
-		$object		= $logic->decodeMailObject( $mail );
-
-		if( $object->mail instanceof \CeusMedia\Mail\Message )								//  modern mail message with parsed body parts
-			return $object->mail->getParts();
+		if( !$mail->object )
+			throw new Exception( 'No mail object available' );
+		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )								//  modern mail message with parsed body parts
+			return $mail->object->mail->getParts( TRUE );
 
 		//  support for older implementation using cmClasses
 		if( !class_exists( 'CMM_Mail_Parser' ) )													//  @todo change to \CeusMedia\Mail\Parser
@@ -79,19 +74,13 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 
 	public function html(){
 		try{
-			$parts	= $this->getMailParts( $this->getData( 'mail' ) );
-			foreach( $parts as $key => $part ){
-				if( strlen( trim( $part->getContent() ) ) ){
-					if( $part->getMimeType() === "text/html" ){
-						print $part->getContent();
-						exit;
-					}
-				}
-			}
-			print 'No HTML part found.';
+			$mail	= $this->getData( 'mail' );
+			$helper	= new View_Helper_Mail_View_HTML( $this->env );
+			$helper->setMail( $mail );
+			print( $helper->render() );
 		}
 		catch( Exception $e ){
-			print $e->getMessage();
+			UI_HTML_Exception_Page::display( $e );
 		}
 		exit;
 	}
