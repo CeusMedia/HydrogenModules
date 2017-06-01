@@ -123,31 +123,6 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/my/user' );
 	}
 
-	public function index(){
-		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$roleId		= $this->session->get( 'roleId' );
-		$modelRole	= new Model_Role( $this->env );
-
-		if( !$this->userId ){
-			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
-			$this->restart( './' );
-		}
-		$user		= $this->modelUser->get( $this->userId );
-		$user->role	= $modelRole->get( $user->roleId );
-		if( class_exists( 'Model_Company' ) ){
-			$modelCompany	= new Model_Company( $this->env );
-			$user->company	= $modelCompany->get( $user->companyId );
-		}
-		$this->addData( 'currentUserId', $this->userId );
-		$this->addData( 'user', $user );
-		$this->addData( 'pwdMinLength', (int) $options->get( 'password.length.min' ) );
-		$this->addData( 'pwdMinStrength', (int) $options->get( 'password.strength.min' ) );
-		$this->addData( 'mandatoryEmail', $options->get( 'email.mandatory' ) );
-		$this->addData( 'mandatoryFirstname', $options->get( 'firstname.mandatory' ) );
-		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
-		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
-	}
-
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
@@ -186,38 +161,34 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	/**
-	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@todo   	Redesign: Send mail with confirmation before applying new username
-	 */
-	public function username(){
-		$this->checkConfirmationPassword();
-
+	public function index(){
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$words		= (object) $this->getWords( 'username' );
-		$user		= $this->modelUser->get( $this->userId );
-		$username	= trim( $this->request->get( 'username' ) );
+		$roleId		= $this->session->get( 'roleId' );
+		$modelRole	= new Model_Role( $this->env );
 
-		if( !strlen( $username ) ){
-			$this->messenger->noteError( $words->msgUsernameMissing );
-			$this->restart( NULL, TRUE );
+		if( !$this->userId ){
+			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
+			$this->restart( './' );
 		}
-		if( $username === $user->username ){
-			$this->messenger->noteNotice( $words->msgNoticeNoChanges );
-			$this->restart( NULL, TRUE );
+		$user		= $this->modelUser->get( $this->userId );
+		$user->role	= $modelRole->get( $user->roleId );
+		if( class_exists( 'Model_Company' ) ){
+			$modelCompany	= new Model_Company( $this->env );
+			$user->company	= $modelCompany->get( $user->companyId );
 		}
-		$indices	= array(
-			'username'	=> $username,
-			'userId'	=> '!='.$this->userId,
-//			'status'	=> '>=-1',																//  disabled for integrity
-		);
-		if( $this->modelUser->getByIndices( $indices ) ){
-			$this->messenger->noteError( $words->msgUsernameExisting, $username );
-			$this->restart( NULL, TRUE );
-		}
-		$this->modelUser->edit( $this->userId, array( 'username' => $username ) );
-		$this->messenger->noteSuccess( $words->msgSuccess );
-		$this->restart( NULL, TRUE );
+
+		$modelPassword	= new Model_User_Password( $this->env );
+		$passwords		= $modelPassword->getAll( array( 'userId' => $this->userId ) );
+
+		$this->addData( 'currentUserId', $this->userId );
+		$this->addData( 'user', $user );
+		$this->addData( 'passwords', $passwords );
+		$this->addData( 'pwdMinLength', (int) $options->get( 'password.length.min' ) );
+		$this->addData( 'pwdMinStrength', (int) $options->get( 'password.strength.min' ) );
+		$this->addData( 'mandatoryEmail', $options->get( 'email.mandatory' ) );
+		$this->addData( 'mandatoryFirstname', $options->get( 'firstname.mandatory' ) );
+		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
+		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
 	/**
@@ -265,6 +236,40 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( $words->msgSuccess );
 		}
 		$this->restart( './manage/my/user' );
+	}
+
+	/**
+	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@todo   	Redesign: Send mail with confirmation before applying new username
+	 */
+	public function username(){
+		$this->checkConfirmationPassword();
+
+		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$words		= (object) $this->getWords( 'username' );
+		$user		= $this->modelUser->get( $this->userId );
+		$username	= trim( $this->request->get( 'username' ) );
+
+		if( !strlen( $username ) ){
+			$this->messenger->noteError( $words->msgUsernameMissing );
+			$this->restart( NULL, TRUE );
+		}
+		if( $username === $user->username ){
+			$this->messenger->noteNotice( $words->msgNoticeNoChanges );
+			$this->restart( NULL, TRUE );
+		}
+		$indices	= array(
+			'username'	=> $username,
+			'userId'	=> '!='.$this->userId,
+//			'status'	=> '>=-1',																//  disabled for integrity
+		);
+		if( $this->modelUser->getByIndices( $indices ) ){
+			$this->messenger->noteError( $words->msgUsernameExisting, $username );
+			$this->restart( NULL, TRUE );
+		}
+		$this->modelUser->edit( $this->userId, array( 'username' => $username ) );
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>
