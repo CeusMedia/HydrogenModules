@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.8</version>
+	<version>0.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -55,7 +55,9 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6.5">Tolerate lack of mail classes.</log>
 	<log version="0.6.6">Automatically include bootstrap into abstract mail if available.</log>
 	<log version="0.6.7">Support greylisting.</log>
-	<log version="0.6.8">Extend mail model by compression and mail class columns.</log>
+	<log version="0.6.8">Extend queue model by compression column.</log>
+	<log version="0.6.9">Add view helpers for mail contents.</log>
+	<log version="0.7">Add mail template support.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -65,10 +67,14 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 		<class>Mail/Test.php5</class>
 		<class>Model/Mail.php5</class>
 		<class>Model/Mail/Attachment.php5</class>
+		<class>Model/Mail/Template.php5</class>
 		<class>Logic/Mail.php5</class>
 		<class>Job/Mail.php5</class>
 		<class>View/Helper/Mail/Facts.php5</class>
 		<class>View/Helper/Mail/Text.php5</class>
+		<class>View/Helper/Mail/View/HTML.php5</class>
+		<class>View/Helper/Mail/View/Source.php5</class>
+		<style source="common">bootstrap.email.min.css</style>
 		<style>mail.min.css</style>
 		<script>mail.min.js</script>
 		<file>config/jobs/mail.xml</file>
@@ -89,6 +95,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="string" name="path.classes" title="path to mail classes to manage">classes/Mail/</config>
 	<config protected="yes" type="integer" name="retry.attempts" title="Maximum number of attempts before sending has failed">10</config>
 	<config protected="yes" type="integer" name="retry.delay" title="Seconds until new attempt to send">900</config>
+	<config protected="yes" type="integer" name="template" title="ID of template to apply automatically">0</config>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
@@ -96,33 +103,35 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
-  `mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `senderId` int(10) unsigned NOT NULL DEFAULT '0',
-  `receiverId` int(10) unsigned NOT NULL DEFAULT '0',
+  `mailId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `senderId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `receiverId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `attempts` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `senderAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `compression` tinyint(1) UNSIGNED NOT NULL COMMENT '0: NONE, 1: GZIP, 2: BZIP',
   `object` longblob NOT NULL,
-  `enqueuedAt` decimal(12,0) unsigned NOT NULL,
-  `attemptedAt` decimal(12,0) unsigned NOT NULL,
-  `sentAt` decimal(12,0) unsigned NOT NULL,
+  `enqueuedAt` decimal(12,0) UNSIGNED NOT NULL,
+  `attemptedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `sentAt` decimal(12,0) UNSIGNED DEFAULT '0',
   PRIMARY KEY (`mailId`),
   KEY `senderId` (`senderId`),
   KEY `receiverId` (`receiverId`),
   KEY `status` (`status`),
   KEY `attempts` (`attempts`),
+  KEY `language` (`language`),
+  KEY `senderAddress` (`senderAddress`),
   KEY `receiverAddress` (`receiverAddress`),
   KEY `receiverName` (`receiverName`),
   KEY `subject` (`subject`),
+  KEY `compression` (`compression`),
   KEY `enqueuedAt` (`enqueuedAt`),
   KEY `attemptedAt` (`attemptedAt`),
-  KEY `sentAt` (`sentAt`),
-  KEY `senderAddress` (`senderAddress`),
-  KEY `language` (`language`)
+  KEY `sentAt` (`sentAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mail_attachments`;
@@ -144,7 +153,25 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
   KEY `language` (`language`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-
+DROP TABLE IF EXISTS `<%?prefix%>mail_templates`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
+  `mailTemplateId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `language` varchar(5) DEFAULT NULL,
+  `title` varchar(100) NOT NULL,
+  `plain` text,
+  `html` text NOT NULL,
+  `css` text NOT NULL,
+  `styles` text NOT NULL,
+  `images` text,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`mailTemplateId`),
+  KEY `status` (`status`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" version="0.4.0" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mails`;
@@ -209,7 +236,29 @@ UPDATE `<%?prefix%>mail_attachments` SET language="de" WHERE language="";
 ALTER TABLE `<%?prefix%>mails` CHANGE `status` `status` TINYINT(1) NOT NULL DEFAULT '0';
 	]]></sql>
 	<sql on="update" version="0.6.8" type="mysql"><![CDATA[
-ALTER TABLE `<%?prefix%>mails` ADD `compression` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0: NONE, 1: BASE64, 2: GZIP, 3: BZIP2' AFTER `subject`, ADD INDEX (`compression`);
-ALTER TABLE `<%?prefix%>mails` ADD `mailClass` VARCHAR(200) NOT NULL AFTER `subject`, ADD INDEX (`mailClass`);
+ALTER TABLE `<%?prefix%>mails` ADD `compression` TINYINT(1) UNSIGNED NOT NULL COMMENT '0: NONE, 1: GZIP, 2: BZIP' AFTER `subject`, ADD INDEX (`compression`);
+ALTER TABLE `<%?prefix%>mails` CHANGE `attemptedAt` `attemptedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `<%?prefix%>mails` CHANGE `sentAt` `sentAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
+	]]></sql>
+	<sql on="update" version="0.7" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_templates`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
+  `mailTemplateId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `language` varchar(5) DEFAULT NULL,
+  `title` varchar(100) NOT NULL,
+  `plain` text,
+  `html` text NOT NULL,
+  `css` text NOT NULL,
+  `styles` text NOT NULL,
+  `images` text,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`mailTemplateId`),
+  KEY `status` (`status`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 </module>

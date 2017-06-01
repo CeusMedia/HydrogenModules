@@ -5,7 +5,6 @@
  *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@since			20.1.2005
- *	@version		3.0
  */
 /**
  *	Data Model of Customers.
@@ -14,7 +13,6 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@since			20.1.2005
- *	@version		3.0
  */
 class Model_Mail extends CMF_Hydrogen_Model {
 
@@ -30,46 +28,44 @@ class Model_Mail extends CMF_Hydrogen_Model {
 	const STATUS_ARCHIVED		= 6;
 
 	const COMPRESSION_NONE		= 0;
-	const COMPRESSION_BASE64	= 1;
-	const COMPRESSION_GZIP		= 2;
-	const COMPRESSION_BZIP2		= 3;
-
+	const COMPRESSION_GZIP		= 1;
+	const COMPRESSION_BZIP		= 2;
 
 	protected $name		= 'mails';
 	protected $columns	= array(
-		"mailId",
-		"senderId",
-		"receiverId",
-		"status",
-		"attempts",
-		"language",
-		"receiverAddress",
-		"receiverName",
-		"senderAddress",
-		"subject",
-		"mailClass",
-		"compression",
-		"object",
-		"enqueuedAt",
-		"attemptedAt",
-		"sentAt",
+		'mailId',
+		'senderId',
+		'receiverId',
+		'status',
+		'attempts',
+		'language',
+		'receiverAddress',
+		'receiverName',
+		'senderAddress',
+		'subject',
+//		'mailClass',
+		'compression',
+		'object',
+		'enqueuedAt',
+		'attemptedAt',
+		'sentAt',
 	);
 	protected $primaryKey	= 'mailId';
 	protected $indices		= array(
-		"senderId",
-		"receiverId",
-		"status",
-		"attempts",
-		"language",
-		"receiverAddress",
-		"receiverName",
-		"senderAddress",
-		"subject",
-		"mailClass",
-		"compression",
-		"enqueuedAt",
-		"attemptedAt",
-		"sentAt",
+		'senderId',
+		'receiverId',
+		'status',
+		'attempts',
+		'language',
+		'receiverAddress',
+		'receiverName',
+		'senderAddress',
+		'subject',
+//		'mailClass',
+		'compression',
+		'enqueuedAt',
+		'attemptedAt',
+		'sentAt',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

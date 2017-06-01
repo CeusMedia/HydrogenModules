@@ -3,24 +3,35 @@ class Mail_Test extends Mail_Abstract{
 
 	public function generate( $data = array() ){
 		$this->setSubject( 'Test' );
-
-		$text		= strip_tags( $this->renderBody( $data ) );
-		$text		= chunk_split( base64_encode( $text ), 78 );
-		$mailText	= new Net_Mail_Body( $text, Net_Mail_Body::TYPE_PLAIN );
-		$mailText->setContentEncoding( 'base64' );
-		$this->mail->addBody( $mailText );
-
-		$html		= $this->renderBody( $data );
-		$html		= chunk_split( base64_encode( $html ), 78 );
-		$mailBody	= new Net_Mail_Body( $html, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$this->mail->addBody( $mailBody );
+		$contentText	= $this->renderText( $data );
+		$contentHtml	= $this->renderHtml( $data );
+		$this->setText( $contentText );
+		$this->setHtml( $contentHtml );
+		return array(
+			'text'	=> $contentText,
+			'html'	=> $contentHtml,
+		);
 	}
 
-	public function renderBody( $data = array() ){
-		if( isset( $data['body'] ) && strlen( trim( $data['body'] ) ) )
-			return $data['body'];
-		return "Test: ".time();
+	public function renderHtml( $data = array() ){
+		$content	= '
+<h2>E-Mail-Test</h2>
+<div>
+	<big>This is a text.</big>
+	<div class="alert alert-info">The current timestamp is '.time().'.</div>
+</div>';
+		return $content;
+	}
+
+	public function renderText( $data = array() ){
+		$content	= '
+*E-Mail-Test*
+
+This is just a test.
+The current timestamp ist '.time().'
+
+Goodbye';
+		return $content;
 	}
 }
 ?>
