@@ -12,7 +12,10 @@ class Mail_Member_Request extends Mail_Abstract{
 		$body	= $this->view->loadContentFile( 'mail/member/request.txt', $data );
 
 		$this->setSubject( $wordsMails['mails']['onRequest'] );
-		$this->addTextBody( $body );
+		$this->setText( $body );
+
+		$body	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $body );
+		$this->setHtml( nl2br( $body ) );
 	}
 }
 ?>

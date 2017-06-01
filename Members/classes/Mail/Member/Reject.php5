@@ -12,7 +12,10 @@ class Mail_Member_Reject extends Mail_Abstract{
 		$body	= $this->view->loadContentFile( 'mail/member/reject.txt', $data );
 
 		$this->setSubject( $wordsMails['mails']['onReject'] );
-		$this->addTextBody( $body );
+		$this->setText( $body );
+
+		$body	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $body );
+		$this->setHtml( nl2br( $body ) );
 	}
 }
 ?>

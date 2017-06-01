@@ -12,7 +12,11 @@ class Mail_Member_Revoke extends Mail_Abstract{
 		$body	= $this->view->loadContentFile( 'mail/member/revoke.txt', $data );
 
 		$this->setSubject( $wordsMails['mails']['onRevoke'] );
-		$this->addTextBody( $body );
+		$this->setText( $body );
+
+		$body	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $body );
+		$this->setHtml( nl2br( $body ) );
+		$this->setHtml( $body );
 	}
 }
 ?>

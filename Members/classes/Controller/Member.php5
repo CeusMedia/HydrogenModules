@@ -168,7 +168,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 
 			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Release( $this->env, array(
+			$mail		= new Mail_Member_Revoke( $this->env, array(
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $toUserId ),
 			) );
