@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.7.3</version>
+	<version>0.7.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -40,15 +40,19 @@
 	<log version="0.7">Upgrade support for new dasboard module.</log>
 	<log version="0.7.1">Remove support for old dasboard module.</log>
 	<log version="0.7.2">Support new mail model statuses.</log>
-	<log version="0.7.3">Use mail logic to decode enqueued mails.</log>
+	<log version="0.7.3">Support embedded images in HTML mail view.</log>
+	<log version="0.7.4">Support mail templates.</log>
+	<log version="0.7.5">Use mail logic to decode enqueued mails.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Mail/Attachment.php5</class>
 		<class>Controller/Admin/Mail/Queue.php5</class>
+		<class>Controller/Admin/Mail/Template.php5</class>
 		<class>View/Admin/Mail/Attachment.php5</class>
 		<class>View/Admin/Mail/Queue.php5</class>
+		<class>View/Admin/Mail/Template.php5</class>
 		<template>admin/mail/attachment/add.php</template>
 		<template>admin/mail/attachment/index.php</template>
 		<template>admin/mail/attachment/index.files.php</template>
@@ -60,6 +64,9 @@
 		<template>admin/mail/queue/view.php</template>
 		<template>admin/mail/queue/view.body.php</template>
 		<template>admin/mail/queue/view.facts.php</template>
+		<template>admin/mail/template/add.php</template>
+		<template>admin/mail/template/edit.php</template>
+		<template>admin/mail/template/index.php</template>
 		<locale>de/admin/mail/attachment.ini</locale>
 		<locale>de/admin/mail/queue.ini</locale>
 		<locale>de/html/admin/mail/attachment/bottom.html</locale>
@@ -77,6 +84,9 @@
 	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
 	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anh&#xE4;nge</link>
 	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
+	<link access="acl" xml:lang="de" rank="89" path="admin/mail/template">E-Mail-Templates</link>
+	<link access="acl" xml:lang="en" rank="89" path="admin/mail/template">Email templates</link>
+	
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">Resource_Mail</needs>

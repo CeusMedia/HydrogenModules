@@ -9,9 +9,10 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Mail( $this->env );
 		$path				= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-		CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
+			CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
+		}
 	}
 
 	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
@@ -46,11 +47,6 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			'status'	=> Model_Mail::STATUS_ABORTED,
 		) );
 		$this->restart( 'view/'.$mailId, TRUE );
-	}
-
-	public function html( $mailId ){
-		$mail		= $this->logic->getMail( $mailId );
-		$this->addData( 'mail', $mail );
 	}
 
 	public function enqueue(){
@@ -118,6 +114,10 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	public function html( $mailId ){
+		$this->addData( 'mail', $this->logic->getMail( (int) $mailId ) );
+	}
+
 	public function index( $page = 0 ){
 //		if( !$this->session->get( 'filter_mail_status' ) )
 //			$this->session->set( 'filter_mail_status', array( 0 ) );
@@ -148,6 +148,23 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->addData( 'filters', $filters );
 	}
 
+	public function resend( $mailId ){
+		$model	= new Model_Mail( $this->env );
+		$mail	= $model->get( $mailId );
+		if( !$mail ){
+			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->restart( NULL, TRUE );
+		}
+/*		if( $mail->status > 1 ){
+			$this->env->getMessenger->noteError( 'Mail already sent' );
+			$this->restart( NULL, TRUE );
+		}*/
+		$model->edit( $mailId, array(
+			'status'	=> Model_Mail::STATUS_NEW,
+		) );
+		$this->restart( 'view/'.$mailId, TRUE );
+	}
+
 	public function send(){
 		$count	= $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) );
 		if( $count ){
@@ -167,31 +184,9 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function resend( $mailId ){
-		$model	= new Model_Mail( $this->env );
-		$mail	= $model->get( $mailId );
-		if( !$mail ){
-			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
-			$this->restart( NULL, TRUE );
-		}
-/*		if( $mail->status > 1 ){
-			$this->env->getMessenger->noteError( 'Mail already sent' );
-			$this->restart( NULL, TRUE );
-		}*/
-		$model->edit( $mailId, array(
-			'status'	=> Model_Mail::STATUS_NEW,
-		) );
-		$this->restart( 'view/'.$mailId, TRUE );
-	}
-
 	public function view( $mailId ){
-		try{
-			$mail	= $this->logic->getMail( $mailId );
-		}
-		catch( Exception $e ){
-			$this->messenger->noteError( 'Parsing of this mail failed.' );
-			$this->restart( NULL, TRUE );
-		}
+		$mail			= $this->logic->getMail( $mailId );
+		$mail->parts	= $this->logic->getMailParts( $mail );
 		$this->addData( 'mail', $mail );
 	}
 }

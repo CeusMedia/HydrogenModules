@@ -19,6 +19,19 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 	public function enqueue(){
 	}
 
+	public function html(){
+		try{
+			$mail	= $this->getData( 'mail' );
+			$helper	= new View_Helper_Mail_View_HTML( $this->env );
+			$helper->setMail( $mail );
+			print( $helper->render() );
+		}
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+		}
+		exit;
+	}
+
 	public function index(){
 	}
 
@@ -57,32 +70,6 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 		$term	= UI_HTML_Tag::create( 'dt', $label );
 		$def	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
 		return $term.$def;
-	}
-
-
-	protected function getMailParts( $mail ){
-		if( !$mail->object )
-			throw new Exception( 'No mail object available' );
-		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )								//  modern mail message with parsed body parts
-			return $mail->object->mail->getParts( TRUE );
-
-		//  support for older implementation using cmClasses
-		if( !class_exists( 'CMM_Mail_Parser' ) )													//  @todo change to \CeusMedia\Mail\Parser
-			throw new RuntimeException( 'No mail parser available.' );
-		return CMM_Mail_Parser::parseBody( $mail->object->mail->getBody() );
-	}
-
-	public function html(){
-		try{
-			$mail	= $this->getData( 'mail' );
-			$helper	= new View_Helper_Mail_View_HTML( $this->env );
-			$helper->setMail( $mail );
-			print( $helper->render() );
-		}
-		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
-		}
-		exit;
 	}
 }
 ?>
