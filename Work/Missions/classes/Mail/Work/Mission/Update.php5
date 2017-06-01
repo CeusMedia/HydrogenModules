@@ -3,6 +3,15 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 
 	protected $languageSection	= 'mail-update';
 
+	public function generate( $data = array() ){
+		parent::generate( $data );
+		$this->addThemeStyle( 'indicator.css' );
+		$this->addBodyClass( 'moduleWorkMission' );
+		$this->addBodyClass( 'jobWorkMission' );
+		$this->addBodyClass( 'job-work-mission-mail-update' );
+		return $this->setHtml( $this->renderBody( $data ) );
+	}
+
 	public function renderBody( $data ){
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
@@ -11,13 +20,13 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$diff		= array();
 		$old		= $data['missionBefore'];
 		$new		= $data['missionAfter'];
+//		$modifier	= $data['modifier'];
 
 		$this->setSubjectFromMission( $old );
 
 		$this->enlistFact( 'type', $this->labelsTypes[$old->type] );
 		if( $old->type !== $new->type )
 			$this->enlistFact( 'type', $this->labelsTypes[$old->type].' &rarr; '.$this->labelsTypes[$new->type], 'label label-info' );
-
 
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$model		= new Model_Project( $this->env );
@@ -29,9 +38,9 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 			}
 		}
 
-		$this->enlistFact( 'title', $old->title );
+		$this->enlistFact( 'title', $this->renderLinkedTitle( $old ) );
 		if( $old->title !== $new->title )
-			$this->enlistFact( 'title', $old->title.'<br/>'.$new->title, 'label label-info' );
+			$this->enlistFact( 'title', $this->renderLinkedTitle( $old ).'<br/>'.$this->renderLinkedTitle( $new ), 'label label-info' );
 
 		$this->enlistFact( 'status', $this->labelsStates[$old->status] );
 		if( $old->status !== $new->status )
@@ -44,11 +53,12 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		if( $old->workerId ){
 			$worker		= $this->modelUser->get( $old->workerId );
 			if( $worker ){
-				$this->enlistFact( 'worker', $worker->username );
+				$this->enlistFact( 'worker', $this->renderUser( $worker, TRUE ) );
 				if( $old->workerId !== $new->workerId ){
 					$workerOld	= $this->modelUser->get( $old->workerId );
 					$workerNew	= $this->modelUser->get( $new->workerId );
-					$this->enlistFact( 'worker', $workerOld->username.' &rarr; '.$workerNew->username, TRUE );
+					$transition	= $this->renderUser( $workerOld, TRUE ).' &rarr; '.$this->renderUser( $workerNew, TRUE );
+					$this->enlistFact( 'worker', $transition/*, TRUE*/ );
 				}
 			}
 		}
@@ -95,15 +105,13 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$list		= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
 		$list		= UI_HTML_Tag::create( 'dl', $this->facts, array( 'class' => 'dl-horizontal' ) );
 
-		$heading	= $this->words->heading ? UI_HTML_Tag::create( 'h3', $this->words->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
 		$dateFull	= $this->labelsWeekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$this->labelsMonthNames[date( 'n' )];
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
-		$heading	= $this->words->heading ? UI_HTML_Tag::create( 'h3', $this->words->heading ) : '';
-		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
+		$modifier	= $this->renderUser( $data['modifier'] );
 		$type		= $this->labelsTypes[$old->type];
 		$salute		= $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '';
 		$url		= $this->baseUrl.'work/mission/'.$old->missionId;
@@ -111,11 +119,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$baseUrl	= $this->baseUrl;
 		$content	= View_Helper_Markdown::transformStatic( $this->env, $new->content );
 		$link		= UI_HTML_Tag::create( 'a', $old->title, array( 'href' => $url ) );
-		$body		= require( 'templates/work/mission/mails/update.php' );
-
-		$this->page->addBody( $body );
-		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-update';
-		return $this->page->build( array( 'class' => $class ) );
+		return require( 'templates/work/mission/mails/update.php' );
 	}
 }
 ?>

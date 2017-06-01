@@ -43,16 +43,34 @@ abstract class Mail_Work_Mission_Change extends Mail_Abstract{
 		$this->indicator		= new UI_HTML_Indicator();
 		$this->modelUser		= new Model_User( $this->env );
 
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'layout.panels.css' );
+//		$this->addThemeStyle( 'layout.panels.css' );
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.mission.css' );
 		$this->addThemeStyle( 'indicator.css' );
+	}
 
-		$html					= $this->renderBody( $data );
-		$this->mail->addHtml( $html, 'utf-8', 'base64' );
-		return $html;
+	protected function renderUser( $user, $link = FALSE ){
+
+		if( $this->env->getModules()->has( 'Members' ) ){
+			$helper	= new View_Helper_Member( $this->env );
+			$helper->setUser( $user );
+			$helper->setMode( 'inline' );
+			$helper->setLinkUrl( 'member/view/'.$user->userId );
+			$userLabel	= $helper->render();
+		}
+		else{
+			$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$fullname	= '('.$user->firstname.' '.$user->surname.')';
+			$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
+		}
+		return $userLabel;
+	}
+
+	protected function renderLinkedTitle( $mission ){
+		return UI_HTML_Tag::create( 'a', $mission->title, array(
+			'href'	=> './work/mission/view/'.$mission->missionId
+		) );
 	}
 
 	protected function setSubjectFromMission( $mission ){

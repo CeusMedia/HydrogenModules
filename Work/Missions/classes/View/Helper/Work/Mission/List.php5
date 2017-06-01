@@ -110,7 +110,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
 		$tableBody	= UI_HTML_Tag::create( 'tbody', $list );
 		$list		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list table-fixed' ) );
-		$list		= UI_HTML_Tag::create( 'h4', 'Termine' ).$list;
+//		$list		= UI_HTML_Tag::create( 'h4', 'Termine' ).$list;
 		return $list;
 	}
 
@@ -150,7 +150,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$tableHeads	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
 		$tableBody	= UI_HTML_Tag::create( 'tbody', $list );
 		$list		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list table-fixed' ) );
-		$list		= UI_HTML_Tag::create( 'h4', 'Aufgaben' ).$list;
+//		$list		= UI_HTML_Tag::create( 'h4', 'Aufgaben' ).$list;
 		return $list;
 	}
 
@@ -229,7 +229,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd/*.' '.$this->words['index']['suffixTime']*/;
 		$times		= UI_HTML_Tag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
-		$worker		= $this->renderUserWithAvatar( $event->workerId, 120 );
+	//	$worker		= $this->renderUserWithAvatar( $event->workerId, 120 );
+		$worker		= $this->renderUser( $modelUser->get( $event->workerId ) );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 		$buttonEdit	= $showActions ? $this->renderRowButtonEdit( $event ) : '';
 		$cells		= array();
@@ -263,13 +264,15 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	}
 
 	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions ){
+		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $task, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $task );
 		$badgeS		= $this->renderBadgeDaysStill( $task );
 		$badgeU		= $this->renderBadgeDaysUntil( $task );
 		$graph		= $this->indicator->build( $task->status, 4, 60 );
 		$graph		= UI_HTML_Tag::create( 'div', $graph.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-graph' ) );
-		$worker		= $this->renderUserWithAvatar( $task->workerId, 120 );
+//		$worker		= $this->renderUserWithAvatar( $task->workerId, 120 );
+		$worker		= $this->renderUser( $modelUser->get( $task->workerId ) );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 		$buttonEdit	= $this->renderRowButtonEdit( $task );
 		$cells		= array();

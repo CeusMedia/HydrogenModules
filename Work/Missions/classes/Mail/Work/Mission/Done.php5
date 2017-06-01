@@ -70,7 +70,6 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 <div class="events">'.$events.'</div>
 <!--
 <div class="text-salute">'.$salute.'</div>
-<div class="text-signature">'.$w->textSignature.'</div>
 -->';
 
 		$this->addPrimerStyle( 'layout.css' );
@@ -80,9 +79,11 @@ class Mail_Work_Mission_Update extends Mail_Abstract{
 		$this->addThemeStyle( 'site.mission.css' );
 		$this->addThemeStyle( 'indicator.css' );
 
-		$this->page->addBody( $body );
-		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-		return $this->page->build( array( 'class' => $class ) );*/
+		$this->addBodyClass( 'moduleWorkMission' );
+		$this->addBodyClass( 'jobWorkMission' );
+		$this->addBodyClass( 'job-work-mission-mail-done' );
+
+		return $this->setHtml( $body );*/
 	}
 }
 ?>

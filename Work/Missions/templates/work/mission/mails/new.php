@@ -8,29 +8,17 @@ return '
 	margin-left: 130px;
 	}
 </style>
-
-<div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
-			<a href="'.$baseUrl.'" class="brand">
-				<i class="icon-fire icon-white"></i> Office
-			</a>
+<div class="alert alert-warning">'.sprintf( $words->message, $type, $link, $modifier ).'</div>
+<div class="content-panel">
+	<h3>'.$words->headingFacts.'</h3>
+	<div class="content-panel-inner">
+		<div class="facts">
+			'.$list.'
 		</div>
-	</div>
-</div>
-<div class="container">
-	<br/>
-<!--	'.$heading.'-->
-<!--	<div class="text-greeting text-info">'.$greeting.'</div>
-	<br/>-->
-	<div class="content-panel">
-		<h4><!--'.$words->facts.': -->'.$link.'</h4>
-		<div class="content-panel-inner">'.$list.'</div>
-		<div class="">'.$content.'</div>
-<!--
-		<div class="text-salute">'.$salute.'</div>
-		<div class="text-signature">'.$words->textSignature.'</div>
--->
+		<hr/>
+		<div class="content">
+			'.$content.'
+		</div>
 	</div>
 </div>';
 ?>

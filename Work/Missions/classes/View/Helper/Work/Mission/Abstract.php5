@@ -29,6 +29,27 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 		return $hours.$mins;
 	}
 
+	protected function renderUser( $user ){
+		if( $this->env->getModules()->has( 'Members' ) ){
+			$helper	= new View_Helper_Member( $this->env );
+			$helper->setUser( $user );
+			$helper->setMode( 'inline' );
+			$helper->setLinkUrl( 'member/view/'.$user->userId );
+			$userLabel	= $helper->render();
+		}
+		else{
+			$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$fullname	= '('.$user->firstname.' '.$user->surname.')';
+			$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
+		}
+		return $userLabel;
+	}
+
+	/**
+	 *	@deprecated use renderUser instead
+	 *	@todo		to be removed
+	 */
 	protected function renderUserWithAvatar( $userId, $width = 160 ){
 		$modelUser	= new Model_User( $this->env );
 		if( !array_key_exists( (int) $userId, $this->users ) )

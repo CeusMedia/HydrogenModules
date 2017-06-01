@@ -285,6 +285,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$type		= (int) $this->request->get( 'type' );
 				$data	= array(
 					'creatorId'			=> (int) $this->userId,
+					'modifierId'		=> (int) $this->userId,
 					'workerId'			=> (int) $this->request->get( 'workerId' ),
 					'projectId'			=> (int) $this->request->get( 'projectId' ),
 					'type'				=> $type,

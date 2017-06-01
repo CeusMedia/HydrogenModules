@@ -3,6 +3,15 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 
 	protected $languageSection	= 'mail-new';
 
+	public function generate( $data = array() ){
+		parent::generate( $data );
+		$this->addThemeStyle( 'indicator.css' );
+		$this->addBodyClass( 'moduleWorkMission' );
+		$this->addBodyClass( 'jobWorkMission' );
+		$this->addBodyClass( 'job-work-mission-mail-new' );
+		return $this->setHtml( $this->renderBody( $data ) );
+	}
+
 	public function renderBody( $data ){
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
@@ -18,7 +27,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 		}
 		if( (int) $mission->workerId ){
 			$worker		= $this->modelUser->get( $mission->workerId );
-			$this->enlistFact( 'worker', $worker->username );
+			$this->enlistFact( 'worker', $this->renderUser( $worker ) );
 		}
 		$this->enlistFact( 'status', $this->labelsStates[$mission->status] );
 		$this->enlistFact( 'priority', $this->labelsPriorities[$mission->priority] );
@@ -56,14 +65,11 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 		$salute		= $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '';
 		$url		= $this->baseUrl.'work/mission/'.$mission->missionId;
 		$link		= UI_HTML_Tag::create( 'a', $mission->title, array( 'href' => $url ) );
-		$heading	= $this->words->heading ? UI_HTML_Tag::create( 'h3', $this->words->heading ) : '';
-		$greeting	= sprintf( $this->words->greeting, $username, $dateFull, $dateShort );
+		$modifier	= $this->renderUser( $data['modifier'] );
 		$words		= $this->words;
 		$baseUrl	= $this->baseUrl;
 		$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
-		$this->page->addBody( require( 'templates/work/mission/mails/new.php' ) );
-		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-new';
-		return $this->page->build( array( 'class' => $class ) );
+		return require( 'templates/work/mission/mails/new.php' );
 	}
 }
 ?>

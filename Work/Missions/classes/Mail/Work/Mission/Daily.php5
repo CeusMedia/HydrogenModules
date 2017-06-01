@@ -3,14 +3,13 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
-		$html		= $this->renderBody( $data );
-		$body		= chunk_split( base64_encode( $html ), 78 );
-		$mailBody	= new Net_Mail_Body( $body, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
-		$this->mail->addBody( $mailBody );
-		return $html;
+		$this->setSubject( $w->subject );
+		$this->addThemeStyle( 'module.work.missions.css' );
+		$this->addThemeStyle( 'indicator.css' );
+		$this->addBodyClass( 'moduleWorkMission' );
+		$this->addBodyClass( 'jobWorkMission' );
+		$this->addBodyClass( 'job-work-mission-mail-daily' );
+		return $this->setHtml( $this->renderBody( $data ) );
 	}
 
 	public function renderBody( $data ){
@@ -21,7 +20,6 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new UI_HTML_Indicator();
-		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );
@@ -55,33 +53,21 @@ class Mail_Work_Mission_Daily extends Mail_Abstract{
 			$events		= $heading.$table;
 		}
 
-		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
 		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
-		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
+		$dateFull	= $weekdays[date( 'w' )].', '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
 		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
 		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
-'.$heading.'
-<div class="text-greeting text-info">'.$greeting.'</div>
+<!--<div class="text-greeting text-info">'.$greeting.'</div>-->
+<big>Datum: '.$dateFull.'</big>
 <div class="tasks">'.$tasks.'</div>
 <div class="events">'.$events.'</div>
 <!--
 <div class="text-salute">'.$salute.'</div>
-<div class="text-signature">'.$w->textSignature.'</div>
 -->';
-
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'bootstrap.css' );
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.mission.css' );
-		$this->addThemeStyle( 'indicator.css' );
-
-		$this->page->addBody( $body );
-		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-		return $this->page->build( array( 'class' => $class ) );
+		return $body;
 	}
 }
 ?>
