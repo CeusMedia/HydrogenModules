@@ -44,7 +44,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"price",
 		"priceTaxed",
 		"createdAt",
-		"editedAt",
+		"modifiedAt",
 	);
 	protected $primaryKey	= 'orderId';
 	protected $indices		= array(

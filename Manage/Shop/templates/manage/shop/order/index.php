@@ -34,7 +34,7 @@ foreach( $orders as $order ){
 	$cellCustomer	= UI_HTML_Tag::create( 'td', $customer );
 	$cellStatus		= UI_HTML_Tag::create( 'td', '<small>'./*$iconStatus.' '.*/$words->states[$order->status].'</small>' );
 	$cellCreated	= UI_HTML_Tag::create( 'td', '<small>'.( $order->createdAt ? date( 'd.m.Y', $order->createdAt ) : "-" ).'</small>' );
-	$cellModified	= UI_HTML_Tag::create( 'td', '<small>'.( $order->editedAt ? date( 'd.m.Y', $order->editedAt ) : '-' ).'</small>' );
+	$cellModified	= UI_HTML_Tag::create( 'td', '<small>'.( $order->modifiedAt ? date( 'd.m.Y', $order->modifiedAt ) : '-' ).'</small>' );
 	$rowColor		= "info";
 	if( in_array( $order->status, array( 6 ) ) )
 		$rowColor	= 'success';
