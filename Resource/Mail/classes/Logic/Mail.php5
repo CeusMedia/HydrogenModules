@@ -145,7 +145,6 @@ class Logic_Mail{
 		else
 			$senderAddress	= $mail->mail->getSender()->address;
 
-		$encoding	= $this->encodeMailObject( $mail );
 		$data		= array(
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
