@@ -3,6 +3,10 @@ div.mce-container.mce-panel.mce-menu > div.mce-container-body.mce-stack-layout {
 	overflow: auto;
 	}
 
+div.mce-tinymce.mce-container.mce-panel {
+	margin-bottom: 0.75em;
+	}
+
 /*
 div.mce-stack-layout-item .mce-text {
 	font-size: 0.9em;
