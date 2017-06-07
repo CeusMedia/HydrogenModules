@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <jobs>
+
+	<!--  OLD JOB DESCRIPTION  --><!--
 	<job id="countCache">
 		<class>Cache</class>
 		<method>countObjects</method>
@@ -11,5 +13,20 @@
 		<method>clearObjects</method>
 		<interval>minute</interval>
 		<mode>live</mode>
+	</job>-->
+
+	<!--  NEW JOB DESCRIPTION  -->
+	<job id="Resource.Cache.count">
+		<class>Cache</class>
+		<method>countObjects</method>
+		<interval>minute</interval>
+		<mode>live</mode>
 	</job>
+	<job id="Resource.Cache.clear">
+		<class>Cache</class>
+		<method>clearObjects</method>
+		<interval>minute</interval>
+		<mode>live</mode>
+	</job>
+
 </jobs>

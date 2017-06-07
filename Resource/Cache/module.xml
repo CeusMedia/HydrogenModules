@@ -6,10 +6,11 @@
 This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (part of cmModules).
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.4">Use Cache library from GitHub.</log>
 	<log version="0.5">Add job to clear cached objects.</log>
 	<log version="0.5.1">Fix bug on using PDO adapter.</log>
+	<log version="0.5.2">Migrate definition of jobs.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
