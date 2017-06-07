@@ -73,12 +73,16 @@
 		<locale>de/html/admin/mail/attachment/top.html</locale>
 		<locale>de/html/admin/mail/queue/bottom.html</locale>
 		<locale>de/html/admin/mail/queue/top.html</locale>
+		<locale>de/html/admin/mail/template/bottom.html</locale>
+		<locale>de/html/admin/mail/template/top.html</locale>
 		<locale>en/admin/mail/attachment.ini</locale>
 		<locale>en/admin/mail/queue.ini</locale>
 		<locale>en/html/admin/mail/attachment/bottom.html</locale>
 		<locale>en/html/admin/mail/attachment/top.html</locale>
 		<locale>en/html/admin/mail/queue/bottom.html</locale>
 		<locale>en/html/admin/mail/queue/top.html</locale>
+		<locale>en/html/admin/mail/template/bottom.html</locale>
+		<locale>en/html/admin/mail/template/top.html</locale>
 	</files>
 	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
 	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
