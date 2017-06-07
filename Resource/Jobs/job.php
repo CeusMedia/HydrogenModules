@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 $configFile		= "config/config.ini";								//  set (an alternative) config file
 $modes			= array(

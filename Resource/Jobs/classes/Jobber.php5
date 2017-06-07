@@ -28,6 +28,19 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		$this->lock			= new \Model_Joblock( $this->env );
 	}
 
+	protected function getJobIdFromRequest(){
+		foreach( $this->env->getRequest()->getAll() as $key => $value ){							//  iterate collected request values
+			if( $value || substr( $key, 0, 2 ) === '__' || substr( $key, 0, 1 ) === '-' )			//  is option or internal value
+				continue;																			//  exclude
+			return $key;																			//  assume first valid part as job ID
+		}
+		return FALSE;
+	}
+
+	public function getJobs(){
+		return $this->jobs;
+	}
+
 	public function loadJobs( $modes, $strict = TRUE ){
 		$this->jobs	= array();
 		foreach( self::readJobXmlFile( $modes )->jobs as $jobId => $job ){
@@ -40,20 +53,21 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 				throw new \DomainException( 'Duplicate job ID "'.$jobId.'"' );
 			$this->jobs[$jobId]	= $job;
 		}
+		ksort( $this->jobs/*, SORT_NATURAL | SORT_FLAG_CASE*/ );
 	}
 
 	public function log( $message ){
 		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.log" );
 	}
 
-	public function logException( $exception ){
-		$message	= $exception->getMessage().'@'.$exception->getFile().':'.$exception->getLine();
-		$this->logError( /*$this->getLogPrefix().*/$message );
-	}
-
 	public function logError( $message ){
 		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message.PHP_EOL, 3, $this->pathLogs."jobs.error.log" );
 		$this->out( "Exception: ".$message."\n" );
+	}
+
+	public function logException( $exception ){
+		$message	= $exception->getMessage().'@'.$exception->getFile().':'.$exception->getLine();
+		$this->logError( /*$this->getLogPrefix().*/$message );
 	}
 
 	/**
@@ -64,8 +78,29 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		exit;
 	}
 
-	protected function out( $message ){
+	protected function out( $message = '' ){
 		print( $message.PHP_EOL );
+	}
+
+	/**
+	 *	@todo  			convert module job files from XML to JSON
+	 */
+	protected function readJobJsonFile( $modes = array() ){
+		$map			= new \stdClass();
+		$map->jobs		= array();
+		$map->intervals	= array();
+		$index			= new \FS_File_RegexFilter( 'config/jobs/', '/\.json$/i' );
+		foreach( $index as $file ){
+			$json	= \FS_File_JSON_Reader::load( $file->getPathname(), FALSE );
+			foreach( $json as $jobId => $job ){
+				$job->id	= $jobId;
+				$job->mode = explode( ",", $job->mode );
+				if( $modes && !array_intersect( $job->mode, $modes ) )
+					continue;
+				$map->jobs[$jobId]	= $job;
+			}
+		}
+		return $map;
 	}
 
 	public static function readJobXmlFile( $modes = array() ){
@@ -95,36 +130,6 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		return $map;
 	}
 
-	/**
-	 *	@todo  			convert module job files from XML to JSON
-	 */
-	protected function readJobJsonFile( $modes = array() ){
-		$map			= new \stdClass();
-		$map->jobs		= array();
-		$map->intervals	= array();
-		$index			= new \FS_File_RegexFilter( 'config/jobs/', '/\.json$/i' );
-		foreach( $index as $file ){
-			$json	= \FS_File_JSON_Reader::load( $file->getPathname(), FALSE );
-			foreach( $json as $jobId => $job ){
-				$job->id	= $jobId;
-				$job->mode = explode( ",", $job->mode );
-				if( $modes && !array_intersect( $job->mode, $modes ) )
-					continue;
-				$map->jobs[$jobId]	= $job;
-			}
-		}
-		return $map;
-	}
-
-	protected function getJobIdFromRequest(){
-		foreach( $this->env->getRequest()->getAll() as $key => $value ){							//  iterate collected request values
-			if( $value || substr( $key, 0, 2 ) === '__' || substr( $key, 0, 1 ) === '-' )			//  is option or internal value
-				continue;																			//  exclude
-			return $key;																			//  assume first valid part as job ID
-		}
-		return FALSE;
-	}
-
 
 	/**
 	 *	Executes possible job call.
@@ -151,7 +156,8 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		}
 		$job		= $this->jobs[$jobId];															//  get job data from job list by job ID
 		$classArgs	= array( $this->env, $this );													//  prepare job class instance arguments
-		$arguments	= array_keys( $parameters );													//
+//		$arguments	= array_keys( $parameters );													//
+		$arguments	= array( $parameters );															//
 		$className	= 'Job_'.$job->class;															//  build job class name
 		if( !class_exists( '\\'.$className ) ){															//  job class is not existing
 			$this->logError( 'Job class "'.$className.'" is not existing.' );						//  log error

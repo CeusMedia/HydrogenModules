@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Job.list">
+		<class>Job</class>
+		<method>index</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Lock.list">
+		<class>Job</class>
+		<method>listLocks</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Lock.clear">
+		<class>Job</class>
+		<method>clearLocks</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Test.reflectParameters">
+		<class>Job</class>
+		<method>reflectParameters</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Util.getDate">
+		<class>Job</class>
+		<method>getDate</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Util.getExtensionVersion">
+		<class>Job</class>
+		<method>getExtensionVersion</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Util.getPhpVersion">
+		<class>Job</class>
+		<method>getPhpVersion</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+</jobs>
