@@ -185,39 +185,43 @@ abstract class Mail_Abstract{
 		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 
-		foreach( explode( ',', $template->images ) as $nr => $image ){
-			if( preg_match( '/^http/', $image ) ){
-				throw new Exception( 'Not implemented yet' );
-			}
-			else{
-				if( !file_exists( $image ) ){
-					$this->env->getMessenger()->noteError( 'Loading image from "'.$image.'" failed.' );
-					continue;
+		if( $template->images ){
+			foreach( explode( ',', $template->images ) as $nr => $image ){
+				if( preg_match( '/^http/', $image ) ){
+					throw new Exception( 'Not implemented yet' );
 				}
+				else{
+					if( !file_exists( $image ) ){
+						$this->env->getMessenger()->noteError( 'Loading image from "'.$image.'" failed.' );
+						continue;
+					}
+				}
+				$this->mail->addHtmlImage( 'image'.( $nr + 1), $image );
 			}
-			$this->mail->addHtmlImage( 'image'.( $nr + 1), $image );
 		}
 
-		foreach( explode( ',', $template->styles ) as $style ){
-			if( preg_match( '/^http/', $style ) ){
-				try{
-					$content = Net_Reader::readUrl( $style );
+		if( $template->styles ){
+			foreach( explode( ',', $template->styles ) as $style ){
+				if( preg_match( '/^http/', $style ) ){
+					try{
+						$content = Net_Reader::readUrl( $style );
+					}
+					catch( Exception $e ){
+						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
+						continue;
+					}
 				}
-				catch( Exception $e ){
-					$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
-					continue;
+				else{
+					if( !file_exists( $style ) ){
+						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
+						continue;
+					}
 				}
+				$content	= FS_File_Reader::load( $style );
+	//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
+				$styleTag	= UI_HTML_Tag::create( 'style', $content, array( 'type' => 'text/css' ) );
+				$this->page->addHead( $styleTag );
 			}
-			else{
-				if( !file_exists( $style ) ){
-					$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
-					continue;
-				}
-			}
-			$content	= FS_File_Reader::load( $style );
-//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
-			$styleTag	= UI_HTML_Tag::create( 'style', $content, array( 'type' => 'text/css' ) );
-			$this->page->addHead( $styleTag );
 		}
 		if( $template->css ){
 			$styleTag	= UI_HTML_Tag::create( 'style', $template->css, array( 'type' => 'text/css' ) );

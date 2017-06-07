@@ -153,6 +153,7 @@ class Logic_Mail{
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,
 			'subject'			=> $mail->getSubject(),
+			'mailClass'			=> get_class( $mail ),
 			'compression'		=> $compression,
 			'object'			=> $serial,
 			'enqueuedAt'		=> time(),
