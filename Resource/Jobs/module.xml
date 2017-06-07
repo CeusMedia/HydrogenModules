@@ -39,10 +39,10 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 	<files>
 		<class>Jobber.php5</class>
 		<class>Job/Abstract.php5</class>
-		<class>Job/Test.php5</class>
+		<class>Job/Job.php5</class>
 		<class>Model/Joblock.php5</class>
 		<file>job.php</file>
-		<file>config/jobs/test.xml</file>
+		<file>config/jobs/job.xml</file>
 	</files>
 	<relations>
 		<supports type="module">Resource_Maintainer</supports>
