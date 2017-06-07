@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <jobs>
+
+	<!--  OLD JOB DESCRIPTION  --><!--
 	<job id="work-mission-mail-daily">
 		<class>Work_Mission</class>
 		<method>mailDaily</method>
@@ -11,5 +13,20 @@
 		<method>informAboutChanges</method>
 		<interval>minute</interval>
 		<mode>test</mode>
+	</job>-->
+
+	<!--  NEW JOB DESCRIPTION  -->
+	<job id="Work.Missions.sendDailyMail">
+		<class>Work_Mission</class>
+		<method>mailDaily</method>
+		<interval>day</interval>
+		<mode>test</mode>
 	</job>
+	<job id="Work.Missions.sendChangesMail">
+		<class>Work_Mission</class>
+		<method>informAboutChanges</method>
+		<interval>minute</interval>
+		<mode>test</mode>
+	</job>
+
 </jobs>
