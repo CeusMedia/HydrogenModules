@@ -1,9 +1,20 @@
 <?xml version="1.0"?>
 <jobs>
+
+	<!--  OLD JOB DESCRIPTION  --><!--
 	<job id="noteLoad">
 		<class>System_Load</class>
 		<method>note</method>
 		<interval>minute</interval>
 		<mode>live</mode>
+	</job>-->
+
+	<!--  NEW JOB DESCRIPTION  -->
+	<job id="System.Load.note">
+		<class>System_Load</class>
+		<method>note</method>
+		<interval>minute</interval>
+		<mode>live</mode>
 	</job>
+
 </jobs>

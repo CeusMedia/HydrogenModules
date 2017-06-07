@@ -3,13 +3,14 @@
 	<title>Server: System Load</title>
 	<description/>
 	<category>Server</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Handle denial via remote environment with exception instead of HTTP response.</log>
 	<log version="0.3">Refactored controller and moved module to server category.</log>
 	<log version="0.3.1">Improved code documentation and module relations.</log>
 	<log version="0.3.2">Add system load panel for dashboard.</log>
+	<log version="0.3.3">Migrate definition of jobs.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
