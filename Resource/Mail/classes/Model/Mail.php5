@@ -27,9 +27,11 @@ class Model_Mail extends CMF_Hydrogen_Model {
 	const STATUS_REPLIED		= 5;
 	const STATUS_ARCHIVED		= 6;
 
-	const COMPRESSION_NONE		= 0;
-	const COMPRESSION_GZIP		= 1;
-	const COMPRESSION_BZIP		= 2;
+	const COMPRESSION_UNKNOWN	= 0;
+	const COMPRESSION_NONE		= 1;
+	const COMPRESSION_BASE64	= 2;
+	const COMPRESSION_GZIP		= 3;
+	const COMPRESSION_BZIP		= 4;
 
 	protected $name		= 'mails';
 	protected $columns	= array(
@@ -43,7 +45,7 @@ class Model_Mail extends CMF_Hydrogen_Model {
 		'receiverName',
 		'senderAddress',
 		'subject',
-//		'mailClass',
+		'mailClass',
 		'compression',
 		'object',
 		'enqueuedAt',
@@ -61,7 +63,7 @@ class Model_Mail extends CMF_Hydrogen_Model {
 		'receiverName',
 		'senderAddress',
 		'subject',
-//		'mailClass',
+		'mailClass',
 		'compression',
 		'enqueuedAt',
 		'attemptedAt',

@@ -66,7 +66,7 @@ class Job_Mail extends Job_Abstract{
 		foreach( $mailClassPaths as $mailClassPaths ){
 			$index	= new FS_File_RecursiveRegexFilter( $mailClassPaths.'/classes/Mail/', '/\.php5?/' );
 			foreach( $index as $entry ){
-				@include_once( $entry->getPathname() );
+				include_once( $entry->getPathname() );
 			}
 		}
 	}
@@ -74,10 +74,10 @@ class Job_Mail extends Job_Abstract{
 	public function migrate(){
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled < "0.4.8" )			// todo: to be removed
 			$this->__migrateRepositoryFromCommonToMail();
-		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.6.8" ){			// todo: to be removed
-			$this->__detectCompression( array(), array(), array( 0, 100 ) );
+		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.6.8" )			// todo: to be removed
+			$this->__detectCompression( array(), array(), array( 0, 20 ) );
+		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.7.1" )			// todo: to be removed
 			$this->__detectMailClass( array(), array(), array( 0, 100 ) );
-		}
 	}
 
 	public function clean(){
@@ -95,17 +95,19 @@ class Job_Mail extends Job_Abstract{
 
 		$model		= new Model_Mail( $this->env );
 		$this->loadMailClasses();
+
 		$conditions['mailClass']	= '';
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 10 );
+		$limits		= $limits ? $limits : array( 0, 100 );
 
 		$count		= 0;
-		$mails		= $model->getAll( $conditions, $orders, $limits );
-		foreach( $mails as $mail ){
+		$mails		= $model->getAllByIndices( $conditions, $orders, $limits, array( 'mailId' ) );
+		foreach( $mails as $mailId ){
 			try{
-				$this->logic->decodeMailObject( $mail, TRUE );
+				$mail	= $this->logic->getMail( $mailId );
 				$model->edit( $mail->mailId, array( 'mailClass' => get_class( $mail->object ) ) );
 				$count++;
+				unset( $mail );
 			}
 			catch( Exception $e ){
 				remark( $e->getMessage() );
@@ -133,7 +135,7 @@ class Job_Mail extends Job_Abstract{
 		$list		= array();
 		foreach( $model->getAll( $conditions, $orders, $limits ) as $mail ){
 			try{
-				$this->logic->decodeMailObject( $mail, TRUE );
+				$mail	= $this->logic->getMail( $mail->mailId );
 				if( get_class( $mail->object ) === "Mail_Newsletter" ){
 					$list[]	= $mail->mailId;
 					$model->remove( $mail->mailId );
@@ -222,7 +224,7 @@ class Job_Mail extends Job_Abstract{
 			throw new InvalidArgumentException( 'Limits must be an array' );
 
 		$model		= new Model_Mail( $this->env );
-		$conditions['compression']	= array( 0 );
+		$conditions['compression']	= array( Model_Mail::COMPRESSION_UNKNOWN );
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
 		$limits		= $limits ? $limits : array( 0, 10 );
 
@@ -231,15 +233,15 @@ class Job_Mail extends Job_Abstract{
 		if( $found ){
 			$mails		= $model->getAll( $conditions, $orders, $limits );
 			foreach( $mails as $mail ){
-				$compression	= 0;
+				$compression	= Model_Mail::COMPRESSION_UNKNOWN;
 				$finfo			= new finfo( FILEINFO_MIME );
 				$mimeType		= $finfo->buffer( $mail->object );
 				if( preg_match( '@application/x-bzip2@', $mimeType ) )
-					$compression	= 3;
+					$compression	= Model_Mail::COMPRESSION_BZIP;
 				else if( preg_match( '@application/x-gzip@', $mimeType ) )
-					$compression	= 2;
+					$compression	= Model_Mail::COMPRESSION_GZIP;
 				else if( preg_match( '@^[A-Za-z0-9+/=]+$@', $mimeType ) )
-					$compression	= 1;
+					$compression	= Model_Mail::COMPRESSION_BASE64;
 				if( $compression ){
 					$count++;
 					$model->edit( $mail->mailId, array( 'compression' => $compression ) );

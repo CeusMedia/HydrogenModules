@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.7</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -58,6 +58,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.6.8">Extend queue model by compression column.</log>
 	<log version="0.6.9">Add view helpers for mail contents.</log>
 	<log version="0.7">Add mail template support.</log>
+	<log version="0.7.1">Add mail class column in mail model.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -113,7 +114,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   `receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `compression` tinyint(1) UNSIGNED NOT NULL COMMENT '0: NONE, 1: GZIP, 2: BZIP',
+  `mailClass` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `compression` tinyint(1) UNSIGNED NOT NULL COMMENT '0: UNKNOWN, 1: BASE64, 2: GZIP, 3: BZIP',
   `object` longblob NOT NULL,
   `enqueuedAt` decimal(12,0) UNSIGNED NOT NULL,
   `attemptedAt` decimal(12,0) UNSIGNED DEFAULT '0',
@@ -128,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   KEY `receiverAddress` (`receiverAddress`),
   KEY `receiverName` (`receiverName`),
   KEY `subject` (`subject`),
+  KEY `mailClass` (`mailClass`),
   KEY `compression` (`compression`),
   KEY `enqueuedAt` (`enqueuedAt`),
   KEY `attemptedAt` (`attemptedAt`),
@@ -236,7 +239,7 @@ UPDATE `<%?prefix%>mail_attachments` SET language="de" WHERE language="";
 ALTER TABLE `<%?prefix%>mails` CHANGE `status` `status` TINYINT(1) NOT NULL DEFAULT '0';
 	]]></sql>
 	<sql on="update" version="0.6.8" type="mysql"><![CDATA[
-ALTER TABLE `<%?prefix%>mails` ADD `compression` TINYINT(1) UNSIGNED NOT NULL COMMENT '0: NONE, 1: GZIP, 2: BZIP' AFTER `subject`, ADD INDEX (`compression`);
+ALTER TABLE `<%?prefix%>mails` ADD `compression` TINYINT(1) UNSIGNED NOT NULL COMMENT '0: UNKNOWN, 1: NONE, 2: BASE64, 3: GZIP, 4: BZIP' AFTER `subject`, ADD INDEX (`compression`);
 ALTER TABLE `<%?prefix%>mails` CHANGE `attemptedAt` `attemptedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>mails` CHANGE `sentAt` `sentAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 	]]></sql>
@@ -260,5 +263,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
   KEY `modifiedAt` (`modifiedAt`),
   KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql on="update" version="0.7.1" type="mysql"><![CDATA[
+ALTER TABLE `<%?prefix%>mails` ADD `mailClass` VARCHAR(200) NOT NULL AFTER `subject`, ADD INDEX (`mailClass`);
 	]]></sql>
 </module>
