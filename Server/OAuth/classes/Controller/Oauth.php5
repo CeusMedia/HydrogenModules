@@ -85,10 +85,11 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 				if( !( $applicationId = $this->getApplicationIdFromClientId( $clientId ) ) )		//  no application found for client ID
 					$this->errorRedirect( 'invalid_client' );
 				if( $this->request->getMethod() === "POST" ){
+					$logic		= Logic_Authentication::getInstance( $this->env );
 					$modelUser	= new Model_User( $this->env );
 					if( !( $user = $modelUser->getByIndex( 'username', $this->request->get( 'username' ) ) ) )
 						$this->errorRedirect( 'access_denied' );
-					if( $user->password !== md5( $this->request->get( 'password' ) ) ){
+					if( !$logic->checkPassword( $user->userId, $this->request->get( 'password' ) ) ){
 						$this->errorRedirect( 'access_denied' );
 
 /*						//  TODO #3: THIS WOULD BE NICE BUT IS NOT RFC-STYLE

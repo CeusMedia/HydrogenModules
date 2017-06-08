@@ -90,6 +90,8 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller{
 	}
 
 	protected function isUserApplication( $applicationId ){
+		if( Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
+			return TRUE;
 		$application	= $this->model->get( $applicationId );
 		if( $application && (int) $application->userId === (int) $this->userId )
 			return TRUE;
