@@ -136,7 +136,7 @@ class Job_Work_Mission extends Job_Abstract{
 			$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
 		$config		= $config->getAll( 'module.work_missions.mail.', TRUE );
 		$isActiveUser	= (int) $user->status > 0 && strlen( trim( $user->email ) );			//  user is active and has mail address
-		$isMailReceiver	= $config->get( 'active' ) && $config->get( 'changes' );				//  mails are enabled
+		$isMailReceiver	= $config->get( 'active' ) && $config->get( 'daily' );					//  mails are enabled
 		$isSendHour		= 1 || (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
 		if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//
 			return;
