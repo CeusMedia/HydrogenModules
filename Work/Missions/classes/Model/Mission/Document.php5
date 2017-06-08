@@ -39,7 +39,7 @@ class Model_Mission_Document extends CMF_Hydrogen_Model{
 		'missionDocumentId',
 		'missionId',
 		'userId',
-		'mimetype',
+		'mimeType',
 		'size',
 		'filename',
 		'hashname',
@@ -55,7 +55,7 @@ class Model_Mission_Document extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'missionId',
 		'userId',
-		'mimetype',
+		'mimeType',
 		'filename',
 	);
 
