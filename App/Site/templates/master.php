@@ -1,5 +1,11 @@
 <?php
 
+$languageSelector	= '';
+if( $env->getModules()->has( 'UI_LanguageSelector' ) ){
+	$helper				= new View_Helper_LanguageSelector( $env );
+	$languageSelector	= $helper->render();
+}
+
 $pathCDN	= "http://cdn.int1a.net/";
 
 /*  --  NAVIGATION  --  */
@@ -80,6 +86,7 @@ $body	= '
 			<div class="container">
 				'.$brand.'
 				'.$navMain.'
+				'.$languageSelector.'
 			</div>
 		</div>
 	</div>

@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -21,6 +21,7 @@
 	<log version="0.4.8">Add style definition for fixed table layout.</log>
 	<log version="0.4.9">Enable gzip compression in .htaccess by default.</log>
 	<log version="0.5">Scan for public links in pages file, if available.</log>
+	<log version="0.5.1">Support module UI:LanguageSelector.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -44,13 +45,14 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 		<needs type="module">UI_Bootstrap</needs>
-		<supports type="module">UI_FavIcon</supports>
-		<supports type="module">UI_MetaTags</supports>
-		<supports type="module">UI_Compressor</supports>
-		<supports type="module">UI_TEA</supports>
-		<supports type="module">JS_Modernizr</supports>
 		<supports type="module">Info_Contact</supports>
 		<supports type="module">Info_Pages</supports>
+		<supports type="module">JS_Modernizr</supports>
+		<supports type="module">UI_Compressor</supports>
+		<supports type="module">UI_FavIcon</supports>
+		<supports type="module">UI_MetaTags</supports>
+		<supports type="module">UI_LanguageSelector</supports>
+		<supports type="module">UI_TEA</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 			$messenger	= $context->env->getMessenger();									//  shortcut messenger
