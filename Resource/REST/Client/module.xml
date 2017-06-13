@@ -29,7 +29,7 @@
 	<config protected="yes" type="string" mandatory="no" name="server.username"></config>
 	<config protected="yes" type="string" mandatory="no" name="server.password"></config>
 	<relations/>
-    <hook type="event" resource="Env" event="initModules"><![CDATA[
+    <hook type="event" resource="Env" event="constructEnd"><![CDATA[
         $env->set( 'restClient', new Resource_REST_Client( $env ) );
 ]]></hook>
 </module>
