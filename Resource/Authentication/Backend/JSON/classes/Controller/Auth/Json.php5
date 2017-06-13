@@ -36,6 +36,14 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		}
 	}
 
+	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
+		$words		= (object) $env->getLanguage()->getWords( 'auth/json' );						//  load words
+		$prefix		= 'module.resource_authentication_backend_json.login.';
+		$rank		= $env->getConfig()->get( $prefix.'rank' );
+		$label		= $words->login['tab'];
+		$context->registerTab( 'auth/json/login', $label, $rank );									//  register main tab
+	}
+
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;

@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -12,6 +12,7 @@
 	<log version="0.2.5">Handle forwarding on login or logout by module.</log>
 	<log version="0.2.6">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.7">Add blind method to note latest user activity (not implementable).</log>
+	<log version="0.2.8">Support tabs for multiple login backends.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -40,6 +41,7 @@
 	<config protected="yes" type="string" name="logout.forward.path"/>
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="yes" type="string" name="login.grantType" values="password,code">code</config>
+	<config protected="yes" type="integer" name="login.rank">0</config>
 	<config protected="yes" type="string" name="provider.client.ID"></config>
 	<config protected="yes" type="string" name="provider.client.secret"></config>
 	<config protected="yes" type="string" name="provider.URI"></config>
@@ -51,6 +53,7 @@
 	<link xml:lang="en" rank="10" access="outside" path="auth/oauth/login">Login</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/oauth/logout">Logout</link>
 	<link rank="99" access="public" path="auth/oauth/index"></link>
+	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth::___onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth::___onAuthRegisterBackend</hook>
 <!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
 </module>

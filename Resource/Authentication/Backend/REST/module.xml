@@ -2,11 +2,12 @@
 <module>
 	<title>Resource: Authentication: Backend: REST</title>
 	<description><![CDATA[Module for authentication against a REST server.]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
 	<log version="0.2.2">Finish login.</log>
+	<log version="0.2.3">Support tabs for multiple login backends.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -33,6 +34,7 @@
 	<config protected="yes" type="string" name="logout.forward.path"/>
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="yes" type="boolean" name="login.remember">yes</config>
+	<config protected="yes" type="integer" name="login.rank">1</config>
 	<config protected="no" type="boolean" name="register">no</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>

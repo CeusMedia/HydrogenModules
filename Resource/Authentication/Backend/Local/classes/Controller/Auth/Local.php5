@@ -36,6 +36,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		}
 	}
 
+	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
+		$words		= (object) $env->getLanguage()->getWords( 'auth/local' );						//  load words
+		$prefix		= 'module.resource_authentication_backend_local.login.';
+		$rank		= $env->getConfig()->get( $prefix.'rank' );
+		$label		= $words->login['tab'];
+		$context->registerTab( 'auth/local/login', $label, $rank );									//  register main tab
+	}
+
 	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
 		$moduleId	= 'Resource_Authentication_Backend_Local';
 		if( !$env->getConfig()->get( 'module.'.strtolower( $moduleId ).'.relateToAllUsers' ) )

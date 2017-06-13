@@ -37,6 +37,14 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		}
 	}
 
+	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
+		$words		= (object) $env->getLanguage()->getWords( 'auth/rest' );						//  load words
+		$prefix		= 'module.resource_authentication_backend_rest.login.';
+		$rank		= $env->getConfig()->get( $prefix.'rank' );
+		$label		= $words->login['tab'];
+		$context->registerTab( 'auth/rest/login', $label, $rank );									//  register main tab
+	}
+
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
