@@ -23,13 +23,13 @@ UI.DevCenter = {
 				$("#DevCenter").height(heightNormal+"%");
 				if(height !== heightNormal)
 					$(document).trigger("mouseup");
+				event.stopPropagation();
+				event.preventDefault();
 			}
-			event.stopPropagation();
-			event.preventDefault();
 		});
 		$(document).bind("mouseup", function(event){
-			if($(document).data("dragging") !== "#DevCenterHandleTop")
 				return;
+			if($(document).data("dragging") !== "#DevCenterHandleTop")
 			$.ajax({
 				url: "./DevCenter/ajaxSetHeight",
 				data: {height: $("#DevCenter").height() / $(window).height() * 100},
