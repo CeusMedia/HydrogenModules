@@ -118,7 +118,7 @@ class Logic_Upload{
 		try{
 			$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
 			copy( realpath( $this->upload->tmp_name ), $copy );
-			$scanner	= new ClamSocketScan();
+			$scanner	= new Resource_ClamScan();
 			$result		= $scanner->scanFile( $copy );
 		}
 		catch( Exception $e ){
