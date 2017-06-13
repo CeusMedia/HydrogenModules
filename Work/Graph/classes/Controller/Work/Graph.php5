@@ -13,9 +13,11 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		$graphs	= $this->modelGraph->getAll();
 		if( !$graphs ){
 			$this->modelGraph->add( array(
-				'type'		=> 'digraph',
-				'rankdir'	=> 'LR',
-				'title'		=> 'test'
+				'type'			=> 'digraph',
+				'rankdir'		=> 'LR',
+				'title'			=> 'test',
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
 			) );
 			$graphs		= $this->modelGraph->getAll();
 		}
@@ -135,7 +137,9 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		$nodes		= $this->modelNode->getAllByIndex( 'graphId', $graphId );
 		$edges		= $this->modelEdge->getAllByIndex( 'graphId', $graphId );
 
-		if( !( $graph && $nodes ) )
+//		if( !( $graph && $nodes ) )
+//			return;
+		if( !$graph )
 			return;
 
 		$nodeIndex	= array();
