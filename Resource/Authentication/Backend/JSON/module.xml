@@ -55,5 +55,5 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/json/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/json/index"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_JSON::___onAuthRegisterBackend</hook>
-	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_JSON::___onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_JSON::___onAuthRegisterLoginTab</hook>
 </module>

@@ -110,6 +110,18 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		return $this->restart( NULL );
 	}
 
+	public function confirm( $userId, $pak ){
+		$user	= $this->logic->confirm( $userId, $pak );
+		if( $user ){
+			$this->messenger->noteSuccess( 'Konto bestätigt.' );
+			$this->restart( 'login/'.$user->username, TRUE );
+		}
+		else{
+			$this->messenger->noteError( 'Aktivierung fehlgeschlagen. Der Aktivierungscode ist nicht mehr gültig.' );
+			$this->restart( 'login', TRUE );
+		}
+	}
+
 	public function login( $username = NULL ){
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )

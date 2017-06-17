@@ -18,6 +18,15 @@ class Logic_Authentication_Backend_Rest{
 		return $result;
 	}
 
+	public function confirm( $userId, $pak ){
+		$parameters	= array(
+			'userId'	=> $userId,
+			'pak'		=> $pak,
+		);
+		$result	= $this->client->post( 'confirm', $parameters )->data;
+		return $result;
+	}
+
 	public function getCurrentRole( $strict = TRUE ){
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){

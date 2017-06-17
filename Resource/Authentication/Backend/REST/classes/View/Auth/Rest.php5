@@ -9,6 +9,8 @@
  */
 class View_Auth_Rest extends CMF_Hydrogen_View {
 
+	public function confirm() {}
+
 	public function login() {}
 
 	public function renderRegisterFormExtensions(){

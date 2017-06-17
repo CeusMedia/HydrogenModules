@@ -48,4 +48,5 @@
 	<link rank="99" access="public" path="auth/rest/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/rest/index"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Rest::___onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Rest::___onAuthRegisterLoginTab</hook>
 </module>
