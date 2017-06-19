@@ -4,8 +4,11 @@ class View_Helper_Mail_Facts{
 	protected $changedFactClassPos  = 'label label-success';
 	protected $changedFactClassNeg  = 'label label-important';
 	protected $changedFactClassInfo	= 'label label-info';
-	protected $facts	= array();
-	protected $labels	= array();
+	protected $facts				= array();
+	protected $labels				= array();
+	protected $listClass			= 'dl-horizontal';
+	protected $textLabelLength		= 23;
+
 /*
 	public function __onInit(){
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
@@ -27,7 +30,8 @@ class View_Helper_Mail_Facts{
 		);
 	}
 
-	public function render( $classList = 'dl-horizontal' ){
+	public function render( $classList = NULL ){
+		$classList	= $classList ? $classList : $this->listClass;
 		$list	= array();
 		foreach( $this->facts as $fact ){
 			$value	= $fact->valueHtml;
@@ -52,8 +56,8 @@ class View_Helper_Mail_Facts{
 		$list	= array();
 		foreach( $this->facts as $fact ){
 			$label	= trim( strip_tags( $fact->label.':' ) );
-			$label	= View_Helper_Mail_Text::fit( $label, 23, STR_PAD_LEFT );
-			$value	= View_Helper_Mail_Text::indent( $fact->valueText, 25, 46 );
+			$label	= View_Helper_Mail_Text::fit( $label, $this->textLabelLength, STR_PAD_LEFT );
+			$value	= View_Helper_Mail_Text::indent( $fact->valueText, $this->textLabelLength + 2, 76 - $this->textLabelLength - 2 );
 			$list[]	= $label.'  '.$value;
 		}
 		return join( "\n", $list );
@@ -62,6 +66,13 @@ class View_Helper_Mail_Facts{
 	public function setLabels( $labels ){
 		$this->labels	= $labels;
 	}
+
+	public function setTextLabelLength( $integer ){
+		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
+	}
+
+	public function setListClass( $listClass ){
+		$this->listClass	= $listClass;
+	}
 }
 ?>
-

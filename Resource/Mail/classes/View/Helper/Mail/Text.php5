@@ -126,7 +126,8 @@ class View_Helper_Mail_Text{
 	 *	@return		string		Last line of text underscored
 	 */
 	static public function underscore( $text, $withString = '-', $maxLength = 76 ){
-		$text	= array_pop( explode( "\n", $text ) );
+		$parts	= explode( "\n", $text );
+		$text	= array_pop( $parts );
 		$text	= self::trim( trim( strip_tags( $text ) ), $maxLength );
 		$repeat	= ceil( strlen( $text ) / strlen( $withString ) );
 		if( function_exists( 'mb_strlen' ) ){
