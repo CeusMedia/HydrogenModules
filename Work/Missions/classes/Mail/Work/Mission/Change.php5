@@ -1,18 +1,10 @@
 <?php
-abstract class Mail_Work_Mission_Change extends Mail_Abstract{
+abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 
 	protected $baseUrl;
 	protected $facts				= array();
-	protected $indicator;
-	protected $labelsMonthNames;
-	protected $labelsWeekdays;
-	protected $labelsTypes;
-	protected $labelsStates;
-	protected $labelsPriorities;
 	protected $labels;
 	protected $languageSection		= NULL;
-	protected $modelUser;
-	protected $salute;
 	protected $changedFactClassPos	= 'label label-success';
 	protected $changedFactClassNeg	= 'label label-important';
 
@@ -33,24 +25,10 @@ abstract class Mail_Work_Mission_Change extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->words			= (object) $this->getWords( 'work/mission', $this->languageSection );
-		$this->labelsMonthNames	= (array) $this->getWords( 'work/mission', 'months' );
-		$this->labelsWeekdays	= (array) $this->getWords( 'work/mission', 'days' );
-		$this->labelsTypes		= (array) $this->getWords( 'work/mission', 'types' );
-		$this->labelsStates		= (array) $this->getWords( 'work/mission', 'states' );
-		$this->labelsPriorities	= (array) $this->getWords( 'work/mission', 'priorities' );
 		$this->labels			= (object) $this->getWords( 'work/mission', 'add' );
-		$this->salutes			= (array) $this->getWords( 'work/mission', 'mail-salutes' );
-		$this->indicator		= new UI_HTML_Indicator();
-		$this->modelUser		= new Model_User( $this->env );
-
-//		$this->addThemeStyle( 'layout.panels.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.mission.css' );
-		$this->addThemeStyle( 'indicator.css' );
 	}
 
 	protected function renderUser( $user, $link = FALSE ){
-
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$helper	= new View_Helper_Member( $this->env );
 			$helper->setUser( $user );

@@ -1,13 +1,9 @@
 <?php
-class Mail_Work_Mission_Daily extends Mail_Abstract{
+class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract{
 
 	protected function generate( $data = array() ){
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$this->setSubject( $w->subject );
-		$this->addThemeStyle( 'module.work.missions.css' );
-		$this->addThemeStyle( 'indicator.css' );
-		$this->addBodyClass( 'moduleWorkMission' );
-		$this->addBodyClass( 'jobWorkMission' );
 		$this->addBodyClass( 'job-work-mission-mail-daily' );
 		return $this->setHtml( $this->renderBody( $data ) );
 	}

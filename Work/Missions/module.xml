@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.50</version>
+	<version>0.9.52</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -92,11 +92,13 @@ code>
 	<log version="0.9.43">Support module Info:Novelties by hook Novelties::collect.</log>
 	<log version="0.9.44">Use modal of module Work:Timer to assign unrelated timers.</log>
 	<log version="0.9.45">Add worker filter.</log>
-	<log version="0.9.46">Replace projects filter dropdown by modal.</log> 
-	<log version="0.9.47">Replace workers filter dropdown by modal.</log> 
+	<log version="0.9.46">Replace projects filter dropdown by modal.</log>
+	<log version="0.9.47">Replace workers filter dropdown by modal.</log>
 	<log version="0.9.48">Extract filters to view helpers.</log>
 	<log version="0.9.49">Use new mail template support.</log>
 	<log version="0.9.50">Migrate definition of jobs.</log>
+	<log version="0.9.51">Add abstract mail class.</log>
+	<log version="0.9.52">Rewrite mail components to support HTML and plain text.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -141,6 +143,7 @@ code>
 		<class>View/Helper/Work/Mission/List/DayControlsSmall.php5</class>
 		<class>View/Helper/Work/Mission/List/Pagination.php5</class>
 		<class>View/Helper/Work/Mission/Mail/Daily.php5</class>
+		<class>Mail/Work/Mission/Abstract.php5</class>
 		<class>Mail/Work/Mission/Change.php5</class>
 		<class>Mail/Work/Mission/Daily.php5</class>
 		<class>Mail/Work/Mission/Done.php5</class>
@@ -166,6 +169,7 @@ code>
 		<template>work/mission/view.content.php</template>
 		<template>work/mission/view.documents.php</template>
 		<template>work/mission/kanban/index.php</template>
+		<template>work/mission/mails/done.php</template>
 		<template>work/mission/mails/new.php</template>
 		<template>work/mission/mails/update.php</template>
 		<locale>de/work/mission.ini</locale>

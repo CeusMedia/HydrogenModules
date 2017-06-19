@@ -5,9 +5,6 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change{
 
 	public function generate( $data = array() ){
 		parent::generate( $data );
-		$this->addThemeStyle( 'indicator.css' );
-		$this->addBodyClass( 'moduleWorkMission' );
-		$this->addBodyClass( 'jobWorkMission' );
 		$this->addBodyClass( 'job-work-mission-mail-new' );
 		return $this->setHtml( $this->renderBody( $data ) );
 	}

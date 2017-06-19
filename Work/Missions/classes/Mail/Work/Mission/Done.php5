@@ -1,5 +1,5 @@
 <?php
-class Mail_Work_Mission_Done extends Mail_Abstract{
+class Mail_Work_Mission_Done extends Mail_Work_Mission_Change{
 
 	protected function generate( $data = array() ){
 		$w			= (object) $this->getWords( 'work/mission', 'mail-change' );
