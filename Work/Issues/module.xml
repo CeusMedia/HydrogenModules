@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.4.1</version>
+	<version>0.4.3</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -22,11 +22,14 @@
 	<log version="0.3.8">Send mail on every new issue.</log>
 	<log version="0.4">Add relation filter to show my issues.</log>
 	<log version="0.4.1">Adjust behaviour of filters.</log>
+	<log version="0.4.2">Add abstract mail class.</log>
+	<log version="0.4.3">Rewrite mail components to support HTML and plain text.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Issue.php5</class>
+		<class>Mail/Work/Issue/Abstract.php5</class>
 		<class>Mail/Work/Issue/Change.php5</class>
 		<class>Mail/Work/Issue/New.php5</class>
 		<class>Model/Issue.php5</class>
@@ -84,7 +87,7 @@
 	<hook type="resource" resource="Project" event="listRelations">Controller_Work_Issue::___onListProjectRelations</hook>
 	<hook type="resource" resource="Project" event="onRemove">Controller_Work_Issue::___onProjectRemove</hook>
 	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Work_Issue::___onRegisterDashboardPanels</hook>
-	<sql on="install"><![CDATA[
+	<sql on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>issues` (
   `issueId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -137,6 +140,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>issue_notes` (
   KEY `issueId` (`issueId`),
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+]]>
+	<sql on="update" version="0.4.2"><![CDATA[
+ALTER TABLE `<%?prefix%>issues` CHANGE `progress` `progress` DECIMAL(3,0) UNSIGNED NULL DEFAULT '0';
 ]]>
 	</sql>
 	<sql on="uninstall"><![CDATA[

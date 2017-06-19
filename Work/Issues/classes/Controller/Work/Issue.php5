@@ -119,16 +119,26 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$request	= $this->env->request;
+		$managerId	= (int) $request->get( 'managerId' );
+		// @todo activate after getDefaultProjectManager is implemented
+/*		if( !$managerId ){
+			$manager	= $this->getDefaultProjectManager( $request->get( 'projectId' ) );
+			$managerId	= $manager ? $manager->userId : $managerId;
+		}*/
+
 		if( $request->has( 'save' ) ){
 			$model		= new Model_Issue( $this->env );
 			$data		= array(
 				'reporterId'	=> $this->userId,
+				'managerId'		=> $managerId,
 				'projectId'		=> (int) $request->get( 'projectId' ),
 				'type'			=> (int) $request->get( 'type' ),
+				'priority'		=> (int) $request->get( 'priority' ),
 				'severity'		=> (int) $request->get( 'severity' ),
 				'status'		=> 0,
+			//	'format'		=> $request->get( 'format' )							// @todo active on implementing format support
 				'title'			=> $request->get( 'title' ),
-				'content'		=> $request->get( 'content' ),
+				'content'		=> trim( $request->get( 'content' ) ),
 				'createdAt'		=> time(),
 			);
 			if( empty( $data['title'] ) )
@@ -153,22 +163,40 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		return UI_HTML_Tag::create( 'div', '...' );
 	}
 
+	protected function checkIssue( $issueId, $strict = TRUE ){
+		$issue	= $this->logic->get( $issueId, TRUE );
+		$users	= $this->logic->getParticitatingUsers( $issueId );
+		if( $issue && $users ){
+			$logicAuth	= Logic_Authentication::getInstance( $this->env );
+			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )
+				return $issue;
+		}
+		if( $strict )
+			throw new RangeException( 'Invalid issue ID' );
+		return NULL;
+	}
+
 	public function edit( $issueId ){
 		$request	= $this->env->request;
+		$issue		= $this->checkIssue( $issueId );
 		if( $request->has( 'save' ) ){
+
+//			$this->logic->informAboutChange( 50, $this->userId );
+
 			$data		= array(
 //				'projectId'		=> (int) $request->get( 'projectId' ),
 //				'type'			=> (int) $request->get( 'type' ),
 //				'severity'		=> (int) $request->get( 'severity' ),
 //				'status'		=> (int) $request->get( 'status' ),
 //				'progress'		=> (int) $request->get( 'progress' ),
-				'title'			=> $request->get( 'title' ),
-				'content'		=> $request->get( 'content' ),
+			//	'format'		=> $request->get( 'format' )							// @todo active on implementing format support
+				'title'			=> trim( $request->get( 'title' ) ),
+				'content'		=> trim( $request->get( 'content' ) ),
 				'modifiedAt'	=> time()
 			);
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
-			$this->logic->informAboutChange( $issueId, $this->userId );
+//			$this->logic->informAboutChange( $issueId, $this->userId );
 			$this->restart( './work/issue/edit/'.$issueId );							//  reload back into edit view
 		}
 //		$this->logic->informAboutChange( $issueId, $this->userId );
@@ -183,6 +211,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$modelNote		= new Model_Issue_Note( $this->env );
 		$issue			= $modelIssue->get( $issueId );
 		if( $request->has( 'save' ) ){
+			$this->logic->informAboutChange( $issueId, $this->userId );
 			$changeTypes	= array(
 				'reporterId'	=> Logic_Issue::CHANGE_REPORTER,
 				'managerId'		=> Logic_Issue::CHANGE_MANAGER,
@@ -216,6 +245,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 					}
 				}
 				$modelIssue->edit( $issueId, $changes, FALSE );
+				$this->logic->informAboutChange( $issueId, $this->userId );
 
 				$this->env->getMessenger()->noteSuccess( 'Die Veränderungen wurden gespeichert.' );
 			}

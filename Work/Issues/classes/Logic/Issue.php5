@@ -135,32 +135,52 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 	}
 
 	public function informAboutNew( $issueId, $currentUserId ){
-		$users	= $this->getParticitatingUsers( $issueId );
+		$users				= $this->getParticitatingUsers( $issueId );
+		$issue				= $this->get( $issueId, TRUE );
+		if( $issue->reporterId )
+			$issue->reporter	= $users[$issue->reporterId];
+		if( $issue->managerId )
+			$issue->manager		= $users[$issue->managerId];
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
-			$logicMail	= new Logic_Mail( $this->env );
-			$mail		= new Mail_Work_Issue_New( $this->env, array(
-				'issue'	=> $this->get( $issueId, TRUE ),
-			) );
+			$logicMail		= new Logic_Mail( $this->env );
+			if( $issue->projectId ){
+				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$issue->project		= $userProjects[$issue->projectId];
+			}
 			foreach( $users as $user ){
-				$logicMail->sendMail( $mail, $user, 'de' );
+				$mail		= new Mail_Work_Issue_New( $this->env, array(
+					'issue'		=> $issue,
+					'user'		=> $user,
+				) );
+				$logicMail->handleMail( $mail, $user, 'de' );
 			}
 		}
 		return $users;
 	}
 
 	public function informAboutChange( $issueId, $currentUserId ){
-		$users	= $this->getParticitatingUsers( $issueId );
+		$users				= $this->getParticitatingUsers( $issueId );
+		$issue				= $this->get( $issueId, TRUE );
+		if( $issue->reporterId )
+			$issue->reporter	= $users[$issue->reporterId];
+		if( $issue->managerId )
+			$issue->manager		= $users[$issue->managerId];
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
-			$logicMail	= new Logic_Mail( $this->env );
-			$mail		= new Mail_Work_Issue_Change( $this->env, array(
-				'issue'	=> $this->get( $issueId, TRUE ),
-			) );
+			$logicMail		= new Logic_Mail( $this->env );
+			if( $issue->projectId ){
+				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$issue->project		= $userProjects[$issue->projectId];
+			}
 			foreach( $users as $user ){
-				$logicMail->sendMail( $mail, $user, 'de' );
+				$mail		= new Mail_Work_Issue_Change( $this->env, array(
+					'issue'		=> $issue,
+					'user'		=> $user,
+				) );
+				$logicMail->handleMail( $mail, $user, 'de' );
 			}
 		}
 		return $users;

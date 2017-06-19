@@ -1,73 +1,114 @@
 <?php
-class Mail_Work_Issue_Change extends Mail_Abstract{
+class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 
-	protected $baseUrl;
 	protected $labelsStates;
+	protected $note;
 
 	protected function generate( $data = array() ){
-		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->labelsStates		= (array) $this->getWords( 'work/issue', 'states' );
-
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'layout.panels.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.work.issue.css' );
-
 		$modelIssue		= new Model_Issue( $this->env );
-		$issue			= $modelIssue->get( $data['issue']->issueId );
 
-		$html		= $this->renderBody( $data );
-		$this->mail->addHtml( $html, 'utf-8', 'quoted-printable' );
-		$this->setSubject( '['.$this->labelsStates[$data['issue']->status].'] '.$data['issue']->title );
-		return $html;
+		$this->prepareFacts( $data );
+
+		$issue			= $data['issue'];
+		$this->setSubject( 'Problemreport #'.$issue->issueId.': ['.$this->labelsStates[$issue->status].'] '.$issue->title );
+
+		$html		= $this->renderHtmlBody( $data );
+		$text		= $this->renderTextBody( $data );
+		$this->setHtml( $html );
+		$this->setText( $text );
+		return (object) array(
+			'html'		=> $html,
+			'text'		=> $text,
+		);
 	}
 
-	public function renderBody( $data ){
-		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
-		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
+	protected function prepareFacts( $data ){
+		parent::prepareFacts( $data );
+		$issue		= $data['issue'];
 
-		$modelIssue	= new Model_Issue( $this->env );
-		$modelNote	= new Model_Issue_Note( $this->env );
-
-		$helperFacts	= new View_Helper_Work_Issue_ChangeFacts( $this->env );
-		$helperNote		= new View_Helper_Work_Issue_ChangeNote( $this->env );
-
-		$notes			= $modelNote->getAllByIndex( 'issueId', $data['issue']->issueId );
-
-		$listChanges	= '';
-		if( count( $notes ) > 2 ){
-			$helperChanges	= new View_Helper_Work_Issue_Changes( $this->env );
-			$helperChanges->setIssue( $data['issue'] );
-			$listChanges	= '<br/><h4>Gesamte Entwicklung</h4>'.$helperChanges->render();
+		$this->factsChanges	= new View_Helper_Mail_Facts( $this->env );
+		$this->note	= $this->modelIssueNote->getByIndex( 'issueId', $issue->issueId, array( 'issueNoteId' => 'DESC' ) );
+		if( $this->note ){
+			$this->note->user	= $this->modelUser->get( $this->note->userId );
+			$this->factsChanges	= new View_Helper_Work_Issue_ChangeFacts( $this->env );
+			$this->factsChanges->setNote( $this->note );
 		}
 
-		$latestNote		= array_pop( $notes );
-		$helperFacts->setNote( $latestNote );
-		$helperNote->setNote( $latestNote );
+	}
+
+	public function renderHtmlBody( $data ){
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
+		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
+		$issue		= $data['issue'];
+
+		$message	= array();
+		if( $this->note ){
+			$worker		= $this->renderUser( $this->note->user, TRUE );
+			$message[]	= $worker.' hat einen Problemreport bearbeitet.';
+		}
+		else
+			$message[]	= 'Ein Problemreport wurde bearbeitet.';
+		if( $issue->projectId ){
+			$projectLink	= UI_HTML_Elements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
+			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
+		}
+		$message	= UI_HTML_Tag::create( 'div', join( '<br/>', $message ), array( 'class' => 'alert alert-info' ) );
 
 		$body	= '
-<div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
-			<a href="'.$this->baseUrl.'" class="brand">
-				<i class="icon-fire icon-white"></i> '.$wordsMain['main']['title'].'
-			</a>
+<div>
+	'.$message.'
+	<div class="content-panel">
+		<h3>Eintrag</h3>
+		<div class="content-panel-inner">
+			'.$this->factsMain->render().'
 		</div>
 	</div>
-</div>
-<div class="container">
-	<big><a href="./work/issue/edit/'.$data['issue']->issueId.'">'.$data['issue']->title.'</a></big>
-	<p>'.nl2br( $data['issue']->content ).'</p>
-	<br/>
-	<h4>Letzte Änderung</h4>
-	'.$helperFacts->render().'
-	'.$helperNote->render().'
-	'.$listChanges.'
-	<br/>
+	<div class="content-panel">
+		<h3>Änderungen</h3>
+		<div class="content-panel-inner">
+			'.$this->factsChanges->render().'
+		</div>
+	</div>
+	<div class="content-panel">
+		<h3>Informationen</h3>
+		<div class="content-panel-inner">
+			'.$this->factsAll->render().'
+		</div>
+	</div>
 </div>';
-		$this->page->setBody( $body );
-		$html	= $this->page->build();
-		return $html;
+		return $body;
+	}
+
+	protected function renderTextBody( $data ){
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
+		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
+		$issue		= $data['issue'];
+
+		$message	= array();
+		if( $this->note )
+			$message[]	= $this->renderUser( $this->note->user, FALSE ).' hat einen neuen Problemreport geschrieben.';
+		else
+			$message[]	= 'Ein neuer Problemreport wurde geschrieben.';
+		if( $issue->projectId )
+			$message[]	= 'Du bekommst diese Mail, da du im Projekt "'.$issue->project->title.'" involviert bist.';
+		$message	= join( PHP_EOL, $message );
+
+		$body		= '
+'.View_Helper_Mail_Text::underscore( 'Neuer Problemreport', '=' ).PHP_EOL.'
+'.$message.PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( 'Eintrag' ).PHP_EOL.'
+'.$this->factsMain->renderAsText().PHP_EOL.PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( 'Änderungen' ).PHP_EOL.'
+'.$this->factsChanges->renderAsText().PHP_EOL.PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
+'.$this->factsAll->renderAsText().PHP_EOL.'';
+
+		$list	= array();
+		foreach( explode( PHP_EOL, $body ) as $nr => $line )
+			$list[]	= View_Helper_Mail_Text::indent( $line, 0, 76 );
+		return join( PHP_EOL, $list );
+
 	}
 }
 ?>

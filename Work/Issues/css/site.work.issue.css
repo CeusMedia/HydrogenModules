@@ -224,3 +224,22 @@ table.issues tr.status-6 td.cell-status {
 body.controller-work-issue.action-index fieldset h4 {
 	margin-bottom: 2px;
 	}
+
+
+body.moduleWorkIssues dl.facts-vertical {
+	padding: 0;
+	margin: 0 0 0.5em 0;
+	}
+body.moduleWorkIssues dl.facts-vertical dt {
+	display: block;
+	float: none;
+	clear: left;
+	font-size: 0.85em;
+	}
+body.moduleWorkIssues dl.facts-vertical dd {
+	display: block;
+	float: none;
+	clear: left;
+	font-size: 1.1em;
+	margin: 0 0 0.5em 0;
+	}

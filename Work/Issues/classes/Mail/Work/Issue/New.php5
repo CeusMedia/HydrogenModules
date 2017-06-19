@@ -1,49 +1,84 @@
 <?php
-class Mail_Work_Issue_New extends Mail_Abstract{
-
-	protected $baseUrl;
-	protected $words;
+class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
 
 	protected function generate( $data = array() ){
-		$this->baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
-		$this->modelIssue	= new Model_Issue( $this->env );
-		$this->modelUser	= new Model_User( $this->env );
-		$this->words		= (array) $this->getWords( 'work/issue' );
-
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'layout.panels.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.work.issue.css' );
+		$this->prepareFacts( $data );
 
 		$issue		= $data['issue'];
+		$subject	= 'Neuer Problemreport #%s: %s';
+		$this->setSubject( sprintf( $subject, $issue->issueId, $issue->title ) );
 
-		$html		= $this->renderBody( $data );
-		$this->mail->addHtml( $html, 'utf-8', 'quoted-printable' );
-		$this->setSubject( '['.$this->words['states'][$issue->status].'] '.$issue->title );
-		return $html;
+		$html		= $this->renderHtmlBody( $data );
+		$text		= $this->renderTextBody( $data );
+		$this->setHtml( $html );
+		$this->setText( $text );
+		return (object) array(
+			'html'		=> $html,
+			'text'		=> $text,
+		);
 	}
 
-	public function renderBody( $data ){
+	public function renderHtmlBody( $data ){
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$issue		= $data['issue'];
-		$body	= '
-<div class="navbar navbar-inverse">
-	<div class="navbar-inner">
-		<div class="container">
-			<a href="'.$this->baseUrl.'" class="brand">
-				<i class="icon-fire icon-white"></i> '.$wordsMain['main']['title'].'
-			</a>
+
+		$message	= array();
+		if( $issue->reporterId ){
+			$reporter	= $this->renderUser( $issue->reporter, TRUE );
+			$message[]	= $reporter.' hat einen neuen Problemreport geschrieben.';
+		}
+		else
+			$message[]	= 'Ein neuer Problemreport wurde geschrieben.';
+		if( $issue->projectId ){
+			$projectLink	= UI_HTML_Elements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
+			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
+		}
+		$message	= UI_HTML_Tag::create( 'div', join( '<br/>', $message ), array( 'class' => 'alert alert-info' ) );
+
+		$body		= '
+<div>
+	'.$message.'
+	<div class="content-panel">
+		<h3>Eintrag</h3>
+		<div class="content-panel-inner">
+			'.$this->factsMain->render().'
 		</div>
 	</div>
-</div>
-<div class="container">
-	<big><a href="./work/issue/edit/'.$issue->issueId.'">'.$issue->title.'</a></big>
-	<p>'.nl2br( $issue->content ).'</p>
-	<br/>
+	<div class="content-panel">
+		<h3>Informationen</h3>
+		<div class="content-panel-inner">
+			'.$this->factsAll->render().'
+		</div>
+	</div>
 </div>';
-		$this->page->setBody( $body );
-		$html	= $this->page->build();
-		return $html;
+		return $body;
+	}
+
+	public function renderTextBody( $data ){
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
+		$issue		= $data['issue'];
+
+		$message	= array();
+		if( $issue->reporterId )
+			$message[]	= $this->renderUser( $issue->reporter, FALSE ).' hat einen neuen Problemreport geschrieben.';
+		else
+			$message[]	= 'Ein neuer Problemreport wurde geschrieben.';
+		if( $issue->projectId )
+			$message[]	= 'Du bekommst diese Mail, da du im Projekt "'.$issue->project->title.'" involviert bist.';
+		$message	= join( PHP_EOL, $message );
+
+		$body		= '
+'.View_Helper_Mail_Text::underscore( 'Neuer Problemreport', '=' ).PHP_EOL.'
+'.$message.PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( 'Neuer Eintrag' ).PHP_EOL.'
+'.$this->factsMain->renderAsText().PHP_EOL.PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
+'.$this->factsAll->renderAsText().PHP_EOL.'';
+
+		$list	= array();
+		foreach( explode( PHP_EOL, $body ) as $nr => $line )
+			$list[]	= View_Helper_Mail_Text::indent( $line, 0, 76 );
+		return join( PHP_EOL, $list );
 	}
 }
 ?>

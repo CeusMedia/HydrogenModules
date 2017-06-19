@@ -1,6 +1,9 @@
 <?php
 class View_Helper_Work_Issue_ChangeNote{
 
+	protected $env;
+	protected $note;
+
 	public function __construct( $env ){
 		$this->env	= $env;
 	}
@@ -11,7 +14,7 @@ class View_Helper_Work_Issue_ChangeNote{
 
 	public function render(){
 		if( !$this->note )
-			throw new RuntimeException( 'No note set.' );
+			return '';
 
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
 
@@ -24,8 +27,20 @@ class View_Helper_Work_Issue_ChangeNote{
 			else
 				$noteText	= nl2br( $this->note->note );
 		}
-		$note	= UI_HTML_Tag::create( 'div', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
+		$note	= UI_HTML_Tag::create( 'tt', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
 		return $note;
+	}
+
+	public function renderAsText(){
+		if( !$this->note )
+			return '';
+
+		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
+
+		$noteText	= 'Kein Kommentar.';
+		if( trim( $this->note->note ) )
+			$noteText	= $this->note->note;
+		return $noteText.PHP_EOL;
 	}
 }
 ?>
