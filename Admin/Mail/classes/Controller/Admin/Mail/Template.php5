@@ -5,6 +5,10 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
+		$this->appUri			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->appUri		= Logic_Frontend::getInstance( $this->env )->getUri();
+		$this->addData( 'appUri', $this->appUri );
 	}
 
 	public function add(){
@@ -83,9 +87,17 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				if( $this->request->get( 'template_style' ) ){
 					$template	= $this->modelTemplate->get( $templateId );
 					$list		= explode( ',', $template->styles );
-					$list[]	= trim( $this->request->get( 'template_style' ) );
+					$list[]		= trim( $this->request->get( 'template_style' ) );
 					$this->modelTemplate->edit( $templateId, array(
 						'styles'	=> join( ',', $list )
+					) );
+				}
+				if( $this->request->get( 'template_image' ) ){
+					$template	= $this->modelTemplate->get( $templateId );
+					$list		= explode( ',', $template->images );
+					$list[]		= trim( $this->request->get( 'template_image' ) );
+					$this->modelTemplate->edit( $templateId, array(
+						'images'	=> join( ',', $list )
 					) );
 				}
 				$this->messenger->noteSuccess( 'Template information saved.' );
@@ -106,28 +118,6 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->addData( 'templates', $this->modelTemplate->getAll() );
-	}
-
-	public function removeStyle( $templateId, $pathBase64 ){
-		$template	= $this->checkTemplate( $templateId );
-		$styles		= explode( ',', $template->style );
-		foreach( $styles as $nr => $style )
-			if( base64_encode( $style ) === $pathBase64 )
-				unset( $styles[$nr] );
-		$this->modelTemplate->edit( $templateId, array(
-			'styles' => join( ',', $styles ),
-			'modifiedAt'	=> time(),
-		) );
-		$this->restart( 'edit/'.$templateId, TRUE );
-	}
-
-	public function set( $templateId ){
-		$template	= $this->checkTemplate( $templateId );
-		$active		= $this->modelTemplate->getByStatus( 3 );
-		if( $active )
-			$this->modelTemplate->edit( $active->mailTemplateId, array( '2' ) );
-		$this->modelTemplate->edit( $templateId, array( 'status' => 3 ) );
-		$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" aktiviert.' );
 	}
 
 	public function preview( $templateId, $mode = NULL ){
@@ -179,6 +169,51 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->modelTemplate->remove( $templateId );
 		$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" entfernt.' );
 		$this->restart( NULL, TRUE );
+	}
+
+	public function removeImage( $templateId, $pathBase64 ){
+		$template	= $this->checkTemplate( $templateId );
+		$images		= explode( ',', $template->images );
+		foreach( $images as $nr => $image )
+			if( base64_encode( $image ) === $pathBase64 )
+				unset( $images[$nr] );
+		$this->modelTemplate->edit( $templateId, array(
+			'images' => join( ',', $images ),
+			'modifiedAt'	=> time(),
+		) );
+		$this->restart( 'edit/'.$templateId, TRUE );
+	}
+
+	public function removeStyle( $templateId, $pathBase64 ){
+		$template	= $this->checkTemplate( $templateId );
+		$styles		= explode( ',', $template->styles );
+		foreach( $styles as $nr => $style )
+			if( base64_encode( $style ) === $pathBase64 )
+				unset( $styles[$nr] );
+		$this->modelTemplate->edit( $templateId, array(
+			'styles' => join( ',', $styles ),
+			'modifiedAt'	=> time(),
+		) );
+		$this->restart( 'edit/'.$templateId, TRUE );
+	}
+
+	public function set( $templateId ){
+		$template	= $this->checkTemplate( $templateId );
+		$active		= $this->modelTemplate->getByStatus( 3 );
+		if( $active )
+			$this->modelTemplate->edit( $active->mailTemplateId, array( '2' ) );
+		$this->modelTemplate->edit( $templateId, array( 'status' => 3 ) );
+		$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" aktiviert.' );
+	}
+
+	public function test( $templateId ){
+		$email		= trim( $this->request->get( 'email' ) );
+		$email		= 'dev@ceusmedia.de';
+		$mail		= new Mail_Test( $this->env, array( 'templateId' => $templateId ) );
+		$logic		= new Logic_Mail( $this->env );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$logic->handleMail( $mail, (object) array( 'email' => $email, $language, TRUE ) );
+		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 }
 ?>
