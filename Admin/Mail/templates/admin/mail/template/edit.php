@@ -77,6 +77,50 @@ if( $template->images ){
 	) );
 }
 
+$rowText	= '
+<div class="row-fluid">
+	<div class="span12">
+		<h4>Text-Variante</h4>
+		<label for="input_template_plain"></label>
+		<textarea name="template_plain" id="input_template_plain" class="span12 CodeMirror-auto" rows="4">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
+	</div>
+</div>';
+$rowHtml	= '
+<div class="row-fluid">
+	<div class="span12">
+		<h4>HTML-Gerüst</h4>
+		<label for="input_template_html"></label>
+		<textarea name="template_html" id="input_template_html" class="span12 CodeMirror-auto" rows="14">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
+	</div>
+</div>';
+$rowStyles	= '
+<div class="row-fluid">
+	<div class="span6">
+		<h4>Style-Definitionen</h4>
+		<label for="input_template_css"></label>
+		<textarea name="template_css" id="input_template_css" class="span12 CodeMirror-auto" rows="10">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
+	</div>
+	<div class="span6">
+		<h4>Style-Files</h4>
+		'.$listStyles.'
+		<label for="input_template_style">Pfad</label>
+		<input type="text" name="template_style"/>
+	</div>
+</div>';
+$rowImages	= '
+<div class="row-fluid">
+	<h4>Bildverweise</h4>
+	'.$listImages.'
+	<label for="input_template_image">Pfad</label>
+	<input type="text" name="template_image"/>
+</div>';
+
+$tabs		= new \CeusMedia\Bootstrap\Tabs( 'admin-mail-template-edit' );
+$tabs->add( 'admin-mail-template-edit-tab-ext', '#', 'Text-Variante', $rowText );
+$tabs->add( 'admin-mail-template-edit-tab-html', '#', 'HTML-Variante', $rowHtml );
+$tabs->add( 'admin-mail-template-edit-tab-styles', '#', 'Style-Definitionen', $rowStyles );
+$tabs->add( 'admin-mail-template-edit-tab-images', '#', 'Bilder-Verweise', $rowImages );
+
 return '
 <div class="row-fluid">
 	<div class="span12">
@@ -90,39 +134,14 @@ return '
 							<input type="text" name="template_title" id="input_template_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
-					<div class="row-fluid">
-						<div class="span12">
-							<h4>Text-Variante</h4>
-							<label for="input_template_plain"></label>
-							<textarea name="template_plain" id="input_template_plain" class="span12 CodeMirror-auto" rows="4">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span12">
-							<h4>HTML-Gerüst</h4>
-							<label for="input_template_html"></label>
-							<textarea name="template_html" id="input_template_html" class="span12 CodeMirror-auto" rows="14">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span6">
-							<h4>Style-Definitionen</h4>
-							<label for="input_template_css"></label>
-							<textarea name="template_css" id="input_template_css" class="span12 CodeMirror-auto" rows="10">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
-						</div>
-						<div class="span6">
-							<h4>Style-Files</h4>
-							'.$listStyles.'
-							<label for="input_template_style">Pfad</label>
-							<input type="text" name="template_style"/>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<h4>Bildverweise</h4>
-						'.$listImages.'
-						<label for="input_template_image">Pfad</label>
-						<input type="text" name="template_image"/>
-					</div>
+<!--					'.$tabs.'-->
+					'.$rowText.'
+					<hr/>
+					'.$rowHtml.'
+					<hr/>
+					'.$rowStyles.'
+					<hr/>
+					'.$rowImages.'
 					<div class="buttonbar">
 						'.$buttonCancel.'
 						'.$buttonSave.'
