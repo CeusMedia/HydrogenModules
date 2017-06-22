@@ -29,6 +29,8 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 	}
 
 	protected function renderUser( $user, $link = FALSE ){
+		if( !$user )
+			return '-';
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$helper	= new View_Helper_Member( $this->env );
 			$helper->setUser( $user );
@@ -45,6 +47,21 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 		return $userLabel;
 	}
 
+	protected function renderUserAsText( $user ){
+		if( !$user )
+			return '-';
+		$fullname	= '';
+		if( strlen( trim( $user->firstname ) ) && strlen( trim( $user->surname ) ) ){
+			$parts	= array();
+			if( strlen( trim( $user->firstname ) ) )
+				$parts[]	= trim( $user->firstname );
+			if( strlen( trim( $user->surname ) ) )
+				$parts[]	= trim( $user->surname );
+			$fullname	= ' ('.join( ' ', $parts ).')';
+		}
+		return $user->username.$fullname;
+	}
+
 	protected function renderLinkedTitle( $mission ){
 		return UI_HTML_Tag::create( 'a', $mission->title, array(
 			'href'	=> './work/mission/view/'.$mission->missionId
@@ -52,9 +69,9 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 	}
 
 	protected function setSubjectFromMission( $mission ){
-		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$subject	= $this->words->subject . ': ' . $mission->title;
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $subject );
+		$subjectKey	= $mission->type ? 'subjectEvent' : 'subjectTask';
+		$subject	= sprintf( $this->words->$subjectKey, $mission->title );
+		$this->setSubject( $subject );
 	}
 }
 ?>

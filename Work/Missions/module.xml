@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.52</version>
+	<version>0.9.53</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -99,6 +99,7 @@ code>
 	<log version="0.9.50">Migrate definition of jobs.</log>
 	<log version="0.9.51">Add abstract mail class.</log>
 	<log version="0.9.52">Rewrite mail components to support HTML and plain text.</log>
+	<log version="0.9.53">Rewrite mail classes to support HTML and plain text.</log>
 	<category>Work</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -169,13 +170,14 @@ code>
 		<template>work/mission/view.content.php</template>
 		<template>work/mission/view.documents.php</template>
 		<template>work/mission/kanban/index.php</template>
-		<template>work/mission/mails/done.php</template>
-		<template>work/mission/mails/new.php</template>
-		<template>work/mission/mails/update.php</template>
 		<locale>de/work/mission.ini</locale>
 		<locale>de/html/work/mission/add.info.html</locale>
 		<locale>de/html/work/mission/export.html</locale>
 		<locale>de/html/work/mission/index.empty.html</locale>
+		<locale>de/mail/work/mission/new.html</locale>
+		<locale>de/mail/work/mission/new.txt</locale>
+		<locale>de/mail/work/mission/update.html</locale>
+		<locale>de/mail/work/mission/update.txt</locale>
 		<script>WorkMissions.js</script>
 		<script>WorkMissionsCalendar.js</script>
 		<script>WorkMissionsFilter.js</script>

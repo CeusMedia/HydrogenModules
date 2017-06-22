@@ -1216,31 +1216,45 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function testMailNew( $missionId ){
+	public function testMailNew( $missionId, $asText = NULL ){
 		$data	= array(
             'mission'   => $this->model->get( $missionId ),
             'user'      => $this->userMap[$this->userId],
         );
 		$mail	= new Mail_Work_Mission_New( $this->env, $data );
-		print( $mail->renderBody( $data ) );
-		die;
+		$asText ? xmp( $mail->contents['text'] ) : print( $mail->contents['html'] );
+		exit;
 	}
 
-	public function testMailUpdate( $missionId ){
+	public function testMailUpdate( $missionId, $asText = NULL ){
 		$missionOld		= $this->model->get( $missionId );
 		$missionNew		= clone( $missionOld );
-		$missionOld->status = 1;
-		$missionNew->type = "1";
-		$missionOld->priority = "1";
-		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) - 3600 * 24 );
+
+		$missionOld->type		= array_rand( array_flip( array( 0, 1 ) ) );
+		$missionOld->status		= array_rand( array_flip( array( -2, -1, 0, 1, 2, 3, 4 ) ) );
+		$missionOld->location	= array_rand( array_flip( array( 'Raum 301', '' ) ) );
+		$missionOld->timeStart	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
+		$missionOld->timeEnd	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
+
+		$missionNew->projectId	= array_rand( array_flip( array( 1, 2, 3 ) ) );
+		$missionNew->workerId	= array_rand( array_flip( array( 1, 2, 4 ) ) );
+		$missionNew->type		= array_rand( array_flip( array( 0, 1 ) ) );
+		$missionNew->status		= array_rand( array_flip( array( -2, -1, 0, 1, 2, 3, 4 ) ) );
+		$missionNew->priority	= array_rand( array_flip( array( 1, 2, 3, 4, 5 ) ) );
+		$missionNew->timeStart	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
+		$missionNew->timeEnd	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
+		$missionNew->title		= array_rand( array_flip( array( $missionOld->title, 'Heißt jetzt ganz anders' ) ) );
+		$missionNew->location	= array_rand( array_flip( array( $missionOld->location, 'Schulungsraum', '' ) ) );
+		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) + array_rand( array_flip( array( -1, 0, 1 ) ) ) * 3600 * 24 );
+		$missionNew->dayEnd		= date( "Y-m-d", strtotime( $missionNew->dayEnd ) + array_rand( array_flip( array( -1, 0, 1 ) ) ) * 3600 * 24 );
 		$data		= array(
 			'missionBefore'	=> $missionOld,
 			'missionAfter'	=> $missionNew,
 			'user'			=> $this->userMap[$this->userId],
 		);
 		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
-		print( $mail->renderBody( $data ) );
-		die;
+		$asText ? xmp( $mail->contents['text'] ) : print( $mail->contents['html'] );
+		exit;
 	}
 
 	public function view( $missionId ){

@@ -1,0 +1,27 @@
+<style>
+.content-panel-inner dl.dl-horizontal dt {
+	width: 110px;
+	}
+.content-panel-inner dl.dl-horizontal dd {
+	margin-left: 130px;
+	}
+</style>
+<div class="alert alert-warning">
+	<%values.type%> <%values.link%> wurde von <%values.modifier%> bearbeitet.
+</div>
+<div class="content-panel">
+	<h3>Fakten</h3>
+	<div class="content-panel-inner">
+		<div class="facts">
+			<%lists.facts%>
+		</div>
+	</div>
+</div>
+<div class="content-panel">
+	<h3>Beschreibung</h3>
+	<div class="content-panel-inner">
+		<div class="content">
+			<%?values.content%>
+		</div>
+	</div>
+</div>
