@@ -7,7 +7,9 @@
  */
 abstract class Mail_Abstract{
 
-	/**	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
+	/**	@var		ADT_List_Dictionary					$config			Application configuration object */
+	protected $config;
+	/*	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
 	protected $env;
 	/**	@var		Net_Mail							$mail			Mail objectm, build on construction */
 	public $mail;
@@ -17,14 +19,16 @@ abstract class Mail_Abstract{
 	protected $transport;
 	/** @var		CMF_Hydrogen_View					$view			General view instance */
 	protected $view;
-
-	public $content;
-
+	/** @var		string								$baseUrl		Application base URL */
 	protected $baseUrl;
-
+	/** @var		array								$bodyClasses	List of Stylesheet files to integrate into HTML body */
 	protected $addedStyles	= array();
-
+	/** @var		array								$bodyClasses	List of classes to apply to HTML body */
 	protected $bodyClasses	= array();
+
+	public $content;									//  @todo remove argument, implement $this->data instead
+
+	public $contents		= array( 'html' => '', 'text' => '' );
 
 	/**
 	 *	Contructor.
@@ -39,30 +43,47 @@ abstract class Mail_Abstract{
 		$this->view		= new CMF_Hydrogen_View( $env );
 		$this->page		= new UI_HTML_PageFrame();
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->baseUrl	= isset( $env->baseUrl ) ? $env->baseUrl : NULL;
+		$this->config	= $this->env->getConfig();
 
-		$config		= $this->env->getConfig();
-		if( !$this->baseUrl && $config->get( 'app.base.url' ) )
-			$this->baseUrl = $config->get( 'app.base.url' );
+		$this->baseUrl	= !empty( $env->baseUrl ) ? $env->baseUrl : $this->config->get( 'app.base.url' );
+		if( !$this->baseUrl )
+			throw new RuntimeException( 'Mailing requires "app.base.url" to be set in application base config file' );
 		$this->page->setBaseHref( $this->baseUrl );
-//		$this->mail->setSender( $config->get( 'module.resource_mail.sender.system' ) );
 
-/*		if( $this->env->getModules()->has( 'UI_Bootstrap' ) ){
-			$localPath	= $this->env->getConfig()->get( 'module.ui_bootstrap.local.path' );
-			$version	= $this->env->getConfig()->get( 'module.ui_bootstrap.version' );
+//		$defaultSender		= $this->config->get( 'module.resource_mail.sender.system' );
+//		$this->mail->setSender( $defaultSender );
+
+/*		if( $this->env->getModules()->has( 'UI_Bootstrap' ) ){					//  removed since new mail templates handle Stylesheet import
+			$config		= $this->env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
+			$localPath	= $config->get( 'local.path' );
+			$version	= $config->get( 'version' );
 			$path		= sprintf( $localPath, $version );
 			$this->addCommonStyle( $path.'/css/bootstrap.min.css' );
 			$this->addCommonStyle( $path.'/css/bootstrap.responsive.min.css' );
 		}
 		else if( $defaultStyle )
 			$this->addThemeStyle( 'mail.min.css' );*/
+//		$this->addScriptFile( 'mail.min.js' );									//  removed since JavaScript will not be ran in mail typical client
 
-//		$this->addScriptFile( 'mail.min.js' );
 		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
+		$this->__onInit();
 		$this->data		= $data;
 		$this->content	= $this->generate( $data );								//  @todo remove argument, use $this->data instead
 	}
+
+	/**
+	 *	This method is called after construction is done and right before generation takes place.
+	 *	Extend this method in your mail class if you need to provide general resources to many methods.
+	 *	Extend this method in an abstract module mail class if you have many mail classes in need of same resources.
+	 *	ATTENTION: Please remember to mark new members as protected, if set by your extension!
+	 *	ATTENTION: Please note possibly thrown resource exceptions!
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __onInit(){
+	}
+
 
 	/**
 	 *	Do not use all members for serialization.
@@ -244,7 +265,7 @@ abstract class Mail_Abstract{
 		}
 		$words	= $this->env->getLanguage()->getWords( 'main' );
 		$appTitle	= $words['main']['title'];
-		$body	= str_replace( '[#content#]', $content, $template->html );
+		$body	= str_replace( '[#content#]', $content, $template->plain );
 		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 		return $body;
@@ -405,6 +426,7 @@ abstract class Mail_Abstract{
 			$classes[]	= 'content-panel-style-'.$options->get( 'style' );
 
 		$html	= $page->build( array( 'class' => $classes ) );
+		$this->contents['html']	= $html;
 		$this->mail->addHTML( $html, 'UTF-8', 'base64' );
 		return $html;
 	}
@@ -423,7 +445,8 @@ abstract class Mail_Abstract{
 		 	$templateId	= $this->data['templateId' ];
 		if( $templateId )
 			$content	= $this->applyTemplateToText( $content, $templateId );
-		 $this->mail->addText( $content, 'UTF-8', 'base64' );
+		$this->contents['text']	= $content;
+		$this->mail->addText( $content, 'UTF-8', 'base64' );
 	}
 
 	/**
