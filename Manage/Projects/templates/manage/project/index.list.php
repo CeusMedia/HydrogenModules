@@ -4,11 +4,12 @@ $w				= (object) $words['index'];
 $indicator		= new UI_HTML_Indicator();
 $helperTime		= new View_Helper_TimePhraser( $env );
 
-$iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-star' ) );
-if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-star' ) );
+//$iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-star' ) );
+$iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-star' ) );
+//if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
+//	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-star' ) );
 
-$pagination		= new CMM_Bootstrap_PageControl( './manage/project', $page, ceil( $total / $filterLimit ), array( 'shortenFirst' => FALSE ) );
+$pagination		= new \CeusMedia\Bootstrap\PageControl( './manage/project', $page, ceil( $total / $filterLimit ), array( 'shortenFirst' => FALSE ) );
 $pagination		= $pagination->render();
 
 $list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
@@ -58,8 +59,10 @@ if( $projects ){
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-plus icon-white" ) );
-$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success btn-small' );
+//$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-plus icon-white" ) );
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
+$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success not-btn-small' );
 $buttonAddSmall	= UI_HTML_Tag::create( 'a', $iconAdd, array(
 	'href'	=> './manage/project/add',
 	'class'	=> 'btn btn-success btn-mini',
@@ -72,7 +75,7 @@ if( !$canAdd ){
 
 return '
 <div class="content-panel content-panel-list">
-	<h3>'.$w->heading.'&nbsp;'.$buttonAddSmall.'</h3>
+	<h3>'.$w->heading.'<!--&nbsp;'.$buttonAddSmall.'--></h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">

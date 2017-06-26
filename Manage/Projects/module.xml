@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.6.9</version>
+	<version>0.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -43,6 +43,7 @@
 	<log version="0.6.7">Support hook Project::onRemove.</log>
 	<log version="0.6.8">Redesign projects table.</log>
 	<log version="0.6.9">Use new mail template support.</log>
+	<log version="0.7">Support FontAwesome and improved panels.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

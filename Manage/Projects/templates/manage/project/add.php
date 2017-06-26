@@ -30,9 +30,12 @@ $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-l
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
-	'href'	=> './manage/project',
+	'href'	=> './'.( $from ? $from : 'manage/project' ),
 	'class'	=> 'btn btn-small',
 ) );
+if( $from && preg_match( '/add$/', $from ) )
+	$buttonCancel	= "";
+
 $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 	'type'	=> 'submit',
 	'name'	=> 'save',

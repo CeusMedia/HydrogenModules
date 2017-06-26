@@ -2,6 +2,8 @@
 
 $w			= (object) $words['filter'];
 
+$isFiltered	= count( $filterStatus ) || count( $filterPriority ) || count( $filterUser ) || $filterId || $filterQuery;
+
 /*  --  STATUS  --  */
 $optStatus	= array();
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
@@ -45,12 +47,21 @@ $iconOrderDesc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-dow
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
 
-$disabled   = $filterDirection == 'ASC';
-$buttonUp	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
-$buttonDown	= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
+$iconOrderAsc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
+$iconOrderDesc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
+$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+
+$disabled   	= $filterDirection == 'ASC';
+$buttonUp		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
+$buttonDown		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
 
 $buttonFilter	= UI_HTML_Elements::Button( 'filter', $iconFilter.'&nbsp;'.$w->buttonFilter, 'btn not-btn-small btn-info' );
-$buttonReset	= UI_HTML_Elements::LinkButton( './manage/project/filter/reset', $iconReset.'&nbsp;'.$w->buttonReset, 'btn btn-small btn-inverse' );
+$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset/*.'&nbsp;'.$w->buttonReset*/, array(
+	'href'		=> './manage/project/filter/reset',
+	'title'		=> $w->buttonReset,
+	'class'		=> 'btn not-btn-small '.( $isFiltered ? 'btn-inverse' : '' )
+) );
 
 $panelFilter = '
 <div class="content-panel content-panel-filter">
@@ -86,11 +97,11 @@ $panelFilter = '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span8">
+				<div class="span7">
 					<label for="input_status">Sortierung</label>
 					<select name="order" id="input_order" class="span12" onchange="this.form.submit()">'.$optOrder.'</select>
 				</div>
-				<div class="span4">
+				<div class="span5">
 					<label>&nbsp;</label>
 					<div class="btn-group">'.$buttonUp.$buttonDown.'</div>
 				</div>
@@ -104,8 +115,10 @@ $panelFilter = '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.$buttonFilter.'
-				'.$buttonReset.'
+				<div class="btn-group">
+					'.$buttonFilter.'
+					'.$buttonReset.'
+				</div>
 			</div>
 		</form>
 	</div>

@@ -83,9 +83,14 @@ $buttonDefault	= UI_HTML_Tag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefau
 
 $panelEdit	= '
 <div class="content-panel content-panel-form">
-	<h3 class="autocut"><a href="./manage/project" class="muted">'.$w->heading.':</a> '.$project->title.'</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
+			<div class="row-fluid">
+				<div class="span12 autocut">
+					<span class="muted">Projekt:</span> <big><strong>'.$project->title.'</strong></big>
+				</div>
+			</div>
 			<div class="row-fluid">
 				<div class="span9">
 					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>

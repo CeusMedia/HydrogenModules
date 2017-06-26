@@ -175,8 +175,10 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 					) );
 				}
 				$this->messenger->noteSuccess( $words->msgSuccess );
-				if( $this->request->get( 'from' ) )
+				if( $this->request->get( 'from' ) ){
+					$this->messenger->noteNotice( 'Weiterleitung zurück zum Ausgangspunkt.' );
 					$this->restart( $this->request->get( 'from' ) );
+				}
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}
 		}
