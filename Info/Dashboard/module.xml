@@ -6,7 +6,7 @@
 Calls hook Dashboard::registerPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
@@ -52,7 +52,24 @@ Calls hook Dashboard::registerPanels.
 	<config protected="yes" type="integer" name="perUser.maxPanels">12</config>
 	<relations/>
 	<hook type="resource" resource="View" event="renderContent">View_Info_Dashboard::___onRenderContent</hook>
-	<sql type="mysql" on="update" version="0.3"><![CDATA[
+	<sql type="mysql" on="install" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>dashboards` (
+  `dashboardId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userId` int(11) UNSIGNED NOT NULL,
+  `isCurrent` tinyint(1) UNSIGNED DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `panels` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`dashboardId`),
+  KEY `userId` (`userId`),
+  KEY `isCurrent` (`isCurrent`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="install" version="0.3"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>dashboards` (
   `dashboardId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -68,6 +85,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>dashboards` (
   KEY `isCurrent` (`isCurrent`),
   KEY `title` (`title`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.3"><![CDATA[
+ALTER TABLE `<%?prefix%>dashboards` CHANGE `isCurrent` `isCurrent` TINYINT(1) UNSIGNED NULL DEFAULT '0';
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
