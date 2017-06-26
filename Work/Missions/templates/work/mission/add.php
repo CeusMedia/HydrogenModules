@@ -124,7 +124,7 @@ $panelAdd	= '
 		'.$fieldContent.'
 		<div class="buttonbar">
 			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
-			<button type="submit" name="add" class="btn btn-success"><i class="icon-ok-circle icon-white"></i> '.$w->buttonSave.'</button>
+			<button type="submit" name="add" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> '.$w->buttonSave.'</button>
 <!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
 			'.UI_HTML_Elements::Button( 'add', $w->buttonSave, 'button add' ).'-->
 		</div>
