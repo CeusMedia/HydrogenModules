@@ -162,6 +162,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 				$data				= $this->request->getAll();
 				$data['creatorId']	= $this->userId;
 				$data['createdAt']	= time();
+				$data['modifiedAt']	= time();
 				$projectId			= $this->modelProject->add( $data, FALSE );
 
 				if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) ) ){
@@ -169,6 +170,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 						'projectId'		=> $projectId,
 						'userId'		=> $this->userId,
 						'isDefault'		=> $isFirstUserProject ? 1 : 0,
+						'createdAt'		=> time(),
+						'modifiedAt'	=> time(),
 					) );
 				}
 				$this->messenger->noteSuccess( $words->msgSuccess );
@@ -201,7 +204,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 					'creatorId'		=> $this->userId,
 					'userId'		=> (int) $userId,
 					'status'		=> 1,
-					'createdAt'		=> time()
+					'createdAt'		=> time(),
+					'modifiedAt'	=> time(),
 				) );
 				$this->messenger->noteSuccess( $words->msgUserAdded, $user->username, $project->title );
 
