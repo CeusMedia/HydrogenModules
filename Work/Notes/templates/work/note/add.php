@@ -17,25 +17,18 @@ return $textTop.'
 <div class="row-fluid">
 	<div class="span9 note-add -column-left-75">
 		<div class="content-panel content-panel-form">
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
-				<h3>'.$w->heading.'</h3>
 				<form name="note_add" id="form_note_add" action="./work/note/add" method="post">
 					<div class="row-fluid">
-						<div class="span6">
+						<div class="span8">
 							<label for="input_note_title" class="mandatory">'.$w->labelTitle.'</label>
 							<input type="text" id="input_note_title" name="note_title" class="mandatory span12" value="'.htmlentities( $note->title, ENT_QUOTES ).'"/>
 						</div>
-						<div class="span3">
+						<div class="span4">
 							<label for="input_note_projectId">'.$w->labelProjectId.'</label>
 							<select id="input_note_projectId" name="note_projectId" class="span12">'.$optProject.'</select>
 						</div>
-<!--						<div class="span3">
-							<br/>
-							<label for="input_note_public">
-								<input type="checkbox" id="input_note_public" name="note_public" value="1" '.( $note->public ? 'checked="checked"' : '' ).'/>
-								&nbsp;'.$w->labelPublic.'
-							</label>
-						</div>-->
 					</div>
 					<div class="row-fluid">
 						<div class="span3">
