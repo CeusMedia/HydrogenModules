@@ -25,10 +25,8 @@ class Logic_FileBucket{
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$basePath	= Logic_Frontend::getInstance( $this->env )->getPath( 'contents' );
 		$this->filePath	= $basePath.$this->moduleConfig->get( 'path' );
-	}
-
-	public function getPath(){
-		return $this->filePath;
+		if( !file_exists( $this->filePath ) )
+			mkdir( $this->filePath );
 	}
 
 	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL ){
@@ -116,16 +114,23 @@ class Logic_FileBucket{
 		return $hash;
 	}
 
-	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality ){
+	public function getPath(){
+		return $this->filePath;
+	}
+
+	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality = NULL ){
 		$file		= $this->get( $fileId );
-		if( !in_array( $file->mimeType, arary( 'image/png', 'image/gif', 'image/jpeg' ) ) )
+		if( !in_array( $file->mimeType, array( 'image/png', 'image/gif', 'image/jpeg' ) ) )
 			throw new Exception( 'File is not an image' );
 		$image		= new UI_Image( $this->getPath().$file->hash );
 		if( $image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight )
 			return FALSE;
+		$processor	= new UI_Image_Processing( $image );
 		$processor->scaleDownToLimit( $maxWidth, $maxHeight, $quality );
 		$image->save();
-		$this->model->edit( $fileId, filesize( $this->getPath().$file->hash ) );
+		$this->model->edit( $fileId, array(
+			'fileSize' => filesize( $this->getPath().$file->hash )
+		) );
 		return TRUE;
 	}
 
@@ -141,6 +146,10 @@ class Logic_FileBucket{
 		$this->remove( $fileId );
 		$uriPath	= $file->filePath ? $file->filePath.'/'.$file->fileName : $file->fileName;
 		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
+	}
+
+	public function rename( $fileId, $name ){
+		$this->model->edit( $fileId, array( 'fileName' => $name ) );
 	}
 
 	public function remove( $fileId ){
