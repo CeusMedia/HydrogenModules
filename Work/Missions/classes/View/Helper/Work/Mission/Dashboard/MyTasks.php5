@@ -14,7 +14,8 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends CMF_Hydrogen_View_Helpe
 
 	public function render(){
 		if( !count( $this->projects ) )
-			throw new RuntimeException( 'No user projects set or available' );
+//			throw new RuntimeException( 'No user projects set or available' );
+			return UI_HTML_Tag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
 
 //		$words			= $this->getWords();
 		$showLimit			= 10;

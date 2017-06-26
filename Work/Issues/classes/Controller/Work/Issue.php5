@@ -31,7 +31,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->logic		= new Logic_Issue( $this->env );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
 		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
-		if( !$this->userProjects )
+		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project' );
 	}
 

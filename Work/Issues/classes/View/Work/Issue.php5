@@ -10,7 +10,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		$modelIssue		= new Model_Issue( $this->env );
 		$userProjects	= $logicProject->getUserProjects( $currentUserId );
 		if( !$userProjects )
-			return UI_HTML_Tag::create( 'div', 'Keine Projekte vorhanden.', array( 'alert' => 'alert-info' ) );
+			return UI_HTML_Tag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
 		$issues	= $modelIssue->getAll( array(
 			'status'	=> array( 0, 1, 2, 3 ),
 		 	'projectId'	=> array_keys( $userProjects ),
