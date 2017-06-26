@@ -140,15 +140,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>issue_notes` (
   KEY `issueId` (`issueId`),
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-]]>
+]]></sql>
 	<sql on="update" version="0.4.2"><![CDATA[
 ALTER TABLE `<%?prefix%>issues` CHANGE `progress` `progress` DECIMAL(3,0) UNSIGNED NULL DEFAULT '0';
-]]>
-	</sql>
+]]></sql>
 	<sql on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>issues`;
 DROP TABLE IF EXISTS `<%?prefix%>issue_changes`;
 DROP TABLE IF EXISTS `<%?prefix%>issue_notes`;
-]]>
-	</sql>
+]]></sql>
 </module>
