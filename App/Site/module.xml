@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -22,6 +22,7 @@
 	<log version="0.4.9">Enable gzip compression in .htaccess by default.</log>
 	<log version="0.5">Scan for public links in pages file, if available.</log>
 	<log version="0.5.1">Support module UI:LanguageSelector.</log>
+	<log version="0.5.2">Extend master template by HTML blocks.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -29,7 +30,13 @@
 		<class>View/Index.php5</class>
 		<class>.htaccess</class>
 		<locale>de/main.ini</locale>
+		<locale>de/html/app.brand.html</locale>
+		<locale>de/html/app.footer.html</locale>
+		<locale>de/html/app.header.html</locale>
 		<locale>en/main.ini</locale>
+		<locale>en/html/app.brand.html</locale>
+		<locale>en/html/app.footer.html</locale>
+		<locale>en/html/app.header.html</locale>
 		<locale>.htaccess</locale>
 		<template>index/index.php</template>
 		<template>master.php</template>

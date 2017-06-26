@@ -1,19 +1,20 @@
 <?php
 
+$navbarFixed	= TRUE;
+
+/*  --  LANGUAGE SELECTOR  --  */
 $languageSelector	= '';
 if( $env->getModules()->has( 'UI_LanguageSelector' ) ){
 	$helper				= new View_Helper_LanguageSelector( $env );
 	$languageSelector	= $helper->render();
 }
 
-$pathCDN	= "http://cdn.int1a.net/";
-
 /*  --  NAVIGATION  --  */
 if( $env->getModules()->has( 'UI_Navigation' ) ){
 	$helper		= new View_Helper_Navigation( $env );
 	$navMain	= $helper->render();
 }
-else if( class_exists( 'View_Helper_Navigation' ) ){
+else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdated local renderer
 	$path		= $this->env->getRequest()->get( '__path' );
 	$helperNav	= new View_Helper_Navigation();
 	$helperNav->setEnv( $this->env );
@@ -21,11 +22,7 @@ else if( class_exists( 'View_Helper_Navigation' ) ){
 	$navMain	= $helperNav->render();
 }
 else{
-	$links	= array(
-		''		=> "Start",
-	);
-
-	if( file_exists( 'config/pages.json' ) ){
+	if( file_exists( 'config/pages.json' ) ){									//  fallback: pages but no renderer
 		$isAuthenticated	= (bool) $env->getSession()->get( 'userId' );
 		if( $env->getModules()->has( 'Resource_Authentication' ) ){
 			$auth				= Logic_Authentication::getInstance( $env );
@@ -53,6 +50,9 @@ else{
 			$messenger->noteFailure( 'Config file "pages.json" cannot be parsed: '.$e->getMessage().'.' );
 		}
 	}
+	else if( isset( $words['links'] ) && $words['links'] ){						//  fallback: links from main words section, all public
+		$links	= $words['links'];
+	}
 	$controller	= $this->env->getRequest()->get( 'controller' );
 	$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
 
@@ -73,15 +73,35 @@ else
 
 $hints	= class_exists( 'View_Helper_Hint' ) ? View_Helper_Hint::render( 'Tipp: ' ) : '';
 
-$brand	= preg_replace( "/\(.*\)/", "", $words['main']['title'] );
+
+/*  --  BRAND  --  */
+$brand		= preg_replace( "/\(.*\)/", "", $words['main']['title'] );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
-$brand	= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
+$brand		= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
+if( $view->hasContentFile( 'html/app.brand.html' ) )
+	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
+		$brand		= $brandHtml;
+
+
+/*  --  STATIC HEADER  --  */
+$header		= '';
+if( $view->hasContentFile( 'html/app.header.html' ) )
+	if( $headerHtml = $view->loadContentFile( 'html/app.header.html' ) )		//  render header, words from main.ini are assigned
+		$header		= $headerHtml;
+
+/*  --  STATIC FOOTER  --  */
+$footer		= '';
+if( $view->hasContentFile( 'html/app.footer.html' ) )
+	if( $footerHtml = $view->loadContentFile( 'html/app.footer.html' ) )		//  render footer, words from main.ini are assigned
+		$footer		= $footerHtml;
+
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '
 <div id="layout-container">
-	<div class="nav navbar navbar-fixed-top">
+	'.$header.'
+	<div class="nav navbar '.( $navbarFixed ? 'navbar-fixed-top' : '' ).'">
 		<div class="navbar-inner">
 			<div class="container">
 				'.$brand.'
@@ -98,11 +118,11 @@ $body	= '
 		</div>
 	</div>
 </div>
-[footer]
+'.$footer.'
 ';
 
-$env->getPage()->addBody( $body );
-$html	= $env->getPage()->build();
-$html	= preg_replace( "/\[(header|footer)\]/", "", $html );
-return $html;
+$page	= $env->getPage();
+$page->addBody( $body );
+$page->setTitle( trim( str_replace( "&nbsp;", " ", strip_tags( $brand ) ) ) );
+return $page->build();
 ?>
