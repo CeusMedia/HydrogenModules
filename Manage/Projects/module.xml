@@ -89,40 +89,40 @@
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (
-  `projectId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `creatorId` int(11) unsigned DEFAULT '0',
-  `parentId` int(10) unsigned NOT NULL,
+  `projectId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) UNSIGNED DEFAULT '0',
+  `parentId` int(10) UNSIGNED DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `priority` tinyint(1) unsigned NOT NULL DEFAULT '3',
+  `priority` tinyint(1) UNSIGNED NOT NULL DEFAULT '3',
   `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
-  `createdAt` decimal(12,0) unsigned NOT NULL,
-  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`projectId`),
   KEY `parentId` (`parentId`),
   KEY `status` (`status`),
   KEY `priority` (`priority`),
   KEY `creatorId` (`creatorId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>project_users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
-  `projectUserId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `projectId` int(10) unsigned NOT NULL,
-  `creatorId` int(11) unsigned DEFAULT '0',
-  `userId` int(10) unsigned NOT NULL,
-  `isDefault` tinyint(1) unsigned DEFAULT '0',
+  `projectUserId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `projectId` int(10) UNSIGNED NOT NULL,
+  `creatorId` int(11) UNSIGNED DEFAULT '0',
+  `userId` int(10) UNSIGNED NOT NULL,
+  `isDefault` tinyint(1) UNSIGNED DEFAULT '0',
   `status` tinyint(1) DEFAULT '1',
-  `createdAt` decimal(12,0) unsigned NOT NULL,
-  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`projectUserId`),
   KEY `projectId` (`projectId`),
   KEY `userId` (`userId`),
   KEY `creatorId` (`creatorId`),
   KEY `status` (`status`),
   KEY `isDefault` (`isDefault`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="install" type="mysql" version="0.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
@@ -156,18 +156,19 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
 ALTER TABLE `<%?prefix%>projects` ADD `priority` TINYINT(1) UNSIGNED NOT NULL DEFAULT '3' AFTER `status` ,
 ADD INDEX ( `priority` ) ;
 ]]></sql>
-	<sql on="update" type="mysql" version="0.3.19"><![CDATA[
+	<sql on="update" type="mysql" version="0.5"><![CDATA[
 ALTER TABLE `<%?prefix%>projects` ADD `creatorId` INT(11) UNSIGNED DEFAULT '0' AFTER `projectId` ,
 ADD INDEX ( `creatorId` ) ;
-]]></sql>
-	<sql on="update" type="mysql" version="0.3.20"><![CDATA[
 ALTER TABLE `<%?prefix%>project_users` ADD `creatorId` INT(11) UNSIGNED DEFAULT '0' AFTER `projectId` ,
 ADD INDEX ( `creatorId` ) ;
 ALTER TABLE `<%?prefix%>project_users` ADD `status` TINYINT(1) DEFAULT '1' AFTER `userId` ,
 ADD INDEX ( `status` ) ;
 ]]></sql>
-	<sql on="update" type="mysql" version="0.3.22"><![CDATA[
-ALTER TABLE `project_users` ADD `isDefault` TINYINT(1) UNSIGNED NULL DEFAULT '0' AFTER `userId`, ADD INDEX `isDefault` (`isDefault`);
+	<sql on="update" type="mysql" version="0.5.3"><![CDATA[
+ALTER TABLE `<%?prefix%>project_users` ADD `isDefault` TINYINT(1) UNSIGNED NULL DEFAULT '0' AFTER `userId`, ADD INDEX `isDefault` (`isDefault`);
+]]></sql>
+	<sql on="update" type="mysql" version="0.6.6"><![CDATA[
+ALTER TABLE `<%?prefix%>projects` CHANGE `parentId` `parentId` INT(10) UNSIGNED NULL DEFAULT '0';
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
