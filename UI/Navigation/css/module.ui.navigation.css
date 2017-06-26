@@ -12,9 +12,9 @@ body.nav-sidebar #layout-container #layout-nav {
 	height: 100%;
 	background-color: #FBFBFB;
 /*	border-right: 2px solid rgba(0,0,0,0.5);*/
-	-webkit-box-shadow: -16px 0px 60px 4px rgba(0,0,0,0.75);
-	-moz-box-shadow: -16px 0px 60px 4px rgba(0,0,0,0.75);
-	box-shadow: -16px 0px 60px 4px rgba(0,0,0,0.75);
+	-webkit-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75)
+	-moz-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75)
+	box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75)
 	}
 body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	height: 100%;
