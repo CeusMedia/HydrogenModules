@@ -22,6 +22,7 @@ Calls hook Dashboard::registerPanels.
 	<log version="0.4">Extract logic to class.</log>
 	<log version="0.4.1">Preselect default panels on new user dashboard.</log>
 	<log version="0.4.2">Finish locale extraction.</log>
+	<log version="0.4.3">Improve info on empty dashboard.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

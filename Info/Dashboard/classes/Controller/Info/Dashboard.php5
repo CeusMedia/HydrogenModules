@@ -27,6 +27,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$logicAuth		= Logic_Authentication::getInstance( $this->env );
 			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
+			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
 		}
 		$this->addData( 'currentUserId', $this->userId );
 
@@ -181,6 +182,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $this->messages->errorException, $e->getMessage() );
 		}
+		$this->addData( 'user', $this->user );
 	}
 
 	public function registerPanel( $panelId, $data ){

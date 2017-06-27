@@ -17,7 +17,7 @@ try{
 		$modalAdd	= $helperAdd->render();
 
 		if( empty( $dashboard ) ){
-			$content	= $view->loadContentFile( 'html/info/dashboard/empty.html' );
+			$content	= $view->loadContentFile( 'html/info/dashboard/empty.html', array( 'user' => $user ) );
 			return $textTop.$content.$textBottom.$modalAdd;
 		}
 
