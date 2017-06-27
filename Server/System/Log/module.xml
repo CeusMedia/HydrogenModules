@@ -26,6 +26,12 @@ catch( Exception $e ){
 ...
 <code
 
+**Fallback:**
+Calling the hook Env::logException will also trigger the event if not handled by any other hooks before:
+code>
+	$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+<code
+
 If you are sure, that this module is installed, you can use:
 code>
 ...
@@ -39,7 +45,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -48,11 +54,13 @@ Please think about using the hook instead.
 	<log version="0.4">Migration of module Server:Syslog to Server:System:Log as common log component.</log>
 	<log version="0.5">Add index and view.</log>
 	<log version="0.5.1">Several UI tweaks.</log>
+	<log version="0.5.2">Add mail component for collecting exceptions facts for HTML and text mail.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/System/Log.php5</class>
 		<class>View/System/Log.php5</class>
+		<class>View/Helper/Mail/Exception/Facts.php5</class>
 		<class>Mail/System/Log.php5</class>
 		<class>Mail/System/Log/Exception.php5</class>
 		<template>system/log/index.php</template>
@@ -65,6 +73,7 @@ Please think about using the hook instead.
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
+	<hook type="resource" resource="Server:System" event="logException">Controller_System_Log::___onLogException</hook>
 	<hook type="resource" resource="Env" event="logException">Controller_System_Log::___onLogException</hook>
 	<link path="system/log" access="acl" rank="96">Exception-Log</link>
 </module>
