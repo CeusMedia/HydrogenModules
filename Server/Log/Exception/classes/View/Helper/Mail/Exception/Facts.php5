@@ -48,7 +48,7 @@ class View_Helper_Mail_Exception_Facts{
 	protected function prepare(){
 		$words			= $this->env->getLanguage()->getWords( 'server/log/exception' );
 		$this->helper	= new View_Helper_Mail_Facts( $this->env );
-		$this->helper->setLabels( $words['exception-facts'] );
+		$this->helper->setLabels( $words['facts'] );
 		$this->helper->setTextLabelLength( 12 );
 		$this->helper->add( 'message', htmlentities( $this->exception->getMessage(), ENT_COMPAT, 'UTF-8' ) );
 		$this->helper->add( 'code', htmlentities( $this->exception->getCode(), ENT_COMPAT, 'UTF-8' ) );
@@ -134,4 +134,3 @@ class View_Helper_Mail_Exception_Facts{
 		return $fileName;
 	}
 }
-?>

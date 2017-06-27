@@ -1,5 +1,5 @@
 <?php
-class Mail_Server_Log_Exception extends Mail_Abstract{
+class Mail_Log_Exception extends Mail_Abstract{
 
 	protected $helperFacts;
 
@@ -42,4 +42,3 @@ class Mail_Server_Log_Exception extends Mail_Abstract{
 		);
 	}
 }
-?>

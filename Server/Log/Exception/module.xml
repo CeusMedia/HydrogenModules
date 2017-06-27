@@ -44,7 +44,7 @@ Please think about using the hook instead.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log/Exception.php5</class>
-		<class>Mail/Log/Exception.php5</class>0
+		<class>Mail/Log/Exception.php5</class>
 		<class>View/Helper/Mail/Exception/Facts.php5</class>
 		<locale>de/server/log/exception.ini</locale>
 		<locale>de/server/log/exception/sqlstate.ini</locale>

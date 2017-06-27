@@ -14,9 +14,11 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2017 Ceus Media {@link https://ceusmedia.de/}
  */
-class Controller_System_Log_Exception extends CMF_Hydrogen_Controller{
+class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 
 	static public function __onEnvLogException( $env, $context, $module, $data = array() ){
+		if( is_object( $data ) && $data instanceof Exception )
+			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		if( !is_object( $data['exception'] ) )
@@ -30,9 +32,9 @@ class Controller_System_Log_Exception extends CMF_Hydrogen_Controller{
 		if( $moduleConfig->get( 'file.active' ) ){
 			if( trim( $moduleConfig->get( 'file.path' ) ) ){
 				$pathLogs		= $env->getConfig()->get( 'path.logs' );
-				$filePath		= $pathLogs.$moduleConfig->get( 'file.path' );
+				$filePath		= $pathLogs.$moduleConfig->get( 'file.name' );
 				try{
-					$content	= serialize( $exception );
+					$content	= @serialize( $exception );
 				}
 				catch( Exception $_e ){
 					$content	= serialize( (object) array(
@@ -51,12 +53,12 @@ class Controller_System_Log_Exception extends CMF_Hydrogen_Controller{
 			}
 		}
 
-		if( $options->get( 'mail.active' ) ){
-			if( trim( $options->get( 'mail.receiver' ) ) ){
+		if( $moduleConfig->get( 'mail.active' ) ){
+			if( trim( $moduleConfig->get( 'mail.receiver' ) ) ){
 				$language		= $env->getLanguage()->getLanguage();
 				$logicMail		= new Logic_Mail( $env );
 				$mail			= new Mail_Log_Exception( $env, $data );
-				$receivers		= preg_split( '/(,|;)/', $options->get( 'mail.receiver' ) );
+				$receivers		= preg_split( '/(,|;)/', $moduleConfig->get( 'mail.receiver' ) );
 				foreach( $receivers as $receiver ){
 					if( trim( $receiver ) ){
 						$receiver	= (object) array( 'email' => $receiver );
@@ -80,4 +82,3 @@ class Controller_System_Log_Exception extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 }
-?>
