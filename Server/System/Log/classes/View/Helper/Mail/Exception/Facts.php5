@@ -4,7 +4,6 @@ class View_Helper_Mail_Exception_Facts{
 	protected $env;
 	protected $exception;
 	protected $helper;
-	protected $showPrevious			= FALSE;
 
 	/**
 	 *	Constructor.
@@ -39,14 +38,14 @@ class View_Helper_Mail_Exception_Facts{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
 
-		$words		= $this->env->getLanguage()->getWords( 'server/log/exception/sqlstate' );
+		$words		= $this->env->getLanguage()->getWords( 'server/system/sqlstate' );
 		if( isset( $words[$class1][$class2] ) )
 			return $words[$class1][$class2];
 		return 'unknown';
 	}
 
 	protected function prepare(){
-		$words			= $this->env->getLanguage()->getWords( 'server/log/exception' );
+		$words			= $this->env->getLanguage()->getWords( 'server/system/log' );
 		$this->helper	= new View_Helper_Mail_Facts( $this->env );
 		$this->helper->setLabels( $words['exception-facts'] );
 		$this->helper->setTextLabelLength( 12 );
@@ -78,18 +77,6 @@ class View_Helper_Mail_Exception_Facts{
 		$this->helper->add( 'file', $file, $pathName );
 		$this->helper->add( 'line', (string) $this->exception->getLine() );
 		$this->helper->add( 'root', realpath( $this->env->uri ).'/' );
-
-		if( $this->showPrevious ){
-			if( method_exists( $this->exception, 'getPrevious' ) ){
-			 	if( $this->exception->getPrevious() ){
-					$helperPrevious	= new View_Helper_Mail_Exception_Facts( $this->env );
-					$helperPrevious->setTextLabelLength( 12 );
-					$helperPrevious->setException( $this->exception->getPrevious() );
-					$helperPrevious->setShowPrevious();
-					$helperFacts->add( 'previous', $helperPrevious->render(), $helperPrevious->renderAsText() );
-				}
-			}
-		}
 	}
 
 	public function render(){
@@ -102,17 +89,6 @@ class View_Helper_Mail_Exception_Facts{
 		if( !$this->helper )
 			throw new RuntimeException( 'No exception set' );
 		return $this->helper->renderAsText();
-	}
-
-	/**
-	 *	Set whether previous exception should be included in view.
-	 *	@access		public
-	 *	@param		boolean			$show			Flag: show previous exceptions
-	 *	@return		self
-	 */
-	public function setShowPrevious( $show = TRUE ){
-		$this->showPrevious	= (bool) $show;
-		return $this;
 	}
 
 	/**
