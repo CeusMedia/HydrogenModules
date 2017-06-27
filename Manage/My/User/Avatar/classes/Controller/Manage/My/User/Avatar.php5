@@ -77,6 +77,7 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 				/*  --  SAVE DATABASE ENTRY OF NEW AVATAR  -- */
 				$data		= array(
 					'userId'	=> $this->userId,
+					'status'	=> 1,
 					'filename'	=> $fileName,
 					'createdAt'	=> time(),
 				);
@@ -85,10 +86,9 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 			}
 			catch( Exception $e ){
 				@unlink( $path.$this->userId.'_'.$filename );
-				$this->callHook( 'Server:System', 'logException', $this, $e );
-				$hint		= ' <small class="muted">('.$e->getMessage().')</small>';
-				$message	=  'Bei der Bildverarbeitung ist ein Fehler aufgetreten%s.';
-				$messenger->noteFailure( $message, $hint );
+				$this->callHook( 'Env', 'logException', $this, $e );
+				$message	=  'Bei der Bildverarbeitung ist ein <abbr title="%s">Fehler</abbr> aufgetreten.';
+				$messenger->noteFailure( $message, $e->getMessage() );
 			}
 		}
 		$this->restart( NULL, TRUE );
