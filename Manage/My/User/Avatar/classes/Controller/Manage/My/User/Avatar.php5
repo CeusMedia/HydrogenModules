@@ -75,13 +75,13 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 				}
 
 				/*  --  SAVE DATABASE ENTRY OF NEW AVATAR  -- */
-				$data		= array(
-					'userId'	=> $this->userId,
-					'status'	=> 1,
-					'filename'	=> $fileName,
-					'createdAt'	=> time(),
-				);
-				$this->modelAvatar->add( $data );
+				$this->modelAvatar->add( array(
+					'userId'		=> $this->userId,
+					'status'		=> 1,
+					'filename'		=> $fileName,
+					'createdAt'		=> time(),
+					'modifiedAt'	=> time(),
+				) );
 				$messenger->noteSuccess( $words->successImageSaved );
 			}
 			catch( Exception $e ){
