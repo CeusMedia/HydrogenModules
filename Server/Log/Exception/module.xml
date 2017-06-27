@@ -2,43 +2,59 @@
 <module>
 	<title>Server: Syslog</title>
 	<description><![CDATA[Extends server by system log.
+
 Sends mail to developer with exception trace if a developer mail address is defined.
-This module can extend normal or server applications but will need an installed application base with mail support.]]></description>
+This module can extend normal or server applications but will need an installed application base with mail support.
+
+**Features:**
+list>
+- stores exceptions into log file (serialized)
+- can send mails to one or more mail receivers
+<list
+
+**Invokation:**
+code>
+...
+catch( Exception $e ){
+	$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+}
+...
+<code
+
+If you are sure, that this module is installed, you can use:
+code>
+...
+catch( Exception $e ){
+	Controller_System_Log::handleException( $e );
+}
+...
+<code
+Of course, this method is not the best way, since you bind your code to this module.
+Please think about using the hook instead.
+
+
+]]></description>
 	<category>Server</category>
-	<version>0.2.1</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
+	<log version="0.3">Add mail component for collecting exceptions facts for HTML and text mail.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Mail/Log/Exception.php5</class>
+		<class>Controller/Server/Log/Exception.php5</class>
+		<class>Mail/Log/Exception.php5</class>0
+		<class>View/Helper/Mail/Exception/Facts.php5</class>
+		<locale>de/server/log/exception.ini</locale>
+		<locale>de/server/log/exception/sqlstate.ini</locale>
 	</files>
-	<config protected="yes" type="string" name="file" info="File name of exception log">exception.log</config>
-	<config protected="yes" type="string" name="email" info="Mail address for exception report mail"></config>
+	<config protected="yes" type="boolean" name="file.active" title="Enable log file">yes</config>
+	<config protected="yes" type="string" name="file.path" title="Path of log file">logs/exception.log</config>
+	<config protected="yes" type="boolean" name="mail.active" title="Enable sending mails">yes</config>
+	<config protected="yes" type="string" name="mail.receivers" title="Mail receiver address[es] (comma separated)"></config>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<hook type="resource" resource="Env" event="logException"><![CDATA[
-		$pathLogs	= $env->getConfig()->get( 'path.logs' );
-		$options	= $env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
-
-		$fileName	= pathLogs.$options->get( 'file' );
-		if( !isset( $data['exception'] ) )
-			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
-		$exception	= $data['exception'];
-
-		$content	= $exception->getMessage();
-		try{
-			$content	= serialize( $exception );
-		}
-		catch( Exception $e ){}
-		error_log( time().":".base64_encode( $content )."\n", 3, $fileName );
-
-		if( $options->get( 'mail' ) ){
-			$mail	= new Mail_Log_Exception( $env, array( 'exception' => $exception ) );
-			$mail->sendTo( (object) array( 'email' => $options->get( 'mail' ) ) );
-		}
-		return TRUE;
-]]></hook>
+	<hook type="resource" resource="Env" event="logException">Controller_System_Log_Exception::__onEnvLogException</hook>
 </module>
