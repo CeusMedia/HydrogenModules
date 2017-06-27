@@ -83,17 +83,18 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 							'value'			=> $value,
 							'modifiedAt'	=> time(),
 						);
-						$this->model->edit( $setting->userSettingId, $data );								//  modify user setting in database
+						$this->model->edit( $setting->userSettingId, $data );						//  modify user setting in database
 					}
 					else{																			//  no user setting has been stored yet
-						$data	= array(															//  prepare data
+						$this->model->add( array(													//  add user setting to database
 							'moduleId'		=> $module->id,
+							'managerId'		=> $this->userId,
 							'userId'		=> $this->userId,
 							'key'			=> $config->key,
 							'value'			=> $value,
 							'createdAt'		=> time(),
-						);
-						$this->model->add( $data );														//  add user setting to database
+							'modifiedAt'	=> time(),
+						) );
 					}
 				}
 			}
