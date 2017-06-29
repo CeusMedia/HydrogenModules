@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<module>
+	<title>Labs: ContextHelp</title>
+	<description><![CDATA[
+Collects and displays context help.
+
+If switched on, all collected contex help sections will be shown for related HTML elements.
+
+This module will automatically try to load these context help files within locales folder:
+list>
+- html/app.contexthelp.html
+- html/[controller]/contexthelp.html
+- html/[controller]/[action]/contexthelp.html
+<list
+
+You call register custom context help by call this hook:
+code>
+$env->getCaptain()->callHook( 'ContextHelp', 'register', $this, array( 'path' => 'my/example/contexthelp' ) );
+<code
+The given path must point to a file within locales HTML folder.
+As file extension, .html is appended automatically.
+So the example path will resolve to file locales/[xy]/my/example/contexthelp.html.
+
+<b>Attention:</b> This module needs PHPHtmlParser to be installed.
+Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
+]]></description>
+	<category>User Interface</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extend show and hide by toggle.</log>
+	<log version="0.2.2">Allow definition as HTML file.</log>
+	<log version="0.2.3">Update style.</log>
+	<log version="0.2.4">Support toggle status update.</log>
+	<log version="0.2.5">Add view helper for hook support.</log>
+	<log version="0.2.6">Autoload context help file for app.</log>
+	<log version="0.2.7">Autoload context help file for requested controller.</log>
+	<log version="0.2.8">Autoload context help file for requested controller and action.</log>
+	<log version="0.3">Migration from protected to public repository.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>View/Helper/ContextHelp.php5</class>
+		<script source="local" load="auto">module.ui.contexthelp.js</script>
+		<style source="theme" load="auto">module.ui.contexthelp.css</style>
+		<locale>de/html/app.contexthelp.html</locale>
+	</files>
+	<relations>
+<!--		<needs type="module">JS_jQuery_UI</needs>-->
+	</relations>
+	<hook env="resource" resource="ContextHelp" event="register">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
+	<hook env="resource" resource="Controller" event="onDetectPath">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
+	<hook env="resource" resource="Page" event="applyModules"><![CDATA[
+		$env->getCaptain()->callHook( 'ContextHelp', 'register', $context, array( 'path' => 'app.contexthelp' ) );
+]]></hook>
+</module>
