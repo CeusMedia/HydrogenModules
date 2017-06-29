@@ -25,7 +25,7 @@ So the example path will resolve to file locales/[xy]/my/example/contexthelp.htm
 Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 ]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extend show and hide by toggle.</log>
@@ -37,6 +37,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<log version="0.2.7">Autoload context help file for requested controller.</log>
 	<log version="0.2.8">Autoload context help file for requested controller and action.</log>
 	<log version="0.3">Migration from protected to public repository.</log>
+	<log version="0.3.1">Hide masks on click.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

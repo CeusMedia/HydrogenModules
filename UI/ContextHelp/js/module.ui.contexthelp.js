@@ -58,7 +58,15 @@ ContextHelp = {
 						help.stop(true, true).fadeOut(150,function(){
 							$(this).removeClass('from-right from-bottom');
 						});
-				},80);
+				}, 80);
+			});
+			mask.bind('click', function(event){
+//				$(this).trigger('mouseleave');
+				help.trigger('click');
+				help.stop(true, true).fadeOut(150,function(){
+					$(this).removeClass('from-right from-bottom');
+				});
+				$(this).fadeOut(100);
 			});
 			help.bind('click', function(event){
 				event.preventDefault();
