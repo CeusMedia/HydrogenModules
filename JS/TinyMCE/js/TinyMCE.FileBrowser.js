@@ -16,11 +16,11 @@ if(typeof tinymce !== "undefined"){															//  tinyMCE is available
 				document.location.href = jQuery(this).data("url");
 			});
 			jQuery(".trigger-submit").bind("click", function(){								// bind submit trigger
-				tinymce.FileBrowser.submit(jQuery(this).data());							// 
+				tinymce.FileBrowser.submit(jQuery(this).data());				//
 			});
 		},
-		open: function(field_name, url, type, win) {
-			var browserPath = 'manage/tinyMce/' + type + '?input=' + field_name;			// script URL
+		open: function(callback, value, meta) {
+			var browserPath = 'manage/tinyMce/' + meta.filetype;							// script URL
 			tinyMCE.activeEditor.windowManager.open({
 				file : tinymce.Config.envUri + browserPath,									// use an absolute path!
 				title : tinymce.FileBrowser.options.labelHeading,
@@ -30,18 +30,25 @@ if(typeof tinymce !== "undefined"){															//  tinyMCE is available
 				inline : "yes",																// this parameter only has an effect if you use the inlinepopups plugin!
 				close_previous : "yes"
 			}, {
-				window: win,
-				input: field_name
+				callback: callback,
+				value: value,
+				meta: meta,
 			});
 			return false;
 		},
 		submit: function (data) {
-//	console.log(data);
-//	console.log(parent.tinymce.Config);
-			var form = parent.$('.mce-btn.mce-open').parent().parent().parent().parent();	//  not a form, but a form-like container
-			form.find('input.mce-textbox').val("");
-			parent.$('.mce-btn.mce-open').parent().find('.mce-textbox').val(data.url);
+//			console.log(data);
 			var editor = parent.tinymce.editors[0];
+			var params = editor.windowManager.windows[1].params;
+//			console.log(params);
+			var label = data.url.split('/').pop();
+			if(params.meta.filetype == 'image')												//  provide image and alt text for the image dialog
+				params.callback(data.url, {alt: label});
+			else if(params.meta.filetype == 'file')											//  provide file and text for the link dialog
+				params.callback(data.url, {text: label});
+//			else if(params.meta.filetype == 'media')										//  provide alternative source and posted for the media dialog
+//			 	params.callback(data.url, {source2: 'alt.ogg', poster: 'image.jpg'});
+//			}
 			editor.windowManager.windows[1].close();										// close file browser window
 		}
 	}
