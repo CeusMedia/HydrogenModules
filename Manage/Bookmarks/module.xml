@@ -37,7 +37,7 @@ CREATE TABLE `<%?prefix%>bookmarks` (
   PRIMARY KEY (`bookmarkId`),
   KEY `status` (`status`),
   KEY `url` (`url`)
-) ENGINE=InnoDBDEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
