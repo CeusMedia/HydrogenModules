@@ -153,6 +153,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 				'languages'		=> $languages,
 				'envUri'		=> $env->url,
 				'frontendUri'	=> $baseUrl,
+				'frontendTheme'	=> $env->getConfig()->get( 'layout.theme' ),
 				'language'		=> $language,
 				'styleFormats'	=> $styleFormats,
 			);
@@ -241,6 +242,22 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 			$list[$value->title.'_'.$key]	= $value;
 		ksort( $list );
 		return $this->listLinks = $list;
+	}
+
+	static public function tidyHtml( $html, $options = array() ){
+		if( function_exists( 'tidy_repair_string' ) ){
+			$html	= tidy_repair_string( $html, array_merge( array(
+				'clean'				=> FALSE,
+				'doctype'			=> 'omit',
+				'show-body-only'	=> TRUE,
+				'output-xhtml'		=> TRUE,
+				'indent'			=> TRUE,
+				'indent-spaces'		=> 4,
+				'wrap'				=> 0,
+			), $options ) );
+			$html	= str_replace( "    ", "\t", $html );
+		}
+		return $html;
 	}
 }
 ?>
