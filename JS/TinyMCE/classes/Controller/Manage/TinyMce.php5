@@ -226,7 +226,7 @@ die;
 		) );
 		return UI_HTML_Tag::create( 'li', $image.$label, array(
 			'class' 	=> 'grid-item grid-item-link trigger-submit',
-			'data-url'	=> $path,
+			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getPath().$path,
 			'data-type'	=> 'link',
 		) );
 	}
@@ -243,7 +243,7 @@ die;
 		$image			= UI_HTML_Tag::create( 'div', NULL, array(
 			'class'		=> 'grid-item-icon trigger-submit',
 			'style'		=> 'background-image: url('.$data.')',
-			'data-url'	=> $path,
+			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
 			'data-type'	=> 'image',
 		) );
 		$label	= UI_HTML_Tag::create( 'div', $filePath.'&nbsp;'.$size, array(

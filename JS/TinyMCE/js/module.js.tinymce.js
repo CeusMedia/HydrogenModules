@@ -3,15 +3,18 @@ var ModuleJsTinyMce = {
 		if(jQuery(settings.JS_TinyMCE.auto_selector).size()){
 			jQuery(settings.JS_TinyMCE.auto_selector).each(function(nr){
 				var options = {};
+				var textarea = jQuery(this);
 				if(settings.JS_TinyMCE.auto_tools)
 					options.tools = settings.JS_TinyMCE.auto_tools;
 				var mode = settings.JS_TinyMCE.auto_mode;
-				if(jQuery(this).data("tinymce-mode"))
+				if(textarea.data("tinymce-mode"))
 					mode = $(this).data("tinymce-mode");
+				options.relative_urls = textarea.data("tinymce-relative") !== false;
+				if(textarea.data("tinymce-mode"))
 				options = tinymce.Config.apply(options, mode);
-				if(!jQuery(this).attr("id"))
-					jQuery(this).attr("id", "TinyMCE-"+nr);
-				options.selector = "#"+jQuery(this).attr("id");
+				if(!textarea.attr("id"))
+					textarea.attr("id", "TinyMCE-"+nr);
+				options.selector = "#"+textarea.attr("id");
 				tinymce.init(options);
 			});
 		}
