@@ -1,3 +1,11 @@
+Auth.Login = {
+	init: function(){
+		if(jQuery("#input_login_username").val())
+			jQuery("#input_login_password").focus();
+		else
+			jQuery("#input_login_username").focus();
+	}
+};
 
 Auth.Registration = {
 	init: function(){

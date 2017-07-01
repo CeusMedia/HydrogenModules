@@ -6,6 +6,8 @@ extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/loca
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/local/login' );
 
+$env->getPage()->js->addScriptOnReady('Auth.Login.init();');
+
 return $tabs.HTML::DivClass( "auth-login-text-top", $textTop ).
 HTML::DivClass( "row-fluid", array(
 	HTML::DivClass( "span4",
