@@ -22,6 +22,8 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 				$this->env->getResponse()->setStatus( 404 );
 			}
 		}
+
+		$this->addData( 'isInside', $this->env->getSession()->has( 'userId' ) );
 	}
 }
 ?>

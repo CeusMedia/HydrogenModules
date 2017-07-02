@@ -1,21 +1,32 @@
 <?php
 
-//  --  LOAD STATIC HTML CONTENT FILE  --  //
+//  --  LOAD STATIC HTML CONTENT FILE ...
+
+//  --  ... BY REQUESTED PATH  --  //
 if( !empty( $path ) ){
 	if( $view->hasContentFile( 'html/'.$path.'.html' ) )
 		return $view->loadContentFile( 'html/'.$path.'.html' );
 }
-if( $view->hasContentFile( 'html/index/index.html' ) ){
-//	$data	= array( 'file' => $view->getContentUri( 'html/index.html' ) );
-	return $view->loadContentFile( 'html/index/index.html'/*, $data*/ );
-}
 
+
+//  --  ... OR DEFAULT INDEX  --  //
+if( $isInside ){
+	if( $view->hasContentFile( 'html/index/index.inside.html' ) )
+		if( $content = $view->loadContentFile( 'html/index/index.inside.html' ) )
+			return $content;
+}
+if( $view->hasContentFile( 'html/index/index.html' ) )
+	if( $content = $view->loadContentFile( 'html/index/index.html' ) )
+		return $content;
+
+
+//  --  ... OR DEFAULT INDEX THE OLD WAY  --  //
 //  @todo	remove this deprecated fallback method
 if( $view->hasContentFile( 'html/index.html' ) ){
 	return $view->loadContentFile( 'html/index/index.html'/*, $data*/ );
 }
 
-//  --  OR RETURN TEMPLATE CONTENT --  //
+//  --  ... OR RETURN PLACEHOLDER CONTENT --  //
 return '
 <h2>Hello World!</h2>
 <p>

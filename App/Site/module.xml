@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -23,6 +23,7 @@
 	<log version="0.5">Scan for public links in pages file, if available.</log>
 	<log version="0.5.1">Support module UI:LanguageSelector.</log>
 	<log version="0.5.2">Extend master template by HTML blocks.</log>
+	<log version="0.5.3">Support separate index HTML file for being logged in (inside).</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
