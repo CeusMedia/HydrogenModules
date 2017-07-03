@@ -3,21 +3,21 @@
 	<title>App: Site: Admin</title>
 	<description><![CDATA[Empty administrative web site application.]]></description>
 	<category>Application</category>
-	<version>0.2.1</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support several HTML files for outside and inside.</log>
-<!--	<log version="0.3">Provide index views relying on extended module App:Site.</log>-->
+	<log version="0.3">Provide index views relying on extended module App:Site.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Index.php5</class>
+<!--		<class>Controller/Index.php5</class>
 		<class>View/Index.php5</class>
 		<template>index/index.php</template>
 		<locale>de/index/index.html</locale>
 		<locale>de/index/index.inside.html</locale>
 		<locale>en/index/index.html</locale>
-		<locale>en/index/index.inside.html</locale>
+		<locale>en/index/index.inside.html</locale>-->
 	</files>
 	<relations>
 		<needs type="module">App_Site</needs>
