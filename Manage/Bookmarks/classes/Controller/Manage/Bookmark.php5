@@ -65,7 +65,7 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 			);
 			if( !strlen( trim( $data['url'] ) ) )
 				$messenger->noteError( 'Die Adresse fehlt.' );
-			else if( !preg_match( "/^(ht|f)tp:\/\//", $data['url'] ) )
+			else if( !preg_match( "/^(http|https|ftp):\/\//", $data['url'] ) )
 				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. http://).' );
 			else if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( 'Der Titel fehlt.' );
