@@ -405,8 +405,8 @@ abstract class Mail_Abstract{
 	 */
 	protected function setHtml( $content ){
 		$templateId		= $this->options->get( 'template' );
-		if( isset( $this->data['templateId' ] ) )
-		 	$templateId	= $this->data['templateId' ];
+		if( isset( $this->data['mailTemplateId' ] ) )
+			$templateId	= $this->data['mailTemplateId' ];
 		if( $templateId )
 			$content	= $this->applyTemplateToHtml( $content, $templateId );
 		$page	= $this->getPage();
@@ -441,8 +441,8 @@ abstract class Mail_Abstract{
 	 */
 	protected function setText( $content ){
 		$templateId		= $this->options->get( 'template' );
-		if( isset( $this->data['templateId' ] ) )
-		 	$templateId	= $this->data['templateId' ];
+		if( isset( $this->data['mailTemplateId' ] ) )
+			$templateId	= $this->data['mailTemplateId' ];
 		if( $templateId )
 			$content	= $this->applyTemplateToText( $content, $templateId );
 		$this->contents['text']	= $content;
