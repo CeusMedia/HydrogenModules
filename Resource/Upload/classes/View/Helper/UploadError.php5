@@ -1,12 +1,11 @@
 <?php
 class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 
-	protected $number;
+	protected $words;
 
 	public function __construct( $env ){
-		$this->env	= $env;
-		$words		= $this->env->getLanguage()->getWords( 'resource/upload' );
-		$this->errors	= $words['errors'];
+		$this->env			= $env;
+		$this->words		= $this->env->getLanguage()->getWords( 'resource/upload' );
 	}
 
 	public function setUpload( $upload ){
@@ -17,7 +16,6 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		if( !isset( $upload->error ) )
 			throw new InvalidArgumentException( 'Not a valid upload object given' );
 		$this->upload	= $upload;
-		$this->number	= $number;
 	}
 
 	public function render(){
@@ -27,11 +25,12 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		if( !$this->upload->error )
 			return;
 
-		if( !array_key_exists( $this->upload->error, $this->errors ) )
+		$messages	= $this->words['errors'];
+		if( !array_key_exists( $this->upload->error, $messages ) )
 			throw new RangeException( 'Given number is not a valid upload error number' );
 
-		$message	= $this->errors[$this->upload->error];
-		switch( $this->number ){
+		$message	= $messages[$this->upload->error];
+		switch( $this->upload->error ){
 			case 10:
 				$size		= Alg_UnitFormater::formatBytes( $this->upload->allowedSize );
 				$message	= sprintf( $message, $size );
@@ -43,6 +42,10 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 			case 12:
 				$mimeTypes	= join( ', ', $this->upload->allowedMimeTypes );
 				$message	= sprintf( $message, $mimeTypes );
+				break;
+			case 14:
+				$name  		= htmlentities( $this->upload->name, ENT_QUOTES, 'UTF-8' );
+				$message	= sprintf( $message, $name, $this->upload->clamscan->message );
 				break;
 		}
 		return $message;

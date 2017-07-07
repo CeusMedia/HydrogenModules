@@ -206,6 +206,12 @@ class Logic_Upload{
 		return $this->upload->type;
 	}
 
+	public function sanitizeFileName(){
+		if( $this->upload->error === 4 )
+			throw new RuntimeException( 'No file uploaded' );
+		return $this->upload->name = self::sanitizeFileNameStatic( $this->upload->name );
+	}
+
 	static public function sanitizeFileNameStatic( $filename, $urlEncode = FALSE, $maxLength = 256 ){
 		$filename	= str_replace( ' ', '_', $filename );											//  replace whitespace by underscore
 		$filename	= str_replace( '/', ',', $filename );											//  replace whitespace by underscore
@@ -233,12 +239,6 @@ class Logic_Upload{
 				$filename	= substr( $filename, 0, $maxLength - strlen( $ext ) - 1 ).$ext;
 		}
 		return $filename;
-	}
-
-	public function sanitizeFileName(){
-		if( $this->upload->error === 4 )
-			throw new RuntimeException( 'No file uploaded' );
-		return $this->upload->name = self::sanitizeFileNameStatic( $this->upload->name );
 	}
 
 
