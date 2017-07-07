@@ -79,19 +79,20 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 				if( $filename )
 					$upload['name']	= $filename;
 				try{
-					$logic	= new Logic_Upload( $this->env );
-					$logic->setUpload( $upload );
-					$logic->sanitizeFileName();
-					if( $logic->getError() ){
-						$handler    = new Net_HTTP_UploadErrorHandler();
-						$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-						$messenger->noteError( $handler->getErrorMessage( $upload->error ) );
+					$logicUpload	= new Logic_Upload( $this->env );
+					$logicUpload->setUpload( $upload );
+					$logicUpload->sanitizeFileName();
+					$logicUpload->checkVirus( TRUE );
+					if( $logicUpload->getError() ){
+						$helper	= new View_Helper_UploadError( $this->env );
+						$helper->setUpload( $logicUpload );
+						$messenger->noteError( $helper->render() );
 					}
 					else{
 						if( $filename )
 							unlink( $this->path.$filename );
-						$filename	= $logic->getFileName();
-						$logic->saveTo( $this->path.$filename );
+						$filename	= $logicUpload->getFileName();
+						$logicUpload->saveTo( $this->path.$filename );
 						$messenger->noteSuccess( $words->successDocumentUploaded, $filename );
 					}
 				}
