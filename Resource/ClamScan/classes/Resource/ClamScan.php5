@@ -13,7 +13,7 @@ class Resource_ClamScan{
 	}
 
 	protected function closeSocket(){
-		if( $this->socket )
+		if( $this->socket && is_resource( $this->socket ) )
 			fclose( $this->socket );
 	}
 
@@ -35,8 +35,8 @@ class Resource_ClamScan{
 		$status		= array_pop( $parts[2] );
 		return (object) array(
 			'file'		=> $filePath,
-			'clean'		=> $status === 'OK',
-			'status'	=> $status,
+			'clean'		=> trim( $status ) === 'OK',
+			'status'	=> trim( $status ),
 			'message'	=> join( ' ', $parts[2] ),
 		);
 	}

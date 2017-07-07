@@ -10,10 +10,11 @@ Therefore it connects to a ClamAV daemon installed on server.
 *Attention:* Will only work on UNIX-like operating systems.
 		]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-<!--	<log version="0.2.1">Support to scan a folder, also recursivly.</log>-->
+	<log version="0.2.1">Fix bug in result parser.</log>
+<!--	<log version="0.2.2">Support to scan a folder, also recursivly.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
