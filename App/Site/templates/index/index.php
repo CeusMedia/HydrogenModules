@@ -23,7 +23,7 @@ if( $view->hasContentFile( 'html/index/index.html' ) )
 //  --  ... OR DEFAULT INDEX THE OLD WAY  --  //
 //  @todo	remove this deprecated fallback method
 if( $view->hasContentFile( 'html/index.html' ) ){
-	return $view->loadContentFile( 'html/index/index.html'/*, $data*/ );
+	return $view->loadContentFile( 'html/index.html'/*, $data*/ );
 }
 
 //  --  ... OR RETURN PLACEHOLDER CONTENT --  //
