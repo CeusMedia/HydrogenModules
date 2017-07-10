@@ -16,6 +16,7 @@ class View_Helper_Messenger_Bootstrap{
 		$messages	= $this->env->getMessenger()->getMessages();
 		$list		= "";
 		if( $messages ){
+			$list	= array();
 			foreach( $messages as $nr => $message ){
 				$message	= (object) $message;
 				if( $linkResources )
