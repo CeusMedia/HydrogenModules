@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Limiter</title>
+	<description><![CDATA[Limiter for resource usage.
+
+This modules allows to limit functionality for usage quantity and quality.
+You can use this module to limit (if is integrated within module):
+list>
+- database model entities
+- file based entities
+- user interface functionalities
+- ... whatever ... depending on module
+<List
+
+Exceeding a limit can result (depending on module) in:
+list>
+- Messenger warning or error
+- Denial of service
+- User interface information
+
+This module has a main module activity switch, which need to be turned on.
+Otherwise it will behave transparent.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add module switch.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/Limiter.php5</class>
+	</files>
+	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<relations/>
+	<hook type="resource" resource="Limiter" event="registerLimits"><![CDATA[
+$context->set( 'Limiter:isOn', TRUE );
+]]></hook>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$logic		= Logic_Limiter::getInstance( $env );
+$env->getCaptain()->callHook( 'Limiter', 'registerLimits', $logic, array() );
+]]></hook>
+</module>
