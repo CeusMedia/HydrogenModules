@@ -73,7 +73,7 @@ class Model_Menu {
 					break;																			//  break scan here
 			}
 			if($i)
-				$selected[$page->path]	= $i / $pathLength;												//  qualification = number of matching characters relative to page link parts
+				$selected[$page->path]	= $i / $pathLength;											//  qualification = number of matching characters relative to page link parts
 		}
 		arsort( $selected );																		//  sort link paths by its length, longest on top
 //print_m( $selected );die;
@@ -82,8 +82,10 @@ class Model_Menu {
 			$page		= $this->pageMap[$first];
 			$this->pageMap[$first]->active	= TRUE;
 			$this->current	= $this->pageMap[$first];
-			if( $page->parent )
-				$this->pageMap[$page->parent]->active = TRUE;
+			if( $page->parent ){
+				if( $this->pageMap[$page->parent]->type !== "item" )
+					$this->pageMap[$page->parent]->active = TRUE;
+			}
 			return $page->path;																		//  return longest link path
 		}
 		return '';
