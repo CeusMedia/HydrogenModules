@@ -26,7 +26,7 @@ class Logic_FileBucket{
 			$basePath	= Logic_Frontend::getInstance( $this->env )->getPath( 'contents' );
 		$this->filePath	= $basePath.$this->moduleConfig->get( 'path' );
 		if( !file_exists( $this->filePath ) )
-			mkdir( $this->filePath );
+			\FS_Folder_Editor::createFolder( $this->filePath );
 	}
 
 	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL ){
