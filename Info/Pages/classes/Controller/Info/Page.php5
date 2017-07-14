@@ -55,7 +55,11 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onControllerDetectPath( $env, $context, $module, $data ){
 		$modelPage			= new Model_Page( $env );
-		$controllerPages	= $modelPage->getAllByIndex( 'controller', $data['controllerName'] );
+		$controllerPages	= $modelPage->getAllByIndices( array(
+			'status'		=> array( 0, 1 ),														//  invisible or active, only (no disabled)
+			'type'			=> 2,																	//  type 'module', only
+			'controller'	=> $data['controllerName'],
+		) );
 		if( $controllerPages ){
 			$pages				= array();
 			foreach( $controllerPages as $page ){
