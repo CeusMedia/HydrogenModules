@@ -18,6 +18,12 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->upload	= $upload;
 	}
 
+	static public function renderStatic( $env, Logic_Upload $upload ){
+		$helper	= new self( $env );
+		$helper->setUpload( $upload );
+		return $helper->render();
+	}
+
 	public function render(){
 		if( !$this->upload )
 			throw new RuntimeException( 'No upload object set, yet' );

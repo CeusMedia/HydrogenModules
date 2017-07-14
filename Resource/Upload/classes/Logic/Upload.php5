@@ -168,6 +168,12 @@ class Logic_Upload{
 		return $this->upload->name;
 	}
 
+	public function getFileSize(){
+		if( $this->upload->error === 4 )
+			throw new RuntimeException( 'No image uploaded' );
+		return $this->upload->size;
+	}
+
 	public function getObject(){
 		return $this->upload;
 	}
