@@ -7,6 +7,7 @@ class Logic_Limiter{
 
 	static protected $instance;
 
+	const OPERATION_BOOLEAN				= 0;
 	const OPERATION_COMPARE_NUMBER		= 1;
 
 	protected function __construct( CMF_Hydrogen_Environment $env ){
@@ -23,16 +24,20 @@ class Logic_Limiter{
 //		$this->env->getCaptain()->callHook( 'Limiter', 'registerLimits', $this );
 	}
 
-	public function allows( $key, $value, $operation = self::OPERATION_COMPARE_NUMBER ){
+	public function allows( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER ){
 		if( !$this->rules->has( $key ) )
-			return FALSE;
+			return TRUE;
+		if( $value === NULL )
+			$operation	= self::OPERATION_BOOLEAN;
 		switch( $operation ){
+			case self::OPERATION_BOOLEAN:
+				return (bool) $this->rules->get( $key );
 			case self::OPERATION_COMPARE_NUMBER:
 				return $this->rules->get( $key ) >= $value;
 		}
 	}
 
-	public function denies( $key, $value, $operation = self::OPERATION_COMPARE_NUMBER ){
+	public function denies( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER ){
 		if( !$this->rules->has( $key ) )
 			return FALSE;
 		return !$this->allows( $key, $value, $operation );

@@ -22,10 +22,11 @@ This module has a main module activity switch, which need to be turned on.
 Otherwise it will behave transparent.
 		]]></description>
 	<category>Resource</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module switch.</log>
+	<log version="0.2.2">Add boolean comparison.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
