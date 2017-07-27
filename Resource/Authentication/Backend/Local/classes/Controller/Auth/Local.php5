@@ -8,6 +8,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected $messenger;
 	protected $useCsrf;
 	protected $moduleConfig;
+	protected $limiter;
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
@@ -18,6 +19,10 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_local.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+
+		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+			$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
 	}
 
 /*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
@@ -245,8 +250,15 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 		$motherModuleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 
-		$this->addData( 'useRegister', $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' ) );
-		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
+
+		$useRegisterConfig	= $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' );
+		$useRegisterLimit	= $this->limiter && !$this->limiter->denies( 'Auth.Local.Login:register' );
+
+		$this->addData( 'useRegister', $useRegisterConfig && $useRegisterLimit );
+
+		$useRememberConfig	= $this->moduleConfig->get( 'login.remember' );
+		$useRememberLimit	= $this->limiter && !$this->limiter->denies( 'Auth.Local.Login:remember' );
+		$this->addData( 'useRemember', $useRememberConfig && $useRememberLimits );
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){

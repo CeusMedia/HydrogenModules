@@ -8,14 +8,14 @@ $tabs	= View_Auth::renderTabs( $env, 'auth/local/login' );
 
 $env->getPage()->js->addScriptOnReady('Auth.Login.init();');
 
-return $tabs.HTML::DivClass( "auth-login-text-top", $textTop ).
+return $tabs.$textTop.
 HTML::DivClass( "row-fluid", array(
 	HTML::DivClass( "span4",
 		$panelLogin
 	),
 	HTML::DivClass( "span8",
-		HTML::DivClass( "auth-login-text-info", $textInfo )
+		$textInfo
 	)
 ) ).
-HTML::DivClass( "auth-login-text-bottom", $textBottom );
+$textBottom;
 ?>

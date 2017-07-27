@@ -43,6 +43,8 @@ $buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPas
 	'href'		=> './auth/local/password',
 	'class'		=> 'btn btn-small btn-block',
 ) );
+if( $limiter && $limiter->get( 'Auth.Local.Login:resetPassword' ) === FALSE )
+	$buttonPassword	= '';
 
 $buttonRegister	= "";
 if( $useRegister ){
