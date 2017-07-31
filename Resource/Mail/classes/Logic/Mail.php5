@@ -399,13 +399,13 @@ class Logic_Mail{
 	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
 	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
-	 *	@return		void
+	 *	@return		boolean			TRUE if success
 	 */
 	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
 		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
-			$this->enqueueMail( $mail, $language, $receiver );
+			return (bool) $this->enqueueMail( $mail, $language, $receiver );
 		else
-			$this->sendMail( $mail, $receiver );
+			return $this->sendMail( $mail, $receiver );
 	}
 
 	/**
@@ -413,7 +413,7 @@ class Logic_Mail{
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
-	 *	@return		void
+	 *	@return		boolean			TRUE if success
 	 */
 	public function sendMail( Mail_Abstract $mail, $receiver ){
 		if( is_array( $receiver ) )
@@ -426,7 +426,7 @@ class Logic_Mail{
 			throw new InvalidArgumentException( 'Receiver is neither an object nor an array' );
 		$mail->setEnv( $this->env );																//  override serialized environment
 		$mail->initTransport();																		//  override serialized mail transfer
-		$mail->sendTo( $receiver );
+		return $mail->sendTo( $receiver );
 	}
 
 	/**
@@ -435,6 +435,7 @@ class Logic_Mail{
 	 *	@return		integer							ID of queued mail to be sent
 	 *	@param		boolean			$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		void
+	 *	@todo		use logging on exception (=sending mail failed)
 	 */
 	public function sendQueuedMail( $mailId, $forceResent = FALSE ){
 		$mail		= $this->getMail( $mailId );
@@ -464,7 +465,7 @@ class Logic_Mail{
 			) );
 		}
 		catch( Exception $e ){
-		remark( $e->getMessage() );
+//			remark( $e->getMessage() );
 			$this->modelQueue->edit( $mailId, array(
 				'status'		=> Model_Mail::STATUS_RETRY,
 			) );

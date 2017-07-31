@@ -363,7 +363,7 @@ abstract class Mail_Abstract{
 	 *	Please use one of these methods instead: sendToUser(int $userId), sendTo(obj $user)
 	 *	@access		protected
 	 *	@param		string		$email		Target email address
-	 *	@return		boolean			TRUE if success
+	 *	@return		boolean		TRUE if success
 	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email ){
