@@ -3,7 +3,7 @@
 	<title>Resource: REST: Client</title>
 	<description><![CDATA[Client for REST servers.]]></description>
 	<category>Resource</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen modules.</log>
 	<log version="0.2.1">Support HTTP Basic Authentication.</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.3">Support server format configuration.</log>
 	<log version="0.2.4">Disable cache for development.</log>
 	<log version="0.2.5">Add connection options to verify SSL certificate or not.</log>
+	<log version="0.2.6">Support client request log.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -22,12 +23,14 @@
 	<config protected="yes" type="integer" mandatory="no" name="cache.expiration">0</config>
 	<config protected="yes" type="string" mandatory="no" name="cache.resource"></config>
 	<config protected="yes" type="string" mandatory="yes" name="cache.type" values="Folder,Memcache,Memory,Noop,PDO,Session">Noop</config>
-	<config protected="yes" type="string" mandatory="yes" name="server.format" values="JSON,PHP,WDDX,XML">JSON</config>
+	<config protected="yes" type="string" mandatory="no" name="log.errors"></config>
+	<config protected="yes" type="string" mandatory="no" name="log.requests"></config>
+	<config protected="yes" type="string" mandatory="yes" name="server.format" values="JSON,PHP,WDDX,XML">XML</config>
 	<config protected="yes" type="string" mandatory="yes" name="server.URL">http://example.com/REST/</config>
-	<config protected="yes" type="boolean" mandatory="no" name="verifyHost">yes</config>
-	<config protected="yes" type="boolean" mandatory="no" name="verifyPeer">yes</config>
 	<config protected="yes" type="string" mandatory="no" name="server.username"></config>
 	<config protected="yes" type="string" mandatory="no" name="server.password"></config>
+	<config protected="yes" type="boolean" mandatory="no" name="verifyHost">yes</config>
+	<config protected="yes" type="boolean" mandatory="no" name="verifyPeer">yes</config>
 	<relations/>
     <hook type="event" resource="Env" event="constructEnd"><![CDATA[
         $env->set( 'restClient', new Resource_REST_Client( $env ) );

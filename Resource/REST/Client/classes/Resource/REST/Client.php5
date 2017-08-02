@@ -19,21 +19,36 @@ class Resource_REST_Client{
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );
 		$this->__initClient();
+		$this->__initLogging();
 		$this->__initCache();
 	}
 
 	protected function __initClient(){
-		$config			= $this->moduleConfig->getAll( 'server.', TRUE );
-		$options		= array(
-			CURLOPT_SSL_VERIFYHOST	=> $config->get( 'verifyHost' ),
-			CURLOPT_SSL_VERIFYPEER	=> $config->get( 'verifyPeer' ),
+		$options		= $this->moduleConfig->getAll( 'server.', TRUE );
+		$curlOptions	= array(
+			CURLOPT_SSL_VERIFYHOST	=> $options->get( 'verifyHost' ),
+			CURLOPT_SSL_VERIFYPEER	=> $options->get( 'verifyPeer' ),
 		);
-		$this->client	= new \CeusMedia\REST\Client( $config->get( 'URL' ), $options );
-		$this->client->expectFormat( $config->get( 'format' ) );
-		if( $this->session->has( 'token' ) )
-			$this->client->addRequestHeader( 'X-REST-Token', $this->session->get( 'token' ) );
-		if( $config->get( 'username' ) )
-			$this->client->setBasicAuth( $config->get( 'username' ), $config->get( 'password' ) );
+		$this->client	= new \CeusMedia\REST\Client( $options->get( 'URL' ), $curlOptions );
+		$this->client->expectFormat( $options->get( 'format' ) );
+		$this->client->setBasicAuth( $options->get( 'username' ), $options->get( 'password' ) );
+	}
+
+	protected function __initLogging(){
+		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
+		$options	= $this->moduleConfig->getAll( 'log.', TRUE );
+		if( $options->get( 'requests' ) ){
+			$filePath	= $pathLogs.$options->get( 'requests' );
+			if( !file_exists( dirname( $filePath ) ) )
+				\FS_Folder_Editor::createFolder( $filePath );
+			$this->client->setLogRequests( $filePath );
+		}
+		if( $options->get( 'errors' ) ){
+			$filePath	= $pathLogs.$options->get( 'errors' );
+			if( !file_exists( dirname( $filePath ) ) )
+				\FS_Folder_Editor::createFolder( $filePath );
+			$this->client->setLogErrors( $filePath );
+		}
 	}
 
 	protected function __initCache(){
@@ -160,6 +175,10 @@ class Resource_REST_Client{
 	public function put( $path, $data = array() ){
 		$this->invalidateCachePathRecursive( $path );
 		return $this->client->put( $path, $data );
+	}
+
+	public function setAuthToken( $token ){
+		$this->client->addRequestHeader( 'X-REST-Token', $token );
 	}
 
 	/**
