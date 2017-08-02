@@ -1,6 +1,6 @@
 <?php
 class Job_Abstract{
-	
+
 	/**	@var	CMF_Hydrogen_Environment_Abstract	$env		Environment object */
 	protected $env;
 	protected $logFile;
@@ -9,7 +9,7 @@ class Job_Abstract{
 
 	/**	@var		Jobber								$manager		Job manager instance */
 	protected $manager;
-	
+
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -24,7 +24,7 @@ class Job_Abstract{
 		$this->jobClass		= $jobClassName === NULL ? get_class( $this ) : $jobClassName;
 		$this->__onInit();
 	}
-	
+
 	protected function __onInit(){
 	}
 
@@ -38,7 +38,7 @@ class Job_Abstract{
 		$this->jobClass		= $className;
 		$this->jobMethod	= $jobName;
 	}
-	
+
 	protected function log( $message ){
 		$this->manager->log( $this->getLogPrefix().$message );
 	}
@@ -50,8 +50,8 @@ class Job_Abstract{
 	protected function logException( $exception ){
 		$this->manager->logException( $exception );
 	}
-	
-	public function out( $message ){
+
+	public function out( $message = NULL ){
 		print( $message."\n" );
 	}
 }
