@@ -13,7 +13,7 @@ class View_Helper_MailEncryption{
 		if( !$options->get( 'enabled' ) )
 			return;
 		$matches		= array();
-		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+)".*>(\S+)</a>(.*)$@siU';						//  pattern to match mail shortcode
+		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+)".*>(.+)</a>(.*)$@siU';						//  pattern to match mail shortcode
 		while( preg_match( $pattern, $data->content ) ){											//  while mail links in content
 			preg_match_all( $pattern, $data->content, $matches );									//  get all match parts
 			list( $partName, $partHost )	= explode( '@', $matches[2][0] );						//  extract mail parts
