@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module>
+	<title>App: Demo: Ace</title>
+	<description><![CDATA[Ace editor demo.]]></description>
+	<category>Application</category>
+	<version>0.2</version>
+	<log version="0.1">Prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<locale>de/html/app.brand.html</locale>
+		<template>index/index.php</template>
+	</files>
+	<relations>
+		<needs type="module">App_Site</needs>
+		<needs type="module">JS_Ace</needs>
+		<needs type="module">UI_Font_Awesome</needs>
+		<needs type="module">UI_Navigation</needs>
+	</relations>
+</module>
