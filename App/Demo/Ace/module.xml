@@ -15,7 +15,7 @@
 	<relations>
 		<needs type="module">App_Site</needs>
 		<needs type="module">JS_Ace</needs>
-		<needs type="module">UI_Font_Awesome</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
 		<needs type="module">UI_Navigation</needs>
 	</relations>
 </module>
