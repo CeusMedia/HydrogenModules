@@ -1,0 +1,33 @@
+.ace_editor {
+    margin: 0;
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	transition: background-color 0.25s ease-out;
+/*	position: relative !important;
+	min-height: 200px;
+*/	}
+
+/*
+.ace_editor.container{
+	line-height: 3em;
+	}
+*/
+.ace_editor.fullScreen {
+    position: fixed !important;
+    height: auto !important;
+    width: auto !important;
+    border: 0;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+	}
+
+.ace_editor.changed {
+	background-color: #ffebbf;
+	}
+
+.ace_marker-layer .ace_active-line {
+	background-color: rgba(127, 127, 127, 0.15) !important;
+	}

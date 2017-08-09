@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Ace</title>
+	<description><![CDATA[Ace Text Editor.]]></description>
+	<version>1.2.8</version>
+	<category>JavaScript</category>
+	<company site="https://ace.c9.io/">ace.c9.io</company>
+	<author><![CDATA[Moxiecode Systems AB]]></author>
+	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
+	<files>
+		<style source="theme" load="auto">module.ace.css</style>
+		<script>module.js.ace.js</script>
+		<file>licenses/TinyMCE.txt</file>
+	</files>
+	<config type="boolean" protected="no" name="auto">yes</config>
+	<config type="string" protected="no" name="auto.mode"></config>
+	<config type="string" protected="no" name="auto.theme"></config>
+	<config type="integer" protected="no" name="auto.height">460</config>
+	<config type="string" protected="no" name="auto.selector">textarea.ace-auto</config>
+	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
+	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">https://cdnjs.cloudflare.com/ajax/libs/ace/</config>
+	<config type="string" protected="yes" name="CDN.ApiKey"></config>
+	<relations>
+		<supports type="module">Resource_Frontend</supports>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+$moduleConfig	= $env->getConfig()->getAll( 'module.js_ace.', TRUE );
+$env->getConfig()->get( 'path.scripts' );
+
+if( $moduleConfig->get( 'CDN' ){
+//	$uri = $moduleConfig->get( 'CDN.URI' ).$version.'/ace.js';
+//	$context->js->addUrl( $uri );
+}
+else{
+	$context->js->addUrl( $pathJs.'ace/ace.js' );
+}
+$context->js->addUrl( $pathJs.'module.js.ace.js' );
+if( !$moduleConfig->get( 'auto' ) )
+	return;
+$script	= '
+jQuery("'.$moduleConfig->get( 'auto.selector'").applyAuto();
+';
+$context->js->addScriptOnReady( $script );
+]]></hook>
+</module>
