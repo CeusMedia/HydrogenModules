@@ -12,32 +12,33 @@
 		<script>module.js.ace.js</script>
 	</files>
 	<config type="boolean" protected="no" name="auto">yes</config>
-	<config type="string" protected="no" name="auto.mode"></config>
-	<config type="string" protected="no" name="auto.theme"></config>
+	<config type="boolean" protected="no" name="auto.verbose">false</config>
+	<config type="string" protected="no" name="auto.mode"/>
+	<config type="string" protected="no" name="auto.theme"/>
 	<config type="integer" protected="no" name="auto.height">460</config>
 	<config type="string" protected="no" name="auto.selector">textarea.ace-auto</config>
-	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
-	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">https://cdnjs.cloudflare.com/ajax/libs/ace/</config>
-	<config type="string" protected="yes" name="CDN.ApiKey"></config>
+	<config type="string" protected="no" name="source.CDN" values="cdnjs,jsDelivr">cdnjs</config>
+	<config type="string" protected="no" name="source.version" title="Ace version within CDN">1.2.8</config>
 	<relations>
 		<supports type="module">Resource_Frontend</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $moduleConfig	= $env->getConfig()->getAll( 'module.js_ace.', TRUE );
-$env->getConfig()->get( 'path.scripts' );
+$pathJs			= $env->getConfig()->get( 'path.scripts' );
+$version		= $moduleConfig->get( 'source.version' );
+$cdn			= $moduleConfig->get( 'source.CDN' );
 
-if( $moduleConfig->get( 'CDN' ){
-//	$uri = $moduleConfig->get( 'CDN.URI' ).$version.'/ace.js';
-//	$context->js->addUrl( $uri );
-}
-else{
-	$context->js->addUrl( $pathJs.'ace/ace.js' );
-}
+$uri	= 'https://cdnjs.cloudflare.com/ajax/libs/ace/'.$version.'/';
+if( $cdn == 'jsDelivr' )
+	$uri	= 'https://cdn.jsdelivr.net/ace/'.$version.'/noconflict/';
+
+$context->js->addUrl( $uri.'ace.js' );
 $context->js->addUrl( $pathJs.'module.js.ace.js' );
 if( !$moduleConfig->get( 'auto' ) )
 	return;
 $script	= '
-jQuery("'.$moduleConfig->get( 'auto.selector'").applyAuto();
+ModuleAce.verbose = '.json_encode( $moduleConfig->get( 'auto.verbose' ) ).';
+ModuleAce.applyAuto("'.$moduleConfig->get( 'auto.selector' ).'");
 ';
 $context->js->addScriptOnReady( $script );
 ]]></hook>

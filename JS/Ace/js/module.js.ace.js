@@ -86,6 +86,7 @@ var ModuleAce = {
 	},
 	applyTo: function(elementOrSelectorOrContainer, config){
 		"use strict";
+		config = typeof config === "undefined" ? [] : config;
 		var container, editor, hotkeys = [], events = [];
 		container	= jQuery(elementOrSelectorOrContainer);								//  try to find HTML node
 		if(!container.size()){															//  no HTML node found
