@@ -8,9 +8,8 @@
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
 	<files>
-		<style source="theme" load="auto">module.ace.css</style>
+		<style source="theme" load="auto">module.js.ace.css</style>
 		<script>module.js.ace.js</script>
-		<file>licenses/TinyMCE.txt</file>
 	</files>
 	<config type="boolean" protected="no" name="auto">yes</config>
 	<config type="string" protected="no" name="auto.mode"></config>
