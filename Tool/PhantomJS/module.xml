@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>Tools: PhantomJS</title>
+	<description><![CDATA[PhantomJS binding and script collection.]]></description>
+	<version>0.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<category>Tools</category>
+	<files>
+		<class>Resource/PhantomJS.php5</class>
+		<script>phantomjs/screenshot.js</script>
+	</files>
+</module>
+
