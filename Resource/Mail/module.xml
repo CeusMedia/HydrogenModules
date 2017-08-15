@@ -78,7 +78,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 		<class>View/Helper/Mail/View/HTML.php5</class>
 		<class>View/Helper/Mail/View/Source.php5</class>
 		<style source="common">bootstrap.email.min.css</style>
-		<style>mail.min.css</style>
+		<style source="common">mail.min.css</style>
 		<script>mail.min.js</script>
 		<file>config/jobs/mail.xml</file>
 	</files>
