@@ -13,6 +13,9 @@ if( $env->getModules()->has( 'UI_LanguageSelector' ) ){
 if( $env->getModules()->has( 'UI_Navigation' ) ){
 	$helper		= new View_Helper_Navigation( $env );
 	$navMain	= $helper->render();
+	$navHeader	= $helper->render( 'header' );
+	$navTop		= $helper->render( 'top' );
+	$navFooter	= $helper->render( 'footer' );
 }
 else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdated local renderer
 	$path		= $this->env->getRequest()->get( '__path' );
@@ -83,19 +86,23 @@ if( $view->hasContentFile( 'html/app.brand.html' ) )
 	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
 		$brand		= $brandHtml;
 
+$data	= array(
+	'navFooter'	=> $navFooter,
+	'navHeader'	=> $navHeader,
+	'navTop'	=> $navTop,
+);
 
 /*  --  STATIC HEADER  --  */
 $header		= '';
 if( $view->hasContentFile( 'html/app.header.html' ) )
-	if( $headerHtml = $view->loadContentFile( 'html/app.header.html' ) )		//  render header, words from main.ini are assigned
+	if( $headerHtml = $view->loadContentFile( 'html/app.header.html', $data ) )		//  render header, words from main.ini are assigned
 		$header		= $headerHtml;
 
 /*  --  STATIC FOOTER  --  */
 $footer		= '';
 if( $view->hasContentFile( 'html/app.footer.html' ) )
-	if( $footerHtml = $view->loadContentFile( 'html/app.footer.html' ) )		//  render footer, words from main.ini are assigned
+	if( $footerHtml = $view->loadContentFile( 'html/app.footer.html', $data ) )		//  render footer, words from main.ini are assigned
 		$footer		= $footerHtml;
-
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '
