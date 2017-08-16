@@ -27,6 +27,10 @@ class Logic_FileBucket{
 		$this->filePath	= $basePath.$this->moduleConfig->get( 'path' );
 		if( !file_exists( $this->filePath ) )
 			\FS_Folder_Editor::createFolder( $this->filePath );
+		if( !file_exists( $this->filePath.'.htaccess' ) )
+			file_put_contents( $this->filePath.'.htaccess', 'Deny from all'.PHP_EOL );
+
+
 	}
 
 	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL ){
