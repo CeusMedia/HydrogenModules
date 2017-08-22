@@ -1,5 +1,13 @@
 .ui-form-changes input.changed,
 .ui-form-changes select.changed,
 .ui-form-changes textarea.changed {
-    background: #FFF7CF;
+    background-color: #FFF7CF;
     }
+.ui-form-changes input.changed[readonly],
+.ui-form-changes select.changed[readonly],
+.ui-form-changes textarea.changed[readonly],
+.ui-form-changes input.changed[disabled],
+.ui-form-changes select.changed[disabled],
+.ui-form-changes textarea.changed[disabled] {
+    background-color: buttonface
+	};
