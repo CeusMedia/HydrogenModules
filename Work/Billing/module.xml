@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Billing</title>
+	<description><![CDATA[Account and billing for small companies.]]></description>
+	<category>Work</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Billing/Bill.php5</class>
+		<class>Controller/Work/Billing/Corporation.php5</class>
+		<class>Controller/Work/Billing/Expense.php5</class>
+		<class>Controller/Work/Billing/Person.php5</class>
+		<class>Controller/Work/Billing/Reserve.php5</class>
+		<class>Controller/Work/Billing/Bill/Breakdown.php5</class>
+		<class>Controller/Work/Billing/Bill/Transaction.php5</class>
+		<class>Controller/Work/Billing/Corporation/Payout.php5</class>
+		<class>Controller/Work/Billing/Corporation/Reserve.php5</class>
+		<class>Controller/Work/Billing/Corporation/Transaction.php5</class>
+		<class>Controller/Work/Billing/Person/Expense.php5</class>
+		<class>Controller/Work/Billing/Person/Payin.php5</class>
+		<class>Controller/Work/Billing/Person/Payout.php5</class>
+		<class>Controller/Work/Billing/Person/Transaction.php5</class>
+		<class>Controller/Work/Billing/Person/Unbooked.php5</class>
+		<class>Job/Billing.php5</class>
+		<class>Logic/Billing.php5</class>
+		<class>Model/Billing/Bill.php5</class>
+		<class>Model/Billing/Corporation.php5</class>
+		<class>Model/Billing/Expense.php5</class>
+		<class>Model/Billing/Person.php5</class>
+		<class>Model/Billing/Reserve.php5</class>
+		<class>Model/Billing/Bill/Expense.php5</class>
+		<class>Model/Billing/Bill/Reserve.php5</class>
+		<class>Model/Billing/Bill/Share.php5</class>
+		<class>Model/Billing/Corporation/Expense.php5</class>
+		<class>Model/Billing/Corporation/Payin.php5</class>
+		<class>Model/Billing/Corporation/Payout.php5</class>
+		<class>Model/Billing/Corporation/Reserve.php5</class>
+		<class>Model/Billing/Corporation/Transaction.php5</class>
+		<class>Model/Billing/Person/Expense.php5</class>
+		<class>Model/Billing/Person/Payin.php5</class>
+		<class>Model/Billing/Person/Payout.php5</class>
+		<class>Model/Billing/Person/Transaction.php5</class>
+		<class>View/Work/Billing/Bill.php5</class>
+		<class>View/Work/Billing/Corporation.php5</class>
+		<class>View/Work/Billing/Expense.php5</class>
+		<class>View/Work/Billing/Person.php5</class>
+		<class>View/Work/Billing/Reserve.php5</class>
+		<class>View/Work/Billing/Bill/Breakdown.php5</class>
+		<class>View/Work/Billing/Bill/Transaction.php5</class>
+		<class>View/Work/Billing/Corporation/Payout.php5</class>
+		<class>View/Work/Billing/Corporation/Reserve.php5</class>
+		<class>View/Work/Billing/Corporation/Transaction.php5</class>
+		<class>View/Work/Billing/Person/Expense.php5</class>
+		<class>View/Work/Billing/Person/Payin.php5</class>
+		<class>View/Work/Billing/Person/Payout.php5</class>
+		<class>View/Work/Billing/Person/Transaction.php5</class>
+		<class>View/Work/Billing/Person/Unbooked.php5</class>
+		<template>work/billing/bill/add.php</template>
+		<template>work/billing/bill/edit.php</template>
+		<template>work/billing/bill/index.php</template>
+		<template>work/billing/bill/breakdown/index.php</template>
+		<template>work/billing/bill/transaction/index.php</template>
+		<template>work/billing/corporation/add.php</template>
+		<template>work/billing/corporation/edit.php</template>
+		<template>work/billing/corporation/index.php</template>
+		<template>work/billing/corporation/payout/index.php</template>
+		<template>work/billing/corporation/reserve/index.php</template>
+		<template>work/billing/corporation/transaction/index.php</template>
+		<template>work/billing/expense/add.php</template>
+		<template>work/billing/expense/edit.php</template>
+		<template>work/billing/expense/index.php</template>
+		<template>work/billing/person/add.php</template>
+		<template>work/billing/person/edit.php</template>
+		<template>work/billing/person/index.php</template>
+		<template>work/billing/person/expense/index.php</template>
+		<template>work/billing/person/payin/index.php</template>
+		<template>work/billing/person/payout/index.php</template>
+		<template>work/billing/person/transaction/index.php</template>
+		<template>work/billing/person/unbooked/index.php</template>
+		<template>work/billing/reserve/add.php</template>
+		<template>work/billing/reserve/edit.php</template>
+		<template>work/billing/reserve/index.php</template>
+		<style source="common" load="auto">module.work.billing.css</style>
+		<script load="auto">module.work.billing.js</script>
+	</files>
+	<needs type="module">JS_Form_Changes</needs>
+	<needs type="module">UI_CSS_Panel</needs>
+	<needs type="module">UI_Navigation</needs>
+	<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	<needs type="module">Resource_Database</needs>
+	<needs type="module">Resource_Jobs</needs>
+	<hook type="resource" resource="WorkBilling/Bill" event="registerTabs">View_Work_Billing_Bill::___onRegisterTab</hook>
+	<hook type="resource" resource="WorkBilling/Corporation" event="registerTabs">View_Work_Billing_Corporation::___onRegisterTab</hook>
+	<hook type="resource" resource="WorkBilling/Person" event="registerTabs">View_Work_Billing_Person::___onRegisterTab</hook>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		$context->js->addScriptOnReady("WorkBilling.init()");
+	]]></hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>billing_bill_expenses`;
+CREATE TABLE `<%?prefix%>billing_bill_expenses` (
+  `billExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `billId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `amount` decimal(10,4) NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`billExpenseId`),
+  KEY `billId` (`billId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_bill_reserves`;
+CREATE TABLE `<%?prefix%>billing_bill_reserves` (
+  `billReserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `billId` int(10) unsigned NOT NULL,
+  `reserveId` int(10) unsigned NOT NULL,
+  `corporationId` int(10) unsigned DEFAULT '9',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `personalize` tinyint(1) unsigned DEFAULT '0' COMMENT '0:no, 1:yes',
+  `percent` decimal(6,2) unsigned NOT NULL,
+  `amount` decimal(10,4) unsigned NOT NULL,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`billReserveId`),
+  KEY `billId` (`billId`) USING BTREE,
+  KEY `reserveId` (`reserveId`) USING BTREE,
+  KEY `corporationId` (`corporationId`),
+  KEY `status` (`status`) USING BTREE,
+  KEY `personalize` (`personalize`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_bill_shares`;
+CREATE TABLE `<%?prefix%>billing_bill_shares` (
+  `billShareId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `billId` int(10) unsigned NOT NULL,
+  `personId` int(10) unsigned NOT NULL,
+  `personPayoutId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `percent` decimal(5,2) unsigned DEFAULT '0.00',
+  `amount` decimal(10,4) unsigned DEFAULT '0.0000',
+  PRIMARY KEY (`billShareId`),
+  KEY `billId` (`billId`),
+  KEY `personId` (`personId`),
+  KEY `payoutId` (`personPayoutId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_bills`;
+CREATE TABLE `<%?prefix%>billing_bills` (
+  `billId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `number` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `amountNetto` decimal(8,2) unsigned NOT NULL,
+  `amountTaxed` decimal(8,2) unsigned NOT NULL,
+  `amountAssigned` decimal(8,2) DEFAULT '0.00',
+  `taxRate` decimal(4,2) unsigned NOT NULL,
+  `dateBooked` date NOT NULL,
+  `datePayed` date NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`billId`),
+  KEY `status` (`status`),
+  KEY `number` (`number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_payouts`;
+CREATE TABLE `<%?prefix%>billing_corporation_payouts` (
+  `corporationPayoutId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `amount` decimal(8,2) DEFAULT '0.00',
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`corporationPayoutId`),
+  KEY `personId` (`corporationId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_reserves`;
+CREATE TABLE `<%?prefix%>billing_corporation_reserves` (
+  `corporationReserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned NOT NULL,
+  `reserveId` int(10) unsigned NOT NULL,
+  `billId` int(10) unsigned NOT NULL,
+  `personId` int(10) unsigned DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `personalize` tinyint(1) unsigned DEFAULT '0' COMMENT '0:no, 1:yes',
+  `amount` decimal(10,4) unsigned NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`corporationReserveId`),
+  KEY `corporationId` (`corporationId`),
+  KEY `reserveId` (`reserveId`),
+  KEY `personId` (`personId`) USING BTREE,
+  KEY `status` (`status`) USING BTREE,
+  KEY `dateBooked` (`dateBooked`) USING BTREE,
+  KEY `billId` (`billId`),
+  KEY `personalize` (`personalize`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_transactions`;
+CREATE TABLE `<%?prefix%>billing_corporation_transactions` (
+  `corporationTransactionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `relation` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `amount` decimal(10,4) DEFAULT '0.0000',
+  `dateCreated` date NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`corporationTransactionId`),
+  KEY `personId` (`corporationId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_corporations`;
+CREATE TABLE `<%?prefix%>billing_corporations` (
+  `corporationId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `balance` decimal(12,4) DEFAULT '0.0000',
+  `iban` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bic` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`corporationId`) USING BTREE,
+  KEY `status` (`status`),
+  KEY `iban` (`iban`),
+  KEY `bic` (`bic`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_expenses`;
+CREATE TABLE `<%?prefix%>billing_expenses` (
+  `expenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned DEFAULT '0',
+  `personId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `frequency` tinyint(3) unsigned DEFAULT '0' COMMENT '0:none, 1:year, 2:quarter, 3:month, 4:week, 5:day',
+  `dayOfMonth` tinyint(3) unsigned DEFAULT '0',
+  `amount` decimal(6,2) unsigned NOT NULL,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`expenseId`),
+  KEY `corporationId` (`corporationId`),
+  KEY `personId` (`personId`),
+  KEY `status` (`status`),
+  KEY `frequency` (`frequency`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_person_expenses`;
+CREATE TABLE `<%?prefix%>billing_person_expenses` (
+  `personExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `personId` int(10) unsigned NOT NULL,
+  `expenseId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `amount` decimal(10,4) NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`personExpenseId`),
+  KEY `personId` (`personId`) USING BTREE,
+  KEY `expenseId` (`expenseId`),
+  KEY `status` (`status`) USING BTREE,
+  KEY `dateBooked` (`dateBooked`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_person_payins`;
+CREATE TABLE `<%?prefix%>billing_person_payins` (
+  `personPayinId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `personId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `amount` decimal(8,2) NOT NULL,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`personPayinId`),
+  KEY `personId` (`personId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_person_payouts`;
+CREATE TABLE `<%?prefix%>billing_person_payouts` (
+  `personPayoutId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `personId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `amount` decimal(8,2) DEFAULT '0.00',
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`personPayoutId`),
+  KEY `personId` (`personId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_person_transactions`;
+CREATE TABLE `<%?prefix%>billing_person_transactions` (
+  `personTransactionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `personId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `relation` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `amount` decimal(10,4) DEFAULT '0.0000',
+  `dateCreated` date NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`personTransactionId`),
+  KEY `personId` (`personId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_persons`;
+CREATE TABLE `<%?prefix%>billing_persons` (
+  `personId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `firstname` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `surname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `balance` decimal(10,4) DEFAULT '0.0000',
+  PRIMARY KEY (`personId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_reserves`;
+CREATE TABLE `<%?prefix%>billing_reserves` (
+  `reserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1',
+  `personalize` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0:no, 1:yes',
+  `percent` decimal(6,2) unsigned DEFAULT '0.00',
+  `amount` decimal(10,4) unsigned DEFAULT '0.0000',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`reserveId`),
+  KEY `corporationId` (`corporationId`),
+  KEY `status` (`status`),
+  KEY `personalize` (`personalize`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>

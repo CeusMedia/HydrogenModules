@@ -1,0 +1,39 @@
+table th.cell-actions,
+table th.cell-number,
+table td.cell-actions,
+table td.cell-number {
+	text-align: right;
+	}
+table th.cell-feature,
+table td.cell-feature {
+	text-align: center;
+	}
+
+
+.modal > form {
+	margin: 0;
+	}
+input.input-number {
+	text-align: right;
+	}
+span.suffix {
+    position: relative;
+    top: -3px;
+	left: 5px;
+    font-weight: bold;
+    font-size: 1.1em;
+	}
+
+body table.table {
+	border: 2px solid rgba(223, 223, 223, 1);
+	}
+body table.table thead th{
+	background-color: rgba(223, 223, 223, 0.66);
+	}
+body table.table tbody td {
+	background-color: white;
+	}
+body table.table tfoot td {
+	background-color: rgba(223, 223, 223, 0.33);
+	font-weight: bold;
+	}

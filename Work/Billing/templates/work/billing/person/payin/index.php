@@ -1,0 +1,108 @@
+<?php
+$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+
+if( $payins ){
+	$list	= array();
+	foreach( $payins as $payin ){
+		$dateBooked	= $payin->dateBooked != "0000-00-00" ? date( 'd.m.Y', strtotime( $payin->dateBooked ) ) : '-';
+		$list[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', $payin->title ),
+			UI_HTML_Tag::create( 'td', $payin->amount.'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			UI_HTML_Tag::create( 'td', $dateBooked ),
+		) );
+	}
+	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '80', '80' ) );
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Titel', 'Betrag', 'gebucht' ) ) );
+	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+}
+
+$buttonSave	= UI_HTML_Tag::create( 'button', 'buchen', array(
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-primary'
+) );
+
+$amount	= $person->balance < 0 ? number_format( -1 * $person->balance, 2 ) : '';
+
+
+$optYear	= array(
+	''	=> '- alle -',
+);
+$optYear[date( "Y" )]	= date( "Y" );
+$optYear[date( "Y" )-1]	= date( "Y" )-1;
+$optYear[date( "Y" )-2]	= date( "Y" )-2;
+$optYear	= UI_HTML_Elements::Options( $optYear, $filterYear );
+
+$optMonth	= array(
+	''		=> '- alle -',
+	'01'	=> 'Januar',
+	'02'	=> 'Februar',
+	'03'	=> 'März',
+	'04'	=> 'April',
+	'05'	=> 'Mai',
+	'06'	=> 'Juni',
+	'07'	=> 'Juli',
+	'08'	=> 'August',
+	'09'	=> 'September',
+	'10'	=> 'Oktober',
+	'11'	=> 'November',
+	'12'	=> 'Dezember',
+);
+$optMonth	= UI_HTML_Elements::Options( $optMonth, $filterMonth );
+
+
+$tabs	= View_Work_Billing_Person::renderTabs( $env, $person->personId, 3 );
+
+return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>
+'.$tabs.'
+<div class="row-fluid">
+	<div class="span8">
+		<div class="content-panel">
+			<h3>Einzahlungen</h3>
+			<div class="content-panel-inner">
+				<form action="./work/billing/person/payin/filter/'.$person->personId.'" method="post">
+					<div class="row-fluid">
+						<div class="span2">
+							<label for="input_year">Jahr</label>
+							<select name="year" id="input_year" class="span12" onchange="this.form.submit()">'.$optYear.'</select>
+						</div>
+						<div class="span2">
+							<label for="input_month">Monat</label>
+							<select name="month" id="input_month" class="span12" onchange="this.form.submit()">'.$optMonth.'</select>
+						</div>
+					</div>
+				</form>
+				'.$list.'
+			</div>
+		</div>
+	</div>
+	<div class="span4">
+		<div class="content-panel">
+			<h3>Einzahlung buchen</h3>
+			<div class="content-panel-inner">
+				<form action="./work/billing/person/payin/add/'.$person->personId.'" method="post">
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_title">Titel</label>
+							<input type="text" name="title" id="input_title" class="span12" required="required"/>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span6">
+							<label for="input_dateBooked">Datum</label>
+							<input type="date" name="dateBooked" id="input_dateBooked" class="span12" required="required" value="'.date( 'Y-m-d' ).'"/>
+						</div>
+						<div class="span6">
+							<label for="input_amount">Betrag</label>
+							<input type="text" name="amount" id="input_amount" class="span10 input-number" data-max-precision="2" required="required" placeholder="0.00" value="'.$amount.'"/><span class="suffix">&euro;</span>
+						</div>
+					</div>
+					<div class="buttonbar">
+						'.$buttonSave.'
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>';
