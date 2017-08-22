@@ -86,6 +86,7 @@
 		<template>work/billing/reserve/index.php</template>
 		<style source="common" load="auto">module.work.billing.css</style>
 		<script load="auto">module.work.billing.js</script>
+		<file>config/jobs/work.billing.xml</file>
 	</files>
 	<needs type="module">JS_Form_Changes</needs>
 	<needs type="module">UI_CSS_Panel</needs>
