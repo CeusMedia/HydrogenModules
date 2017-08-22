@@ -10,6 +10,11 @@ $buttonSave	= UI_HTML_Tag::create( 'button', 'speichern', array(
 	'class'	=> 'btn btn-primary',
 ) );
 
+$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
+	'href'	=> './work/billing/expense/remove/'.$expense->expenseId,
+	'class'	=> 'btn btn-danger',
+) );
+
 $optCorporation	= array(
 	'0'	=> '- kein Unternehmen -',
 );
@@ -46,9 +51,9 @@ return '
 <div class="row-fluid">
 	<div class="span9">
 		<div class="content-panel">
-			<h3>Neue Rücklage</h3>
+			<h3>Ausgabe</h3>
 			<div class="content-panel-inner">
-				<form action="./work/billing/expense/add" method="post" class="form-changes-auto">
+				<form action="./work/billing/expense/edit/'.$expense->expenseId.'" method="post" class="form-changes-auto">
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_title">Bezeichnung</label>
@@ -80,6 +85,7 @@ return '
 					<div class="buttonbar">
 						'.$buttonCancel.'
 						'.$buttonSave.'
+						'.$buttonRemove.'
 					</div>
 				</form>
 			</div>

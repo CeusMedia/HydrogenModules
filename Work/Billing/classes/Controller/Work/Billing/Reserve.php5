@@ -5,16 +5,12 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 		$this->logic	= new Logic_Billing( $this->env );
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();
+		$this->modelReserve	= new Model_Billing_Reserve( $this->env );
 	}
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
-			$reserveId		= $this->logic->addReserve(
-				$this->request->get( 'title' ),
-				$this->request->get( 'percent' ),
-				$this->request->get( 'amount' ),
-				$this->request->get( 'corporationId' )
-			);
+			$reserveId		= $this->modelReserve->add( $this->request->getAll() );
 			$this->restart( 'edit/'.$reserveId, TRUE );
 		}
 		$this->addData( 'corporations', $this->logic->getCorporations() );
@@ -22,15 +18,15 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 
 	public function edit( $reserveId ){
 		if( $this->request->has( 'save' ) ){
-			$this->logic->editReserve( $reserveId, $this->request->getAll() );
+			$this->modelReserve->edit( $reserveId, $this->request->getAll() );
 			$this->restart( NULL, TRUE );
 		}
-		$this->addData( 'reserve', $this->logic->getReserve( $reserveId ) );
+		$this->addData( 'reserve', $this->modelReserve->get( $reserveId ) );
 		$this->addData( 'corporations', $this->logic->getCorporations() );
 	}
 
 	public function index(){
-		$reserves	= $this->logic->getReserves();
+		$reserves	= $this->modelReserve->getAll();
 		$this->addData( 'reserves', $reserves );
 
 		$corporations	= array();
@@ -40,7 +36,9 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $reserveId ){
-
+		$reserve	= $this->modelReserve->get( $reserveId );
+		$this->modelReserve->remove( $reserveId );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>

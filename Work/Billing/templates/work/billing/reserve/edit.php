@@ -10,6 +10,11 @@ $buttonSave	= UI_HTML_Tag::create( 'button', 'speichern', array(
 	'class'	=> 'btn btn-primary',
 ) );
 
+$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
+	'href'	=> './work/billing/reserve/remove/'.$reserve->reserveId,
+	'class'	=> 'btn btn-danger',
+) );
+
 $optStatus	= array(
 	0	=> 'inaktiv',
 	1	=> 'aktiv',
@@ -70,6 +75,7 @@ return '
 					<div class="buttonbar">
 						'.$buttonCancel.'
 						'.$buttonSave.'
+						'.$buttonRemove.'
 					</div>
 				</form>
 			</div>

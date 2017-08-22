@@ -29,7 +29,8 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 	public function edit( $expenseId ){
 		if( $this->request->has( 'save' ) ){
 			$this->modelExpense->edit( $expenseId, $this->request->getAll() );
-			$this->restart( './work/billing/expense/edit/'.$expenseId );
+			$this->restart( NULL, TRUE );
+//			$this->restart( './work/billing/expense/edit/'.$expenseId );
 		}
 		$this->addData( 'expense', $this->logic->getExpense( $expenseId ) );
 		$this->addData( 'corporations', $this->logic->getCorporations() );
@@ -52,7 +53,8 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $expenseId ){
-		$this->logic->removeExpense( $expenseId );
+		$expense	= $this->modelExpense->get( $expenseId );
+		$this->modelExpense->remove( $expenseId );
 		$this->restart( NULL, TRUE );
 	}
 }
