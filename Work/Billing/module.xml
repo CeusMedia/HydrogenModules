@@ -59,6 +59,7 @@
 		<class>View/Work/Billing/Person/Payout.php5</class>
 		<class>View/Work/Billing/Person/Transaction.php5</class>
 		<class>View/Work/Billing/Person/Unbooked.php5</class>
+		<class>View/Work/Billing/Helper/Transactions.php5</class>
 		<template>work/billing/bill/add.php</template>
 		<template>work/billing/bill/edit.php</template>
 		<template>work/billing/bill/index.php</template>
