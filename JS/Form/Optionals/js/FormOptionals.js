@@ -34,8 +34,27 @@ var FormOptionals = {
             toHide.hide();
             toShow.show();
         }
-    }
-
+		FormOptionals.disableRequired(toHide);
+		FormOptionals.enableRequired(toShow);
+    },
+	disableRequired: function(container){
+		container.find(":input").each(function(){
+			var elem = jQuery(this);
+			if(elem.attr("required")){
+				elem.data("optionals-required", elem.attr("required"));
+				elem.removeAttr("required");
+			}
+		});
+	},
+	enableRequired: function(container){
+		container.find(":input").each(function(){
+			var elem = jQuery(this);
+			if(elem.data("optionals-required")){
+				elem.attr("required", elem.data("optionals-required"));
+				elem.data("optionals-required", null);
+			}
+		});
+	}
 };
 
 /* @deprecated by hook
