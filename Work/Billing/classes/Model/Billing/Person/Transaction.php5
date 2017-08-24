@@ -11,7 +11,6 @@ class Model_Billing_Person_Transaction extends CMF_Hydrogen_Model{
 		'status',
 		'relation',
 		'amount',
-		'dateCreated',
 		'dateBooked',
 	);
 	protected $primaryKey	= 'personTransactionId';

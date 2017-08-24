@@ -22,7 +22,7 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 				'title'			=> $this->request->get( 'title' ),
 				'taxRate'		=> $this->request->get( 'taxRate' ),
 				'amountNetto'	=> $this->request->get( 'amountNetto' ),
-				'amountBrutto'	=> $this->request->get( 'amountBrutto' ),
+				'amountTaxed'	=> $this->request->get( 'amountTaxed' ),
 				'dateBooked'	=> $this->request->get( 'dateBooked' ),
 		 	) );
 			$this->restart( './work/billing/bill/breakdown/'.$billId );
