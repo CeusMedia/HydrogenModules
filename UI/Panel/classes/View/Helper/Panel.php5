@@ -53,7 +53,7 @@ class View_Helper_Panel{
 	}
 
 	static public function create( $env, $head, $body, $foot, $attributes = array(), $classes = array(), $theme = NULL, $id = NULL ){
-		$instance	= new static( $env )
+		$instance	= new static( $env );
 		$instance->setHead( $head )->setBody( $body )->setFoot( $foot );
 		$instance->setAttributes( $attributes );
 		foreach( $classes as $key => $value ){
@@ -203,17 +203,6 @@ class View_Helper_Panel{
 	 */
 	public function setId( $id ){
 		$this->attributes['id']	= $id;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
-	 */
-	public function setTheme( $id ){
-		$this->id	= $id;
 		return $this;
 	}
 
