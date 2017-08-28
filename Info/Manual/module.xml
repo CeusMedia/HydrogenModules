@@ -45,6 +45,7 @@ This module can be localized.
 		<template>info/manual/view.php</template>
 		<locale>de/info/manual.ini</locale>
 		<locale>de/info/manual/demo.syntax.md</locale>
+		<locale>de/info/manual/order.list</locale>
 		<script>Info.Manual.js</script>
 		<style>module.info.manual.css</style>
 	</files>
