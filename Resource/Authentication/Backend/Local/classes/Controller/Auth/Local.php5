@@ -258,7 +258,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 		$useRememberConfig	= $this->moduleConfig->get( 'login.remember' );
 		$useRememberLimit	= $this->limiter && !$this->limiter->denies( 'Auth.Local.Login:remember' );
-		$this->addData( 'useRemember', $useRememberConfig && $useRememberLimits );
+		$this->addData( 'useRemember', $useRememberConfig && $useRememberLimit );
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
