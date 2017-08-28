@@ -28,7 +28,6 @@ class Model_Blog_Comment extends CMF_Hydrogen_Model {
 		'language',
 		'username',
 		'email',
-		'title',
 		'content',
 		'nrLikes',
 		'nrDislikes',

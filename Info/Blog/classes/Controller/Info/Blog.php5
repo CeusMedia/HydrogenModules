@@ -165,6 +165,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 	public function post( $postId = NULL ){
 		if( !$postId )
 			$this->restart( NULL, TRUE );
+		$postId			= (int) preg_replace( '/^([0-9]+)-?.*$/', '\\1', $postId );
 		$post			= $this->checkPost( $postId );
 		$this->modelPost->edit( $postId, array(														//  save in post
 			'nrViews'	=> $post->nrViews + 1,														//  ... increased views

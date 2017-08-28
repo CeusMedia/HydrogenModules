@@ -18,12 +18,16 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 			'Autor: '	=> $comment->username,
 			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
 		);
-		$facts		= self::renderFacts( $facts, 'dl-inline' );
+		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
 		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-comment-info' ) );
 	}
 
+	public function renderComment( $comment ){
+		return self::renderCommentStatic( $this->env, $comment );
+	}
+
 	static public function renderCommentStatic( $env, $comment ){
-		$infobar	= self::renderCommentInfoBar( $comment );
+		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
 		$content	= UI_HTML_Tag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
 		$html		= UI_HTML_Tag::create( 'div', $infobar.$content, array(
 			'class'		=> 'list-comments-item'

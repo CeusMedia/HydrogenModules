@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -19,6 +19,7 @@
 	<log version="0.3.8">Reset locales.</log>
 	<log version="0.3.9">Extract messages to locales.</log>
 	<log version="0.4">Extend models by columns for parents, likes, dislikes and more timestamps.</log>
+	<log version="0.4.1">Remove comment title column.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -59,7 +60,7 @@
 <!--	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>-->
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Blog::___onRenderContent</hook>
-	<sql on="install" type="mysql" version="0.1"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_categories` (
   `categoryId` int(11) NOT NULL AUTO_INCREMENT,
@@ -83,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>blog_comments` (
   `language` char(2) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `title` char(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`commentId`),
@@ -133,6 +133,9 @@ ALTER TABLE `<%?prefix%>blog_categories` ADD `nrComments` INT(11) UNSIGNED NULL 
 ALTER TABLE `<%?prefix%>blog_categories` CHANGE `modifiedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>blog_categories` CHANGE `viewedAt` `postedAt` DECIMAL(12,0) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>blog_categories` ADD `commentedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `postedAt`;
+]]></sql>
+<sql on="update" type="mysql" version="0.4.1"><![CDATA[
+	ALTER TABLE `<%?prefix%>blog_comments` DROP `title`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>blog_categories`;
