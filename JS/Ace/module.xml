@@ -2,7 +2,7 @@
 <module>
 	<title>JS: Ace</title>
 	<description><![CDATA[Ace Text Editor.]]></description>
-	<version>1.2.8</version>
+	<version>1.2.8-p1</version>
 	<category>JavaScript</category>
 	<company site="https://ace.c9.io/">ace.c9.io</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -15,7 +15,6 @@
 	<config type="boolean" protected="no" name="auto.verbose">false</config>
 	<config type="string" protected="no" name="auto.mode"/>
 	<config type="string" protected="no" name="auto.theme"/>
-	<config type="integer" protected="no" name="auto.height">460</config>
 	<config type="string" protected="no" name="auto.selector">textarea.ace-auto</config>
 	<config type="string" protected="no" name="source.CDN" values="cdnjs,jsDelivr">cdnjs</config>
 	<config type="string" protected="no" name="source.version" title="Ace version within CDN">1.2.8</config>

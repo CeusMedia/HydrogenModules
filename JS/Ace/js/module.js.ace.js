@@ -13,8 +13,10 @@ var ModuleAce = {
 	config: {																	//  @see https://github.com/ajaxorg/ace/wiki/Configuring-Ace
 		theme: "ace/theme/tomorrow",
 		mode: "ace/mode/html",
+		width: "100%",
+		height: "auto",
 		options: {
-			lineHeight: 1.25,						//  add top and bottom padding, @see https://stackoverflow.com/a/37976142
+			lineHeight: 1.15,							//  add top and bottom padding, @see https://stackoverflow.com/a/37976142
 			minLines: 4,							//  show atleast 4 lines
 			maxLines: 'Infinity',							//  ...
 			useWorker: false,
@@ -116,17 +118,23 @@ var ModuleAce = {
 
 		/*  Create Ace instance and apply configuration  */
 		try{
+			var width = config.width;													//  note width by set width
+			var height = config.height;													//  note height by set height
+			var isVisible = container.is(":visible");									//  note if input element is visible
+			if(width == "auto")
+				width = isVisible ? container.width() : "100%";							//  set width of original textarea or 100% if invisible
+			height = height == "auto" ? container.height() : height;					//  set height of original textarea or set height
 			if(container.get(0).nodeName === "TEXTAREA"){								//  selected container is a textarea
 				var editDiv = $('<div>', {												//  create a new container to apply ace on
 					position: 'absolute',												//
-//					'class': container.attr('class'),
-					width: container.width(),											//  set width of original textarea
-					height: container.height()											//  set height of original textarea
+					width: width,														//  set width
+					height: height,														//  set height
+	//				'class': container.attr('class'),
 				}).data('original-value', container.val());								//  copy original textarea content for change detection
 				editDiv.insertBefore(container);										//  insert new container OVER textarea
 				editor = ace.edit(editDiv.get(0));										//  apply ace editor to new container
 				editor.getSession().setValue(container.val());							//  set editor content from original textarea
-				container.css('visibility', 'hidden');									//  hide original textarea
+				container.css('display', 'none');										//  hide original textarea
 				editor.getSession().on("change", function(){							//  on content changes ...
 					container.val(editor.session.getValue());							//  ... update content of original textarea
 				});
@@ -221,11 +229,11 @@ var ModuleAce = {
 				return;
 			switch(this.name.toLowerCase()){
 				case "rows":
-					config.options.minLines = this.value;
+					config.options.minLines = parseInt(this.value, 10);
 					ModuleAce.log(
 						"AceEditor: Found HTML attribute \"%s\" to override option \"minLines\" with %d",
 						this.name,
-						this.value
+						parseInt(this.value, 10)
 					);
 					break;
 				case "readonly":
@@ -264,7 +272,7 @@ var ModuleAce = {
 					JSON.stringify(currentValue),
 				);
 			}
-			if(key.match(/^aceOption/)){
+			else if(key.match(/^aceOption/)){
 				key = key.replace(/^aceOption/, "");
 				key = key.charAt(0).toLowerCase() + key.slice(1);
 				var currentValue = false;
@@ -273,6 +281,27 @@ var ModuleAce = {
 				if(currentValue == value)
 					return;
 				config.options[key] = value;
+				ModuleAce.log(
+					"AceEditor: Found data option attribute \"%s\" with value %s (was: %s)",
+					key,
+					JSON.stringify(value),
+					JSON.stringify(currentValue)
+				);
+			}
+			else if(key.match(/^ace/)){
+				key = key.replace(/^ace/, "");
+				key = key.charAt(0).toLowerCase() + key.slice(1);
+				var currentValue = false;
+				switch(key){
+					case "mode":
+						value	= "ace/mode/"+value;
+						break;
+				}
+				if(typeof config[key] !== "undefined")
+					currentValue	= config[key];
+				if(currentValue == value)
+					return;
+				config[key] = value;
 				ModuleAce.log(
 					"AceEditor: Found data option attribute \"%s\" with value %s (was: %s)",
 					key,
