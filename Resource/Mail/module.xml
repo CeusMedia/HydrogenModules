@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
   `plain` text,
   `html` text NOT NULL,
   `css` text NOT NULL,
-  `styles` text NOT NULL,
+  `styles` text NULL,
   `images` text,
   `createdAt` decimal(12,0) UNSIGNED NOT NULL,
   `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
@@ -268,5 +268,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
 	]]></sql>
 	<sql on="update" version="0.7.1" type="mysql"><![CDATA[
 ALTER TABLE `<%?prefix%>mails` ADD `mailClass` VARCHAR(200) NOT NULL AFTER `subject`, ADD INDEX (`mailClass`);
+]]></sql>
+<sql on="update" version="0.7.4" type="mysql"><![CDATA[
+ALTER TABLE `<%?prefix%>mail_templates` CHANGE `styles` `styles` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
 	]]></sql>
 </module>
