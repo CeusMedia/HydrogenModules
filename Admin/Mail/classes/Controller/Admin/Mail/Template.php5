@@ -123,7 +123,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	public function preview( $templateId, $mode = NULL ){
 		$this->logicMail	= new Logic_Mail( $this->env );
 		$template	= $this->checkTemplate( $templateId );
-		$mail		= new Mail_Test( $this->env, array( 'templateId' => $templateId ) );
+		$mail		= new Mail_Test( $this->env, array( 'mailTemplateId' => $templateId ) );
 
 		$parts		= $this->logicMail->getMailParts( (object) array( 'object' => $mail ) );
 		switch( strtolower( $mode ) ){

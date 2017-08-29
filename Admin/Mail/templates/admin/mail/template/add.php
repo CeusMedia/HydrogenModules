@@ -22,25 +22,25 @@ return '
 				<form action="./admin/mail/template/add" method="post">
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_template_title"></label>
+							<label for="input_template_title">Titel</label>
 							<input type="text" name="template_title" id="input_template_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_template_plain"></label>
+							<label for="input_template_plain">Text-Variante</label>
 							<textarea name="template_plain" id="input_template_plain" class="span12" rows="12">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_template_html"></label>
+							<label for="input_template_html">HTML-Gerüst</label>
 							<textarea name="template_html" id="input_template_html" class="span12" rows="12">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_template_css"></label>
+							<label for="input_template_css">Style-Definitionen</label>
 							<textarea name="template_css" id="input_template_css" class="span12 CodeMirror-auto" rows="12">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>

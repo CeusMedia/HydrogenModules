@@ -80,31 +80,28 @@ if( $template->images ){
 $rowText	= '
 <div class="row-fluid">
 	<div class="span12">
-		<h4>Text-Variante</h4>
-		<label for="input_template_plain"></label>
-		<textarea name="template_plain" id="input_template_plain" class="span12 CodeMirror-auto" rows="4">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
+		<label for="input_template_plain">Text-Variante</label>
+		<textarea name="template_plain" id="input_template_plain" class="span12 ace-auto" data-ace-option-max-lines="14" rows="14">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
 	</div>
 </div>';
 $rowHtml	= '
 <div class="row-fluid">
 	<div class="span12">
-		<h4>HTML-Gerüst</h4>
-		<label for="input_template_html"></label>
-		<textarea name="template_html" id="input_template_html" class="span12 CodeMirror-auto" rows="14">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
+		<label for="input_template_html">HTML-Gerüst</label>
+		<textarea name="template_html" id="input_template_html" class="span12 ace-auto" data-ace-option-max-lines="14" data-ace-mode="html" rows="14" style="line-height: 1em">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
 	</div>
 </div>';
 $rowStyles	= '
 <div class="row-fluid">
 	<div class="span6">
-		<h4>Style-Definitionen</h4>
-		<label for="input_template_css"></label>
-		<textarea name="template_css" id="input_template_css" class="span12 CodeMirror-auto" rows="10">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
+		<label for="input_template_css">Style-Definitionen</label>
+		<textarea name="template_css" id="input_template_css" class="span12 ace-auto"data-ace-option-max-lines="14" data-ace-mode="css" rows="14" style="line-height: 1em">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
 	</div>
 	<div class="span6">
 		<h4>Style-Files</h4>
 		'.$listStyles.'
 		<label for="input_template_style">Pfad</label>
-		<input type="text" name="template_style"/>
+		<input type="text" name="template_style" class="span12"/>
 	</div>
 </div>';
 $rowImages	= '
@@ -112,7 +109,7 @@ $rowImages	= '
 	<h4>Bildverweise</h4>
 	'.$listImages.'
 	<label for="input_template_image">Pfad</label>
-	<input type="text" name="template_image"/>
+	<input type="text" name="template_image" class="span12"/>
 </div>';
 
 $tabs		= new \CeusMedia\Bootstrap\Tabs( 'admin-mail-template-edit' );
@@ -130,18 +127,11 @@ return '
 				<form action="./admin/mail/template/edit/'.$template->mailTemplateId.'" method="post" class="not-form-changes-auto">
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_template_title"></label>
+							<label for="input_template_title">Titel</label>
 							<input type="text" name="template_title" id="input_template_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
-<!--					'.$tabs.'-->
-					'.$rowText.'
-					<hr/>
-					'.$rowHtml.'
-					<hr/>
-					'.$rowStyles.'
-					<hr/>
-					'.$rowImages.'
+					'.$tabs.'
 					<div class="buttonbar">
 						'.$buttonCancel.'
 						'.$buttonSave.'
@@ -156,9 +146,9 @@ return '
 			<div class="content-panel-inner">
 				<form action="./admin/mail/template/test/'.$template->mailTemplateId.'" method="post">
 				<div class="row-fluid">
-					<div class="span12">
+					<div class="span6">
 						<label for="input_email">E-Mail-Adresse</label>
-						<input type="text" name="email" id="input_email"/>
+						<input type="text" name="email" id="input_email" class="span12"/>
 					</div>
 				</div>
 				<div class="buttonbar">
@@ -167,5 +157,15 @@ return '
 			</div>
 		</div>
 	</div>
-</div>';
+</div>
+<script>
+jQuery(document).ready(function(){
+	jQuery("#admin-mail-template-edit li").bind("click", function(){
+		console.log(jQuery(this).data("nr"));
+	});
+})
+</script>
+<style>
+</style>
+';
 ?>
