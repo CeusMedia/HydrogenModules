@@ -250,15 +250,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 		$motherModuleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 
+		$useRegisterByConfig	= $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' );
+		$useRegisterByLimit		= !$this->limiter || !$this->limiter->denies( 'Auth.Local.Login:register' );
 
-		$useRegisterConfig	= $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' );
-		$useRegisterLimit	= $this->limiter && !$this->limiter->denies( 'Auth.Local.Login:register' );
+		$this->addData( 'useRegister', $useRegisterByConfig && $useRegisterByLimit );
 
-		$this->addData( 'useRegister', $useRegisterConfig && $useRegisterLimit );
-
-		$useRememberConfig	= $this->moduleConfig->get( 'login.remember' );
-		$useRememberLimit	= $this->limiter && !$this->limiter->denies( 'Auth.Local.Login:remember' );
-		$this->addData( 'useRemember', $useRememberConfig && $useRememberLimit );
+		$useRememberByConfig	= $this->moduleConfig->get( 'login.remember' );
+		$useRememberByLimit		= !$this->limiter || !$this->limiter->denies( 'Auth.Local.Login:remember' );
+		$this->addData( 'useRemember', $useRememberByConfig && $useRememberByLimit );
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
