@@ -80,8 +80,8 @@ class Logic_Billing{
 			'status'	=> Model_Billing_Bill_Share::STATUS_NEW,
 			'billId'	=> $billId,
 			'personId'	=> $personId,
-			'percent'	=> $percent,
-			'amount'	=> $amount,
+			'percent'	=> (float) $percent,
+			'amount'	=> (float) $amount,
 		) );
 //		$this->_updatePayoutAmountByBill( $billId );
 		$this->_updateBillAssignedAmount( $billId );
