@@ -92,7 +92,6 @@
 	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
 	<link access="acl" xml:lang="de" rank="89" path="admin/mail/template">E-Mail-Templates</link>
 	<link access="acl" xml:lang="en" rank="89" path="admin/mail/template">Email templates</link>
-	
 	<todo>Implement attachment filters</todo>
 	<relations>
 		<needs type="module">JS_Ace</needs>
