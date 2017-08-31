@@ -34,15 +34,15 @@ return '
 					<div class="row-fluid">
 						<div class="span3">
 							<label for="input_amountNetto">Nettobetrag</label>
-							<input type="text" name="amountNetto" id="input_amountNetto" class="span10 input-number" data-max-precision="2" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0" name="amountNetto" id="input_amountNetto" class="span10 input-number" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span3">
 							<label for="input_amountTaxed">Bruttobetrag</label>
-							<input type="text" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" data-max-precision="2" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span3">
 							<label for="input_taxRate">Steuersatz</label>
-							<input type="text" name="taxRate" id="input_taxRate" class="span10 input-number" required="required" value="19" data-min-value="0" data-max-value="100" data-max-precision="2" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">%</span>
+							<input type="number" step="0.01" min="0" max="100" name="taxRate" id="input_taxRate" class="span10 input-number" value="19.00" required="required" required="required" autocomplete="off" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">%</span>
 						</div>
 					</div>
 					<div class="buttonbar">

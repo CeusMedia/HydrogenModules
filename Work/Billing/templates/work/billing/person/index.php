@@ -9,7 +9,7 @@ if( $persons ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', count( $person->payouts ) ),
-			UI_HTML_Tag::create( 'td', number_format( $person->balance, 2 ).'&nbsp;&euro;' ),
+			UI_HTML_Tag::create( 'td', number_format( $person->balance, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
@@ -21,6 +21,11 @@ if( $persons ){
 		'Person',
 		'Auszahlungen',
 		'Balance'
+	) ) );
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+		UI_HTML_Tag::create( 'th', 'Person' ),
+		UI_HTML_Tag::create( 'th', 'Auszahlungen' ),
+		UI_HTML_Tag::create( 'th', 'Balance', array( 'class' => 'cell-number' ) ),
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );

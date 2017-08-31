@@ -30,7 +30,7 @@ $panelFacts		= '
 				</div>
 				<div class="span2">
 					<label for="input_balance">Kontostand</label>
-					<input type="text" name="balance" id="input_balance" class="span10 input-number" data-max-precision="2" disabled="disabled" value="'.number_format( $person->balance, 2 ).'"/><span class="suffix">&euro;</span>
+					<input type="number" step="0.01" name="balance" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2 ).'"/><span class="suffix">&euro;</span>
 				</div>
 			</div>
 			<div class="buttonbar">

@@ -27,19 +27,19 @@ if( $bill->status == 1 ){
 		<div class="row-fluid">
 			<div class="span3">
 				<label for="input_taxRate">Steuersatz</label>
-				<input type="text" name="taxRate" id="input_taxRate" class="span10 input-number" disabled="disabled" value="'.$bill->taxRate.'"/><span class="suffix">%</span>
+				<input type="number" step="0.01" min="0" name="taxRate" id="input_taxRate" class="span10 input-number" disabled="disabled" value="'.$bill->taxRate.'"/><span class="suffix">%</span>
 			</div>
 			<div class="span3">
 				<label for="input_amountNetto">Nettobetrag</label>
-				<input type="text" name="amountNetto" id="input_amountNetto" class="span10 input-number" disabled="disabled" value="'.$bill->amountNetto.'"/><span class="suffix">&euro;</span>
+				<input type="number" step="0.01" min="0" name="amountNetto" id="input_amountNetto" class="span10 input-number" disabled="disabled" value="'.number_format( $bill->amountNetto, 2 ).'"/><span class="suffix">&euro;</span>
 			</div>
 			<div class="span3">
 				<label for="input_amountTaxed">Bruttobetrag</label>
-				<input type="text" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" disabled="disabled" value="'.$bill->amountTaxed.'"/><span class="suffix">&euro;</span>
+				<input type="number" step="0.01" min="0" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" disabled="disabled" value="'.number_format( $bill->amountTaxed, 2 ).'"/><span class="suffix">&euro;</span>
 			</div>
 			<div class="span3">
 				<label>noch zu verteilen</label>
-				<input type="text" disabled="disabled" class="span10 input-number" disabled="disabled" value="'.number_format( $bill->amountNetto - $bill->amountAssigned, 2 ).'"/><span class="suffix">&euro;</span>
+				<input type="number" step="0.01" min="0" disabled="disabled" class="span10 input-number" disabled="disabled" value="'.number_format( $bill->amountNetto - $bill->amountAssigned, 2 ).'"/><span class="suffix">&euro;</span>
 			</div>
 		</div>
 		<div class="buttonbar">
@@ -78,19 +78,19 @@ else{
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_taxRate">Steuersatz</label>
-					<input type="text" name="taxRate" id="input_taxRate" class="span10 input-number" required="required" data-max-precision="2" value="'.$bill->taxRate.'"/><span class="suffix">%</span>
+					<input type="number" step="0.01" min="0" name="taxRate" id="input_taxRate" class="span10 input-number" required="required" value="'.number_format( $bill->taxRate, 2 ).'" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">%</span>
 				</div>
 				<div class="span3">
 					<label for="input_amountNetto">Nettobetrag</label>
-					<input type="text" name="amountNetto" id="input_amountNetto" class="span10 input-number" data-max-precision="2" value="'.$bill->amountNetto.'" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+					<input type="number" step="0.01" min="0" name="amountNetto" id="input_amountNetto" class="span10 input-number"  value="'.number_format( $bill->amountNetto, 2 ).'" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span3">
 					<label for="input_amountTaxed">Bruttobetrag</label>
-					<input type="text" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" data-max-precision="2" value="'.$bill->amountTaxed.'" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+					<input type="number" step="0.01" min="0" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" value="'.number_format( $bill->amountTaxed, 2 ).'" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span3">
 					<label>noch zu verteilen</label>
-					<input type="text" disabled="disabled" class="span10 input-number" value="'.number_format( $bill->amountNetto - $bill->amountAssigned, 2 ).'"/><span class="suffix">&euro;</span>
+					<input type="number" step="0.01" min="0" disabled="disabled" class="span10 input-number" value="'.number_format( $bill->amountNetto - $bill->amountAssigned, 2 ).'"/><span class="suffix">&euro;</span>
 				</div>
 			</div>
 			<div class="row-fluid">

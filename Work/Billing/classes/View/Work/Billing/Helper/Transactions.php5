@@ -117,18 +117,24 @@ class View_Work_Billing_Helper_Transactions{
 				$target	= '-';
 			}
 
-			$date	= date( "d.m.Y", strtotime( $transaction->dateBooked ) );
-			$date	= UI_HTML_Tag::create( 'small', $date );
+			$year	= UI_HTML_Tag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), array( 'class' => 'muted' ) );
+			$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;
+
 
 			$list[]	= UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create( 'td', $title ),
 				UI_HTML_Tag::create( 'td', $target ),
-				UI_HTML_Tag::create( 'td', number_format( round( $transaction->amount, 2 ), 2 ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 				UI_HTML_Tag::create( 'td', $date, array( 'class' => 'cell-number' ) ),
+				UI_HTML_Tag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 			), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '160', '80', '80' ) );
-		$thead	= UI_HTML_Tag::create( 'thread', UI_HTML_Elements::TableHeads( array( 'Vorgang', 'Empfänger', 'Betrag', 'Datum' ) ) );
+		$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'th', 'Vorgang' ),
+			UI_HTML_Tag::create( 'th', 'Empfänger' ),
+			UI_HTML_Tag::create( 'th', 'Datum', array( 'class' => 'cell-number' ) ),
+			UI_HTML_Tag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
+		) ) );
 		$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 		$list = UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 

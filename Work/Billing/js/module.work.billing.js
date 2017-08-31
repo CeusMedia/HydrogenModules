@@ -8,6 +8,7 @@ var WorkBilling = {
 	},
 	init: function(){
 		jQuery("form input.input-number").each(function(){
+			return;
 			var input = jQuery(this);
 			input.bind("keydown", function(event){
 				if(event.keyCode == 188){
@@ -46,6 +47,7 @@ WorkBilling.Bill = {
 	updateAmounts: function(elem){
 		var id = jQuery(elem).attr("id");
 		var tax = jQuery("#input_taxRate").val();
+		console.log(tax);
 		if(isNaN(tax) || tax.length == 0)
 			return;
 		if(id == "input_amountNetto"){

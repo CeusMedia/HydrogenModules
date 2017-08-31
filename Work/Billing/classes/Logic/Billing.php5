@@ -579,15 +579,15 @@ class Logic_Billing{
 		$amount		= (float) $bill->amountNetto;
 		$expenses	= $this->getBillExpenses( $billId );
 		foreach( $expenses as $expense ){
-			$amount	-= $expense->amount;
+			$amount	-= (float) $expense->amount;
 		}
 		$reserves	= $this->getBillReserves( $billId );
 		$substract	= 0;
 		foreach( $reserves as $reserve ){
 			if( $reserve->percent )
-				$substract	+= $amount * $reserve->percent / 100;
+				$substract	+= $amount * (float) $reserve->percent / 100;
 			else
-				$substract	+= $reserve->amount;
+				$substract	+= (float) $reserve->amount;
 		}
 		return $amount - $substract;
 	}

@@ -23,19 +23,19 @@ if( $bills ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $number ),
 			UI_HTML_Tag::create( 'td', $title, array( 'class' => 'cell-title autocut' ) ),
-			UI_HTML_Tag::create( 'td', number_format( $bill->amountNetto, 2 ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', round( $bill->taxRate, 0 ).'%', array( 'class' => 'cell-number cell-bill-tax' ) ),
+			UI_HTML_Tag::create( 'td', number_format( $bill->amountNetto, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			UI_HTML_Tag::create( 'td', number_format( $bill->taxRate, 2, ',', '.' ).'%', array( 'class' => 'cell-number cell-bill-tax' ) ),
 			UI_HTML_Tag::create( 'td', $dateBooked, array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', $status ),
 		), array( 'class' => $bill->status > 0 ? 'success' : 'warning' ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
-		'50',
+		'120',
 		'',
 		'90',
-		'60',
-		'80',
-		'80',
+		'70',
+		'70',
+		'90',
 	) );
 	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'th', 'Nr' ),
@@ -47,7 +47,7 @@ if( $bills ){
 	) ) );
 	$tfoot	= UI_HTML_Tag::create( 'tfoot', UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', 'Gesamt', array( 'colspan' => 2 ) ),
-		UI_HTML_Tag::create( 'td', number_format( $totalAmount, 2 ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+		UI_HTML_Tag::create( 'td', number_format( $totalAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 		UI_HTML_Tag::create( 'td', '' ),
 		UI_HTML_Tag::create( 'td', '' ),
 		UI_HTML_Tag::create( 'td', '' ),
