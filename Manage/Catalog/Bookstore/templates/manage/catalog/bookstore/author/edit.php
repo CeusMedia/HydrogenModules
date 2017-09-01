@@ -18,7 +18,10 @@ foreach( $words['tabs'] as $key => $label ){
 		'data-toggle'	=> 'tab',
 		'onclick'		=> "ModuleManageCatalogBookstore.setAuthorTab('".$key."');",
 	);
-	$link	= UI_HTML_Tag::create( 'a', $label, $attributes );
+	$count	= '';
+	if( $key === "articles" && $articles )
+		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articles ), array( 'class' => 'badge badge-info' ) );
+	$link	= UI_HTML_Tag::create( 'a', $label.$count, $attributes );
 	$class	= $current == $key ? "active" : NULL;
 	$tabs[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 	$attributes		= array(

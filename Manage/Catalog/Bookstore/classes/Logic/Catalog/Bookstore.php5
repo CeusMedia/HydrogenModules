@@ -87,8 +87,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function addArticle( $data ){
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
-		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.articles' );
+		$this->clearCacheForArticle( $articleId );
 		return $articleId;
 	}
 
@@ -305,6 +304,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->cache->remove( 'catalog.bookstore.categories' );
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.categories' );
 		$this->cache->remove( 'catalog.bookstore.count.categories.articles' );
+//		$this->cache->remove( 'admin.categories.list.html' );
 	}
 
 	/**

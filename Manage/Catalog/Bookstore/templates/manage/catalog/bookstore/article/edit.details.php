@@ -51,7 +51,7 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_publication">'.$w->labelPublication.'</label>
+					<label for="input_publication"><abbr title="'.$w->labelPublication_title.'">'.$w->labelPublication.'</abbr></label>
 					<input class="span12" type="text" name="publication" id="input_publication" value="'.htmlentities( $article->publication, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span4">

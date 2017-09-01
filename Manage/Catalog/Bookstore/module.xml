@@ -3,7 +3,7 @@
 	<title>Manage: Catalog: Bookstore</title>
 	<description><![CDATA[Bookstore Catalog Management.]]></description>
 	<category>Management</category>
-	<version>0.7.2</version>
+	<version>0.7.3</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -39,6 +39,7 @@
 	<log version="0.7">Migration from module Manage:Catalog.</log>
 	<log version="0.7.1">Add support for large article images.</log>
 	<log version="0.7.2">Integrate module Resource:FileBucket.</log>
+	<log version="0.7.3">Extend tabs by badges of counted entities.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
