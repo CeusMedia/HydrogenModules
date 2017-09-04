@@ -71,31 +71,10 @@ if( $reserves ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed' ) );
 }
 
-$optYear	= array(
-	''	=> '- alle -',
-);
-$optYear[date( "Y" )]	= date( "Y" );
-$optYear[date( "Y" )-1]	= date( "Y" )-1;
-$optYear[date( "Y" )-2]	= date( "Y" )-2;
-$optYear	= UI_HTML_Elements::Options( $optYear, $filterYear );
-
-$optMonth	= array(
-	''		=> '- alle -',
-	'01'	=> 'Januar',
-	'02'	=> 'Februar',
-	'03'	=> 'März',
-	'04'	=> 'April',
-	'05'	=> 'Mai',
-	'06'	=> 'Juni',
-	'07'	=> 'Juli',
-	'08'	=> 'August',
-	'09'	=> 'September',
-	'10'	=> 'Oktober',
-	'11'	=> 'November',
-	'12'	=> 'Dezember',
-);
-$optMonth	= UI_HTML_Elements::Options( $optMonth, $filterMonth );
-
+$filter	= new View_Work_Billing_Helper_Filter( $this->env );
+$filter->setFilters( array( 'year', 'month' ) );
+$filter->setSessionPrefix( $filterSessionPrefix );
+$filter->setUrl( './work/billing/corporation/reserve/filter/'.$corporation->corporationId );
 
 $tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporationId, 2 );
 
@@ -104,18 +83,7 @@ return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporatio
 <div class="content-panel">
 	<h3>Rücklagen</h3>
 	<div class="content-panel-inner">
-		<form action="./work/billing/corporation/reserve/filter/'.$corporationId.'" method="post">
-			<div class="row-fluid">
-				<div class="span2">
-					<label for="input_year">Jahr</label>
-					<select name="year" id="input_year" class="span12" onchange="this.form.submit()">'.$optYear.'</select>
-				</div>
-				<div class="span2">
-					<label for="input_month">Monat</label>
-					<select name="month" id="input_month" class="span12" onchange="this.form.submit()">'.$optMonth.'</select>
-				</div>
-			</div>
-		</form>
+		'.$filter->render().'
 		'.$list.'
 	</div>
 </div>

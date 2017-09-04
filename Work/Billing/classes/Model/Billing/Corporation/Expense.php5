@@ -11,6 +11,7 @@ class Model_Billing_Corporation_Expense extends CMF_Hydrogen_Model{
 		'expenseId',
 		'status',
 		'amount',
+		'title',
 		'dateBooked',
 	);
 	protected $primaryKey	= 'corporationExpenseId';

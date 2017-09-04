@@ -12,6 +12,7 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
 		if( !$this->session->has( $this->filterPrefix.'month' ) )
 			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
+		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
 	}
 
 	public function add( $personId ){

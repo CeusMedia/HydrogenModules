@@ -11,6 +11,7 @@ class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controlle
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
 		if( !$this->session->has( $this->filterPrefix.'month' ) )
 			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
+		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
 	}
 
 	public function filter( $corporationId, $reset = FALSE ){

@@ -13,6 +13,7 @@ class Controller_Work_Billing_Person_Payin extends CMF_Hydrogen_Controller{
 		if( !$this->session->has( $this->filterPrefix.'month' ) )
 			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
 		$this->logic->_bookPersonPayins( $personId );
+		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
 	}
 
 	public function add( $personId ){

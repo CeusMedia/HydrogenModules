@@ -334,6 +334,10 @@ class Logic_Billing{
 		return $this->modelCorporation->getAll( $conditions, $orders, $limits );
 	}
 
+	public function getCorporationExpense( $expenseId ){
+		return $this->modelCorporationExpense->get( $expenseId );
+	}
+
 	public function getCorporationExpenses( $corporationId, $conditions = array(), $orders = array(), $limits = array() ){
 		$conditions	= array_merge( array( 'corporationId' => $corporationId ), $conditions );
 		$orders		= $orders ? $orders : array( 'corporationExpenseId' => 'ASC' );
