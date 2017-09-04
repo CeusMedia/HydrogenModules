@@ -1,4 +1,7 @@
 <?php
+//$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $payouts ){
@@ -27,23 +30,20 @@ if( $payouts ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonSave	= UI_HTML_Tag::create( 'button', 'buchen', array(
+$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'
 ) );
 if( $person->balance <= 0 ){
-	$buttonSave	= UI_HTML_Tag::create( 'button', 'buchen', array(
+	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 		'type'	=> 'button',
 		'disabled'	=> 'disabled',
 		'class'	=> 'btn btn-primary'
 	) );
 }
 
-
-
 $amount	= $person->balance > 0 ? floor( $person->balance * 100 ) / 100 : 0;
-
 
 $optYear	= array(
 	''	=> '- alle -',

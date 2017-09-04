@@ -1,4 +1,5 @@
 <?php
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
 $helper->setTransactions( $personTransactions );
@@ -31,7 +32,7 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 		<div class="content-panel">
 			<h3>Weiter im Text...</h3>
 			<div class="content-panel-inner">
-				<a href="./work/billing/bill/add" class="btn btn-success">neue Rechnung</a>
+				<a href="./work/billing/bill/add" class="btn btn-success">'.$iconAdd.' neue Rechnung</a>
 			</div>
 		</div>
 	</div>

@@ -1,13 +1,19 @@
 <?php
 
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $corporations ){
 	$list	= array();
 	foreach( $corporations as $corporation ){
-		$link	= UI_HTML_Tag::create( 'a', $corporation->title, array( 'href' => './work/billing/corporation/edit/'.$corporation->corporationId ) );
+		$link	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+			'href' => './work/billing/corporation/edit/'.$corporation->corporationId
+		) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
+			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', number_format( $corporation->balance, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 		) );
 	}
@@ -23,7 +29,7 @@ if( $corporations ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', 'neues Unternehmen', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neues Unternehmen', array(
 	'href'	=> './work/billing/corporation/add',
 	'class'	=> 'btn btn-success',
 ) );

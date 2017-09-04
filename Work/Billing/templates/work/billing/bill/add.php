@@ -1,10 +1,13 @@
 <?php
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', 'zur Liste', array(
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
 	'href'	=> './work/billing/bill',
 	'class'	=> 'btn btn',
 ) );
-$buttonSave	= UI_HTML_Tag::create( 'button', 'speichern', array(
+$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
@@ -34,15 +37,19 @@ return '
 					<div class="row-fluid">
 						<div class="span3">
 							<label for="input_amountNetto">Nettobetrag</label>
-							<input type="number" step="0.01" min="0" name="amountNetto" id="input_amountNetto" class="span10 input-number" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0" name="amountNetto" id="input_amountNetto" class="span10 input-number" required="required" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span3">
 							<label for="input_amountTaxed">Bruttobetrag</label>
-							<input type="number" step="0.01" min="0" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" required="required" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0" name="amountTaxed" id="input_amountTaxed" class="span10 input-number" required="required" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span3">
 							<label for="input_taxRate">Steuersatz</label>
-							<input type="number" step="0.01" min="0" max="100" name="taxRate" id="input_taxRate" class="span10 input-number" value="19.00" required="required" required="required" autocomplete="off" onkeyup="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">%</span>
+							<input type="number" step="0.01" min="0" max="100" name="taxRate" id="input_taxRate" class="span10 input-number" value="19.00" required="required" required="required" autocomplete="off" oninput="WorkBilling.Bill.updateAmounts(this)"/><span class="suffix">%</span>
+						</div>
+						<div class="span3">
+							<label>Mehrwertsteuer</label>
+							<input type="number" step="0.01" min="0" max="100" name="tax" id="output_tax" class="span10 input-number" disabled="disabled"/><span class="suffix">&euro;</span>
 						</div>
 					</div>
 					<div class="buttonbar">

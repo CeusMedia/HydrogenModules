@@ -1,5 +1,9 @@
 <?php
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
 $list	= array();
 $leftAmount	= (float) $bill->amountNetto;
 
@@ -115,39 +119,39 @@ foreach( $reserves as $reserve )
 	$optReserve[$reserve->reserveId]	= $reserve->title;
 $optReserve	= UI_HTML_Elements::Options( $optReserve );
 
-$buttonBook		= UI_HTML_Tag::create( 'button', 'buchen', array(
+$buttonBook		= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn btn-primary',
 ) );
-$buttonAddExpense	= UI_HTML_Tag::create( 'a', '+ neue Ausgabe', array(
+$buttonAddExpense	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
 	'href'			=> '#modal-add-expense',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonAddReserve	= UI_HTML_Tag::create( 'a', '+ neue Rücklage', array(
+$buttonAddReserve	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rücklage', array(
 	'href'			=> '#modal-add-reserve',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonAddShare		= UI_HTML_Tag::create( 'a', '+ neuer Anteil', array(
+$buttonAddShare		= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anteil', array(
 	'href'			=> '#modal-add-share',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
 if( $bill->amountNetto - $bill->amountAssigned == 0 ){
-	$buttonBook		= UI_HTML_Tag::create( 'a', 'buchen', array(
+	$buttonBook		= UI_HTML_Tag::create( 'a', $iconSave.' buchen', array(
 		'href'	=> './work/billing/bill/breakdown/book/'.$bill->billId,
 		'class'	=> 'btn btn-primary',
 	) );
-	$buttonAddExpense	= UI_HTML_Tag::create( 'button', '+ neue Ausgabe', array(
+	$buttonAddExpense	= UI_HTML_Tag::create( 'button', $iconAdd.' neue Ausgabe', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
 	) );
-	$buttonAddShare		= UI_HTML_Tag::create( 'a', '+ neuer Anteil', array(
+	$buttonAddShare		= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anteil', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
 	) );
@@ -189,7 +193,7 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" name="save" class="btn btn-primary">speichern</button>
+			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
 		</div>
 	</form>
 </div>
@@ -209,7 +213,7 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" name="save" class="btn btn-primary">speichern</button>
+			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
 		</div>
 	</form>
 </div>
@@ -237,7 +241,7 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button type="submit" name="save" class="btn btn-primary">speichern</button>
+			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
 		</div>
 	</form>
 </div>

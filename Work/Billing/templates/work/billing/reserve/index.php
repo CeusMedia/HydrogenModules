@@ -1,4 +1,6 @@
 <?php
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
 
 $list	= UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
 
@@ -9,7 +11,7 @@ if( $reserves ){
 		$corporation	= '<em class="muted">Person per Anteil</em>';
 		if( $reserve->corporationId ){
 			$corporation	= $corporations[$reserve->corporationId];
-			$corporation	= UI_HTML_Tag::create( 'a', $corporation->title, array(
+			$corporation	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
 			) );
 		}
@@ -17,7 +19,7 @@ if( $reserves ){
 		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2 ).'&nbsp;&euro;' : '-';
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $corporation ),
+			UI_HTML_Tag::create( 'td', $corporation, array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', $reserve->personalize ? 'ja' : 'nein', array( 'class' => 'cell-feature' ) ),
 			UI_HTML_Tag::create( 'td', $percent, array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
@@ -41,7 +43,7 @@ if( $reserves ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', 'neue Rücklage', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rücklage', array(
 	'href'	=> './work/billing/reserve/add',
 	'class'	=> 'btn btn-success',
 ) );

@@ -1,5 +1,7 @@
 <?php
 
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
 $list	= UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
 
 $statuses	= array(
@@ -56,7 +58,7 @@ if( $bills ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', 'neue Rechnungen', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rechnungen', array(
 	'href'	=> './work/billing/bill/add',
 	'class'	=> 'btn btn-success',
 ) );

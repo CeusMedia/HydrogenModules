@@ -1,10 +1,13 @@
 <?php
-$buttonCancel	= UI_HTML_Tag::create( 'a', 'zur Liste', array(
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
 	'href'	=> './work/billing/expense',
 	'class'	=> 'btn btn',
 ) );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', 'speichern', array(
+$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',

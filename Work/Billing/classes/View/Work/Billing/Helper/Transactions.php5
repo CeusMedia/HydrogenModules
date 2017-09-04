@@ -97,18 +97,22 @@ class View_Work_Billing_Helper_Transactions{
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
+		$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+		$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+
+
 		foreach( $this->transactions as $transaction ){
 			$title	= $this->transformRelationToTitle( $transaction->relation );
 
 			if( $this->mode === static::MODE_PERSON ){
 				$person	= $modelPerson->get( $transaction->personId );
-				$target	= UI_HTML_Tag::create( 'a', $person->firstname.' '.$person->surname, array(
+				$target	= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
 					'href'	=> './work/billing/person/edit/'.$person->personId,
 				) );
 			}
 			else if( $this->mode === static::MODE_CORPORATION ){
 				$corporation	= $modelCorporation->get( $transaction->corporationId );
-				$target	= UI_HTML_Tag::create( 'a', $corporation->title, array(
+				$target	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 					'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId,
 				) );
 //				$target	= UI_HTML_Tag::create( 'small', $target );

@@ -46,26 +46,31 @@ var WorkBilling = {
 WorkBilling.Bill = {
 	updateAmounts: function(elem){
 		var id = jQuery(elem).attr("id");
-		var tax = jQuery("#input_taxRate").val();
-		console.log(tax);
-		if(isNaN(tax) || tax.length == 0)
+		var taxRate = jQuery("#input_taxRate").val();
+		if(isNaN(taxRate) || taxRate.length == 0)
 			return;
 		if(id == "input_amountNetto"){
-			var value = jQuery(elem).val() * ( 1 + tax / 100);
+			var value = jQuery(elem).val() * ( 1 + taxRate / 100);
 			value = Math.round(value * 100, 2) / 100;
 			jQuery("#input_amountTaxed").val(value);
+			var tax = value - jQuery(elem).val();
+			jQuery("#output_tax").val(Math.round(tax * 100, 2) / 100);
 		}
 		if(id == "input_amountTaxed"){
-			var value = jQuery(elem).val() / ( 1 + tax / 100);
+			var value = jQuery(elem).val() / ( 1 + taxRate / 100);
 			value = Math.round(value * 100, 2) / 100;
 			jQuery("#input_amountNetto").val(value);
+			var tax = jQuery(elem).val() - value;
+			jQuery("#output_tax").val(Math.round(tax * 100, 2) / 100);
 		}
 		if(id == "input_taxRate"){
 			if(!isNaN(jQuery("#input_amountNetto").val())){
 				if(jQuery("#input_amountNetto").val().length > 0){
-					var value = jQuery("#input_amountNetto").val() * ( 1 + tax / 100);
+					var value = jQuery("#input_amountNetto").val() * ( 1 + taxRate / 100);
 					value = Math.round(value * 100, 2) / 100;
 					jQuery("#input_amountTaxed").val(value);
+					var tax = value - jQuery("#input_amountNetto").val();
+					jQuery("#output_tax").val(Math.round(tax * 100, 2) / 100);
 				}
 			}
 		}

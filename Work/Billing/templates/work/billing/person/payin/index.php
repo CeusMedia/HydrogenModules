@@ -1,4 +1,7 @@
 <?php
+//$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $payins ){
@@ -23,7 +26,7 @@ if( $payins ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonSave	= UI_HTML_Tag::create( 'button', 'buchen', array(
+$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'

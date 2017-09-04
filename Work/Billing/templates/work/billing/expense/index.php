@@ -1,4 +1,7 @@
 <?php
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
 
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
@@ -22,13 +25,13 @@ if( $expenses ){
 		$link	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './work/billing/expense/edit/'.$expense->expenseId ) );
 		if( $expense->corporationId ){
 			$corporation	= $corporations[$expense->corporationId];
-			$relation		= UI_HTML_Tag::create( 'a', $corporation->title, array(
+			$relation		= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
 			) );
 		}
 		else if( $expense->personId ){
 			$person		= $persons[$expense->personId];
-			$relation		= UI_HTML_Tag::create( 'a', $person->firstname.' '.$person->surname, array(
+			$relation		= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
 				'href'	=> './work/billing/person/edit/'.$person->personId
 			) );
 		}
@@ -36,7 +39,7 @@ if( $expenses ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $frequencies[$expense->frequency] ),
-			UI_HTML_Tag::create( 'td', $relation ),
+			UI_HTML_Tag::create( 'td', $relation, array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
 		) );
 	}
@@ -56,7 +59,7 @@ if( $expenses ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', 'neue Ausgabe', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
 	'href'	=> './work/billing/expense/add',
 	'class'	=> 'btn btn-success',
 ) );

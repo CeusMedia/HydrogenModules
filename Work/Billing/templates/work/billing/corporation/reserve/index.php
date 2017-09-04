@@ -1,4 +1,8 @@
 <?php
+
+$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $reserves ){
@@ -11,12 +15,12 @@ if( $reserves ){
 		$person	= '-';
 		if( $reserve->personId ){
 			$person	= $reserve->person->firstname.' '.$reserve->person->surname;
-			$person	= UI_HTML_Tag::create( 'a', $person, array(
+			$person	= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person, array(
 				'href'	=> './work/billing/person/edit/'.$reserve->personId,
 			) );
 		}
 
-		$target	= UI_HTML_Tag::create( 'a', $reserve->corporation->title, array(
+		$target	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$reserve->corporation->title, array(
 			'href'	=> './work/billing/corporation/edit/'.$reserve->corporationId,
 		) );
 		$bill	= UI_HTML_Tag::create( 'a', $reserve->bill->number.': '.$reserve->bill->title, array(

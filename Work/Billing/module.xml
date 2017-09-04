@@ -3,10 +3,11 @@
 	<title>Work: Billing</title>
 	<description><![CDATA[Account and billing for small companies.]]></description>
 	<category>Work</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve lists and inputs.</log>
+	<log version="0.2.2">Add icons with UI:Font:FontAwesome.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -92,6 +93,7 @@
 	</files>
 	<needs type="module">JS_Form_Changes</needs>
 	<needs type="module">UI_CSS_Panel</needs>
+	<needs type="module">UI_Font_FontAwesome</needs>
 	<needs type="module">UI_Navigation</needs>
 	<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	<needs type="module">Resource_Database</needs>
