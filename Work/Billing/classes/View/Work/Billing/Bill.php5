@@ -11,9 +11,9 @@ class View_Work_Billing_Bill extends CMF_Hydrogen_View{
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
 		$modelBill	= new Model_Billing_Bill( $env );
 		$bill		= $modelBill->get( $data['billId'] );
-		$context->registerTab( 'edit/'.$data['billId'], 'Daten', 0 );
-		$context->registerTab( 'breakdown/'.$data['billId'], 'Aufteilung', 1 );
-		$context->registerTab( 'transaction/'.$data['billId'], 'Transaktionen', 2, $bill->status == 0 );
+		$context->registerTab( 'edit/'.$data['billId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
+		$context->registerTab( 'breakdown/'.$data['billId'], '<i class="fa fa-fw fa-sitemap"></i> Aufteilung', 1 );
+		$context->registerTab( 'transaction/'.$data['billId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 2, $bill->status == 0 );
 	}
 
 	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $billId, $current = 0 ){

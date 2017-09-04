@@ -3,11 +3,12 @@
 	<title>Work: Billing</title>
 	<description><![CDATA[Account and billing for small companies.]]></description>
 	<category>Work</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve lists and inputs.</log>
 	<log version="0.2.2">Add icons with UI:Font:FontAwesome.</log>
+	<log version="0.2.3">Add corporation expenses.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,6 +20,7 @@
 		<class>Controller/Work/Billing/Reserve.php5</class>
 		<class>Controller/Work/Billing/Bill/Breakdown.php5</class>
 		<class>Controller/Work/Billing/Bill/Transaction.php5</class>
+		<class>Controller/Work/Billing/Corporation/Expense.php5</class>
 		<class>Controller/Work/Billing/Corporation/Payout.php5</class>
 		<class>Controller/Work/Billing/Corporation/Reserve.php5</class>
 		<class>Controller/Work/Billing/Corporation/Transaction.php5</class>
@@ -53,6 +55,7 @@
 		<class>View/Work/Billing/Reserve.php5</class>
 		<class>View/Work/Billing/Bill/Breakdown.php5</class>
 		<class>View/Work/Billing/Bill/Transaction.php5</class>
+		<class>View/Work/Billing/Corporation/Expense.php5</class>
 		<class>View/Work/Billing/Corporation/Payout.php5</class>
 		<class>View/Work/Billing/Corporation/Reserve.php5</class>
 		<class>View/Work/Billing/Corporation/Transaction.php5</class>
@@ -70,6 +73,7 @@
 		<template>work/billing/corporation/add.php</template>
 		<template>work/billing/corporation/edit.php</template>
 		<template>work/billing/corporation/index.php</template>
+		<template>work/billing/corporation/expense/index.php</template>
 		<template>work/billing/corporation/payout/index.php</template>
 		<template>work/billing/corporation/reserve/index.php</template>
 		<template>work/billing/corporation/transaction/index.php</template>
@@ -168,6 +172,22 @@ CREATE TABLE `<%?prefix%>billing_bills` (
   KEY `status` (`status`),
   KEY `number` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_expenses`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_corporation_expenses` (
+  `corporationExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `corporationId` int(10) unsigned NOT NULL,
+  `expenseId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `amount` decimal(10,4) NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`corporationExpenseId`),
+  KEY `personId` (`corporationId`) USING BTREE,
+  KEY `expenseId` (`expenseId`),
+  KEY `status` (`status`) USING BTREE,
+  KEY `dateBooked` (`dateBooked`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_payouts`;
 CREATE TABLE `<%?prefix%>billing_corporation_payouts` (

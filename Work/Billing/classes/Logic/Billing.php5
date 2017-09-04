@@ -12,6 +12,7 @@ class Logic_Billing{
 		$this->modelBillExpense				= new Model_Billing_Bill_Expense( $this->env );
 		$this->modelBillReserve				= new Model_Billing_Bill_Reserve( $this->env );
 		$this->modelCorporation				= new Model_Billing_Corporation( $this->env );
+		$this->modelCorporationExpense		= new Model_Billing_Corporation_Expense( $this->env );
 		$this->modelCorporationPayout		= new Model_Billing_Corporation_Payout( $this->env );
 		$this->modelCorporationReserve		= new Model_Billing_Corporation_Reserve( $this->env );
 		$this->modelCorporationTransaction	= new Model_Billing_Corporation_Transaction( $this->env );
@@ -23,7 +24,6 @@ class Logic_Billing{
 		$this->modelReserve					= new Model_Billing_Reserve( $this->env );
 		$this->modelExpense					= new Model_Billing_Expense( $this->env );
 		$this->modelPersonExpense			= new Model_Billing_Person_Expense( $this->env );
-//		$this->modelCorporationExpense		= new Model_Billing_Expense( $this->env );
 	}
 
 	public function addBill( $number, $title, $taxRate, $amountNetto = 0, $amountTaxed = 0 ){
@@ -334,6 +334,12 @@ class Logic_Billing{
 		return $this->modelCorporation->getAll( $conditions, $orders, $limits );
 	}
 
+	public function getCorporationExpenses( $corporationId, $conditions = array(), $orders = array(), $limits = array() ){
+		$conditions	= array_merge( array( 'corporationId' => $corporationId ), $conditions );
+		$orders		= $orders ? $orders : array( 'corporationExpenseId' => 'ASC' );
+		return $this->modelCorporationExpense->getAll( $conditions, $orders, $limits );
+	}
+
 	public function getCorporationPayout( $payoutId ){
 		return $this->modelCorporationPayout->get( $payoutId );
 	}
@@ -468,6 +474,34 @@ class Logic_Billing{
 					$amount	+= $share->amount;
 			}
 			$this->modelPersonPayout->edit( $payout->payoutId, array( 'amount' => $amount ) );
+		}
+	}
+
+	public function _bookCorporationExpenses( $corporationId ){
+		$expenses	= $this->getCorporationExpenses( $corporationId, array( 'status' => Model_Billing_Corporation_Expense::STATUS_NEW ) );
+		$this->env->getDatabase()->beginTransaction();
+		try{
+			foreach( $expenses as $expense ){
+				$relation	= '|corporationExpense:'.$expense->corporationExpenseId.'|';
+				if( $expense->expenseId )
+					$relation	.= 'expense:'.$expense->expenseId.'|';
+				$this->modelCorporationTransaction->add( array(
+					'status'		=> Model_Billing_Corporation_Transaction::STATUS_NEW,
+					'corporationId'	=> $expense->corporationId,
+					'relation'		=> $relation,
+					'amount'		=> -1 * $expense->amount,
+					'dateBooked'	=> $expense->dateBooked,
+				) );
+				$this->modelCorporationExpense->edit( $expense->corporationExpenseId, array(
+					'status' => Model_Billing_Corporation_Expense::STATUS_BOOKED,
+				) );
+			}
+			$this->env->getDatabase()->commit();
+			$this->_realizeCorporationTransactions( $corporationId );
+		}
+		catch( Exception $e ){
+			$this->env->getDatabase()->rollBack();
+			$this->env->getMessenger()->noteFailure( $e->getMessage() );
 		}
 	}
 
