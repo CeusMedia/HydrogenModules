@@ -108,20 +108,36 @@
 		$context->js->addScriptOnReady("WorkBilling.init()");
 	]]></hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>billing_bills`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_bills` (
+  `billId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `number` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amountNetto` decimal(8,2) unsigned NOT NULL,
+  `amountTaxed` decimal(8,2) unsigned NOT NULL,
+  `amountAssigned` decimal(8,2) DEFAULT '0.00',
+  `taxRate` decimal(4,2) unsigned NOT NULL,
+  `dateBooked` date NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`billId`),
+  KEY `status` (`status`),
+  KEY `number` (`number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
 DROP TABLE IF EXISTS `<%?prefix%>billing_bill_expenses`;
-CREATE TABLE `<%?prefix%>billing_bill_expenses` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_bill_expenses` (
   `billExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `billId` int(10) unsigned NOT NULL,
   `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `amount` decimal(10,4) NOT NULL,
-  `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`billExpenseId`),
   KEY `billId` (`billId`),
   KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_bill_reserves`;
-CREATE TABLE `<%?prefix%>billing_bill_reserves` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_bill_reserves` (
   `billReserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `billId` int(10) unsigned NOT NULL,
   `reserveId` int(10) unsigned NOT NULL,
@@ -130,17 +146,17 @@ CREATE TABLE `<%?prefix%>billing_bill_reserves` (
   `personalize` tinyint(1) unsigned DEFAULT '0' COMMENT '0:no, 1:yes',
   `percent` decimal(6,2) unsigned NOT NULL,
   `amount` decimal(10,4) unsigned NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`billReserveId`),
   KEY `billId` (`billId`) USING BTREE,
   KEY `reserveId` (`reserveId`) USING BTREE,
   KEY `corporationId` (`corporationId`),
   KEY `status` (`status`) USING BTREE,
   KEY `personalize` (`personalize`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_bill_shares`;
-CREATE TABLE `<%?prefix%>billing_bill_shares` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_bill_shares` (
   `billShareId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `billId` int(10) unsigned NOT NULL,
   `personId` int(10) unsigned NOT NULL,
@@ -153,202 +169,87 @@ CREATE TABLE `<%?prefix%>billing_bill_shares` (
   KEY `personId` (`personId`),
   KEY `payoutId` (`personPayoutId`),
   KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_bills`;
-CREATE TABLE `<%?prefix%>billing_bills` (
-  `billId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `status` tinyint(1) DEFAULT '0',
-  `number` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `amountNetto` decimal(8,2) unsigned NOT NULL,
-  `amountTaxed` decimal(8,2) unsigned NOT NULL,
-  `amountAssigned` decimal(8,2) DEFAULT '0.00',
-  `taxRate` decimal(4,2) unsigned NOT NULL,
-  `dateBooked` date NOT NULL,
-  `datePayed` date NOT NULL,
-  `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`billId`),
-  KEY `status` (`status`),
-  KEY `number` (`number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_expenses`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_corporation_expenses` (
-  `corporationExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `corporationId` int(10) unsigned NOT NULL,
-  `expenseId` int(10) unsigned DEFAULT '0',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `amount` decimal(10,4) NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`corporationExpenseId`),
-  KEY `personId` (`corporationId`) USING BTREE,
-  KEY `expenseId` (`expenseId`),
-  KEY `status` (`status`) USING BTREE,
-  KEY `dateBooked` (`dateBooked`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_payouts`;
-CREATE TABLE `<%?prefix%>billing_corporation_payouts` (
-  `corporationPayoutId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `corporationId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '0',
-  `amount` decimal(8,2) DEFAULT '0.00',
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`corporationPayoutId`),
-  KEY `personId` (`corporationId`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_reserves`;
-CREATE TABLE `<%?prefix%>billing_corporation_reserves` (
-  `corporationReserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `corporationId` int(10) unsigned NOT NULL,
-  `reserveId` int(10) unsigned NOT NULL,
-  `billId` int(10) unsigned NOT NULL,
-  `personId` int(10) unsigned DEFAULT NULL,
-  `status` tinyint(1) DEFAULT '0',
-  `personalize` tinyint(1) unsigned DEFAULT '0' COMMENT '0:no, 1:yes',
-  `amount` decimal(10,4) unsigned NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`corporationReserveId`),
-  KEY `corporationId` (`corporationId`),
-  KEY `reserveId` (`reserveId`),
-  KEY `personId` (`personId`) USING BTREE,
-  KEY `status` (`status`) USING BTREE,
-  KEY `dateBooked` (`dateBooked`) USING BTREE,
-  KEY `billId` (`billId`),
-  KEY `personalize` (`personalize`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_corporation_transactions`;
-CREATE TABLE `<%?prefix%>billing_corporation_transactions` (
-  `corporationTransactionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `corporationId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) DEFAULT '0',
-  `relation` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `amount` decimal(10,4) DEFAULT '0.0000',
-  `dateCreated` date NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`corporationTransactionId`),
-  KEY `personId` (`corporationId`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_corporations`;
-CREATE TABLE `<%?prefix%>billing_corporations` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_corporations` (
   `corporationId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) DEFAULT '0',
-  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `balance` decimal(12,4) DEFAULT '0.0000',
-  `iban` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `bic` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `iban` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bic` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`corporationId`) USING BTREE,
   KEY `status` (`status`),
   KEY `iban` (`iban`),
   KEY `bic` (`bic`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_expenses`;
-CREATE TABLE `<%?prefix%>billing_expenses` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_expenses` (
   `expenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `corporationId` int(10) unsigned DEFAULT '0',
-  `personId` int(10) unsigned DEFAULT '0',
+  `fromCorporationId` int(10) unsigned DEFAULT '0',
+  `fromPersonId` int(10) unsigned DEFAULT '0',
+  `toCorporationId` int(10) unsigned DEFAULT '0',
+  `toPersonId` int(10) unsigned DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `frequency` tinyint(3) unsigned DEFAULT '0' COMMENT '0:none, 1:year, 2:quarter, 3:month, 4:week, 5:day',
   `dayOfMonth` tinyint(3) unsigned DEFAULT '0',
   `amount` decimal(6,2) unsigned NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`expenseId`),
-  KEY `corporationId` (`corporationId`),
-  KEY `personId` (`personId`),
+  KEY `corporationId` (`fromCorporationId`),
+  KEY `personId` (`fromPersonId`),
   KEY `status` (`status`),
   KEY `frequency` (`frequency`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_person_expenses`;
-CREATE TABLE `<%?prefix%>billing_person_expenses` (
-  `personExpenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL,
-  `expenseId` int(10) unsigned DEFAULT '0',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `amount` decimal(10,4) NOT NULL,
-  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`personExpenseId`),
-  KEY `personId` (`personId`) USING BTREE,
-  KEY `expenseId` (`expenseId`),
-  KEY `status` (`status`) USING BTREE,
-  KEY `dateBooked` (`dateBooked`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_person_payins`;
-CREATE TABLE `<%?prefix%>billing_person_payins` (
-  `personPayinId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '0',
-  `amount` decimal(8,2) NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`personPayinId`),
-  KEY `personId` (`personId`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_person_payouts`;
-CREATE TABLE `<%?prefix%>billing_person_payouts` (
-  `personPayoutId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '0',
-  `amount` decimal(8,2) DEFAULT '0.00',
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`personPayoutId`),
-  KEY `personId` (`personId`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>billing_person_transactions`;
-CREATE TABLE `<%?prefix%>billing_person_transactions` (
-  `personTransactionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `personId` int(10) unsigned NOT NULL,
-  `status` tinyint(1) DEFAULT '0',
-  `relation` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `amount` decimal(10,4) DEFAULT '0.0000',
-  `dateCreated` date NOT NULL,
-  `dateBooked` date NOT NULL,
-  PRIMARY KEY (`personTransactionId`),
-  KEY `personId` (`personId`),
-  KEY `status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_persons`;
-CREATE TABLE `<%?prefix%>billing_persons` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_persons` (
   `personId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) DEFAULT '0',
-  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `firstname` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `surname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `firstname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `surname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `balance` decimal(10,4) DEFAULT '0.0000',
   PRIMARY KEY (`personId`),
   KEY `status` (`status`),
   KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5 ;
 
 DROP TABLE IF EXISTS `<%?prefix%>billing_reserves`;
-CREATE TABLE `<%?prefix%>billing_reserves` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_reserves` (
   `reserveId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `corporationId` int(10) unsigned DEFAULT '0',
   `status` tinyint(1) DEFAULT '1',
   `personalize` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0:no, 1:yes',
   `percent` decimal(6,2) unsigned DEFAULT '0.00',
   `amount` decimal(10,4) unsigned DEFAULT '0.0000',
-  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`reserveId`),
   KEY `corporationId` (`corporationId`),
   KEY `status` (`status`),
   KEY `personalize` (`personalize`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+
+DROP TABLE IF EXISTS `<%?prefix%>billing_transactions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_transactions` (
+  `transactionId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `fromType` tinyint(1) unsigned DEFAULT '0' COMMENT '0:none, 1:corporation, 2:person, 3:payin, 4:payout, 5:reserve, 6:expense, 7:bill',
+  `fromId` int(10) unsigned DEFAULT '0',
+  `toType` tinyint(1) unsigned DEFAULT '0' COMMENT '0:none, 1:corporation, 2:person, 3:payin, 4:payout, 5:reserve, 6:expense, 7:bill',
+  `toId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:new, 1:booked',
+  `relation` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount` decimal(10,4) DEFAULT '0.0000',
+  `title` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `dateBooked` date NOT NULL,
+  PRIMARY KEY (`transactionId`),
+  KEY `personId` (`fromId`),
+  KEY `status` (`status`),
+  KEY `fromType` (`fromType`),
+  KEY `toType` (`toType`),
+  KEY `toId` (`toId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
 ]]></sql>
 </module>

@@ -20,7 +20,7 @@ $helper->setHeading( 'Ausgaben' );
 $helper->setTransactions( $expenses );
 $helper->setFilterUrl( './work/billing/corporation/expense/filter/'.$corporation->corporationId );
 $helper->setFilterPrefix( $filterSessionPrefix );
-$helper->setButtons( $buttonAdd );ss
+$helper->setButtons( $buttonAdd );
 $panelTransactions	= $helper->render();
 
 $tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 2 );
