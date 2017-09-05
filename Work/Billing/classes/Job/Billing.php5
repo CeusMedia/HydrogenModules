@@ -8,59 +8,102 @@ class Job_Billing extends Job_Abstract{
 		$this->logic	= new Logic_Billing( $this->env );
 	}
 
+	protected function _bookExpense( $expense ){
+		$title	= $expense->title;
+		if( preg_match( '/\[date\.Y\]/', $title ) )
+			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
+		if( preg_match( '/\[date.m\]/', $title ) )
+			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
+		if( preg_match( '/\[date.d\]/', $title ) )
+			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
+
+		$fromType	= Model_Billing_Transaction::TYPE_NONE;
+		$fromId		= 0;
+		$toType		= Model_Billing_Transaction::TYPE_NONE;
+		$toId		= 0;
+		if( $expense->fromCorporationId ){
+			$fromType	= Model_Billing_Transaction::TYPE_CORPORATION;
+			$fromId		= $expense->fromCorporationId;
+		}
+		else if( $expense->fromPersonId ){
+			$fromType	= Model_Billing_Transaction::TYPE_PERSON;
+			$fromId		= $expense->fromPersonId;
+		}
+		if( $expense->toCorporationId ){
+			$toType	= Model_Billing_Transaction::TYPE_CORPORATION;
+			$toId	= $expense->toCorporationId;
+		}
+		else if( $expense->toPersonId ){
+			$toType	= Model_Billing_Transaction::TYPE_PERSON;
+			$toId	= $expense->toPersonId;
+		}
+		return $this->logic->addTransaction(
+			$expense->amount,
+			$fromType,
+			$fromId,
+			$toType,
+			$toId,
+			NULL,
+			$title
+		);
+	}
+
 	public function bookExpenses(){
-		$dayOfMonth	= (int) date( 'j' );
+		$date	= strtotime( "2017-01-02" );
 
-		$dayOfMonth	= 1;
+		$dayOfWeek	= (int) date( 'w', $date );
+		$dayOfMonth	= (int) date( 'j', $date );
+		$dayOfYear	= (int) date( 'z', $date ) + 1;
 
-		$modelCorporation				= new Model_Billing_Corporation( $this->env );
-		$modelCorporationTransaction	= new Model_Billing_Corporation_Transaction( $this->env );
-		$modelPerson					= new Model_Billing_Person( $this->env );
-		$modelPersonTransaction			= new Model_Billing_Person_Transaction( $this->env );
-
-		if( $dayOfMonth === 1 ){
-			$expenses	= $this->logic->getExpenses( array( 'frequency' => 3 ) );
-			foreach( $expenses as $expense ){
-				if( $expense->corporationId ){
-					$modelCorporationTransaction->add( array(
-						'status'		=> Model_Billing_Corporation_Transaction::STATUS_BOOKED,
-						'corporationId'	=> $expense->corporationId,
-						'relation'		=> '|expense:'.$expense->expenseId.'|',
-						'amount'		=> -1 * $expense->amount,
-						'dateBooked'	=> date( 'Y-m-d' ),
-					) );
-					$corporation		= $this->logic->getCorporation( $expense->corporationId );
-					$modelCorporation->edit( $expense->corporationId, array(
-						'balance'	=> $corporation->balance - $expense->amount,
-					) );
-				}
-				else if( $expense->personId ){
-					$title	= $expense->title;
-					if( preg_match( '/\[date\.Y\]/', $title ) )
-						$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
-					if( preg_match( '/\[date.m\]/', $title ) )
-						$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
-					$this->logic->addPersonExpense(
-						$expense->personId,
-						$expense->expenseId,
-						$expense->amount,
-						$title
-					);
-/*					$modelPersonTransaction->add( array(
-						'status'		=> Model_Billing_Person_Transaction::STATUS_BOOKED,
-						'personId'		=> $expense->personId,
-						'relation'		=> 'expense:'.$expense->expenseId,
-						'amount'		=> -1 * $expense->amount,
-						'dateBooked'	=> date( 'Y-m-d' ),
-					) );
-					$person		= $this->logic->getPerson( $expense->personId );
-					$modelPerson->edit( $expense->personId, array(
-						'balance'	=> $person->balance - $expense->amount,
-					) );*/
-				}
+		$total		= 0;
+		if( $dayOfYear === 1 ){
+			$expenses	= $this->logic->getExpenses( array(
+				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
+				'frequency'	=> Model_Billing_Expense::FREQUENCY_YEARLY,
+			) );
+			if( $expenses ){
+				$total	+= count( $expenses );
+				$this->out( "Booking ".count( $expenses )." yearly expenses..." );
+				foreach( $expenses as $expense )
+					$this->_bookExpense( $expense );
 			}
 		}
-		$this->out( 'test' );
+		if( $dayOfMonth === 1 ){
+			$expenses	= $this->logic->getExpenses( array(
+				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
+				'frequency'	=> Model_Billing_Expense::FREQUENCY_MONTHLY,
+			) );
+			if( $expenses ){
+				$total	+= count( $expenses );
+				$this->out( "Booking ".count( $expenses )." monthly expenses..." );
+				foreach( $expenses as $expense )
+					$this->_bookExpense( $expense );
+			}
+		}
+		if( $dayOfWeek === 1 ){
+			$expenses	= $this->logic->getExpenses( array(
+				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
+				'frequency'	=> Model_Billing_Expense::FREQUENCY_WEEKLY,
+			) );
+			if( $expenses ){
+				$total	+= count( $expenses );
+				$this->out( "Booking ".count( $expenses )." weekly expenses..." );
+				foreach( $expenses as $expense )
+					$this->_bookExpense( $expense );
+			}
+		}
+		$expenses	= $this->logic->getExpenses( array(
+			'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
+			'frequency'	=> Model_Billing_Expense::FREQUENCY_DAILY
+		) );
+		if( $expenses ){
+			$total	+= count( $expenses );
+			$this->out( "Booking ".count( $expenses )." daily expenses..." );
+			foreach( $expenses as $expense )
+				$this->_bookExpense( $expense );
+		}
+		if( $total )
+			$this->out( 'Booked '.$total.' expenses.' );
 	}
 }
 ?>

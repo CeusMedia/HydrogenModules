@@ -8,7 +8,8 @@ class View_Work_Billing_Person extends CMF_Hydrogen_View{
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
 		$context->registerTab( 'edit/'.$data['personId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
-		$context->registerTab( 'transaction/'.$data['personId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
+//		$context->registerTab( 'transaction/'.$data['personId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
+		$context->registerTab( 'reserve/'.$data['personId'], '<i class="fa fa-fw fa-plus-square-o"></i> Einnahmen / Rücklagen', 1 );
 		$context->registerTab( 'expense/'.$data['personId'], '<i class="fa fa-fw fa-minus-square-o"></i> Ausgaben', 2 );
 		$context->registerTab( 'payin/'.$data['personId'], '<i class="fa fa-fw fa-sign-in"></i> Einzahlungen', 3 );
 		$context->registerTab( 'payout/'.$data['personId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );

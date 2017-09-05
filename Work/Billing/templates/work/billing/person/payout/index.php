@@ -2,33 +2,13 @@
 //$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
-
-if( $payouts ){
-	$list	= array();
-	foreach( $payouts as $payout ){
-		$amount		= number_format( $payout->amount, 2, ',', '.' ).'&nbsp;&euro;';
-		$year		= UI_HTML_Tag::create( 'small', date( 'y', strtotime( $payout->dateBooked ) ), array( 'class' => 'muted' ) );
-		$date		= date( 'd.m.', strtotime( $payout->dateBooked ) ).$year;
-		$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
-			'href'	=> './work/billing/person/removePayout/'.$payout->personPayoutId,
-			'class'	=> 'btn btn-inverse btn-mini',
-		) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $payout->title ),
-			UI_HTML_Tag::create( 'td', $date, array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
-		) );
-	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '80', '80' ) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', 'Titel' ),
-		UI_HTML_Tag::create( 'th', 'gebucht', array( 'class' => 'cell-number' ) ),
-		UI_HTML_Tag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
-	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
-}
+$helper	= new View_Work_Billing_Helper_Transactions( $env );
+$helper->setHeading( 'Auszahlungen' );
+$helper->setTransactions( $payouts );
+$helper->setMode( View_Work_Billing_Helper_Transactions::MODE_PERSON );
+$helper->setFilterUrl( './work/billing/person/payout/filter/'.$person->personId );
+$helper->setFilterPrefix( $filterSessionPrefix );
+$panelTransactions	= $helper->render();
 
 $buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 	'type'	=> 'submit',
@@ -56,13 +36,7 @@ return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstna
 '.$tabs.'
 <div class="row-fluid">
 	<div class="span8">
-		<div class="content-panel">
-			<h3>Auszahlungen</h3>
-			<div class="content-panel-inner">
-				'.$filter->render().'
-				'.$list.'
-			</div>
-		</div>
+		'.$panelTransactions.'
 	</div>
 	<div class="span4">
 		<div class="content-panel">

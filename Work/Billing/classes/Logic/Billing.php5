@@ -24,7 +24,77 @@ class Logic_Billing{
 		$this->modelReserve					= new Model_Billing_Reserve( $this->env );
 		$this->modelExpense					= new Model_Billing_Expense( $this->env );
 		$this->modelPersonExpense			= new Model_Billing_Person_Expense( $this->env );
+		$this->modelTransaction				= new Model_Billing_Transaction( $this->env );
 	}
+
+	public function addTransaction( $amount, $fromType, $fromId, $toType, $toId, $relation, $title, $date = NULL ){
+		$date	= $date ? $date : date( 'Y-m-d' );
+		$data	= array(
+			'status'		=> Model_Billing_Transaction::STATUS_NEW,
+			'dateBooked'	=> $date,
+			'fromType'		=> $fromType,
+			'fromId'		=> $fromId,
+			'toType'		=> $toType,
+			'toId'			=> $toId,
+			'amount'		=> $amount,
+			'relation'		=> $relation,
+			'title'			=> $title,
+		);
+	 	$transactionId	= $this->modelTransaction->add( $data );
+		$this->realizeTransactions();
+		return $transactionId;
+	}
+
+	public function getTransactions( $conditions = array(), $orders = array(), $limits = array() ){
+		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
+	}
+
+	public function realizeTransactions(){
+		$transactions	= $this->modelTransaction->getAll( array(
+			'status' => Model_Billing_Transaction::STATUS_NEW,
+		), array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' ) );
+		foreach( $transactions as $transaction ){
+			$this->env->getDatabase()->beginTransaction();
+			try{
+				switch( $transaction->toType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$receiver	= $this->getPerson( $transaction->toId );
+						$this->modelPerson->edit( $transaction->toId, array(
+							'balance'	=> $receiver->balance + $transaction->amount,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$receiver	= $this->getCorporation( $transaction->toId );
+						$this->modelCorporation->edit( $transaction->toId, array(
+							'balance'	=> $receiver->balance + $transaction->amount,
+						) );
+						break;
+				}
+				switch( $transaction->fromType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$sender	= $this->getPerson( $transaction->fromId );
+						$this->modelPerson->edit( $transaction->fromId, array(
+							'balance'	=> $sender->balance - $transaction->amount,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$sender	= $this->getCorporation( $transaction->fromId );
+						$this->modelCorporation->edit( $transaction->fromId, array(
+							'balance'	=> $sender->balance - $transaction->amount,
+						) );
+						break;
+				}
+				$this->modelTransaction->edit( $transaction->transactionId, array(
+					'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
+				) );
+				$this->env->getDatabase()->commit();
+			}
+			catch( Exception $e ){
+				$this->env->getDatabase()->rollBack();
+			}
+		}
+	}
+
 
 	public function addBill( $number, $title, $taxRate, $amountNetto = 0, $amountTaxed = 0 ){
 		if( $amountNetto && !$amountTaxed )
@@ -86,6 +156,18 @@ class Logic_Billing{
 //		$this->_updatePayoutAmountByBill( $billId );
 		$this->_updateBillAssignedAmount( $billId );
 		return $shareId;
+	}
+
+	public function addCorporationExpense( $corporationId, $expenseId = 0, $amount, $title ){
+		$this->modelCorporationExpense->add( array(
+			'corporationId'	=> $corporationId,
+			'expenseId'		=> $expenseId,
+			'status'		=> Model_Billing_Corporation_Expense::STATUS_NEW,
+			'amount'		=> $amount,
+			'title'			=> $title,
+			'dateBooked'	=> date( 'Y-m-d' ),
+		) );
+		$this->_bookCorporationExpenses( $corporationId );
 	}
 
 	public function addExpense( $title, $amount, $corporationId = 0, $personId = 0, $frequency = 0, $dayOfMonth = 0 ){
@@ -190,7 +272,7 @@ class Logic_Billing{
 			$amount		= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 			$billShares	= $this->getBillShares( $billId );
 			foreach( $billShares as $billShare )
-				if( !(float)$billShare->percent )
+				if( !(float) $billShare->percent )
 					$billShare->percent	= $billShare->amount / $amount * 100;
 
 			$billReserves	= $this->getBillReserves( $billId );
@@ -198,70 +280,59 @@ class Logic_Billing{
 				if( $billReserve->corporationId ){
 					if( $billReserve->personalize ){
 						foreach( $billShares as $billShare ){
-							$this->modelCorporationReserve->add( array(
-								'corporationId'	=> $billReserve->corporationId,
-								'reserveId'		=> $billReserve->reserveId,
-								'billId'		=> $billId,
-								'personId'		=> $billShare->personId,
-								'status'		=> Model_Billing_Corporation_Reserve::STATUS_BOOKED,
-								'amount'		=> $billReserve->amount * $billShare->percent / 100,
-								'dateBooked'	=> date( 'Y-m-d' ),
-							) );
-							$this->modelCorporationTransaction->add( array(
-								'corporationId'	=> $billReserve->corporationId,
-								'status'		=> Model_Billing_Corporation_Transaction::STATUS_NEW,
-								'amount'		=> $billReserve->amount * $billShare->percent / 100,
-								'relation'		=> '|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
-								'dateBooked'	=> date( 'Y-m-d' ),
-							) );
+							$this->addTransaction(
+								$billReserve->amount * $billShare->percent / 100,
+								Model_Billing_Transaction::TYPE_BILL,
+								$billId,
+								Model_Billing_Transaction::TYPE_PERSON,
+								$billShare->personId,
+								'|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
+								$bill->dateBooked
+							);
 						}
 					}
 					else{
-						$this->modelCorporationReserve->add( array(
-							'corporationId'	=> $billReserve->corporationId,
-							'reserveId'		=> $billReserve->reserveId,
-							'billId'		=> $billId,
-							'personId'		=> 0,
-							'status'		=> Model_Billing_Corporation_Reserve::STATUS_BOOKED,
-							'amount'		=> $billReserve->amount,
-							'dateBooked'	=> date( 'Y-m-d' ),
-						) );
-						$this->modelCorporationTransaction->add( array(
-							'corporationId'	=> $billReserve->corporationId,
-							'status'		=> Model_Billing_Corporation_Transaction::STATUS_NEW,
-							'amount'		=> $billReserve->amount,
-							'relation'		=> '|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
-							'dateBooked'	=> date( 'Y-m-d' ),
-						) );
+						$this->addTransaction(
+							$billReserve->amount,
+							Model_Billing_Transaction::TYPE_BILL,
+							$billId,
+							Model_Billing_Transaction::TYPE_CORPORATION,
+							$billReserve->corporationId,
+							'|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
+							$bill->dateBooked
+						);
 					}
 				}
 				else{
 					foreach( $billShares as $billShare ){
-						$this->modelPersonTransaction->add( array(
-							'personId'		=> $billShare->personId,
-							'status'		=> Model_Billing_Person_Transaction::STATUS_NEW,
-							'amount'		=> $billReserve->amount * $billShare->percent / 100,
-							'relation'		=> '|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
-							'dateBooked'	=> date( 'Y-m-d' ),
-						) );
+						$this->addTransaction(
+							$billReserve->amount * $billShare->percent / 100,
+							Model_Billing_Transaction::TYPE_BILL,
+							$billId,
+							Model_Billing_Transaction::TYPE_PERSON,
+							$billShare->personId,
+							'|billReserve:'.$billReserve->billReserveId.'|bill:'.$billReserve->billId.'|',
+							$bill->dateBooked
+						);
 					}
 				}
 				$this->modelBillReserve->edit( $billReserve->billReserveId, array(
-					'status'		=> Model_Billing_Bill_Reserve::STATUS_BOOKED,
+					'status'	=> Model_Billing_Bill_Reserve::STATUS_BOOKED,
 				) );
 			}
 			foreach( $billShares as $billShare ){
-				$this->modelPersonTransaction->add( array(
-					'personId'		=> $billShare->personId,
-					'status'		=> Model_Billing_Person_Transaction::STATUS_NEW,
-					'amount'		=> $billShare->amount,
-					'relation'		=> '|billShare:'.$billShare->billShareId.'|bill:'.$billShare->billId.'|',
-					'dateBooked'	=> date( 'Y-m-d' ),
-				) );
+				$this->addTransaction(
+					$billShare->amount,
+					Model_Billing_Transaction::TYPE_BILL,
+					$billShare->billId,
+					Model_Billing_Transaction::TYPE_PERSON,
+					$billShare->personId,
+					'|billShare:'.$billShare->billShareId.'|bill:'.$billShare->billId.'|',
+					$bill->dateBooked
+				);
 				$this->modelBillShare->edit( $billShare->billShareId, array(
 					'status'	=> Model_Billing_Bill_Share::STATUS_BOOKED,
 				) );
-				$this->_realizePersonTransactions( $billShare->personId );
 			}
 			$this->modelBill->edit( $billId, array( 'status' => Model_Billing_Bill::STATUS_BOOKED ) );
 			$this->env->getDatabase()->commit();

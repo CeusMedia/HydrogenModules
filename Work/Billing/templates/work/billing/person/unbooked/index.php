@@ -8,7 +8,7 @@ if( $unpayedBillShares ){
 			'href'	=> './work/billing/bill/edit/'.$unpayedBillShare->bill->billId
 		) );
 		$billTitle	= $unpayedBillShare->bill->title;
-		$amount		= number_format( $unpayedBillShare->amount, 2 ).'&nbsp;&euro;';
+		$amount		= number_format( $unpayedBillShare->amount, 2, ',', '.' ).'&nbsp;&euro;';
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $billTitle ),

@@ -11,6 +11,10 @@ class View_Work_Billing_Helper_Filter{
 		$this->session	= $this->env->getSession();
 	}
 
+	public function __toString(){
+		return $this->render();
+	}
+
 	public function setFilters( $filters ){
 		$this->filters	= $filters;
 	}

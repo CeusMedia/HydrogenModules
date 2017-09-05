@@ -27,11 +27,16 @@ class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controlle
 	}
 
 	public function index( $corporationId ){
-
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-
-		$conditions	= array();
+		$conditions		= array(
+			'fromType'	=> array(
+				Model_Billing_Transaction::TYPE_BILL,
+				Model_Billing_Transaction::TYPE_RESERVE,
+			),
+			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
+			'toId'		=> $corporationId,
+		);
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -40,16 +45,9 @@ class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controlle
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-
-		$reserves	= $this->logic->getCorporationReserves( $corporationId, $conditions );
-		foreach( $reserves as $reserve ){
-			$reserve->reserve	= $this->logic->getReserve( $reserve->reserveId );
-			if( $reserve->personId )
-				$reserve->person	= $this->logic->getPerson( $reserve->personId );
-			if( $reserve->corporationId )
-				$reserve->corporation	= $this->logic->getCorporation( $reserve->corporationId );
-			$reserve->bill		= $this->logic->getBill( $reserve->billId );
-		}
+		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$limits		= array();
+		$reserves	= $this->logic->getTransactions( $conditions, $orders, $limits );
 		$this->addData( 'reserves', $reserves );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );
 		$this->addData( 'corporationId', $corporationId );

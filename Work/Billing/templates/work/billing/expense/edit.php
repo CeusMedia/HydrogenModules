@@ -19,22 +19,29 @@ $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
 	'class'	=> 'btn btn-danger',
 ) );
 
+$optStatus	= array(
+	0		=> 'deaktiviert',
+	1		=> 'aktiv',
+);
+$optStatus	= UI_HTML_Elements::Options( $optStatus, $expense->status );
+
 $optCorporation	= array(
-	'0'	=> '- kein Unternehmen -',
+//	'0'	=> '- kein Unternehmen -',
 );
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
-$optCorporation	= UI_HTML_Elements::Options( $optCorporation, $expense->corporationId );
+$optFromCorporation	= UI_HTML_Elements::Options( $optCorporation, $expense->fromCorporationId );
+$optToCorporation	= UI_HTML_Elements::Options( $optCorporation, $expense->toCorporationId );
 
 $optPerson	= array(
-	'0'	=> '- keine Person -',
+//	'0'	=> '- keine Person -',
 );
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
-$optPerson	= UI_HTML_Elements::Options( $optPerson, $expense->personId );
+$optFromPerson	= UI_HTML_Elements::Options( $optPerson, $expense->fromPersonId );
+$optToPerson	= UI_HTML_Elements::Options( $optPerson, $expense->toPersonId );
 
 $optFrequency	= array(
-	0		=> '- keine Wiederholung -',
 	1		=> 'jährlich',
 	2		=> 'quartalsweise',
 	3		=> 'monatlich',
@@ -44,46 +51,76 @@ $optFrequency	= array(
 $optFrequency	= UI_HTML_Elements::Options( $optFrequency, $expense->frequency );
 
 
-$optDayOfMonth	= array(
-	1		=> '1.',
-	15		=> '15.',
-	28		=> '28.',
+$optType	= array(
+	1		=> 'Person',
+	2		=> 'Unternehmen',
 );
-$optDayOfMonth	= UI_HTML_Elements::Options( $optDayOfMonth, $expense->dayOfMonth );
+$optFromType	= UI_HTML_Elements::Options( $optType, $expense->fromCorporationId ? 2 : 1 );
+$optType	= array(
+	0		=> '- keiner / extern -',
+	1		=> 'Person',
+	2		=> 'Unternehmen',
+);
+$toType		= $expense->toCorporationId ? 2 : ( $expense->toPersonId ? 1 : 0 );
+$optToType	= UI_HTML_Elements::Options( $optType, $toType );
 
 return '
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span12">
 		<div class="content-panel">
-			<h3>Ausgabe</h3>
+			<h3>Regelausgabe</h3>
 			<div class="content-panel-inner">
 				<form action="./work/billing/expense/edit/'.$expense->expenseId.'" method="post" class="form-changes-auto">
 					<div class="row-fluid">
-						<div class="span4">
+						<div class="span5">
 							<label for="input_title">Bezeichnung</label>
 							<input type="text" name="title" id="input_title" class="span12" required="required" value="'.htmlentities( $expense->title, ENT_QUOTES, 'UTF-8' ).'"/>
-						</div>
-						<div class="span4">
-							<label for="input_corporationId"><small class="muted">entweder</small> Unternehmen</label>
-							<select name="corporationId" id="input_corporationId" class="span12">'.$optCorporation.'</select>
-						</div>
-						<div class="span4">
-							<label for="input_personId"><small class="muted">oder</small> Person</label>
-							<select name="personId" id="input_personId" class="span12">'.$optPerson.'</select>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span3">
-							<label for="input_amount">Betrag</label>
-							<input type="text" name="amount" id="input_amount" class="span10 input-number" data-max-precision="2" required="required" value="'.$expense->amount.'"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span3">
 							<label for="input_frequency">Wiederholung</label>
 							<select name="frequency" id="input_frequency" class="span12">'.$optFrequency.'</select>
 						</div>
-						<div class="span3">
-							<label for="input_dayOfMonth">Ausführungstag</label>
-							<select name="dayOfMonth" id="input_dayOfMonth" class="span12">'.$optDayOfMonth.'</select>
+						<div class="span2">
+							<label for="input_amount">Betrag</label>
+							<input type="number" min="1" name="amount" id="input_amount" class="span10 input-number" required="required" value="'.$expense->amount.'"/><span class="suffix">&euro;</span>
+						</div>
+						<div class="span2">
+							<label for="input_status">Zustand</label>
+							<select name="status" id="input_status" class="span12"/>'.$optStatus.'</select>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span5">
+							<div class="row-fluid">
+								<div class="span5">
+									<label for="input_fromType">Belasteter</label>
+									<select name="fromType" id="input_fromType" class="span12 has-optionals">'.$optFromType.'</select>
+								</div>
+								<div class="span7 optional fromType fromType-2">
+									<label for="input_fromCorporationId">Unternehmen</label>
+									<select name="fromCorporationId" id="input_fromCorporationId" class="span12">'.$optFromCorporation.'</select>
+								</div>
+								<div class="span7 optional fromType fromType-1">
+									<label for="input_fromPersonId">Person</label>
+									<select name="fromPersonId" id="input_fromPersonId" class="span12">'.$optFromPerson.'</select>
+								</div>
+							</div>
+						</div>
+						<div class="span7">
+							<div class="row-fluid">
+								<div class="span5">
+									<label for="input_toType">Begünstigter <small class="muted">(optional)</small></label>
+									<select name="toType" id="input_toType" class="span12 has-optionals">'.$optToType.'</select>
+								</div>
+								<div class="span7 optional toType toType-2">
+									<label for="input_toCorporationId">Unternehmen</label>
+									<select name="toCorporationId" id="input_toCorporationId" class="span12">'.$optToCorporation.'</select>
+								</div>
+								<div class="span7 optional toType toType-1">
+									<label for="input_toPersonId">Person</label>
+									<select name="toPersonId" id="input_toPersonId" class="span12">'.$optToPerson.'</select>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="buttonbar">

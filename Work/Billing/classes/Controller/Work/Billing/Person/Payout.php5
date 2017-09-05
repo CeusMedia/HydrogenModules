@@ -16,17 +16,16 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 	}
 
 	public function add( $personId ){
-		$dateBooked	= date( 'Y-m-d' );
-		if( $this->request->get( 'dateBooked' ) )
-			$dateBooked	= $this->request->get( 'dateBooked' );
-		$this->modelPayout->add( array(
-			'status'		=> Model_Billing_Person_Payout::STATUS_NEW,
-			'personId'		=> $personId,
-			'amount'		=> $this->request->get( 'amount' ),
-			'title'			=> $this->request->get( 'title' ),
-			'dateBooked'	=> $dateBooked,
-		) );
-		$this->logic->_bookPersonPayouts( $personId );
+		$this->logic->addTransaction(
+			$this->request->get( 'amount' ),
+			Model_Billing_Transaction::TYPE_PERSON,
+			$personId,
+			Model_Billing_Transaction::TYPE_PAYOUT,
+			0,
+			NULL,
+			$this->request->get( 'title' ),
+			$this->request->get( 'dateBooked' )
+		);
 		$this->restart( $personId, TRUE );
 	}
 
@@ -43,11 +42,13 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $personId ){
-
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-
-		$conditions	= array();
+		$conditions		= array(
+			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
+			'fromId'	=> $personId,
+			'toType'	=> Model_Billing_Transaction::TYPE_PAYOUT,
+		);
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -56,7 +57,10 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$payouts	= $this->logic->getPersonPayouts( $personId, $conditions );
+		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$limits		= array();
+		$payouts	= $this->logic->getTransactions( $conditions, $orders, $limits );
+//		$payouts	= $this->logic->getPersonPayouts( $personId, $conditions );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$this->addData( 'payouts', $payouts );
 		$this->addData( 'personId', $personId );

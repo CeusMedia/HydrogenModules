@@ -38,6 +38,16 @@ class View_Work_Billing_Helper_Transactions{
 		$this->transactions	= $transactions;
 	}
 
+	protected function transformDateInTitle( $title ){
+		if( preg_match( '/\[date\.Y\]/', $title ) )
+			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
+		if( preg_match( '/\[date.m\]/', $title ) )
+			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
+		if( preg_match( '/\[date.d\]/', $title ) )
+			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
+		return $title;
+	}
+
 	protected function transformRelationToTitle( $relation ){
 		$parts	= array();
 		if( preg_match( '/\|billShare:([0-9]+)\|/', $relation ) ){
@@ -66,7 +76,8 @@ class View_Work_Billing_Helper_Transactions{
 			$personExpense	= $this->logic->getPersonExpense( $id );
 			if( $personExpense->expenseId ){
 				$expense	= $this->logic->getExpense( $personExpense->expenseId );
-				$link		= UI_HTML_Tag::create( 'a', 'Regelausgabe '.$expense->title, array(
+				$link		= $this->transformDateInTitle( $expense->title );
+				$link		= 'Regelausgabe '.UI_HTML_Tag::create( 'a', $link, array(
 					'href' => './work/billing/expense/edit/'.$personExpense->expenseId
 				) );
 			}
@@ -80,7 +91,8 @@ class View_Work_Billing_Helper_Transactions{
 			$corporationExpense	= $this->logic->getCorporationExpense( $id );
 			if( $corporationExpense->expenseId ){
 				$expense	= $this->logic->getExpense( $corporationExpense->expenseId );
-				$link		= UI_HTML_Tag::create( 'a', 'Regelausgabe '.$expense->title, array(
+				$link		= $this->transformDateInTitle( $expense->title );
+				$link		= 'Regelausgabe '.UI_HTML_Tag::create( 'a', $link, array(
 					'href' => './work/billing/expense/edit/'.$corporationExpense->expenseId
 				) );
 			}
@@ -123,6 +135,7 @@ class View_Work_Billing_Helper_Transactions{
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
+		$iconBill		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-euro' ) );
 		$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
 		$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
 
@@ -130,24 +143,46 @@ class View_Work_Billing_Helper_Transactions{
 		if( $this->transactions ){
 			$list	= array();
 			foreach( $this->transactions as $transaction ){
-				$title	= $this->transformRelationToTitle( $transaction->relation );
+				$from	= UI_HTML_Tag::create( 'em', 'extern', array( 'class' => 'muted' ) );
+				switch( $transaction->fromType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$sender	= $this->logic->getPerson( $transaction->fromId );
+						$from	= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, array(
+							'href'	=> './work/billing/person/edit/'.$transaction->fromId,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$sender	= $this->logic->getCorporation( $transaction->fromId );
+						$from	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, array(
+							'href'	=> './work/billing/corporation/edit/'.$transaction->fromId,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_BILL:
+						$sender	= $this->logic->getBill( $transaction->fromId );
+						$from	= UI_HTML_Tag::create( 'a', $iconBill.'&nbsp;'.$sender->number, array(
+							'href'	=> './work/billing/edit/'.$transaction->fromId,
+						) );
+						break;
+				}
 
-				if( $this->mode === static::MODE_PERSON ){
-					$person	= $modelPerson->get( $transaction->personId );
-					$target	= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
-						'href'	=> './work/billing/person/edit/'.$person->personId,
-					) );
+				$to		= UI_HTML_Tag::create( 'em', 'extern', array( 'class' => 'muted' ) );
+				switch( $transaction->toType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$sender	= $this->logic->getPerson( $transaction->toId );
+						$to		= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, array(
+							'href'	=> './work/billing/person/edit/'.$transaction->toId,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$sender	= $this->logic->getCorporation( $transaction->toId );
+						$to		= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, array(
+							'href'	=> './work/billing/corporation/edit/'.$transaction->toId,
+						) );
+						break;
 				}
-				else if( $this->mode === static::MODE_CORPORATION ){
-					$corporation	= $modelCorporation->get( $transaction->corporationId );
-					$target	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
-						'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId,
-					) );
-	//				$target	= UI_HTML_Tag::create( 'small', $target );
-				}
-				else{
-					$target	= '-';
-				}
+
+				$title	= $this->transformRelationToTitle( $transaction->relation );
+				$title	= $title ? $title : $transaction->title;
 
 				$year	= UI_HTML_Tag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), array( 'class' => 'muted' ) );
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;
@@ -155,15 +190,17 @@ class View_Work_Billing_Helper_Transactions{
 
 				$list[]	= UI_HTML_Tag::create( 'tr', array(
 					UI_HTML_Tag::create( 'td', $title ),
-					UI_HTML_Tag::create( 'td', $target ),
+					UI_HTML_Tag::create( 'td', $from ),
+					UI_HTML_Tag::create( 'td', $to ),
 					UI_HTML_Tag::create( 'td', $date, array( 'class' => 'cell-number' ) ),
 					UI_HTML_Tag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 				), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
 			}
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '160', '80', '80' ) );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '160', '160', '80', '80' ) );
 			$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create( 'th', 'Vorgang' ),
-				UI_HTML_Tag::create( 'th', 'Empfänger' ),
+				UI_HTML_Tag::create( 'th', 'Zu Lasten' ),
+				UI_HTML_Tag::create( 'th', 'Zu Gunsten' ),
 				UI_HTML_Tag::create( 'th', 'Datum', array( 'class' => 'cell-number' ) ),
 				UI_HTML_Tag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
 			) ) );

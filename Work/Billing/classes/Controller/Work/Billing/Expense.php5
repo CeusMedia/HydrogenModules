@@ -10,16 +10,21 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
-			$expenseId		= $this->modelExpense->add( array(
-				'corporationId'	=> $this->request->get( 'corporationId' ),
-				'personId'		=> $this->request->get( 'personId' ),
+			$data	= array(
 				'status'		=> $this->request->get( 'status' ),
-				'personalize'	=> $this->request->get( 'personalize' ),
 				'title'			=> $this->request->get( 'title' ),
 				'amount'		=> $this->request->get( 'amount' ),
 				'frequency'		=> $this->request->get( 'frequency' ),
-				'dayOfMonth'	=> $this->request->get( 'dayOfMonth' ),
-			) );
+			);
+			if( $this->request->get( 'fromType' ) == 2 )
+				$data['fromCorporationId']	= $this->request->get( 'fromCorporationId' );
+			else if( $this->request->get( 'fromType' ) == 1 )
+				$data['fromPersonId']	= $this->request->get( 'fromPersonId' );
+			if( $this->request->get( 'toType' ) == 2 )
+				$data['toCorporationId']	= $this->request->get( 'toCorporationId' );
+			else if( $this->request->get( 'toType' ) == 1 )
+				$data['toPersonId']	= $this->request->get( 'toPersonId' );
+			$expenseId		= $this->modelExpense->add( $data );
 			$this->restart( 'edit/'.$expenseId, TRUE );
 		}
 		$this->addData( 'corporations', $this->logic->getCorporations() );
@@ -28,7 +33,25 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 
 	public function edit( $expenseId ){
 		if( $this->request->has( 'save' ) ){
-			$this->modelExpense->edit( $expenseId, $this->request->getAll() );
+			$data	= array(
+				'title'				=> $this->request->get( 'title' ),
+				'amount'			=> $this->request->get( 'amount' ),
+				'frequency'			=> $this->request->get( 'frequency' ),
+				'status'			=> $this->request->get( 'status' ),
+				'fromCorporationId'	=> 0,
+				'fromPersonId'		=> 0,
+				'toCorporationId'	=> 0,
+				'toPersonId'		=> 0,
+			);
+			if( $this->request->get( 'fromType' ) == 2 )
+				$data['fromCorporationId']	= $this->request->get( 'fromCorporationId' );
+			else if( $this->request->get( 'fromType' ) == 1 )
+				$data['fromPersonId']		= $this->request->get( 'fromPersonId' );
+			if( $this->request->get( 'toType' ) == 2 )
+				$data['toCorporationId']	= $this->request->get( 'toCorporationId' );
+			else if( $this->request->get( 'toType' ) == 1 )
+				$data['toPersonId']	= $this->request->get( 'toPersonId' );
+			$this->modelExpense->edit( $expenseId, $data );
 			$this->restart( NULL, TRUE );
 //			$this->restart( './work/billing/expense/edit/'.$expenseId );
 		}

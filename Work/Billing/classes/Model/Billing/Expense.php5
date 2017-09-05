@@ -7,11 +7,18 @@ class Model_Billing_Expense extends CMF_Hydrogen_Model{
 	const FREQUENCY_WEEKLY		= 4;
 	const FREQUENCY_DAILY		= 5;
 
+	const STATUS_DISABLED		= 0;
+	const STATUS_ACTIVE			= 1;
+
+
 	protected $name		= "billing_expenses";
 	protected $columns	= array(
 		'expenseId',
-		'corporationId',
-		'personId',
+		'fromCorporationId',
+		'fromPersonId',
+		'toCorporationId',
+		'toPersonId',
+		'status',
 		'frequency',
 		'dayOfMonth',
 		'amount',
@@ -19,8 +26,11 @@ class Model_Billing_Expense extends CMF_Hydrogen_Model{
 	);
 	protected $primaryKey	= 'expenseId';
 	protected $indices		= array(
-		'corporationId',
-		'personId',
+		'fromCorporationId',
+		'fromPersonId',
+		'toCorporationId',
+		'toPersonId',
+		'status',
 		'frequency',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

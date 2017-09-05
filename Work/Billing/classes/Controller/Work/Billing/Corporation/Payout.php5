@@ -16,17 +16,16 @@ class Controller_Work_Billing_Corporation_Payout extends CMF_Hydrogen_Controller
 	}
 
 	public function add( $corporationId ){
-		$dateBooked	= date( 'Y-m-d' );
-		if( $this->request->get( 'dateBooked' ) )
-			$dateBooked	= $this->request->get( 'dateBooked' );
-		$this->modelPayout->add( array(
-			'status'		=> Model_Billing_Corporation_Payout::STATUS_NEW,
-			'corporationId'		=> $corporationId,
-			'amount'		=> $this->request->get( 'amount' ),
-			'title'			=> $this->request->get( 'title' ),
-			'dateBooked'	=> $dateBooked,
-		) );
-		$this->logic->_bookCorporationPayouts( $corporationId );
+		$this->logic->addTransaction(
+			$this->request->get( 'amount' ),
+			Model_Billing_Transaction::TYPE_CORPORATION,
+			$corporationId,
+			Model_Billing_Transaction::TYPE_PAYOUT,
+			0,
+			NULL,
+			$this->request->get( 'title' ),
+			$this->request->get( 'dateBooked' )
+		);
 		$this->restart( $corporationId, TRUE );
 	}
 
@@ -43,11 +42,13 @@ class Controller_Work_Billing_Corporation_Payout extends CMF_Hydrogen_Controller
 	}
 
 	public function index( $corporationId ){
-
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-
-		$conditions	= array();
+		$conditions	= array(
+			'fromType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
+			'fromId'	=> $corporationId,
+			'toType'	=> Model_Billing_Transaction::TYPE_PAYOUT,
+		);
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -56,7 +57,9 @@ class Controller_Work_Billing_Corporation_Payout extends CMF_Hydrogen_Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$payouts	= $this->logic->getCorporationPayouts( $corporationId, $conditions );
+		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$limits		= array();
+		$payouts	= $this->logic->getTransactions( $conditions, $orders, $limits );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );
 		$this->addData( 'payouts', $payouts );
 		$this->addData( 'corporationId', $corporationId );

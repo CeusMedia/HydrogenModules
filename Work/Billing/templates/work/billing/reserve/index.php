@@ -15,8 +15,8 @@ if( $reserves ){
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
 			) );
 		}
-		$percent	= (float) $reserve->percent ? number_format( $reserve->percent, 2 ).'&nbsp;%' : '-';
-		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2 ).'&nbsp;&euro;' : '-';
+		$percent	= (float) $reserve->percent ? number_format( $reserve->percent, 2, ',', '.' ).'&nbsp;%' : '-';
+		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $corporation, array( 'class' => 'autocut' ) ),

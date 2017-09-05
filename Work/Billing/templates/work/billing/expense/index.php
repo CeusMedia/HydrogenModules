@@ -22,30 +22,47 @@ if( $expenses ){
 			$title	= preg_replace( '/\[date.Y\]/', '<em class="muted">Jahr</em>', $title );
 		if( preg_match( '/\[date.m\]/', $title ) )
 			$title	= preg_replace( '/\[date.m\]/', '<em class="muted">Monat</em>', $title );
+		if( preg_match( '/\[date.d\]/', $title ) )
+			$title	= preg_replace( '/\[date.d\]/', '<em class="muted">Tag</em>', $title );
 		$link	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './work/billing/expense/edit/'.$expense->expenseId ) );
-		if( $expense->corporationId ){
-			$corporation	= $corporations[$expense->corporationId];
-			$relation		= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+		if( $expense->fromCorporationId ){
+			$corporation	= $corporations[$expense->fromCorporationId];
+			$from			= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
 			) );
 		}
-		else if( $expense->personId ){
-			$person		= $persons[$expense->personId];
-			$relation		= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
+		else if( $expense->fromPersonId ){
+			$person		= $persons[$expense->fromPersonId];
+			$from		= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
 				'href'	=> './work/billing/person/edit/'.$person->personId
 			) );
 		}
-		$amount		= (float) $expense->amount ? number_format( $expense->amount, 2 ).'&nbsp;&euro;' : '-';
+		$to	= '-';
+		if( $expense->toCorporationId ){
+			$corporation	= $corporations[$expense->toCorporationId];
+			$to			= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
+			) );
+		}
+		else if( $expense->toPersonId ){
+			$person		= $persons[$expense->toPersonId];
+			$to		= UI_HTML_Tag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
+				'href'	=> './work/billing/person/edit/'.$person->personId
+			) );
+		}
+		$amount		= (float) $expense->amount ? number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $frequencies[$expense->frequency] ),
-			UI_HTML_Tag::create( 'td', $relation, array( 'class' => 'autocut' ) ),
+			UI_HTML_Tag::create( 'td', $from, array( 'class' => 'autocut' ) ),
+			UI_HTML_Tag::create( 'td', $to, array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
-		) );
+		), array( 'class' => $expense->status ? 'success' : 'warning' ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
 		'',
 		'120',
+		'180',
 		'180',
 		'100',
 	) );
@@ -53,6 +70,7 @@ if( $expenses ){
 		'Bezeichnung',
 		'Wiederholung',
 		'Belasteter',
+		'Begünstigter',
 		'Betrag'
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
@@ -66,9 +84,9 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
 
 return '
 <div class="row-fluid">
-	<div class="span9">
+	<div class="span12">
 		<div class="content-panel">
-			<h3>Ausgaben</h3>
+			<h3>Regelausgaben</h3>
 			<div class="content-panel-inner">
 				'.$list.'
 				<div class="buttonbar">

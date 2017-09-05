@@ -69,11 +69,11 @@ return '
 					<div class="row-fluid">
 						<div class="span3">
 							<label for="input_percent"><small class="muted">entweder</small> Prozent</label>
-							<input type="text" name="percent" id="input_percent" class="span10 input-number" data-min-value="0" data-max-value="50" data-max-precision="2" value="'.number_format( $reserve->percent, 2 ).'"/><span class="suffix">%</span>
+							<input type="number" step="0.01" min="0" name="percent" id="input_percent" class="span10 input-number" value="'.number_format( $reserve->percent, 2, '.', '' ).'"/><span class="suffix">%</span>
 						</div>
 						<div class="span3">
 							<label for="input_amount"><small class="muted">oder</small> Betrag</label>
-							<input type="text" name="amount" id="input_amount" class="span10 input-number" data-min-value="0" data-max-precision="2" value="'.number_format( $reserve->amount, 2 ).'"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0" name="amount" id="input_amount" class="span10 input-number" value="'.number_format( $reserve->amount, 2, '.', '' ).'"/><span class="suffix">&euro;</span>
 						</div>
 					</div>
 					<div class="buttonbar">

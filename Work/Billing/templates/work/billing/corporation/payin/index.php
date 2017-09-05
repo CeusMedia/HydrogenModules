@@ -3,9 +3,9 @@
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
-$helper->setHeading( 'Auszahlungen' );
-$helper->setTransactions( $payouts );
-$helper->setFilterUrl( './work/billing/corporation/payout/filter/'.$corporation->corporationId );
+$helper->setHeading( 'Einzahlungen' );
+$helper->setTransactions( $payins );
+$helper->setFilterUrl( './work/billing/corporation/payin/filter/'.$corporation->corporationId );
 $helper->setFilterPrefix( $filterSessionPrefix );
 $panelTransactions	= $helper->render();
 
@@ -18,7 +18,7 @@ $buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 	'disabled'	=> $corporation->balance < 1 ? 'disabled' : NULL,
 ) );
 
-$tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 4 );
+$tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 3 );
 
 return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>
 '.$tabs.'
@@ -28,9 +28,9 @@ return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporatio
 	</div>
 	<div class="span4">
 		<div class="content-panel">
-			<h3>Auszahlung buchen</h3>
+			<h3>Einzahlung buchen</h3>
 			<div class="content-panel-inner">
-				<form action="./work/billing/corporation/payout/add/'.$corporationId.'" method="post">
+				<form action="./work/billing/corporation/payin/add/'.$corporationId.'" method="post">
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">Titel</label>
@@ -44,7 +44,7 @@ return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporatio
 						</div>
 						<div class="span6">
 							<label for="input_amount">Betrag</label>
-							<input type="number" step="0.01" min="0.01" max="'.$amount.'" name="amount" id="input_amount" class="span10 input-number" required="required" placeholder="0,00" value="'.$amount.'"/><span class="suffix">&euro;</span>
+							<input type="number" step="0.01" min="0.01" name="amount" id="input_amount" class="span10 input-number" required="required" placeholder="0,00"/><span class="suffix">&euro;</span>
 						</div>
 					</div>
 					<div class="buttonbar">
