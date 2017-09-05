@@ -93,14 +93,16 @@
 		<script load="auto">module.work.billing.js</script>
 		<file>config/jobs/work.billing.xml</file>
 	</files>
-	<needs type="module">JS_Form_Changes</needs>
-	<needs type="module">JS_Form_Optionals</needs>
-	<needs type="module">UI_CSS_Panel</needs>
-	<needs type="module">UI_Font_FontAwesome</needs>
-	<needs type="module">UI_Navigation</needs>
-	<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
-	<needs type="module">Resource_Database</needs>
-	<needs type="module">Resource_Jobs</needs>
+	<relations>
+		<needs type="module">JS_Form_Changes</needs>
+		<needs type="module">JS_Form_Optionals</needs>
+		<needs type="module">UI_CSS_Panel</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
+		<needs type="module">UI_Navigation</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Jobs</needs>
+	</relations>
 	<hook type="resource" resource="WorkBilling/Bill" event="registerTabs">View_Work_Billing_Bill::___onRegisterTab</hook>
 	<hook type="resource" resource="WorkBilling/Corporation" event="registerTabs">View_Work_Billing_Corporation::___onRegisterTab</hook>
 	<hook type="resource" resource="WorkBilling/Person" event="registerTabs">View_Work_Billing_Person::___onRegisterTab</hook>
