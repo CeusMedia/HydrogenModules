@@ -1,12 +1,13 @@
 <?php
 class View_Work_Billing_Helper_Transactions{
 
-	const MODE_NONE			= 0;
-	const MODE_CORPORATION	= 1;
-	const MODE_PERSON		= 2;
+	const MODE_NONE				= 0;
+	const MODE_CORPORATION		= 1;
+	const MODE_PERSON			= 2;
 
-	protected $heading				= 'Transaktionen';
-	protected $mode					= 0;
+	protected $buttons;
+	protected $heading			= 'Transaktionen';
+	protected $mode				= 0;
 	protected $transactions;
 	protected $filterPrefix;
 	protected $filterUrl;
@@ -16,6 +17,10 @@ class View_Work_Billing_Helper_Transactions{
 		$this->logic	= new Logic_Billing( $this->env );
 		$this->modelBill	= new Model_Billing_Bill( $this->env );
 		$this->modelExpense	= new Model_Billing_Expense( $this->env );
+	}
+
+	public function setButtons( $buttons ){
+		$this->buttons	= $buttons;
 	}
 
 	public function setFilterPrefix( $prefix ){
@@ -48,22 +53,24 @@ class View_Work_Billing_Helper_Transactions{
 		return $title;
 	}
 
-	protected function transformRelationToTitle( $relation ){
-		$parts	= array();
+	protected function transformRelationToTitle( $transaction ){
+		$parts		= array();
+		$title		= '';
+		$relation	= $transaction->relation;
 		if( preg_match( '/\|billShare:([0-9]+)\|/', $relation ) ){
 			$billShareId	= preg_replace( '/\|billShare:([0-9]+)\|/', '\\1', $relation );
 			$billShare		= $this->logic->getBillShare( $billShareId );
 			$bill			= $this->logic->getBill( $billShare->billId );
-			$linkBill		= UI_HTML_Tag::create( 'a', $bill->number.': '.$bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$relation		= 'Anteil aus Rechnung '.$linkBill;
+			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+			$title			= 'Anteil aus Rechnung '.$linkBill;
 		}
 		else if( preg_match( '/\|billReserve:([0-9]+)\|/', $relation ) ){
 			$billReserveId	= preg_replace( '/\|billReserve:([0-9]+)\|/', '\\1', $relation );
 			$billReserve	= $this->logic->getBillReserve( $billReserveId );
 			$bill			= $this->logic->getBill( $billReserve->billId );
 			$linkReserve	= UI_HTML_Tag::create( 'a', $billReserve->title, array( 'href' => './work/billing/reserve/edit/'.$billReserve->reserveId ) );
-			$linkBill		= UI_HTML_Tag::create( 'a', $bill->number.': '.$bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$relation		= 'Rücklage '.$linkReserve.' aus Rechnung '.$linkBill;
+			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+			$title			= 'Rücklage '.$linkReserve.' aus Rechnung '.$linkBill;
 		}
 /*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
 			$id			= preg_replace( '/^bill:([0-9]+)$/', '\\1', $relation );
@@ -71,63 +78,20 @@ class View_Work_Billing_Helper_Transactions{
 			$link		= UI_HTML_Tag::create( 'a', 'RNr.'.$bill->number, array( 'href' => './work/billing/bill/edit/'.$id ) );
 			$relation	= $link;
 		}*/
-		else if( preg_match( '/\|personExpense:[0-9]+\|/', $relation ) ){
-			$id			= preg_replace( '/\|personExpense:([0-9]+)\|/', '\\1', $relation );
-			$personExpense	= $this->logic->getPersonExpense( $id );
-			if( $personExpense->expenseId ){
-				$expense	= $this->logic->getExpense( $personExpense->expenseId );
-				$link		= $this->transformDateInTitle( $expense->title );
-				$link		= 'Regelausgabe '.UI_HTML_Tag::create( 'a', $link, array(
-					'href' => './work/billing/expense/edit/'.$personExpense->expenseId
-				) );
-			}
-			else{
-				$link		= '<small>Ausgabe:</small> '.$personExpense->title;
-			}
-			$relation	= $link;
-		}
-		else if( preg_match( '/\|corporationExpense:[0-9]+\|/', $relation ) ){
-			$id			= preg_replace( '/\|corporationExpense:([0-9]+)\|/', '\\1', $relation );
-			$corporationExpense	= $this->logic->getCorporationExpense( $id );
-			if( $corporationExpense->expenseId ){
-				$expense	= $this->logic->getExpense( $corporationExpense->expenseId );
-				$link		= $this->transformDateInTitle( $expense->title );
-				$link		= 'Regelausgabe '.UI_HTML_Tag::create( 'a', $link, array(
-					'href' => './work/billing/expense/edit/'.$corporationExpense->expenseId
-				) );
-			}
-			else{
-				$link		= '<small>Ausgabe:</small> '.$corporationExpense->title;
-			}
-			$relation	= $link;
-		}
 		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
 			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
 			$expense	= $this->modelExpense->get( $id );
-			$link		= UI_HTML_Tag::create( 'a', $expense->title, array( 'href' => './work/billing/expense/edit/'.$id ) );
-			$relation	= $link;
+			$link		= $this->transformDateInTitle( $expense->title );
+			$link		= UI_HTML_Tag::create( 'a', $link, array( 'href' => './work/billing/expense/edit/'.$id ) );
+			$title		= $link;
 		}
-		else if( preg_match( '/\|personPayout:([0-9]+)\|/', $relation ) ){
-			$id			= preg_replace( '/\|personPayout:([0-9]+)\|/', '\\1', $relation );
-			$payout		= $this->logic->getPersonPayout( $id );
-			$relation	= '<small>Auszahlung:</small> '.$payout->title;
+		else if( preg_match( '/\|payin\|/', $relation ) ){
+			$title		= 'Einzahlung: '.$transaction->title;
 		}
-		else if( preg_match( '/\|personPayin:([0-9]+)\|/', $relation ) ){
-			$id			= preg_replace( '/\|personPayin:([0-9]+)\|/', '\\1', $relation );
-			$payin		= $this->logic->getPersonPayin( $id );
-			$relation	= '<small>Einzahlung:</small> '.$payin->title;
+		else if( preg_match( '/\|payout\|/', $relation ) ){
+			$title		= 'Auszahlung: '.$transaction->title;
 		}
-		else if( preg_match( '/\|corporationPayout:([0-9]+)\|/', $relation ) ){
-			$id			= preg_replace( '/\|corporationPayout:([0-9]+)\|/', '\\1', $relation );
-			$payout		= $this->logic->getCorporationPayout( $id );
-			$relation	= '<small>Auszahlung:</small> '.$payout->title;
-		}
-		else if( preg_match( '/\|corporationPayin:([0-9]+)\|/', $relation ) ){
-			$id			= preg_replace( '/\|corporationPayin:([0-9]+)\|/', '\\1', $relation );
-			$payin		= $this->logic->getCorporationPayin( $id );
-			$relation	= '<small>Einzahlung:</small> '.$payin->title;
-		}
-		return $relation;
+		return $title;
 	}
 
 	public function render(){
@@ -135,8 +99,8 @@ class View_Work_Billing_Helper_Transactions{
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
-		$iconBill		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-euro' ) );
-		$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+		$iconBill		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o' ) );
+		$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
 		$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
 
 		$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
@@ -181,14 +145,15 @@ class View_Work_Billing_Helper_Transactions{
 						break;
 				}
 
-				$title	= $this->transformRelationToTitle( $transaction->relation );
+				$title	= $this->transformRelationToTitle( $transaction );
 				$title	= $title ? $title : $transaction->title;
 
 				$year	= UI_HTML_Tag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), array( 'class' => 'muted' ) );
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;
 
-
+				$id		= UI_HTML_Tag::create( 'small', $transaction->transactionId );
 				$list[]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', $id, array( 'class' => 'cell-number' )  ),
 					UI_HTML_Tag::create( 'td', $title ),
 					UI_HTML_Tag::create( 'td', $from ),
 					UI_HTML_Tag::create( 'td', $to ),
@@ -196,8 +161,9 @@ class View_Work_Billing_Helper_Transactions{
 					UI_HTML_Tag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 				), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
 			}
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '160', '160', '80', '80' ) );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( array( '45', '', '160', '160', '80', '80' ) );
 			$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),
 				UI_HTML_Tag::create( 'th', 'Vorgang' ),
 				UI_HTML_Tag::create( 'th', 'Zu Lasten' ),
 				UI_HTML_Tag::create( 'th', 'Zu Gunsten' ),
@@ -208,14 +174,20 @@ class View_Work_Billing_Helper_Transactions{
 			$list = UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 		}
 
+		$buttonbar	= '';
+		if( $this->buttons ){
+			$buttonbar	= '<div class="buttonbar">
+				'.$this->buttons.'
+			</div>';
+		}
+
 		return '
 		<div class="content-panel">
 			<h3>'.$this->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$this->renderFilter().'
 				'.$list.'
-<!--				<div class="buttonbar">
-				</div>-->
+				'.$buttonbar.'
 			</div>
 		</div>';
 	}

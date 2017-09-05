@@ -30,8 +30,6 @@ class Controller_Work_Billing_Corporation extends CMF_Hydrogen_Controller{
 			) );
 			$this->restart( 'edit/'.$corporationId, TRUE );
 		}
-
-		$this->logic->_realizeCorporationTransactions( $corporationId );
 		$this->addData( 'corporation', $this->modelCorporation->get( $corporationId ) );
 	}
 

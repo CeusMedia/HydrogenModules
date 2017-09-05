@@ -1,60 +1,15 @@
 <?php
 class Job_Billing extends Job_Abstract{
 
-	protected $pathLocks	= 'config/locks/';
-
 	public function __onInit(){
-//		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
 		$this->logic	= new Logic_Billing( $this->env );
 	}
 
-	protected function _bookExpense( $expense ){
-		$title	= $expense->title;
-		if( preg_match( '/\[date\.Y\]/', $title ) )
-			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
-		if( preg_match( '/\[date.m\]/', $title ) )
-			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
-		if( preg_match( '/\[date.d\]/', $title ) )
-			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
-
-		$fromType	= Model_Billing_Transaction::TYPE_NONE;
-		$fromId		= 0;
-		$toType		= Model_Billing_Transaction::TYPE_NONE;
-		$toId		= 0;
-		if( $expense->fromCorporationId ){
-			$fromType	= Model_Billing_Transaction::TYPE_CORPORATION;
-			$fromId		= $expense->fromCorporationId;
-		}
-		else if( $expense->fromPersonId ){
-			$fromType	= Model_Billing_Transaction::TYPE_PERSON;
-			$fromId		= $expense->fromPersonId;
-		}
-		if( $expense->toCorporationId ){
-			$toType	= Model_Billing_Transaction::TYPE_CORPORATION;
-			$toId	= $expense->toCorporationId;
-		}
-		else if( $expense->toPersonId ){
-			$toType	= Model_Billing_Transaction::TYPE_PERSON;
-			$toId	= $expense->toPersonId;
-		}
-		return $this->logic->addTransaction(
-			$expense->amount,
-			$fromType,
-			$fromId,
-			$toType,
-			$toId,
-			NULL,
-			$title
-		);
-	}
-
 	public function bookExpenses(){
-		$date	= strtotime( "2017-01-02" );
-
-		$dayOfWeek	= (int) date( 'w', $date );
-		$dayOfMonth	= (int) date( 'j', $date );
-		$dayOfYear	= (int) date( 'z', $date ) + 1;
-
+		$timestamp	= time();
+		$dayOfWeek	= (int) date( 'w', $timestamp );
+		$dayOfMonth	= (int) date( 'j', $timestamp );
+		$dayOfYear	= (int) date( 'z', $timestamp ) + 1;
 		$total		= 0;
 		if( $dayOfYear === 1 ){
 			$expenses	= $this->logic->getExpenses( array(
@@ -104,6 +59,46 @@ class Job_Billing extends Job_Abstract{
 		}
 		if( $total )
 			$this->out( 'Booked '.$total.' expenses.' );
+	}
+
+	protected function _bookExpense( $expense ){
+		$title	= $expense->title;
+		if( preg_match( '/\[date\.Y\]/', $title ) )
+			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
+		if( preg_match( '/\[date.m\]/', $title ) )
+			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
+		if( preg_match( '/\[date.d\]/', $title ) )
+			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
+
+		$fromType	= Model_Billing_Transaction::TYPE_NONE;
+		$fromId		= 0;
+		$toType		= Model_Billing_Transaction::TYPE_NONE;
+		$toId		= 0;
+		if( $expense->fromCorporationId ){
+			$fromType	= Model_Billing_Transaction::TYPE_CORPORATION;
+			$fromId		= $expense->fromCorporationId;
+		}
+		else if( $expense->fromPersonId ){
+			$fromType	= Model_Billing_Transaction::TYPE_PERSON;
+			$fromId		= $expense->fromPersonId;
+		}
+		if( $expense->toCorporationId ){
+			$toType	= Model_Billing_Transaction::TYPE_CORPORATION;
+			$toId	= $expense->toCorporationId;
+		}
+		else if( $expense->toPersonId ){
+			$toType	= Model_Billing_Transaction::TYPE_PERSON;
+			$toId	= $expense->toPersonId;
+		}
+		return $this->logic->addTransaction(
+			$expense->amount,
+			$fromType,
+			$fromId,
+			$toType,
+			$toId,
+			'|expense:'.$expense->expenseId.'|',
+			$title
+		);
 	}
 }
 ?>

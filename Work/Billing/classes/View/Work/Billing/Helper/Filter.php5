@@ -80,7 +80,7 @@ class View_Work_Billing_Helper_Filter{
 		}
 
 		return '
-		<form action="'.$this->url.'" method="post">
+		<form action="'.$this->url.'" class="form-list-filter" method="post">
 			<div class="row-fluid">
 				'.join( $formFields ).'
 			</div>

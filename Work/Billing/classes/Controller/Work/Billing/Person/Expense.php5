@@ -6,7 +6,6 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller{
 		$this->session			= $this->env->getSession();
 		$this->filterPrefix		= 'filter_work_billing_person_expense_';
 		$this->logic			= new Logic_Billing( $this->env );
-		$this->modelExpense		= new Model_Billing_Person_Expense( $this->env );
 
 		if( !$this->session->has( $this->filterPrefix.'year' ) )
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
@@ -16,16 +15,10 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller{
 	}
 
 	public function add( $personId ){
-		$this->logic->addTransaction(
-			$this->request->get( 'amount' ),
-			Model_Billing_Transaction::TYPE_PERSON,
-			$personId,
-			Model_Billing_Transaction::TYPE_EXPENSE,
-			0,
-			NULL,
-			$this->request->get( 'title' ),
-			$this->request->get( 'dateBooked' )
-		);
+		$amount		= $this->request->get( 'amount' );
+		$title		= $this->request->get( 'title' );
+		$date		= $this->request->get( 'dateBooked' );
+		$this->logic->addPersonExpense( $personId, $amount, $title, $date );
 		$this->restart( $personId, TRUE );
 	}
 
@@ -44,14 +37,7 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller{
 	public function index( $personId ){
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-		$conditions	= array(
-			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
-			'fromId'	=> $personId,
-			'toType'	=> array(
-				Model_Billing_Transaction::TYPE_CORPORATION,
-				Model_Billing_Transaction::TYPE_EXPENSE,
-			)
-		);
+		$conditions	= array();
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -62,7 +48,7 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller{
 		}
 		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
 		$limits		= array();
-		$expenses	= $this->logic->getTransactions( $conditions, $orders, $limits );
+		$expenses	= $this->logic->getPersonExpenses( $personId, $conditions, $orders, $limits );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$this->addData( 'expenses', $expenses );
 		$this->addData( 'personId', $personId );

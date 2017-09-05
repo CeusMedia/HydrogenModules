@@ -29,14 +29,7 @@ class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controlle
 	public function index( $corporationId ){
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-		$conditions		= array(
-			'fromType'	=> array(
-				Model_Billing_Transaction::TYPE_BILL,
-				Model_Billing_Transaction::TYPE_RESERVE,
-			),
-			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
-			'toId'		=> $corporationId,
-		);
+		$conditions		= array();
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -47,7 +40,7 @@ class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controlle
 		}
 		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
 		$limits		= array();
-		$reserves	= $this->logic->getTransactions( $conditions, $orders, $limits );
+		$reserves	= $this->logic->getCorporationReserves( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'reserves', $reserves );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );
 		$this->addData( 'corporationId', $corporationId );

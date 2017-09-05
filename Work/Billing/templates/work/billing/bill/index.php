@@ -99,7 +99,7 @@ return '
 <div class="content-panel">
 	<h3>Rechnungen</h3>
 	<div class="content-panel-inner">
-		<form action="./work/billing/bill/filter" method="post">
+		<form action="./work/billing/bill/filter" class="form-list-filter" method="post">
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_status">Zustand</label>
@@ -115,7 +115,6 @@ return '
 				</div>
 			</div>
 		</form>
-		<hr/>
 		'.$list.'
 		<div class="buttonbar">
 			'.$buttonAdd.'

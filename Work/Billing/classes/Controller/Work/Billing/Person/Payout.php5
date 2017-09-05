@@ -6,7 +6,6 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 		$this->session			= $this->env->getSession();
 		$this->filterPrefix		= 'filter_work_billing_person_payout_';
 		$this->logic			= new Logic_Billing( $this->env );
-		$this->modelPayout		= new Model_Billing_Person_Payout( $this->env );
 
 		if( !$this->session->has( $this->filterPrefix.'year' ) )
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
@@ -16,16 +15,10 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 	}
 
 	public function add( $personId ){
-		$this->logic->addTransaction(
-			$this->request->get( 'amount' ),
-			Model_Billing_Transaction::TYPE_PERSON,
-			$personId,
-			Model_Billing_Transaction::TYPE_PAYOUT,
-			0,
-			NULL,
-			$this->request->get( 'title' ),
-			$this->request->get( 'dateBooked' )
-		);
+		$amount		= $this->request->get( 'amount' );
+		$title		= $this->request->get( 'title' );
+		$date		= $this->request->get( 'dateBooked' );
+		$this->logic->addPersonPayout( $personId, $amount, $title, $date );
 		$this->restart( $personId, TRUE );
 	}
 
@@ -44,11 +37,7 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 	public function index( $personId ){
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-		$conditions		= array(
-			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
-			'fromId'	=> $personId,
-			'toType'	=> Model_Billing_Transaction::TYPE_PAYOUT,
-		);
+		$conditions		= array();
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -59,8 +48,7 @@ class Controller_Work_Billing_Person_Payout extends CMF_Hydrogen_Controller{
 		}
 		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
 		$limits		= array();
-		$payouts	= $this->logic->getTransactions( $conditions, $orders, $limits );
-//		$payouts	= $this->logic->getPersonPayouts( $personId, $conditions );
+		$payouts	= $this->logic->getPersonPayouts( $personId, $conditions, $orders, $limits );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$this->addData( 'payouts', $payouts );
 		$this->addData( 'personId', $personId );

@@ -20,7 +20,6 @@ class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $personId ){
-//		$this->logic->_realizePersonTransactions( $personId );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 	}
 

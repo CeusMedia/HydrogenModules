@@ -3,7 +3,7 @@
 	<title>Work: Billing</title>
 	<description><![CDATA[Account and billing for small companies.]]></description>
 	<category>Work</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve lists and inputs.</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.3">Add corporation expenses.</log>
 	<log version="0.2.4">Add filter helper.</log>
 	<log version="0.2.5">Merge person and corporation transactions.</log>
+	<log version="0.2.6">Remove deprecated models and templates.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -44,15 +45,6 @@
 		<class>Model/Billing/Bill/Expense.php5</class>
 		<class>Model/Billing/Bill/Reserve.php5</class>
 		<class>Model/Billing/Bill/Share.php5</class>
-		<class>Model/Billing/Corporation/Expense.php5</class>
-		<class>Model/Billing/Corporation/Payin.php5</class>
-		<class>Model/Billing/Corporation/Payout.php5</class>
-		<class>Model/Billing/Corporation/Reserve.php5</class>
-		<class>Model/Billing/Corporation/Transaction.php5</class>
-		<class>Model/Billing/Person/Expense.php5</class>
-		<class>Model/Billing/Person/Payin.php5</class>
-		<class>Model/Billing/Person/Payout.php5</class>
-		<class>Model/Billing/Person/Transaction.php5</class>
 		<class>View/Work/Billing/Bill.php5</class>
 		<class>View/Work/Billing/Corporation.php5</class>
 		<class>View/Work/Billing/Expense.php5</class>
@@ -64,12 +56,10 @@
 		<class>View/Work/Billing/Corporation/Payin.php5</class>
 		<class>View/Work/Billing/Corporation/Payout.php5</class>
 		<class>View/Work/Billing/Corporation/Reserve.php5</class>
-		<class>View/Work/Billing/Corporation/Transaction.php5</class>
 		<class>View/Work/Billing/Person/Expense.php5</class>
 		<class>View/Work/Billing/Person/Payin.php5</class>
 		<class>View/Work/Billing/Person/Payout.php5</class>
 		<class>View/Work/Billing/Person/Reserve.php5</class>
-		<class>View/Work/Billing/Person/Transaction.php5</class>
 		<class>View/Work/Billing/Person/Unbooked.php5</class>
 		<class>View/Work/Billing/Helper/Filter.php5</class>
 		<class>View/Work/Billing/Helper/Transactions.php5</class>
@@ -85,7 +75,6 @@
 		<template>work/billing/corporation/payin/index.php</template>
 		<template>work/billing/corporation/payout/index.php</template>
 		<template>work/billing/corporation/reserve/index.php</template>
-		<template>work/billing/corporation/transaction/index.php</template>
 		<template>work/billing/expense/add.php</template>
 		<template>work/billing/expense/edit.php</template>
 		<template>work/billing/expense/index.php</template>
@@ -96,7 +85,6 @@
 		<template>work/billing/person/payin/index.php</template>
 		<template>work/billing/person/payout/index.php</template>
 		<template>work/billing/person/reserve/index.php</template>
-		<template>work/billing/person/transaction/index.php</template>
 		<template>work/billing/person/unbooked/index.php</template>
 		<template>work/billing/reserve/add.php</template>
 		<template>work/billing/reserve/edit.php</template>

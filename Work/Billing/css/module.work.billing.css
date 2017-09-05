@@ -37,3 +37,8 @@ body table.table tfoot td {
 	background-color: rgba(223, 223, 223, 0.33);
 	font-weight: bold;
 	}
+
+body div.content-panel-inner form.form-list-filter {
+	border-bottom: 1px dashed rgba(191, 191, 191, 0.5);
+	margin-bottom: 1em;
+	}
