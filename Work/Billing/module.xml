@@ -95,7 +95,7 @@
 		<template>work/billing/person/expense/index.php</template>
 		<template>work/billing/person/payin/index.php</template>
 		<template>work/billing/person/payout/index.php</template>
-		<template>work/billing/persongit di/reserve/index.php</template>
+		<template>work/billing/person/reserve/index.php</template>
 		<template>work/billing/person/transaction/index.php</template>
 		<template>work/billing/person/unbooked/index.php</template>
 		<template>work/billing/reserve/add.php</template>
