@@ -58,7 +58,7 @@ if( $bills ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rechnungen', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rechnung', array(
 	'href'	=> './work/billing/bill/add',
 	'class'	=> 'btn btn-success',
 ) );

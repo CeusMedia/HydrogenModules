@@ -3,7 +3,7 @@
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Einzahlung', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
 	'href'			=> '#modal-add-expense',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
