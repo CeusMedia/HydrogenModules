@@ -116,6 +116,8 @@ class Logic_Upload{
 	 */
 	public function checkVirus( $noteError = FALSE ){
 		try{
+			if( $this->upload->error )
+				throw new Exception( 'Upload failed beforehand' );
 			$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
 			copy( realpath( $this->upload->tmp_name ), $copy );
 			$scanner	= new Resource_ClamScan();
