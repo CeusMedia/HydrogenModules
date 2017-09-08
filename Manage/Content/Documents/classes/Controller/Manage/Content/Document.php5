@@ -82,6 +82,7 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 					$logicUpload	= new Logic_Upload( $this->env );
 					$logicUpload->setUpload( $upload );
 					$logicUpload->sanitizeFileName();
+					$logicUpload->checkSize( Logic_Upload::getMaxUploadSize() );
 					$logicUpload->checkVirus( TRUE );
 					if( $logicUpload->getError() ){
 						$helper	= new View_Helper_UploadError( $this->env );
