@@ -239,6 +239,16 @@ die;
 //		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'grid-item-icon fa fa-fw fa-'.$icon ) );
 
 		$remoteFilePath	= Logic_Frontend::getInstance( $this->env )->getPath().$path;
+
+		$remoteFilePath = Logic_Frontend::getInstance( $this->env )->getPath().$path;
+		if( preg_match( '/^file\//', $path ) ){
+			$bucket = new Logic_FileBucket( $this->env );
+			$file   = $bucket->getByPath( substr( $path, 5 ) );
+			if( $file )
+				$remoteFilePath = $bucket->getPath().$file->hash;
+			else
+				throw new Exception( 'No file found in bucket for: '.$path );
+		}
 		$data			= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
 		$image			= UI_HTML_Tag::create( 'div', NULL, array(
 			'class'		=> 'grid-item-icon trigger-submit',
