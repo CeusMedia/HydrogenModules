@@ -41,12 +41,15 @@ if( 1 || $mission->versions ){
 		'class'				=> 'version-list-item active',
 //		'data-version'		=> 'current',
 	) );
+	$list	= array_reverse( $list );
 	$list	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 	$panelVersions		= '
 		<div class="content-panel">
 			<h4>'.$w->headingVersions.'</h4>
 			<div class="content-panel-inner">
-				'.$list.'
+				<div style="max-height: 510px; overflow-y: auto">
+					'.$list.'
+				</div>
 			</div>
 		</div>';
 }
