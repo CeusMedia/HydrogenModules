@@ -167,7 +167,8 @@ class Job_Mail extends Job_Abstract{
 		$list		= array();
 		foreach( $model->getAll( $conditions, $orders, $limits ) as $mail ){
 			try{
-				$this->logic->decodeMailObject( $mail, TRUE );
+
+				$mail	= $this->logic->getMail( $mail->mailId );
 				if( method_exists( $mail->object->mail, 'getParts' ) ){
 					$mailParts		= $mail->object->mail->getParts( TRUE );
 					$nrAttachments	= array();

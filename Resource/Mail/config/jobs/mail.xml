@@ -15,6 +15,11 @@
 	</job>-->
 
 	<!--  NEW JOB DESCRIPTION  -->
+	<job id="Resource.Mail.clean">
+		<class>Mail</class>
+		<method>clean</method>
+		<mode>live</mode>
+	</job>
 	<job id="Resource.Mail.Queue.count">
 		<class>Mail</class>
 		<method>countQueuedMails</method>
