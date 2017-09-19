@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Bootstrap: Modal</title>
+	<description><![CDATA[Modal dialog using bootstrap.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<category>User Interface</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>View/Helper/Bootstrap/Modal.php5</style>
+		<class>View/Helper/Bootstrap/Modal/Trigger.php5</style>
+	</files>
+	<relations>
+		<needs type="module">UI_Bootstrap</needs>
+	</relations>
+</module>
