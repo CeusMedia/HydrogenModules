@@ -15,6 +15,14 @@ class View_Helper_Bootstrap_Modal_Trigger{
 		$this->env		= $env;
 	}
 
+	public function __toString(){
+		return $this->render();
+	}
+
+	static public function create( $env ){
+		return new static( $env );
+	}
+
 	/**
 	 *	Returns rendered component.
 	 *	@access		public

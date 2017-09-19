@@ -17,6 +17,14 @@ class View_Helper_Bootstrap_Modal{
 		$this->env		= $env;
 	}
 
+	public function __toString(){
+		return $this->render();
+	}
+
+	static public function create( $env ){
+		return new static( $env );
+	}
+
 	/**
 	 *	Returns rendered component.
 	 *	@access		public
@@ -137,6 +145,7 @@ class View_Helper_Bootstrap_Modal{
 	 */
 	public function setFormAction( $action ){
 		$this->formAction	= $action;
+		return $this;
 	}
 
 	/**
