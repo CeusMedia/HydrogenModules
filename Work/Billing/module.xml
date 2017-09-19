@@ -3,7 +3,7 @@
 	<title>Work: Billing</title>
 	<description><![CDATA[Account and billing for small companies.]]></description>
 	<category>Work</category>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve lists and inputs.</log>
@@ -12,6 +12,7 @@
 	<log version="0.2.4">Add filter helper.</log>
 	<log version="0.2.5">Merge person and corporation transactions.</log>
 	<log version="0.2.6">Remove deprecated models and templates.</log>
+	<log version="0.2.7">Change calculation of amounts of relative reserves.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

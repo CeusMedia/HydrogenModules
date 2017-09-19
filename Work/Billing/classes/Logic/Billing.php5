@@ -583,10 +583,7 @@ class Logic_Billing{
 		$reserves	= $this->getBillReserves( $billId );
 		$substract	= 0;
 		foreach( $reserves as $reserve ){
-			if( $reserve->percent )
-				$substract	+= $amount * (float) $reserve->percent / 100;
-			else
-				$substract	+= (float) $reserve->amount;
+			$substract	+= (float) $reserve->amount;
 		}
 		return $amount - $substract;
 	}
@@ -611,10 +608,21 @@ class Logic_Billing{
 		foreach( $expenses as $expense )
 			$amount	-= $expense->amount;
 		$reserves	= $this->getBillReserves( $billId );
-		foreach( $reserves as $reserve ){
-			if( $reserve->percent ){
-				$this->modelBillReserve->edit( $reserve->billReserveId, array(
-					'amount'	=> $amount * $reserve->percent / 100
+		$reservesPercent	= 0;
+		$reservesAmount		= 0;
+		foreach( $reserves as $reserve ){										//  iterate reserves
+			if( (float) $reserve->percent )										//  either relative reserve
+				$reservesPercent	+= $reserve->percent;						//  then sum percentage
+			else if( $reserve->amount )											//  otherwise absolute reserve
+				$reservesAmount		+= $reserve->amount;						//  then sum amount
+		}
+		$reducedAmount	= $amount - $reservesAmount;							//  subtract absolute reserves
+		$reducedAmount	= $reducedAmount / ( 1 + $reservesPercent / 100 );		//  real core value depending on relative reserves
+
+		foreach( $reserves as $reserve ){										//  iterate reserves
+			if( (float) $reserve->percent ){									//  if relative reserve
+				$this->modelBillReserve->edit( $reserve->billReserveId, array(	//  calculate absolute amount
+					'amount'	=> $reducedAmount * $reserve->percent / 100		//  by percent WITHIN core value
 				) );
 			}
 		}
