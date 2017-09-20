@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: bindWithDelay</title>
+	<description><![CDATA[jQuery plugin for delayed event execution.]]></description>
+	<version>1.0</version>
+	<category>JavaScript</category>
+	<author site="http://briangrinstead.com/">Brian Grinstead</author>
+	<url>http://github.com/bgrins/bindWithDelay</url>
+	<license>MIT</license>
+	<files>
+		<script load="auto">jquery.bindWithDelay.js</script>
+	</files>
+</module>
