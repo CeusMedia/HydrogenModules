@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.5.7-p2</version>
+	<version>4.5.7-p3</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -10,6 +10,7 @@
 	<files>
 		<class>Controller/Manage/TinyMce.php5</class>
 		<class>View/Helper/TinyMce.php5</class>
+		<class>View/Helper/TinyMce/FileBrowser.php5</class>
 		<class>View/Manage/TinyMce.php5</class>
 		<style source="theme" load="auto">tinymce.css</style>
 		<style source="theme">tinymce.content.css</style>

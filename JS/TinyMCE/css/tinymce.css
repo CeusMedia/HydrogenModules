@@ -19,6 +19,40 @@ div.mce-stack-layout-item .mce-text {
 }
 */
 
+body#tinymce-file-browser {
+	overflow-y: scroll;
+	}
+body#tinymce-file-browser #tinymce-file-browser-sidebar{
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 240px;
+	height: 100%;
+	padding: 4px;
+	overflow-y: auto;
+	background-color: #EEE;
+	border-right: 1px solid rgba(127, 127, 127, 0.25);
+/*	box-shadow: 1px 1px 2px 2px rgba(127, 127, 127, 0.25);*/
+	box-sizing: border-box;
+	}
+body#tinymce-file-browser #tinymce-file-browser-topbar{
+	position: fixed;
+	right: 0;
+	top: 0;
+	left: 239px;
+	padding-right: 10px;
+	height: 32px;
+	padding-top: 2px;
+	background-color: #EEE;
+	border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+/*	box-shadow: 1px 1px 2px 2px rgba(127, 127, 127, 0.25);*/
+	text-align: right;
+	}
+body#tinymce-file-browser #tinymce-file-browser-content{
+	margin-top: 44px;
+	margin-left: 255px;
+	}
+
 
 #container-tinymce-file-browser #container-list-items {
 /*	display: none;*/
@@ -82,6 +116,71 @@ div.mce-stack-layout-item .mce-text {
 	font-size: 4.5em;
 	text-align: center;
 	line-height: 2em;
+	background-color: rgba(191,191,191,0.1);
+	color: rgba(127,127,127,0.5);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
+	}
+
+
+
+
+#container-tinymce-file-browser ul.list {}
+#container-tinymce-file-browser ul.list li.list-item {
+	clear: left;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	padding: 0px;
+	box-sizing: border-box;
+ 	border-bottom: 1px solid rgba(191, 191, 191, 0.75);
+	height: 72px;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-icon {
+	display: inline-block;
+	float: left;
+	width: 64px;
+	height: 64px;
+	border: 1px solid #DDD;
+	background-color: rgba(191,191,191,0.2);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-icon:hover {
+/*	opacity: 0.85;*/
+	background-color: rgba(191,191,191,0.3) !important;
+	border-color: #AAA;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-folder {
+	cursor: pointer;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label {
+	float: left;
+	text-align: left;
+	font-size: 1.2em;
+	width: auto !important;
+	padding: 1em;
+	cursor: pointer;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-folder .list-item-icon {
+	font-size: 2.25em;
+	text-align: center;
+	line-height: 2.2em;
+	background-color: rgba(191,191,191,0.2);
+	color: #08c;
+	color: #DBA901;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-link .list-item-icon {
+	font-size: 2.25em;
+	text-align: center;
+	line-height: 2.2em;
+	color: #084d6f;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-file .list-item-icon {
+	font-size: 2.25em;
+	text-align: center;
+	line-height: 2.2em;
 	background-color: rgba(191,191,191,0.1);
 	color: rgba(127,127,127,0.5);
 	background-repeat: no-repeat;
