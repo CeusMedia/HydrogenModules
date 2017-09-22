@@ -360,6 +360,10 @@ class Logic_Billing{
 		}
 	}
 
+	public function countBills( $conditions ){
+		return $this->modelBill->count( $conditions );
+	}
+
 	public function getBill( $billId ){
 		return $this->modelBill->get( $billId );
 	}

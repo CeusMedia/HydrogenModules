@@ -61,19 +61,28 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 			$this->session->remove( $this->filterPrefix.'status' );
 			$this->session->remove( $this->filterPrefix.'year' );
 			$this->session->remove( $this->filterPrefix.'month' );
+			$this->session->remove( $this->filterPrefix.'number' );
+			$this->session->remove( $this->filterPrefix.'title' );
+			$this->session->remove( $this->filterPrefix.'limit' );
 		}
 		else{
 			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status' ) );
 			$this->session->set( $this->filterPrefix.'year', $this->request->get( 'year' ) );
 			$this->session->set( $this->filterPrefix.'month', $this->request->get( 'month' ) );
+			$this->session->set( $this->filterPrefix.'number', $this->request->get( 'number' ) );
+			$this->session->set( $this->filterPrefix.'title', $this->request->get( 'title' ) );
+			$this->session->set( $this->filterPrefix.'limit', $this->request->get( 'limit' ) );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index( $page = 0 ){
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
-		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
+		$filterYear	= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
+		$filterNumber	= $this->session->get( $this->filterPrefix.'number' );
+		$filterTitle	= $this->session->get( $this->filterPrefix.'title' );
+		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' );
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 
@@ -85,10 +94,22 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
+		if( $filterNumber )
+			$conditions['number']	= '%'.$filterNumber.'%';
+		if( $filterTitle )
+			$conditions['title']	= '%'.$filterTitle.'%';
+		$bills	= $this->logic->getBills( $conditions, array(), array( $page * 15, 15 ) );
+		$total	= $this->logic->countBills( $conditions );
 
-		$this->addData( 'bills', $this->logic->getBills( $conditions, array() ) );
+		$this->addData( 'bills', $bills );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterYear', $filterYear );
 		$this->addData( 'filterMonth', $filterMonth );
+		$this->addData( 'filterNumber', $filterNumber );
+		$this->addData( 'filterTitle', $filterTitle );
+		$this->addData( 'filterLimit', $filterLimit );
+		$this->addData( 'limit', 15 );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', ceil( $total / 15 ) );
 	}
 }

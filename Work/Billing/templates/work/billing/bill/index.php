@@ -32,7 +32,7 @@ if( $bills ){
 		), array( 'class' => $bill->status > 0 ? 'success' : 'warning' ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
-		'120',
+		'140',
 		'',
 		'90',
 		'70',
@@ -95,12 +95,31 @@ $optMonth	= array(
 );
 $optMonth	= UI_HTML_Elements::Options( $optMonth, $filterMonth );
 
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/billing/bill', $page, $pages );
+
+$iconFilter	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+
+$buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter, array(
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-small btn-info',
+	'style'	=> 'display: none'
+) );
+
 return '
 <div class="content-panel">
 	<h3>Rechnungen</h3>
 	<div class="content-panel-inner">
 		<form action="./work/billing/bill/filter" class="form-list-filter" method="post">
 			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_number">Nummer</label>
+					<input type="text" name="number" id="input_number" class="span12" value="'.htmlentities( $filterNumber, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="span2">
+					<label for="input_title">Titel</label>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
 				<div class="span2">
 					<label for="input_status">Zustand</label>
 					<select name="status" id="input_status" class="span12" onchange="this.form.submit()">'.$optStatus.'</select>
@@ -114,10 +133,12 @@ return '
 					<select name="month" id="input_month" class="span12" onchange="this.form.submit()">'.$optMonth.'</select>
 				</div>
 			</div>
+			'.$buttonFilter.'
 		</form>
 		'.$list.'
 		<div class="buttonbar">
 			'.$buttonAdd.'
+			'.$pagination.'
 		</div>
 	</div>
 </div>

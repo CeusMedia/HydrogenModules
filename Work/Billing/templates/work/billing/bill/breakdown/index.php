@@ -147,10 +147,10 @@ if( $bill->amountNetto - $bill->amountAssigned == 0 ){
 		'href'	=> './work/billing/bill/breakdown/book/'.$bill->billId,
 		'class'	=> 'btn btn-primary',
 	) );
-	$buttonAddExpense	= UI_HTML_Tag::create( 'button', $iconAdd.' neue Ausgabe', array(
+/*	$buttonAddExpense	= UI_HTML_Tag::create( 'button', $iconAdd.' neue Ausgabe', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
-	) );
+	) );*/
 	$buttonAddShare		= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anteil', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
