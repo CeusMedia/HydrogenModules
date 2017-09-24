@@ -47,24 +47,14 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
-		$result		= FALSE;
-		if( strlen( $username ) ){
-			$data		= array ( 'filters' => array( 'username' => $username ) );
-			$result		= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
-			$result		= count( $result ) === 1;
-		}
+		$result		= $this->logic->checkUsername( $username );
 		print( json_encode( $result ) );
 		exit;
 	}
 
 	public function ajaxEmailExists(){
-		$email	= trim( $this->request->get( 'email' ) );
-		$result		= FALSE;
-		if( strlen( $email ) ){
-			$data		= array ( 'filters' => array( 'email' => $email ) );
-			$result		= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
-			$result		= count( $result ) === 1;
-		}
+		$email		= trim( $this->request->get( 'email' ) );
+		$result		= $this->logic->checkEmail( $email );
 		print( json_encode( $result ) );
 		exit;
 	}
@@ -110,16 +100,24 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		return $this->restart( NULL );
 	}
 
-	public function confirm( $userId, $pak ){
-		$user	= $this->logic->confirm( $userId, $pak );
-		if( $user ){
-			$this->messenger->noteSuccess( 'Konto bestätigt.' );
-			$this->restart( 'login/'.$user->username, TRUE );
+	public function confirm( $userId, $token ){
+		$words		= (object) $this->getWords( 'confirm' );
+		$result		= $this->logic->confirm( $userId, $token );
+		if( is_object( $result ) ){
+			$this->messenger->noteSuccess( $words->msgSuccess );
+			$this->restart( 'login/'.$result->data->username, TRUE );
 		}
-		else{
-			$this->messenger->noteError( 'Aktivierung fehlgeschlagen. Der Aktivierungscode ist nicht mehr gültig.' );
-			$this->restart( 'login', TRUE );
-		}
+		if( $result == -1 )
+			$this->messenger->noteError( $words->msgNoUserId );
+		if( $result == -2 )
+			$this->messenger->noteError( $words->msgNoToken );
+		if( $result == -10 )
+			$this->messenger->noteError( $words->msgInvalidToken );
+		else if( $result == -11 )
+			$this->messenger->noteError( $words->msgAccountAlreadyConfirmed );
+		else if( $result == -12 )
+			$this->messenger->noteError( $words->msgManagerAlreadyConfirmed );
+		$this->restart( 'login', TRUE );
 	}
 
 	public function login( $username = NULL ){
@@ -158,16 +156,22 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 					$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 					$this->restart( './auth/rest?from='.$from );								//  restart (or go to redirect URL)
 				}
-				if( $user->data == -9 )
+				if( $user->data == -1 )
+					$this->messenger->noteError( $words->msgNoUsername );
+				if( $user->data == -2 )
+					$this->messenger->noteError( $words->msgNoPassword );
+				if( $user->data == -10 )
 					$this->messenger->noteError( $words->msgInvalidDomain );
-				else if( $user->data == -10 )
-					$this->messenger->noteError( $words->msgInvalidUser );
 				else if( $user->data == -11 )
-					$this->messenger->noteError( $words->msgInvalidPassword );
-				else if( $user->data == -12 )
-					$this->messenger->noteError( $words->msgUserDisabled );
-				else if( $user->data == -13 )
 					$this->messenger->noteError( $words->msgDomainDisabled );
+				else if( $user->data == -20 )
+					$this->messenger->noteError( $words->msgInvalidUser );
+				else if( $user->data == -21 )
+					$this->messenger->noteError( $words->msgUserDisabled );
+				else if( $user->data == -22)
+					$this->messenger->noteError( $words->msgUserUnconfirmed );
+				else if( $user->data == -30 )
+					$this->messenger->noteError( $words->msgInvalidPassword );
 			}
 
 
@@ -222,6 +226,68 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 
 		$redirectTo	= $redirectController.( $redirectAction ? '/'.$redirectAction : '' );
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
+	}
+
+	public function register(){
+		$data	= array();
+		if( $this->request->has( 'save' ) ){
+			$data	= $this->request->getAllFromSource( 'POST' );
+			$result	= $this->logic->register( $data );
+			if( is_array( $result ) ){
+				$this->messenger->noteSuccess( 'Account has been created. Now, please confirm you account!' );
+				$from	= $this->request->get( 'from' );
+				if( $from ){
+//					if( preg_match( '/:\/\//', $from ) )
+//						$this->relocate( $from );
+					$from->restart( $from );
+				}
+				$this->session->set( 'registered_account_id', $result['accountId'] );
+				$this->restart( 'auth/rest/login' );
+			}
+			if( !preg_match( '/^[a-z]+:-[0-9]+/$i', $result ) )
+				throw new InvalidArgumentException( 'Invalid reponse code' );
+			list( $level, $code )	= explode( ':', $result, 2 );
+			$message	= 'error-'.$level.$code;
+			$message	= isset( $words[$message] ) ? $words[$message] : $message;
+			$this->messenger->noteError( $message );
+			$data		= array_merge( array(
+				'business'			=> FALSE,
+				'billing_address'	=> FALSE,
+			), $data );
+		}
+		if( !$data ){
+			$data	= array(
+				'firstname'			=> 'Hans',
+				'surname'			=> 'Testmann',
+				'username'			=> 'htestmann',
+				'email'				=> 'hans.testmann@aol.com',
+				'phone'				=> '0123/4567890',
+				'country'			=> 'Deutschland',
+				'state'				=> '',
+				'postcode'			=> '12345',
+				'city'				=> 'Stadt 1',
+				'street'			=> 'Straße 1',
+				'business'			=> 'on',
+				'company'			=> 'Testmann Inc.',
+				'tax_id'			=> '123-456-789',
+				'billing_address'	=> 'on',
+				'billing_country'	=> 'Deutschland',
+				'billing_state'		=> '',
+				'billing_postcode'	=> '98765',
+				'billing_city'		=> 'Stadt 2',
+				'billing_street'	=> 'Straße 2',
+				'billing_email'		=> 'testmann@aol.com',
+				'billing_phone'		=> '0123/9876543',
+			);
+		}
+
+		$this->addData( 'data', (object) $data );
+		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+	}
+
+	public function registered(){
+		$lastRegistration	= $this->session->get( 'registered_account_id' );
+		return "YESSSSS!";
 	}
 
 	/**
