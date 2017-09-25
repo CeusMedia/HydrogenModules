@@ -75,9 +75,9 @@ class Job_Mail extends Job_Abstract{
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled < "0.4.8" )			// todo: to be removed
 			$this->__migrateRepositoryFromCommonToMail();
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.6.8" )			// todo: to be removed
-			$this->__detectCompression( array(), array(), array( 0, 20 ) );
+			$this->__detectCompression( array(), array() );
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.7.1" )			// todo: to be removed
-			$this->__detectMailClass( array(), array(), array( 0, 100 ) );
+			$this->__detectMailClass( array(), array() );
 	}
 
 	public function clean(){
@@ -85,36 +85,40 @@ class Job_Mail extends Job_Abstract{
 		$this->__removeAttachments( array(), array( 'mailId' => 'ASC' ), array( 0, 1000 ) );
 	}
 
-	protected function __detectMailClass( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function __detectMailClass( $conditions = array(), $orders = array() ){
 		if( !is_array( $conditions ) )
 			throw new InvalidArgumentException( 'Conditions must be an array' );
 		if( !is_array( $orders ) )
 			throw new InvalidArgumentException( 'Orders must be an array' );
-		if( !is_array( $limits ) )
-			throw new InvalidArgumentException( 'Limits must be an array' );
 
 		$model		= new Model_Mail( $this->env );
 		$this->loadMailClasses();
 
 		$conditions['mailClass']	= '';
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 100 );
 
 		$count		= 0;
-		$mails		= $model->getAllByIndices( $conditions, $orders, $limits, array( 'mailId' ) );
-		foreach( $mails as $mailId ){
-			try{
-				$mail	= $this->logic->getMail( $mailId );
-				$model->edit( $mail->mailId, array( 'mailClass' => get_class( $mail->object ) ) );
-				$count++;
-				unset( $mail );
+		$found		= $model->count( $conditions );
+		$this->out( '- detectMailClass: Found '.$found.' mail with unkown mail class.' );
+		if( $found ){
+			$mails		= $model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
+			foreach( $mails as $mailId ){
+				try{
+					$mail	= $this->logic->getMail( $mailId );
+					$model->edit( $mail->mailId, array( 'mailClass' => get_class( $mail->object ) ) );
+					$count++;
+					unset( $mail );
+					echo ".";
+					if( $count % 60 === 0 )
+						echo str_pad( $count.'/'.$found, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+				}
+				catch( Exception $e ){
+					remark( $e->getMessage() );
+//					$this->env->getMessenger()->noteFailure( 'Decoding of mail ('.$mail->mailId.') failed: '.$e->getMessage() );
+				}
 			}
-			catch( Exception $e ){
-				remark( $e->getMessage() );
-//				$this->env->getMessenger()->noteFailure( 'Decoding of mail ('.$mail->mailId.') failed: '.$e->getMessage() );
-			}
+			$this->out( '- detectMailClass: Detected mail class for '.$count.' mails.' );
 		}
-		$this->out( 'Resource.Mail.Queue.repair/detectMailClass: Detected mail class for '.$count.' mails.' );
 	}
 
 	protected function __removeNewsletters( $conditions = array(), $orders = array(), $limits = array() ){
@@ -216,23 +220,21 @@ class Job_Mail extends Job_Abstract{
 		) ) );
 	}
 
-	protected function __detectCompression( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function __detectCompression( $conditions = array(), $orders = array() ){
 		if( !is_array( $conditions ) )
 			throw new InvalidArgumentException( 'Conditions must be an array' );
 		if( !is_array( $orders ) )
 			throw new InvalidArgumentException( 'Orders must be an array' );
-		if( !is_array( $limits ) )
-			throw new InvalidArgumentException( 'Limits must be an array' );
 
 		$model		= new Model_Mail( $this->env );
 		$conditions['compression']	= array( Model_Mail::COMPRESSION_UNKNOWN );
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 10 );
 
-		$count		= 0;
-		$found		= $model->count( $conditions );
+		$count	= 0;
+		$found	= $model->count( $conditions );
+		$this->out( '- detectCompression: Found '.$found.' mails with unknown compression.' );
 		if( $found ){
-			$mails		= $model->getAll( $conditions, $orders, $limits );
+			$mails	= $model->getAll( $conditions, $orders );
 			foreach( $mails as $mail ){
 				$compression	= Model_Mail::COMPRESSION_UNKNOWN;
 				$finfo			= new finfo( FILEINFO_MIME );
@@ -246,44 +248,48 @@ class Job_Mail extends Job_Abstract{
 				if( $compression ){
 					$count++;
 					$model->edit( $mail->mailId, array( 'compression' => $compression ) );
+					echo ".";
+					if( $count % 60 === 0 )
+						echo str_pad( $count.'/'.$found, 18, " ", STR_PAD_LEFT ).PHP_EOL;
 				}
 			}
+			$this->out( '- detectCompression: Detected compression of '.$count.' mails.' );
 		}
-		$this->out( 'Resource.Mail.Queue.repair/detectCompression: Detected compression of '.$count.' mails.' );
 	}
 
-	protected function __migrateRepositoryFromCommonToMail( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function __migrateRepositoryFromCommonToMail( $conditions = array(), $orders = array() ){
 		if( !is_array( $conditions ) )
 			throw new InvalidArgumentException( 'Conditions must be an array' );
 		if( !is_array( $orders ) )
 			throw new InvalidArgumentException( 'Orders must be an array' );
-		if( !is_array( $limits ) )
-			throw new InvalidArgumentException( 'Limits must be an array' );
 
 		$model		= new Model_Mail( $this->env );
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 10 );
 
 		$count		= 0;
 		$found		= $model->count( $conditions );
-		foreach( $model->getAll( $conditions, $orders, $limits ) as $mail ){
-			if( empty( $mail->senderAddress ) ){
-				try{
-					$this->decodeMailObject( $mail, TRUE );												//  decompress & unserialize mail object serial and apply to mail data object
-					if( is_object( $mail->object ) ){
-						die( get_class( $mail->object ) );
-						if( method_exists( $mail->object->mail, 'getSender' ) ){
-							$count++;
-							$model->edit( $mail->mailId, array( 'senderAddress' => $mail->object->mail->getSender() ) );
+		if( $found ){
+			$this->out( 'Resource.Mail.Queue.repair/migrateRepositoryFromCommonToMail: Found '.$found.' mails.' );
+			foreach( $model->getAll( $conditions, $orders ) as $mail ){
+				if( empty( $mail->senderAddress ) ){
+					try{
+						$this->decodeMailObject( $mail, TRUE );												//  decompress & unserialize mail object serial and apply to mail data object
+						if( is_object( $mail->object ) ){
+							die( get_class( $mail->object ) );
+							if( method_exists( $mail->object->mail, 'getSender' ) ){
+								$count++;
+								$model->edit( $mail->mailId, array( 'senderAddress' => $mail->object->mail->getSender() ) );
+							}
 						}
 					}
-				}
-				catch( Exception $e ){
-					remark( $e->getMessage() );
+					catch( Exception $e ){
+						remark( $e->getMessage() );
+					}
 				}
 			}
+			$this->out( '' );
+			$this->out( 'Resource.Mail.Queue.repair/migrateRepositoryFromCommonToMail: Migrated '.$count.' mails.' );
 		}
-		$this->out( 'Resource.Mail.Queue.repair/migrateRepositoryFromCommonToMail: Migrated '.$count.' mails.' );
 	}
 }
 ?>
