@@ -81,8 +81,8 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function clean(){
-		$this->__removeNewsletters( array( 'createdAt' => '<'.( time()- 7 * 24 * 3600 ) ), array( 'mailId' => 'ASC' ), array( 0, 100 ) );
-		$this->__removeAttachments( array(), array( 'mailId' => 'ASC' ), array( 0, 1000 ) );
+		$this->__removeNewsletters( array( 'createdAt' => '<'.( time()- 7 * 24 * 3600 ) ), array( 'mailId' => 'ASC' ) );
+		$this->__removeAttachments( array(), array( 'mailId' => 'ASC' ) );
 	}
 
 	protected function __detectMailClass( $conditions = array(), $orders = array() ){
@@ -121,57 +121,56 @@ class Job_Mail extends Job_Abstract{
 		}
 	}
 
-	protected function __removeNewsletters( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function __removeNewsletters( $conditions = array(), $orders = array() ){
 		if( !is_array( $conditions ) )
 			throw new InvalidArgumentException( 'Conditions must be an array' );
 		if( !is_array( $orders ) )
 			throw new InvalidArgumentException( 'Orders must be an array' );
-		if( !is_array( $limits ) )
-			throw new InvalidArgumentException( 'Limits must be an array' );
 		$model		= new \Model_Mail( $this->env );
 
 		$this->loadMailClasses();
 		$conditions['status']		= array( -2, 2 );
 		$conditions['mailClass']	= 'Mail_Newsletter';
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 10 );
 
-		$list		= array();
-		foreach( $model->getAll( $conditions, $orders, $limits ) as $mail ){
-			try{
-				$mail	= $this->logic->getMail( $mail->mailId );
-				if( get_class( $mail->object ) === "Mail_Newsletter" ){
-					$list[]	= $mail->mailId;
-					$model->remove( $mail->mailId );
+		$found	= $model->count( $conditions );
+		$this->out( '- removeNewsletters: Found '.$found.' newsletter mails.' );
+		if( $found ){
+			$count	= 0;
+			foreach( $model->getAll( $conditions, $orders ) as $mail ){
+				try{
+					$mail	= $this->logic->getMail( $mail->mailId );
+					if( get_class( $mail->object ) === "Mail_Newsletter" ){
+						$model->remove( $mail->mailId );
+						echo ".";
+						$count++;
+						if( $count % 60 === 0 )
+							echo str_pad( $count.'/'.$found, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+					}
+				}
+				catch( Exception $e ){
+					remark( $e->getMessage() );
+//					$this->env->getMessenger()->noteFailure( 'Decoding of mail ('.$mail->mailId.') failed: '.$e->getMessage() );
 				}
 			}
-			catch( Exception $e ){
-				remark( $e->getMessage() );
-//				$this->env->getMessenger()->noteFailure( 'Decoding of mail ('.$mail->mailId.') failed: '.$e->getMessage() );
-			}
+			$this->out( '- removeNewsletters: Removed '.$count.' newsletter mails.' );
 		}
-		$this->out( 'Resource.Mail.Queue.repair/removeNewsletters: Removed '.count( $list ).' newsletter mails.' );
 	}
 
-	protected function __removeAttachments( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function __removeAttachments( $conditions = array(), $orders = array() ){
 		if( !is_array( $conditions ) )
 			throw new InvalidArgumentException( 'Conditions must be an array' );
 		if( !is_array( $orders ) )
 			throw new InvalidArgumentException( 'Orders must be an array' );
-		if( !is_array( $limits ) )
-			throw new InvalidArgumentException( 'Limits must be an array' );
 		$model		= new \Model_Mail( $this->env );
 
 		$this->loadMailClasses();
 
 		$conditions['status']	= array( -2, 2 );
 		$orders		= $orders ? $orders : array( 'mailId' => 'DESC' );
-		$limits		= $limits ? $limits : array( 0, 10 );
-
 		$list		= array();
-		foreach( $model->getAll( $conditions, $orders, $limits ) as $mail ){
+		foreach( $model->getAll( $conditions, $orders ) as $mail ){
 			try{
-
 				$mail	= $this->logic->getMail( $mail->mailId );
 				if( method_exists( $mail->object->mail, 'getParts' ) ){
 					$mailParts		= $mail->object->mail->getParts( TRUE );
@@ -211,7 +210,7 @@ class Job_Mail extends Job_Abstract{
 				'object'		=> $encoding->code,
 			), FALSE );
 		}
-		$message	= 'Resource.Mail.Queue.repair/removeAttachments: Reduced %s mails by %s attachments from %s to %s.';
+		$message	= '- removeAttachments: Reduced %s mails by %s attachments from %s to %s.';
 		$this->out( vsprintf( $message, array(
 			count( $list ),
 			$nrAttachments,

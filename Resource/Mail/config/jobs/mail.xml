@@ -27,7 +27,7 @@
 	</job>
 	<job id="Resource.Mail.Queue.clean">
 		<class>Mail</class>
-		<method>cleanUp</method>
+		<method>clean</method>
 		<mode>live</mode>
 	</job>
 	<job id="Resource.Mail.Queue.migrate">
