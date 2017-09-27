@@ -24,7 +24,7 @@
 		<template>auth/oauth/login.php</template>
 		<template>auth/oauth/login.form.php</template>
 		<template>auth/oauth/password.php</template>
-		<template>auth/oauth/register.php</template>
+<!--		<template>auth/oauth/register.php</template>-->
 		<locale>de/auth/oauth.ini</locale>
 		<locale>de/html/auth/oauth/login/top.html</locale>
 		<locale>de/html/auth/oauth/login/info.html</locale>
