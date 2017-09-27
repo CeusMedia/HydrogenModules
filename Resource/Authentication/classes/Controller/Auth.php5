@@ -78,58 +78,52 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->redirectAfterLogin();
 	}
 
+
+	protected function getBackend(){
+		$backends		= $this->logic->getBackends();
+		$backendKey		= $this->session->get( 'authBackend' );
+		$backendKeys	= array_keys( $backends );
+		if( !$backends )
+			throw new RuntimeException( 'No authentication backend available' );
+		if( !$backendKey || in_array( $backendKey, $backendKeys ) )
+			$backendKey	= $backendKeys[0];
+		return $backends[$backendKey];
+	}
+
 	public function login( $username = NULL ){
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
-		$backends	= $this->logic->getBackends();
-		$backendKey	= $this->session->get( 'authBackend' );
-		if( !$backendKey )
-			$backendKey	= key( $backends );
-		if( count( $backends ) === 1 ){
-			$backendKey	= key( $backends );
-			$path		= 'auth/'.$backends[$backendKey]->path.'/login';
-			if( $username )
-				$path	.= '/'.$username;
-			$from		= $this->request->get( 'from' );
-			$from		= str_replace( "index/index", "", $from );
-			$path		= $from ? $path.'?from='.$from : $path;
-			$this->restart( $path );
-		}
-
-		$this->addData( 'backends', $backends );
+		$backend	= $this->getBackend();
+		$path		= 'auth/'.$backend->path.'/login';
+		if( $username )
+			$path	.= '/'.$username;
+		$from		= $this->request->get( 'from' );
+		$from		= str_replace( "index/index", "", $from );
+		$this->restart( $from ? $path.'?from='.$from : $path );
 	}
 
 	public function logout(){
-		$backends	= array_values( $this->logic->getBackends() );
-		$backend	= $this->session->get( 'authBackend' );
-		if( !$backend && !$backends )
-			throw new RuntimeException( 'No authentication backend available' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/logout';
-		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
-		$path		= $from ? $path.'?from='.$from : $path;
-		$this->restart( $path );
+		$backend	= $this->getBackend();
+		$path		= 'auth/'.strtolower( $backend ->path ).'/logout';
+		$from		= $this->request->get( 'from' );
+		$from		= str_replace( "index/index", "", $from );
+		$this->restart( $from ? $path.'?from='.$from : $path );
 	}
 
 	public function password(){
-		$backends	= array_values( $this->logic->getBackends() );
-		$backend	= $this->session->get( 'authBackend' );
-		if( !$backend && !$backends )
-			throw new RuntimeException( 'No authentication backend available' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/password';
-		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
-		$path		= $from ? $path.'?from='.$from : $path;
-		$this->restart( $path );
+		$backend	= $this->getBackend();
+		$path		= 'auth/'.strtolower( $backend->path ).'/password';
+		$from		= $this->request->get( 'from' );
+		$from		= str_replace( "index/index", "", $from );
+		$this->restart( $from ? $path.'?from='.$from : $path );
 	}
 
 	public function register(){
-		$backends	= array_values( $this->logic->getBackends() );
-		$backend	= $this->session->get( 'authBackend' );
-		if( !$backend && !$backends )
-			throw new RuntimeException( 'No authentication backend available' );
-		$path		= 'auth/'.strtolower( $backend ? $backend : $backends[0]->path ).'/register';
-		$from		= str_replace( "index/index", "", $this->request->get( 'from' ) );
-		$path		= $from ? $path.'?from='.$from : $path;
-		$this->restart( $path );
+		$backend	= $this->getBackend();
+		$path		= 'auth/'.strtolower( $backend->path ).'/register';
+		$from		= $this->request->get( 'from' );
+		$from		= str_replace( "index/index", "", $from );
+		$this->restart( $from ? $path.'?from='.$from : $path );
 	}
 
 	protected function rememberUserInCookie( $user ){
