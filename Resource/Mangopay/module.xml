@@ -3,12 +3,14 @@
 	<title>Resource: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Start to move common functionality to logic class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Logic/Payment/Mangopay.php5</class>
 		<class>Resource/Mangopay.php5</class>
 	</files>
 	<config protected="yes" mandatory="yes" type="string" name="client.id"></config>
