@@ -68,6 +68,11 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.8.8">Avoid to carry from path "index/index".</log>
 	<log version="0.8.9">Add login template again for having several authentication backends.</log>
 	<log version="0.9">Support newer password hash logic in basic authentication.</log>
+	<log version="0.9.1">Avoid to carry from path "index/index".</log>
+	<log version="0.9.2">Extract registration JavaScript to local auth module.</log>
+	<log version="0.9.3">Extend backend registration.</log>
+	<log version="0.9.4">Improve backend handling.</log>
+<!--	<log version="0.9.5">Start to remove deprecated files.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

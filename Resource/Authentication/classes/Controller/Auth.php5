@@ -82,11 +82,12 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 		$backends	= $this->logic->getBackends();
+		$backendKey	= $this->session->get( 'authBackend' );
+		if( !$backendKey )
+			$backendKey	= key( $backends );
 		if( count( $backends ) === 1 ){
-	//		reset( $backends );
-			$first		= key( $backends );
-			$path	= 'auth/'.strtolower( $first ).'/login';
-//			$path	= 'auth/'.$backends[$first]->path.'/login';										//  @todo use this line later
+			$backendKey	= key( $backends );
+			$path		= 'auth/'.$backends[$backendKey]->path.'/login';
 			if( $username )
 				$path	.= '/'.$username;
 			$from		= $this->request->get( 'from' );
