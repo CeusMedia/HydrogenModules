@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <module>
-	<title>Resource: Mangopay</title>
+	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
+	<log version="0.2.2">Move module to Resource:Payment:Mangopay.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -18,5 +19,7 @@
 	<config protected="yes" mandatory="yes" type="string" name="api.mode" values="sandbox,production">sandbox</config>
 	<config protected="yes" mandatory="yes" type="string" name="api.url.sandbox" title="URL of Mangopay API sandbox environment">https://api.sandbox.mangopay.com</config>
 	<config protected="yes" mandatory="yes" type="string" name="api.url.production" title="URL of Mangopay API production environment">https://api.mangopay.com</config>
-	<relations/>
+	<relations>
+		<needs type="module">Resource_Payment</needs>
+	</relations>
 </module>
