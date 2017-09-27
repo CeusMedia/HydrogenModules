@@ -9,7 +9,7 @@
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Model/Payment/User/Account.php5</class>
+		<class>Model/User/Payment/Account.php5</class>
 	</files>
 	<relations/>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
