@@ -9,7 +9,7 @@ class Logic_Payment_Mangopay{
 
 	protected function __construct( $env ){
 		$this->env			= $env;
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_mangopay.', TRUE );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Mangopay::getInstance( $this->env );
 	}

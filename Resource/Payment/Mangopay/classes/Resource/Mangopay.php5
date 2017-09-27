@@ -7,7 +7,7 @@ class Resource_Mangopay{
 	protected function __construct( $env ){
 		$this->api	= new MangoPay\MangoPayApi();
 		$this->env	= $env;
-		$config		= $this->env->getConfig()->getAll( 'module.resource_mangopay.', TRUE );
+		$config		= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 		$mode		= $config->get( 'api.mode' );
 		if( $config->has( 'api.url.'.$mode ) )
 			$this->api->Config->BaseUrl		= $config->get( 'api.url.'.$mode );
