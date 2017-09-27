@@ -12,7 +12,7 @@
 		<class>Model/Payment/user/Account.php5</class>
 	</files>
 	<relations/>
-	<sql on="install" version="0.1"><![CDATA[
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_payment_accounts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_payment_accounts` (
   `userPaymentAccountId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_payment_accounts` (
   KEY `paymentAccountId` (`paymentAccountId`),
   KEY `provider` (`provider`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]>
-	<sql on="install" version="0.1"><![CDATA[
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_payment_accounts`;
-]]>
+]]></sql>
 </module>
