@@ -6,7 +6,7 @@ if( $type == 'bankwire' ){
 <div class="content-panel">
 	<h3>Pay In</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/wallet/payin/'.$walletId.'/bankwire" method="post">
+		<form action="./manage/my/mangopay/wallet/payIn/'.$walletId.'/bankwire" method="post">
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_amount">Amount</label>
@@ -29,7 +29,7 @@ if( $type == 'bankwire' ){
 <div class="content-panel">
 	<h3>Pay In</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/wallet/payin/'.$walletId.'/bankwire" method="post">
+		<form action="./manage/my/mangopay/wallet/payIn/'.$walletId.'/bankwire" method="post">
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_amount">Amount</label>
@@ -52,7 +52,7 @@ else if( $type == 'card' ){
 	foreach( $cards as $item ){
 		if( !$item->Active )
 			continue;
-		$button	= UI_HTML_Tag::create( 'a', 'use this!', array( 'class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payin/'.$walletId.'/card?cardId='.$item->Id ) );
+		$button	= UI_HTML_Tag::create( 'a', 'use this!', array( 'class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payIn/'.$walletId.'/card?cardId='.$item->Id ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create(' td', $item->CardProvider, array( 'class' => 'cell-card-provider' ) ),
 			UI_HTML_Tag::create(' td', $item->Alias, array( 'class' => 'cell-card-title' ) ),
@@ -88,9 +88,9 @@ return '
 			</p>
 			<div class="buttonbar">
 				<a href="./manage/my/mangopay/wallet/view/'.$walletId.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
-				<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'/bankwire" class="btn btn-primary"><b class="fa fa-arrow-right"></b> Überweisung</a>
-				<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'/card" class="btn btn-primary"><b class="fa fa-credit-card"></b> Kreditkarse</a>
-				<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'/directdebit" class="btn btn-primary"><b class="fa fa-money"></b> Lastschrift</a>
+				<a href="./manage/my/mangopay/wallet/payIn/'.$walletId.'/bankwire" class="btn btn-primary"><b class="fa fa-arrow-right"></b> Überweisung</a>
+				<a href="./manage/my/mangopay/wallet/payIn/'.$walletId.'/card" class="btn btn-primary"><b class="fa fa-credit-card"></b> Kreditkarse</a>
+				<a href="./manage/my/mangopay/wallet/payIn/'.$walletId.'/directdebit" class="btn btn-primary"><b class="fa fa-money"></b> Lastschrift</a>
 			</div>
 		</div>
 	</div>

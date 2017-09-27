@@ -55,7 +55,7 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 					$cardId	= $this->request->get( 'cardId' );
 					if( $cardId ){
 						$this->checkIsOwnCard( $cardId );
-						$this->restart( './manage/my/mangopay/card/payin/'.$cardId.'?walletId='.$walletId.'&from=manage/my/mangopay/wallet/view/'.$walletId );
+						$this->restart( './manage/my/mangopay/card/payIn/'.$cardId.'?walletId='.$walletId.'&from=manage/my/mangopay/wallet/view/'.$walletId );
 					}
 					$pagination	= new \MangoPay\Pagination();
 					$sorting	= new \MangoPay\Sorting();
@@ -74,6 +74,28 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		$this->addData( 'walletId', $walletId );
 		$this->addData( 'wallet', $wallet );
 
+	}
+
+	public function payOut( $walletId ){
+		$wallet		= $this->checkWalletIsOwn( $walletId );
+
+		if( $this->request->has( 'save' ) ){
+			$amount	= $this->request->get( 'amount' );
+			if( $amount < 100 ){
+				$this->messenger->noteError( 'Amount must be larger than 1' );
+				$this->restart( 'payOut/'.$walletId, TRUE );
+			}
+			//  payout
+		}
+
+
+		$pagination	= new \MangoPay\Pagination();
+		$sorting	= new \MangoPay\Sorting();
+		$sorting->AddField( 'CreationDate', 'DESC' );
+		$this->addData( 'bankAccounts', $this->mangopay->Users->GetBankAccounts( $this->userId, $pagination, $sorting ));
+
+		$this->addData( 'wallet', $wallet );
+		$this->addData( 'walletId', $walletId );
 	}
 
 	public function view( $walletId ){
@@ -101,5 +123,42 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 			$this->env->getMessenger()->noteError( 'Invalid User ID' );
 			$this->restart( NULL, TRUE );
 		}
+	}
+
+	public function transfer( $sourceWalletId ){
+		$sourceWallet		= $this->mangopay->Wallets->Get( $sourceWalletId );
+
+		$targetWallets		= array();
+		foreach( $this->mangopay->Users->GetWallets( $this->userId ) as $wallet )
+			if( $wallet->Id != $sourceWalletId )
+				if( $wallet->Currency === $sourceWallet->Currency )
+					$targetWallets[$wallet->Id]	= $wallet;
+
+		if( $this->request->has( 'amount' ) ){
+			$targetWalletId		= $this->request->get( 'targetWalletId' );
+			$amount				= $this->request->get( 'amount' );
+			$currency			= $sourceWallet->Currency;
+
+			$transfer			= new \MangoPay\Transfer();
+			$transfer->AuthorId			= $this->userId;											//  @todo inset user ID from session
+			$transfer->CreditedUserId	= $this->userId;											//  @todo inset user ID from session
+			$transfer->CreditedWalletId	= $targetWalletId;
+			$transfer->DebitedWalletId	= $sourceWalletId;
+			$transfer->DebitedFunds		= new \MangoPay\Money();
+			$transfer->DebitedFunds->Amount		= $amount;
+			$transfer->DebitedFunds->Currency	= $currency;
+			$transfer->Fees				= new \MangoPay\Money();
+			$transfer->Fees->Amount		= 0;
+			$transfer->Fees->Currency	= $currency;
+			$result	= $this->mangopay->Transfers->create( $transfer );
+			print_m( $result );
+			die;
+			$this->restart( 'view/'.$walletId, TRUE );
+
+		}
+
+		$this->addData( 'sourceWalletId', $sourceWalletId );
+		$this->addData( 'sourceWallet', $sourceWallet );
+		$this->addData( 'targetWallets', $targetWallets );
 	}
 }

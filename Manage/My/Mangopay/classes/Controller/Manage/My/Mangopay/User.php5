@@ -2,10 +2,13 @@
 class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay{
 
 	public function index(){
+
+		$this->addData( 'user', $this->mangopay->Users->Get( $this->userId ) );
+/*
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
 		$sorting->AddField( 'CreationDate', 'DESC' );
-		$this->addData( 'users', $this->mangopay->Users->GetAll( $pagination, $sorting ));
+		$this->addData( 'users', $this->mangopay->Users->GetAll( $pagination, $sorting ));*/
 	}
 
 	public function view( $userId ){

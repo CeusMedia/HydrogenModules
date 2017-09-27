@@ -85,6 +85,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 			}
 
 			$this->env->getMessenger()->noteSuccess( 'Credit Card has been created.' );
+			$cacheKey	= 'user_'.$this->userId.'_cards';
+			$this->cache->remove( $cacheKey );
 			$this->restart( 'view/'.$registration->CardId, TRUE );
 
 /*			$card = $this->mangopay->Cards->Get( $registration->CardId );
@@ -112,15 +114,15 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 			$this->restart( NULL, TRUE );
 		}
 		$card	= $this->checkIsOwnCard( $cardId );
-
-		$payIn		= new \MangoPay\PayIn();
+		$fees	= $this->moduleConfig->getAll( 'fees.payin.' );
+		$payIn	= new \MangoPay\PayIn();
 		$payIn->PreauthorizationId	= $preAuthId;
 		$payIn->AuthorId			= $preAuth->AuthorId;
 		$payIn->CreditedUserId		= $preAuth->AuthorId;
 		$payIn->CreditedWalletId	= $walletId;
 		$payIn->DebitedFunds		= $preAuth->DebitedFunds;
 		$payIn->Fees				= new \MangoPay\Money();
-		$payIn->Fees->Amount		= $preAuth->DebitedFunds->Amount * $this->factorFees;
+		$payIn->Fees->Amount		= $preAuth->DebitedFunds->Amount * $fees['percent'] + ( $fees['fix'] * 100 );
 		$payIn->Fees->Currency		= $preAuth->DebitedFunds->Currency;
 
 		// payment type as CARD
@@ -209,14 +211,9 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 	}
 
 	public function index( $refresh = NULL ){
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
 		try{
-			$cacheKey	= 'user_'.$this->userId.'_cards';
-			if( is_null( $cards = $this->cache->get( $cacheKey ) ) || $refresh ){
-				$cards	= $this->mangopay->Users->GetCards( $this->userId, $pagination, $sorting );
-				$this->cache->set( $cacheKey, $cards );
-			}
+			$this->logic->skipCacheOnNextRequest( $refresh );
+			$cards	= $this->logic->getUsersCards( $this->userId );
 			$this->addData( 'cards', $cards );
 		}
 		catch( \MangoPay\ResponseException $e ){
@@ -230,56 +227,32 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 	}
 
 	public function payIn( $cardId ){
-		$card	= $this->checkIsOwnCard( $cardId );
+		$card		= $this->checkIsOwnCard( $cardId );
+		$fees		= $this->moduleConfig->getAll( 'fees.payin.' );
 		$this->saveBackLink( 'from', 'payin_from' );
 		if( $this->request->has( 'save' ) ){
 			$walletId	= $this->request->get( 'walletId' );
 			$wallet		= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
 
-			$payIn		= new \MangoPay\PayIn();
-			$payIn->CreditedWalletId	= $walletId;
-			$payIn->AuthorId			= $this->userId;											//  @todo inset user ID from session
-			$payIn->DebitedFunds		= new \MangoPay\Money();
-			$payIn->Fees				= new \MangoPay\Money();
-
-			$amount	= $this->request->get( 'amount' );
-		//	$amount	= $this->checkAmount( $amount, $this->currency );								//  @todo handle amount format and sanity
-
-			$payIn->DebitedFunds->Amount	= $amount;
-			$payIn->DebitedFunds->Currency	= $this->currency;
-
-			$payIn->Fees->Amount	= $amount * $this->factorFees;
-			$payIn->Fees->Currency	= $this->currency;
-
-			$card	= $this->checkIsOwnCard( $cardId );
-
-			// payment type as CARD
-			$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsCard();
-			$payIn->PaymentDetails->CardType	= $card->CardType;
-			$payIn->PaymentDetails->CardId		= $card->Id;
-
-			// execution type as DIRECT
-			$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
-			$payIn->ExecutionDetails->SecureModeReturnURL = $this->env->url.'manage/my/mangopay/card/handlePayInSecureMode';
-
-			// create Pay-In
-			$createdPayIn = $this->mangopay->PayIns->Create( $payIn );
+			$createdPayIn = $this->logic->createPayInFromCard(
+				$this->userId,
+				$walletId,
+				$cardId,
+				$this->request->get( 'amount' ),
+				$this->env->url.'manage/my/mangopay/card/handlePayInSecureMode'
+			);
 			$this->handlePayInStatus( $createdPayIn, $card, $wallet );
 		}
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
-		$wallets	= $this->mangopay->Users->GetWallets( $this->userId, $pagination, $sorting );
+		$card		= $this->mangopay->Cards->Get( $cardId );
+		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
 
 		$this->addData( 'wallets', $wallets );
 		$this->addData( 'walletId', $this->request->get( 'walletId' ) );
 		$this->addData( 'cardId', $cardId );
-		$this->addData( 'card', $this->mangopay->Cards->Get( $cardId ) );
+		$this->addData( 'card', $card );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
-
-
 
 	protected function saveBackLink( $requestKey, $sessionKey ){
 		$from = $this->request->get( $requestKey );
@@ -294,8 +267,6 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 			$this->restart( $from );
 		}
 	}
-
-
 
 	public function payInPreAuthorized( $cardId ){
 		$card	= $this->checkIsOwnCard( $cardId );
@@ -329,10 +300,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 			}
 			$this->handlePayInPreAuthorized( $createdPreAuth->Id, $cardId, $walletId );
 		}
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
-		$wallets	= $this->mangopay->Users->GetWallets( $this->userId, $pagination, $sorting );
+		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
 
 		$this->addData( 'wallets', $wallets );
 		$this->addData( 'walletId', $this->request->get( 'walletId' ) );
@@ -344,6 +312,9 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 
 	public function payOut(){
 		throw new RuntimeException( 'Not implemented yet' );
+
+		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
+
 		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
 		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
 	}

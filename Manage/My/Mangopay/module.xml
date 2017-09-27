@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3.2">Add dashboard.</log>
 	<log version="0.3.3">Add transitions index.</log>
 	<log version="0.3.4">Extend credit card payins by preauthorization.</log>
+	<log version="0.3.5">Add cache, payout and many improvements.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -50,6 +51,6 @@
 		<locale>de/manage/my/mangopay/card.ini</locale>
 	</files>
 	<relations>
-		<needs type="module">Resource_Mangopay</needs>
+		<needs type="module">Resource_Payment_Mangopay</needs>
 	</relations>
 </module>

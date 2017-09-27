@@ -11,7 +11,7 @@ return '
 <div class="content-panel">
 	<h3>Pay in from Credit Card to Wallet</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/card/payin/'.$cardId.'" method="post">
+		<form action="./manage/my/mangopay/card/payIn/'.$cardId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span6">

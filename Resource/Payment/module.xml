@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Payment</title>
+	<description><![CDATA[...]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Model/Payment/user/Account.php5</class>
+	</files>
+	<relations/>
+	<sql on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_payment_accounts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_payment_accounts` (
+  `userPaymentAccountId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userId` int(11) UNSIGNED NOT NULL,
+  `paymentAccountId` int(11) UNSIGNED NOT NULL,
+  `provider` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`userPaymentAccountId`),
+  KEY `userId` (`userId`),
+  KEY `paymentAccountId` (`paymentAccountId`),
+  KEY `provider` (`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]>
+	<sql on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_payment_accounts`;
+]]>
+</module>

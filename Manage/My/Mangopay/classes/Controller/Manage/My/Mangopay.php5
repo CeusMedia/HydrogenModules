@@ -6,7 +6,6 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 	protected $messenger;
 	protected $session;
 
-	protected $userId		= 15013325;
 	protected $currency		= "EUR";
 	protected $factorFees	= 0.1;
 
@@ -16,7 +15,21 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->cache		= $this->env->getCache();
+		$this->logic		= Logic_Payment_Mangopay::getInstance( $this->env );
 		$this->mangopay		= Resource_Mangopay::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_mangopay.', TRUE );
+
+		$modelAccount		= new Model_User_Payment_Account( $this->env );
+		$localUserId		= $this->session->get( 'userId' );
+
+		try{
+			if( !$this->logic->hasPaymentAccount( $localUserId ) )
+				$this->logic->createNaturalUserFromLocalUser( $localUserId );
+			$this->userId	= $this->logic->getUserIdFromLocalUserId( $localUserId );
+		}
+		catch( RuntimeException $e ){
+			$this->messenger->noteFailure( 'Registration on payment provider failed: '.$e->getMessage() );
+		}
 	}
 
 	protected function checkIsOwnCard( $cardId ){
@@ -103,7 +116,7 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 			if( 1 || is_null( $transactions = $this->cache->get( $cacheKey ) ) ){
 				$pagination	= $this->mangopay->getDefaultPagination();
 				$sorting	= $this->mangopay->getDefaultSorting();
-				$sorting->AddField( 'CreationDate', 'ASC' );
+				$sorting->AddField( 'CreationDate', 'DESC' );
 				$transactions	= $this->mangopay->Users->GetTransactions( $this->userId, $pagination, $sorting );
 				$this->cache->set( $cacheKey, $transactions );
 			}

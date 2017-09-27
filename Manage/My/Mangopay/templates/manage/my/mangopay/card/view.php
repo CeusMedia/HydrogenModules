@@ -1,7 +1,7 @@
 <?php
 
-$buttonPayIn	= '<a href="./manage/my/mangopay/card/payin/'.$cardId.'" class="btn btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
-$buttonPayOut	= '<a href="./manage/my/mangopay/card/payout/'.$cardId.'" class="btn btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
+$buttonPayIn	= '<a href="./manage/my/mangopay/card/payIn/'.$cardId.'" class="btn btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
+$buttonPayOut	= '<a href="./manage/my/mangopay/card/payOut/'.$cardId.'" class="btn btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
 $buttonPreAuth	= '<a href="./manage/my/mangopay/card/payInPreAuthorized/'.$cardId.'" class="btn btn-small"><b class="fa fa-sign-in"></b> Einzahlung mit Reservierung</a>';
 if( 0 && !$card->Active ){
 	$buttonPayIn	= '<button type="button" class="btn btn-small" disabled="disabled"><b class="fa fa-sign-in"></b> Einzahlung</button>';

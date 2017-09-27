@@ -19,12 +19,13 @@ $panelTransactions	= '
 $linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
 
 $buttonCancel	= '<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>';
-$buttonPayIn	= '<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
-$buttonPayOut	= '<a href="./manage/my/mangopay/wallet/payout/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
+$buttonPayIn	= '<a href="./manage/my/mangopay/wallet/payIn/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
+$buttonPayOut	= '<a href="./manage/my/mangopay/wallet/payOut/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
+$buttonTransfer	= '<a href="./manage/my/mangopay/wallet/transfer/'.$walletId.'" class="btn btn-info"><b class="fa fa-exchange"></b> Überweisen</a>';
 
 return '
 <div class="row-fluid">
-	<div class="span6">
+	<div class="span4">
 		<div class="content-panel">
 			<h3>Wallet</h3>
 			<div class="content-panel-inner">
@@ -33,11 +34,12 @@ return '
 					'.$buttonCancel.'
 					'.$buttonPayIn.'
 					'.$buttonPayOut.'
+					'.$buttonTransfer.'
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="span6">
-		'.$panelTransactions.'
+	<div class="span8">
+		'.View_Helper_Panel_Mangopay_Transactions::renderStatic( $env, $transactions ).'
 	</div>
 </div>';
