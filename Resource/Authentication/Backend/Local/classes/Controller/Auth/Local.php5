@@ -156,7 +156,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
-					$this->restart( './auth/login/'.$user->username.( $from ? '?from='.$from : '' ) );
+					$this->restart( './auth/local/login?login_username='.$user->username.( $from ? '?from='.$from : '' ) );
 				}
 			}
 			$this->messenger->noteError( $words->msgInvalidCode );
@@ -182,6 +182,9 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		return $this->restart( NULL );
 	}
 
+	/**
+	 *	@todo implement username parameter to be used (not the case right now)
+	 */
 	public function login( $username = NULL ){
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
@@ -329,7 +332,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
 	//				$this->messenger->noteNotice( 'Neues Passwort: '.$password." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
-					$this->restart( './auth/login?login_username='.$user->username );
+					$this->restart( './auth/local/login?login_username='.$user->username );
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );
@@ -488,7 +491,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 				$this->env->getDatabase()->beginTransaction();
 				$from		= $this->request->get( 'from' );
-				$forward	= './auth/login'.( $from ? '?from='.$from : '' );
+				$forward	= './auth/local/login'.( $from ? '?from='.$from : '' );
 				try{
 					$userId		= $modelUser->add( $data );
 					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
