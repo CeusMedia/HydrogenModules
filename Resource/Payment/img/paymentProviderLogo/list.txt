@@ -1,0 +1,108 @@
+		<image>paymentProviderLogo/xlarge/amazon-2.png
+		<image>paymentProviderLogo/xlarge/klarna-1.png
+		<image>paymentProviderLogo/xlarge/diners-club-1.png
+		<image>paymentProviderLogo/xlarge/bitcoin-1.png
+		<image>paymentProviderLogo/xlarge/diners-club-2.png
+		<image>paymentProviderLogo/xlarge/apple-pay-1.png
+		<image>paymentProviderLogo/xlarge/direct-debit-1.png
+		<image>paymentProviderLogo/xlarge/western-union-1.png
+		<image>paymentProviderLogo/xlarge/amex-1.png
+		<image>paymentProviderLogo/xlarge/contactless-1.png
+		<image>paymentProviderLogo/xlarge/sprite.png
+		<image>paymentProviderLogo/xlarge/visa-1.png
+		<image>paymentProviderLogo/xlarge/klarna-2.png
+		<image>paymentProviderLogo/xlarge/apple-pay-2.png
+		<image>paymentProviderLogo/xlarge/maestro-1.png
+		<image>paymentProviderLogo/xlarge/amazon-1.png
+		<image>paymentProviderLogo/xlarge/android-pay-1.png
+		<image>paymentProviderLogo/xlarge/paypal-1.png
+		<image>paymentProviderLogo/xlarge/mastercard-1.png
+		<image>paymentProviderLogo/xlarge/android-pay-2.png
+		<image>paymentProviderLogo/xlarge/creditcard-1.png
+		<image>paymentProviderLogo/xlarge/skrill-1.png
+		<image>paymentProviderLogo/xlarge/paypal-2.png
+		<image>paymentProviderLogo/xlarge/paypoint-1.png
+		<image>paymentProviderLogo/xlarge/discover-1.png
+		<image>paymentProviderLogo/xlarge/bacs-1.png
+		<image>paymentProviderLogo/xlarge/jcb-1.png
+		<image>paymentProviderLogo/small/amazon-2.png
+		<image>paymentProviderLogo/small/klarna-1.png
+small/bitcoin-1.png
+small/diners-club-2.png
+small/apple-pay-1.png
+small/direct-debit-1.png
+small/western-union-1.png
+small/amex-1.png
+small/diners-1.png
+small/contactless-1.png
+small/sprite.png
+small/visa-1.png
+small/klarna-2.png
+small/apple-pay-2.png
+small/maestro-1.png
+small/amazon-1.png
+small/android-pay-1.png
+small/paypal-1.png
+small/mastercard-1.png
+small/android-pay-2.png
+small/creditcard-1.png
+small/skrill-1.png
+small/paypal-2.png
+small/paypoint-1.png
+small/discover-1.png
+small/bacs-1.png
+small/jcb-1.png
+medium/amazon-2.png
+medium/klarna-1.png
+medium/diners-club-1.png
+medium/bitcoin-1.png
+medium/diners-club-2.png
+medium/apple-pay-1.png
+medium/direct-debit-1.png
+medium/western-union-1.png
+medium/amex-1.png
+medium/contactless-1.png
+medium/sprite.png
+medium/visa-1.png
+medium/klarna-2.png
+medium/apple-pay-2.png
+medium/maestro-1.png
+medium/amazon-1.png
+medium/android-pay-1.png
+medium/paypal-1.png
+medium/mastercard-1.png
+medium/android-pay-2.png
+medium/creditcard-1.png
+medium/skrill-1.png
+medium/paypal-2.png
+medium/paypoint-1.png
+medium/discover-1.png
+medium/bacs-1.png
+medium/jcb-1.png
+large/amazon-2.png
+large/klarna-1.png
+large/bitcoin-1.png
+large/diners-club-2.png
+large/apple-pay-1.png
+large/direct-debit-1.png
+large/western-union-1.png
+large/amex-1.png
+large/diners-1.png
+large/contactless-1.png
+large/sprite.png
+large/visa-1.png
+large/klarna-2.png
+large/apple-pay-2.png
+large/maestro-1.png
+large/amazon-1.png
+large/android-pay-1.png
+large/paypal-1.png
+large/mastercard-1.png
+large/android-pay-2.png
+large/creditcard-1.png
+large/skrill-1.png
+large/paypal-2.png
+large/paypoint-1.png
+large/discover-1.png
+large/bacs-1.png
+large/jcb-1.png

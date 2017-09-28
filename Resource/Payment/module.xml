@@ -3,13 +3,122 @@
 	<title>Resource: Payment</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add images for payment providers.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Model/User/Payment/Account.php5</class>
+		<image>paymentProviderLogo/xlarge/amazon-1.png</image>
+		<image>paymentProviderLogo/xlarge/amazon-2.png</image>
+		<image>paymentProviderLogo/xlarge/amex-1.png</image>
+		<image>paymentProviderLogo/xlarge/android-pay-1.png</image>
+		<image>paymentProviderLogo/xlarge/android-pay-2.png</image>
+		<image>paymentProviderLogo/xlarge/apple-pay-1.png</image>
+		<image>paymentProviderLogo/xlarge/apple-pay-2.png</image>
+		<image>paymentProviderLogo/xlarge/bacs-1.png</image>
+		<image>paymentProviderLogo/xlarge/bitcoin-1.png</image>
+		<image>paymentProviderLogo/xlarge/contactless-1.png</image>
+		<image>paymentProviderLogo/xlarge/creditcard-1.png</image>
+		<image>paymentProviderLogo/xlarge/diners-1.png</image>
+		<image>paymentProviderLogo/xlarge/diners-2.png</image>
+		<image>paymentProviderLogo/xlarge/direct-debit-1.png</image>
+		<image>paymentProviderLogo/xlarge/discover-1.png</image>
+		<image>paymentProviderLogo/xlarge/jcb-1.png</image>
+		<image>paymentProviderLogo/xlarge/klarna-1.png</image>
+		<image>paymentProviderLogo/xlarge/klarna-2.png</image>
+		<image>paymentProviderLogo/xlarge/maestro-1.png</image>
+		<image>paymentProviderLogo/xlarge/mastercard-1.png</image>
+		<image>paymentProviderLogo/xlarge/paypal-1.png</image>
+		<image>paymentProviderLogo/xlarge/paypal-2.png</image>
+		<image>paymentProviderLogo/xlarge/paypoint-1.png</image>
+		<image>paymentProviderLogo/xlarge/skrill-1.png</image>
+		<image>paymentProviderLogo/xlarge/sprite.png</image>
+		<image>paymentProviderLogo/xlarge/visa-1.png</image>
+		<image>paymentProviderLogo/xlarge/western-union-1.png</image>
+		<image>paymentProviderLogo/small/amazon-1.png</image>
+		<image>paymentProviderLogo/small/amazon-2.png</image>
+		<image>paymentProviderLogo/small/amex-1.png</image>
+		<image>paymentProviderLogo/small/android-pay-1.png</image>
+		<image>paymentProviderLogo/small/android-pay-2.png</image>
+		<image>paymentProviderLogo/small/apple-pay-1.png</image>
+		<image>paymentProviderLogo/small/apple-pay-2.png</image>
+		<image>paymentProviderLogo/small/bacs-1.png</image>
+		<image>paymentProviderLogo/small/bitcoin-1.png</image>
+		<image>paymentProviderLogo/small/contactless-1.png</image>
+		<image>paymentProviderLogo/small/creditcard-1.png</image>
+		<image>paymentProviderLogo/small/diners-1.png</image>
+		<image>paymentProviderLogo/small/diners-2.png</image>
+		<image>paymentProviderLogo/small/direct-debit-1.png</image>
+		<image>paymentProviderLogo/small/discover-1.png</image>
+		<image>paymentProviderLogo/small/jcb-1.png</image>
+		<image>paymentProviderLogo/small/klarna-1.png</image>
+		<image>paymentProviderLogo/small/klarna-2.png</image>
+		<image>paymentProviderLogo/small/maestro-1.png</image>
+		<image>paymentProviderLogo/small/mastercard-1.png</image>
+		<image>paymentProviderLogo/small/paypal-1.png</image>
+		<image>paymentProviderLogo/small/paypal-2.png</image>
+		<image>paymentProviderLogo/small/paypoint-1.png</image>
+		<image>paymentProviderLogo/small/skrill-1.png</image>
+		<image>paymentProviderLogo/small/sprite.png</image>
+		<image>paymentProviderLogo/small/visa-1.png</image>
+		<image>paymentProviderLogo/small/western-union-1.png</image>
+		<image>paymentProviderLogo/medium/amazon-1.png</image>
+		<image>paymentProviderLogo/medium/amazon-2.png</image>
+		<image>paymentProviderLogo/medium/amex-1.png</image>
+		<image>paymentProviderLogo/medium/android-pay-1.png</image>
+		<image>paymentProviderLogo/medium/android-pay-2.png</image>
+		<image>paymentProviderLogo/medium/apple-pay-1.png</image>
+		<image>paymentProviderLogo/medium/apple-pay-2.png</image>
+		<image>paymentProviderLogo/medium/bacs-1.png</image>
+		<image>paymentProviderLogo/medium/bitcoin-1.png</image>
+		<image>paymentProviderLogo/medium/contactless-1.png</image>
+		<image>paymentProviderLogo/medium/creditcard-1.png</image>
+		<image>paymentProviderLogo/medium/diners-1.png</image>
+		<image>paymentProviderLogo/medium/diners-2.png</image>
+		<image>paymentProviderLogo/medium/direct-debit-1.png</image>
+		<image>paymentProviderLogo/medium/discover-1.png</image>
+		<image>paymentProviderLogo/medium/jcb-1.png</image>
+		<image>paymentProviderLogo/medium/visa-1.png</image>
+		<image>paymentProviderLogo/medium/klarna-1.png</image>
+		<image>paymentProviderLogo/medium/klarna-2.png</image>
+		<image>paymentProviderLogo/medium/maestro-1.png</image>
+		<image>paymentProviderLogo/medium/mastercard-1.png</image>
+		<image>paymentProviderLogo/medium/paypal-1.png</image>
+		<image>paymentProviderLogo/medium/paypal-2.png</image>
+		<image>paymentProviderLogo/medium/paypoint-1.png</image>
+		<image>paymentProviderLogo/medium/skrill-1.png</image>
+		<image>paymentProviderLogo/medium/sprite.png</image>
+		<image>paymentProviderLogo/medium/western-union-1.png</image>
+		<image>paymentProviderLogo/large/amazon-1.png</image>
+		<image>paymentProviderLogo/large/amazon-2.png</image>
+		<image>paymentProviderLogo/large/amex-1.png</image>
+		<image>paymentProviderLogo/large/android-pay-1.png</image>
+		<image>paymentProviderLogo/large/android-pay-2.png</image>
+		<image>paymentProviderLogo/large/apple-pay-1.png</image>
+		<image>paymentProviderLogo/large/apple-pay-2.png</image>
+		<image>paymentProviderLogo/large/bacs-1.png</image>
+		<image>paymentProviderLogo/large/bitcoin-1.png</image>
+		<image>paymentProviderLogo/large/contactless-1.png</image>
+		<image>paymentProviderLogo/large/creditcard-1.png</image>
+		<image>paymentProviderLogo/large/diners-1.png</image>
+		<image>paymentProviderLogo/large/diners-2.png</image>
+		<image>paymentProviderLogo/large/direct-debit-1.png</image>
+		<image>paymentProviderLogo/large/discover-1.png</image>
+		<image>paymentProviderLogo/large/jcb-1.png</image>
+		<image>paymentProviderLogo/large/klarna-1.png</image>
+		<image>paymentProviderLogo/large/klarna-2.png</image>
+		<image>paymentProviderLogo/large/maestro-1.png</image>
+		<image>paymentProviderLogo/large/mastercard-1.png</image>
+		<image>paymentProviderLogo/large/paypal-1.png</image>
+		<image>paymentProviderLogo/large/paypal-2.png</image>
+		<image>paymentProviderLogo/large/paypoint-1.png</image>
+		<image>paymentProviderLogo/large/skrill-1.png</image>
+		<image>paymentProviderLogo/large/sprite.png</image>
+		<image>paymentProviderLogo/large/visa-1.png</image>
+		<image>paymentProviderLogo/large/western-union-1.png</image>
 	</files>
 	<relations/>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
