@@ -38,7 +38,7 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 			$rows[]	= UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create(' td', $link, array( 'class' => 'cell-transaction-id' ) ),
 				UI_HTML_Tag::create(' td', $date.'<br/>'.$time, array( 'class' => 'cell-transaction-date' ) ),
-				UI_HTML_Tag::create(' td', $iconType.'&nbsp;'.$transaction->Type, array( 'class' => 'cell-transaction-type' ) ),
+				UI_HTML_Tag::create(' td', $iconType.'&nbsp;'.$transaction->Type.'<br/>'.$transaction->Nature, array( 'class' => 'cell-transaction-type' ) ),
 				UI_HTML_Tag::create(' td', $status, array( 'class' => 'cell-transaction-status' ) ),
 				UI_HTML_Tag::create(' td', $amount.'<br/>'.$fees, array( 'class' => 'cell-transaction-amount', 'style' => 'text-align: right' ) ),
 			) );

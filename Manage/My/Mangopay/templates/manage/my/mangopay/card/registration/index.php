@@ -2,9 +2,46 @@
 
 $optType	= UI_HTML_Elements::Options( $words['cardTypes'], $cardType );
 
+$inputCardType	= UI_HTML_Tag::create( 'select', $optType, array(
+	'name'			=> "cardType",
+	'id'			=> "input_cardType",
+	'class'			=> "span12",
+	'readonly'		=> $cardType ? 'readonly' : NULL,
+) );
+
+$inputCardTitle	= UI_HTML_Tag::create( 'input', NULL, array(
+	'type'			=> 'text',
+	'name'			=> 'title',
+	'id'			=> 'input_title',
+	'class'			=> 'span12',
+//	'required'		=> 'required',
+	'placeholder'	=> 'Karte '.( count( $cards ) + 1 ),
+	'value'			=> htmlentities( $cardTitle, ENT_QUOTES, 'UTF-8' ),
+	'readonly'		=> $cardTitle ? 'readonly' : NULL,
+) );
+
+$part1		= '
+<h4>Schritt 1: Anbieter der Kreditkarte und Bezeichnung</h4>
+<div class="row-fluid">
+	<div class="span3">
+		<label for="input_cardType">Card Type</label>
+		'.$inputCardType.'
+	</div>
+	<div class="span9">
+		<label for="input_title">Bezeichnung <!--<small class="muted">(z.B. "Meine VISA-Karte")</small>--></label>
+		'.$inputCardTitle.'
+	</div>
+</div>';
 
 if( $cardType ){
-	$linkBack	= 'manage/my/mangopay/card/add';
+	$inputCardNumber	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'			=> 'text',
+		'name'			=> 'cardNumber',
+		'id'			=> 'input_cardNumber',
+		'class'			=> 'span12',
+		'required'		=> 'required',
+	) );
+	$linkBack	= 'manage/my/mangopay/card/registration';
 	if( $backwardTo )
 		$linkBack	.= '?backwardTo='.$backwardTo;
 	$form	= '
@@ -12,21 +49,13 @@ if( $cardType ){
 			<input type="hidden" name="data" value="'.$registration->PreregistrationData.'" />
 			<input type="hidden" name="accessKeyRef" value="'.$registration->AccessKey.'" />
 			<input type="hidden" name="returnURL" value="'.$returnUrl.'" />
-			<div class="row-fluid">
-				<div class="span3">
-					<label for="input_cardType">Card Type</label>
-					<select name="cardType" id="input_cardType" class="span12" readonly="readonly">'.$optType.'</select>
-				</div>
-				<div class="span9">
-					<label for="input_title">Bezeichnung <small class="muted">(z.B. "Meine VISA-Karte")</small></label>
-					<input type="text" name="title" id="input_title" class="span12" readonly="readonly" value="'.htmlentities( $cardTitle, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
-			</div>
+			'.$part1.'
 			<hr/>
+			<h4>Schritt 2: Daten der Kreditkarte</h4>
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_cardNumber">Card Number</label>
-					<input type="text" name="cardNumber" id="input_cardNumber" value="" class="span12"/>
+					'.$inputCardNumber.'
 				</div>
 				<div class="span3">
 					<label for="input_cardExpirationDate">Expiration Date</label>
@@ -46,18 +75,9 @@ if( $cardType ){
 else{
 	$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
 	$form	= '
-		<form action="./manage/my/mangopay/card/add" method="post">
+		<form action="./manage/my/mangopay/card/registration" method="post">
 			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
-			<div class="row-fluid">
-				<div class="span3">
-					<label for="input_cardType">Card Type</label>
-					<select name="cardType" id="input_cardType" class="span12">'.$optType.'</select>
-				</div>
-				<div class="span9">
-					<label for="input_title">Bezeichnung <small class="muted">(z.B. "Meine VISA-Karte")</small></label>
-					<input type="text" name="title" id="input_title" class="span12" required="required"/>
-				</div>
-			</div>
+			'.$part1.'
 			<div class="buttonbar">
 				<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
 				<button type="submit" name="save" value="select" class="btn btn-primary"><b class="fa fa-check"></b> weiter</button>

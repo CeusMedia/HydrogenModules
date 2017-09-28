@@ -32,26 +32,33 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function checkIsOwnCard( $cardId ){
-		$card	= $this->checkCard( $cardId );
+	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = array() ){
+		if( !is_array( $fallback ) || !count( $fallback ) )
+			$fallback	= array( NULL, TRUE );
+		$card	= $this->checkCard( $cardId, $fallback );
 	//	@todo check card against user cards
 		return $card;
 	}
 
-	protected function checkCard( $cardId ){
+	protected function checkCard( $cardId, $fallback = array() ){
 		try{
+			if( !strlen( trim( $cardId ) ) )
+				throw new InvalidArgumentException( 'No card ID given' );
 			$card	= $this->mangopay->Cards->Get( $cardId );
 			return $card;
 		}
 		catch( \MangoPay\Libraries\ResponseException $e ){
 			$this->handleMangopayResponseException( $e );
-			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
 //			$this->messenger->noteNotice( "Exception: ".$e->getMessage( ) );
 			$this->messenger->noteError( "Invalid card ID given." );
-			$this->restart( NULL, TRUE );
 		}
+		if( !is_array( $fallback ) || !count( $fallback ) )
+			$fallback	= array( NULL, TRUE );
+		if( count( $fallback ) == 1 )
+			$fallback[1]	= FALSE;
+		$this->restart( $fallback[0], $fallback[1] );
 	}
 
 	protected function checkWallet( $walletId ){

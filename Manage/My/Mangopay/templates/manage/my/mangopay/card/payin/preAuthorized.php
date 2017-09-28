@@ -11,7 +11,7 @@ return '
 <div class="content-panel">
 	<h3>PreAuth for pay in from Credit Card to Wallet</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/card/payInPreAuthorized/'.$cardId.'" method="post">
+		<form action="./manage/my/mangopay/card/payin/preAuthorized/'.$cardId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span6">
@@ -24,7 +24,7 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/my/mangopay/card" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
+				<a href="./manage/my/mangopay/card/payin" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
 				<button type="submit" name="save" value="payin" class="btn btn-primary"><b class="fa fa-check"></b> einzahlen</button>
 			</div>
 		</form>
