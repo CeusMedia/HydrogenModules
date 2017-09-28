@@ -9,16 +9,24 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->sessionPrefix	= 'manage_my_mangopay_card_';
 	}
 
+	public function ajaxValidateCardNumber(){
+		$number		= $this->request->get( 'cardNumber' );
+		$provider	= $this->request->get( 'cardProvider' );
+		$result		= $this->logic->validateCardNumber( $number, $provider );
+		print( json_encode( array(
+			'status'	=> 'data',
+			'data'		=> $result
+		) ) );
+		exit;
+	}
+
 	public function index(){
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 		$cards	= $this->logic->getUsersCards( $this->userId );
 		$this->addData( 'cards', $cards );
 		$cardType	= $this->request->get( 'cardType' );
-		$cardTitle	= $this->request->get( 'title' );
 		if( $cardType ){
-			if( !strlen( trim( $cardTitle ) ) )
-				$cardTitle	= 'Karte '.( count( $cards ) + 1 );
 			$param	= array();
 			if( $this->request->get( 'backwardTo' ) )
 				$param[]	= 'backwardTo='.$this->request->get( 'backwardTo' );
@@ -33,15 +41,20 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 			$cardRegister->UserId	= $this->userId;
 			$cardRegister->Currency	= $this->currency;
 			$cardRegister->CardType	= $cardType;
-			$cardRegister->Tag		= $cardTitle;
 
-			$registration = $this->mangopay->CardRegistrations->Create( $cardRegister );
+			try{
+				$registration = $this->mangopay->CardRegistrations->Create( $cardRegister );
+			}
+			catch( Exception $e ){
+				$this->handleMangopayResponseException( $e );
+			}
 
 			$this->env->getSession()->set( 'cardRegisterId', $registration->Id );
 			$this->addData( 'registration', $registration );
 		}
 		$this->addData( 'cardType', $cardType );
-		$this->addData( 'cardTitle', $cardTitle );
+//		$this->addData( 'cardTitle', $cardTitle );
+		$this->addData( 'cardProvider', $this->request->get( 'cardProvider' ) );
 	}
 
 	public function finish(){
@@ -76,11 +89,13 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 				$this->env->getMessenger()->noteError( 'Cannot create card.' );
 				$this->restart( NULL, TRUE );
 			}
-
+/*			$card	= $this->checkIsOwnCard( $registration->CardId );
+			$card->Tag	= $registration->Tag;
+			$this->mangopay->Cards->Update( $card );*/
 			$this->env->getMessenger()->noteSuccess( 'Credit Card has been created.' );
 			$cacheKey	= 'user_'.$this->userId.'_cards';
 			$this->cache->remove( $cacheKey );
-			$this->restart( 'view/'.$registration->CardId, TRUE );
+			$this->restart( '../view/'.$registration->CardId, TRUE );
 
 /*			$card = $this->mangopay->Cards->Get( $registration->CardId );
 			$this->addData( 'card', $card );

@@ -81,7 +81,7 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 
 	protected function handleMangopayResponseException( $e ){
 		ob_start();
-		print_r( $e->GetErrorDetails() );
+		print_r( $e->GetErrorDetails()->Errors );
 		$details	= ob_get_clean();
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );

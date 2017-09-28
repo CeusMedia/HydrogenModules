@@ -17,6 +17,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 		$card	= $this->checkIsOwnCard( $cardId );
 		$card->Active	= FALSE;
 		$this->mangopay->Cards->Update( $card );
+		$this->messenger->noteSuccess( 'Card has been removed' );
 		$this->cache->remove( 'user_'.$this->userId.'_cards' );
 		$this->restart( NULL, TRUE );
 	}
@@ -55,18 +56,18 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 //		$this->restart( 'payin', TRUE );
 	}*/
 
-	protected function saveBackLink( $requestKey, $sessionKey ){
-		$from = $this->request->get( $requestKey );
-		if( $from )
-			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
-	}
-
 	protected function followBackLink( $sessionKey ){
 		$from = $this->session->get( $this->sessionPrefix.$sessionKey );
 		if( $from ){
 			$this->session->remove( $this->sessionPrefix.$sessionKey );
 			$this->restart( $from );
 		}
+	}
+
+	protected function saveBackLink( $requestKey, $sessionKey ){
+		$from = $this->request->get( $requestKey );
+		if( $from )
+			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
 	}
 
 	public function payOut(){

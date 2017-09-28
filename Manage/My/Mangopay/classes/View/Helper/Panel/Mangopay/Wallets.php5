@@ -1,12 +1,13 @@
 <?php
 class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 
-	public function __construct( $env, $options = array() ){
-		parent::__construct( $env, array_merge( array(
+	public function __construct( $env ){
+		parent::__construct( $env );
+		$this->setOptions( array(
 			'linkItem'	=> './manage/my/mangopay/wallet/view/%s',
 			'linkBack'	=> '',
 			'linkAdd'	=> '',
-		), $options ) );
+		) );
 	}
 
 	public function render(){

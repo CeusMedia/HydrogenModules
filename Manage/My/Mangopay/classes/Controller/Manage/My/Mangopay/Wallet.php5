@@ -55,7 +55,7 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 					$cardId	= $this->request->get( 'cardId' );
 					if( $cardId ){
 						$this->checkIsOwnCard( $cardId );
-						$this->restart( './manage/my/mangopay/card/payIn/'.$cardId.'?walletId='.$walletId.'&from=manage/my/mangopay/wallet/view/'.$walletId );
+						$this->restart( './manage/my/mangopay/card/payin/preAuthorized/'.$cardId.'?walletId='.$walletId.'&from=manage/my/mangopay/wallet/view/'.$walletId );
 					}
 					$pagination	= new \MangoPay\Pagination();
 					$sorting	= new \MangoPay\Sorting();

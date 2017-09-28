@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.4">Extend credit card payins by preauthorization.</log>
 	<log version="0.3.5">Add cache, payout and many improvements.</log>
 	<log version="0.3.6">Split card controller into subcontrollers.</log>
+	<log version="0.3.7">Improve credit card registration heavily.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -53,10 +54,11 @@
 		<template>manage/my/mangopay/user/index.php</template>
 		<template>manage/my/mangopay/user/view.php</template>
 		<template>manage/my/mangopay/wallet/index.php</template>
-		<template>manage/my/mangopay/wallet/payin.php</template>
+		<template>manage/my/mangopay/wallet/payIn.php</template>
 		<template>manage/my/mangopay/wallet/view.php</template>
 		<template>manage/my/mangopay/transaction/index.php</template>
 		<locale>de/manage/my/mangopay/card.ini</locale>
+		<script>module.manage.my.mangopay.card.registration.js</script>
 	</files>
 	<relations>
 		<needs type="module">Resource_Payment_Mangopay</needs>
