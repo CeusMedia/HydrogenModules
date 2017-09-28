@@ -41,8 +41,8 @@ class View_Helper_Mangopay_Entity_CardProviderLogo{
 	}
 
 	public function render(){
-		$path		= 'images/payment/providers/'.$this->size.'/';
-		$path		.= strtolower( $this->provider ).'-1-'.$this->size[0].'.png';
+		$path		= 'images/paymentProviderLogo/'.$this->size.'/';
+		$path		.= strtolower( $this->provider ).'-1.png';
 		$image		= UI_HTML_Tag::create( 'img', NULL, array(
 			'src'	=> $path,
 		) );
