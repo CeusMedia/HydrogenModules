@@ -20,6 +20,23 @@ class Logic_Payment_Mangopay{
 		return self::$instance;
 	}
 
+	/**
+	 *	@link	https://stackoverflow.com/a/174772
+	 */
+	static public function validateCardNumber( $number, $provider ){
+		$providerPatterns = array(
+			"VISA"			=> "(4\d{12}(?:\d{3})?)",
+			"MAESTRO"		=> "((?:5020|5038|6304|6579|6761)\d{12}(?:\d\d)?)",
+			"MASTERCARD"	=> "(5[1-5]\d{14})",
+			"AMEX"			=> "(3[47]\d{13})",
+		);
+		if( !array_key_exists( $provider, $providerPatterns ) )
+			return NULL;
+		$pattern	= '#^'.$providerPatterns[$provider].'$#';
+		$number		= trim( str_replace( " ", "", $number ) );
+		return preg_match( $pattern, $number );
+	}
+
 	protected function checkIsOwnCard( $cardId ){
 		$card	= $this->checkCard( $cardId );
 	//	@todo check card against user cards
