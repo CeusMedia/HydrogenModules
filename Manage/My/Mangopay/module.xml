@@ -44,7 +44,6 @@
 		<template>manage/my/mangopay/bank/index.php</template>
 		<template>manage/my/mangopay/bank/payIn.php</template>
 		<template>manage/my/mangopay/bank/view.php</template>
-		<template>manage/my/mangopay/card/add.php</template>
 		<template>manage/my/mangopay/card/edit.php</template>
 		<template>manage/my/mangopay/card/index.php</template>
 		<template>manage/my/mangopay/card/view.php</template>
