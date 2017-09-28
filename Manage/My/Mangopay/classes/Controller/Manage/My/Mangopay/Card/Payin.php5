@@ -119,7 +119,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
 		$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
 		$this->followBackLink( 'payin_from' );
-		$this->restart( NULL, TRUE );
+		$this->restart( '..', TRUE );
 	}
 
 	public function index( $cardId = NULL ){
@@ -129,12 +129,11 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		if( $this->request->has( 'save' ) ){
 			$walletId	= $this->request->get( 'walletId' );
 			$wallet		= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
-
 			$createdPayIn = $this->logic->createPayInFromCard(
 				$this->userId,
 				$walletId,
 				$cardId,
-				$this->request->get( 'amount' ),
+				round( $this->request->get( 'amount' ) * 100 ),
 				$this->env->url.'manage/my/mangopay/card/payin/handleSecureMode'
 			);
 			$this->handleStatus( $createdPayIn, $card, $wallet );
@@ -150,12 +149,6 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	protected function saveBackLink( $requestKey, $sessionKey ){
-		$from = $this->request->get( $requestKey );
-		if( $from )
-			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
-	}
-
 	protected function followBackLink( $sessionKey ){
 		$from = $this->session->get( $this->sessionPrefix.$sessionKey );
 		if( $from ){
@@ -164,13 +157,13 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		}
 	}
 
-	public function payInPreAuthorized( $cardId ){
+	public function preAuthorized( $cardId ){
 		$card	= $this->checkIsOwnCard( $cardId );
 		$this->saveBackLink( 'from', 'payin_from' );
 		if( $this->request->has( 'save' ) ){
 			$walletId	= $this->request->get( 'walletId' );
 			$wallet		= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
-			$amount		= $this->request->get( 'amount' );
+			$amount		= round ( $this->request->get( 'amount' ) * 100 );
 
 			$preAuth	= new \MangoPay\CardPreAuthorization();
 			$preAuth->AuthorId		= $this->userId;
@@ -204,5 +197,11 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'card', $this->mangopay->Cards->Get( $cardId ) );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
+	}
+
+	protected function saveBackLink( $requestKey, $sessionKey ){
+		$from = $this->request->get( $requestKey );
+		if( $from )
+			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
 	}
 }

@@ -35,6 +35,10 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay{
 		try{
 			$this->logic->skipCacheOnNextRequest( $refresh );
 			$cards	= $this->logic->getUsersCards( $this->userId );
+			foreach( $cards as $nr => $card ){
+				if( !$card->Active )
+					unset( $cards[$nr] );
+			}
 			$this->addData( 'cards', $cards );
 		}
 		catch( \MangoPay\ResponseException $e ){

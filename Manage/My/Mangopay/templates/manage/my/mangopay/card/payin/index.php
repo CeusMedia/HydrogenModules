@@ -11,12 +11,12 @@ return '
 <div class="content-panel">
 	<h3>Pay in from Credit Card to Wallet</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/card/payIn/'.$cardId.'" method="post">
+		<form action="./manage/my/mangopay/card/payin/'.$cardId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_amount">Amount</label>
-					<input type="text" id="input_amount" name="amount"/>
+					<input type="number" step="0.01" min="1" max="1000" id="input_amount" name="amount" class="span10"/>&nbsp;<big>&euro;</big>
 				</div>
 				<div class="span6">
 					<label for="input_walletId">Wallet</label>
