@@ -43,31 +43,52 @@ class Logic_Payment_Mangopay{
 		return $card;
 	}
 
-	protected function getCardById( $cardId ){
-		return $this->provider->Cards->Get( $cardId );
-	}
-
-	public function getUsersCards( $userId, $conditions = array(), $orders = array(), $limits = array() ){
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
-		if( !$orders )
-			$sorting->AddField( 'CreationDate', 'DESC' );
-		else{
-			foreach( $orders as $orderKey => $orderValue )
-				$sorting->AddField( $orderKey, strtoupper( $orderValue ) );
-		}
-		$cacheKey	= 'user_'.$userId.'_cards';
-		$refresh	= 1;//$this->skipCacheOnNextRequest;
-		if( $refresh || is_null( $cards = $this->cache->get( $cacheKey ) ) ){
-			$cards	= $this->provider->Users->GetCards( $userId, $pagination, $sorting );
-//			$this->skipCacheOnNextRequest	= FALSE;
-			$this->cache->set( $cacheKey, $cards );
-		}
-		return $cards;
-	}
-
-	public function calculateFeesForPayIn( $price ){
+	/**
+	 *	@todo		implement type
+	 */
+	public function calculateFeesForPayIn( $price, $type = NULL ){
 		return $price * $this->moduleConfig->get( 'fees.payin' ) / 100;
+	}
+
+	public function createBankAccount( $userId, $iban, $bic, $title ){
+		$user	= $this->getUser( $userId );
+		$bankAccount = new \MangoPay\BankAccount();
+		$bankAccount->Type			= "IBAN";
+		$bankAccount->Details		= new \MangoPay\BankAccountDetailsIBAN();
+		$bankAccount->Details->IBAN	= trim( str_replace( ' ', '', $iban ) );
+		$bankAccount->Details->BIC	= trim( $bic );
+		$bankAccount->OwnerName		= $title;
+		$bankAccount->OwnerAddress	= $user->Address;
+		return $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
+	}
+
+	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $amount ){
+		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
+
+		$payIn		= new \MangoPay\PayIn();
+		$payIn->AuthorId			= $userId;
+		$payIn->CreditedWalletId	= $walletId;
+		$payIn->DebitedFunds		= new \MangoPay\Money();
+		$payIn->Fees				= new \MangoPay\Money();
+
+		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Currency	= "EUR";
+
+		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
+		$payIn->DebitedFunds->Currency	= "EUR";
+
+		// payment type as BANKWIRE
+		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsBankWire();
+		$payIn->PaymentDetails->DeclaredDebitedFunds	= $payIn->DebitedFunds;
+		$payIn->PaymentDetails->DeclaredFees			= $payIn->Fees;
+		$payIn->PaymentDetails->BankAccount				= $bankAccount;
+		$payIn->PaymentDetails->WireReference			= "BankWire PayIn 1";
+
+		// execution type as DIRECT
+		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+
+		// create Pay-In
+		return $this->provider->PayIns->Create( $payIn );
 	}
 
 	public function createPayInFromCard( $userId, $walletId, $cardId, $amount, $secureModeReturnUrl ){
@@ -75,8 +96,8 @@ class Logic_Payment_Mangopay{
 		$card	= $this->getCardById( $cardId );
 
 		$payIn		= new \MangoPay\PayIn();
-		$payIn->CreditedWalletId	= $walletId;
 		$payIn->AuthorId			= $userId;
+		$payIn->CreditedWalletId	= $walletId;
 		$payIn->DebitedFunds		= new \MangoPay\Money();
 		$payIn->Fees				= new \MangoPay\Money();
 
@@ -98,6 +119,31 @@ class Logic_Payment_Mangopay{
 		$payIn->ExecutionDetails->SecureModeReturnURL = $secureModeReturnUrl;
 
 		// create Pay-In
+		return $this->provider->PayIns->Create( $payIn );
+	}
+
+	public function checkUser( $userId ){
+		return $this->getUser( $userId );
+	}
+
+	public function createPayInFromCardViaWeb( $userId, $walletId, $cardType, $currency, $amount, $returnUrl ){
+		$user	= $this->checkUser( $userId );
+		$payIn = new \MangoPay\PayIn();
+		$payIn->CreditedWalletId = $walletId;
+		$payIn->AuthorId = $userId;
+		$payIn->PaymentType = "CARD";
+		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsCard();
+		$payIn->PaymentDetails->CardType = $cardType;
+		$payIn->DebitedFunds = new \MangoPay\Money();
+		$payIn->DebitedFunds->Currency = strtoupper( $currency );
+		$payIn->DebitedFunds->Amount = $amount;
+		$payIn->Fees = new \MangoPay\Money();
+		$payIn->Fees->Currency = strtoupper( $currency );
+		$payIn->Fees->Amount = $this->calculateFeesForPayIn( $amount );
+		$payIn->ExecutionType = "WEB";
+		$payIn->ExecutionDetails = new \MangoPay\PayInExecutionDetailsWeb();
+		$payIn->ExecutionDetails->ReturnURL = $returnUrl;
+		$payIn->ExecutionDetails->Culture = strtoupper( $user->Nationality );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
@@ -130,6 +176,59 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$wallet->Owners			= array( $userId );
 		$wallet->Description	= $currency.' Wallet';
 		return $this->provider->Wallets->Create( $wallet );
+	}
+
+	public function getBankAccount( $userId, $bankAccountId ){
+		$cacheKey	= 'user_'.$userId.'_bankaccount_'.$bankAccountId;
+		$refresh	= 1;//$this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $bankAccount = $this->cache->get( $cacheKey ) ) ){
+			$bankAccount	= $this->provider->Users->GetBankAccount( $userId, $bankAccountId );
+//			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $bankAccount );
+		}
+		return $bankAccount;
+	}
+
+	public function getCardById( $cardId ){
+		$cacheKey	= 'card_'.$cardId;
+		$refresh	= 1;//$this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $card = $this->cache->get( $cacheKey ) ) ){
+			$card	= $this->provider->Cards->Get( $cardId );
+//			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $card );
+		}
+		return $card;
+	}
+
+	public function getUser( $userId ){
+		$cacheKey	= 'user_'.$userId;
+		$refresh	= $this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $user = $this->cache->get( $cacheKey ) ) ){
+			$user	= $this->provider->Users->Get( $userId );
+			if( $this->skipCacheOnNextRequest )
+				$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $user );
+		}
+		return $user;
+	}
+
+	public function getUserCards( $userId, $conditions = array(), $orders = array(), $limits = array() ){
+		$pagination	= new \MangoPay\Pagination();
+		$sorting	= new \MangoPay\Sorting();
+		if( !$orders )
+			$sorting->AddField( 'CreationDate', 'DESC' );
+		else{
+			foreach( $orders as $orderKey => $orderValue )
+				$sorting->AddField( $orderKey, strtoupper( $orderValue ) );
+		}
+		$cacheKey	= 'user_'.$userId.'_cards';
+		$refresh	= 1;//$this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $cards = $this->cache->get( $cacheKey ) ) ){
+			$cards	= $this->provider->Users->GetCards( $userId, $pagination, $sorting );
+//			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $cards );
+		}
+		return $cards;
 	}
 
 	public function getUserWallets( $userId, $orders = array(), $limits = array() ){
@@ -179,6 +278,11 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		if( !$relation )
 			throw new RuntimeException( 'No payment account available' );
 		return $relation->paymentAccountId;
+	}
+
+	public function updateUser( $user ){
+		$this->cache->remove( 'user_'.$user->Id );
+		return $this->provider->Users->Update( $user );
 	}
 
 	public function skipCacheOnNextRequest( $skip ){
