@@ -35,7 +35,7 @@ $cardTypes	= array(
 foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
 	$logo	= $helperCardLogo->setProvider( $cardTypeKey )->render();
 	$link	= UI_HTML_Tag::create( 'a', $logo.'&nbsp;'.$cardTypeItem->provider, array(
-		'href'	=> './manage/my/mangopay/card/registration?cardType='.$cardTypeItem->type.'&cardProvider='.$cardTypeKey,
+		'href'	=> './manage/my/mangopay/card/registration?cardType='.$cardTypeItem->type.'&cardProvider='.$cardTypeKey.'&forwardTo='.$forwardTo,
 	) );
 	$list[]	= UI_HTML_Tag::create( 'li', $link, array(
 		'class'	=> $cardProvider == $cardTypeKey ? 'active' : NULL,
@@ -123,6 +123,7 @@ else{
 	$form	= '
 		<form action="./manage/my/mangopay/card/registration" method="post">
 			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
+			<input type="hidden" name="forwardTo" value="'.$forwardTo.'"/>
 			<div class="row-fluid">
 				<div class="span4">
 					'.$part1.'

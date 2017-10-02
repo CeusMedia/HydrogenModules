@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
+abstract class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 
 	protected $request;
 	protected $mangopay;
@@ -44,8 +44,7 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 		try{
 			if( !strlen( trim( $cardId ) ) )
 				throw new InvalidArgumentException( 'No card ID given' );
-			$card	= $this->mangopay->Cards->Get( $cardId );
-			return $card;
+			return $this->logic->getCardById( $cardId );
 		}
 		catch( \MangoPay\Libraries\ResponseException $e ){
 			$this->handleMangopayResponseException( $e );
@@ -85,58 +84,6 @@ class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
 		$details	= ob_get_clean();
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
-	}
-
-	public function index(){
-
-		try{
-			$cacheKey	= 'user_'.$this->userId.'_bankaccounts';
-			if( is_null( $bankAccounts = $this->cache->get( $cacheKey ) ) ){
-				$pagination	= $this->mangopay->getDefaultPagination();
-				$sorting	= $this->mangopay->getDefaultSorting();
-				$sorting->AddField( 'CreationDate', 'ASC' );
-				$bankAccounts	= $this->mangopay->Users->GetBankAccounts( $this->userId, $pagination, $sorting );
-				$this->cache->set( $cacheKey, $bankAccounts );
-			}
-			$this->addData( 'bankAccounts', $bankAccounts );
-
-			$cacheKey	= 'user_'.$this->userId.'_cards';
-			if( is_null( $cards = $this->cache->get( $cacheKey ) ) ){
-				$pagination	= $this->mangopay->getDefaultPagination();
-				$sorting	= $this->mangopay->getDefaultSorting();
-				$cards	= $this->mangopay->Users->GetCards( $this->userId, $pagination, $sorting );
-				$this->cache->set( $cacheKey, $cards );
-			}
-			$this->addData( 'cards', $cards );
-
-			$cacheKey	= 'user_'.$this->userId.'_wallets';
-			if( is_null( $wallets = $this->cache->get( $cacheKey ) ) ){
-				$pagination	= $this->mangopay->getDefaultPagination();
-				$sorting	= $this->mangopay->getDefaultSorting();
-				$sorting->AddField( 'CreationDate', 'ASC' );
-				$wallets	= $this->mangopay->Users->GetWallets( $this->userId, $pagination, $sorting );
-				$this->cache->set( $cacheKey, $wallets );
-			}
-			$this->addData( 'wallets', $wallets );
-
-			$cacheKey	= 'user_'.$this->userId.'_transactions';
-			if( 1 || is_null( $transactions = $this->cache->get( $cacheKey ) ) ){
-				$pagination	= $this->mangopay->getDefaultPagination();
-				$sorting	= $this->mangopay->getDefaultSorting();
-				$sorting->AddField( 'CreationDate', 'DESC' );
-				$transactions	= $this->mangopay->Users->GetTransactions( $this->userId, $pagination, $sorting );
-				$this->cache->set( $cacheKey, $transactions );
-			}
-			$this->addData( 'transactions', $transactions );
-		}
-		catch( \MangoPay\ResponseException $e ){
-			$this->handleMangopayResponseException( $e );
-			$this->restart( NULL );
-		}
-		catch( Exception $e ){
-			$this->messenger->noteError( "Exception: ".$e->getMessage() );
-			$this->restart( NULL );
-		}
 	}
 }
 ?>

@@ -13,7 +13,7 @@ return '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3>Bank Account</h3>
+			<h3><i class="fa fa-fw fa-bank"></i> Bankkonto</h3>
 			<div class="content-panel-inner">
 				'.print_m( $bankAccount, NULL, NULL, TRUE ).'
 				<div class="buttonbar">

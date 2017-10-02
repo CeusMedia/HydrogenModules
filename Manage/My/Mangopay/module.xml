@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -14,17 +14,20 @@
 	<log version="0.3.5">Add cache, payout and many improvements.</log>
 	<log version="0.3.6">Split card controller into subcontrollers.</log>
 	<log version="0.3.7">Improve credit card registration heavily.</log>
+	<log version="0.3.8">Improve controllers, views and templates heavily.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/My/Mangopay.php5</class>
 		<class>Controller/Manage/My/Mangopay/Bank.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card.php5</class>
+		<class>Controller/Manage/My/Mangopay/Index.php5</class>
 		<class>Controller/Manage/My/Mangopay/User.php5</class>
 		<class>Controller/Manage/My/Mangopay/Wallet.php5</class>
 		<class>Controller/Manage/My/Mangopay/Transaction.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card/Payin.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card/Registration.php5</class>
+		<class>Controller/Manage/My/Mangopay/Wallet/Payin.php5</class>
 		<class>View/Helper/Accordion.php5</class>
 		<class>View/Helper/Panel.php5</class>
 		<class>View/Helper/Panel/Mangopay.php5</class>
@@ -35,11 +38,13 @@
 		<class>View/Manage/My/Mangopay.php5</class>
 		<class>View/Manage/My/Mangopay/Bank.php5</class>
 		<class>View/Manage/My/Mangopay/Card.php5</class>
+		<class>View/Manage/My/Mangopay/Index.php5</class>
 		<class>View/Manage/My/Mangopay/User.php5</class>
 		<class>View/Manage/My/Mangopay/Wallet.php5</class>
 		<class>View/Manage/My/Mangopay/Transaction.php5</class>
 		<class>View/Manage/My/Mangopay/Card/Payin.php5</class>
 		<class>View/Manage/My/Mangopay/Card/Registration.php5</class>
+		<class>View/Manage/My/Mangopay/Wallet/Payin.php5</class>
 		<template>manage/my/mangopay/index.php</template>
 		<template>manage/my/mangopay/bank/add.php</template>
 		<template>manage/my/mangopay/bank/index.php</template>
@@ -51,14 +56,20 @@
 		<template>manage/my/mangopay/card/registration/index.php</template>
 		<template>manage/my/mangopay/card/payin/index.php</template>
 		<template>manage/my/mangopay/card/payin/preAuthorized.php</template>
+		<template>manage/my/mangopay/user/edit.php</template>
 		<template>manage/my/mangopay/user/index.php</template>
 		<template>manage/my/mangopay/user/view.php</template>
 		<template>manage/my/mangopay/wallet/index.php</template>
 		<template>manage/my/mangopay/wallet/payIn.php</template>
 		<template>manage/my/mangopay/wallet/view.php</template>
+		<template>manage/my/mangopay/wallet/payin/bankwire.php</template>
+		<template>manage/my/mangopay/wallet/payin/card.php</template>
+		<template>manage/my/mangopay/wallet/payin/cardWeb.php</template>
+		<template>manage/my/mangopay/wallet/payin/index.php</template>
 		<template>manage/my/mangopay/transaction/index.php</template>
 		<locale>de/manage/my/mangopay/card.ini</locale>
 		<script>module.manage.my.mangopay.card.registration.js</script>
+		<style>module.manage.my.mangopay.css</style>
 	</files>
 	<relations>
 		<needs type="module">Resource_Payment_Mangopay</needs>

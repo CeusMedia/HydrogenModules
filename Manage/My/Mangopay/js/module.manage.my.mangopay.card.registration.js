@@ -26,6 +26,8 @@ var ModulePaymentMangopayCardRegistration = {
 				date = new Date();
 				year = parseInt(value.replace(/^(\d{2})\/(\d{2})$/, "20$2"), 10);
 				month = parseInt(value.replace(/^(\d{2})\/(\d{2})$/, "$1"), 10);
+console.log(month);
+console.log(year);
 				if(year >= date.getFullYear()){
 					if(month > 0 && month <= 12){
 						var isThisYear = year == date.getFullYear();
@@ -51,7 +53,7 @@ var ModulePaymentMangopayCardRegistration = {
 		}
 		jQuery.ajax({
 			url: "./manage/my/mangopay/card/registration/ajaxValidateCardNumber",
-			data: {cardNumber: input.val(), cardProvider: cardProvider},
+			data: {cardNumber: input.val(), cardProvider: ModulePaymentMangopayCardRegistration.cardProvider},
 			method: "post",
 			dataType: "json",
 			context: input,

@@ -23,15 +23,15 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 	public function index(){
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
-		$cards	= $this->logic->getUsersCards( $this->userId );
+		$cards	= $this->logic->getUserCards( $this->userId );
 		$this->addData( 'cards', $cards );
 		$cardType	= $this->request->get( 'cardType' );
 		if( $cardType ){
 			$param	= array();
 			if( $this->request->get( 'backwardTo' ) )
-				$param[]	= 'backwardTo='.$this->request->get( 'backwardTo' );
+				$param['backwardTo']	= $this->request->get( 'backwardTo' );
 			if( $this->request->get( 'forwardTo' ) )
-				$param[]	= 'forwardTo='.$this->request->get( 'forwardTo' );
+				$param['forwardTo']	= $this->request->get( 'forwardTo' );
 			$param			= $param ? '?'.http_build_query( $param, NULL, '&' ) : '';
 
 			$returnUrl	= $this->env->url.'manage/my/mangopay/card/registration/finish';
@@ -95,6 +95,10 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 			$this->env->getMessenger()->noteSuccess( 'Credit Card has been created.' );
 			$cacheKey	= 'user_'.$this->userId.'_cards';
 			$this->cache->remove( $cacheKey );
+			if( ( $forwardTo = $this->request->get( 'forwardTo' ) ) )
+				$this->restart( $forwardTo );
+			if( ( $backwardTo = $this->request->get( 'backwardTo' ) ) )
+				$this->restart( $backwardTo );
 			$this->restart( '../view/'.$registration->CardId, TRUE );
 
 /*			$card = $this->mangopay->Cards->Get( $registration->CardId );

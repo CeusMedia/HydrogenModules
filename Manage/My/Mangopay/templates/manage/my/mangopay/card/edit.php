@@ -2,15 +2,15 @@
 
 $linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
 
+$buttonDeactivate	= '<a href="./manage/my/mangopay/card/deactivate/'.$cardId.'" class="btn btn-small btn-danger"><b class="fa fa-remove"></b> entfernen</a>';
+
 $data = print_m( $card, NULL, NULL, TRUE );
-
-
 
 return '
 <div class="row-fluid">
     <div class="span6">
         <div class="content-panel">
-            <h3>Kreditkarte bearbeiten</h3>
+            <h3><i class="fa fa-fw fa-credit-card"></i> Kreditkarte bearbeiten</h3>
             <div class="content-panel-inner">
                 <form action="./manage/my/mangopay/card/edit/'.$cardId.'" method="post">
                     <input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
@@ -27,6 +27,8 @@ return '
                     <div class="buttonbar">
                         <a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
                         <button type="submit" name="save" value="select" class="btn btn-primary"><b class="fa fa-check"></b> speichern</button>
+					&nbsp;|&nbsp;
+					'.$buttonDeactivate.'
                     </div>
                 </form>
             </div>

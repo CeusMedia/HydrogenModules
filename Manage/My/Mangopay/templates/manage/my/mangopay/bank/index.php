@@ -1,5 +1,61 @@
 <?php
 
+$logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank fa-4x' ) );
+
+$list	= array();
+foreach( $bankAccounts as $bankAccount ){
+//print_m( $bankAccount );die;
+	$number	= UI_HTML_Tag::create( 'tt', $bankAccount->Details->BIC );
+	$title	= UI_HTML_Tag::create( 'div', $bankAccount->OwnerName, array( 'class' => 'bankaccount-title' ) );
+	$item	= $logo.$title.$number;
+	$list[]	= UI_HTML_Tag::create( 'div', $item, array(
+		'class'		=> 'bankaccount-list-item',
+		'onclick'	=> 'document.location.href="./manage/my/mangopay/bank/view/'.$bankAccount->Id.'";',
+	) );
+}
+$logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus fa-4x' ) );
+$number	= UI_HTML_Tag::create( 'div', 'Konto hinzufügen' );
+$item	= $logo.$number;
+$list[]	= UI_HTML_Tag::create( 'div', $item, array(
+	'class'		=> 'bankaccount-list-item',
+	'onclick'	=> 'document.location.href="./manage/my/mangopay/bank/add";',
+) );
+$list	= UI_HTML_Tag::create( 'div', $list );
+return '<h2>Bankkonten</h2>'.$list.'
+<style>
+div.bankaccount-list-item {
+	float: left;
+	width: 200px;
+	height: 170px;
+	padding: 1em;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	border-radius: 5px;
+	background-color: rgba(191, 191, 191, 0.15);
+	cursor: pointer;
+	text-align: center;
+	}
+div.bankaccount-list-item tt {
+	margin-top: 6px;
+	font-size: 1em;
+	display: block;
+	}
+div.bankaccount-list-item div.bankaccount-title {
+	font-size: 1.1em;
+	}
+div.bankaccount-list-item i.fa {
+	margin-top: 0.75em;
+	margin-bottom: 0.25em;
+	}
+</style>';
+
+$panel	= new View_Helper_Panel_Mangopay_Cards( $env );
+return $panel->setData( $cards )->render();
+
+
+
+
 $rows		= array();
 foreach( $bankAccounts as $item ){
 //print_m( $item );die;
