@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_My_Mangopay_Index extends Controller_Manage_My_Mangopay{
+class Controller_Manage_My_Mangopay_Index extends Controller_Manage_My_Mangopay_Abstract{
 
 	public function index(){
 

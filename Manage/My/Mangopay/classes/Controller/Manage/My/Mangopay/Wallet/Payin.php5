@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Mangopay{
+class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Mangopay_Abstract{
 
 	protected function __onInit(){
 		parent::__onInit();

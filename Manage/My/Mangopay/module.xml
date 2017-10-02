@@ -18,7 +18,7 @@
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/My/Mangopay.php5</class>
+		<class>Controller/Manage/My/Mangopay/Abstract.php5</class>
 		<class>Controller/Manage/My/Mangopay/Bank.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card.php5</class>
 		<class>Controller/Manage/My/Mangopay/Index.php5</class>

@@ -1,5 +1,5 @@
 <?php
-abstract class Controller_Manage_My_Mangopay extends CMF_Hydrogen_Controller{
+abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Controller{
 
 	protected $request;
 	protected $mangopay;
