@@ -3,7 +3,7 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.3">Add entity view helpers.</log>
 	<log version="0.2.4">Add credit card number validation.</log>
 	<log version="0.2.5">Add helper for responded result codes.</log>
+	<log version="0.2.6">Add helper for card and wallet.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -18,7 +19,9 @@
 		<class>Resource/Mangopay.php5</class>
 		<class>View/Helper/Mangopay/Entity/Error.php5</class>
 		<class>View/Helper/Mangopay/Entity/Money.php5</class>
+		<class>View/Helper/Mangopay/Entity/Card.php5</class>
 		<class>View/Helper/Mangopay/Entity/CardNumber.php5</class>
+		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 	</files>
 	<config protected="yes" mandatory="yes" type="string" name="client.id"></config>

@@ -24,6 +24,7 @@ class Logic_Payment_Mangopay{
 	 *	@link	https://stackoverflow.com/a/174772
 	 */
 	static public function validateCardNumber( $number, $provider ){
+		return TRUE;
 		$providerPatterns = array(
 			"VISA"			=> "(4\d{12}(?:\d{3})?)",
 			"MAESTRO"		=> "((?:5020|5038|6304|6579|6761)\d{12}(?:\d\d)?)",
@@ -258,6 +259,24 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			$list[]	= $wallet;
 		}
 		return $list;
+	}
+
+	/**
+	 *	@todo		extend cache key by filters
+	 */
+	public function getWalletTransactions( $walletId, $orders = array(), $limits = array() ){
+		$cacheKey	= 'wallet_'.$walletId.'_transactions';
+		$refresh	= $this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $transactions = $this->cache->get( $cacheKey ) ) ){
+			$pagination	= $this->provider->getDefaultPagination();
+			$sorting	= $this->provider->getDefaultSorting();
+	//		$sorting->AddField( 'CreationDate', 'ASC' );
+			$filter		= new \MangoPay\FilterTransactions();
+			$transactions	= $this->provider->Wallets->GetTransactions( $walletId, $pagination, $filter, $sorting );
+			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $transactions );
+		}
+		return $transactions;
 	}
 
 	public function hasPaymentAccount( $localUserId ){
