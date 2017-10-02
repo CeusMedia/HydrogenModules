@@ -21,6 +21,7 @@
 		<class>View/Helper/Mangopay/Entity/Money.php5</class>
 		<class>View/Helper/Mangopay/Entity/Card.php5</class>
 		<class>View/Helper/Mangopay/Entity/CardNumber.php5</class>
+		<class>View/Helper/Mangopay/Entity/CardProviderLogo.php5</class>
 		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 	</files>
