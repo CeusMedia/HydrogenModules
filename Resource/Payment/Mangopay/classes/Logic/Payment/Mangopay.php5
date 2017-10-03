@@ -63,6 +63,9 @@ class Logic_Payment_Mangopay{
 		return $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
 	}
 
+	/**
+	 *	@todo		finish implementation, not working right now
+	 */
 	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $amount ){
 		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
