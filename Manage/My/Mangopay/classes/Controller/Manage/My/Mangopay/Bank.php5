@@ -49,6 +49,14 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 	print_m( $wallet );
 	print_m( $createdPayIn );
 	die;
+/*
+Response Exception "Bad request. One or several required parameters are missing or incorrect. An incorrect resource ID also raises this kind of error." (400)
+stdClass Object (
+[BankAccount.UserId] => Could not create an instance of type Leetchi.MoneyAPI.Models.DTO.Core.BankDetailDto.IBAN.BankDetailFormatIBANDtoBase. Type is an interface or abstract class and cannot be instantiated. Path 'BankAccount.UserId', line 1, position 156.
+[BankAccount.Type] => IBAN is not a valid BankAccount.Type
+[AuthorId] => The AuthorId field is required. )
+
+*/
 				$this->handleStatus( $createdPayIn, $bankAccount, $wallet );
 				throw new RuntimeException( 'Not implemented yet' );
 			}
