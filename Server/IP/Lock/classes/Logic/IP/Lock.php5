@@ -77,7 +77,7 @@ class Logic_IP_Lock{
 	}
 
 	public function getByIp( $ip ){
-		$lock	= $this->modelLock->getByIndex( 'IPv4', $ip );
+		$lock	= $this->modelLock->getByIndex( 'IP', $ip );
 		if( $lock )
 			return $this->get( $lock->ipLockId );
 		return NULL;
@@ -130,7 +130,7 @@ class Logic_IP_Lock{
 			$lockId	= $this->modelLock->add( array(
 				'reasonId'	=> (int) $reasonId ? (int) $reasonId : 0,
 				'status'	=> self::STATUS_REQUEST_LOCK,
-				'IPv4'		=> trim( $ip ),
+				'IP'		=> trim( $ip ),
 				'uri'		=> getEnv( 'REQUEST_URI' ),
 				'lockedAt'	=> time(),
 			) );
@@ -141,7 +141,7 @@ class Logic_IP_Lock{
 				$this->modelLock->edit( $lock->ipLockId, array( 'reasonId' => $reasonId ) );
 			$this->lock( $lock->ipLockId, $reasonId );
 		}
-		return$lock->ipLockId;
+		return $lock->ipLockId;
 	}
 
 	public function remove( $ipLockId ){

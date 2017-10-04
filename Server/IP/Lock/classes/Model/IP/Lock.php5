@@ -12,7 +12,7 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 		'ipLockId',
 		'reasonId',
 		'status',
-		'IPv4',
+		'IP',
 		'uri',
 		'views',
 		'lockedAt',
@@ -23,7 +23,7 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'reasonId',
 		'status',
-		'IPv4',
+		'IP',
 		'lockedAt',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

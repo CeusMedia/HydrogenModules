@@ -3,7 +3,7 @@
 	<title>Server: IP Lock</title>
 	<description><![CDATA[]]></description>
 	<category>Server</category>
-	<version>0.2.7</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Extracted logic to class.</log>
@@ -13,7 +13,8 @@
 	<log version="0.2.5">Added missing reason code column.</log>
 	<log version="0.2.6">Added URI column to lock model.</log>
 	<log version="0.2.7">Extended logic class.</log>
-<!--	<log version="0.2.8">Added whitelist.</log>-->
+	<log version="0.3">Add support for IPv6.</log>
+<!--	<log version="0.3.1">Added whitelist.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -28,7 +29,7 @@
 		<needs type="module">Resource_Database</needs>
 	</relations>
 	<hook type="resource" resource="Env" event="init">Controller_IP_Lock::___onEnvInit</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_locks` (
   `ipLockId` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -87,6 +88,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_lock_reasons` (
 ]]></sql>
 	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
 ALTER TABLE `<%?prefix%>ip_locks` ADD `uri` VARCHAR(255) NOT NULL AFTER `IPv4`;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3"><![CDATA[
+ALTER TABLE `<%?prefix%>ip_locks` CHANGE `IPv4` `IP` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
