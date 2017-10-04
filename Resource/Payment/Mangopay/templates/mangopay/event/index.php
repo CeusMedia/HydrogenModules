@@ -26,7 +26,7 @@ $list	= array();
 foreach( $events as $item ){
 	$labelType		= ucwords( strtolower( str_replace( '_', ' ', $item->type ) ) );
 	$labelStatus	= UI_HTML_Tag::create( 'label', $statuses[$item->status], array( 'class' => 'label '.$colors[$item->status] ) );
-	$link			= UI_HTML_Tag::create( 'a', $labelType, array( 'href' => './mangopay/event/view/'.$item->eventId ) );
+	$link			= UI_HTML_Tag::create( 'a', $labelType, array( 'href' => './mangopay/event/view/'.$item->eventId.'?page='.$page ) );
 
 	$list[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $link ),

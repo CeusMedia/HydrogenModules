@@ -60,6 +60,7 @@ class Logic_Payment_Mangopay{
 			$hook->Url			= $this->env->url.trim( $path );
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
+			$this->cache->remove( 'hooks' );
 			return $this->provider->Hooks->Create( $hook );
 		}
 	}

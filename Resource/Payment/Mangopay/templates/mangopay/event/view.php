@@ -52,11 +52,11 @@ $table	= UI_HTML_Tag::create( 'table', array(
 ), array( 'class' => 'table' ) );
 
 $buttonHandle	= UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-cogs"></i> behandeln', array(
-	'href'	=> './mangopay/event/handle/'.$event->eventId,
+	'href'	=> './mangopay/event/handle/'.$event->eventId.'?page='.$page,
 	'class'	=> 'btn btn-primary',
 ) );
 $buttonClose	= UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-check"></i> schließen', array(
-	'href'	=> './mangopay/event/close/'.$event->eventId,
+	'href'	=> './mangopay/event/close/'.$event->eventId.'?page='.$page,
 	'class'	=> 'btn btn-success',
 ) );
 if( $event->status == Model_Mangopay_Event::STATUS_CLOSED ){
@@ -77,7 +77,7 @@ return UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		$table,
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', array( 'href' => './mangopay/event', 'class' => 'btn' ) ),
+			UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', array( 'href' => './mangopay/event/'.$page, 'class' => 'btn' ) ),
 			' ',
 			$buttonHandle,
 			' ',

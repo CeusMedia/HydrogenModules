@@ -15,7 +15,7 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
 			$this->messenger->noteError( 'Invalid event ID.' );
-			$this->restart( NULL, TRUE );
+			$this->restart( '?page='.$this->request->get( 'page' ), TRUE );
 		}
 		else{
 			$this->model->edit( $eventId, array(
@@ -23,7 +23,7 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 				'output'	=> $event->output.'<br/><strong>CLOSED MANUALLY</strong>',
 				'handledAt'	=> time,
 			), FALSE );
-			$this->restart( 'view/'.$eventId, TRUE );
+			$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 		}
 	}
 
@@ -41,7 +41,7 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		catch( Exception $e ){
 			$this->messenger->noteError( 'Error: '.$e->getMessage() );
 		}
-		$this->restart( 'view/'.$eventId, TRUE );
+		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
 	protected function handleEvent( $eventId ){
@@ -156,9 +156,10 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
 			$this->messenger->noteError( 'Invalid event ID.' );
-			$this->restart( NULL, TRUE );
+			$this->restart( '?page='.$this->request->get( 'page' ), TRUE );
 		}
 		$this->addData( 'event', $event );
+		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
 }
 ?>

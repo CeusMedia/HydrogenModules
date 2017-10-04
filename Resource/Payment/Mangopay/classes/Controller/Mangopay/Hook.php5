@@ -20,6 +20,7 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$path	= $this->request->get( 'path' );
 			$types	= $this->request->get( 'types' );
+//print_m( $types );die;
 			if( !strlen( $path ) ){
 				$this->messenger->noteError( 'Invalid hook path' );
 				$this->restart( NULL, TRUE );
@@ -32,7 +33,12 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 					$id		= $hookedEventTypes[$type]->Id;
 				}
 				$tag		= 'Set on '.date( 'Y-m-d H:i:s' ).'.';
-				$this->mangopay->setHook( $id, $type, $path, TRUE, $tag );
+				try{
+					$this->mangopay->setHook( $id, $type, $path, TRUE, $tag );
+				}
+				catch( Exception $e ){
+					$this->handleMangopayResponseException( $e );
+				}
 			}
 			$this->messenger->noteSuccess( 'Hooks applied ('.count( $hooks ).').' );
 			$this->restart( 'apply', TRUE );
@@ -44,10 +50,20 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		$this->addData( 'currentUrl', $hooks ? $hooks[0]->Url : '' );
 	}
 
-	public function index( $hookId = NULL ){
+
+	protected function handleMangopayResponseException( $e ){
+		ob_start();
+		print_r( $e->GetErrorDetails() );
+		$details	= ob_get_clean();
+		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
+		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
+	}
+
+
+	public function index( $refresh = NULL ){
 		if( $hookId )
 			$this->restart( 'view/'.$hookId, TRUE );
-		$hooks		= $this->mangopay->getHooks();
+		$hooks		= $this->mangopay->getHooks( $refresh );
 		$hookedEventTypes	= array();
 		foreach( $hooks as $hook )
 			$hookedEventTypes[$hook->EventType]	= $hook;
