@@ -35,7 +35,7 @@ $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
 
 $panelEdit	= '
 <div class="content-panel">
-	<h3><a class="muted" hred="./manage/ip/lock">IP-Sperre:</a> '.$lock->IPv4.'</h3>
+	<h3><a class="muted" hred="./manage/ip/lock">IP-Sperre:</a> '.$lock->IP.'</h3>
 	<div class="content-panel-inner">
 		'.$data.'
 		<div class="buttonbar">

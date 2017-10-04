@@ -79,7 +79,7 @@ if( $locks ){
 		if( $helperTime )
 			$lockedAt	= $helperTime->convert( $lock->lockedAt, TRUE, 'vor ' );
 
-		$link	= UI_HTML_Tag::create( 'a', '<kbd>'.$lock->IPv4.'</kbd>', array(
+		$link	= UI_HTML_Tag::create( 'a', '<kbd><small>'.$lock->IP.'</small></kbd>', array(
 			'href'	=> './manage/ip/lock/edit/'.$lock->ipLockId,
 		) );
 		$reason	= UI_HTML_Tag::create( 'div', $lock->reason->title, array( 'class' => 'autocut' ) );

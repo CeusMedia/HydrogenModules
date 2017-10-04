@@ -3,7 +3,7 @@
 	<title>Manage: IP Locks</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Added tabs and reason management.</log>
@@ -16,6 +16,7 @@
 	<log version="0.3">First production release.</log>
 	<log version="0.3.1">Add lock list filter.</log>
 	<log version="0.3.2">Use pagination from Bootstrap package.</log>
+	<log version="0.3.3">Support IPv6.</log>
 <!--	<log version="0.2.6">Added whitelist management.</log>-->
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

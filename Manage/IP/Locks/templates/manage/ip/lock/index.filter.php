@@ -25,7 +25,7 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
 $optSort	= array(
 	'lockedAt'	=> 'Sperrung',
-	'IPv4'		=> 'IP',
+	'IP'		=> 'IP',
 );
 $optSort	= UI_HTML_Elements::Options( $optSort, $filterSort );
 

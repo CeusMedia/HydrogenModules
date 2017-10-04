@@ -42,7 +42,7 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		);
 		$order		= array();
 		if( $session->get( $this->filterSessionPrefix.'ip' ) )
-			$conditions['IPv4']	= $session->get( $this->filterSessionPrefix.'ip' );
+			$conditions['IP']	= $session->get( $this->filterSessionPrefix.'ip' );
 		if( strlen( trim( $session->get( $this->filterSessionPrefix.'status' ) ) ) )
 			$conditions['status']	= $session->get( $this->filterSessionPrefix.'status' );
 		$sort	= 'lockedAt';
