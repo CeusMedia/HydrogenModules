@@ -20,6 +20,50 @@ class Logic_Payment_Mangopay{
 		return self::$instance;
 	}
 
+	public function getHook( $hookId ){
+		$cacheKey	= 'hook_'.$hookId;
+		$refresh	= $this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $hook = $this->cache->get( $cacheKey ) ) ){
+			$hook	= $this->provider->Hooks->Get( $hookId );
+			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $hook );
+		}
+		return $hook;
+	}
+
+	public function getHooks( $refresh = FALSE ){
+		$cacheKey	= 'hooks';
+		$refresh	= $refresh || $this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $hooks = $this->cache->get( $cacheKey ) ) ){
+			$hooks	= $this->provider->Hooks->GetAll();
+			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $hooks );
+		}
+		return $hooks;
+	}
+
+	public function setHook( $id, $eventType, $path, $status = NULL, $tag = NULL ){
+		if( $id > 0 ){
+			$hook			= $this->provider->Hooks->Get( $id );
+			if( $status !== NULL )
+				$hook->Status	= $status ? 'ENABLED' : 'DISABLED';
+			if( $tag !== NULL )
+				$hook->Tag	= trim( $tag );
+			$hook->Url			= $this->env->url.trim( $path );
+			$this->cache->remove( 'hooks' );
+			$this->cache->remove( 'hook_'.$id );
+			return $this->provider->Hooks->Update( $hook );
+		}
+		else{
+			$hook				= new \MangoPay\Hook;
+			$hook->EventType	= $eventType;
+			$hook->Url			= $this->env->url.trim( $path );
+			if( $tag !== NULL )
+				$hook->Tag	= trim( $tag );
+			return $this->provider->Hooks->Create( $hook );
+		}
+	}
+
 	/**
 	 *	@link	https://stackoverflow.com/a/174772
 	 */
