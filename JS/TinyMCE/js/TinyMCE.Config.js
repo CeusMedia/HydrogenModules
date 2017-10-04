@@ -68,6 +68,7 @@ if(typeof tinymce !== "undefined"){
 			plugins: "advlist anchor autolink autoresize autosave charmap code colorpicker contextmenu emoticons fullscreen hr image insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount",
 			noneditable_leave_contenteditable: true,
 			fontsize_formats: "80% 90% 100% 110% 120% 150% 200% 300%",
+			relative_urls: false,
 			remove_script_host: false,
 			browser_spellcheck: true,
 			style_formats_merge: true,
