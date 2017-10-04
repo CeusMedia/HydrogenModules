@@ -49,4 +49,26 @@
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
+	<sql type="mysql" on="install" version="0.3"><![CDATA[
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
+  `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(3) unsigned DEFAULT '0' COMMENT '0:received, 1:failed, 2:handled',
+  `id` int(10) unsigned NOT NULL,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `output` text COLLATE utf8_unicode_ci NOT NULL,
+  `triggeredAt` decimal(12,0) unsigned NOT NULL,
+  `receivedAt` decimal(12,0) unsigned NOT NULL,
+  `handledAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`eventId`),
+  KEY `status` (`status`),
+  KEY `id` (`id`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mangopay_events`;
+]]></sql>
+
+
+
 </module>
