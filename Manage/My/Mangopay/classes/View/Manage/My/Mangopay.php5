@@ -5,6 +5,8 @@ class View_Manage_My_Mangopay extends CMF_Hydrogen_View{
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.mangopay.css' );
 	}
 
+	public function index(){}
+
 	static public function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 ){
 		$price		= number_format( $money->Amount / 100, $accuracy, ',', '.' );
 //		$pattern	= '{Amount}&nbsp;{Currency}';
