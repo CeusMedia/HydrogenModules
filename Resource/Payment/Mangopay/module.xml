@@ -3,7 +3,7 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -15,12 +15,15 @@
 	<log version="0.3">Add event receiver with database model.</log>
 	<log version="0.3.1">Add event management.</log>
 	<log version="0.3.2">Add hook management.</log>
+	<log version="0.3.3">Verify events.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Mangopay/Event.php5</class>
 		<class>Controller/Mangopay/Hook.php5</class>
 		<class>Mail/Mangopay/EventFailed.php5</class>
+		<class>Mail/Mangopay/EventAgain.php5</class>
+		<class>Mail/Mangopay/EventUnverfied.php5</class>
 		<class>Model/Mangopay/Event.php5</class>
 		<class>Logic/Payment/Mangopay.php5</class>
 		<class>Resource/Mangopay.php5</class>

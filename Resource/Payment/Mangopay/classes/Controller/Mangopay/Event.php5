@@ -102,21 +102,31 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		try{
 			if( $this->request->has( 'RessourceId' ) )
 				$this->request->set( 'ResourceId', $this->request->get( 'RessourceId' ) );
-			if( !$this->request->has( 'EventType' ) )
+			if( !strlen( $eventType = $this->request->get( 'EventType' ) ) )
 				throw new InvalidArgumentException( 'Event type is missing' );
-			if( !$this->request->has( 'ResourceId' ) )
+			if( !strlen( $resourceId = $this->request->get( 'ResourceId' ) ) )
 				throw new InvalidArgumentException( 'Resource ID is missing' );
-			if( !$this->request->has( 'Date' ) )
+			if( !strlen( $date = $this->request->get( 'Date' ) ) )
 				throw new InvalidArgumentException( 'Event date is missing' );
+
+			$indices	= array( 'type' => $eventType, 'id' => $resourceId );
+			if( $event = $this->model->getByIndices( $indices ) ){
+				$this->sendMail( 'EventAgain', array( 'event' => $event ) );
+				throw new InvalidArgumentException( 'Event has been received before' );
+			}
+			if( !$this->verify( $eventType, $resourceId ) )
+				throw new InvalidArgumentException( 'Event verification failed' );
 			$eventId	= $this->model->add( array(
 				'status'		=> Model_Mangopay_Event::STATUS_RECEIVED,
-				'id'			=> $this->request->get( 'ResourceId' ),
-				'type'			=> $this->request->get( 'EventType' ),
-				'triggeredAt'	=> $this->request->get( 'Date' ),
+				'id'			=> $resourceId,
+				'type'			=> $eventType,
+				'triggeredAt'	=> $date,
 				'receivedAt'	=> time(),
 				'handledAt'		=> 0,
 			) );
 			$this->handleEvent( $eventId );
+			$response->setStatus( 200 );
+			$response->setBody( '<h1>OK</h1><p>Event has been received and handled.</p>' );
 		}
 		catch( InvalidArgumentException $e ){
 			$this->sendMail( 'EventFailed', array( 'eventId' => $eventId, 'exception' => $e ) );
@@ -140,6 +150,58 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	protected function verify( $eventType, $resourceId ){
+		switch( $eventType ){
+			case 'PAYIN_NORMAL_SUCCEEDED':
+				$method	= 'getPayin';
+				$status	= 'SUCCEEDED';
+				break;
+			case 'PAYIN_NORMAL_FAILED':
+				$method	= 'getPayin';
+				$status	= 'FAILED';
+				break;
+			case 'PAYOUT_NORMAL_SUCCEEDED':
+				$method	= 'getPayout';
+				$status	= 'SUCCEEDED';
+				break;
+			case 'PAYOUT_NORMAL_FAILED':
+				$method	= 'getPayout';
+				$status	= 'FAILED';
+				break;
+			case 'TRANSFER_NORMAL_SUCCEEDED':
+				$method	= 'getTransfer';
+				$status	= 'SUCCEEDED';
+				break;
+			case 'TRANSFER_NORMAL_FAILED':
+				$method	= 'getTransfer';
+				$status	= 'FAILED';
+				break;
+			default:
+				return TRUE;
+		}
+
+		try{
+			if( !method_exists( $this->mangopay, $method ) )
+				throw new BadMethodCallException( 'Method "'.$method.'" is not existing' );
+			$factory	= new Alg_Object_MethodFactory();
+			$entity		= $factory->call( $this->mangopay, $method, array( $resourceId ) );
+			if( $entity->Status === $status )
+				return TRUE;
+		}
+		catch( Exception $e ){
+			$entity	= $e;
+		}
+		$this->sendMail( 'EventUnverfied', array(
+			'entity'	=> $entity,
+			'event'		=> (object) array(
+				'eventType'		=> $eventType,
+				'resourceId'	=> $resourceId,
+			),
+		) );
+		return FALSE;
+	}
+
+
 	protected function sendMail( $type, $data ){
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
 			return;
@@ -153,6 +215,9 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $eventId, $run = NULL ){
+
+		print_m( $this->mangopay->getPayin( 34702094 ) );die;
+
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
 			$this->messenger->noteError( 'Invalid event ID.' );

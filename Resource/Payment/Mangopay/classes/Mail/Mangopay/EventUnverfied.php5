@@ -1,18 +1,18 @@
 <?php
-class Mail_Mangopay_EventFailed extends Mail_Abstract{
+class Mail_Mangopay_EventUnverfied extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
 		$data		= new ADT_List_Dictionary( $this->data );
 		$buffer		= new UI_OutputBuffer();
-		print UI_HTML_Tag::create( 'h2', 'Error on handling event' );
-		if( $data->get( 'eventId' ) ){
-			$model		= new Model_Mangopay_Event( $this->env );
-			$event		= $model->get( $data->get( 'eventId' ) );
-			print UI_HTML_Tag::create( 'h3', 'Event' );
-			print_m( $event );
-		}
-		if( $data->get( 'exception' ) instanceof Exception ){
-			$e	= $data->get( 'exception' );
+
+		$event		= $data->get( 'event' );
+		$entity		= $data->get( 'entity' );
+
+		print UI_HTML_Tag::create( 'h2', 'Event verification failed' );
+		print UI_HTML_Tag::create( 'h3', 'Event' );
+		print_m( $event );
+		if( $entity instanceof Exception ){
+			$e	= $entity;
 			print UI_HTML_Tag::create( 'h3', 'Exception' );
 			print UI_HTML_Tag::create( 'h4', 'Message / Code' );
 			print UI_HTML_Tag::create( 'p', $e->getMessage().' ('.$e->getCode().')' );
@@ -21,9 +21,13 @@ class Mail_Mangopay_EventFailed extends Mail_Abstract{
 			print UI_HTML_Tag::create( 'h4', 'Trace' );
 			print UI_HTML_Tag::create( 'pre', $e->getTraceAsString() );
 		}
+		else{
+			print UI_HTML_Tag::create( 'h3', 'Entity' );
+			print_m( $entity );
+		}
 		print UI_HTML_Tag::create( 'h3', 'Info' );
 		phpinfo( INFO_VARIABLES );
-		$this->setSubject( 'Event handling failed' );
+		$this->setSubject( 'Event verification failed' );
 		$this->setHtml( $buffer->get( TRUE ) );
 	}
 }

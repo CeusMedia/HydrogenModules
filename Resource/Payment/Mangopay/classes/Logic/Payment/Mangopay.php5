@@ -60,9 +60,20 @@ class Logic_Payment_Mangopay{
 			$hook->Url			= $this->env->url.trim( $path );
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
-			$this->cache->remove( 'hooks' );
 			return $this->provider->Hooks->Create( $hook );
 		}
+	}
+
+	public function getPayin( $payInId ){
+		return $this->provider->PayIns->Get( $payInId );
+	}
+
+	public function getPayout( $payOutId ){
+		return $this->provider->PayOuts->Get( $payOutId );
+	}
+
+	public function getTransfer( $transferId ){
+		return $this->provider->Transfers->Get( $transferId );
 	}
 
 	/**

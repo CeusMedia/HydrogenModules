@@ -20,7 +20,6 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$path	= $this->request->get( 'path' );
 			$types	= $this->request->get( 'types' );
-//print_m( $types );die;
 			if( !strlen( $path ) ){
 				$this->messenger->noteError( 'Invalid hook path' );
 				$this->restart( NULL, TRUE );
