@@ -216,7 +216,7 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 
 	public function view( $eventId, $run = NULL ){
 
-		print_m( $this->mangopay->getPayin( 34702094 ) );die;
+//		print_m( $this->mangopay->getPayin( 34702094 ) );die;
 
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
