@@ -32,7 +32,7 @@ if( $bills ){
 		), array( 'class' => $bill->status > 0 ? 'success' : 'warning' ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
-		'140',
+		'150',
 		'',
 		'90',
 		'70',
