@@ -1,13 +1,11 @@
 <?php
-class Logic_Authentication{
+class Logic_Authentication extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
 	protected $env;
 	protected $backend;
 	protected $backends	= array();
 
-	protected function __construct( $env ){
-		$this->env			= $env;
+	protected function __onInit(){
 		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
 		if( !$this->backends )
 			throw new RuntimeException( 'No authentication backend installed' );
@@ -38,12 +36,6 @@ class Logic_Authentication{
 
 	public function getCurrentUserId( $strict = TRUE ){
 		return $this->backend->getCurrentUserId( $strict );
-	}
-
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new Logic_Authentication( $env );
-		return self::$instance;
 	}
 
 	/**

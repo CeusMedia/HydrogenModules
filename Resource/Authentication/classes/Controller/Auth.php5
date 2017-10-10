@@ -104,7 +104,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function logout(){
 		$backend	= $this->getBackend();
-		$path		= 'auth/'.strtolower( $backend ->path ).'/logout';
+		$path		= 'auth/'.strtolower( $backend->path ).'/logout';
 		$from		= $this->request->get( 'from' );
 		$from		= str_replace( "index/index", "", $from );
 		$this->restart( $from ? $path.'?from='.$from : $path );
