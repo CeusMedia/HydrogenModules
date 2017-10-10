@@ -15,5 +15,8 @@
     "email": "office@ceusmedia.de",
     "jabber": "ceus-media@jabber.org"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require": {
+    "ceus-media/hydrogen-framework": "^0.8.5.2"
+  }
 }
