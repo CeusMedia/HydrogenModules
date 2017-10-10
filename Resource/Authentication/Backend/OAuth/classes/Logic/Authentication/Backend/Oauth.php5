@@ -1,20 +1,18 @@
 <?php
-class Logic_Authentication_Backend_Oauth{
+class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
-	protected $env;
+	protected $config;
 	protected $modelUser;
 	protected $modelRole;
+	protected $moduleConfig;
+	protected $providerUri;
 
-	protected function __construct( $env ){
-		$this->env			= $env;
-		$this->modelUser	= new Model_User( $env );
-		$this->modelRole	= new Model_Role( $env );
+	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
-		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
-		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelRole	= new Model_Role( $this->env );
 	}
 
 	public function checkPassword( $userId, $password ){
@@ -23,7 +21,10 @@ class Logic_Authentication_Backend_Oauth{
 		if( !$this->modelUser->get( $userId ) )
 			return FALSE;
 
-		$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
+		$authorization	= base64_encode( implode( ':', array(
+			$this->moduleConfig->get( 'provider.client.ID' ),
+			$this->moduleConfig->get( 'provider.client.secret' ),
+		) ) );
 		$postData		= http_build_query( array(
 			'grant_type'	=> 'password',
 			'username'		=> $user->username,
@@ -89,12 +90,6 @@ class Logic_Authentication_Backend_Oauth{
 			return 0;
 		}
 		return $this->env->getSession()->get( 'userId' );
-	}
-
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
 	}
 
 	public function isAuthenticated(){

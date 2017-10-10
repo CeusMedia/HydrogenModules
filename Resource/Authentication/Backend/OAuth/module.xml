@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.8</version>
+	<version>0.3</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -13,6 +13,8 @@
 	<log version="0.2.6">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.7">Add blind method to note latest user activity (not implementable).</log>
 	<log version="0.2.8">Support tabs for multiple login backends.</log>
+	<log version="0.2.9">Extend module relations.</log>
+	<log version="0.3">Migrate logic to support new logic pool.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -47,6 +49,9 @@
 	<config protected="yes" type="string" name="provider.URI"></config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">UI_Helper_HTML</needs>
+		<supports type="module">Resource_Users</supports>
+		<supports type="module">Security_CSRF</supports>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/oauth/login">Login</link>
 	<link xml:lang="de" rank="99" access="inside" path="auth/oauth/logout">Logout</link>
