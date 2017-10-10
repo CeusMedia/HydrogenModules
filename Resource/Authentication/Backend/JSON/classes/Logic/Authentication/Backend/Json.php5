@@ -1,12 +1,5 @@
 <?php
-class Logic_Authentication_Backend_Json{
-
-	static protected $instance;
-	protected $env;
-
-	protected function __construct( $env ){
-		$this->env			= $env;
-	}
+class Logic_Authentication_Backend_Json extends CMF_Hydrogen_Logic{
 
 	public function checkPassword( $userId, $password ){
 		$data	= array(
@@ -62,12 +55,6 @@ class Logic_Authentication_Backend_Json{
 			return 0;
 		}
 		return $this->env->getSession()->get( 'userId' );
-	}
-
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
 	}
 
 	public function isAuthenticated(){
