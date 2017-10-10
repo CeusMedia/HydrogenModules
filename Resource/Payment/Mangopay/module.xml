@@ -3,21 +3,22 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
 	<log version="0.2.2">Move module to Resource:Payment:Mangopay.</log>
 	<log version="0.2.3">Add entity view helpers.</log>
 	<log version="0.2.4">Add credit card number validation.</log>
-	<log version="0.2.5">Add helper for responded result codes.</log>
-	<log version="0.2.6">Add helper for card and wallet.</log>
+	<log version="0.2.5">Add view helper for responded result codes.</log>
+	<log version="0.2.6">Add view helpers for card and wallet.</log>
 	<log version="0.3">Add event receiver with database model.</log>
 	<log version="0.3.1">Add event management.</log>
 	<log version="0.3.2">Add hook management.</log>
 	<log version="0.3.3">Verify events.</log>
 	<log version="0.3.4">Add model for payins.</log>
 	<log version="0.3.5">Add logic classes for handling single events.</log>
+	<log version="0.3.6">Add view helpers for IBAN and BIC.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -40,10 +41,12 @@
 		<class>View/Mangopay/Event.php5</class>
 		<class>View/Mangopay/Hook.php5</class>
 		<class>View/Helper/Mangopay/Error.php5</class>
-		<class>View/Helper/Mangopay/Entity/Money.php5</class>
+		<class>View/Helper/Mangopay/Entity/BIC.php5</class>
 		<class>View/Helper/Mangopay/Entity/Card.php5</class>
 		<class>View/Helper/Mangopay/Entity/CardNumber.php5</class>
 		<class>View/Helper/Mangopay/Entity/CardProviderLogo.php5</class>
+		<class>View/Helper/Mangopay/Entity/IBAN.php5</class>
+		<class>View/Helper/Mangopay/Entity/Money.php5</class>
 		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 		<template>mangopay/event/index.php</template>
