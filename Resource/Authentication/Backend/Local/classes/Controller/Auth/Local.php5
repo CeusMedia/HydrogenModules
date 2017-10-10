@@ -140,6 +140,9 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		return FALSE;
 	}
 
+	/**
+ 	 *	@todo		send mail to user after confirmation with user data
+	 */
 	public function confirm( $code = NULL ){
 		$words		= (object) $this->getWords( 'confirm' );
 		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET

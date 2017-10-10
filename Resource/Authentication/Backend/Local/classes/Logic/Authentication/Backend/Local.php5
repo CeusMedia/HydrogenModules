@@ -1,16 +1,14 @@
 <?php
-class Logic_Authentication_Backend_Local{
+class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
-	protected $env;
 	protected $modelUser;
 	protected $modelRole;
+	protected $session;
 
-	protected function __construct( $env ){
-		$this->env			= $env;
+	protected function __onInit(){
 		$this->session		= $this->env->getSession();
-		$this->modelUser	= new Model_User( $env );
-		$this->modelRole	= new Model_Role( $env );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelRole	= new Model_Role( $this->env );
 	}
 
 	/**
@@ -88,12 +86,6 @@ class Logic_Authentication_Backend_Local{
 			return 0;
 		}
 		return $this->env->getSession()->get( 'userId' );
-	}
-
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
 	}
 
 	public function isAuthenticated(){
