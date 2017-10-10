@@ -3,7 +3,7 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.3.3</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -16,6 +16,8 @@
 	<log version="0.3.1">Add event management.</log>
 	<log version="0.3.2">Add hook management.</log>
 	<log version="0.3.3">Verify events.</log>
+	<log version="0.3.4">Add model for payins.</log>
+	<log version="0.3.5">Add logic classes for handling single events.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -24,8 +26,16 @@
 		<class>Mail/Mangopay/EventFailed.php5</class>
 		<class>Mail/Mangopay/EventAgain.php5</class>
 		<class>Mail/Mangopay/EventUnverfied.php5</class>
+		<class>Mail/Mangopay/Event/Payin.php5</class>
 		<class>Model/Mangopay/Event.php5</class>
+		<class>Model/Mangopay/Payin.php5</class>
 		<class>Logic/Payment/Mangopay.php5</class>
+		<class>Logic/Payment/Mangopay/Event.php5</class>
+		<class>Logic/Payment/Mangopay/Event/Payin.php5</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal.php5</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Created.php5</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Failed.php5</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Succeeded.php5</class>
 		<class>Resource/Mangopay.php5</class>
 		<class>View/Mangopay/Event.php5</class>
 		<class>View/Mangopay/Hook.php5</class>
@@ -43,6 +53,7 @@
 		<template>mangopay/hook/index.php</template>
 		<template>mangopay/hook/view.php</template>
 	</files>
+	<link access="public" path="mangopay/event/receive"/>
 	<config protected="yes" mandatory="no" type="string" name="mail.hook"></config>
 	<config protected="yes" mandatory="yes" type="string" name="client.id"></config>
 	<config protected="yes" mandatory="yes" type="string" name="client.password"></config>
@@ -52,7 +63,7 @@
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
-	<sql type="mysql" on="install" version="0.3"><![CDATA[
+	<sql type="mysql" on="update" version="0.3"><![CDATA[
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
   `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned DEFAULT '0' COMMENT '0:received, 1:failed, 2:handled',
@@ -68,8 +79,27 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_payins` (
+  `payinId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(3) UNSIGNED DEFAULT '0' COMMENT '0:UNKNOWN, 1:CREATED, 2:FAILED, 3:SUCCEEDED',
+  `id` int(10) UNSIGNED NOT NULL,
+  `type` tinyint(1) UNSIGNED NOT NULL COMMENT '0:UNKNOWN, 1:CARD, 2:PREAUTHORIZED, 3:BANK_WIRE, 4:DIRECT_DEBIT, 5:DIRECT_DEBIT_DIRECT, 6:PAYPAL',
+  `amount` float UNSIGNED NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL COMMENT 'ex: EUR, USD',
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`payinId`),
+  KEY `status` (`status`),
+  KEY `id` (`id`),
+  KEY `type` (`type`),
+  KEY `currency` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mangopay_events`;
+DROP TABLE IF EXISTS `<%?prefix%>mangopay_payins`;
 ]]></sql>
 
 

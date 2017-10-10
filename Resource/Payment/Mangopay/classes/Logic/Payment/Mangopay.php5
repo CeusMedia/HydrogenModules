@@ -14,6 +14,29 @@ class Logic_Payment_Mangopay{
 		$this->provider		= Resource_Mangopay::getInstance( $this->env );
 	}
 
+	public function getEventResource( $eventType, $resourceId ){
+		switch( $eventType ){
+			case 'PAYIN_NORMAL_SUCCEEDED':
+			case 'PAYIN_NORMAL_FAILED':
+				$method	= 'getPayin';
+				break;
+			case 'PAYOUT_NORMAL_SUCCEEDED':
+			case 'PAYOUT_NORMAL_FAILED':
+				$method	= 'getPayout';
+				break;
+			case 'TRANSFER_NORMAL_SUCCEEDED':
+			case 'TRANSFER_NORMAL_FAILED':
+				$method	= 'getTransfer';
+				break;
+			default:
+				return NULL;
+		}
+		if( !method_exists( $this, $method ) )
+			throw new BadMethodCallException( 'Method "'.$method.'" is not existing' );
+		$factory	= new Alg_Object_MethodFactory();
+		return $factory->call( $this->mangopay, $method, array( $resourceId ) );
+	}
+
 	static public function getInstance( $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Payment_Mangopay( $env );
@@ -141,9 +164,9 @@ class Logic_Payment_Mangopay{
 		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsBankWire();
 		$payIn->PaymentDetails->DeclaredDebitedFunds	= $payIn->DebitedFunds;
 		$payIn->PaymentDetails->DeclaredFees			= $payIn->Fees;
-		$payIn->PaymentDetails->BankAccount				= $bankAccount;
+/*		$payIn->PaymentDetails->BankAccount				= $bankAccount;
 		$payIn->PaymentDetails->WireReference			= "BankWire PayIn 1";
-
+*/
 		// execution type as DIRECT
 		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
 
@@ -318,6 +341,17 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			$list[]	= $wallet;
 		}
 		return $list;
+	}
+
+	public function getWallet( $walletId ){
+		$cacheKey	= 'wallet_'.$walletId;
+		$refresh	= $this->skipCacheOnNextRequest;
+		if( $refresh || is_null( $wallet = $this->cache->get( $cacheKey ) ) ){
+			$wallet	= $this->mangopay->Wallets->Get( $walletId );
+			$this->skipCacheOnNextRequest	= FALSE;
+			$this->cache->set( $cacheKey, $wallet );
+		}
+		return $wallet;
 	}
 
 	/**
