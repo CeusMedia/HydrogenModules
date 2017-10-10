@@ -3,14 +3,15 @@
 $logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank fa-4x' ) );
 
 $list	= array();
-foreach( $bankAccounts as $bankAccount ){
-//print_m( $bankAccount );die;
-	$number	= UI_HTML_Tag::create( 'tt', $bankAccount->Details->BIC );
-	$title	= UI_HTML_Tag::create( 'div', $bankAccount->OwnerName, array( 'class' => 'bankaccount-title' ) );
-	$item	= $logo.$title.$number;
-	$list[]	= UI_HTML_Tag::create( 'div', $item, array(
+foreach( $bankAccounts as $item ){
+	if( !$item->Active )
+		continue;
+	$number	= UI_HTML_Tag::create( 'tt', $item->Details->BIC );
+	$title	= UI_HTML_Tag::create( 'div', $item->OwnerName, array( 'class' => 'bankaccount-title' ) );
+	$label	= $logo.$title.$number;
+	$list[]	= UI_HTML_Tag::create( 'div', $label, array(
 		'class'		=> 'bankaccount-list-item',
-		'onclick'	=> 'document.location.href="./manage/my/mangopay/bank/view/'.$bankAccount->Id.'";',
+		'onclick'	=> 'document.location.href="./manage/my/mangopay/bank/view/'.$item->Id.'";',
 	) );
 }
 $logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus fa-4x' ) );

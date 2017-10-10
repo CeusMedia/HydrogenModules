@@ -18,8 +18,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 					$this->request->get( 'bic' ),
 					$this->request->get( 'title' )
 				);
-				print_m( $created );
-				die;
+				$this->restart( 'view/'.$created->Id, TRUE );
 			}
 			catch( Exception $e ){
 				$this->handleMangopayResponseException( $e );
@@ -29,6 +28,27 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		}
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+	}
+
+	public function deactivate( $bankAccountId ){
+		if( $this->request->getMethod() === "POST" ){									//  form has been executed
+			$password		= $this->request->get( 'password' );
+			$localUserId	= $this->session->get( 'userId' );
+			$logicAuth		= $this->env->logic->authentication;
+			if( $logicAuth->checkPassword( $localUserId, $password ) ){
+				try{
+					$this->logic->deactivateBankAccount( $this->userId, $bankAccountId );
+					$this->restart( NULL, TRUE );
+				}
+				catch( Exception $e ){
+					$this->handleMangopayResponseException( $e );
+				}
+			}
+			else
+				$this->messenger->noteError( 'Invalid password.' );
+		}
+		$this->restart( 'view/'.$bankAccountId, TRUE );
+
 	}
 
 	public function payIn( $bankAccountId, $walletId = NULL, $amount = NULL ){
@@ -62,10 +82,12 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 			}
 		}
 		$wallets		= $this->logic->getUserWallets( $this->userId );
+		$this->addData( 'walletId', $walletId );
 		$this->addData( 'wallets', $wallets );
 		$this->addData( 'bankAccountId', $bankAccountId );
 		$this->addData( 'bankAccount', $bankAccount );
 		$this->addData( 'from', $this->request->get( 'from' ) );
+		$this->addData( 'amount', $amount );
 	}
 
 	public function payOut( $bankAccountId ){
@@ -75,10 +97,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 	}
 
 	public function index(){
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
-		$this->addData( 'bankAccounts', $this->mangopay->Users->GetBankAccounts( $this->userId, $pagination, $sorting ));
+		$this->addData( 'bankAccounts', $this->logic->getBankAccounts( $this->userId ) );
 	}
 
 	public function view( $bankAccountId ){

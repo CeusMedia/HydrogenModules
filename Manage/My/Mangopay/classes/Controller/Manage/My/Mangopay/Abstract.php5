@@ -45,9 +45,12 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 	public function checkIsOwnBankAccount( $bankAccountId, $strict = TRUE ){
 		$bankAccount	= $this->checkBankAccount( $bankAccountId, $strict );
 		$bankAccounts	= $this->logic->getUserBankAccounts( $this->userId );
-		print_m( $bankAccount );
-		print_m( $bankAccounts );
-		die;
+		foreach( $bankAccounts as $item )
+			if( $item->Id === $bankAccount->Id )
+				return $bankAccount;
+		if( !$strict )
+			return FALSE;
+		throw new DomainException( 'Access to this bank account is denied' );
 	}
 
 	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = array() ){
@@ -80,9 +83,9 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 
 	protected function checkWallet( $walletId, $strict = TRUE ){
 		if( $strict )
-			return $this->logic->getWallet( $walletId );
+			return $this->logic->getUserWallet( $walletId );
 		try{
-			return $this->logic->getWallet( $walletId );
+			return $this->logic->getUserWallet( $walletId );
 		}
 		catch( Exception $e ){
 //			$this->messenger->noteNotice( "Exception: ".$e->getMessage( ) );
@@ -91,14 +94,15 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		}
 	}
 
-	protected function checkWalletIsOwn( $walletId ){
+	protected function checkWalletIsOwn( $walletId, $strict = TRUE ){
 		$wallet		= $this->checkWallet( $walletId );
 		$wallets	= $this->logic->getUserWallets( $this->userId );
-		print_m( $wallet );
-		print_m( $wallets );die;
-
-		//	@todo check against list of user wallets
-		return $wallet;
+		foreach( $wallets as $item )
+			if( $item->Id == $wallet->Id )
+				return $wallet;
+		if( !$strict )
+			return FALSE;
+		throw new DomainException( 'Access to this wallet is denied' );
 	}
 
 	protected function handleMangopayResponseException( $e ){
