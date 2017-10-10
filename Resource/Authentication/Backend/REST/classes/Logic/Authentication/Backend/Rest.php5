@@ -1,11 +1,7 @@
 <?php
-class Logic_Authentication_Backend_Rest{
+class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
-	protected $env;
-
-	protected function __construct( $env ){
-		$this->env			= $env;
+	protected function __onInit(){
 		$this->client		= $this->env->get( 'restClient' );
 	}
 
@@ -28,6 +24,9 @@ class Logic_Authentication_Backend_Rest{
 		return $this->client->post( 'username/check', $parameters )->data;
 	}
 
+	/**
+ 	 *	@todo		send mail to user after confirmation with user data
+	 */
 	public function confirm( $userId, $token ){
 		$parameters	= array(
 			'userId'	=> $userId,
@@ -84,12 +83,6 @@ class Logic_Authentication_Backend_Rest{
 		return $this->env->getSession()->get( 'userId' );
 	}
 
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
-	}
-
 	public function isAuthenticated(){
 		return $this->env->getSession()->get( 'userId' );
 	}
@@ -104,6 +97,9 @@ class Logic_Authentication_Backend_Rest{
 	protected function noteUserActivity(){
 	}
 
+	/**
+ 	 *	@todo		send mail to user with confirmation link
+	 */
 	public function register( $postData ){
 
 		$data	= array(
