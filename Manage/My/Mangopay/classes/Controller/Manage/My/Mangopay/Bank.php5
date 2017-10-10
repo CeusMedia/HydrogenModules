@@ -31,13 +31,17 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 
-	public function payIn( $bankAccountId ){
-		$bankAccount	= $this->logic->getBankAccount( $this->userId, $bankAccountId );
+	public function payIn( $bankAccountId, $walletId = NULL, $amount = NULL ){
+		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
+		$walletId = $walletId ? $walletId : $this->request->get( 'walletId' );
+		if( $walletId )
+			$wallet	= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );
+
 		$fees			= $this->moduleConfig->getAll( 'fees.payin.' );
-		$this->saveBackLink( 'from', 'payin_from' );
-		if( $this->request->has( 'save' ) ){
+		$this->saveBackLink( 'from', 'payin_from' );									//  @todo kriss: may be earlier?
+		if( $this->request->getMethod() === "POST" ){									//  form has been executed
 			$walletId		= $this->request->get( 'walletId' );
-			$wallet			= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
+			$wallet			= $this->checkWalletIsOwn( $walletId );						//  @todo handle invalid walled
 			try{
 				$createdPayIn	= $this->logic->createPayInFromBankAccount(
 					$this->userId,
@@ -45,20 +49,9 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 					$bankAccountId,
 					round( $this->request->get( 'amount' ) * 100 )
 				);
-	print_m( $bankAccount );
-	print_m( $wallet );
-	print_m( $createdPayIn );
-	die;
-/*
-Response Exception "Bad request. One or several required parameters are missing or incorrect. An incorrect resource ID also raises this kind of error." (400)
-stdClass Object (
-[BankAccount.UserId] => Could not create an instance of type Leetchi.MoneyAPI.Models.DTO.Core.BankDetailDto.IBAN.BankDetailFormatIBANDtoBase. Type is an interface or abstract class and cannot be instantiated. Path 'BankAccount.UserId', line 1, position 156.
-[BankAccount.Type] => IBAN is not a valid BankAccount.Type
-[AuthorId] => The AuthorId field is required. )
-
-*/
-				$this->handleStatus( $createdPayIn, $bankAccount, $wallet );
-				throw new RuntimeException( 'Not implemented yet' );
+				$this->addData( 'bankAccount', $bankAccount );
+				$this->addData( 'wallet', $wallet );
+				$this->addData( 'payin', $createdPayIn );
 			}
 			catch( MangoPay\Libraries\ResponseException $e ){
 				$this->handleMangopayResponseException( $e );
@@ -74,30 +67,6 @@ stdClass Object (
 		$this->addData( 'bankAccount', $bankAccount );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 	}
-
-	protected function handleStatus( $payIn, $bankAccount, $wallet ){
-		$price	= View_Manage_My_Mangopay::formatMoney( $payIn->DebitedFunds );
-print_m( $payIn );die;
-		if( $payIn->Status === \MangoPay\PayInStatus::Failed ){
-			$this->handleErrorCode( $payIn->ResultCode );
-
-			if( ( $from = $this->request->get( 'from' ) ) )
-				$this->restart( $from );
-			$this->restart( 'payin/'.$card->Id, TRUE );
-		}
-		else if( $payIn->Status === \MangoPay\PayInStatus::Created ){
-			$this->session->set( 'payInId', $payIn->Id );
-//				print_m( $createdPayIn );die;
-			header( 'Location: '.$payIn->ExecutionDetails->SecureModeRedirectURL );
-			exit;
-		}
-		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
-		$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
-		$this->followBackLink( 'payin_from' );
-		$this->restart( '..', TRUE );
-	}
-
 
 	public function payOut( $bankAccountId ){
 		if( $this->request->has( 'save' ) ){

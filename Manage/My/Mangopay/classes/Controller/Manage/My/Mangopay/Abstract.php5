@@ -32,6 +32,24 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		}
 	}
 
+	public function checkBankAccount( $bankAccountId, $strict = TRUE ){
+//		if( $strict )
+			return $this->logic->getBankAccount( $this->userId, $bankAccountId );
+/*		try{
+			return $this->logic->getBankAccount( $this->userId, $bankAccountId );
+		}
+		catch( Exception $e ){
+		}*/
+	}
+
+	public function checkIsOwnBankAccount( $bankAccountId, $strict = TRUE ){
+		$bankAccount	= $this->checkBankAccount( $bankAccountId, $strict );
+		$bankAccounts	= $this->logic->getUserBankAccounts( $this->userId );
+		print_m( $bankAccount );
+		print_m( $bankAccounts );
+		die;
+	}
+
 	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = array() ){
 		if( !is_array( $fallback ) || !count( $fallback ) )
 			$fallback	= array( NULL, TRUE );
@@ -60,10 +78,11 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		$this->restart( $fallback[0], $fallback[1] );
 	}
 
-	protected function checkWallet( $walletId ){
+	protected function checkWallet( $walletId, $strict = TRUE ){
+		if( $strict )
+			return $this->logic->getWallet( $walletId );
 		try{
-			$wallet	= $this->mangopay->Wallets->Get( $walletId );
-			return $wallet;
+			return $this->logic->getWallet( $walletId );
 		}
 		catch( Exception $e ){
 //			$this->messenger->noteNotice( "Exception: ".$e->getMessage( ) );
@@ -74,6 +93,10 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 
 	protected function checkWalletIsOwn( $walletId ){
 		$wallet		= $this->checkWallet( $walletId );
+		$wallets	= $this->logic->getUserWallets( $this->userId );
+		print_m( $wallet );
+		print_m( $wallets );die;
+
 		//	@todo check against list of user wallets
 		return $wallet;
 	}
