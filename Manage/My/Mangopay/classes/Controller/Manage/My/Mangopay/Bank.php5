@@ -10,6 +10,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 	}
 
 	public function add(){
+		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
 			try{
 				$created	= $this->logic->createBankAccount(
@@ -18,6 +19,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 					$this->request->get( 'bic' ),
 					$this->request->get( 'title' )
 				);
+				$this->followBackLink( 'from' );
 				$this->restart( 'view/'.$created->Id, TRUE );
 			}
 			catch( Exception $e ){
@@ -48,46 +50,6 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 				$this->messenger->noteError( 'Invalid password.' );
 		}
 		$this->restart( 'view/'.$bankAccountId, TRUE );
-
-	}
-
-	public function payIn( $bankAccountId, $walletId = NULL, $amount = NULL ){
-		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
-		$walletId = $walletId ? $walletId : $this->request->get( 'walletId' );
-		if( $walletId )
-			$wallet	= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );
-
-		$fees			= $this->moduleConfig->getAll( 'fees.payin.' );
-		$this->saveBackLink( 'from', 'payin_from' );									//  @todo kriss: may be earlier?
-		if( $this->request->getMethod() === "POST" ){									//  form has been executed
-			$walletId		= $this->request->get( 'walletId' );
-			$wallet			= $this->checkWalletIsOwn( $walletId );						//  @todo handle invalid walled
-			try{
-				$createdPayIn	= $this->logic->createPayInFromBankAccount(
-					$this->userId,
-					$walletId,
-					$bankAccountId,
-					round( $this->request->get( 'amount' ) * 100 )
-				);
-				$this->addData( 'bankAccount', $bankAccount );
-				$this->addData( 'wallet', $wallet );
-				$this->addData( 'payin', $createdPayIn );
-			}
-			catch( MangoPay\Libraries\ResponseException $e ){
-				$this->handleMangopayResponseException( $e );
-			}
-			catch( Exception $e ){
-				UI_HTML_Exception_Page::display( $e );
-				exit;
-			}
-		}
-		$wallets		= $this->logic->getUserWallets( $this->userId );
-		$this->addData( 'walletId', $walletId );
-		$this->addData( 'wallets', $wallets );
-		$this->addData( 'bankAccountId', $bankAccountId );
-		$this->addData( 'bankAccount', $bankAccount );
-		$this->addData( 'from', $this->request->get( 'from' ) );
-		$this->addData( 'amount', $amount );
 	}
 
 	public function payOut( $bankAccountId ){
@@ -101,23 +63,10 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 	}
 
 	public function view( $bankAccountId ){
-		try{
-			$bankAccount	= $this->logic->getBankAccount( $this->userId, $bankAccountId );
-			$this->addData( 'bankAccountId', $bankAccountId );
-			$this->addData( 'bankAccount', $bankAccount );
-			$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
-			$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
-		}
-		catch( Exception $e ){
-			$this->env->getMessenger()->noteError( 'Invalid User ID' );
-			$this->restart( NULL, TRUE );
-		}
-
-	}
-
-	protected function saveBackLink( $requestKey, $sessionKey ){
-		$from = $this->request->get( $requestKey );
-		if( $from )
-			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
+		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
+		$this->addData( 'bankAccountId', $bankAccountId );
+		$this->addData( 'bankAccount', $bankAccount );
+		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
+		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 }

@@ -1,4 +1,8 @@
 <?php
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconCard		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
 
 $helperCard	= new View_Helper_Mangopay_Entity_Card( $env );
 $helperCard->set( $card )->setNodeName( 'div' );
@@ -24,7 +28,7 @@ else if( count( $wallets ) > 1 ){
 $linkBack	= $from ? $from : './manage/my/mangopay/card/'.$cardId;
 
 $panelPayIn	= '<div class="content-panel">
-	<h3>PreAuth for pay in from Credit Card to Wallet</h3>
+	<h3>'.$iconCard.' Von Kreditkarte einzahlen <small class="muted">(mit vorheriger Reservierung)</small></h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/card/payin/preAuthorized/'.$cardId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
@@ -47,8 +51,8 @@ $panelPayIn	= '<div class="content-panel">
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
-				<button type="submit" name="save" value="payin" class="btn btn-primary"><b class="fa fa-check"></b> einzahlen</button>
+				<a href="'.$linkBack.'" class="btn">'.$iconCancel.' abbrechen</a>
+				<button type="submit" name="save" value="payin" class="btn btn-primary">'.$iconSave.' einzahlen</button>
 			</div>
 		</form>
 	</div>

@@ -73,6 +73,13 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		}
 		$this->addData( 'cards', $cards );
 
+		$bankAccounts	= $this->logic->getUserBankAccounts( $this->userId );
+		foreach( $bankAccounts as $nr => $bankAccount ){
+			if( !$bankAccount->Active )
+				unset( $bankAccounts[$nr] );
+		}
+		$this->addData( 'bankAccounts', $bankAccounts );
+
 	}
 
 	public function transfer( $sourceWalletId ){

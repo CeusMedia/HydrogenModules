@@ -7,7 +7,8 @@ return '
 	<h3><i class="fa fa-fw fa-bank"></i> Neues Bankkonto</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/bank/add" method="post">
-			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
+<!--			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
+			<input type="hidden" name="forwardTo" value="'.$forwardTo.'"/>-->
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_title">Bezeichnung <small class="muted"></small></label>

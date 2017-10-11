@@ -1,5 +1,13 @@
 <?php
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconPayout		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-out' ) );
+$iconTransfer	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exchange' ) );
+
+/*
 $list	= new View_Helper_Accordion( 'user-transations' );
 $list->setSingleOpen( TRUE );
 foreach( $transactions as $item ){
@@ -14,14 +22,15 @@ $panelTransactions	= '
 	<div class="content-panel-inner">
 		'.$list->render().'
 	</div>
-</div>';
+</div>';*/
+$panelTransactions	= View_Helper_Panel_Mangopay_Transactions::renderStatic( $env, $transactions );
 
 $linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
 
-$buttonCancel	= '<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>';
-$buttonPayIn	= '<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
-$buttonPayOut	= '<a href="./manage/my/mangopay/wallet/payOut/'.$walletId.'" class="btn btn-primary not-btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
-$buttonTransfer	= '<a href="./manage/my/mangopay/wallet/transfer/'.$walletId.'" class="btn btn-info"><b class="fa fa-exchange"></b> Überweisen</a>';
+$buttonCancel	= '<a href="'.$linkBack.'" class="btn btn-small">'.$iconList.' zurück zur Liste</a>';
+$buttonPayIn	= '<a href="./manage/my/mangopay/wallet/payin/'.$walletId.'" class="btn btn-primary not-btn-small">'.$iconPayin.' Einzahlung</a>';
+$buttonPayOut	= '<a href="./manage/my/mangopay/wallet/payOut/'.$walletId.'" class="btn btn-primary not-btn-small">'.$iconPayout.' Auszahlung</a>';
+$buttonTransfer	= '<a href="./manage/my/mangopay/wallet/transfer/'.$walletId.'" class="btn btn-info">'.$iconTransfer.' Überweisen</a>';
 
 $helperMoney	= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
@@ -60,24 +69,30 @@ $panelView	= '
 
 
 $listCards	= UI_HTML_Tag::create( 'div', 'Keine Kreditkarten registriert.', array( 'class' => 'alert alert-warning' ) );
-
 if( $cards ){
 	$helperCardLogo		= new View_Helper_Mangopay_Entity_CardProviderLogo( $env );
 	$helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMALL );
 	$helperCardLogo->setNodeName( 'span' );
 	$helperCardNumber	= new View_Helper_Mangopay_Entity_CardNumber( $env );
 	$list	= array();
-	foreach( $cards as $card ){
-	//print_m( $card );die;
-		$logo	= $helperCardLogo->setProvider( $card->CardProvider )->render();
-		$number	= $helperCardNumber->set( $card->Alias )->render();
-		$title	= UI_HTML_Tag::create( 'div', $card->Tag, array( 'class' => 'card-title' ) );
-		$item	= $logo.$number.$title;
-		$list[]	= UI_HTML_Tag::create( 'div', $item, array(
+	foreach( $cards as $item ){
+	//print_m( $item );die;
+		$logo	= $helperCardLogo->setProvider( $item->CardProvider )->render();
+		$number	= $helperCardNumber->set( $item->Alias )->render();
+		$title	= UI_HTML_Tag::create( 'div', $item->Tag, array( 'class' => 'card-title' ) );
+		$label	= $logo.$number.$title;
+		$list[]	= UI_HTML_Tag::create( 'div', $label, array(
 			'class'		=> 'card-list-item-small',
-			'onclick'	=> 'document.location.href="./manage/my/mangopay/wallet/payin/card/'.$walletId.'/'.$card->Id.'";',
+			'onclick'	=> 'document.location.href="./manage/my/mangopay/wallet/payin/card/'.$walletId.'/'.$item->Id.'";',
 		) );
 	}
+	$logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+	$title	= UI_HTML_Tag::create( 'span', 'Karte hinzufügen', array( 'class' => 'card-title' ) );
+	$label	= $logo.$title;
+	$list[]	= UI_HTML_Tag::create( 'div', $label, array(
+		'class'		=> 'card-list-item-small',
+		'onclick'	=> 'document.location.href="./manage/my/mangopay/card/registration?forwardTo=manage/my/mangopay/wallet/'.$walletId.'";',
+	) );
 	$listCards	= UI_HTML_Tag::create( 'div', $list );
 }
 $panelPayInCards	= '
@@ -85,12 +100,34 @@ $panelPayInCards	= '
 	<h3><i class="fa fa-fw fa-credit-card"></i> Einzahlen mit Kreditkarte</h3>
 	<div class="content-panel-inner">
 		'.$listCards.'
-		<div class="buttonbar">
-			<a href="./manage/my/mangopay/card/registration?forwardTo=manage/my/mangopay/wallet/'.$walletId.'" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> andere Karte</a>
-		</div>
 	</div>
 </div>';
 
+$listBankAccounts	= UI_HTML_Tag::create( 'div', 'Keine Bankkonten registriert.', array( 'class' => 'alert alert-warning' ) );
+if( $bankAccounts ){
+	$list	= array();
+	foreach( $bankAccounts as $item ){
+//	print_m( $item );die;
+		$logo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank' ) );
+		$title	= UI_HTML_Tag::create( 'span', $item->OwnerName, array( 'class' => 'card-title' ) );
+		$label	= $logo.$title;
+		$list[]	= UI_HTML_Tag::create( 'div', $label, array(
+			'class'		=> 'card-list-item-small',
+			'onclick'	=> 'document.location.href="./manage/my/mangopay/bank/payin/'.$item->Id.'/'.$walletId.'?from=manage/my/mangopay/wallet/view/'.$walletId.'";',
+		) );
+	}
+	$listBankAccounts	= UI_HTML_Tag::create( 'div', $list );
+}
+$panelPayInBank	= '
+<div class="content-panel">
+	<h3><i class="fa fa-fw fa-credit-card"></i> Einzahlen mit Bankkonto</h3>
+	<div class="content-panel-inner">
+		'.$listBankAccounts.'
+		<div class="buttonbar">
+			<a href="./manage/my/mangopay/bank/add?from=manage/my/mangopay/wallet/'.$walletId.'" class="btn btn-success">'.$iconAdd.' Bankkonto registrieren</a>
+		</div>
+	</div>
+</div>';
 
 return '
 <div class="row-fluid">
@@ -100,9 +137,12 @@ return '
 	<div class="span4">
 		'.$panelPayInCards.'
 	</div>
+	<div class="span4">
+		'.$panelPayInBank.'
+	</div>
 </div>
 <div class="row-fluid">
 	<div class="span12">
-		'.View_Helper_Panel_Mangopay_Transactions::renderStatic( $env, $transactions ).'
+		'.$panelTransactions.'
 	</div>
 </div>';

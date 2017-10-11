@@ -28,9 +28,14 @@ div.card-list-item-small {
 	cursor: pointer;
 	margin: 0 0 6px 0;
 	}
-div.card-list-item-small img {
+div.card-list-item-small > span > img {
 	display: inline-block;
-	margin: 4px 8px;
+	margin: 6px 8px;
+	}
+div.card-list-item-small > i {
+	display: inline-block;
+	font-size: 1.5em;
+	margin: 12px 12px;
 	}
 
 div.card-list-item-large {
@@ -59,6 +64,11 @@ div.card-list-item-large i.fa {
 	}
 
 
+#panel-mangopay-bank-payin dt,
+#panel-mangopay-bank-payin dd {
+	line-height: 2em;
+	font-size: 1em;
+	}
 
 
 .i.fa.opacity-50 {

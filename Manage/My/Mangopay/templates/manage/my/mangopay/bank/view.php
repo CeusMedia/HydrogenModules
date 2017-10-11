@@ -1,13 +1,13 @@
 <?php
 
-$buttonPayIn	= '<a href="./manage/my/mangopay/bank/payIn/'.$bankAccountId.'" class="btn btn-small"><b class="fa fa-sign-in"></b> Einzahlung</a>';
-$buttonPayOut	= '<a href="./manage/my/mangopay/bank/payOut/'.$bankAccountId.'" class="btn btn-small"><b class="fa fa-sign-out"></b> Auszahlung</a>';
-if( 0 && !$bankAccount->Active ){
-	$buttonPayIn	= '<button type="button" class="btn btn-small" disabled="disabled"><b class="fa fa-sign-in"></b> Einzahlung</button>';
-	$buttonPayOut	= '<button type="button" class="btn btn-small" disabled="disabled"><b class="fa fa-sign-out"></b> Auszahlung</button>';
-}
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconPayout		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-out' ) );
 
-$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/bank' );
+$buttonPayIn	= '<a href="./manage/my/mangopay/bank/payin/'.$bankAccountId.'" class="btn">'.$iconPayin.' Einzahlung</a>';
+$buttonPayOut	= '<a href="./manage/my/mangopay/bank/payOut/'.$bankAccountId.'" class="btn">'.$iconPayout.' Auszahlung</a>';
+$linkBack		= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/bank' );
 
 $inputAddressLine2	= '';
 if( strlen( trim( $bankAccount->OwnerAddress->AddressLine2 ) ) ){
@@ -88,10 +88,8 @@ $panelView	= '
 		'.$inputAddressLine2.'
 <!--		'.print_m( $bankAccount, NULL, NULL, TRUE ).'-->
 		<div class="buttonbar">
-			<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
-			&nbsp;|&nbsp;
+			<a href="'.$linkBack.'" class="btn">'.$iconList.' zurück zur Liste</a>
 			'.$buttonPayIn.'
-			&nbsp;|&nbsp;
 			'.$buttonPayOut.'
 		</div>
 	</div>

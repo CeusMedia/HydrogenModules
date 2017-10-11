@@ -52,33 +52,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 			$this->messenger->noteError( "Exception: ".$e->getMessage() );
 			$this->restart( 'manage/my/mangopay' );
 		}
-	}
-
-/*	public function payIn( $cardId ){
-//		$this->restart( 'payin', TRUE );
-	}*/
-
-	protected function followBackLink( $sessionKey ){
-		$from = $this->session->get( $this->sessionPrefix.$sessionKey );
-		if( $from ){
-			$this->session->remove( $this->sessionPrefix.$sessionKey );
-			$this->restart( $from );
-		}
-	}
-
-	protected function saveBackLink( $requestKey, $sessionKey ){
-		$from = $this->request->get( $requestKey );
-		if( $from )
-			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
-	}
-
-	public function payOut(){
-		throw new RuntimeException( 'Not implemented yet' );
-
-		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
-
-		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
+		$this->addData( 'from', $this->session->get( $this->sessionPrefix.'from' ) );
 	}
 
 	public function edit( $cardId ){
@@ -104,6 +78,15 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'cardId', $cardId );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+	}
+
+	public function payOut(){
+		throw new RuntimeException( 'Not implemented yet' );
+
+		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
+
+		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
+		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
 	}
 
 	public function view( $cardId ){

@@ -6,7 +6,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 	public function __onInit(){
 		parent::__onInit();
 		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
-		$this->sessionPrefix	= 'manage_my_mangopay_card_';
+		$this->sessionPrefix	= 'manage_my_mangopay_card_payin_';
 	}
 
 	protected function followBackLink( $sessionKey ){
@@ -145,7 +145,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'walletLocked', (bool) $walletId );
 		$card		= $this->checkIsOwnCard( $cardId );
 		$fees		= $this->moduleConfig->getAll( 'fees.payin.' );
-		$this->saveBackLink( 'from', 'payin_from' );
+		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
 			$walletId		= $walletId ? $walletId : $this->request->get( 'walletId' );
 			$wallet			= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
@@ -172,7 +172,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 	public function preAuthorized( $cardId, $walletId = NULL ){
 		$this->addData( 'walletLocked', (bool) $walletId );
 		$card	= $this->checkIsOwnCard( $cardId, FALSE, array( '') );
-		$this->saveBackLink( 'from', 'payin_from' );
+		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
 
 			$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
@@ -209,11 +209,5 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'card', $this->mangopay->Cards->Get( $cardId ) );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
-	}
-
-	protected function saveBackLink( $requestKey, $sessionKey ){
-		$from = $this->request->get( $requestKey );
-		if( $from )
-			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
 	}
 }

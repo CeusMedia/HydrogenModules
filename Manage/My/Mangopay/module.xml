@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.3.9</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -15,7 +15,8 @@
 	<log version="0.3.6">Split card controller into subcontrollers.</log>
 	<log version="0.3.7">Improve credit card registration heavily.</log>
 	<log version="0.3.8">Improve controllers, views and templates heavily.</log>
-	<log version="0.3.9">Finish bank account payin and add bank account deactivation.</log>
+	<log version="0.4">Finish bank account payin and add bank account deactivation.</log>
+	<log version="0.4.1">Improve workflow.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -26,6 +27,7 @@
 		<class>Controller/Manage/My/Mangopay/User.php5</class>
 		<class>Controller/Manage/My/Mangopay/Wallet.php5</class>
 		<class>Controller/Manage/My/Mangopay/Transaction.php5</class>
+		<class>Controller/Manage/My/Mangopay/Bank/Payin.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card/Payin.php5</class>
 		<class>Controller/Manage/My/Mangopay/Card/Registration.php5</class>
 		<class>Controller/Manage/My/Mangopay/Wallet/Payin.php5</class>
@@ -43,6 +45,7 @@
 		<class>View/Manage/My/Mangopay/User.php5</class>
 		<class>View/Manage/My/Mangopay/Wallet.php5</class>
 		<class>View/Manage/My/Mangopay/Transaction.php5</class>
+		<class>View/Manage/My/Mangopay/Bank/Payin.php5</class>
 		<class>View/Manage/My/Mangopay/Card/Payin.php5</class>
 		<class>View/Manage/My/Mangopay/Card/Registration.php5</class>
 		<class>View/Manage/My/Mangopay/Wallet/Payin.php5</class>
@@ -51,6 +54,7 @@
 		<template>manage/my/mangopay/bank/index.php</template>
 		<template>manage/my/mangopay/bank/payIn.php</template>
 		<template>manage/my/mangopay/bank/view.php</template>
+		<template>manage/my/mangopay/bank/payin/index.php</template>
 		<template>manage/my/mangopay/card/edit.php</template>
 		<template>manage/my/mangopay/card/index.php</template>
 		<template>manage/my/mangopay/card/view.php</template>

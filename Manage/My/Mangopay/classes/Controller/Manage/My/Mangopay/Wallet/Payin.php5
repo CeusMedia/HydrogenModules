@@ -8,6 +8,7 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 	}
 
 	public function bankwire( $walletId = NULL ){
+		throw new Exception( 'Deprecated: use bank/payin instead' );
 		$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
 		$wallet		= $this->checkWalletIsOwn( $walletId );
 		if( $this->request->has( 'amount' ) && $this->request->get( 'currency' ) ){
@@ -32,6 +33,7 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 			$this->addData( 'amount', $amount );
 			$this->addData( 'currency', $this->currency );
 		}
+		$this->addData( 'walletId', $walletId );
 	}
 
 	public function card( $walletId = NULL, $cardId = NULL ){
@@ -85,25 +87,6 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 		}
 		$this->addData( 'walletId', $walletId );
 	}
-
-	protected function checkWallet( $walletId ){
-		try{
-			$wallet	= $this->mangopay->Wallets->Get( $walletId );
-			return $wallet;
-		}
-		catch( Exception $e ){
-//			$this->messenger->noteNotice( "Exception: ".$e->getMessage( ) );
-			$this->messenger->noteError( "Invalid wallet ID given." );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	protected function checkWalletIsOwn( $walletId ){
-		$wallet		= $this->checkWallet( $walletId );
-		//	@todo check against list of user wallets
-		return $wallet;
-	}
-
 
 	public function index( $walletId, $type = NULL ){
 		$wallet		= $this->checkWalletIsOwn( $walletId );

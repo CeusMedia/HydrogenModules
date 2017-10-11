@@ -33,17 +33,19 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 	}
 
 	public function checkBankAccount( $bankAccountId, $strict = TRUE ){
-//		if( $strict )
-			return $this->logic->getBankAccount( $this->userId, $bankAccountId );
-/*		try{
-			return $this->logic->getBankAccount( $this->userId, $bankAccountId );
+		$item	= $this->logic->getBankAccount( $this->userId, $bankAccountId );
+		if( !$item->Active ){
+			if( !$strict )
+				return FALSE;
+			throw new RuntimeException( 'Bank account has been disabled' );
 		}
-		catch( Exception $e ){
-		}*/
+		return $item;
 	}
 
 	public function checkIsOwnBankAccount( $bankAccountId, $strict = TRUE ){
 		$bankAccount	= $this->checkBankAccount( $bankAccountId, $strict );
+		if( !$bankAccount )
+			return FALSE;
 		$bankAccounts	= $this->logic->getUserBankAccounts( $this->userId );
 		foreach( $bankAccounts as $item )
 			if( $item->Id === $bankAccount->Id )
@@ -105,12 +107,29 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		throw new DomainException( 'Access to this wallet is denied' );
 	}
 
+	protected function followBackLink( $sessionKey ){
+		$from	= $this->session->get( $this->sessionPrefix.$sessionKey );
+		if( !$from )
+			return;
+		$this->session->remove( $this->sessionPrefix.$sessionKey );
+		$this->restart( $from );
+	}
+
 	protected function handleMangopayResponseException( $e ){
 		ob_start();
 		print_r( $e->GetErrorDetails()->Errors );
 		$details	= ob_get_clean();
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
+	}
+
+	protected function saveBackLink( $requestKey, $sessionKey, $override = FALSE ){
+		$from		= $this->request->get( $requestKey );
+		if( !$from )
+			return;
+		$current	= $this->session->get( $this->sessionPrefix.$sessionKey );
+		if( !$current || $override )
+			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
 	}
 }
 ?>
