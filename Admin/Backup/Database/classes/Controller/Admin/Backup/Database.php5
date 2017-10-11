@@ -3,6 +3,7 @@ class Controller_Admin_Backup_Database extends CMF_Hydrogen_Controller{
 
 	protected $moduleConfig;
 	protected $dumps;
+	protected $prefixPlaceholder	= '<%?prefix%>';
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
