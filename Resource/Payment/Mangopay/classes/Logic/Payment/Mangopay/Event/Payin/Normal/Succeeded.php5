@@ -14,8 +14,8 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Succeeded extends Logic_Payment_
 		$data->data->succeeded	= $payin;
 		$data->data				= json_encode( $data->data );
 		$data->status			= Model_Mangopay_Payin::STATUS_SUCCEEDED;
-		$data->currency			= $payin->DebitedFunds->Currency,
-		$data->amount			= $payin->DebitedFunds->Amount / 100,
+		$data->currency			= $payin->DebitedFunds->Currency;
+		$data->amount			= $payin->DebitedFunds->Amount / 100;
 		$data->modifiedAt		= $this->event->triggeredAt;
 		$this->modelPayin->edit( $data->payinId, (array) $data );
 

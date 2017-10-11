@@ -17,6 +17,7 @@ class Model_Mangopay_Payin extends CMF_Hydrogen_Model {
 	protected $name		= 'mangopay_payins';
 	protected $columns	= array(
 		"payinId",
+		"userId",
 		"status",
 		"id",
 		"type",
@@ -28,11 +29,22 @@ class Model_Mangopay_Payin extends CMF_Hydrogen_Model {
 	);
 	protected $primaryKey	= 'payinId';
 	protected $indices		= array(
+		"userId",
 		"status",
 		"id",
 		"type",
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
+
+	static public function getLatestResourceFromPayinData( $payinData ){
+		$resource	= json_decode( $payinData );
+		$keys		= array_keys( (array) $resource );
+		while( $key = array_pop( $keys ) ){
+			if( $resource->{$key} )
+				return $resource->{$key};
+		}
+		return NULL;
+	}
 
 	static public function getStatusId( $status ){
 		switch( $status ){

@@ -3,7 +3,7 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -19,11 +19,13 @@
 	<log version="0.3.4">Add model for payins.</log>
 	<log version="0.3.5">Add logic classes for handling single events.</log>
 	<log version="0.3.6">Add view helpers for IBAN and BIC.</log>
+	<log version="0.3.7">Add view for payin.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Mangopay/Event.php5</class>
 		<class>Controller/Mangopay/Hook.php5</class>
+		<class>Controller/Mangopay/Payin.php5</class>
 		<class>Mail/Mangopay/EventFailed.php5</class>
 		<class>Mail/Mangopay/EventAgain.php5</class>
 		<class>Mail/Mangopay/EventUnverfied.php5</class>
@@ -40,6 +42,7 @@
 		<class>Resource/Mangopay.php5</class>
 		<class>View/Mangopay/Event.php5</class>
 		<class>View/Mangopay/Hook.php5</class>
+		<class>View/Mangopay/Payin.php5</class>
 		<class>View/Helper/Mangopay/Error.php5</class>
 		<class>View/Helper/Mangopay/Entity/BIC.php5</class>
 		<class>View/Helper/Mangopay/Entity/Card.php5</class>
@@ -55,6 +58,8 @@
 		<template>mangopay/hook/apply.php</template>
 		<template>mangopay/hook/index.php</template>
 		<template>mangopay/hook/view.php</template>
+		<template>mangopay/payin/index.php</template>
+		<template>mangopay/payin/view.php</template>
 	</files>
 	<link access="public" path="mangopay/event/receive"/>
 	<config protected="yes" mandatory="no" type="string" name="mail.hook"></config>
@@ -100,11 +105,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_payins` (
   KEY `currency` (`currency`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
+	<sql type="mysql" on="update" version="0.3.7"><![CDATA[
+ALTER TABLE `<%?prefix%>mangopay_payins` ADD `userId` INT UNSIGNED NOT NULL AFTER `payinId`, ADD INDEX (`userId`);
+]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mangopay_events`;
 DROP TABLE IF EXISTS `<%?prefix%>mangopay_payins`;
 ]]></sql>
-
-
-
 </module>
