@@ -19,8 +19,11 @@ class Controller_Mangopay_Payin extends CMF_Hydrogen_Controller{
 		$count		= $this->model->count( $conditions );
 		$pages		= ceil( $count / $limit );
 		$payins		= $this->model->getAll( $conditions, $orders, $limits );
-		foreach( $payins as $nr => $payin )
-			$payin->user	= $this->mangopay->getUser( $payin->userId );
+
+		foreach( $payins as $nr => $payin ){
+			if( $payin->userId )
+				$payin->user	= $this->mangopay->getUser( $payin->userId );
+		}
 		$this->addData( 'payins', $payins );
 		$this->addData( 'count', $count );
 		$this->addData( 'pages', $pages );

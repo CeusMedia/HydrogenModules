@@ -31,7 +31,7 @@ if( $payins ){
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $fromUser ),
 			UI_HTML_Tag::create( 'td', $tags ),
-			UI_HTML_Tag::create( 'td', $helperMoney->setAmount( $item->amount )->setCurrency( $item->currency ), array( 'style' => 'text-align: right' ) ),
+			UI_HTML_Tag::create( 'td', $helperMoney->setAmount( $item->amount * 100 )->setCurrency( $item->currency ), array( 'style' => 'text-align: right' ) ),
 			UI_HTML_Tag::create( 'td', $status ),
 /*			UI_HTML_Tag::create( 'td', date( 'Y-m-d H:i:s', $item->createdAt ) ),*/
 			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', date( 'Y-m-d H:i:s', $item->modifiedAt ) ) ),

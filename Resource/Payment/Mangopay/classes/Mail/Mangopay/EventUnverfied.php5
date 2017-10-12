@@ -10,7 +10,7 @@ class Mail_Mangopay_EventUnverfied extends Mail_Abstract{
 
 		print UI_HTML_Tag::create( 'h2', 'Event verification failed' );
 		print UI_HTML_Tag::create( 'h3', 'Event' );
-		print_m( $event );
+		print print_m( $event, NULL, NULL, TRUE, 'html' );
 		if( $entity instanceof Exception ){
 			$e	= $entity;
 			print UI_HTML_Tag::create( 'h3', 'Exception' );
@@ -23,7 +23,7 @@ class Mail_Mangopay_EventUnverfied extends Mail_Abstract{
 		}
 		else{
 			print UI_HTML_Tag::create( 'h3', 'Entity' );
-			print_m( $entity );
+			print print_m( $entity, NULL, NULL, TRUE, 'html' );
 		}
 		print UI_HTML_Tag::create( 'h3', 'Info' );
 		phpinfo( INFO_VARIABLES );

@@ -9,7 +9,7 @@ class Mail_Mangopay_EventFailed extends Mail_Abstract{
 			$model		= new Model_Mangopay_Event( $this->env );
 			$event		= $model->get( $data->get( 'eventId' ) );
 			print UI_HTML_Tag::create( 'h3', 'Event' );
-			print_m( $event );
+			print print_m( $event, NULL, NULL, TRUE, 'html' );
 		}
 		if( $data->get( 'exception' ) instanceof Exception ){
 			$e	= $data->get( 'exception' );

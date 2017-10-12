@@ -6,16 +6,18 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Failed extends Logic_Payment_Man
 			'status' 	=> Model_Mangopay_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
 		);
+		$payin		= $this->entity;
 		$data		= $this->modelPayin->getByIndices( $indices );
 		if( !$data )
 			return FALSE;
-		$payin		= $this->logicMangopay->getPayin( $this->event->id );
 		$data->data				= json_decode( $data->data );
 		$data->data->failed		= $payin;
 		$data->data				= json_encode( $data->data );
 		$data->status			= Model_Mangopay_Payin::STATUS_FAILED;
 		$data->modifiedAt		= $this->event->triggeredAt;
 		$this->modelPayin->edit( $data->payinId, (array) $data );
+
+		$this->uncache( 'wallet_'.$payin->CreditedWalletId.'_transactions' );
 
 		$data			= $this->modelPayin->get( $data->payinId );
 		$data->status	= Model_Mangopay_Payin::getStatusLabel( $data->status );

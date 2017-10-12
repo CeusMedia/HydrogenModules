@@ -243,28 +243,21 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getEventResource( $eventType, $resourceId, $force = FALSE ){
-		switch( $eventType ){
-			case 'PAYIN_NORMAL_SUCCEEDED':
-			case 'PAYIN_NORMAL_FAILED':
-				$method	= 'getPayin';
-				break;
-			case 'PAYOUT_NORMAL_SUCCEEDED':
-			case 'PAYOUT_NORMAL_FAILED':
-				$method	= 'getPayout';
-				break;
-			case 'TRANSFER_NORMAL_SUCCEEDED':
-			case 'TRANSFER_NORMAL_FAILED':
-				$method	= 'getTransfer';
-				break;
-			default:
-				return NULL;
-		}
+		if( preg_match( '@^PAYIN_NORMAL_@', $eventType ) )
+			$method	= 'getPayin';
+		else if( preg_match( '@^PAYOUT_NORMAL_@', $eventType ) )
+			$method	= 'getPayout';
+		else if( preg_match( '@^TRANSFER_NORMAL_@', $eventType ) )
+			$method	= 'getTransfer';
+		else
+			throw new RuntimeException( 'No implementation found for event type '.$eventType );
+
 		if( !method_exists( $this, $method ) )
 			throw new BadMethodCallException( 'Method "'.$method.'" is not existing' );
 		if( $force )
 			$this->skipCacheOnNextRequest( TRUE );
 		$factory	= new Alg_Object_MethodFactory();
-		return $factory->call( $this->mangopay, $method, array( $resourceId ) );
+		return $factory->call( $this, $method, array( $resourceId ) );
 	}
 
 	public function getHook( $hookId ){
@@ -351,8 +344,8 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		return $items;
 	}
 
-	public function getUserWallet( $walletId ){
-		$cacheKey	= 'mangopay_wallet_'.$walletId;
+	public function getUserWallet( $userId, $walletId ){
+		$cacheKey	= 'mangopay_user_'.$userId.'_wallet_'.$walletId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Wallets->Get( $walletId );

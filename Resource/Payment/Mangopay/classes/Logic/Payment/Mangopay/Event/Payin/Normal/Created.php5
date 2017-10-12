@@ -2,7 +2,7 @@
 class Logic_Payment_Mangopay_Event_Payin_Normal_Created extends Logic_Payment_Mangopay_Event_Payin_Normal{
 
 	public function handle(){
-		$payin		= $this->logicMangopay->getPayin( $this->event->id );
+		$payin		= $this->entity;
 		$data		= array(
 			"status"		=> Model_Mangopay_Payin::STATUS_CREATED,
 			"id"			=> $this->event->id,
@@ -20,6 +20,7 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Created extends Logic_Payment_Ma
 			"modifiedAt"	=> $this->event->triggeredAt,
 		);
 		$payinId		= $this->modelPayin->add( $data );
+		$this->uncache( 'wallet_'.$payin->CreditedWalletId.'_transactions' );
 
 		$data			= $this->modelPayin->get( $payinId );
 		$data->status	= Model_Mangopay_Payin::getStatusLabel( $data->status );

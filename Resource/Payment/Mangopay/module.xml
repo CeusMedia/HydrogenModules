@@ -1,7 +1,13 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Payment: Mangopay</title>
-	<description><![CDATA[...]]></description>
+	<description><![CDATA[
+Payment integration for MangoPay.
+
+Cronjobs:
+* * * * * cd /path/to/app && ./job.php Resource.Payment.Mangopay.Event.handle
+
+]]></description>
 	<category>Resource</category>
 	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
@@ -21,12 +27,14 @@
 	<log version="0.3.6">Add view helpers for IBAN and BIC.</log>
 	<log version="0.3.7">Add view for payin.</log>
 	<log version="0.3.8">Add view helper for wallet logo.</log>
+	<log version="0.4">Add job to handle events in background.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Mangopay/Event.php5</class>
 		<class>Controller/Mangopay/Hook.php5</class>
 		<class>Controller/Mangopay/Payin.php5</class>
+		<class>Job/Mangopay/Event.php5</class>
 		<class>Mail/Mangopay/EventFailed.php5</class>
 		<class>Mail/Mangopay/EventAgain.php5</class>
 		<class>Mail/Mangopay/EventUnverfied.php5</class>
@@ -62,6 +70,7 @@
 		<template>mangopay/hook/view.php</template>
 		<template>mangopay/payin/index.php</template>
 		<template>mangopay/payin/view.php</template>
+		<file>config/jobs/mangopay.event.xml</file>
 	</files>
 	<link access="public" path="mangopay/event/receive"/>
 	<config protected="yes" mandatory="no" type="string" name="mail.hook"></config>

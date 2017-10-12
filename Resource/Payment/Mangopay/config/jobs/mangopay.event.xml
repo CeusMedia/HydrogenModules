@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Resource.Payment.Mangopay.Event.count">
+		<class>Mangopay_Event</class>
+		<method>count</method>
+		<mode>live</mode>
+	</job>
+	<job id="Resource.Payment.Mangopay.Event.handle">
+		<class>Mangopay_Event</class>
+		<method>handle</method>
+		<mode>live</mode>
+	</job>
+</jobs>

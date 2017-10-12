@@ -6,10 +6,10 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Succeeded extends Logic_Payment_
 			'status' 	=> Model_Mangopay_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
 		);
+		$payin		= $this->entity;
 		$data		= $this->modelPayin->getByIndices( $indices );
 		if( !$data )
 			return FALSE;
-		$payin		= $this->logicMangopay->getPayin( $this->event->id );
 		$data->data				= json_decode( $data->data );
 		$data->data->succeeded	= $payin;
 		$data->data				= json_encode( $data->data );
@@ -18,6 +18,10 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Succeeded extends Logic_Payment_
 		$data->amount			= $payin->DebitedFunds->Amount / 100;
 		$data->modifiedAt		= $this->event->triggeredAt;
 		$this->modelPayin->edit( $data->payinId, (array) $data );
+
+		$this->uncache( 'user_'.$payin->CreditedUserId.'_wallets' );
+		$this->uncache( 'user_'.$payin->CreditedUserId.'_wallet_'.$payin->CreditedWalletId );
+		$this->uncache( 'wallet_'.$payin->CreditedWalletId.'_transactions' );
 
 		$data			= $this->modelPayin->get( $data->payinId );
 		$data->status	= Model_Mangopay_Payin::getStatusLabel( $data->status );
