@@ -3,7 +3,7 @@
 	<title>Resource: Payment: Mangopay</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -20,6 +20,7 @@
 	<log version="0.3.5">Add logic classes for handling single events.</log>
 	<log version="0.3.6">Add view helpers for IBAN and BIC.</log>
 	<log version="0.3.7">Add view for payin.</log>
+	<log version="0.3.8">Add view helper for wallet logo.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -51,6 +52,7 @@
 		<class>View/Helper/Mangopay/Entity/IBAN.php5</class>
 		<class>View/Helper/Mangopay/Entity/Money.php5</class>
 		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
+		<class>View/Helper/Mangopay/Entity/WalletLogo.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 		<template>mangopay/event/index.php</template>
 		<template>mangopay/event/view.php</template>

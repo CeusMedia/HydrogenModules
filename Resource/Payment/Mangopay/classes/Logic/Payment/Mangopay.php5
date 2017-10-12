@@ -30,8 +30,8 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 		$bankAccount->Active = FALSE;
 		$result	= $this->provider->Users->UpdateBankAccount( $userId, $bankAccount );
-		$this->cache->remove( 'user_'.$userId.'_bankaccounts' );
-		$this->cache->remove( 'user_'.$userId.'_bankaccount_'.$bankAccountId );
+		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccounts' );
+		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId );
 	}
 
 	/**
@@ -61,8 +61,47 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount->OwnerName		= $title;
 		$bankAccount->OwnerAddress	= $user->Address;
 		$item	= $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
-		$this->cache->remove( 'user_'.$userId.'_bankaccounts' );
+		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccounts' );
 		return $item;
+	}
+
+	public function createMandate( $bankAccountId, $returnUrl ){
+		$mandate 	= new \MangoPay\Mandate();
+		$mandate->BankAccountId	= $bankAccountId;
+		$mandate->Culture		= "EN";
+		$mandate->ReturnUrl		= $returnUrl;
+		return $this->provider->Mandates->Create( $mandate );
+	}
+
+	public function getUserMandates( $userId ){
+		$cacheKey	= 'mangopay_user_'.$userId.'_mandates';
+		$this->applyPossibleCacheSkip( $cacheKey );
+		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
+			$items	= 	$this->provider->Users->GetMandates( $userId );
+			$this->cache->set( $cacheKey, $items );
+		}
+		return $items;
+	}
+
+	public function getBankAccountMandates( $userId, $bankAccountId ){
+		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId.'_mandates';
+		$this->applyPossibleCacheSkip( $cacheKey );
+		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
+			$items	= 	$this->provider->Users->GetMandatesForBankAccount( $userId, $bankAccountId );
+print_m( $items );
+			$this->cache->set( $cacheKey, $items );
+		}
+		return $items;
+	}
+
+	public function getMandates(){
+		$cacheKey	= 'mangopay_mandates';
+		$this->applyPossibleCacheSkip( $cacheKey );
+		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
+			$items	= 	$this->provider->Mandates->GetAll();
+			$this->cache->set( $cacheKey, $items );
+		}
+		return $items;
 	}
 
 	/**
@@ -190,7 +229,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getCardById( $cardId ){
-		$cacheKey	= 'card_'.$cardId;
+		$cacheKey	= 'mangopay_card_'.$cardId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Cards->Get( $cardId );
@@ -229,7 +268,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getHook( $hookId ){
-		$cacheKey	= 'hook_'.$hookId;
+		$cacheKey	= 'mangopay_hook_'.$hookId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Hooks->Get( $hookId );
@@ -239,7 +278,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getHooks( $refresh = FALSE ){
-		$cacheKey	= 'hooks';
+		$cacheKey	= 'mangopay_hooks';
 		$refresh ? $this->skipCacheOnNextRequest( TRUE ) : NULL;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
@@ -262,7 +301,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getUser( $userId ){
-		$cacheKey	= 'user_'.$userId;
+		$cacheKey	= 'mangopay_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Users->Get( $userId );
@@ -272,7 +311,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getUserBankAccount( $userId, $bankAccountId ){
-		$cacheKey	= 'user_'.$userId.'_bankaccount_'.$bankAccountId;
+		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Users->GetBankAccount( $userId, $bankAccountId );
@@ -282,7 +321,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getUserBankAccounts( $userId ){
-		$cacheKey	= 'user_'.$userId.'_bankaccounts';
+		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccounts';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
 			$pagination	= new \MangoPay\Pagination();
@@ -303,7 +342,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			foreach( $orders as $orderKey => $orderValue )
 				$sorting->AddField( $orderKey, strtoupper( $orderValue ) );
 		}
-		$cacheKey	= 'user_'.$userId.'_cards';
+		$cacheKey	= 'mangopay_user_'.$userId.'_cards';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
 			$items	= $this->provider->Users->GetCards( $userId, $pagination, $sorting );
@@ -313,7 +352,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	}
 
 	public function getUserWallet( $walletId ){
-		$cacheKey	= 'wallet_'.$walletId;
+		$cacheKey	= 'mangopay_wallet_'.$walletId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
 			$item	= $this->provider->Wallets->Get( $walletId );
@@ -366,7 +405,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 	 *	@todo		extend cache key by filters
 	 */
 	public function getWalletTransactions( $walletId, $orders = array(), $limits = array() ){
-		$cacheKey	= 'wallet_'.$walletId.'_transactions';
+		$cacheKey	= 'mangopay_wallet_'.$walletId.'_transactions';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
 			$pagination	= $this->provider->getDefaultPagination();
@@ -396,8 +435,8 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
 			$hook->Url			= $this->env->url.trim( $path );
-			$this->cache->remove( 'hooks' );
-			$this->cache->remove( 'hook_'.$id );
+			$this->cache->remove( 'mangopay_hooks' );
+			$this->cache->remove( 'mangopay_hook_'.$id );
 			return $this->provider->Hooks->Update( $hook );
 		}
 		else{
