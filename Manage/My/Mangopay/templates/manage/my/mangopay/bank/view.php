@@ -96,6 +96,27 @@ $panelView	= '
 </div>';
 
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
+$list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+if( $mandates ){
+	$list	= array();
+	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+	$list	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'tabe table-fixed' ) );
+}
+
+$panelMandate	= '
+<div class="content-panel panel-mangopay-view" id="panel-mangopay-card-view">
+	<h3><i class="fa fa-fw fa-ban"></i> Bankkonto abmelden</h3>
+	<div class="content-panel-inner">
+		'.$list.'
+		<div class="buttonbar">
+			<a href="./manage/my/mangopay/bank/mandate/'.$bankAccountId.'">'.$iconAdd.' Mandate erstellen</a>
+		</div>
+	</div>
+</div>';
+
+
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-remove" ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-trash" ) );
 $buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' entfernen', array(
@@ -152,6 +173,7 @@ return '
 		'.$panelRemove.'
 	</div>
 	<div class="span6">
+		'.$panelMandate.'
 		'./*$panelTransactions.*/'
 	</div>
 </div>';

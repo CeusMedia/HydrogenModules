@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -17,6 +17,7 @@
 	<log version="0.3.8">Improve controllers, views and templates heavily.</log>
 	<log version="0.4">Finish bank account payin and add bank account deactivation.</log>
 	<log version="0.4.1">Improve workflow.</log>
+	<log version="0.4.2">Add support for bank account mandates.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -67,11 +68,14 @@
 		<template>manage/my/mangopay/wallet/index.php</template>
 		<template>manage/my/mangopay/wallet/payIn.php</template>
 		<template>manage/my/mangopay/wallet/view.php</template>
+		<template>manage/my/mangopay/wallet/view.payin.web.php</template>
 		<template>manage/my/mangopay/wallet/payin/bankwire.php</template>
 		<template>manage/my/mangopay/wallet/payin/card.php</template>
 		<template>manage/my/mangopay/wallet/payin/cardWeb.php</template>
 		<template>manage/my/mangopay/wallet/payin/index.php</template>
 		<template>manage/my/mangopay/transaction/index.php</template>
+
+
 		<locale>de/manage/my/mangopay/card.ini</locale>
 		<script>module.manage.my.mangopay.card.registration.js</script>
 		<style>module.manage.my.mangopay.css</style>

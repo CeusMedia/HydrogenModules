@@ -32,6 +32,16 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 
+	public function mandate( $bankAccountId ){
+		try{
+			$this->logic->createMandate( $bankAccountId, $this->env->url.'manage/my/mangopay/bank/view/'.$bankAccountId );
+			die;
+		}
+		catch( Exception $e ){
+			$this->handleMangopayResponseException( $e );
+		}
+	}
+
 	public function deactivate( $bankAccountId ){
 		if( $this->request->getMethod() === "POST" ){									//  form has been executed
 			$password		= $this->request->get( 'password' );
@@ -64,6 +74,12 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 
 	public function view( $bankAccountId ){
 		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
+		try{
+			$this->addData( 'mandates', $this->logic->getBankAccountMandates( $this->userId, $bankAccountId ) );
+		}
+		catch( Exception $e ){
+			$this->handleMangopayResponseException( $e );
+		}
 		$this->addData( 'bankAccountId', $bankAccountId );
 		$this->addData( 'bankAccount', $bankAccount );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );

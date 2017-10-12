@@ -5,11 +5,8 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		if( $walletId )
 			$this->restart( 'view/'.$walletId, TRUE );
 
-		$pagination	= $this->mangopay->getDefaultPagination();
-		$sorting	= $this->mangopay->getDefaultSorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
 		try{
-			$this->addData( 'wallets', $this->mangopay->Users->GetWallets( $this->userId, $pagination, $sorting ));
+			$this->addData( 'wallets', $this->logic->getUserWallets( $this->userId ) );
 		}
 		catch( \MangoPay\Libraries\ResponseException $e ){
 			$this->handleMangopayResponseException( $e );
@@ -43,7 +40,7 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		$this->addData( 'walletId', $walletId );
 	}
 
-	public function view( $walletId ){
+	public function view( $walletId, $amount = NULL ){
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 
@@ -79,7 +76,8 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 				unset( $bankAccounts[$nr] );
 		}
 		$this->addData( 'bankAccounts', $bankAccounts );
-
+		$this->addData( 'wordsCards', $this->getWords( 'cardTypes', 'manage/my/mangopay/card' ) );
+		$this->addData( 'amount', $amount );
 	}
 
 	public function transfer( $sourceWalletId ){

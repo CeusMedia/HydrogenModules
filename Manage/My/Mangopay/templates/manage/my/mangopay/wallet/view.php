@@ -129,15 +129,22 @@ $panelPayInBank	= '
 	</div>
 </div>';
 
+$panelPayin	= $view->loadTemplateFile( 'manage/my/mangopay/wallet/view.payin.web.php' );
+
 return '
 <div class="row-fluid">
-	<div class="span4">
+	<div class="span6">
 		'.$panelView.'
 	</div>
-	<div class="span4">
+	<div class="span6">
+		'.$panelPayin.'
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
 		'.$panelPayInCards.'
 	</div>
-	<div class="span4">
+	<div class="span6">
 		'.$panelPayInBank.'
 	</div>
 </div>

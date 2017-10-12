@@ -17,7 +17,7 @@ return '
 					<div class="row-fluid">
 						<div class="span8">
 							<label for="input_amount">Geldbetrag</label>
-							<input type="number" step="0.01" min="0" max="1000" name="amount" id="input_amount" class="span12"/>
+							<input type="number" step="0.01" min="0" max="1000" name="amount" id="input_amount" class="span12" value="'.htmlentities( $amount, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span4">
 							<label for="input_currency">Währung</label>
@@ -31,7 +31,7 @@ return '
 						</div>
 					</div>
 					<div class="buttonbar">
-						<a href="./manage/my/mangopay/wallet/'.$walletId.'" class="btn"><i class="fa fa-arrow-left"></i> zurück</a>
+						<a href="./manage/my/mangopay/wallet/view/'.$walletId.'" class="btn"><i class="fa fa-arrow-left"></i> zurück</a>
 						<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-arrow-right"></i> weiter</button>
 					<div>
 				</form>

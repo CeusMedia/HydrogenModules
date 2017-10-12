@@ -56,7 +56,7 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 		$this->addData( 'walletId', $walletId );
 	}
 
-	public function cardWeb( $walletId ){
+	public function cardWeb( $walletId, $amount = NULL ){
 		$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
 		$wallet		= $this->checkWalletIsOwn( $walletId );
 		if( $this->request->has( 'transactionId' ) ){
@@ -86,6 +86,7 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
 		}
 		$this->addData( 'walletId', $walletId );
+		$this->addData( 'amount', $amount );
 	}
 
 	public function index( $walletId, $type = NULL ){

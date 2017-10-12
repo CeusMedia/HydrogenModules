@@ -4,6 +4,7 @@ class View_Helper_Mangopay_List_Cards_Big{
 	protected $allowAdd;
 	protected $cards;
 	protected $env;
+	protected $from;
 	protected $link;
 
 	public function __toString(){
@@ -66,7 +67,6 @@ class View_Helper_Mangopay_List_Cards_Big{
 		$this->link		= $link;
 		return $this;
 	}
-
 }
 
 $panel	= new View_Helper_Mangopay_List_Cards_Big( $env );
