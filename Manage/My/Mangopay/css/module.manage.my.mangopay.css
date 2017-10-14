@@ -21,6 +21,21 @@ div.value,
 	background-color: rgba(223, 223, 223, 0.15);
 	}
 
+.btn.btn-block {
+	padding: 10px 18px 16px 18px;
+	font-size: 1.1em;
+	line-height: 1.5em;
+	}
+.btn.btn-block > small {
+	display: block;
+	padding-left: 1.85em;
+	line-height: 1.2em;
+	}
+
+.half-muted {
+	opacity: 0.75;
+	}
+
 div.card-list-item-small {
 	border: 1px solid rgba(191, 191, 191, 0.5);
 	border-radius: 5px;

@@ -34,8 +34,8 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 
 	public function mandate( $bankAccountId ){
 		try{
-			$this->logic->createMandate( $bankAccountId, $this->env->url.'manage/my/mangopay/bank/view/'.$bankAccountId );
-			die;
+			$mandate	= $this->logic->createMandate( $bankAccountId, $this->env->url.'manage/my/mangopay/bank/view/'.$bankAccountId );
+			$this->restart( $mandate->RedirectURL, FALSE, TRUE );
 		}
 		catch( Exception $e ){
 			$this->handleMangopayResponseException( $e );
@@ -82,6 +82,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		}
 		$this->addData( 'bankAccountId', $bankAccountId );
 		$this->addData( 'bankAccount', $bankAccount );
+		$this->addData( 'wallets', $this->logic->getUserWallets( $this->userId ) );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}

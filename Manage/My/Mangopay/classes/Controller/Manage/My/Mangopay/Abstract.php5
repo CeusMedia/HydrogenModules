@@ -83,11 +83,11 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		$this->restart( $fallback[0], $fallback[1] );
 	}
 
-	protected function checkWallet( $walletId, $strict = TRUE ){
+	protected function checkWallet( $userId, $walletId, $strict = TRUE ){
 		if( $strict )
-			return $this->logic->getUserWallet( $walletId );
+			return $this->logic->getUserWallet( $userId, $walletId );
 		try{
-			return $this->logic->getUserWallet( $walletId );
+			return $this->logic->getUserWallet( $userId, $walletId );
 		}
 		catch( Exception $e ){
 //			$this->messenger->noteNotice( "Exception: ".$e->getMessage( ) );
@@ -97,7 +97,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 	}
 
 	protected function checkWalletIsOwn( $walletId, $strict = TRUE ){
-		$wallet		= $this->checkWallet( $walletId );
+		$wallet		= $this->checkWallet( $this->userId, $walletId );
 		$wallets	= $this->logic->getUserWallets( $this->userId );
 		foreach( $wallets as $item )
 			if( $item->Id == $wallet->Id )

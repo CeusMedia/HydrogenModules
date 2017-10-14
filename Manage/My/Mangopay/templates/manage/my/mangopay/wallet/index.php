@@ -27,13 +27,14 @@ class View_Helper_Mangopay_List_Wallet_Big{
 		$helperMoney		= new View_Helper_Mangopay_Entity_Money( $this->env );
 		$helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
+		$helperMoney->setNodeName( 'div' );
 		$list	= array();
 		foreach( $this->wallets as $wallet ){
 		//	print_m( $card );die;
 			$logo		= $helperWalletLogo->setWallet( $wallet->Balance )->render();
 			$balance	= $helperMoney->set( $wallet->Balance )->render();
-			$title		= UI_HTML_Tag::create( 'div', $balance, array( 'class' => 'card-title' ) );
-			$item		= $logo.$title;
+			$title		= UI_HTML_Tag::create( 'div', $wallet->Description, array( 'class' => 'card-title' ) );
+			$item		= $logo.$title.$balance;
 			$url	= sprintf( $this->link, $wallet->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
 			$list[]	= UI_HTML_Tag::create( 'div', $item, array(

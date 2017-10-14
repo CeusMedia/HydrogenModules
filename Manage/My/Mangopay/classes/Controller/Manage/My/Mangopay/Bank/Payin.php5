@@ -19,8 +19,12 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 			$wallet	= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );
 
 		$fees			= $this->moduleConfig->getAll( 'fees.payin.' );
-		$this->saveBackLink( 'from', 'from' );									//  @todo kriss: may be earlier?
-		if( $this->request->getMethod() === "POST" ){									//  form has been executed
+		$this->saveBackLink( 'from', 'from' );											//  @todo kriss: may be earlier?
+		$isPost			= $this->request->getMethod() === "POST";
+		$hasAmount		= strlen( trim( $this->request->get( 'amount' ) ) );
+		$hasCurrency	= strlen( trim( $this->request->get( 'currency' ) ) );
+		$hasWallet		= strlen( trim( $this->request->get( 'walletId' ) ) );
+		if( $isPost && $hasAmount && $hasCurrency && $hasWallet ){						//  form has been executed
 			$walletId		= $this->request->get( 'walletId' );
 			$wallet			= $this->checkWalletIsOwn( $walletId );						//  @todo handle invalid walled
 			try{

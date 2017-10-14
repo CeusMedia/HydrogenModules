@@ -8,6 +8,7 @@ return '
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/wallet/payin/cardWeb/'.$walletId.'" method="post">
 			<input type="hidden" name="forwardTo" value="manage/my/mangopay/wallet/view/'.$walletId.'">
+			<input type="hidden" name="currency" value="'.$wallet->Balance->Currency.'">
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_amount">Geldbetrag</label>

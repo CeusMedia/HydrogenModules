@@ -100,6 +100,9 @@ $panelPayInCards	= '
 	<h3><i class="fa fa-fw fa-credit-card"></i> Einzahlen mit Kreditkarte</h3>
 	<div class="content-panel-inner">
 		'.$listCards.'
+		<div class="buttonbar">
+			<a href="./manage/my/mangopay/card/registration?from=manage/my/mangopay/wallet/'.$walletId.'" class="btn btn-success">'.$iconAdd.' Kredikarte registrieren</a>
+		</div>
 	</div>
 </div>';
 
