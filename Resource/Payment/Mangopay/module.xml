@@ -9,7 +9,7 @@ Cronjobs:
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.8</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -28,6 +28,7 @@ Cronjobs:
 	<log version="0.3.7">Add view for payin.</log>
 	<log version="0.3.8">Add view helper for wallet logo.</log>
 	<log version="0.4">Add job to handle events in background.</log>
+	<log version="0.4.1">Improve caching.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

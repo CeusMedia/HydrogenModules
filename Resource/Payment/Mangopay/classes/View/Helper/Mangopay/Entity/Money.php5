@@ -13,9 +13,11 @@ class View_Helper_Mangopay_Entity_Money{
 	protected $amount			= 0;
 	protected $currency			= "EUR";
 	protected $env;
-	protected $separator		= "&nbsp;";
 	protected $format			= self::FORMAT_CURRENCY_SPACE_AMOUNT;
+	protected $nodeClass		= NULL;
+	protected $nodeName			= 'span';
 	protected $numberFormat		= self::NUMBER_FORMAT_DOT;
+	protected $separator		= "&nbsp;";
 
 	public function __construct( $env ){
 		$this->env		= $env;
@@ -53,6 +55,16 @@ class View_Helper_Mangopay_Entity_Money{
 		return $this;
 	}
 
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
+	}
+
 	public function setNumberFormat( $numberFormat ){
 		$this->numberFormat	= $numberFormat;
 		return $this;
@@ -70,7 +82,8 @@ class View_Helper_Mangopay_Entity_Money{
 			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? ',' : '.',
 			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? '.' : '´'
 		);
-		return sprintf( $this->format, $price, $this->separator, $this->currency );
+		$label	= sprintf( $this->format, $price, $this->separator, $this->currency );
+		return UI_HTML_Tag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
 	}
 }
 ?>

@@ -30,8 +30,8 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 		$bankAccount->Active = FALSE;
 		$result	= $this->provider->Users->UpdateBankAccount( $userId, $bankAccount );
-		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccounts' );
-		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId );
+		$this->uncache( 'user_'.$userId.'_bankaccounts' );
+		$this->uncache( 'user_'.$userId.'_bankaccount_'.$bankAccountId );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount->OwnerName		= $title;
 		$bankAccount->OwnerAddress	= $user->Address;
 		$item	= $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
-		$this->cache->remove( 'mangopay_user_'.$userId.'_bankaccounts' );
+		$this->uncache( 'user_'.$userId.'_bankaccounts' );
 		return $item;
 	}
 
@@ -129,6 +129,33 @@ print_m( $items );
 /*		$payIn->PaymentDetails->BankAccount				= $bankAccount;
 		$payIn->PaymentDetails->WireReference			= "BankWire PayIn 1";
 */
+		// execution type as DIRECT
+		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+
+		// create Pay-In
+		return $this->provider->PayIns->Create( $payIn );
+	}
+
+	/**
+	 *	@todo		test (not tested since no mandates allowed, yet)
+	 */
+	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $amount ){
+
+		$payIn	= new \MangoPay\PayIn();
+		$payIn->AuthorId			= $userId;
+		$payIn->CreditedWalletId	= $walletId;
+		$payIn->DebitedFunds		= new \MangoPay\Money();
+		$payIn->Fees				= new \MangoPay\Money();
+
+		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Currency	= "EUR";
+
+		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
+		$payIn->DebitedFunds->Currency	= "EUR";
+
+		$payIn->PaymentDetails	= new \MangoPay\PayInPaymentDetailsDirectDebitDirect();
+		$payIn->PaymentDetails->MandateId	=
+
 		// execution type as DIRECT
 		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
 
@@ -240,6 +267,16 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 
 	public function getClientWallet( $fundsType, $currency ){
 		return $this->provider->Clients->GetWallet( $fundsType, $currency );
+	}
+
+	/**
+	 *	@todo			implement
+	 */
+	public function getDefaultCurrency( $userId = NULL ){
+		$currency	= 'EUR';
+		if( $userId ){
+
+		}
 	}
 
 	public function getEventResource( $eventType, $resourceId, $force = FALSE ){
@@ -428,8 +465,8 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
 			$hook->Url			= $this->env->url.trim( $path );
-			$this->cache->remove( 'mangopay_hooks' );
-			$this->cache->remove( 'mangopay_hook_'.$id );
+			$this->uncache( 'hooks' );
+			$this->uncache( 'hook_'.$id );
 			return $this->provider->Hooks->Update( $hook );
 		}
 		else{
@@ -446,10 +483,32 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$this->skipCacheOnNextRequest	= (bool) $skip;
 	}
 
+	protected function uncache( $key ){
+		$this->cache->remove( 'mangopay_'.$key );
+	}
+
 	public function updateUser( $user ){
-		$this->cache->remove( 'user_'.$user->Id );
+		$this->uncache( 'user_'.$user->Id );
 		return $this->provider->Users->Update( $user );
 	}
+
+	public function updateUserWallet( $userId, $walletId, $description, $tag = NULL ){
+		$wallet		= $this->getUserWallet( $userId, $walletId );
+		$wallet->Description = $description;
+		if( $tag !== NULL )
+			$wallet->Tag = $tag;
+		$this->uncache( 'user_'.$userId.'_wallets' );
+		$this->uncache( 'user_'.$userId.'_wallet_'.$walletId );
+		return $this->provider->Wallets->Update( $wallet );
+	}
+
+/*	not working - only possible update: Active = FALSE
+	public function updateUserBankAccount( $userId, $bankAccountId, $tag ){
+		$bankAccount	= $this->getUserBankAccount( $userId, $bankAccountId );
+		$bankAccount->Tag = $tag;
+		$this->cache->remove( 'user_'.$user->Id );
+		return $this->provider->Users->UpdateBankAccount( $userId, $bankAccount );
+	}*/
 
 	/**
 	 *	@link	https://stackoverflow.com/a/174772

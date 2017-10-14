@@ -49,7 +49,6 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		$this->addData( 'currentUrl', $hooks ? $hooks[0]->Url : '' );
 	}
 
-
 	protected function handleMangopayResponseException( $e ){
 		ob_start();
 		print_r( $e->GetErrorDetails() );

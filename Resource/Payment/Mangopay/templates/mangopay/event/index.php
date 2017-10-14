@@ -38,6 +38,13 @@ $tbody	= UI_HTML_Tag::create( 'tbody', $list );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '80', '140' ) );
 $list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
+$iconRefresh	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+
+$buttonReload	= UI_HTML_Tag::create( 'a', $iconRefresh.' aktualisieren', array(
+	'href'		=> './mangopay/event'.( $page ? '/'.$page : '' ).'?'.time(),
+	'class'		=> 'btn',
+) );
+
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './mangopay/event', $page, $pages );
 
 return UI_HTML_Tag::create( 'div', array(
@@ -45,7 +52,8 @@ return UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		$list,
 		UI_HTML_Tag::create( 'div', array(
-			$pagination,
+			$pagination, ' ',
+			$buttonReload, ' ',
 		), array( 'class' => 'buttonbar' ) )
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
