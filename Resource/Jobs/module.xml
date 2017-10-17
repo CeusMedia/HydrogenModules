@@ -13,7 +13,7 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.5</version>
+	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -34,6 +34,9 @@ code:html>php job.php5 JOB_ID [ARG]*<code
 	<log version="0.4.6">Add jobs to get PHP version and PHP extension version.</log>
 	<log version="0.4.7">Apply shebang line to job script.</log>
 	<log version="0.5">Change handling of run parameters.</log>
+	<log version="0.5.1">Removed outdated library loading in job script.</log>
+	<log version="0.5.2">Capsulated error handling and reporting in job script.</log>
+	<log version="0.5.3">Let job script detect application path to be run from anywhere.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
