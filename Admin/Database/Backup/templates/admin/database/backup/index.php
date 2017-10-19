@@ -6,7 +6,7 @@ $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert
 if( $dumps ){
 	$list	= array();
 	foreach( $dumps as $dump ){
-		$link	= UI_HTML_Tag::create( 'a', $dump->filename, array( 'href' => './admin/backup/database/view/'.$dump->id ) );
+		$link	= UI_HTML_Tag::create( 'a', $dump->filename, array( 'href' => './admin/database/backup/view/'.$dump->id ) );
 		$date	= UI_HTML_Tag::create( 'span', date( 'd.m.Y', $dump->timestamp ), array( 'class' => '' ) );
 		$time	= UI_HTML_Tag::create( 'small', date( 'H:i:s', $dump->timestamp ), array( 'class' => 'muted' ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
@@ -23,7 +23,7 @@ if( $dumps ){
 }
 
 $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Sicherung anlegen', array(
-	'href'	=> './admin/backup/database/backup',
+	'href'	=> './admin/database/backup/backup',
 	'class'	=> 'btn btn-success',
 ) );
 

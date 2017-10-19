@@ -6,19 +6,19 @@ $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-dow
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', array(
-	'href'	=> './admin/backup/database/',
+	'href'	=> './admin/database/backup/',
 	'class'	=> 'btn'
 ) );
 $buttonRestore	= UI_HTML_Tag::create( 'a', $iconRestore.' wiederherstellen', array(
-	'href'	=> './admin/backup/database/restore/'.$dump->id,
+	'href'	=> './admin/database/backup/restore/'.$dump->id,
 	'class'	=> 'btn btn-primary'
 ) );
 $buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload.' herunterladen', array(
-	'href'	=> './admin/backup/database/download/'.$dump->id,
+	'href'	=> './admin/database/backup/download/'.$dump->id,
 	'class'	=> 'btn btn-info'
 ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
-	'href'	=> './admin/backup/database/remove/'.$dump->id,
+	'href'	=> './admin/database/backup/remove/'.$dump->id,
 	'class'	=> 'btn btn-danger'
 ) );
 

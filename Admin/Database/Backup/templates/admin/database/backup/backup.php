@@ -2,7 +2,7 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', array(
-	'href'		=> './admin/backup/database',
+	'href'		=> './admin/database/backup',
 	'class'		=> 'btn',
 ) );
 $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;Sicherung erstellen', array(
@@ -15,7 +15,7 @@ return '
 <div class="content-panel">
 	<h3>Sicherung erstellen</h3>
 	<div class="content-panel-inner">
-		<form action="./admin/backup/database/backup" method="post">
+		<form action="./admin/database/backup/backup" method="post">
 		<p>Hierbei wird nur der Datenbank in der Datenbank gesichert.</p>
 		<div class="row-fluid">
 			<div class="span4">

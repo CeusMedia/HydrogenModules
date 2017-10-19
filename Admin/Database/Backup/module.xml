@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
-	<title>Admin: Backup: Database</title>
-	<description><![CDATA[...]]></description>
+	<title>Admin: Database: Backup</title>
+	<description><![CDATA[Backup and resort database dumps.]]></description>
 	<category>Administration</category>
 	<version>0.2</version>
 	<log version="0.1">Initial prototype.</log>
@@ -10,11 +10,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Backup/Database.php5</class>
-		<class>View/Admin/Backup/Database.php5</class>
-		<template>admin/backup/database/backup.php</template>
-		<template>admin/backup/database/index.php</template>
-		<template>admin/backup/database/view.php</template>
+		<class>Controller/Admin/Database/Backup.php5</class>
+		<class>View/Admin/Database/Backup.php5</class>
+		<template>admin/database/backup/backup.php</template>
+		<template>admin/database/backup/index.php</template>
+		<template>admin/database/backup/view.php</template>
 <!--		<file>config/jobs/admin.backup.database.xml</file>-->
 	</files>
 <!--	<config protected="yes" type="boolean" name="enabled">1</config>-->

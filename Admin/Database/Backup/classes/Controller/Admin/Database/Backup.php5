@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Backup_Database extends CMF_Hydrogen_Controller{
+class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 
 	protected $moduleConfig;
 	protected $dumps;
@@ -9,7 +9,7 @@ class Controller_Admin_Backup_Database extends CMF_Hydrogen_Controller{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->config->getAll( 'module.admin_backup_database.', TRUE );
+		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
 		$this->path			= $this->moduleConfig->get( 'path' );
 		$this->commentsFile	= $this->path.'comments.json';
 		if( !file_exists( $this->path ) )
@@ -62,7 +62,7 @@ class Controller_Admin_Backup_Database extends CMF_Hydrogen_Controller{
 
 	public function download( $id ){
 		$dump	= $this->check( $id );
-		Net_HTTP_Download::sendFile( $dump->pathname, $dump->filename, TRUE );
+		\Net_HTTP_Download::sendFile( $dump->pathname, $dump->filename, TRUE );
 	}
 
 	protected function dump(){
