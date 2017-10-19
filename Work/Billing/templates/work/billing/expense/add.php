@@ -72,7 +72,7 @@ return '
 						</div>
 						<div class="span2">
 							<label for="input_amount">Betrag</label>
-							<input type="number" min="1"  name="amount" id="input_amount" class="span10 input-number" required="required"/><span class="suffix">&euro;</span>
+							<input type="number" min="1" step="0.01" name="amount" id="input_amount" class="span10 input-number" required="required"/><span class="suffix">&euro;</span>
 						</div>
 						<div class="span2">
 							<label for="input_status">Zustand</label>
