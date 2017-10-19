@@ -1,5 +1,4 @@
 <?php
-
 class Logic_Billing{
 
 	protected $env;
@@ -597,7 +596,7 @@ class Logic_Billing{
 		$amount		= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 		$billShares	= $this->getBillShares( $billId );
 		foreach( $billShares as $billShare ){
-			if( $billShare->percent )
+			if( (float) $billShare->percent )
 				$amount -= $billShare->amount;
 		}
 		$this->modelBill->edit( $billId, array(
@@ -617,7 +616,7 @@ class Logic_Billing{
 		foreach( $reserves as $reserve ){										//  iterate reserves
 			if( (float) $reserve->percent )										//  either relative reserve
 				$reservesPercent	+= $reserve->percent;						//  then sum percentage
-			else if( $reserve->amount )											//  otherwise absolute reserve
+			else if( (float) $reserve->amount )									//  otherwise absolute reserve
 				$reservesAmount		+= $reserve->amount;						//  then sum amount
 		}
 		$reducedAmount	= $amount - $reservesAmount;							//  subtract absolute reserves
@@ -637,7 +636,7 @@ class Logic_Billing{
 		$amount		= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 		$billShares	= $this->getBillShares( $billId );
 		foreach( $billShares as $billShare ){
-			if( $billShare->percent ){
+			if( (float) $billShare->percent ){
 				$this->modelBillShare->edit( $billShare->billShareId, array(
 					'amount'	=> $amount * $billShare->percent / 100
 				) );

@@ -69,16 +69,16 @@ if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 	$missingPercent	= ( $leftAmount - $sharedAmount ) / $leftAmount * 100;
 
 	if( $missingAmount < 0 ){
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', ',' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelAmount	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', ',' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
+		$labelAmount	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else if( $missingAmount > 0 ){
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', ',' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', ',' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
+		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else{
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', ',' ).'&nbsp;%', array( 'class' => 'text-success' ) );
-		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', ',' ).'&nbsp;&euro;', array( 'class' => 'text-success' ) );
+		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-success' ) );
+		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-success' ) );
 	}
 
 	$list[]	= UI_HTML_Tag::create( 'tr', array(
@@ -232,7 +232,7 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 				</div>
 				<div class="span4">
 					<label for="input_percent"><small class="muted">entweder</small> Prozent</label>
-					<input type="number" step="0.01" min="0" max="100" name="percent" id="input_percent" class="span12 input-number" placeholder="0,00"/>
+					<input type="number" step="0.01" min="0" max="100" name="percent" id="input_percent" class="span12 input-number" value="'.number_format( $missingPercent, 2, '.', '' ).'"/>
 				</div>
 				<div class="span4">
 					<label for="input_amount"><small class="muted">oder</small> <strong>Netto</strong>betrag</label>
