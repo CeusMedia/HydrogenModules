@@ -70,7 +70,8 @@ class View_Work_Billing_Helper_Transactions{
 			$bill			= $this->logic->getBill( $billReserve->billId );
 			$linkReserve	= UI_HTML_Tag::create( 'a', $billReserve->title, array( 'href' => './work/billing/reserve/edit/'.$billReserve->reserveId ) );
 			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$title			= 'Rücklage '.$linkReserve.' aus Rechnung '.$linkBill;
+			$prefix			= UI_HTML_Tag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', array( 'class' => 'muted' ) );
+			$title			= $prefix.$linkBill;
 		}
 /*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
 			$id			= preg_replace( '/^bill:([0-9]+)$/', '\\1', $relation );
@@ -81,15 +82,17 @@ class View_Work_Billing_Helper_Transactions{
 		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
 			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
 			$expense	= $this->modelExpense->get( $id );
-			$link		= $this->transformDateInTitle( $expense->title );
-			$link		= UI_HTML_Tag::create( 'a', $link, array( 'href' => './work/billing/expense/edit/'.$id ) );
+			$prefix		= UI_HTML_Tag::create( 'small', 'Ausgabe: ', array( 'class' => 'muted' ) );
+			$link		= UI_HTML_Tag::create( 'a', $prefix.$transaction->title, array( 'href' => './work/billing/expense/edit/'.$id ) );
 			$title		= $link;
 		}
 		else if( preg_match( '/\|payin\|/', $relation ) ){
-			$title		= 'Einzahlung: '.$transaction->title;
+			$prefix		= UI_HTML_Tag::create( 'small', 'Einzahlung: ', array( 'class' => 'muted' ) );
+			$title		= $prefix.$transaction->title;
 		}
 		else if( preg_match( '/\|payout\|/', $relation ) ){
-			$title		= 'Auszahlung: '.$transaction->title;
+			$prefix		= UI_HTML_Tag::create( 'small', 'Auszahlung: ', array( 'class' => 'muted' ) );
+			$title		= $prefix.$transaction->title;
 		}
 		return $title;
 	}
@@ -153,7 +156,7 @@ class View_Work_Billing_Helper_Transactions{
 
 				$id		= UI_HTML_Tag::create( 'small', $transaction->transactionId );
 				$list[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', $id, array( 'class' => 'cell-number' )  ),
+				/*	UI_HTML_Tag::create( 'td', $id, array( 'class' => 'cell-number' ) ),*/
 					UI_HTML_Tag::create( 'td', $title ),
 					UI_HTML_Tag::create( 'td', $from ),
 					UI_HTML_Tag::create( 'td', $to ),
@@ -161,9 +164,9 @@ class View_Work_Billing_Helper_Transactions{
 					UI_HTML_Tag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 				), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
 			}
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array( '45', '', '160', '160', '80', '80' ) );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( array( /*'45', */'', '200', '200', '100', '100' ) );
 			$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),
+/*				UI_HTML_Tag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),*/
 				UI_HTML_Tag::create( 'th', 'Vorgang' ),
 				UI_HTML_Tag::create( 'th', 'Zu Lasten' ),
 				UI_HTML_Tag::create( 'th', 'Zu Gunsten' ),
