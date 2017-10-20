@@ -156,13 +156,17 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 			if( !preg_match( '/\.sql$/', $entry->getFilename() ) )
 				continue;
 			$id			= base64_encode( $entry->getFilename() );
-			$timestamp	= filemtime( $entry->getPathname() );
+
+			$timestamp	= preg_replace( '/[a-z_]/', ' ', $entry->getFilename() );
+			$timestamp	= strtotime( rtrim( trim( $timestamp ), '.' ) );
+			if( !$timestamp )
+				$timestamp	= filemtime( $entry->getPathname() );
 
 			$comment	= '';
 			if( array_key_exists( $id, $this->comments ) )
 				$comment	= $this->comments[$id];
 
-			$list[$timestamp]	= (object) array(
+			$list[$timestamp.uniqid()]	= (object) array(
 				'id'			=> $id,
 				'filename'		=> $entry->getFilename(),
 				'pathname'		=> $entry->getPathname(),

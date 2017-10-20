@@ -2,18 +2,26 @@
 
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
+
 $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $dumps ){
 	$list	= array();
 	foreach( $dumps as $dump ){
 		$link	= UI_HTML_Tag::create( 'a', $dump->filename, array( 'href' => './admin/database/backup/view/'.$dump->id ) );
-		$date	= UI_HTML_Tag::create( 'span', date( 'd.m.Y', $dump->timestamp ), array( 'class' => '' ) );
-		$time	= UI_HTML_Tag::create( 'small', date( 'H:i:s', $dump->timestamp ), array( 'class' => 'muted' ) );
+		if( class_exists ( 'View_Helper_TimePhraser' ) ){
+			$helper			= new View_Helper_TimePhraser( $env );
+			$creationDate	= $helper->convert( $dump->timestamp, TRUE, 'vor ' );
+		}
+		else {
+			$date			= UI_HTML_Tag::create( 'span', date( 'd.m.Y', $dump->timestamp ), array( 'class' => '' ) );
+			$time			= UI_HTML_Tag::create( 'small', date( 'H:i:s', $dump->timestamp ), array( 'class' => 'muted' ) );
+			$creationDate	= $date.' '.$time;
+		}
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $dump->comment, array( 'class' => 'muted' ) ) ),
 			UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $dump->filesize ) ),
-			UI_HTML_Tag::create( 'td', $date.' '.$time ),
+			UI_HTML_Tag::create( 'td', $creationDate ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '33%', '', '100px', '150px' ) );
