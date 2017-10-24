@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.7.1</version>
+	<version>0.7.2</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -26,6 +26,7 @@
 	<log version="0.6.9">Prefix all form elements with namespace.</log>
 	<log version="0.7">Change module column to controller and action.</log>
 	<log version="0.7.1">Support search module.</log>
+	<log version="0.7.2">Support page access.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -51,6 +52,7 @@
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Page::___onRenderContent</hook>
 	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Page::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Controller" event="onDetectPath">Controller_Info_Page::___onControllerDetectPath</hook>
+	<hook type="resource" resource="Env" event="constructEnd">Controller_Info_Page::___onEnvConstructEnd</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (

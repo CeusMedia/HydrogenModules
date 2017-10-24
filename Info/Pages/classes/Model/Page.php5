@@ -29,6 +29,7 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'identifier',
 		'controller',
 		'action',
+		'access',
 		'title',
 		'content',
 		'format',
@@ -49,6 +50,7 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'identifier',
 		'controller',
 		'action',
+		'access',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

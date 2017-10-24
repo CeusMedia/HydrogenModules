@@ -78,6 +78,36 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 
+	static public function ___onEnvConstructEnd( $env, $context, $module, $data ){
+		if( !$env->getModules()->has( 'Resource_Authentication' ) )
+			return;
+		if( file_exists( 'config/pages.json' ) )
+			return;
+		$acl	= $env->getAcl();
+		$model	= new Model_Page( $env );
+		$pages	= $model->getAll();
+		foreach( $pages as $page ){
+			$path	= '';
+		 	if( $page->type == 0 && strlen( trim( $page->content ) ) ){
+				$path	= 'info_page_'.$page->identifier;
+			}
+			else if( $page->type == 2 ){
+				$path	= strtolower( $page->controller );
+				if( $page->action )
+					$path	.= '_'.$page->action;
+			}
+			if( !$path )
+				continue;
+			if( $page->access == "public" ){
+				$acl->setPublicLinks( array( $path ), 'append' );
+				$acl->setPublicLinks( array( $path.'_index' ), 'append' );
+			}
+			else if( $subpage->access == "outside" ){
+				$acl->setPublicOutsideLinks( array( $path ), 'append' );
+				$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
+			}
+		}
+	}
 
 	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
 		try{
