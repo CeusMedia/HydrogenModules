@@ -12,6 +12,7 @@
 	<files>
 		<class>Controller/Ace.php5</class>
 		<locale>de/html/app.brand.html</locale>
+		<locale>de/html/index/content.html</locale>
 		<template>index/index.php</template>
 	</files>
 	<relations>
