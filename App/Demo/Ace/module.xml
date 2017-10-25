@@ -3,12 +3,14 @@
 	<title>App: Demo: Ace</title>
 	<description><![CDATA[Ace editor demo.]]></description>
 	<category>Application</category>
-	<version>0.2</version>
+	<version>0.3</version>
 	<log version="0.1">Prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Implement auto save.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Ace.php5</class>
 		<locale>de/html/app.brand.html</locale>
 		<template>index/index.php</template>
 	</files>
