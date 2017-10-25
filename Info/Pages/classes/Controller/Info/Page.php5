@@ -85,28 +85,24 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			return;
 		$acl	= $env->getAcl();
 		$model	= new Model_Page( $env );
-		$pages	= $model->getAll();
+		$pages	= $model->getAll( array( 'type' => 2 ) );
+
+		$paths	= array( 'public' => array(), 'inside' => array(), 'outside' => array() );
+		$paths['public'][] = 'info_page_index';
+
 		foreach( $pages as $page ){
-			$path	= '';
-		 	if( $page->type == 0 && strlen( trim( $page->content ) ) ){
-				$path	= 'info_page_'.$page->identifier;
-			}
-			else if( $page->type == 2 ){
-				$path	= strtolower( $page->controller );
-				if( $page->action )
-					$path	.= '_'.$page->action;
-			}
-			if( !$path )
-				continue;
-			if( $page->access == "public" ){
-				$acl->setPublicLinks( array( $path ), 'append' );
-				$acl->setPublicLinks( array( $path.'_index' ), 'append' );
-			}
-			else if( $subpage->access == "outside" ){
-				$acl->setPublicOutsideLinks( array( $path ), 'append' );
-				$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
-			}
+			$path	= strtolower( $page->controller );
+			$methods = [];
+			$reflection = new ReflectionClass( 'Controller_'.$page->controller );
+			foreach( $reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method )
+				if( !$method->isStatic() && substr( $method->name, 0, 1 ) !== '_' )
+					if( $method->class == $reflection->getName() )
+						if( array_key_exists( $page->access, $paths ) )
+							$paths[$page->access][] = $path.'_'.$method->name;
 		}
+			$acl->setPublicLinks( $paths['public'], 'append' );
+			$acl->setPublicInsideLinks( $paths['inside'], 'append' );
+			$acl->setPublicOutsideLinks( $paths['outside'], 'append' );
 	}
 
 	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
@@ -119,7 +115,11 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
 					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
-						$indices	= array( 'status' => '>0', 'parentId' => $page->pageId );		//  focus on active pages on sub level
+						$indices	= array(														//  focus on active pages on sub level
+							'status'	=> '>0',
+							'access'	=> array( 'public', 'outside' ),
+							'parentId'	=> $page->pageId
+						);
 						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
 						foreach( $subpages as $subpage ){											//  iterate found pages
 							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
@@ -138,7 +138,12 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 					}
 				}
 
-				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 1 );				//  focus on active top pages of main navigation scope
+				$indices	= array(																//  focus on active top pages of main navigation scope
+					'status'	=> '>0',
+					'access'	=> array( 'public', 'outside' ),
+					'parentId'	=> 0,
+					'scope'		=> 1
+				);
 				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
@@ -200,6 +205,10 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 		$logic		= new Logic_Page( $this->env );													//  get page logic instance
 		$pageId		= strlen( trim( $pageId ) ) ? trim( $pageId ) : 'index';						//  ensure page ID is not empty
 		$page		= $logic->getPageFromPath( $pageId, TRUE );										//  try to find page for page ID
+
+		if( !$logic->isAccessible( $page ) )
+			throw new RuntimeException( 'Access denied', 403 );
+
 		if( $accessGranted && $page ){																//  access allowed and valid page ID
 			$this->addData( 'page', $page );														//  provide page object to view
 		}

@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `identifier` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `controller` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `action` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `access` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'public',
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
   `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
@@ -83,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   KEY `identifier` (`identifier`),
   KEY `controller` (`controller`),
   KEY `action` (`action`),
+  KEY `access` (`access`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
@@ -123,5 +125,12 @@ ALTER TABLE `<%?prefix%>pages` ADD `icon` VARCHAR(30) DEFAULT NULL AFTER `priori
 	<sql on="update" type="mysql" version="0.7"><![CDATA[
 ALTER TABLE `<%?prefix%>pages` CHANGE `module` `controller` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
 ALTER TABLE `<%?prefix%>pages` ADD `action` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `controller`, ADD INDEX (`action`);
+]]></sql>
+	<sql on="update" type="mysql" version="0.7.2"><![CDATA[
+ALTER TABLE `<%?prefix%>pages` ADD `access` VARCHAR( 10 ) NOT NULL DEFAULT 'public' AFTER `action` ,
+ADD INDEX ( `access` ) ;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>pages`;
 ]]></sql>
 </module>

@@ -97,5 +97,13 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function hasPage( $path ){
 		return (bool) $this->getPageFromPath( $path );
 	}
+
+	public function isAccessible( $page ){
+		$isAuthenticated	= $this->env->getSession()->get( 'userId' );
+		$public		= $page->access == "public";
+		$outside	= !$isAuthenticated && $page->access == "outside";
+		$inside		= $isAuthenticated && $page->access == "inside";
+		return $public || $outside || $inside;
+	}
 }
 ?>
