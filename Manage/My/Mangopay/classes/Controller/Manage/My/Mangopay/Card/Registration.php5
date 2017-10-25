@@ -21,6 +21,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 	}
 
 	public function index(){
+//			$this->logic->uncache( 'user_'.$this->userId.'_cards' );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 		$cards	= $this->logic->getUserCards( $this->userId );
@@ -92,6 +93,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 /*			$card	= $this->checkIsOwnCard( $registration->CardId );
 			$card->Tag	= $registration->Tag;
 			$this->mangopay->Cards->Update( $card );*/
+			$this->logic->uncache( 'user_'.$this->userId.'_cards' );
 			$this->env->getMessenger()->noteSuccess( 'Credit Card has been created.' );
 			$cacheKey	= 'user_'.$this->userId.'_cards';
 			$this->cache->remove( $cacheKey );

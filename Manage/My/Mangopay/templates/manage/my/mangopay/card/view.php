@@ -18,11 +18,11 @@ $panelView	= '
 	<h3><i class="fa fa-fw fa-credit-card"></i> Kreditkarte</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
-			<div class="span3">
+			<div class="span4">
 				<label>Anbieter</label>
 				<div class="value">'.$card->CardProvider.'</div>
 			</div>
-			<div class="span6">
+			<div class="span5">
 				<label>Card Number</label>
 				<div class="value">'.$helperCardNumber->set( $card->Alias )->render().'</div>
 			</div>
@@ -32,11 +32,11 @@ $panelView	= '
 			</div>
 		</div>
 		<div class="row-fluid">
-			<div class="span4">
+			<div class="span5">
 				<label>Land</label>
 				<div class="value">'.$card->Country.'</div>
 			</div>
-			<div class="span4">
+			<div class="span3">
 				<label>Währung</label>
 				<div class="value">'.$card->Currency.'</div>
 			</div>
@@ -46,53 +46,32 @@ $panelView	= '
 			</div>
 		</div>
 <!--		'.print_m( $card, NULL, NULL, TRUE ).'-->
-		<div class="buttonbar">
+<!--		<div class="buttonbar">
 			<a href="'.$linkBack.'" class="btn"><b class="fa fa-arrow-left"></b> zurück</a>
 			&nbsp;|&nbsp;
 			'.$buttonPayIn.'
 			'.$buttonPreAuth.'
 			&nbsp;|&nbsp;
 			'.$buttonPayOut.'
-		</div>
+		</div>-->
 	</div>
 </div>';
 
 
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-remove" ) );
-$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' entfernen', array(
-	'type'		=> 'submit',
-	'name'		=> 'save',
-	'class'		=> 'btn btn-danger',
-) );
 
-$panelRemove	= '
-<div class="content-panel panel-mangopay-view" id="panel-mangopay-card-view">
-	<h3><i class="fa fa-fw fa-credit-card"></i> Kreditkarte abmelden</h3>
-	<div class="content-panel-inner">
-		<form action="./manage/my/mangopay/card/deactivate/'.$cardId.'" method="post">
-			<p>
-				...
-			</p>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_password">Passwort</label>
-					<input type="password" name="password" id="input_password"/>
-				</div>
-			</div>
-			<div class="buttonbar">
-				'.$buttonRemove.'
-			</div>
-		</form>
-	</div>
-</div>';
+$panelPayin		= $view->loadTemplateFile( 'manage/my/mangopay/card/view.payin.php' );
+$panelRemove	= $view->loadTemplateFile( 'manage/my/mangopay/card/view.remove.php' );
 
 return '
+<h2><a class="muted" href="./manage/my/mangopay/card">Kreditkarte</a> '.$card->CardProvider.'</h2>
 <div class="row-fluid">
 	<div class="span6">
-		'.$panelView.'
+		'.$panelPayin.'
 	</div>
 	<div class="span6">
+		'.$panelView.'
 		'.$panelRemove.'
-		'./*$panelTransactions.*/'
 	</div>
-</div>';
+</div>
+'./*$panelTransactions.*/'
+';

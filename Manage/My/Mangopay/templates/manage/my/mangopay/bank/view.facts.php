@@ -87,10 +87,10 @@ return '
 		</div>
 		'.$inputAddressLine2.'-->
 <!--		'.print_m( $bankAccount, NULL, NULL, TRUE ).'-->
-		<div class="buttonbar">
+<!--		<div class="buttonbar">
 			<a href="'.$linkBack.'" class="btn">'.$iconList.' zurück zur Liste</a>
 			'.$buttonPayIn.'
 			'.$buttonPayOut.'
-		</div>
+		</div>-->
 	</div>
 </div>';

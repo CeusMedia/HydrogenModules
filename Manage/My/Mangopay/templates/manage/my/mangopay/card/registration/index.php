@@ -1,6 +1,6 @@
 <?php
 
-//print_m( $words['cardProviders'] );die;
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
 
 $helperCardLogo	= new View_Helper_Mangopay_Entity_CardProviderLogo( $env );
 $helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMALL );
@@ -33,9 +33,16 @@ $cardTypes	= array(
 	),
 );
 foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
-	$logo	= $helperCardLogo->setProvider( $cardTypeKey )->render();
+	$logo		= $helperCardLogo->setProvider( $cardTypeKey )->render();
+	$helperUrl	= new \View_Helper_Mangopay_URL( $env );
+	$helperUrl->set( 'manage/my/mangopay/card/registration' );
+	$helperUrl->setParameter( 'cardType', $cardTypeItem->type );
+	$helperUrl->setParameter( 'cardProvider', $cardTypeKey );
+	$helperUrl->setBackwardTo( TRUE );
+	$helperUrl->setForwardTo( TRUE );
+	$helperUrl->setFrom( TRUE );
 	$link	= UI_HTML_Tag::create( 'a', $logo.'&nbsp;'.$cardTypeItem->provider, array(
-		'href'	=> './manage/my/mangopay/card/registration?cardType='.$cardTypeItem->type.'&cardProvider='.$cardTypeKey.'&forwardTo='.$forwardTo,
+		'href'	=> $helperUrl->render(),
 	) );
 	$list[]	= UI_HTML_Tag::create( 'li', $link, array(
 		'class'	=> $cardProvider == $cardTypeKey ? 'active' : NULL,
@@ -95,9 +102,18 @@ $part2	= '
 ';
 
 if( $cardType ){
-	$linkBack	= 'manage/my/mangopay/card/registration';
-	if( $backwardTo )
-		$linkBack	.= '?backwardTo='.$backwardTo;
+	$helperUrl	= new \View_Helper_Mangopay_URL( $env );
+	$helperUrl->set( $backwardTo ? $backwardTo : 'manage/my/mangopay/card/registration' );
+	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
+	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
+	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
+	$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
+	$buttonSave		= UI_HTML_Tag::create( 'button', '<b class="fa fa-check"></b> registrieren', array(
+		'type'		=> "submit",
+		'name'		=> "save",
+		'value'		=> "register",
+		'class'		=> "btn btn-primary"
+	) );
 	$form	= '
 		<form action="'.$registration->CardRegistrationURL.'" method="post">
 			<input type="hidden" name="data" value="'.$registration->PreregistrationData.'" />
@@ -113,13 +129,18 @@ if( $cardType ){
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
-				<button type="submit" name="save" value="register" class="btn btn-primary"><b class="fa fa-check"></b> registrieren</button>
+				'.$buttonCancel.'
+				'.$buttonSave.'
 			</div>
 		</form>';
 }
 else{
-	$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
+	$helperUrl	= new \View_Helper_Mangopay_URL( $env );
+	$helperUrl->set( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
+	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
+	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
+	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
+	$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
 	$form	= '
 		<form action="./manage/my/mangopay/card/registration" method="post">
 			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>
@@ -130,7 +151,7 @@ else{
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="'.$linkBack.'" class="btn btn-small"><b class="fa fa-arrow-left"></b> zurück</a>
+				'.$buttonCancel.'
 			</div>
 		</form>';
 }
@@ -141,22 +162,7 @@ return '
 		'.$form.'
 	</div>
 </div>
-<style>
-ul.nav li a img {
-	padding-right: 10px;
-	}
-ul.nav li a {
-	font-size: 1.1em;
-	}
-input.success {
-	background-color: rgba(140, 255, 120, 0.25);
-	}
-input.error {
-	background-color: rgba(255, 140, 120, 0.25);
-	}
-</style>
 <script>
-
 jQuery(document).ready(function(){
 	ModulePaymentMangopayCardRegistration.cardProvider = "'.$cardProvider.'";
 	ModulePaymentMangopayCardRegistration.init();

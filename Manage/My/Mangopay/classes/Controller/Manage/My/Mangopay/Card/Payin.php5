@@ -28,7 +28,6 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			$message	= sprintf( 'Unknown error code: %s', $errorCode );
 		}
 		$this->messenger->noteError( $message );
-
 //		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
 //		if( !array_key_exists( $errorCode, $errorCodes ) )
 //			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
@@ -76,11 +75,15 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			$this->messenger->noteError( 'No PreAuthorization ID given.' );
 			$this->restart( 'payInPreAuthorized', TRUE );
 		}
-
 		$preAuth	= $this->mangopay->CardPreAuthorizations->Get( $preAuthId );
 		if( !$preAuth ){
 			$this->messenger->noteError( 'Invalid PreAuth.' );
 			$this->restart( 'payin', TRUE );
+		}
+
+		if( $preAuth->Status === 'FAILED' ){
+			$this->handleErrorCode( $preAuth->ResultCode, TRUE );
+			$this->restart( 'preAuthorized/'.$cardId.'/'.$walletId, TRUE );
 		}
 		$this->handlePreAuthorized( $preAuthId, $cardId, $walletId );
 	}
@@ -166,6 +169,8 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'cardId', $cardId );
 		$this->addData( 'card', $card );
 		$this->addData( 'from', $this->request->get( 'from' ) );
+		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
 
@@ -174,10 +179,13 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$card	= $this->checkIsOwnCard( $cardId, FALSE, array( '') );
 		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
-
 			$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
-			$wallet		= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
+			$wallet		= $this->checkWalletIsOwn( $walletId );
 			$amount		= round ( $this->request->get( 'amount' ) * 100 );
+
+			$helperUrl	= new \View_Helper_Mangopay_URL( $this->env );
+			$helperUrl->set( 'manage/my/mangopay/card/payin/handlePreAuthorizedSecureMode/'.$cardId.'/'.$walletId );
+			$helperUrl->setBackwardTo( TRUE )->setForwardTo( TRUE )->setFrom( TRUE );
 
 			$preAuth	= new \MangoPay\CardPreAuthorization();
 			$preAuth->AuthorId		= $this->userId;
@@ -185,14 +193,12 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			$preAuth->DebitedFunds	= new \MangoPay\Money();
 			$preAuth->DebitedFunds->Amount		= $amount;
 			$preAuth->DebitedFunds->Currency	= $this->currency;
-			$preAuth->SecureModeReturnURL		= $this->env->url.'manage/my/mangopay/card/payin/handlePreAuthorizedSecureMode/'.$cardId.'/'.$walletId;
+			$preAuth->SecureModeReturnURL		= $helperUrl->render();
 			$createdPreAuth		= $this->mangopay->CardPreAuthorizations->Create( $preAuth );
-
 			if( $createdPreAuth->Status === \MangoPay\CardPreAuthorizationStatus::Failed ){
-//				print_m( $createdPreAuth );die;
 				$this->handleErrorCode( $createdPreAuth->ResultCode, FALSE );
 				$this->followBackLink( 'payin_from' );
-				$this->restart( 'view/'.$cardId, TRUE );
+				$this->restart( 'manage/my/mangopay/card/view/'.$cardId );
 			}
 			else if( $createdPreAuth->Status === \MangoPay\CardPreAuthorizationStatus::Created ){
 				$this->session->set( 'preAuthId', $createdPreAuth->Id );

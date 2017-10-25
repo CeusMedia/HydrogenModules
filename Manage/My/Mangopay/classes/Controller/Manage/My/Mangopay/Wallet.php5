@@ -18,28 +18,6 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		}
 	}
 
-	public function payOut( $walletId ){
-		$wallet		= $this->checkWalletIsOwn( $walletId );
-
-		if( $this->request->has( 'save' ) ){
-			$amount	= $this->request->get( 'amount' );
-			if( $amount < 100 ){
-				$this->messenger->noteError( 'Amount must be larger than 1' );
-				$this->restart( 'payOut/'.$walletId, TRUE );
-			}
-			//  payout
-		}
-
-
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
-		$sorting->AddField( 'CreationDate', 'DESC' );
-		$this->addData( 'bankAccounts', $this->mangopay->Users->GetBankAccounts( $this->userId, $pagination, $sorting ));
-
-		$this->addData( 'wallet', $wallet );
-		$this->addData( 'walletId', $walletId );
-	}
-
 	public function view( $walletId, $amount = NULL ){
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
@@ -80,7 +58,7 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		$this->addData( 'amount', $amount );
 	}
 
-	public function transfer( $sourceWalletId ){
+/*	public function transfer( $sourceWalletId ){
 		$sourceWallet		= $this->mangopay->Wallets->Get( $sourceWalletId );
 
 		$targetWallets		= array();
@@ -109,11 +87,10 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 			print_m( $result );
 			die;
 			$this->restart( 'view/'.$walletId, TRUE );
-
 		}
 
 		$this->addData( 'sourceWalletId', $sourceWalletId );
 		$this->addData( 'sourceWallet', $sourceWallet );
 		$this->addData( 'targetWallets', $targetWallets );
-	}
+	}*/
 }

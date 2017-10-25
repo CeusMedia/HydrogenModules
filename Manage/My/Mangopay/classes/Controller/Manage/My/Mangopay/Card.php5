@@ -7,6 +7,14 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		parent::__onInit();
 		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
 		$this->sessionPrefix	= 'manage_my_mangopay_card_';
+
+		$cards	= $this->logic->getUserCards( $this->userId );
+		foreach( $cards as $nr => $card ){
+			if( !$card->Active )
+				unset( $cards[$nr] );
+		}
+		$this->addData( 'cards', $cards );
+
 	}
 
 	public function add(){
@@ -37,12 +45,6 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 			$this->restart( 'view/'.$cardId, TRUE );
 		try{
 			$this->logic->skipCacheOnNextRequest( $refresh );
-			$cards	= $this->logic->getUserCards( $this->userId );
-			foreach( $cards as $nr => $card ){
-				if( !$card->Active )
-					unset( $cards[$nr] );
-			}
-			$this->addData( 'cards', $cards );
 		}
 		catch( \MangoPay\ResponseException $e ){
 			$this->handleMangopayResponseException( $e );
@@ -94,6 +96,13 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$card	= $this->checkIsOwnCard( $cardId );
 		$this->addData( 'cardId', $cardId );
 		$this->addData( 'card', $card );
+
+		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
+
+		$this->addData( 'wallets', $wallets );
+		$this->addData( 'walletId', $walletId );
+		$this->addData( 'walletLocked', FALSE );
+
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}

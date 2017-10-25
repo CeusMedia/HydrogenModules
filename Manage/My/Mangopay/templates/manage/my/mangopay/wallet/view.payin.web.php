@@ -1,6 +1,10 @@
 <?php
 $optCardType	= UI_HTML_Elements::Options( $wordsCards );
+$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-arrow-left" ) );
 $iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-arrow-right" ) );
+
+$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
+$buttonCancel	= '<a href="'.$linkBack.'" class="btn">'.$iconBack.' zurück</a>';
 
 return '
 <div class="content-panel">
@@ -26,6 +30,7 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
+				'.$buttonCancel.'
 				<button type="submit" name="save" class="btn btn-primary">'.$iconNext.' weiter</button>
 			</div>
 		</form>

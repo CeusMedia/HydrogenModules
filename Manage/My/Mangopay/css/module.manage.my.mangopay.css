@@ -1,3 +1,121 @@
+/*  -- BLOCK LINK: used in guide views  --  */
+body.moduleManageMyMangopay .btn.btn-block {
+	padding: 10px 18px 16px 18px;
+	font-size: 1.1em;
+	line-height: 1.5em;
+	}
+body.moduleManageMyMangopay .btn.btn-block > small {
+	display: block;
+	padding-left: 1.85em;
+	line-height: 1.2em;
+	}
+
+/*  -- CARD LIST: SMALL  --  */
+body.moduleManageMyMangopay div.card-list-item-small {
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	border-radius: 5px;
+	background-color: rgba(191, 191, 191, 0.15);
+	cursor: pointer;
+	margin: 0 0 6px 0;
+	}
+body.moduleManageMyMangopay div.card-list-item-small > span > img {
+	display: inline-block;
+	margin: 6px 8px;
+	}
+body.moduleManageMyMangopay div.card-list-item-small > i {
+	display: inline-block;
+	font-size: 1.5em;
+	margin: 12px 12px;
+	}
+
+/*  -- CARD LIST: LARGE  --  */
+body.moduleManageMyMangopay div.card-list-item-large {
+	float: left;
+	width: 200px;
+	height: 170px;
+	padding: 1em;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	border-radius: 5px;
+	background-color: rgba(191, 191, 191, 0.15);
+	cursor: pointer;
+	text-align: center;
+	}
+body.moduleManageMyMangopay div.card-list-item-large tt {
+	margin-top: 6px;
+	font-size: 1.1em;
+	display: block;
+	}
+body.moduleManageMyMangopay div.card-list-item-large div.card-title {
+	}
+body.moduleManageMyMangopay div.card-list-item-large i.fa {
+	margin-top: 0.75em;
+	margin-bottom: 0.25em;
+	}
+
+/*  -- BANK LIST  --  */
+body.moduleManageMyMangopay div.bankaccount-list-item {
+	float: left;
+	width: 200px;
+	height: 170px;
+	padding: 1em;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	border-radius: 5px;
+	background-color: rgba(191, 191, 191, 0.15);
+	cursor: pointer;
+	text-align: center;
+	}
+body.moduleManageMyMangopay div.bankaccount-list-item tt {
+	margin-top: 6px;
+	font-size: 1em;
+	display: block;
+	}
+body.moduleManageMyMangopay div.bankaccount-list-item div.bankaccount-title {
+	font-size: 1.1em;
+	}
+body.moduleManageMyMangopay div.bankaccount-list-item i.fa {
+	margin-top: 0.75em;
+	margin-bottom: 0.25em;
+	}
+
+/*  -- CARD REGISTRATION: CARD LIST NAV  --  */
+body.moduleManageMyMangopay.controller-manage-my-mangopay-card-registration ul.nav li a img {
+	padding-right: 10px;
+	}
+body.moduleManageMyMangopay.controller-manage-my-mangopay-card-registration ul.nav li a {
+	font-size: 1.1em;
+	}
+body.moduleManageMyMangopay.controller-manage-my-mangopay-card-registration input.success {
+	background-color: rgba(140, 255, 120, 0.25);
+	}
+body.moduleManageMyMangopay.controller-manage-my-mangopay-card-registration input.error {
+	background-color: rgba(255, 140, 120, 0.25);
+	}
+
+/*  -- unclear where used  --  */
+body.moduleManageMyMangopay #panel-mangopay-bank-payin dt,
+body.moduleManageMyMangopay #panel-mangopay-bank-payin dd {
+	line-height: 2em;
+	font-size: 1em;
+	}
+
+
+/*  -- GENERAL: could be generalized  --  */
+.i.fa.opacity-50 {
+	opacity: 0.5;
+	font-weight: 100;
+	}
+.fa-stack.fa-sm {
+	font-size: 0.5em;
+	}
+
+.half-muted {
+	opacity: 0.75;
+	}
+
 .panel-mangopay-view label {
 	padding: 8px 8px 0px 8px;
 	line-height: 1em;
@@ -11,85 +129,30 @@ div.value,
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 	margin: 0px 0px 8px 0px;
-	padding: 4px 8px;
+	padding: 1px 8px;
 	font-size: 1.2em;
 	line-height: 1.5em;
 	height: auto;
-	min-height: 35px;
+	min-height: 30px;
 	border: 1px solid rgba(223, 223, 223, 0.66);
 	box-shadow: none;
 	background-color: rgba(223, 223, 223, 0.15);
+	border-radius: 4px;
 	}
 
-.btn.btn-block {
-	padding: 10px 18px 16px 18px;
-	font-size: 1.1em;
-	line-height: 1.5em;
+h2 .muted {
+	font-weight: lighter;
 	}
-.btn.btn-block > small {
-	display: block;
-	padding-left: 1.85em;
-	line-height: 1.2em;
+h2 a.muted {
+	text-decoration: none;
 	}
-
-.half-muted {
-	opacity: 0.75;
-	}
-
-div.card-list-item-small {
-	border: 1px solid rgba(191, 191, 191, 0.5);
-	border-radius: 5px;
-	background-color: rgba(191, 191, 191, 0.15);
-	cursor: pointer;
-	margin: 0 0 6px 0;
-	}
-div.card-list-item-small > span > img {
-	display: inline-block;
-	margin: 6px 8px;
-	}
-div.card-list-item-small > i {
-	display: inline-block;
-	font-size: 1.5em;
-	margin: 12px 12px;
-	}
-
-div.card-list-item-large {
-	float: left;
-	width: 200px;
-	height: 170px;
-	padding: 1em;
-	margin-right: 1em;
-	margin-bottom: 1em;
-	border: 1px solid rgba(191, 191, 191, 0.5);
-	border-radius: 5px;
-	background-color: rgba(191, 191, 191, 0.15);
-	cursor: pointer;
-	text-align: center;
-	}
-div.card-list-item-large tt {
-	margin-top: 6px;
-	font-size: 1.1em;
-	display: block;
-	}
-div.card-list-item-large div.card-title {
-	}
-div.card-list-item-large i.fa {
-	margin-top: 0.75em;
-	margin-bottom: 0.25em;
-	}
-
-
-#panel-mangopay-bank-payin dt,
-#panel-mangopay-bank-payin dd {
-	line-height: 2em;
-	font-size: 1em;
-	}
-
-
-.i.fa.opacity-50 {
+h2 a.muted:after {
+	content: ': ';
 	opacity: 0.5;
-	font-weight: 100;
+	font-size: 0.8em;
 	}
-.fa-stack.fa-sm {
-	font-size: 0.5em;
+h2 a.muted:hover {
+	color: #08c;
+	transition: 0.15s all;
+	text-decoration: none;
 	}

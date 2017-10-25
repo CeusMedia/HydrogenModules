@@ -3,7 +3,7 @@
 	<title>Manage: My Mangopay</title>
 	<description><![CDATA[User self management of Mangopay entities.]]></description>
 	<category>Management</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add more features.</log>
@@ -19,6 +19,7 @@
 	<log version="0.4.1">Improve workflow.</log>
 	<log version="0.4.2">Add support for bank account mandates.</log>
 	<log version="0.4.3">Improve bank panels.</log>
+	<log version="0.4.4">Add new list helpers.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -35,6 +36,9 @@
 		<class>Controller/Manage/My/Mangopay/Card/Registration.php5</class>
 		<class>Controller/Manage/My/Mangopay/Wallet/Payin.php5</class>
 		<class>View/Helper/Accordion.php5</class>
+		<class>View/Helper/Mangopay/List/BankAccounts/Big.php5</class>
+		<class>View/Helper/Mangopay/List/Cards/Big.php5</class>
+		<class>View/Helper/Mangopay/List/Wallets/Big.php5</class>
 		<class>View/Helper/Panel.php5</class>
 		<class>View/Helper/Panel/Mangopay.php5</class>
 		<class>View/Helper/Panel/Mangopay/BankAccounts.php5</class>
@@ -68,12 +72,11 @@
 		<template>manage/my/mangopay/user/index.php</template>
 		<template>manage/my/mangopay/user/view.php</template>
 		<template>manage/my/mangopay/wallet/index.php</template>
-		<template>manage/my/mangopay/wallet/payIn.php</template>
 		<template>manage/my/mangopay/wallet/view.php</template>
 		<template>manage/my/mangopay/wallet/view.payin.web.php</template>
-		<template>manage/my/mangopay/wallet/payin/bankwire.php</template>
+		<template>manage/my/mangopay/wallet/view/payin.cards.php</template>
+		<template>manage/my/mangopay/wallet/view/payin.bank.php</template>
 		<template>manage/my/mangopay/wallet/payin/card.php</template>
-		<template>manage/my/mangopay/wallet/payin/cardWeb.php</template>
 		<template>manage/my/mangopay/wallet/payin/index.php</template>
 		<template>manage/my/mangopay/transaction/index.php</template>
 

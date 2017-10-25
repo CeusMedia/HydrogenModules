@@ -12,7 +12,21 @@ $helperMoney->set( $payin->PaymentDetails->DeclaredDebitedFunds );
 $helperIBAN	= new View_Helper_Mangopay_Entity_IBAN( $env );
 $helperBIC	= new View_Helper_Mangopay_Entity_BIC( $env );
 
-$linkBack	= $from ? $from : './manage/my/mangopay/bank/view/'.$bankAccountId;
+$helperUrl	= new \View_Helper_Mangopay_URL( $env );
+$helperUrl->set( ( isset( $from ) && $from ) ? $from :  'manage/my/mangopay/bank/view/'.$bankAccountId );
+$helperUrl->setBackwardTo( TRUE );
+$helperUrl->setForwardTo( TRUE );
+$helperUrl->setFrom( TRUE );
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+	'href'	=> $helperUrl->render(),
+	'class'	=> 'btn',
+) );
+
+$buttonPrint	= UI_HTML_Tag::create( 'a', $iconPrint.' drucken', array(
+	'type'		=> 'button',
+	'class'		=> 'btn btn-info',
+	'onclick'	=> 'window.print()',
+) );
 
 return '
 <div class="content-panel" id="panel-mangopay-bank-payin">
@@ -31,8 +45,8 @@ return '
 			<dd>'.$payin->PaymentDetails->WireReference.'</dd>
 		</dl>
 		<div class="buttonbar">
-			<a href="'.$linkBack.'" class="btn">'.$iconCancel.' zurück</a>
-			<button type="button" class="btn btn-info" onclick="window.print()">'.$iconPrint.' drucken</a>
+			'.$buttonCancel.'
+			'.$buttonPrint.'
 		</div>
 	</div>
 </div>';
