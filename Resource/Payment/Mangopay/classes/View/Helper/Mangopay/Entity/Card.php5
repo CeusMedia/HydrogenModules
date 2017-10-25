@@ -1,38 +1,10 @@
 <?php
-class View_Helper_Mangopay_Entity_Card{
+class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 
-	protected $env;
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'span';
 	protected $card;
 	protected $url;
-
-	public function __construct( $env ){
-		$this->env		= $env;
-	}
-
-	public function __toString(){
-		return $this->render();
-	}
-
-	public function set( $card ){
-		$this->card	= $card;
-		return $this;
-	}
-
-	public function setNodeClass( $classNames ){
-		$this->nodeClass	= $classNames;
-		return $this;
-	}
-
-	public function setNodeName( $nodeName ){
-		$this->nodeName	= $nodeName;
-		return $this;
-	}
-
-	public function setUrl( $url ){
-		$this->url		= $url;
-	}
 
 	public function render(){
 		$helperCardLogo		= new View_Helper_Mangopay_Entity_CardProviderLogo( $this->env );
@@ -53,6 +25,25 @@ class View_Helper_Mangopay_Entity_Card{
  				$attributes['onclick']	= 'document.location.href="'.$url.'";';
 		}
 		return UI_HTML_Tag::create( $this->nodeName, $item, $attributes );
+	}
+
+	public function set( $card ){
+		$this->card	= $card;
+		return $this;
+	}
+
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
+	}
+
+	public function setUrl( $url ){
+		$this->url		= $url;
 	}
 }
 ?>

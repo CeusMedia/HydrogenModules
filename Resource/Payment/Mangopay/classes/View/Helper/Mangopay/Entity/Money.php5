@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Mangopay_Entity_Money{
+class View_Helper_Mangopay_Entity_Money extends View_Helper_Mangopay_Abstract{
 
 	const FORMAT_AMOUNT_CURRENCY		= '%1$s%3$s';
 	const FORMAT_AMOUNT_SPACE_CURRENCY	= '%1$s%2$s%3$s';
@@ -12,19 +12,21 @@ class View_Helper_Mangopay_Entity_Money{
 	protected $accuracy			= 2;
 	protected $amount			= 0;
 	protected $currency			= "EUR";
-	protected $env;
 	protected $format			= self::FORMAT_CURRENCY_SPACE_AMOUNT;
 	protected $nodeClass		= NULL;
 	protected $nodeName			= 'span';
 	protected $numberFormat		= self::NUMBER_FORMAT_DOT;
 	protected $separator		= "&nbsp;";
 
-	public function __construct( $env ){
-		$this->env		= $env;
-	}
-
-	public function __toString(){
-		return $this->render();
+	public function render(){
+		$price		= number_format(
+			$this->amount / 100,
+			$this->accuracy,
+			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? ',' : '.',
+			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? '.' : '´'
+		);
+		$label	= sprintf( $this->format, $price, $this->separator, $this->currency );
+		return UI_HTML_Tag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
 	}
 
 	public function set( \MangoPay\Money $money, $accuracy = NULL ){
@@ -73,17 +75,6 @@ class View_Helper_Mangopay_Entity_Money{
 	public function setSeparator( $separator ){
 		$this->separator	= $separator;
 		return $this;
-	}
-
-	public function render(){
-		$price		= number_format(
-			$this->amount / 100,
-			$this->accuracy,
-			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? ',' : '.',
-			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? '.' : '´'
-		);
-		$label	= sprintf( $this->format, $price, $this->separator, $this->currency );
-		return UI_HTML_Tag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
 	}
 }
 ?>

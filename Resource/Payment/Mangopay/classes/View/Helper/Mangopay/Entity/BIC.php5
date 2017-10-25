@@ -1,33 +1,9 @@
 <?php
-class View_Helper_Mangopay_Entity_BIC{
+class View_Helper_Mangopay_Entity_BIC extends View_Helper_Mangopay_Abstract{
 
-	protected $env;
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'tt';
 	protected $bic;
-
-	public function __construct( $env ){
-		$this->env		= $env;
-	}
-
-	public function __toString(){
-		return $this->render();
-	}
-
-	public function set( $bic ){
-		$this->bic	= $bic;
-		return $this;
-	}
-
-	public function setNodeClass( $classNames ){
-		$this->nodeClass	= $classNames;
-		return $this;
-	}
-
-	public function setNodeName( $nodeName ){
-		$this->nodeName	= $nodeName;
-		return $this;
-	}
 
 	public function render(){
 		$parts	= array(
@@ -49,6 +25,21 @@ class View_Helper_Mangopay_Entity_BIC{
 		if( $nodeClass !== NULL )
 			$this->setNodeClass( $nodeClass );
 		return $instance->set( $iban )->render();
+	}
+
+	public function set( $bic ){
+		$this->bic	= $bic;
+		return $this;
+	}
+
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
 	}
 }
 ?>

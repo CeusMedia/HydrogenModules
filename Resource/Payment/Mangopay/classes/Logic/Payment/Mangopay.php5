@@ -5,6 +5,19 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 	protected $provider;
 	protected $skipCacheOnNextRequest;
 
+	static public $typeCurrencies	= array(
+		'CB_VISA_MASTERCARD'	=> array(),
+		'MAESTRO'				=> array( 'EUR' ),
+		'DINERS'				=> array( 'EUR' ),
+		'GIROPAY'				=> array( 'EUR' ),
+		'IDEAL'					=> array( 'EUR' ),
+		'PAYLIB'				=> array( 'EUR' ),
+		'SOFORT'				=> array( 'EUR' ),
+		'BCMC'					=> array( 'EUR' ),
+		'P24'					=> array( 'PLN' ),
+		'BANKWIRE'				=> array(),
+	);
+
 	protected function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 		$this->cache		= $this->env->getCache();
@@ -194,24 +207,43 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createPayInFromCardViaWeb( $userId, $walletId, $cardType, $currency, $amount, $returnUrl ){
+	public function createBankPayInViaWeb( $type, $userId, $walletId, $currency, $amount, $returnUrl ){
 		$user	= $this->checkUser( $userId );
-		$payIn = new \MangoPay\PayIn();
-		$payIn->CreditedWalletId = $walletId;
-		$payIn->AuthorId = $userId;
-		$payIn->PaymentType = "CARD";
-		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsCard();
-		$payIn->PaymentDetails->CardType = $cardType;
-		$payIn->DebitedFunds = new \MangoPay\Money();
-		$payIn->DebitedFunds->Currency = strtoupper( $currency );
-		$payIn->DebitedFunds->Amount = $amount;
-		$payIn->Fees = new \MangoPay\Money();
-		$payIn->Fees->Currency = strtoupper( $currency );
-		$payIn->Fees->Amount = $this->calculateFeesForPayIn( $amount );
-		$payIn->ExecutionType = "WEB";
-		$payIn->ExecutionDetails = new \MangoPay\PayInExecutionDetailsWeb();
-		$payIn->ExecutionDetails->ReturnURL = $returnUrl;
-		$payIn->ExecutionDetails->Culture = strtoupper( $user->Nationality );
+		$payIn	= new \MangoPay\PayIn();
+		$payIn->CreditedWalletId	= $walletId;
+		$payIn->AuthorId			= $userId;
+		$payIn->PaymentDetails		= new \MangoPay\PayInPaymentDetailsDirectDebit();
+		$payIn->DirectDebitType		= $type;
+		$payIn->PaymentDetails->DebitedFunds			= new \MangoPay\Money();
+		$payIn->PaymentDetails->DebitedFunds->Amount	= $amount;
+		$payIn->PaymentDetails->DebitedFunds->Currency	= $currency;
+		$payIn->PaymentDetails->Fees					= new \MangoPay\Money();
+		$payIn->PaymentDetails->Fees->Amount			= $this->calculateFeesForPayIn( $amount );
+		$payIn->PaymentDetails->Fees->Currency			= $currency;
+		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
+		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
+		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
+		return $this->provider->PayIns->Create( $payIn );
+	}
+
+	public function createCardPayInViaWeb( $userId, $walletId, $cardType, $currency, $amount, $returnUrl ){
+		$user	= $this->checkUser( $userId );
+		$payIn	= new \MangoPay\PayIn();
+		$payIn->CreditedWalletId			= $walletId;
+		$payIn->AuthorId					= $userId;
+		$payIn->PaymentType					= "CARD";
+		$payIn->ExecutionType				= "WEB";
+		$payIn->PaymentDetails				= new \MangoPay\PayInPaymentDetailsCard();
+		$payIn->PaymentDetails->CardType	= $cardType;
+		$payIn->DebitedFunds				= new \MangoPay\Money();
+		$payIn->DebitedFunds->Currency		= strtoupper( $currency );
+		$payIn->DebitedFunds->Amount		= $amount;
+		$payIn->Fees						= new \MangoPay\Money();
+		$payIn->Fees->Currency				= strtoupper( $currency );
+		$payIn->Fees->Amount				= $this->calculateFeesForPayIn( $amount );
+		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
+		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
+		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
@@ -483,7 +515,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$this->skipCacheOnNextRequest	= (bool) $skip;
 	}
 
-	protected function uncache( $key ){
+	public function uncache( $key ){
 		$this->cache->remove( 'mangopay_'.$key );
 	}
 

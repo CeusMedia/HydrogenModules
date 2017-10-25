@@ -1,33 +1,9 @@
 <?php
-class View_Helper_Mangopay_Entity_CardNumber{
+class View_Helper_Mangopay_Entity_CardNumber extends View_Helper_Mangopay_Abstract{
 
-	protected $env;
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'tt';
 	protected $number;
-
-	public function __construct( $env ){
-		$this->env		= $env;
-	}
-
-	public function __toString(){
-		return $this->render();
-	}
-
-	public function set( $number ){
-		$this->number	= $number;
-		return $this;
-	}
-
-	public function setNodeClass( $classNames ){
-		$this->nodeClass	= $classNames;
-		return $this;
-	}
-
-	public function setNodeName( $nodeName ){
-		$this->nodeName	= $nodeName;
-		return $this;
-	}
 
 	public function render(){
 		$pattern	= '/^([^x]+)(x+)(.+)$/i';
@@ -45,6 +21,21 @@ class View_Helper_Mangopay_Entity_CardNumber{
 		if( $nodeClass !== NULL )
 			$this->setNodeClass( $nodeClass );
 		return $instance->set( $number )->render();
+	}
+
+	public function set( $number ){
+		$this->number	= $number;
+		return $this;
+	}
+
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
 	}
 }
 ?>

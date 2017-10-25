@@ -29,6 +29,9 @@ Cronjobs:
 	<log version="0.3.8">Add view helper for wallet logo.</log>
 	<log version="0.4">Add job to handle events in background.</log>
 	<log version="0.4.1">Improve caching.</log>
+	<log version="0.4.2">Add view helper abstraction.</log>
+	<log version="0.4.3">Add view helper for amount input.</log>
+	<log version="0.4.4">Add view helper for links supporting workflow.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -53,7 +56,9 @@ Cronjobs:
 		<class>View/Mangopay/Event.php5</class>
 		<class>View/Mangopay/Hook.php5</class>
 		<class>View/Mangopay/Payin.php5</class>
+		<class>View/Helper/Mangopay/Abstract.php5</class>
 		<class>View/Helper/Mangopay/Error.php5</class>
+		<class>View/Helper/Mangopay/URL.php5</class>
 		<class>View/Helper/Mangopay/Entity/BIC.php5</class>
 		<class>View/Helper/Mangopay/Entity/Card.php5</class>
 		<class>View/Helper/Mangopay/Entity/CardNumber.php5</class>
@@ -62,6 +67,7 @@ Cronjobs:
 		<class>View/Helper/Mangopay/Entity/Money.php5</class>
 		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
 		<class>View/Helper/Mangopay/Entity/WalletLogo.php5</class>
+		<class>View/Helper/Mangopay/Input/Amount.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 		<template>mangopay/event/index.php</template>
 		<template>mangopay/event/view.php</template>

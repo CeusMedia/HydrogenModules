@@ -1,7 +1,6 @@
 <?php
-class View_Helper_Mangopay_Entity_WalletLogo{
+class View_Helper_Mangopay_Entity_WalletLogo extends View_Helper_Mangopay_Abstract{
 
-	protected $env;
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'div';
 	protected $wallet;
@@ -11,33 +10,8 @@ class View_Helper_Mangopay_Entity_WalletLogo{
 	const SIZE_MEDIUM		= 'fa-2x';
 	const SIZE_LARGE		= 'fa-4x';
 
-	public function __construct( $env ){
-		$this->env		= $env;
+	public function __onInit(){
 		$this->setSize( self::SIZE_MEDIUM );
-	}
-
-	public function __toString(){
-		return $this->render();
-	}
-
-	public function setWallet( $wallet ){
-		$this->wallet	= $wallet;
-		return $this;
-	}
-
-	public function setNodeClass( $classNames ){
-		$this->nodeClass	= $classNames;
-		return $this;
-	}
-
-	public function setNodeName( $nodeName ){
-		$this->nodeName	= $nodeName;
-		return $this;
-	}
-
-	public function setSize( $size ){
-		$this->size	= $size;
-		return $this;
 	}
 
 	public function render(){
@@ -67,6 +41,26 @@ class View_Helper_Mangopay_Entity_WalletLogo{
 		if( $nodeClass !== NULL )
 			$this->setNodeClass( $nodeClass );
 		return $instance->set( $number )->render();
+	}
+
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
+	}
+
+	public function setSize( $size ){
+		$this->size	= $size;
+		return $this;
+	}
+
+	public function setWallet( $wallet ){
+		$this->wallet	= $wallet;
+		return $this;
 	}
 }
 ?>

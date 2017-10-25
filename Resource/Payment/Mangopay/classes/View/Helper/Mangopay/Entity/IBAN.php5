@@ -1,33 +1,9 @@
 <?php
-class View_Helper_Mangopay_Entity_IBAN{
+class View_Helper_Mangopay_Entity_IBAN extends View_Helper_Mangopay_Abstract{
 
-	protected $env;
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'tt';
 	protected $iban;
-
-	public function __construct( $env ){
-		$this->env		= $env;
-	}
-
-	public function __toString(){
-		return $this->render();
-	}
-
-	public function set( $iban ){
-		$this->iban	= $iban;
-		return $this;
-	}
-
-	public function setNodeClass( $classNames ){
-		$this->nodeClass	= $classNames;
-		return $this;
-	}
-
-	public function setNodeName( $nodeName ){
-		$this->nodeName	= $nodeName;
-		return $this;
-	}
 
 	public function render(){
 		$parts		= str_split( trim( $this->iban ), 4 );
@@ -44,6 +20,21 @@ class View_Helper_Mangopay_Entity_IBAN{
 		if( $nodeClass !== NULL )
 			$this->setNodeClass( $nodeClass );
 		return $instance->set( $iban )->render();
+	}
+
+	public function set( $iban ){
+		$this->iban	= $iban;
+		return $this;
+	}
+
+	public function setNodeClass( $classNames ){
+		$this->nodeClass	= $classNames;
+		return $this;
+	}
+
+	public function setNodeName( $nodeName ){
+		$this->nodeName	= $nodeName;
+		return $this;
 	}
 }
 ?>
