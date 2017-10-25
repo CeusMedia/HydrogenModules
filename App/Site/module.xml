@@ -53,6 +53,7 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">Server_System_Exception</needs>
 		<supports type="module">Info_Contact</supports>
 		<supports type="module">Info_Pages</supports>
 		<supports type="module">JS_Modernizr</supports>
