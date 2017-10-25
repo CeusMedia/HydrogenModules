@@ -195,6 +195,7 @@ class Model_Menu {
 		);
 		$this->pages		= array();
 		$this->pageMap		= array();
+		$isAuthenticated	= (bool) $this->userId;
 		foreach( $scopes as $scopeId => $scope ){
 			$this->pages[$scope]	= array();
 			$pages		= $model->getAllByIndices( array(
@@ -241,10 +242,27 @@ class Model_Menu {
 							'active'	=> FALSE,
 							'icon'		=> @$subpage->icon,
 						);
+						if( $subpage->type == 2 ){
+							$subpage->path	= $subpage->controller;
+							$subpage->path	.= '_'.$subpage->action ? $subpage->action : 'index';
+						}
+						$public		= $subpage->access == "public";
+						$outside	= !$isAuthenticated && $subpage->access == "outside";
+						$inside		= $isAuthenticated && $subpage->access == "inside";
+						$acl		= $subpage->access == "acl" && $this->env->getAcl()->has( $subitem->path );
+						if( !( $public || $outside || $inside || $acl ) )
+							continue;
 						$item->items[]	= $subitem;
 						$this->pageMap[$page->identifier.'/'.$subpage->identifier]	= $subitem;
 					}
 				}
+				$public		= $page->access == "public";
+				$outside	= !$isAuthenticated && $page->access == "outside";
+				$inside		= $isAuthenticated && $page->access == "inside";
+				$acl		= $page->access == "acl" && $this->env->getAcl()->has( $item->path );
+				$menu		= $page->type == 1 && count( $subpages );
+				if( !( $public || $outside || $inside || $acl || $menu ) )
+					continue;
 				$this->pages[$scope][]	= $item;
 				$this->pageMap[$page->identifier]	= $item;
 			}
