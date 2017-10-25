@@ -1,21 +1,28 @@
 <?php
 $w				= (object) $words['edit'];
 
-$optType	= $words['types'];
-$optScope	= $words['scopes'];
-$optStatus	= $words['states'];
-$optFormat	= $words['formats'];
-
 $optController	= array( '' => '-' );
 foreach( $controllers as $item )
 	$optController[$item]	= $item;
 
-$optType		= UI_HTML_Elements::Options( $optType, $page->type );
-$optScope		= UI_HTML_Elements::Options( $optScope, $page->scope );
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $page->status );
+$optType		= UI_HTML_Elements::Options( $words['types'], $page->type );
+$optScope		= UI_HTML_Elements::Options( $words['scopes'], $page->scope );
+$optStatus		= UI_HTML_Elements::Options( $words['states'], $page->status );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
-$optFormat		= UI_HTML_Elements::Options( $optFormat, $page->format );
+$optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
 $optController	= UI_HTML_Elements::Options( $optController, $page->controller );
+
+$fieldAccess	= '';
+if( $useAuth ){
+	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
+	$fieldAccess	= '
+		<div class="row-fluid">
+			<div class="span5">
+				<label for="input_page_access">'.$w->labelAccess.'</label>
+				<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
+			</div>
+		</div>';
+}
 
 return '
 <div class="content-panel content-panel-form">
@@ -76,6 +83,7 @@ return '
 					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
+			'.$fieldAccess.'
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>

@@ -10,7 +10,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	protected $patternIdentifier	= '@[^a-z0-9_/-]@';
 
 	protected function __onInit(){
-		$config		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
+		$config				= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
 
 		$this->model		= new Model_Page( $this->env );
 		$this->request		= $this->env->getRequest();
@@ -21,6 +21,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 
 		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'useAuth', $this->frontend->hasModule( 'Resource_Authentication' ) );
 
 		if( !$this->frontend->hasModule( 'Info_Pages' ) ){
 			$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
@@ -104,6 +105,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'format'		=> $this->request->get( 'page_format' ),
 			'controller'	=> $this->request->get( 'page_controller' ),
 			'action'		=> $this->request->get( 'page_action' ),
+			'access'		=> $this->request->get( 'page_access' ),
 			'icon'			=> $this->request->get( 'page_icon' ),
 			'createdAt'		=> time(),
 		);

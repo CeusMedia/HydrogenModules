@@ -12,6 +12,19 @@ $optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
 $optController	= UI_HTML_Elements::Options( $optController, $page->controller );
 
+$fieldAccess	= '';
+if( $useAuth ){
+	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
+	$fieldAccess	= '
+		<div class="row-fluid">
+			<div class="span5">
+				<label for="input_page_access">'.$w->labelAccess.'</label>
+				<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
+			</div>
+		</div>';
+}
+
+
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
 $panelTree	= $view->loadTemplateFile( 'manage/page/tree.php' );
@@ -81,6 +94,7 @@ return '
 							<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
+					'.$fieldAccess.'
 					<div class="buttonbar">
 						<button type="submit" name="save" class="btn btn-small btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 					</div>
