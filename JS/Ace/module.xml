@@ -2,12 +2,17 @@
 <module>
 	<title>JS: Ace</title>
 	<description><![CDATA[Ace Text Editor.]]></description>
-	<version>1.2.8-p1</version>
+	<version>0.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Implement auto apply.</log>
+	<log version="0.4">Implement auto save.</log>
 	<category>JavaScript</category>
 	<company site="https://ace.c9.io/">ace.c9.io</company>
-	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
 	<files>
+		<locale>de/ace.ini</locale>
+		<locale>en/ace.ini</locale>
 		<style source="theme" load="auto">module.js.ace.css</style>
 		<script>module.js.ace.js</script>
 	</files>
@@ -16,16 +21,19 @@
 	<config type="string" protected="no" name="auto.mode"/>
 	<config type="string" protected="no" name="auto.theme"/>
 	<config type="string" protected="no" name="auto.selector">textarea.ace-auto</config>
+	<config type="integer" protected="no" name="auto.save.duration.delay">750</config>
+	<config type="integer" protected="no" name="auto.save.duration.in">250</config>
+	<config type="integer" protected="no" name="auto.save.duration.out">250</config>
+	<config type="integer" protected="no" name="auto.save.duration.show">750</config>
 	<config type="string" protected="no" name="source.CDN" values="cdnjs,jsDelivr">cdnjs</config>
-	<config type="string" protected="no" name="source.version" title="Ace version within CDN">1.2.8</config>
-	<relations>
-		<supports type="module">Resource_Frontend</supports>
-	</relations>
+	<config type="string" protected="no" name="source.version" title="Ace version within CDN">1.2.9</config>
+	<relations/>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 $moduleConfig	= $env->getConfig()->getAll( 'module.js_ace.', TRUE );
 $pathJs			= $env->getConfig()->get( 'path.scripts' );
 $version		= $moduleConfig->get( 'source.version' );
 $cdn			= $moduleConfig->get( 'source.CDN' );
+$words			= $env->getLanguage()->getWords( 'ace' );
 
 $uri	= 'https://cdnjs.cloudflare.com/ajax/libs/ace/'.$version.'/';
 if( $cdn == 'jsDelivr' )
@@ -33,12 +41,17 @@ if( $cdn == 'jsDelivr' )
 
 $context->js->addUrl( $uri.'ace.js' );
 $context->js->addUrl( $pathJs.'module.js.ace.js' );
+
+$durations		= $moduleConfig->getAll( 'auto.save.duration.', FALSE );
+$overlayLabels	= $words['overlay-labels'];
+$context->js->addScriptOnReady( '
+ModuleAceAutoSave.options.words = '.json_encode( $overlayLabels ).';
+ModuleAceAutoSave.options.durations = '.json_encode( $durations ).';' );
+
 if( !$moduleConfig->get( 'auto' ) )
 	return;
-$script	= '
+$context->js->addScriptOnReady( '
 ModuleAce.verbose = '.json_encode( $moduleConfig->get( 'auto.verbose' ) ).';
-ModuleAce.applyAuto("'.$moduleConfig->get( 'auto.selector' ).'");
-';
-$context->js->addScriptOnReady( $script );
+ModuleAce.applyAuto("'.$moduleConfig->get( 'auto.selector' ).'");' );
 ]]></hook>
 </module>

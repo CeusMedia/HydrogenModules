@@ -8,7 +8,7 @@
  *
  */
 var ModuleAce = {
-	verbose: true,
+	verbose: false,
 	strict: true,
 	config: {																	//  @see https://github.com/ajaxorg/ace/wiki/Configuring-Ace
 		theme: "ace/theme/tomorrow",
@@ -22,9 +22,6 @@ var ModuleAce = {
 			useWorker: false,
 		},
 		events: [{
-			event: 'change',
-			callback: function(){
-			}
 		}],
 		hotkeys: [{
 	    	key: "F11",
@@ -81,9 +78,9 @@ var ModuleAce = {
 //
 		}
 	},
-	applyAuto: function(){
-		jQuery(".ace-auto").each(function(){
-			ModuleAce.applyTo(this);
+	applyAuto: function(selector){
+		jQuery(selector).each(function(){
+			jQuery(this).data('ace-editor', ModuleAce.applyTo(this));
 		});
 	},
 	applyTo: function(elementOrSelectorOrContainer, config){
@@ -135,8 +132,21 @@ var ModuleAce = {
 				editor = ace.edit(editDiv.get(0));										//  apply ace editor to new container
 				editor.getSession().setValue(container.val());							//  set editor content from original textarea
 				container.css('display', 'none');										//  hide original textarea
+/*				for(var i=0; i<config.events.length; i++){
+					console.log(config.events.event);
+				}*/
+
 				editor.getSession().on("change", function(){							//  on content changes ...
 					container.val(editor.session.getValue());							//  ... update content of original textarea
+					for(var i=0; i<config.events.length; i++){							//  iterate configured events
+						if(config.events[i].event === "change"){
+							if(typeof config.events[i].callback === "function"){
+								ModuleAce.log("AceEditor: Call event \"%s\"", config.events[i].event);
+								config.events[i]["callback"](editor);
+							}
+						}
+//					alert("!");
+					}
 				});
 			}
 			else{																		//  selected container is NOT a textarea
@@ -162,10 +172,6 @@ var ModuleAce = {
 		if(config.mode)																	//  editor mode is configured
 			editor.session.setMode(config.mode);										//  set editor mode
 
-		for(i=0; i<config.events.length; i++){											//  iterate configured events
-			ModuleAce.log( "AceEditor: Set event \"%s\"", config.events[i].event );
-			editor.session.on(config.events[i].event, config.events[i].callback);		//
-		}
 		for(i=0; i<config.hotkeys.length; i++){											//  iterate configured hotkeys
 			ModuleAce.log( "AceEditor: Set hotkey \"%s\"", config.hotkeys[i].key );
 			editor.commands.addCommand({												//  add hotkey as new command
@@ -215,6 +221,10 @@ var ModuleAce = {
 				JSON.stringify(currentValue)
 			);
 		}
+/*		for(i=0; i<config.events.length; i++){											//  iterate configured events
+			ModuleAce.log( "AceEditor: Set event \"%s\"", config.events[i].event );
+			editor.session.on(config.events[i].event, config.events[i].callback);		//
+		}*/
 	},
 	extendConfigByHtmlTagAttributes: function (elementOrContainer, config) {
 		var container = jQuery(elementOrContainer);
@@ -224,9 +234,19 @@ var ModuleAce = {
 		ModuleAce.log("minLines: " + config.options.minLines);
 
 		/*  Apply HTML attributes as ACE options/flags to config  */
-		jQuery.each(container.get(0).attributes, function(nr){
-			if(this.name.match(/^data-/))
-				return;
+		jQuery.each(container.get(0).attributes, function(nr){							//  iterate HTML attributes
+			if(this.name.match(/^data-/))												//  attribute is a data attribute
+				return;																	//  skip for now (handled later, see below)
+
+			/*  Look out events described in HTML data attributes but do NOT handle  */
+			if(this.name.match(/^on/)){													//  attribute is an event attribute
+				ModuleAce.log(
+					"AceEditor: Found event \"%s\" but ignore it - use attributes like data-ace-event-* to hook editor events",
+					this.name.substr(2)
+				);
+				return;																	//  do not handle (ace events will be hooked below)
+			}
+
 			switch(this.name.toLowerCase()){
 				case "rows":
 					config.options.minLines = parseInt(this.value, 10);
@@ -256,6 +276,8 @@ var ModuleAce = {
 
 		/*  Apply HTML data attributes as ACE options/flags to config  */
 		jQuery.each(container.data(), function(key, value){
+
+			/*  Handle Ace flags described in HTML data attributes  */
 			if(key.match(/^aceFlag/)){
 				key = key.replace(/^aceFlag/, "");
 				key = key.charAt(0).toLowerCase() + key.slice(1);
@@ -272,6 +294,7 @@ var ModuleAce = {
 					JSON.stringify(currentValue),
 				);
 			}
+			/*  Handle Ace options described in HTML data attributes  */
 			else if(key.match(/^aceOption/)){
 				key = key.replace(/^aceOption/, "");
 				key = key.charAt(0).toLowerCase() + key.slice(1);
@@ -288,6 +311,21 @@ var ModuleAce = {
 					JSON.stringify(currentValue)
 				);
 			}
+			/*  Handle Ace events described in HTML data attributes  */
+/*			else if(key.match(/^aceEvent/)){
+				key = key.replace(/^aceEvent/, "");
+				key = key.charAt(0).toLowerCase() + key.slice(1);
+				var currentValue = false;
+				ModuleAce.log( "AceEditor: Set event \"%s\"", key );
+				for(i=0; i<config.events.length; i++){											//  iterate configured events
+					if(key === config.events[i].event){
+						config.events[i].callback = value;										//
+						return;
+					}
+				}
+				config.events[i].callback = value;										//
+			}*/
+			/*  Handle general Ace settings described in HTML data attributes  */
 			else if(key.match(/^ace/)){
 				key = key.replace(/^ace/, "");
 				key = key.charAt(0).toLowerCase() + key.slice(1);
@@ -328,6 +366,9 @@ var ModuleAce = {
 		if(ModuleAce.verbose && typeof console !== "undefined")
 			console.log(ModuleAce.sprintf.apply(this, arguments));
 	},
+	save: function(){
+
+	},
 	sprintf: function(message){
 		if(arguments.length === 0)
 			throw "sprintf needs atleast 1 argument (as message)";
@@ -335,5 +376,60 @@ var ModuleAce = {
 		for(var i=1; i<arguments.length; i++)
 			msg = msg.replace(/(%[ds])/, arguments[i]);
 		return msg;
+	}
+};
+
+var ModuleAceAutoSave = {
+	timeout: {},
+	options: {
+		words: {
+			changed: "changed...",
+			saved: "saved.",
+			failed: "Error!"
+		},
+		durations: {
+			delay: 750,
+			in: 250,
+			out: 250,
+			show: 750
+		}
+	},
+	applyToEditor: function(editor, url, options){
+		var divSave = jQuery("<div></div>").html("saved").addClass("ace-overlay");
+		jQuery(editor.container).append(divSave);
+		options = jQuery.extend(true, this.options, options);
+		editor.on("change", function(change, editor){
+			ModuleAceAutoSave.onChange(change, editor, url, options);
+		});
+	},
+	clearOverlayWithDelay: function(editor, options){
+		var overlay = jQuery(editor.container).find(".ace-overlay");
+		ModuleAceAutoSave.timeout[editor.id] = window.setTimeout(function(){
+			overlay.fadeOut(options.durations.out, function(){
+				jQuery(this).removeClass("positive negative").html("");
+			});
+		}, options.durations.show);
+	},
+	onChange: function(change, editor, url, options){
+		if(typeof url === "undefined" || url.length == 0)					//  no save URL set
+			return;
+		if(!(editor.curOp && editor.curOp.command.name))					//  not a user change
+		 	return;
+		var overlay = jQuery(editor.container).find(".ace-overlay");
+		overlay.html(options.words.changed).removeClass("positive negative");
+		overlay.fadeIn(options.durations.in);
+		if(typeof ModuleAceAutoSave.timeout[editor.id] === "number");
+			window.clearTimeout(ModuleAceAutoSave.timeout[editor.id]);
+		ModuleAceAutoSave.timeout[editor.id] = window.setTimeout(function(){
+			jQuery.post(url, {content: editor.session.getValue()}, "json")
+			.done(function(){
+				overlay.addClass("positive").html(options.words.saved);
+				ModuleAceAutoSave.clearOverlayWithDelay(editor, options);
+			})
+			.fail(function(a,b){
+				overlay.addClass("negative").html(options.words.failed+": "+a.responseJSON.message);
+//				ModuleAceAutoSave.clearOverlayWithDelay(editor, options);
+			});
+		}, options.durations.delay);
 	}
 };
