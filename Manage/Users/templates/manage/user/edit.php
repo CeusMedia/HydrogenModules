@@ -1,4 +1,19 @@
 <?php
+$w				= (object) $words['edit'];
+//$helperAge		= new View_Helper_TimePhraser( $env );
+
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+}
 
 /*
  *	@deprecated		not used. nice feature but no styling done.
@@ -35,10 +50,6 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
-$helper	= new View_Helper_TimePhraser( $env );
-
-$w	= (object) $words['edit'];
-
 $optRole	= array();
 foreach( array_reverse( $roles, TRUE ) as $role )
 	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
@@ -51,30 +62,23 @@ $optStatus  = join( $optStatus );
 
 $optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
+$buttonList			= UI_HTML_Elements::LinkButton( $from ? $from : './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
+$buttonSave			= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search' ) );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-	$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+$buttonRemove		= '';
+if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
+	$buttonRemove		= UI_HTML_Elements::LinkButton(
+		'./manage/user/remove/'.$userId,
+		$iconRemove.'&nbsp;'.$w->buttonRemove,
+		'btn btn-mini btn-danger',
+		$w->buttonRemoveConfirm
+	);
 }
 
-$buttonCancel		= UI_HTML_Elements::LinkButton( $from ? $from : './manage/user', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' );
-$buttonSave			= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
-$buttonRemove		= UI_HTML_Elements::LinkButton(
-	'./manage/user/remove/'.$userId,
-	$iconRemove.'&nbsp;'.$w->buttonRemove,
-	'btn btn-small btn-danger',
-	$w->buttonRemoveConfirm
-);
 $buttonRole	= '';
 if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
 	$buttonRole	= UI_HTML_Tag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, array(
-		'class'	=> 'btn btn-small',
+		'class'	=> 'btn btn-small btn-info',
 		'href'	=> './manage/role/edit/'.$user->roleId
 	) );
 }
@@ -167,10 +171,10 @@ $panelEdit	= '
 			</div>
 			<div class="buttonbar">
 				<div class="btn-toolbar">
-					'.$buttonCancel.'
+					'.$buttonList.'
 					'.$buttonSave.'
-					'.$buttonRemove.'
 					'.$buttonRole.'
+					'.$buttonRemove.'
 				</div>
 			</div>
 		</form>

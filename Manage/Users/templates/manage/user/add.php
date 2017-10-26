@@ -1,8 +1,18 @@
 <?php
 $w				= (object) $words['add'];
 
-$optStatus		= $words['status'] + array( '_selected' => $user->status );
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+}
 
+$roleMap	= array();
+foreach( $roles as $role )
+	$roleMap[$role->roleId] = $role->title;
 
 /*
  *	@deprecated		not used. nice feature but no styling done.
@@ -32,22 +42,11 @@ $page->js->addUrl( 'http://cdn.int1a.net/js/jquery/pstrength/2.1.0.min.js', TRUE
 $page->js->addScriptOnReady( $script );
 */
 
-$roleMap	= array();
-foreach( $roles as $role )
-	$roleMap[$role->roleId] = $role->title;
+$optStatus		= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
+$optRole		= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
+$optGender		= UI_HTML_Elements::Options( $words['gender'], $user->gender );
 
-$optStatus	= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
-$optRole	= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
-
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-}
-
-$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' );
+$buttonList		= UI_HTML_Elements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
 $buttonSave		= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
 $panelAdd	= '
@@ -115,7 +114,7 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.$buttonCancel.'
+				'.$buttonList.'
 				'.$buttonSave.'
 			</div>
 		</form>

@@ -1,6 +1,6 @@
  <?php
 
-//$w	= (object) $words['editStatus'];
+$w	= (object) $words['editStatus'];
 
 $optStatus	= array();
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
@@ -20,37 +20,37 @@ $buttons	= array();
 if( $user->status != 1 ){
 	$buttons[]	= UI_HTML_Elements::LinkButton(
 		'./manage/user/accept/'.$userId,
-		$iconAccept.'&nbsp;'.$words['editStatus']['buttonAccept'],
+		$iconAccept.'&nbsp;'.$w->buttonAccept,
 		'btn btn-small btn-success',
-		$words['editStatus']['buttonAcceptConfirm']
+		$w->buttonAcceptConfirm
 	);
 }
 if( $moduleConfig->get( 'ban' ) && $user->status == 1 ){
 	$buttons[]	= UI_HTML_Elements::LinkButton(
 		'./manage/user/ban/'.$userId,
-		$iconBan.'&nbsp;'.$words['editStatus']['buttonBan'],
+		$iconBan.'&nbsp;'.$w->buttonBan,
 		'btn btn-small btn-warning',
-		$words['editStatus']['buttonBanConfirm']
+		$w->buttonBanConfirm
 	);
 }
 if( $user->status != -2 ){
 	$buttons[]	= UI_HTML_Elements::LinkButton(
 		'./manage/user/disable/'.$userId,
-		$iconRemove.'&nbsp;'.$words['editStatus']['buttonDisable'],
+		$iconRemove.'&nbsp;'.$w->buttonDisable,
 		'btn btn-small btn-danger',
-		$words['editStatus']['buttonDisableConfirm']
+		$w->buttonDisableConfirm
 	);
 }
 $buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => "btn-group" ) );
 
 return '
 <div class="content-panel">
-	<h3>'.$words['editStatus']['heading'].'</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUserStates" action="./manage/user/edit/'.$userId.'" method="post">
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="status">'.$words['editStatus']['labelStatus'].'</label><br/>
+					<label for="status">'.$w->labelStatus.'</label><br/>
 				</div>
 				<div class="span7">
 					'.UI_HTML_Elements::Input( 'status', $words['status'][$user->status], 'span12 user-status status'.$user->status, TRUE ).'

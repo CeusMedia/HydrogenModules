@@ -1,47 +1,61 @@
- <?php
+<?php
+$w			= (object) $words['editInfo'];
 
-$w  = (object) $words['editInfo'];
+$helperAge	= new View_Helper_TimePhraser( $env );
 
 $roleMap	= array();
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
 
 $facts		= array();
-$helper		= new View_Helper_TimePhraser( $env );
 $facts[]	= array(
 	'label'	=> $w->labelRegisteredAt,
-	'value'	=> $helper->convert( $user->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
+	'value'	=> $helperAge->convert( $user->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 );
 if( $user->loggedAt ){
-	$loggedAt	= $helper->convert( $user->loggedAt );
+	$loggedAt	= $helperAge->convert( $user->loggedAt );
 	$facts[]	= array(
 		'label'	=> $w->labelLoggedAt,
-		'value'	=> $helper->convert( $user->loggedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
+		'value'	=> $helperAge->convert( $user->loggedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 	);
 }
 if( $user->activeAt ){
-	$activeAt	= $helper->convert( $user->activeAt );
+	$activeAt	= $helperAge->convert( $user->activeAt );
 	$facts[]	= array(
 		'label'	=> $w->labelActiveAt,
-		'value'	=> $helper->convert( $user->activeAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
-	);
-}
-if( !empty( $projects ) ){
-	$list	= array();
-	foreach( $projects as $project ){
-		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
-	}
-	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
-	$facts[]	= array(
-		'label'	=> 'Projekte',
-		'value'	=> $projects
+		'value'	=> $helperAge->convert( $user->activeAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
 	);
 }
 
-foreach( $facts as $nr => $fact )
-	$facts[$nr]	= UI_HTML_Tag::create( 'dt', $fact['label'] ).UI_HTML_Tag::create( 'dd', $fact['value'] );
+if( !empty( $projects ) ){
+	$list	= array();
+	foreach( $projects as $project ){
+		$label	= $project->title;
+		if( !in_array( (int) $project->status, array( 0, 1, 2, 3 ) ) )
+			$label	= UI_HTML_Tag::create( 'del', $label );
+		$url	= './manage/project/edit/'.$project->projectId;
+		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'project project-list-item' ) );
+		$list[]	= UI_HTML_Tag::create( 'li', $link );
+	}
+	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects project-list' ) );
+	$facts[]	= array(
+		'label'	=> 'Projekte',
+		'value'	=> $projects,
+		'style'	=> 'max-height: 200px; overflow-y: auto',
+//		'class'	=> 'fact-list-definition-multiple',
+	);
+}
+
+foreach( $facts as $nr => $fact ){
+	$fact['class']	= !empty( $fact['class'] ) ? $fact['class'] : NULL;
+	$fact['style']	= !empty( $fact['style'] ) ? $fact['style'] : NULL;
+	$term			= UI_HTML_Tag::create( 'dt', $fact['label'] );
+	$definition		= UI_HTML_Tag::create( 'dd', $fact['value'], array(
+		'class'		=> $fact['class'],
+		'style'		=> $fact['style']
+	) );
+	$facts[$nr]		= $term.$definition;
+}
 $facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
 
 return '
