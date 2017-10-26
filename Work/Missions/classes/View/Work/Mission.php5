@@ -66,8 +66,8 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$duration	= ( $duration - $seconds ) / 60;
 		$minutes	= $duration % 60;
 		$duration	= ( $duration - $minutes ) / 60;
-		$hours		= $duration % 24;
-		$days		= ( $duration - $hours ) / 24;
+		$hours		= $duration % 8;
+		$days		= ( $duration - $hours ) / 8;
 		$duration	= ( $seconds ? $space.str_pad( $seconds, 2, 0, STR_PAD_LEFT ).'s' : '' );
 		$duration	= ( $minutes ? $space.( $hours ? str_pad( $minutes, 2, 0, STR_PAD_LEFT ).'m' : $minutes.'m' ) : '' ).$duration;
 		$duration	= ( $hours ? $space.( $days ? str_pad( $hours, 2, 0, STR_PAD_LEFT ).'h' : $hours.'h' ) : '' ).$duration;
@@ -84,7 +84,7 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$matches	= array();
 		if( preg_match( $regexDays, $time, $matches ) ){
 			$time		= preg_replace( $regexDays, '', $time );
-			$seconds	+= (int) $matches[1] * 24 * 60 * 60;
+			$seconds	+= (int) $matches[1] * 8 * 60 * 60;
 		}
 		if( preg_match( $regexHours, $time, $matches ) ){
 			$time		= preg_replace( $regexHours, '', $time );
