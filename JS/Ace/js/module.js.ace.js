@@ -8,7 +8,7 @@
  *
  */
 var ModuleAce = {
-	verbose: false,
+	verbose: !false,
 	strict: true,
 	config: {																	//  @see https://github.com/ajaxorg/ace/wiki/Configuring-Ace
 		theme: "ace/theme/tomorrow",
@@ -20,6 +20,7 @@ var ModuleAce = {
 			minLines: 4,							//  show atleast 4 lines
 			maxLines: 'Infinity',							//  ...
 			useWorker: false,
+			showGutter: true,
 		},
 		events: [{
 		}],
@@ -392,6 +393,9 @@ var ModuleAceAutoSave = {
 			in: 250,
 			out: 250,
 			show: 750
+		},
+		callbacks: {
+			update: function(change, editor){}
 		}
 	},
 	applyToEditor: function(editor, url, options){
@@ -425,6 +429,7 @@ var ModuleAceAutoSave = {
 			.done(function(){
 				overlay.addClass("positive").html(options.words.saved);
 				ModuleAceAutoSave.clearOverlayWithDelay(editor, options);
+				options.callbacks["update"](change, editor);
 			})
 			.fail(function(a,b){
 				overlay.addClass("negative").html(options.words.failed+": "+a.responseJSON.message);

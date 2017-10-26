@@ -2,11 +2,12 @@
 <module>
 	<title>JS: Ace</title>
 	<description><![CDATA[Ace Text Editor.]]></description>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Implement auto apply.</log>
 	<log version="0.4">Implement auto save.</log>
+	<log version="0.4.1">Add callback support.</log>
 	<category>JavaScript</category>
 	<company site="https://ace.c9.io/">ace.c9.io</company>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
