@@ -75,9 +75,9 @@ class Job_Mail extends Job_Abstract{
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled < "0.4.8" )			// todo: to be removed
 			$this->__migrateRepositoryFromCommonToMail();
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.6.8" )			// todo: to be removed
-			$this->__detectCompression( array(), array() );
+			$this->__detectCompression( array()/*, array(), array( 0, 1000 )*/ );
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.7.1" )			// todo: to be removed
-			$this->__detectMailClass( array(), array() );
+			$this->__detectMailClass( array()/*, array(), array( 0, 1000 )*/ );
 	}
 
 	public function clean(){
