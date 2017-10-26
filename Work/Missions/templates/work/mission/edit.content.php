@@ -26,7 +26,14 @@ if( $mode === "tabbed" ){
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
 				<div id="mirror-container">
-					<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+					'.UI_HTML_Tag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ), array(
+						'id'		=> "input_content",
+						'name'		=> "content",
+						'rows'		=> "22",
+						'class'		=> "span12 -max -cmGrowText -cmClearInput",
+						'data-ace-flag-font-size'	=> "12",
+						'data-ace-option-show-gutter'	=> "false"
+					) ).'
 					<p>
 						'.$hintMarkdown.'
 					</p>
@@ -45,8 +52,8 @@ if( $mode === "tabbed" ){
 							Alternativ dazu kann dieser Text auch mit einem HTML-Editor bearbeitet werden.
 						</p>
 						<p>
-							Dazu kann man diese Beschreibung von Markdown in HTML.
-							Bei zukünftigen Veränderungen wird immer der HTML-Editor angezeigt.
+							Dazu kann man diese Beschreibung von Markdown in HTML überführen.
+							Bei zukünftigen Veränderungen wird danach immer der HTML-Editor angezeigt.
 							Das betrifft auch ggfs. Andere, die diesen Eintrag bearbeiten können.
 						</p>
 					</div>

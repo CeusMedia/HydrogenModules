@@ -38,7 +38,7 @@ var WorkMissionsCalendar = {
 	},
 
 	initContextMenu: function(){
-		cmContextMenu.containment = "#mission-calendar";
+		cmContextMenu.containment = "#mission-calendar table tbody";
 		cmContextMenu.init("#mission-calendar tbody ul li");
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");

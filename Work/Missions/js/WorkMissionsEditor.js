@@ -139,6 +139,32 @@ var WorkMissionsEditor = {
 		WorkMissionsEditor.missionId = missionId;
 		WorkMissionsEditor.userId = Auth.userId;
 		WorkMissionsEditor.markdown = $("#mission-content-html");
+		var editor = "Ace";
+//		var editor = "CodeMirror";
+		switch(editor){
+			case "Ace":
+				this._setupMarkdownEditorWithAce(missionId);
+				break;
+			case "CodeMirror":
+				this._setupMarkdownEditorWithCodeMirror(missionId);
+				break;
+		}
+	},
+	_setupMarkdownEditorWithAce: function(missionId){
+		var editor 	= ModuleAce.applyTo("#input_content");
+		var saveUrl	= "work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId;
+		var onUpdate	= function(chance, editor){
+			jQuery.post("./helper/markdown/ajaxRender", {content: editor.getValue()})
+			.done(function(html){
+				jQuery("#work-missions-loader").remove();
+				WorkMissionsEditor.markdown.html(html).css({opacity: 1});
+			});
+		};
+		ModuleAceAutoSave.applyToEditor(editor, saveUrl, {callbacks: {update: onUpdate}});
+		onUpdate(null, editor);
+	},
+	_setupMarkdownEditorWithCodeMirror: function(missionId){
+                "use strict";
 		WorkMissionsEditor.textarea = $("#input_content");
 		WorkMissionsEditor.mirror = CodeMirror.fromTextArea(WorkMissionsEditor.textarea.get(0), {
 			lineNumbers: true,
