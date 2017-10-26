@@ -33,6 +33,8 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 			$this->note->user	= $this->modelUser->get( $this->note->userId );
 			$this->factsChanges	= new View_Helper_Work_Issue_ChangeFacts( $this->env );
 			$this->factsChanges->setNote( $this->note );
+			$this->changeNote	= new View_Helper_Work_Issue_ChangeNote( $this->env );
+			$this->changeNote->setNote( $this->note );
 		}
 
 	}
@@ -43,9 +45,26 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 		$issue		= $data['issue'];
 
 		$message	= array();
+		$panelFacts	= '';
+		$panelNote	= '';
 		if( $this->note ){
 			$worker		= $this->renderUser( $this->note->user, TRUE );
 			$message[]	= $worker.' hat einen Problemreport bearbeitet.';
+			$panelFacts	= '
+				<div class="content-panel">
+					<h3>Änderungen</h3>
+					<div class="content-panel-inner">
+						'.$this->factsChanges->render().'
+					</div>
+				</div>';
+			$panelNote	= '
+				<div class="content-panel">
+					<h3>Notiz zur Änderung</h3>
+					<div class="content-panel-inner">
+						'.$this->changeNote->render().'
+					</div>
+				</div>';
+
 		}
 		else
 			$message[]	= 'Ein Problemreport wurde bearbeitet.';
@@ -64,12 +83,8 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 			'.$this->factsMain->render().'
 		</div>
 	</div>
-	<div class="content-panel">
-		<h3>Änderungen</h3>
-		<div class="content-panel-inner">
-			'.$this->factsChanges->render().'
-		</div>
-	</div>
+	'.$panelFacts.'
+	'.$panelNote.'
 	<div class="content-panel">
 		<h3>Informationen</h3>
 		<div class="content-panel-inner">

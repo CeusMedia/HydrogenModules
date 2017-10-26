@@ -45,9 +45,6 @@ class View_Helper_Work_Issue_ChangeFacts{
 			$helper->setChange( $change );
 			$this->factsChanges->add( $change->type, $helper->render(), $helper->renderAsText() );
 		}
-		$helper		= new View_Helper_Work_Issue_ChangeNote( $this->env );
-		$helper->setNote( $this->note );
-		$this->factsChanges->add( 10, $helper->render(), $helper->renderAsText() );
 
 	}
 
