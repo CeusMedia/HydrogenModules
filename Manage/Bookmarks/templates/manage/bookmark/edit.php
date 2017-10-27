@@ -1,8 +1,16 @@
 <?php
+$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+}
 
 return '
 <div class="row-fluid">
-	<div class="span3">
+	<div class="span6">
 		<div class="content-panel">
 			<h3>Lesezeichen</h3>
 			<div class="content-panel-inner">
@@ -10,7 +18,7 @@ return '
 			</div>
 		</div>
 	</div>
-	<div class="span9">
+	<div class="span6">
 		<div class="content-panel">
 			<h3>Lesezeichen verändern</h3>
 			<div class="content-panel-inner">
@@ -28,9 +36,9 @@ return '
 						</div>
 					</div>
 					<div class="buttonbar">
-						<a class="btn btn-small" href="./manage/bookmark"><i class="icon-arrow-left"></i> zurück</a>
-						<button type="submit" name="save" class="btn not-btn-small btn-primary"><i class="icon-ok icon-white"></i> speichern</button>
-						<a class="btn btn-small btn-danger" href="./manage/bookmark/remove/'.$bookmark->bookmarkId.'"><i class="icon-remove icon-white"></i> entfernen</a>
+						<a class="btn btn-small" href="./manage/bookmark">'.$iconList.' Liste</a>
+						<button type="submit" name="save" class="btn not-btn-small btn-primary">'.$iconSave.' speichern</button>
+						<a class="btn btn-small btn-danger" href="./manage/bookmark/remove/'.$bookmark->bookmarkId.'">'.$iconRemove.' entfernen</a>
 					</div>
 				</form>
 			</div>
