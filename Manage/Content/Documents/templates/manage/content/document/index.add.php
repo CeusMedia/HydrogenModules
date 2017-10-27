@@ -2,12 +2,27 @@
 
 $w		= (object) $words['add'];
 
-$optFilename	= array( '' => '' );
-foreach( $documents as $entry )
-	$optFilename[$entry]	= $entry;
-$optFilename	= UI_HTML_Elements::Options( $optFilename );
-
 $iconUpload     = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+	$iconUpload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+}
+
+$fieldFilename	= '';
+if( count( $documents ) ){
+	$optFilename	= array( '' => '' );
+	foreach( $documents as $entry )
+		$optFilename[$entry]	= $entry;
+	$optFilename	= UI_HTML_Elements::Options( $optFilename );
+	$fieldFilename	= '
+	<div class="row-fluid">
+		<div class="span12">
+			<label for="input_filename">'.$w->labelFilename.'</label>
+			<select name="filename" id="input_filename" class="span12">'.$optFilename.'</select>
+		</div>
+	</div>';
+}
 
 if( !in_array( 'add', $rights ) )
 	return;
@@ -22,14 +37,9 @@ return '
 					'.View_Helper_Input_File::render( 'upload', $iconUpload, TRUE ).'
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_filename">'.$w->labelFilename.'</label>
-					<select name="filename" id="input_filename" class="span12">'.$optFilename.'</select>
-				</div>
-			</div>
+			'.$fieldFilename.'
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-primary"><i class="icon-plus icon-white"></i> '.$w->buttonSave.'</button>
+				<button type="submit" name="save" class="btn btn-small btn-primary">'.$iconSave.' '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
