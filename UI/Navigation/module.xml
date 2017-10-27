@@ -5,7 +5,7 @@
 
 This module combines several navigation types to provide a standard navigation composition.
 ]]></description>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -28,6 +28,7 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.3.9">Replace algorithm for identification of current link.</log>
 	<log version="0.4">Add responsive design for sidebar navigation.</log>
 	<log version="0.4.1">Support database page access attribute.</log>
+	<log version="0.4.2">Improve sidebar responsive design.</log>
 	<category>User Interface</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

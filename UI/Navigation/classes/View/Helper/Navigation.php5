@@ -21,8 +21,8 @@ class View_Helper_Navigation{
 		$desktopRendererClass = $moduleConfig->get( 'render.desktop.class' );
 		if( $desktopRendererClass === 'View_Helper_Navigation_Bootstrap_Sidebar' ){
 			$pathJs	= $env->getConfig()->get( 'path.scripts' );
-			$context->js->addUrl( $pathJs.'module.ui.navigation.sidebar.js' );
-			$context->js->addScriptOnReady("ModuleUiNavigation.Sidebar.init();");
+			$env->getPage()->js->addUrl( $pathJs.'module.ui.navigation.sidebar.js' );
+			$env->getPage()->js->addScriptOnReady("ModuleUiNavigation.Sidebar.init();");
 		}
 	}
 
