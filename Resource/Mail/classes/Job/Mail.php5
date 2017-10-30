@@ -72,8 +72,8 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function migrate(){
-		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled < "0.4.8" )			// todo: to be removed
-			$this->__migrateRepositoryFromCommonToMail();
+//		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.4.8" )			// todo: to be removed
+//			$this->__migrateRepositoryFromCommonToMail();
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.6.8" )			// todo: to be removed
 			$this->__detectCompression( array()/*, array(), array( 0, 1000 )*/ );
 		if( $this->env->getModules()->get( 'Resource_Mail' )->versionInstalled >= "0.7.1" )			// todo: to be removed
@@ -81,7 +81,7 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function clean(){
-		$this->__removeNewsletters( array( 'createdAt' => '<'.( time()- 7 * 24 * 3600 ) ), array( 'mailId' => 'ASC' ) );
+		$this->__removeNewsletters( array( 'createdAt' => '<'.( time() - 7 * 24 * 3600 ) ), array( 'mailId' => 'ASC' ) );
 		$this->__removeAttachments( array(), array( 'mailId' => 'ASC' ) );
 	}
 
@@ -274,7 +274,7 @@ class Job_Mail extends Job_Abstract{
 					try{
 						$this->decodeMailObject( $mail, TRUE );												//  decompress & unserialize mail object serial and apply to mail data object
 						if( is_object( $mail->object ) ){
-							die( get_class( $mail->object ) );
+//							die( get_class( $mail->object ) );
 							if( method_exists( $mail->object->mail, 'getSender' ) ){
 								$count++;
 								$model->edit( $mail->mailId, array( 'senderAddress' => $mail->object->mail->getSender() ) );
