@@ -8,6 +8,11 @@ $panelConfirm	= HTML::DivClass( "content-panel", array(
 		UI_HTML_Tag::create( 'form', array(
 			HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),
 			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'hidden',
+				'name'		=> 'from',
+				'value'		=> $from
+			) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'confirm_code',
 				'id'		=> 'input_confirm_code',
@@ -23,7 +28,7 @@ $panelConfirm	= HTML::DivClass( "content-panel", array(
 				) )
 			) )
 		), array(
-			'action'	=> './auth/local/confirm'.( $from ? '?from='.$from : '' ),
+			'action'	=> './auth/local/confirm',
 			'method'	=> 'POST',
 			'name'		=> 'auth-confirm'
 		) )
