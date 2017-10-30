@@ -248,10 +248,15 @@ print_m( $items );
 	}
 
 	public function createNaturalUserFromLocalUser( $localUserId ){
-throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$modelUser		= new Model_User( $this->env );
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
+		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
+		$address		= $modelAddress->get( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $this->localUserId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
 
 		$account	= new \MangoPay\UserNatural();
 		$account->PersonType			= "NATURAL";
@@ -261,6 +266,17 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$account->Nationality			= $user->country;
 		$account->CountryOfResidence	= $user->country;
 		$account->Email					= $user->email;
+		$account->Address 				= new \MangoPay\Address();
+		$account->Address->AddressLine1	= $user->street.' '.$user->number;
+		$account->Address->City			= $user->city;
+		$account->Address->PostalCode	= $user->postcode;
+		$account->Address->Country		= $user->country;
+		if( $address ){
+			$account->Address->AddressLine1	= $address->street;
+			$account->Address->City			= $address->city;
+			$account->Address->PostalCode	= $address->postcode;
+			$account->Address->Country		= $address->country;
+		}
 		$account	= $this->provider->Users->Create( $account );
 		$modelAccount->add( array(
 			'userId'			=> $localUserId,
@@ -269,7 +285,6 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		) );
 		return $account;
 	}
-
 
 	public function createUserWallet( $userId, $currency ){
 		$wallet		= new \MangoPay\Wallet();
@@ -452,14 +467,16 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		return $list;
 	}
 
-	public function getUserIdFromLocalUserId( $localUserId ){
+	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE ){
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( array(
 			'userId'	=> $localUserId,
 			'provider'	=> 'mangopay',
 		) );
-		if( !$relation )
+		if( !$relation && $strict )
 			throw new RuntimeException( 'No payment account available' );
+		if( !$relation )
+			return NULL;
 		return $relation->paymentAccountId;
 	}
 
