@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<module>
+	<title><![CDATA[Resource: Address]]></title>
+	<description><![CDATA[Address store for several other modules.]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initital prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Model/Address.php5</class>
+<!--		<class>Logic/Address.php5</class>-->
+<!--		<locale>de/address.ini</locale>
+		<locale>en/address.ini</locale>-->
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>addresses`;
+CREATE TABLE IF NOT EXISTS `addresses` (
+  `addressId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `relationId` int(11) UNSIGNED NOT NULL,
+  `relationType` varchar(30) NOT NULL,
+  `type` tinyint(1) UNSIGNED NOT NULL COMMENT '1:Location, 2:Billing, 4:Delivery',
+  `country` varchar(100) NOT NULL,
+  `state` varchar(127) DEFAULT NULL,
+  `region` varchar(127) DEFAULT NULL,
+  `city` varchar(127) NOT NULL,
+  `postcode` varchar(10) NOT NULL,
+  `street` varchar(127) NOT NULL,
+  `latitude` float NOT NULL,
+  `longitude` float NOT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(127) NOT NULL,
+  `institution` varchar(255) DEFAULT NULL,
+  `firstname` varchar(100) DEFAULT NULL,
+  `surname` varchar(100) DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`addressId`),
+  KEY `relationId` (`relationId`),
+  KEY `relationType` (`relationType`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>addresses`;
+]]></sql>
+	<sql on="uninstall" type="sqlite"><![CDATA[
+DROP TABLE IF EXISTS "<%?prefix%>addresses";
+]]></sql>
+</module>
