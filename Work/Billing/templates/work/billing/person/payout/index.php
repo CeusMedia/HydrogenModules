@@ -23,7 +23,7 @@ $helper->setFilterUrl( './work/billing/person/payout/filter/'.$person->personId 
 $helper->setFilterPrefix( $filterSessionPrefix );
 $helper->setButtons( $buttonAdd );
 $panelTransactions	= $helper->render();
-if( $person->balance <= 0 ){
+if( 0 && $person->balance <= 0 ){							//  disabled for now
 	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
 		'type'	=> 'button',
 		'disabled'	=> 'disabled',
@@ -63,7 +63,8 @@ return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstna
 				</div>
 				<div class="span6">
 					<label for="input_amount">Betrag</label>
-					<input type="number" step="0.01" min="0.01" max="'.$amount.'" name="amount" id="input_amount" class="span10 input-number" required="required" placeholder="0,00" value="'.$amount.'"/><span class="suffix">&euro;</span>
+					<input type="number" step="0.01" min="0.01"  name="amount" id="input_amount" class="span10 input-number" required="required" placeholder="0,00" value="'.$amount.'"/><span class="suffix">&euro;</span>
+<!--					<input type="number" step="0.01" min="0.01" max="'.$amount.'" name="amount" id="input_amount" class="span10 input-number" required="required" placeholder="0,00" value="'.$amount.'"/><span class="suffix">&euro;</span>-->
 				</div>
 			</div>
 		</div>

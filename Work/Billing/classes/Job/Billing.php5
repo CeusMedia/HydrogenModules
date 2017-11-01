@@ -7,7 +7,7 @@ class Job_Billing extends Job_Abstract{
 
 	public function bookExpenses(){
 		$timestamp	= time();
-		$timestamp	= strtotime( "2017-10-01" );
+//		$timestamp	= strtotime( "2017-10-01" );
 		$dayOfWeek	= (int) date( 'w', $timestamp );
 		$dayOfMonth	= (int) date( 'j', $timestamp );
 		$dayOfYear	= (int) date( 'z', $timestamp ) + 1;
