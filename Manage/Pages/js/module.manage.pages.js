@@ -19,8 +19,12 @@ ModuleManagePages.PageEditor = {
 			});
 			$("#tabs-page-editor>ul>li>a").bind("click", function(){
 				var key = $(this).attr("href").replace(/#tab/, "");
-				if(key == 3 && ModuleManagePages.PageEditor.editor.toLowerCase() == "codemirror")
-					window.setTimeout(ModuleManagePages.PageEditor.setupCodeMirror, 20);
+				if(key == 3){
+					if( ModuleManagePages.PageEditor.editor.toLowerCase() == "codemirror")
+						window.setTimeout(ModuleManagePages.PageEditor.setupCodeMirror, 20);
+					if( ModuleManagePages.PageEditor.editor.toLowerCase() == "ace")
+						window.setTimeout(ModuleManagePages.PageEditor.setupAce, 20);
+				}
 				if(key == 4)
 					ModuleManagePages.PageEditor.loadPagePreview();
 				$.ajax({
@@ -36,6 +40,9 @@ ModuleManagePages.PageEditor = {
 					break;
 				case 'codemirror':
 					ModuleManagePages.PageEditor.setupCodeMirror();
+					break;
+				case 'ace':
+					ModuleManagePages.PageEditor.setupAce();
 					break;
 				default:
 					break;
@@ -103,6 +110,10 @@ ModuleManagePages.PageEditor = {
 				document.location.reload();
 			}
 		});
+	},
+
+	setupAce: function(){
+		ModuleAce.applyTo("textarea#input_page_content");
 	},
 
 	setupCodeMirror: function(){
