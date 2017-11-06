@@ -99,10 +99,7 @@ abstract class Mail_Abstract{
 	}*/
 
 	public function addAttachment( $filePath, $mimeType ){
-		$attachment	= new \CeusMedia\Mail\Part\Attachment();
-		$attachment->setFile( $filePath, $mimeType );
-//		$this->mail->addAttachmentFile( $filePath, $mimeType );
-		$this->mail->addAttachment( $attachment );
+		$this->mail->addFile( $filePath, $mimeType );
 	}
 
 	protected function addBodyClass( $class ){
