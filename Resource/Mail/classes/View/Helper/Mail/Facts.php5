@@ -31,6 +31,8 @@ class View_Helper_Mail_Facts{
 	}
 
 	public function render( $classList = NULL ){
+		if( !count( $this->facts ) )
+			return '';
 		$classList	= $classList ? $classList : $this->listClass;
 		$list	= array();
 		foreach( $this->facts as $fact ){
