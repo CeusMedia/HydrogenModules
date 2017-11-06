@@ -120,8 +120,8 @@ print_m( $items );
 	/**
 	 *	@todo		finish implementation, not working right now
 	 */
-	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $amount ){
-		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
+	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $currency, $amount ){
+//		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
 		$payIn		= new \MangoPay\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -130,10 +130,10 @@ print_m( $items );
 		$payIn->Fees				= new \MangoPay\Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
-		$payIn->Fees->Currency	= "EUR";
+		$payIn->Fees->Currency	= $currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
-		$payIn->DebitedFunds->Currency	= "EUR";
+		$payIn->DebitedFunds->Currency	= $currency;
 
 		// payment type as BANKWIRE
 		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsBankWire();
@@ -152,7 +152,7 @@ print_m( $items );
 	/**
 	 *	@todo		test (not tested since no mandates allowed, yet)
 	 */
-	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $amount ){
+	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $currency, $amount ){
 
 		$payIn	= new \MangoPay\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -161,10 +161,10 @@ print_m( $items );
 		$payIn->Fees				= new \MangoPay\Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
-		$payIn->Fees->Currency	= "EUR";
+		$payIn->Fees->Currency	= $currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
-		$payIn->DebitedFunds->Currency	= "EUR";
+		$payIn->DebitedFunds->Currency	= $currency;
 
 		$payIn->PaymentDetails	= new \MangoPay\PayInPaymentDetailsDirectDebitDirect();
 		$payIn->PaymentDetails->MandateId	=
