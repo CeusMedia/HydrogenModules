@@ -113,7 +113,8 @@ ModuleManagePages.PageEditor = {
 	},
 
 	setupAce: function(){
-		ModuleAce.applyTo("textarea#input_page_content");
+		if(jQuery("textarea#input_page_content").size())
+			ModuleAce.applyTo("textarea#input_page_content");
 	},
 
 	setupCodeMirror: function(){
