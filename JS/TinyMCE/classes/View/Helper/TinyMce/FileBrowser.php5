@@ -98,17 +98,27 @@ class View_Helper_TinyMce_FileBrowser{
 	}
 
 	protected function renderFolderItem( $path, $label, $count = NULL, $icon = 'folder-open' ){
-		$path	= base64_encode( $path );
-		if( is_int( $count ) )
-			$count	= UI_HTML_Tag::create( 'small', '('.$count.')', array( 'class' => 'muted' ) );
+		$facts		= array();
+		if( is_int( $count ) && $count > 0 )
+			$facts[]	= sprintf( 'Einträge: %d', $count );
+		$facts	= UI_HTML_Tag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), array( 'class' => 'muted' ) );
+
+		$path		= base64_encode( $path );
 		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
-		$label	= UI_HTML_Tag::create( 'div', $label.'&nbsp;'.$count, array(
+		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		return UI_HTML_Tag::create( 'li', $image.$label, array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-folder trigger-folder',
 			'data-url'	=> './manage/tinyMce/setPath/'.$mode.'/'.$this->topicId.'/'.$path,
+		) );
+	}
+
+	protected function renderItemException( $itemUri, $itemLabel, $exception ){
+		return UI_HTML_Tag::create( 'li', $exception->getMessage(), array(
+			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
+			'data-url'	=> '',
 		) );
 	}
 
@@ -129,29 +139,47 @@ class View_Helper_TinyMce_FileBrowser{
 				throw new Exception( 'No file found in bucket for: '.$path );
 		}
 
-		$image		= new UI_Image( $remoteFilePath );
-		$facts		= join( '&nbsp;|&nbsp;', array(
-			sprintf( 'Größe: %s', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
-			sprintf( 'Auflösung: %s &times; %s Pixel', $image->getWidth(), $image->getHeight() ),
-			sprintf( 'Qualität: %s %%', $image->getQuality() ),
-			sprintf( 'Typ: %s', $image->getMimeType() ),
-			sprintf( 'Alter: '.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
-		) );
+		try{
+			$image		= new UI_Image( $remoteFilePath );
+			$facts		= UI_HTML_Tag::create( 'dl', array(
+				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
+				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
+				sprintf( '<dt>Typ</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
+				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
+			), array( 'class' => 'dl-inline' ) );
+		}
+		catch( Exception $e ){
+			$facts		= UI_HTML_Tag::create( 'dl', array(
+				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
+			), array( 'class' => 'dl-inline' ) );
+		}
 		$facts		= UI_HTML_Tag::create( 'small', $facts, array( 'class' => 'muted' ) );
 
-		$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
-		$thumbnail	= UI_HTML_Tag::create( 'div', NULL, array(
-			'class'		=> $this->cssClassPrefix.'-item-icon trigger-submit',
-			'style'		=> 'background-image: url('.$data.')',
-			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
-			'data-type'	=> 'image',
-		) );
-		$label	= UI_HTML_Tag::create( 'div', $filePath.'<br/>'.$facts, array(
+		try{
+			$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
+			$thumbnail	= UI_HTML_Tag::create( 'div', NULL, array(
+				'class'		=> $this->cssClassPrefix.'-item-icon trigger-submit',
+				'style'		=> 'background-image: url('.$data.')',
+				'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-type'	=> 'image',
+			) );
+		}
+		catch( Exception $e ){
+			$thumbnail		= UI_HTML_Tag::create( 'div', NULL, array(
+				'class'		=> $this->cssClassPrefix.'-item-icon trigger-submit',
+				'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-type'	=> 'image',
+			) );
+		}
+
+		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		return UI_HTML_Tag::create( 'li', $thumbnail.$label, array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
-			'data-url'	=> '',
+			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
 		) );
 	}
 
@@ -179,27 +207,14 @@ class View_Helper_TinyMce_FileBrowser{
 				$list[]		= $this->renderImageItem( $image->value, $image->title );
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteFailure( $e->getMessage() );
+				$list[]		= $this->renderItemException( $image->value, $image->title, $e );
+//				$this->env->getMessenger()->noteFailure( $e->getMessage() );
 			}
 		}
-		$parts		= explode( '/', $this->path );
-		$pathLabel	= array();
-		$way		= array();
-		foreach( $parts as $nr => $part ){
-			if( $nr == count( $parts ) - 1 )
-				break;
-			$way[]	= $part;
-			$pathLabel[]	= UI_HTML_Tag::create( 'a', $part, array(
-				'class'		=> 'trigger-folder',
-				'data-url'	=> './manage/tinyMce/setPath/image/'.$this->topicId.'/'.base64_encode( join( '/', $way ) ),
-			) );
-		}
-		$pathLabel[]	= $part;
-		$pathLabel		= join( ' / ', $pathLabel );
 
 		$listItems		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
 		$listItems		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', $pathLabel ),
+//			UI_HTML_Tag::create( 'h4', '-' ),//$pathLabel ),
 			UI_HTML_Tag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
 		) );
 
@@ -254,24 +269,9 @@ class View_Helper_TinyMce_FileBrowser{
 			}
 		}
 
-		$parts		= explode( '/', $this->path );
-		$pathLabel	= array();
-		$way		= array();
-		foreach( $parts as $nr => $part ){
-			if( $nr == count( $parts ) - 1 )
-				break;
-			$way[]	= $part;
-			$pathLabel[]	= UI_HTML_Tag::create( 'a', $part, array(
-				'class'		=> 'trigger-folder',
-				'data-url'	=> './manage/tinyMce/setPath/link/'.$this->topicId.'/'.base64_encode( join( '/', $way ) ),
-			) );
-		}
-		$pathLabel[]	= $part;
-		$pathLabel		= join( ' / ', $pathLabel );
-
 		$listItems		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
 		$listItems		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', $pathLabel ),
+//			UI_HTML_Tag::create( 'h4', '-' ),//$pathLabel ),
 			UI_HTML_Tag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
 		) );
 
@@ -282,16 +282,35 @@ class View_Helper_TinyMce_FileBrowser{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		$iconGrid	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
-				'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/0',
-				'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
-			) ),
-			UI_HTML_Tag::create( 'a', $iconList.'&nbsp;Liste', array(
-				'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/1',
-				'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
-			) ),
-		), array( 'class' => 'btn-group' ) );
+
+		$parts		= explode( '/', $this->path );
+		$pathLabel	= array();
+		$way		= array();
+		foreach( $parts as $nr => $part ){
+			if( $nr == count( $parts ) - 1 )
+				break;
+			$way[]	= $part;
+			$pathLabel[]	= UI_HTML_Tag::create( 'a', $part, array(
+				'class'		=> 'trigger-folder',
+				'data-url'	=> './manage/tinyMce/setPath/image/'.$this->topicId.'/'.base64_encode( join( '/', $way ) ),
+			) );
+		}
+		$pathLabel[]	= $part;
+		$pathLabel		= join( ' / ', $pathLabel );
+
+		return UI_HTML_Tag::create( 'div', 'Position: '.$pathLabel, array( 'class' => 'position' ) ).
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
+						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/0',
+						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
+					) ),
+					UI_HTML_Tag::create( 'a', $iconList.'&nbsp;Liste', array(
+						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/1',
+						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
+					) ),
+				), array( 'class' => 'btn-group' ) )
+			), array( 'class' => 'buttons' ) );
 	}
 
 	protected function renderTopicList(){

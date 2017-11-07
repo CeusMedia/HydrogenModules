@@ -46,6 +46,15 @@ body#tinymce-file-browser #tinymce-file-browser-topbar{
 	background-color: #EEE;
 	border-bottom: 1px solid rgba(127, 127, 127, 0.25);
 /*	box-shadow: 1px 1px 2px 2px rgba(127, 127, 127, 0.25);*/
+	}
+body#tinymce-file-browser #tinymce-file-browser-topbar > div{
+	float: left;
+	width: 50%;
+	}
+body#tinymce-file-browser #tinymce-file-browser-topbar .position{
+	line-height: 30px;
+	}
+body#tinymce-file-browser #tinymce-file-browser-topbar .buttons{
 	text-align: right;
 	}
 body#tinymce-file-browser #tinymce-file-browser-content{
@@ -62,12 +71,12 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 #container-tinymce-file-browser ul.grid li.grid-item {
 	display: inline-block;
 	float: left;
-	width: 140px;
-	height: 158px;
+	width: 210px;
+	height: 248px;
 	border: 1px solid #ddd;
 	margin-right: 6px;
 	margin-bottom: 6px;
-	padding: 4px;
+	padding: 8px;
 	box-sizing: border-box;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -78,13 +87,14 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 	}
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-icon {
 	display: block;
-	width: 128px;
-	height: 128px;
-	border: 1px solid #DDD;
+	width: 192px;
+	height: 192px;
+	border: 0px solid black;
+/*	border: 1px solid #DDD;
 	background-color: rgba(191,191,191,0.2);
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;
+	border-radius: 2px;*/
 	}
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-icon:hover {
 /*	opacity: 0.85;*/
@@ -98,11 +108,33 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 	text-align: center;
 	font-size: 0.9em;
 	}
-#container-tinymce-file-browser ul.grid li.grid-item.grid-item-folder .grid-item-icon {
-	font-size: 4.5em;
+
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl {
+	margin: 0;
+	padding: 0;
 	text-align: center;
-	line-height: 2em;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dt {
+	display: none;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd {
+	display: inline-block;
+	margin: 0 3px 0 0;
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd:after {
+	content: ",";
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd.fact-mime,
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd.fact-quality {
+	display: none;
+	}
+
+#container-tinymce-file-browser ul.grid li.grid-item.grid-item-folder .grid-item-icon {
+	font-size: 5.6em;
+	text-align: center;
+	line-height: 2.2em;
 	background-color: rgba(191,191,191,0.2);
+	border-radius: 3px;
 	color: #08c;
 	color: #DBA901;
 	}
@@ -113,17 +145,16 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 	color: #084d6f;
 	}
 #container-tinymce-file-browser ul.grid li.grid-item.grid-item-file .grid-item-icon {
-	font-size: 4.5em;
-	text-align: center;
-	line-height: 2em;
-	background-color: rgba(191,191,191,0.1);
-	color: rgba(127,127,127,0.5);
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: contain;
+	background-color: rgba(191,191,191,0.1);
+	border-radius: 3px;
+	font-size: 4.5em;
+	text-align: center;
+	line-height: 2em;
+	color: rgba(127,127,127,0.5);
 	}
-
-
 
 
 #container-tinymce-file-browser ul.list {}
@@ -136,16 +167,41 @@ body#tinymce-file-browser #tinymce-file-browser-content{
  	border-bottom: 1px solid rgba(191, 191, 191, 0.75);
 	height: 72px;
 	}
+
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl dt {
+	display: inline-block;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl dt:after {
+	content: ":";
+	padding-right: 4px;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl dd {
+	display: inline-block;
+	margin: 0 3px 0 0;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl dd:after {
+	content: ",";
+	padding-right: 2px;
+	}
+#container-tinymce-file-browser ul.list li.list-item .list-item-label dl dd:last-child:after {
+	content: "";
+	}
+
 #container-tinymce-file-browser ul.list li.list-item .list-item-icon {
 	display: inline-block;
 	float: left;
 	width: 64px;
 	height: 64px;
+/*	background-color: rgba(191,191,191,0.2);
 	border: 1px solid #DDD;
-	background-color: rgba(191,191,191,0.2);
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;
+	border-radius: 2px;*/
 	}
 #container-tinymce-file-browser ul.list li.list-item .list-item-icon:hover {
 /*	opacity: 0.85;*/
@@ -160,30 +216,31 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 	text-align: left;
 	font-size: 1.2em;
 	width: auto !important;
-	padding: 1em;
+	padding: 0.6em 1em;
 	cursor: pointer;
 	}
-#container-tinymce-file-browser ul.list li.list-item.list-item-folder .list-item-icon {
-	font-size: 2.25em;
+#container-tinymce-file-browser ul.list li.list-item small {
+	font-size: 0.7em;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-folder .list-item-icon,
+#container-tinymce-file-browser ul.list li.list-item.list-item-link .list-item-icon,
+#container-tinymce-file-browser ul.list li.list-item.list-item-file .list-item-icon {
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: contain;
 	text-align: center;
-	line-height: 2.2em;
+	line-height: 2.1em;
+	font-size: 2.1em;
+	}
+#container-tinymce-file-browser ul.list li.list-item.list-item-folder .list-item-icon {
 	background-color: rgba(191,191,191,0.2);
 	color: #08c;
 	color: #DBA901;
 	}
 #container-tinymce-file-browser ul.list li.list-item.list-item-link .list-item-icon {
-	font-size: 2.25em;
-	text-align: center;
-	line-height: 2.2em;
 	color: #084d6f;
 	}
 #container-tinymce-file-browser ul.list li.list-item.list-item-file .list-item-icon {
-	font-size: 2.25em;
-	text-align: center;
-	line-height: 2.2em;
-	background-color: rgba(191,191,191,0.1);
+/*	background-color: rgba(191,191,191,0.1);*/
 	color: rgba(127,127,127,0.5);
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: contain;
 	}
