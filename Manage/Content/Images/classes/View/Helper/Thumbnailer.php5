@@ -16,6 +16,12 @@ class View_Helper_Thumbnailer{
 	}
 
 	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL ){
+		$extension	= pathinfo( $imagePath, PATHINFO_EXTENSION );
+		if( strtolower( $extension ) === "svg" ){
+			$mime		= 'image/svg+xml';
+			$content	= file_get_contents( $imagePath );
+			return 'data:'.$mime.';base64,'.base64_encode( $content );
+		}
 		$maxWidth	= is_null( $maxWidth ) ? $this->maxWidth : (int) $maxWidth;
 		$maxHeight	= is_null( $maxHeight ) ? $this->maxHeight : (int) $maxHeight;
 		$indices	= array(
@@ -30,6 +36,7 @@ class View_Helper_Thumbnailer{
 		if( ( $thumb = $this->model->getByIndices( $indices ) ) )
 			return $thumb->data;
 		$mime		= image_type_to_mime_type( exif_imagetype( $imagePath ) );
+//		print_m( $mime );die;
 		$tmpName	= tempnam( sys_get_temp_dir(), 'img_' );
 		$image		= new UI_Image( $imagePath );
 		$processor	= new UI_Image_Processing( $image );
