@@ -48,13 +48,16 @@ body#tinymce-file-browser #tinymce-file-browser-topbar{
 /*	box-shadow: 1px 1px 2px 2px rgba(127, 127, 127, 0.25);*/
 	}
 body#tinymce-file-browser #tinymce-file-browser-topbar > div{
-	float: left;
-	width: 50%;
 	}
 body#tinymce-file-browser #tinymce-file-browser-topbar .position{
+	float: left;
+	width: 49%;
+	margin-left: 1%;
 	line-height: 30px;
 	}
 body#tinymce-file-browser #tinymce-file-browser-topbar .buttons{
+	float: left;
+	width: 50%;
 	text-align: right;
 	}
 body#tinymce-file-browser #tinymce-file-browser-content{
@@ -123,6 +126,9 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 	}
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd:after {
 	content: ",";
+	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd:last-child:after {
+	content: "";
 	}
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd.fact-mime,
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd.fact-quality {
