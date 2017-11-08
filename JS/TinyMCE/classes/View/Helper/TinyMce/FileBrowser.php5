@@ -6,8 +6,8 @@ class View_Helper_TinyMce_FileBrowser{
 	protected $sourceMode			= 0;
 	protected $cssClassPrefix		= 'list';
 
-	const DISPLAY_MODE_GRID			= 0;
-	const DISPLAY_MODE_LIST			= 1;
+	const DISPLAY_MODE_LIST			= 0;
+	const DISPLAY_MODE_GRID			= 1;
 
 	const SOURCE_MODE_IMAGE			= 0;
 	const SOURCE_MODE_LINK			= 1;
@@ -99,8 +99,9 @@ class View_Helper_TinyMce_FileBrowser{
 
 	protected function renderFolderItem( $path, $label, $count = NULL, $icon = 'folder-open' ){
 		$facts		= array();
-		if( is_int( $count ) && $count > 0 )
-			$facts[]	= sprintf( 'Einträge: %d', $count );
+		if( is_int( $count ) && $count > 0 ){
+			$facts[]	= sprintf( $count > 1 ? '%d Einträge' : '%d Eintrag', $count );
+		}
 		$facts	= UI_HTML_Tag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), array( 'class' => 'muted' ) );
 
 		$path		= base64_encode( $path );
@@ -195,9 +196,11 @@ class View_Helper_TinyMce_FileBrowser{
 		$images		= $this->filterItemsByPath( $this->topics[$this->topicId]->menu, $this->path );
 
 		if( $this->path ){
-			$parts		= explode( "/", $this->path );
-			$pathBack	= implode( "/", array_slice( $parts, 0, -1 ) );
-			$list[]		= $this->renderFolderItem( $pathBack, 'zurück', NULL, 'arrow-left' );
+			$parts		= explode( '/', $this->path );
+			$pathBack	= implode( '/', array_slice( $parts, 0, -1 ) );
+			$title		= 'zurück';
+			$desc		= UI_HTML_Tag::create( 'small', 'zum Überordner', array( 'class' => 'muted' ) );
+			$list[]		= $this->renderFolderItem( $pathBack, $title.'<br/>'.$desc, NULL, 'arrow-left' );
 		}
 
 		foreach( $folders as $label => $count ){
@@ -214,13 +217,11 @@ class View_Helper_TinyMce_FileBrowser{
 //				$this->env->getMessenger()->noteFailure( $e->getMessage() );
 			}
 		}
-
 		$listItems		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
 		$listItems		= UI_HTML_Tag::create( 'div', array(
 //			UI_HTML_Tag::create( 'h4', '-' ),//$pathLabel ),
 			UI_HTML_Tag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
 		) );
-
 		return $listItems;
 	}
 
@@ -312,17 +313,21 @@ class View_Helper_TinyMce_FileBrowser{
 		}
 		$pathLabel[]	= $part;
 		$pathLabel		= join( ' / ', $pathLabel );
+		$position		= '<b><small>Position:</small></b> '.$pathLabel;
 
-		return UI_HTML_Tag::create( 'div', 'Position: '.$pathLabel, array( 'class' => 'position' ) ).
+		$modeLabel		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
+		$mode			= '<b><small>Modus:</small></b> '.$modeLabel;
+
+		return UI_HTML_Tag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, array( 'class' => 'position autocut' ) ).
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
-						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/0',
-						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
-					) ),
 					UI_HTML_Tag::create( 'a', $iconList.'&nbsp;Liste', array(
-						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/1',
+						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_LIST,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
+					) ),
+					UI_HTML_Tag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
+						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_GRID,
+						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
 					) ),
 				), array( 'class' => 'btn-group' ) )
 			), array( 'class' => 'buttons' ) );

@@ -51,13 +51,13 @@ body#tinymce-file-browser #tinymce-file-browser-topbar > div{
 	}
 body#tinymce-file-browser #tinymce-file-browser-topbar .position{
 	float: left;
-	width: 49%;
+	width: 69%;
 	margin-left: 1%;
 	line-height: 30px;
 	}
 body#tinymce-file-browser #tinymce-file-browser-topbar .buttons{
 	float: left;
-	width: 50%;
+	width: 30%;
 	text-align: right;
 	}
 body#tinymce-file-browser #tinymce-file-browser-content{
@@ -180,7 +180,7 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 #container-tinymce-file-browser ul.list li.list-item .list-item-label dl {
 	margin: 0;
 	padding: 0;
-	text-align: center;
+/*	text-align: center;*/
 	}
 #container-tinymce-file-browser ul.list li.list-item .list-item-label dl dt {
 	display: inline-block;
