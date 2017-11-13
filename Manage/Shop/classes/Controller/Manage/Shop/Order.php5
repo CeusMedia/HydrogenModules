@@ -62,11 +62,11 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 					if( strlen( trim( $filterValue ) ) ){
 						$model		= new Model_Shop_Customer( $this->env );
 						$value		= '%'.str_replace( " ", "%", str_replace( ' ', '', $filterValue ) ).'%';
-						$find		= array( 'CONCAT(firstname, lastname)' => $value );
+						$find		= array( 'CONCAT(firstname, surname)' => $value );
 						if( ( $customers = $model->getAll( $find ) ) ){
-							$conditions['customerId']	= array();
+							$conditions['userId']	= array();
 							foreach( $customers as $customer )
-								$conditions['customerId'][]	= $customer->customerId;
+								$conditions['userId'][]	= $customer->userId;
 						}
 					}
 					break;
@@ -83,11 +83,11 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		$orders			= $this->logicShop->getOrders( $conditions, $orders, array( $pageNr * 15, 15 ) );
 		$customerIds	= array();
 		foreach( $orders as $nr => $order ){
-			$customerIds[]	= $order->customerId;
+			$customerIds[]	= $order->userId;
 			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->orderId );
-			$orders[$nr]->customer	= $this->logicShop->getCustomer( $order->customerId );
+			$orders[$nr]->customer	= $this->logicShop->getCustomer( $order->userId, TRUE );
 		}
-//		$customers		= $this->modelCustomer->getAll( array( 'customerId' => $customerIds ) );
+//		$customers		= $this->modelCustomer->getAll( array( 'userId' => $customerIds ) );
 		$this->addData( 'orders', $orders );
 		$this->addData( 'total', $this->logicShop->countOrders( $conditions ) );
 		$this->addData( 'pageNr', $pageNr );

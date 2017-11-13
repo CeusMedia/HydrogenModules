@@ -148,7 +148,7 @@ $panels[]	= '
 			<div class="content-panel-inner">
 				<dl class="dl-horizontal">
 					<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
-					<dt>Kunden-ID</dt><dd>'.$order->customerId.'</dd>
+					<dt>Kunden-ID</dt><dd>'.$order->userId.'</dd>
 					<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
 					<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
 		<!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
@@ -163,17 +163,17 @@ if( $order->customer )
 		<div class="content-panel">
 			<h4>Lieferanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( array( 'institution', 'firstname', 'lastname', 'email', 'phone', 'country', 'region', 'city', 'postcode', 'address' ), $order->customer, $labelsCustomer ).'
+				'.renderDataList( array( 'institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone' ), $order->customer->addressDelivery, $labelsCustomer ).'
 			</div>
 		</div>
 	</div>';
-if( $order->customer && $order->customer->alternative )
+if( $order->customer && $order->customer->addressBilling )
 	$panels[]	= '
 	<div class="span4">
 		<div class="content-panel">
 			<h4>Rechnungsanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( array( 'billing_institution', 'billing_firstname', 'billing_lastname', 'billing_country', 'billing_region', 'billing_city', 'billing_postcode', 'billing_address', 'billing_tnr', 'billing_phone', 'billing_email' ), $order->customer, $labelsCustomer ).'
+				'.renderDataList( array( 'institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone' ), $order->customer->addressBilling, $labelsCustomer ).'
 			</div>
 		</div>
 	</div>';

@@ -67,8 +67,11 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Environment_Resource_Logic{
 
 class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 
-	/**	@var		Model_Shop_Customer			$modelCustomer */
-	protected $modelCustomer;
+	/**	@var		Model_User					$modelUser */
+	protected $modelUser;
+
+	/**	@var		Model_Address				$modelAddress */
+	protected $modelAddress;
 
 	/**	@var		Model_Shop_Order			$modelOrder */
 	protected $modelOrder;
@@ -80,7 +83,8 @@ class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 	protected $shipping;
 
 	protected function __onInit(){
-		$this->modelCustomer		= new Model_Shop_Customer( $this->env );
+		$this->modelUser			= new Model_User( $this->env );
+		$this->modelAddress			= new Model_Address( $this->env );
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
 		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
 		if( !$this->env->hasModules( 'Shop_Shipping' ) )
@@ -91,18 +95,31 @@ class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getCustomer( $customerId ){
-		return $this->modelCustomer->get( $customerId );
+	public function getCustomer( $userId, $extended = FALSE ){
+		$customer	= $this->modelUser->get( $userId );
+		if( $customer && $extended ){
+			$customer->addressBilling	= $this->modelAddress->getByIndices( array(
+				'relationType'	=> 'user',
+				'relationId'	=> $userId,
+				'type'			=> Model_Address::TYPE_BILLING
+			) );
+			$customer->addressDelivery	= $this->modelAddress->getByIndices( array(
+				'relationType'	=> 'user',
+				'relationId'	=> $userId,
+				'type'			=> Model_Address::TYPE_DELIVERY
+			) );
+		}
+		return $customer;
 	}
 
 	public function getCustomers( $conditions = array(), $orders = array(), $limits = array() ){
-		return $this->modelCustomer->getAll( $conditions, $orders, $limits );
+		return array();//$this->modelCustomer->getAll( $conditions, $orders, $limits );
 	}
 
 	public function getOrder( $orderId, $extended = FALSE ){
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){
-			$order->customer	= $this->getCustomer( $order->customerId );
+			$order->customer	= $this->getCustomer( $order->userId, TRUE );
 			$order->positions	= $this->getOrderPositions( $orderId );
 		}
 		return $order;
