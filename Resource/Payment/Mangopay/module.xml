@@ -90,6 +90,7 @@ Cronjobs:
 		<needs type="module">Resource_Payment</needs>
 	</relations>
 	<sql type="mysql" on="install" version="0.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mangopay_events`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
   `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned DEFAULT '0' COMMENT '0:received, 1:failed, 2:handled',
@@ -106,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mangopay_payins`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_payins` (
   `payinId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) UNSIGNED DEFAULT '0' COMMENT '0:UNKNOWN, 1:CREATED, 2:FAILED, 3:SUCCEEDED',
