@@ -9,6 +9,10 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
 		$this->model		= new Model_Mangopay_Event( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+		$this->baseUrl		= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+		$this->addData( 'baseUrl', $this->baseUrl );
 	}
 
 	public function apply(){
@@ -27,7 +31,7 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 			foreach( $types as $type ){
 				$id	= 0;
 				if( array_key_exists( $type, $hookedEventTypes ) ){
-					if( $hookedEventTypes[$type]->Url == $this->env->url.$path )
+					if( $hookedEventTypes[$type]->Url == $this->baseUrl.$path )
 						continue;
 					$id		= $hookedEventTypes[$type]->Id;
 				}
@@ -42,7 +46,6 @@ class Controller_Mangopay_Hook extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Hooks applied ('.count( $hooks ).').' );
 			$this->restart( 'apply', TRUE );
 		}
-		$this->addData( 'baseUrl', $this->env->url );
 		$this->addData( 'eventTypes', $this->model->types );
 		$this->addData( 'hooks', $hooks );
 		$this->addData( 'hookedEventTypes', array_keys( $hookedEventTypes ) );

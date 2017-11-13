@@ -4,6 +4,7 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 	protected $cache;
 	protected $provider;
 	protected $skipCacheOnNextRequest;
+	protected $baseUrl;
 
 	static public $typeCurrencies	= array(
 		'CB_VISA_MASTERCARD'	=> array(),
@@ -22,6 +23,9 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Mangopay::getInstance( $this->env );
+		$this->baseUrl		= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
 	}
 
 	/**
@@ -513,7 +517,7 @@ print_m( $items );
 				$hook->Status	= $status ? 'ENABLED' : 'DISABLED';
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
-			$hook->Url			= $this->env->url.trim( $path );
+			$hook->Url			= $this->baseUrl.trim( $path );
 			$this->uncache( 'hooks' );
 			$this->uncache( 'hook_'.$id );
 			return $this->provider->Hooks->Update( $hook );
@@ -521,7 +525,7 @@ print_m( $items );
 		else{
 			$hook				= new \MangoPay\Hook;
 			$hook->EventType	= $eventType;
-			$hook->Url			= $this->env->url.trim( $path );
+			$hook->Url			= $this->baseUrl.trim( $path );
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
 			return $this->provider->Hooks->Create( $hook );
