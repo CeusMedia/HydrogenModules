@@ -89,7 +89,7 @@ Cronjobs:
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
-	<sql type="mysql" on="update" version="0.3"><![CDATA[
+	<sql type="mysql" on="install" version="0.3"><![CDATA[
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mangopay_events` (
   `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(3) unsigned DEFAULT '0' COMMENT '0:received, 1:failed, 2:handled',
