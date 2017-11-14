@@ -21,6 +21,7 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+//		print_m( $this->moduleConfig->getAll() );die;
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Mangopay::getInstance( $this->env );
 		$this->baseUrl		= $this->env->url;
@@ -534,6 +535,23 @@ print_m( $items );
 
 	public function skipCacheOnNextRequest( $skip ){
 		$this->skipCacheOnNextRequest	= (bool) $skip;
+	}
+
+	public function transfer( $sourceUserId, $targetUserId, $sourceWalletId, $targetWalletId, $currency, $amount, $fees, $tag = NULL ){
+		$transfer = new \MangoPay\Transfer();
+		$transfer->Tag = $tag;
+		$transfer->AuthorId = $sourceUserId;
+		$transfer->CreditedUserId = $targetUserId;
+		$transfer->DebitedFunds = new \MangoPay\Money();
+		$transfer->DebitedFunds->Currency = $currency;
+		$transfer->DebitedFunds->Amount = $amount;
+		$transfer->Fees = new \MangoPay\Money();
+		$transfer->Fees->Currency = $currency;
+		$transfer->Fees->Amount = $fees;
+		$transfer->DebitedWalletId = $sourceWalletId;
+		$transfer->CreditedWalletId = $targetWalletId;
+		$result		= $this->provider->Transfers->Create( $transfer );
+		return $result;
 	}
 
 	public function uncache( $key ){
