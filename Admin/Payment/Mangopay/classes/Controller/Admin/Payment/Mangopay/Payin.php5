@@ -1,5 +1,5 @@
 <?php
-class Controller_Mangopay_Payin extends CMF_Hydrogen_Controller{
+class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
