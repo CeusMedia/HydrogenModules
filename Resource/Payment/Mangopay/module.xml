@@ -9,7 +9,7 @@ Cronjobs:
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -34,12 +34,10 @@ Cronjobs:
 	<log version="0.4.4">Add view helper for links supporting workflow.</log>
 	<log version="0.4.5">Add frontend support using module Resource:Frontend.</log>
 	<log version="0.4.6">Add transfer method.</log>
+	<log version="0.4.7">Move administrative parts to Admin:Payment:Mangopay.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Mangopay/Event.php5</class>
-		<class>Controller/Mangopay/Hook.php5</class>
-		<class>Controller/Mangopay/Payin.php5</class>
 		<class>Job/Mangopay/Event.php5</class>
 		<class>Mail/Mangopay/EventFailed.php5</class>
 		<class>Mail/Mangopay/EventAgain.php5</class>
@@ -55,9 +53,6 @@ Cronjobs:
 		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Failed.php5</class>
 		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Succeeded.php5</class>
 		<class>Resource/Mangopay.php5</class>
-		<class>View/Mangopay/Event.php5</class>
-		<class>View/Mangopay/Hook.php5</class>
-		<class>View/Mangopay/Payin.php5</class>
 		<class>View/Helper/Mangopay/Abstract.php5</class>
 		<class>View/Helper/Mangopay/Error.php5</class>
 		<class>View/Helper/Mangopay/URL.php5</class>
@@ -71,14 +66,6 @@ Cronjobs:
 		<class>View/Helper/Mangopay/Entity/WalletLogo.php5</class>
 		<class>View/Helper/Mangopay/Input/Amount.php5</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
-		<template>mangopay/event/index.php</template>
-		<template>mangopay/event/view.php</template>
-<!--		<template>mangopay/hook/add.php</template>-->
-		<template>mangopay/hook/apply.php</template>
-		<template>mangopay/hook/index.php</template>
-		<template>mangopay/hook/view.php</template>
-		<template>mangopay/payin/index.php</template>
-		<template>mangopay/payin/view.php</template>
 		<file>config/jobs/mangopay.event.xml</file>
 	</files>
 	<link access="public" path="mangopay/event/receive"/>
