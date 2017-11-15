@@ -52,4 +52,5 @@
 	<relations>
 		<needs type="module">Resource_Payment_Mangopay</needs>
 	</relations>
+	<hook type="resource" resource="AdminPaymentMangopay" event="registerTabs">View_Admin_Payment_Mangopay::___onRegisterTab</hook>
 </module>
