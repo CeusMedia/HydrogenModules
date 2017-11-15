@@ -252,6 +252,35 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
+/*	public function createLegalUser(){
+		$account	= new \MangoPay\UserLegal();
+		$account->PersonType			= "NATURAL";
+		$account->FirstName				= $user->firstname;
+		$account->LastName				= $user->surname;
+		$account->Birthday				= 0;
+		$account->Nationality			= $user->country;
+		$account->CountryOfResidence	= $user->country;
+		$account->Email					= $user->email;
+		$account->Address 				= new \MangoPay\Address();
+		$account->Address->AddressLine1	= $user->street.' '.$user->number;
+		$account->Address->City			= $user->city;
+		$account->Address->PostalCode	= $user->postcode;
+		$account->Address->Country		= $user->country;
+		if( $address ){
+			$account->Address->AddressLine1	= $address->street;
+			$account->Address->City			= $address->city;
+			$account->Address->PostalCode	= $address->postcode;
+			$account->Address->Country		= $address->country;
+		}
+		$account	= $this->provider->Users->Create( $account );
+		$modelAccount->add( array(
+			'userId'			=> $localUserId,
+			'paymentAccountId'	=> $account->Id,
+			'provider'			=> 'mangopay',
+		) );
+		return $account;
+	}*/
+
 	public function createNaturalUserFromLocalUser( $localUserId ){
 		$modelUser		= new Model_User( $this->env );
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
@@ -315,6 +344,10 @@ print_m( $items );
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
+	}
+
+	public function getClient(){
+		return $this->provider->Clients->Get();
 	}
 
 	public function getClientWallet( $fundsType, $currency ){
@@ -443,6 +476,10 @@ print_m( $items );
 		return $item;
 	}
 
+	public function getClientWallets(){
+		return $this->provider->Clients->GetWallets();
+	}
+
 	public function getUserWallets( $userId, $orders = array(), $limits = array() ){
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
@@ -511,6 +548,12 @@ print_m( $items );
 		return $relation;
 	}
 
+	public function setClientLogo( $imageContentBase64 ){
+		$ClientLogoUpload = new \MangoPay\ClientLogoUpload();
+		$ClientLogoUpload->File = $imageContentBase64;
+		return $this->provider->Clients->UploadLogo( $ClientLogoUpload );
+	}
+
 	public function setHook( $id, $eventType, $path, $status = NULL, $tag = NULL ){
 		if( $id > 0 ){
 			$hook			= $this->provider->Hooks->Get( $id );
@@ -556,6 +599,49 @@ print_m( $items );
 
 	public function uncache( $key ){
 		$this->cache->remove( 'mangopay_'.$key );
+	}
+
+	public function updateClient( $data ){
+		$client	= $this->getClient();
+		$copy	= clone( $client );
+		$map	= array(
+			'PrimaryButtonColour'	=> 'colorButton',
+			'PrimaryThemeColour'	=> 'colorTheme',
+			'TaxNumber'				=> 'taxNumber',
+			'PlatformType'			=> 'platformType',
+			'PlatformDescription'	=> 'platformDescription',
+			'PlatformURL'			=> 'platformUrl',
+		);
+		foreach( $map as $key => $value )
+			if( isset( $data[$value] ) )
+				$copy->$key	= $data[$value];
+
+		if( isset( $data['headquarter'] ) && is_array( $data['headquarter'] ) ){
+			$map	= array(
+				'AddressLine1'	=> 'address',
+				'City'			=> 'city',
+				'Region'		=> 'region',
+				'PostalCode'	=> 'postcode',
+				'Country'		=> 'country',
+			);
+			foreach( $map as $key => $value )
+				if( isset( $data['headquarter'][$value] ) )
+					$copy->HeadquartersAddress->$key	= $data['headquarter'][$value];
+		}
+
+		if( isset( $data['emails'] ) && is_array( $data['emails'] ) ){
+			$map	= array(
+				'AdminEmails'	=> 'admin',
+				'TechEmails'	=> 'tech',
+				'BillingEmails'	=> 'billing',
+			);
+			foreach( $map as $key => $value )
+				if( isset( $data['emails'][$value] ) )
+					$copy->$key	= explode( "\n", $data['emails'][$value] );
+		}
+		if( $copy !== $client )
+			return $this->provider->Clients->Update( $copy );
+		return NULL;
 	}
 
 	public function updateUser( $user ){
