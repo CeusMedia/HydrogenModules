@@ -3,7 +3,7 @@
 	<title>Admin: Payment: Mangopay</title>
 	<description><![CDATA[MangoPay Administration.]]></description>
 	<category>Resource</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add event management.</log>
@@ -11,17 +11,17 @@
 	<log version="0.2.3">Add view for payin.</log>
 	<log version="0.2.4">Add wallet management.</log>
 	<log version="0.2.5">Add client management.</log>
-<!--	<log version="0.2.6">Use tabs.</log>
+	<log version="0.2.6">Use tabs to organize views.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-<!--		<class>Controller/Admin/Payment/Mangopay.php5</class>-->
+		<class>Controller/Admin/Payment/Mangopay.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Client.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Event.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Hook.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Payin.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Wallet.php5</class>
-<!--		<class>View/Admin/Payment/Mangopay.php5</class>-->
+		<class>View/Admin/Payment/Mangopay.php5</class>
 		<class>View/Admin/Payment/Mangopay/Client.php5</class>
 		<class>View/Admin/Payment/Mangopay/Event.php5</class>
 		<class>View/Admin/Payment/Mangopay/Hook.php5</class>
@@ -44,19 +44,11 @@
 		<template>admin/payment/mangopay/wallet/index.php</template>
 		<template>admin/payment/mangopay/wallet/panelClientWallets.php</template>
 		<template>admin/payment/mangopay/wallet/panelProjectWallets.php</template>
-<!--		<locale>de/admin/payment/mangopay.ini</locale>-->
+		<locale>de/admin/payment/mangopay.ini</locale>
 		<locale>de/admin/payment/mangopay/client.ini</locale>
 	</files>
-	<link access="acl" xml:lang="de" path="admin/payment/mangopay/event">MangoPay-Client</link>
-	<link access="acl" xml:lang="de" path="admin/payment/mangopay/wallet">MangoPay-Wallets</link>
-	<link access="acl" xml:lang="de" path="admin/payment/mangopay/event">MangoPay-Events</link>
-	<link access="acl" xml:lang="de" path="admin/payment/mangopay/payin">MangoPay-Payins</link>
-	<link access="acl" xml:lang="de" path="admin/payment/mangopay/hook">MangoPay-Hooks</link>
-	<link access="acl" xml:lang="en" path="admin/payment/mangopay/event">MangoPay Client</link>
-	<link access="acl" xml:lang="en" path="admin/payment/mangopay/wallet">MangoPay Wallets</link>
-	<link access="acl" xml:lang="en" path="admin/payment/mangopay/payin">MangoPay Payins</link>
-	<link access="acl" xml:lang="en" path="admin/payment/mangopay/event">MangoPay Events</link>
-	<link access="acl" xml:lang="en" path="admin/payment/mangopay/hook">MangoPay Hooks</link>
+	<link access="acl" xml:lang="de" path="admin/payment/mangopay">Payment: MangoPay</link>
+	<link access="acl" xml:lang="en" path="admin/payment/mangopay/event">Payment: MangoPay</link>
 	<relations>
 		<needs type="module">Resource_Payment_Mangopay</needs>
 	</relations>

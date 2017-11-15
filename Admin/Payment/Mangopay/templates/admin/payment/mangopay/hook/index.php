@@ -52,7 +52,9 @@ $tbody	= UI_HTML_Tag::create( 'tbody', $list );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '30%', '', '90', '80' ) );
 $list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
-return UI_HTML_Tag::create( 'div', array(
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'hook' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Hooks' ),
 	UI_HTML_Tag::create( 'div', array(
 		$list,

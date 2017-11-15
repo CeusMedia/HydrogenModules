@@ -73,7 +73,9 @@ if( $event->status == Model_Mangopay_Event::STATUS_CLOSED ){
 	) );
 }
 
-return UI_HTML_Tag::create( 'div', array(
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'event' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Event' ),
 	UI_HTML_Tag::create( 'div', array(
 		$table,

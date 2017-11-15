@@ -1,5 +1,5 @@
 <?php
-class View_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_View{
+class View_Admin_Payment_Mangopay_Hook extends View_Admin_Payment_Mangopay{
 
 	public function apply(){}
 

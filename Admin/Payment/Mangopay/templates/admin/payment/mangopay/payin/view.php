@@ -30,4 +30,6 @@ foreach( $steps as $key => $item ){
 }
 $panelSteps	= UI_HTML_Tag::create( 'div', $panelSteps, array( 'class' => 'row-fluid' ) );
 
-return $panelFacts.$panelSteps;
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'payin' );
+
+return $tabs.$panelFacts.$panelSteps;

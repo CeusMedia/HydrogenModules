@@ -57,7 +57,9 @@ if( $pages > 1 )
 		$pagination,
 	), array( 'class' => 'buttonbar' ) );
 
-return UI_HTML_Tag::create( 'div', array(
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'payin' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Payins' ),
 	UI_HTML_Tag::create( 'div', array(
 		$list,

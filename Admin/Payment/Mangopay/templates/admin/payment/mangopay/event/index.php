@@ -47,7 +47,9 @@ $buttonReload	= UI_HTML_Tag::create( 'a', $iconRefresh.' aktualisieren', array(
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/payment/mangopay/event', $page, $pages );
 
-return UI_HTML_Tag::create( 'div', array(
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'event' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Events' ),
 	UI_HTML_Tag::create( 'div', array(
 		$list,

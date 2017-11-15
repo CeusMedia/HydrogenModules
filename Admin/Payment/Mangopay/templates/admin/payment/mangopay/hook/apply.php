@@ -54,7 +54,9 @@ foreach( $chunks as $nr => $chunk ){
 
 $list	= UI_HTML_Tag::create( 'div', $lists, array( 'class' => 'row-fluid' ) );
 
-return UI_HTML_Tag::create( 'div', array(
+$tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'hook' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Hooks' ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'form', array(
