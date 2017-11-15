@@ -8,22 +8,6 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->words		= $this->env->getLanguage()->getWords( 'resource/upload' );
 	}
 
-	public function setUpload( $upload ){
-		if( !is_object( $upload ) )
-			throw new InvalidArgumentException( 'No upload object given' );
-		if( $upload instanceof Logic_Upload )
-			$upload	= $upload->getObject();
-		if( !isset( $upload->error ) )
-			throw new InvalidArgumentException( 'Not a valid upload object given' );
-		$this->upload	= $upload;
-	}
-
-	static public function renderStatic( $env, Logic_Upload $upload ){
-		$helper	= new self( $env );
-		$helper->setUpload( $upload );
-		return $helper->render();
-	}
-
 	public function render(){
 		if( !$this->upload )
 			throw new RuntimeException( 'No upload object set, yet' );
@@ -55,5 +39,21 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 				break;
 		}
 		return $message;
+	}
+
+	static public function renderStatic( $env, Logic_Upload $upload ){
+		$helper	= new self( $env );
+		$helper->setUpload( $upload );
+		return $helper->render();
+	}
+
+	public function setUpload( $upload ){
+		if( !is_object( $upload ) )
+			throw new InvalidArgumentException( 'No upload object given' );
+		if( $upload instanceof Logic_Upload )
+			$upload	= $upload->getObject();
+		if( !isset( $upload->error ) )
+			throw new InvalidArgumentException( 'Not a valid upload object given' );
+		$this->upload	= $upload;
 	}
 }

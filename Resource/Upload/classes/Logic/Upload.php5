@@ -142,10 +142,6 @@ class Logic_Upload{
 		return file_get_contents( $this->upload->tmp_name );
 	}
 
-	public function getError(){
-		return $this->upload->error;
-	}
-
 	/**
 	 *	Returns extension of uploaded file.
 	 *	@access		public
@@ -162,6 +158,10 @@ class Logic_Upload{
 			$extension		= preg_replace( "/^(jpe|jpeg)$/i", 'jpg', $extension );
 		}
 		return $extension;
+	}
+
+	public function getError(){
+		return $this->upload->error;
 	}
 
 	public function getFileName(){
