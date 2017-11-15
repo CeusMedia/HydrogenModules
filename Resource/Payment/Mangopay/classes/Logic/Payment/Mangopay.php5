@@ -252,38 +252,8 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-/*	public function createLegalUser(){
-		$account	= new \MangoPay\UserLegal();
-		$account->PersonType			= "NATURAL";
-		$account->FirstName				= $user->firstname;
-		$account->LastName				= $user->surname;
-		$account->Birthday				= 0;
-		$account->Nationality			= $user->country;
-		$account->CountryOfResidence	= $user->country;
-		$account->Email					= $user->email;
-		$account->Address 				= new \MangoPay\Address();
-		$account->Address->AddressLine1	= $user->street.' '.$user->number;
-		$account->Address->City			= $user->city;
-		$account->Address->PostalCode	= $user->postcode;
-		$account->Address->Country		= $user->country;
-		if( $address ){
-			$account->Address->AddressLine1	= $address->street;
-			$account->Address->City			= $address->city;
-			$account->Address->PostalCode	= $address->postcode;
-			$account->Address->Country		= $address->country;
-		}
-		$account	= $this->provider->Users->Create( $account );
-		$modelAccount->add( array(
-			'userId'			=> $localUserId,
-			'paymentAccountId'	=> $account->Id,
-			'provider'			=> 'mangopay',
-		) );
-		return $account;
-	}*/
-
-	public function createNaturalUserFromLocalUser( $localUserId ){
+	public function createLegalUserFromLocalUser( $localUserId, $companyData, $representativeData ){
 		$modelUser		= new Model_User( $this->env );
-		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
 		$address		= $modelAddress->get( array(
@@ -292,32 +262,125 @@ print_m( $items );
 			'type'			=> Model_Address::TYPE_BILLING,
 		) );
 
-		$account	= new \MangoPay\UserNatural();
-		$account->PersonType			= "NATURAL";
-		$account->FirstName				= $user->firstname;
-		$account->LastName				= $user->surname;
-		$account->Birthday				= 0;
-		$account->Nationality			= $user->country;
-		$account->CountryOfResidence	= $user->country;
-		$account->Email					= $user->email;
-		$account->Address 				= new \MangoPay\Address();
-		$account->Address->AddressLine1	= $user->street.' '.$user->number;
-		$account->Address->City			= $user->city;
-		$account->Address->PostalCode	= $user->postcode;
-		$account->Address->Country		= $user->country;
+		$user = new \MangoPay\UserLegal();
+		$user->LegalPersonType	= "BUSINESS";
+		$user->Name				= $companyData['name'];
+//		$user->Tag				= NULL;
+		$user->Email			= $companyData['email'];
+//		$user->CompanyNumber	= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $address->country;
+		$user->LegalRepresentativeNationality			= $address->country;
+		$user->LegalRepresentativeEmail					= $representativeData['email'];
+		$user->LegalRepresentativeFirstName				= $representativeData['firstname'];
+		$user->LegalRepresentativeLastName				= $representativeData['lastname'];
 		if( $address ){
-			$account->Address->AddressLine1	= $address->street;
-			$account->Address->City			= $address->city;
-			$account->Address->PostalCode	= $address->postcode;
-			$account->Address->Country		= $address->country;
+			$user->LegalRepresentativeAddress = new \MangoPay\Address();
+			$user->LegalRepresentativeAddress->AddressLine1	= $address->street;
+			$user->LegalRepresentativeAddress->City			= $address->city;
+			$user->LegalRepresentativeAddress->Region		= $address->region;
+			$user->LegalRepresentativeAddress->PostalCode	= $address->postcode;
+			$user->LegalRepresentativeAddress->Country		= $address->country;
+			$user->HeadquartersAddress = new \MangoPay\Address();
+			$user->HeadquartersAddress->AddressLine1	= $address->street;
+			$user->HeadquartersAddress->City			= $address->city;
+			$user->HeadquartersAddress->Region			= $address->region;
+			$user->HeadquartersAddress->PostalCode		= $address->postcode;
+			$user->HeadquartersAddress->Country			= $address->country;
 		}
-		$account	= $this->provider->Users->Create( $account );
-		$modelAccount->add( array(
-			'userId'			=> $localUserId,
-			'paymentAccountId'	=> $account->Id,
-			'provider'			=> 'mangopay',
+		$user = $this->provider->Users->Create( $user );
+	}
+
+	public function createLegalUser( $data ){
+		$user = new \MangoPay\UserLegal();
+		$user->LegalPersonType	= $data['company']['type'];
+		$user->Name				= $data['company']['name'];
+		$user->Email			= $data['company']['email'];
+		$user->CompanyNumber	= $data['company']['number'];
+//		$user->Tag				= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $data['representative']['country'];
+		$user->LegalRepresentativeNationality			= $data['representative']['country'];
+		$user->LegalRepresentativeEmail					= $data['representative']['email'];
+		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
+		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
+		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
+		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
+		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
+		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
+		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
+		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
+		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
+		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
+		$user->HeadquartersAddress->PostalCode		= $data['headquarter']['postcode'];
+		$user->HeadquartersAddress->Country			= $data['headquarter']['country'];
+//print_m( $user );die;
+		return $this->provider->Users->Create( $user );
+	}
+
+	public function updateLegalUser( $userId, $data ){
+		$user	= $this->getUser( $userId );
+		$user->LegalPersonType	= $data['company']['type'];
+		$user->Name				= $data['company']['name'];
+		$user->Email			= $data['company']['email'];
+		$user->CompanyNumber	= $data['company']['number'];
+//		$user->Tag				= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $data['representative']['country'];
+		$user->LegalRepresentativeNationality			= $data['representative']['country'];
+		$user->LegalRepresentativeEmail					= $data['representative']['email'];
+		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
+		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
+		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
+		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
+		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
+		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
+		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
+		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
+		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
+		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
+		$user->HeadquartersAddress->PostalCode		= $data['headquarter']['postcode'];
+		$user->HeadquartersAddress->Country			= $data['headquarter']['country'];
+//print_m( $user );die;
+		return $this->provider->Users->Update( $user );
+	}
+
+	public function createNaturalUserFromLocalUser( $localUserId ){
+		$modelUser		= new Model_User( $this->env );
+		$modelAddress	= new Model_Address( $this->env );
+		$user			= $modelUser->get( $localUserId );
+		$address		= $modelAddress->get( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $this->localUserId,
+			'type'			=> Model_Address::TYPE_BILLING,
 		) );
-		return $account;
+
+		$user	= new \MangoPay\UserNatural();
+		$user->PersonType			= "NATURAL";
+		$user->FirstName				= $user->firstname;
+		$user->LastName				= $user->surname;
+		$user->Birthday				= 0;
+		$user->Nationality			= $user->country;
+		$user->CountryOfResidence	= $user->country;
+		$user->Email					= $user->email;
+		$user->Address 				= new \MangoPay\Address();
+		$user->Address->AddressLine1	= $user->street.' '.$user->number;
+		$user->Address->City			= $user->city;
+		$user->Address->PostalCode	= $user->postcode;
+		$user->Address->Country		= $user->country;
+		if( $address ){
+			$user->Address->AddressLine1	= $address->street;
+			$user->Address->City			= $address->city;
+			$user->Address->PostalCode	= $address->postcode;
+			$user->Address->Country		= $address->country;
+		}
+		$user	= $this->provider->Users->Create( $user );
+		$this->setUserIdForLocalUserId( $user->Id, $localUserId );
+		return $user;
 	}
 
 	public function createUserWallet( $userId, $currency ){
@@ -507,6 +570,28 @@ print_m( $items );
 			$list[]	= $wallet;
 		}
 		return $list;
+	}
+
+	public function setUserIdForLocalUserId( $userId, $localUserId ){
+		$modelAccount	= new Model_User_Payment_Account( $this->env );
+		$relation		= $modelAccount->getByIndices( array(
+			'userId'	=> $localUserId,
+			'provider'	=> 'mangopay',
+		) );
+		if( $relation ){
+			$modelAccount->edit( $relation->userPaymentAccountId, array(
+				'paymentAccountId'	=> $userId,
+//				'modifiedAt'		=> time(),
+			) );
+		}
+		else{
+			$modelAccount->add( array(
+				'userId'	=> $localUserId,
+				'paymentAccountId'	=> $userId,
+				'provider'	=> 'mangopay',
+				'createdAt'	=> time(),
+			) );
+		}
 	}
 
 	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE ){

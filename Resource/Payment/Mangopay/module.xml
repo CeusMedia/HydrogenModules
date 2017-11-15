@@ -9,7 +9,7 @@ Cronjobs:
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.7</version>
+	<version>0.4.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
@@ -35,6 +35,7 @@ Cronjobs:
 	<log version="0.4.5">Add frontend support using module Resource:Frontend.</log>
 	<log version="0.4.6">Add transfer method.</log>
 	<log version="0.4.7">Move administrative parts to Admin:Payment:Mangopay.</log>
+	<log version="0.4.8">Add legal user methods.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
