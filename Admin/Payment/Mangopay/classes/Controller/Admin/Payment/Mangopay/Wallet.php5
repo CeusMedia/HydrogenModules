@@ -12,11 +12,11 @@ class Controller_Admin_Payment_Mangopay_Wallet extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->addData( 'clientWallets', $this->mangopay->getClientWallets() );
-		$clientUserId = $this->moduleConfig->get( 'project.userId' );
+		$clientUserId = $this->moduleConfig->get( 'seller.userId' );
 		$this->addData( 'projectUserId', $clientUserId );
 		if( $clientUserId ){
 			$user			= $this->mangopay->getUser( $clientUserId );
-			$clientWalletId = $this->moduleConfig->get( 'project.walletId' );
+			$clientWalletId = $this->moduleConfig->get( 'seller.walletId' );
 			$this->addData( 'projectUser', $user );
 			$this->addData( 'projectWalletId', $clientWalletId );
 			if( $clientWalletId ){

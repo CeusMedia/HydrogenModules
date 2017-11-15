@@ -3,7 +3,7 @@
 	<title>Admin: Payment: Mangopay</title>
 	<description><![CDATA[MangoPay Administration.]]></description>
 	<category>Resource</category>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add event management.</log>
@@ -12,6 +12,7 @@
 	<log version="0.2.4">Add wallet management.</log>
 	<log version="0.2.5">Add client management.</log>
 	<log version="0.2.6">Use tabs to organize views.</log>
+	<log version="0.2.7">Add seller management.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -20,12 +21,14 @@
 		<class>Controller/Admin/Payment/Mangopay/Event.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Hook.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Payin.php5</class>
+		<class>Controller/Admin/Payment/Mangopay/Seller.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Wallet.php5</class>
 		<class>View/Admin/Payment/Mangopay.php5</class>
 		<class>View/Admin/Payment/Mangopay/Client.php5</class>
 		<class>View/Admin/Payment/Mangopay/Event.php5</class>
 		<class>View/Admin/Payment/Mangopay/Hook.php5</class>
 		<class>View/Admin/Payment/Mangopay/Payin.php5</class>
+		<class>View/Admin/Payment/Mangopay/Seller.php5</class>
 		<class>View/Admin/Payment/Mangopay/Wallet.php5</class>
 		<template>admin/payment/mangopay/client/index.php</template>
 		<template>admin/payment/mangopay/client/panelCompany.php</template>
@@ -41,11 +44,15 @@
 		<template>admin/payment/mangopay/hook/view.php</template>
 		<template>admin/payment/mangopay/payin/index.php</template>
 		<template>admin/payment/mangopay/payin/view.php</template>
+		<template>admin/payment/mangopay/seller/index.php</template>
+		<template>admin/payment/mangopay/seller/panelUser.php</template>
+		<template>admin/payment/mangopay/seller/panelHeadquarter.php</template>
 		<template>admin/payment/mangopay/wallet/index.php</template>
 		<template>admin/payment/mangopay/wallet/panelClientWallets.php</template>
 		<template>admin/payment/mangopay/wallet/panelProjectWallets.php</template>
 		<locale>de/admin/payment/mangopay.ini</locale>
 		<locale>de/admin/payment/mangopay/client.ini</locale>
+		<locale>de/admin/payment/mangopay/seller.ini</locale>
 	</files>
 	<link access="acl" xml:lang="de" path="admin/payment/mangopay">Payment: MangoPay</link>
 	<link access="acl" xml:lang="en" path="admin/payment/mangopay/event">Payment: MangoPay</link>
