@@ -3,7 +3,7 @@
 	<title>Admin: Payment: Mangopay</title>
 	<description><![CDATA[MangoPay Administration.]]></description>
 	<category>Resource</category>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add event management.</log>
@@ -13,6 +13,7 @@
 	<log version="0.2.5">Add client management.</log>
 	<log version="0.2.6">Use tabs to organize views.</log>
 	<log version="0.2.7">Add seller management.</log>
+	<log version="0.2.8">Use module UI:Bootstrap:Modal.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -45,7 +46,9 @@
 		<template>admin/payment/mangopay/payin/index.php</template>
 		<template>admin/payment/mangopay/payin/view.php</template>
 		<template>admin/payment/mangopay/seller/index.php</template>
+		<template>admin/payment/mangopay/seller/panelBanks.php</template>
 		<template>admin/payment/mangopay/seller/panelUser.php</template>
+		<template>admin/payment/mangopay/seller/panelWallets.php</template>
 		<template>admin/payment/mangopay/seller/panelHeadquarter.php</template>
 		<template>admin/payment/mangopay/wallet/index.php</template>
 		<template>admin/payment/mangopay/wallet/panelClientWallets.php</template>
@@ -58,6 +61,7 @@
 	<link access="acl" xml:lang="en" path="admin/payment/mangopay/event">Payment: MangoPay</link>
 	<relations>
 		<needs type="module">Resource_Payment_Mangopay</needs>
+		<needs type="module">UI_Bootstrap_Modal</needs>
 	</relations>
 	<hook type="resource" resource="AdminPaymentMangopay" event="registerTabs">View_Admin_Payment_Mangopay::___onRegisterTab</hook>
 </module>

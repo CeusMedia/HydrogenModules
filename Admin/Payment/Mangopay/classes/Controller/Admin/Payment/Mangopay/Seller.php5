@@ -10,10 +10,13 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 	}
 
 	public function index(){
-
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 		if( $sellerUserId ){
-			$user			= $this->mangopay->getUser( $sellerUserId );
+			$user		= $this->mangopay->getUser( $sellerUserId );
+			$wallets	= $this->mangopay->getUserWallets( $sellerUserId );
+			$banks		= $this->mangopay->getUserBankAccounts( $sellerUserId );
+			$this->addData( 'sellerWallets', $wallets );
+			$this->addData( 'sellerBanks', $banks );
 		}
 		else{
 			$user	= new \MangoPay\UserLegal();
@@ -25,16 +28,41 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		if( !isset( $user->CompanyNumber ) )
 			$user->CompanyNumber	= NULL;
 		$this->addData( 'sellerUser', $user );
-/*
-		$this->addData( 'sellerUserId', $sellerUserId );
-			$user			= $this->mangopay->getUser( $sellerUserId );
-			$sellerWalletId = $this->moduleConfig->get( 'seller.walletId' );
-			$this->addData( 'sellerWalletId', $sellerWalletId );
-			if( $sellerWalletId ){
-				$wallet	= $this->mangopay->getUserWallets( $sellerUserId );
-				$this->addData( 'sellerWallets', $wallet );
+	}
+
+	public function bank(){
+		if( $this->request->isPost() ){
+			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
+			$iban			= $this->request->get( 'iban' );
+			$bic			= $this->request->get( 'bic' );
+			$title			= $this->request->get( 'title' );
+			if( $sellerUserId && strlen( trim( $iban ) ) && strlen( trim( $bic ) ) ){
+				try{
+					$this->mangopay->createBankAccount( $sellerUserId, $iban, $bic, $title );
+				}
+				catch( \MangoPay\Libraries\ResponseException $e ){
+					$this->handleMangopayResponseException( $e );
+					$this->restart( NULL );
+				}
+				catch( Exception $e ){
+					$this->messenger->noteError( "Exception (".get_class( $e )."): ".$e->getMessage() );
+					$this->restart( NULL );
+				}
 			}
-		}*/
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function wallet(){
+		if( $this->request->isPost() ){
+			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
+			$currency		= $this->request->get( 'currency' );
+			if( $sellerUserId && $currency ){
+				$wallets	= $this->mangopay->getUserWallets( $sellerUserId );
+				$this->mangopay->createUserWallet( $sellerUserId, $currency );
+			}
+		}
+		$this->restart( NULL, TRUE );
 	}
 
 	public function user(){
