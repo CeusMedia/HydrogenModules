@@ -1,12 +1,14 @@
 <?php
 class View_Helper_Bootstrap_Modal{
 
-	protected $attributes	= array();
-	protected $id;
-	protected $fade				= TRUE;
-	protected $heading;
+	protected $attributes			= array();
 	protected $body;
+	protected $fade					= TRUE;
+	protected $heading;
+	protected $id;
 	protected $formAction;
+	protected $labelButtonCancel	= "Schließen";
+	protected $labelButtonSubmit	= "Weiter";
 
 	/**
 	 *	Constructor.
@@ -15,6 +17,7 @@ class View_Helper_Bootstrap_Modal{
 	 */
 	public function __construct( $env ){
 		$this->env		= $env;
+		$this->id		= 'modal-'.uniqid();
 	}
 
 	public function __toString(){
@@ -69,12 +72,12 @@ class View_Helper_Bootstrap_Modal{
 	}
 
 	protected function renderFooter(){
-		$buttonClose	= UI_HTML_Tag::create( 'button', 'Schließen', array(
+		$buttonClose	= UI_HTML_Tag::create( 'button', $this->labelButtonCancel, array(
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
 			'aria-hidden'	=> 'true',
 		) );
-		$buttonSubmit	= UI_HTML_Tag::create( 'button', 'Weiter', array(
+		$buttonSubmit	= UI_HTML_Tag::create( 'button', $this->labelButtonSubmit, array(
 			'class'		=> 'btn btn-primary',
 			'type'		=> 'submit',
 		) );
@@ -109,6 +112,28 @@ class View_Helper_Bootstrap_Modal{
 	 */
 	public function setAttributes( $attributes ){
 		$this->attributes	= $attributes;
+		return $this;
+	}
+
+	/**
+	 *	Set label of cancel button in modal footer.
+	 *	@access		public
+	 *	@param		string		$label			Label of cancel button in modal footer
+	 *	@return		self
+	 */
+	public function setButtonLabelCancel( $label ){
+		$this->labelButtonCancel	= $label;
+		return $this;
+	}
+
+	/**
+	 *	Set label of submit button in modal footer.
+	 *	@access		public
+	 *	@param		string		$label			Label of submit button in modal footer
+	 *	@return		self
+	 */
+	public function setButtonLabelSubmit( $label ){
+		$this->labelButtonSubmit	= $label;
 		return $this;
 	}
 
