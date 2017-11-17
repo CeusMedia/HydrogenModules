@@ -131,10 +131,13 @@ class Logic_Billing{
 	}
 
 	public function addBillShare( $billId, $personId, $amount = 0, $percent = 0 ){
+		$bill		= $this->getBill( $billId );
+		$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 		if( !$amount && $percent ){
-			$bill		= $this->getBill( $billId );
-			$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 			$amount	= $amountLeft * $percent / 100;
+		}
+		else if( $amount ){
+			$percent	= $amount / $amountLeft * 100;
 		}
 		$shareId	= $this->modelBillShare->add( array(
 			'status'	=> Model_Billing_Bill_Share::STATUS_NEW,

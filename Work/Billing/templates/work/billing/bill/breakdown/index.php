@@ -66,11 +66,11 @@ if( $billShares ){
 
 if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 	$missingAmount	= (float) round( (float) $bill->amountNetto - (float) $bill->amountAssigned, 2 );
-	$missingPercent	= ( $leftAmount - $sharedAmount ) / $leftAmount * 100;
+	$missingPercent	= $leftAmount > 0 ? ( $leftAmount - $sharedAmount ) / $leftAmount * 100 : 0;
 
 	if( $missingAmount < 0 ){
 		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelAmount	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else if( $missingAmount > 0 ){
 		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );

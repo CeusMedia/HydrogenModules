@@ -36,6 +36,28 @@ $panelFacts		= '
 					<input type="number" step="0.01" name="balance" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2, '.', '' ).'"/><span class="suffix">&euro;</span>
 				</div>
 			</div>
+			<div class="row-fluid">
+				<div class="span2">
+					<label for="input_income">Einnahmen</label>
+					<input type="text" id="input_income" class="span10 input-number" disabled="disabled" value="'.number_format( $income, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
+				</div>
+				<div class="span2">
+					<label for="input_outcome">Ausgaben</label>
+					<input type="text" id="input_outcome" class="span10 input-number" disabled="disabled" value="'.number_format( $outcome, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
+				</div>
+				<div class="span2">
+					<label for="input_balance">Kontostand (berechnet)</label>
+					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( ( $income - $outcome ), 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
+				</div>
+				<div class="span2">
+					<label for="input_balance">Kontostand (kumuliert)</label>
+					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
+				</div>
+				<div class="span2">
+					<label for="input_balance">Abweichung</label>
+					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( ( $person->balance - $income + $outcome ), 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
+				</div>
+			</div>
 			<div class="buttonbar">
 				'.$buttonCancel.'
 				'.$buttonSave.'

@@ -21,6 +21,11 @@ class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
 
 	public function edit( $personId ){
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
+		$dbc	= $this->env->getDatabase();
+		$query	= "SELECT SUM(amount) as income FROM billing_transactions AS t WHERE t.toType = 2 AND toId = ".$personId;
+		$this->addData( 'income', (float) $dbc->query( $query)->fetch( PDO::FETCH_OBJ )->income );
+		$query	= "SELECT SUM(amount) as outcome FROM billing_transactions AS t WHERE t.fromType = 2 AND fromId = ".$personId;
+		$this->addData( 'outcome', (float) $dbc->query( $query)->fetch( PDO::FETCH_OBJ )->outcome );
 	}
 
 	public function index(){
