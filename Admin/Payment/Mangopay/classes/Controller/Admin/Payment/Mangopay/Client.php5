@@ -25,6 +25,7 @@ class Controller_Admin_Payment_Mangopay_Client extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->addData( 'client', $this->mangopay->getClient() );
+		$this->addData( 'clientWallets', $this->mangopay->getClientWallets() );
 	}
 
 	public function logo( $remove = NULL ){

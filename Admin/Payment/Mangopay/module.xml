@@ -3,7 +3,7 @@
 	<title>Admin: Payment: Mangopay</title>
 	<description><![CDATA[MangoPay Administration.]]></description>
 	<category>Resource</category>
-	<version>0.2.8</version>
+	<version>0.2.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add event management.</log>
@@ -14,6 +14,7 @@
 	<log version="0.2.6">Use tabs to organize views.</log>
 	<log version="0.2.7">Add seller management.</log>
 	<log version="0.2.8">Use module UI:Bootstrap:Modal.</log>
+	<log version="0.2.9">Integrated wallets into client and seller management.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -23,20 +24,19 @@
 		<class>Controller/Admin/Payment/Mangopay/Hook.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Payin.php5</class>
 		<class>Controller/Admin/Payment/Mangopay/Seller.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Wallet.php5</class>
 		<class>View/Admin/Payment/Mangopay.php5</class>
 		<class>View/Admin/Payment/Mangopay/Client.php5</class>
 		<class>View/Admin/Payment/Mangopay/Event.php5</class>
 		<class>View/Admin/Payment/Mangopay/Hook.php5</class>
 		<class>View/Admin/Payment/Mangopay/Payin.php5</class>
 		<class>View/Admin/Payment/Mangopay/Seller.php5</class>
-		<class>View/Admin/Payment/Mangopay/Wallet.php5</class>
 		<template>admin/payment/mangopay/client/index.php</template>
 		<template>admin/payment/mangopay/client/panelCompany.php</template>
 		<template>admin/payment/mangopay/client/panelColor.php</template>
 		<template>admin/payment/mangopay/client/panelEmails.php</template>
 		<template>admin/payment/mangopay/client/panelHeadquarter.php</template>
 		<template>admin/payment/mangopay/client/panelLogo.php</template>
+		<template>admin/payment/mangopay/client/panelWallets.php</template>
 		<template>admin/payment/mangopay/event/index.php</template>
 		<template>admin/payment/mangopay/event/view.php</template>
 <!--		<template>admin/payment/mangopay/hook/add.php</template>-->
@@ -50,9 +50,6 @@
 		<template>admin/payment/mangopay/seller/panelUser.php</template>
 		<template>admin/payment/mangopay/seller/panelWallets.php</template>
 		<template>admin/payment/mangopay/seller/panelHeadquarter.php</template>
-		<template>admin/payment/mangopay/wallet/index.php</template>
-		<template>admin/payment/mangopay/wallet/panelClientWallets.php</template>
-		<template>admin/payment/mangopay/wallet/panelProjectWallets.php</template>
 		<locale>de/admin/payment/mangopay.ini</locale>
 		<locale>de/admin/payment/mangopay/client.ini</locale>
 		<locale>de/admin/payment/mangopay/seller.ini</locale>
