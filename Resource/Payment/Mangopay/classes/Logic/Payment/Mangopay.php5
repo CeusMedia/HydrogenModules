@@ -69,7 +69,18 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		return $this->getUser( $userId );
 	}
 
-	public function createBankAccount( $userId, $iban, $bic, $title ){
+	public function createAddress( $street, $postcode, $city, $country, $region = NULL ){
+		$address = new \MangoPay\Address();
+		$address->AddressLine1	= $street;
+		$address->PostalCode	= $postcode;
+		$address->City			= $city;
+		$address->Country		= $country;
+		if( $region )
+			$address->Region		= $region;
+		return $address;
+	}
+
+	public function createBankAccount( $userId, $iban, $bic, $title, $address = NULL ){
 		$user	= $this->getUser( $userId );
 		$bankAccount = new \MangoPay\BankAccount();
 		$bankAccount->Type			= "IBAN";
@@ -77,7 +88,12 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount->Details->IBAN	= trim( str_replace( ' ', '', $iban ) );
 		$bankAccount->Details->BIC	= trim( $bic );
 		$bankAccount->OwnerName		= $title;
-		$bankAccount->OwnerAddress	= $user->Address;
+		if( $address )
+			$bankAccount->OwnerAddress	= $address;
+		else if( $user instanceof \MangoPay\UserNatural )
+			$bankAccount->OwnerAddress	= $user->Address;
+		else if( $user instanceof \MangoPay\UserLegal )
+			$bankAccount->OwnerAddress	= $user->LegalRepresentativeAddress;
 		$item	= $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
 		$this->uncache( 'user_'.$userId.'_bankaccounts' );
 		return $item;
