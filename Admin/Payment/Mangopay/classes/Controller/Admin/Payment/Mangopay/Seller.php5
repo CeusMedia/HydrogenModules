@@ -38,7 +38,14 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 			$title			= $this->request->get( 'title' );
 			if( $sellerUserId && strlen( trim( $iban ) ) && strlen( trim( $bic ) ) ){
 				try{
-					$this->mangopay->createBankAccount( $sellerUserId, $iban, $bic, $title );
+					$address	= $this->mangopay->createAddress(
+						$this->request->get( 'address' ),
+						$this->request->get( 'postcode' ),
+						$this->request->get( 'city' ),
+						$this->request->get( 'country' ),
+						$this->request->get( 'region' )
+					);
+					$this->mangopay->createBankAccount( $sellerUserId, $iban, $bic, $title, $address );
 				}
 				catch( \MangoPay\Libraries\ResponseException $e ){
 					$this->handleMangopayResponseException( $e );
