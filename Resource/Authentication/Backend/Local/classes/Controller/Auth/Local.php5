@@ -224,8 +224,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			if( $this->messenger->gotError() )
 				$this->restart( 'login?username='.$username, TRUE );
 
-			$role	= $modelRole->get( $user->roleId );
+			$role			= $modelRole->get( $user->roleId );
+			$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
+			$allowedRoles	= $allowedRoles ? $allowedRoles : "*";
+			$allowedRoles	= explode( ',', $this->moduleConfig->get( 'login.roles' ) );
+
 			if( !$role->access )
+				$this->messenger->noteError( $words->msgInvalidRole );
+			else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
 				$this->messenger->noteError( $words->msgInvalidRole );
 			else if( $user->status == 0 )
 				$this->messenger->noteError( $words->msgUserUnconfirmed );
