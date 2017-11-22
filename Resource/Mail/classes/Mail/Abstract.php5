@@ -200,7 +200,7 @@ abstract class Mail_Abstract{
 		$words	= $this->env->getLanguage()->getWords( 'main' );
 		$appTitle	= $words['main']['title'];
 		$body	= str_replace( '[#content#]', $content, $template->html );
-		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
+		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 
 		if( $template->images ){
@@ -263,7 +263,7 @@ abstract class Mail_Abstract{
 		$words	= $this->env->getLanguage()->getWords( 'main' );
 		$appTitle	= $words['main']['title'];
 		$body	= str_replace( '[#content#]', $content, $template->plain );
-		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
+		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 		return $body;
 	}
