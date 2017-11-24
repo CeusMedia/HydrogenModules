@@ -93,6 +93,14 @@ $rowHtml	= '<form action="./admin/mail/template/edit/'.$template->mailTemplateId
 	</div>
 </form>';
 
+$modalStyle		= new View_Helper_Input_Resource( $env );
+$modalStyle->setModalId( 'modal-admin-mail-template-select-style' );
+$modalStyle->setInputId( 'input_template_css' );
+$trigger	= new View_Helper_Input_ResourceTrigger( $env );
+$trigger->setLabel( UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) ) );
+$trigger->setModalId( 'modal-admin-mail-template-select-style' );
+$trigger->setInputId( 'input_template_css' );
+$trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
 $listStyles	= '<em class="muted">Keine.</em>';
 if( $template->styles ){
@@ -123,19 +131,30 @@ $rowStyles	= '<form action="./admin/mail/template/edit/'.$template->mailTemplate
 		<div class="span6">
 			<h4>Style-Files</h4>
 			'.$listStyles.'
-			<label for="input_template_style">Pfad</label>
-			<input type="text" name="template_style" class="span12"/>
+			<div class="row-fluid">
+				<div class="span8">
+					<label for="input_template_style">Pfad</label>
+					<input type="text" name="template_style" class="span12"/>
+				</div>
+				<div class="span4">
+					<label>&nbsp;</label>
+					<div class="btn-group">
+						'.$trigger.'
+						<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> hinzufügen</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-</form>';
+</form>'.$modalStyle;
 
 
-$modal		= new View_Helper_Input_Resource( $env );
-$modal->setModalId( 'modal-admin-mail-template-select' );
-$modal->setInputId( 'input_template_image' );
+$modalImage		= new View_Helper_Input_Resource( $env );
+$modalImage->setModalId( 'modal-admin-mail-template-select-image' );
+$modalImage->setInputId( 'input_template_image' );
 $trigger	= new View_Helper_Input_ResourceTrigger( $env );
 $trigger->setLabel( UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) ) );
-$trigger->setModalId( 'modal-admin-mail-template-select' );
+$trigger->setModalId( 'modal-admin-mail-template-select-image' );
 $trigger->setInputId( 'input_template_image' );
 
 $listImages	= '<em class="muted">Keine.</em>';
@@ -193,7 +212,7 @@ $rowImages	= '<form action="./admin/mail/template/edit/'.$template->mailTemplate
 			</div>
 		</div>
 	</div>
-</form>'.$modal;
+</form>'.$modalImage;
 
 $rowPreview	= '
 	<div class="row-fluid">

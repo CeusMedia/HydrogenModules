@@ -100,6 +100,7 @@
 		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_Helper_Input_Resource</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">View_Admin_Mail_Attachment::___onRegisterTab</hook>
