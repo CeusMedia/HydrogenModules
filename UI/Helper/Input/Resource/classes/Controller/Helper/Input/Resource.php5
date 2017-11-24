@@ -10,7 +10,7 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 
 		$env	= $this->env;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$env	= Logic_Frontend::getRemoveEnv( $this->env );
+			$env	= Logic_Frontend::getRemoteEnv( $this->env );
 		$realpath	= realpath( $env->path ).'/';
 
 		$list		= array();
