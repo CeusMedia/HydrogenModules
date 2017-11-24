@@ -1,21 +1,34 @@
 var HelperInputResource = {
-	openImageList: function(elem){
+	open: function(elem){
 		var inputId = jQuery(elem).data('inputId');
 		var modalId = jQuery(elem).data('modalId');
+		var mode = jQuery(elem).data('mode');
 		if(!modalId || !inputId)
 			return;
 		jQuery("#"+modalId+"-content").hide();
 		jQuery("#"+modalId+"-loader").show();
 		jQuery("#"+modalId).modal();
+
+		var data = {
+			inputId: inputId,
+			modalId: modalId,
+			mode: mode,
+		};
+		switch(mode){
+			case 'image':
+				data = jQuery.extend(data, {
+					paths: ["contents/images/", "images/", "themes/"],
+				});
+				break;
+			case 'style':
+				data = jQuery.extend(data, {
+					paths: ["themes/"],
+				});
+				break;
+		}
 		jQuery.ajax({
 			url: "./helper/input/resource/ajaxRender",
-			data: {
-				inputId: inputId,
-				modalId: modalId,
-				paths: ["contents/images/", "images/", "themes/"],
-				extensions: ["png", "gif", "jpg", "jpeg", "jpe", "svg"],
-				mimeTypes: ["*"]
-			},
+			data: data,
 			method: "post",
 			dataType: "html",
 			success: function(html){

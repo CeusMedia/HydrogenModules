@@ -36,11 +36,16 @@ class View_Helper_Input_Resource{
 
 class View_Helper_Input_ResourceTrigger{
 
+	const MODE_IMAGE			= 'image';
+	const MODE_STYLE			= 'style';
+	const MODE_DOCUMENT			= 'document';
+
 	protected $env;
 	protected $modalId;
+	protected $mode				= 'image';
 	protected $inputId;
-	protected $label	= 'select';
-	protected $class	= 'btn';
+	protected $label			= 'select';
+	protected $class			= 'btn';
 
 	public function __construct( $env ){
 		$this->env		= $env;
@@ -70,14 +75,20 @@ class View_Helper_Input_ResourceTrigger{
 		return $this;
 	}
 
+	public function setMode( $mode ){
+		$this->mode	= $mode;
+		return $this;
+	}
+
 	public function render(){
 		return UI_HTML_Tag::create( 'button', $this->label, array(
 			'type'		=> "button",
-			'onclick'	=> "HelperInputResource.openImageList(this)",
+			'onclick'	=> "HelperInputResource.open(this)",
 			'class'		=> $this->class,
 		), array(
 			'modal-id'	=> $this->modalId,
 			'input-id'	=> $this->inputId,
+			'mode'		=> $this->mode,
 		) );
 	}
 }

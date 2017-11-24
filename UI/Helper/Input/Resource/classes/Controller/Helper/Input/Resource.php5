@@ -3,10 +3,20 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 
 	public function ajaxRender(){
 		$paths		= (array) $this->env->getRequest()->get( 'paths' );
-		$extensions	= (array) $this->env->getRequest()->get( 'extensions' );
-		$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
+		$mode		= $this->env->getRequest()->get( 'mode' );
 		$modalId	= $this->env->getRequest()->get( 'modalId' );
 		$inputId	= $this->env->getRequest()->get( 'inputId' );
+
+		switch( $mode ){
+			case 'image':
+				$extensions	= array( "png", "gif", "jpg", "jpeg", "jpe", "svg" );
+				$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
+				break;
+			case 'style':
+				$extensions	= array( "css", "scss", "less" );
+				$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
+				break;
+		}
 
 		$env	= $this->env;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
@@ -30,10 +40,7 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 					continue;
 				$key		= strtolower( $relativePath );
 				$sublist[$key]	= UI_HTML_Tag::create( 'li', array(
-					UI_HTML_Tag::create( 'div', '&nbsp;', array(
-						'class'	=> 'source-list-image',
-						'style'	=> 'background-image: url('.$env->getBaseUrl().$path.$relativePath.');',
-					) ),
+					self::renderThumbnail( $env, $mode, $path, $relativePath ),
 					UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'span', $fileName ),
 						'<br/>',
@@ -54,11 +61,28 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 				continue;
 			ksort( $sublist );
 			$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'unstyled' ) );
-			$labelPath	= UI_HTML_Tag::create( 'div', 'Pfad: <strong>'.$path.'</strong>', array( 'style' => 'font-size: 1.2em; padding: 5px 4px' ) );
-			$list[]		= UI_HTML_Tag::create( 'li', $labelPath.$sublist, array( 'class' => 'path' ) );
+			$labelPath	= UI_HTML_Tag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
+			$list[]		= UI_HTML_Tag::create( 'li', $labelPath.$sublist, array( 'class' => 'source-list-path' ) );
 		}
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
 		print $list;
 		exit;
+	}
+
+	static protected function renderThumbnail( $env, $mode, $path, $relativePath ){
+		switch( $mode ){
+			case 'image':
+				return UI_HTML_Tag::create( 'div', '&nbsp;', array(
+					'class'	=> 'source-list-image',
+					'style'	=> 'background-image: url('.$env->getBaseUrl().$path.$relativePath.');',
+				) );
+			case 'style':
+			default:
+				return UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-2x fa-file-code-o' ) )
+				), array(
+					'class'	=> 'source-list-image',
+				) );
+		}
 	}
 }

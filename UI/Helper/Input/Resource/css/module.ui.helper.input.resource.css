@@ -27,6 +27,13 @@
 	background-size: contain;
 	background-position: center center;
 	}
+.modal-source-list .source-list-image > i.fa {
+    padding-top: 3px;
+	}
 .modal-source-list .source-list-label {
 	margin-left: 46px;
+	}
+.modal-source-list .source-list-path > div {
+	padding: 5px 4px;
+	font-size: 1.2em;
 	}
