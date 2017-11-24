@@ -39,53 +39,6 @@ class Logic_Billing{
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function realizeTransactions(){
-		$transactions	= $this->modelTransaction->getAll( array(
-			'status' => Model_Billing_Transaction::STATUS_NEW,
-		), array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' ) );
-		foreach( $transactions as $transaction ){
-			$this->env->getDatabase()->beginTransaction();
-			try{
-				switch( $transaction->toType ){
-					case Model_Billing_Transaction::TYPE_PERSON:
-						$receiver	= $this->getPerson( $transaction->toId );
-						$this->modelPerson->edit( $transaction->toId, array(
-							'balance'	=> $receiver->balance + $transaction->amount,
-						) );
-						break;
-					case Model_Billing_Transaction::TYPE_CORPORATION:
-						$receiver	= $this->getCorporation( $transaction->toId );
-						$this->modelCorporation->edit( $transaction->toId, array(
-							'balance'	=> $receiver->balance + $transaction->amount,
-						) );
-						break;
-				}
-				switch( $transaction->fromType ){
-					case Model_Billing_Transaction::TYPE_PERSON:
-						$sender	= $this->getPerson( $transaction->fromId );
-						$this->modelPerson->edit( $transaction->fromId, array(
-							'balance'	=> $sender->balance - $transaction->amount,
-						) );
-						break;
-					case Model_Billing_Transaction::TYPE_CORPORATION:
-						$sender	= $this->getCorporation( $transaction->fromId );
-						$this->modelCorporation->edit( $transaction->fromId, array(
-							'balance'	=> $sender->balance - $transaction->amount,
-						) );
-						break;
-				}
-				$this->modelTransaction->edit( $transaction->transactionId, array(
-					'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
-				) );
-				$this->env->getDatabase()->commit();
-			}
-			catch( Exception $e ){
-				$this->env->getDatabase()->rollBack();
-			}
-		}
-	}
-
-
 	public function addBill( $number, $title, $taxRate, $amountNetto = 0, $amountTaxed = 0 ){
 		if( $amountNetto && !$amountTaxed )
 			$amountTaxed	= $amountNetto * ( 1 + $taxRate / 100 );
@@ -257,29 +210,6 @@ class Logic_Billing{
 		) );
 	}
 
-	public function editBill( $billId, $data ){
-		$this->modelBill->edit( $billId, $data );
-		$this->_updateBillReserves( $billId );
-		$this->_updateBillShares( $billId );
-		$this->_updateBillAssignedAmount( $billId );
-	}
-
-	public function editCorporation( $corporationId, $data ){
-		if( isset( $data['balance'] ) )
-			unset( $data['balance'] );
-		$this->modelCorporation->edit( $corporationId, $data );
-	}
-
-	public function editPerson( $personId, $data ){
-		if( isset( $data['balance'] ) )
-			unset( $data['balance'] );
-		$this->modelPerson->edit( $personId, $data );
-	}
-
-	public function editReserve( $reserveId, $data ){
-		$this->modelReserve->edit( $reserveId, $data );
-	}
-
 	public function closeBill( $billId ){
 		$this->env->getDatabase()->beginTransaction();
 		try{
@@ -364,6 +294,29 @@ class Logic_Billing{
 
 	public function countBills( $conditions ){
 		return $this->modelBill->count( $conditions );
+	}
+
+	public function editBill( $billId, $data ){
+		$this->modelBill->edit( $billId, $data );
+		$this->_updateBillReserves( $billId );
+		$this->_updateBillShares( $billId );
+		$this->_updateBillAssignedAmount( $billId );
+	}
+
+	public function editCorporation( $corporationId, $data ){
+		if( isset( $data['balance'] ) )
+			unset( $data['balance'] );
+		$this->modelCorporation->edit( $corporationId, $data );
+	}
+
+	public function editPerson( $personId, $data ){
+		if( isset( $data['balance'] ) )
+			unset( $data['balance'] );
+		$this->modelPerson->edit( $personId, $data );
+	}
+
+	public function editReserve( $reserveId, $data ){
+		$this->modelReserve->edit( $reserveId, $data );
 	}
 
 	public function getBill( $billId ){
@@ -557,6 +510,52 @@ class Logic_Billing{
 		return $this->modelReserve->getAll( $conditions, $orders, $limits );
 	}
 
+	public function realizeTransactions(){
+		$transactions	= $this->modelTransaction->getAll( array(
+			'status' => Model_Billing_Transaction::STATUS_NEW,
+		), array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' ) );
+		foreach( $transactions as $transaction ){
+			$this->env->getDatabase()->beginTransaction();
+			try{
+				switch( $transaction->toType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$receiver	= $this->getPerson( $transaction->toId );
+						$this->modelPerson->edit( $transaction->toId, array(
+							'balance'	=> $receiver->balance + $transaction->amount,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$receiver	= $this->getCorporation( $transaction->toId );
+						$this->modelCorporation->edit( $transaction->toId, array(
+							'balance'	=> $receiver->balance + $transaction->amount,
+						) );
+						break;
+				}
+				switch( $transaction->fromType ){
+					case Model_Billing_Transaction::TYPE_PERSON:
+						$sender	= $this->getPerson( $transaction->fromId );
+						$this->modelPerson->edit( $transaction->fromId, array(
+							'balance'	=> $sender->balance - $transaction->amount,
+						) );
+						break;
+					case Model_Billing_Transaction::TYPE_CORPORATION:
+						$sender	= $this->getCorporation( $transaction->fromId );
+						$this->modelCorporation->edit( $transaction->fromId, array(
+							'balance'	=> $sender->balance - $transaction->amount,
+						) );
+						break;
+				}
+				$this->modelTransaction->edit( $transaction->transactionId, array(
+					'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
+				) );
+				$this->env->getDatabase()->commit();
+			}
+			catch( Exception $e ){
+				$this->env->getDatabase()->rollBack();
+			}
+		}
+	}
+
 	public function removeBillExpense( $billExpenseId ){
 		$billExpense	= $this->modelBillExpense->get( $billExpenseId );
 		$this->modelBillExpense->remove( $billExpenseId );
@@ -577,6 +576,48 @@ class Logic_Billing{
 		$this->_updateBillReserves( $billReserve->billId );
 		$this->_updateBillShares( $billReserve->billId );
 		$this->_updateBillAssignedAmount( $billReserve->billId );
+	}
+
+	public function revertTransaction( $transactionId ){
+		$transaction	= $this->modelTransaction->get( $transactionId );
+		if( !$transaction )
+			throw new RangeException( 'Invalid transaction ID: '.$transactionId );
+		$this->env->getDatabase()->beginTransaction();
+		try{
+			switch( $transaction->toType ){
+				case Model_Billing_Transaction::TYPE_PERSON:
+					$receiver	= $this->getPerson( $transaction->toId );
+					$this->modelPerson->edit( $transaction->toId, array(
+						'balance'	=> $receiver->balance - $transaction->amount,
+					) );
+					break;
+				case Model_Billing_Transaction::TYPE_CORPORATION:
+					$receiver	= $this->getCorporation( $transaction->toId );
+					$this->modelCorporation->edit( $transaction->toId, array(
+						'balance'	=> $receiver->balance - $transaction->amount,
+					) );
+					break;
+			}
+			switch( $transaction->fromType ){
+				case Model_Billing_Transaction::TYPE_PERSON:
+					$sender	= $this->getPerson( $transaction->fromId );
+					$this->modelPerson->edit( $transaction->fromId, array(
+						'balance'	=> $sender->balance + $transaction->amount,
+					) );
+					break;
+				case Model_Billing_Transaction::TYPE_CORPORATION:
+					$sender	= $this->getCorporation( $transaction->fromId );
+					$this->modelCorporation->edit( $transaction->fromId, array(
+						'balance'	=> $sender->balance + $transaction->amount,
+					) );
+					break;
+			}
+			$this->modelTransaction->remove( $transaction->transactionId );
+			$this->env->getDatabase()->commit();
+		}
+		catch( Exception $e ){
+			$this->env->getDatabase()->rollBack();
+		}
 	}
 
 	protected function _getBillAmountAfterExpensesAndReserves( $billId ){

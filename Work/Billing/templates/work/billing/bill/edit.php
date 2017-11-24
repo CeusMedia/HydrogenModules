@@ -8,7 +8,7 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
 	'class'	=> 'btn btn',
 ) );
 
-if( $bill->status == 1 ){
+if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 	$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 		'type'	=> 'submit',
 		'name'	=> 'save',

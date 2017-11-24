@@ -112,4 +112,42 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $total / 15 ) );
 	}
+
+	public function unbook( $billId ){
+		$bill			= $this->logic->getBill( $billId );
+		$modelBillShare		= new Model_Billing_Bill_Share( $this->env );
+		$modelBillReserve	= new Model_Billing_Bill_Reserve( $this->env );
+		$billShares		= $this->logic->getBillShares( $billId );
+		$billReserves		= $this->logic->getBillReserves( $billId );
+		foreach( $billReserves as $billReserve ){
+			$transactions	= $this->logic->getTransactions( array(
+				'fromType'	=> Model_Billing_Transaction::TYPE_BILL,
+				'fromId'	=> $billId,
+				'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
+				'relation'	=> '%|billReserve:'.$billReserve->billReserveId.'|%',
+			) );
+			foreach( $transactions as $transaction )
+//				remark( 'Revert share transaction '.$transaction->transactionId );
+				$this->logic->revertTransaction( $transaction->transactionId );
+//			remark( 'Reserve '.$billReserve->billReserveId.': set status from "booked" to "new"' );
+			$modelBillReserve->edit( $billReserve->billReserveId, array( 'status' => Model_Billing_Bill_Reserve::STATUS_NEW ) );
+		}
+		foreach( $billShares as $billShare ){
+			$transactions	= $this->logic->getTransactions( array(
+				'fromType'	=> Model_Billing_Transaction::TYPE_BILL,
+				'fromId'	=> $billId,
+				'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
+				'relation'	=> '%|billShare:'.$billShare->billShareId.'|%',
+			) );
+			foreach( $transactions as $transaction )
+//				remark( 'Revert share transaction '.$transaction->transactionId );
+				$this->logic->revertTransaction( $transaction->transactionId );
+//			remark( 'Share '.$billShare->billShareId.': set status from 1 to 0' );
+			$modelBillShare->edit( $billShare->billShareId, array( 'status' => Model_Billing_Bill_Share::STATUS_NEW ) );
+		}
+		$this->modelBill->edit( $billId, array( 'status' => Model_Billing_Bill::STATUS_NEW ) );
+//		remark( 'Bill '.$bill->billId.': set status from "booked" to "new"' );
+//		die;
+		$this->restart( './work/billing/bill/breakdown/'.$billId );
+	}
 }

@@ -3,6 +3,7 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconUndo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
 
 $list	= array();
 $leftAmount	= (float) $bill->amountNetto;
@@ -99,12 +100,19 @@ $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 1 );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 
+	$buttonUnbook		= UI_HTML_Tag::create( 'a', $iconUndo.' zurücksetzen', array(
+		'href'		=> './work/billing/bill/unbook/'.$bill->billId,
+		'class'		=> 'btn btn-mini',
+	) );
 	return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.' - '.$bill->title.'</h2>
 '.$tabs.'
 <div class="content-panel">
 	<h3>Aufteilung</h3>
 	<div class="content-panel-inner">
 		'.$list.'
+		<div class="buttonbar">
+			'.$buttonUnbook.'
+		</div>
 	</div>
 </div>';
 }
