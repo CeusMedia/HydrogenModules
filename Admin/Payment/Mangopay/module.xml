@@ -3,7 +3,7 @@
 	<title>Admin: Payment: Mangopay</title>
 	<description><![CDATA[MangoPay Administration.]]></description>
 	<category>Resource</category>
-	<version>0.2.9</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add event management.</log>
@@ -15,6 +15,7 @@
 	<log version="0.2.7">Add seller management.</log>
 	<log version="0.2.8">Use module UI:Bootstrap:Modal.</log>
 	<log version="0.2.9">Integrated wallets into client and seller management.</log>
+	<log version="0.3">Improve seller management by modals.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
