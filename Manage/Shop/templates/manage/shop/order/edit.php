@@ -8,14 +8,14 @@ $buttons	= array( new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', ''
 $states	= array(
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( -5, -4, 2 ),
+		'from'		=> array( -5, -4, 3 ),
 		'to'		=> -6,
 		'label'		=> 'erstattet',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	),
 	(object) array(
-		'enabled'	=> FALSE,
+		'enabled'	=> TRUE,
 		'from'		=> array( 4, 5, 6 ),
 		'to'		=> -5,
 		'label'		=> 'reklamiert',
@@ -31,7 +31,7 @@ $states	= array(
 		'icon'		=> 'remove',
 	),
 	(object) array(
-		'enabled'	=> FALSE,
+		'enabled'	=> TRUE,
 		'from'		=> array( 2 ),
 		'to'		=> -3,
 		'label'		=> 'nicht bezahlt',
