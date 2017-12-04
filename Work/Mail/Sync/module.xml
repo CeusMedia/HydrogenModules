@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Mail Sync</title>
+	<description/>
+	<category>Work</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Mail/Sync.php5</class>
+		<class>View/Work/Mail/Sync.php5</class>
+		<class>Model/Mail/Host.php5</class>
+		<class>Model/Mail/Box.php5</class>
+		<class>Model/Mail/Sync.php5</class>
+<!--		<class>Model/Mail/Sync/Run.php5</class>-->
+<!--		<class>Job/Work/Mail/Sync.php5</class>-->
+<!--		<template>work/mail/sync/host/index.php</template>
+		<template>work/mail/sync/host/add.php</template>
+		<template>work/mail/sync/host/edit.php</template>
+		<template>work/mail/sync/box/index.php</template>
+		<template>work/mail/sync/box/add.php</template>
+		<template>work/mail/sync/box/edit.php</template>
+		<template>work/mail/sync/sync/index.php</template>
+		<template>work/mail/sync/sync/add.php</template>
+		<template>work/mail/sync/sync/edit.php</template>
+		<locale>de/work/mail/sync.ini</locale>
+		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>
+		<file>config/jobs/work.mail.sync.xml</file>-->
+	</files>
+	<relations>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="WorkMailSync" event="registerTabs">View_Work_Mail_Sync::___onRegisterTab</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_boxes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_boxes` (
+  `boxId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `hostId` int(10) unsigned NOT NULL,
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`boxId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_hosts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_hosts` (
+  `hostId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ip` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `host` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `port` int(5) NOT NULL,
+  `ssl` tinyint(1) NOT NULL,
+  `auth` tinyint(3) unsigned NOT NULL COMMENT '0:PLAIN, 1:LOGIN, 2:CRAM-MD5',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`hostId`),
+  UNIQUE KEY `host` (`host`),
+  KEY `ip` (`ip`),
+  KEY `port` (`port`),
+  KEY `ssl` (`ssl`),
+  KEY `auth` (`auth`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_syncs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_syncs` (
+  `syncId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sourceUserId` int(10) unsigned NOT NULL,
+  `targetUserId` int(10) unsigned NOT NULL,
+  `status` int(11) NOT NULL COMMENT '0:new, 1:synched, 2:resynched, 3:closed',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`syncId`),
+  KEY `sourceUserId` (`sourceUserId`,`targetUserId`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_sync_runs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_sync_runs` (
+  `syncRunId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `syncId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `statistics` text COLLATE utf8_unicode_ci,
+  `lines` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`syncRunId`),
+  KEY `syncId` (`syncId`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>
