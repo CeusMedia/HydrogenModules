@@ -9,16 +9,23 @@ class Model_Mail_Sync extends CMF_Hydrogen_Model{
 	protected $name		= 'mail_syncs';
 	protected $columns	= array(
 		'mailSyncId',
-		'sourceMailBoxId',
-		'targetMailBoxId',
+		'sourceMailHostId',
+		'targetMailHostId',
 		'status',
+		'resync',
+		'sourceUsername',
+		'targetUsername',
+		'sourcePassword',
+		'targetPassword',
 		'createdAt',
 		'modifiedAt',
 	);
 	protected $primaryKey	= 'mailSyncId';
 	protected $indices		= array(
-		'sourceMailBoxId',
-		'targetMailBoxId',
+		'sourceMailHostId',
+		'targetMailHostId',
+		'sourceUsername',
+		'targetUsername',
 		'status',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
