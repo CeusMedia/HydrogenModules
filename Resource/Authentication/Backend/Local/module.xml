@@ -92,7 +92,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="yes" type="integer" name="login.rank">10</config>
-	<config protected="yes" type="integer" name="login.roles">*</config>
+	<config protected="yes" type="string" name="login.roles">*</config>
 	<config protected="no" type="boolean" name="register">yes</config>
 	<config protected="yes" type="boolean" name="relateToAllUsers">no</config>
 	<relations>
