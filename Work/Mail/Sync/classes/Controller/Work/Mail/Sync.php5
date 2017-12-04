@@ -9,20 +9,6 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 	public function add(){
 	}
 
-	public function addBox(){
-		if( $this->request->has( 'save' ) ){
-			$this->logic->addBox( array(
-				'mailHostId'	=> $this->request->get( 'hostId' ),
-				'username'		=> $this->request->get( 'username' ),
-				'password'		=> $this->request->get( 'password' ),
-				'createdAt'		=> time(),
-				'modifiedAt'	=> time(),
-			) );
-			$this->restart( NULL, TRUE  );
-		}
-		$this->addData( 'hosts', $this->logic->getHosts() );
-	}
-
 	public function addHost(){
 		if( $this->request->has( 'save' ) ){
 			$this->logic->addHost( array(
@@ -68,7 +54,6 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->addData( 'hosts', $this->logic->getHosts() );
-		$this->addData( 'boxes', $this->logic->getBoxes() );
 		$this->addData( 'syncs', $this->logic->getSyncs() );
 	}
 }
