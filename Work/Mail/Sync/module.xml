@@ -38,18 +38,18 @@
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_boxes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_boxes` (
-  `boxId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `hostId` int(10) unsigned NOT NULL,
+  `mailBoxId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailHostId` int(10) unsigned NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`boxId`)
+  PRIMARY KEY (`mailBoxId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mail_hosts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_hosts` (
-  `hostId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailHostId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ip` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `host` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `port` int(5) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_hosts` (
   `auth` tinyint(3) unsigned NOT NULL COMMENT '0:PLAIN, 1:LOGIN, 2:CRAM-MD5',
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`hostId`),
+  PRIMARY KEY (`mailHostId`),
   UNIQUE KEY `host` (`host`),
   KEY `ip` (`ip`),
   KEY `port` (`port`),
@@ -67,27 +67,27 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_hosts` (
 
 DROP TABLE IF EXISTS `<%?prefix%>mail_syncs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_syncs` (
-  `syncId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sourceUserId` int(10) unsigned NOT NULL,
-  `targetUserId` int(10) unsigned NOT NULL,
+  `mailSyncId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sourceMailBoxId` int(10) unsigned NOT NULL,
+  `targetMailBoxId` int(10) unsigned NOT NULL,
   `status` int(11) NOT NULL COMMENT '0:new, 1:synched, 2:resynched, 3:closed',
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`syncId`),
-  KEY `sourceUserId` (`sourceUserId`,`targetUserId`,`status`)
+  PRIMARY KEY (`mailSyncId`),
+  KEY `sourceUserId` (`sourceMailBoxId`,`targetMailBoxId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mail_sync_runs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_sync_runs` (
-  `syncRunId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `syncId` int(10) unsigned NOT NULL,
+  `MailSyncRunId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailSyncId` int(10) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
   `statistics` text COLLATE utf8_unicode_ci,
   `lines` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`syncRunId`),
-  KEY `syncId` (`syncId`,`status`)
+  PRIMARY KEY (`MailSyncRunId`),
+  KEY `syncId` (`mailSyncId`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 </module>
