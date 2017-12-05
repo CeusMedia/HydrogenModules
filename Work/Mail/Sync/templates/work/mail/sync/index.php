@@ -16,7 +16,7 @@ $panelHosts	= '<div class="content-panel">
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">
-			<a href="./work/mail/sync/addHost" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;add</a>
+			<a href="./work/mail/sync/addHost" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;neuer Host</a>
 		</div>
 	</div>
 </div>';
@@ -37,6 +37,8 @@ $statusClasses	= array(
 	3		=> "progress-success",
 	4		=> "progress-info",
 );
+
+$helperTimestamp	= new View_Helper_TimePhraser( $env );
 
 $table	= '<div class="alert alert-info">Keine.</div>';
 if( $syncs ){
@@ -72,7 +74,7 @@ if( $syncs ){
 		$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 		$buttonActivate	= UI_HTML_Tag::create( 'a', $iconActivate.'&nbsp;aktivieren', array( 'href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/1' ) );
-		$buttonClose	= UI_HTML_Tag::create( 'a', 'schließen', array( 'href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4' ) );
+		$buttonClose	= UI_HTML_Tag::create( 'a', $iconClose.'&nbsp;schließen', array( 'href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4' ) );
 		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array( 'href' => './work/mail/sync/editSync/'.$sync->mailSyncId ) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './work/mail/sync/removeSync/'.$sync->mailSyncId ) );
 
@@ -90,6 +92,7 @@ if( $syncs ){
 		}
 		else if( $sync->status == Model_Mail_Sync::STATUS_CLOSED ){
 			$buttons[]	= $buttonActivate;
+			$buttons[]	= $buttonRemove;
 		}
 
 		foreach( $buttons as $nr => $button )
@@ -97,19 +100,28 @@ if( $syncs ){
 
 		if( $buttons ){
 			$buttons	= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-cog"></i>', array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-				UI_HTML_Tag::create( 'ul', $buttons, array( 'class' => 'dropdown-menu' ) )
+				UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-cog"></i>', array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+				UI_HTML_Tag::create( 'ul', $buttons, array( 'class' => 'dropdown-menu pull-right' ) )
 			), array( 'class' => 'btn-group' ) );
 		}
 		else{
 			$buttons	= '';
 		}
 
-
+		$messages	= 0;
+		foreach( $sync->runs as $run ){
+			if( $run->status == Model_Mail_Sync_Run::STATUS_SUCCESS ){
+				$statistics	= json_decode( $run->statistics, TRUE );
+				if( isset( $statistics['Messages transferred'] ) )
+					$messages	+= (int) $statistics['Messages transferred'];
+			}
+		}
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $sync->sourceUsername.'<br/><small><span class="muted">'.$sourceHost.'</span></small>'  ),
-			UI_HTML_Tag::create( 'td', $sync->targetUsername.'<br/><small><span class="muted">'.$targetHost.'</span></small>'  ),
-			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', $sync->sourceUsername.'<br/><small class="muted">'.$sourceHost.'</small>'  ),
+			UI_HTML_Tag::create( 'td', $sync->targetUsername.'<br/><small class="muted">'.$targetHost.'</small>'  ),
+			UI_HTML_Tag::create( 'td', $status.'<br/><small class="muted">'.$helperTimestamp->convert( $sync->modifiedAt, TRUE, 'vor' ).'</small>' ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'span', count( $sync->runs ), array( 'class' => 'badge '.( count( $sync->runs ) ? 'badge-info' : '' ) ) ) ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'span', $messages, array( 'class' => 'badge '.( $messages ? 'badge-success' : '' ) ) ) ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		) );
 	}
@@ -117,20 +129,22 @@ if( $syncs ){
 		'Quelle',
 		'Ziel',
 		'Zustand',
+		'<i class="fa fa-fw fa-repeat" title="Durchläufe"></i>',
+		'<i class="fa fa-fw fa-envelope" title="Nachrichten übertragen"></i>',
 		'',
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '35%', '35%', '20%', '10%' );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '30%', '30%', '20%', '5%', '5%', '10%' );
 	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 $panelSyncs	= '<div class="content-panel">
-	<h3>Syncs</h3>
+	<h3>Synchronisierungen</h3>
 	<div class="content-panel-inner">
 		<tbody>
 			'.$table.'
 		</tbody>
 		<div class="buttonbar">
-			<a href="./work/mail/sync/addSync" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;add</a>
+			<a href="./work/mail/sync/addSync" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;neue Synchronisierung</a>
 		</div>
 	</div>
 </div>';
@@ -142,5 +156,11 @@ return '<div class="row-fluid">
 	<div class="span4">
 		'.$panelHosts.'
 	</div>
-</div>';
-;
+</div>
+<style>
+div.progress {
+	margin: 0;
+	display: inline-block;
+	width: 100%;
+	}
+</style>';

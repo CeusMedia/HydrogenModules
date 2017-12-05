@@ -58,7 +58,7 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 
 //		$parameters[]	= '--authmech1 CRAM-MD5';
 //		$parameters[]	= '--authmech2 CRAM-MD5';
-		$parameters[]	= '--dry';
+//		$parameters[]	= '--dry';
 
 		$command	= "imapsync ".join( ' ', $parameters );
 //		$this->out( $command ); return;
