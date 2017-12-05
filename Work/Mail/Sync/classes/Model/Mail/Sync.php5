@@ -1,10 +1,12 @@
 <?php
 class Model_Mail_Sync extends CMF_Hydrogen_Model{
 
+	const STATUS_ERROR			= -1;
 	const STATUS_NEW			= 0;
-	const STATUS_SYNCHED		= 1;
-	const STATUS_RESYNCHED		= 2;
-	const STATUS_CLOSED			= 3;
+	const STATUS_ACTIVE			= 1;
+	const STATUS_SYNCHING		= 2;
+	const STATUS_SYNCHED		= 3;
+	const STATUS_CLOSED			= 4;
 
 	protected $name		= 'mail_syncs';
 	protected $columns	= array(
