@@ -49,7 +49,10 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$bill	= $this->logic->getBill( $billId );
 		$billShares	= $this->logic->getBillShares( $billId );
 		foreach( $billShares as $billShare ){
-			$billShare->person	= $this->logic->getPerson( $billShare->personId );
+			if( $billShare->personId )
+				$billShare->person	= $this->logic->getPerson( $billShare->personId );
+			else
+				$billShare->corporation	= $this->logic->getCorporation( $billShare->corporationId );
 		}
 
 		$reserves		= $this->logic->getReserves();

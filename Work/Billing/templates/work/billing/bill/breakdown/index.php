@@ -54,9 +54,11 @@ if( $billShares ){
 		) );
 		if( $billShare->status == Model_Billing_Bill_Share::STATUS_BOOKED )
 			$buttonRemove	= '';
+
+		$label	= (int) $billShare->personId > 0 ? $billShare->person->firstname.' '.$billShare->person->surname : $billShare->corporation->title;
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', '<small>Anteil</small>' ),
-			UI_HTML_Tag::create( 'td', $billShare->person->firstname.' '.$billShare->person->surname ),
+			UI_HTML_Tag::create( 'td', $label ),
 			UI_HTML_Tag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
