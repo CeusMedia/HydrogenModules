@@ -117,6 +117,18 @@ if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 </div>';
 }
 
+$optType	= array(
+	0	=> 'Person',
+	1	=> 'Unternehmen',
+);
+$optType	= UI_HTML_Elements::Options( $optType );
+
+
+$optCorporation	= array();
+foreach( $corporations as $corporation )
+	$optCorporation[$corporation->corporationId]	= $corporation->title;
+$optCorporation	= UI_HTML_Elements::Options( $optCorporation );
+
 $optPerson	= array();
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
@@ -234,10 +246,20 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
-				<div class="span4">
+				<div class="span5" >
+					<label for="input_type">Typ</label>
+					<select name="type" id="input_type" class="span12 has-optionals">'.$optType.'</select>
+				</div>
+				<div class="span7 optional type type-0">
 					<label for="input_personId">Person</label>
 					<select name="personId" id="input_personId" class="span12">'.$optPerson.'</select>
 				</div>
+				<div class="span7 optional type type-1">
+					<label for="input_coporationId">Unternehmen</label>
+					<select name="corporationId" id="input_corporationId" class="span12">'.$optCorporation.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_percent"><small class="muted">entweder</small> Prozent</label>
 					<input type="number" step="0.01" min="0" max="100" name="percent" id="input_percent" class="span12 input-number" value="'.number_format( $missingPercent, 2, '.', '' ).'"/>
@@ -252,8 +274,5 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
 		</div>
 	</form>
-</div>
-';
-
-
+</div>';
 ?>

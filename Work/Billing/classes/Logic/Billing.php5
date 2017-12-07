@@ -83,7 +83,27 @@ class Logic_Billing{
 		$this->_updateBillAssignedAmount( $billId );
 	}
 
-	public function addBillShare( $billId, $personId, $amount = 0, $percent = 0 ){
+	public function addBillCorporationShare( $billId, $corporationId, $amount = 0, $percent = 0 ){
+		$bill		= $this->getBill( $billId );
+		$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
+		if( !$amount && $percent ){
+			$amount	= $amountLeft * $percent / 100;
+		}
+		else if( $amount ){
+			$percent	= $amount / $amountLeft * 100;
+		}
+		$shareId	= $this->modelBillShare->add( array(
+			'status'	=> Model_Billing_Bill_Share::STATUS_NEW,
+			'billId'	=> $billId,
+			'corporationId'	=> $corporationId,
+			'percent'	=> (float) $percent,
+			'amount'	=> (float) $amount,
+		) );
+		$this->_updateBillAssignedAmount( $billId );
+		return $shareId;
+	}
+
+	public function addBillPersonShare( $billId, $personId, $amount = 0, $percent = 0 ){
 		$bill		= $this->getBill( $billId );
 		$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
 		if( !$amount && $percent ){
@@ -269,16 +289,30 @@ class Logic_Billing{
 				) );
 			}
 			foreach( $billShares as $billShare ){
-				$this->addTransaction(
-					$billShare->amount,
-					Model_Billing_Transaction::TYPE_BILL,
-					$billShare->billId,
-					Model_Billing_Transaction::TYPE_PERSON,
-					$billShare->personId,
-					'|billShare:'.$billShare->billShareId.'|bill:'.$billShare->billId.'|',
-					NULL,
-					$bill->dateBooked
-				);
+				if( $billShare->personId ){
+					$this->addTransaction(
+						$billShare->amount,
+						Model_Billing_Transaction::TYPE_BILL,
+						$billShare->billId,
+						Model_Billing_Transaction::TYPE_PERSON,
+						$billShare->personId,
+						'|billShare:'.$billShare->billShareId.'|bill:'.$billShare->billId.'|',
+						NULL,
+						$bill->dateBooked
+					);
+				}
+				else{
+					$this->addTransaction(
+						$billShare->amount,
+						Model_Billing_Transaction::TYPE_BILL,
+						$billShare->billId,
+						Model_Billing_Transaction::TYPE_CORPORATION,
+						$billShare->corporationId,
+						'|billShare:'.$billShare->billShareId.'|bill:'.$billShare->billId.'|',
+						NULL,
+						$bill->dateBooked
+					);
+				}
 				$this->modelBillShare->edit( $billShare->billShareId, array(
 					'status'	=> Model_Billing_Bill_Share::STATUS_BOOKED,
 				) );

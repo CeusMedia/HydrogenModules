@@ -9,7 +9,7 @@ class Model_Billing_Bill_Share extends CMF_Hydrogen_Model{
 		'billShareId',
 		'billId',
 		'personId',
-		'personPayoutId',
+		'corporationId',
 		'status',
 		'percent',
 		'amount',
@@ -18,7 +18,7 @@ class Model_Billing_Bill_Share extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'billId',
 		'personId',
-		'personPayoutId',
+		'corporationId',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
