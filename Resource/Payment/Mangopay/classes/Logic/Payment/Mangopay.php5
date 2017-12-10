@@ -55,8 +55,36 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		implement type
 	 */
-	public function calculateFeesForPayIn( $price, $type = NULL ){
-		return $price * $this->moduleConfig->get( 'fees.payin' ) / 100;
+	public function calculateFeesForPayIn( $price, $currency, $type ){
+		switch( $type ){
+			case 'CB_VISA_MASTERCARD':
+				if( $currency === "EUR" )
+					return $price * 0.018 + 18;
+				else if( $currency === "GBP" )
+					return $price * 0.019 + 20;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'MAESTRO':
+			case 'DINERS':
+			case 'BCMC':
+				if( $currency === "EUR" )
+					return $price * 0.025 + 25;
+				else if( $currency === "GBP" )
+					return $price * 0.025 + 20;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'GIROPAY':
+			case 'SOFORT':
+				if( $currency === "EUR" )
+					return $price * 0.018 + 30;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'IDEAL':
+				if( $currency === "EUR" )
+					return 80;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'BANKWIRE':
+				return $price * 0.005;
+			default:
+				throw new RangeException( sprintf( 'Payin type %s is not supported', $type ) );
+		}
 	}
 
 	protected function checkIsOwnCard( $cardId ){
@@ -209,7 +237,7 @@ print_m( $items );
 
 	//	$amount	= $this->checkAmount( $amount, $this->currency );								//  @todo handle amount format and sanity
 
-		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Amount	= 0;
 		$payIn->Fees->Currency	= $card->Currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
@@ -239,7 +267,7 @@ print_m( $items );
 		$payIn->PaymentDetails->DebitedFunds->Amount	= $amount;
 		$payIn->PaymentDetails->DebitedFunds->Currency	= $currency;
 		$payIn->PaymentDetails->Fees					= new \MangoPay\Money();
-		$payIn->PaymentDetails->Fees->Amount			= $this->calculateFeesForPayIn( $amount );
+		$payIn->PaymentDetails->Fees->Amount			= 0;
 		$payIn->PaymentDetails->Fees->Currency			= $currency;
 		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
@@ -261,7 +289,7 @@ print_m( $items );
 		$payIn->DebitedFunds->Amount		= $amount;
 		$payIn->Fees						= new \MangoPay\Money();
 		$payIn->Fees->Currency				= strtoupper( $currency );
-		$payIn->Fees->Amount				= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Amount				= 0;
 		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
 		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
