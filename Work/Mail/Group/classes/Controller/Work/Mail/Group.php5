@@ -3,6 +3,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 
 	protected $modelGroup;
 	protected $modelMember;
+	protected $modelRole;
+	protected $modelServer;
 	protected $messenger;
 	protected $request;
 	protected $session;
@@ -46,6 +48,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 //		$this->addData( 'servers', $this->modelServer->getAll() );
 		$users		= $this->modelUser->getAll( array( 'status' => '>0' ), array( 'username' => 'ASC' ) );
 		$this->addData( 'users', $users );
+		$roles		= $this->modelRole->getAll( array(), array( 'rank' => 'ASC' ) );
+		$this->addData( 'roles', $roles );
 	}
 
 	public function addMember( $groupId ){
@@ -73,11 +77,11 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
-			if( $this->modelGroup->getByIndex( 'title', $title ) ){
+			if( $this->modelGroup->getAll( array( 'title' => $title, 'mailGroupId' => '!='.$groupId ) ) ){
 				$this->messenger->noteError( 'Title "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
-			if( $this->modelGroup->getByIndex( 'address', $address ) ){
+			if( $this->modelGroup->getAll( array( 'address' => $address, 'mailGroupId' => '!='.$groupId ) ) ){
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
@@ -91,13 +95,14 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				'modifiedAt'	=> time(),
 			) );
 			$this->messenger->noteSuccess( 'Saved.' );
+			$this->restart( 'edit/'.$groupId );
 		}
 		$this->addData( 'group', $group );
 		$users		= $this->modelUser->getAll( array( 'status' => '>0' ), array( 'username' => 'ASC' ) );
 		$this->addData( 'users', $users );
 		$members	= $this->modelMember->getAll( array( 'mailGroupId' => $groupId ), array( 'title' => 'ASC' ) );
 		$this->addData( 'members', $members );
-		$roles		= $this->modelRoles->getAll( array(), array( 'rank' => 'ASC' ) );
+		$roles		= $this->modelRole->getAll( array(), array( 'rank' => 'ASC' ) );
 		$this->addData( 'roles', $roles );
 	}
 
@@ -134,7 +139,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				'status'		=> (int) $status,
 				'modifiedAt'	=> time(),
 			) );
-			if( (int) $status ){
+			switch( (int) $status ){
 				case 1:
 					break;
 				case -1:

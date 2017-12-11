@@ -15,7 +15,12 @@ $optStatus		= array(
 );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, 0 );
 
-return '
+$optRoleId	= array();
+foreach( $roles as $role )
+	$optRoleId[$role->mailGroupRoleId]	= $role->title;
+$optRoleId	= UI_HTML_Elements::Options( $optRoleId );
+
+$panelAdd	= '
 <div class="content-panel">
 	<h3>Neue E-Mail-Gruppe</h3>
 	<div class="content-panel-inner">
@@ -29,13 +34,17 @@ return '
 					<label for="input_address" class="mandatory">E-Mail-Adresse</label>
 					<input type="email" name="address" id="input_address" class="span12" required="required"/>
 				</div>
-				<div class="span3">
+				<div class="span2">
 					<label for="input_adminId">Administrator</label>
 					<select name="adminId" id="input_adminId" class="span12">'.$optAdminId.'</select>
 				</div>
 				<div class="span2">
 					<label for="input_status">Zustand</label>
 					<select name="status" id="input_status" class="span12" readonly="readonly">'.$optStatus.'</select>
+				</div>
+				<div class="span2">
+					<label for="input_roleId">Standard-Rolle</label>
+					<select name="roleId" id="input_roleId" class="span12">'.$optRoleId.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -45,3 +54,7 @@ return '
 		</form>
 	</div>
 </div>';
+
+$tabs	= $view->renderTabs( $env, 0 );
+
+return $tabs.$panelAdd;

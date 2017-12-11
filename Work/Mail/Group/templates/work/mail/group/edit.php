@@ -61,6 +61,11 @@ if( $members ){
 	$list	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
 }
 
+$optRoleId	= array();
+foreach( $roles as $role )
+	$optRoleId[$role->mailGroupRoleId]	= $role->title;
+$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $group->defaultRoleId );
+
 $panelEdit	= '
 <div class="content-panel">
 	<h3>E-Mail-Gruppe bearbeiten</h3>
@@ -72,12 +77,12 @@ $panelEdit	= '
 					<input type="text" name="title" id="input_title" class="span12" required="required" value="'.htmlentities( $group->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span6">
-					<label for="input_email" class="mandatory">E-Mail-Adresse</label>
-					<input type="email" name="email" id="input_email" class="span12" required="required" value="'.htmlentities( $group->address, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_address" class="mandatory">E-Mail-Adresse</label>
+					<input type="email" name="address" id="input_address" class="span12" required="required" value="'.htmlentities( $group->address, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span6">
+				<div class="span4">
 					<label for="input_adminId">Administrator</label>
 					<select name="adminId" id="input_adminId" class="span12">'.$optAdminId.'</select>
 				</div>
@@ -85,23 +90,24 @@ $panelEdit	= '
 					<label for="input_status">Zustand</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
+				<div class="span4">
+					<label for="input_roleId">Standard-Rolle</label>
+					<select name="roleId" id="input_roleId" class="span12">'.$optRoleId.'</select>
+				</div>
 			</div>
 			<div class="buttonbar">
 				<a href="./work/mail/group" class="btn">'.$iconCancel.'&nbsp;zurück</a>
-				<button type="submit" class="btn btn-primary">'.$iconSave.'&nbsp;speichern</button>
+				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'&nbsp;speichern</button>
 			</div>
 		</form>
 	</div>
 </div>';
 
 
-$optRoleId	= array(
-	0	=> 'nur Leser',
-	1	=> 'Teilnehmer (Standard)',
-	2	=> 'Moderator',
-	3	=> 'Administrator',
-);
-$optRoleId	= UI_HTML_Elements::Options( $optRoleId, 1 );
+$optRoleId	= array();
+foreach( $roles as $role )
+	$optRoleId[$role->mailGroupRoleId]	= $role->title;
+$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $group->defaultRoleId );
 
 $optStatus		= array(
 	-1		=> 'deaktiviert',
@@ -164,7 +170,9 @@ $panelMembers	= '
 	</div>
 </div>'.$modalMemberAdd;
 
-return '<div class="row-fluid">
+$tabs	= $view->renderTabs( $env, 0 );
+
+return $tabs.'<div class="row-fluid">
 	<div class="span6">
 		'.$panelEdit.'
 	</div>
