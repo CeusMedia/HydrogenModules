@@ -54,7 +54,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		if( strlen( trim( $mail->textHtml ) ) )
 			$message->addHtml( $mail->textHtml );
 		if( !count( $message->getParts() ) )
-			continue;
+			return;
 		$message->setSender( $sender );
 		$message->addReplyTo( new \CeusMedia\Mail\Address( $group->address ) );
 		$message->setSubject( $mail->subject );
