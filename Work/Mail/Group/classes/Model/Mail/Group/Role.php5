@@ -16,34 +16,26 @@
  *	@since			20.1.2005
  *	@version		3.0
  */
-class Model_Mail_Group extends CMF_Hydrogen_Model {
+class Model_Mail_Group_Role extends CMF_Hydrogen_Model {
 
-	const STATUS_DEACTIVATED	= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_ACTIVATED		= 1;
-
-	protected $name		= 'mail_groups';
+	protected $name		= 'mail_group_roles';
 	protected $columns	= array(
-		"mailGroupId",
-		"mailGroupServerId",
-		"defaultRoleId",
-		"adminId",
+		"mailGroupRoleId",
 		"status",
+		"rank",
 		"title",
-		"address",
-		"password",
-		"bounce",
+		"read",
+		"write",
 		"createdAt",
 		"modifiedAt",
 	);
-	protected $primaryKey	= 'mailGroupId';
+	protected $primaryKey	= 'mailGroupRoleId';
 	protected $indices		= array(
-		"mailGroupServerId",
-		"defaultRoleId",
-		"adminId",
 		"status",
+		"rank",
 		"title",
-		"address",
+		"read",
+		"write",
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
