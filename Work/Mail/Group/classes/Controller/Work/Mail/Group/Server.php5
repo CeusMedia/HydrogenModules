@@ -1,6 +1,8 @@
 <?php
 class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 
+	protected $modelServer;
+
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -13,7 +15,7 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 			$title	= trim( $this->request->get( 'title' ) );
 			$host	= trim( $this->request->get( 'host' ) );
 			$port	= trim( $this->request->get( 'port' ) );
-			$this->modelServer->edit( $serverId, array(
+			$this->modelServer->add( array(
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $title,
 				'port'			=> $port,

@@ -14,12 +14,14 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Mail/Group.php5</class>
+		<class>Controller/Work/Mail/Group/Role.php5</class>
 		<class>Controller/Work/Mail/Group/Server.php5</class>
 		<class>Model/Mail/Group.php5</class>
 		<class>Model/Mail/Group/Member.php5</class>
 		<class>Model/Mail/Group/Role.php5</class>
 		<class>Model/Mail/Group/Server.php5</class>
 		<class>View/Work/Mail/Group.php5</class>
+		<class>View/Work/Mail/Group/Role.php5</class>
 		<class>View/Work/Mail/Group/Server.php5</class>
 		<locale>de/work/mail/group.ini</locale>
 		<template>work/mail/group/add.php</template>
@@ -28,6 +30,9 @@
 		<template>work/mail/group/server/add.php</template>
 		<template>work/mail/group/server/edit.php</template>
 		<template>work/mail/group/server/index.php</template>
+		<template>work/mail/group/role/add.php</template>
+		<template>work/mail/group/role/edit.php</template>
+		<template>work/mail/group/role/index.php</template>
 <!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
 <!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
 <!--		<file>config/jobs/work.mail.group.xml</file>-->
