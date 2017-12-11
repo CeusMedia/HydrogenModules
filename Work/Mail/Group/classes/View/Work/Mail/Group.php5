@@ -8,7 +8,7 @@ class View_Work_Mail_Group extends CMF_Hydrogen_View{
 	public static function ___onRegisterTab( $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'work/mail/group' );					//  load words
 		$context->registerTab( '', $words->tabs['group'], 0 );									//  register main tab
-		$context->registerTab( 'member', $words->tabs['members'], 1 );							//  register main tab
+	//	$context->registerTab( 'member', $words->tabs['members'], 1 );							//  register main tab
 		$context->registerTab( 'server', $words->tabs['servers'], 2 );							//  register main tab
 		$context->registerTab( 'role', $words->tabs['roles'], 3 );								//  register main tab
 	}

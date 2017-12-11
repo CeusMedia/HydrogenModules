@@ -32,6 +32,6 @@ $panelAdd	= '
 	</div>
 </div>';
 
-$tabs	= $view->renderTabs( $env, 2 );
+$tabs	= $view->renderTabs( $env, 1 );
 
 return $tabs.$panelAdd;

@@ -26,25 +26,33 @@ $panelAdd	= '
 	<div class="content-panel-inner">
 		<form action="./work/mail/group/add" method="post">
 			<div class="row-fluid">
-				<div class="span3">
+				<div class="span8">
 					<label for="input_title" class="mandatory">Titel</label>
 					<input type="text" name="title" id="input_title" class="span12" required="required"/>
 				</div>
-				<div class="span3">
-					<label for="input_address" class="mandatory">E-Mail-Adresse</label>
-					<input type="email" name="address" id="input_address" class="span12" required="required"/>
-				</div>
-				<div class="span2">
+				<div class="span4">
 					<label for="input_adminId">Administrator</label>
 					<select name="adminId" id="input_adminId" class="span12">'.$optAdminId.'</select>
 				</div>
-				<div class="span2">
-					<label for="input_status">Zustand</label>
-					<select name="status" id="input_status" class="span12" readonly="readonly">'.$optStatus.'</select>
+			</div>
+			<div class="row-fluid">
+				<div class="span8">
+					<label for="input_address" class="mandatory">E-Mail-Adresse</label>
+					<input type="email" name="address" id="input_address" class="span12" required="required"/>
 				</div>
-				<div class="span2">
+				<div class="span4">
+					<label for="input_password" class="mandatory">Passwort</label>
+					<input type="password" name="password" id="input_password" class="span12" required="required"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span6">
 					<label for="input_roleId">Standard-Rolle</label>
 					<select name="roleId" id="input_roleId" class="span12">'.$optRoleId.'</select>
+				</div>
+				<div class="span6">
+					<label for="input_status">Zustand</label>
+					<select name="status" id="input_status" class="span12" readonly="readonly">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -57,4 +65,4 @@ $panelAdd	= '
 
 $tabs	= $view->renderTabs( $env, 0 );
 
-return $tabs.$panelAdd;
+return $tabs.'<div class="row-fluid"><div class="span6">'.$panelAdd.'</div></div>';

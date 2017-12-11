@@ -34,10 +34,12 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			}
 			$data		= array(
 				'mailGroupServerId'	=> 1,
+				'defaultRoleId'		=> $this->request->get( 'roleId' ),
 				'status'			=> $this->request->get( 'status' ),
 				'adminId'			=> $this->request->get( 'adminId' ),
 				'title'				=> $title,
 				'address'			=> $address,
+				'password'			=> $this->request->get( 'password' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
@@ -57,6 +59,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$address	= $this->request->get( 'address' );
 		$this->modelMember->add( array(
 			'mailGroupId'	=> $groupId,
+			'roleId'		=> $this->request->get( 'roleId' ),
+			'status'		=> $this->request->get( 'status' ),
 			'title'			=> $title,
 			'address'		=> $address,
 			'createdAt'		=> time(),
@@ -72,6 +76,15 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			throw new RuntimeException( 'Invalid Mail Group ID' );
 	}
 
+	protected function checkMemberId( $memberId, $strict = TRUE ){
+		$member	= $this->modelMember->get( $memberId );
+		if( $member )
+			return $member;
+		if( $strict )
+			throw new RangeException( 'Invalid member ID: '.$memberId );
+		return NULL;
+	}
+
 	public function edit( $groupId ){
 		$group	= $this->checkGroupId( $groupId );
 		if( $this->request->has( 'save' ) ){
@@ -85,17 +98,21 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
-			$groupId	= $this->modelGroup->edit( $groupId, array(
-				'mailServerId'	=> 1,
-				'status'		=> $this->request->get( 'status' ),
-				'adminId'		=> $this->request->get( 'adminId' ),
-				'title'			=> $title,
-				'address'		=> $address,
-				'createdAt'		=> time(),
-				'modifiedAt'	=> time(),
-			) );
+			$data		= array(
+				'mailGroupServerId'	=> 1,
+				'defaultRoleId'		=> $this->request->get( 'roleId' ),
+				'status'			=> $this->request->get( 'status' ),
+				'adminId'			=> $this->request->get( 'adminId' ),
+				'title'				=> $title,
+				'address'			=> $address,
+				'createdAt'			=> time(),
+				'modifiedAt'		=> time(),
+			);
+			if( strlen( trim( $this->request->get( 'password' ) ) ) )
+				$data['password']	= trim( $this->request->get( 'password' ) );
+			$groupId	= $this->modelGroup->edit( $groupId, $data );
 			$this->messenger->noteSuccess( 'Saved.' );
-			$this->restart( 'edit/'.$groupId );
+			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'group', $group );
 		$users		= $this->modelUser->getAll( array( 'status' => '>0' ), array( 'username' => 'ASC' ) );
@@ -117,18 +134,9 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'groups', $groups );
 	}
 
-	protected function checkMemberId( $memberId, $strict = TRUE ){
-		$member	= $this->modelMember->get( $memberId );
-		if( $member )
-			return $member;
-		if( $strict )
-			throw new RangeException( 'Invalid member ID: '.$memberId );
-		return NULL;
-	}
-
 	public function removeMember( $mailGroupId, $mailGroupMemberId ){
 		$member	= $this->checkMemberId( $mailGroupMemberId );
-		$this->modelMember->remove( $mailGroupId );
+		$this->modelMember->remove( $mailGroupMemberId );
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
