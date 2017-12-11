@@ -3,26 +3,23 @@
 	<title>Work: Mail Group</title>
 	<description/>
 	<category>Work</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add database models.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Mail/Group.php5</class>
 <!--		<class>Logic/Mail/Group.php5</class>-->
+		<class>Model/Mail/Group.php5</class>
+		<class>Model/Mail/Group/Member.php5</class>
 		<class>View/Work/Mail/Group.php5</class>
-<!--		<class>Model/Mail/Host.php5</class>
-		<class>Model/Mail/Sync.php5</class>
-		<class>Model/Mail/Sync/Run.php5</class>-->
-<!--		<class>Job/Work/Mail/Group.php5</class>-->
+		<template>work/mail/group/add.php</template>
+		<template>work/mail/group/edit.php</template>
 		<template>work/mail/group/index.php</template>
-<!--		<template>work/mail/group/addHost.php</template>
-		<template>work/mail/group/addSync.php</template>
-		<template>work/mail/group/editSync.php</template>-->
-<!--		<locale>de/work/mail/sync.ini</locale>
-		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
+<!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
 <!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
 <!--		<file>config/jobs/work.mail.group.xml</file>-->
 	</files>
@@ -32,5 +29,37 @@
 	</relations>
 <!--	<hook type="resource" resource="WorkMailGroup" event="registerTabs">View_Work_Mail_Group::___onRegisterTab</hook>-->
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (
+  `mailGroupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupServerId` int(11) UNSIGNED NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `bounce` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`mailGroupId`),
+  UNIQUE KEY `address` (`address`),
+  KEY `mailServerId` (`mailGroupServerId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_members`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_members` (
+  `mailGroupMemberId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`mailGroupMemberId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `status` (`status`),
+  KEY `address` (`address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 </module>
