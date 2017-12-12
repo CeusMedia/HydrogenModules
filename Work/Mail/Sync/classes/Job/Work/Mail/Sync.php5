@@ -7,8 +7,8 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 	public function __onInit(){
 		$this->logic	= new Logic_Mail_Sync( $this->env );
 		$this->hostMap	= array();
-		foreach( $this->logic->getHosts() as $host )
-			$this->hostMap[$host->mailHostId]	= $host;
+		foreach( $this->logic->getSyncHosts() as $host )
+			$this->hostMap[$host->mailSyncHostId]	= $host;
 	}
 
 	public function sync(){
@@ -23,7 +23,7 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 			array( 0, 1 )
 		);
 		$resyncs		= $this->logic->getSyncs(
-			array( 'status' => Model_Mail_Sync::STATUS_SYNCHED, 'resync' => 1/*, 'modifiedAt' => '<'.( time() - 900 )*/ ),
+			array( 'status' => Model_Mail_Sync::STATUS_SYNCHED, 'resync' => 1, 'modifiedAt' => '<'.( time() - 900 ) ),
 			array( 'modifiedAt' => 'ASC' ),
 			array( 0, 10 )
 		);

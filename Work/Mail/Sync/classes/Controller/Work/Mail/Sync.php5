@@ -16,7 +16,7 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 			if( !strlen( trim( $ip ) ) )
 				$ip	= gethostbyname( $host );
 
-			$this->logic->addHost( array(
+			$this->logic->addSyncHost( array(
 				'host'			=> $host,
 				'ip'			=> $ip,
 				'port'			=> $this->request->get( 'port' ),
@@ -27,15 +27,7 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 			) );
 			$this->restart( NULL, TRUE  );
 		}
-		$this->addData( 'hosts', $this->logic->getHosts() );
-	}
-
-	public function setSyncStatus( $id, $status ){
-		$this->logic->editSync( $id, array(
-			'status'		=> (int) $status,
-			'modifiedAt'	=> time(),
-		) );
-		$this->restart( NULL, TRUE );
+		$this->addData( 'hosts', $this->logic->getSyncHosts() );
 	}
 
 	public function addSync(){
@@ -57,12 +49,12 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 				'sourcePassword'	=> $sourcePassword,
 				'targetUsername'	=> $targetUsername,
 				'targetPassword'	=> $targetPassword,
-				'createdAt'		=> time(),
-				'modifiedAt'	=> time(),
+				'createdAt'			=> time(),
+				'modifiedAt'		=> time(),
 			) );
 			$this->restart( NULL, TRUE );
 		}
-		$this->addData( 'hosts', $this->logic->getHosts() );
+		$this->addData( 'hosts', $this->logic->getSyncHosts() );
 	}
 
 	public function editSync( $id ){
@@ -84,8 +76,8 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 				'sourcePassword'	=> $sourcePassword,
 				'targetUsername'	=> $targetUsername,
 				'targetPassword'	=> $targetPassword,
-				'createdAt'		=> time(),
-				'modifiedAt'	=> time(),
+				'createdAt'			=> time(),
+				'modifiedAt'		=> time(),
 			) );
 			$this->restart( NULL, TRUE );
 		}
@@ -94,7 +86,7 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
-		$hosts		= $this->logic->getHosts();
+		$hosts		= $this->logic->getSyncHosts();
 		$syncs		= $this->logic->getSyncs();
 		foreach( $syncs as $sync ){
 			$sync->runs	= $this->logic->getSyncRuns(
@@ -106,5 +98,13 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'hosts', $hosts );
 		$this->addData( 'syncs', $syncs );
+	}
+
+	public function setSyncStatus( $id, $status ){
+		$this->logic->editSync( $id, array(
+			'status'		=> (int) $status,
+			'modifiedAt'	=> time(),
+		) );
+		$this->restart( NULL, TRUE );
 	}
 }

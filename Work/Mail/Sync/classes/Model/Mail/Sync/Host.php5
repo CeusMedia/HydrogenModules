@@ -1,9 +1,9 @@
 <?php
-class Model_Mail_Host extends CMF_Hydrogen_Model{
+class Model_Mail_Sync_Host extends CMF_Hydrogen_Model{
 
-	protected $name		= 'mail_hosts';
+	protected $name		= 'mail_sync_hosts';
 	protected $columns	= array(
-		'mailHostId',
+		'mailSyncHostId',
 		'ip',
 		'host',
 		'port',
@@ -12,7 +12,7 @@ class Model_Mail_Host extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
-	protected $primaryKey	= 'mailHostId';
+	protected $primaryKey	= 'mailSyncHostId';
 	protected $indices		= array(
 		'ip',
 		'host',

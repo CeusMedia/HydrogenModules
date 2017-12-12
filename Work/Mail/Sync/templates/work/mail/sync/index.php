@@ -45,12 +45,12 @@ if( $syncs ){
 	$list	= array();
 	foreach( $syncs as $sync ){
 		foreach( $hosts as $host )
-			if( $host->mailHostId == $sync->sourceMailHostId ){
+			if( $host->mailSyncHostId == $sync->sourceMailHostId ){
 				$sourceHost	= $host->host ? $host->host : $host->ip;
 				break;
 			}
 		foreach( $hosts as $host )
-			if( $host->mailHostId == $sync->targetMailHostId ){
+			if( $host->mailSyncHostId == $sync->targetMailHostId ){
 				$targetHost	= $host ? $host->host : $host->ip;
 				break;
 			}
