@@ -96,7 +96,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		$server		= $this->modelServer->get( $group->mailGroupServerId );
 
 		$flags		= array( 'imap' );
-		if( (int) $server->port === 993 )
+		if( (int) $server->imapPort === 993 )
 			$flags[]	= 'ssl';
 		$flags		= join( '/', $flags );
 		$mailbox	= new \PhpImap\Mailbox(
