@@ -38,8 +38,8 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 
 		if( !isset( $this->transports[(int) $groupId] ) )
 			$this->transports[(int) $groupId]  = new \CeusMedia\Mail\Transport\SMTP(
-				$server->host,
-				(int) $server->port,
+				$server->smtpHost,
+				(int) $server->smtpPort,
 				$group->address,
 				$group->password
 			);
@@ -100,7 +100,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 			$flags[]	= 'ssl';
 		$flags		= join( '/', $flags );
 		$mailbox	= new \PhpImap\Mailbox(
-			sprintf( '{%s:%d/%s}INBOX', $server->host, $server->port, $flags ),
+			sprintf( '{%s:%d/%s}INBOX', $server->imapHost, $server->imapPort, $flags ),
 			$group->address,
 			$group->password,
 			'data/attachments'

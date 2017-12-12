@@ -22,8 +22,10 @@ class Model_Mail_Group_Server extends CMF_Hydrogen_Model {
 	protected $columns	= array(
 		"mailGroupServerId",
 		"status",
-		"host",
-		"port",
+		"imapHost",
+		"imapPort",
+		"smtpHost",
+		"smtpPort",
 		"title",
 		"createdAt",
 		"modifiedAt",
@@ -31,8 +33,10 @@ class Model_Mail_Group_Server extends CMF_Hydrogen_Model {
 	protected $primaryKey	= 'mailGroupServerId';
 	protected $indices		= array(
 		"status",
-		"host",
-		"port",
+		"imapHost",
+		"imapPort",
+		"smtpHost",
+		"smtpPort",
 		"title",
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

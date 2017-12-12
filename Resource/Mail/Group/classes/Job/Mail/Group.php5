@@ -5,7 +5,7 @@ class Job_Mail_Group extends Job_Abstract{
 		$this->logic	= new Logic_Mail_Group( $this->env );
 		$groups			= $this->logic->getActiveGroups();
 		foreach( $groups as $group ){
-			$results	= $this->logic->handleMailgroup( $group->mailGroupId, TRUE );
+			$results	= $this->logic->handleMailgroup( $group->mailGroupId );
 			if( $results->mails ){
 				$this->out( date( 'r' ).': Handling mailgroup: '.$group->title );
  				foreach( $results->mails as $mailId => $handledMail ){
