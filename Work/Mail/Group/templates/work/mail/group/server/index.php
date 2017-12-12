@@ -15,7 +15,8 @@ if( count( $servers ) ){
 //		$status	= UI_HTML_Tag::create( 'span', $statusLabels[$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $label ),
-			UI_HTML_Tag::create( 'td', $server->host ),
+			UI_HTML_Tag::create( 'td', $server->imapHost.':'.$server->imapPort ),
+			UI_HTML_Tag::create( 'td', $server->smtpHost.':'.$server->smtpPort ),
 	//		UI_HTML_Tag::create( 'td', $status ),
 	//		UI_HTML_Tag::create( 'td', count( $group->members ) ),
 			UI_HTML_Tag::create( 'td', $helperTimestamp->convert( $server->createdAt, TRUE, 'vor' ) ),
@@ -23,7 +24,8 @@ if( count( $servers ) ){
 	}
 	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'Titel',
-		'Adresse',
+		'IMAP-Server',
+		'SMTP-Server',
 //		'Zustand',
 //		$iconUsers,
 		'erstellt',

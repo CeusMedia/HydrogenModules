@@ -12,14 +12,18 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
-			$title	= trim( $this->request->get( 'title' ) );
-			$host	= trim( $this->request->get( 'host' ) );
-			$port	= trim( $this->request->get( 'port' ) );
+			$title		= trim( $this->request->get( 'title' ) );
+			$imapHost	= trim( $this->request->get( 'imap_host' ) );
+			$imapPort	= trim( $this->request->get( 'imap_port' ) );
+			$smtpHost	= trim( $this->request->get( 'smtp_host' ) );
+			$smtpPort	= trim( $this->request->get( 'smtp_port' ) );
 			$this->modelServer->add( array(
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $title,
-				'port'			=> $port,
-				'host'			=> $host,
+				'imapHost'		=> $imapHost,
+				'imapPort'		=> $imapPort,
+				'smtpHost'		=> $smtpHost,
+				'smtpPort'		=> $smtpPort,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			) );
@@ -39,14 +43,18 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 	public function edit( $serverId ){
 		$server	= $this->checkId( $serverId );
 		if( $this->request->has( 'save' ) ){
-			$title	= trim( $this->request->get( 'title' ) );
-			$host	= trim( $this->request->get( 'host' ) );
-			$port	= trim( $this->request->get( 'port' ) );
+			$title		= trim( $this->request->get( 'title' ) );
+			$imapHost	= trim( $this->request->get( 'imap_host' ) );
+			$imapPort	= trim( $this->request->get( 'imap_port' ) );
+			$smtpHost	= trim( $this->request->get( 'smtp_host' ) );
+			$smtpPort	= trim( $this->request->get( 'smtp_port' ) );
 			$this->modelServer->edit( $serverId, array(
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $title,
-				'host'			=> $host,
-				'port'			=> $port,
+				'imapHost'		=> $imapHost,
+				'imapPort'		=> $imapPort,
+				'smtpHost'		=> $smtpHost,
+				'smtpPort'		=> $smtpPort,
 				'modifiedAt'	=> time(),
 			) );
 			$this->restart( NULL, TRUE );
