@@ -93,13 +93,20 @@ DROP TABLE IF EXISTS `<%?prefix%>mail_group_servers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_servers` (
   `mailGroupServerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) unsigned NOT NULL,
-  `host` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `port` decimal(5,0) unsigned NOT NULL,
+  `imapHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `imapPort` decimal(5,0) unsigned NOT NULL,
+  `smptHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `smtpPort` decimal(5,0) unsigned NOT NULL,
   `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) NOT NULL,
   `modifiedAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`mailGroupServerId`),
-  KEY `status` (`status`,`host`,`title`)
+  KEY `status` (`status`),
+  KEY `imapHost` (`imapHost`),
+  KEY `imapPort` (`imapPort`),
+  KEY `smtpHost` (`smtpHost`),
+  KEY `smtpPort` (`smtpPort`),
+  KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ]]></sql>
