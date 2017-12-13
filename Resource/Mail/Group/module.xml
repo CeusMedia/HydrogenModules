@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_servers` (
   `status` tinyint(1) unsigned NOT NULL,
   `imapHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `imapPort` decimal(5,0) unsigned NOT NULL,
-  `smptHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `smtpHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `smtpPort` decimal(5,0) unsigned NOT NULL,
   `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) NOT NULL,
