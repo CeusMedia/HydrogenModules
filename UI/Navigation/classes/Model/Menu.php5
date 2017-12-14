@@ -192,6 +192,7 @@ class Model_Menu {
 		$scopes		= array(
 			0		=> 'main',
 			1		=> 'footer',
+			2		=> 'top',
 		);
 		$this->pages		= array();
 		$this->pageMap		= array();
