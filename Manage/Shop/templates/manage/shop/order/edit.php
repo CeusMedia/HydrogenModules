@@ -150,6 +150,7 @@ $panels[]	= '
 					<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
 					<dt>Kunden-ID</dt><dd>'.$order->userId.'</dd>
 					<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
+					<dt>Bezahlung</dt><dd>'.$order->paymentMethod.'</dd>
 					<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
 		<!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
 				</dl>
