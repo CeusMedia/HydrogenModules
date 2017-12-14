@@ -38,6 +38,8 @@ class View_Info_Page extends CMF_Hydrogen_View{
 			}
 			if( !strlen( trim( $object->content ) ) )
 				$object->content  	= " ";
+			$page	= $this->env->getPage();
+			$page->addBodyClass( 'info-page-'.$object->identifier );
 			return $this->renderContent( $object->content, $object->format );
 		}
 	}
