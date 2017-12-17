@@ -81,7 +81,7 @@ Cronjobs:
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
-<!--	<sql type="mysql" on="install" version="0.3"><![CDATA[
+	<sql type="mysql" on="install" version="0.3"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>stripe_events`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>stripe_events` (
   `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -123,5 +123,5 @@ ALTER TABLE `<%?prefix%>stripe_payins` ADD `userId` INT UNSIGNED NOT NULL AFTER 
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>stripe_events`;
 DROP TABLE IF EXISTS `<%?prefix%>stripe_payins`;
-]]></sql>-->
+]]></sql>
 </module>

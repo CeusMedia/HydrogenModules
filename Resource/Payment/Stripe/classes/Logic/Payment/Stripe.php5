@@ -21,7 +21,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
-		\Stripe\Stripe::setApiKey( $config->get( 'api.key.secret' ) );
+		\Stripe\Stripe::setApiKey( $this->moduleConfig->get( 'api.key.secret' ) );
 
 //		print_m( $this->moduleConfig->getAll() );die;
 		$this->cache		= $this->env->getCache();
@@ -373,8 +373,7 @@ print_m( $items );
 		return $this->provider->Users->Update( $user );
 	}
 
-	public function createNaturalUserFromLocalUser( $localUserId ){
-		throw new Exception( 'Not implemented yet' );
+	public function createUserFromLocalUser( $localUserId ){
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
@@ -384,27 +383,12 @@ print_m( $items );
 			'type'			=> Model_Address::TYPE_BILLING,
 		) );
 
-		$user	= new \Stripe\UserNatural();
-		$user->PersonType			= "NATURAL";
-		$user->FirstName				= $user->firstname;
-		$user->LastName				= $user->surname;
-		$user->Birthday				= 0;
-		$user->Nationality			= $user->country;
-		$user->CountryOfResidence	= $user->country;
-		$user->Email					= $user->email;
-		$user->Address 				= new \Stripe\Address();
-		$user->Address->AddressLine1	= $user->street.' '.$user->number;
-		$user->Address->City			= $user->city;
-		$user->Address->PostalCode	= $user->postcode;
-		$user->Address->Country		= $user->country;
-		if( $address ){
-			$user->Address->AddressLine1	= $address->street;
-			$user->Address->City			= $address->city;
-			$user->Address->PostalCode	= $address->postcode;
-			$user->Address->Country		= $address->country;
-		}
-		$user	= $this->provider->Users->Create( $user );
-		$this->setUserIdForLocalUserId( $user->Id, $localUserId );
+		$data	= array(
+				'email'			=> $user->email,
+				'description'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')',
+		);
+		$user	= \Stripe\Customer::create( $data );
+		$this->setUserIdForLocalUserId( $user->id, $localUserId );
 		return $user;
 	}
 
