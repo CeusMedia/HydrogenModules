@@ -81,7 +81,7 @@ Cronjobs:
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
-	<sql type="mysql" on="install" version="0.3"><![CDATA[
+	<sql type="mysql" on="install" version="0.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>stripe_events`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>stripe_events` (
   `eventId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -97,11 +97,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>stripe_events` (
   KEY `id` (`id`),
   KEY `type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+
 DROP TABLE IF EXISTS `<%?prefix%>stripe_payins`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>stripe_payins` (
   `payinId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userId` int(10) UNSIGNED NOT NULL,
   `status` tinyint(3) UNSIGNED DEFAULT '0' COMMENT '0:UNKNOWN, 1:CREATED, 2:FAILED, 3:SUCCEEDED',
   `id` int(10) UNSIGNED NOT NULL,
   `type` tinyint(1) UNSIGNED NOT NULL COMMENT '0:UNKNOWN, 1:CARD, 2:PREAUTHORIZED, 3:BANK_WIRE, 4:DIRECT_DEBIT, 5:DIRECT_DEBIT_DIRECT, 6:PAYPAL',
@@ -111,14 +111,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>stripe_payins` (
   `createdAt` decimal(12,0) UNSIGNED NOT NULL,
   `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
   PRIMARY KEY (`payinId`),
+  KEY `userId` (`userId`),
   KEY `status` (`status`),
   KEY `id` (`id`),
   KEY `type` (`type`),
   KEY `currency` (`currency`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql type="mysql" on="update" version="0.3.7"><![CDATA[
-ALTER TABLE `<%?prefix%>stripe_payins` ADD `userId` INT UNSIGNED NOT NULL AFTER `payinId`, ADD INDEX (`userId`);
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>stripe_events`;
