@@ -21,6 +21,8 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
+		\Stripe\Stripe::setApiKey( $config->get( 'api.key.secret' ) );
+
 //		print_m( $this->moduleConfig->getAll() );die;
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Stripe::getInstance( $this->env );
@@ -44,47 +46,11 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function deactivateBankAccount( $userId, $bankAccountId ){
-		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
-		$bankAccount->Active = FALSE;
-		$result	= $this->provider->Users->UpdateBankAccount( $userId, $bankAccount );
-		$this->uncache( 'user_'.$userId.'_bankaccounts' );
-		$this->uncache( 'user_'.$userId.'_bankaccount_'.$bankAccountId );
-	}
-
 	/**
 	 *	@todo		implement type
 	 */
-	public function calculateFeesForPayIn( $price, $currency, $type ){
-		switch( $type ){
-			case 'CB_VISA_MASTERCARD':
-				if( $currency === "EUR" )
-					return $price * 0.018 + 18;
-				else if( $currency === "GBP" )
-					return $price * 0.019 + 20;
-				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
-			case 'MAESTRO':
-			case 'DINERS':
-			case 'BCMC':
-				if( $currency === "EUR" )
-					return $price * 0.025 + 25;
-				else if( $currency === "GBP" )
-					return $price * 0.025 + 20;
-				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
-			case 'GIROPAY':
-			case 'SOFORT':
-				if( $currency === "EUR" )
-					return $price * 0.018 + 30;
-				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
-			case 'IDEAL':
-				if( $currency === "EUR" )
-					return 80;
-				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
-			case 'BANKWIRE':
-				return $price * 0.005;
-			default:
-				throw new RangeException( sprintf( 'Payin type %s is not supported', $type ) );
-		}
+	public function calculateFeesForPayIn( $price, $currency ){
+		return 0;
 	}
 
 	protected function checkIsOwnCard( $cardId ){
@@ -98,6 +64,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 	}
 
 	public function createAddress( $street, $postcode, $city, $country, $region = NULL ){
+		throw new Exception( 'Not implemented yet' );
 		$address = new \Stripe\Address();
 		$address->AddressLine1	= $street;
 		$address->PostalCode	= $postcode;
@@ -109,6 +76,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 	}
 
 	public function createBankAccount( $userId, $iban, $bic, $title, $address = NULL ){
+		throw new Exception( 'Not implemented yet' );
 		$user	= $this->getUser( $userId );
 		$bankAccount = new \Stripe\BankAccount();
 		$bankAccount->Type			= "IBAN";
@@ -128,6 +96,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 	}
 
 	public function createMandate( $bankAccountId, $returnUrl ){
+		throw new Exception( 'Not implemented yet' );
 		$mandate 	= new \Strope\Mandate();
 		$mandate->BankAccountId	= $bankAccountId;
 		$mandate->Culture		= "EN";
@@ -136,6 +105,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 	}
 
 	public function getUserMandates( $userId ){
+		throw new Exception( 'Not implemented yet' );
 		$cacheKey	= 'stripe_user_'.$userId.'_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
@@ -146,6 +116,7 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 	}
 
 	public function getBankAccountMandates( $userId, $bankAccountId ){
+		throw new Exception( 'Not implemented yet' );
 		$cacheKey	= 'strope_user_'.$userId.'_bankaccount_'.$bankAccountId.'_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
@@ -157,6 +128,7 @@ print_m( $items );
 	}
 
 	public function getMandates(){
+		throw new Exception( 'Not implemented yet' );
 		$cacheKey	= 'stripe_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
@@ -170,6 +142,7 @@ print_m( $items );
 	 *	@todo		finish implementation, not working right now
 	 */
 	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $currency, $amount ){
+		throw new Exception( 'Not implemented yet' );
 //		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
 		$payIn		= new \Stripe\PayIn();
@@ -202,6 +175,7 @@ print_m( $items );
 	 *	@todo		test (not tested since no mandates allowed, yet)
 	 */
 	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $currency, $amount ){
+		throw new Exception( 'Not implemented yet' );
 
 		$payIn	= new \Stripe\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -226,6 +200,7 @@ print_m( $items );
 	}
 
 	public function createPayInFromCard( $userId, $walletId, $cardId, $amount, $secureModeReturnUrl ){
+		throw new Exception( 'Not implemented yet' );
 
 		$card	= $this->getCardById( $cardId );
 
@@ -257,6 +232,7 @@ print_m( $items );
 	}
 
 	public function createBankPayInViaWeb( $type, $userId, $walletId, $currency, $amount, $returnUrl ){
+		throw new Exception( 'Not implemented yet' );
 		$user	= $this->checkUser( $userId );
 		$payIn	= new \Stripe\PayIn();
 		$payIn->CreditedWalletId	= $walletId;
@@ -276,6 +252,7 @@ print_m( $items );
 	}
 
 	public function createCardPayInViaWeb( $userId, $walletId, $cardType, $currency, $amount, $returnUrl ){
+		throw new Exception( 'Not implemented yet' );
 		$user	= $this->checkUser( $userId );
 		$payIn	= new \Stripe\PayIn();
 		$payIn->CreditedWalletId			= $walletId;
@@ -297,6 +274,7 @@ print_m( $items );
 	}
 
 	public function createLegalUserFromLocalUser( $localUserId, $companyData, $representativeData ){
+		throw new Exception( 'Not implemented yet' );
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
@@ -336,6 +314,7 @@ print_m( $items );
 	}
 
 	public function createLegalUser( $data ){
+		throw new Exception( 'Not implemented yet' );
 		$user = new \Stripe\UserLegal();
 		$user->LegalPersonType	= $data['company']['type'];
 		$user->Name				= $data['company']['name'];
@@ -365,6 +344,7 @@ print_m( $items );
 	}
 
 	public function updateLegalUser( $userId, $data ){
+		throw new Exception( 'Not implemented yet' );
 		$user	= $this->getUser( $userId );
 		$user->LegalPersonType	= $data['company']['type'];
 		$user->Name				= $data['company']['name'];
@@ -394,6 +374,7 @@ print_m( $items );
 	}
 
 	public function createNaturalUserFromLocalUser( $localUserId ){
+		throw new Exception( 'Not implemented yet' );
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
@@ -428,6 +409,7 @@ print_m( $items );
 	}
 
 	public function createUserWallet( $userId, $currency ){
+		throw new Exception( 'Not implemented yet' );
 		$wallet		= new \Stripe\Wallet();
 		$wallet->Currency		= $currency;
 		$wallet->Owners			= array( $userId );
@@ -436,14 +418,28 @@ print_m( $items );
 	}
 
 	public function getBankAccount( $userId, $bankAccountId ){
-		return $this->getUserBankAccount( $userId, $bankAccountId );
+		$user	= $this->getUser( $userId );
+		return $user->sources->retrieve( $bankAccountId );
 	}
 
 	public function getBankAccounts( $userId ){
-		return $this->getUserBankAccounts( $userId );
+		$user	= $this->getUser( $userId );
+		return $user->sources->all( array( 'object' => 'bank_account' ) );
+	}
+
+	public function getCard( $userId, $cardId ){
+		$cacheKey	= 'stripe_user_'.$userId.'_card_'.$cardId;
+		$this->applyPossibleCacheSkip( $cacheKey );
+		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
+			$user	= $this->getUser( $userId );
+			$item	= $user->sources->retrieve( $cardId );
+			$this->cache->set( $cacheKey, $item );
+		}
+		return $item;
 	}
 
 	public function getCardById( $cardId ){
+		throw new Exception( 'Not supported anymore' );
 		$cacheKey	= 'stripe_card_'.$cardId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
@@ -454,10 +450,12 @@ print_m( $items );
 	}
 
 	public function getClient(){
+		throw new Exception( 'Not implemented yet' );
 		return $this->provider->Clients->Get();
 	}
 
 	public function getClientWallet( $fundsType, $currency ){
+		throw new Exception( 'Not implemented yet' );
 		return $this->provider->Clients->GetWallet( $fundsType, $currency );
 	}
 
@@ -511,14 +509,17 @@ print_m( $items );
 	}
 
 	public function getPayin( $payInId ){
+		throw new Exception( 'Not implemented yet' );
 		return $this->provider->PayIns->Get( $payInId );
 	}
 
 	public function getPayout( $payOutId ){
+		throw new Exception( 'Not implemented yet' );
 		return $this->provider->PayOuts->Get( $payOutId );
 	}
 
 	public function getTransfer( $transferId ){
+		throw new Exception( 'Not implemented yet' );
 		return $this->provider->Transfers->Get( $transferId );
 	}
 
@@ -526,7 +527,7 @@ print_m( $items );
 		$cacheKey	= 'stripe_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
-			$item	= $this->provider->Users->Get( $userId );
+			$item	= \Stripe\Customer::retrieve( $userId );
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
@@ -536,7 +537,8 @@ print_m( $items );
 		$cacheKey	= 'stripe_user_'.$userId.'_bankaccount_'.$bankAccountId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
-			$item	= $this->provider->Users->GetBankAccount( $userId, $bankAccountId );
+			$user	= $this->getUser( $userId );
+			$item	= $user->sources->retrieve( $bankAccountId );
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
@@ -546,16 +548,15 @@ print_m( $items );
 		$cacheKey	= 'stripe_user_'.$userId.'_bankaccounts';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
-			$pagination	= new \Stripe\Pagination();
-			$sorting	= new \Stripe\Sorting();
-			$sorting->AddField( 'CreationDate', 'DESC' );
-			$items		= $this->provider->Users->GetBankAccounts( $userId, $pagination, $sorting );
+			$user	= $this->getUser( $userId );
+			$items	= $user->sources->all( array( 'object' => 'bank_account' ) )->data;
 			$this->cache->set( $cacheKey, $items );
 		}
 		return $items;
 	}
 
 	public function getUserCards( $userId, $conditions = array(), $orders = array(), $limits = array() ){
+		throw new Exception( 'Not implemented yet' );
 		$pagination	= new \Stripe\Pagination();
 		$sorting	= new \Stripe\Sorting();
 		if( !$orders )
@@ -574,6 +575,7 @@ print_m( $items );
 	}
 
 	public function getUserWallet( $userId, $walletId ){
+		throw new Exception( 'Not supported' );
 		$cacheKey	= 'stripe_user_'.$userId.'_wallet_'.$walletId;
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
@@ -584,10 +586,12 @@ print_m( $items );
 	}
 
 	public function getClientWallets(){
+		throw new Exception( 'Not supported' );
 		return $this->provider->Clients->GetWallets();
 	}
 
 	public function getUserWallets( $userId, $orders = array(), $limits = array() ){
+		throw new Exception( 'Not supported' );
 		$pagination	= new \Stripe\Pagination();
 		$sorting	= new \Stripe\Sorting();
 		if( !$orders )
@@ -600,6 +604,7 @@ print_m( $items );
 	}
 
 	public function getUserWalletsByCurrency( $userId, $currency, $force = FALSE ){
+		throw new Exception( 'Not supported' );
 		$pagination	= new \Stripe\Pagination();
 		$sorting	= new \Stripe\Sorting();
 		$sorting->AddField( 'CreationDate', 'DESC' );
@@ -655,6 +660,7 @@ print_m( $items );
 	 *	@todo		extend cache key by filters
 	 */
 	public function getWalletTransactions( $walletId, $orders = array(), $limits = array() ){
+		throw new Exception( 'Not implemented yet' );
 		$cacheKey	= 'stripe_wallet_'.$walletId.'_transactions';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
@@ -669,6 +675,7 @@ print_m( $items );
 	}
 
 	public function hasPaymentAccount( $localUserId ){
+		throw new Exception( 'Not implemented yet' );
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->countByIndices( array(
 			'userId'	=> $localUserId,
@@ -678,12 +685,14 @@ print_m( $items );
 	}
 
 	public function setClientLogo( $imageContentBase64 ){
+		throw new Exception( 'Not implemented yet' );
 		$ClientLogoUpload = new \Stripe\ClientLogoUpload();
 		$ClientLogoUpload->File = $imageContentBase64;
 		return $this->provider->Clients->UploadLogo( $ClientLogoUpload );
 	}
 
 	public function setHook( $id, $eventType, $path, $status = NULL, $tag = NULL ){
+		throw new Exception( 'Not implemented yet' );
 		if( $id > 0 ){
 			$hook			= $this->provider->Hooks->Get( $id );
 			if( $status !== NULL )
@@ -710,6 +719,7 @@ print_m( $items );
 	}
 
 	public function transfer( $sourceUserId, $targetUserId, $sourceWalletId, $targetWalletId, $currency, $amount, $fees, $tag = NULL ){
+		throw new Exception( 'Not implemented yet' );
 		$transfer = new \Stripe\Transfer();
 		$transfer->Tag = $tag;
 		$transfer->AuthorId = $sourceUserId;
@@ -731,6 +741,7 @@ print_m( $items );
 	}
 
 	public function updateClient( $data ){
+		throw new Exception( 'Not implemented yet' );
 		$client	= $this->getClient();
 		$copy	= clone( $client );
 		$map	= array(
@@ -774,11 +785,13 @@ print_m( $items );
 	}
 
 	public function updateUser( $user ){
+		throw new Exception( 'Not implemented yet' );
 		$this->uncache( 'user_'.$user->Id );
 		return $this->provider->Users->Update( $user );
 	}
 
 	public function updateUserWallet( $userId, $walletId, $description, $tag = NULL ){
+		throw new Exception( 'Not implemented yet' );
 		$wallet		= $this->getUserWallet( $userId, $walletId );
 		$wallet->Description = $description;
 		if( $tag !== NULL )
