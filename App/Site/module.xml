@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -25,6 +25,7 @@
 	<log version="0.5.2">Extend master template by HTML blocks.</log>
 	<log version="0.5.3">Support separate index HTML file for being logged in (inside).</log>
 	<log version="0.5.4">Extract hooks to own hook class.</log>
+	<log version="0.5.5">Prepare to use new abstract hook provided by framework.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -69,8 +70,9 @@
 		<supports type="module">UI_LanguageSelector</supports>
 		<supports type="module">UI_TEA</supports>
 	</relations>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_App_Site::___onTinyMCE_getImageList</hook>
-	<hook type="resource" resource="Page" event="applyModules">Hook_App_Site::___onPageApplyModules</hook>
-	<hook type="resource" resource="Page" event="init">Hook_App_Site::___onPageInit</hook>
-	<hook type="resource" resource="Env" event="constructEnd">Hook_App_Site::___onEnvConstructEnd</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_App_Site::onTinyMCEGetImageList</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_App_Site::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="init">Hook_App_Site::onPageInit</hook>
+	<hook type="resource" resource="Env" event="constructEnd">Hook_App_Site::onEnvConstructEnd</hook>
+	<hook type="resource" resource="Framework" event="calledDeprecationResource">Hook_App_Site::onFrameworkDeprecation</hook>
 </module>
