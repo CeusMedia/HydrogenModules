@@ -1,0 +1,297 @@
+body.moduleCatalogBookstore dl {
+	border: 0px solid black;
+	}
+body.moduleCatalogBookstore dl dt {
+	font-size: 1.0em;
+	font-weight: normal;
+	}
+body.moduleCatalogBookstore dl dd {
+	padding-left: 1.5em;
+	padding-bottom: 0.5em;
+	}
+body.moduleCatalogBookstore dl dd div {
+	font-size: 1em;
+	}
+body.moduleCatalogBookstore dl.column dd {
+	font-weight: bold;
+	font-size: 1.1em;
+	}
+body.moduleCatalogBookstore dl.column dd div{
+	}
+body.moduleCatalogBookstore div.buttonbar {
+/*	border-top: 1px solid #BFBFBF;
+	background-color: #EFEFEF;
+	padding: 1em 2em;
+	padding-left: 0;*/
+	padding-left: 200px;
+	}
+
+
+
+
+
+/*  --  ARTICLE LIST  --  */
+#layout-content div.catalog-bookstore-article-item {
+	clear: both;
+	margin-bottom: 2em;
+	border-bottom: 1px solid #DDD;
+	padding-bottom: 2em;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.author {
+	display: block;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.title {
+	display: block;
+	margin: 0.3em 0em;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.title a {
+	font-size: 1.1em;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.description {
+	font-style: italic;
+	display: block;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.subtitle {
+	display: block;
+	font-size: 0.9em;
+	}
+#layout-content div.catalog-bookstore-article-item div.data span.info {
+	display: block;
+	margin-top: 0.9em;
+	}
+#layout-content div.catalog-bookstore-article-item div.image {
+	float: left;
+	width: 110px;
+/*	border: 1px dotted #eee;*/
+	}
+#layout-content div.catalog-bookstore-article-item div.data.withImage {
+	margin-left: 110px;
+/*	border: 1px dotted #eee;*/
+	}
+#layout-content div.articleList div.future_de {
+/*	background: #EFEFEF;*/
+	background-image: url(../../../images/future_de2.png);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	}
+#layout-content div.articleList div.future_en {
+/*	background: #EFEFEF;*/
+	background-image: url(../../../images/future_en.png);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	}
+
+
+#layout-content div.catalog-bookstore-article-item.status_de_-2,
+#layout-content div.catalog-bookstore-article-item.status_en_-2,
+#layout-content div.catalog-bookstore-article-item.status_de_-1,
+#layout-content div.catalog-bookstore-article-item.status_en_-1,
+#layout-content div.catalog-bookstore-article-item.status_de_1,
+#layout-content div.catalog-bookstore-article-item.status_en_1 {
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	}
+
+#layout-content div.catalog-bookstore-article-item.status_de_-2 {
+	background-image: url(../img/back_status_de_-2.png);
+	}
+#layout-content div.catalog-bookstore-article-item.status_de_-1 {
+	background-image: url(../img/back_status_de_-1.png);
+	}
+#layout-content div.catalog-bookstore-article-item.status_de_1 {
+	background-image: url(../img/back_status_de_1.png);
+	}
+
+#layout-content div.catalog-bookstore-article-item.status_en_-2 {
+	background-image: url(../img/back_status_en_-2.png);
+	}
+#layout-content div.catalog-bookstore-article-item.status_en_-1 {
+	background-image: url(../img/back_status_en_-1.png);
+	}
+#layout-content div.catalog-bookstore-article-item.status_en_1 {
+	background-image: url(../img/back_status_en_1.png);
+	}
+
+
+#layout-content table.articleList div.catalog-bookstore-article-item div.image {
+	width: 70px;
+	padding-top: 10px;
+	height: 100px;
+	}
+#layout-content table.articleList div.catalog-bookstore-article-item div.image img {
+	width: 80%;
+	height: auto;
+	}
+#layout-content table.articleList div.catalog-bookstore-article-item div.data.withImage {
+	margin-left: 80px;
+	}
+#layout-content table.articleList div.catalog-bookstore-article-item span.author {
+	font-size: smaller;
+	}
+#layout-content table.articleList div.catalog-bookstore-article-item span.isbn {
+	font-size: smaller;
+	color: #777;
+	}
+#layout-content table.articleList td {
+	vertical-align: middle;
+	}
+
+
+
+
+
+/*  --  CATEGORY INDEX  --  */
+#layout-content #categoryList {}
+#layout-content #categoryList div.column {
+	float: left;
+	}
+#layout-content #categoryList div.column.column-2 {
+	width: 45%;
+	margin-right: 4%;
+	}
+#layout-content #categoryList div.column.column-3 {
+	width: 30%;
+	margin-right: 3%;
+	}
+#layout-content #categoryList div.column.column-4 {
+	width: 22%;
+	margin-right: 3%;
+	}
+
+
+#layout-content #categoryList div.column ul.branches {
+	margin: 0;
+	padding: 0;
+	}
+#layout-content #categoryList div.column ul.branches li.branch {
+	clear: left;
+	padding: 4px;
+	list-style: none;
+	font-weight: bold;
+	}
+#layout-content #categoryList div.column ul.branches li.branch ul.topics {
+	display: none;
+	margin-left: 1.5em;
+	}
+#layout-content #categoryList div.column ul.branches li.branch ul.topics li.topic {
+	margin-left: 16px;
+	font-weight: normal;
+	list-style: circle;
+	list-style-position: outside;
+	}
+#layout-content #categoryList div.column ul.branches li.branch a {
+	text-decoration: none;
+	display: compact;
+	}
+#layout-content #categoryList div.column ul.branches li.branch>a {
+	margin-left: 20px;
+	display: block;
+	}
+
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty,
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open,
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
+	background-position: 2px 3px;
+	background-repeat: no-repeat;
+	display: block;
+	float: left;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty {
+	background-image: url(../img/icons/bullet_empty_large.png);
+	opacity: 0.5;
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open {
+	background-image: url(../img/icons/bullet_minus_large.png);
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
+	background-image: url(../img/icons/bullet_plus_large.png);
+	}
+
+/*  --  ARTICLE  --  */
+#layout-content div.article {
+/*	font-size: 0.9em;*/
+	}
+#layout-content div.article div.image img.dropshadow,
+#layout-content div.catalog-bookstore-article-item img.dropshadow {
+/*  Version 1
+	border: 1px solid rgb(95, 95, 95);
+	box-shadow: 2px 2px 6px rgb(159, 159, 159);*/
+/*  Version 2
+	border: 1px solid rgb(95, 95, 95);
+	-o-box-shadow: 1px 0px 0px #AAA, 2px -1px 0px #BBB, 3px -2px 0px #CCC;
+	-moz-box-shadow: 1px 0px 0px #AAA, 2px -1px 0px #BBB, 3px -2px 0px #CCC;
+	-webkit-box-shadow: 1px 0px 0px #AAA, 2px -1px 0px #BBB, 3px -2px 0px #CCC;
+	box-shadow: 1px 0px 0px #AAA, 2px -1px 0px #BBB, 3px -2px 0px #CCC;*/
+/*  Version 3  */
+	box-shadow: 1px -1px 8px 0px rgba(127,127,127,0.5);
+	}
+#layout-content div.article div.subtitle {
+	font-style: italic;
+	}
+#layout-content div.article div.volume {
+	font-style: italic;
+	font-size: 0.9em;
+	}
+#layout-content div.article ul {
+	margin: 0px;
+	}
+
+
+
+
+
+
+div.text_more {
+	display: none;
+	}
+
+
+
+
+body.moduleCatalog #layout-content ul.categories {
+	margin-left: 1em;
+	}
+body.moduleCatalog #layout-content ul.topics {
+	margin-left: 1em;
+	list-style: none;
+	}
+body.moduleCatalog #layout-content ul li.document{
+	list-style: none;
+	}
+body.moduleCatalog #layout-content ul li.document a {
+/*	background-image: url(../../../../images/!.png);
+	background-repeat: no-repeat;
+	background-position: 0px;
+	padding-left: 20px;
+*/	}
+
+
+/*  ARTICLE STATUS  */
+span.status_-2 {
+    font-weight: bold;
+    font-style: italic;
+    color: gray;
+    }
+span.status_-1 {
+    font-weight: bold;
+    font-style: italic;
+    }
+span.status_0 {
+    font-weight: bold;
+    color: green;
+    }
+span.status_1 {
+	font-weight: bold;
+    font-style: italic;
+    color: gray;
+    }
+
+
+.catalog-bookstore-article-item span.title {
+	font-size: 1.1em;
+	}
+
+

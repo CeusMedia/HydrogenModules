@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<module>
+	<title>Catalog: Clothing</title>
+	<description><![CDATA[Clothing products support for shop.
+
+This frontend shop catalog is a prototype for dealing with clothes.
+Right now, this module **DOES NOT HAVE** own views and templates,
+since it has been developed for and used by a private module.
+
+]]></description>
+	<todo><![CDATA[Implement own views and templates.]]></todo>
+	<category>Catalog</category>
+	<version>0.2.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add shop bridge logic.</log>
+	<log version="0.2.2">Extend model by image and currency.</log>
+	<log version="0.2.3">Add service panel.</log>
+	<log version="0.2.4">Extend bridge logic for quantity changes.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Catalog/Clothing.php5</class>
+		<class>Logic/ShopBridge/Clothing.php5</class>
+		<class>Model/Catalog/Clothing/Article.php5</class>
+		<class>Model/Catalog/Clothing/Category.php5</class>
+		<class>View/Catalog/Clothing.php5</class>
+		<class>View/Helper/Shop/FinishPanel/CatalogClothing.php5</class>
+		<locale>de/catalog/clothing.ini</locale>
+		<locale>de/html/catalog/clothing/bottom.html</locale>
+		<locale>de/html/catalog/clothing/finished.html</locale>
+		<locale>de/html/catalog/clothing/top.html</locale>
+		<template>catalog/clothing/index.php</template>
+		<style load="auto" level="end">module.catalog.clothing.css</style>
+	</files>
+	<config protected="yes" type="string" name="path.images" title="within images folder">clothings/</config>
+	<config protected="no" type="integer" name="tax.rate">19</config>
+	<config protected="no" type="boolean" name="tax.included">yes</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Shop</needs>
+	</relations>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Catalog_Clothing::__onRenderServicePanels</hook>
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_clothing_articles`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_clothing_articles` (
+  `articleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `categoryId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `gender` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
+  `size` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `color` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `part` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `price` decimal(6,2) NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`articleId`),
+  KEY `categoryId` (`categoryId`),
+  KEY `status` (`status`),
+  KEY `gender` (`gender`),
+  KEY `size` (`size`),
+  KEY `color` (`color`),
+  KEY `part` (`part`),
+  KEY `createdAt` (`createdAt`,`modifiedAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_clothing_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_clothing_categories` (
+  `categoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`categoryId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>shop_bridges` (`title`, `class`, `frontendController`, `frontendUriPath`, `backendController`, `backendUriPath`, `articleTableName`, `articleIdColumn`, `createdAt`) VALUES('Catalog: Clothing', 'Clothing', 'Catalog_Clothing', 'catalog/clothing', 'Manage_Catalog_Clothing_Article', 'manage/catalog/clothing/article/', 'catalog_clothing_articles', 'articleId', 1434653387);
+	]]></sql>
+	<sql on="install" type="mysql" version="0.2.2"><![CDATA[
+ALTER TABLE  `catalog_clothing_articles` ADD  `currency` VARCHAR( 3 ) NULL DEFAULT  'EUR' AFTER  `price` ,
+ADD INDEX (  `currency` ) ;
+ALTER TABLE  `catalog_clothing_articles` ADD  `quantity` INT NULL DEFAULT  '0' AFTER  `currency` ;
+ALTER TABLE  `catalog_clothing_articles` ADD  `image` VARCHAR( 255 ) NULL AFTER  `description` ;
+	]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_clothing_articles`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_clothing_categories`;
+	]]></sql>
+</module>
