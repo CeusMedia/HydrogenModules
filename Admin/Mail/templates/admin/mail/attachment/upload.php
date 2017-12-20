@@ -6,10 +6,10 @@ $iconUpload	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-folder-open icon
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
 
 $panelFiles		= $this->loadTemplateFile( 'admin/mail/attachment/index.files.php' );
-
-$tabs	= View_Admin_Mail_Attachment::renderTabs( $env, 'upload' );
-
-$maxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
+$tabs			= View_Admin_Mail_Attachment::renderTabs( $env, 'upload' );
+$maxSize		= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
+$helperUpload	= new View_Helper_Input_File( $env );
+$helperUpload->setLabel( $iconUpload )->setRequired( TRUE )->setName( 'file' );
 
 return $tabs.$textTop.'
 <div class="row-fluid">
@@ -21,7 +21,7 @@ return $tabs.$textTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_file">'.$w->labelFile.'</label>
-							'.View_Helper_Input_File::render( 'file', $iconUpload, TRUE ).'
+							'.$helperUpload.'
 						</div>
 					</div>
 					<div class="row-fluid">
