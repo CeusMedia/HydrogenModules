@@ -1,0 +1,31 @@
+<h3><%?words.heading%></h3>
+<p>
+	Leider ist die Bezahlung Ihrer Bestellung fehlgeschlagen.<br/>
+	Die Bestellung wurde daher abgebrochen.<br/>
+	Sollten Sie noch immer Interesse haben, lösen Sie bitte eine neue Bestellung aus.
+</p>
+<h3>Ihre Bestellung</h3>
+<dl class="dl-horizontal">
+	<dt>Datum</dt><dd><%orderDate%>&nbsp;</dd>
+	<dt>Uhrzeit</dt><dd><%orderTime%>&nbsp;</dd>
+	<dt>Gesamtbetrag</dt><dd><%?priceTotal%></dd>
+	<dt>Bezahlmethode</dt><dd><%?paymentBackend.title%>&nbsp;</dd>
+	<dt>Bestellungsnummer</dt><dd><%?order.orderId%>&nbsp;</dd>
+</dl>
+<div class="row-fluid">
+	<div class="span12">
+		<h4><%?words.panel-cart.heading%></h4>
+		<%?tableCart%>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<h4><%?words.panel-customer.heading%></h4>
+		<%?addressDelivery%>
+	</div>
+	<div class="span6">
+		<h4><%?words.panel-billing.heading%></h4>
+		<%?addressBilling%>
+	</div>
+</div>
+<br/>

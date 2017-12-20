@@ -1,0 +1,16 @@
+<%?words.heading%>
+
+Wir haben den Betrag dankend erhalten und senden die Ware nun an die Lieferadresse.
+Über Lieferverzögerungen werden wir Sie rechtzeitig informieren.
+
+Sie hatten folgende Artikel bestellt:
+
+<%?tableCart%>
+
+Die Lieferung geht an:
+
+<%?addressDelivery%>
+
+Die Rechnung geht an:
+
+<%?addressBilling%>

@@ -1,0 +1,17 @@
+<%?words.heading%>
+
+Leider ist die Bezahlung Ihrer Bestellung fehlgeschlagen.
+Die Bestellung wurde daher abgebrochen.
+Sollten Sie noch immer Interesse haben, lösen Sie bitte eine neue Bestellung aus.
+
+Sie hatten folgende Artikel bestellt:
+
+<%?tableCart%>
+
+Die Lieferung geht an:
+
+<%?addressDelivery%>
+
+Die Rechnung geht an:
+
+<%?addressBilling%>

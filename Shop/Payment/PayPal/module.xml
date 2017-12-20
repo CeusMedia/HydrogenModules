@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<module>
+	<title>Shop: Payment: PayPal</title>
+	<description><![CDATA[Integrates PayPal Express into shop.
+
+This module extends the plain basic shop module by the possibility to pay directly usind PayPal Express.
+To make use of this module you need to have a PayPal account with signature.
+
+While in test mode (using PayPal sandbox) you can use the following settings:
+code>
+merchant.username: sdk-three_api1.sdk.com
+merchant.password: QFZCWN5HZM8VBG7Q
+merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
+<code
+]]></description>
+	<category>Shop</category>
+	<version>0.4.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Finished database design.</log>
+	<log version="0.3.1">Fixed checkout data.</log>
+	<log version="0.3.2">Made API version configurable.</log>
+	<log version="0.3.3">Check merchant account in init.</log>
+	<log version="0.3.4">Support MySQL strict mode.</log>
+	<log version="0.4">Fork from module Shop:Payment.</log>
+	<log version="0.4.1">Set access for inside links.</log>
+	<log version="0.4.2">Fix module configuration bugs from migration.</log>
+	<log version="0.4.3">Remove deprecated templates.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Shop/Payment/Paypal.php5</class>
+		<class>Model/Shop/Payment/Paypal.php5</class>
+		<class>Logic/Payment/Paypal.php5</class>
+		<class>View/Shop/Payment/Paypal.php5</class>
+		<locale>de/shop/payment/paypal.ini</locale>
+	</files>
+<!--	<config type="string" protected="yes" mandatory="yes" name="forward.on.success">shop/finish</config>-->
+
+	<config type="string" protected="yes" mandatory="yes" name="merchant.username">sdk-three_api1.sdk.com</config>
+	<config type="string" protected="yes" mandatory="yes" name="merchant.password"></config>
+	<config type="string" protected="yes" mandatory="yes" name="merchant.signature"></config>
+	<config type="string" protected="yes" mandatory="yes" name="mode" values="live,test">test</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.api.live">https://api.paypal.com/nvp</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.api.version">123</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.login.test">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config type="string" protected="yes" mandatory="yes" name="option.shipping" values="none,paypal,shop">paypal</config>
+	<config type="string" protected="yes" mandatory="no" name="option.header.color.background"/>
+	<config type="string" protected="yes" mandatory="no" name="option.header.color.border"/>
+	<config type="string" protected="yes" mandatory="no" name="option.header.image"/>
+	<config type="string" protected="yes" mandatory="no" name="option.payflow.color.background"/>
+	<config type="boolean" protected="yes" mandatory="yes" name="option.instantPay">0</config>
+	<relations>
+		<needs type="module">Shop</needs>
+	</relations>
+	<link access="inside" path="shop/payment/paypal/index"/>
+	<link access="inside" path="shop/payment/paypal/authorize"/>
+	<link access="inside" path="shop/payment/paypal/authorized"/>
+	<link access="inside" path="shop/payment/paypal/cancelled"/>
+	<link access="inside" path="shop/payment/paypal/checkout"/>
+	<link access="inside" path="shop/payment/paypal/pay"/>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Paypal::__onRegisterShopPaymentBackends</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_payments_paypal`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_paypal` (
+  `paymentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) unsigned NOT NULL,
+  `token` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `payerId` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `amount` float(6,2) unsigned NOT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `country` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`paymentId`),
+  UNIQUE KEY `token` (`token`),
+  KEY `payerId` (`payerId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`),
+  KEY `orderId` (`orderId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_payments_paypal` CHANGE `payerId` `payerId` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_payments_paypal`;
+]]></sql>
+</module>

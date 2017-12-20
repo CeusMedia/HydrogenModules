@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Shop.Payment.Mangopay.handle">
+		<class>Shop_Payment_Mangopay</class>
+		<method>handle</method>
+		<mode>live</mode>
+	</job>
+</jobs>

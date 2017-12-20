@@ -1,0 +1,126 @@
+/*  --  ARTICLE LIST  --  */
+body.moduleShop div.articleList div.article {
+	clear: both;
+	margin-bottom: 2em;
+	border-bottom: 1px solid #DDD;
+	padding-bottom: 2em;
+	}
+body.moduleShop .articleList div.article div.data span.author {
+	display: block;
+	}
+body.moduleShop .articleList div.article div.data span.title {
+	display: block;
+	margin: 0.3em 0em;
+	}
+body.moduleShop .articleList div.article div.data span.title a {
+	font-size: 1.1em;
+	}
+body.moduleShop .articleList div.article div.data span.description {
+	font-style: italic;
+	display: block;
+	}
+body.moduleShop .articleList div.article div.data span.subtitle {
+	display: block;
+	}
+body.moduleShop .articleList div.article div.image {
+	float: left;
+	width: 110px;
+/*	border: 1px dotted #eee;*/
+	}
+body.moduleShop .articleList div.article div.data.withImage {
+	margin-left: 110px;
+/*	border: 1px dotted #eee;*/
+	}
+body.moduleShop div.articleList div.future_de {
+/*	background: #EFEFEF;*/
+	background-image: url(../../../images/future_de2.png);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	}
+body.moduleShop div.articleList div.future_en {
+/*	background: #EFEFEF;*/
+	background-image: url(../../../images/future_en.png);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	}
+
+body.moduleShop table.articleList div.article div.image {
+	width: 70px;
+	padding-top: 10px;
+	height: 100px;
+	}
+body.moduleShop table.articleList div.article div.image img {
+	width: 80%;
+	height: auto;
+	}
+body.moduleShop table.articleList div.article div.data.withImage {
+	margin-left: 80px;
+	}
+body.moduleShop table.articleList div.article span.author {
+	font-size: smaller;
+	}
+body.moduleShop table.articleList div.article span.isbn {
+	font-size: smaller;
+	color: #777;
+	}
+body.moduleShop table.articleList td {
+	vertical-align: middle;
+	}
+body.moduleShop table.articleList th.column-cart-quantity,
+body.moduleShop table.articleList td.column-cart-quantity,
+body.moduleShop table.articleList td.quantity {
+	text-align: center;
+	}
+body.moduleShop table.articleList th.column-cart-price,
+body.moduleShop table.articleList td.column-cart-price,
+body.moduleShop table.articleList td.price {
+	text-align: right;
+	padding-right: 1em;
+	}
+
+body.moduleShop table.articleList tr.tax td {
+	font-size: 0.9em;
+	}
+body.moduleShop table.articleList tr.total td {
+	font-size: 1.15em;
+	font-weight: bold;
+	padding-top: 0.35em;
+	padding-bottom: 0.3em;
+	}
+
+body.moduleShop input#input_accept_rules {
+	transform: scale(1.5);
+	}
+
+
+body.moduleShop table.articleList div.article-title {
+	font-size: 1.1em;
+/*	font-weight: bold;*/
+	}
+
+
+body.moduleShop ul.nav.nav-tabs {
+	margin-bottom: 0;
+	}
+body.moduleShop .tab-content {
+	background-color: white;
+	padding: 1em;
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: #ddd;
+	}
+body.moduleShop div.tab-content div.well {
+	margin-bottom: 0px;
+	}
+
+body.moduleShop form {
+	margin: 0;
+	}
+
+
+
+
+.articleList-allSingle th.column-cart-quantity,
+.articleList-allSingle td.column-cart-quantity {
+	display: none;
+	}
