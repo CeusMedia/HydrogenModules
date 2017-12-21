@@ -13,7 +13,7 @@ $tabContent	= '
 	<h3>'.$w->heading.'</h3>
 	'.$tablePositions.'
 	<div class="buttonbar well well-small">
-		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'arrow-right', !$positions ).'
+		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions ).'
 	</div>
 ';
 

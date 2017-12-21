@@ -250,6 +250,12 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 			$order['createdAt']		= time();
 			$orderId	= $this->modelOrder->add( $order );
 		}
+		else{
+			if( !$this->modelOrder->get( $orderId ) ){
+				$this->session->remove( 'shop.orderId' );
+				return $this->storeCartFromSession();
+			}
+		}
 		$this->modelOrderPosition->removeByIndex( 'orderId', $orderId );		//  @todo is this removal needed?
 		foreach( $positions as $position ){
 			$article	= $position->article;

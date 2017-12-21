@@ -25,7 +25,7 @@ $tabContent	= '
 <!--		'.new \CeusMedia\Bootstrap\LinkButton( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-shopping-cart' ).'-->
 <!--		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-user-o' ).'-->
 		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
-		'.new \CeusMedia\Bootstrap\SubmitButton( "saveConditions", $w->buttonNext, 'btn-success not-pull-right', 'arrow-right' ).'
+		'.new \CeusMedia\Bootstrap\SubmitButton( "saveConditions", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
 	</div>
 </form>';
 

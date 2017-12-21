@@ -58,22 +58,26 @@ class View_Helper_Shop_Tabs{
 			}
 		}
 
-		$iconCart			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-		$iconCustomer		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
-		$iconConditions		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-square-o' ) );
-		$iconCheckout		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-		$iconPayment		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-money' ) );
-		$iconService		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-
 		$tabLabels			= (object) $this->words['tabs'];
 
-		$tabs->add( 'shop-cart', './shop/cart', $iconCart.'&nbsp;'.$tabLabels->cart.'&nbsp;', $this->content );
-		$tabs->add( 'shop-customer', './shop/customer', $iconCustomer.'&nbsp;'.$tabLabels->customer.'&nbsp;', $this->content );
-		$tabs->add( 'shop-conditions', './shop/conditions', $iconConditions.'&nbsp;'.$tabLabels->conditions.'&nbsp;', $this->content );
+		$iconCart			= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->cart, 'class' => 'fa fa-fw fa-shopping-cart' ) );
+		$iconCustomer		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->customer, 'class' => 'fa fa-fw fa-user-o' ) );
+		$iconConditions		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->conditions, 'class' => 'fa fa-fw fa-check-square-o' ) );
+		$iconPayment		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->payment, 'class' => 'fa fa-fw fa-money' ) );
+		$iconCheckout		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->checkout, 'class' => 'fa fa-fw fa-check' ) );
+		$iconService		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->service, 'class' => 'fa fa-fw fa-star' ) );
+
+		$tabLabels			= (object) $this->words['tabs'];
+		foreach( $tabLabels as $key => $value )
+			$tabLabels->$key	= UI_HTML_Tag::create( 'span', '&nbsp;'.$value.'&nbsp;', array( 'class' => 'hidden-phone' ) );
+
+		$tabs->add( 'shop-cart', './shop/cart', $iconCart.$tabLabels->cart, $this->content );
+		$tabs->add( 'shop-customer', './shop/customer', $iconCustomer.$tabLabels->customer, $this->content );
+		$tabs->add( 'shop-conditions', './shop/conditions', $iconConditions.$tabLabels->conditions, $this->content );
 		if( count( $this->backends ) > 1 )
-			$tabs->add( 'shop-payment', './shop/payment', $iconPayment.'&nbsp;'.$tabLabels->payment.'&nbsp;', $this->content );
-		$tabs->add( 'shop-checkout', './shop/checkout', $iconCheckout.'&nbsp;'.$tabLabels->checkout.'&nbsp;', $this->content );
-		$tabs->add( 'shop-service', './shop/service', $iconService.'&nbsp;'.$tabLabels->service.'&nbsp;', $this->content );
+			$tabs->add( 'shop-payment', './shop/payment', $iconPayment.$tabLabels->payment, $this->content );
+		$tabs->add( 'shop-checkout', './shop/checkout', $iconCheckout.$tabLabels->checkout, $this->content );
+		$tabs->add( 'shop-service', './shop/service', $iconService.$tabLabels->service, $this->content );
 
 		$tabs->setActive( $this->current ? $this->current : 0 );
 
