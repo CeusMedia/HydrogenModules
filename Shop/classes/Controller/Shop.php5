@@ -253,7 +253,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 					foreach( $this->backends as $backend ){
 						if( $backend->key === $order->paymentMethod ){
 //							$this->logic->setOrderPaymentMethod( $orderId, $backend->key );
-							$this->restart( './shop/payment/'.$backend->path );
+							$this->restart( 'payment/'.$backend->path, TRUE );
 						}
 					}
 				}
