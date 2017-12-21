@@ -168,7 +168,7 @@ $insurance	= 0;
 		$data['LOCALECODE']		= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$data['ALLOWNOTE']		= "1";
 		$data['FIRSTNAME']		= $customer->firstname;
-		$data['LASTNAME']		= $customer->lastname;
+		$data['LASTNAME']		= $customer->surname;
 
 		$totalPrice	= 0;
 		$totalTax	= 0;
@@ -208,6 +208,8 @@ $insurance	= 0;
 			$response	= (object) $this->request( $data );
 			if( !$response || $response->ACK !== "Success" ){
 				$this->latestResponse	= $response;
+				print_m( $data );
+				print_m( $response );
 				throw new RuntimeException( 'Requesting token failed' );
 			}
 /*			$modelAddress	= new Model_Address( $this->env );
