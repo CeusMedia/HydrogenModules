@@ -12,9 +12,9 @@ $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->butt
 if( count( $paymentBackends ) > 1 )
 	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
-$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'arrow-right' );
+$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 if( !$paymentBackends /* || !$price*/ )
-	$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'arrow-right' );
+	$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
 $tabContent	= UI_HTML_Tag::create( 'div', array(
 	$textCheckoutTop,
@@ -33,10 +33,7 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 		), array( 'class' => 'row-fluid' ) ),
 		UI_HTML_Tag::create( 'br', NULL ),
 		UI_HTML_Tag::create( 'div', array(
-//			new \CeusMedia\Bootstrap\LinkButton( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-shopping-cart' ),
-//			new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-user-o' ),
-//			new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-check-square-o' ),
-			$buttonPrev,
+			$buttonPrev, ' ',
 			$buttonNext,
 		), array( 'class' => 'buttonbar well well-small' ) ),
 	), array( 'method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout' ) ),
