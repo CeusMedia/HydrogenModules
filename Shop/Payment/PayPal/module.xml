@@ -42,7 +42,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<config type="string" protected="yes" mandatory="yes" name="merchant.password"></config>
 	<config type="string" protected="yes" mandatory="yes" name="merchant.signature"></config>
 	<config type="string" protected="yes" mandatory="yes" name="mode" values="live,test">test</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.api.live">https://api.paypal.com/nvp</config>
+	<config type="string" protected="yes" mandatory="yes" name="server.api.live">https://api-3t.paypal.com/nvp</config>
 	<config type="string" protected="yes" mandatory="yes" name="server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
 	<config type="string" protected="yes" mandatory="yes" name="server.api.version">123</config>
 	<config type="string" protected="yes" mandatory="yes" name="server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
