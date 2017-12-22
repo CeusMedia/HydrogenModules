@@ -8,6 +8,7 @@ class View_Helper_Shop_CartPositions{
 	const OUTPUT_UNKNOWN			= 0;
 	const OUTPUT_TEXT				= 1;
 	const OUTPUT_HTML				= 2;
+	const OUTPUT_HTML_LIST			= 3;
 
 	protected $bridge;
 	protected $changeable;
@@ -34,9 +35,98 @@ class View_Helper_Shop_CartPositions{
 		switch( $this->output ){
 			case self::OUTPUT_HTML:
 				return $this->renderAsHtml();
+			case self::OUTPUT_HTML_LIST:
+				return $this->renderAsHtmlList();
 			case self::OUTPUT_TEXT:
 				return $this->renderAsText();
 		}
+	}
+
+	public function renderAsHtmlList(){
+		$words		= (object) $this->words['panel-cart'];
+		$wordsCart	= (object) $this->words['cart'];
+		$rows		= array();
+		$totalPrice	= 0;
+		$totalTax	= 0;
+		$taxes		= array();
+		$allSingle	= TRUE;
+		foreach( $this->positions as $nr => $position ){
+			$isSingle		= isset( $position->article->single ) && $position->article->single;
+			$allSingle		= $allSingle && $isSingle;
+
+			if( !isset( $taxes[$position->article->tax->rate] ) )
+				$taxes[$position->article->tax->rate]	= 0;
+			$taxes[$position->article->tax->rate]	+= $position->article->tax->all;
+			$price1			= $this->formatPrice( $position->article->price->one );
+			$priceX			= $this->formatPrice( $position->article->price->all );
+			$totalPrice		+= $position->article->price->all;
+			$totalTax		+= $position->article->tax->all;
+			$title			= $position->article->title; //htmlspecialchars( $position->article->title, ENT_QUOTES, 'UTF-8' );
+			$titleLinked	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $position->article->link ) );
+			$titleCut		= UI_HTML_Tag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
+			$description	= $position->article->description;
+			$description	= UI_HTML_Tag::create( 'div', $description, array( 'class' => 'autocut article-description' ) );
+			$image			= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
+			$imageLinked	= UI_HTML_Tag::create( 'a', $image, array( 'href' => $position->article->link ) );
+
+			$priceCalc		= UI_HTML_Tag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
+			$priceTotal		= UI_HTML_Tag::create( 'big', UI_HTML_Tag::create( 'strong', $priceX ) );
+			$cellPrice		= $position->quantity > 1 ? $priceTotal.'<br/>'.$priceCalc : $priceTotal;
+
+			$quantity		= UI_HTML_Tag::create( 'big', $position->quantity );
+			$cellQuantity	= $isSingle ? '' : $quantity;
+			if( $this->changeable ){
+				$buttons		= $this->renderPositionQuantityButtons( $position );
+				$cellQuantity	= $isSingle ? $buttons : $quantity.'<br/>'.$buttons;
+			}
+
+			$cells			= array(
+				UI_HTML_Tag::create( 'td', $imageLinked, array( 'class' => 'column-cart-picture position-image position-thumbnail' ) ),
+				UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'div', $titleCut.$description ),
+					UI_HTML_Tag::create( 'div', array(
+						UI_HTML_Tag::create( 'div', $wordsCart->headQuantity.': '.$cellQuantity, array( 'style' => 'float: left; width: 50%; text-align: left' ) ),
+						UI_HTML_Tag::create( 'div', '<span class="hidden-phone">'.$wordsCart->headPrice.':</span> '.$cellPrice.'<br/><small class="muted">zzgl. MwSt 19%</small>', array( 'style' => 'float: left; width: 50%; text-align: right' ) ),
+					), array( 'class' => 'row-fluid', 'style' => 'border-top: 1px solid rgba(127, 127, 127, 0.25)' ) ),
+				) ), array( 'colspan' => 2 ) ),
+			);
+			$rows[]	= UI_HTML_Tag::create( 'tr', $cells );
+		}
+		$colgroup		= UI_HTML_Elements::ColumnGroup( '25%', '40%', '35%' );
+		$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
+
+		//  @todo add shipping
+		$priceShipping	= 0;
+		$priceTax		= $this->formatPrice( $totalTax );
+		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
+		$rows	= array();
+		foreach( $taxes as $rate => $amount ){
+			$amount	= $this->formatPrice( $amount );
+			$rows[]	= UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), array( 'class' => 'autocut', 'colspan' => 2 ) ),
+				UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'price' ) )
+			), array( 'class' => 'tax' ) );
+		}
+
+		$priceTotal		= $totalPrice + $priceShipping;
+		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
+		$rows[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', $words->labelTotal, array( 'class' => 'autocut', 'colspan' => 2 ) ),
+			UI_HTML_Tag::create( 'td', $this->formatPrice( $priceTotal ), array( 'class' => 'price' ) )
+		), array( 'class' => 'total' ) );
+		$tfoot			= UI_HTML_Tag::create( 'tfoot', $rows );
+
+		$tableAttr		= array( 'class' => 'table not-table-hover not-table-striped table-fixed articleList table-borderless' );
+		if( $allSingle ){
+			$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140' );
+			$tableAttr['class']	.= ' articleList-allSingle';
+		}
+		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
+			$tableAttr['class']	.= ' table-bordered';
+
+		$tablePositions	= UI_HTML_Tag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
+		return $tablePositions;
+
 	}
 
 	public function renderAsHtml(){
@@ -258,7 +348,8 @@ class View_Helper_Shop_CartPositions{
 	}
 
 	public function setOutput( $format ){
-		if( !in_array( (int) $format, array( self::OUTPUT_HTML, self::OUTPUT_TEXT	) ) )
+		$formats	= array( self::OUTPUT_HTML, self::OUTPUT_TEXT, self::OUTPUT_HTML_LIST );
+		if( !in_array( (int) $format, $formats ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
 		$this->output		= (int) $format;
 		return $this;

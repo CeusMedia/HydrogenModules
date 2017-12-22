@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.6.8</version>
+	<version>0.6.9</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -35,6 +35,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.6.6">Renamed mail classes.</log>
 	<log version="0.6.7">Decrease article stock quantity if order has been payed.</log>
 	<log version="0.6.8">Add mail for not payed orders.</log>
+	<log version="0.6.9">Support reponsive design in cart and checkout.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -6,7 +6,11 @@ if( count( $positions ) ){
 	$helperCart	= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
 	$helperCart->setChangeable( TRUE );
-	$tablePositions	= $helperCart->render();
+	$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
+	$tablePositionsDesktop	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
+	$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
+	$tablePositionsPhone	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
+	$tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 }
 
 $tabContent	= '

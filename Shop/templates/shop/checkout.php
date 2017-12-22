@@ -5,6 +5,10 @@ $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $positions );
 //$helperCart->setChangeable( TRUE );
+$tablePositionsDesktop	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
+$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
+$tablePositionsPhone	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
+$tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'checkout.top', 'checkout.bottom' ), 'html/shop/' ) );
 
@@ -20,7 +24,7 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 	$textCheckoutTop,
 	UI_HTML_Tag::create( 'form', array(
 		UI_HTML_Tag::create( 'h4', $words['panel-cart']['heading'] ),
-		$helperCart->render(),
+		$tablePositions,
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'h4', $words['panel-customer']['heading'] ),
