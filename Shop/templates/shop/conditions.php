@@ -8,18 +8,17 @@ $tabContent	= '
 	<br/>
 	<h4>Geschäftsbedingungen</h4>
 	<div class="alert alert-success">
-		<div class="row-fluid">
-			<div class="span1">
-				<div class="pull-right" style="padding-top: 7px">
-					<input type="checkbox" name="accept_rules" value="1" id="input_accept_rules" '.( $order->rules ? ' checked="checked"' : '' ).'>
-				</div>
-			</div>
-			<div class="span10">
-				<label for="input_accept_rules">
-					'.$w->labelAcceptRules.'
-				</label>
+		<div style="float: left; width: 30px;">
+			<div class="pull-right" style="padding-top: 7px">
+				<input type="checkbox" name="accept_rules" value="1" id="input_accept_rules" '.( $order->rules ? ' checked="checked"' : '' ).'>
 			</div>
 		</div>
+		<div style="margin-left: 50px;">
+			<label for="input_accept_rules">
+				'.$w->labelAcceptRules.'
+			</label>
+		</div>
+		<div class="clearfloat"></div>
 	</div>
 	<div class="buttonbar well well-small">
 		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
