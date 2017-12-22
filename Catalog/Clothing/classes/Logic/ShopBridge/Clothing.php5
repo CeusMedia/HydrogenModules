@@ -116,7 +116,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@return		string
 	 */
 	public function getLink( $articleId ){
-		return NULL;//$this->logic->pathModule.'image/'.$articleId;
+		$article	= $this->check( $articleId );
+		return $this->logic->pathModule.$this->pathImages.'products/'.$article->image;
 	}
 
 	/**
