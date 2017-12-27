@@ -19,8 +19,16 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 		$this->session		= $this->env->getSession();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->languages	= $this->frontend->getLanguages();
+		$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+		if( !$this->session->get( 'module.manage_pages.language' ) ){
+			if( $this->frontend->getDefaultLanguage() )
+				$this->setLanguage( $this->frontend->getDefaultLanguage() );
+		}
 
 		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'languages', $this->languages );
+		$this->addData( 'language', $this->session->get( 'module.manage_pages.language' ) );
 		$this->addData( 'useAuth', $this->frontend->hasModule( 'Resource_Authentication' ) );
 
 		if( !$this->frontend->hasModule( 'Info_Pages' ) ){
@@ -182,7 +190,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
 			$this->restart( NULL, TRUE );
 		}
-		return $page;
+		return $this->translatePage( $page );
 	}
 
 	public function copy( $pageId ){
@@ -203,12 +211,6 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$scope		= (int) $session->get( 'module.manage_pages.scope' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
-
-		$editors	= array( 'none' );
-		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
-			$editors[]	= 'TinyMCE';
-		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
-			$editors[]	= 'CodeMirror';
 
 		if( !$session->get( 'module.manage_pages.editor' ) )
 			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
@@ -241,8 +243,21 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				}
 			}
 			else{
-
-				if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
+//				if( $this->env->getModules()->has( 'Resource_Localization' ) ){							//  localization module is installed
+				if( class_exists( 'Logic_Localization' ) ){							//  localization module is installed
+					$localization	= new Logic_Localization( $this->env );
+					$localization->setLanguage( $this->session->get( 'module.manage_pages.language' ) );
+					$idTitle	= 'page.'.$page->identifier.'-title';
+					$idContent	= 'page.'.$page->identifier.'-content';
+					$title		= $this->request->get( 'page_title' );
+					$content	= $this->request->get( 'page_content' );
+//					print_m( $this->request->getAll() );die;
+					if( $title && $localization->translate( $idTitle, NULL, $title ) )
+						$this->request->remove( 'page_title' );
+					if( $content && $localization->translate( $idContent, NULL, $content ) )
+						$this->request->remove( 'page_content' );
+				}
+				else if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
 					$contentNew	= $this->request->get( 'page_content' );
 					if( $page->content !== $contentNew ){											//  new content differs from page content
 						$logic		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
@@ -255,6 +270,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 							$logic->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
 					}
 				}
+
 
 				$data		= array();
 				foreach( $this->model->getColumns() as $column )
@@ -280,6 +296,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				}
 				$item->identifier	= $parent->identifier.'/'.$item->identifier;
 			}
+/*			if( class_exists( 'Logic_Localization' ) ){							//  localization module is installed
+				$localization	= new Logic_Localization( $this->env );
+				$id	= 'page.'.$item->identifier.'-title';
+				$item->title	= $localization->translate( $id, $item->title );
+			}*/
 			$pages[]	= $item;
 		}
 
@@ -302,6 +323,14 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 					$page->content	= $entry->content;
 			}
 		}
+
+		$editors	= array( 'none' );
+		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
+			$editors[]	= 'TinyMCE';
+		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
+			$editors[]	= 'CodeMirror';
+		if( $this->env->getModules()->has( 'JS_Ace' ) )
+			$editors[]	= 'Ace';
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pageId', $pageId );
@@ -390,6 +419,20 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'parentId', 0 );
 	}
 
+	protected function translatePage( $page ){
+		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
+			return $page;
+		$localization	= new Logic_Localization( $this->env );
+		$localization->setLanguage( $this->session->get( 'module.manage_pages.language' ) );
+		remark( $localization->getLanguage() );
+		$id	= 'page.'.$page->identifier.'-title';
+		remark( $id );
+		$page->title	= $localization->translate( $id, $page->title );
+		$id	= 'page.'.$page->identifier.'-content';
+		$page->content	= $localization->translate( $id, $page->content );
+		return $page;
+	}
+
 	protected function preparePageTree( $currentPageId = NULL ){
 		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
 		$model		= new Model_Page( $this->env );
@@ -398,10 +441,14 @@ ModuleManagePages.PageEditor.init();
 		$tree		= array();
 		$parentMap	= array( '0' => '-' );
 		foreach( $pages as $item ){
+			$item	= $this->translatePage( $item );
+//			print_m( $item );die;
 			if( $item->pageId != $currentPageId && $item->type == 1 )
 				$parentMap[$item->pageId]	= $item->title;
 			$indices		= array( 'parentId' => $item->pageId );
 			$item->subpages	= $model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
+			foreach( $item->subpages as $nr => $subitem )
+				$subitem	= $this->translatePage( $subitem );
 			$tree[]		= $item;
 		}
 		$this->addData( 'tree', $tree );
@@ -413,6 +460,11 @@ ModuleManagePages.PageEditor.init();
 		$model		= new Model_Page( $this->env );
 		$model->remove( $pageId );
 		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $page->title );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function setLanguage( $language ){
+		$this->session->set( 'module.manage_pages.language', (string) $language );
 		$this->restart( NULL, TRUE );
 	}
 

@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -35,6 +35,7 @@
 	<log version="1.0">Finish implementation of planned module.</log>
 	<log version="1.0.1">Support page access attribute.</log>
 	<log version="1.0.2">Support Ace editor.</log>
+	<log version="1.0.3">Add language support using module Resource:Localization.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -67,6 +68,7 @@
 		<needs type="module">JS_TinyMCE</needs>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Frontend</needs>
+		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<link access="acl" path="manage/page" xml:lang="de">Seiten</link>
 	<link access="acl" path="manage/page" xml:lang="en">Pages</link>
