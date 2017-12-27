@@ -9,8 +9,21 @@ class Controller_Manage_Catalog_Clothing_Article extends CMF_Hydrogen_Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
 		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
-		$this->categoryMap		= array();
 
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->languages		= $this->frontend->getLanguages();
+		$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+		if( !$this->session->get( $this->sessionPrefix.'language' ) ){
+			if( $this->frontend->getDefaultLanguage() )
+				$this->session->set( $this->sessionPrefix.'language', $this->defaultLanguage );
+		}
+		$this->localization		= new Logic_Localization( $this->env );
+		$this->localization->setLanguage( $this->session->get( $this->sessionPrefix.'language' ) );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'languages', $this->languages );
+		$this->addData( 'language', $this->session->get( $this->sessionPrefix.'language' ) );
+
+		$this->categoryMap		= array();
 		$categories		= $this->modelCategory->getAll( array(), array( 'title' => 'ASC' ) );
 		foreach( $categories as $item )
 			$this->categoryMap[$item->categoryId]	= $item;
@@ -36,6 +49,16 @@ class Controller_Manage_Catalog_Clothing_Article extends CMF_Hydrogen_Controller
 	public function edit( $articleId ){
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
+			if( class_exists( 'Logic_Localization' ) ){							//  localization module is installed
+				$idTitle	= 'catalog.clothing.article.'.$articleId.'-title';
+				$idContent	= 'catalog.clothing.article.'.$articleId.'-description';
+				$title		= $this->request->get( 'title' );
+				$content	= $this->request->get( 'description' );
+				if( $title && $this->localization->translate( $idTitle, NULL, $title ) )
+					unset( $data['title'] );
+				if( $content && $this->localization->translate( $idContent, NULL, $content ) )
+					unset( $data['description'] );
+			}
 			$this->modelArticle->edit( $articleId, $data );
 			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( NULL, TRUE );
@@ -45,15 +68,61 @@ class Controller_Manage_Catalog_Clothing_Article extends CMF_Hydrogen_Controller
 
 	public function filter( $reset = NULL ){
 		if( $reset ){
+			$this->session->remove( $this->sessionPrefix.'language' );
 			$this->session->remove( $this->sessionPrefix.'categoryId' );
 			$this->session->remove( $this->sessionPrefix.'size' );
 			$this->session->remove( $this->sessionPrefix.'limit' );
 		}
 		else{
+			$this->session->set( $this->sessionPrefix.'language', $this->request->get( 'language' ) );
 			$this->session->set( $this->sessionPrefix.'categoryId', $this->request->get( 'categoryId' ) );
 			$this->session->set( $this->sessionPrefix.'size', $this->request->get( 'size' ) );
 			$this->session->set( $this->sessionPrefix.'limit', $this->request->get( 'limit' ) );
 		}
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function translateArticle( $article ){
+		if( $this->session->get( $this->sessionPrefix.'language' ) === $this->defaultLanguage )
+			return $article;
+		$idTitle				= 'catalog.clothing.article.'.$article->articleId.'-title';
+		$idDescription			= 'catalog.clothing.article.'.$article->articleId.'-description';
+		$article->title			= $this->localization->translate( $idTitle, $article->title );
+		$article->description	= $this->localization->translate( $idDescription, $article->description );
+		return $article;
+	}
+
+	public function index( $page = 0 ){
+		$filterCategoryId	= $this->session->get( $this->sessionPrefix.'categoryId' );
+		$filterSize			= $this->session->get( $this->sessionPrefix.'size' );
+		$filterLimit		= $this->session->get( $this->sessionPrefix.'limit' );
+
+		$conditions			= array();
+		if( $filterCategoryId )
+			$conditions['categoryId']	= $filterCategoryId;
+		if( $filterSize )
+			$conditions['size']			= $filterSize;
+
+		$limits		= array( $page * $filterLimit, $filterLimit );
+
+		$total		= $this->modelArticle->count( $conditions );
+		$articles	= $this->modelArticle->getAll( $conditions, array(), $limits );
+		foreach( $articles as $article )
+			$article	= $this->translateArticle( $article );
+
+		$this->addData( 'articles', $articles );
+		$this->addData( 'categories', $this->modelCategory->getAll() );
+		$this->addData( 'page', $page );
+		$this->addData( 'total', $total );
+		$this->addData( 'filterCategoryId', $filterCategoryId );
+		$this->addData( 'filterLimit', $filterLimit );
+		$this->addData( 'filterSize', $filterSize );
+	}
+
+	public function remove( $articleId ){
+		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
+		$this->modelArticle->remove( $articleId );
+		$this->messenger->noteSuccess( 'Removed.' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -99,37 +168,5 @@ class Controller_Manage_Catalog_Clothing_Article extends CMF_Hydrogen_Controller
 			}
 		}
 		$this->restart( 'edit/'.$articleId, TRUE );
-	}
-
-	public function index( $page = 0 ){
-		$filterCategoryId	= $this->session->get( $this->sessionPrefix.'categoryId' );
-		$filterSize			= $this->session->get( $this->sessionPrefix.'size' );
-		$filterLimit		= $this->session->get( $this->sessionPrefix.'limit' );
-
-		$conditions			= array();
-		if( $filterCategoryId )
-			$conditions['categoryId']	= $filterCategoryId;
-		if( $filterSize )
-			$conditions['size']			= $filterSize;
-
-		$limits		= array( $page * $filterLimit, $filterLimit );
-
-		$total		= $this->modelArticle->count( $conditions );
-		$articles	= $this->modelArticle->getAll( $conditions, array(), $limits );
-
-		$this->addData( 'articles', $articles );
-		$this->addData( 'categories', $this->modelCategory->getAll() );
-		$this->addData( 'page', $page );
-		$this->addData( 'total', $total );
-		$this->addData( 'filterCategoryId', $filterCategoryId );
-		$this->addData( 'filterLimit', $filterLimit );
-		$this->addData( 'filterSize', $filterSize );
-	}
-
-	public function remove( $articleId ){
-		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
-		$this->modelArticle->remove( $articleId );
-		$this->messenger->noteSuccess( 'Removed.' );
-		$this->restart( NULL, TRUE );
 	}
 }

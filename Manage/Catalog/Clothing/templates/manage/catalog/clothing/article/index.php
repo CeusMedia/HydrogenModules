@@ -12,11 +12,28 @@ foreach( array( 'S', 'M', 'L', 'XL' ) as $size )
 	$optSize[$size]	= $size;
 $optSize	= UI_HTML_Elements::Options( $optSize, $filterSize );
 
+
+$filterLanguage		= '';
+if( count( $languages ) > 1 ){
+	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
+	$filterLanguage	= '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_language" class="mandatory">'.$words['filter']['labelLanguage'].'</label>
+				<select name="language" id="input_language" class="span12" onchange="this.form.submit();">'.$optLanguage.'</select>
+			</div>
+		</div>';
+}
+else
+	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+
+
 $panelFilter	= '
 <div class="content-panel">
 	<h3>Filter</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/catalog/clothing/article/filter" method="post">
+			'.$filterLanguage.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_categoryId">Kategorie</label>

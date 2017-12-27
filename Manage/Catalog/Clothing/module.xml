@@ -3,11 +3,12 @@
 	<title>Manage: Catalog: Clothing</title>
 	<description><![CDATA[Management for clothing catalog.]]></description>
 	<category>Management</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extended article features.</log>
 	<log version="0.2.2">Support article images.</log>
+	<log version="0.2.3">Add language support using module Resource:Localization.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -41,6 +42,7 @@
 	</files>
 	<relations>
 		<needs type="module">Manage_Shop</needs>
+		<supports type="module">Resource_Localization</supports>
 	</relations>
 <!--	<hook type="resource" resource="TinyMCE" event="getImageList">View_Manage_Catalog_Clothing_Article::___onTinyMCE_getImageList</hook>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">View_Manage_Catalog_Clothing_Article::___onTinyMCE_getLinkList</hook>-->
