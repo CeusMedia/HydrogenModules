@@ -26,6 +26,9 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$this->pathImages	= $frontend->getPath( 'images' );
 		}
+		if( class_exists( 'Logic_Localization' ) ){
+			$this->localization	= new Logic_Localization( $this->env );
+		}
 	}
 
 	/**
@@ -73,7 +76,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 */
 	public function get( $articleId, $quantity = 1 ){
 		$article	= $this->check( $articleId );
-		return (object) array(
+		$data		= (object) array(
 			'id'		=> $articleId,
 			'link'		=> $this->getLink( $articleId ),
 			'picture'	=> (object) array(
@@ -96,6 +99,13 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 			'bridgeId'		=> $this->getBridgeId(),
 			'raw'			=> $this->modelArticle->get( $articleId ),
 		);
+		if( $this->localization ){
+			$id	= 'catalog.clothing.article.'.$articleId.'-title';
+			$data->title	= $this->localization->translate( $id, $data->title );
+			$id	= 'catalog.clothing.article.'.$articleId.'-description';
+			$data->description	= $this->localization->translate( $id, $data->description );
+		}
+		return $data;
 	}
 
 	/**
@@ -117,7 +127,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 */
 	public function getLink( $articleId ){
 		$article	= $this->check( $articleId );
-		return $this->logic->pathModule.$this->pathImages.'products/'.$article->image;
+		return $this->pathImages.'products/'.$article->image;
 	}
 
 	/**

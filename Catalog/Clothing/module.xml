@@ -10,13 +10,14 @@ since it has been developed for and used by a private module.
 ]]></description>
 	<todo><![CDATA[Implement own views and templates.]]></todo>
 	<category>Catalog</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add shop bridge logic.</log>
 	<log version="0.2.2">Extend model by image and currency.</log>
 	<log version="0.2.3">Add service panel.</log>
 	<log version="0.2.4">Extend bridge logic for quantity changes.</log>
+	<log version="0.2.5">Add language support using module Resource:Localization.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -39,6 +40,7 @@ since it has been developed for and used by a private module.
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Shop</needs>
+		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Catalog_Clothing::__onRenderServicePanels</hook>
 	<sql on="install" type="mysql" version="0.2"><![CDATA[
