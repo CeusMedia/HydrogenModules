@@ -1,9 +1,10 @@
 <?php
 class Model_Menu {
 
-	protected $pages	= array();
-	protected $pageMap	= array();
-	protected $current	= NULL;
+	protected $pages		= array();
+	protected $pageMap		= array();
+	protected $current		= NULL;
+	protected $localization	= NULL;
 	public static $pathRequestKey		= "__path";
 
 	public function __construct( $env ){
@@ -13,6 +14,10 @@ class Model_Menu {
 		$this->language		= $env->getLanguage()->getLanguage();
 		$this->useAcl		= $env->getModules()->has( 'Resource_Users' );
 		$this->source		= $this->moduleConfig->get( 'menu.source' );
+//		if( $this->env->getModules()->has( '' ))
+		if( class_exists( 'Logic_Localization' ) )
+			$this->localization	= new Logic_Localization( $this->env );
+
 		if( $this->source === "Database" && !$env->getModules()->has( 'Info_Pages' ) ){
 			$this->env->getMessenger()->noteNotice( 'Navigation source "Database" is not available. Module "Info_Pages" is not installed. Falling back to navigation source "Config".' );
 			$this->source	= "Config";
@@ -22,6 +27,7 @@ class Model_Menu {
 			$this->source	= "Modules";
 		}
 		$this->readUserPages();
+
 	}
 
 	public function getCurrent(){
@@ -218,6 +224,10 @@ class Model_Menu {
 					'active'	=> FALSE,
 					'icon'		=> @$page->icon,
 				);
+				if( $this->localization ){
+					$id	= 'page.'.$item->path.'-title';
+					$item->label	= $this->localization->translate( $id, $item->label );
+				}
 				if( $page->type == 1 ){
 					$item->type		= 'menu';
 					$item->items	= array();
@@ -243,6 +253,10 @@ class Model_Menu {
 							'active'	=> FALSE,
 							'icon'		=> @$subpage->icon,
 						);
+						if( $this->localization ){
+							$id	= 'page.'.$subitem->path.'-title';
+							$subitem->label	= $this->localization->translate( $id, $subitem->title );
+						}
 						if( $subpage->type == 2 ){
 							$subpage->path	= $subpage->controller;
 							$subpage->path	.= '_'.$subpage->action ? $subpage->action : 'index';
