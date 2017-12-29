@@ -1,10 +1,15 @@
 <?php
 
+$w	= (object) $words['panel-customer-address-delivery'];
+if( $address->type == 2 )
+	$w	= (object) $words['panel-customer-address-billing'];
+
 $helper		= new View_Helper_Shop_AddressForm( $env );
 $helper->setAddress( $address );
-$helper->setHeading( $address->type == 2 ? 'Rechnungsanschrift' : 'Lieferanschrift' );
+$helper->setHeading( $w->heading );
 $helper->setType( 0 );
-$helper->setTextTop( '<p>Anschrift ändern.</p>' );
+if( strlen( trim( $w->textTop ) ) )
+	$helper->setTextTop( UI_HTML_Tag::create( 'p', $w->textTop ) );
 $tabContent	= $helper->render();
 
 

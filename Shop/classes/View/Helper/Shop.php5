@@ -5,12 +5,13 @@ class View_Helper_Shop{
 		$this->env		= $env;
 		$this->config	= $env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->words	= $env->getLanguage()->getWords( 'shop' );
+		$this->language	= $env->getLanguage()->getLanguage();
 	}
 
 	public function formatPrice( $price, $spaceBeforeCurrency = TRUE, $asHtml = TRUE ){
 		$decimals	= (int) $this->config->get( 'price.accuracy' );
 		$currency	= (string) $this->config->get( 'price.currency' );
-		$decPoint	= (string) $this->config->get( 'price.point' );
+		$decPoint	= $this->language === 'de' ? ',' : '.';
 		$currency	= $asHtml ? htmlentities( $currency, ENT_QUOTES, 'utf-8' ) : $currency;
 		$space		= $spaceBeforeCurrency ? ( $asHtml ? '&nbsp;' : ' ' ) : '';
 		return number_format( $price, $decimals, $decPoint, NULL ).$space.$currency;

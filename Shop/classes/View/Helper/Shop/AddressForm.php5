@@ -1,35 +1,15 @@
 <?php
 class View_Helper_Shop_AddressForm{
+
 	protected $env;
 	protected $address;
+	protected $heading;
+	protected $textTop;
+	protected $type		= 0;
+
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'address' );
-	}
-
-	public function setAddress( $addressOrId ){
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
-		return $this;
-	}
-
-	public function setHeading( $heading ){
-		$this->heading		= $heading;
-		return $this;
-	}
-
-	public function setTextTop( $text ){
-		$this->textTop	= $text;
-		return $this;
-	}
-
-	public function setType( $type ){
-		$this->type		= $type;
-		return $this;
 	}
 
 	public function render(){
@@ -133,5 +113,30 @@ $(document).ready(function(){
 	});
 });
 </script>';
+	}
+
+	public function setAddress( $addressOrId ){
+		if( is_object( $addressOrId ) )
+			$this->address	= $addressOrId;
+		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
+			$this->address	= $this->model->get( $addressOrId );
+		if( !$this->address )
+			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		return $this;
+	}
+
+	public function setHeading( $heading ){
+		$this->heading		= $heading;
+		return $this;
+	}
+
+	public function setTextTop( $text ){
+		$this->textTop	= $text;
+		return $this;
+	}
+
+	public function setType( $type ){
+		$this->type		= $type;
+		return $this;
 	}
 }

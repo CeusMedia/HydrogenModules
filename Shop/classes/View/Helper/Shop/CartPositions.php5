@@ -156,7 +156,6 @@ class View_Helper_Shop_CartPositions{
 			$image			= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
 			$imageLinked	= UI_HTML_Tag::create( 'a', $image, array( 'href' => $position->article->link ) );
 
-
 			$priceCalc		= UI_HTML_Tag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
 			$priceTotal		= UI_HTML_Tag::create( 'big', UI_HTML_Tag::create( 'strong', $priceX ) );
 			$cellPrice		= $position->quantity > 1 ? $priceTotal.'<br/>'.$priceCalc : $priceTotal;
