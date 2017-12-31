@@ -23,6 +23,7 @@ class Model_Download_File extends CMF_Hydrogen_Model {
 		'downloadFileId',
 		'downloadFolderId',
 		'rank',
+		'size',
 		'title',
 		'description',
 		'nrDownloads',
@@ -33,6 +34,7 @@ class Model_Download_File extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		'downloadFolderId',
 		'rank',
+		'size',
 		'title',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
