@@ -52,7 +52,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 						'class'			=> "span11 mandatory",
 						'required'		=> 'required',
 						'value'			=> "",
-						'autocomplete'	=> "off"
+						'autocomplete'	=> "new-password"
 					) ),
 				) )
 			),
@@ -66,7 +66,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 						'class'			=> "span11 mandatory",
 						'required'		=> 'required',
 						'value'			=> "",
-						'autocomplete'	=> "off"
+						'autocomplete'	=> "new-password"
 					) ),
 				) )
 			),

@@ -89,9 +89,17 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
-							HTML::SpanClass( 'add-on', '<i class="not-icon-lock fa fa-fw fa-lock"></i>' ).
-							'<input type="password" name="password" id="input_password" class="span7" required placeholder="'.$w->labelPassword.'" value="" autocomplete="off"/>'.
-							UI_HTML_Elements::Button( 'saveUser', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' )
+							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
+							UI_HTML_Tag::create( 'input', '', array(
+								'type'			=> 'password',
+								'name'			=> 'password',
+								'id'			=> 'input_password',
+								'class'			=> 'span7',
+								'required'		=> 'required',
+								'autocomplete'	=> 'new-password',
+								'placeholder'	=> $w->labelPassword,
+							) ).
+							UI_HTML_Elements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )
 				)
