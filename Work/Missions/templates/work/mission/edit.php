@@ -225,17 +225,13 @@ return '
 			'.$priorities.'
 		</fieldset>-->
 		'.$panelContent.'
+		'.$panelDocuments.'
 	</div>
 	<div class="span4">
 		'.$panelInfo.'
 		'.$panelTime.'
 		'.$panelClose.'
 		'.$panelIssue.'
-	</div>
-</div>
-<div class="row-fluid">
-	<div class="span12">
-		'.$panelDocuments.'
 	</div>
 </div>
 <script>
