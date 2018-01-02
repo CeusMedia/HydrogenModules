@@ -15,6 +15,8 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 		$this->helperAddress	= new View_Helper_Shop_AddressView( $this->env );
 		$this->helperCart		= new View_Helper_Shop_CartPositions( $this->env );
 		$this->helperCart->setDisplay( View_Helper_Shop_CartPositions::DISPLAY_MAIL );
+		$this->helperOrderFacts	= new View_Helper_Shop_OrderFacts( $this->env );
+		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
 
 		if( empty( $data['orderId'] ) )
@@ -45,6 +47,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 	public function renderHtml( $data ){
 		$this->helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
 		$this->helperAddress->setOutput( View_Helper_Shop_AddressView::OUTPUT_HTML );
+		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_HTML );
 
 		$paymentBackend	= NULL;
 		foreach( $data['paymentBackends'] as $item )
@@ -69,6 +72,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 		) );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
@@ -79,15 +83,19 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 	public function renderText( $data ){
 		$this->helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
 		$this->helperAddress->setOutput( View_Helper_Shop_AddressView::OUTPUT_TEXT );
+		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
 		$templateData	= array(
-			'date'			=> date( 'd.m.Y' ),
-			'time'			=> date( 'H:i:s' ),
-			'config'		=> $this->env->getConfig()->getAll( 'module.shop.' ),
-			'env'			=> array( 'domain' => $this->env->host ),
-			'main'			=> (object) $this->getWords( 'main', 'main' ),
-			'words'			=> (object) $this->getWords( 'shop', 'mail-customer-not-payed' ),
-			'customer'		=> $this->customer,
-			'tableCart'		=> $this->helperCart->render(),
+			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
+			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
+			'config'			=> $this->env->getConfig()->getAll( 'module.shop.' ),
+			'env'				=> array( 'domain' => $this->env->host ),
+			'main'				=> (object) $this->getWords( 'main', 'main' ),
+			'words'				=> (object) $this->getWords( 'shop', 'mail-customer-not-payed' ),
+			'customer'			=> $this->customer,
+			'tableCart'			=> $this->helperCart->render(),
+			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
+			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 		);
 		return $this->view->loadContentFile( 'mail/shop/customer/not_payed.txt', $templateData );
 	}

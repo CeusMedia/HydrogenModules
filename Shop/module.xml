@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.7.1</version>
+	<version>0.7.3</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -37,6 +37,8 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.6.8">Add mail for not payed orders.</log>
 	<log version="0.7">Support reponsive design in cart and checkout.</log>
 	<log version="0.7.1">Improve locales.</log>
+	<log version="0.7.2">Add english mail locales.</log>
+	<log version="0.7.3">Add helper for order facts, used in mails.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -57,6 +59,7 @@ For payment you need to install a payment module.]]></description>
 		<class>View/Helper/Shop/AddressForm.php5</class>
 		<class>View/Helper/Shop/AddressView.php5</class>
 		<class>View/Helper/Shop/CartPositions.php5</class>
+		<class>View/Helper/Shop/OrderFacts.php5</class>
 		<class>View/Helper/Shop/Tabs.php5</class>
 		<locale>de/shop.ini</locale>
 		<locale>de/html/shop/bottom.html</locale>
@@ -76,6 +79,22 @@ For payment you need to install a payment module.]]></description>
 		<locale>de/mail/shop/manager/ordered.html</locale>
 		<locale>de/mail/shop/manager/payed.html</locale>
 		<locale>en/shop.ini</locale>
+		<locale>en/html/shop/bottom.html</locale>
+		<locale>en/html/shop/top.html</locale>
+		<locale>en/html/shop/conditions.html</locale>
+		<locale>en/html/shop/shipping.html</locale>
+		<locale>en/html/shop/service.html</locale>
+		<locale>en/html/shop/checkout.top.html</locale>
+		<locale>en/html/shop/checkout.bottom.html</locale>
+		<locale>en/mail/shop/customer/not_payed.html</locale>
+		<locale>en/mail/shop/customer/not_payed.txt</locale>
+		<locale>en/mail/shop/customer/ordered.html</locale>
+		<locale>en/mail/shop/customer/ordered.txt</locale>
+		<locale>en/mail/shop/customer/payed.html</locale>
+		<locale>en/mail/shop/customer/payed.txt</locale>
+		<locale>en/mail/shop/manager/not_payed.html</locale>
+		<locale>en/mail/shop/manager/ordered.html</locale>
+		<locale>en/mail/shop/manager/payed.html</locale>
 		<template>shop/address.php</template>
 		<template>shop/cart.php</template>
 		<template>shop/checkout.php</template>
