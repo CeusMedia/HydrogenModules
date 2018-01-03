@@ -2,16 +2,16 @@
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
-$helper->setTransactions( $personTransactions );
-$helper->setHeading( 'Transaktionen an Personen' );
-$helper->setMode( View_Work_Billing_Helper_Transactions::MODE_PERSON );
-$panelPersonTransactions	= $helper->render();
-
-$helper	= new View_Work_Billing_Helper_Transactions( $env );
 $helper->setTransactions( $corporationTransactions );
 $helper->setHeading( 'Transaktionen an Unternehmen' );
 $helper->setMode( View_Work_Billing_Helper_Transactions::MODE_CORPORATION );
 $panelCorporationTransactions	= $helper->render();
+
+$helper	= new View_Work_Billing_Helper_Transactions( $env );
+$helper->setTransactions( $personTransactions );
+$helper->setHeading( 'Transaktionen an Personen' );
+$helper->setMode( View_Work_Billing_Helper_Transactions::MODE_PERSON );
+$panelPersonTransactions	= $helper->render();
 
 $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 2 );
 

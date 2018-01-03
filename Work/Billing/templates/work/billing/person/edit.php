@@ -27,7 +27,7 @@ $panelFacts		= '
 					<label for="input_surname">Nachname</label>
 					<input type="text" name="surname" id="input_surname" class="span12" required="required" value="'.htmlentities( $person->surname, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="span4">
+				<div class="span5">
 					<label for="input_email">E-Mail-Adresse</label>
 					<input type="text" name="email" id="input_email" class="span12" required="required" value="'.htmlentities( $person->email, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
@@ -45,11 +45,11 @@ $panelFacts		= '
 					<label for="input_outcome">Ausgaben</label>
 					<input type="text" id="input_outcome" class="span10 input-number" disabled="disabled" value="'.number_format( $outcome, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
-				<div class="span2">
+				<div class="span3">
 					<label for="input_balance">Kontostand (berechnet)</label>
 					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( ( $income - $outcome ), 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
-				<div class="span2">
+				<div class="span3">
 					<label for="input_balance">Kontostand (kumuliert)</label>
 					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
