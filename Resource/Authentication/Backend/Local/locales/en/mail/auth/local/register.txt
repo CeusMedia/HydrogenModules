@@ -1,4 +1,3 @@
-
 Hello  <%?firstname%> <%?surname%>!
 
 You have registered a new user account at <%appTitle%>.
@@ -14,8 +13,8 @@ or by entering this registration code:
 
 Account access data:
 
-  - Benutzername: <%username%>
-  - Passwort: <%password%>
+  - Username: <%username%>
+  - Password: <%password%>
 
 Profile data provided by you:
 
