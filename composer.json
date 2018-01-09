@@ -17,6 +17,6 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "ceus-media/hydrogen-framework": "^0.8.5.2"
+    "ceus-media/hydrogen-framework": "^0.8"
   }
 }
