@@ -16,7 +16,7 @@ if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 		) ).$textBottom;
 }
 
-return '<br/></br/><br/><br/><br/><br/>'.$tabs.$textTop.
+return $tabs.'<br/></br/><br/><br/><br/><br/>'.$textTop.
 	HTML::DivClass( "row-fluid", array(
 		HTML::DivClass( "span4 offset4", $panelLogin )
 	) ).$textBottom;
