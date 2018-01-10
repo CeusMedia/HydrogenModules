@@ -4,7 +4,10 @@ $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );
 
 $iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
-$upload		= View_Helper_Input_File::render( 'upload', $iconFile, TRUE );
+$helperUpload	= new View_Helper_Input_File( $env );
+$helperUpload->setName( 'upload' );
+$helperUpload->setLabel( $iconFile );
+$helperUpload->setRequired( TRUE );
 
 $maxSize	= Alg_UnitParser::parse( $config->get( 'image.upload.maxFileSize' ), 'M' );
 $maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
@@ -40,7 +43,7 @@ if( $config->get( 'use.avatar' ) ){
 							<div class="row-fluid">
 								<div class="span12">
 									<label for="input_upload">'.$w->labelUpload.'</label>
-									'.$upload.'
+									'.$helperUpload->render().'
 								</div>
 							</div>
 						</div>
