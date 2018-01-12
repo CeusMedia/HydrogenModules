@@ -43,8 +43,8 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission{
 		parent::__onInit();
 
 		$this->session->set( 'filter.work.mission.mode', 'calendar' );
-		if( !$this->session->has( $this->filterKeyPrefix.'month' ) )
-			$this->session->set( $this->filterKeyPrefix.'month', date( 'm' ) );
+		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
+			$this->session->set( $this->filterKeyPrefix.'month', date( 'Y' ).'-'.date( 'n' ) );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
 		$this->setData( array(

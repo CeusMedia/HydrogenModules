@@ -214,7 +214,7 @@ code>
 	<config protected="no" type="boolean" name="editor.TinyMCE.menubar">no</config>
 	<config protected="user" type="string" name="format" values="HTML,Markdown">HTML</config>
 	<config protected="user" type="boolean" name="mail.active">no</config>
-	<config protected="user" type="boolean" name="mail.html">yes</config>
+	<config protected="user" type="boolean" name="mail.html">no</config>
 	<config protected="user" type="boolean" name="mail.daily">yes</config>
 	<config protected="user" type="integer" name="mail.daily.hour">8</config>
 	<config protected="user" type="boolean" name="mail.changes">yes</config>

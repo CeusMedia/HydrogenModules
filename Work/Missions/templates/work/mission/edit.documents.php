@@ -47,7 +47,6 @@ if( $documents ){
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-
 $formUpload		= '';
 if( $env->getAcl()->has( 'work/mission', 'addDocument' ) ){
 	$iconFile		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
@@ -71,7 +70,7 @@ if( $env->getAcl()->has( 'work/mission', 'addDocument' ) ){
 }
 
 return '
-<div class="content-panel content-panel-list">
+<div class="content-panel content-panel-list" id="documents">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">

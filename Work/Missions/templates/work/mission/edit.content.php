@@ -31,7 +31,7 @@ if( $mode === "tabbed" ){
 						'name'		=> "content",
 						'rows'		=> "22",
 						'class'		=> "span12 -max -cmGrowText -cmClearInput",
-						'data-ace-flag-font-size'	=> "12",
+						'data-ace-flag-font-size'	=> "16",
 						'data-ace-option-show-gutter'	=> "false"
 					) ).'
 					<p>

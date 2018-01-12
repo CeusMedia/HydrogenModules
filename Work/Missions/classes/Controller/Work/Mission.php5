@@ -30,8 +30,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $useIssues		= FALSE;
 	protected $useProjects		= TRUE;																//  @deprecated since projects module is required
 	protected $userMap			= array();
-	protected $userId;
-	protected $userRoleId;
+	protected $userId			= 0;
+	protected $userRoleId		= 0;
 	protected $moduleConfig;
 	protected $contentFormat;
 
@@ -75,8 +75,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->useIssues	= $this->env->getModules()->has( 'Work_Issues' );
 		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
-		$this->userId		= $this->logicAuth->getCurrentUserId();
-		$this->userRoleId	= $this->logicAuth->getCurrentRoleId();
+		if( $this->logicAuth->isAuthenticated() ){
+			$this->userId		= $this->logicAuth->getCurrentUserId();
+			$this->userRoleId	= $this->logicAuth->getCurrentRoleId();
+		}
 
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.work_missions.', TRUE );
 		$this->contentFormat	= $this->moduleConfig->get( 'format' );
@@ -380,7 +382,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 
 //		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
-		$this->restart( 'edit/'.$missionId, TRUE );
+		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
 	public function ajaxGetProjectUsers( $projectId ){
@@ -1093,7 +1095,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function removeDocument( $missionId, $missionDocumentId ){
 		$this->logic->removeDocument( $missionDocumentId );
-		$this->restart( 'edit/'.$missionId, TRUE );
+		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
 	protected function saveFilters( $userId ){

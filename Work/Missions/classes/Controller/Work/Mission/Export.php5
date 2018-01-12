@@ -95,14 +95,15 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 	}
 
 	public function ical(){
+			$method		= $this->request->getMethod();
+			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
+			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
+			error_log( $logMessage, 3, $logFile );
 		if( !$this->userId ){
 			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
 			$this->userId	= $auth->authenticate();
 		}
 		try{
-			$method		= $this->request->getMethod();
-			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
-			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
 			switch( strtoupper( $method ) ){
 				case 'PUT':
 //					$ical	= file_get_contents( "php://input" );							//  read PUT data
@@ -159,7 +160,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 
 		$parser	= new FS_File_ICal_Parser();
 		$tree	= $parser->parse( "test", $ical );
-		$root	= array_pop( $tree->getChildren() );
+		if( !$tree )
+			return;
+		$root	= @array_pop( $tree->getChildren() );
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes
 			if( !in_array( $node->getNodeName(), array( 'vevent', 'vtodo' ) ) )			//  neither a task nor an event
 				continue;																//  go on
