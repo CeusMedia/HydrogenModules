@@ -389,10 +389,10 @@ var ModuleAceAutoSave = {
 			failed: "Error!"
 		},
 		durations: {
-			delay: 750,
+			delay: 5000,
 			in: 250,
 			out: 250,
-			show: 750
+			show: 2000
 		},
 		callbacks: {
 			update: function(change, editor){}
