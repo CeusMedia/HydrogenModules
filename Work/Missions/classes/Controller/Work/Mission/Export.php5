@@ -78,7 +78,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 			if( $mission->location )
 				$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
 			if( $mission->priority )
-				$node->addChild( new XML_DOM_Node( 'PRIORITY', round( ( $mission->priority - 5.5 ) * -2 ) ) );
+				$node->addChild( new XML_DOM_Node( 'PRIORITY', round( $mission->priority * 2 - 1 ) ) );
 			if( $mission->projectId )
 				$node->addChild( new XML_DOM_Node( 'CATEGORIES', $modelProject->get( $mission->projectId )->title ) );
 			$calendar->addChild( $node );
