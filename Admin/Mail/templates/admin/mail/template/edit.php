@@ -270,8 +270,9 @@ $(document).ready(function(){
 
 jQuery(document).ready(function(){
 	jQuery("#admin-mail-template-edit li a").bind("click", function(){
+		var targetUrl	= jQuery(this).attr("href").substr(1);
 		jQuery.ajax({
-			url: "./admin/mail/template/ajaxSetTab/"+jQuery(this).data("id")
+			url: "./admin/mail/template/ajaxSetTab/"+targetUrl
 		});
 	});
 })
