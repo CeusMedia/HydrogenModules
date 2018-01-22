@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.5</version>
+	<version>0.5.6</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -26,6 +26,7 @@
 	<log version="0.5.3">Support separate index HTML file for being logged in (inside).</log>
 	<log version="0.5.4">Extract hooks to own hook class.</log>
 	<log version="0.5.5">Prepare to use new abstract hook provided by framework.</log>
+	<log version="0.5.6">Add background images and rename logo images.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -45,11 +46,18 @@
 		<template>index/index.php</template>
 		<template>master.php</template>
 		<template>.htaccess</template>
-		<style source="theme" load="auto" level="end">layout.css</style>
-		<image source="theme" theme="common">logos/CeusMedia/CeusMediaLogo_Inline_Blue_Transparent.svg</image>
-		<image source="theme" theme="common">logos/CeusMedia/CeusMediaLogo_Inline_White_Transparent.svg</image>
-		<image source="theme" theme="common">logos/CeusMedia/CeusMediaLogo_Stacked_Blue_Transparent.svg</image>
-		<image source="theme" theme="common">logos/CeusMedia/CeusMediaLogo_Stacked_White_Transparent.svg</image>
+		<style source="theme" theme="common" load="auto" level="end">layout.css</style>
+        <image source="theme" theme="common">background/CeusMedia/Logo.xcf</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_dark_25.png</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_dark_50.png</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_dark_75.png</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_light_25.png</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_light_50.png</image>
+        <image source="theme" theme="common">background/CeusMedia/Logo_light_75.png</image>
+		<image source="theme" theme="common">logo/CeusMedia/Inline_Blue_Transparent.svg</image>
+		<image source="theme" theme="common">logo/CeusMedia/Inline_White_Transparent.svg</image>
+		<image source="theme" theme="common">logo/CeusMedia/Stacked_Blue_Transparent.svg</image>
+		<image source="theme" theme="common">logo/CeusMedia/Stacked_White_Transparent.svg</image>
 		<file>index.php</file>
 		<file>robots.txt</file>
 		<file>.htaccess.dist</file>

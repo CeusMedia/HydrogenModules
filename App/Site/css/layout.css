@@ -1,3 +1,15 @@
+body.style-tool {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: rgba(191, 191, 191, 0.25);/* = EDEDEE*/
+	background-attachment: fixed;
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	background-image: url(../img/background/CeusMedia/Logo_light_75.png);
+	background-image: url(../img/background/CeusMedia/Logo_dark_25.png);
+	}
+
 .autocut {
 	width: 100%;
 	white-space: nowrap;

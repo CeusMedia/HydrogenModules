@@ -1,4 +1,5 @@
 <?php
+$page	= $env->getPage();
 
 $navbarFixed	= TRUE;
 
@@ -77,37 +78,35 @@ else
 $hints	= class_exists( 'View_Helper_Hint' ) ? View_Helper_Hint::render( 'Tipp: ' ) : '';
 
 
-/*  --  BRAND  --  */
+/*  --  TITLE & BRAND  --  */
 $brand		= preg_replace( "/\(.*\)/", "", $words['main']['title'] );
+$page->setTitle( $brand );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
+
 $brand		= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
 if( $view->hasContentFile( 'html/app.brand.html' ) )
 	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
 		$brand		= $brandHtml;
 
+
+/*  --  STATIC HEADER / FOOTER  --  */
 $data	= array(
 	'navFooter'	=> $navFooter,
 	'navHeader'	=> $navHeader,
 	'navTop'	=> $navTop,
 );
-
-/*  --  STATIC HEADER  --  */
 $header		= '';
-if( $view->hasContentFile( 'html/app.header.html' ) )
-	if( $headerHtml = $view->loadContentFile( 'html/app.header.html', $data ) )		//  render header, words from main.ini are assigned
-		$header		= $headerHtml;
-
-/*  --  STATIC FOOTER  --  */
 $footer		= '';
+if( $view->hasContentFile( 'html/app.header.html' ) )
+	$header = $view->loadContentFile( 'html/app.header.html', $data );		//  render header, words from main.ini are assigned
 if( $view->hasContentFile( 'html/app.footer.html' ) )
-	if( $footerHtml = $view->loadContentFile( 'html/app.footer.html', $data ) )		//  render footer, words from main.ini are assigned
-		$footer		= $footerHtml;
+	$footer = $view->loadContentFile( 'html/app.footer.html', $data );		//  render footer, words from main.ini are assigned
+
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '
 <div id="layout-container">
-	'.$header.'
 	<div class="nav navbar '.( $navbarFixed ? 'navbar-fixed-top' : '' ).'">
 		<div class="navbar-inner">
 			<div class="container">
@@ -124,12 +123,8 @@ $body	= '
 			'.$content.'
 		</div>
 	</div>
-</div>
-'.$footer.'
-';
+</div>';
 
-$page	= $env->getPage();
-$page->addBody( $body );
-$page->setTitle( trim( str_replace( "&nbsp;", " ", strip_tags( $brand ) ) ) );
+$page->addBody( $header.$body.$footer );
 return $page->build();
 ?>
