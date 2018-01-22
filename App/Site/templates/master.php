@@ -92,6 +92,7 @@ if( $view->hasContentFile( 'html/app.brand.html' ) )
 
 /*  --  STATIC HEADER / FOOTER  --  */
 $data	= array(
+	'words'		=> $words,
 	'navFooter'	=> $navFooter,
 	'navHeader'	=> $navHeader,
 	'navTop'	=> $navTop,
