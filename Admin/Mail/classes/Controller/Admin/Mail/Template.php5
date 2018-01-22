@@ -10,10 +10,12 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$this->appUri		= Logic_Frontend::getInstance( $this->env )->getUri();
 		$this->addData( 'appUri', $this->appUri );
+			$this->env->getSession()->remove( 'admin-mail-template-edit-tab' );
 	}
 
 	public function ajaxSetTab( $tabId ){
-		$this->env->getSession()->set( 'admin-mail-template-edit-tab', $tabId );
+		if( strlen( trim( $tabId ) ) && $tabId != "undefined" )
+			$this->env->getSession()->set( 'admin-mail-template-edit-tab', $tabId );
 		exit;
 	}
 
