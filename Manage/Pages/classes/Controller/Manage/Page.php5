@@ -327,10 +327,10 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$editors	= array( 'none' );
 		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
 			$editors[]	= 'TinyMCE';
-		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
-			$editors[]	= 'CodeMirror';
 		if( $this->env->getModules()->has( 'JS_Ace' ) )
 			$editors[]	= 'Ace';
+		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
+			$editors[]	= 'CodeMirror';
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pageId', $pageId );
