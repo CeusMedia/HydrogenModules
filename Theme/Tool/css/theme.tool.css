@@ -49,6 +49,40 @@ div#layout-container > div.container {
 	margin-top: 110px !important;
 	}
 
+ul.nav-tabs {
+	border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+	}
+ul.nav-tabs li {
+	margin-right: 2px;
+	}
+ul.nav-tabs li a {
+	background-color: rgba(0, 0, 0, 0.25);
+	color: rgba(255, 255, 255, 0.8);
+	line-height: 30px;
+	padding-left: 20px;
+	padding-right: 20px;
+	}
+ul.nav-tabs li a:hover {
+	border: 1px solid rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.35);
+	color: rgba(255, 255, 255, 1);
+	}
+
+ul.nav-tabs li.active {
+	margin-bottom: 0px;
+	}
+
+ul.nav-tabs li.active a {
+	border: 1px solid rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	font-weight: bold;
+	}
+ul.nav-tabs li.active a:hover {
+	border: 1px solid rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.6);
+	color: rgba(255, 255, 255, 1);
+	}
 
 table.table-striped tbody>tr:nth-child(odd)>td,
 table.table-striped tbody>tr:nth-child(odd)>th {
@@ -149,4 +183,3 @@ body.style-blue-3 {
 body.style-blue-3 div.navbar-inner {
 	background-color: rgba(0,11,58, 0.75);
 	}
-
