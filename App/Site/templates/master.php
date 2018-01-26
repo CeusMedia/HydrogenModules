@@ -35,19 +35,19 @@ else{
 		$links	= array();
 		try{
 			$scopes	= FS_File_JSON_Reader::load( 'config/pages.json' );
-			foreach( $scopes->main as $pageId => $page ){
-				if( isset( $page->disabled ) && $page->disabled !== "no" )
+			foreach( $scopes->main as $mainPageId => $mainPage ){
+				if( isset( $mainPage->disabled ) && $mainPage->disabled !== "no" )
 					continue;
-				if( isset( $page->pages ) && $page->pages )
+				if( isset( $mainPage->pages ) && $mainPage->pages )
 					continue;
-				$free		= !isset( $page->access );
-				$public		= !$free && $page->access == "public";
-				$outside	= !$free && !$isAuthenticated && $page->access == "outside";
-				$inside		= !$free && $isAuthenticated && $page->access == "inside";
-				$acl		= !$free && $page->access == "acl" && $env->getAcl()->has( $page->path );
-				$page->visible	= $free || $public || $outside || $inside || $acl;
-				if( $page->visible )
-					$links[$page->path]	= $page->label;
+				$free		= !isset( $mainPage->access );
+				$public		= !$free && $mainPage->access == "public";
+				$outside	= !$free && !$isAuthenticated && $mainPage->access == "outside";
+				$inside		= !$free && $isAuthenticated && $mainPage->access == "inside";
+				$acl		= !$free && $mainPage->access == "acl" && $env->getAcl()->has( $mainPage->path );
+				$mainPage->visible	= $free || $public || $outside || $inside || $acl;
+				if( $mainPage->visible )
+					$links[$mainPage->path]	= $mainPage->label;
 			}
 		}
 		catch( Exception $e ){
