@@ -7,8 +7,10 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 		$this->userId		= $this->env->getSession()->get( 'userId' );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_my_user_avatar.', TRUE );
 		$this->modelAvatar	= new Model_User_Avatar( $this->env );
-		if( !file_exists( $this->moduleConfig->get( 'path.images' ) ) )
-			FS_Folder_Editor::createFolder( $this->moduleConfig->get( 'path.images' ) );
+		$this->pathImages	= $this->moduleConfig->get( 'path.images' );
+
+		if( !file_exists( $this->pathImages ) )
+			FS_Folder_Editor::createFolder( $this->pathImages );
 	}
 
 	public function index(){
@@ -22,6 +24,10 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove(){
+		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
+		@unlink( $this->pathImages.$this->userId.'_'.$avatar->filename );
+		@unlink( $this->pathImages.$this->userId.'__'.$avatar->filename );
+		@unlink( $this->pathImages.$this->userId.'___'.$avatar->filename );
 		$this->modelAvatar->removeByIndex( 'userId', $this->userId );
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
@@ -40,12 +46,11 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 			$messenger->noteError( $words->errorFileTooLarge );
 		}
 		else{
-			$path		= $this->moduleConfig->get( 'path.images' );
-			$fileName	= md5( time() ).'.'.$logic->getExtension( TRUE );
-			$logic->saveTo( $path.$this->userId.'_'.$fileName );									//  save originally uploaded image
+			$fileName	= Alg_ID::uuid().'.'.$logic->getExtension( TRUE );
+			$logic->saveTo( $this->pathImages.$this->userId.'_'.$fileName );									//  save originally uploaded image
 			try{
 				/*  --  PROCESS AND SAVE NEW AVATAR IMAGES  -- */
-				$image		= new UI_Image( $path.$this->userId.'_'.$fileName );
+				$image		= new UI_Image( $this->pathImages.$this->userId.'_'.$fileName );
 				$processor	= new UI_Image_Processing( $image );
 				$width		= (int) $image->getWidth();
 				$height		= (int) $image->getHeight();
@@ -58,19 +63,19 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 				$sizeSmall	= $this->moduleConfig->get( 'image.size.small' );
 				if( $size > $sizeLarge )
 					$processor->resize( $sizeLarge, $sizeLarge );
-				$image->save( $path.$this->userId.'_'.$fileName );
+				$image->save( $this->pathImages.$this->userId.'_'.$fileName );
 				if( $size > $sizeMedium )
 					$processor->resize( $sizeMedium, $sizeMedium );
-				$image->save( $path.$this->userId.'__'.$fileName );
+				$image->save( $this->pathImages.$this->userId.'__'.$fileName );
 				if( $size > $sizeSmall )
 					$processor->resize( $sizeSmall, $sizeSmall );
-				$image->save( $path.$this->userId.'___'.$fileName );
+				$image->save( $this->pathImages.$this->userId.'___'.$fileName );
 
 				/*  --  REMOVE OLD AVATAR IMAGES AND DATABASE ENTRY  -- */
 				if( ( $avatar	= $this->modelAvatar->getByIndex( 'userId', $this->userId ) ) ){
-					@unlink( $path.$this->userId.'_'.$avatar->filename );
-					@unlink( $path.$this->userId.'__'.$avatar->filename );
-					@unlink( $path.$this->userId.'___'.$avatar->filename );
+					@unlink( $this->pathImages.$this->userId.'_'.$avatar->filename );
+					@unlink( $this->pathImages.$this->userId.'__'.$avatar->filename );
+					@unlink( $this->pathImages.$this->userId.'___'.$avatar->filename );
 					$this->modelAvatar->remove( $avatar->userAvatarId );
 				}
 

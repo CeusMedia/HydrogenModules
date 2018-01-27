@@ -194,7 +194,7 @@ return '
 </style>
 <script>
 jQuery(document).ready(function(){
-	Auth.Rest.Register.countries = '.json_encode( array_values( $words['countries' ] ) ).'
+	Auth.Rest.Register.countries = '.json_encode( array_values( $countries ) ).'
 	Auth.Rest.Register.init("#panel-auth-rest-register");
 });
 </script>';

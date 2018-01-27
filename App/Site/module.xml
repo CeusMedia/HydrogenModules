@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.3</version>
+	<version>0.5.6</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -24,11 +24,15 @@
 	<log version="0.5.1">Support module UI:LanguageSelector.</log>
 	<log version="0.5.2">Extend master template by HTML blocks.</log>
 	<log version="0.5.3">Support separate index HTML file for being logged in (inside).</log>
+	<log version="0.5.4">Extract hooks to own hook class.</log>
+	<log version="0.5.5">Prepare to use new abstract hook provided by framework.</log>
+	<log version="0.5.6">Add background images and rename logo images.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Index.php5</class>
 		<class>View/Index.php5</class>
+		<class>Hook/App/Site.php5</class>
 		<class>.htaccess</class>
 		<locale>de/main.ini</locale>
 		<locale>de/html/app.brand.html</locale>
@@ -42,7 +46,18 @@
 		<template>index/index.php</template>
 		<template>master.php</template>
 		<template>.htaccess</template>
-		<style source="theme" load="auto" level="end">layout.css</style>
+		<style source="common" load="auto" level="end">layout.css</style>
+		<image source="common">background/CeusMedia/Logo.xcf</image>
+		<image source="common">background/CeusMedia/Logo_dark_25.png</image>
+		<image source="common">background/CeusMedia/Logo_dark_50.png</image>
+		<image source="common">background/CeusMedia/Logo_dark_75.png</image>
+		<image source="common">background/CeusMedia/Logo_light_25.png</image>
+		<image source="common">background/CeusMedia/Logo_light_50.png</image>
+		<image source="common">background/CeusMedia/Logo_light_75.png</image>
+		<image source="common">logo/CeusMedia/Inline_Blue_Transparent.svg</image>
+		<image source="common">logo/CeusMedia/Inline_White_Transparent.svg</image>
+		<image source="common">logo/CeusMedia/Stacked_Blue_Transparent.svg</image>
+		<image source="common">logo/CeusMedia/Stacked_White_Transparent.svg</image>
 		<file>index.php</file>
 		<file>robots.txt</file>
 		<file>.htaccess.dist</file>
@@ -63,69 +78,9 @@
 		<supports type="module">UI_LanguageSelector</supports>
 		<supports type="module">UI_TEA</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-			$messenger	= $context->env->getMessenger();									//  shortcut messenger
-			$config		= $module->config;													//  shortcut module configuration pairs
-			if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
-				if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
-					if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
-						throw new RuntimeException( "Cannot create .htaccess from .htaccess.dist" );
-					if( !@copy( '.htpasswd.dist', '.htpasswd' ) )							//  try to install default .htpasswd
-						throw new RuntimeException( "Cannot create .htpasswd from .htpasswd.dist" );
-					$messenger->noteSuccess( 'Created .htaccess and .htpasswd for authentication.' );
-				}
-			}
-	]]></hook>
-	<hook type="resource" resource="Page" event="init"><![CDATA[
-		$config = $env->getConfig();														//  shortcut configuration
-		if( !$config->get( 'app.revision' ) ){												//  no revision set in base app configuration
-			$version	= $config->get( 'module.app_site.version' );						//  get version from module App:Site
-			if( version_compare( $version, 0 ) === 1 ){										//  a version (greater than 0) has been set
-				$context->css->primer->setRevision( $version );								//  set version as revision on primer CSS collector
-				$context->css->theme->setRevision( $version );								//  set version as revision on theme CSS collector
-				$context->js->setRevision( $version );										//  set version as revision on JavaScript collector
-			}
-		}
-	]]></hook>
-	<hook type="resource" resource="Env" event="constructEnd"><![CDATA[
-		if( !$env->getModules()->has( 'Resource_Authentication' ) )
-			return;
-		if( !file_exists( 'config/pages.json' ) )
-			return;
-		$acl	= $env->getAcl();
-		$scopes	= json_decode( file_get_contents( 'config/pages.json' ) );
-		foreach( $scopes as $scope => $pages ){
-			foreach( $pages as $page ){
-				//  @todo adding subpages is not stable because parent page could be not visible
-				if( isset( $page->pages ) ){
-					foreach( $page->pages as $subpage ){
-						if( isset( $subpage->access ) ){
-							$path	= isset( $subpage->link ) ? $subpage->link : $subpage->path;
-							$path	= str_replace( '/', '_', $path );
-							if( $subpage->access == "public" ){
-								$acl->setPublicLinks( array( $path ), 'append' );
-								$acl->setPublicLinks( array( $path.'_index' ), 'append' );
-							}
-							else if( $subpage->access == "outside" ){
-								$acl->setPublicOutsideLinks( array( $path ), 'append' );
-								$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
-							}
-						}
-					}
-				}
-				if( isset( $page->access ) ){
-					$path	= isset( $page->link ) ? $page->link : $page->path;
-					$path	= str_replace( '/', '_', $path );
-					if( $page->access == "public" ){
-						$acl->setPublicLinks( array( $path ), 'append' );
-						$acl->setPublicLinks( array( $path.'_index' ), 'append' );
-					}
-					else if( $page->access == "outside" ){
-						$acl->setPublicOutsideLinks( array( $path ), 'append' );
-						$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
-					}
-				}
-			}
-		}
-]]></hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_App_Site::onTinyMCEGetImageList</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_App_Site::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="init">Hook_App_Site::onPageInit</hook>
+	<hook type="resource" resource="Env" event="constructEnd">Hook_App_Site::onEnvConstructEnd</hook>
+	<hook type="resource" resource="Framework" event="calledDeprecationResource">Hook_App_Site::onFrameworkDeprecation</hook>
 </module>

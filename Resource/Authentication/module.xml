@@ -98,7 +98,9 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="register">yes</config>
 	<config protected="no" type="boolean" name="session.refresh">yes</config>
 	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
-	<relations/>
+	<relations>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>
 	<link xml:lang="de" rank="12" access="outside" path="auth/register">Registrieren</link>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Resource.Payment.Stripe.Event.count">
+		<class>Stripe_Event</class>
+		<method>count</method>
+		<mode>live</mode>
+	</job>
+	<job id="Resource.Payment.Stripe.Event.handle">
+		<class>Stripe_Event</class>
+		<method>handle</method>
+		<mode>live</mode>
+	</job>
+</jobs>

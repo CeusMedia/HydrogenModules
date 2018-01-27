@@ -3,6 +3,7 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconUndo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
 
 $list	= array();
 $leftAmount	= (float) $bill->amountNetto;
@@ -53,9 +54,11 @@ if( $billShares ){
 		) );
 		if( $billShare->status == Model_Billing_Bill_Share::STATUS_BOOKED )
 			$buttonRemove	= '';
+
+		$label	= (int) $billShare->personId > 0 ? $billShare->person->firstname.' '.$billShare->person->surname : $billShare->corporation->title;
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', '<small>Anteil</small>' ),
-			UI_HTML_Tag::create( 'td', $billShare->person->firstname.' '.$billShare->person->surname ),
+			UI_HTML_Tag::create( 'td', $label ),
 			UI_HTML_Tag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 			UI_HTML_Tag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
@@ -66,11 +69,11 @@ if( $billShares ){
 
 if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 	$missingAmount	= (float) round( (float) $bill->amountNetto - (float) $bill->amountAssigned, 2 );
-	$missingPercent	= ( $leftAmount - $sharedAmount ) / $leftAmount * 100;
+	$missingPercent	= $leftAmount > 0 ? ( $leftAmount - $sharedAmount ) / $leftAmount * 100 : 0;
 
 	if( $missingAmount < 0 ){
 		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelAmount	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else if( $missingAmount > 0 ){
 		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
@@ -99,15 +102,34 @@ $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 1 );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 
+	$buttonUnbook		= UI_HTML_Tag::create( 'a', $iconUndo.' zurücksetzen', array(
+		'href'		=> './work/billing/bill/unbook/'.$bill->billId,
+		'class'		=> 'btn btn-mini',
+	) );
 	return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.' - '.$bill->title.'</h2>
 '.$tabs.'
 <div class="content-panel">
 	<h3>Aufteilung</h3>
 	<div class="content-panel-inner">
 		'.$list.'
+		<div class="buttonbar">
+			'.$buttonUnbook.'
+		</div>
 	</div>
 </div>';
 }
+
+$optType	= array(
+	0	=> 'Person',
+	1	=> 'Unternehmen',
+);
+$optType	= UI_HTML_Elements::Options( $optType );
+
+
+$optCorporation	= array();
+foreach( $corporations as $corporation )
+	$optCorporation[$corporation->corporationId]	= $corporation->title;
+$optCorporation	= UI_HTML_Elements::Options( $optCorporation );
 
 $optPerson	= array();
 foreach( $persons as $person )
@@ -226,10 +248,20 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
-				<div class="span4">
+				<div class="span5" >
+					<label for="input_type">Typ</label>
+					<select name="type" id="input_type" class="span12 has-optionals">'.$optType.'</select>
+				</div>
+				<div class="span7 optional type type-0">
 					<label for="input_personId">Person</label>
 					<select name="personId" id="input_personId" class="span12">'.$optPerson.'</select>
 				</div>
+				<div class="span7 optional type type-1">
+					<label for="input_coporationId">Unternehmen</label>
+					<select name="corporationId" id="input_corporationId" class="span12">'.$optCorporation.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_percent"><small class="muted">entweder</small> Prozent</label>
 					<input type="number" step="0.01" min="0" max="100" name="percent" id="input_percent" class="span12 input-number" value="'.number_format( $missingPercent, 2, '.', '' ).'"/>
@@ -244,8 +276,5 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
 		</div>
 	</form>
-</div>
-';
-
-
+</div>';
 ?>

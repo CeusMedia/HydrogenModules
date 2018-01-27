@@ -36,8 +36,8 @@ if( $useHoneypot ){
 	</div>';
 }
 
-
 $content	= $textTop.'
+<a id="'.$w->idPanel.'"></a>
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
@@ -74,7 +74,6 @@ $content	= $textTop.'
 	</div>
 </div>
 '.$textBottom;
-
 
 if( $textRight )
 	$content	= '

@@ -4,6 +4,7 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 	protected $cache;
 	protected $provider;
 	protected $skipCacheOnNextRequest;
+	protected $baseUrl;
 
 	static public $typeCurrencies	= array(
 		'CB_VISA_MASTERCARD'	=> array(),
@@ -20,8 +21,12 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+//		print_m( $this->moduleConfig->getAll() );die;
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Mangopay::getInstance( $this->env );
+		$this->baseUrl		= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
 	}
 
 	/**
@@ -50,8 +55,36 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		implement type
 	 */
-	public function calculateFeesForPayIn( $price, $type = NULL ){
-		return $price * $this->moduleConfig->get( 'fees.payin' ) / 100;
+	public function calculateFeesForPayIn( $price, $currency, $type ){
+		switch( $type ){
+			case 'CB_VISA_MASTERCARD':
+				if( $currency === "EUR" )
+					return $price * 0.018 + 18;
+				else if( $currency === "GBP" )
+					return $price * 0.019 + 20;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'MAESTRO':
+			case 'DINERS':
+			case 'BCMC':
+				if( $currency === "EUR" )
+					return $price * 0.025 + 25;
+				else if( $currency === "GBP" )
+					return $price * 0.025 + 20;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'GIROPAY':
+			case 'SOFORT':
+				if( $currency === "EUR" )
+					return $price * 0.018 + 30;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'IDEAL':
+				if( $currency === "EUR" )
+					return 80;
+				throw new RangeException( sprintf( 'Currency %s is not supported', $currency ) );
+			case 'BANKWIRE':
+				return $price * 0.005;
+			default:
+				throw new RangeException( sprintf( 'Payin type %s is not supported', $type ) );
+		}
 	}
 
 	protected function checkIsOwnCard( $cardId ){
@@ -64,7 +97,18 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		return $this->getUser( $userId );
 	}
 
-	public function createBankAccount( $userId, $iban, $bic, $title ){
+	public function createAddress( $street, $postcode, $city, $country, $region = NULL ){
+		$address = new \MangoPay\Address();
+		$address->AddressLine1	= $street;
+		$address->PostalCode	= $postcode;
+		$address->City			= $city;
+		$address->Country		= $country;
+		if( $region )
+			$address->Region		= $region;
+		return $address;
+	}
+
+	public function createBankAccount( $userId, $iban, $bic, $title, $address = NULL ){
 		$user	= $this->getUser( $userId );
 		$bankAccount = new \MangoPay\BankAccount();
 		$bankAccount->Type			= "IBAN";
@@ -72,7 +116,12 @@ class Logic_Payment_Mangopay extends CMF_Hydrogen_Logic{
 		$bankAccount->Details->IBAN	= trim( str_replace( ' ', '', $iban ) );
 		$bankAccount->Details->BIC	= trim( $bic );
 		$bankAccount->OwnerName		= $title;
-		$bankAccount->OwnerAddress	= $user->Address;
+		if( $address )
+			$bankAccount->OwnerAddress	= $address;
+		else if( $user instanceof \MangoPay\UserNatural )
+			$bankAccount->OwnerAddress	= $user->Address;
+		else if( $user instanceof \MangoPay\UserLegal )
+			$bankAccount->OwnerAddress	= $user->LegalRepresentativeAddress;
 		$item	= $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
 		$this->uncache( 'user_'.$userId.'_bankaccounts' );
 		return $item;
@@ -120,8 +169,8 @@ print_m( $items );
 	/**
 	 *	@todo		finish implementation, not working right now
 	 */
-	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $amount ){
-		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
+	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $currency, $amount ){
+//		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
 		$payIn		= new \MangoPay\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -130,10 +179,10 @@ print_m( $items );
 		$payIn->Fees				= new \MangoPay\Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
-		$payIn->Fees->Currency	= "EUR";
+		$payIn->Fees->Currency	= $currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
-		$payIn->DebitedFunds->Currency	= "EUR";
+		$payIn->DebitedFunds->Currency	= $currency;
 
 		// payment type as BANKWIRE
 		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsBankWire();
@@ -152,7 +201,7 @@ print_m( $items );
 	/**
 	 *	@todo		test (not tested since no mandates allowed, yet)
 	 */
-	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $amount ){
+	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $currency, $amount ){
 
 		$payIn	= new \MangoPay\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -161,10 +210,10 @@ print_m( $items );
 		$payIn->Fees				= new \MangoPay\Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
-		$payIn->Fees->Currency	= "EUR";
+		$payIn->Fees->Currency	= $currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
-		$payIn->DebitedFunds->Currency	= "EUR";
+		$payIn->DebitedFunds->Currency	= $currency;
 
 		$payIn->PaymentDetails	= new \MangoPay\PayInPaymentDetailsDirectDebitDirect();
 		$payIn->PaymentDetails->MandateId	=
@@ -188,7 +237,7 @@ print_m( $items );
 
 	//	$amount	= $this->checkAmount( $amount, $this->currency );								//  @todo handle amount format and sanity
 
-		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Amount	= 0;
 		$payIn->Fees->Currency	= $card->Currency;
 
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
@@ -218,7 +267,7 @@ print_m( $items );
 		$payIn->PaymentDetails->DebitedFunds->Amount	= $amount;
 		$payIn->PaymentDetails->DebitedFunds->Currency	= $currency;
 		$payIn->PaymentDetails->Fees					= new \MangoPay\Money();
-		$payIn->PaymentDetails->Fees->Amount			= $this->calculateFeesForPayIn( $amount );
+		$payIn->PaymentDetails->Fees->Amount			= 0;
 		$payIn->PaymentDetails->Fees->Currency			= $currency;
 		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
@@ -240,36 +289,143 @@ print_m( $items );
 		$payIn->DebitedFunds->Amount		= $amount;
 		$payIn->Fees						= new \MangoPay\Money();
 		$payIn->Fees->Currency				= strtoupper( $currency );
-		$payIn->Fees->Amount				= $this->calculateFeesForPayIn( $amount );
+		$payIn->Fees->Amount				= 0;
 		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
 		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createNaturalUserFromLocalUser( $localUserId ){
-throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
+	public function createLegalUserFromLocalUser( $localUserId, $companyData, $representativeData ){
 		$modelUser		= new Model_User( $this->env );
-		$modelAccount	= new Model_User_Payment_Account( $this->env );
+		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
-
-		$account	= new \MangoPay\UserNatural();
-		$account->PersonType			= "NATURAL";
-		$account->FirstName				= $user->firstname;
-		$account->LastName				= $user->surname;
-		$account->Birthday				= 0;
-		$account->Nationality			= $user->country;
-		$account->CountryOfResidence	= $user->country;
-		$account->Email					= $user->email;
-		$account	= $this->provider->Users->Create( $account );
-		$modelAccount->add( array(
-			'userId'			=> $localUserId,
-			'paymentAccountId'	=> $account->Id,
-			'provider'			=> 'mangopay',
+		$address		= $modelAddress->get( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $this->localUserId,
+			'type'			=> Model_Address::TYPE_BILLING,
 		) );
-		return $account;
+
+		$user = new \MangoPay\UserLegal();
+		$user->LegalPersonType	= "BUSINESS";
+		$user->Name				= $companyData['name'];
+//		$user->Tag				= NULL;
+		$user->Email			= $companyData['email'];
+//		$user->CompanyNumber	= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $address->country;
+		$user->LegalRepresentativeNationality			= $address->country;
+		$user->LegalRepresentativeEmail					= $representativeData['email'];
+		$user->LegalRepresentativeFirstName				= $representativeData['firstname'];
+		$user->LegalRepresentativeLastName				= $representativeData['lastname'];
+		if( $address ){
+			$user->LegalRepresentativeAddress = new \MangoPay\Address();
+			$user->LegalRepresentativeAddress->AddressLine1	= $address->street;
+			$user->LegalRepresentativeAddress->City			= $address->city;
+			$user->LegalRepresentativeAddress->Region		= $address->region;
+			$user->LegalRepresentativeAddress->PostalCode	= $address->postcode;
+			$user->LegalRepresentativeAddress->Country		= $address->country;
+			$user->HeadquartersAddress = new \MangoPay\Address();
+			$user->HeadquartersAddress->AddressLine1	= $address->street;
+			$user->HeadquartersAddress->City			= $address->city;
+			$user->HeadquartersAddress->Region			= $address->region;
+			$user->HeadquartersAddress->PostalCode		= $address->postcode;
+			$user->HeadquartersAddress->Country			= $address->country;
+		}
+		$user = $this->provider->Users->Create( $user );
 	}
 
+	public function createLegalUser( $data ){
+		$user = new \MangoPay\UserLegal();
+		$user->LegalPersonType	= $data['company']['type'];
+		$user->Name				= $data['company']['name'];
+		$user->Email			= $data['company']['email'];
+		$user->CompanyNumber	= $data['company']['number'];
+//		$user->Tag				= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $data['representative']['country'];
+		$user->LegalRepresentativeNationality			= $data['representative']['country'];
+		$user->LegalRepresentativeEmail					= $data['representative']['email'];
+		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
+		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
+		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
+		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
+		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
+		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
+		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
+		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
+		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
+		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
+		$user->HeadquartersAddress->PostalCode		= $data['headquarter']['postcode'];
+		$user->HeadquartersAddress->Country			= $data['headquarter']['country'];
+//print_m( $user );die;
+		return $this->provider->Users->Create( $user );
+	}
+
+	public function updateLegalUser( $userId, $data ){
+		$user	= $this->getUser( $userId );
+		$user->LegalPersonType	= $data['company']['type'];
+		$user->Name				= $data['company']['name'];
+		$user->Email			= $data['company']['email'];
+		$user->CompanyNumber	= $data['company']['number'];
+//		$user->Tag				= NULL;
+		$user->LegalRepresentativeBirthday				= 0;
+		$user->LegalRepresentativeCountryOfResidence	= $data['representative']['country'];
+		$user->LegalRepresentativeNationality			= $data['representative']['country'];
+		$user->LegalRepresentativeEmail					= $data['representative']['email'];
+		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
+		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
+		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
+		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
+		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
+		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
+		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
+		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
+		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
+		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
+		$user->HeadquartersAddress->PostalCode		= $data['headquarter']['postcode'];
+		$user->HeadquartersAddress->Country			= $data['headquarter']['country'];
+//print_m( $user );die;
+		return $this->provider->Users->Update( $user );
+	}
+
+	public function createNaturalUserFromLocalUser( $localUserId ){
+		$modelUser		= new Model_User( $this->env );
+		$modelAddress	= new Model_Address( $this->env );
+		$user			= $modelUser->get( $localUserId );
+		$address		= $modelAddress->get( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $this->localUserId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
+
+		$user	= new \MangoPay\UserNatural();
+		$user->PersonType			= "NATURAL";
+		$user->FirstName				= $user->firstname;
+		$user->LastName				= $user->surname;
+		$user->Birthday				= 0;
+		$user->Nationality			= $user->country;
+		$user->CountryOfResidence	= $user->country;
+		$user->Email					= $user->email;
+		$user->Address 				= new \MangoPay\Address();
+		$user->Address->AddressLine1	= $user->street.' '.$user->number;
+		$user->Address->City			= $user->city;
+		$user->Address->PostalCode	= $user->postcode;
+		$user->Address->Country		= $user->country;
+		if( $address ){
+			$user->Address->AddressLine1	= $address->street;
+			$user->Address->City			= $address->city;
+			$user->Address->PostalCode	= $address->postcode;
+			$user->Address->Country		= $address->country;
+		}
+		$user	= $this->provider->Users->Create( $user );
+		$this->setUserIdForLocalUserId( $user->Id, $localUserId );
+		return $user;
+	}
 
 	public function createUserWallet( $userId, $currency ){
 		$wallet		= new \MangoPay\Wallet();
@@ -295,6 +451,10 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
+	}
+
+	public function getClient(){
+		return $this->provider->Clients->Get();
 	}
 
 	public function getClientWallet( $fundsType, $currency ){
@@ -423,6 +583,10 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		return $item;
 	}
 
+	public function getClientWallets(){
+		return $this->provider->Clients->GetWallets();
+	}
+
 	public function getUserWallets( $userId, $orders = array(), $limits = array() ){
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
@@ -452,14 +616,38 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		return $list;
 	}
 
-	public function getUserIdFromLocalUserId( $localUserId ){
+	public function setUserIdForLocalUserId( $userId, $localUserId ){
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( array(
 			'userId'	=> $localUserId,
 			'provider'	=> 'mangopay',
 		) );
-		if( !$relation )
+		if( $relation ){
+			$modelAccount->edit( $relation->userPaymentAccountId, array(
+				'paymentAccountId'	=> $userId,
+//				'modifiedAt'		=> time(),
+			) );
+		}
+		else{
+			$modelAccount->add( array(
+				'userId'	=> $localUserId,
+				'paymentAccountId'	=> $userId,
+				'provider'	=> 'mangopay',
+				'createdAt'	=> time(),
+			) );
+		}
+	}
+
+	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE ){
+		$modelAccount	= new Model_User_Payment_Account( $this->env );
+		$relation		= $modelAccount->getByIndices( array(
+			'userId'	=> $localUserId,
+			'provider'	=> 'mangopay',
+		) );
+		if( !$relation && $strict )
 			throw new RuntimeException( 'No payment account available' );
+		if( !$relation )
+			return NULL;
 		return $relation->paymentAccountId;
 	}
 
@@ -489,6 +677,12 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		return $relation;
 	}
 
+	public function setClientLogo( $imageContentBase64 ){
+		$ClientLogoUpload = new \MangoPay\ClientLogoUpload();
+		$ClientLogoUpload->File = $imageContentBase64;
+		return $this->provider->Clients->UploadLogo( $ClientLogoUpload );
+	}
+
 	public function setHook( $id, $eventType, $path, $status = NULL, $tag = NULL ){
 		if( $id > 0 ){
 			$hook			= $this->provider->Hooks->Get( $id );
@@ -496,7 +690,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 				$hook->Status	= $status ? 'ENABLED' : 'DISABLED';
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
-			$hook->Url			= $this->env->url.trim( $path );
+			$hook->Url			= $this->baseUrl.trim( $path );
 			$this->uncache( 'hooks' );
 			$this->uncache( 'hook_'.$id );
 			return $this->provider->Hooks->Update( $hook );
@@ -504,7 +698,7 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		else{
 			$hook				= new \MangoPay\Hook;
 			$hook->EventType	= $eventType;
-			$hook->Url			= $this->env->url.trim( $path );
+			$hook->Url			= $this->baseUrl.trim( $path );
 			if( $tag !== NULL )
 				$hook->Tag	= trim( $tag );
 			return $this->provider->Hooks->Create( $hook );
@@ -515,8 +709,68 @@ throw new Exception("createNaturalUserFromLocalUser: ".$localUserId);
 		$this->skipCacheOnNextRequest	= (bool) $skip;
 	}
 
+	public function transfer( $sourceUserId, $targetUserId, $sourceWalletId, $targetWalletId, $currency, $amount, $fees, $tag = NULL ){
+		$transfer = new \MangoPay\Transfer();
+		$transfer->Tag = $tag;
+		$transfer->AuthorId = $sourceUserId;
+		$transfer->CreditedUserId = $targetUserId;
+		$transfer->DebitedFunds = new \MangoPay\Money();
+		$transfer->DebitedFunds->Currency = $currency;
+		$transfer->DebitedFunds->Amount = $amount;
+		$transfer->Fees = new \MangoPay\Money();
+		$transfer->Fees->Currency = $currency;
+		$transfer->Fees->Amount = $fees;
+		$transfer->DebitedWalletId = $sourceWalletId;
+		$transfer->CreditedWalletId = $targetWalletId;
+		$result		= $this->provider->Transfers->Create( $transfer );
+		return $result;
+	}
+
 	public function uncache( $key ){
 		$this->cache->remove( 'mangopay_'.$key );
+	}
+
+	public function updateClient( $data ){
+		$client	= $this->getClient();
+		$copy	= clone( $client );
+		$map	= array(
+			'PrimaryButtonColour'	=> 'colorButton',
+			'PrimaryThemeColour'	=> 'colorTheme',
+			'TaxNumber'				=> 'taxNumber',
+			'PlatformType'			=> 'platformType',
+			'PlatformDescription'	=> 'platformDescription',
+			'PlatformURL'			=> 'platformUrl',
+		);
+		foreach( $map as $key => $value )
+			if( isset( $data[$value] ) )
+				$copy->$key	= $data[$value];
+
+		if( isset( $data['headquarter'] ) && is_array( $data['headquarter'] ) ){
+			$map	= array(
+				'AddressLine1'	=> 'address',
+				'City'			=> 'city',
+				'Region'		=> 'region',
+				'PostalCode'	=> 'postcode',
+				'Country'		=> 'country',
+			);
+			foreach( $map as $key => $value )
+				if( isset( $data['headquarter'][$value] ) )
+					$copy->HeadquartersAddress->$key	= $data['headquarter'][$value];
+		}
+
+		if( isset( $data['emails'] ) && is_array( $data['emails'] ) ){
+			$map	= array(
+				'AdminEmails'	=> 'admin',
+				'TechEmails'	=> 'tech',
+				'BillingEmails'	=> 'billing',
+			);
+			foreach( $map as $key => $value )
+				if( isset( $data['emails'][$value] ) )
+					$copy->$key	= explode( "\n", $data['emails'][$value] );
+		}
+		if( $copy !== $client )
+			return $this->provider->Clients->Update( $copy );
+		return NULL;
 	}
 
 	public function updateUser( $user ){

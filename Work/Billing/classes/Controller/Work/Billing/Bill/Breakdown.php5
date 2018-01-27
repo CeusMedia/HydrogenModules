@@ -16,10 +16,19 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 	}
 
 	public function addShare( $billId ){
-		$personId	= $this->request->get( 'personId' );
+		$type		= (int) $this->request->get( 'type' );
 		$percent	= $this->request->get( 'percent' );
 		$amount		= $this->request->get( 'amount' );
-		$this->logic->addBillShare( $billId, $personId, $amount, $percent );
+		switch( $type ){
+			case 0:
+				$personId	= $this->request->get( 'personId' );
+				$this->logic->addBillPersonShare( $billId, $personId, $amount, $percent );
+				break;
+			case 1:
+				$corporationId	= $this->request->get( 'corporationId' );
+				$this->logic->addBillCorporationShare( $billId, $corporationId, $amount, $percent );
+				break;
+		}
 		$this->restart( $billId, TRUE );
 	}
 
@@ -40,11 +49,15 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$bill	= $this->logic->getBill( $billId );
 		$billShares	= $this->logic->getBillShares( $billId );
 		foreach( $billShares as $billShare ){
-			$billShare->person	= $this->logic->getPerson( $billShare->personId );
+			if( $billShare->personId )
+				$billShare->person	= $this->logic->getPerson( $billShare->personId );
+			else
+				$billShare->corporation	= $this->logic->getCorporation( $billShare->corporationId );
 		}
 
 		$reserves		= $this->logic->getReserves();
 		$persons		= $this->logic->getPersons();
+		$corporations		= $this->logic->getCorporations();
 		$billReserves	= $this->logic->getBillReserves( $billId );
 		$billExpenses	= $this->logic->getBillExpenses( $billId );
 
@@ -52,6 +65,7 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$this->addData( 'billShares', $billShares );
 		$this->addData( 'reserves', $reserves );
 		$this->addData( 'persons', $persons );
+		$this->addData( 'corporations', $corporations );
 		$this->addData( 'billReserves', $billReserves );
 		$this->addData( 'billExpenses', $billExpenses );
 

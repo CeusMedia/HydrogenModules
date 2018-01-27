@@ -1,0 +1,39 @@
+#modal-admin-mail-template-select-content {
+	display: none;
+	height: 400px;
+	overflow-y: auto;
+	}
+#modal-admin-mail-template-select-loader {
+	height: 400px;
+	overflow: hidden;
+	}
+
+.modal-source-list > li {
+	background-color: rgba(191, 191, 191, 0.15);
+	border-top: 2px solid rgba(191, 191, 191, 0.5);
+	}
+.modal-source-list > li > ul > li {
+	padding: 2px;
+	background-color: rgb(255, 255, 255);
+	border-top: 1px solid rgba(191, 191, 191, 0.5);
+	cursor: pointer;
+	}
+.modal-source-list .source-list-image {
+	float: left;
+	width: 36px;
+	height: 36px;
+	margin: 2px 6px 1px 0px;
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center center;
+	}
+.modal-source-list .source-list-image > i.fa {
+    padding-top: 3px;
+	}
+.modal-source-list .source-list-label {
+	margin-left: 46px;
+	}
+.modal-source-list .source-list-path > div {
+	padding: 5px 4px;
+	font-size: 1.2em;
+	}

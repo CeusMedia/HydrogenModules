@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.4.1</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -32,6 +32,8 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.3.9">Extend module relations.</log>
 	<log version="0.4">Migrate logic to support new logic pool.</log>
 	<log version="0.4.1">Center login if info block is empty.</log>
+	<log version="0.4.2">Bug fix.</log>
+	<log version="0.4.3">Add config for roles allowed to login.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -90,6 +92,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="yes" type="boolean" name="logout.forward.force">no</config>
 	<config protected="yes" type="boolean" name="login.remember">yes</config>
 	<config protected="yes" type="integer" name="login.rank">10</config>
+	<config protected="yes" type="string" name="login.roles">*</config>
 	<config protected="no" type="boolean" name="register">yes</config>
 	<config protected="yes" type="boolean" name="relateToAllUsers">no</config>
 	<relations>

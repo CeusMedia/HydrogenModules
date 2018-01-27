@@ -17,7 +17,7 @@ class View_Helper_CookieWarning{
 				if( $options->get( 'readMorePagePath' ) ){
 					$buttons[]	= UI_HTML_Tag::create( 'a', $words['warning']['buttonReadMore'], array(
 						'href'	=> './'.$options->get( 'readMorePagePath' ),
-						'class'		=> 'btn btn-mini btn-info',
+						'class'	=> 'btn btn-mini btn-info',
 					) );
 				}
 				$buttons	= join( '&nbsp;', $buttons );

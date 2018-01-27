@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Mail.Group.handle">
+		<class>Mail_Group</class>
+		<method>handle</method>
+		<mode>live</mode>
+	</job>
+</jobs>

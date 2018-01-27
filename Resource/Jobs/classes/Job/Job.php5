@@ -63,8 +63,6 @@ class Job_Job extends Job_Abstract{
 
 	public function index(){
 	//	print( json_encode( $this->env->getRequest()->getAll()));
-
-
 		foreach( $this->manager->getJobs() as $jobId => $jobData )
 			$this->out( '- '.$jobId );
 	}

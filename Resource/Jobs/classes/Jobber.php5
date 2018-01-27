@@ -93,8 +93,9 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		foreach( $index as $file ){
 			$json	= \FS_File_JSON_Reader::load( $file->getPathname(), FALSE );
 			foreach( $json as $jobId => $job ){
-				$job->id	= $jobId;
-				$job->mode = explode( ",", $job->mode );
+				$job->id		= $jobId;
+				$job->mode		= explode( ",", $job->mode );
+				$job->multiple	= isset( $job->multiple ) ? $job->multiple : FALSE;
 				if( $modes && !array_intersect( $job->mode, $modes ) )
 					continue;
 				$map->jobs[$jobId]	= $job;
@@ -111,9 +112,10 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		foreach( $index as $file ){
 			$xml	= \XML_ElementReader::readFile( $file->getPathname() );
 			foreach( $xml->job as $job ){
-				$jobObj			= new \stdClass();
-				$jobObj->mode	= array( 'dev' );
+				$jobObj				= new \stdClass();
+				$jobObj->mode		= array( 'dev' );
 				$jobObj->id			= $job->getAttribute( 'id' );
+				$jobObj->multiple	= $job->hasAttribute( 'multiple' ) ? TRUE : FALSE;
 				foreach( $job->children() as $nodeName => $node ){
 					$value	= (string) $node;
 					if( $nodeName == 'mode' )
@@ -164,7 +166,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 			return -1;																				//  quit with negative status
 		}
 		try{																						//  try to ...
-			if( $this->lock->isLocked( $job->class, $job->method ) )								//  job is locked (=still running)
+			if( !$job->multiple && $this->lock->isLocked( $job->class, $job->method ) )				//  job is locked (=still running)
 				return 0;																			//  quit with neutral status
 			$this->lock->lock( $job->class, $job->method );											//  set lock on job
 			$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );			//  ... create job class instance with arguments

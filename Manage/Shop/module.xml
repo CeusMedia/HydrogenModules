@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.4</version>
+	<version>0.4.2</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added shipping.</log>
@@ -22,6 +22,8 @@
 	<log version="0.3.8">Use shop bridge in order position list and report.</log>
 	<log version="0.3.9">Renamed shop logic to shop manager logic.</log>
 	<log version="0.4">Adjustment to shop model changes.</log>
+	<log version="0.4.1">Use new user model instead of customer.</log>
+	<log version="0.4.2">Use new user address model.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -52,6 +54,7 @@
 		<image>states.png</image>
 	</files>
 	<relations>
+		<needs type="module">Resource_Address</needs>
 		<needs type="module">Shop_Bridge</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 		<needs type="module">UI_Map</needs>

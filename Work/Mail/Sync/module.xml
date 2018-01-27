@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Mail Sync</title>
+	<description/>
+	<category>Work</category>
+	<version>0.2.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add logic class.</log>
+	<log version="0.2.2">Add job class.</log>
+	<log version="0.2.3">Extract JavaScript.</log>
+	<log version="0.2.4">Refactor database.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Mail/Sync.php5</class>
+		<class>Logic/Mail/Sync.php5</class>
+		<class>View/Work/Mail/Sync.php5</class>
+		<class>Model/Mail/Sync.php5</class>
+		<class>Model/Mail/Sync/Host.php5</class>
+		<class>Model/Mail/Sync/Run.php5</class>
+		<class>Job/Work/Mail/Sync.php5</class>
+		<template>work/mail/sync/index.php</template>
+		<template>work/mail/sync/addHost.php</template>
+		<template>work/mail/sync/addSync.php</template>
+		<template>work/mail/sync/editSync.php</template>
+<!--		<locale>de/work/mail/sync.ini</locale>
+		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
+		<script load="auto" level="end">module.work.mail.sync.js</script>
+		<file>config/jobs/work.mail.sync.xml</file>
+	</files>
+	<relations>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="WorkMailSync" event="registerTabs">View_Work_Mail_Sync::___onRegisterTab</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_syncs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_syncs` (
+  `mailSyncId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sourceMailHostId` int(10) unsigned NOT NULL,
+  `targetMailHostId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '-1:error, 0:new, 1:active, 2:synching, 3:synched, 4:closed',
+  `resync` tinyint(1) unsigned NOT NULL COMMENT '0:no, 1:yes',
+  `sourceUsername` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `targetUsername` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `sourcePassword` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `targetPassword` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailSyncId`),
+  KEY `sourceUserId` (`sourceMailHostId`,`targetMailHostId`),
+  KEY `status` (`status`),
+  KEY `resync` (`resync`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_sync_hosts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_sync_hosts` (
+  `mailSyncHostId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ip` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `host` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `port` int(5) NOT NULL,
+  `ssl` tinyint(1) NOT NULL,
+  `auth` tinyint(3) unsigned NOT NULL COMMENT '0:PLAIN, 1:LOGIN, 2:CRAM-MD5',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailSyncHostId`),
+  UNIQUE KEY `host` (`host`),
+  KEY `ip` (`ip`),
+  KEY `port` (`port`),
+  KEY `ssl` (`ssl`),
+  KEY `auth` (`auth`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_sync_runs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_sync_runs` (
+  `mailSyncRunId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailSyncId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '-1:fail, 0:new, 1:success',
+  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `statistics` text COLLATE utf8_unicode_ci,
+  `output` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailSyncRunId`),
+  KEY `syncId` (`mailSyncId`,`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>

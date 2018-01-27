@@ -1,4 +1,5 @@
 <?php
+$page	= $env->getPage();
 
 $navbarFixed	= TRUE;
 
@@ -34,19 +35,19 @@ else{
 		$links	= array();
 		try{
 			$scopes	= FS_File_JSON_Reader::load( 'config/pages.json' );
-			foreach( $scopes->main as $pageId => $page ){
-				if( isset( $page->disabled ) && $page->disabled !== "no" )
+			foreach( $scopes->main as $mainPageId => $mainPage ){
+				if( isset( $mainPage->disabled ) && $mainPage->disabled !== "no" )
 					continue;
-				if( isset( $page->pages ) && $page->pages )
+				if( isset( $mainPage->pages ) && $mainPage->pages )
 					continue;
-				$free		= !isset( $page->access );
-				$public		= !$free && $page->access == "public";
-				$outside	= !$free && !$isAuthenticated && $page->access == "outside";
-				$inside		= !$free && $isAuthenticated && $page->access == "inside";
-				$acl		= !$free && $page->access == "acl" && $env->getAcl()->has( $page->path );
-				$page->visible	= $free || $public || $outside || $inside || $acl;
-				if( $page->visible )
-					$links[$page->path]	= $page->label;
+				$free		= !isset( $mainPage->access );
+				$public		= !$free && $mainPage->access == "public";
+				$outside	= !$free && !$isAuthenticated && $mainPage->access == "outside";
+				$inside		= !$free && $isAuthenticated && $mainPage->access == "inside";
+				$acl		= !$free && $mainPage->access == "acl" && $env->getAcl()->has( $mainPage->path );
+				$mainPage->visible	= $free || $public || $outside || $inside || $acl;
+				if( $mainPage->visible )
+					$links[$mainPage->path]	= $mainPage->label;
 			}
 		}
 		catch( Exception $e ){
@@ -77,37 +78,36 @@ else
 $hints	= class_exists( 'View_Helper_Hint' ) ? View_Helper_Hint::render( 'Tipp: ' ) : '';
 
 
-/*  --  BRAND  --  */
+/*  --  TITLE & BRAND  --  */
 $brand		= preg_replace( "/\(.*\)/", "", $words['main']['title'] );
+$page->setTitle( $brand );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
+
 $brand		= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
 if( $view->hasContentFile( 'html/app.brand.html' ) )
 	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
 		$brand		= $brandHtml;
 
+
+/*  --  STATIC HEADER / FOOTER  --  */
 $data	= array(
+	'words'		=> $words,
 	'navFooter'	=> $navFooter,
 	'navHeader'	=> $navHeader,
 	'navTop'	=> $navTop,
 );
-
-/*  --  STATIC HEADER  --  */
 $header		= '';
-if( $view->hasContentFile( 'html/app.header.html' ) )
-	if( $headerHtml = $view->loadContentFile( 'html/app.header.html', $data ) )		//  render header, words from main.ini are assigned
-		$header		= $headerHtml;
-
-/*  --  STATIC FOOTER  --  */
 $footer		= '';
+if( $view->hasContentFile( 'html/app.header.html' ) )
+	$header = $view->loadContentFile( 'html/app.header.html', $data );		//  render header, words from main.ini are assigned
 if( $view->hasContentFile( 'html/app.footer.html' ) )
-	if( $footerHtml = $view->loadContentFile( 'html/app.footer.html', $data ) )		//  render footer, words from main.ini are assigned
-		$footer		= $footerHtml;
+	$footer = $view->loadContentFile( 'html/app.footer.html', $data );		//  render footer, words from main.ini are assigned
+
 
 /*  --  MAIN STRUCTURE  --  */
 $body	= '
 <div id="layout-container">
-	'.$header.'
 	<div class="nav navbar '.( $navbarFixed ? 'navbar-fixed-top' : '' ).'">
 		<div class="navbar-inner">
 			<div class="container">
@@ -124,12 +124,8 @@ $body	= '
 			'.$content.'
 		</div>
 	</div>
-</div>
-'.$footer.'
-';
+</div>';
 
-$page	= $env->getPage();
-$page->addBody( $body );
-$page->setTitle( trim( str_replace( "&nbsp;", " ", strip_tags( $brand ) ) ) );
+$page->addBody( $header.$body.$footer );
 return $page->build();
 ?>

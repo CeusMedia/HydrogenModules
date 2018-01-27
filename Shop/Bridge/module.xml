@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Shop Bridge</title>
+	<description><![CDATA[Abstraction layer for different shop article types.]]></description>
+	<category>Resource</category>
+	<version>0.3.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added support for article description.</log>
+	<log version="0.2.2">Extend database model by controller classes.</log>
+	<log version="0.2.3">Extend database model by URI paths and title.</log>
+	<log version="0.2.4">Removed concept of bridge sources.</log>
+	<log version="0.2.5">Added automatic bridge discovery.</log>
+	<log version="0.3">Add table information to bridge.</log>
+	<log version="0.3.1">Add strict mode for article check.</log>
+	<log version="0.3.2">Fixed two bugs.</log>
+	<log version="0.3.3">Extend bridge logic for quantity changes.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/ShopBridge.php5</class>
+		<class>Logic/ShopBridge/Abstract.php5</class>
+		<class>Model/Shop/Bridge.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<supports type="module">Shop</supports>
+	</relations>
+	<sql on="install" type="mysql" version="0.1.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_bridges`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_bridges` (
+  `bridgeId` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `class` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `frontendController` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `frontendUriPath` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `backendController` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `backendUriPath` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`bridgeId`),
+  KEY `class` (`class`),
+  KEY `frontendController` (`frontendController`),
+  KEY `backendController` (`backendController`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql on="update" type="mysql" version="0.1.8"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_bridges` ADD `articleTableName` VARCHAR(50) NOT NULL AFTER `backendUriPath`;
+ALTER TABLE `<%?prefix%>shop_bridges` ADD `articleIdColumn` VARCHAR(50) NOT NULL AFTER `articleTableName`;
+	]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_bridges`;
+	]]></sql>
+</module>

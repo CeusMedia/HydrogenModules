@@ -398,26 +398,30 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$upload	= (object) $request->get( 'upload' );
-			if( $upload->error ){
-				$handler    = new Net_HTTP_UploadErrorHandler();
-				$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-				$this->messenger->noteError( $handler->getErrorMessage( $upload->error ) );
-			}
-			else{
+			$logicUpload	= new Logic_Upload( $this->env );
+			try{
+				$logicUpload->setUpload( $upload );
+				$logicUpload->checkSize( Logic_Upload::getMaxUploadSize(), TRUE );
+//				$logicUpload->checkVirus( TRUE );
 				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
-				if( !@move_uploaded_file( $upload->tmp_name, $targetFile ) ){
-					$this->messenger->noteFailure( 'Moving uploaded file to documents folder failed' );
-					$this->restart( NULL, TRUE );
-				}
+				$logicUpload->saveTo( $targetFile );
 				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
 				$this->modelFile->add( array(
 					'downloadFolderId'	=> $folderId,
 					'rank'				=> $rank,
-					'title'				=> $upload->name,
+					'size'				=> $logicUpload->getFileSize(),
+					'title'				=> $logicUpload->getFileName(),
+					'description'		=> (string) $request->get( 'description' ),
 					'uploadedAt'		=> time()
 				) );
 				$this->updateNumber( $folderId, 'file', 1 );
 				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
+			}
+			catch( Exception $e ){
+				$helperError	= new View_Helper_UploadError( $this->env );
+				$helperError->setUpload( $logicUpload );
+				$message	= $helperError->render();
+				$this->messenger->noteError( $message ? $message : $e->getMessage() );
 			}
 		}
 		$this->restart( 'index/'.$folderId, TRUE );

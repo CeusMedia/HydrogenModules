@@ -47,36 +47,37 @@ if( $documents ){
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-return '
-<div class="row-fluid">
-	<div class="span8">
-		<div class="content-panel content-panel-list">
-			<h3>'.$w->heading.'</h3>
-			<div class="content-panel-inner">
-				<div class="row-fluid">
-					<div class="span12">
-						'.$table.'
-					</div>
+$formUpload		= '';
+if( $env->getAcl()->has( 'work/mission', 'addDocument' ) ){
+	$iconFile		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
+	$helperUpload	= new View_Helper_Input_File( $env );
+	$helperUpload->setName( 'document' );
+	$helperUpload->setLabel( $iconFile );
+	$helperUpload->setRequired( TRUE );
+	$formUpload	= '
+	<form action="./work/mission/addDocument/'.$mission->missionId.'" method="post" enctype="multipart/form-data">
+		<div class="buttonbar">
+			<div class="row-fluid">
+				<div class="span6">
+					'.$helperUpload->render().'
+				</div>
+				<div class="span6">
+					<button type="submit" name="save" value="document" class="btn btn-success not-btn-small"><i class="fa fa-upload"></i>&nbsp;hochladen</button>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="span4">
-		<div class="content-panel content-panel-form">
-			<h3>Upload</h3>
-			<div class="content-panel-inner">
-				<form action="./work/mission/addDocument/'.$mission->missionId.'" method="post" enctype="multipart/form-data">
-					<div class="row-fluid">
-						<div class="span12">
-							'.View_Helper_Input_File::render( 'document', 'Dokument', TRUE, '' ).'
-						</div>
-					</div>
-					<div class="buttonbar">
-						<button type="submit" name="save" value="document" class="btn btn-success btn-small"><i class="fa fa-upload"></i>&nbsp;hochladen</button>
-					</div>
-				</form>
+	</form>';
+}
+
+return '
+<div class="content-panel content-panel-list" id="documents">
+	<h3>'.$w->heading.'</h3>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<div class="span12">
+				'.$table.'
 			</div>
+			'.$formUpload.'
 		</div>
 	</div>
-</div>
-';
+</div>';

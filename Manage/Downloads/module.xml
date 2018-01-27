@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <module>
 	<title>Manage: Downloads</title>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[Management for frontend module Info:Downloads.]]></description>
 	<category>Management</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.3.4">Cloned from module Info:Files.</log>
+	<log version="0.3.5">Use module Resource:Upload.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -23,10 +24,11 @@
 		<style>module.manage.downloads.css</style>
 		<script load="auto">module.manage.downloads.js</script>
 	</files>
-	<link xml:lang="de" access="acl" rank="21" path="manage/file">Downloads</link>
-	<link xml:lang="en" access="acl" rank="21" path="manage/file">Downloads</link>
+	<link xml:lang="de" access="acl" rank="21" path="manage/file">Download-Verwaltung</link>
+	<link xml:lang="en" access="acl" rank="21" path="manage/file">Download Management</link>
 	<relations>
 		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">Resource_Upload</needs>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>

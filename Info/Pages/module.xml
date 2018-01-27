@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.7.2</version>
+	<version>0.7.3</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -27,6 +27,7 @@
 	<log version="0.7">Change module column to controller and action.</log>
 	<log version="0.7.1">Support search module.</log>
 	<log version="0.7.2">Support page access.</log>
+	<log version="0.7.3">Add language support using module Resource:Localization.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -47,6 +48,7 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_MetaTags</needs>
+		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<hook type="resource" resource="App" event="onDispatch">Controller_Info_Page::___onAppDispatch</hook>
 	<hook type="resource" resource="View" event="onRenderContent">View_Info_Page::___onRenderContent</hook>

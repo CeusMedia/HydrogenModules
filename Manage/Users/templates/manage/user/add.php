@@ -53,8 +53,7 @@ $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form name="editUser" action="./manage/user/add" method="post">
-			<input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" style="display:none;" />
+		<form name="editUser" action="./manage/user/add" method="post" autocomplete="off">
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
@@ -62,7 +61,7 @@ $panelAdd	= '
 				</div>
 				<div class="span2">
 					<label for="input_password" class="mandatory">'.$w->labelPassword.'</label>
-					<input type="password" name="password" id="input_password" class="span12" required="required" autocomplete="off"/>
+					<input type="password" name="password" id="input_password" class="span12" required="required" autocomplete="new-password"/>
 				</div>
 				<div class="span4">
 					<label for="input_email" class="mandatory">'.$w->labelEmail.'</label>

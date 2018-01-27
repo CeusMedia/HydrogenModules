@@ -159,7 +159,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
-					$this->restart( './auth/local/login?login_username='.$user->username.( $from ? '?from='.$from : '' ) );
+					$this->restart( './auth/local/login?login_username='.$user->username.( $from ? '&from='.$from : '' ) );
 				}
 			}
 			$this->messenger->noteError( $words->msgInvalidCode );
@@ -224,8 +224,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			if( $this->messenger->gotError() )
 				$this->restart( 'login?username='.$username, TRUE );
 
-			$role	= $modelRole->get( $user->roleId );
+			$role			= $modelRole->get( $user->roleId );
+			$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
+			$allowedRoles	= $allowedRoles ? $allowedRoles : "*";
+			$allowedRoles	= explode( ',', $this->moduleConfig->get( 'login.roles' ) );
+
 			if( !$role->access )
+				$this->messenger->noteError( $words->msgInvalidRole );
+			else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
 				$this->messenger->noteError( $words->msgInvalidRole );
 			else if( $user->status == 0 )
 				$this->messenger->noteError( $words->msgUserUnconfirmed );
@@ -416,7 +422,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
+		$roleDefault	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 		$rolesAllowed	= array();
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 			$rolesAllowed[]	= $role->roleId;
@@ -435,7 +441,13 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$status			= (int) $options->get( 'status.register' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$roleId		= $this->request->has( 'roleId' ) ? $input->get( 'roleId' ) : $roleDefaultId;	//  use default register role if none given
+		$roleId		= $roleDefault->roleId;															//  use default register role if none given
+		if( $this->request->has( 'roleId' ) && trim( $input->get( 'roleId' ) ) ){
+			if( in_array( (int) $this->request->get( 'roleId' ), $rolesAllowed ) ){
+				$roleId		= $input->get( 'roleId' );
+			}
+		}
+
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );

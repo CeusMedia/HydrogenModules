@@ -137,6 +137,10 @@ class Resource_REST_Client{
 		if( $isCachable && ( $cached = $this->cache->get( $cacheKey ) ) !== NULL )	//  cache hit by cache key
 			return $cached;															//  return cached content
 		$response	= $this->client->get( $path, $parameters );						//  request resource
+		if( isset( $response->data->data ) && $response->data->data === "error" ){
+//			$this->lastestResonse	= $response;
+			throw new RuntimeException( "Request to server failed: ".$response->data->error );
+		}
 		if( $isCachable )															//  cache is enabled for request
 			$this->cache->set( $cacheKey, $response );								//  cache resource content
 		return $response;															//  return resource content

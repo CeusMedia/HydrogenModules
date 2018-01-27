@@ -283,6 +283,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 
 		$this->addData( 'data', (object) $data );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
 	public function registered(){

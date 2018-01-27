@@ -2,8 +2,9 @@
 class View_Helper_Work_Mission_Filter_Worker{
 
 	public function __construct( $env ){
-		$this->env	= $env;
+		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
+		$this->userId	= $this->env->getSession()->get( 'userId' );
 	}
 
 	public function setModalRegistry( $modalRegistry ){
@@ -70,8 +71,21 @@ class View_Helper_Work_Mission_Filter_Worker{
 			'class'	=> 'trigger-select-all',
 			'href'	=> '#',
 		) );
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "", "140px" );
-		$tableHeads	= UI_HTML_Elements::TableHeads( array( $buttonAll."&nbsp;&nbsp;Bearbeiter", "" ) );
+
+		$buttonUser	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-user"></i>&nbsp;<b>nur ich</b>', array(
+			'class'		=> 'btn btn-small trigger-select-this',
+			'data-id'	=> $this->userId,
+		) );
+		$buttonAll	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-users"></i>&nbsp;<b>alle</b>', array(
+			'class'		=> 'btn btn-small trigger-select-all',
+			'href'		=> '#',
+		) );
+		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonUser, $buttonAll ), array( 'class' => 'btn-group' ) );
+		$colgroup	= UI_HTML_Elements::ColumnGroup( "", "160px" );
+		$tableHeads	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'th', "Bearbeiter" ),
+			UI_HTML_Tag::create( 'th', $buttons, array( 'style' => 'text-align: right') )
+		) );
 		$thead		= UI_HTML_Tag::create( 'thead', $tableHeads );
 		$tbody		= UI_HTML_Tag::create( 'tbody', $list );
 		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(

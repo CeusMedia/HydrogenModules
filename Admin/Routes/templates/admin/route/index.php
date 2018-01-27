@@ -3,10 +3,9 @@
 
 $table		= UI_HTML_Tag::create( 'div', '<em>Keine Routen definiert.</em>', array( 'alert alert-info' ) );
 if( $routes ){
-
 	$rows	= array();
-	foreach( $routes as $route ){
-		$id		= md5( $route->source );
+	foreach( $routes as $id => $route ){
+		$regex	= $route->regex ? 'ja' : 'nein';
 		$code	= $route->code ? UI_HTML_Tag::create( 'abbr', $route->code, array( 'title' => Net_HTTP_Status::getText( $route->code ) ) ) : '-';
 		$status	= $route->status ? 'aktiv' : 'inaktiv';
 
@@ -22,6 +21,7 @@ if( $routes ){
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $route->source, array( 'class' => 'cell-route-source' ) ),
 			UI_HTML_Tag::create( 'td', $route->target, array( 'class' => 'cell-route-target' ) ),
+			UI_HTML_Tag::create( 'td', $regex, array( 'class' => 'cell-route-regex' ) ),
 			UI_HTML_Tag::create( 'td', $code, array( 'class' => 'cell-route-code' ) ),
 			UI_HTML_Tag::create( 'td', $status, array( 'class' => 'cell-route-status' ) ),
 			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-route-actions' ) ),

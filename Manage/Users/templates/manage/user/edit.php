@@ -88,16 +88,15 @@ $panelEdit	= '
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
-			<input type="text" id="PreventChromeAutocomplete" name="PreventChromeAutocomplete" autocomplete="address-level4" style="display:none;" />
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
-					<input type="text" name="username" id="input_username" class="span12 mandatory" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="username" id="input_username" class="span12 mandatory" autocomplete="off" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_password" class="">'.$w->labelPassword.'</label>
-					<input type="password" name="password" id="input_password" class="span12"/>
+					<input type="password" name="password" id="input_password" autocomplete="new-password" class="span12"/>
 				</div>
 				<div class="span4">
 					<label for="input_email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>

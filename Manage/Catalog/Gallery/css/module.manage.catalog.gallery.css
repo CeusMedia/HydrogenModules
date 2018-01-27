@@ -1,0 +1,62 @@
+.gallery-matrix {}
+
+/*  --  LAYOUT  --  */
+.gallery-matrix-item {
+	display: inline-block;
+	width: 156px;
+	cursor: pointer;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	}
+.gallery-matrix-image {
+	display: inline-block;
+	width: 150px;
+	height: 150px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	border: 1px solid rgba(0,0,0,0.5);
+	background-color: rgba(0,0,0,0.05);
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	margin: 2px;
+	}
+.gallery-matrix-item-label {
+	text-align: center;
+	padding-bottom: 4px;
+	display: block;
+	}
+
+
+/*  --  STATES  --  */
+.gallery-matrix .status-1,
+.gallery-matrix .status0 {
+	opacity: 0.5;
+	}
+.gallery-matrix .status-1:hover,
+.gallery-matrix .status0:hover {
+	opacity: 0.75;
+	}
+.gallery-matrix .status-1 .gallery-matrix-item-label {
+	text-decoration: line-through;
+	}
+
+
+table.table td.active a {
+	font-weight: bold;
+	}
+
+
+.gallery-matrix .add .gallery-matrix-image {
+	background-image: url('http://png-2.findicons.com/files/icons/1007/crystal_like/256/plus.png');
+	background-image: url('../img/plus.png');
+	}
+
+
+body.moduleManageCatalogGallery.action-editImage dl.dl-horizontal dt {
+	width: 120px;
+	}
+body.moduleManageCatalogGallery.action-editImage dl.dl-horizontal dd {
+	margin-left: 130px;
+	}

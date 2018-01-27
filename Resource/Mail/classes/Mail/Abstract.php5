@@ -99,10 +99,7 @@ abstract class Mail_Abstract{
 	}*/
 
 	public function addAttachment( $filePath, $mimeType ){
-		$attachment	= new \CeusMedia\Mail\Part\Attachment();
-		$attachment->setFile( $filePath, $mimeType );
-//		$this->mail->addAttachmentFile( $filePath, $mimeType );
-		$this->mail->addAttachment( $attachment );
+		$this->mail->addFile( $filePath, $mimeType );
 	}
 
 	protected function addBodyClass( $class ){
@@ -203,26 +200,31 @@ abstract class Mail_Abstract{
 		$words	= $this->env->getLanguage()->getWords( 'main' );
 		$appTitle	= $words['main']['title'];
 		$body	= str_replace( '[#content#]', $content, $template->html );
-		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
+		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 
 		if( $template->images ){
-			foreach( explode( ',', $template->images ) as $nr => $image ){
+			if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
+				$template->images	= json_encode( explode( ",", $template->images ) );
+			foreach( json_decode( $template->images, TRUE ) as $nr => $image ){
 				if( preg_match( '/^http/', $image ) ){
 					throw new Exception( 'Not implemented yet' );
 				}
 				else{
-					if( !file_exists( $image ) ){
-						$this->env->getMessenger()->noteError( 'Loading image from "'.$image.'" failed.' );
+					if( !file_exists( $this->env->uri.$image ) ){
+//						throw new RuntimeException( 'Loading image from "'.$image.'" failed' );
+						$this->env->getMessenger()->noteError( 'Loading image from "'.$this->env->uri.$image.'" failed.' );
 						continue;
 					}
 				}
-				$this->mail->addHtmlImage( 'image'.( $nr + 1), $image );
+				$this->mail->addHtmlImage( 'image'.( $nr + 1), $this->env->uri.$image );
 			}
 		}
 
 		if( $template->styles ){
-			foreach( explode( ',', $template->styles ) as $style ){
+			if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]/", $template->styles ) )
+				$template->styles	= json_encode( explode( ",", $template->styles ) );
+			foreach( json_decode( $template->styles, TRUE ) as $style ){
 				if( preg_match( '/^http/', $style ) ){
 					try{
 						$content = Net_Reader::readUrl( $style );
@@ -233,8 +235,8 @@ abstract class Mail_Abstract{
 					}
 				}
 				else{
-					if( !file_exists( $style ) ){
-						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
+					if( !file_exists( $this->env->uri.$style ) ){
+						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$this->env->uri.$style.'" failed.' );
 						continue;
 					}
 				}
@@ -266,7 +268,7 @@ abstract class Mail_Abstract{
 		$words	= $this->env->getLanguage()->getWords( 'main' );
 		$appTitle	= $words['main']['title'];
 		$body	= str_replace( '[#content#]', $content, $template->plain );
-		$body	= str_replace( '[#app.url#]', $this->env->url, $body );
+		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 		return $body;
 	}

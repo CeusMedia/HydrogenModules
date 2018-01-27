@@ -60,7 +60,7 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 		if( $withParents )
 			$page->parents	= $parents;
-		return $page;
+		return $this->translatePage( $page );
 	}
 
 	public function getChildren( $pageId, $activeOnly = TRUE ){
@@ -80,11 +80,16 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 */
-	public function getPageFromController( $controllerName ){
+	public function getPageFromController( $controllerName, $strict = TRUE ){
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
 		$page	= $this->modelPage->getByIndex( 'controller', $controllerName );
-		return $page ? $page : NULL;
+		if( !$page ){
+			if( !$strict )
+				return NULL;
+			throw new RangeException( 'No page set for controller: '.$controllerName );
+		}
+		return $this->translatePage( $page );
 	}
 
 	/**
@@ -104,6 +109,17 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 		$outside	= !$isAuthenticated && $page->access == "outside";
 		$inside		= $isAuthenticated && $page->access == "inside";
 		return $public || $outside || $inside;
+	}
+
+	public function translatePage( $page ){
+		if( !class_exists( 'Logic_Localization' ) )
+			return $page;
+		$localization		= new Logic_Localization( $this->env );
+		$id	= 'page.'.$page->fullpath.'-title';
+		$page->title	= $localization->translate( $id, $page->title );
+		$id	= 'page.'.$page->fullpath.'-content';
+		$page->content	= $localization->translate( $id, $page->content );
+		return $page;
 	}
 }
 ?>

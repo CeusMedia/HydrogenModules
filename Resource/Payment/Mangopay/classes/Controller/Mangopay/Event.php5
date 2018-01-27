@@ -1,7 +1,7 @@
 <?php
 class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 
-	public static $verbose	= TRUE;
+//	public static $verbose	= TRUE;
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
@@ -9,38 +9,6 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
 		$this->model		= new Model_Mangopay_Event( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
-	}
-
-	protected function checkEvent( $eventId, $failUrl = 'view/%s' ){
-		$event	= $this->model->get( $eventId );
-		if( $event )
-			return $event;
-		$this->messenger->noteError( 'Invalid event ID.' );
-		$this->restart( strintf( $failUrl, $eventId ), TRUE );
-	}
-
-	public function close( $eventId ){
-		$event	= $this->checkEvent( $eventId, 'view/'.$eventId.'?page='.$this->request->get( 'page' ) );
-		$this->model->edit( $eventId, array(
-			'status'	=> Model_Mangopay_Event::STATUS_CLOSED,
-			'output'	=> $event->output.'<br/><strong>CLOSED MANUALLY</strong>',
-			'handledAt'	=> time,
-		), FALSE );
-		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
-	}
-
-	public function index( $page = 0 ){
-		$limit		= 10;
-		$conditions = array();
-		$orders		= array( 'eventId' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
-
-		$total		= $this->model->count( $conditions );
-		$events		= $this->model->getAll( $conditions, $orders, $limits );
-		$this->addData( 'events', $events );
-		$this->addData( 'eventTypes', $this->model->types );
-		$this->addData( 'page', $page );
-		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
 	public function receive(){
@@ -89,17 +57,15 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function retry( $eventId ){
-		$event	= $this->checkEvent( $eventId );
-		$statuses	= array( Model_Mangopay_Event::STATUS_FAILED, Model_Mangopay_Event::STATUS_HANDLED );
-		if( !in_array( (int) $event->status, $statuses ) ){
-			$this->messenger->noteError( 'Only failed or unsuccessful events can be reactivated.' );
-			$this->restart( 'view/'.$eventId, TRUE );
-		}
-		$this->model->edit( $eventId, array(
-			'status'	=> Model_Mangopay_Event::STATUS_RECEIVED,
-		) );
-		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
+	protected function sendMail( $type, $data ){
+		if( !$this->moduleConfig->get( 'mail.hook' ) )
+			return;
+		$className	= 'Mail_Mangopay_'.$type;
+		$arguments	= array( $this->env, $data );
+		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
+		$receiver	= array( 'email' => $this->moduleConfig->get( 'mail.hook' ) );
+		$language	= $this->env->getLanguage()->getLanguage();
+		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 
 	protected function verify( $eventType, $resourceId ){
@@ -121,27 +87,6 @@ class Controller_Mangopay_Event extends CMF_Hydrogen_Controller{
 			),
 		) );
 		return FALSE;
-	}
-
-	protected function sendMail( $type, $data ){
-		if( !$this->moduleConfig->get( 'mail.hook' ) )
-			return;
-		$className	= 'Mail_Mangopay_'.$type;
-		$arguments	= array( $this->env, $data );
-		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
-		$receiver	= array( 'email' => $this->moduleConfig->get( 'mail.hook' ) );
-		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
-	}
-
-	public function view( $eventId, $run = NULL ){
-		$event	= $this->model->get( $eventId );
-		if( !$event ){
-			$this->messenger->noteError( 'Invalid event ID.' );
-			$this->restart( '?page='.$this->request->get( 'page' ), TRUE );
-		}
-		$this->addData( 'event', $event );
-		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
 }
 ?>

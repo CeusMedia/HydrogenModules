@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Theme</title>
+	<description><![CDATA[Support for app themes.]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<category>User Interface</category>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Resource/Theme.php5</class>
+	</files>
+	<hook type="resource" resource="Page" event="build">Resource_Theme::___onPageBuild</hook>
+	<relations>
+		<needs type="module">App_Site</needs>
+	</relations>
+</module>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Mail Group</title>
+	<description/>
+	<category>Work</category>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add database models for groups and members.</log>
+	<log version="0.2.2">Add database models for servers and roles.</log>
+	<log version="0.3">Extracted logic, models and job to new module Resource:Mail:Group.</log>
+	<log version="0.3.1">Support Extended server model (IMAP and SMTP).</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Mail/Group.php5</class>
+		<class>Controller/Work/Mail/Group/Role.php5</class>
+		<class>Controller/Work/Mail/Group/Server.php5</class>
+		<class>View/Work/Mail/Group.php5</class>
+		<class>View/Work/Mail/Group/Role.php5</class>
+		<class>View/Work/Mail/Group/Server.php5</class>
+		<locale>de/work/mail/group.ini</locale>
+		<template>work/mail/group/add.php</template>
+		<template>work/mail/group/edit.php</template>
+		<template>work/mail/group/index.php</template>
+		<template>work/mail/group/role/add.php</template>
+		<template>work/mail/group/role/edit.php</template>
+		<template>work/mail/group/role/index.php</template>
+		<template>work/mail/group/server/add.php</template>
+		<template>work/mail/group/server/edit.php</template>
+		<template>work/mail/group/server/index.php</template>
+<!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
+<!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
+	</files>
+	<relations>
+		<needs type="module">Resource_Mail_Group</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="WorkMailGroup" event="registerTabs">View_Work_Mail_Group::___onRegisterTab</hook>
+</module>

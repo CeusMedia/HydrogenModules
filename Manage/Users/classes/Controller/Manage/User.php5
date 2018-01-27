@@ -75,7 +75,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
 		$username		= $input->get( 'username' );
 		$password		= $input->get( 'password' );
-		$email			= $input->get( 'email' );
+		$email			= strtolower( trim( $input->get( 'email' ) ) );
 
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) )																//  no username given
@@ -194,7 +194,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
-		$email		= $input->get( 'email' );
+		$email		= strtolower( trim( $input->get( 'email' ) ) );
 
 		if( $request->getMethod() == 'POST' ){
 			if( empty( $username ) ){																//  no username given
@@ -217,8 +217,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 			if( !empty( $email ) ){
-				$foundUser	= $modelUser->getByIndex( 'email', strtolower( $email ) );
-				if( $foundUser->userId != $userId ){
+				$foundUser	= $modelUser->getByIndex( 'email', $email );
+				if( $foundUser && $foundUser->userId != $userId ){
 					$messenger->noteError( $words->msgEmailExisting, $email );
 					$this->restart( 'edit/'.$userId, TRUE );
 				}

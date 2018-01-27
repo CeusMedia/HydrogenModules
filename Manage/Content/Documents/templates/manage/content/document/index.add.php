@@ -34,7 +34,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_upload">'.$w->labelFile.'</label>
-					'.View_Helper_Input_File::render( 'upload', $iconUpload, TRUE ).'
+					'.View_Helper_Input_File::renderStatic( $env, 'upload', $iconUpload, TRUE ).'
 				</div>
 			</div>
 			'.$fieldFilename.'

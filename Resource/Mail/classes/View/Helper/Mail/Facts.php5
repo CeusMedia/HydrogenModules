@@ -31,6 +31,8 @@ class View_Helper_Mail_Facts{
 	}
 
 	public function render( $classList = NULL ){
+		if( !count( $this->facts ) )
+			return '';
 		$classList	= $classList ? $classList : $this->listClass;
 		$list	= array();
 		foreach( $this->facts as $fact ){
@@ -46,7 +48,7 @@ class View_Helper_Mail_Facts{
 				) );
 			}
 			$term		= UI_HTML_Tag::create( 'dt', $fact->label );
-			$definition	= UI_HTML_Tag::create( 'dd', $value );
+			$definition	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
 			$list[]		= $term.$definition;
 		}
 		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $classList ) );
