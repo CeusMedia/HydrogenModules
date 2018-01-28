@@ -15,6 +15,9 @@ if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 			HTML::DivClass( "span8", $textInfo ),
 		) ).$textBottom;
 }
+if( strlen( trim( strip_tags( $textTop ) ) ) && strlen( trim( strip_tags( $textBottom ) ) ) ){
+	return $tabs.$textTop.$panelLogin.$textBottom;
+}
 
 return $tabs.'<br/></br/><br/><br/><br/><br/>'.$textTop.
 	HTML::DivClass( "row-fluid", array(
