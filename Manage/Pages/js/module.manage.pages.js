@@ -2,6 +2,8 @@ var ModuleManagePages = {};
 ModuleManagePages.PageEditor = {
 
 	pageId: null,
+	pageIdentiffier: null,
+	parentId: null,
 	editor: "none",
 	editors: [],
 	format: "HTML",

@@ -147,13 +147,23 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$pageId		= $this->request->get( 'pageId' );
 		$result		= array( 'status' => FALSE );
 		try{
-			if( $pageId ){
+			/*	@todo remove this old string-based solution soon */
+			if( preg_match( '/[a-z]/', $pageId ) ){
 				if( $page = $this->model->getByIndex( 'identifier', $pageId ) ){
 					$this->model->edit( $page->pageId, array(
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
 					), FALSE );
 					$result	= array( 'pageId' => $pageId, 'content' => $content );
+					$result	= array( 'status' => TRUE );
+				}
+			}
+			else if( $pageId ){
+				if( $page = $this->model->get( (int) $pageId ) ){
+					$this->model->edit( $page->pageId, array(
+						'content'		=> $content,
+						'modifiedAt'	=> time(),
+					), FALSE );
 					$result	= array( 'status' => TRUE );
 				}
 			}
@@ -370,7 +380,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 //		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
 		$script	= '
 ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
-ModuleManagePages.PageEditor.pageId = "'.$page->identifier.'";
+ModuleManagePages.PageEditor.pageId = "'.$page->pageId.'";
+ModuleManagePages.PageEditor.pageIdentifier = "'.$page->identifier.'";
+ModuleManagePages.PageEditor.parentPageId = "'.$page->parentId.'";
 ModuleManagePages.PageEditor.editor = "'.$session->get( 'module.manage_pages.editor' ).'";
 ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
 ModuleManagePages.PageEditor.format = "'.$page->format.'";
