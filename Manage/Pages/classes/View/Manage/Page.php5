@@ -59,7 +59,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 				$classes	= array();
 				if( $currentPageId && $currentPageId == $subitem->pageId )
 					$classes[]	= 'active';
-				if( $subitem->status < 1 )
+				if( $subitem->status < 1 || $item->status < 1 )
 					$classes[]	= 'disabled';
 				if( $subitem->status < 0 )
 					$subitem->title	= '<strike>'.$subitem->title.'</strike>';
@@ -78,8 +78,10 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$classes	= array( 'autocut' );
 			if( $currentPageId && $currentPageId == $item->pageId )
 				$classes[]	= 'active';
-			if( $item->status == 0 )
+			if( $item->status < 1 )
 				$classes[]	= 'disabled';
+			if( $item->status < 0 )
+				$item->title	= '<strike>'.$item->title.'</strike>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
 			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
