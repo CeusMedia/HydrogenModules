@@ -246,7 +246,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$this->restart( 'login?username='.$username, TRUE );
 
 			$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
-			$this->messenger->noteSuccess( $words->msgSuccess );
+			if( $this->request->isPost() )
+				$this->messenger->noteSuccess( $words->msgSuccess );
 			$this->session->set( 'userId', $user->userId );
 			$this->session->set( 'roleId', $user->roleId );
 			$this->session->set( 'authBackend', 'Local' );
