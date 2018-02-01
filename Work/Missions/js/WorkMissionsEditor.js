@@ -54,7 +54,7 @@ var WorkMissionsEditor = {
 		var dateInputs = $("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd");
 		var timeInputs = $("#input_timeStart, #input_timeEnd");
 
-		dateInputs.datepicker({
+/*		dateInputs.datepicker({
 			dateFormat: "yy-mm-dd",
 		//	appendText: "(yyyy-mm-dd)",
 		//	buttonImage: "/images/datepicker.gif",
@@ -67,10 +67,10 @@ var WorkMissionsEditor = {
 			prevText: "vorheriger Monat",
 			yearRange: "c:c+2",
 			monthNames: monthNames
-		});
+		});*/
 
 		//  @link   http://trentrichardson.com/examples/timepicker/
-		timeInputs.timepicker({});
+//		timeInputs.timepicker({});
 //		$("#input_type").trigger("change");
 		dateInputs.add(timeInputs).bind("change", WorkMissionsEditor._sanitizeDateAndTime);
 		this._bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
