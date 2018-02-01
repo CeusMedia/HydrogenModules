@@ -32,7 +32,7 @@ class View_Helper_Work_Mission_Filter_Status{
 		$buttonIcon			= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-spinner' ) ).'&nbsp;';
-		$labelFilter	= $this->words['filters']['status'];
+		$labelFilter	= UI_HTML_Tag::create( 'span', $this->words['filters']['status'], array( 'class' => 'hidden-phone' ) );
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedStates ? "btn-info" : "" );
 		return UI_HTML_Tag::create( 'div', array(

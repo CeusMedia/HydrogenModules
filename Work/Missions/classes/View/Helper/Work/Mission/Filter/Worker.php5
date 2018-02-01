@@ -103,7 +103,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$buttonIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) ).'&nbsp;';
-		$labelFilter	= $this->words['filters']['worker'];
+		$labelFilter	= UI_HTML_Tag::create( 'span', $this->words['filters']['worker'], array( 'class' => 'hidden-phone' ) );
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonAttr		= array(
 			'class'	=> 'btn '.( count( $changedWorkers ) ? "btn-info" : "" ),
