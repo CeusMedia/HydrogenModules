@@ -11,9 +11,10 @@ This resource must be available for visitors, too.
 This module will need the sever router module and a route.
 		]]></description>
 	<category>Resource</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add missing template.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -22,6 +23,7 @@ This module will need the sever router module and a route.
 		<class>Logic/Share.php5</class>
 		<class>Model/Share.php5</class>
 		<class>View/Share.php5</class>
+		<template>share/index.php</template>
 	</files>
 	<relations>
 		<needs type="module">Server_Router</needs>
