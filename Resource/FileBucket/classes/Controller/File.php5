@@ -10,8 +10,12 @@ class Controller_File extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $args4 = NULL, $arg5 = NULL, $arg6 = NULL, $arg7 = NULL, $arg8 = NULL ){
-		$this->addData( 'uriPath', $uriPath	= implode( "/", func_get_args() ) );
-		$this->addData( 'file', $this->logic->getByPath( $uriPath ) );
+		$uriPath	= implode( "/", func_get_args() );
+		$file		= $this->logic->getByPath( $uriPath );
+		$this->addData( 'uriPath', $uriPath );
+		$this->addData( 'file', $file );
+		if( $file )
+			$this->logic->noteView( $file->fileId );
 	}
 }
 ?>

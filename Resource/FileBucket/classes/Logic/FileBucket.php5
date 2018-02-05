@@ -1,5 +1,5 @@
 <?php
-class Logic_FileBucket{
+class Logic_FileBucket extends CMF_Hydrogen_Logic{
 
 	const HASH_MD5			= 0;
 	const HASH_UUID			= 1;
@@ -138,7 +138,15 @@ class Logic_FileBucket{
 		return TRUE;
 	}
 
-	public function replace( $fileId, $sourceFilePath, $mimeType ){
+	public function noteView( $fileId ){
+		if( $file = $this->get( $fileId ) )
+			$this->model->edit( $fileId, array(
+				'viewedAt'	=> time(),
+				'viewCount'	=> $file->viewCount + 1,
+			) );
+	}
+
+	public function replace( $fileId, $sourceFilePath, $mimeType = NULL ){
 		$file	= $this->get( $fileId );
 		if( !$file )
 			throw new DomainException( 'Given source file is not existing' );
@@ -146,7 +154,7 @@ class Logic_FileBucket{
 			throw new RuntimeException( 'Given source file is not existing' );
 		if( !is_readable( $sourceFilePath ) )
 			throw new RuntimeException( 'Given source file is not readable' );
-
+		$mimeType	= $mimeType ? $mimeType : $file->mimeType;
 		$this->remove( $fileId );
 		$uriPath	= $file->filePath ? $file->filePath.'/'.$file->fileName : $file->fileName;
 		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
