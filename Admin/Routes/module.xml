@@ -14,6 +14,8 @@
 	<files>
 		<class>Controller/Admin/Route.php5</class>
 		<class>View/Admin/Route.php5</class>
+		<template>admin/route/add.php</template>
+		<template>admin/route/edit.php</template>
 		<template>admin/route/index.php</template>
 	</files>
 	<link access="acl" xml:lang="de" rank="95" path="admin/route">Routes</link>
