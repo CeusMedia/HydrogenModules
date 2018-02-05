@@ -10,7 +10,21 @@ class View_Helper_Favicon{
 
 		if( $configFav->get( 'active' ) ){
 			$path		= $configFav->get( 'fromTheme' ) ? $pathTheme : $pathImages;
-			$context->addFavouriteIcon( $path.$configFav->get( 'name' ) );
+
+			//  @todo 	use the line below after CeusMedia/Common supports MIME types depending on extension */
+		//		$context->addFavouriteIcon( $path.$configFav->get( 'name' ) );
+
+			//  @todo 	remove this solution afterwards
+			$url	= $path.$configFav->get( 'name' );
+			$ext	= strtolower( pathinfo( $url, PATHINFO_EXTENSION ) );
+			$type	= "image/x-icon";
+			if( $ext === "png" )
+				$type	= "image/png";
+			else if( $ext === "gif" )
+				$type	= "image/gif";
+			$attributes	= array( 'rel' => "icon", 'type' => $type, 'href' => $url );
+			$link		= UI_HTML_Tag::create( 'link', NULL, $attributes );
+			$context->addHead( $link );
 		}
 
 		if( $configTouch->get( 'active' ) ){
