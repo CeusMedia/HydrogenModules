@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Shares</title>
+	<description><![CDATA[Public share links.
+
+Each share link will have an unguessable link and a QR code.
+Depending in access type, the user will have to answer a CAPTCHA code.
+The share link will redirect to a given resource.
+This resource must be available for visitors, too.
+
+This module will need the sever router module and a route.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Share.php5</class>
+		<class>Logic/Share.php5</class>
+		<class>Model/Share.php5</class>
+		<class>View/Share.php5</class>
+	</files>
+	<relations>
+		<needs type="module">Server_Router</needs>
+	</relations>
+	<link access="public" path="share/index"/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shares`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shares` (
+  `shareId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `access` tinyint(1) UNSIGNED NOT NULL COMMENT '0:public, 1:captcha, 2:login',
+  `validity` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `moduleId` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `relationId` int(10) UNSIGNED NOT NULL,
+  `path` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `uuid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `accessedAt` decimal(12,0) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`shareId`),
+  KEY `status` (`status`),
+  KEY `access` (`access`),
+  KEY `validity` (`validity`),
+  KEY `moduleId` (`moduleId`),
+  KEY `relationId` (`relationId`),
+  KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>
