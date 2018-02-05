@@ -8,6 +8,10 @@ if( $page->type == 1 ){
 $optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->changefreq );
 $optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
 
+$buttonSuggest	= '';
+if( $page->type == 0 )
+	$buttonSuggest	= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.suggestKeyWords('.$page->pageId.', \'#input_page_keywords\');">vorschlagen</button>';
+
 return '
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
@@ -27,6 +31,7 @@ return '
 						<div class="span12">
 							<label for="input_page_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
 							<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
+							'.$buttonSuggest.'
 						</div>
 					</div>
 			<!--		<div class="row-fluid">

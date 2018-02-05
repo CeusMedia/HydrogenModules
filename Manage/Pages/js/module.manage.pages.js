@@ -184,5 +184,18 @@ ModuleManagePages.PageEditor = {
 		if(typeof tinymce.Config !== "undefined")
 			options = tinymce.Config.apply(options, null);
 		tinymce.init(options);
+	},
+
+	suggestKeyWords: function(pageId, id){
+		jQuery.ajax({
+			url: "./manage/page/ajaxSuggestKeywords",
+			data: {pageId: pageId},
+			method: "post",
+			dataType: "JSON",
+			success: function(response){
+				if(response.status === "data")
+					jQuery(id).val(response.data.join(", "));
+			}
+		});
 	}
 };

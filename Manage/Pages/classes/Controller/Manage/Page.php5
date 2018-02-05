@@ -186,6 +186,32 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function ajaxSuggestKeywords(){
+		$pageId	= $this->request->get( 'pageId' );
+		$page	= $this->checkPageId( $pageId );
+		$html	= Alg_Text_Filter::stripComments( $page->content );
+		$html	= Alg_Text_Filter::stripScripts( $html );
+		$html	= Alg_Text_Filter::stripStyles( $html );
+		$html	= Alg_Text_Filter::stripEventAttributes( $html );
+		//$html	= Alg_Text_Filter::stripTags( $html );
+		$html	= preg_replace( "@<[\/\!]*?[^<>]*?>@si", " ", $html );
+		$html	= str_replace( "&nbsp;", " ", $html );
+		$blacklist	= 'config/terms.blacklist.txt';
+		if( file_exists( $blacklist ) )
+			Alg_Text_TermExtractor::loadBlacklist( $blacklist );
+		$terms	= Alg_Text_TermExtractor::getTerms( $html );
+		$list	= array();
+		foreach( $terms as $term => $count )
+			if( preg_match( '/^[A-Z]/', $term ) )
+				if( preg_match( '/[A-Z]$/i', $term ) )
+					$list[]	= $term;
+		print( json_encode( array(
+			'status'	=> 'data',
+			'data'		=> $list
+		) ) );
+		exit;
+	}
+
 	protected function checkPageId( $pageId, $strict = FALSE ){
 		if( !$pageId ){
 			if( $strict )
