@@ -170,7 +170,7 @@ body.style-blue-2 {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#43b4d3', endColorstr='#0c0b3a',GradientType=0 ); /* IE6-9 */
 	}
 body.style-blue-2 div.navbar-inner {
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 60, 80, 0.75);
 	}
 
 body.style-blue-3 {
