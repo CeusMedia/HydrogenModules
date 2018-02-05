@@ -24,13 +24,7 @@ class Controller_Share extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( 'Für diesen Share-Code existiert kein Dokument.' );
 				$this->restart( $uuid, TRUE );
 			}
-			$invoiceId	= 1;
-			$fileName	= $this->generatePdf( $invoiceId );
-			header( 'Content-Type: application/pdf' );
-			$fp	= fopen( $fileName, 'rb' );
-			while( $buffer = fread( $fp, 4096 ) )
-				echo $buffer;
-			exit;
+			$this->restart( 'file/'.$share->path );
 		}
 		$captcha	= new UI_Image_Captcha();
 		$captcha->useUnique		= TRUE;

@@ -7,13 +7,13 @@ $panel	= '
 		<br/>
 		<br/>
 		<br/>
-		<form action="./work/accounting/invoice/share/'.$uuid.'" method="post">
+		<form action="./share/'.$uuid.'" method="post">
 			<div class="panel">
 				<div class="panel-head">
 					<h3>Sicherheitsabfrage</h3>
 				</div>
 				<div class="panel-body">
-					<label for="input_captcha">Sicherheitscode <small><a href="./work/accounting/invoice/share/'.$uuid.'">Nicht lesbar? Neu laden</a></small></label>
+					<label for="input_captcha">Sicherheitscode <small><a href="./share/'.$uuid.'">Nicht lesbar? Neu laden</a></small></label>
 					<div class="row-fluid">
 						<div class="span12" style="border: 1px solid rgb(239, 239, 239); background-color: rgb(247, 247, 247); border-radius: 4px; text-align: center; margin: 4px 0;">
 							<img src="data:image/jpeg;base64,'.base64_encode( $captchaImage ).'" title="CAPTCHA" class="img-captcha">

@@ -57,6 +57,12 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 		return $share;
 	}
 
+	public function changePath( $moduleId, $relationId, $path ){
+		$share	= $this->get( $moduleId, $relationId );
+		if( $share )
+			$this->modelShare->edit( $share->shareId, array( 'path' => $path ) );
+	}
+
 	public function remove( $moduleId, $relationId ){
 		$share	= $this->get( $moduleId, $relationId );
 		if( $share )
@@ -65,7 +71,7 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 	}
 
 	protected function generateQrCode( $shareId, $url ){
-		$fileName	= 'documents/qr-'.$shareId.'.png';
+		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
 		$renderer	= new \BaconQrCode\Renderer\Image\Png();
 		$renderer->setHeight( 32 );
 		$renderer->setWidth( 32 );

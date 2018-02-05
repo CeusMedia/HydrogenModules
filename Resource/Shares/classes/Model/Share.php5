@@ -1,6 +1,10 @@
 <?php
 class Model_Share extends CMF_Hydrogen_Model{
 
+	const ACCESS_PUBLIC			= 0;
+	const ACCESS_CAPTCHA		= 1;
+	const ACCESS_LOGIN			= 2;
+
 	protected $name				= 'shares';
 	protected $columns			= array(
 		'shareId',
