@@ -8,31 +8,31 @@ if( $routes ){
 		$regex	= $route->regex ? 'ja' : 'nein';
 		$code	= $route->code ? UI_HTML_Tag::create( 'abbr', $route->code, array( 'title' => Net_HTTP_Status::getText( $route->code ) ) ) : '-';
 		$status	= $route->status ? 'aktiv' : 'inaktiv';
+		$status	= UI_HTML_Tag::create( 'span', $status, array( 'class' => 'label '.( $route->status ? 'label-success' : 'label-important' ) ) );
 
 		$buttons = array();
-		$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-eye-open"></i>', array( 'href' => $route->source, 'target' => '_blank', 'class' => 'btn btn-small' ) );
-		if( !$route->status )
-			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-ok icon-white"></i>', array( 'href' => './admin/route/activate/'.$id, 'class' => 'btn btn-small btn-success', 'title' => 'activieren' ) );
-		else
-			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', array( 'href' => './admin/route/deactivate/'.$id, 'class' => 'btn btn-small btn-inverse', 'title' => 'deaktivieren' ) );
-		$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-trash icon-white"></i>', array( 'href' => './admin/route/remove/'.$id, 'class' => 'btn btn-small btn-danger', 'title' => 'entfernen' ) );
+		if( !$route->regex )
+			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-eye-open"></i>', array( 'href' => $route->source, 'target' => '_blank', 'class' => 'btn btn-small' ) );
+		$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-pencil"></i>', array( 'href' => './admin/route/edit/'.$id, 'class' => 'btn btn-small' ) );
+//		if( !$route->status )
+//			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-ok icon-white"></i>', array( 'href' => './admin/route/activate/'.$id, 'class' => 'btn btn-small btn-success', 'title' => 'activieren' ) );
+//		else
+//			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-remove icon-white"></i>', array( 'href' => './admin/route/deactivate/'.$id, 'class' => 'btn btn-small btn-inverse', 'title' => 'deaktivieren' ) );
 		$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $route->source, array( 'class' => 'cell-route-source' ) ),
-			UI_HTML_Tag::create( 'td', $route->target, array( 'class' => 'cell-route-target' ) ),
-			UI_HTML_Tag::create( 'td', $regex, array( 'class' => 'cell-route-regex' ) ),
-			UI_HTML_Tag::create( 'td', $code, array( 'class' => 'cell-route-code' ) ),
 			UI_HTML_Tag::create( 'td', $status, array( 'class' => 'cell-route-status' ) ),
+			UI_HTML_Tag::create( 'td', $code, array( 'class' => 'cell-route-code' ) ),
+			UI_HTML_Tag::create( 'td', $route->source, array( 'class' => 'cell-route-source autocut' ) ),
+			UI_HTML_Tag::create( 'td', $route->target, array( 'class' => 'cell-route-target autocut' ) ),
 			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-route-actions' ) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "30%", "10%", "15%", "15%" );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Quelle', 'Ziel', 'Code', 'Zustand', 'Aktion' ) ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( "8%", "7%", "", "", "8%" );
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Aktiv', 'Code', 'Quelle', 'Ziel', '' ) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
-
 
 return '
 <style>

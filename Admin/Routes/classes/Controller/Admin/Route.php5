@@ -9,6 +9,7 @@ class Controller_Admin_Route extends CMF_Hydrogen_Controller{
 	protected $routeMapBySource	= array();
 
 	public function __onInit(){
+		$this->request	= $this->env->getRequest();
 		$this->frontend	= Logic_Frontend::getInstance( $this->env );
 		$this->source	= $this->frontend->getModuleConfigValue( 'Server_Router', 'source' );
 		switch( $this->source ){
@@ -27,6 +28,7 @@ class Controller_Admin_Route extends CMF_Hydrogen_Controller{
 					foreach( $xml as $route ){
 						$id	= md5( (string) $route->source );
 						$this->routes[$id]	= (object) array(
+							'routeId'		=> $id,
 							'source'		=> (string) $route->source,
 							'target'		=> (string) $route->target,
 							'status'		=> (int) $route->getAttribute( 'status' ),
@@ -127,7 +129,7 @@ class Controller_Admin_Route extends CMF_Hydrogen_Controller{
 			}
 			$this->restart( NULL, TRUE );
 		}
-		$this->addData( 'route', $this->routes[$nr] );
+		$this->addData( 'route', $this->routes[$id] );
 	}
 
 	public function index(){
