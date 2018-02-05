@@ -1,5 +1,5 @@
 <?php
-
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $table		= UI_HTML_Tag::create( 'div', '<em>Keine Routen definiert.</em>', array( 'alert alert-info' ) );
 if( $routes ){
@@ -34,6 +34,11 @@ if( $routes ){
 	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
 
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Route', array(
+	'href'	=> './admin/route/add',
+	'class'	=> 'btn btn-success',
+) );
+
 return '
 <style>
 .cell-route-actions {
@@ -55,6 +60,9 @@ return '
 			<h3>Routen</h3>
 			<div class="content-panel-inner">
 				'.$table.'
+				<div class="buttonbar">
+					'.$buttonAdd.'
+				</div>
 			</div>
 		</div>
 	</div>

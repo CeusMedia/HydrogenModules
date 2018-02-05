@@ -86,6 +86,7 @@ class Controller_Admin_Route extends CMF_Hydrogen_Controller{
 			}
 			$this->restart( NULL, TRUE );
 		}
+		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
 	public function deactivate( $id ){
