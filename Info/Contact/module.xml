@@ -41,6 +41,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
+		<needs type="module">JS_Form_Optionals</needs>
 	</relations>
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
 	<config protected="yes" mandatory="yes" type="string" name="mail.receiver"></config>
