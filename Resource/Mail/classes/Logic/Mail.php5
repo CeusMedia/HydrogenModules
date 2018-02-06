@@ -468,7 +468,9 @@ class Logic_Mail{
 //			remark( $e->getMessage() );
 			$this->modelQueue->edit( $mailId, array(
 				'status'		=> Model_Mail::STATUS_RETRY,
+//				'error'			=> $e->getMessage(),
 			) );
+			throw new RuntimeException( 'Mail could not been sent: '.$e->getMessage(), 0, $e );
 		}
 	}
 

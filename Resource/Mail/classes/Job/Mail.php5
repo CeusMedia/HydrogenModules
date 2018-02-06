@@ -10,9 +10,11 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function countQueuedMails(){
-		$conditions	= array( 'status' => array( 0, 1 ) );
-		$count		= $this->logic->countQueue( $conditions );
-		$this->out( sprintf( "%s mails on queue.\n", $count ) );
+		$conditions	= array( 'status' => array( Model_Mail::STATUS_NEW ) );
+		$countNew		= $this->logic->countQueue( $conditions );
+		$conditions	= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
+		$countRetry		= $this->logic->countQueue( $conditions );
+		$this->out( sprintf( "%d mails to send, %d mail to retry.\n", $countNew, $countRetry ) );
 	}
 
 	public function sendQueuedMails(){
@@ -40,10 +42,14 @@ class Job_Mail extends Job_Abstract{
 			$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
 			if( $mails && $mail = array_pop( $mails ) ){
 				$counter++;
-				if( $this->logic->sendQueuedMail( $mail->mailId ) )
+				try{
+					$this->logic->sendQueuedMail( $mail->mailId );
 					$listSent[]	= (int) $mail->mailId;
-				else
+				}
+				catch( Exception $e ){
+					$this->logError( $e->getMessage() );
 					$listFailed[]	= (int) $mail->mailId;
+				}
 			}
 		}
 		$this->log( json_encode( array(

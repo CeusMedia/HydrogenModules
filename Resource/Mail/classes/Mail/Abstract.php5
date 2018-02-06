@@ -321,7 +321,7 @@ abstract class Mail_Abstract{
 		return $language->getSection( $topic, $section );
 	}
 
-	public function initTransport(){
+	public function initTransport( $verbose = FALSE ){
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
@@ -333,7 +333,7 @@ abstract class Mail_Abstract{
 				$this->transport->setUsername( $username );
 				$this->transport->setPassword( $password );
 				$this->transport->setSecure( $options->get( 'secure' ) );
-				$this->transport->setVerbose( FALSE );
+				$this->transport->setVerbose( $verbose );
 				break;
 			case 'local':
 			case 'default':
