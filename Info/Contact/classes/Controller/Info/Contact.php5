@@ -8,6 +8,42 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$this->addData( 'useHoneypot', $this->moduleConfig->get( 'honeypot.enable' ) );
 	}
 
+	public function ajaxForm(){
+		$request	= $this->env->getRequest();
+		$message	= '';
+		$data		= NULL;
+		if( !$request->isAjax() )
+			$message	= "Access granted for AJAX requests, only.";
+		else if( !$request->isPost() )
+			$message	= "Access granted for POST requests, only.";
+		else{
+			try{
+				$logic		= new Logic_Mail( $this->env );
+				$mail		= new Mail_Info_Contact_Form( $this->env, $request->getAll() );
+				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+				$logic->handleMail( $mail, $receiver, 'de' );
+				$data		= TRUE;
+			}
+			catch( Exception $e ){
+				$message	= $e->getMessage();
+			}
+		}
+		header( 'Content-Type: application/json' );
+		if( $message ){
+			print( json_encode( array(
+				'status'	=> "error",
+				'message'	=> $message,
+			) ) );
+		}
+		else{
+			print( json_encode( array(
+				'status'	=> "data",
+				'data'		=> $data,
+			) ) );
+		}
+		exit;
+	}
+
 	public function index(){
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -40,7 +76,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 					$this->restart( NULL, TRUE );
 				}
 				catch( Exception $e ){
-					die( $e->getMessage() );
+					$messenger->noteFailure( $e->getMessage() );
+					$this->restart( NULL, TRUE );
 				}
 			}
 		}
@@ -60,8 +97,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			$filePath	= $filePath ? $filePath : 'tmp/';
 			$filePath	= $filePath."/captcha.jpg";
 			if( $this->moduleConfig->get( 'captcha.strength' ) == 'hard' ){
-					$captcha->useDigits	= TRUE;
-					$captcha->useLarge	= TRUE;
+				$captcha->useDigits	= TRUE;
+				$captcha->useLarge	= TRUE;
 			}
 			$word	= $captcha->generateWord();
 			$this->env->getSession()->set( 'captcha', $word );

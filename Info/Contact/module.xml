@@ -3,7 +3,7 @@
 	<title>Info: Contact</title>
 	<description><![CDATA[Simple contact form.]]></description>
 	<category>Info</category>
-	<version>0.2.9</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for static content blocks (top, right, bottom).</log>
@@ -15,21 +15,29 @@
 	<log version="0.2.7">Applied panel style.</log>
 	<log version="0.2.8">Fill static content blocks with hidden examples.</log>
 	<log version="0.2.9">Adjust to changes of module Info:Pages.</log>
+	<log version="0.3.0">Implement contact form modals.</log>
+	<log version="0.3.1">Improve contact form modals and triggers.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Contact.php5</class>
 		<class>Mail/Info/Contact.php5</class>
+		<class>Mail/Info/Contact/Form.php5</class>
+		<class>View/Helper/Info/Contact/Form/Modal.php5</class>
+		<class>View/Helper/Info/Contact/Form/Trigger.php5</class>
 		<class>View/Info/Contact.php5</class>
 		<template>info/contact/index.php</template>
 		<locale>de/html/info/contact/top.html</locale>
 		<locale>de/info/contact.ini</locale>
 		<locale>de/mail/info/contact.html</locale>
+		<locale>de/mail/info/contact/form.html</locale>
 		<locale>en/html/info/contact/top.html</locale>
 		<locale>en/info/contact.ini</locale>
 		<locale>en/mail/info/contact.html</locale>
-		<style>module.info.contact.css</style>
+		<locale>en/mail/info/contact/form.html</locale>
+		<script load="auto" level="end">module.info.contact.js</script>
+		<style source="common" load="auto">module.info.contact.css</style>
 	</files>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
@@ -43,8 +51,10 @@
 	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
 	<link xml:lang="de" rank="80" access="public" path="info/contact/index" link="info/contact">Kontakt</link>
 	<link xml:lang="en" rank="80" access="public" path="info/contact/index" link="info/contact">Contact</link>
+	<link access="public" path="info/contact/ajaxForm"/>
+	<hook type="resource" resource="View" event="onRenderContent">View_Info_Contact::___onRenderContent</hook>
 	<sql on="install" type="mysql"><![CDATA[
-]]></sql>	
+]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-]]></sql>	
+]]></sql>
 </module>
