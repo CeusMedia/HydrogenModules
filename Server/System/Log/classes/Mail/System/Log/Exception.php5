@@ -33,12 +33,18 @@ class Mail_System_Log_Exception extends Mail_Abstract{
 		$this->setHtml( $html );
 
 		$root		= realpath( $this->env->uri ).'/';
-		$this->setText(
-			View_Helper_Mail_Text::underscore( 'Exception' ).PHP_EOL.
-			$this->helperFacts->renderAsText().PHP_EOL.
-			PHP_EOL.
-			View_Helper_Mail_Text::underscore( 'Trace' ).PHP_EOL.
-			str_replace( ' '.$root, ' ', $exception->getTraceAsString() ).PHP_EOL
+		$plain		= join( PHP_EOL, array(
+			View_Helper_Mail_Text::underscore( 'Exception' ),
+			$this->helperFacts->renderAsText(),
+			'',
+			View_Helper_Mail_Text::underscore( 'Trace' ),
+			str_replace( ' '.$root, ' ', $exception->getTraceAsString() ),
+		) ).PHP_EOL;
+		$this->setText( $plain );
+
+		return (object) array(
+			'plain'	=> $plain,
+			'html'	=> $html,
 		);
 	}
 }
