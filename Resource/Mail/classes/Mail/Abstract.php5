@@ -98,8 +98,8 @@ abstract class Mail_Abstract{
 		return $this->initTransport();
 	}*/
 
-	public function addAttachment( $filePath, $mimeType ){
-		$this->mail->addFile( $filePath, $mimeType );
+	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL ){
+		$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
 	}
 
 	protected function addBodyClass( $class ){
