@@ -19,8 +19,9 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 			$this->restart();
 		}
 		if( !file_exists( $this->path ) || !is_dir( $this->path ) ){
-			$this->messenger->noteFailure( $words->failurePathNotExisting, $this->path );
-			$this->restart();
+			mkdir( $this->path, 0777, TRUE );
+//			$this->messenger->noteFailure( $words->failurePathNotExisting, $this->path );
+//			$this->restart();
 		}
 		if( !is_writable( $this->path ) ){
 			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->path );

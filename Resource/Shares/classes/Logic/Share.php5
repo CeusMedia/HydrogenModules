@@ -1,9 +1,12 @@
 <?php
 class Logic_Share extends CMF_Hydrogen_Logic {
 
+	protected $logicFileBucket;
+	protected $modelShare;
+
 	public function __onInit(){
-		$this->modelShare	= new Model_Share( $this->env );
 		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
+		$this->modelShare		= new Model_Share( $this->env );
 	}
 
 	public function create( $moduleId, $relationId, $path, $access, $validity ){

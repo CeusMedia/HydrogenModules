@@ -15,6 +15,15 @@ var FormOptionals = {
 		}
 		var toHide = form.find(".optional." + name).not("." + value);
 		var toShow = form.find(".optional." + value);
+
+		if (type === "radio") {													//  element input is of type radio
+			if (!$(elem).prop("checked")){										//  this radio is NOT checked
+				if(form.find(":input[name="+name+"]:checked").size())			//  there is a preselected radio in this group
+					toHide = jQuery();											//  do not hide anything, will be done on selected element
+				toShow = jQuery();												//  do not show anything, will be done on selected element
+			}
+		}
+
 		FormOptionals.disableRequired(toHide);
 		FormOptionals.enableRequired(toShow);
 		if (!$(elem).data("status")) {
