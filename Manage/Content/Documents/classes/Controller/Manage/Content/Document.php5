@@ -18,15 +18,15 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 			$this->messenger->noteFailure( $words->failureNoPathSet );
 			$this->restart();
 		}
-		if( !file_exists( $this->path ) || !is_dir( $this->path ) ){
+		if( !file_exists( $this->path ) || !is_dir( $this->path ) )
 			mkdir( $this->path, 0777, TRUE );
-//			$this->messenger->noteFailure( $words->failurePathNotExisting, $this->path );
-//			$this->restart();
-		}
 		if( !is_writable( $this->path ) ){
 			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->path );
 			$this->restart();
 		}
+		if( !file_exists( $this->path.'.htaccess' ) )
+			file_put_contents( $this->path.'.htaccess', 'Deny from all'.PHP_EOL );
+
 		$this->model	= new Model_Document( $this->env, $this->path );
 		$this->rights	= $this->env->getAcl()->index( 'manage/content/document' );
 		$this->addData( 'rights', $this->rights );
