@@ -13,37 +13,41 @@ var FormOptionals = {
 		if (type === "checkbox") {
 			value = name + "-" + $(elem).prop("checked");
 		}
+
 		var toHide = form.find(".optional." + name).not("." + value);
 		var toShow = form.find(".optional." + value);
 
 		if (type === "radio") {													//  element input is of type radio
-			if (!$(elem).prop("checked")){										//  this radio is NOT checked
-				if(form.find(":input[name="+name+"]:checked").size())			//  there is a preselected radio in this group
-					toHide = jQuery();											//  do not hide anything, will be done on selected element
+			if (!$(elem).prop("checked")) {										//  this radio is NOT checked
 				toShow = jQuery();												//  do not show anything, will be done on selected element
+				if (form.find(":input[name="+name+"]:checked").size()) {		//  there is a preselected radio in this group
+					toHide = jQuery();											//  do not hide anything, will be done on selected element
+				}
 			}
 		}
 
 		FormOptionals.disableRequired(toHide);
 		FormOptionals.enableRequired(toShow);
-		if (!$(elem).data("status")) {
-			toHide.hide();
-			toShow.show();
-			$(elem).data("status", 1);
+
+		if (!$(elem).data("status")) {											//  initial run
+			toHide.hide();														//  hide disabled optionals right now
+			toShow.show();														//  show enabled optionals right now
+			$(elem).data("status", 1);											//  note inital run
 			return;
 		}
-		switch ($(elem).data('animation')) {
-		case 'fade':
-			toHide.fadeOut();
-			toShow.fadeIn();
-			break;
-		case 'slide':
-			toHide.slideUp($(elem).data('speed-hide'));
-			toShow.slideDown($(elem).data('speed-show'));
-			break;
-		default:
-			toHide.hide();
-			toShow.show();
+
+		switch ($(elem).data('animation')) {									//  watch for transition style
+			case 'fade':
+				toHide.fadeOut();
+				toShow.fadeIn();
+				break;
+			case 'slide':
+				toHide.slideUp($(elem).data('speed-hide'));
+				toShow.slideDown($(elem).data('speed-show'));
+				break;
+			default:
+				toHide.hide();
+				toShow.show();
 		}
 	},
 	disableRequired: function(container){
