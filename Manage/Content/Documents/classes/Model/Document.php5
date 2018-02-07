@@ -19,7 +19,7 @@
 class Model_Document {
 
 	protected $path;
-	
+
 	public function __construct( $env, $path ){
 		$this->path	= $path;
 	}
@@ -31,27 +31,32 @@ class Model_Document {
 			$handler	= new Net_HTTP_UploadErrorHandler();
 			$handler->handleErrorFromUpload( $upload );
 		}
+		if( substr( $upload['name'], 0, 1 ) === '.' )
+			throw new RuntimeException( 'File names starting with a dot are permitted.' );
 		if( !@move_uploaded_file( $upload['tmp_name'], $this->path.$upload['name'] ) )
 			throw new RuntimeException( 'Error during file upload' );
 		return TRUE;
 	}
-	
+
 	public function index(){
 		$index	= new DirectoryIterator( $this->path );
 		$list	= array();
 		foreach( $index as $entry ){
-			if( !$entry->isDir() && !$entry->isDot() )
-				$list[]	= $entry->getFilename();
+			if( $entry->isDir() || $entry->isDot() )
+				continue;
+			if( substr( $entry->getFilename(), 0, 1 ) === '.'  )
+				continue;
+			$list[]	= $entry->getFilename();
 		}
 		natcasesort( $list );
 		return $list;
 	}
 
 	public function remove( $fileName ){
-		if( @unlink( $this->path.$fileName ) )
-			return TRUE;
+		if( substr( $fileName, 0, 1 ) !== '.'  )
+			if( @unlink( $this->path.$fileName ) )
+				return TRUE;
 		return FALSE;
 	}
-			
 }
 ?>
