@@ -108,8 +108,10 @@ class View_Work_Billing_Helper_Transactions{
 
 		$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 		if( $this->transactions ){
+			$sum	= 0;
 			$list	= array();
 			foreach( $this->transactions as $transaction ){
+				$sum	+= (float) $transaction->amount;
 				$from	= UI_HTML_Tag::create( 'em', 'extern', array( 'class' => 'muted' ) );
 				switch( $transaction->fromType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
@@ -164,8 +166,20 @@ class View_Work_Billing_Helper_Transactions{
 					UI_HTML_Tag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 				), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
 			}
+
+			$tfoot	= UI_HTML_Tag::create( 'tfoot', UI_HTML_Tag::create( 'tr', array(
+			/*	UI_HTML_Tag::create( 'td', $id, array( 'class' => 'cell-number' ) ),*/
+				UI_HTML_Tag::create( 'td', '<strong>Gesamt</strong>' ),
+				UI_HTML_Tag::create( 'td', '' ),
+				UI_HTML_Tag::create( 'td', '' ),
+				UI_HTML_Tag::create( 'td', '' ),
+				UI_HTML_Tag::create( 'td', number_format( $sum, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			) ) );
+			if( count( $this->transactions ) < 2 )
+				$tfoot		= '';
+
 			$colgroup	= UI_HTML_Elements::ColumnGroup( array( /*'45', */'', '200', '200', '100', '100' ) );
-			$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+			$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 /*				UI_HTML_Tag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),*/
 				UI_HTML_Tag::create( 'th', 'Vorgang' ),
 				UI_HTML_Tag::create( 'th', 'Zu Lasten' ),
@@ -174,7 +188,7 @@ class View_Work_Billing_Helper_Transactions{
 				UI_HTML_Tag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
 			) ) );
 			$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-			$list = UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
+			$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed table-condensed' ) );
 		}
 
 		$buttonbar	= '';
