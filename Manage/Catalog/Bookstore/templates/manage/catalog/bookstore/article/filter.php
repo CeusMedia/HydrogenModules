@@ -1,6 +1,7 @@
 <?php
 $w			= (object) $view->getWords( 'index.filter', 'manage/catalog/bookstore/article' );
 
+$filterId		= !empty( $filters['id'] ) ? $filters['id'] : "";
 $filterTerm		= !empty( $filters['term'] ) ? $filters['term'] : "";
 $filterAuthor	= !empty( $filters['author'] ) ? $filters['author'] : "";
 $filterTag		= !empty( $filters['tag'] ) ? $filters['tag'] : "";
@@ -29,6 +30,12 @@ return '
 	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/bookstore/article/filter" method="post">
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_id">ID</label>
+					<input class="span12" type="text" name="id" id="input_id" value="'.$filterId.'"/>
+				</div>
+			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_term">Suchtext</label>

@@ -36,7 +36,8 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 				$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
 				$class		= $categoryId == $entry->categoryId ? "active" : NULL;
 				$item		= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
-				$listSub[$entry->rank.'_'.uniqid()]	= $item;
+				$key		= str_pad( $entry->rank, 3, '0', STR_PAD_LEFT ).'_'.uniqid();
+				$listSub[$key]	= $item;
 			}
 			ksort( $listSub );
 			if( $listSub )

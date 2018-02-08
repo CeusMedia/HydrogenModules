@@ -260,6 +260,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	}
 
 	public function filter( $reset = FALSE ){
+		$this->session->set( $this->sessionPrefix.'id', trim( $this->request->get( 'id' ) ) );
+		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
 		$this->session->set( $this->sessionPrefix.'tag', trim( $this->request->get( 'tag' ) ) );
@@ -269,6 +271,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$this->session->set( $this->sessionPrefix.'order', $this->request->get( 'order' ) );
 		$this->session->set( $this->sessionPrefix.'status', $this->request->get( 'status' ) );
 		if( $reset ){
+			$this->session->remove( $this->sessionPrefix.'id' );
 			$this->session->remove( $this->sessionPrefix.'term' );
 			$this->session->remove( $this->sessionPrefix.'author' );
 			$this->session->remove( $this->sessionPrefix.'tag' );
@@ -327,6 +330,10 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 				case 'cover':
 					if( $filterValue )
 						$conditions[$filterKey]	= "IS NOT NULL";
+					break;
+				case 'id':
+					if( strlen( $filterValue ) )
+						$articleIds	= array( $filterValue );
 					break;
 				case 'term':
 					if( strlen( $filterValue ) )
