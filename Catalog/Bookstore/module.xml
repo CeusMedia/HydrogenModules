@@ -3,7 +3,7 @@
 	<title>Catalog: Bookstore</title>
 	<description/>
 	<category>Catalog</category>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.4.6">Responsive Design for category index.</log>
 	<log version="0.4.7">Support for search engine module.</log>
 	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
@@ -26,6 +26,7 @@
 	<log version="0.7.1">Integrate module Resource:FileBucket.</log>
 	<log version="0.7.2">Update search support.</log>
 	<log version="0.7.3">Extend bridge logic for quantity changes.</log>
+	<log version="0.7.4">Improve design on category index.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

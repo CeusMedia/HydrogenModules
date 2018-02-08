@@ -27,9 +27,6 @@ body.moduleCatalogBookstore div.buttonbar {
 	}
 
 
-
-
-
 /*  --  ARTICLE LIST  --  */
 #layout-content div.catalog-bookstore-article-item {
 	clear: both;
@@ -168,6 +165,8 @@ body.moduleCatalogBookstore div.buttonbar {
 	padding: 4px;
 	list-style: none;
 	font-weight: bold;
+	background-color: rgba(207, 207, 207, 0.2);
+	margin-top: 3px;
 	}
 #layout-content #categoryList div.column ul.branches li.branch ul.topics {
 	display: none;
@@ -184,7 +183,7 @@ body.moduleCatalogBookstore div.buttonbar {
 	display: compact;
 	}
 #layout-content #categoryList div.column ul.branches li.branch>a {
-	margin-left: 20px;
+	margin-left: 30px;
 	display: block;
 	}
 
@@ -199,15 +198,26 @@ body.moduleCatalogBookstore div.buttonbar {
 	height: 20px;
 	cursor: pointer;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty {
-	background-image: url(../img/icons/bullet_empty_large.png);
+#layout-content #categoryList div.column ul.branches li.branch span {
+	margin-left: 5px;
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty:after {
+	font-family: "FontAwesome";
+	content: "\f096";
 	opacity: 0.5;
+	font-size: 16px;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open {
-	background-image: url(../img/icons/bullet_minus_large.png);
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open:after {
+	font-family: "FontAwesome";
+	content: "\f146";
+	opacity: 0.5;
+	font-size: 16px;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
-	background-image: url(../img/icons/bullet_plus_large.png);
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed:after {
+	font-family: "FontAwesome";
+	content: "\f0fe";
+	opacity: 0.5;
+	font-size: 16px;
 	}
 
 /*  --  ARTICLE  --  */

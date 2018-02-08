@@ -2,13 +2,16 @@ ModuleCatalogBookstore = {
 	setupCategoryIndex: function(selector){
 		var container = typeof selector == "undefined" ? $("body") : $(selector);
 		container.find("span.hitarea:not(.empty)").click(function(){
-			if($(this).hasClass("closed")){
-				$(this).removeClass("closed").addClass("open");
-				$(this).parent().children("ul").eq(0).show();
+			var list = jQuery(this).parent().children("ul.topics");
+			var area = jQuery(this);
+			if(area.hasClass("closed")){
+				area.removeClass("closed").addClass("open");
+				list.slideDown(250);
 			}else{
-				$(this).removeClass("open").addClass("closed");
-				$(this).parent().children("ul").eq(0).hide();
+				area.removeClass("open").addClass("closed");
+				list.slideUp(250);
 			}
 		});
 	}
 };
+
