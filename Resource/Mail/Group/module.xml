@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.3.2</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -12,6 +12,8 @@
 	<log version="0.3">Refactoring to new module Resource:Mail:Group.</log>
 	<log version="0.3.1">Implement unregister.</log>
 	<log version="0.3.2">Extend server model by IMAP and SMTP.</log>
+	<log version="0.3.3">Add model for mail group messages.</log>
+	<log version="0.3.4">Extend group model by type, visibility and description.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -21,10 +23,13 @@
 		<class>Logic/Mail/Group.php5</class>
 		<class>Model/Mail/Group.php5</class>
 		<class>Model/Mail/Group/Member.php5</class>
+		<class>Model/Mail/Group/Message.php5</class>
 		<class>Model/Mail/Group/Role.php5</class>
 		<class>Model/Mail/Group/Server.php5</class>
 		<class>View/Info/Mail/Group.php5</class>
 		<locale>de/info/mail/group.ini</locale>
+		<template>info/mail/group/index.php</template>
+		<template>info/mail/group/join.php</template>
 		<template>info/mail/group/register.php</template>
 		<template>info/mail/group/unregister.php</template>
 <!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
@@ -34,6 +39,10 @@
 	<relations>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
+	<link access="public" path="info/mail/group/index"/>
+	<link access="public" path="info/mail/group/join"/>
+	<link access="public" path="info/mail/group/register"/>
+	<link access="public" path="info/mail/group/unregister"/>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (
@@ -50,9 +59,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`mailGroupId`),
   UNIQUE KEY `address` (`address`),
+  UNIQUE KEY `title` (`title`),
   KEY `mailServerId` (`mailGroupServerId`),
   KEY `status` (`status`),
-  KEY `title` (`title`),
   KEY `adminId` (`adminId`),
   KEY `defaultRoleId` (`defaultRoleId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -86,7 +95,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_roles` (
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`mailGroupRoleId`),
   UNIQUE KEY `title` (`title`),
-  KEY `status` (`status`,`rank`)
+  KEY `status` (`status`),
+  KEY `rank` (`rank`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>mail_group_servers`;
@@ -108,6 +118,47 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_servers` (
   KEY `smtpPort` (`smtpPort`),
   KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_messages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_messages` (
+  `mailGroupMessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) UNSIGNED NOT NULL,
+  `mailGroupMemberId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL,
+  `parentId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `messageId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `raw` blob NOT NULL,
+  `object` blob NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`mailGroupMessageId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `mailGroupMemberId` (`mailGroupMemberId`),
+  KEY `status` (`status`),
+  KEY `parentId` (`parentId`),
+  KEY `messageId` (`messageId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+ALTER TABLE `<%?prefix%>mail_groups` CHANGE `adminId` `managerId` INT(11) UNSIGNED NOT NULL;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:public, 1:join, 2:register, 3:invite' AFTER `managerId`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `visibility` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:public, 1:inside, 2:manager, 3:hidden' AFTER `type`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `subtitle` VARCHAR(200) NULL DEFAULT NULL AFTER `bounce`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `description` TEXT NULL DEFAULT NULL AFTER `subtitle`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `terms` TEXT NULL DEFAULT NULL AFTER `description`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD INDEX (`type`);
+ALTER TABLE `<%?prefix%>mail_groups` ADD INDEX (`visibility`);
+ALTER TABLE `<%?prefix%>mail_groups` DROP INDEX `title`, ADD UNIQUE `title` (`title`) USING BTREE;
+ALTER TABLE `<%?prefix%>mail_group_roles` DROP INDEX status;
+ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`status`);
+ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`rank`);
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_members`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_messages`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_roles`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_servers`;
 ]]></sql>
 </module>

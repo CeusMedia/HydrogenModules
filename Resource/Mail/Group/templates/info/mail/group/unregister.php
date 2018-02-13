@@ -1,6 +1,6 @@
 <?php
 
-$panelUnregister	= '
+$panelForm	= '
 <div class="content-panel">
 	<h3>Abmelden</h3>
 	<div class="content-panel-inner">
@@ -38,9 +38,7 @@ return '<div class="row-fluid">
 		<br/>
 		<br/>
 		<br/>
-		<br/>
-		<br/>
-		'.$panelUnregister.'
+		'.$panelForm.'
 	</div>
 </div>';
 

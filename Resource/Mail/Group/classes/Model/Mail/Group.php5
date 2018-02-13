@@ -22,12 +22,25 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 	const STATUS_NEW			= 0;
 	const STATUS_ACTIVATED		= 1;
 
+	const TYPE_PUBLIC			= 0;
+	const TYPE_JOIN				= 1;
+	const TYPE_REGISTER			= 2;
+	const TYPE_INVITE			= 3;
+
+	const VISIBILITY_PUBLIC		= 0;
+	const VISIBILITY_INSIDE		= 1;
+	const VISIBILITY_MANAGER	= 2;
+	const VISIBILITY_HIDDEN		= 3;
+
+
 	protected $name		= 'mail_groups';
 	protected $columns	= array(
 		"mailGroupId",
 		"mailGroupServerId",
 		"defaultRoleId",
-		"adminId",
+		"managerId",
+		"type",
+		"visibility",
 		"status",
 		"title",
 		"address",
@@ -40,7 +53,9 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		"mailGroupServerId",
 		"defaultRoleId",
-		"adminId",
+		"managerId",
+		"type",
+		"visibility",
 		"status",
 		"title",
 		"address",
