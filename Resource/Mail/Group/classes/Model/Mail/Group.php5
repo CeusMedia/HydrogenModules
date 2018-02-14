@@ -46,6 +46,8 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 		"address",
 		"password",
 		"bounce",
+		"subtitle",
+		"description",
 		"createdAt",
 		"modifiedAt",
 	);
