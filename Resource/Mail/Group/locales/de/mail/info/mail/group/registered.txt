@@ -1,0 +1,20 @@
+Hallo <%?member.title%>!
+
+Sie haben den Beitritt in die E-Mail-Gruppe "<%group.title%>" beantragt.
+
+Um sicher zu stellen, dass die benutzte E-Mail-Adresse auch wirklich von Ihnen verwaltet wird,
+erhalten Sie diese E-Mail mit einem Bestätigungslink.
+Bitte öffnen Sie diesen Link in einem Internet-Browser, z. B. durch einen einfachen Klick.
+
+Bestätigungslink:
+<%link.confirm%>
+
+Diese Gruppe wird durch einen Verwalter betreut und neue Mitglieder müssen von ihm aktiviert werden.
+Durch Ihre Bestätigung wird der Verwalter über Ihren Beitritt informiert.
+Ihre Mitgliedschaft wird durch einen Verwalter überprüft und aktiviert, wenn alles in Ordnung ist.
+Sie werden über den Ausgang der Prüfung per E-Mail informiert.
+
+Mit dem Beitritt stimmen Sie den Nutzungsbedingungen und Datenschutzbestimmungen zu.
+Sollten Sie nicht mit den Bedingungen einverstanden sein, melden Sie sich bitte von der Gruppe ab.
+
+Link zum Abmelden: <%link.leave%>

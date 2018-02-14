@@ -1,0 +1,6 @@
+Hallo <%?member.title%>!
+
+Sie haben den Austritt aus der E-Mail-Gruppe "<%group.title%>" beantragt und bestätigt.
+
+Damit wurden Sie von der Gruppe abgemeldet.
+Sie können nun keine weiteren E-Mails an die Gruppe schreiben und erhalten keine weiteren E-Mails der anderen Mitglieder.

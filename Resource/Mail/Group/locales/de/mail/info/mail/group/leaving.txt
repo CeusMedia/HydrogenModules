@@ -1,0 +1,15 @@
+Hallo <%?member.title%>!
+
+Sie haben den Austritt aus der E-Mail-Gruppe "<%group.title%>" beantragt.
+
+Um sicher zu stellen, dass die Aktion auch wirklich von Ihnen veranlasst wurde,
+erhalten Sie diese E-Mail mit einem Bestätigungslink.
+Bitte öffnen Sie diesen Link in einem Internet-Browser, z. B. durch einen einfachen Klick.
+
+Bestätigungslink:
+<%link.confirm%>
+
+Durch diese Bestätigung wird Ihr Austritt vollständig.
+
+Sollten Sie den Austritt NICHT beantragt haben, können Sie diese E-Mail ignorieren.
+Ihre Mitgliedschaft bleibt erhalten.

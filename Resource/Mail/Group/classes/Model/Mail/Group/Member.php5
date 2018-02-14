@@ -21,8 +21,8 @@ class Model_Mail_Group_Member extends CMF_Hydrogen_Model {
 	const STATUS_DEACTIVATED		= -2;
 	const STATUS_UNREGISTERED		= -1;
 	const STATUS_REGISTERED			= 0;
-//	const STATUS_ADDED				= 1;
-	const STATUS_ACTIVATED			= 1;
+	const STATUS_CONFIRMED			= 1;
+	const STATUS_ACTIVATED			= 2;
 
 	protected $name		= 'mail_group_members';
 	protected $columns	= array(

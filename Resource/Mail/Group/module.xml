@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -14,24 +14,45 @@
 	<log version="0.3.2">Extend server model by IMAP and SMTP.</log>
 	<log version="0.3.3">Add model for mail group messages.</log>
 	<log version="0.3.4">Extend group model by type, visibility and description.</log>
+	<log version="0.3.5">Add model for mail group actions.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Mail/Group.php5</class>
 		<class>Job/Mail/Group.php5</class>
+		<class>Hook/Resource/Mail/Group.php5</class>
 		<class>Logic/Mail/Group.php5</class>
+		<class>Mail/Info/Mail/Group/Autojoined.php5</class>
+		<class>Mail/Info/Mail/Group/Joined.php5</class>
+		<class>Mail/Info/Mail/Group/Leaving.php5</class>
+		<class>Mail/Info/Mail/Group/Left.php5</class>
+		<class>Mail/Info/Mail/Group/Registered.php5</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberJoined.php5</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberLeft.php5</class>
+		<class>Mail/Info/Mail/Group/Members/MemberJoined.php5</class>
+		<class>Mail/Info/Mail/Group/Members/MemberLeft.php5</class>
 		<class>Model/Mail/Group.php5</class>
+		<class>Model/Mail/Group/Action.php5</class>
 		<class>Model/Mail/Group/Member.php5</class>
 		<class>Model/Mail/Group/Message.php5</class>
 		<class>Model/Mail/Group/Role.php5</class>
 		<class>Model/Mail/Group/Server.php5</class>
 		<class>View/Info/Mail/Group.php5</class>
 		<locale>de/info/mail/group.ini</locale>
+		<locale>de/mail/info/mail/group/manager/member/joined.txt</locale>
+		<locale>de/mail/info/mail/group/manager/member/left.txt</locale>
+		<locale>de/mail/info/mail/group/members/member/joined.txt</locale>
+		<locale>de/mail/info/mail/group/members/member/left.txt</locale>
+		<locale>de/mail/info/mail/group/autojoined.txt</locale>
+		<locale>de/mail/info/mail/group/joined.txt</locale>
+		<locale>de/mail/info/mail/group/registered.txt</locale>
+		<locale>de/mail/info/mail/group/leaving.txt</locale>
+		<locale>de/mail/info/mail/group/left.txt</locale>
 		<template>info/mail/group/index.php</template>
 		<template>info/mail/group/join.php</template>
+		<template>info/mail/group/leave.php</template>
 		<template>info/mail/group/register.php</template>
-		<template>info/mail/group/unregister.php</template>
 <!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
 <!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
 		<file>config/jobs/mail.group.xml</file>
@@ -41,8 +62,10 @@
 	</relations>
 	<link access="public" path="info/mail/group/index"/>
 	<link access="public" path="info/mail/group/join"/>
+	<link access="public" path="info/mail/group/leave"/>
 	<link access="public" path="info/mail/group/register"/>
-	<link access="public" path="info/mail/group/unregister"/>
+	<link access="public" path="info/mail/group/completeMemberAction"/>
+	<hook type="resource" resource="MailGroupAction" event="activateAfterJoin">Hook_Resource_Mail_Group::onActivateAfterJoin</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (
@@ -153,6 +176,26 @@ ALTER TABLE `<%?prefix%>mail_groups` DROP INDEX `title`, ADD UNIQUE `title` (`ti
 ALTER TABLE `<%?prefix%>mail_group_roles` DROP INDEX status;
 ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`status`);
 ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`rank`);
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_actions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_actions` (
+  `mailGroupActionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) UNSIGNED NOT NULL,
+  `mailGroupMemberId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `uuid` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`mailGroupActionId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `mailGroupMemberId` (`mailGroupMemberId`),
+  KEY `status` (`status`),
+  KEY `uuid` (`uuid`),
+  KEY `action` (`action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
