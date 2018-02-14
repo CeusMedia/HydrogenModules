@@ -11,6 +11,7 @@ class View_Work_Mail_Group extends CMF_Hydrogen_View{
 	//	$context->registerTab( 'member', $words->tabs['members'], 1 );							//  register main tab
 		$context->registerTab( 'server', $words->tabs['servers'], 2 );							//  register main tab
 		$context->registerTab( 'role', $words->tabs['roles'], 3 );								//  register main tab
+		$context->registerTab( 'message', $words->tabs['messages'], 4 );						//  register main tab
 	}
 
 	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
