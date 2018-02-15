@@ -23,11 +23,10 @@ class Hook_Resource_Mail_Group{
 				'greeting'	=> $action->message,
 			);
 
-			$logicMail->handleMail(
-				new Mail_Info_Mail_Group_Manager_MemberJoined( $env, $mailData ),
-				$manager,
-				$env->getLanguage()->getLanguage()
-			);
+			$mail		= new Mail_Info_Mail_Group_Manager_MemberJoined( $env, $mailData );
+			$language	= $env->getLanguage()->getLanguage();
+			$logicMail->appendRegisteredAttachments( $mail, $language );
+			$logicMail->handleMail( $mail, $manager, $language );
 
 			$members	= $logic->getGroupMembers( $action->mailGroupId, TRUE );
 			foreach( $members as $entry ){
@@ -42,12 +41,12 @@ class Hook_Resource_Mail_Group{
 				);
 			}
 
-			$member	= $modelMember->get( $action->mailGroupMemberId );
-			$logicMail->handleMail(
-				new Mail_Info_Mail_Group_Activated( $env, $mailData ),
-				(object) array( 'email' => $member->address ),
-				$env->getLanguage()->getLanguage()
-			);
+			$mail		= new Mail_Info_Mail_Group_Activated( $env, $mailData );
+			$member		= $modelMember->get( $action->mailGroupMemberId );
+			$receiver	= (object) array( 'email' => $member->address );
+			$language	= $env->getLanguage()->getLanguage();
+			$logicMail->appendRegisteredAttachments( $mail, $language );
+			$logicMail->handleMail( $mail, $receiver, $language );
 			return TRUE;
 		}
 
@@ -65,11 +64,10 @@ class Hook_Resource_Mail_Group{
 				'greeting'	=> $action->message,
 			);
 
-			$logicMail->handleMail(
-				new Mail_Info_Mail_Group_Manager_MemberJoined( $env, $mailData ),
-				$manager,
-				$env->getLanguage()->getLanguage()
-			);
+			$mail		= new Mail_Info_Mail_Group_Manager_MemberJoined( $env, $mailData );
+			$language	= $env->getLanguage()->getLanguage();
+			$logicMail->appendRegisteredAttachments( $mail, $language );
+			$logicMail->handleMail( $mail, $manager, $language );
 
 			$logic->registerMemberAction(
 				'activateAfterConfirm',
@@ -93,11 +91,10 @@ class Hook_Resource_Mail_Group{
 				'greeting'	=> $action->message,
 			);
 
-			$logicMail->handleMail(
-				new Mail_Info_Mail_Group_Manager_MemberRegistered( $env, $mailData ),
-				$manager,
-				$env->getLanguage()->getLanguage()
-			);
+			$mail		= new Mail_Info_Mail_Group_Manager_MemberRegistered( $env, $mailData );
+			$language	= $env->getLanguage()->getLanguage();
+			$logicMail->appendRegisteredAttachments( $mail, $language );
+			$logicMail->handleMail( $mail, $manager, $language );
 			return TRUE;
 		}
 
@@ -126,11 +123,10 @@ class Hook_Resource_Mail_Group{
 			'greeting'	=> $action->message,
 		);
 
-		$logicMail->handleMail(
-			new Mail_Info_Mail_Group_Manager_MemberLeft( $env, $mailData ),
-			$manager,
-			$env->getLanguage()->getLanguage()
-		);
+		$mail		= new Mail_Info_Mail_Group_Manager_MemberLeft( $env, $mailData );
+		$language	= $env->getLanguage()->getLanguage();
+		$logicMail->appendRegisteredAttachments( $mail, $language );
+		$logicMail->handleMail( $mail, $manager, $language );
 
 		$members	= $logic->getGroupMembers( $action->mailGroupId, TRUE );
 		foreach( $members as $entry ){
@@ -145,12 +141,12 @@ class Hook_Resource_Mail_Group{
 			);
 		}
 
-		$member	= $modelMember->get( $action->mailGroupMemberId );
-		$logicMail->handleMail(
-			new Mail_Info_Mail_Group_Left( $env, $mailData ),
-			(object) array( 'email' => $member->address ),
-			$env->getLanguage()->getLanguage()
-		);
+		$member		= $modelMember->get( $action->mailGroupMemberId );
+		$mail		= new Mail_Info_Mail_Group_Left( $env, $mailData );
+		$receiver	= (object) array( 'email' => $member->address );
+		$language	= $env->getLanguage()->getLanguage();
+		$logicMail->appendRegisteredAttachments( $mail, $language );
+		$logicMail->handleMail( $mail, $receiver, $language );
 		return TRUE;
 	}
 }

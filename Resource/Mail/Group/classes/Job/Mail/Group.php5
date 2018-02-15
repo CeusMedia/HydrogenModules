@@ -54,11 +54,13 @@ class Job_Mail_Group extends Job_Abstract{
 							$this->env->getLanguage()->getLanguage()
 						);
 					}
-					$logicMail->handleMail(
-						new Mail_Info_Mail_Group_Activated( $this->env, $mailData ),
-						(object) array( 'email' => $member->address ),
-						$this->env->getLanguage()->getLanguage()
-					);
+
+					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
+					$receiver	= (object) array( 'email' => $member->address );
+					$language	= $this->env->getLanguage()->getLanguage();
+					$logicMail->appendRegisteredAttachments( $mail, $language );
+					$logicMail->handleMail( $mail, $receiver, $language );
+
 					$modelAction->edit( $action->mailGroupActionId, array(
 						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 						'modifiedAt'	=> time(),
@@ -104,11 +106,12 @@ class Job_Mail_Group extends Job_Abstract{
 							$this->env->getLanguage()->getLanguage()
 						);
 					}
-					$logicMail->handleMail(
-						new Mail_Info_Mail_Group_Activated( $this->env, $mailData ),
-						(object) array( 'email' => $member->address ),
-						$this->env->getLanguage()->getLanguage()
-					);
+					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
+					$receiver	= (object) array( 'email' => $member->address );
+					$language	= $this->env->getLanguage()->getLanguage();
+					$logicMail->appendRegisteredAttachments( $mail, $language );
+					$logicMail->handleMail( $mail, $receiver, $language );
+
 					$modelAction->edit( $action->mailGroupActionId, array(
 						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 						'modifiedAt'	=> time(),

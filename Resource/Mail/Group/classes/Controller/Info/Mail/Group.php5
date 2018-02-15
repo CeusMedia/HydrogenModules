@@ -184,6 +184,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 				) );
 				$receiver	= (object) array( 'email' => $member->address );
 				$language	= $this->env->getLanguage()->getLanguage();
+				$this->logicMail->appendRegisteredAttachments( $mail, $language );
 				$this->logicMail->handleMail( $mail, $receiver, $language );
 				$this->messenger->noteSuccess( 'Okay.' );
 				$this->restart( NULL, TRUE );
@@ -230,6 +231,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 						) );
 						$receiver	= (object) array( 'email' => $member->address );
 						$language	= $this->env->getLanguage()->getLanguage();
+						$this->logicMail->appendRegisteredAttachments( $mail, $language );
 						$this->logicMail->handleMail( $mail, $receiver, $language );
 						$this->messenger->noteSuccess( 'Okay.' );
 						$this->restart( NULL, TRUE );
