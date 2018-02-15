@@ -104,6 +104,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		}
 		$receiver	= (object) array( 'email' => $address );
 		$language	= $this->env->getLanguage()->getLanguage();
+		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
@@ -213,6 +214,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
 					$receiver	= (object) array( 'email' => $member->address );
 					$language	= $this->env->getLanguage()->getLanguage();
+					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					$this->logicMail->handleMail( $mail, $receiver, $language );
 					return TRUE;
 				}
@@ -225,6 +227,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
 		$receiver	= (object) array( 'email' => $member->address );
 		$language	= $this->env->getLanguage()->getLanguage();
+		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 
 		$manager	= $this->modelUser->get( $group->managerId );
@@ -258,6 +261,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				$mail		= new Mail_Info_Mail_Group_Deactivated( $this->env, $mailData );
 				$receiver	= (object) array( 'email' => $member->address );
 				$language	= $this->env->getLanguage()->getLanguage();
+				$this->logicMail->appendRegisteredAttachments( $mail, $language );
 				$this->logicMail->handleMail( $mail, $receiver, $language );
 				return TRUE;
 			}
@@ -269,6 +273,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$mail		= new Mail_Info_Mail_Group_Member_Deactivated( $this->env, $mailData );
 		$receiver	= (object) array( 'email' => $member->address );
 		$language	= $this->env->getLanguage()->getLanguage();
+		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 
 		$manager	= $this->modelUser->get( $group->managerId );

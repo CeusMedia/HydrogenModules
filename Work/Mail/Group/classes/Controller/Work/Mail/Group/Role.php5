@@ -42,8 +42,8 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 			$this->modelRole->edit( $roleId, array(
 				'status'		=> $this->request->get( 'status' ),
 				'rank'			=> $this->request->get( 'rank' ),
-				'read'			=> $this->request->get( 'read' ),
-				'write'			=> $this->request->get( 'write' ),
+				'read'			=> $this->request->has( 'read' ) ? 1 : 0,
+				'write'			=> $this->request->has( 'write' ) ? 1 : 0,
 				'modifiedAt'	=> time(),
 			) );
 			$this->restart( NULL, TRUE );
