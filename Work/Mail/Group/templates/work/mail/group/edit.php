@@ -123,6 +123,10 @@ if( $members ){
 			$buttonActivate	= '';
 		if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
 			$buttonDeactivate	= '';
+		if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
+			$buttonActivate		= '';
+			$buttonDeactivate	= '';
+		}
 		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonActivate, $buttonDeactivate, $buttonRemove ), array( 'class' => 'btn-group' ) );
 		$address	= UI_HTML_Tag::create( 'span', $member->address, array( 'class' => 'muted' ) );
 		$name		= UI_HTML_Tag::create( 'small', $member->title, array( 'class' => '' ) );
