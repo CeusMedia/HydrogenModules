@@ -26,9 +26,13 @@ abstract class Mail_Abstract{
 	/** @var		array								$bodyClasses	List of classes to apply to HTML body */
 	protected $bodyClasses	= array();
 
+	protected $encodingHtml		= 'quoted-printable';
+	protected $encodingSubject	= 'quoted-printable';
+	protected $encodingText		= 'quoted-printable';
+
 	public $content;									//  @todo remove argument, implement $this->data instead
 
-	public $contents		= array( 'html' => '', 'text' => '' );
+	public $contents			= array( 'html' => '', 'text' => '' );
 
 	/**
 	 *	Contructor.
@@ -44,6 +48,16 @@ abstract class Mail_Abstract{
 		$this->page		= new UI_HTML_PageFrame();
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->config	= $this->env->getConfig();
+
+		if( !$this->options->get( 'encoding.html' ) )
+			$this->options->set( 'encoding.html', $this->encodingHtml );
+		if( !$this->options->get( 'encoding.subject' ) )
+			$this->options->set( 'encoding.html', $this->encodingSubject );
+		if( !$this->options->get( 'encoding.text' ) )
+			$this->options->set( 'encoding.text', $this->encodingText );
+		$this->encodingHtml		= $this->options->get( 'encoding.html' );
+		$this->encodingSubject	= $this->options->get( 'encoding.subject' );
+		$this->encodingText		= $this->options->get( 'encoding.text' );
 
 		$this->baseUrl	= !empty( $env->baseUrl ) ? $env->baseUrl : $this->config->get( 'app.base.url' );
 		if( !$this->baseUrl )
@@ -429,7 +443,7 @@ abstract class Mail_Abstract{
 
 		$html	= $page->build( array( 'class' => $classes ) );
 		$this->contents['html']	= $html;
-		$this->mail->addHTML( $html, 'UTF-8', 'base64' );
+		$this->mail->addHTML( $html, 'UTF-8', $this->encodingHtml );
 		return $html;
 	}
 
@@ -448,7 +462,7 @@ abstract class Mail_Abstract{
 		if( $templateId )
 			$content	= $this->applyTemplateToText( $content, $templateId );
 		$this->contents['text']	= $content;
-		$this->mail->addText( $content, 'UTF-8', 'base64' );
+		$this->mail->addText( $content, 'UTF-8', $this->encodingText );
 	}
 
 	/**
@@ -491,7 +505,7 @@ abstract class Mail_Abstract{
 			)
 		);
 		$subject	= UI_Template::renderString( $subject, $data );
-		$this->mail->setSubject( $subject );
+		$this->mail->setSubject( $subject, $this->encodingSubject );
 	}
 }
 ?>

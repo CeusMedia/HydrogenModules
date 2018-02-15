@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.7.7</version>
+	<version>0.7.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -64,6 +64,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.7.5">Improve mail jobs for migration and cleanup.</log>
 	<log version="0.7.6">Support listed images and styles encoded with JSON.</log>
 	<log version="0.7.7">Improve error handling in logic and job classes.</log>
+	<log version="0.7.8">Make encoding of mail content and headers configurable.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -102,6 +103,9 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="integer" name="retry.attempts" title="Maximum number of attempts before sending has failed">10</config>
 	<config protected="yes" type="integer" name="retry.delay" title="Seconds until new attempt to send">900</config>
 	<config protected="yes" type="integer" name="template" title="ID of template to apply automatically">0</config>
+	<config protected="yes" type="string" name="encoding.html" values="base64,quoted-printable">quoted-printable</config>
+	<config protected="yes" type="string" name="encoding.text" values="base64,quoted-printable">quoted-printable</config>
+	<config protected="yes" type="string" name="encoding.subject" values="base64,quoted-printable">quoted-printable</config>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
@@ -150,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_attachments` (
   `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `countAttached` int(11) NOT NULL,
+  `countAttached` int(11) NULL DEFAULT '0',
   `createdAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`mailAttachmentId`),
   KEY `status` (`status`),
@@ -271,8 +275,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_templates` (
 	]]></sql>
 	<sql on="update" version="0.7.1" type="mysql"><![CDATA[
 ALTER TABLE `<%?prefix%>mails` ADD `mailClass` VARCHAR(200) NOT NULL AFTER `subject`, ADD INDEX (`mailClass`);
-]]></sql>
-<sql on="update" version="0.7.4" type="mysql"><![CDATA[
+	]]></sql>
+	<sql on="update" version="0.7.4" type="mysql"><![CDATA[
 ALTER TABLE `<%?prefix%>mail_templates` CHANGE `styles` `styles` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
+	]]></sql>
+	<sql on="update" version="0.7.8" type="mysql"><![CDATA[
+ALTER TABLE `mail_attachments` CHANGE `countAttached` `countAttached` INT(11) NULL DEFAULT '0';
 	]]></sql>
 </module>
