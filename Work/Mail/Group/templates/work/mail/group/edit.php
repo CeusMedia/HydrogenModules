@@ -186,22 +186,43 @@ $modalMemberAdd	= '
 		<div class="modal-body">
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_title" class="mandatory">Name</label>
-					<input type="text" name="title" id="input_title" class="span12" required="required"/>
+					<label for="input_member_title" class="mandatory">Name</label>
+					<input type="text" name="title" id="input_member_title" class="span12" required="required"/>
 				</div>
 				<div class="span7">
-					<label for="input_address" class="mandatory">E-Mail-Adresse</label>
-					<input type="email" name="address" id="input_address" class="span12" required="required"/>
+					<label for="input_member_address" class="mandatory">E-Mail-Adresse</label>
+					<input type="email" name="address" id="input_member_address" class="span12" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_roleId">Rolle</label>
-					<select name="roleId" id="input_roleId" class="span12">'.$optRoleId.'</select>
+					<label for="input_member_roleId">Rolle</label>
+					<select name="roleId" id="input_member_roleId" class="span12">'.$optRoleId.'</select>
 				</div>
-				<div class="span4">
+<!--				<div class="span4">
 					<label for="input_status">Zustand</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
+				</div>-->
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label class="checkbox">
+						<input type="checkbox" name="invite" value="1" checked="checked" class="has-optionals" data-animation="slide"/>Einladen - muss durch Mitglied bestätigt werden.
+					</label>
+				</div>
+			</div>
+			<div class="row-fluid optional invite invite-false">
+				<div class="span12">
+					<label class="checkbox">
+						<input type="checkbox" name="quiet" value="1"/>Die anderen Mitglieder nicht über den Zugang informieren.
+					</label>
+					<div class="alert alert-info">
+						Der Teilnehmer bekommt trotzdem eine E-Mail mit Informationen über seinen Beitritt, Nutzungsbedingungen und Datenschutzbestimmungen sowie den Abmeldelink.
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid optional invite invite-false">
+				<div class="span12">
 				</div>
 			</div>
 		</div>

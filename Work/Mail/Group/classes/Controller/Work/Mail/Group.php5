@@ -1,14 +1,16 @@
 <?php
 class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 
+	protected $request;
+	protected $session;
+	protected $messenger;
 	protected $modelGroup;
 	protected $modelMember;
 	protected $modelRole;
 	protected $modelServer;
 	protected $modelAction;
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected $logic;
+	protected $logicMail;
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
@@ -20,6 +22,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
 //		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
+		$this->logic		= new Logic_Mail_Group( $this->env );
 		$this->logicMail	= new Logic_Mail( $this->env );
 	}
 
@@ -46,6 +49,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				'address'			=> $address,
 				'password'			=> $this->request->get( 'password' ),
 				'description'		=> $this->request->get( 'description' ),
+				'bounce'			=> '',
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
@@ -63,15 +67,44 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	public function addMember( $groupId ){
 		$title		= $this->request->get( 'title' );
 		$address	= $this->request->get( 'address' );
-		$this->modelMember->add( array(
+
+		$invite		= $this->request->has( 'invite' );
+		$quiet		= $this->request->has( 'quiet' );
+
+		$status		= Model_Mail_Group_Member::STATUS_ACTIVATED;
+		if( $invite )
+			$status		= Model_Mail_Group_Member::STATUS_REGISTERED;
+
+		$memberId	= $this->modelMember->add( array(
 			'mailGroupId'	=> $groupId,
 			'roleId'		=> $this->request->get( 'roleId' ),
-			'status'		=> $this->request->get( 'status' ),
+			'status'		=> $status,				//$this->request->get( 'status' ),
 			'title'			=> $title,
 			'address'		=> $address,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
 		) );
+		if( !$quiet )
+			$action	= $this->logic->registerMemberAction( 'informAfterFirstActivate', $groupId, $memberId, '' );
+		if( $invite ){
+			$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, '' );
+			$mailData	= array(
+				'group'		=> $this->checkGroupId( $groupId ),
+				'member'	=> $this->modelMember->get( $memberId ),
+				'action'	=> $action,
+			);
+			$mail		= new Mail_Info_Mail_Group_Member_Invited( $this->env, $mailData );
+		}
+		else{
+			$mailData	= array(
+				'group'		=> $this->checkGroupId( $groupId ),
+				'member'	=> $this->modelMember->get( $memberId ),
+			);
+			$mail		= new Mail_Info_Mail_Group_Member_Added( $this->env, $mailData );
+		}
+		$receiver	= (object) array( 'email' => $address );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$this->logicMail->handleMail( $mail, $receiver, $language );
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
@@ -268,9 +301,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				$this->messenger->noteSuccess( 'Das Mitglied wurde aktiviert und darüber informiert.' );
 
 			}
-			else if( $status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
+			else if( $status == Model_Mail_Group_Member::STATUS_DEACTIVATED ){
 				$this->setMemberStatusToDeactivated( $group, $member );
 				$this->messenger->noteSuccess( 'Das Mitglied wurde deaktiviert und darüber informiert.' );
+			}
 		}
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
