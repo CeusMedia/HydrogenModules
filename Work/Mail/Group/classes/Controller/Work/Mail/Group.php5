@@ -36,10 +36,13 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				'mailGroupServerId'	=> 1,
 				'defaultRoleId'		=> $this->request->get( 'roleId' ),
 				'status'			=> $this->request->get( 'status' ),
-				'adminId'			=> $this->request->get( 'adminId' ),
+				'managerId'			=> $this->request->get( 'managerId' ),
+				'type'				=> $this->request->get( 'type' ),
+				'visibility'		=> $this->request->get( 'visibility' ),
 				'title'				=> $title,
 				'address'			=> $address,
 				'password'			=> $this->request->get( 'password' ),
+				'description'		=> $this->request->get( 'description' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
@@ -102,15 +105,19 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				'mailGroupServerId'	=> 1,
 				'defaultRoleId'		=> $this->request->get( 'roleId' ),
 				'status'			=> $this->request->get( 'status' ),
-				'adminId'			=> $this->request->get( 'adminId' ),
+				'managerId'			=> $this->request->get( 'managerId' ),
+				'type'				=> $this->request->get( 'type' ),
+				'visibility'		=> $this->request->get( 'visibility' ),
 				'title'				=> $title,
 				'address'			=> $address,
+				'password'			=> $this->request->get( 'password' ),
+				'description'		=> $this->request->get( 'description' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
 			if( strlen( trim( $this->request->get( 'password' ) ) ) )
 				$data['password']	= trim( $this->request->get( 'password' ) );
-			$groupId	= $this->modelGroup->edit( $groupId, $data );
+			$this->modelGroup->edit( $groupId, $data );
 			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}

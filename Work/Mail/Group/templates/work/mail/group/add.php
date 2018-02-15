@@ -3,10 +3,10 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$optAdminId		= array();
+$optManagerId	= array();
 foreach( $users as $user )
-	$optAdminId[$user->userId]	= $user->username;
-$optAdminId		= UI_HTML_Elements::Options( $optAdminId );
+	$optManagerId[$user->userId]	= $user->username;
+$optManagerId	= UI_HTML_Elements::Options( $optManagerId );
 
 $optStatus		= array(
 	-1		=> 'deaktiviert',
@@ -20,6 +20,10 @@ foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
 $optRoleId	= UI_HTML_Elements::Options( $optRoleId );
 
+$optType		= UI_HTML_Elements::Options( $words['group-types'], @$data->type );
+$optVisibility	= UI_HTML_Elements::Options( $words['group-visibilities'], @$data->visibility );
+
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>Neue E-Mail-Gruppe</h3>
@@ -31,8 +35,8 @@ $panelAdd	= '
 					<input type="text" name="title" id="input_title" class="span12" required="required"/>
 				</div>
 				<div class="span4">
-					<label for="input_adminId">Administrator</label>
-					<select name="adminId" id="input_adminId" class="span12">'.$optAdminId.'</select>
+					<label for="input_status">Zustand</label>
+					<select name="status" id="input_status" class="span12" readonly="readonly">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -51,8 +55,24 @@ $panelAdd	= '
 					<select name="roleId" id="input_roleId" class="span12">'.$optRoleId.'</select>
 				</div>
 				<div class="span6">
-					<label for="input_status">Zustand</label>
-					<select name="status" id="input_status" class="span12" readonly="readonly">'.$optStatus.'</select>
+					<label for="input_managerId">Administrator</label>
+					<select name="managerId" id="input_managerId" class="span12">'.$optManagerId.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span7">
+					<label for="input_type">Beitritt</label>
+					<select name="type" id="input_type" class="span12">'.$optType.'</select>
+				</div>
+				<div class="span5">
+					<label for="input_visibility">Sichtbarkeit</label>
+					<select name="visibility" id="input_visibility" class="span12">'.$optVisibility.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_description">Beschreibung der Gruppe</label>
+					<textarea name="description" id="input_description" rows="6" class="span12">'.@$data->description.'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
