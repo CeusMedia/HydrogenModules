@@ -1,0 +1,10 @@
+
+Ihre E-Mail-Adresse <%member.address%> wurde der E-Mail-Gruppe "<%group.title%>" hinzugefügt.
+
+Sie können E-Mails an die Gruppe senden, die automatisch an alle Mitglieder der Gruppe zugestellt werden.
+Die Mitglieder antworten auf Ihre E-Mail wieder an die Gruppe und damit an alle.
+
+Mit der Benutzung stimmen Sie den Nutzungsbedingungen und Datenschutzbestimmungen zu.
+Sollten Sie nicht mit den Bedingungen einverstanden sein, melden Sie sich bitte von der Gruppe ab.
+
+Link zum Abmelden: <%link.leave%>

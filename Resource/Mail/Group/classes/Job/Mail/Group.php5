@@ -1,54 +1,6 @@
 <?php
 class Job_Mail_Group extends Job_Abstract{
 
-	public function informMembersAboutNewMember(){
-		$logic			= new Logic_Mail_Group( $this->env );
-		$logicMail		= new Logic_Mail( $this->env );
-		$modelMember	= new Model_Mail_Group_Member( $this->env );
-		$modelAction	= new Model_Mail_Group_Action( $this->env );
-		$modelUser		= new Model_User( $this->env );
-		$groups			= $logic->getGroups();
-		$count			= 0;
-		foreach( $groups as $group ){
-			$actions	= $modelAction->getAllByIndices( array(
-				'action'			=> 'informAfterFirstActivate',
-				'mailGroupId'		=> $group->mailGroupId,
-				'status'			=> 0,
-			) );
-			if( $actions ){
-				$manager	= $modelUser->get( $group->managerId );
-				foreach( $actions as $action ){
-					$member		= $modelMember->get( $action->mailGroupMemberId );
-					foreach( $logic->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
-						if( $entry->address === $manager->email )
-							continue;
-						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
-							continue;
-						$mailData	= array(
-							'member'	=> $member,
-							'group'		=> $group,
-							'greeting'	=> $action->message,
-						);
-						$logicMail->handleMail(
-							new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData ),
-							(object) array( 'email' => $entry->address ),
-							$this->env->getLanguage()->getLanguage()
-						);
-					}
-					$logicMail->handleMail(
-						new Mail_Info_Mail_Group_Activated( $this->env, $mailData ),
-						(object) array( 'email' => $member->address ),
-						$this->env->getLanguage()->getLanguage()
-					);
-					$modelAction->edit( $action->mailGroupActionId, array(
-						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
-						'modifiedAt'	=> time(),
-					) );
-				}
-			}
-		}
-	}
-
 	public function activateConfirmedMembers(){
 		$logic			= new Logic_Mail_Group( $this->env );
 		$logicMail		= new Logic_Mail( $this->env );
@@ -116,6 +68,54 @@ class Job_Mail_Group extends Job_Abstract{
 			}
 		}
 		$this->out( $count.' members activated' );
+	}
+
+	public function informMembersAboutNewMember(){
+		$logic			= new Logic_Mail_Group( $this->env );
+		$logicMail		= new Logic_Mail( $this->env );
+		$modelMember	= new Model_Mail_Group_Member( $this->env );
+		$modelAction	= new Model_Mail_Group_Action( $this->env );
+		$modelUser		= new Model_User( $this->env );
+		$groups			= $logic->getGroups();
+		$count			= 0;
+		foreach( $groups as $group ){
+			$actions	= $modelAction->getAllByIndices( array(
+				'action'			=> 'informAfterFirstActivate',
+				'mailGroupId'		=> $group->mailGroupId,
+				'status'			=> 0,
+			) );
+			if( $actions ){
+				$manager	= $modelUser->get( $group->managerId );
+				foreach( $actions as $action ){
+					$member		= $modelMember->get( $action->mailGroupMemberId );
+					foreach( $logic->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
+						if( $entry->address === $manager->email )
+							continue;
+						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
+							continue;
+						$mailData	= array(
+							'member'	=> $member,
+							'group'		=> $group,
+							'greeting'	=> $action->message,
+						);
+						$logicMail->handleMail(
+							new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData ),
+							(object) array( 'email' => $entry->address ),
+							$this->env->getLanguage()->getLanguage()
+						);
+					}
+					$logicMail->handleMail(
+						new Mail_Info_Mail_Group_Activated( $this->env, $mailData ),
+						(object) array( 'email' => $member->address ),
+						$this->env->getLanguage()->getLanguage()
+					);
+					$modelAction->edit( $action->mailGroupActionId, array(
+						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
+						'modifiedAt'	=> time(),
+					) );
+				}
+			}
+		}
 	}
 
 	public function test(){

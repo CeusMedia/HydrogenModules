@@ -1,0 +1,21 @@
+
+Sie wurden mit Ihrer E-Mail-Adresse <%member.address%> in die E-Mail-Gruppe "<%group.title%>" eingeladen.
+
+Wenn Sie die Einladung annehmen, können Sie E-Mails an die Gruppe senden, die automatisch an alle Mitglieder der Gruppe zugestellt werden.
+Die Mitglieder antworten auf Ihre E-Mail wieder an die Gruppe.
+
+Die Mitgliedschaft muss zunächst durch Sie bestätigt werden.
+
+Bestätigungslink:
+<%link.confirm%>
+
+Mit dem Beitritt stimmen Sie den Nutzungsbedingungen und Datenschutzbestimmungen zu.
+Sollten Sie nicht mit den Bedingungen einverstanden sein, melden Sie sich bitte von der Gruppe ab.
+
+Link zum Abmelden: <%link.leave%>
+
+Alle E-Mails, die Sie bis zur Bestätigung an die Gruppe schicken, werden erst an die Mitglieder zugestellt,
+wenn Ihre Mitgliedschaft überprüft und aktiviert wurde.
+
+Sollten Sie die Mitgliedschaft nicht bestätigen, verfällt ihr Beitritt nach einer Woche.
+Bis dahin geschriebene E-Mails an die Gruppe verfallen ebenso.

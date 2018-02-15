@@ -10,7 +10,7 @@ class Hook_Resource_Mail_Group{
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 
-		if( $group->type == Model_Mail_Group::TYPE_INVITE ){
+		if( in_array( $group->type, array( Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_PUBLIC ) ) ){
 			$modelMember->edit( $action->mailGroupMemberId, array(
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),

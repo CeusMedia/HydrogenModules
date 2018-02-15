@@ -86,56 +86,6 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function handleIfAlreadyMember( $groupId, $email ){
-		try{
-			$member		= $this->logic->getGroupMemberByAddress( $groupId, $email );
-			switch( $member->status ){
-				case Model_Mail_Group_Member::STATUS_ACTIVATED:
-					$msg	= 'Sie sind bereits an der Gruppe registriert und ihre Mitgliedschaft ist aktiv.';
-					break;
-				case Model_Mail_Group_Member::STATUS_REGISTERED:
-					$msg	= 'Sie haben sich bereits registriert, aber die Zusage steht noch aus.';
-					break;
-				case Model_Mail_Group_Member::STATUS_DEACTIVATED:
-					$msg	= 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.';
-					break;
-				case Model_Mail_Group_Member::STATUS_UNREGISTERED:
-					$msg	= 'Sie waren mit diesee Adresse bereits an der Gruppe registriert, haben Ihre Mitgliedschaft jedoch beendet.';
-					break;
-				default:
-					$msg	= 'Unbekannter Zustand - bitte melden Sie sich bei der Verwaltung!';
-			}
-			$this->messenger->noteError( $msg );
-			return FALSE;
-		}
-		catch( Exception $e ){}
-		return TRUE;
-	}
-
-	protected function handleIfNotMember( $groupId, $email ){
-		try{
-			$member		= $this->logic->getGroupMemberByAddress( $groupId, $email );
-			switch( $member->status ){
-				case Model_Mail_Group_Member::STATUS_REGISTERED:
-				case Model_Mail_Group_Member::STATUS_ACTIVATED:
-					return TRUE;
-					break;
-				case Model_Mail_Group_Member::STATUS_DEACTIVATED:
-					$msg	= 'Diese Adresse war an der Gruppe bereits registriert, wurde aber bereits deaktiviert.';
-					break;
-				case Model_Mail_Group_Member::STATUS_UNREGISTERED:
-					$msg	= 'Ihre Mitgliedschaft in dieser Gruppe wurde bereits beendet.';
-					break;
-			}
-			$this->messenger->noteError( $msg );
-			return FALSE;
-		}
-		catch( Exception $e ){
-
-		}
-		return TRUE;
-	}
-
 	public function filter( $reset = NULL ){
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'page' );
