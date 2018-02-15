@@ -13,7 +13,7 @@ class Mail_Info_Mail_Group_Autojoined extends Mail_Abstract{
 		$data['config']		= $this->env->getConfig()->getAll();
 		$data['link']		= array(
 			'confirm'		=> $this->env->url.'info/mail/group/completeMemberAction/'.$data['action']->mailGroupActionId.'/'.$data['action']->uuid,
-			'remove'		=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
+			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 		);
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/autojoined.txt', $data );

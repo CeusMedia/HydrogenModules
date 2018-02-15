@@ -341,41 +341,6 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return $results;
 	}
 
-	public function informGroupManagerAboutJoinedMember( $groupId, $memberId, $greeting ){
-		$group		= $this->getGroup( $groupId );
-		$this->logicMail->handleMail(
-			new Mail_Info_Mail_Group_Manager_MemberJoined( $this->env, array(
-				'group'		=> $group,
-				'member'	=> $this->getGroupMember( $memberId ),
-				'greeting'	=> $greeting,
-			) ),
-			$this->modelUser->get( $group->managerId ),
-			$this->env->getLanguage()->getLanguage()
-		);
-	}
-
-	public function informGroupMembersAboutNewMember( $groupId, $memberId, $greeting ){
-		$group		= $this->getGroup( $groupId );
-		$member		= $this->getGroupMember( $memberId );
-		$manager	= $this->modelUser->get( $group->managerId );
-		$members	= $this->getGroupMembers( $groupId, TRUE );
-		foreach( $members as $entry ){
-			if( $entry->address === $manager->email )
-				continue;
-			if( $entry->mailGroupMemberId === $memberId )
-				continue;
-			$this->logicMail->handleMail(
-				new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, array(
-					'group'		=> $group,
-					'member'	=> $member,
-					'greeting'	=> $greeting,
-				) ),
-				(object) array( 'email' => $entry->address ),
-				$this->env->getLanguage()->getLanguage()
-			);
-		}
-	}
-
 	public function isGroupMember( $groupId, $address ){
 		return (bool) $this->modelMember->count( array(
 			'mailGroupId'		=> $groupId,
@@ -397,16 +362,6 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return $this->modelAction->get( $actionId );
 	}
 
-	public function sendMailAfterJoin( $group, $member, $action ){
-		$mail	= new Mail_Info_Mail_Group_Joined( $this->env, array(
-			'member'	=> $member,
-			'group'		=> $group,
-			'action'	=> $action,
-		) );
-		$receiver	= (object) array( 'email' => $member->address );
-		$language	= $this->env->getLanguage()->getLanguage();
-		$this->logicMail->handleMail( $mail, $receiver, $language );
-	}
 
 	public function testGestMail( $groupId, $limit = 1 ){
 		return;

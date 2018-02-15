@@ -23,19 +23,14 @@ if( $groups ){
 		$subtitle	= strlen( trim( $group->subtitle ) ) ? UI_HTML_Tag::create( 'strong', $group->subtitle ).'<br/>' : '';
 
 		$buttons	= array();
-		if( in_array( $group->type, array( Model_Mail_Group::TYPE_PUBLIC, Model_Mail_Group::TYPE_JOIN ) ) )
+		if( in_array( $group->type, array( Model_Mail_Group::TYPE_PUBLIC, Model_Mail_Group::TYPE_JOIN, Model_Mail_Group::TYPE_REGISTER ) ) )
 			$buttons[]	= UI_HTML_Tag::create( 'a', $iconJoin.'&nbsp;beitreten', array(
 				'href'	=> './info/mail/group/join/'.$group->mailGroupId,
-				'class'	=> 'btn btn-small',
-			) );
-		if( $group->type == 2 )
-			$buttons[]	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;Beitritt beantragen', array(
-				'href'	=> './info/mail/group/register/'.$group->mailGroupId,
-				'class'	=> 'btn btn-small',
+				'class'	=> 'btn not-btn-small btn-primary',
 			) );
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconUnregister.'&nbsp;austreten', array(
-			'href'	=> './info/mail/group/unregister/'.$group->mailGroupId,
-			'class'	=> 'btn btn-small',
+			'href'	=> './info/mail/group/leave/'.$group->mailGroupId,
+			'class'	=> 'btn not-btn-small btn-inverse',
 		) );
 		$type	= UI_HTML_Tag::create( 'abbr', $words['types'][$group->type], array( 'title' => $words['types-description'][$group->type] ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(

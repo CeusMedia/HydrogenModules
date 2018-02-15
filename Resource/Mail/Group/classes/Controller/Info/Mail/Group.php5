@@ -18,6 +18,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Mail_Group( $this->env );
+		$this->logicMail	= new Logic_Mail( $this->env );
 		$this->modelGroup	= new Model_Mail_Group( $this->env );
 		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
 		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
@@ -56,14 +57,14 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid action.' );
 			$this->restart( NULL );
 		}
-		if( $action->status != 0 ){
+		if( $action->status == 1 ){
 			$this->messenger->noteError( 'Action already taken.' );
 			$this->restart( NULL );
 		}
 		try{
 			$result	= $this->env->getModules()->callHook(
 				'MailGroupAction',
-				'activateAfterJoin',
+				$action->action,
 				$this,
 				array( 'action' => $action )
 			);
@@ -76,8 +77,9 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 				$this->restart( $result );
 		}
 		catch( Exception $e ){
+			$this->messenger->noteFailure( $e->getMessage() );
 			$this->modelAction->edit( $action->mailGroupActionId, array(
-				'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
+				'status'		=> Model_Mail_Group_Action::STATUS_FAILED,
 				'modifiedAt'	=> time(),
 			) );
 		}
@@ -155,8 +157,8 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$filterType	= $this->session->get( $this->filterPrefix.'type' );
 
 		$conditions	= array(
-//			'status'		=> Model_Mail_Group::STATUS_ACTIVATED,
-//			'visibility'	=> Model_Mail_Group::VISIBILITY_PUBLIC,
+			'status'		=> Model_Mail_Group::STATUS_ACTIVATED,
+			'visibility'	=> Model_Mail_Group::VISIBILITY_PUBLIC,
 		);
 		if( $filterType )
 			$conditions['type']	= $filterType;
@@ -222,48 +224,17 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 				}
 			}
 			if( $registered ){
-				$action	= $this->logic->registerMemberAction( 'activateAfterJoin', $groupId, $memberId, $greeting );
-				$member	= $this->logic->getGroupMember( $memberId, FALSE );
-				$this->logic->sendMailAfterJoin( $group, $member, $action );
-				$this->messenger->noteSuccess( 'Okay.' );
-				$this->restart( NULL, TRUE );
-			}
-		}
-		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;
-		$this->addData( 'group', $group );
-		$this->addData( 'data', (object) $this->request->getAll() );
-	}
+				$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
 
-	public function register( $groupId = NULL ){
-		if( $this->request->has( 'save' ) ){
-			$address	= trim( $this->request->get( 'address' ) );
-			$greeting	= trim( $this->request->get( 'message' ) );
-			$failed		= FALSE;
-			$group		= $this->checkGroupByIdOrAddress( $groupId > 0 ? (int) $groupId : $address );
-			if( !$group ){
-				$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
-				$failed	= TRUE;
-			}
-			if( !( $email = trim( $this->request->get( 'email' ) ) ) ){
-				$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
-				$failed	= TRUE;
-			}
-			if( !$failed )
-				$failed	= !$this->handleIfAlreadyMember( $group->mailGroupId, $email );
-			if( !$failed ){
-				$name		= trim( $this->request->get( 'name' ) );
-				$message	= trim( $this->request->get( 'message' ) );
-				$memberId	= $this->modelMember->add( array(
-					'mailGroupId'	=> $group->mailGroupId,
-					'roleId'		=> $group->defaultRoleId,
-					'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-					'address'		=> $email,
-					'title'			=> strlen( $name ) ? $name : NULL,
-					'createdAt'		=> time(),
-					'modifiedAt'	=> time(),
+				$member	= $this->logic->getGroupMember( $memberId, FALSE );
+				$mail	= new Mail_Info_Mail_Group_Joining( $this->env, array(
+					'member'	=> $member,
+					'group'		=> $group,
+					'action'	=> $action,
 				) );
-				$this->logic->informGroupManagerAboutRegisteredMember( $groupId, $memberId, $greeting );
-//				$this->logic->informGroupMembersAboutNewMember( $group->mailGroupId, $memberId, $greeting );
+				$receiver	= (object) array( 'email' => $member->address );
+				$language	= $this->env->getLanguage()->getLanguage();
+				$this->logicMail->handleMail( $mail, $receiver, $language );
 				$this->messenger->noteSuccess( 'Okay.' );
 				$this->restart( NULL, TRUE );
 			}
@@ -276,78 +247,49 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 	public function leave( $groupId = NULL ){
 		if( $this->request->has( 'save' ) ){
 			$address	= trim( $this->request->get( 'address' ) );
+			$email		= trim( $this->request->get( 'email' ) );
+			$name		= trim( $this->request->get( 'name' ) );
 			$greeting	= trim( $this->request->get( 'message' ) );
-			$failed		= FALSE;
-			$group		= $this->checkGroupByIdOrAddress( $groupId > 0 ? (int) $groupId : $address );
-			if( !$group ){
+			$registered	= FALSE;
+
+			if( $groupId )
+				$group		= $this->logic->getGroup( $groupId, TRUE, FALSE );
+			else if( $address )
+				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
+			if( !$group )
 				$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
-				$failed	= TRUE;
-			}
-			if( !( $email = trim( $this->request->get( 'email' ) ) ) ){
-				$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
-				$failed	= TRUE;
-			}
-			if( !$failed )
-				$failed	= !$this->handleIfNotMember( $group->mailGroupId, $email );
-			if( !$failed ){
-				$name		= trim( $this->request->get( 'name' ) );
-				$message	= trim( $this->request->get( 'message' ) );
-				$memberId	= $this->modelMember->add( array(
-					'mailGroupId'	=> $group->mailGroupId,
-					'roleId'		=> $group->defaultRoleId,
-					'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-					'address'		=> $email,
-					'title'			=> strlen( $name ) ? $name : NULL,
-					'createdAt'		=> time(),
-					'modifiedAt'	=> time(),
-				) );
-				$this->logic->informGroupManagerAboutJoinedMember( $groupId, $memberId, $greeting );
-				$this->logic->informGroupMembersAboutNewMember( $group->mailGroupId, $memberId, $greeting );
-				$this->messenger->noteSuccess( 'Okay.' );
-				$this->restart( NULL, TRUE );
+			else{
+				$groupId 	= $group->mailGroupId;
+				$member		= $this->logic->getGroupMemberByAddress( $group->mailGroupId, $email, FALSE, FALSE );
+				if( !$member ){
+					$this->messenger->noteError( 'Zu dieser Adresse gibt es bei dieser Gruppe keine Mitgliedschaft.' );
+				}
+				else{
+					$memberId	= $member->mailGroupMemberId;
+					if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
+						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );
+					else if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED )
+						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber bereits abgemeldet.' );
+					else{
+						$action	= $this->logic->registerMemberAction( 'deactivateAfterLeaving', $groupId, $memberId, $greeting );
+
+						$mail	= new Mail_Info_Mail_Group_Leaving( $this->env, array(
+							'member'	=> $member,
+							'group'		=> $group,
+							'action'	=> $action,
+						) );
+						$receiver	= (object) array( 'email' => $member->address );
+						$language	= $this->env->getLanguage()->getLanguage();
+						$this->logicMail->handleMail( $mail, $receiver, $language );
+						$this->messenger->noteSuccess( 'Okay.' );
+						$this->restart( NULL, TRUE );
+					}
+				}
 			}
 		}
 		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;
 		$this->addData( 'group', $group );
-		$this->addData( 'data', (object) $this->request->getAll() );
-
-
-/*
-
-		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;
-		if( $this->request->has( 'save' ) ){
-			if( $group ){
-//				...
-			}
-//			...
-//			$this->restart( NULL, TRUE );
-		}
-		$this->addData( 'group', $group );
-*/
-/*		$this->checkId( $groupId );
-		$addressGroup	= $this->request->get( 'address_group' );
-		$addressMember	= $this->request->get( 'address_member' );
-		if( $this->request->has( 'save' ) ){
-			if( !( $group = $this->modelGroup->getByIndex( 'address', $addressGroup ) ) ){
-				$this->messenger->noteError( 'Keine Gruppe mit dieser E-Mail-Adresse gefunden.' );
-				$this->restart( 'unregister?address_member='.$addressMember, TRUE );
-			}
-			$indices	= array(
-				'mailGroupId'	=> $group->mailGroupId,
-				'address'		=> $addressMember
-			);
-			if( !( $member = $this->modelMember->getByIndices( $indices ) ) ){
-				$this->messenger->noteError( 'Kein Mitglied mit dieser E-Mail-Adresse gefunden.' );
-				$this->restart( 'unregister?address_group='.$addressGroup, TRUE );
-			}
-			$this->modelMember->remove( $member->mailGroupMemberId );
-			$this->messenger->noteSuccess( 'Das Mitglied wurde aus der Gruppe entfernt.' );
-			$this->restart( 'unregister', TRUE );
-		}
-		$groups	= $this->logic->getActiveGroups();
-		$this->addData( 'groups', $groups );
-		$this->addData( 'address_group', $addressGroup );
-		$this->addData( 'address_member', $addressMember );*/
+		$this->addData( 'groupId', (int) $groupId );
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 }

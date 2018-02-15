@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3.3">Add model for mail group messages.</log>
 	<log version="0.3.4">Extend group model by type, visibility and description.</log>
 	<log version="0.3.5">Add model for mail group actions.</log>
+	<log version="0.3.6">Add hooks to handle confirmed member actions.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -23,8 +24,10 @@
 		<class>Job/Mail/Group.php5</class>
 		<class>Hook/Resource/Mail/Group.php5</class>
 		<class>Logic/Mail/Group.php5</class>
+		<class>Mail/Info/Mail/Group/Activated.php5</class>
 		<class>Mail/Info/Mail/Group/Autojoined.php5</class>
 		<class>Mail/Info/Mail/Group/Joined.php5</class>
+		<class>Mail/Info/Mail/Group/Joining.php5</class>
 		<class>Mail/Info/Mail/Group/Leaving.php5</class>
 		<class>Mail/Info/Mail/Group/Left.php5</class>
 		<class>Mail/Info/Mail/Group/Registered.php5</class>
@@ -44,8 +47,10 @@
 		<locale>de/mail/info/mail/group/manager/member/left.txt</locale>
 		<locale>de/mail/info/mail/group/members/member/joined.txt</locale>
 		<locale>de/mail/info/mail/group/members/member/left.txt</locale>
+		<locale>de/mail/info/mail/group/activated.txt</locale>
 		<locale>de/mail/info/mail/group/autojoined.txt</locale>
 		<locale>de/mail/info/mail/group/joined.txt</locale>
+		<locale>de/mail/info/mail/group/joining.txt</locale>
 		<locale>de/mail/info/mail/group/registered.txt</locale>
 		<locale>de/mail/info/mail/group/leaving.txt</locale>
 		<locale>de/mail/info/mail/group/left.txt</locale>
@@ -63,9 +68,9 @@
 	<link access="public" path="info/mail/group/index"/>
 	<link access="public" path="info/mail/group/join"/>
 	<link access="public" path="info/mail/group/leave"/>
-	<link access="public" path="info/mail/group/register"/>
 	<link access="public" path="info/mail/group/completeMemberAction"/>
-	<hook type="resource" resource="MailGroupAction" event="activateAfterJoin">Hook_Resource_Mail_Group::onActivateAfterJoin</hook>
+	<hook type="resource" resource="MailGroupAction" event="confirmAfterJoin">Hook_Resource_Mail_Group::onConfirmAfterJoin</hook>
+	<hook type="resource" resource="MailGroupAction" event="deactivateAfterLeaving">Hook_Resource_Mail_Group::onDeactivateAfterLeaving</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (

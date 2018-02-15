@@ -5,4 +5,14 @@
 		<method>handle</method>
 		<mode>live</mode>
 	</job>
+	<job id="Mail.Group.test">
+		<class>Mail_Group</class>
+		<method>test</method>
+		<mode>live</mode>
+	</job>
+	<job id="Mail.Group.Members.activate">
+		<class>Mail_Group</class>
+		<method>activateConfirmedMembers</method>
+		<mode>live</mode>
+	</job>
 </jobs>

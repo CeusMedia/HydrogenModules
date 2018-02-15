@@ -1,0 +1,8 @@
+Hallo <%?member.title%>!
+
+Ihre Mitgliedschaft in der E-Mail-Gruppe "<%group.title%>" wurde aktiviert.
+
+Sie können ab jetzt E-Mails an die Gruppe und damit an deren Mitglieder schicken.
+Alle E-Mails, die andere Mitglieder an diese Gruppe schreiben, bekommen Sie nun auch.
+
+E-Mails, die Sie bis jetzt an die Gruppe geschrieben haben, werden jetzt zugestellt.
