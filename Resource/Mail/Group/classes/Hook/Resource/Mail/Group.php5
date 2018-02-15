@@ -10,13 +10,12 @@ class Hook_Resource_Mail_Group{
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 
-		if( $group->type == Model_Mail_Group::TYPE_JOIN ){
+		if( $group->type == Model_Mail_Group::TYPE_INVITE ){
 			$modelMember->edit( $action->mailGroupMemberId, array(
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
 			) );
-			$env->getMessenger()->noteSuccess( 'Ihr Beitritt ist nun vollständig. Sie können jetzt E-Mails an die Gruppe schreiben.' );
-
+			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt und freigegeben. Sie können jetzt E-Mails an die Gruppe schicken.' );
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
 				'group'		=> $group,
@@ -45,12 +44,63 @@ class Hook_Resource_Mail_Group{
 
 			$member	= $modelMember->get( $action->mailGroupMemberId );
 			$logicMail->handleMail(
-				new Mail_Info_Mail_Group_Joined( $env, $mailData ),
+				new Mail_Info_Mail_Group_Activated( $env, $mailData ),
 				(object) array( 'email' => $member->address ),
 				$env->getLanguage()->getLanguage()
 			);
 			return TRUE;
 		}
+
+		if( $group->type == Model_Mail_Group::TYPE_JOIN ){
+			$modelMember->edit( $action->mailGroupMemberId, array(
+				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
+				'modifiedAt'	=> time(),
+			) );
+			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Die Freigabe durch den Verwalter steht noch aus.' );
+
+			$manager	= $modelUser->get( $group->managerId );
+			$mailData	= array(
+				'group'		=> $group,
+				'member'	=> $modelMember->get( $action->mailGroupMemberId ),
+				'greeting'	=> $action->message,
+			);
+
+			$logicMail->handleMail(
+				new Mail_Info_Mail_Group_Manager_MemberJoined( $env, $mailData ),
+				$manager,
+				$env->getLanguage()->getLanguage()
+			);
+
+			$logic->registerMemberAction(
+				'activateAfterConfirm',
+				$action->mailGroupId,
+				$action->mailGroupMemberId,
+				$action->message
+			);
+			return TRUE;
+		}
+		else if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
+			$modelMember->edit( $action->mailGroupMemberId, array(
+				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
+				'modifiedAt'	=> time(),
+			) );
+			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Die Freigabe durch den Verwalter steht noch aus.' );
+
+			$manager	= $modelUser->get( $group->managerId );
+			$mailData	= array(
+				'group'		=> $group,
+				'member'	=> $modelMember->get( $action->mailGroupMemberId ),
+				'greeting'	=> $action->message,
+			);
+
+			$logicMail->handleMail(
+				new Mail_Info_Mail_Group_Manager_MemberRegistered( $env, $mailData ),
+				$manager,
+				$env->getLanguage()->getLanguage()
+			);
+			return TRUE;
+		}
+
 		return FALSE;
 	}
 

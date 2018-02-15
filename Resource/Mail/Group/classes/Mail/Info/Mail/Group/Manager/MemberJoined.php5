@@ -11,6 +11,7 @@ class Mail_Info_Mail_Group_Manager_MemberJoined extends Mail_Abstract{
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
+		$data['greeting']	= strlen( trim( $data['greeting'] ) ) ? $data['greeting'] : '-';
 		$data['member']->link	= $this->env->url.'work/mail/group/member/edit/'.$data['member']->mailGroupMemberId;
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/member/joined.txt', $data );

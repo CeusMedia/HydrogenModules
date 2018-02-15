@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -16,6 +16,7 @@
 	<log version="0.3.4">Extend group model by type, visibility and description.</log>
 	<log version="0.3.5">Add model for mail group actions.</log>
 	<log version="0.3.6">Add hooks to handle confirmed member actions.</log>
+	<log version="0.3.7">Add mails for member status change.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -26,6 +27,7 @@
 		<class>Logic/Mail/Group.php5</class>
 		<class>Mail/Info/Mail/Group/Activated.php5</class>
 		<class>Mail/Info/Mail/Group/Autojoined.php5</class>
+		<class>Mail/Info/Mail/Group/Deactivated.php5</class>
 		<class>Mail/Info/Mail/Group/Joined.php5</class>
 		<class>Mail/Info/Mail/Group/Joining.php5</class>
 		<class>Mail/Info/Mail/Group/Leaving.php5</class>
@@ -33,6 +35,11 @@
 		<class>Mail/Info/Mail/Group/Registered.php5</class>
 		<class>Mail/Info/Mail/Group/Manager/MemberJoined.php5</class>
 		<class>Mail/Info/Mail/Group/Manager/MemberLeft.php5</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberRegistered.php5</class>
+		<class>Mail/Info/Mail/Group/Member/Activated.php5</class>
+		<class>Mail/Info/Mail/Group/Member/Deactivated.php5</class>
+		<class>Mail/Info/Mail/Group/Members/MemberActivated.php5</class>
+		<class>Mail/Info/Mail/Group/Members/MemberDeactivated.php5</class>
 		<class>Mail/Info/Mail/Group/Members/MemberJoined.php5</class>
 		<class>Mail/Info/Mail/Group/Members/MemberLeft.php5</class>
 		<class>Model/Mail/Group.php5</class>
@@ -45,10 +52,16 @@
 		<locale>de/info/mail/group.ini</locale>
 		<locale>de/mail/info/mail/group/manager/member/joined.txt</locale>
 		<locale>de/mail/info/mail/group/manager/member/left.txt</locale>
+		<locale>de/mail/info/mail/group/manager/member/registered.txt</locale>
+		<locale>de/mail/info/mail/group/member/autojoined.txt</locale>
+		<locale>de/mail/info/mail/group/member/deactivated.txt</locale>
+		<locale>de/mail/info/mail/group/members/member/autojoined.txt</locale>
+		<locale>de/mail/info/mail/group/members/member/deactivated.txt</locale>
 		<locale>de/mail/info/mail/group/members/member/joined.txt</locale>
 		<locale>de/mail/info/mail/group/members/member/left.txt</locale>
 		<locale>de/mail/info/mail/group/activated.txt</locale>
 		<locale>de/mail/info/mail/group/autojoined.txt</locale>
+		<locale>de/mail/info/mail/group/deactivated.txt</locale>
 		<locale>de/mail/info/mail/group/joined.txt</locale>
 		<locale>de/mail/info/mail/group/joining.txt</locale>
 		<locale>de/mail/info/mail/group/registered.txt</locale>
@@ -188,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_actions` (
   `mailGroupActionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `mailGroupId` int(10) UNSIGNED NOT NULL,
   `mailGroupMemberId` int(10) UNSIGNED NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) NULL DEFAULT '0',
   `uuid` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `action` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `message` text COLLATE utf8_unicode_ci,

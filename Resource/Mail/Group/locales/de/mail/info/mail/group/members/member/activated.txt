@@ -1,0 +1,6 @@
+
+Mitglied in der Gruppe "<%group.title%>" wurde aktivert
+--------------------------------------------------------------------------------
+
+E-Mail:    <%member.address%>
+Name:      <%?member.title%>

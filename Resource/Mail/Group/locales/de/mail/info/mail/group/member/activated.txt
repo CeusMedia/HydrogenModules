@@ -1,0 +1,4 @@
+
+Ihre Mitglied in der Gruppe "<%group.title%>" wurde aktiviert.
+
+Sie können nun E-Mails an die Gruppe schreiben.

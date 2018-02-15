@@ -1,0 +1,20 @@
+
+Neuer Beitritt in der Gruppe "<%group.title%>"
+--------------------------------------------------------------------------------
+
+E-Mail:    <%member.address%>
+Name:      <%?member.title%>
+
+Begrüßung:
+<%?greeting%>
+
+
+Interaktion notwendig
+--------------------------------------------------------------------------------
+
+Das Mitglied muss noch freigegeben oder abgelehnt werden.
+
+Freigeben:  <%link.activate%>
+Ablehnen:   <%link.deactivate%>
+
+Gruppe:     <%link.group%>

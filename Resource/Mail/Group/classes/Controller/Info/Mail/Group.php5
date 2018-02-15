@@ -208,7 +208,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 					$memberId	= $member->mailGroupMemberId;
 					if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED )
 						$this->messenger->noteError( 'Sie sind bereits an der Gruppe registriert und ihre Mitgliedschaft ist aktiv.' );
-					else if( $member->status == Model_Mail_Group_Member::STATUS_REGISTERED )
+					else if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED )
 						$this->messenger->noteError( 'Sie haben sich bereits registriert, aber die Zusage steht noch aus.' );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
 						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );

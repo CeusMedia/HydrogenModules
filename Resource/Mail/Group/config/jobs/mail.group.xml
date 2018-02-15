@@ -15,4 +15,9 @@
 		<method>activateConfirmedMembers</method>
 		<mode>live</mode>
 	</job>
+	<job id="Mail.Group.Members.inform">
+		<class>Mail_Group</class>
+		<method>informMembersAboutNewMember</method>
+		<mode>live</mode>
+	</job>
 </jobs>
