@@ -111,7 +111,7 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
 				$model		= new Model_Page( $env );												//  get model of pages
 				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 0 );				//  focus on active top pages of main navigation scope
-				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
+				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
 					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
