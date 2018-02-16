@@ -33,7 +33,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_id">ID</label>
-					<input class="span12" type="text" name="id" id="input_id" value="'.$filterId.'"/>
+					<input class="span12" type="number" name="id" id="input_id" value="'.$filterId.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

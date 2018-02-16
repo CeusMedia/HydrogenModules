@@ -82,7 +82,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 			}
 		}
 		$this->addData( 'category', $this->logic->getCategory( $categoryId ) );
-		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) ) );
+		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
 		$this->addData( 'nrArticles', $this->logic->countArticlesInCategory( $categoryId, TRUE ) );
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
 	}
