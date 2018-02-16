@@ -22,7 +22,7 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 			$code		= preg_replace( '/( ){2,}/', " ", $code );
 			$code		= str_replace( 'contact:form', "contactForm", trim( $code ) );
 			try{
-				$node		= new @XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
+				$node		= new XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
 				$attr		= array_merge( $defaultAttr, $node->getAttributes() );
 				if( substr( $attr['button-class'], 0, 4 ) === 'btn-' )
 					$attr['button-class']	= 'btn '.$attr['button-class'];
