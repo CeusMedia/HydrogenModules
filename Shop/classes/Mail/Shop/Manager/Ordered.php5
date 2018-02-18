@@ -80,3 +80,4 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 
 	}
 }
+class Mail_Shop_Order_Manager extends Mail_Shop_Manager_Ordered{}

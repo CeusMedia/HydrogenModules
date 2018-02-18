@@ -97,3 +97,4 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		return $this->view->loadContentFile( 'mail/shop/customer/ordered.txt', $templateData );
 	}
 }
+class Mail_Shop_Order_Customer extends Mail_Shop_Customer_Ordered{}
