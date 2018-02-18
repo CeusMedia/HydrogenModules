@@ -54,5 +54,21 @@ class Job_Abstract{
 	public function out( $message = NULL ){
 		print( $message."\n" );
 	}
+
+	protected function showProgress( $count, $total, $sign = '.', $length = 60 ){
+		echo $sign;
+		if( $count % $length === 0 )
+			echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+	}
+
+	protected function showErrors( $taskName, $errors ){
+		if( !$errors )
+			return;
+		$this->out( 'Errors:' );
+		foreach( $errors as $mailId => $message )
+			$this->out( '- '.$mailId.': '.$message );
+	}
+
+
 }
 ?>
