@@ -30,6 +30,11 @@
 		<method>clean</method>
 		<mode>live</mode>
 	</job>
+	<job id="Resource.Mail.Queue.detach">
+		<class>Mail</class>
+		<method>removeAttachments</method>
+		<mode>live</mode>
+	</job>
 	<job id="Resource.Mail.Queue.migrate">
 		<class>Mail</class>
 		<method>migrate</method>

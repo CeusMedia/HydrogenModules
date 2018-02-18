@@ -281,55 +281,40 @@ class Logic_Mail{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
-		if( isset( $mail->compression ) ){
-			if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-				if( !$this->phpHasBzip )
+		if( is_object( $mail->object ) )
+			$object	= $mail->object;
+		else{
+			if( isset( $mail->compression ) ){
+				if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
+					if( !$this->phpHasBzip )
 					throw new RuntimeException( 'Missing extension for BZIP compression' );
-				$mail->serial	= bzdecompress( $mail->object );
-			}
-			else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-				if( !$this->phpHasGzip )
+					$mail->serial	= bzdecompress( $mail->object );
+				}
+				else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
+					if( !$this->phpHasGzip )
 					throw new RuntimeException( 'Missing extension for BZIP compression' );
-				$mail->serial	= gzinflate( $mail->object );
-			}
-			else
+					$mail->serial	= gzinflate( $mail->object );
+				}
+				else
 				$mail->serial	= base64_decode( $mail->object );
-		}
-		else{																							// @todo compression detection is deprecated, use model compression column instead
-			if( substr( $mail->object, 0, 2 ) == "BZ" ){												//  BZIP compression detected
-				$mail->serial		= bzdecompress( $mail->object );									//  inflate compressed mail object
-				$mail->compression	= 4;
 			}
-			else if( substr( $mail->object, 0, 2 ) == "GZ" ){											//  GZIP compression detected
-				$mail->serial		= gzinflate( $mail->object );										//  inflate compressed mail object
-				$mail->compression	= 3;
+			else{																							// @todo compression detection is deprecated, use model compression column instead
+				if( substr( $mail->object, 0, 2 ) == "BZ" ){												//  BZIP compression detected
+					$mail->serial		= bzdecompress( $mail->object );									//  inflate compressed mail object
+					$mail->compression	= Model_Mail::COMPRESSION_BZIP;
+				}
+				else if( substr( $mail->object, 0, 2 ) == "GZ" ){											//  GZIP compression detected
+					$mail->serial		= gzinflate( $mail->object );										//  inflate compressed mail object
+					$mail->compression	= Model_Mail::COMPRESSION_GZIP;
+				}
+				else{
+					$mail->serial		= base64_decode( $mail->object );
+					$mail->compression	= 2;
+				}
 			}
-			else{
-				$mail->serial		= base64_decode( $mail->object );
-				$mail->compression	= 2;
-			}
-		}
 
-		//  detect outdated mail classes and reserialize
-		//  @todo move this fallback to a migration job in mail job class
-		$serialStart	= substr( $mail->serial, 0, 80 );
-		$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
-		$newSerial		= NULL;
-		if( $mailClass == "Mail_Auth_Password" )
-			$newSerial	= str_replace( 'O:18:"Mail_Auth_Password":', 'O:24:"Mail_Auth_Local_Password":', $mail->serial );
-		if( $mailClass == "Mail_Auth_Register" )
-			$newSerial	= str_replace( 'O:18:"Mail_Auth_Register":', 'O:24:"Mail_Auth_Local_Register":', $mail->serial );
-		if( $newSerial ){
-			$serial	= base64_encode( $newSerial );
-			if( $this->phpHasBzip )
-				$serial	= bzcompress( $newSerial );
-			else if( $this->phpHasGzip )
-				$serial	= gzdeflate( $newSerial );
-			$this->modelQueue->edit( $mailId, array( 'object' => $serial ) );
-			$mail->serial	= $newSerial;
+			$object = unserialize( $mail->serial );
 		}
-
-		$object = unserialize( $mail->serial );
 		if( !is_object( $object ) ){
 			print( substr( $mail->serial, 0, 50 ) );
 			throw new RuntimeException( 'Deserialization of mail failed' );

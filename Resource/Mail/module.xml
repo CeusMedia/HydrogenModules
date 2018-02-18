@@ -65,6 +65,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.7.6">Support listed images and styles encoded with JSON.</log>
 	<log version="0.7.7">Improve error handling in logic and job classes.</log>
 	<log version="0.7.8">Make encoding of mail content and headers configurable.</log>
+	<log version="0.7.9">Refactored mail jobs heavily.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
