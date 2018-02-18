@@ -40,21 +40,24 @@ class Job_Job extends Job_Abstract{
 		$this->out( preg_replace( '/(-.+)$/', '', phpversion() ) );
 	}
 
-	public function getExtensionVersion( $parameters ){
-		$parameters	= array_keys( $parameters );
-		$extension	= array_shift( $parameters );
-		if( !$extension ){
+	public function getExtensionVersion( $commands, $parameters ){
+		if( !$commands ){
 			$this->out( 'No extension given' );
 			return;
 		}
-		$this->out( preg_replace( '/(-.+)$/', '', phpversion( $extension ) ) );
+		foreach( $commands as $command ){
+			$version	= preg_replace( '/(-.+)$/', '', phpversion( $command ) );
+			if( count( $commands ) > 1 )
+				$version		= $command.': '.$version;
+			$this->out( $version );
+		}
 	}
 
-	public function reflectParameters( $parameters ){
+	public function reflectParameters( $commands, $parameters ){
 		$this->out( json_encode( $parameters ) );
 	}
 
-	public function getDate( $parameters ){
+	public function getDate( $commands, $parameters ){
 		$format	= 'r';
 		if( isset( $parameters['--format'] ) && $parameters['--format'] )
 			$format	= $parameters['--format'];
