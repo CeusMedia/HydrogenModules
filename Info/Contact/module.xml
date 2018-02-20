@@ -3,7 +3,7 @@
 	<title>Info: Contact</title>
 	<description><![CDATA[Simple contact form.]]></description>
 	<category>Info</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for static content blocks (top, right, bottom).</log>
@@ -17,6 +17,7 @@
 	<log version="0.2.9">Adjust to changes of module Info:Pages.</log>
 	<log version="0.3.0">Implement contact form modals.</log>
 	<log version="0.3.1">Improve contact form modals and triggers.</log>
+	<log version="0.3.2">Use module UI_Shortcode to perform contact forms.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -42,6 +43,7 @@
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">JS_Form_Optionals</needs>
+		<needs type="module">UI_Shortcode</needs>
 	</relations>
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
 	<config protected="yes" mandatory="yes" type="string" name="mail.receiver"></config>
