@@ -53,6 +53,12 @@ foreach( explode( ",", $documentExtensions ) as $nr => $type )
 		$list[$nr]	= strtoupper( trim( $type ) );
 $documentExtensions	= join( ", ", $list );
 
+$helperUpload   = new View_Helper_Input_File( $env );
+$helperUpload->setName( 'document' );
+$helperUpload->setLabel( '<i class="icon-folder-open icon-white"></i>' );
+$helperUpload->setRequired( TRUE );
+
+
 $panelAdd	= '
 <div class="content-panel">
 	<h4>Dokumente hinzufügen</h4>
@@ -67,7 +73,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_document">lokale Dokumentdatei <small class="muted"></small></label>
-					'.View_Helper_Input_File::render( 'document', '<i class="icon-folder-open icon-white"></i>', 'Datei auswählen...' ).'
+					'.$helperUpload.'
 				</div>
 			</div>
 			<div class="row-fluid">

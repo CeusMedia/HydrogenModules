@@ -34,6 +34,11 @@ $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove,
 	'onclick'	=> "if(!confirm('Wirklich?')) return false",
 ) );
 
+$helperUpload	= new View_Helper_Input_File( $env );
+$helperUpload->setName( 'image' );
+$helperUpload->setLabel( '<i class="icon-folder-open icon-white"></i>' );
+$helperUpload->setRequired( FALSE );
+
 return '
 <div class="content-panel">
 	<!--<h4>'.$w->heading.'</h4>-->
@@ -60,7 +65,7 @@ return '
 					<div class="row-fluid">
 						<div class="span10">
 							<label for="input_image">'.$w->labelImage.'</label>
-							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', FALSE ).'
+							'.$helperUpload->render().'
 						</div>
 						<div class="span2 pull-right">
 							<label>&nbsp;</label>

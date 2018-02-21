@@ -75,6 +75,11 @@ $imageExtensions	= join( ", ", $list );
 
 $minSize		= $moduleConfig->get( 'article.image.medium.height' );
 
+$helperUpload	= new View_Helper_Input_File( $env );
+$helperUpload->setName( 'image' );
+$helperUpload->setLabel( '<i class="icon-folder-open icon-white"></i>' );
+$helperUpload->setRequired( TRUE );
+
 $panelUpload	= '
 <div class="content-panel">
 	<h4>Cover-Bild hochladen</h4>
@@ -89,7 +94,7 @@ $panelUpload	= '
 		</div>
 		<form action="./manage/catalog/bookstore/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 			<label for="input_image">Bilddatei <small class="muted"></small></label>
-			'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
+			'.$helperUpload.'
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
 			</div>

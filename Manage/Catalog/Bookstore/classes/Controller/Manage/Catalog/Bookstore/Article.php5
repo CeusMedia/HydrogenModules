@@ -261,10 +261,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 	public function filter( $reset = FALSE ){
 		$this->session->set( $this->sessionPrefix.'id', trim( $this->request->get( 'id' ) ) );
-<<<<<<< HEAD
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
-=======
->>>>>>> Improve management views.
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
 		$this->session->set( $this->sessionPrefix.'tag', trim( $this->request->get( 'tag' ) ) );

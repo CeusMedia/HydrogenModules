@@ -57,7 +57,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 			$category[$column]	= $this->request->get( $column );
 		$category['parentId']	= (int) $parentId;
 		$this->addData( 'category', (object) $category );
-		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) ) );
+		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
 	}
 
 	public function ajaxSetTab( $tabKey ){
