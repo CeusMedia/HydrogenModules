@@ -12,6 +12,11 @@ $w				= (object) $words['addImage'];
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'add.image.right' ), 'html/manage/content/image/' ) );
 
+$helperUpload	= new View_Helper_Input_File( $env );
+$helperUpload->setName( 'file' );
+$helperUpload->setLabel( $iconUpload );
+$helperUpload->setRequired( TRUE );
+
 return $textTop.'
 <div class="row-fluid">
 	<div class="span3">
@@ -25,7 +30,7 @@ return $textTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_file">'.$w->labelFile.'</label>
-							'.View_Helper_Input_File::render( 'file', $iconUpload, 'Datei auswählen...' ).'
+							'.$helperUpload->render().'
 						</div>
 					</div>
 					<div class="row-fluid">
