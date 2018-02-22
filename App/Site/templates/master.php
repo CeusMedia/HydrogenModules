@@ -2,6 +2,11 @@
 $page	= $env->getPage();
 
 $navbarFixed	= TRUE;
+$navMain		= '';
+$navHeader		= '';
+$navTop			= '';
+$navFooter		= '';
+
 
 /*  --  LANGUAGE SELECTOR  --  */
 $languageSelector	= '';
@@ -26,13 +31,13 @@ else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdate
 	$navMain	= $helperNav->render();
 }
 else{
+	$links	= array();
 	if( file_exists( 'config/pages.json' ) ){									//  fallback: pages but no renderer
 		$isAuthenticated	= (bool) $env->getSession()->get( 'userId' );
 		if( $env->getModules()->has( 'Resource_Authentication' ) ){
 			$auth				= Logic_Authentication::getInstance( $env );
 			$isAuthenticated	= $auth->isAuthenticated();
 		}
-		$links	= array();
 		try{
 			$scopes	= FS_File_JSON_Reader::load( 'config/pages.json' );
 			foreach( $scopes->main as $mainPageId => $mainPage ){
