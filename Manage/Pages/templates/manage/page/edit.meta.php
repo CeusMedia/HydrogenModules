@@ -9,8 +9,10 @@ $optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->change
 $optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
 
 $buttonSuggest	= '';
-if( $page->type == 0 )
-	$buttonSuggest	= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.suggestKeyWords('.$page->pageId.', \'#input_page_keywords\');">vorschlagen</button>';
+if( $page->type == 0 ){
+	$buttonSuggest		= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.suggestKeyWords('.$page->pageId.', \'#input_page_keywords\');">vorschlagen</button>';
+	$buttonBlacklist	= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.blacklistSuggestedWords('.$page->pageId.', \'#input_page_keywords\');">Wörter ausschließen</button>';
+}
 
 return '
 <div class="content-panel content-panel-form">
@@ -31,7 +33,7 @@ return '
 						<div class="span12">
 							<label for="input_page_keywords">Schlagwörter <small class="muted">(kommagetrennt)</small></label>
 							<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
-							'.$buttonSuggest.'
+							'.$buttonSuggest.' '.$buttonBlacklist.'
 						</div>
 					</div>
 			<!--		<div class="row-fluid">

@@ -186,6 +186,22 @@ ModuleManagePages.PageEditor = {
 		tinymce.init(options);
 	},
 
+	blacklistSuggestedWords: function(pageId, id){
+		var words = prompt( "Wörter ausschließen, getrennt mit Leerzeichen" );
+		if(!words)
+			return;
+		jQuery.ajax({
+			url: "./manage/page/ajaxBlacklistSuggestedKeywords",
+			data: {pageId: pageId, words: words},
+			method: "post",
+			dataType: "JSON",
+			success: function(response){
+				if(response.status === "data")
+					ModuleManagePages.PageEditor.suggestKeyWords(pageId, id);
+			}
+		});
+	},
+
 	suggestKeyWords: function(pageId, id){
 		jQuery.ajax({
 			url: "./manage/page/ajaxSuggestKeywords",

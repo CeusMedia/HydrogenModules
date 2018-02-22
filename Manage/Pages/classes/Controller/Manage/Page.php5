@@ -186,6 +186,33 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function ajaxBlacklistSuggestedKeywords(){
+		try{
+			$pageId		= $this->request->get( 'pageId' );						//  get page ID from request
+			$page		= $this->checkPageId( $pageId );						//  check if page ID is valid
+			$blacklist	= 'config/terms.blacklist.txt';
+			$words		= trim( $this->request->get( 'words' ) );				//  get string of whitespace concatenated words from request
+			if( $words ){														//  atleast one word is given
+				if( !file_exists( $blacklist ) )								//  blacklist file is not existing, yet
+					touch( $blacklist );										//  create empty list file
+				$editor	= new \FS_File_List_Editor( $blacklist );				//  start list editor
+				foreach( preg_split( '/\s*(,|\s)\s*/', $words ) as $word )		//  iterate trimmed words
+					$editor->add( trim( $word ) );								//  add word to list and save
+			}
+			print( json_encode( array(											//  respond to client
+				'status'	=> 'data',											//  that this operation has been successful
+				'data'		=> is_array( $words ) ? count( $words ) : 0,		//  provider number of added words
+			) ) );
+		}
+		catch( Exception $e ){													//  an exception has been thrown
+			print( json_encode( array(											//  respond to client
+				'status'	=> 'exception',										//  that this is an error
+				'data'		=> $e->getMessage(),								//  provider exception message as error message
+			) ) );
+		}
+		exit;																	//  quit anyways since this is an AJAX request
+	}
+
 	public function ajaxSuggestKeywords(){
 		$pageId	= $this->request->get( 'pageId' );
 		$page	= $this->checkPageId( $pageId );
