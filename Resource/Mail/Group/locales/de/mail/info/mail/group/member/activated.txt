@@ -1,3 +1,4 @@
+Hallo <%?member.title%>!
 
 Ihre Mitgliedschaft in der Gruppe "<%group.title%>" wurde aktiviert.
 

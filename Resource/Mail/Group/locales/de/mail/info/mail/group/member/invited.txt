@@ -1,3 +1,4 @@
+Hallo <%?member.title%>!
 
 Sie wurden mit Ihrer E-Mail-Adresse <%member.address%> in die E-Mail-Gruppe "<%group.title%>" eingeladen.
 

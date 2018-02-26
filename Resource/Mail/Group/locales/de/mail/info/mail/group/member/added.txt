@@ -1,3 +1,4 @@
+Hallo <%?member.title%>!
 
 Ihre E-Mail-Adresse <%member.address%> wurde der E-Mail-Gruppe "<%group.title%>" hinzugefügt.
 
