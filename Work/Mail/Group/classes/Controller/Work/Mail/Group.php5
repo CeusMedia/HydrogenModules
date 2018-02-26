@@ -102,7 +102,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			);
 			$mail		= new Mail_Info_Mail_Group_Member_Added( $this->env, $mailData );
 		}
-		$receiver	= (object) array( 'email' => $address );
+		$receiver	= (object) array(
+			'username'	=> $title,
+			'email'		=> $address
+		);
 		$language	= $this->env->getLanguage()->getLanguage();
 		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
@@ -244,10 +247,13 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		foreach( $members as $entry ){
 			if( $entry->address == $manager->email )
 				continue;
-			if( $entry->address == $member->mailGroupMemberId )
+			if( $entry->mailGroupMemberId == $member->mailGroupMemberId )
 				continue;
 			$mail		= new Mail_Info_Mail_Group_Members_MemberActivated( $this->env, $mailData );
-			$receiver	= (object) array( 'email' => $entry->address );
+			$receiver	= (object) array(
+				'username'	=> $entry->title,
+				'email'		=> $entry->address
+			);
 			$language	= $this->env->getLanguage()->getLanguage();
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
@@ -296,10 +302,13 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		foreach( $members as $entry ){
 			if( $entry->address == $manager->email )
 				continue;
-			if( $entry->address == $member->mailGroupMemberId )
+			if( $entry->mailGroupMemberId == $member->mailGroupMemberId )
 				continue;
 			$mail		= new Mail_Info_Mail_Group_Members_MemberDeactivated( $this->env, $mailData );
-			$receiver	= (object) array( 'email' => $entry->address );
+			$receiver	= (object) array(
+				'username'	=> $entry->title,
+				'email'		=> $entry->address
+			);
 			$language	= $this->env->getLanguage()->getLanguage();
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
