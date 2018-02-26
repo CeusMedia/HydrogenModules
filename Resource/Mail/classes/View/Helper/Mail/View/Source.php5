@@ -17,9 +17,11 @@ class View_Helper_Mail_View_Source{
 	public function render(){
 		if( !$this->mail )
 			throw new RuntimeException( 'No mail object or ID set' );
-		if( $this->mail->object->mail instanceof \CeusMedia\Mail\Message )
+		if( class_exists( '\CeusMedia\Mail\Message\Renderer' ) )							//  use library CeusMedia/Mail version 2
+			$code	= \CeusMedia\Mail\Message\Renderer::render( $this->mail->object->mail );
+		else if( $this->mail->object->mail instanceof \CeusMedia\Mail\Message )				//  use library CeusMedia/Mail version 1
 			$code	= \CeusMedia\Mail\Renderer::render( $this->mail->object->mail );
-		else if( $this->mail->object->mail instanceof Net_Mail )
+		else if( $this->mail->object->mail instanceof Net_Mail )							//  use ibrary CeusMedia/Common
 			$code	= $this->mail->object->mail->getBody();
 		else
 			throw new RangeException( 'No source renderer for mail object available' );

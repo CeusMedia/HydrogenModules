@@ -140,7 +140,9 @@ class Logic_Mail{
 			$compression	= Model_Mail::COMPRESSION_NONE;
 		}
 
-		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
+		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Address )
+			$senderAddress	= $mail->mail->getSender()->getAddress();
+		else if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
 			$senderAddress	= $mail->mail->getSender()->getAddress();
 		else
 			$senderAddress	= $mail->mail->getSender()->address;
@@ -522,10 +524,16 @@ class Logic_Mail{
 		$mails		= $this->modelQueue->getAll( $conditions, $orders, $limits );
 		foreach( $mails as $mail ){
 			$mail	= $this->getMail( $mail->mailId );
+			remark( "repair: ".$mail->mailId );
 			if( empty( $mail->senderAddress ) ){
 				if( method_exists( $mail->object->mail, 'getSender' ) ){
+					$address 	= $mail->object->mail->getSender();
+					if( $mail->object->mail->getSender() instanceof \CeusMedia\Mail\Address )				//  use library CeusMedia/Mail version 2
+						$address	= $address->getAddress();
+					else if( $mail->object->mail->getSender() instanceof \CeusMedia\Mail\Participant )		//  use library CeusMedia/Mail version 1
+						$address	= $address->getAddress();
 					$this->modelQueue->edit( $mail->mailId, array(
-						'senderAddress'	=> $mail->object->mail->getSender(),
+						'senderAddress'	=> $address,
 					) );
 				}
 			}
