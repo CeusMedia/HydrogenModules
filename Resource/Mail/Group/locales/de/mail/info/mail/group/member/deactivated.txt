@@ -1,4 +1,4 @@
 
-Ihre Mitglied in der Gruppe "<%group.title%>" wurde deaktiviert.
+Ihre Mitgliedschaft in der Gruppe "<%group.title%>" wurde deaktiviert.
 
 Sie können nun keine E-Mails mehr an die Gruppe schreiben.
