@@ -212,7 +212,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 						'modifiedAt'	=> time(),
 					) );
 					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
-					$receiver	= (object) array( 'email' => $member->address );
+					$receiver	= (object) array(
+						'username'	=> $member->title,
+						'email'		=> $member->address
+					);
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					$this->logicMail->handleMail( $mail, $receiver, $language );
@@ -225,7 +228,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			'modifiedAt'	=> time(),
 		) );
 		$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
-		$receiver	= (object) array( 'email' => $member->address );
+		$receiver	= (object) array(
+			'username'	=> $member->title,
+			'email'		=> $member->address
+		);
 		$language	= $this->env->getLanguage()->getLanguage();
 		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
@@ -259,7 +265,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 					'modifiedAt'	=> time(),
 				) );
 				$mail		= new Mail_Info_Mail_Group_Deactivated( $this->env, $mailData );
-				$receiver	= (object) array( 'email' => $member->address );
+				$receiver	= (object) array(
+					'username'	=> $member->title,
+					'email'		=> $member->address
+				);
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->appendRegisteredAttachments( $mail, $language );
 				$this->logicMail->handleMail( $mail, $receiver, $language );
@@ -271,7 +280,10 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			'modifiedAt'	=> time(),
 		) );
 		$mail		= new Mail_Info_Mail_Group_Member_Deactivated( $this->env, $mailData );
-		$receiver	= (object) array( 'email' => $member->address );
+		$receiver	= (object) array(
+			'username'	=> $member->title,
+			'email'		=> $member->address
+		);
 		$language	= $this->env->getLanguage()->getLanguage();
 		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
