@@ -38,8 +38,9 @@ if( $groups ){
 			UI_HTML_Tag::create( 'td', join( ' ', $buttons ), array( 'style' => 'text-align: right' ) ),
 		) );
 	}
+	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '240px' ) );
 	$tbody	= UI_HTML_Tag::create(' tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', array( $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
+	$list	= UI_HTML_Tag::create( 'table', array( $colgroup, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 }
 
 $buttonbar	= '';
