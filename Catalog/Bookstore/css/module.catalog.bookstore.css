@@ -198,6 +198,16 @@ body.moduleCatalogBookstore div.buttonbar {
 	height: 20px;
 	cursor: pointer;
 	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty {
+/*	background-image: url(../img/icons/bullet_empty_large.png);*/
+/*	opacity: 0.5;*/
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open {
+/*	background-image: url(../img/icons/bullet_minus_large.png);*/
+	}
+#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
+/*	background-image: url(../img/icons/bullet_plus_large.png);*/
+	}
 #layout-content #categoryList div.column ul.branches li.branch span {
 	margin-left: 5px;
 	}
@@ -305,3 +315,73 @@ span.status_1 {
 	}
 
 
+/*  --  RELATED ARTICLES SLIDER  --  */
+.related-articles-slider {
+	position: relative;
+	height: 220px;
+	box-sizing: box-model;
+	}
+.related-articles-slider * {
+	-webkit-user-select: none;	/* Chrome all / Safari all */
+	-moz-user-select: none;		/* Firefox all */
+	-ms-user-select: none;		/* IE 10+ */
+	user-select: none;
+	}
+.related-articles-slider .related-articles-arrow {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 5%;
+	height: 218px;
+	border: 1px solid rgba(127,127,127,0.2);
+	background-color: rgba(127,127,127,0.1);
+	vertical-align: middle;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	cursor: pointer;
+	}
+.related-articles-slider .related-articles-arrow span {
+	line-height: 200px;
+	font-size: 2em;
+	font-weight: bold;
+	}
+.related-articles-slider .related-articles-arrow-right {
+	left: auto;
+	right: 0;
+	}
+.related-articles-slider .related-articles-container {
+	position: absolute;
+	left: 5%;
+	right: 5%;
+	top: 0;
+	width: 90%;
+	height: 100%;
+/*	border: 1px solid rgba(127,127,127,0.5);*/
+	overflow: hidden;
+	overflow-x: auto;
+	}
+.related-articles-slider .related-articles-list {
+	position: relative;
+	white-space: nowrap;
+	}
+.related-articles-slider .related-articles-list .related-articles-list-item {
+	float: left;
+	width: 240px;
+	height: 200px;
+	padding: 10px;
+	text-align: center;
+	white-space: initial;
+	overflow: hidden;
+/*	overflow-y: auto;*/
+	}
+.related-articles-slider .related-articles-list .related-articles-list-item:hover {
+	background-color: yellow;
+	background-color: #F7F7F7;
+	}
+.related-articles-slider .related-articles-image-container {
+	padding-bottom: 0.5em;
+	}
+.related-articles-slider .related-articles-list img {
+	height: 120px;
+	}

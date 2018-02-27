@@ -3,7 +3,7 @@
 	<title>Catalog: Bookstore</title>
 	<description/>
 	<category>Catalog</category>
-	<version>0.7.4</version>
+	<version>0.7.5</version>
 	<log version="0.4.6">Responsive Design for category index.</log>
 	<log version="0.4.7">Support for search engine module.</log>
 	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
@@ -27,6 +27,7 @@
 	<log version="0.7.2">Update search support.</log>
 	<log version="0.7.3">Extend bridge logic for quantity changes.</log>
 	<log version="0.7.4">Improve design on category index.</log>
+	<log version="0.7.5">Add helper for related articles slider.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -44,6 +45,7 @@
 		<class>View/Catalog/Bookstore.php5</class>
 		<class>View/Helper/Catalog/Bookstore.php5</class>
 		<class>View/Helper/Catalog/Bookstore/Position.php5</class>
+		<class>View/Helper/Catalog/Bookstore/Relations.php5</class>
 		<class>View/Helper/Text.php5</class>
 		<template>catalog/bookstore/article.php</template>
 		<template>catalog/bookstore/article/item.php</template>
@@ -103,6 +105,7 @@
 	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Catalog_Bookstore::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Search" event="renderResults">View_Catalog_Bookstore::___onRenderSearchResults</hook>
 	<hook type="resource" resource="Info_News" event="renderItem">View_Helper_Catalog_Bookstore::___onRenderNewsItem</hook>
+	<hook type="resource" resource="View" event="onRenderContent">View_Catalog_Bookstore::___onRenderContent</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_articles`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_articles` (

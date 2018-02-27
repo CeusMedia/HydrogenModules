@@ -1,6 +1,44 @@
 <?php
 class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 
+	static public function ___onRenderContent( $env, $context, $module, $data ){
+		$pattern		= "/^(.*)(\[CatalogBookstoreRelations([^\]]+)?\])(.*)$/sU";
+		$helper			= new View_Helper_Catalog_Bookstore_Relations( $env );
+		$defaultAttr	= array(
+			'articleId'		=> '',
+			'tags'			=> '',
+			'heading'		=> '',
+		);
+		$modals			= array();
+		if( preg_match( $pattern, $data->content ) ){
+			$code		= preg_replace( $pattern, "\\2", $data->content );
+			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
+			$code		= preg_replace( '/( ){2,}/', " ", $code );
+			$code		= trim( $code );
+			try{
+				$node		= new XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
+				$attr		= array_merge( $defaultAttr, $node->getAttributes() );
+				if( $attr['articleId'] )
+					$helper->setArticleId( $attr['articleId'] );
+				else if( $attr['tags'] ){
+					$tags	= preg_split( '/, */', $attr['tags'] );
+					$helper->setTags( $tags );
+				}
+				if( $attr['heading'] )
+					$helper->setHeading( $attr['heading'] );
+				$subcontent		= $helper->render();
+				$subcontent		.= '<script>jQuery(document).ready(function(){ModuleCatalogBookstoreRelatedArticlesSlider.init(260)});</script>';
+			}
+			catch( Exception $e ){
+				$env->getMessenger()->noteFailure( 'Short code failed: '.$code );
+				$subcontent	= '';
+			}
+			$replacement	= "\\1".$subcontent."\\4";												//  insert content of nested page...
+			$data->content	= preg_replace( $pattern, $replacement, $data->content );				//  ...into page content
+		}
+	}
+
+
 	static public function ___onRenderSearchResults( $env, $context, $module, $data ){
 		$helper			= new View_Helper_Catalog_Bookstore( $env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $env );
