@@ -72,7 +72,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function changeQuantity( $articleId, $change ){
 		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
-		if( !$article && $strict ){
+		if( !$article && $strict )
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
