@@ -1,13 +1,21 @@
 <?php
 class Job_Mail_Group extends Job_Abstract{
 
+	protected $logicGroup;
+	protected $logicMail;
+	protected $logicMessage;
+
+	protected function __onInit(){
+		$this->logicGroup		= new Logic_Mail_Group( $this->env );
+		$this->logicMail		= new Logic_Mail( $this->env );
+		$this->logicMessage		= new Logic_Mail_Group_Message( $this->env );
+	}
+
 	public function activateConfirmedMembers(){
-		$logic			= new Logic_Mail_Group( $this->env );
-		$logicMail		= new Logic_Mail( $this->env );
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
 		$modelUser		= new Model_User( $this->env );
-		$groups			= $logic->getGroups();
+		$groups			= $this->logicGroup->getGroups();
 		$count			= 0;
 		foreach( $groups as $group ){
 			if( $group->type == Model_Mail_Group::TYPE_PUBLIC )
@@ -38,7 +46,7 @@ class Job_Mail_Group extends Job_Abstract{
 				if( $action ){
 					$count++;
 					$manager	= $modelUser->get( $group->managerId );
-					foreach( $logic->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
+					foreach( $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
 						if( $entry->address === $manager->email )
 							continue;
 						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
@@ -48,21 +56,22 @@ class Job_Mail_Group extends Job_Abstract{
 							'group'		=> $group,
 							'greeting'	=> $action->message,
 						);
-						$logicMail->handleMail(
-							new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData ),
-							(object) array( 'email' => $entry->address ),
-							$this->env->getLanguage()->getLanguage()
+						$receiver	= (object) array(
+							'username'	=> $entry->title,
+							'email'		=> $entry->address
 						);
+						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
+						$language	= $this->env->getLanguage()->getLanguage();
+						$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
-
 					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
 					$receiver	= (object) array(
 						'username'	=> $member->title,
 						'email'		=> $member->address
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
-					$logicMail->appendRegisteredAttachments( $mail, $language );
-					$logicMail->handleMail( $mail, $receiver, $language );
+					$this->logicMail->appendRegisteredAttachments( $mail, $language );
+					$this->logicMail->handleMail( $mail, $receiver, $language );
 
 					$modelAction->edit( $action->mailGroupActionId, array(
 						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
@@ -76,12 +85,10 @@ class Job_Mail_Group extends Job_Abstract{
 	}
 
 	public function informMembersAboutNewMember(){
-		$logic			= new Logic_Mail_Group( $this->env );
-		$logicMail		= new Logic_Mail( $this->env );
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
 		$modelUser		= new Model_User( $this->env );
-		$groups			= $logic->getGroups();
+		$groups			= $this->logicGroup->getGroups();
 		$count			= 0;
 		foreach( $groups as $group ){
 			$actions	= $modelAction->getAllByIndices( array(
@@ -93,7 +100,7 @@ class Job_Mail_Group extends Job_Abstract{
 				$manager	= $modelUser->get( $group->managerId );
 				foreach( $actions as $action ){
 					$member		= $modelMember->get( $action->mailGroupMemberId );
-					foreach( $logic->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
+					foreach( $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
 						if( $entry->address === $manager->email )
 							continue;
 						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
@@ -103,11 +110,13 @@ class Job_Mail_Group extends Job_Abstract{
 							'group'		=> $group,
 							'greeting'	=> $action->message,
 						);
-						$logicMail->handleMail(
-							new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData ),
-							(object) array( 'email' => $entry->address ),
-							$this->env->getLanguage()->getLanguage()
+						$receiver	= (object) array(
+							'username'	=> $entry->title,
+							'email'		=> $entry->address
 						);
+						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
+						$language	= $this->env->getLanguage()->getLanguage();
+						$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
 					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
 					$receiver	= (object) array(
@@ -115,8 +124,8 @@ class Job_Mail_Group extends Job_Abstract{
 						'email'		=> $member->address
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
-					$logicMail->appendRegisteredAttachments( $mail, $language );
-					$logicMail->handleMail( $mail, $receiver, $language );
+					$this->logicMail->appendRegisteredAttachments( $mail, $language );
+					$this->logicMail->handleMail( $mail, $receiver, $language );
 
 					$modelAction->edit( $action->mailGroupActionId, array(
 						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
@@ -128,11 +137,10 @@ class Job_Mail_Group extends Job_Abstract{
 	}
 
 	public function test(){
-		$logic		= new Logic_Mail_Group( $this->env );
-		$groups		= $logic->getGroups();
+		$groups			= $this->logicGroup->getGroups();
 		foreach( $groups as $group ){
 			$this->out( '- Mail Group: '.$group->title );
-			$results	= $logic->importNewMails( $group->mailGroupId );
+			$results	= $this->logicMessage->importNewMails( $group->mailGroupId );
 			$this->out( '  Imported ('.count( $results->mailsImported ).'): '.join( ',', $results->mailsImported ) );
 			if( $results->errors ){
 				$this->out( '  Errors:' );
@@ -140,15 +148,14 @@ class Job_Mail_Group extends Job_Abstract{
 					$this->out( '    - '.$error );
 				}
 			}
-			$results	= $logic->handleNewMails( $group->mailGroupId );
+			$results	= $this->logicGroup->handleNewMails( $group->mailGroupId );
 		}
 	}
 
 	public function handle(){
-		$logic		= new Logic_Mail_Group( $this->env );
-		$groups		= $logic->getActiveGroups();
+		$groups			= $this->logicGroup->getActiveGroups();
 		foreach( $groups as $group ){
-			$results	= $logic->handleMailgroup( $group->mailGroupId );
+			$results	= $this->logicGroup->handleMailgroup( $group->mailGroupId );
 			if( $results->mails ){
 				$this->out( date( 'r' ).': Handling mailgroup: '.$group->title );
  				foreach( $results->mails as $mailId => $handledMail ){

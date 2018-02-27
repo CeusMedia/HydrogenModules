@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.3.9</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -19,6 +19,7 @@
 	<log version="0.3.7">Add mails for member status change.</log>
 	<log version="0.3.8">Add invite and silent add.</log>
 	<log version="0.3.9">Support automatic mail attachments.</log>
+	<log version="0.4">Extract message logic to own class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,6 +28,7 @@
 		<class>Job/Mail/Group.php5</class>
 		<class>Hook/Resource/Mail/Group.php5</class>
 		<class>Logic/Mail/Group.php5</class>
+		<class>Logic/Mail/Group/Message.php5</class>
 		<class>Mail/Info/Mail/Group/Activated.php5</class>
 		<class>Mail/Info/Mail/Group/Autojoined.php5</class>
 		<class>Mail/Info/Mail/Group/Deactivated.php5</class>

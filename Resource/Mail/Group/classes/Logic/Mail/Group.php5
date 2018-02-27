@@ -22,12 +22,43 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		$this->logicMail	= new Logic_Mail( $this->env );
 	}
 
+	/**
+	 *	Check mail group by ID.
+	 *	Alias for checkGroupId.
+	 *	@access		protected
+	 *	@param		integer			$groupId		...
+	 *	@param		boolean			$strict			Flag: throw exception if not existing
+	 *	@return		object			Group model object if existing
+	 *	@throws		RangeException	if mail group is not existing
+	 *	@todo 		make this the main implementation after extraction of this large logic to sub logic classes.
+	 */
+	protected function checkId( $groupId, $strict = TRUE ){
+		return $this->checkGroupId( $groupId, $strict );
+	}
+
+	/**
+	 *	Check mail group by ID.
+	 *	@access		protected
+	 *	@param		integer			$groupId		...
+	 *	@param		boolean			$strict			Flag: throw exception if not existing
+	 *	@return		object			Group model object if existing
+	 *	@throws		RangeException	if mail group is not existing
+	 */
 	protected function checkGroupId( $groupId, $strict = TRUE ){
 		$group	= $this->modelGroup->get( $groupId );
 		if( $group )
 			return $group;
 		if( $strict )
 			throw new RangeException( 'Invalid group ID: '.$groupId );
+		return NULL;
+	}
+
+	protected function checkMemberId( $memberId, $strict = TRUE ){
+		$member	= $this->modelMember->get( $memberId );
+		if( $member )
+			return $member;
+		if( $strict )
+			throw new RangeException( 'Invalid member ID: '.$memberId );
 		return NULL;
 	}
 
@@ -52,29 +83,6 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		if( $forwardedOnly )
 			$indices['status']	= Model_Mail_Group_Message::STATUS_FORWARDED;
 		return $this->modelMessage->count( $indices );
-	}
-
-	protected function forwardMailTo( $groupId, $mail, \CeusMedia\Mail\Address $sender, \CeusMedia\Mail\Address $receiver, $dry = FALSE ){
-		$group		= $this->checkGroupId( $groupId );
-		$message	= new \CeusMedia\Mail\Message();
-		if( strlen( trim( $mail->textPlain ) ) )
-			$message->addText( $mail->textPlain );
-		if( strlen( trim( $mail->textHtml ) ) )
-			$message->addHtml( $mail->textHtml );
-		if( !count( $message->getParts() ) )
-			return;
-		$message->setSender( $sender );
-		$message->addReplyTo( new \CeusMedia\Mail\Address( $group->address ) );
-		$message->setSubject( $mail->subject );
-		$message->addHeaderPair( 'Precedence', 'list' );
-		$message->addHeaderPair( 'List-Post', '<mailto:'.$group->address.'>' );
-		$message->addHeaderPair( 'Reply-To', $group->address );
-		if( !empty( $group->bounce ) )
-			$message->addHeaderPair( 'Errors-To', $group->bounce );
-		$message->addRecipient( $receiver );
-//		remark( '    Send to: '.$receiver->get() );
-		if( !$dry )
-			$this->getTransport( $groupId )->send( $message );
 	}
 
 	public function getActiveGroups(){
@@ -164,74 +172,8 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		) );
 	}
 
-	public function getMessageObject( $messageOrMessageId ){
-		if( is_object( $messageOrMessageId ) )
-			$message	= $messageOrMessageId;
-		else if( is_int( $messageOrMessageId ) )
-			$message	= $this->modelMessage->get( $messageOrMessageId );
-		if( !$message || !isset( $message->object ) )
-			throw new InvalidArgumentException( 'Given message is invalid' );
-
-		$object	= explode( ":", $message->object, 2 );
-		if( $object[0] === "BZIP2" )
-			return unserialize( bzdecompress( $object[1] ) );
-		else if( $object[0] === "GZIP" )
-			return unserialize( gzinflate( $object[1] ) );
-		return unserialize( $object[1] );
-	}
-
-	public function getRawMailFromMessage( $messageOrMessageId ){
-		if( is_object( $messageOrMessageId ) )
-			$message	= $messageOrMessageId;
-		else if( is_int( $messageOrMessageId ) )
-			$message	= $this->modelMessage->get( $messageOrMessageId );
-		if( !$message || !isset( $message->object ) )
-			throw new InvalidArgumentException( 'Given message is invalid' );
-
-		$raw	= explode( ":", $message->raw, 2 );
-		if( $raw[0] === "BZIP2" )
-			return bzdecompress( $raw[1] );
-		if( $raw[0] === "GZIP" )
-			return gzinflate( $raw[1] );
-		return $raw[1];
-	}
-
-	protected function getTransport( $groupId ){
-		$group	= $this->checkGroupId( $groupId );
-		$server	= $this->checkServerId( $group->mailGroupServerId );
-
-		if( !isset( $this->transports[(int) $groupId] ) )
-			$this->transports[(int) $groupId]  = new \CeusMedia\Mail\Transport\SMTP(
-				$server->smtpHost,
-				(int) $server->smtpPort,
-				$group->address,
-				$group->password
-			);
-		return $this->transports[(int) $groupId];
-	}
-
-	public function handleNewMails( $groupId = 0 ){
-		$groupIds	= array_keys( $this->getGroups() );
-		$groupIds	= $groupId > 0 ? array( $groupId ) : $groupIds;
-
-		$results	= (object) array(
-			'mailsImported'	=> array(),
-			'errors'		=> array(),
-		);
-		foreach( $groupIds as $groupId ){
-			$indices	= array(
-				'groupId'	=> $groupId,
-				'status'	=> Model_Mail_Group_Message::STATUS_NEW,
-			);
-			$orders		= array( 'createdAt' => 'ASC' );
-			$messages	= $this->modelMessage->getAll( $indices, $orders );
-			foreach( $messages as $message ){
-
-			}
-		}
-	}
-
 	public function handleMailgroup( $groupId, $dry = FALSE, $verbose = NULL ){
+		trigger_error( "Deprecated function called.", E_USER_NOTICE );
 		$group		= $this->checkGroupId( $groupId );
 		$mailbox	= $this->getMailbox( $groupId );
 		$mails		= $this->getUnhandledNewMails( $mailbox );
@@ -279,68 +221,6 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 			$list[]	= $mail;
 		}
 		return (object) array( 'mails' => $list );
-	}
-
-	protected function importNewMail( $groupId, $rawMail ){
-		$message	= \CeusMedia\Mail\Message\Parser::parse( $rawMail );
-		$headers	= $message->getHeaders();
-		$member		= $this->modelMember->getByIndices( array(
-			'mailGroupId'	=> $groupId,
-			'address'		=> $message->getSender()->getAddress(),
-		) );
-		$parentId	= 0;
-		if( $headers->hasField( 'References' ) ){
-			$referenceId	= $headers->getField( 'References' )->getValue();
-			$indices		= array( 'messageId' => '%'.$referenceId );
-			if( ( $parent = $this->modelMessage->getByIndices( $indices ) ) )
-				$parentId	= $parent->mailGroupMessageId;
-		}
-		$timestamp	= strtotime( $headers->getField( 'Date' )->getValue() );
-		$data	= array(
-			'mailGroupId'		=> $groupId,
-			'mailGroupMemberId'	=> $member ? $member->mailGroupMemberId : 0,
-			'status'			=> Model_Mail_Group_Message::STATUS_FORWARDED,
-			'parentId'			=> $parentId,
-			'messageId'			=> $headers->getField( 'Message-ID' )->getValue(),
-			'createdAt'			=> $timestamp,
-		);
-		$compression	= "bzip2";
-		if( $compression === "bzip2" ){
-			$data['raw']		= 'BZIP2:'.bzcompress( $rawMail );
-			$data['object']		= 'BZIP2:'.bzcompress( serialize( $message ) );
-		}
-		else if( $compression === "gzip" ){
-			$data['raw']		= 'GZIP:'.gzdeflate( $rawMail );
-			$data['object']		= 'GZIP:'.gzdeflate( serialize( $message ) );
-		}
-		return $this->modelMessage->add( $data, FALSE );
-	}
-
-	public function importNewMails( $groupId = 0, $dry = FALSE ){
-		$groupIds	= array_keys( $this->getGroups() );
-		$groupIds	= $groupId > 0 ? array( $groupId ) : $groupIds;
-		$results	= (object) array(
-			'mailsImported'	=> array(),
-			'errors'		=> array(),
-		);
-		foreach( $groupIds as $groupId ){
-			$mailbox	= $this->getMailbox( $groupId );
-			$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
-//			$mailIds	= $limit > 0 ? array_slice( $mailIds, 0, $limit ) : $mailIds;
-			foreach( $mailIds as $mailId ){
-				$mail		= $mailbox->getRawMail( $mailId );
-				try{
-					$messageId	= $this->importNewMail( $groupId, $mail );
-					$results->mailsImported[]	= $messageId;
-					if( !$dry )
-						$mailbox->markMailAsRead( $mailId );
-				}
-				catch( Exception $e ){
-					$results->errors[]	= $e->getMessage();
-				}
-			}
-		}
-		return $results;
 	}
 
 	public function isGroupMember( $groupId, $address ){
