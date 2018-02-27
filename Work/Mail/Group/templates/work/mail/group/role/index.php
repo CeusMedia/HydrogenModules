@@ -43,6 +43,6 @@ $panelRoles	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 
-$tabs	= $view->renderTabs( $env, 2 );
+$tabs	= $view->renderTabs( $env, 'role' );
 
 return $tabs.$panelRoles;

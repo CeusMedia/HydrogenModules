@@ -233,7 +233,7 @@ $modalMemberAdd	= '
 	</div>
 </form>';
 
-$tabs	= $view->renderTabs( $env, 0 );
+$tabs	= $view->renderTabs( $env );
 
 return $tabs.'<div class="row-fluid">
 	<div class="span6">

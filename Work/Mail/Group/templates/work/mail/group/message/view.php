@@ -1,6 +1,7 @@
 <?php
+$tabs	= $view->renderTabs( $env, 'message' );
 
-return UI_HTML_Tag::create( 'div', array(
+return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Mail: Raw' ),
 	UI_HTML_Tag::create( 'div', array(
 		xmp( $message->raw, TRUE ),

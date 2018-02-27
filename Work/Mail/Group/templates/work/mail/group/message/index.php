@@ -83,9 +83,7 @@ $panelList	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
-$tabs	= $view->renderTabs( $env, 4 );
-
-
+$tabs	= $view->renderTabs( $env, 'message' );
 
 return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),

@@ -56,6 +56,6 @@ $panelGroups	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 
-$tabs	= $view->renderTabs( $env, 0 );
+$tabs	= $view->renderTabs( $env );
 
 return $tabs.$panelGroups;

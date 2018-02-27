@@ -51,6 +51,6 @@ $panelEdit	= '
 	</div>
 </div>';
 
-$tabs	= $view->renderTabs( $env, 2 );
+$tabs	= $view->renderTabs( $env, 'role' );
 
 return $tabs.$panelEdit;
