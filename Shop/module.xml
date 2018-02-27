@@ -133,6 +133,7 @@ For payment you need to install a payment module.]]></description>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Address</needs>
+		<needs type="module">Resource_Authentication_Backend_Local</needs>
 		<needs type="module">Shop_Bridge</needs>
 		<needs type="module">UI_Font_FontAwesome</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
