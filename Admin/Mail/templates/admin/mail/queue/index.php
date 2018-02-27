@@ -62,6 +62,19 @@ foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $key.': '.$value;
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $filters->get( 'status' ) );
 
+$optOrder		= array(
+	''				=> '- egal -',
+	'subject'		=> 'Betreff',
+	'enqueuedAt'	=> 'Eingangsdatum',
+);
+$optOrder		= UI_HTML_Elements::Options( $optOrder, $filters->get( 'order' ) );
+
+$optDirection	= array(
+	'ASC'		=> 'aufsteigend',
+	'DESC'		=> 'absteigend',
+);
+$optDirection	= UI_HTML_Elements::Options( $optDirection, $filters->get( 'direction' ) );
+
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
 
@@ -93,8 +106,18 @@ return $textTop.'
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
+							<label for="input_order">'.$wf->labelOrder.'</label>
+							<select name="order" id="input_order" class="span12" onclick="this.form.submit();">'.$optOrder.'</select>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span7">
+							<label for="input_direction">'.$wf->labelDirection.'</label>
+							<select type="text" name="direction" id="input_direction" class="span12" onclick="this.form.submit();">'.$optDirection.'</select>
+						</div>
+						<div class="span5">
 							<label for="input_limit">'.$wf->labelLimit.'</label>
-							<input type="text" name="limit" id="input_limit" class="span4" value="'.$filters->get( 'limit' ).'"/>
+							<input type="text" name="limit" id="input_limit" class="span12" value="'.$filters->get( 'limit' ).'"/>
 						</div>
 					</div>
 					<div class="buttonbar">

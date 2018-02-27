@@ -8,6 +8,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Mail( $this->env );
+		$this->filterPrefix	= 'filter_admin_mail_queue_';
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
@@ -91,24 +92,24 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function filter( $reset = NULL ){
 		if( $reset ){
-			$this->session->remove( 'filter_mail_receiverAddress' );
-			$this->session->remove( 'filter_mail_status' );
-//			$this->session->remove( 'filter_mail_way' );
-			$this->session->remove( 'filter_mail_limit' );
-			$this->session->remove( 'filter_mail_order' );
-			$this->session->remove( 'filter_mail_direction' );
+			$this->session->remove( $this->filterPrefix.'receiverAddress' );
+			$this->session->remove( $this->filterPrefix.'status' );
+//			$this->session->remove( $this->filterPrefix.'way' );
+			$this->session->remove( $this->filterPrefix.'limit' );
+			$this->session->remove( $this->filterPrefix.'order' );
+			$this->session->remove( $this->filterPrefix.'direction' );
 		}
 		else{
-			$this->session->set( 'filter_mail_receiverAddress', $this->request->get( 'receiverAddress' ) );
-			$this->session->set( 'filter_mail_status', $this->request->get( 'status' ) );
-//			$this->session->set( 'filter_mail_way', $this->request->get( 'way' ) );
-			$this->session->set( 'filter_mail_limit', $this->request->get( 'limit' ) );
-			$this->session->set( 'filter_mail_order', $this->request->get( 'order' ) );
-			$this->session->set( 'filter_mail_direction', $this->request->get( 'direction' ) );
+			$this->session->set( $this->filterPrefix.'receiverAddress', $this->request->get( 'receiverAddress' ) );
+			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status' ) );
+//			$this->session->set( $this->filterPrefix.'way', $this->request->get( 'way' ) );
+			$this->session->set( $this->filterPrefix.'limit', $this->request->get( 'limit' ) );
+			$this->session->set( $this->filterPrefix.'order', $this->request->get( 'order' ) );
+			$this->session->set( $this->filterPrefix.'direction', $this->request->get( 'direction' ) );
 
-			if( count( $states = $this->session->get( 'filter_mail_status' ) ) === 1 )
+			if( count( $states = $this->session->get( $this->filterPrefix.'status' ) ) === 1 )
 				if( $states[0] === '' )
-					$this->session->remove( 'filter_mail_status' );
+					$this->session->remove( $this->filterPrefix.'status' );
 
 		}
 		$this->restart( NULL, TRUE );
@@ -119,15 +120,15 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $page = 0 ){
-//		if( !$this->session->get( 'filter_mail_status' ) )
-//			$this->session->set( 'filter_mail_status', array( 0 ) );
-		if( !$this->session->get( 'filter_mail_limit' ) )
-			$this->session->set( 'filter_mail_limit', 10 );
-		if( !$this->session->get( 'filter_mail_order' ) )
-			$this->session->set( 'filter_mail_order', 'enqueuedAt' );
-		if( !$this->session->get( 'filter_mail_direction' ) )
-			$this->session->set( 'filter_mail_direction', 'DESC' );
-		$filters	= $this->session->getAll( 'filter_mail_', TRUE );
+//		if( !$this->session->get( $this->filterPrefix.'status' ) )
+//			$this->session->set( $this->filterPrefix.'status', array( 0 ) );
+		if( !$this->session->get( $this->filterPrefix.'limit' ) )
+			$this->session->set( $this->filterPrefix.'limit', 10 );
+		if( !$this->session->get( $this->filterPrefix.'order' ) )
+			$this->session->set( $this->filterPrefix.'order', 'enqueuedAt' );
+		if( !$this->session->get( $this->filterPrefix.'direction' ) )
+			$this->session->set( $this->filterPrefix.'direction', 'DESC' );
+		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
 
 		$page		= max( 0, (int) $page );
 		$offset		= $page * $filters->get( 'limit' );
