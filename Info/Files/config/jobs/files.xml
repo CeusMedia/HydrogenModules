@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Info.Files.migrate">
+		<class>Info_Files</class>
+		<method>migrate</method>
+		<mode>live</mode>
+		<interval>daily</interval>
+	</job>
+</jobs>

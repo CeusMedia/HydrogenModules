@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -14,6 +14,7 @@
 	<log version="0.3.4">End of life: Continued in module Info:Downloads and Manage:Downloads.</log>
 	<log version="0.4">Resurrection for having display and management in one module.</log>
 	<log version="0.4.1">Add search for files in folders.</log>
+	<log version="0.4.2">Add job to migrate older file entries.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -21,6 +22,7 @@
 		<class>View/Info/File.php5</class>
 		<class>Model/Download/File.php5</class>
 		<class>Model/Download/Folder.php5</class>
+		<class>Job/Info/Files.php5</class>
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
 		<locale>de/html/info/file/index.top.html</locale>
@@ -33,6 +35,7 @@
 		<style>module.info.files.css</style>
 		<script load="auto">InfoFile.js</script>
 		<file>contents/files/.htaccess</file>
+		<file>config/jobs/files.xml</file>
 	</files>
 	<config protected="yes" type="string" name="path">contents/files/</config>
 	<link xml:lang="de" access="acl" rank="21" path="info/file">Dateien</link>
