@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <jobs>
-	<job id="Forum.sendDaily">
+	<job id="Info.Forum.sendDaily">
 		<class>Info_Forum</class>
 		<method>sendDaily</method>
 		<mode>live</mode>
