@@ -29,17 +29,18 @@ if(typeof tinymce !== "undefined"){
 			options.style_formats = this.styleFormats;
 			options.content_css += "," + this.envUri + "themes/" + this.frontendTheme + "/css/tinymce.content.css";
 
-			if(typeof tinymce.FileBrowser !== "undefined"){
+			if(settings.JS_TinyMCE.auto_file_browser && typeof tinymce.FileBrowser !== "undefined"){
 				options.file_picker_callback = function(callback, value, meta){
 					tinymce.FileBrowser.initOpener();
 					tinymce.FileBrowser.open(callback, value, meta);
 				};
 				options.file_picker_types = "file image media";
 			}
-			else{
+			else if(settings.JS_TinyMCE.auto_file && (this.listImages || this.listLinks)){
 				options.image_list = this.listImages;
 				options.link_list = this.listLinks;
 			}
+
 
 			if(!jQuery.inArray(mode, ["default", "extended", "minimal"]))
 				mode = "default";
