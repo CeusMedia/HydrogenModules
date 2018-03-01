@@ -165,7 +165,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function deliver( $fileId = NULL ){
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
@@ -182,12 +182,12 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function download( $fileId ){
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		$this->modelFile->edit( $fileId, array(
-			'nrDownloads'	=> $file->nrDownloads++,
+			'nrDownloads'	=> $file->nrDownloads + 1,
 			'downloadedAt'	=> time(),
 		) );
 		Net_HTTP_Download::sendFile( $path.$file->title );
@@ -199,7 +199,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			$path		= $folder->title.'/'.$path;
 			$folderId	= $folder->parentId;
 		}
@@ -211,7 +211,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			$steps[$folder->downloadFolderId]	= $folder;
 			$folderId	= $folder->parentId;
 		}
@@ -219,18 +219,49 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		return $steps;
 	}
 
-	public function index( $folderId = NULL ){
-		$folderId	= (int) $folderId;
-		$orders		= array( 'rank' => 'ASC' );
-		if( $folderId ){
-			$folder		= $this->modelFolder->get( $folderId );
-			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
-				$this->restart( NULL, TRUE );
-			}
+	protected function getNestedFolderIds( $parentId ){
+		$list		= array();
+		$folders	= $this->modelFolder->getAllByIndex( 'parentId', $parentId );
+		foreach( $folders as $folder ){
+			$list[]	= $folder->downloadFolderId;
+			foreach( $this->getNestedFolderIds( $folder->downloadFolderId ) as $id )
+				$list[]	= $id;
 		}
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+		return $list;
+	}
+
+
+	public function index( $folderId = NULL ){
+		$request	= $this->env->getRequest();
+		$search		= trim( $request->get( 'search' ) );
+		$folderId	= (int) $folderId;
+
+		$folders	= array();
+		if( $search ){
+			$conditions	= array( 'title' => '%'.$search.'%' );
+			if( $folderId ){
+				$folderIds	= $this->getNestedFolderIds( $folderId );
+				array_unshift( $folderIds, $folderId );
+				$conditions['downloadFolderId']	= $folderIds;
+			}
+			$orders		= array( 'title' => 'ASC' );
+			$limits		= array();
+			$files		= $this->modelFile->getAll( $conditions, $orders, $limits );
+		}
+		else{
+			$orders		= array( 'rank' => 'ASC' );
+			$orders		= array( 'title' => 'ASC' );
+			if( $folderId ){
+				$folder		= $this->modelFolder->get( $folderId );
+				if( !$folder ){
+					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
+					$this->restart( NULL, TRUE );
+				}
+			}
+			$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+			$orders		= array( 'title' => 'ASC' );
+			$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
+		}
 
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
@@ -239,6 +270,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
+		$this->addData( 'search', $request->get( 'search' ) );
 	}
 
 	public function rankFolder( $folderId, $downwards = NULL ){
@@ -260,7 +292,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function remove( $fileId ){
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->path;
@@ -278,7 +310,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		if( $folderId ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 			}
 			else{
 				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
@@ -358,10 +390,11 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			else if( $entry->isFile() ){
 				$data		= array(
 					'downloadFolderId'	=> $parentId,
-					'title'				=> $entryName
+					'title'				=> $entryName,
 				);
 				if( !$this->modelFile->count( $data ) ){
 					$data['rank']		= $nrFiles++;
+					$data['size']		= filesize( $entry->getPathname() );
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );
 					$this->modelFile->add( $data );
 					$this->updateNumber( $parentId, 'file' );
@@ -377,7 +410,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
+				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			switch( $type ){
 				case 'folder':
 					$data	= array( 'nrFolders' => $folder->nrFolders + $diff );
@@ -430,7 +463,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function view( $fileId = NULL ){
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
-			$this->messenger->noteError( 'Invalid file ID: '.$fileId );
+			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );

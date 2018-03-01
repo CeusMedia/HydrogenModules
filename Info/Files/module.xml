@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.3">Support module Info:Novelties.</log>
 	<log version="0.3.4">End of life: Continued in module Info:Downloads and Manage:Downloads.</log>
 	<log version="0.4">Resurrection for having display and management in one module.</log>
+	<log version="0.4.1">Add search for files in folders.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -27,6 +28,7 @@
 		<template>info/file/index.folder.php</template>
 		<template>info/file/index.info.php</template>
 		<template>info/file/index.scan.php</template>
+		<template>info/file/index.search.php</template>
 		<template>info/file/index.upload.php</template>
 		<style>module.info.files.css</style>
 		<script load="auto">InfoFile.js</script>

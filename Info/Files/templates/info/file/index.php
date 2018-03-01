@@ -13,12 +13,13 @@ $rows			= array( 'folders' => array(), 'files' => array() );
 
 foreach( $files as $file ){
 	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->uploadedAt ) );
-	$size			= Alg_UnitFormater::formatBytes( filesize( $pathBase.$folderPath.$file->title ) );
+	$size			= Alg_UnitFormater::formatBytes( $file->size );
 	$urlView		= './info/file/view/'.$file->downloadFileId;
 	$urlDownload	= './info/file/download/'.$file->downloadFileId;
 	$urlRemove		= './info/file/remove/'.$file->downloadFileId;
 	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
-	$underline		= $size.', '.$timePhrase.', '.$file->nrDownloads.' Downloads';
+	$downloads		= $file->nrDownloads > 2 ? ', '.$file->nrDownloads.' Downloads' : '';
+	$underline		= $size.', '.$timePhrase/*.$downloads*/;
 	$underline		= UI_HTML_Tag::create( 'small', $underline, array( 'class' => "muted" ) );
 	$label			= $file->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
@@ -58,7 +59,14 @@ ksort( $rows['files'] );
 foreach( $folders as $folder ){
 	$url	= './info/file/index/'.$folder->downloadFolderId;
 	$label	= $folder->title.'<br/>';
-	$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+	if( $folder->nrFiles && $folder->nrFolders )
+		$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+	else if( $folder->nrFiles )
+		$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien', array( 'class' => 'muted' ) );
+	else if( $folder->nrFolders )
+		$info	= UI_HTML_Tag::create( 'small', $folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+	else
+		$info	= '';
 	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
 	$buttons	= array();
@@ -105,28 +113,32 @@ foreach( $folders as $folder ){
 //ksort( $rows['folders'] );
 $rows	= $rows['folders'] + $rows['files'];
 
-$table	= '<br/><p><em><small class="muted">'.$words['index']['empty'].'</small></em></p>';
 
 if( $rows ){
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "85%", "15%" );
 	$heads		= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', $words['index']['headFile'] ),
+		UI_HTML_Tag::create( 'th', $words['index'][( $search ? 'headFiles' : 'headFilesAndFolders' )] ),
 		UI_HTML_Tag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),
 	) );
 	$thead		= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$panelList	= '
+	<div class="content-panel">
+		<div class="content-panel-inner">
+			'.$table.'
+		</div>
+	</div>';
 }
-$panelList	= '
-<div class="content-panel">
-	<div class="content-panel-inner">
-		'.$table.'
-	</div>
-</div>';
+else
+	$panelList	= '<br/><div class="alert alert-info"><em class="not-muted">'.$words['index']['empty'].'</em></div>';
+
 
 
 $panels		= array();
-if( 0 )
+if( 1 )
+	$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
+if( !in_array( 'upload', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.info.php' );
 if( in_array( 'upload', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.upload.php' );
@@ -137,21 +149,22 @@ if( in_array( 'scan', $rights ) )
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', !$folderPath );
+$iconHome	= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-home', !$folderPath );
 $buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './info/file/index', $iconHome );
-if( !$folderPath )
+if( !$folderPath && !$search )
 	$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
 $buttons	= array( $buttonHome );
 foreach( $steps as $nr => $stepFolder ){
 	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 	$url		= './info/file/index/'.$stepFolder->downloadFolderId;
-	$icon		= new \CeusMedia\Bootstrap\Icon( 'folder-open', $isCurrent );
+	$icon		= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-folder-open', $isCurrent );
 	$class		= $isCurrent ? 'btn-inverse' : NULL;
 	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 }
 $position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
+
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
 
