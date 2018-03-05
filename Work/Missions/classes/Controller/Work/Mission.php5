@@ -141,14 +141,26 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	static public function ___onDatabaseLockReleaseCheck( $env, $context, $module, $data = array() ){
 		$controllerAction	= $data['controller'].'/'.$data['action'];
 		$skipActions		= array(
-			'work/mission/edit',
 			'work/mission/export/ical',
+			'work/mission/addDocument',
+			'work/mission/edit',
+			'work/time/add',
+			'work/time/start',
+			'work/time/pause',
+			'work/time/stop',
 		);
-		if( !preg_match( "@^work/mission@", $data['controller'] ) )
-			return FALSE;
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
-		return Logic_Database_Lock::release( $env, 'Work_Missions' );
+		if( !$data['userId'] )
+			return FALSE;
+		$logicLock	= new Logic_Database_Lock( $env );
+		$locks		= $logicLock->getUserLocks( $data['userId'] );
+		foreach( $locks as $lock ){
+			if( $lock->subject === "Work_Missions" ){
+//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $data['request']->get( '__path') )."\n", 3, "unlock.log" );
+				$logicLock->unlock( $lock->subject, $lock->entryId, $data['userId'] );
+			}
+		}
 	}
 
 	static public function ___onProjectRemove( $env, $context, $module, $data ){
