@@ -1,20 +1,25 @@
 <?php
-class Logic_Database_Lock{
+class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 
 	protected $model;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env		= $env;
-		$this->model	= new Model_Lock( $env );
-		$this->userId	= (int) $env->getSession()->get( 'userId' );
+	public function __onInit(){
+		$this->model	= new Model_Lock( $this->env );
+		$this->userId	= (int) $this->env->getSession()->get( 'userId' );
 	}
 
+	/**
+	 *	@deprecated		use hook class instead
+	 *	@todo			remove after all installations are updated
+	 */
 	static public function ___onAutoModuleLockRelease( $env, $context/*, $module, $data = array()*/ ){
 		$request	= $env->getRequest();
 		if( $request->isAjax() )
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
 		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', $context, array(
+			'userId'		=> $env->getSession()->get( 'userId' ),
+			'request'		=> $request,
 			'controller'	=> $request->get( 'controller' ),
 			'action'		=> $request->get( 'action' ),
 			'uri'			=> getEnv( 'REQUEST_URI' ),

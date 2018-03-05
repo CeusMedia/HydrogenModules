@@ -5,6 +5,21 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller{
 		$this->model	= new Model_Lock( $this->env );
 	}
 
+	/**
+	 *	@deprecated		use hook class instead
+	 *	@todo			remove after all installations are updated
+	 */
+	static public function ___onAuthLogout( $env, $context, $module, $data = array() ){
+		$model		= new Model_Lock( $env );
+		$model->removeByIndices( array(
+			'userId'	=> $data['userId'],
+		) );
+	}
+
+	/**
+	 *	@deprecated		use hook class instead
+	 *	@todo			remove after all installations are updated
+	 */
 	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
 		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
 			return;
