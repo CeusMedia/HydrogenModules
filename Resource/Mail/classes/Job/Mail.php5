@@ -16,9 +16,10 @@ class Job_Mail extends Job_Abstract{
 
 	public function clean(){
 		$this->__removeNewsletters();
+		$this->__removeOldMails();
 	}
 
-	public function countQueuedMails( $commands, $parameters ){
+	public function countQueuedMails(){
 		$conditions	= array( 'status' => array( Model_Mail::STATUS_NEW ) );
 		$countNew		= $this->logic->countQueue( $conditions );
 		$conditions	= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
@@ -38,7 +39,7 @@ class Job_Mail extends Job_Abstract{
 		$this->__migrateMailClasses();
 	}
 
-	public function removeAttachments( $parameters = array() ){
+	public function removeAttachments(){
 		$conditions	= array( 'status' => array( -2, 2 ) );
 		$orders		= array( 'mailId' => 'DESC' );
 		$fails		= array();
@@ -97,44 +98,54 @@ class Job_Mail extends Job_Abstract{
 		$limit		= (integer) $this->options->get( 'queue.job.limit' );
 		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );
 
-//		$this->log( 'run with config: {sleep: '.$sleep.', limit: '.$limit.'}' );
-		$this->logic->abortMailsWithTooManyAttempts();
+		if( !$this->dryMode )
+			$this->logic->abortMailsWithTooManyAttempts();
 
 		$counter	= 0;
 		$listSent	= array();
 		$listFailed	= array();
 		$conditions	= array(
-			'status'		=> array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY ),
+			'status'		=> array(
+				Model_Mail::STATUS_NEW,
+				Model_Mail::STATUS_RETRY
+			),
 			'attemptedAt'	=> '<'.( time() - $this->options->get( 'retry.delay' ) ),
 		);
 		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
 		$count		= $this->logic->countQueue( $conditions );
-		if( !$count )
-			return;
-		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
-			if( $counter > 0 && $sleep > 0 )
-				$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
-			$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
-			if( $mails && $mail = array_pop( $mails ) ){
-				$counter++;
-				try{
-					$this->logic->sendQueuedMail( $mail->mailId );
-					$listSent[]	= (int) $mail->mailId;
-				}
-				catch( Exception $e ){
-					$this->logError( $e->getMessage() );
-					$listFailed[]	= (int) $mail->mailId;
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would send '.$count.' mails.' );
+		}
+		else{
+			if( !$count )
+				return;
+			while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
+				if( $counter > 0 && $sleep > 0 )
+					$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
+				$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
+				if( $mails && $mail = array_pop( $mails ) ){
+					$counter++;
+					try{
+						if( !$this->dryMode )
+							$this->logic->sendQueuedMail( $mail->mailId );
+						$listSent[]	= (int) $mail->mailId;
+					}
+					catch( Exception $e ){
+						$this->logError( $e->getMessage() );
+						$listFailed[]	= (int) $mail->mailId;
+					}
 				}
 			}
+			$this->log( json_encode( array(
+				'timestamp'	=> time(),
+				'datetime'	=> date( "Y-m-d H:i:s" ),
+				'count'		=> $count,
+				'failed'	=> count( $listFailed ),
+				'sent'		=> count( $listSent ),
+				'ids'		=> $listSent,
+			) ) );
 		}
-		$this->log( json_encode( array(
-			'timestamp'	=> time(),
-			'datetime'	=> date( "Y-m-d H:i:s" ),
-			'count'		=> $count,
-			'failed'	=> count( $listFailed ),
-			'sent'		=> count( $listSent ),
-			'ids'		=> $listSent,
-		) ) );
 	}
 
 
@@ -197,64 +208,39 @@ class Job_Mail extends Job_Abstract{
 		return $unserialize ? unserialize( $serial ) : $serial;
 	}
 
-
-
-
-
 	protected function __detectMailClass(){
-		$conditions	= array( 'mailClass' => '' );
-		$orders		= array( 'mailId' => 'DESC' );
-		$count		= 0;
-		$mails		= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
-		foreach( $mails as $mailId ){
-			try{
-				$mail			= $this->model->get( $mailId );
-				$serial			= $this->_unpackMailObject( $mail, FALSE );
-				$serialStart	= substr( $serial, 0, 80 );
-				$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
-				$this->model->edit( $mail->mailId, array( 'mailClass' => $mailClass ) );
-				$this->showProgress( ++$count, count( $mails ) );
-			}
-			catch( Exception $e ){
-				$fails[$mailId]	= $e->getMessage();
-				$this->showProgress( ++$count, count( $mails ), 'E' );
-			}
-		}
-		if( $mails )
-			$this->out();
-		$this->out( 'Detected mail class for '.$count.' mails.' );
-		$this->showErrors( 'detectMailClass', $fails );
-	}
-
-	protected function __removeNewsletters(){
-		$conditions	= array(
-			'status'		=> array( -2, 2 ),
-			'mailClass'		=> 'Mail_Newsletter',
-			'createdAt' 	=> '<'.( time() - 7 * 24 * 3600 ),
+		$mails		= $this->model->getAllByIndices(
+			array( 'mailClass' => '' ),
+			array( 'mailId' => 'DESC' ),
+			array(),
+			array( 'mailId' )
 		);
-		$orders		= array( 'mailId' => 'ASC' );
-		$count		= 0;
-		$fails		= array();
-		$mails		= $this->model->getAll( $conditions, $orders, $limits );
-
-		foreach( $mails as $mail ){
-			try{
-				$mail	= $this->logic->getMail( $mail->mailId );
-				if( get_class( $mail->object ) === "Mail_Newsletter" ){
-					$this->model->remove( $mail->mailId );
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would detect mail class of '.count( $mails ).' mails.' );
+		}
+		else{
+			$count		= 0;
+			$fails		= array();
+			foreach( $mails as $mailId ){
+				try{
+					$mail			= $this->model->get( $mailId );
+					$serial			= $this->_unpackMailObject( $mail, FALSE );
+					$serialStart	= substr( $serial, 0, 80 );
+					$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
+					$this->model->edit( $mail->mailId, array( 'mailClass' => $mailClass ) );
 					$this->showProgress( ++$count, count( $mails ) );
 				}
+				catch( Exception $e ){
+					$fails[$mailId]	= $e->getMessage();
+					$this->showProgress( ++$count, count( $mails ), 'E' );
+				}
 			}
-			catch( Exception $e ){
-				$this->showProgress( ++$count, count( $mails ), 'E' );
-				$fails[$mail->mailId]	= $e->getMessage();
-//					$this->env->getMessenger()->noteFailure( 'Decoding of mail ('.$mail->mailId.') failed: '.$e->getMessage() );
-			}
+			if( $mails )
+				$this->out();
+			$this->out( 'Detected mail class for '.$count.' mails.' );
+			$this->showErrors( 'detectMailClass', $fails );
 		}
-		if( $mails )
-			$this->out();
-		$this->out( 'Removed '.$count.' newsletter mails.' );
-		$this->showErrors( 'removeNewsletters', $fails );
 	}
 
 	public function __migrateMailClasses( $conditions = array(), $orders = array(), $limits = array() ){
@@ -265,73 +251,85 @@ class Job_Mail extends Job_Abstract{
 //			'Mail_Shop_Order_Manager'	=> 'Mail_Shop_Manager_Ordered',
 		);
 
-		$count		= 0;
-		$fails		= array();
 		$conditions	= array(
-			'status'	=> array( -2, 2 ),
+			'status'	=> array( -2, 2 ),										//  @todo why only these to statuses?
 			'mailClass' => array_keys( $classMigrations ),
 		);
 		$orders		= $orders ? $orders : array( 'mailId' => 'ASC' );
 		$limits		= $limits ? $limits : array();
 		$mails		= $this->model->getAll( $conditions, $orders, $limits );
-		foreach( $mails as $mail ){
-			try{
-				$serial		= $this->_unpackMailObject( $mail, FALSE );
-				$newerClass	= $classMigrations[$mail->mailClass];
-				$find		= 'O:'.strlen( $mail->mailClass ).':"'.$mail->mailClass.'":';
-				$replace	= 'O:'.strlen( $newerClass ).':"'.$newerClass.'":';
-				$serial		= str_replace( $find, $replace, $serial );
-				$object		= $this->_packMailObject( $mail, $serial );
-				$this->model->edit( $mail->mailId, array(
-					'object'	=> $object,
-					'mailClass'	=> $newerClass,
-				), FALSE );
-				$this->showProgress( ++$count, count( $mails ) );
-			}
-			catch( Exception $e ){
-				$fails[$mail->mailId]	= $e->getMessage();
-				$this->showProgress( ++$count, count( $mails ), 'E' );
-			}
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would migrate mail class of '.count( $mails ).' mails.' );
 		}
-		if( $mails )
-			$this->out();
-		$this->out( "Migrated ".$count." mails, ".count( $fails )." failed" );
-		$this->showErrors( 'migrateMailClasses', $fails );
+		else{
+			$count		= 0;
+			$fails		= array();
+			foreach( $mails as $mail ){
+				try{
+					$serial		= $this->_unpackMailObject( $mail, FALSE );
+					$newerClass	= $classMigrations[$mail->mailClass];
+					$find		= 'O:'.strlen( $mail->mailClass ).':"'.$mail->mailClass.'":';
+					$replace	= 'O:'.strlen( $newerClass ).':"'.$newerClass.'":';
+					$serial		= str_replace( $find, $replace, $serial );
+					$object		= $this->_packMailObject( $mail, $serial );
+					$this->model->edit( $mail->mailId, array(
+						'object'	=> $object,
+						'mailClass'	=> $newerClass,
+					), FALSE );
+					$this->showProgress( ++$count, count( $mails ) );
+				}
+				catch( Exception $e ){
+					$fails[$mail->mailId]	= $e->getMessage();
+					$this->showProgress( ++$count, count( $mails ), 'E' );
+				}
+			}
+			if( $mails )
+				$this->out();
+			$this->out( "Migrated ".$count." mails, ".count( $fails )." failed" );
+			$this->showErrors( 'migrateMailClasses', $fails );
+		}
 	}
 
 	protected function __detectCompression(){
 		$conditions	= array( 'compression' => array( Model_Mail::COMPRESSION_UNKNOWN ) );
 		$orders		= array( 'mailId' => 'DESC' );
 
-		$count	= 0;
-		$fails	= array();
 		$mails	= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
-		foreach( $mails as $mailId ){
-			try{
-				$mail			= $this->model->get( $mailId );
-				$compression	= Model_Mail::COMPRESSION_UNKNOWN;
-				$finfo			= new finfo( FILEINFO_MIME );
-				$mimeType		= $finfo->buffer( $mail->object );
-				if( preg_match( '@application/x-bzip2@', $mimeType ) )
-					$compression	= Model_Mail::COMPRESSION_BZIP;
-				else if( preg_match( '@application/x-gzip@', $mimeType ) )
-					$compression	= Model_Mail::COMPRESSION_GZIP;
-				else if( preg_match( '@^[A-Za-z0-9+/=]+$@', $mimeType ) )
-					$compression	= Model_Mail::COMPRESSION_BASE64;
-				if( $compression ){
-					$this->model->edit( $mailId, array( 'compression' => $compression ) );
-					$this->showProgress( ++$count, count( $mails ) );
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would detect compression of '.count( $mails ).' mails.' );
+		}
+		else{
+			$count	= 0;
+			$fails	= array();
+			foreach( $mails as $mailId ){
+				try{
+					$mail			= $this->model->get( $mailId );
+					$compression	= Model_Mail::COMPRESSION_UNKNOWN;
+					$finfo			= new finfo( FILEINFO_MIME );
+					$mimeType		= $finfo->buffer( $mail->object );
+					if( preg_match( '@application/x-bzip2@', $mimeType ) )
+						$compression	= Model_Mail::COMPRESSION_BZIP;
+					else if( preg_match( '@application/x-gzip@', $mimeType ) )
+						$compression	= Model_Mail::COMPRESSION_GZIP;
+					else if( preg_match( '@^[A-Za-z0-9+/=]+$@', $mimeType ) )
+						$compression	= Model_Mail::COMPRESSION_BASE64;
+					if( $compression ){
+						$this->model->edit( $mailId, array( 'compression' => $compression ) );
+						$this->showProgress( ++$count, count( $mails ) );
+					}
+				}
+				catch( Exception $e ){
+					$this->showProgress( ++$count, count( $mails ), 'E' );
+					$fails[$mailId]	= $e->getMessage();
 				}
 			}
-			catch( Exception $e ){
-				$this->showProgress( ++$count, count( $mails ), 'E' );
-				$fails[$mailId]	= $e->getMessage();
-			}
+			if( $mails )
+				$this->out();
+			$this->out( 'Detected compression of '.$count.' mails.' );
+			$this->showErrors( 'detectCompression', $fails );
 		}
-		if( $mails )
-			$this->out();
-		$this->out( 'Detected compression of '.$count.' mails.' );
-		$this->showErrors( 'detectCompression', $fails );
 	}
 
 /*	protected function __migrateRepositoryFromCommonToMail(){
@@ -357,5 +355,68 @@ class Job_Mail extends Job_Abstract{
 		$this->out( '' );
 		$this->out( '- migrateRepositoryFromCommonToMail: Migrated '.$count.' mails.' );
 	}*/
+
+	protected function __removeNewsletters(){
+		$conditions	= array(
+			'status'		=> array( -2, 2 ),
+			'mailClass'		=> 'Mail_Newsletter',
+			'enqueuedAt' 	=> '<'.( time() - 7 * 24 * 3600 ),
+		);
+		$orders		= array( 'mailId' => 'ASC' );
+		$limits		= array();
+		$mails		= $this->model->getAll( $conditions, $orders, $limits );
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would remove '.count( $mails ).' old newsletter mails.' );
+		}
+		else{
+			$count		= 0;
+//			$fails		= array();
+			foreach( $mails as $mail ){
+				$this->model->remove( $mail->mailId );
+				$this->showProgress( ++$count, count( $mails ) );
+			}
+			if( $mails )
+				$this->out();
+			$this->out( 'Removed '.$count.' newsletter mails.' );
+//			$this->showErrors( 'removeNewsletters', $fails );
+		}
+	}
+
+	protected function __removeOldMails(){
+		$age	= 365;
+		if( $this->parameters->get( 'age' ) > 0 )
+			$age	= (int) $this->parameters->get( 'age' );
+		$conditions	= array(
+			'status'		=> array(
+				Model_Mail::STATUS_ABORTED,
+				Model_Mail::STATUS_FAILED,
+				Model_Mail::STATUS_SENT,
+				Model_Mail::STATUS_RECEIVED,
+				Model_Mail::STATUS_OPENED,
+				Model_Mail::STATUS_REPLIED,
+			),
+			'enqueuedAt' 	=> '<'.( time() - $age * 24 * 3600 ),
+		);
+		$orders		= array( 'mailId' => 'ASC' );
+		$limits		= array();
+		$mails		= $this->model->getAll( $conditions, $orders, $limits );
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would remove '.count( $mails ).' old mails.' );
+		}
+		else{
+			$count	= 0;
+	//		$fails	= array();
+			foreach( $mails as $mail ){
+				$this->model->remove( $mail->mailId );
+				$this->showProgress( ++$count, count( $mails ) );
+			}
+			if( $mails )
+				$this->out();
+			$this->out( 'Removed '.$count.' old mails.' );
+//			$this->showErrors( 'removeOldMails', $fails );
+		}
+	}
 }
 ?>
