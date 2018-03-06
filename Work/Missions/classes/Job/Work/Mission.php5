@@ -179,5 +179,41 @@ class Job_Work_Mission extends Job_Abstract{
 		$this->logicMail->handleMail( $mail, $user, $language );
 		return TRUE;
 	}
+
+	public function cleanup(){
+		$modelVersion	= new Model_Mission_Version( $this->env );
+		$modelMission	= new Model_Mission( $this->env );
+
+		$missionIds		= array_unique( array_values( $modelVersion->getAll(
+			array(),
+			array( 'timestamp' => 'ASC' ),
+			array(),
+			array( 'missionId' )
+		) ) );
+
+		$missionIds	= $modelMission->getAll( array(
+			'status'	=> array(
+				Model_Mission::STATUS_ABORTED,
+				Model_Mission::STATUS_REJECTED,
+				Model_Mission::STATUS_FINISHED,
+			),
+			'missionId'	=> $missionIds,
+		), array(), array(), array( 'missionId' ) );
+
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would remove content versions of '.count( $missionIds ).' closed missions.' );
+		}
+		else{
+			$count	= 0;
+			foreach( $missionIds as $nr => $missionId ){
+				$count	+= $modelVersion->removeByIndex( 'missionId', $missionId );
+				$this->showProgress( $nr + 1, count( $missionIds ) );
+			}
+			if( $missionIds )
+				$this->out();
+			$this->out( 'Removed '.$count.' content versions of '.count( $missionIds ).' closed missions.' );
+		}
+	}
 }
 ?>
