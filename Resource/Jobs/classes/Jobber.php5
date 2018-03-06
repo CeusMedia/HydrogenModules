@@ -106,8 +106,9 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 				return 0;																			//  quit with neutral status
 			$this->modelLock->lock( $job->class, $job->method );									//  set lock on job
 			$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );			//  ... create job class instance with arguments
-			$jobObject->noteJob( $job->class, $job->method );										//  ... inform job class instance about method to be called
-			$result		= \Alg_Object_MethodFactory::call( $jobObject, $job->method, $arguments );	//  ... call job method of job class instance
+			$jobObject->noteJob( $job->class, $job->method );										//  ... inform job instance about method to be called
+			$jobObject->noteArguments( $commands, $parameters );									//  ... inform job instance about request arguments 
+			$result		= \Alg_Object_MethodFactory::call( $jobObject, $job->method, $arguments );	//  ... call job method of job instance
 			$this->modelLock->unlock( $job->class, $job->method );									//  remove job lock
 			if( is_integer( $result ) ){
 				return $result;

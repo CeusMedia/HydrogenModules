@@ -7,6 +7,10 @@ class Job_Abstract{
 	protected $jobClass;
 	protected $jobMethod;
 
+	protected $commands			= array();
+	protected $dryMode			= FALSE;
+	protected $parameters;
+
 	/**	@var		Jobber								$manager		Job manager instance */
 	protected $manager;
 
@@ -22,6 +26,7 @@ class Job_Abstract{
 		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
 		$this->jobClass		= $jobClassName === NULL ? get_class( $this ) : $jobClassName;
+		$this->parameters	= new ADT_List_Dictionary();
 		$this->__onInit();
 	}
 
@@ -34,6 +39,13 @@ class Job_Abstract{
 			$label	.= '.'.$this->jobMethod;
 		return $label.': ';
 	}
+
+	public function noteArguments( $commands = array(), $parameters = array() ){
+		$this->commands		= $commands;
+		$this->parameters	= new ADT_List_Dictionary( $parameters );
+		$this->dryMode		= in_array( 'dry', $commands );
+	}
+
 	public function noteJob( $className, $jobName ){
 		$this->jobClass		= $className;
 		$this->jobMethod	= $jobName;
