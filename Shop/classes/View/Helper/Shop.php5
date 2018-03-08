@@ -20,14 +20,14 @@ class View_Helper_Shop{
 	public function renderCartPanelAsText( $positions ){
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
-		$helper->setMode( View_Helper_Shop_CartPositions::MODE_TEXT );
+		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
 		return $helper->render();
 	}
 
 	public function renderCartPanel( $positions ){
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
-		$helper->setMode( View_Helper_Shop_CartPositions::MODE_HTML );
+		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
 		return '<h4>Warenkorb</h4>'.$helper->render();
 	}
 

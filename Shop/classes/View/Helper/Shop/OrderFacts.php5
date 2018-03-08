@@ -42,7 +42,7 @@ class View_Helper_Shop_OrderFacts{
 		$helperFacts->add( 'date', date( 'd.m.Y', $this->order->modifiedAt ) );
 		$helperFacts->add( 'time', date( 'H:i:s', $this->order->modifiedAt ) );
 		$helperFacts->add( 'price', $this->helperShop->formatPrice( $this->order->priceTaxed ) );
-		$helperFacts->add( 'payment', $this->paymentBackend['title'] );
+		$helperFacts->add( 'payment', $this->paymentBackend->title );
 		$helperFacts->add( 'orderId', $this->order->orderId );
 		return $helperFacts->render();
 	}
@@ -79,7 +79,7 @@ class View_Helper_Shop_OrderFacts{
 			'date'		=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'time'		=> date( 'H:i:s', $this->order->modifiedAt ),
 			'price'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
-			'payment'	=> $this->paymentBackend['title'],
+			'payment'	=> $this->paymentBackend->title,
 			'orderId'	=> $this->order->orderId,
 		);
 		return $this;
