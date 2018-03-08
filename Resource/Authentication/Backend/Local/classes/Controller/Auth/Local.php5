@@ -501,7 +501,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				);
 
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
-					unset( $data['password'] );
+					$data['password']	= '';
 				}
 
 
@@ -526,7 +526,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						$mail		= new Mail_Auth_Local_Register( $this->env, $data );
 						$logic		= new Logic_Mail( $this->env );
 						$logic->appendRegisteredAttachments( $mail, $language );
-						$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
+						$mailId		= $logic->enqueueMail( $mail, $language, $user );
+						$logic->sendQueuedMail( $mailId );
 						$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
 					}
 					$this->env->getDatabase()->commit();
@@ -536,7 +537,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					$this->restart( $forward );
 				}
 				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->msgSendingMailFailed );
+//					$this->messenger->noteFailure( $words->msgSendingMailFailed );
+					$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
 					$this->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
 				}
 				$this->env->getDatabase()->rollBack();
