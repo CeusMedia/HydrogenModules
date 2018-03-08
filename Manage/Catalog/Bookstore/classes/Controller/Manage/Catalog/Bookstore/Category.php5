@@ -34,8 +34,9 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.categories', $categories );
 		}
+		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
         $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
-			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['categories'],											//  label of submenu @todo extract
 			'menu'	=> array_values( $categories ),									//  items of submenu
 		) ) );
 	}

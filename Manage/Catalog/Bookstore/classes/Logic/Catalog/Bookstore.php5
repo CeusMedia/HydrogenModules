@@ -264,6 +264,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.articles' );
+		$this->cache->remove( 'tinymce.links' );
 	}
 
 	/**
@@ -281,6 +282,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->cache->remove( 'catalog.bookstore.search.authors' );
 		$this->cache->remove( 'catalog.bookstore.tinymce.images.authors' );
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.authors' );
+		$this->cache->remove( 'tinymce.links' );
 	}
 
 	/**
@@ -305,6 +307,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.categories' );
 		$this->cache->remove( 'catalog.bookstore.count.categories.articles' );
 //		$this->cache->remove( 'admin.categories.list.html' );
+		$this->cache->remove( 'tinymce.links' );
 	}
 
 	/**
@@ -371,10 +374,10 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticle( $articleId ){
+	public function getArticle( $articleId, $strict = TRUE ){
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
 			return $data;
-		$this->checkArticleId( $articleId, TRUE );
+		$this->checkArticleId( $articleId, $strict );
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.bookstore.article.'.$articleId, $data );
 		return $data;

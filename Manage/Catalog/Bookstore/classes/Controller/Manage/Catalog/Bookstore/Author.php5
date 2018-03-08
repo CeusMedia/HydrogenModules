@@ -66,8 +66,9 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.authors', $authors );
 		}
+		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
 		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
-			'title'	=> 'Autoren:',												//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['authors'],					//  label of submenu
 			'menu'	=> array_values( $authors ),								//  items of submenu
 		) ) );
 	}

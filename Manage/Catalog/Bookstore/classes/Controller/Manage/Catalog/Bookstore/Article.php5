@@ -42,7 +42,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 */
 	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
-		if( !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
+		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
 			$frontend	= Logic_Frontend::getInstance( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
@@ -50,7 +50,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list       = array();
 			$conditions	= array( 'cover' => '>0' );
-			$orders		= array( 'articleId' => 'DESC' );
+			$orders		= array( 'title' => 'ASC' );
 			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$list[] = (object) array(
@@ -85,7 +85,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 		if( !( $articles = $cache->get( 'catalog.tinymce.links.catalog.bookstore.articles' ) ) ){
 			$orders		= array( 'articleId' => 'DESC' );
-			$articles	= $logic->getArticles( array(), $orders, array( 0, 200 ) );
+			$limits		= array();//array( 0, 200 );
+			$articles	= $logic->getArticles( array(), $orders, $limits );
 			foreach( $articles as $nr => $item ){
 /*				$category	= $logic->getCategoryOfArticle( $article->articleId );
 				if( $category->volume )
@@ -97,26 +98,31 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.articles', $articles );
 		}
+		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
 		$context->list	= array_merge( $context->list, array( (object) array(
-			'title'	=> 'Veröffentlichungen:',
+			'title'	=> $words['tinymce-menu-links']['articles'],
 			'menu'	=> array_values( $articles ),
 		) ) );
 
-		if( !( $documents = $cache->get( 'catalog.tinymce.links.catalog.bookstore.documents' ) ) ){
+		if( 1 ||  !( $documents = $cache->get( 'catalog.tinymce.links.catalog.bookstore.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
-			$documents	= $logic->getDocuments( array(), array( 'articleDocumentId' => 'DESC' ), array( 0, 200 ) );
+			$limits		= array();//array( 0, 200 );
+			$orders		= array( 'articleDocumentId' => 'DESC' );
+			$documents	= $logic->getDocuments( array(), $orders, $limits );
 			foreach( $documents as $nr => $item ){
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
-				$article		= $logic->getArticle( $item->articleId );
-				$documents[$nr]	= (object) array(
-					'title'	=> Alg_Text_Trimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
+				$article		= $logic->getArticle( $item->articleId, FALSE );
+				if( $article )
+					$documents[$nr]	= (object) array(
+//					'title'	=> Alg_Text_Trimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
+					'title'	=> $article->title.' - '.$item->title,
 					'value'	=> 'file/bookstore/document/'.$item->url,
 				);
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.documents', $documents );
 		}
 		$context->list	= array_merge( $context->list, array( (object) array(
-			'title'	=> 'Dokuments:',
+			'title'	=> $words['tinymce-menu-links']['documents'],
 			'menu'	=> array_values( $documents ),
 		) ) );
 	}
