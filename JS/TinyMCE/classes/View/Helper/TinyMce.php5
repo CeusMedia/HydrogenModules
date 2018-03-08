@@ -23,6 +23,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->setEnv( $env );
 		$this->config		= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$this->pathFront	= $this->config->get( 'path' );
+		$this->cache		= $this->env->getCache();
 	}
 
 	/**
@@ -212,14 +213,20 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@access		public
 	 *	@return		array		List of images
 	 */
-	public function getImageList(){
-		if( !$this->listImages ){
+	public function getImageList( $refresh = FALSE ){
+		$cacheKey	= 'tinymce.images';
+		if( $refresh ){
+			$this->listImages	= array();
+			$this->cache->remove( $cacheKey );
+		}
+		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= array();
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getImageList', $this, array( 'hidePrefix' => FALSE ) );								//  call related module event hooks
 			$this->listImages	= $this->list;
+			usort( $this->listImages, array( $this, "__compare" ) );
+			$this->cache->set( $cacheKey, $this->listImages );
 		}
-		usort( $this->listImages, array( $this, "__compare" ) );
 		return $this->listImages;
 	}
 
@@ -228,20 +235,21 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@access		public
 	 *	@return		array		List of links
 	 */
-	public function getLinkList(){
-		if( !$this->listLinks ){
+	public function getLinkList( $refresh = FALSE ){
+		$cacheKey	= 'tinymce.links';
+		if( $refresh || 1 ){
+			$this->listLinks	= array();
+			$this->cache->remove( $cacheKey );
+		}
+		if( !( $this->listLinks = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= array();
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks
 			$this->listLinks	= $this->list;
+			usort( $this->listLinks, array( $this, "__compare" ) );
+			$this->cache->set( $cacheKey, $this->listLinks );
 		}
-		usort( $this->listLinks, array( $this, "__compare" ) );
 		return $this->listLinks;
-		$list	= array();
-		foreach( $this->listLinks as $key => $value )
-			$list[$value->title.'_'.$key]	= $value;
-		ksort( $list );
-		return $this->listLinks = $list;
 	}
 
 	static public function tidyHtml( $html, $options = array() ){

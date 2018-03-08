@@ -128,6 +128,9 @@ body#tinymce-file-browser #tinymce-file-browser-content{
 #container-tinymce-file-browser ul.grid li.grid-item .grid-item-label dl dd.fact-quality {
 	display: none;
 	}
+#container-tinymce-file-browser ul.grid li.grid-item .grid-item-label br + * {
+	display: none;
+	}
 
 #container-tinymce-file-browser ul.grid li.grid-item.grid-item-folder .grid-item-icon {
 	font-size: 5.6em;

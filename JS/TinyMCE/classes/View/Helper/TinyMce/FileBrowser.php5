@@ -225,7 +225,11 @@ class View_Helper_TinyMce_FileBrowser{
 		$parts	= explode( "/", $filePath );
 		$label	= array_pop( $parts );
 		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
-		$label	= UI_HTML_Tag::create( 'div', $label, array(
+		$url	= preg_replace( '/^\.\//', '', $path );
+		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-external-link' ) );
+		$icon	= UI_HTML_Tag::create( 'a', $icon, array( 'href' => $this->baseUrl.$url, 'target' => '_blank' ) );
+		$url	= UI_HTML_Tag::create( 'small', $url.'&nbsp;'.$icon, array( 'class' => 'muted' ) );
+		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$url, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		return UI_HTML_Tag::create( 'li', $image.$label, array(
@@ -265,7 +269,10 @@ class View_Helper_TinyMce_FileBrowser{
 					$icon	= 'camera';
 				if( $link->type === 'link:bookmark' )
 					$icon	= 'bookmark';
-				$list[]		= $this->renderLinkItem( $link->value, $link->title, NULL, $icon );
+				if( $link->type === 'unkown' )
+					$icon	= 'link';
+				if( isset( $link->value ) )
+					$list[]		= $this->renderLinkItem( $link->value, $link->title, NULL, $icon );
 			}
 		}
 
