@@ -4,7 +4,7 @@
 	<description><![CDATA[Integrates Stripe into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 <!--	<log version="0.2.1">Improve relations.</log>
@@ -44,13 +44,13 @@
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
 	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Stripe::__onRegisterShopPaymentBackends</hook>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Shop_Payment_Stripe::__onRenderServicePanels</hook>
-	<sql on="install" type="mysql" version="0.2"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_stripe`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_stripe` (
   `paymentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `orderId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `payInId` int(11) NOT NULL,
+  `userId` varchar(100) NOT NULL,
+  `payInId` varchar(100) NOT NULL,
   `status` tinyint(1) NOT NULL COMMENT '0: created, 1: failed, 2: succeeded',
   `object` text COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) NOT NULL,
@@ -61,5 +61,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_stripe` (
   KEY `payInId` (`payInId`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.2.1"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_payments_stripe` CHANGE `userId` `userId` VARCHAR(100) NOT NULL;
+ALTER TABLE `<%?prefix%>shop_payments_stripe` CHANGE `payInId` `payInId` VARCHAR(100) NOT NULL;
 ]]></sql>
 </module>
