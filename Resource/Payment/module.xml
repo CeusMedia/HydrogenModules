@@ -3,7 +3,7 @@
 	<title>Resource: Payment</title>
 	<description><![CDATA[...]]></description>
 	<category>Resource</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add images for payment providers.</log>
@@ -134,6 +134,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_payment_accounts` (
   KEY `paymentAccountId` (`paymentAccountId`),
   KEY `provider` (`provider`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.2.2"><![CDATA[
+ALTER TABLE `<%?prefix%>user_payment_accounts` CHANGE `paymentAccountId` `paymentAccountId` VARCHAR(200) NOT NULL;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_payment_accounts`;
