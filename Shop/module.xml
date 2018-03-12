@@ -242,15 +242,15 @@ ALTER TABLE `<%?prefix%>shop_order_positions` CHANGE `editedAt` `modifiedAt` DEC
 ]]></sql>
 	<sql type="mysql" on="update" version="0.5.6"><![CDATA[
 ALTER TABLE `<%?prefix%>shop_customers` CHANGE `billing_institution` `billing_institution` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-	CHANGE `billing_firstname` `billing_firstname` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-    CHANGE `billing_lastname` `billing_lastname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-    CHANGE `billing_tnr` `billing_tnr` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-    CHANGE `billing_country` `billing_country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-    CHANGE `billing_city` `billing_city` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-    CHANGE `billing_postcode` `billing_postcode` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-    CHANGE `billing_address` `billing_address` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-    CHANGE `billing_phone` `billing_phone` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
-    CHANGE `billing_email` `billing_email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '';
+CHANGE `billing_firstname` `billing_firstname` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_lastname` `billing_lastname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_tnr` `billing_tnr` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_country` `billing_country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_city` `billing_city` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_postcode` `billing_postcode` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_address` `billing_address` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_phone` `billing_phone` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_email` `billing_email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '';
 ]]></sql>
 	<sql type="mysql" on="update" version="0.6"><![CDATA[
 ALTER TABLE  `<%?prefix%>shop_orders` ADD  `currency` VARCHAR( 3 ) NOT NULL DEFAULT  'EUR' AFTER  `status` ,

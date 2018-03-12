@@ -71,13 +71,43 @@ class View_Helper_Shop_Tabs{
 		foreach( $tabLabels as $key => $value )
 			$tabLabels->$key	= UI_HTML_Tag::create( 'span', '&nbsp;'.$value.'&nbsp;', array( 'class' => 'hidden-phone' ) );
 
-		$tabs->add( 'shop-cart', './shop/cart', $iconCart.$tabLabels->cart, $this->content );
-		$tabs->add( 'shop-customer', './shop/customer', $iconCustomer.$tabLabels->customer, $this->content );
-		$tabs->add( 'shop-conditions', './shop/conditions', $iconConditions.$tabLabels->conditions, $this->content );
+		$tabs->add(
+			'shop-cart',
+			'./shop/cart',
+			$iconCart.$tabLabels->cart,
+			$this->current === 'shop-cart' ? $this->content : ''
+		);
+		$tabs->add(
+			'shop-customer',
+			'./shop/customer',
+			$iconCustomer.$tabLabels->customer,
+			$this->current === 'shop-customer' ? $this->content : ''
+		);
+		$tabs->add(
+			'shop-conditions',
+			'./shop/conditions',
+			$iconConditions.$tabLabels->conditions,
+			$this->current === 'shop-conditions' ? $this->content : ''
+		);
 		if( count( $this->backends ) > 1 )
-			$tabs->add( 'shop-payment', './shop/payment', $iconPayment.$tabLabels->payment, $this->content );
-		$tabs->add( 'shop-checkout', './shop/checkout', $iconCheckout.$tabLabels->checkout, $this->content );
-		$tabs->add( 'shop-service', './shop/service', $iconService.$tabLabels->service, $this->content );
+			$tabs->add(
+				'shop-payment',
+				'./shop/payment',
+				$iconPayment.$tabLabels->payment,
+				$this->current === 'shop-payment' ? $this->content : ''
+		);
+		$tabs->add(
+			'shop-checkout',
+			'./shop/checkout',
+			$iconCheckout.$tabLabels->checkout,
+			$this->current === 'shop-checkout' ? $this->content : ''
+		);
+		$tabs->add(
+			'shop-service',
+			'./shop/service',
+			$iconService.$tabLabels->service,
+			$this->current === 'shop-service' ? $this->content : ''
+		);
 
 		$tabs->setActive( $this->current ? $this->current : 0 );
 

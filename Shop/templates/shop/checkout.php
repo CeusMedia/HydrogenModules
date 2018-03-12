@@ -44,39 +44,35 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 	$textCheckoutBottom,
 ) );
 
-$helperTabs		= new View_Helper_Shop_Tabs( $env );
-$helperTabs->setCurrent( 'shop-checkout' );
-$helperTabs->setContent( $tabContent );
-$helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
-
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 
+$w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	<div class="modal-header">
-		<h4>Weiterleitung</h4>
+		<h4>'.$w->heading.'</h4>
 	</div>
 	<div class="modal-body">
-		<big><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> Einen Moment bitte…</big>
+	<div class="modal-body">
+		<big><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> '.$w->title.'</big><br/>
 		<br/>
-		<br/>
-		<p>
-			Sie werden nun zum Bezahlanbieter weitergeleitet.<br/>
-			Das kann ein paar Sekunden dauern.<br/>
-			Bitte warten Sie einen kleinen Moment.
-		</p>
-		<p><strong>Vielen Dank!</strong></p>
+		<p>'.$w->message.'</p>
+		<p><strong>'.$w->slogan.'</strong></p>
 		<br/>
 	</div>
 </div><script>
-var needsPayment = '.count( $paymentBackends ).';
 jQuery(document).ready(function(){
-	if(needsPayment){
+	if('.count( $paymentBackends ).'){
 		jQuery("#form-shop-checkout button[type=submit]").bind("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});
 	}
 });
 </script>';
+
+$helperTabs		= new View_Helper_Shop_Tabs( $env );
+$helperTabs->setCurrent( 'shop-checkout' );
+$helperTabs->setContent( $tabContent );
+$helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
 return $textTop.$helperTabs->render().$textBottom.$modalLoading;
 ?>
