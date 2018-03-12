@@ -7,6 +7,7 @@
 	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Integrate credit card payment.</log>
 <!--	<log version="0.2.1">Improve relations.</log>
 	<log version="0.2.2">Set access for inside links.</log>
 	<log version="0.2.3">Add model for stripe payments.</log>
@@ -26,7 +27,12 @@
 		<class>Model/Shop/Payment/Stripe.php5</class>
 		<class>View/Helper/Shop/FinishPanel/Stripe.php5</class>
 		<class>View/Shop/Payment/Stripe.php5</class>
+		<template>shop/payment/stripe/perCreditCard.php</template>
+		<script>Module.Shop.Payment.Stripe.js</script>
+		<style>module.shop.payment.stripe.css</style>
 		<locale>de/shop/payment/stripe.ini</locale>
+		<locale>de/html/shop/payment/stripe/perCreditCard/bottom.html</locale>
+		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
 		<file>config/jobs/shop.payment.stripe.xml</file>
 	</files>
 	<config protected="yes" type="integer" name="method.Card" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
@@ -41,6 +47,7 @@
 	<link access="inside" path="shop/payment/stripe/perCreditCard"/>
 	<link access="inside" path="shop/payment/stripe/perDirectDebit"/>
 	<link access="inside" path="shop/payment/stripe/perSofort"/>
+	<link access="inside" path="shop/payment/stripe/perGiropay"/>
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
 	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Stripe::__onRegisterShopPaymentBackends</hook>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Shop_Payment_Stripe::__onRenderServicePanels</hook>

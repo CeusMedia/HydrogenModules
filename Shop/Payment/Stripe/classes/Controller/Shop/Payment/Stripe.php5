@@ -20,9 +20,11 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	protected $localUserId;
 	protected $userId;
 	protected $wallet;
+	protected $backends			= array();
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment.', TRUE );
+		$this->configShop	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->provider		= new Logic_Payment_Stripe( $this->env );
 		$this->logicShop	= new Logic_Shop( $this->env );
 		$this->logicPayment	= new Logic_Shop_Payment_Stripe( $this->env );
@@ -30,6 +32,11 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+
+		$captain	= $this->env->getCaptain();
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$this->addData( 'paymentBackends', $this->backends );
+		$this->addData( 'configShop', $this->configShop );
 
 		$this->orderId		= $this->session->get( 'shop.orderId' );
 		if( !$this->orderId ){
@@ -49,7 +56,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		}
 		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
 		if( !$this->userId ){
-			$account		= $this->provider->createUserFromLocalUser( $this->localUserId );
+			$account		= $this->provider->createCustomerFromLocalUser( $this->localUserId );
 			$this->userId	= $account->Id;
 		}
 /*		$wallets		= $this->provider->getUserWalletsByCurrency( $this->userId, $this->order->currency );
@@ -146,9 +153,11 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	}
 
 	protected function handleStripeResponseException( $e ){
-		ob_start();
-		print_r( $e->GetErrorDetails()->Errors );
-		$details	= ob_get_clean();
+		$error		= (object) array_merge( $e->getJsonBody()['error'], array(
+			'http'		=> $e->getHttpStatus(),
+			'class'		=> get_class( $e ),
+		) );
+		$details	= print_m( $error, NULL, NULL, TRUE );
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
 	}
@@ -177,8 +186,8 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		print_m( $payIn );die;
 	}
 
-
 	public function perBankWire(){
+		throw new Exception( 'Not implemented' );
 		$returnUrl		= $this->env->url.'shop/checkout';
 		try{
 			$createdPayIn	= $this->provider->createPayInFromBankAccount(
@@ -201,46 +210,33 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perGiropay(){
-		if( $this->request->has( 'source' ) )
-			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
-		$modelUser		= new Model_User( $this->env );
-		$user			= $modelUser->get( $this->localUserId );
-		$source	= \Stripe\Source::create(array(
-			'type'		=> 'giropay',
-			'amount'	=> round( $this->order->priceTaxed * 100 ),
-			'currency'	=> strtolower( $this->order->currency ),
-			'redirect'	=> array(
-				'return_url'	=> $this->env->url.'shop/payment/stripe',
-			),
-			'owner'	=> array(
-				'name'	=> $user->firstname.' '.$user->surname,
-				'email'	=> $user->email,
-			)
-		));
-		$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
-		$this->relocate( $source->redirect->url );
-	}
-
-	public function perSofort(){
-		if( $this->request->has( 'source' ) )
-			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
-		$source	= \Stripe\Source::create(array(
-			'type'		=> 'sofort',
-			'amount'	=> round( $this->order->priceTaxed * 100 ),
-			'currency'	=> strtolower( $this->order->currency ),
-			'redirect'	=> array(
-				'return_url'	=> $this->env->url.'shop/payment/stripe',
-			),
-			'sofort'	=> array(
-				'country'	=> 'DE',
-			)
-		));
-		$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
-		$this->relocate( $source->redirect->url );
+	public function perCreditCard( $arg0 = NULL, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL ){
+		if( $this->request->get( 'stripeToken' ) ){
+			try{
+				$charge	= $this->provider->createChargeFromToken(
+					$this->orderId,
+ 					$this->request->get( 'stripeToken' )
+				);
+				$this->logicPayment->notePayment( $charge, $this->userId, $this->orderId );
+				$this->messenger->noteSuccess( 'Die Bezahlung wurde erfolgreich durchgeführt.' );
+				$this->restart( 'shop/finish' );
+			}
+			catch( Stripe\Libraries\ResponseException $e ){
+				$this->handleStripeResponseException( $e );
+			}
+			catch( Exception $e ){
+				UI_HTML_Exception_Page::display( $e );
+				exit;
+			}
+		}
+		$configResource	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
+		$this->addData( 'publicKey', $configResource->get( 'api.key.public' ) );
+		$this->addData( 'orderId', $this->orderId );
+		$this->addData( 'order', $this->logicShop->getOrder( $this->orderId ) );
 	}
 
 	public function perDirectDebit(){
+		throw new Exception( 'Not implemented yet' );
 		$returnUrl		= $this->env->url.'shop/payment/stripe';
 		try{
 			$createdPayIn	= $this->provider->createBankPayInViaWeb(
@@ -264,33 +260,26 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perCreditCard(){
-/*		if( $this->request->has( 'transactionId' ) ){
-			$result = $this->provider->getPayin( $this->request->get( 'transactionId' ) );
-			if( $result->Status === "SUCCEEDED" ){
-
-				$this->messenger->noteSuccess( 'Payin succeeded.' );
-				$this->restart( './shop/finish' );
-			}
-			else{
-				$helper	= new View_Helper_Stripe_Error( $this->env );
-				$helper->setCode( $result->ResultCode );
-				$this->messenger->noteError( $helper->render() );
-				$this->restart( './shop/payment/stripe' );
-			}
-		}*/
+	public function perGiropay(){
+		if( $this->request->has( 'source' ) )
+			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
+		$modelUser		= new Model_User( $this->env );
+		$user			= $modelUser->get( $this->localUserId );
 		try{
-			$returnUrl		= $this->env->url.'shop/payment/stripe';
-			$createdPayIn	= $this->provider->createCardPayInViaWeb(
-				$this->userId,
-				$this->wallet->Id,
-				'CB_VISA_MASTERCARD',//$this->request->get( 'cardType' ),
-				$this->order->currency,
-				round( $this->order->priceTaxed * 100 ),
-				$returnUrl
-			);
-			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
-			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
+			$source	= \Stripe\Source::create(array(
+				'type'		=> 'giropay',
+				'amount'	=> round( $this->order->priceTaxed * 100 ),
+				'currency'	=> strtolower( $this->order->currency ),
+				'redirect'	=> array(
+					'return_url'	=> $this->env->url.'shop/payment/stripe',
+				),
+				'owner'	=> array(
+					'name'	=> $user->firstname.' '.$user->surname,
+					'email'	=> $user->email,
+				)
+			));
+			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
+			$this->relocate( $source->redirect->url );
 		}
 		catch( Stripe\Libraries\ResponseException $e ){
 			$this->handleStripeResponseException( $e );
@@ -299,5 +288,48 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 			UI_HTML_Exception_Page::display( $e );
 			exit;
 		}
+	}
+
+	public function perSofort(){
+		if( $this->request->has( 'source' ) )
+			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
+		$modelUser		= new Model_User( $this->env );
+		$user			= $modelUser->get( $this->localUserId );
+		try{
+			$source	= \Stripe\Source::create(array(
+				'type'		=> 'sofort',
+				'amount'	=> round( $this->order->priceTaxed * 100 ),
+				'currency'	=> strtolower( $this->order->currency ),
+				'redirect'	=> array(
+					'return_url'	=> $this->env->url.'shop/payment/stripe',
+				),
+				'owner'	=> array(
+					'name'	=> $user->firstname.' '.$user->surname,
+					'email'	=> $user->email,
+				),
+				'sofort'	=> array(
+					'country'	=> 'DE',
+				)
+			));
+			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
+			$this->relocate( $source->redirect->url );
+		}
+		catch( Stripe\Libraries\ResponseException $e ){
+			$this->handleStripeResponseException( $e );
+		}
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+			exit;
+		}
+	}
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+		$this->backends[]	= (object) array(
+			'backend'	=> $backend,
+			'key'		=> $key,
+			'title'		=> $title,
+			'path'		=> $path,
+			'priority'	=> $priority,
+			'icon'		=> $icon,
+		);
 	}
 }
