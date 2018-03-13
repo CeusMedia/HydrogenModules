@@ -286,10 +286,17 @@ abstract class Mail_Abstract{
 			if( !$template )
 				throw new RangeException( 'Invalid template ID' );
 		}
-		$words	= $this->env->getLanguage()->getWords( 'main' );
+		$words		= $this->env->getLanguage()->getWords( 'main' );
+		$baseUrl	= $this->env->getBaseUrl();
+		$appEmail	= $this->env->getConfig()->get( 'app.email' );
 		$appTitle	= $words['main']['title'];
+		$appHost	= parse_url( $baseUrl, PHP_URL_HOST );
+		$appPath	= rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' );
 		$body	= str_replace( '[#content#]', $content, $template->plain );
-		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
+		$body	= str_replace( '[#app.email#]', $appEmail, $body );
+		$body	= str_replace( '[#app.url#]', $baseUrl, $body );
+		$body	= str_replace( '[#app.host#]', $appHost, $body );
+		$body	= str_replace( '[#app.path#]', $appPath, $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 		return $body;
 	}
