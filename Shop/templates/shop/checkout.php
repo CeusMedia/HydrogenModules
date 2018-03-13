@@ -35,16 +35,15 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 				$helperAddress->setAddress( $customer->addressBilling ),
 			), array( 'class' => 'span6' ) ),
 		), array( 'class' => 'row-fluid' ) ),
+		$textCheckoutBottom,
 		UI_HTML_Tag::create( 'br', NULL ),
 		UI_HTML_Tag::create( 'div', array(
 			$buttonPrev, ' ',
 			$buttonNext,
 		), array( 'class' => 'buttonbar well well-small' ) ),
 	), array( 'method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout' ) ),
-	$textCheckoutBottom,
 ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 
 $w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
@@ -67,6 +66,8 @@ jQuery(document).ready(function(){
 	}
 });
 </script>';
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-checkout' );

@@ -469,6 +469,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$paymentBackend		= array_pop( $this->backends );
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
+		$orderId	= $this->session->get( 'shop.orderId' );
+		$this->addData( 'order', $this->session->get( 'shop.order' ) );
 	}
 
 	public function setPaymentBackend( $paymentBackendKey = NULL ){
