@@ -37,6 +37,8 @@ class Job_Mail extends Job_Abstract{
 		$this->__detectCompression();
 		$this->out( 'Migrate outdated mail mail classes:' );
 		$this->__migrateMailClasses();
+		$this->__migrateMailTemplates();
+
 	}
 
 	public function removeAttachments(){
@@ -329,6 +331,30 @@ class Job_Mail extends Job_Abstract{
 				$this->out();
 			$this->out( 'Detected compression of '.$count.' mails.' );
 			$this->showErrors( 'detectCompression', $fails );
+		}
+	}
+
+	protected function __migrateMailTemplates(){
+		$model		= new Model_Mail_Template( $this->env );
+		foreach( $model->getAll() as $template ){
+			if( strlen( trim( $template->styles ) ) ){
+				if( substr( $template->styles, 0, 2 ) !== '["' ){
+					$list	= array( $template->styles );
+					if( strpos( $template->styles, ',' ) ){
+						$list	= explode( ',', $template->styles );
+					}
+					$model->edit( $template->mailTemplateId, array( 'styles' => json_encode( $list ) ) );
+				}
+			}
+			if( strlen( trim( $template->images ) ) ){
+				if( substr( $template->images, 0, 2 ) !== '["' ){
+					$list	= array( $template->images );
+					if( strpos( $template->images, ',' ) ){
+						$list	= explode( ',', $template->images );
+					}
+					$model->edit( $template->mailTemplateId, array( 'images' => json_encode( $list ) ) );
+				}
+			}
 		}
 	}
 
