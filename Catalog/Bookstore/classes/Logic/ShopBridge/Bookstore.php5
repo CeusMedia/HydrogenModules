@@ -19,7 +19,6 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 		return $this->logic->changeQuantity( $articleId, $change );
 	}
 
-
 	/**
 	 *	Checks existance of article and returns data object if found.
 	 *	@access		public
