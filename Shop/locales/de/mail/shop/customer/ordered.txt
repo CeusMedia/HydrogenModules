@@ -1,8 +1,7 @@
-<%?words.heading%>
+<%?words.mail-customer-ordered.heading%>
 
 Wir bemühen uns, Ihren Auftrag zügig zu bearbeiten, so dass Ihnen die Ware in den nächsten Tagen zugestellt werden kann.
 Über Lieferverzögerungen werden wir Sie rechtzeitig informieren.
-
 
 <%?words.mail.headingFacts%>
 <%?orderFacts%>

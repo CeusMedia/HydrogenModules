@@ -60,9 +60,9 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
 
 		$panelPayment	= '';
-		$filenameHtml	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
-		if( $this->view->hasContentFile( $filenameHtml ) )
-			$panelPayment	= $this->view->loadContentFile( $filenameHtml, array(
+		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
+		if( $this->view->hasContentFile( $filePayment ) )
+			$panelPayment	= $this->view->loadContentFile( $filePayment, array(
 				'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
 				'order'		=> $this->order,
 			) );
@@ -76,6 +76,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'main'				=> (object) $this->getWords( 'main', 'main' ),
 			'words'				=> $this->words,
 			'order'				=> $this->order,
+			'customer'			=> $this->customer,
 			'priceTotal'		=> $helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
@@ -95,11 +96,16 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		$this->helperAddress->setOutput( View_Helper_Shop_AddressView::OUTPUT_TEXT );
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
 
+		$paymentBackend	= NULL;
+		foreach( $data['paymentBackends'] as $item )
+			if( $item->key === $this->order->paymentMethod )
+				$paymentBackend	= $item;
+
 		$panelPayment	= '';
-		$filenameHtml	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
-		if( $this->view->hasContentFile( $filenameHtml ) )
-			$panelPayment	= $this->view->loadContentFile( $filenameHtml, array(
-				'module'		=> $this->env->getConfig()->getAll( 'modules.', TRUE ),
+		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
+		if( $this->view->hasContentFile( $filePayment ) )
+			$panelPayment	= $this->view->loadContentFile( $filePayment, array(
+				'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
 				'order'		=> $this->order,
 			) );
 
@@ -109,11 +115,16 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'config'			=> $this->env->getConfig()->getAll( 'module.shop.' ),
 			'env'				=> array( 'domain' => $this->env->host ),
 			'main'				=> (object) $this->getWords( 'main', 'main' ),
-			'words'				=> (object) $this->getWords( 'shop', 'mail-customer-ordered' ),
+			'words'				=> $this->words,
+			'order'				=> $this->order,
 			'customer'			=> $this->customer,
+			'priceTotal'		=> $helperShop->formatPrice( $this->order->priceTaxed ),
+			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
+			'panelPayment'		=> $panelPayment,
 		);
 		return $this->view->loadContentFile( 'mail/shop/customer/ordered.txt', $templateData );
 	}

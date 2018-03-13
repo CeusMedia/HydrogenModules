@@ -57,7 +57,7 @@ class View_Helper_Shop_OrderFacts{
 		$helperFacts->add( 'date', date( 'd.m.Y', $this->order->modifiedAt ) );
 		$helperFacts->add( 'time', date( 'H:i:s', $this->order->modifiedAt ) );
 		$helperFacts->add( 'price', $this->helperShop->formatPrice( $this->order->priceTaxed, TRUE, FALSE ) );
-		$helperFacts->add( 'payment', $this->paymentBackend['title'] );
+		$helperFacts->add( 'payment', $this->paymentBackend->title );
 		$helperFacts->add( 'orderId', $this->order->orderId );
 		$list[]	= $helperFacts->renderAsText();
 		$list[]	= $helperText->line( "-", 78 );
