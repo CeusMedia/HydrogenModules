@@ -20,6 +20,10 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 		$this->taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 	}
 
+	public function changeQuantity( $articleId, $change ){
+		return $this->logic->changeQuantity( $articleId, $change );
+	}
+
 	/**
 	 *	Checks existance of article and returns data object if found.
 	 *	@access		public
