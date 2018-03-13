@@ -1,11 +1,13 @@
 
 Bezahlung
-------------------------------------------------------------------------------
+==============================================================================
 Bitte überweisen Sie den Betrag an das folgende Konto:
 
-Kontoinhaber:  <%?module.shop_payment_bank.bank.holder%>
-IBAN:          <%?module.shop_payment_bank.bank.iban%>
-BIC:           <%?module.shop_payment_bank.bank.bic%>
-Bank:          <%?module.shop_payment_bank.bank.name%>
+          Kontoinhaber:  <%?module.shop_payment_bank.bank.holder%>
+                  IBAN:  <%?module.shop_payment_bank.bank.iban%>
+                   BIC:  <%?module.shop_payment_bank.bank.bic%>
+                  Bank:  <%?module.shop_payment_bank.bank.name%>
+         Bestellnummer:  <%?module.shop_payment_bank.bank.name%>
 
 Die Rechnung wird der Ware beliegen.
+------------------------------------------------------------------------------

@@ -13,14 +13,16 @@ class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
 	 */
 	static public function __onRegisterShopPaymentBackends( $env, $context, $module, $arguments = array() ){
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
+		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
+		$labels		= (object) $words['payment-methods'];
 		if( $methods->get( 'Transfer' ) ){
 			$context->registerPaymentBackend(
 				'Bank',									//  backend class name
 				'Bank:Transfer',						//  payment method key
-				'Vorkasse',								//  payment method label
-				'bank/perTransfer',								//  shop URL
-	 			$methods->get( 'Transfer' ),				//  priority
-				'fa fa-fw fa-bank'						//  icon
+				$labels->transfer,						//  payment method label
+				'bank/perTransfer',						//  shop URL
+				$methods->get( 'Transfer' ),			//  priority
+				'fa fa-fw fa-2x fa-bank'				//  icon
 			);
 		}
 	}
