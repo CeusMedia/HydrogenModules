@@ -15,94 +15,81 @@ class View_Helper_Shop_FinishPanel_Stripe{
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Stripe( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
-		$this->heading		= 'Bezahlung';
+		$this->heading		= 'Bezahlvorgang';
 	}
 
 	public function render(){
 		if( !$this->payment )
 			throw new RuntimeException( 'No payment selected' );
+
 		switch( $this->order->paymentMethod ){
-			case 'StripeBW':
-				return $this->renderBankWire();
-			case 'StripeBWW':
-				return $this->renderBankWireWeb();
-			case 'StripeCCW':
-				return $this->renderCreditCardWeb();
+			case 'Stripe:Card':
+				return $this->renderCreditCard();
+			case 'Stripe:Giropay':
+				return $this->renderGiropay();
+			case 'Stripe:Sofort':
+				return $this->renderSofort();
 		}
 	}
 
-	protected function renderBankWire(){
-		$facts		= new View_Helper_Mail_Facts( $this->env );
-		$facts->add( 'Methode', 'Vorkasse per Überweisung' );
-		$facts->add( 'Kontoinhaber', $this->payin->PaymentDetails->BankAccount->OwnerName );
-		$facts->add( 'IBAN', $this->payin->PaymentDetails->BankAccount->Details->IBAN );
-		$facts->add( 'BIC', $this->payin->PaymentDetails->BankAccount->Details->BIC );
-		$facts->add( 'Referenz', $this->payin->PaymentDetails->WireReference );
-		$facts->add( 'Preis', number_format( $this->order->price, 2, ',', '' ).' '.$this->order->currency );
-
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return '
-<div class="content-panel">
-	<h3>'.$this->heading.'</h3>
-	<div class="content-panel-inner">
-		'.$facts->render( $this->listClass ).'
-		<p>
-			Bitte überweisen Sie den Betrag auf das oberhalb genannte Konto!<br/>
-			Beachten Sie dabei, <b>unbedingt die Referenz in der Überweisung anzugeben</b>!<br/>
-		</p>
-	</div>
-</div>';
-
-		return PHP_EOL.
-View_Helper_Mail_Text::underscore( $this->heading ).PHP_EOL.
-$facts->renderAsText().PHP_EOL.
-PHP_EOL.
-'Bitte überweisen Sie den Betrag auf das oberhalb genannte Konto!'.PHP_EOL.
-'Beachten Sie dabei, unbedingt die Referenz in der Überweisung anzugeben!'.PHP_EOL;
-	}
-
-	protected function renderBankWireWeb(){
-		$facts		= new View_Helper_Mail_Facts( $this->env );
-		$facts->add( 'Methode', 'per Sofortüberweisung' );
-		$facts->add( 'Preis', number_format( $this->order->price, 2, ',', '' ).' '.$this->order->currency );
-
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return '
-<div class="content-panel">
-	<h3>'.$this->heading.'</h3>
-	<div class="content-panel-inner">
-		'.$facts->render( $this->listClass ).'
-		<p>
-			Wir haben den Betrag dankend erhalten.<br/>
-		</p>
-	</div>
-</div>';
-		return PHP_EOL.
-View_Helper_Mail_Text::underscore( $this->heading ).PHP_EOL.
-$facts->renderAsText().PHP_EOL.PHP_EOL.
-'Wir haben den Betrag dankend erhalten.'.PHP_EOL;
-	}
-
-	protected function renderCreditCardWeb(){
+	protected function renderCreditCard(){
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per Kreditkarte' );
-		$facts->add( 'Preis', number_format( $this->order->price, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
 		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return '
-<div class="content-panel">
-	<h3>'.$this->heading.'</h3>
-	<div class="content-panel-inner">
-		'.$facts->render( $this->listClass ).'
-		<p>
-			Wir haben den Betrag dankend erhalten.<br/>
-		</p>
-	</div>
-</div>';
-		return PHP_EOL.
-View_Helper_Mail_Text::underscore( $this->heading ).PHP_EOL.
-$facts->renderAsText().PHP_EOL.PHP_EOL.
-'Wir haben den Betrag dankend erhalten.'.PHP_EOL;
+			return UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'h3', $this->heading ),
+					$facts->render( $this->listClass ),
+				), array( 'class' => 'content-panel-inner' ) ),
+			), array( 'class' => 'content-panel' ) );
+
+		return PHP_EOL.join( PHP_EOL, array(
+			View_Helper_Mail_Text::underscore( $this->heading ),
+			$facts->renderAsText(),
+		) ).PHP_EOL.PHP_EOL;
+	}
+
+	protected function renderGiropay(){
+		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts->add( 'Methode', 'per GiroPay' );
+		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
+
+		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
+			return UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'h3', $this->heading ),
+					$facts->render( $this->listClass ),
+				), array( 'class' => 'content-panel-inner' ) ),
+			), array( 'class' => 'content-panel' ) );
+
+		return PHP_EOL.join( PHP_EOL, array(
+			View_Helper_Mail_Text::underscore( $this->heading ),
+			$facts->renderAsText(),
+		) ).PHP_EOL.PHP_EOL;
+	}
+
+	protected function renderSofort(){
+		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts->add( 'Methode', 'per Sofortüberweisung' );
+		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
+		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
+
+		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
+			return UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'h3', $this->heading ),
+					$facts->render( $this->listClass ),
+				), array( 'class' => 'content-panel-inner' ) ),
+			), array( 'class' => 'content-panel' ) );
+
+		return PHP_EOL.join( PHP_EOL, array(
+			View_Helper_Mail_Text::underscore( $this->heading ),
+			$facts->renderAsText(),
+		) ).PHP_EOL.PHP_EOL;
 	}
 
 	public function setListClass( $class ){

@@ -4,10 +4,11 @@
 	<description><![CDATA[Integrates Stripe into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate credit card payment.</log>
+	<log version="0.2.2">Extract hooks to own hook class.</log>
 <!--	<log version="0.2.1">Improve relations.</log>
 	<log version="0.2.2">Set access for inside links.</log>
 	<log version="0.2.3">Add model for stripe payments.</log>
@@ -22,6 +23,7 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop/Payment/Stripe.php5</class>
+		<class>Hook/Shop/Payment/Stripe.php5</class>
 		<class>Job/Shop/Payment/Stripe.php5</class>
 		<class>Logic/Shop/Payment/Stripe.php5</class>
 		<class>Model/Shop/Payment/Stripe.php5</class>
@@ -49,8 +51,8 @@
 	<link access="inside" path="shop/payment/stripe/perSofort"/>
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
-	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Stripe::__onRegisterShopPaymentBackends</hook>
-	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Shop_Payment_Stripe::__onRenderServicePanels</hook>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Stripe::__onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Stripe::__onRenderServicePanels</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_stripe`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_stripe` (

@@ -36,6 +36,16 @@ $form		= '
 	</div>
 </form>';
 
+$script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
+$env->page->js->addScriptOnReady( $script );
+
+$panel	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', $w->heading ),
+	UI_HTML_Tag::create( 'div', array(
+		$form,
+	), array( 'class' => 'content-panel-inner' ) ),
+), array( 'class' => 'content-panel' ) );
+
 $w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	<div class="modal-header">
@@ -57,16 +67,6 @@ jQuery(document).ready(function(){
 	}
 });
 </script>';
-
-$script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
-$env->page->js->addScriptOnReady( $script );
-
-$panel	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $w->heading ),
-	UI_HTML_Tag::create( 'div', array(
-		$form,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-checkout' );
