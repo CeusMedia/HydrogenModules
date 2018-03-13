@@ -1,12 +1,20 @@
 <?php
 
+$w		= (object) $words['payment'];
+
 $list	= array();
 foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
-	if( $paymentBackend->icon )
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $paymentBackend->icon ) ).'&nbsp;';
-	$link	= UI_HTML_Tag::create( 'a', $icon.$paymentBackend->title, array(
+	$path	= $env->getConfig()->get( 'path.images' ).'paymentProviderLogo/medium/';
+	if( $paymentBackend->icon ){
+		$icon	= '&nbsp;&nbsp;&nbsp;'.UI_HTML_Tag::create( 'i', '', array( 'class' => $paymentBackend->icon ) ).'&nbsp;&nbsp;&nbsp;';
+		if( preg_match( '/\.(png|jpe?g?)$/i', $paymentBackend->icon ) )
+			$icon	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $path.$paymentBackend->icon ) );
+	}
+	$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title, array(
 		'href'	=> './shop/setPaymentBackend/'.$paymentBackend->key,
+		'class' => ' '.( $order->paymentMethod === $paymentBackend->key ? 'current' : '' ),
+//		'style' => 'display: inline-block; float: left; padding: 0.5em',
 	) );
 	$key	= $paymentBackend->priority.'.'.uniqid();
 	$list[$key]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'payment-method-list-item' ) );
@@ -14,37 +22,30 @@ foreach( $paymentBackends as $paymentBackend ){
 ksort( $list );
 $list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled payment-method-list') );
 
-$tabContent	= '
-<h3>Bezahlmethode</h3>
-<p>
-	Bitte wählen Sie nun aus, mit welcher Methode Sie Ihre Bestellung bezahlen möchten!
-</p>
-'.$list.'
-<br/>
-<style>
-ul.payment-method-list li.payment-method-list-item {
-	}
-ul.payment-method-list li.payment-method-list-item a {
-	display: block;
-	font-size: 1.5em;
-	line-height: 1.5em;
-	margin-bottom: 0.2em;
-	padding: 0.5em 0.75em;
-	background-color: rgba(191, 191, 191, 0.05);
-	border: 2px solid rgba(127, 127, 127, 0.25);
-	border-radius: 0.2em;
-	}
-ul.payment-method-list li.payment-method-list-item a:hover {
-	background-color: rgba(191, 191, 191, 0.25);
-	border: 2px solid rgba(127, 127, 127, 0.5);
-	}
-ul.payment-method-list li.payment-method-list-item a i {
-	margin-right: 0.25em;
-	}
-</style>
-';
+$iconSubmit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/pay/' ) );
+
+$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+if( !$order->paymentMethod )
+	$buttonNext	= new \CeusMedia\Bootstrap\Button( $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', TRUE );
+
+$buttonbar	= '
+<br/>
+<form action="shop/customer" method="post">
+	<div class="buttonbar well well-small">
+		'.$buttonPrev.'
+		'.$buttonNext.'
+	</div>
+</form>';
+
+$tabContent	= '
+<h3>'.$w->heading.'</h3>
+<p>'.$w->textTop.'</p>
+'.$list.'
+'.$buttonbar.'';
+
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 
 $w			= (object) $words['payment'];
 
@@ -53,14 +54,5 @@ $helperTabs->setCurrent( 'shop-payment' );
 $helperTabs->setContent( $tabContent );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
-$buttonbar	= '
-<br/>
-<form action="shop/customer" method="post">
-	<div class="buttonbar well well-small">
-		'.new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
-		'.new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
-	</div>
-</form>';
-
-return $textTop.$helperTabs->render().$buttonbar.$textBottom;
+return $textTop.$helperTabs->render().$textBottom;
 ?>
