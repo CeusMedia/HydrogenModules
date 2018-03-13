@@ -4,9 +4,11 @@
 	<description><![CDATA[Integrates Stripe into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.2</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add service panel for shop order finish.</log>
+	<log version="0.2.2">Add payment block for customer order mails.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -15,6 +17,9 @@
 		<class>Hook/Shop/Payment/Bank.php5</class>
 		<class>View/Shop/Payment/Bank.php5</class>
 		<class>View/Helper/Shop/FinishPanel/Bank.php5</class>
+		<locale>de/mail/shop/customer/ordered/bank/perTransfer.html</locale>
+		<locale>de/mail/shop/customer/ordered/bank/perTransfer.txt</locale>
+		<locale>de/shop/payment/bank.ini</locale>
 <!--		<class>Job/Shop/Payment/Stripe.php5</class>
 		<class>Logic/Shop/Payment/Stripe.php5</class>
 		<class>Model/Shop/Payment/Stripe.php5</class>
@@ -22,8 +27,6 @@
 		<script>Module.Shop.Payment.Stripe.js</script>
 		<style>module.shop.payment.stripe.css</style>
 		<locale>de/shop/payment/stripe.ini</locale>
-		<locale>de/html/shop/payment/stripe/perCreditCard/bottom.html</locale>
-		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
 		<file>config/jobs/shop.payment.stripe.xml</file>-->
 	</files>
 	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
