@@ -211,10 +211,17 @@ abstract class Mail_Abstract{
 			if( !$template )
 				throw new RangeException( 'Invalid template ID' );
 		}
-		$words	= $this->env->getLanguage()->getWords( 'main' );
+		$words		= $this->env->getLanguage()->getWords( 'main' );
+		$baseUrl	= $this->env->getBaseUrl();
+		$appEmail	= $this->env->getConfig()->get( 'app.email' );
 		$appTitle	= $words['main']['title'];
+		$appHost	= parse_url( $baseUrl, PHP_URL_HOST );
+		$appPath	= rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' );
 		$body	= str_replace( '[#content#]', $content, $template->html );
-		$body	= str_replace( '[#app.url#]', $this->env->getBaseUrl(), $body );
+		$body	= str_replace( '[#app.email#]', $appEmail, $body );
+		$body	= str_replace( '[#app.url#]', $baseUrl, $body );
+		$body	= str_replace( '[#app.host#]', $appHost, $body );
+		$body	= str_replace( '[#app.path#]', $appPath, $body );
 		$body	= str_replace( '[#app.title#]', $appTitle, $body );
 
 		if( $template->images ){
@@ -253,8 +260,8 @@ abstract class Mail_Abstract{
 						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$this->env->uri.$style.'" failed.' );
 						continue;
 					}
+					$content	= FS_File_Reader::load( $this->env->uri.$style );
 				}
-				$content	= FS_File_Reader::load( $style );
 	//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
 				$styleTag	= UI_HTML_Tag::create( 'style', $content, array( 'type' => 'text/css' ) );
 				$this->page->addHead( $styleTag );
