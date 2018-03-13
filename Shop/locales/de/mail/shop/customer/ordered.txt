@@ -6,7 +6,7 @@ Wir bemühen uns, Ihren Auftrag zügig zu bearbeiten, so dass Ihnen die Ware in 
 
 <%?words.mail.headingFacts%>
 <%?orderFacts%>
-
+<%?panelPayment%>
 
 <%?words.mail.headingCart%>
 <%?tableCart%>

@@ -56,6 +56,17 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 
 		$helperShop	= new View_Helper_Shop( $this->env );
 
+		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
+		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
+
+		$panelPayment	= '';
+		$filenameHtml	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
+		if( $this->view->hasContentFile( $filenameHtml ) )
+			$panelPayment	= $this->view->loadContentFile( $filenameHtml, array(
+				'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
+				'order'		=> $this->order,
+			) );
+
 		$body	= $this->view->loadContentFile( 'mail/shop/customer/ordered.html', array(
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
@@ -71,6 +82,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
+			'panelPayment'		=> $panelPayment,
 		) );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
@@ -82,6 +94,15 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		$this->helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
 		$this->helperAddress->setOutput( View_Helper_Shop_AddressView::OUTPUT_TEXT );
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
+
+		$panelPayment	= '';
+		$filenameHtml	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
+		if( $this->view->hasContentFile( $filenameHtml ) )
+			$panelPayment	= $this->view->loadContentFile( $filenameHtml, array(
+				'module'		=> $this->env->getConfig()->getAll( 'modules.', TRUE ),
+				'order'		=> $this->order,
+			) );
+
 		$templateData	= array(
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
