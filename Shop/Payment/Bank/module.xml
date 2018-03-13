@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>Shop: Payment: Bank</title>
+	<description><![CDATA[Integrates Stripe into shop.
+]]></description>
+	<category>Shop</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Shop/Payment/Bank.php5</class>
+		<class>Hook/Shop/Payment/Bank.php5</class>
+		<class>View/Shop/Payment/Bank.php5</class>
+		<class>View/Helper/Shop/FinishPanel/Bank.php5</class>
+<!--		<class>Job/Shop/Payment/Stripe.php5</class>
+		<class>Logic/Shop/Payment/Stripe.php5</class>
+		<class>Model/Shop/Payment/Stripe.php5</class>
+		<template>shop/payment/stripe/perCreditCard.php</template>
+		<script>Module.Shop.Payment.Stripe.js</script>
+		<style>module.shop.payment.stripe.css</style>
+		<locale>de/shop/payment/stripe.ini</locale>
+		<locale>de/html/shop/payment/stripe/perCreditCard/bottom.html</locale>
+		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
+		<file>config/jobs/shop.payment.stripe.xml</file>-->
+	</files>
+	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<config protected="no" type="string" name="bank.name" title="Bank name company bank account">My Bank</config>
+	<config protected="no" type="string" name="bank.holder" title="Holder of company bank account">My Company</config>
+	<config protected="no" type="string" name="bank.iban" title="IBAN of company bank account">DE12 3456 4567 8900</config>
+	<config protected="no" type="string" name="bank.bic" title="BIC of company bank account">ABC123123XX</config>
+	<relations>
+<!--		<needs type="module">Shop_Payment</needs>-->
+<!--		<needs type="module">Resource_Payment_Stripe</needs>-->
+	</relations>
+	<link access="inside" path="shop/payment/bank/perTransfer"/>
+<!--	<link access="inside" path="shop/payment/stripe/index"/>
+	<link access="inside" path="shop/payment/stripe/perCreditCard"/>
+	<link access="inside" path="shop/payment/stripe/perDirectDebit"/>
+	<link access="inside" path="shop/payment/stripe/perSofort"/>
+	<link access="inside" path="shop/payment/stripe/perGiropay"/>
+	<link access="inside" path="shop/payment/stripe/perGiropay"/>-->
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Bank::__onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Bank::__onRenderServicePanels</hook>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+]]></sql>
+</module>
