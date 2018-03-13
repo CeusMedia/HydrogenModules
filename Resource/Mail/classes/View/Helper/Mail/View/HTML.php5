@@ -29,7 +29,7 @@ class View_Helper_Mail_View_HTML{
 		foreach( $images as $imageId => $part ){
 			$find	= '"CID:'.$imageId.'"';
 			$subst	= '"data:'.$part->getMimeType().';base64,'.base64_encode( $part->getContent() ).'"';
-			$html	= str_replace( $find, $subst, $html );
+			$html	= str_ireplace( $find, $subst, $html );
 		}
 		return $html;
 	}
