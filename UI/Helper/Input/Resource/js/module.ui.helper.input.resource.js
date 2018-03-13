@@ -22,7 +22,7 @@ var HelperInputResource = {
 				break;
 			case 'style':
 				data = jQuery.extend(data, {
-					paths: ["themes/"],
+					paths: ["themes/", "contents/themes/"],
 				});
 				break;
 		}
