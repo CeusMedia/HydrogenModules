@@ -52,7 +52,6 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 		<h4>'.$w->heading.'</h4>
 	</div>
 	<div class="modal-body">
-	<div class="modal-body">
 		<big><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> '.$w->title.'</big><br/>
 		<br/>
 		<p>'.$w->message.'</p>

@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -39,11 +39,13 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.7.1">Improve locales.</log>
 	<log version="0.7.2">Add english mail locales.</log>
 	<log version="0.7.3">Add helper for order facts, used in mails.</log>
+	<log version="0.7.4">Add support for new finish panel hook.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop.php5</class>
+		<class>Hook/Shop/FinishPanel.php5</class>
 		<class>Logic/Shop.php5</class>
 		<class>Mail/Shop/Customer/NotPayed.php5</class>
 		<class>Mail/Shop/Customer/Ordered.php5</class>
@@ -78,6 +80,8 @@ For payment you need to install a payment module.]]></description>
 		<locale>de/mail/shop/manager/not_payed.html</locale>
 		<locale>de/mail/shop/manager/ordered.html</locale>
 		<locale>de/mail/shop/manager/payed.html</locale>
+		<locale>de/html/shop/panel/finish.html</locale>
+		<locale>de/html/shop/panel/finishTop.html</locale>
 		<locale>en/shop.ini</locale>
 		<locale>en/html/shop/bottom.html</locale>
 		<locale>en/html/shop/top.html</locale>
@@ -95,6 +99,8 @@ For payment you need to install a payment module.]]></description>
 		<locale>en/mail/shop/manager/not_payed.html</locale>
 		<locale>en/mail/shop/manager/ordered.html</locale>
 		<locale>en/mail/shop/manager/payed.html</locale>
+		<locale>en/html/shop/panel/finish.html</locale>
+		<locale>en/html/shop/panel/finishTop.html</locale>
 		<template>shop/address.php</template>
 		<template>shop/cart.php</template>
 		<template>shop/checkout.php</template>
@@ -140,6 +146,7 @@ For payment you need to install a payment module.]]></description>
 		<supports type="module">Shop_Payment</supports>
 		<supports type="module">Shop_Shipping</supports>
 	</relations>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::__onRenderServicePanels</hook>
 	<sql type="mysql" on="install" version="0.1">
 <![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
