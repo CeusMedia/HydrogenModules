@@ -99,7 +99,7 @@ $modalStyle->setInputId( 'input_template_css' );
 $trigger	= new View_Helper_Input_ResourceTrigger( $env );
 $trigger->setLabel( UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) ) );
 $trigger->setModalId( 'modal-admin-mail-template-select-style' );
-$trigger->setInputId( 'input_template_css' );
+$trigger->setInputId( 'input_template_style' );
 $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
 $listStyles	= '<em class="muted">Keine.</em>';
@@ -134,7 +134,7 @@ $rowStyles	= '<form action="./admin/mail/template/edit/'.$template->mailTemplate
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_template_style">Pfad</label>
-					<input type="text" name="template_style" class="span12"/>
+					<input type="text" name="template_style" id="input_template_style" class="span12"/>
 				</div>
 				<div class="span4">
 					<label>&nbsp;</label>

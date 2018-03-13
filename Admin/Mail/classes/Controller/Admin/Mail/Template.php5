@@ -21,24 +21,9 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	public function ajaxRender( $templateId ){
 		$template	= $this->checkTemplate( $templateId );
 		$mail		= new Mail_Test( $this->env, array( 'mailTemplateId' => $templateId ) );
-		$parts		= $this->logicMail->getMailParts( (object) array( 'object' => $mail ) );
-		$images	= array();
-		foreach( $parts as $key => $part ){
-			if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
-				$images[$part->getId()]	= $part;
-			else if( $part instanceof \CeusMedia\Mail\Part\HTML )
-				$html	= $part->getContent();
-			else if( $part instanceof Net_Mail_Body )
-				if( $part->getMimeType() === "text/html" )
-					$html	= $part->getContent();
-		}
-		if( !$html )
-			throw new Exception( 'No HTML part found' );
-		foreach( $images as $imageId => $part ){
-			$find	= '"CID:'.$imageId.'"';
-			$subst	= '"data:'.$part->getMimeType().';base64,'.base64_encode( $part->getContent() ).'"';
-			$html	= str_replace( $find, $subst, $html );
-		}
+		$helper		= new View_Helper_Mail_View_HTML( $this->env );
+		$helper->setMail( (object) array( 'object' => $mail ) );
+		$html		= $helper->render();
 		print( $html );
 		exit;
 	}
@@ -198,26 +183,11 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 				$env	= Logic_Frontend::getRemoteEnv( $this->env );
 			$mail		= new Mail_Test( $env, array( 'mailTemplateId' => $templateId ) );
-			$parts		= $this->logicMail->getMailParts( (object) array( 'object' => $mail ) );
 			switch( strtolower( $mode ) ){
 				case 'html':
-					$images	= array();
-					foreach( $parts as $key => $part ){
-						if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
-							$images[$part->getId()]	= $part;
-						else if( $part instanceof \CeusMedia\Mail\Part\HTML )
-							$html	= $part->getContent();
-						else if( $part instanceof Net_Mail_Body )
-							if( $part->getMimeType() === "text/html" )
-								$html	= $part->getContent();
-					}
-					if( !$html )
-						throw new Exception( 'No HTML part found' );
-					foreach( $images as $imageId => $part ){
-						$find	= '"CID:'.$imageId.'"';
-						$subst	= '"data:'.$part->getMimeType().';base64,'.base64_encode( $part->getContent() ).'"';
-						$html	= str_replace( $find, $subst, $html );
-					}
+					$helper	= new View_Helper_Mail_View_HTML( $this->env );
+					$helper->setMail( (object) array( 'object' => $mail ) );
+					$html	= $helper->render();
 					print( $html );
 					break;
 				case 'plain':
