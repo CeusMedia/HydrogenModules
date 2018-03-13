@@ -14,7 +14,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 <code
 ]]></description>
 	<category>Shop</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished database design.</log>
@@ -27,34 +27,36 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<log version="0.4.2">Fix module configuration bugs from migration.</log>
 	<log version="0.4.3">Remove deprecated templates.</log>
 	<log version="0.4.4">Support locales.</log>
+	<log version="0.4.5">Extract payment registration to a hook class.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop/Payment/Paypal.php5</class>
-		<class>Model/Shop/Payment/Paypal.php5</class>
+		<class>Hook/Shop/Payment/Paypal.php5</class>
 		<class>Logic/Payment/Paypal.php5</class>
+		<class>Model/Shop/Payment/Paypal.php5</class>
 		<class>View/Shop/Payment/Paypal.php5</class>
 		<locale>de/shop/payment/paypal.ini</locale>
 		<locale>en/shop/payment/paypal.ini</locale>
 	</files>
+	<config protected="yes" mandatory="yes" type="string" name="merchant.username">sdk-three_api1.sdk.com</config>
+	<config protected="yes" mandatory="yes" type="string" name="merchant.password"></config>
+	<config protected="yes" mandatory="yes" type="string" name="merchant.signature"></config>
+	<config protected="yes" mandatory="yes" type="string" name="mode" values="live,test">test</config>
+	<config protected="yes" mandatory="yes" type="string" name="server.api.live">https://api-3t.paypal.com/nvp</config>
+	<config protected="yes" mandatory="yes" type="string" name="server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
+	<config protected="yes" mandatory="yes" type="string" name="server.api.version">123</config>
+	<config protected="yes" mandatory="yes" type="string" name="server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config protected="yes" mandatory="yes" type="string" name="server.login.test">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config protected="yes" mandatory="yes" type="string" name="option.shipping" values="none,paypal,shop">paypal</config>
+	<config protected="yes" mandatory="no" type="string" name="option.header.color.background"/>
+	<config protected="yes" mandatory="no" type="string" name="option.header.color.border"/>
+	<config protected="yes" mandatory="no" type="string" name="option.header.image"/>
+	<config protected="yes" mandatory="no" type="string" name="option.payflow.color.background"/>
+	<config protected="yes" mandatory="yes" type="boolean" name="option.instantPay">0</config>
+	<config protected="yes" mandatory="yes" type="integer" name="method.Express" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
 <!--	<config type="string" protected="yes" mandatory="yes" name="forward.on.success">shop/finish</config>-->
-
-	<config type="string" protected="yes" mandatory="yes" name="merchant.username">sdk-three_api1.sdk.com</config>
-	<config type="string" protected="yes" mandatory="yes" name="merchant.password"></config>
-	<config type="string" protected="yes" mandatory="yes" name="merchant.signature"></config>
-	<config type="string" protected="yes" mandatory="yes" name="mode" values="live,test">test</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.api.live">https://api-3t.paypal.com/nvp</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.api.version">123</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
-	<config type="string" protected="yes" mandatory="yes" name="server.login.test">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
-	<config type="string" protected="yes" mandatory="yes" name="option.shipping" values="none,paypal,shop">paypal</config>
-	<config type="string" protected="yes" mandatory="no" name="option.header.color.background"/>
-	<config type="string" protected="yes" mandatory="no" name="option.header.color.border"/>
-	<config type="string" protected="yes" mandatory="no" name="option.header.image"/>
-	<config type="string" protected="yes" mandatory="no" name="option.payflow.color.background"/>
-	<config type="boolean" protected="yes" mandatory="yes" name="option.instantPay">0</config>
 	<relations>
 		<needs type="module">Shop</needs>
 	</relations>
@@ -64,7 +66,8 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<link access="inside" path="shop/payment/paypal/cancelled"/>
 	<link access="inside" path="shop/payment/paypal/checkout"/>
 	<link access="inside" path="shop/payment/paypal/pay"/>
-	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Paypal::__onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Paypal::__onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="registerServicePanel">Hook_Shop_Payment_Paypal::__onRenderServicePanels</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_paypal`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_paypal` (

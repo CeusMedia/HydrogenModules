@@ -32,27 +32,6 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	/**
-	 *	...
-	 *	@static
-	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
-	 *	@param		object								$context	Hook context object
-	 *	@param		object								$module		Module object
-	 *	@param		public								$arguments	Map of hook arguments
-	 *	@return		void
-	 */
-	static public function __onRegisterShopPaymentBackends( $env, $context, $module, $arguments = array() ){
-		$context->registerPaymentBackend(
-			'Paypal',					//  backend class name
-			'Paypal',					//  payment method key
-			'PayPal Express Checkout',	//  payment method label
-			'paypal/authorize',			//  pay URL
-			5,							//  priority
-			'fa fa-fw fa-paypal'		//  icon
-		);
-	}
-
 	public function authorize(){
 //		$this->session->clear();
 		$price		= $this->shop->calculateOrderTotalPrice( $this->orderId );
