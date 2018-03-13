@@ -158,7 +158,18 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
 					$this->messenger->noteSuccess( $words->msgSuccess );
-					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array( 'userId' => $user->userId ) );
+					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array(
+						'userId'	=> $user->userId,
+						'roleId'	=> $user->roleId,
+						'from'		=> $from,
+					) );
+					if( 1 ){
+						$this->messenger->noteSuccess( $words->msgSuccessAutoLogin );
+						$this->session->set( 'userId', $user->userId );
+						$this->session->set( 'roleId', $user->roleId );
+						if( $from )
+							$this->restart( $from );
+					}
 					$this->restart( './auth/local/login?login_username='.$user->username.( $from ? '&from='.$from : '' ) );
 				}
 			}
@@ -192,6 +203,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
+		$username = trim( $this->request->get( 'login_username' ) );
+
 		$this->tryLoginByCookie();
 		$words		= (object) $this->getWords( 'login' );
 
@@ -201,7 +214,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$controller	= new Controller_Csrf( $this->env );
 				$controller->checkToken();
 			}
-			if( !trim( $username = $this->request->get( 'login_username' ) ) )
+			if( !strlen( $username ) )
 				$this->messenger->noteError( $words->msgNoUsername );
 			if( !trim( $password = $this->request->get( 'login_password' ) ) )
 				$this->messenger->noteError( $words->msgNoPassword );
@@ -222,7 +235,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				'userId'	=> $user ? $user->userId : 0,
 			) );
 			if( $this->messenger->gotError() )
-				$this->restart( 'login?username='.$username, TRUE );
+				$this->restart( 'login?login_username='.$username, TRUE );
 
 			$role			= $modelRole->get( $user->roleId );
 			$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
@@ -243,7 +256,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$this->messenger->noteError( $words->msgInvalidPassword );
 
 			if( $this->messenger->gotError() )
-				$this->restart( 'login?username='.$username, TRUE );
+				$this->restart( 'login?login_username='.$username, TRUE );
 
 			$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 			if( $this->request->isPost() )
