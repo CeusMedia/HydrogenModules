@@ -15,7 +15,7 @@ class Hook_Shop_Payment_Paypal/* extends CMF_Hydrogen_Hook*/{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_paypal.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/paypal' );
 		$labels		= (object) $words['payment-methods'];
-		if( $methods->get( 'v2' ) ){
+		if( $methods->get( 'Express' ) ){
 			$context->registerPaymentBackend(
 				'Paypal',									//  backend class name
 				'PayPal:Express',							//  payment method key
