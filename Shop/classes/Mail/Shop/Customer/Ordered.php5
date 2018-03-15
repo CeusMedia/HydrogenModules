@@ -15,6 +15,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		$this->helperAddress	= new View_Helper_Shop_AddressView( $this->env );
 		$this->helperCart		= new View_Helper_Shop_CartPositions( $this->env );
 		$this->helperCart->setDisplay( View_Helper_Shop_CartPositions::DISPLAY_MAIL );
+		$this->helperShop		= new View_Helper_Shop( $this->env );
 		$this->helperOrderFacts	= new View_Helper_Shop_OrderFacts( $this->env );
 		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
@@ -54,8 +55,6 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
-		$helperShop	= new View_Helper_Shop( $this->env );
-
 		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
 		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
 
@@ -77,7 +76,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'words'				=> $this->words,
 			'order'				=> $this->order,
 			'customer'			=> $this->customer,
-			'priceTotal'		=> $helperShop->formatPrice( $this->order->priceTaxed ),
+			'priceTotal'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
@@ -118,7 +117,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'words'				=> $this->words,
 			'order'				=> $this->order,
 			'customer'			=> $this->customer,
-			'priceTotal'		=> $helperShop->formatPrice( $this->order->priceTaxed ),
+			'priceTotal'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
