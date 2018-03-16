@@ -34,7 +34,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
 		foreach( $files as $file ){
-			$context->add( (object) array(
+			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -42,7 +42,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFolderId,
-			) );
+				'icon'		=> 'fa fa-fw fa-file-o',
+			) ) );
 		}
 	}
 
@@ -51,7 +52,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
 		foreach( $files as $file ){
-			$context->add( (object) array(
+			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -59,10 +60,10 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFolderId,
-			) );
+				'icon'		=> 'fa fa-fw fa-file-o',
+			) ) );
 		}
 	}
-
 
 	public function addFolder( $folderId = NULL ){
 		$path		= $this->getPathFromFolderId( $folderId );

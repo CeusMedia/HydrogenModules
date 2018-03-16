@@ -1,4 +1,6 @@
 <?php
+$env->getPage()->js->addScriptOnReady( 'jQuery("#input_search").focus();' );
+
 return '
 <div class="content-panel">
 	<h4>'.$words['search']['heading'].'</h4>
