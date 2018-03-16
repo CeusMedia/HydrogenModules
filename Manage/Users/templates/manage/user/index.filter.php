@@ -91,7 +91,7 @@ return '
 			</div>
 			<div class="buttonbar">
 				'.UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Elements::Button( 'filter', $iconFilter.' '.$w->buttonFilter, 'btn btn-small not-btn-info btn-primary' ),
+					UI_HTML_Elements::Button( 'filter', $iconFilter.' '.$w->buttonFilter, 'btn not-btn-small not-btn-info btn-primary' ),
 					UI_HTML_Tag::create( 'a', $iconReset, array(
 						'href'		=> './manage/user/filter/reset',
 						'title'		=> $w->buttonReset,
