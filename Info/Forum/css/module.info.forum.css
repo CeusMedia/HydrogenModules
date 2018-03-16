@@ -9,7 +9,7 @@ body.controller-info-forum table td.topic-label {
 	background-position: 11px 8px;
 	background-repeat: no-repeat;
 	padding-left: 52px;
-	background-image: url(//cdn.ceusmedia.de/icons/fatcow/32/folder.png);
+	background-image: url(//cdn.ceusmedia.de/img/fatcow/32/folder.png);
 	line-height: 1.15em;
 	}
 
@@ -17,7 +17,7 @@ body.controller-info-forum table td.thread-label {
 	background-position: 11px 8px;
 	background-repeat: no-repeat;
 	padding-left: 52px;
-	background-image: url(//cdn.ceusmedia.de/icons/fatcow/32/script.png);
+	background-image: url(//cdn.ceusmedia.de/img/fatcow/32/script.png);
 	line-height: 1.15em;
 	}
 
