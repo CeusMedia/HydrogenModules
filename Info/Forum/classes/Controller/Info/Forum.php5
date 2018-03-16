@@ -38,18 +38,24 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	static public function ___onPageCollectNews( $env, $context, $module, $data = array() ){
 		$model			= new Model_Forum_Thread( $env );
 		$oneDay			= 24 * 60 * 60;
-		$conditions		= array( 'createdAt' => '>'.( time() - 7 * $oneDay ) );
-		$threads		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( 0, 3 ) );
+		$conditions		= array( 'modifiedAt' => '>'.( time() - 7 * $oneDay ) );
+		$orders			= array(
+			'modifiedAt'	=> 'DESC',
+			'createdAt'		=> 'DESC',
+		);
+		$threads		= $model->getAll( $conditions, $orders, array( 0, 3 ) );
 		foreach( $threads as $thread ){
-			$context->news[]	= (object) array(
+			$context->news[]	= (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'title'		=> $thread->title,
-				'timestamp'	=> $thread->createdAt,
+				'timestamp'	=> max( $thread->createdAt, $thread->modifiedAt ),
 				'module'	=> 'Info_Forum',
 				'type'		=> 'thread',
+				'typeLabel'	=> 'Forum',
 				'url'		=> './info/forum/thread/'.$thread->threadId,
-    	    );
+				'icon'		=> 'fa fa-fw fa-comment-o',
+			) );
 		}
-    }
+	}
 
 	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
 		try{
