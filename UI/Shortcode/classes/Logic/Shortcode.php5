@@ -41,6 +41,10 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 	}
 
 	public function replaceNext( $content, $shortCode, $replacement ){
+		if( !is_string( $content ) )
+			throw new InvalidArgumentException( 'Content must be of string' );
+		if( !is_string( $replacement ) )
+			throw new InvalidArgumentException( 'Replacement must be of string' );
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		$replacement	= "\\1".$replacement."\\4";													//  insert content of nested page...
 		return preg_replace( $pattern, $replacement, $content, 1 );									//  apply replacement once
