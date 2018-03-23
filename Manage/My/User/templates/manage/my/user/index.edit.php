@@ -41,7 +41,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					) )
 				)
 			),
-			HTML::HR,
+//			HTML::HR,
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
 					HTML::Label( 'number', $w->labelCountry, '' ).
@@ -73,7 +73,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::Input( 'street', $user->street, 'span12' )
 				)
 			),
-			HTML::HR,
+//			HTML::HR,
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
 					HTML::Label( 'phone', $w->labelPhone ).

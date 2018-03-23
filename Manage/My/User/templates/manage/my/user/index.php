@@ -55,6 +55,21 @@ extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/user/' 
 
 return $textTop.$tabs.
 HTML::DivClass( 'row-fluid', array(
+	HTML::DivClass( 'span8', array(
+		$panelAccount,
+		$panelEdit,
+		$panelEmail,
+//		$panelPasswords,
+		$panelUsername,
+	) ),
+	HTML::DivClass( 'span4', array(
+		$panelInfo,
+		$panelPassword,
+	) ),
+) ).$textBottom;
+
+return $textTop.$tabs.
+HTML::DivClass( 'row-fluid', array(
 	HTML::DivClass( 'span8', $panelAccount ),
 	HTML::DivClass( 'span4', $panelInfo ),
 ) ).

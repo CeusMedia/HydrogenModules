@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -20,7 +20,8 @@
 	<log version="0.5.1">Redesign password strength meter.</log>
 	<log version="0.5.2">Add tab icon.</log>
 	<log version="0.5.3">Add panel for user passwords.</log>
-	<log version="0.5.4">Prevent password form fill in Chrome.</log> 
+	<log version="0.5.4">Prevent password form fill in Chrome.</log>
+	<log version="0.5.5">Support texts for email and username panels.</log>
 	<category>Management</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -38,9 +39,13 @@
 		<locale>de/manage/my/user.ini</locale>
 		<locale>de/html/manage/my/user/bottom.html</locale>
 		<locale>de/html/manage/my/user/top.html</locale>
+		<locale>de/html/manage/my/user/panel.email.info.html</locale>
+		<locale>de/html/manage/my/user/panel.username.info.html</locale>
 		<locale>en/manage/my/user.ini</locale>
 		<locale>en/html/manage/my/user/bottom.html</locale>
 		<locale>en/html/manage/my/user/top.html</locale>
+		<locale>de/html/manage/my/user/panel.email.info.html</locale>
+		<locale>de/html/manage/my/user/panel.username.info.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
