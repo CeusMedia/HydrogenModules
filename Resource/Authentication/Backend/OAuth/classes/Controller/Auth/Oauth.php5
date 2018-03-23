@@ -117,7 +117,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 							$response	= $client->read( 'me' );
 							$data		= $response->user;
 							$data->accountId	= $data->userId;
-							$data->roleId		= $modelRole->getByIndex( 'register', 128, 'roleId' );
+							$data->roleId		= $modelRole->getByIndex( 'register', 128, array(), 'roleId' );
 							unset( $data->userId );
 							$userId				= $modelUser->add( (array) $data );
 							$this->session->set( 'userId', $userId );

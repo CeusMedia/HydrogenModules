@@ -103,7 +103,7 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		implement if possible
 	 */
-	protected function noteUserActivity(){
+	public function noteUserActivity(){
 	}
 
 /*	public function setCurrentUser( $userId ){
