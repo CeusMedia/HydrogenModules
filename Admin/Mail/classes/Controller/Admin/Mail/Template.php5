@@ -210,7 +210,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function remove(){
+	public function remove( $templateId ){
 		$template	= $this->checkTemplate( $templateId );
 		if( $template->status == 3 ){
 			$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" entfernt.' );
