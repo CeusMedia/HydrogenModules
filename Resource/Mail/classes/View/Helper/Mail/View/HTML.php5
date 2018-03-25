@@ -18,13 +18,17 @@ class View_Helper_Mail_View_HTML{
 		foreach( $parts as $key => $part ){
 			if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
 				$images[$part->getId()]	= $part;
+			else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
+				$images[$part->getId()]	= $part;
 			else if( $part instanceof \CeusMedia\Mail\Part\HTML )
+				$html	= $part->getContent();
+			else if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
 				$html	= $part->getContent();
 			else if( $part instanceof Net_Mail_Body )
 				if( $part->getMimeType() === "text/html" )
 					$html	= $part->getContent();
 		}
-		if( !$html )
+		if( empty( $html ) )
 			throw new Exception( 'No HTML part found' );
 		foreach( $images as $imageId => $part ){
 			$find	= '"CID:'.$imageId.'"';
