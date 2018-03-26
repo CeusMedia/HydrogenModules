@@ -6,10 +6,13 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
 		$this->logicMail		= new Logic_Mail( $this->env );
-		$this->appUri			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->appUri		= Logic_Frontend::getInstance( $this->env )->getUri();
-		$this->addData( 'appUri', $this->appUri );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$this->appPath	= $frontend->getPath();
+			$this->appUrl	= $frontend->getUri();
+		}
+		$this->addData( 'appPath', $this->appPath );
+		$this->addData( 'appUrl', $this->appUrl );
 	}
 
 	public function ajaxSetTab( $tabId ){

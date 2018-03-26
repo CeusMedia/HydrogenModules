@@ -1,6 +1,10 @@
 <?php
 class View_Admin_Mail_Attachment extends CMF_Hydrogen_View{
 
+	public function __onInit(){
+		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
+	}
+
 	public static function ___onRegisterTab( $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'admin/mail/attachment' );				//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );										//  register main tab

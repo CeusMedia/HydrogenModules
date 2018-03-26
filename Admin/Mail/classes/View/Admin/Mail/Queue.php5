@@ -2,6 +2,7 @@
 class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 
 	public function __onInit(){
+		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
 	}
 
 	public function ajaxRenderDashboardPanel(){
