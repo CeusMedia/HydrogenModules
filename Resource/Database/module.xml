@@ -3,10 +3,11 @@
 	<title>Resource: Database</title>
 	<description><![CDATA[Database connection support.]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Use CeusMedia:Common (on GitHub) instead of cmClasses (on GoogleCode).</log>
+	<log version="0.3.1">Shorten and order PDO options in module configuration.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -26,10 +27,10 @@
 	<config protected="yes" type="boolean" name="log.errors">yes</config>
 	<config protected="yes" type="string" name="log.file.statements">db.statements.log</config>
 	<config protected="yes" type="string" name="log.file.errors">db.error.log</config>
-	<config protected="yes" type="string" name="option.ATTR_ERRMODE">PDO::ERRMODE_EXCEPTION</config>
+	<config protected="yes" type="string" name="option.ATTR_CASE" values="NATURAL,LOWER,UPPER">NATURAL</config>
+	<config protected="yes" type="string" name="option.ATTR_DEFAULT_FETCH_MODE" values="ASSOC,BOTH,NUM,OBJ">OBJ</config>
+	<config protected="yes" type="string" name="option.ATTR_ERRMODE" values="SILENT,WARNING,EXCEPTION">EXCEPTION</config>
 	<config protected="yes" type="boolean" name="option.ATTR_PERSISTENT">yes</config>
-	<config protected="yes" type="string" name="option.ATTR_DEFAULT_FETCH_MODE">PDO::FETCH_OBJ</config>
-	<config protected="yes" type="string" name="option.ATTR_CASE">PDO::CASE_NATURAL</config>
 	<config protected="yes" type="boolean" name="option.MYSQL_ATTR_USE_BUFFERED_QUERY">yes</config>
 	<config protected="yes" type="string" name="option.MYSQL_ATTR_INIT_COMMAND">SET NAMES 'utf8';</config>
 </module>

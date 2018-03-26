@@ -95,13 +95,33 @@ class Resource_Database extends \DB_PDO_Connection
 		//  --  DATABASE OPTIONS  --  //
 		$driverOptions	= array();																	//  @todo: to be implemented
 		foreach( $options as $key => $value ){														//  iterate all database options
+			if( $key == "ATTR_ERRMODE" ){
+				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
+					if( !in_array( $value, array( 'SILENT', 'WARNING', 'EXCEPTION' ) ) )			//  invalid option set
+						continue;																	//  skip this option
+					$value	= 'PDO::ERRMODE_'.$value;												//  extend value by PDO prefix
+				}
+			}
+			else if( $key == "ATTR_CASE" ){
+				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
+					if( !in_array( $value, array( 'NATURAL', 'LOWER', 'UPPER' ) ) )					//  invalid option set
+						continue;																	//  skip this option
+					$value	= 'PDO::CASE_'.$value;													//  extend value by PDO prefix
+				}
+			}
+			else if( $key == "ATTR_DEFAULT_FETCH_MODE" ){
+				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
+					if( !in_array( $value, array( 'ASSOC', 'BOTH', 'NUM', 'OBJ' ) ) )				//  invalid option set
+						continue;																	//  skip this option
+					$value	= 'PDO::FETCH_'.$value;													//  extend value by PDO prefix
+				}
+			}
 			if( !defined( "PDO::".$key ) )															//  no PDO constant for for option key
 				throw new InvalidArgumentException( 'Unknown constant PDO::'.$key );				//  quit with exception
 			if( is_string( $value ) && preg_match( "/^[A-Z][A-Z0-9_:]+$/", $value ) )				//  option value is a constant name
-				$value	= constant( $value );														//  replace option value string by constant value 
+				$value	= constant( $value );														//  replace option value string by constant value
 			$driverOptions[constant( "PDO::".$key )]	= $value;									//  note option
 		}
-
 		parent::__construct( $dsn, $access->username, $access->password, $driverOptions );			//  connect to database
 
 		$log		= $this->options->getAll( 'log.', TRUE);
