@@ -2,7 +2,7 @@
 class Logic_Shortcode extends CMF_Hydrogen_Logic{
 
 	protected $moduleConfig;
-	protected $pattern			= "/^(.*)(\[##shortcode##([^\]]+)?\])(.*)$/sU";
+	protected $pattern			= "/^(.*)(\[##shortcode##( [^\]]+)?\])(.*)$/sU";
 
 	protected function getShortCodePattern( $shortCode ){
 		return str_replace( "##shortcode##", preg_quote( $shortCode, '/' ), $this->pattern );

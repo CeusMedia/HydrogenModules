@@ -48,6 +48,5 @@ class Hook_Info_NewsList/* extends CMF_Hydrogen_Hook*/{
 				}
 			}
 		}
-
 	}
 }
