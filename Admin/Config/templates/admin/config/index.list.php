@@ -48,11 +48,12 @@ foreach( $foundModules as $moduleId => $module ){
 	$rows	= array();
 	foreach( $module->config as $item ){
 		$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
-		if( $item->type === "boolean" )
+		if( preg_match( '/password/', $item->key ) )
+			$value	= UI_HTML_Tag::create( 'em', 'versteckt', array( 'class' => 'muted') );
+		else if( $item->type === "boolean" )
 			$value	= $item->value ? 'yes' : 'no';
-		else{
+		else
 			$value		= htmlentities( $item->value, ENT_QUOTES, 'UTF-8' );
-		}
 
 		$protection	= UI_HTML_Tag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
 		if( $item->protected === "user" )

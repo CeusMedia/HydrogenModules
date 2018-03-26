@@ -2,7 +2,7 @@
 <module>
 	<title>Admin: Config</title>
 	<description><![CDATA[Editor for module application configuration.]]></description>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Render table instead of list.</log>
@@ -15,6 +15,7 @@
 	<log version="0.4">Split view into list and module config editor.</log>
 	<log version="0.4.1">Extract style definitions to CSS file.</log>
 	<log version="0.5">Add filter and extract labels to locales.</log>
+	<log version="0.5.1">Hide password values.</log>
 	<category>Administration</category>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

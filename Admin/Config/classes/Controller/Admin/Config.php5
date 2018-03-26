@@ -107,6 +107,8 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 			if( $request->has( 'save' ) ){
 				$list	= array();
 				foreach( $request->getAll() as $key => $value ){
+					if( preg_match( '/password/', $key ) && !strlen( $value ) )
+						continue;
 					if( substr_count( $key, "|" ) ){
 						list( $partModuleId, $partKey ) = explode( "|", $key );
 						$partKey	= preg_replace( "/([a-z0-9])_(\S)/", "\\1.\\2", $partKey );
@@ -119,7 +121,6 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 						$list[$partModuleId][$partKey]	= $value;
 					}
 				}
-				print_m( $list );
 				$pairs	= $list[$moduleId];
 				$this->configureLocalModule( $moduleId, $pairs );
 				$this->env->getMessenger()->noteSuccess( $words->successSaved );

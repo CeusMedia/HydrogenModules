@@ -29,7 +29,7 @@ class View_Admin_Config extends CMF_Hydrogen_View {
 		if( $item->values ){
 			$values		= array_combine( $item->values, $item->values );
 			$options	= UI_HTML_Elements::Options( $values, $item->value );
-			$class		= $isNumeric ? "span3" : "span12";
+			$class		= $isNumeric ? "span3" : "span6";
 			$input		= new UI_HTML_Tag( 'select', $options, array(
 				'name'	=> $moduleId.'|'.$item->key,
 				'class'	=> $class,
@@ -53,9 +53,10 @@ class View_Admin_Config extends CMF_Hydrogen_View {
 			$input			= $inputYes.$inputNo;
 		}
 		else{
+			$class			= $isNumeric || ( strlen( $item->value ) < 10 && strlen( $item->title ) < 10 ) ? "span3" : "span12";
+			$item->value	= preg_match( '/password/', $item->key ) ? '' : $item->value;
 			if( preg_match( "/,/", $item->value ) ){
 				$value		= str_replace( ",", "\n", htmlentities( $item->value, ENT_QUOTES, 'UTF-8' ) );
-				$class		= $isNumeric || strlen( $item->value ) < 10  ? "span3" : "span12";
 				$input		= new UI_HTML_Tag( 'textarea', $value, array(
 					'name'			=> $moduleId.'|'.$item->key,
 					'multiple'		=> 'multiple',
@@ -64,7 +65,6 @@ class View_Admin_Config extends CMF_Hydrogen_View {
 				) );
 			}
 			else{
-				$class		= $isNumeric || strlen( $item->value ) < 10  ? "span3" : "span12";
 				$input		= new UI_HTML_Tag( 'input', NULL, array(
 					'type'			=> 'text',
 					'name'			=> $moduleId.'|'.$item->key,
