@@ -68,9 +68,9 @@ class Logic_Mail{
 		if( is_string( $roleIds ) )
 			$roleIds	= explode( ",", trim( $roleIds ) );
 		if( !is_array( $userIds ) )
-			throw new InvalidArgument( 'Invalid list of user IDs' );
+			throw new InvalidArgumentException( 'Invalid list of user IDs' );
 		if( !is_array( $roleIds ) )
-			throw new InvalidArgument( 'Invalid list of role IDs' );
+			throw new InvalidArgumentException( 'Invalid list of role IDs' );
 		$modelUser		= new Model_User( $this->env );
 		foreach( $roleIds as $roleId ){
 			if( strlen( trim( $roleId ) ) && (int) $roleId > 0 ){
