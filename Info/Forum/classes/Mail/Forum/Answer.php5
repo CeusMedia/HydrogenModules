@@ -5,9 +5,9 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 		extract( $data );
 		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
 
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$heading	= $this->env->title;
-		$words		= $this->env->getLanguage()->getWords( 'main' );
-		$heading	= $words['main']['title'];
+		$heading	= $wordsMain['main']['title'];
 
 		$content		= nl2br( $post->content, TRUE );
 		if( $post->type == 1 ){
@@ -35,41 +35,26 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 		}
 
 		$body	= '
-<div id="layout-mail">
-	<div class="layout-header">
-		<div class="container">
-			<h2><a href="'.$this->env->url.'info/forum">Forum</a> @ <a href="'.$this->env->url.'">'.$heading.'</a></h2>
-		</div>	
+<div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">
+	<h2>Forum</h2>
+	<div class="intro">
+		<div class="salutation">Hallo '.$user->username.'!</div>
+		Auf deinen Beitrag im Forum gibt es eine Reaktion.
 	</div>
-	<div class="layout-content">
-		<div class="container">
-			<div class="intro">
-				<div class="salutation">Hallo '.$user->username.'!</div>
-				Auf deinen Beitrag im Forum gibt es eine Reaktion.
-			</div>
-			<h3>Thema: <a href="'.$this->env->url.'info/forum/thread/'.$thread->threadId.'">'.$thread->title.'</a></h3>
-<!--			<div class="post-header">
-				Neuer Beitrag von '.$author->username.' vom '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'd.m.Y', $post->createdAt ).':
-			</div>-->
-			<div class="post-content1">
-				<blockquote>
-					<p>'.$content.'</p>
-					<small>von '.$author->username.' am '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'H:i', $post->createdAt ).'</small>
-				<blockquote>
-			</div>
-		</div>
+	<h3>Thema: <a href="'.$this->env->url.'info/forum/thread/'.$thread->threadId.'">'.$thread->title.'</a></h3>
+<!--	<div class="post-header">
+		Neuer Beitrag von '.$author->username.' vom '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'd.m.Y', $post->createdAt ).':
+	</div>-->
+	<div class="post-content1">
+		<blockquote>
+			<p>'.$content.'</p>
+			<small>von '.$author->username.' am '.date( 'd.m.Y', $post->createdAt ).' um '.date( 'H:i', $post->createdAt ).'</small>
+		<blockquote>
 	</div>
-</div>
-';
+</div>';
 
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'bootstrap.css' );
-		$this->addThemeStyle( 'layout.css' );
 		$this->addThemeStyle( 'module.info.forum.css' );
-		$this->page->addBody( $body );
-		$this->page->setBaseHref( $this->env->url );
-		$class	= 'moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer';
-		return $this->page->build( array( 'class' => $class ) );
+		return $body;
 	}
 }
 ?>

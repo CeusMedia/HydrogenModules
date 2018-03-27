@@ -162,19 +162,11 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	}
 
 	protected function informThreadUsersAboutPost( $threadId, $postId = NULL ){
-		$thread	= $this->modelThread->get( $threadId );
-		if( !$thread ){
-//			$this->messenger->noteError( $words->errorInvalidThreadId, $threadId );
-//			$this->restart( NULL, TRUE );
+		$logicMail	= new Logic_Mail( $this->env );
+		if( !( $thread = $this->modelThread->get( $threadId ) ) )
 			throw new InvalidArgumentException( 'Invalid thread ID' );
-}
-
-		$post		= $this->modelPost->get( (int) $postId );
-		if( !$post ){
-//			$this->messenger->noteError( $words->errorInvalidPostId, $postId );
-//			$this->restart( NULL, TRUE );
+		if( !( $post = $this->modelPost->get( (int) $postId ) ) )
 			throw new InvalidArgumentException( 'Invalid post ID' );
-		}
 		$authors	= array();
 		$modelUser	= new Model_User( $this->env );
 		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, array( 'postId' => 'ASC' ) );
@@ -183,7 +175,6 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 				$authors[$entry->authorId]	= $modelUser->get( $entry->authorId );
 
 		$useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
-
 		$config	= $this->env->getConfig();
 		foreach( $authors as $authorId => $author ){
 			if( $useSettings )
@@ -206,7 +197,8 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$mail	= new Mail_Forum_Answer( $this->env, $data );
 			if( $this->options->get( 'mail.sender' ) )
 				$mail->setSender( $this->options->get( 'mail.sender' ) );
-			$mail->sendTo( $author );
+			$language	= $this->env->getLanguage()->getLanguage();
+			$logicMail->handleMail( $mail, $author, $language );
 		}
 	}
 
@@ -326,7 +318,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 
 	public function thread( $threadId ){
 		if( $this->env->getRequest()->has( 'mail' ) )
-			$this->informThreadUsersAboutPost( $threadId, 23 );
+			$this->informThreadUsersAboutPost( $threadId, 71 );
 		$words		= (object) $this->getWords( 'msg' );
 		$threadId	= (int) $threadId;
 		$thread		= $this->modelThread->get( $threadId );
@@ -429,41 +421,6 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$this->modelTopic->remove( $topicId );
 		$this->messenger->noteSuccess( $words->successTopicRemoved, $topic->title );
 		$this->restart( NULL, TRUE );
-	}
-
-	/**
-	 *	@todo		remove
-	 */
-	public function testMailAnswer(){
-		$mail	= new Mail_Forum_Answer( $this->env, array() );
-		if( $this->options->get( 'mail.sender' ) )
-			$mail->setSender( $this->options->get( 'mail.sender' ) );
-		print( $mail->renderBody() );
-		die;
-	}
-
-	/**
-	 *	@todo		remove
-	 */
-	public function testMailDaily(){
-		$modelThread	= new Model_Forum_Thread( $this->env );
-		$modelPost		= new Model_Forum_Post( $this->env );
-
-		$threads		= $modelThread->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
-		$posts			= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
-		$user			= (object) array( 'email' => 'dev@ceusmedia.de', 'username' => 'Herr Manager' );
-
-		$data	= array(
-			'threads'		=> $threads,
-			'posts'			=> $posts,
-			'user'			=> $user,
-		);
-
-		$mail	= new Mail_Forum_Daily( $this->env, $data );
-		if( $this->options->get( 'mail.sender' ) )
-			$mail->setSender( $this->options->get( 'mail.sender' ) );
-		print( $mail->renderBody( $data ) );
-		die;
 	}
 }
 ?>

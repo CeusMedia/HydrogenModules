@@ -22,6 +22,7 @@ class Job_Info_Forum extends Job_Abstract{
 
 		$modelUser		= new Model_User( $this->env );
 		$modelPost		= new Model_Forum_Post( $this->env );
+		$logicMail		= new Logic_Mail( $this->env );
 
 		$receivers		= array();
 		$roleIds		= trim( $this->options->get( 'mail.inform.managers.roleIds' ) );
@@ -45,7 +46,7 @@ class Job_Info_Forum extends Job_Abstract{
 					$receivers[(int) $user->userId]	= $user;
 		}
 
-		$posts			= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
+		$posts		= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
 
 		if( $posts ){
 			foreach( $receivers as $receiver ){
@@ -56,7 +57,8 @@ class Job_Info_Forum extends Job_Abstract{
 				$mail	= new Mail_Forum_Daily( $this->env, $data );
 				if( $this->options->get( 'mail.sender' ) )
 					$mail->setSender( $this->options->get( 'mail.sender' ) );
-				$mail->sendTo( $receiver );
+				$language	= $this->env->getLanguage()->getLanguage();
+				$logicMail->handleMail( $mail, $receiver, $language );
 			}
 			$time	= round( microtime( TRUE ) - $start, 3 ) * 1000;
 			$this->log( sprintf( 'Daily forum mail sent to '.count( $receivers ).' manager(s) in %d ms.', $time ) );

@@ -4,9 +4,11 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract{
 	public function renderBody( $data = array() ){
 //		extract( $data );
 
-		$this->setSubject( 'Moderation notwendig' );
+		$this->setSubject( 'Moderation im Forum notwendig' );
 
-		$heading		= $this->env->title;
+		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
+		$heading	= $this->env->title;
+		$heading	= $wordsMain['main']['title'];
 
 		if( $data['posts'] ){
 			$list	= array();
@@ -41,30 +43,17 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract{
 			$list	= UI_HTML_Tag::create( 'ul', $rows, array( 'class' => '' ) );
 		}
 		$body	= '
-<div id="layout-mail">
-	<div class="layout-header">
-		<div class="container">
-			<h2><a href="'.$this->env->url.'info/forum">Forum</a> @ <a href="'.$this->env->url.'">'.$heading.'</a></h2>
-		</div>	
+<div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">
+	<h2>Forum</h2>
+	<div class="intro">
+		<div class="salutation">Hallo '.$data['user']->username.'!</div>
+		Es gibt etwas zu moderieren:
 	</div>
-	<div class="layout-content">
-		<div class="container">
-			<div class="intro">
-				<div class="salutation">Hallo '.$data['user']->username.'!</div>
-				Es gibt etwas zu moderieren:
-			</div>
-			'.$list.'
-		</div>
-	</div>
+	'.$list.'
 </div>';
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'bootstrap.css' );
-		$this->addThemeStyle( 'layout.css' );
+
 		$this->addThemeStyle( 'module.info.forum.css' );
-		$this->page->addBody( $body );
-		$this->page->setBaseHref( $this->env->url );
-		$class	= 'moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer';
-		return $this->page->build( array( 'class' => $class ) );
+		return $body;
 	}
 }
 ?>
