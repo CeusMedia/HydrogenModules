@@ -3,9 +3,10 @@
 	<title>Manage: Downloads</title>
 	<description><![CDATA[Management for frontend module Info:Downloads.]]></description>
 	<category>Management</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.3.4">Cloned from module Info:Files.</log>
 	<log version="0.3.5">Use module Resource:Upload.</log>
+	<log version="0.3.6">Replace CDN resource.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
