@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: News</title>
+	<description></description>
+	<category>Management</category>
+	<version>0.5.8</version>
+	<log version="0.4.2">Add action to remove news.</log>
+	<log version="0.4.3">Updated JavaScript according to Hydrogen changes.</log>
+	<log version="0.4.4">Improved check for module JS:jQuery:UI.</log>
+	<log version="0.4.5">Add image alignment in style formats.</log>
+	<log version="0.4.6">Use new TinyMCE configuration.</log>
+	<log version="0.4.7">Updated integration of TinyMCE.</log>
+	<log version="0.4.8">Remove releation to Resource_Library_cmModules.</log>
+	<log version="0.4.9">Split index template into panels.</log>
+	<log version="0.5">Remove columns from forms and actions.</log>
+	<log version="0.5.1">Use HTML5 date inputs.</log>
+	<log version="0.5.2">Use module Info_News and remove model class.</log>
+	<log version="0.5.3">Replace icons by FontAwesome.</log>
+	<log version="0.5.4">Improve forms.</log>
+	<log version="0.5.5">Remove support for columns.</log>
+	<log version="0.5.6">Improve support for several editors.</log>
+	<log version="0.5.7">Remove JavaScript file, since not needed anymore.</log>
+	<log version="0.5.8">Imported module from protected repository.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/News.php5</class>
+		<class>View/Manage/News.php5</class>
+		<locale>de/manage/news.ini</locale>
+		<template>manage/news/add.php</template>
+		<template>manage/news/edit.php</template>
+		<template>manage/news/index.php</template>
+		<template>manage/news/index.filter.php</template>
+		<template>manage/news/index.list.php</template>
+	</files>
+	<config type="string" protected="no" name="editor" values="none,CodeMirror,TinyMCE">TinyMCE</config>
+	<relations>
+		<needs type="module">Info_News</needs>
+		<needs type="module">JS_TinyMCE</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
+		<supports type="module">JS_Ace</supports>
+		<supports type="module">JS_CodeMirror</supports>
+	</relations>
+	<link xml:lang="de" access="public" path="manage/news">Neuigkeiten</link>
+	<link xml:lang="en" access="public" path="manage/news">News</link>
+</module>
