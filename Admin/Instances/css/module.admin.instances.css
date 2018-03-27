@@ -1,6 +1,6 @@
 a.instance {
 	font-size: 1.1em;
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world.png);
 	background-position: 1px 2px;
 	background-repeat: no-repeat;
 	padding: 1px 0px 1px 22px;
@@ -23,22 +23,22 @@ body.moduleAdminInstance.action-index div.status-box.status-box-no {
 	opacity: 1;
 	}
 body.moduleAdminInstance.action-index div.status-box.status-http{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world.png);
 	}
 body.moduleAdminInstance.action-index div.status-box.status-http.status-box-yes{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world_add.png);
 	}
 body.moduleAdminInstance.action-index div.status-box.status-http.status-box-no{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/world_delete.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world_delete.png);
 	}
 body.moduleAdminInstance.action-index div.status-box.status-file{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_link.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/server_link.png);
 	}
 body.moduleAdminInstance.action-index div.status-box.status-file.status-box-yes{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/server_add.png);
 	}
 body.moduleAdminInstance.action-index div.status-box.status-file.status-box-no{
-	background-image: url(//cdn.int1a.net/img/famfamfam/silk/server_delete.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/server_delete.png);
 	}
 
 body.moduleAdminInstance.action-index table td.label {
