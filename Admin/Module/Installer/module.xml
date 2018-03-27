@@ -17,7 +17,7 @@ list>
 <list
 ]]></description>
 	<category>Administration</category>
-	<version>0.3.16</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished installation process with copying and linking.</log>
@@ -30,13 +30,14 @@ list>
 	<log version="0.3.7">Added screen for uninstallation.</log> 
 	<log version="0.3.8">Check file permissions before update and show problems.</log>
 	<log version="0.3.9">Fixed listing of refered sources.</log>
-	<log version="0.3.10">Rework SQL script collecting on install and update.</log>
-	<log version="0.3.11">Show configuration key titles on update.</log>
-	<log version="0.3.12">Added view helper for SQL scripts on install and update.</log>
-    <log version="0.3.13">Added view helper for files on install and update.</log>
-	<log version="0.3.14">Extracted styles from templates to new CSS file.</log>
-	<log version="0.3.15">Extracted scripts from templates to JS file.</log>
-	<log version="0.3.16">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4">Rework SQL script collecting on install and update.</log>
+	<log version="0.4.1">Show configuration key titles on update.</log>
+	<log version="0.4.2">Added view helper for SQL scripts on install and update.</log>
+	<log version="0.4.3">Added view helper for files on install and update.</log>
+	<log version="0.4.4">Extracted styles from templates to new CSS file.</log>
+	<log version="0.4.5">Extracted scripts from templates to JS file.</log>
+	<log version="0.4.6">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4.7">Replace CDN resource.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

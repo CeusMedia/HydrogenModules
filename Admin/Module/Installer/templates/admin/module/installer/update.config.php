@@ -21,8 +21,8 @@ if( $hasUpdate && count( $configKeys ) ){
 					$status		= 1;
 			}
 		}
-		$buttonCopy	= UI_HTML_Tag::create( 'button', '<img src="//cdn.int1a.net/img/famfamfam/silk/arrow_down.png"/>', array( 'type' => 'button', 'class' => "button tiny copy" ) );
-		$buttonInit	= UI_HTML_Tag::create( 'button', '<img src="//cdn.int1a.net/img/famfamfam/silk/arrow_refresh.png"/>', array( 'type' => 'button', 'class' => "button tiny reset" ) );
+		$buttonCopy	= UI_HTML_Tag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png"/>', array( 'type' => 'button', 'class' => "button tiny copy" ) );
+		$buttonInit	= UI_HTML_Tag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png"/>', array( 'type' => 'button', 'class' => "button tiny reset" ) );
 		$inputOld	= View_Helper_Module::renderModuleConfigInput( $itemOld, $words['boolean-values'], TRUE );
 		$inputNew	= View_Helper_Module::renderModuleConfigInput( $itemNew, $words['boolean-values'] );
 		$input		= $inputNew;
