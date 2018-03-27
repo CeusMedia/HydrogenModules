@@ -4,9 +4,9 @@ $textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
 $textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconApprove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconApprove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );

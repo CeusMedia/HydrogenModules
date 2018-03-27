@@ -4,10 +4,10 @@ $textTop	= $textIndexTop	? $textIndexTop : '';
 $textBottom	= $textIndexBottom	? $textIndexBottom : '';
 
 $helper		= new View_Helper_TimePhraser( $env );
-$iconUp		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
-$iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+$iconUp		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
+$iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
 $rows	= array();
 foreach( $topics as $topic ){

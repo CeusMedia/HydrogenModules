@@ -5,11 +5,11 @@ $textBottom	= $textTopicBottom ? $textTopicBottom : $textIndexBottom;
 
 $helper		= new View_Helper_TimePhraser( $env );
 $iconSticky	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-exclamation-sign not-icon-white' ) );
-$iconSticky	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-star not-icon-white' ) );
+$iconSticky	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
 
-$iconRename	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconStar	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-star' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRename	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconStar	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $userCanStar	= in_array( 'ajaxStarThread', $rights );
 $userCanEdit	= in_array( 'ajaxRenameThread', $rights );

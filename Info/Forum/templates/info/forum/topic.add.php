@@ -32,7 +32,7 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" value="1" class="btn btn-success btn-small"><i class="icon-ok icon-white"></i> '.$words['topic-add']['buttonSave'].'</button>
+				<button type="submit" name="save" value="1" class="btn btn-primary btn-small"><i class="fa fa-fw fa-check"></i> '.$words['topic-add']['buttonSave'].'</button>
 			</div>
 		</form>
 	</div>
