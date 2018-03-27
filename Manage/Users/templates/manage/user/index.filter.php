@@ -40,12 +40,11 @@ $script	= '
 ';
 $env->page->js->addScript( $script );
 
-
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-in icon-white' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconFilter		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconReset		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
+	$iconFilter		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search' ) );
+	$iconReset		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 }
 
 return '
