@@ -89,7 +89,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 		$this->addData( 'filterModuleId', $this->session->get( 'filter_admin_config_moduleId' ) );
 		$this->addData( 'categories', $categories );
 		$this->addData( 'filteredModules', $filteredModules );
-		$this->addData( 'foundModules', $foundModules );
+		$this->addData( 'modules', $foundModules );
 	}
 
 	public function edit( $moduleId = NULL ){
@@ -197,5 +197,26 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 			$this->env->getMessenger()->noteError( $e->getMessage() );
 			$this->env->getMessenger()->noteNotice( UI_HTML_Exception_View::render( $e ) );
 		}
+	}
+
+	public function view( $moduleId ){
+		$words		= (object) $this->getWords( 'msg' );
+		$request	= $this->env->getRequest();
+		$modules	= $this->env->getModules()->getAll();
+		if( !array_key_exists( $moduleId, $modules ) ){
+			$this->env->getMessenger()->noteError( 'Invalid module ID.' );
+			$this->restart( NULL, TRUE );
+		}
+		$module		= $modules[$moduleId];
+
+		$versions	= array();
+		$fileName	= "config/modules/".$moduleId.".xml";
+		$file		= new FS_File_Backup( $fileName );
+		$version	= $file->getVersion();
+		$version	= is_int( $version ) ? $version + 1 : 0;
+		$versions	= $version;
+		$this->addData( 'module', $module );
+		$this->addData( 'moduleId', $moduleId );
+		$this->addData( 'versions', $versions );
 	}
 }

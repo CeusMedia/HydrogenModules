@@ -14,11 +14,6 @@ foreach( $categories as $category => $nrModules )
 	$optCategory[$category]	= $category.' ('.$nrModules.')';
 $optCategory	= UI_HTML_Elements::Options( $optCategory, $filterCategory );
 
-$optModuleId	= array( '' => '- wähle -' );
-foreach( $filteredModules as $moduleId => $module )
-	$optModuleId[$moduleId]	= $module->title.' ('.count( $module->config ).')';
-$optModuleId	= UI_HTML_Elements::Options( $optModuleId, $filterModuleId );
-
 return '
 <div class="content-panel content-panel-form content-panel-filter">
 	<h3>'.$w->heading. '</h3>
@@ -28,12 +23,6 @@ return '
 				<div class="span12">
 					<label for="input_category">'.$w->labelCategory.'</label>
 					<select name="category" id="input_category" class="span12 has-optionals" onchange="this.form.submit();">'.$optCategory.'</select>
-				</div>
-			</div>
-			<div class="row-fluid" style="'.( !$filterCategory ? 'display: none' : '' ).'">
-				<div class="span12">
-					<label for="input_moduleId">'.$w->labelModuleId.'</label>
-					<select name="moduleId" id="input_moduleId" class="span12" onchange="this.form.submit();">'.$optModuleId.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
