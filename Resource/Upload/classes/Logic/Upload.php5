@@ -313,7 +313,7 @@ class Logic_Upload{
 		$this->upload	= $uploadData;
 		$this->upload->allowedMimeTypes		= array();
 		$this->upload->allowedExtensions	= $allowedExtensions;
-		$this->upload->allowedSize			= $maxSize;
+		$this->upload->allowedSize			= Alg_UnitParser::parse( trim( $maxSize ) );
 
 		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;
