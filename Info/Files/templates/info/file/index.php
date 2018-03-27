@@ -14,7 +14,7 @@ $rows			= array( 'folders' => array(), 'files' => array() );
 foreach( $files as $file ){
 	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->uploadedAt ) );
 	$size			= Alg_UnitFormater::formatBytes( $file->size );
-	$urlView		= './info/file/view/'.$file->downloadFileId;
+	$urlView		= './info/file/deliver/'.$file->downloadFileId;
 	$urlDownload	= './info/file/download/'.$file->downloadFileId;
 	$urlRemove		= './info/file/remove/'.$file->downloadFileId;
 	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
