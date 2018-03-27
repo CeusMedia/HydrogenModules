@@ -60,7 +60,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFolderId,
-				'icon'		=> 'fa fa-fw fa-file-o',
+				'icon'		=> 'fa fa-fw fa-folder',
 			) ) );
 		}
 	}
@@ -170,6 +170,10 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		if( !file_exists( $path.$file->title ) ){
+			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
+			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
+		}
 		$mimeType	= mime_content_type( $path.$file->title );
 		header( 'Content-Type: '.$mimeType );
 		header( 'Content-Length: '.filesize( $path.$file->title ) );
@@ -187,6 +191,10 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		if( !file_exists( $path.$file->title ) ){
+			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
+			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
+		}
 		$this->modelFile->edit( $fileId, array(
 			'nrDownloads'	=> $file->nrDownloads + 1,
 			'downloadedAt'	=> time(),
