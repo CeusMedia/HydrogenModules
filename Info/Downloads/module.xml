@@ -3,7 +3,7 @@
 	<title>Info: Downloads</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.3">Support module Info:Novelties.</log>
 	<log version="0.3.4">Renamed from module Info:Files to Info:Downloads.</log>
 	<log version="0.3.5">Use module Resource:Upload.</log>
+	<log version="0.3.6">Replace CDN resource.</log>
 	<company site="http://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
