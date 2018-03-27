@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: News</title>
+	<description></description>
+	<category>Info</category>
+	<version>0.3</version>
+	<log version="0.2.5">Prepared extraction of still bundled catalog news.</log>
+	<log version="0.2.6">Add helper to render news.</log>
+	<log version="0.2.7">Improve HTML customisation.</log>
+	<log version="0.2.8">Add hook to render news from shortcode.</log>
+	<log version="0.2.9">Use shortcode logic to apply shortcode hook.</log>
+	<log version="0.3">Imported module from protected repository.</log>
+	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/News.php5</class>
+		<class>Hook/Info/News.php5</class>
+		<class>Model/News.php5</class>
+		<class>View/Info/News.php5</class>
+		<class>View/Helper/News.php5</class>
+		<locale>de/info/news.ini</locale>
+		<locale>de/html/info/news/bottom.html</locale>
+		<locale>de/html/info/news/top.html</locale>
+		<template>info/news/index.php</template>
+		<style source="common" load="auto">module.info.news.css</style>
+	</files>
+	<config type="boolean" name="show.empty">no</config>
+	<config type="integer" name="show.max">10</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<link xml:lang="de" access="public" path="info/news">Neuigkeiten</link>
+	<link xml:lang="en" access="public" path="info/news">News</link>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_News::onViewRenderContent</hook>
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>news`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>news` (
+  `newsId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) unsigned DEFAULT '0',
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `columns` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `startsAt` decimal(12,0) unsigned DEFAULT NULL,
+  `endsAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`newsId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>news`;
+]]></sql>
+</module>
