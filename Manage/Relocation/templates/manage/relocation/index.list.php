@@ -3,9 +3,9 @@ $w			= (object) $words['index-list'];
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
