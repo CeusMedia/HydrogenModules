@@ -164,10 +164,10 @@ body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article
 	}
 *//*
 body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item span.blog-article-date {
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/date.png);
 	}
 body.controller-blog ul.blog-article-list li.blog-article-list-item.blog-article-abstract .blog-article-info li.blog-article-info-list-item span.blog-article-time {
-	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/time.png);
 	}
 */
 
@@ -188,7 +188,7 @@ body.controller-blog .link-feed {
 	background-repeat: no-repeat;
 	background-position: 4px 2px;
 	padding: 2px 8px 2px 25px;
-	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/feed.png);
 	}
 
 span.number-indicator {
@@ -213,17 +213,17 @@ body.controller-blog .article-status {
 	padding: 1px 5px 1px 24px;
 	}
 body.controller-blog .article-status.status-1 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/bin_closed.png);
 	background-position: 2px 1px;
 	}
 body.controller-blog .article-status.status0 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/pencil.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png);
 	}
 body.controller-blog .article-status.status1 {
-	background-image: url(http://img.int1a.net/famfamfam/silk/world.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/world.png);
 	}
 body.controller-blog .article-status.loading {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_refresh.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png);
 	background-position: 4px 1px;
 	}
 
@@ -242,6 +242,6 @@ body.controller-blog.action-edit ul.editor-list button.remove {
 	margin-right: 5px;
 	}
 body.controller-blog.action-edit ul.editor-list button.remove span{
-	background-image: url(http://img.int1a.net/famfamfam/silk/bin_closed.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/bin_closed.png);
 	background-position: -3px 0px;
 	}

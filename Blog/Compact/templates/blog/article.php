@@ -69,7 +69,7 @@ $tagList	= View_Blog::renderTagList( $env, $tags );
 $roleId		= $this->env->getSession()->get( 'roleId');
 $canEdit	= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'edit' );
 $url		= './blog/edit/'.$article->articleId;
-$label		= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/pencil.png', 'Eintrag bearbeiten' );
+$label		= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png', 'Eintrag bearbeiten' );
 $linkEdit	= $canEdit ? UI_HTML_Elements::Link( $url, $label, 'link-edit button' ) : '';
 
 $date	= 'unbekannt';
@@ -81,10 +81,10 @@ if( $article->createdAt ){
 return '
 <style>
 .icon-label.date {
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/date.png);
 	}
 .icon-label.time {
-	background-image: url(http://img.int1a.net/famfamfam/silk/time.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/time.png);
 	}
 .link-blog.version {
 	border: 1px solid transparent;
