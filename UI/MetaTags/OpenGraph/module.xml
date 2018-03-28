@@ -8,7 +8,7 @@
 	<log version="0.2.1">Add relation to Resource:Library:cmModules.</log>
 	<log version="0.3">Use OpenGraph library from Github.</log>
 	<category>User Interface</category>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<config protected="yes" type="string" name="audio"></config>

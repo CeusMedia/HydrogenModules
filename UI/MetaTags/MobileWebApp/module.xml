@@ -12,7 +12,7 @@ Having this module activated, a pinned Web App can opened in a new browser insta
 	<version>0.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<config protected="yes" type="boolean" name="enabled">yes</config>
