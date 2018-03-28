@@ -9,7 +9,7 @@
 	<log version="0.2.1">Extended article features.</log>
 	<log version="0.2.2">Support article images.</log>
 	<log version="0.2.3">Add language support using module Resource:Localization.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/Catalog/Clothing/Article.php5</class>

@@ -20,7 +20,7 @@
 	<log version="0.4.2">Add support for bank account mandates.</log>
 	<log version="0.4.3">Improve bank panels.</log>
 	<log version="0.4.4">Add new list helpers.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/My/Mangopay.php5</class>

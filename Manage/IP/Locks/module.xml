@@ -18,7 +18,7 @@
 	<log version="0.3.2">Use pagination from Bootstrap package.</log>
 	<log version="0.3.3">Support IPv6.</log>
 <!--	<log version="0.2.6">Added whitelist management.</log>-->
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/Ip/Lock.php5</class>

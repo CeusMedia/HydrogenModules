@@ -14,7 +14,7 @@
 	<log version="0.6">Extend code editor by AJAX-save with Ctrl-S.</log>
 	<log version="0.6.1">Extract code mirror call to JavaScript file.</log>
 	<log version="0.6.2">Internal improvements.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/Content/Locale.php5</class>

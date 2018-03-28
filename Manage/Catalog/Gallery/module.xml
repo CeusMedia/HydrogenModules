@@ -21,7 +21,7 @@
 	<log version="0.3.3">Finish category cover upload.</log>
 	<log version="0.3.4">Add JavaScript.</log>
 	<log version="0.3.5">Add EXIF support.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/Catalog/Gallery.php5</class>

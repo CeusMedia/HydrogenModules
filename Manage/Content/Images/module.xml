@@ -32,7 +32,7 @@
 	<log version="0.4.4">Update folder list.</log>
 	<log version="0.4.5">Fix panel bugs.</log>
 	<log version="0.4.6">Support new TineMCE file browser.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
