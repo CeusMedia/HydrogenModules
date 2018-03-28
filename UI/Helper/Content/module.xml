@@ -3,7 +3,10 @@
 	<title>UI: Helper: Content</title>
 	<description><![CDATA[Content converter and format helper.]]></description>
 	<category>User Interface</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Replace CDN resource.</log>
 	<files>
 		<class>View/Helper/ContentConverter.php5</class>
 		<style source="theme" load="auto">links.css</style>
