@@ -17,7 +17,7 @@ if( $invites->all ){
 			if( $invite->status == 1 ){
 				$expire	= date( 'd.m.Y', $invite->createdAt + $daysValid * 24 * 60 * 60 );
 				$expire	= sprintf( 'verfällt am %s', $expire );
-				$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'http://img.int1a.net/famfamfam/silk/error.png' ) );
+				$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png' ) );
 				$date	.= '&nbsp;'.UI_HTML_Tag::create( 'span', $image, array( 'title' => $expire ) );
 				$buttons[]	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
 			}

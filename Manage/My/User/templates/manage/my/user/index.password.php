@@ -2,7 +2,7 @@
 
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['password'];
-$env->page->js->addUrl( 'http://cdn.ceusmedia.de/js/jquery/pstrength/2.1.0.min.js' );
+$env->page->js->addUrl( 'https://cdn.ceusmedia.de/js/jquery/pstrength/2.1.0.min.js' );
 $script		= '
 $(document).ready(function(){
 	if('.$pwdMinLength.'||'.$pwdMinStrength.'){
