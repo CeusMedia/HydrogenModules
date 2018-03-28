@@ -10,7 +10,7 @@ Editor for graph structure, stored in database.
 	<log version="0.3">Improve UI structure.</log>
 	<log version="0.3.1">Set permissions.</log>
 	<category>Work</category>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

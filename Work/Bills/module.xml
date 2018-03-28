@@ -12,7 +12,7 @@
 	<log version="0.2.9">Updated filters, lists and marked panels.</log>
 	<log version="0.2.10">Extended filters by ID and search term (applies on title only).</log>
 	<log version="0.2.11">Updated list data for template of seconds tab (graph).</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
