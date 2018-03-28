@@ -2,10 +2,10 @@
 
 /*  --  PERSPECTIVE BUTTONS  --  */
 button.icon.list span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/table.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/table.png);
 	}
 button.icon.calendar span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/calendar_view_month.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/calendar_view_month.png);
 	}
 
 
@@ -20,22 +20,22 @@ button.icon.calendar span {
 
 /*  --  BUTTONS  --  */
 button.export.ical span{
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/date.png);
 	}
 button.export.archive span{
-	background-image: url(http://img.int1a.net/famfamfam/silk/compress.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/compress.png);
 	}
 legend.icon.export {
-	background-image: url(http://img.int1a.net/famfamfam/silk/package.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/package.png);
 	}
 legend.icon.mission-add {
-	background-image: url(http://img.int1a.net/famfamfam/silk/script_add.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/script_add.png);
 	}
 legend.icon.mission-edit {
-	background-image: url(http://img.int1a.net/famfamfam/silk/script_edit.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/script_edit.png);
 	}
 legend.icon.mission-close {
-	background-image: url(http://img.int1a.net/famfamfam/silk/accept.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/accept.png);
 	}
 
 
