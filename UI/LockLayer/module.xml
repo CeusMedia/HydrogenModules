@@ -15,7 +15,7 @@ Can be used to cover long loading requests.
 	<log version="0.2.4">Restrict lock layer to left mouse button.</log>
 	<log version="0.3.0">Refactoring to apply to forms, links (without fragment), buttons (which redirect location) automatically.</log>
 <!--	<log version="0.3.1">Support for localized default messages.</log>-->
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

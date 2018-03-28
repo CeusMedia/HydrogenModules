@@ -12,7 +12,7 @@ Press F9 to open DevCenter.
 	<log version="0.2.1">Use F9 as hotkey since Chrome uses F10 for menu.</log>
 	<log version="0.2.2">Fix bug which disables text selection at all.</log>
 	<category>User Interface</category>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/DevCenter.php5</class>

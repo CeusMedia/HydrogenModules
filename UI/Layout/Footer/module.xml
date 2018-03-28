@@ -4,7 +4,7 @@
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
 	<version>0.2</version>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>View/Helper/Footer.php5</class>

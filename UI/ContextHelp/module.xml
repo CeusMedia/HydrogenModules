@@ -38,7 +38,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<log version="0.2.8">Autoload context help file for requested controller and action.</log>
 	<log version="0.3">Migration from protected to public repository.</log>
 	<log version="0.3.1">Hide masks on click.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>View/Helper/ContextHelp.php5</class>

@@ -8,7 +8,7 @@
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add set methods for footer button labels.</log>
 	<category>User Interface</category>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>View/Helper/Bootstrap/Modal.php5</class>
