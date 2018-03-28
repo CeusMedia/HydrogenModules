@@ -18,7 +18,7 @@
 	<log version="0.3">Improve user interface usability.</log>
 	<log version="0.3.1">Extend export data by check information.</log>
 	<log version="0.3.2">Migrate to use newer database classes.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

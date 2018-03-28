@@ -16,7 +16,7 @@
 	<log version="0.3.5">Add members per invite or already activated.</log>
 	<log version="0.3.6">Support automatic mail attachments.</log>
 	<log version="0.3.7">Set receiver name in sent mails.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
