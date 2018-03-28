@@ -32,7 +32,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
-	protected $pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
+	protected $pathIcons	= 'https://cdn.ceusmedia.de/img/famfamfam/silk/';
 	protected $projects		= array();
 	protected $titleLength	= 80;
 	protected $today;

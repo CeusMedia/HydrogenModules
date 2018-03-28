@@ -5,7 +5,7 @@ var WorkMissionsCalendar = {
 	monthShow: 0,
 	monthNames: [],
 	monthNamesShort: [],
-	pathIcons: "http://img.int1a.net/famfamfam/silk/",
+	pathIcons: "https://cdn.ceusmedia.de/img/famfamfam/silk/",
 	userId: 0,
 
 /*	blendOut: function(duration){
