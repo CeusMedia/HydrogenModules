@@ -8,7 +8,7 @@
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate event map.</log>
 	<log version="0.2.2">Replace CDN resource.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Event.php5</class>

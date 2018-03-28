@@ -16,7 +16,7 @@
 	<log version="0.4.1">Add search for files in folders.</log>
 	<log version="0.4.2">Add job to migrate older file entries.</log>
 	<log version="0.4.3">Add icon to newslist items ans focus search.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/File.php5</class>
