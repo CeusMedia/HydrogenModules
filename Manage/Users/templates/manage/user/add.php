@@ -38,7 +38,7 @@ $script	= '
 ';
 
 $page	= $env->getPage();
-$page->js->addUrl( 'http://cdn.int1a.net/js/jquery/pstrength/2.1.0.min.js', TRUE );
+$page->js->addUrl( 'https://cdn.ceusmedia.de/js/jquery/pstrength/2.1.0.min.js', TRUE );
 $page->js->addScriptOnReady( $script );
 */
 
