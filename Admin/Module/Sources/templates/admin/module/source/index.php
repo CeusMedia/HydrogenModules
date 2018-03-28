@@ -1,8 +1,8 @@
 <?php
 
-$iconEnabled	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/accept.png', $words['states'][1] );
-$iconDisabled	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/silk/delete.png', $words['states'][0] );
-$iconRefresh	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
+$iconEnabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/accept.png', $words['states'][1] );
+$iconDisabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/delete.png', $words['states'][0] );
+$iconRefresh	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
 
 $rows	= array();
 foreach( $sources as $sourceId => $source ){
