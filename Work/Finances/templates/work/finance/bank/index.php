@@ -1,5 +1,5 @@
 <?php
-$urlIcons	= 'http://img.int1a.net/';
+$urlIcons	= 'https://cdn.ceusmedia.de/img/';
 $imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
 	$total	= 0;
 	$number	= 0;
