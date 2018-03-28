@@ -15,7 +15,7 @@ This module can extend normal or server applications but will need an installed 
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Syslog.php5</class>

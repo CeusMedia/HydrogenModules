@@ -55,7 +55,7 @@ Please think about using the hook instead.
 	<log version="0.5">Add index and view.</log>
 	<log version="0.5.1">Several UI tweaks.</log>
 	<log version="0.5.2">Add mail component for collecting exceptions facts for HTML and text mail.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/System/Log.php5</class>

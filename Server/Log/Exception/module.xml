@@ -40,7 +40,7 @@ Please think about using the hook instead.
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
 	<log version="0.3">Add mail component for collecting exceptions facts for HTML and text mail.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log/Exception.php5</class>

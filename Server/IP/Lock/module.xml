@@ -15,7 +15,7 @@
 	<log version="0.2.7">Extended logic class.</log>
 	<log version="0.3">Add support for IPv6.</log>
 <!--	<log version="0.3.1">Added whitelist.</log>-->
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/IP/Lock.php5</class>

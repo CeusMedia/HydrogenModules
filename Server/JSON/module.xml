@@ -18,7 +18,7 @@ This module installs the main classes needed to run a server application which i
 	<log version="0.3.1">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.3.2">Load support for page in environment for browser.</log>
 	<log version="0.3.3">Enable environment self detection.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Dispatcher.php5</class>
