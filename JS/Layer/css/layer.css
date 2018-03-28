@@ -132,13 +132,13 @@ div.layer button span {
 	background-position: 0px 0px;
 	}
 div.layer button.prev span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_left.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_left.png);
 	}
 div.layer button.next span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_right.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_right.png);
 	}
 div.layer button.info span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/information.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/information.png);
 	}
 div.layer button span.label {
 	display: none;
