@@ -27,22 +27,22 @@
 #layout-messenger ul li.failure {
 	background-color: #DDD;
 	background-color: #FBA;
-	background-image: url(//img.int1a.net/famfamfam/silk/cancel.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/cancel.png);
 	}
 #layout-messenger ul li.error {
 	background-color: #FCB;
-	background-image: url(//img.int1a.net/famfamfam/silk/error.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/error.png);
 	}
 #layout-messenger ul li.notice {
 	background-color: #FFD;
 	background-color: #DDD;
 	background-color: #EEE;
 	background-color: #FFC;
-	background-image: url(//img.int1a.net/famfamfam/silk/information.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/information.png);
 	}
 #layout-messenger ul li.success {
 	background-color: #DFB;
-	background-image: url(//img.int1a.net/famfamfam/silk/accept.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/accept.png);
 	}	
 	
 #layout-messages .time {

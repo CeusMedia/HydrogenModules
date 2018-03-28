@@ -184,10 +184,10 @@ div.index ul.instances li.check-fail {
 	background-position: right 2px;
 	}
 div.index ul.instances li.check-okay {
-	background-image: url(http://img.int1a.net/famfamfam/silk/tick.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tick.png);
 	}
 div.index ul.instances li.check-fail {
-	background-image: url(http://img.int1a.net/famfamfam/silk/cross.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/cross.png);
 	}
 div.index ul.instances li.active a {
 	}
@@ -217,13 +217,13 @@ div.index ul.instances li.check-fail {
 div.index ul.instances li.check-okay {
 	}
 div.index ul.instances li.check-fail {
-	background-image: url(http://img.int1a.net/famfamfam/silk/bullet_error.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/bullet_error.png);
 	}
 div.index ul.instances li.check-modules-missing {
-	background-image: url(http://img.int1a.net/famfamfam/silk/cog_delete.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/cog_delete.png);
 	}
 div.index ul.instances li.check-modules-updatable {
-	background-image: url(http://img.int1a.net/famfamfam/silk/cog_error.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/cog_error.png);
 	}
 div.index ul.instances li.active a {
 	}
