@@ -28,7 +28,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<log version="0.4.3">Remove deprecated templates.</log>
 	<log version="0.4.4">Support locales.</log>
 	<log version="0.4.5">Extract payment registration to a hook class.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

@@ -41,7 +41,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.7.3">Add helper for order facts, used in mails.</log>
 	<log version="0.7.4">Add support for new finish panel hook.</log>
 	<log version="0.7.5">Add payment block in customer order mail.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
