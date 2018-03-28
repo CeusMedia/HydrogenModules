@@ -9,7 +9,7 @@
 	<log version="0.3">Added support for events.</log>
 	<log version="0.3.1">Extended configuration for automatic mode.</log>
 	<log version="0.3.2">Updated configuration by type and protection.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
