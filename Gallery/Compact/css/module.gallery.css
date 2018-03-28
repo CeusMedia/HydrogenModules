@@ -6,7 +6,7 @@ body.controller-gallery .link-feed {
 	background-repeat: no-repeat;
 	background-position: 4px 2px;
 	padding: 2px 8px 2px 25px;
-	background-image: url(http://img.int1a.net/famfamfam/silk/feed.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/feed.png);
 	}
 body.controller-gallery #license {
 	clear: left;
@@ -18,12 +18,12 @@ body.controller-gallery #license {
 /*  --  GLOBAL  --  */
 .icon-label.link-gallery,
 .icon-label.link-gallery {
-	background-image: url(http://img.int1a.net/famfamfam/silk/folder_image.png);
-	background-image: url(http://img.int1a.net/famfamfam/silk/application_view_tile.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/folder_image.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/application_view_tile.png);
 	padding-left: 22px;
 	}
 .icon-label.link-gallery-year {
-	background-image: url(http://img.int1a.net/famfamfam/silk/date.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/date.png);
 	}
 	
 /*  --  INDEX: FOLDERS  --  */
@@ -168,13 +168,13 @@ body.moduleGallery.action-info button.button span {
 	background-position-x: 0px;
 	}
 body.moduleGallery.action-info button.button.loading span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_refresh.png) !important;
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png) !important;
 	}
 body.moduleGallery.action-info button.button.resize-max span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_out.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_out.png);
 	}
 body.moduleGallery.action-info button.button.download span {
-	background-image: url(http://img.int1a.net/famfamfam/silk/arrow_down.png);
+	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png);
 	}
 	
 /*  --  IMAGE INFO: FULLSCREEN LAYER  --  */

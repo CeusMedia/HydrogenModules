@@ -110,7 +110,7 @@ $(document).ready(function(){
 <div id="gallery">
 	<div id="gallery-item-info-button" title="Informationen und Zoom">
 		<b class="fa fa-info-circle fa-fw"></b>
-<!--		<img src="http://img.int1a.net/famfamfam/silk/information.png"/>-->
+<!--		<img src="https://cdn.ceusmedia.de/img/famfamfam/silk/information.png"/>-->
 	</div>
 	<div style="float: right"><a href="'.$feedUrl.'" class="not-link-feed"><b class="fa fa-rss fa-fw"></b>&nbsp;RSS Feed</a></div>
 	'.$navigation.'<br/>
