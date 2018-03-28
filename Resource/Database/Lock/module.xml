@@ -12,8 +12,8 @@
 	<log version="0.3.3">Add dashboard panel.</log>
 	<log version="0.3.4">Extract hooks to own class.</log>
 	<category>Resource</category>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de" link="http://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Database/Lock.php5</class>
 		<class>Hook/Database/Lock.php5</class>

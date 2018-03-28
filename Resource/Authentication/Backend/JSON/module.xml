@@ -17,7 +17,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.2">Support tabs for multiple login backends.</log>
 	<log version="0.2.3">Extend module relations.</log>
 	<log version="0.2.4">Migrate logic to support new logic pool.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

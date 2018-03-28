@@ -8,7 +8,7 @@ This module is ***abstract*** and can be used as template for library autoloader
 ]]></description>
 	<category>Resource</category>
 	<version>0.1</version>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files/>
 	<relations/>

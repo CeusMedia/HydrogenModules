@@ -12,7 +12,7 @@
 	<log version="0.3.3">Refactoring for delivering MIME type next to content.</log>
 	<log version="0.3.4">Improve sitemap information handling.</log>
 	<log version="0.3.5">Support HTML view of sitemap with content negotiation.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Sitemap.php5</class>

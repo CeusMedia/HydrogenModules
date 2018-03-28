@@ -38,7 +38,7 @@ Cronjobs:
 	<log version="0.4.8">Add legal user methods.</log>
 	<log version="0.4.9">Restore hook controller and view.</log>
 	<log version="0.5">Integrate fees calculation.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Mangopay/Event.php5</class>

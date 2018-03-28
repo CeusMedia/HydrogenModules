@@ -17,7 +17,7 @@ Files can be assigned to modules and virtual paths.
 	<log version="0.2.5">Create .htaccess in file path if not existing.</log>
 	<log version="0.2.6">Let logic class inherit from new framework logic class.</log>
 	<log version="0.2.7">Add method to cleanup files.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

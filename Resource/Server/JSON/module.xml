@@ -11,7 +11,7 @@
 	<log version="0.2.3">Updated configuration by mandatory and title.</log>
 	<log version="0.3">Use hook for automatic initialization and configuration.</log>
 <!--	<log version="0.3.1">Allow multiple instances.</log>-->
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Resource/Server/Json.php5</class>
