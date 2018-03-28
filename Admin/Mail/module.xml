@@ -50,7 +50,7 @@
 	<log version="0.8.2">Improve template management.</log>
 	<log version="0.8.3">Add locales for mail facts.</log>
 	<log version="0.8.4">Add default contents for new templates.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>

@@ -16,7 +16,7 @@
 	<log version="0.2.8">Use module UI:Bootstrap:Modal.</log>
 	<log version="0.2.9">Integrated wallets into client and seller management.</log>
 	<log version="0.3">Improve seller management by modals.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Admin/Payment/Mangopay.php5</class>

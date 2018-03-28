@@ -13,7 +13,7 @@
 	<log version="0.5">Add index and view.</log>
 	<log version="0.5.1">Several UI tweaks.</log>
 	<log version="0.6">Migration of module Server:System:Log to Admin:Log:Exception and Server:Log:Exception.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Admin/Log/Exception.php5</class>
