@@ -31,7 +31,7 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 		$page	= new UI_HTML_PageFrame();
 		$page->setBaseHref( $this->env->url );
 		$page->addBody( $body );
-		$page->addStylesheet( "//cdn.int1a.net/css/bootstrap.min.css" );
+		$page->addStylesheet( "//cdn.ceusmedia.de/css/bootstrap.min.css" );
 		$page->addStylesheet( "themes/custom/css/php-diff.css" );
 		print( $page->build() );
 		die;

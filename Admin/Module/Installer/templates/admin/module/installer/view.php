@@ -119,9 +119,9 @@ $panelInfo	= '
 		<dd>'.$module->source.'</dd>
 		<dt>Version</dt>
 		<dd>'.( $module->versionAvailable ? $module->versionAvailable : '?' ).'</dd>
-		<dt>benötigte Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/needs" class="layer-image" title="Abhängigkeiten von anderen Modulen"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
+		<dt>benötigte Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/needs" class="layer-image" title="Abhängigkeiten von anderen Modulen"><img src="https://cdn.ceusmedia.de/img/famfamfam/silk/magnifier.png"/></a></dt>
 		<dd>'.$relationsNeeded.'</dd>
-		<dt>unterstützt Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/supports" class="layer-image" title="Unterstützung anderer Module"><img src="http://img.int1a.net/famfamfam/silk/magnifier.png"/></a></dt>
+		<dt>unterstützt Module&nbsp;<a href="./admin/module/showRelationGraph/'.$moduleId.'/supports" class="layer-image" title="Unterstützung anderer Module"><img src="https://cdn.ceusmedia.de/img/famfamfam/silk/magnifier.png"/></a></dt>
 		<dd>'.$relationsSupported.'</dd>
 	</dl>
 	<div class="clearfix"></div>
