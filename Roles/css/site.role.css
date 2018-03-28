@@ -11,16 +11,16 @@
 
 .role.role1,
 .role.role2 {
-	background-image: url(//img.int1a.net/famfamfam/silk/user_gray.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_gray.png);
 	}
 .role.role3 {
-	background-image: url(//img.int1a.net/famfamfam/silk/user_suit.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_suit.png);
 	}
 .role.role4 {
-	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
 	}
 .role.role5 {
-	background-image: url(//img.int1a.net/famfamfam/silk/user_green.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_green.png);
 	}
 
 .role-access {
@@ -32,13 +32,13 @@
 	float: left;
 	}
 .role-access.access0 {
-	background-image: url(//img.int1a.net/famfamfam/silk/stop.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/stop.png);
 	}
 .role-access.access64 {
-	background-image: url(//img.int1a.net/famfamfam/silk/shield.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/shield.png);
 	}
 .role-access.access128 {
-	background-image: url(//img.int1a.net/famfamfam/silk/world.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world.png);
 	}
 
 #role-edit-rights {
