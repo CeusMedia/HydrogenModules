@@ -78,7 +78,7 @@ if( $module->links ){
 		if( in_array( $link->access, array_keys( $words['access-types'] ) ) )
 			$access	= $words['access-types'][$link->access];
 		if( !empty( $link->language ) )
-			$labelLanguage	= UI_HTML_Elements::Image( 'http://img.int1a.net/famfamfam/flags/png/'.$link->language.'.png', $link->language );
+			$labelLanguage	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/flags/png/'.$link->language.'.png', $link->language );
 		else
 			$labelLanguage	= "*";
 

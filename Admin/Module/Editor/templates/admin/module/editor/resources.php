@@ -2,8 +2,8 @@
 /**	@todo	kriss: realize new view button, see implementation @scripts */
 
 $w			= (object) $words['tab-resources'];
-$pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
-$pathIcons	= 'http://img.int1a.net/famfamfam/silk/';
+$pathIcons	= 'https://cdn.ceusmedia.de/img/famfamfam/silk/';
+$pathIcons	= 'https://cdn.ceusmedia.de/img/famfamfam/silk/';
 
 $tableResources	= '<br/><div>'.$w->listNone.'</div><br/>';
 
