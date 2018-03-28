@@ -175,7 +175,7 @@ ModuleManagePages.PageEditor = {
 			selector: "textarea#input_page_content",
 //			plugins: "textcolor advlist autolink link image lists charmap print autosave code hr paste searchreplace visualblocks wordcount visualchars table contextmenu emoticons",
 //			document_base_url: this.frontendUri,
-//			content_css: "http://cdn.int1a.net/css/bootstrap.css",
+//			content_css: "https://cdn.ceusmedia.de/css/bootstrap.css",
 //			image_list: ModuleManagePages.PageEditor.imageList,
 //			link_list: ModuleManagePages.PageEditor.linkList,
 			height: 360,
