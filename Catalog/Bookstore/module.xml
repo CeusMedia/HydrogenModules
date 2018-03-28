@@ -28,7 +28,7 @@
 	<log version="0.7.3">Extend bridge logic for quantity changes.</log>
 	<log version="0.7.4">Improve design on category index.</log>
 	<log version="0.7.5">Add helper for related articles slider.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Catalog/Bookstore.php5</class>

@@ -23,7 +23,7 @@
 	<log version="0.3.7">Add view helper for shop service panel.</log>
 	<log version="0.3.8">Extend bridge logic for quantity changes.</log>
 <!--	<log version="0.4">Support localization.</log>-->
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Catalog/Gallery.php5</class>

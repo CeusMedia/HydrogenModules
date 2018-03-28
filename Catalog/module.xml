@@ -22,7 +22,7 @@
 	<log version="0.6.2">Extract article view into several templates.</log>
 	<log version="0.6.3">Change related articles list to slider.</log>
 	<log version="0.6.4">Add tags to search index.</log>
-	<company site="http://ceusmedia.de/">Ceus Media</company>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Catalog.php5</class>
