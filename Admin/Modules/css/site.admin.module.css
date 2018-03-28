@@ -158,55 +158,55 @@ span.icon {
 	float: left;
 */	}
 span.icon.class {
-	background-image: url(//img.int1a.net/famfamfam/silk/page_white_php.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white_php.png);
 	}
 span.icon.locale {
-	background-image: url(//img.int1a.net/famfamfam/silk/page_white_world.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white_world.png);
 	}
 span.icon.template {
-	background-image: url(//img.int1a.net/famfamfam/silk/html.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/html.png);
 	}
 span.icon.script {
-	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
 	}
 span.icon.style {
-	background-image: url(//img.int1a.net/famfamfam/silk/css.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/css.png);
 	}
 span.icon.image {
-	background-image: url(//img.int1a.net/famfamfam/silk/image.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/image.png);
 	}
 span.icon.file {
-	background-image: url(//img.int1a.net/famfamfam/silk/page_white.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white.png);
 	}
 
 span.icon.module {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
 	}
 span.icon.module.add {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
 	}
 span.icon.module.edit {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
 	}
 span.icon.module.disabled {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
 	}
 	
 span.icon.module.module-status-0 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_delete.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_delete.png);
 	}
 span.icon.module.module-status-1 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
 	}
 span.icon.module.module-status-2 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
 	}
 span.icon.module.module-status-3 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_link.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_link.png);
 	}
 span.icon.module.module-status-4 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_error.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_error.png);
 	}
 	
 	
@@ -220,35 +220,35 @@ legend.module-edit {
 	padding-left: 28px;
 	}
 legend.module {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
-	background-image: url(//img.int1a.net/famfamfam/silk/package.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package.png);
 	}
 legend.module-add {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
-	background-image: url(//img.int1a.net/famfamfam/silk/package_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package_add.png);
 	}
 legend.module-edit {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edi.png);
-	background-image: url(//img.int1a.net/famfamfam/silk/package_edit.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edi.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package_edit.png);
 	}
 
 .module-type.type-1 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	}
 .module-type.type-2 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_edit.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	}
 .module-type.type-3 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	}
 .module-type.type-4 {
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin_disabled.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	}
@@ -392,23 +392,23 @@ ul.general-info li.licence {
 	}
 /*
 ul.general-info li.company {
-	background-image: url(//img.int1a.net/famfamfam/silk/building.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/building.png);
 	}
 ul.general-info li.author {
-	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
 	}
 ul.general-info li.license {
-	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
 	}
 */	
 legend.icon.author{
-	background-image: url(//img.int1a.net/famfamfam/silk/user.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
 	}
 legend.icon.company{
-	background-image: url(//img.int1a.net/famfamfam/silk/building.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/building.png);
 	}
 legend.icon.license{
-	background-image: url(//img.int1a.net/famfamfam/silk/script.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
 	}
 
 
@@ -490,7 +490,7 @@ select.active-no {
 	}
 
 .button.refresh span {
-	background-image: url(//img.int1a.net/famfamfam/silk/arrow_refresh.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png);
 	padding-left: 22px;
 	}
 
@@ -530,7 +530,7 @@ select.active-no {
 	}
 #layout-messenger ul li .message cite.module {
 	font-style: normal;
-	background-image: url(//img.int1a.net/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
 	background-position: 1px -1px;
 	background-repeat: no-repeat;
 	padding-left: 20px;
