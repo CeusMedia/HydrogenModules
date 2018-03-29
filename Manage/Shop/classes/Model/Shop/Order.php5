@@ -42,6 +42,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"paymentMethod",
 		"paymentId",
 		"status",
+//		"currency",
 		"price",
 		"priceTaxed",
 		"createdAt",
@@ -54,7 +55,8 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"userId",
 		"paymentMethod",
 		"paymentId",
-		"status"
+		"status",
+//		"currency",
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
