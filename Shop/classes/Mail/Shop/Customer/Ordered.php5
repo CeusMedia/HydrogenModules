@@ -55,8 +55,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
-		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
-		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
+//		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $data );
 
 		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';

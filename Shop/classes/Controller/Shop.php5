@@ -406,7 +406,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'userId', $userId );
-		$this->addData( 'email', $this->request->get( 'email' ) );
+		$this->addData( 'login', $this->request->get( 'login' ) );
 	}
 
 	public function finish(){
@@ -443,20 +443,27 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	public function login(){
 		$logic		= new Logic_Authentication( $this->env );
 		$modelUser	= new Model_User( $this->env );
-		$email		= $this->request->get( 'email' );
+		$login		= $this->request->get( 'login' );
 		$password	= $this->request->get( 'password' );
-		$user		= $modelUser->getByIndices( array(
+
+		$user		= $modelUser->getByIndices( array(							//  find user by email address
 			'roleId'	=> 4,
 			'status'	=> 1,
-			'email'		=> $email,
-		) );						//  find user by email address
+			'email'		=> $login,
+		) );
+		if( !$user )
+			$user		= $modelUser->getByIndices( array(						//  find user by username
+				'roleId'	=> 4,
+				'status'	=> 1,
+				'username'	=> $login,
+			) );
 		if( !$user ){
-			$this->messenger->noteError( 'Kein gültiges Benutzerkonto für diese E-Mail-Adresse gefunden.' );
-			$this->restart( 'customer', TRUE );
+			$this->messenger->noteError( 'Kein gültiges Benutzerkonto gefunden.' );
+			$this->restart( 'customer?login='.$login, TRUE );
 		}
 		if( !$logic->checkPassword( $user->userId, $password ) ){
 			$this->messenger->noteError( 'Das Passwort ist ungültig.' );
-			$this->restart( 'customer?email='.$email, TRUE );
+			$this->restart( 'customer?login='.$login, TRUE );
 		}
 		$this->session->set( 'userId', $user->userId );
 		$this->session->set( 'roleId', $user->roleId );
@@ -578,7 +585,10 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$email		= $this->env->getConfig()->get( 'module.shop.mail.manager' );
 		$logic		= new Logic_Mail( $this->env );
-		$mail		= new Mail_Shop_Manager_Ordered( $this->env, array( 'orderId' => $orderId ) );
+		$mail		= new Mail_Shop_Manager_Ordered( $this->env, array(
+			'orderId'			=> $orderId,
+			'paymentBackends'	=> $this->backends,
+		) );
 		$logic->appendRegisteredAttachments( $mail, $language );
 		$logic->handleMail( $mail, (object) array( 'email' => $email ), $language );
 	}

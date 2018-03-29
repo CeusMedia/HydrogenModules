@@ -129,6 +129,7 @@ For payment you need to install a payment module.]]></description>
 	<link access="public" path="shop/cart"/>
 	<link access="public" path="shop/index"/>
 	<link access="public" path="shop/customer"/>
+	<link access="public" path="shop/login"/>
 	<link access="public" path="shop/changePositionQuantity"/>
 	<link access="public" path="shop/conditions"/>
 	<link access="public" path="shop/checkout"/>

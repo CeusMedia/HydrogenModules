@@ -252,7 +252,7 @@ class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 		else{
 			if( !$this->modelOrder->get( $orderId ) ){
-				$this->session->remove( 'shop.orderId' );
+				$session->remove( 'shop.orderId' );
 				return $this->storeCartFromSession();
 			}
 		}

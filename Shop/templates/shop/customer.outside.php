@@ -8,8 +8,8 @@ return '<div class="row-fluid">
 			<div class="content-panel-inner">
 				<p>'.$wLogin->textTop.'</p>
 				<form action="./shop/login" method="post">
-					<label for="input_email">'.$wLogin->labelEmail.'</label>
-					<input type="text" name="email" id="input_email" class="span10" value="'.htmlentities( $email, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_login">'.$wLogin->labelLogin.'</label>
+					<input type="text" name="login" id="input_login" class="span10" value="'.htmlentities( $login, ENT_QUOTES, 'UTF-8' ).'"/>
 					<label for="input_password">'.$wLogin->labelPassword.'</label>
 					<input type="password" name="password" id="input_password" class="span10"/>
 					<div class="buttonbar">
