@@ -56,11 +56,12 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Access to order denied for current user' );
 			$this->restart( 'shop/customer' );
 		}
-		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
+		$this->userId	= $this->localUserId;
+/*		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
 		if( !$this->userId ){
 			$account		= $this->provider->createCustomerFromLocalUser( $this->localUserId );
 			$this->userId	= $account->Id;
-		}
+		}*/
 /*		$wallets		= $this->provider->getUserWalletsByCurrency( $this->userId, $this->order->currency );
 		if( !$wallets )
 			$wallets	= array( $this->provider->createUserWallet( $this->userId, $this->order->currency ) );
