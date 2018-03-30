@@ -31,7 +31,7 @@
 		<class>View/Shop/Payment/Stripe.php5</class>
 		<template>shop/payment/stripe/perCreditCard.php</template>
 		<script>Module.Shop.Payment.Stripe.js</script>
-		<style>module.shop.payment.stripe.css</style>
+		<style source="common">module.shop.payment.stripe.css</style>
 		<locale>de/shop/payment/stripe.ini</locale>
 		<locale>de/html/shop/payment/stripe/perCreditCard/bottom.html</locale>
 		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
