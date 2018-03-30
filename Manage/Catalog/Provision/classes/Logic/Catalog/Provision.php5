@@ -6,7 +6,7 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
 		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
 		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
-		$this->modelUser		= new Model_Provision_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
 	}
 
 	/**

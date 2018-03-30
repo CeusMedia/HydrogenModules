@@ -7,7 +7,7 @@ class Model_Provision_User_License extends CMF_Hydrogen_Model{
 	const STATUS_ACTIVE			= 1;
 	const STATUS_EXPIRED		= 2;
 
-	protected $name			= 'provision_user_licenses';
+	protected $name			= 'user_provision_licenses';
 
 	protected $columns		= array(
 		'userLicenseId',

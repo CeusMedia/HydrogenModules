@@ -35,7 +35,7 @@ class Controller_Manage_Catalog_Provision_Product extends CMF_Hydrogen_Controlle
 		$licenses	= $this->logicProvision->getProductLicenses( $productId );
 		foreach( $licenses as $license ){
 //			$license->product	= $this->logicProvision->getProduct( $license->productId );
-			$license->count		= $this->logicProvision->countUserLicensesByProductLicense( $license->productLicenseId );
+			$license->count		= 0;//$this->logicProvision->countUserLicensesByProductLicense( $license->productLicenseId );
 		}
 		$this->addData( 'licenses', $licenses );
 		$this->addData( 'productId', $productId );

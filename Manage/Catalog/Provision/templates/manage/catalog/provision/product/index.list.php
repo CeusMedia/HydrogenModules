@@ -1,6 +1,6 @@
 <?php
 
-$words	= $env->getLanguage()->getWords( 'manage/product' );
+$words	= $env->getLanguage()->getWords( 'manage/catalog/provision/product' );
 $w		= (object) $words['index'];
 
 $iconsStatus	= array(
