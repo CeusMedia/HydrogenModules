@@ -6,16 +6,14 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo		code doc
  */
-class Logic_Mail{
+class Logic_Mail extends CMF_Hydrogen_Logic{
 
-	protected $env;
 	protected $modelQueue;
 	protected $modelAttachment;
 	protected $options;
 	protected $pathAttachments;
 
-	public function __construct( $env ){
-		$this->env				= $env;
+	public function __onInit(){
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 
 		/*  --  INIT QUEUE  --  */
@@ -28,8 +26,10 @@ class Logic_Mail{
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
 		$this->pathAttachments	= $this->options->get( 'path.attachments' );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->pathAttachments	= Logic_Frontend::getInstance( $this->env )->getPath().$this->pathAttachments;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend				= Logic_Frontend::getInstance( $this->env );
+			$this->pathAttachments	= $frontend->getPath().$this->pathAttachments;
+		}
 		if( !file_exists( $this->pathAttachments ) ){
 			mkdir( $this->pathAttachments, 0755, TRUE );
 			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
@@ -103,6 +103,23 @@ class Logic_Mail{
 	 */
 	public function countQueue( $conditions = array() ){
 		return $this->modelQueue->count( $conditions );
+	}
+
+	/**
+	 *	Creates instance of mail class with given mail data.
+	 *	Return mail object contains availble mail parts.
+	 *	An active mail template will be applied.
+	 *	@access		public
+	 *	@param		string		$mailClassName		Name of mail class without Mail_ prefix
+	 *	@param		array		$mailData			Data map for mail content generation, nested arrays and objects are possible
+	 *	@return		object							Instance of mail class containing rendered mail parts
+	 *	@throws		RuntimeException				If mail class is not existing
+	 */
+	public function createMail( $mailClassName, $data ){
+		$className	= 'Mail_'.$mailClassName;
+		if( !class_exists( $className ) )
+			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
+		return Alg_Object_Factory::createObject( $className, array( $this->env, $mailData ) );
 	}
 
 	/**
@@ -543,5 +560,4 @@ class Logic_Mail{
 if( !class_exists( 'PHP_Incomplete_Class' ) ){
 	class PHP_Incomplete_Class{}
 }
-
 ?>
