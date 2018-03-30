@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Provision</title>
+	<description><![CDATA[Management for provisioning of products, licenses and their keys.]]></description>
+	<category>Management</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add locales.</log>
+	<log version="0.2.2">Finish localisation.</log>
+	<log version="0.2.3">Support ranking of products and licences.</log>
+	<log version="0.2.4">Allow client applications to request active product key.</log>
+	<log version="0.2.5">Extend products and licenses by description.</log>
+	<log version="0.2.6">Use module JS:TinyMCE for HTML descriptions.</log>
+	<log version="0.2.7">Moved hasActiveKey to Resource_Accounting::Controller_Rest.</log>
+	<log version="0.3">Migrated Manage:Accounting to Manage:Accounts.</log>
+	<log version="0.4">Migrated Manage:Accounts to Manage:Provision.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Catalog/Provision/Product.php5</class>
+		<class>Controller/Manage/Catalog/Provision/Product/License.php5</class>
+		<class>Controller/Manage/Catalog/Provision/License.php5</class>
+		<class>Logic/Catalog/Provision.php5</class>
+		<class>Logic/ShopBridge/Provision.php5</class>
+		<class>Model/Provision/Product.php5</class>
+		<class>Model/Provision/Product/License.php5</class>
+		<class>View/Manage/Catalog/Provision/Product.php5</class>
+		<class>View/Manage/Catalog/Provision/Product/License.php5</class>
+		<class>View/Manage/Catalog/Provision/License.php5</class>
+		<template>manage/catalog/provision/license/add.php</template>
+		<template>manage/catalog/provision/license/edit.php</template>
+		<template>manage/catalog/provision/license/index.php</template>
+		<template>manage/catalog/provision/license/index.filter.php</template>
+		<template>manage/catalog/provision/license/index.list.php</template>
+		<template>manage/catalog/provision/product/add.php</template>
+		<template>manage/catalog/provision/product/edit.php</template>
+		<template>manage/catalog/provision/product/index.php</template>
+		<template>manage/catalog/provision/product/index.list.php</template>
+		<template>manage/catalog/provision/product/license/add.php</template>
+		<template>manage/catalog/provision/product/license/edit.php</template>
+		<template>manage/catalog/provision/product/license/index.php</template>
+		<template>manage/catalog/provision/product/license/index.list.php</template>
+		<locale>de/manage/catalog/provision/license.ini</locale>
+		<locale>de/manage/catalog/provision/product.ini</locale>
+		<locale>de/manage/catalog/provision/product/license.ini</locale>
+		<locale>en/manage/catalog/provision/license.ini</locale>
+		<locale>en/manage/catalog/provision/product.ini</locale>
+		<locale>en/manage/catalog/provision/product/license.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">JS_TinyMCE</needs>
+		<needs type="module">Manage_User_Provision</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="manage/catalog/provision/product" rank="73">Produkte &amp; Lizenzen</link>
+	<link xml:lang="de" access="acl" path="manage/catalog/provision/license" rank="74">Lizenzen &amp; Schlüssel</link>
+	<link xml:lang="en" access="acl" path="manage/catalog/provision/product" rank="73">Products &amp; Licenses</link>
+	<link xml:lang="en" access="acl" path="manage/catalog/provision/license" rank="74">Licenses &amp; Keys</link>
+<!--	<hook type="resource" resource="CustomerManager" event="registerTabs">View_Manage_Customer::___onRegisterTab</hook>-->
+</module>
