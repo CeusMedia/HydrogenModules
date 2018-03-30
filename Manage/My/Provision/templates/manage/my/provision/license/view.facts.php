@@ -1,0 +1,54 @@
+<?php
+
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+
+$duration		= '<em>noch nicht aktiviert</em>';
+if( in_array( $userLicense->status, array( Model_User_License::STATUS_ACTIVE, Model_User_License::STATUS_EXPIRED ) ) ){
+	$dateStart	= date( 'd.m.Y', $userLicense->startsAt );
+	$dateEnd 	= date( 'd.m.Y', $userLicense->endsAt );
+	$duration	= $dateStart.' - '.$dateEnd;
+}
+
+$iconsStatus	= array(
+	Model_User_License::STATUS_DEACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_User_License::STATUS_REVOKED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_User_License::STATUS_PREPARED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
+	Model_User_License::STATUS_ACTIVE		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
+ 	Model_User_License::STATUS_EXPIRED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+);
+
+$avatar	= View_Helper_Member::renderStatic( $env, $userLicense->userId );
+
+$data1	= array();
+$data1['Produkt']				= $product->title;
+$data1['Lizenz']				= $userLicense->productLicense->title;
+$data1['Lizenznummer']			= $userLicense->uid;
+$data1['Preis']					= $userLicense->price.'&nbsp;&euro;';
+$data1['Besitzer']				= $avatar;
+$data2['Lizenzschlüssel']	= ( $userLicense->users - count( $notAssignedKeys ) ).' von '.$userLicense->users.' Schlüssel<span class="muted">(n)</span> vergeben';
+$data2['Laufzeit']				= $words['durations'][$userLicense->duration];
+$data2['Zustand']				= $iconsStatus[$userLicense->status].'&nbsp;'.$words['licenseStates'][$userLicense->status];
+//$data1['davon vergeben']		= $userLicense->users;
+$data2['Zeitraum']				= $duration;
+
+$list1	= View_Manage_My_License::renderDefinitionList( $data1 );
+$list2	= View_Manage_My_License::renderDefinitionList( $data2 );
+
+return '
+<div class="content-panel">
+	<h3><span class="muted">Lizenz: </span>'.$userLicense->uid.'</h3>
+	<div class="content-panel-inner">
+		<div class="row-fluid">
+			<div class="span6">
+				'.$list1.'
+			</div>
+			<div class="span6">
+				'.$list2.'
+			</div>
+		</div>
+		<div class="buttonbar">
+			<a href="./manage/my/provision/license" class="btn btn-small">'.$iconCancel.'&nbsp;zurück</a>
+
+		</div>
+	</div>
+</div>';

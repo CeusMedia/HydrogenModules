@@ -1,0 +1,30 @@
+#tabs-manage-my-provision .badge {
+	font-size: 0.8em;
+	font-weight: normal;
+	padding: 1px 6px 1px 5px;
+	}
+
+body.moduleManageMyProvision #user-container div.user,
+body.moduleManageMyProvision #modalSelectUser #user-list div.user {
+	border: 1px solid gray;
+	padding: 2px;
+	width: 16em;
+	line-height: 1.4em;
+	}
+body.moduleManageMyProvision #modalSelectUser #user-list {
+	height: 250px;
+	}
+body.moduleManageMyProvision #modalSelectUser #user-list div.list {
+	height: 250px;
+	overflow: auto;
+	}
+body.moduleManageMyProvision #modalSelectUser #user-list div.list div.item {
+	float: left;
+	margin: 2px;
+	}
+body.moduleManageMyProvision #modalSelectUser #user-list div.list div.user {
+	cursor: pointer;
+	}
+body.moduleManageMyProvision #modalSelectUser .modal-footer {
+	text-align: left;
+	}
