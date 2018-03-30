@@ -12,6 +12,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		if( !$this->session->get( 'filter_member_limit' ) )
 			$this->session->set( 'filter_member_limit', 9 );
 		$this->logicMember		= Logic_Member::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 	}
 
 	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
@@ -41,13 +42,12 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->restart( $from, $from ? FALSE : TRUE );
 		}
 		try{
-			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
 			$mail		= new Mail_Member_Accept( $this->env, array(
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
 			) );
-			$logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 			$this->modelRelation->edit( $relation->userRelationId, array(
 				'status'	=> 2,
 			) );
@@ -131,13 +131,12 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		try{
-			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
 			$mail		= new Mail_Member_Reject( $this->env, array(
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
 			) );
-			$logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 
 			$this->modelRelation->edit( $relation->userRelationId, array(
 				'status'	=> -1,
@@ -166,13 +165,12 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			if( $relation->toUserId == $this->userId )
 				$toUserId	= $relation->fromUserId;
 
-			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
 			$mail		= new Mail_Member_Revoke( $this->env, array(
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $toUserId ),
 			) );
-			$logicMail->handleMail( $mail, (int) $toUserId, $language );
+			$this->logicMail->handleMail( $mail, (int) $toUserId, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
 			$this->messenger->noteSuccess( $words->successReleased );
 		}
@@ -203,13 +201,12 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 			}
 		}
 		try{
-			$logicMail	= new Logic_Mail( $this->env );
 			$language	= $this->env->getLanguage()->getLanguage();
 			$mail		= new Mail_Member_Request( $this->env, array(
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $userId ),
 			) );
-			$logicMail->handleMail( $mail, (int) $userId, $language );
+			$this->logicMail->handleMail( $mail, (int) $userId, $language );
 			$data	= array(
 				'fromUserId'	=> $this->userId,
 				'toUserId'		=> $userId,

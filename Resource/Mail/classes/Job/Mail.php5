@@ -7,7 +7,7 @@ class Job_Mail extends Job_Abstract{
 
 	public function __onInit(){
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->logic	= new Logic_Mail( $this->env );
+		$this->logic	= Logic_Mail::getInstance( $this->env );
 		$this->model	= new Model_Mail( $this->env );
 		$this->phpHasGzip	= function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
 		$this->phpHasBzip	= function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );

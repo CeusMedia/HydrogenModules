@@ -6,7 +6,7 @@ class Hook_Resource_Mail_Group{
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
 		$logic			= new Logic_Mail_Group( $env );
-		$logicMail		= new Logic_Mail( $env );
+		$logicMail		= Logic_Mail::getInstance( $env );
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 
@@ -106,7 +106,7 @@ class Hook_Resource_Mail_Group{
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
 		$logic			= new Logic_Mail_Group( $env );
-		$logicMail		= new Logic_Mail( $env );
+		$logicMail		= Logic_Mail::getInstance( $env );
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 

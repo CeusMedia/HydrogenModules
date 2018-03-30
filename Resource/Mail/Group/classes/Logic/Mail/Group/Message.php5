@@ -20,7 +20,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 /*		$this->modelGroup	= new Model_Mail_Group( $this->env );
 		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
-		$this->logicMail	= new Logic_Mail( $this->env );*/
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
 	}
 
 	public function checkId( $messageId, $strict = TRUE ){

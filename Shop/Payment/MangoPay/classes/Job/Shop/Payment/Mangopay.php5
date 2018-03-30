@@ -26,7 +26,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 	}
 
 	protected function handleFailedBankWirePayIns(){
-		$logic		= new Logic_Mail( $this->env );
+		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= array( 'paymentId' => 'ASC' );
 		$indices	= array(
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,
@@ -70,7 +70,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 	}
 
 	protected function handleSucceededBankWirePayIns(){
-		$logic		= new Logic_Mail( $this->env );
+		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= array( 'paymentId' => 'ASC' );
 		$indices	= array(
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,

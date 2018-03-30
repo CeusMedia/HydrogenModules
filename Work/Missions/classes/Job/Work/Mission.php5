@@ -11,7 +11,7 @@ class Job_Work_Mission extends Job_Abstract{
 
 
 	protected function __onInit(){
-		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->language		= $this->env->getLanguage()->getLanguage();							//  @deprecated if each mail is sent in user language
 		$this->modelChange	= new Model_Mission_Change( $this->env );							//  get mission changes model
 		$this->modelMission	= new Model_Mission( $this->env );									//  get mission model

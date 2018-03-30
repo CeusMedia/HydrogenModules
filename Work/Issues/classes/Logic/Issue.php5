@@ -144,7 +144,7 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
-			$logicMail		= new Logic_Mail( $this->env );
+			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
 				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
 				$issue->project		= $userProjects[$issue->projectId];
@@ -170,7 +170,7 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
-			$logicMail		= new Logic_Mail( $this->env );
+			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
 				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
 				$issue->project		= $userProjects[$issue->projectId];

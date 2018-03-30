@@ -56,7 +56,7 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		if( $moduleConfig->get( 'mail.active' ) ){
 			if( trim( $moduleConfig->get( 'mail.receiver' ) ) ){
 				$language		= $env->getLanguage()->getLanguage();
-				$logicMail		= new Logic_Mail( $env );
+				$logicMail		= Logic_Mail::getInstance( $env );
 				$mail			= new Mail_Log_Exception( $env, $data );
 				$receivers		= preg_split( '/(,|;)/', $moduleConfig->get( 'mail.receiver' ) );
 				foreach( $receivers as $receiver ){

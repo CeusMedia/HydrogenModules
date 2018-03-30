@@ -7,7 +7,7 @@ class Job_Mail_Group extends Job_Abstract{
 
 	protected function __onInit(){
 		$this->logicGroup		= new Logic_Mail_Group( $this->env );
-		$this->logicMail		= new Logic_Mail( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->logicMessage		= new Logic_Mail_Group_Message( $this->env );
 	}
 

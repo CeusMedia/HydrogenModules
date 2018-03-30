@@ -5,7 +5,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-		$this->logicMail		= new Logic_Mail( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend	= Logic_Frontend::getInstance( $this->env );
 			$this->appPath	= $frontend->getPath();
@@ -262,13 +262,8 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
-		$env	= $this->env;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$env	= Logic_Frontend::getRemoteEnv( $this->env );
-		$mail		= new Mail_Test( $env, array( 'mailTemplateId' => $templateId ) );
-		$logic		= new Logic_Mail( $this->env );
-		$language	= $this->env->getLanguage()->getLanguage();
-		$logic->handleMail( $mail, (object) array( 'email' => $email ), $language, TRUE );
+		$mail	= $this->logicMail->createMail( 'Test', array( 'mailTemplateId' => $templateId ) );
+		$this->logicMail->sendMail( $mail, (object) array( 'email' => $email ) );
 		$this->messenger->noteSuccess( 'E-Mail für Test an "%s" versendet.', htmlentities( $email, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}

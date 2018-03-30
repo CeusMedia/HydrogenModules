@@ -326,7 +326,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		return $this->handleOutdatedUserLicenses();
 		$dbc		= $this->env->getDatabase();
 		$language	= $this->env->getLanguage()->getLanguage();
-		$logicMail	= new Logic_Mail( $this->env );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$list		= array();
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
 			$data	= array(

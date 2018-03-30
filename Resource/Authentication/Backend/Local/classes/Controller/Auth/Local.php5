@@ -340,7 +340,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
 					$mail		= new Mail_Auth_Local_Password( $this->env, $data );
-					$logic		= new Logic_Mail( $this->env );
+					$logic		= Logic_Mail::getInstance( $this->env );
 					$logic->appendRegisteredAttachments( $mail, $language );
 					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
 					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
@@ -537,7 +537,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						$language	= $this->env->getLanguage()->getLanguage();
 						$user		= $modelUser->get( $userId );
 						$mail		= new Mail_Auth_Local_Register( $this->env, $data );
-						$logic		= new Logic_Mail( $this->env );
+						$logic		= Logic_Mail::getInstance( $this->env );
 						$logic->appendRegisteredAttachments( $mail, $language );
 						$mailId		= $logic->enqueueMail( $mail, $language, $user );
 						$logic->sendQueuedMail( $mailId );

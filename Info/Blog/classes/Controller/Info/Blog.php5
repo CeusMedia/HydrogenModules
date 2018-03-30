@@ -123,7 +123,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 	protected function informAboutNewComment( $commentId ){
 		if( !$this->moduleConfig->get( 'mail' ) )													//  do not send mails to participants
 			return;
-		$logic		= new Logic_Mail( $this->env );													//  get mailer logic
+		$logic		= Logic_Mail::getInstance( $this->env );										//  get mailer logic
 		$language	= $this->env->getLanguage();
 		$comment	= $this->modelComment->get( $commentId );
 		$post		= $this->checkPost( $comment->postId );

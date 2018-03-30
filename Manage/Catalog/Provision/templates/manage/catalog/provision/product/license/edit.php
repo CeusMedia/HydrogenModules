@@ -21,7 +21,7 @@ $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3><span class="muted">'.$product->title.':</span> '.$license->title.'</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/catalog/provision/product/license/edit/'.$product->productId.'/'.$license->productLicenseId.'" method="post">
+		<form action="./manage/catalog/provision/product/license/edit/'.$license->productLicenseId.'" method="post">
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">'.$w->labelTitle.'</label>

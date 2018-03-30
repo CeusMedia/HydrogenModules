@@ -15,7 +15,7 @@ class Controller_Info_Contact_Developer extends CMF_Hydrogen_Controller{
 			else if( !strlen( trim( $request->get( 'message' ) ) ) )
 				$messenger->noteError( 'Message is missing.' );
 			else{
-				$logic	= new Logic_Mail( $this->env );
+				$logic	= Logic_Mail::getInstance( $this->env );
 				$data	= $request->getAll();
 				$mail	= new Mail_Info_Contact_Developer( $this->env, $data );
 				$receiver	= (object) array( 'email' => $options->get( 'receiver' ) );

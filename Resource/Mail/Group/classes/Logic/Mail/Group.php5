@@ -19,7 +19,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
 		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
-		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	/**

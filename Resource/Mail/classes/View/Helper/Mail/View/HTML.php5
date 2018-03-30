@@ -7,7 +7,7 @@ class View_Helper_Mail_View_HTML{
 
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	public function render(){

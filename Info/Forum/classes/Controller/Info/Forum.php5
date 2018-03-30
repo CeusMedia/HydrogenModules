@@ -162,7 +162,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 	}
 
 	protected function informThreadUsersAboutPost( $threadId, $postId = NULL ){
-		$logicMail	= new Logic_Mail( $this->env );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
 		if( !( $thread = $this->modelThread->get( $threadId ) ) )
 			throw new InvalidArgumentException( 'Invalid thread ID' );
 		if( !( $post = $this->modelPost->get( (int) $postId ) ) )

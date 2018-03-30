@@ -127,7 +127,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		$config		= $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( $config->get( 'email.active' ) && $config->get( 'email.receivers' ) ){
 			$language	= $env->getLanguage()->getLanguage();
-			$logic		= new Logic_Mail( $env );
+			$logic		= Logic_Mail::getInstance( $env );
 			foreach( explode( ",", $config->get( 'email.receivers' ) ) as $receiver ){
 				if( strlen( trim( $receiver ) ) ){
 					$user	= (object) array( 'email' => trim( $receiver ) );

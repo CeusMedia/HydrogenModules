@@ -18,7 +18,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			$message	= "Access granted for POST requests, only.";
 		else{
 			try{
-				$logic		= new Logic_Mail( $this->env );
+				$logic		= Logic_Mail::getInstance( $this->env );
 				$mail		= new Mail_Info_Contact_Form( $this->env, $request->getAll() );
 				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
 				$logic->handleMail( $mail, $receiver, 'de' );
@@ -68,7 +68,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			if( !$messenger->gotError() ){
 				$data	= $request->getAll();
 				try{
-					$logic		= new Logic_Mail( $this->env );
+					$logic		= Logic_Mail::getInstance( $this->env );
 					$mail		= new Mail_Info_Contact( $this->env, $data );
 					$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
 					$logic->handleMail( $mail, $receiver, 'de' );

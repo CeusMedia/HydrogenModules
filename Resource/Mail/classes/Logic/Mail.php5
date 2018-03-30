@@ -8,10 +8,10 @@
  */
 class Logic_Mail extends CMF_Hydrogen_Logic{
 
-	protected $modelQueue;
+/*	protected $modelQueue;
 	protected $modelAttachment;
 	protected $options;
-	protected $pathAttachments;
+	protected $pathAttachments;*/
 
 	public function __onInit(){
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
@@ -119,7 +119,10 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$className	= 'Mail_'.$mailClassName;
 		if( !class_exists( $className ) )
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
-		return Alg_Object_Factory::createObject( $className, array( $this->env, $mailData ) );
+		$env	= $this->env;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$env	= Logic_Frontend::getRemoteEnv( $this->env );
+		return Alg_Object_Factory::createObject( $className, array( $env, $mailData ) );
 	}
 
 	/**

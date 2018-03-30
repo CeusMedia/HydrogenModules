@@ -12,7 +12,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
-		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
 		$pathApp			= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )

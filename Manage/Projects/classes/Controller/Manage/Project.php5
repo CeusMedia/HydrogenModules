@@ -23,7 +23,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->userId			= $this->session->get( 'userId' );
 		$this->roleId			= $this->session->get( 'roleId' );
 		$this->logic			= new Logic_Project( $this->env );
-		$this->logicMail		= new Logic_Mail( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelProjectUser	= new Model_Project_User( $this->env );
 		$this->modelUser		= new Model_User( $this->env );

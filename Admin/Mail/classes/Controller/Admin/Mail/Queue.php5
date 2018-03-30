@@ -7,7 +7,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Mail( $this->env );
+		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->filterPrefix	= 'filter_admin_mail_queue_';
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){

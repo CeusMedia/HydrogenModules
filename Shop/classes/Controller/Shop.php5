@@ -269,7 +269,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$order		= $this->logic->getOrder( $orderId );
 			$customer	= $this->logic->getCustomer( $order->userId );
 			$language	= $this->env->getLanguage()->getLanguage();
-			$logic		= new Logic_Mail( $this->env );
+			$logic		= Logic_Mail::getInstance( $this->env );
 			$mail		= new Mail_Shop_Manager_Ordered( $this->env, array(
 				'orderId'			=> $orderId,
 				'paymentBackends'	=> $this->backends,
@@ -283,7 +283,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$order		= $this->logic->getOrder( $orderId );
 			$customer	= $this->logic->getCustomer( $order->userId );
 			$language	= $this->env->getLanguage()->getLanguage();
-			$logic		= new Logic_Mail( $this->env );
+			$logic		= Logic_Mail::getInstance( $this->env );
 			$mail		= new Mail_Shop_Customer_Ordered( $this->env, array(
 				'orderId'			=> $orderId,
 				'paymentBackends'	=> $this->backends,
@@ -572,7 +572,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$language   = !empty( $customer->language ) ? $customer->language : $language;
 
-		$logic		= new Logic_Mail( $this->env );
+		$logic		= Logic_Mail::getInstance( $this->env );
 		$mail		= new Mail_Shop_Customer_Ordered( $this->env, array(
 			'orderId'			=> $orderId,
 			'paymentBackends'	=> $this->backends,
@@ -584,7 +584,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	protected function sentOrderMailManager( $orderId ){
 		$language	= $this->env->getLanguage()->getLanguage();
 		$email		= $this->env->getConfig()->get( 'module.shop.mail.manager' );
-		$logic		= new Logic_Mail( $this->env );
+		$logic		= Logic_Mail::getInstance( $this->env );
 		$mail		= new Mail_Shop_Manager_Ordered( $this->env, array(
 			'orderId'			=> $orderId,
 			'paymentBackends'	=> $this->backends,

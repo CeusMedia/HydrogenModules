@@ -22,7 +22,7 @@ class Job_Info_Forum extends Job_Abstract{
 
 		$modelUser		= new Model_User( $this->env );
 		$modelPost		= new Model_Forum_Post( $this->env );
-		$logicMail		= new Logic_Mail( $this->env );
+		$logicMail		= Logic_Mail::getInstance( $this->env );
 
 		$receivers		= array();
 		$roleIds		= trim( $this->options->get( 'mail.inform.managers.roleIds' ) );

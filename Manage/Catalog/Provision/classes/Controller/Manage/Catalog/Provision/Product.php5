@@ -30,7 +30,7 @@ class Controller_Manage_Catalog_Provision_Product extends CMF_Hydrogen_Controlle
 			$data['modifiedAt']	= time();
 			$projectId	= $this->modelProduct->edit( $productId, $data, FALSE );
 			$this->messenger->noteSuccess( 'Product saved.' );
-			$this->restart( NULL, TRUE );
+			$this->restart( 'edit/'.$productId, TRUE );
 		}
 		$licenses	= $this->logicProvision->getProductLicenses( $productId );
 		foreach( $licenses as $license ){

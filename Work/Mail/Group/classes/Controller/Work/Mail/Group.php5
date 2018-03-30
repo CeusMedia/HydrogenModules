@@ -23,7 +23,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 //		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
 		$this->logic		= new Logic_Mail_Group( $this->env );
-		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	public function add(){

@@ -24,7 +24,7 @@ class Controller_Info_Testimonial extends CMF_Hydrogen_Controller{
 			$data['timestamp']	= time();
 			$testimonialId	= $this->model->add( $data );
 
-			$logic		= new Logic_Mail( $this->env );												//  get mailer logic
+			$logic		= Logic_Mail::getInstance( $this->env );									//  get mailer logic
 			$data		= array( 'entry' => $this->model->get( $testimonialId ) );					//  prepare mail data
 			$mail		= new Mail_Info_Testimonial_New( $this->env, $data );						//  generate mail to post author
 			$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );	//	get mail receiver from module config
