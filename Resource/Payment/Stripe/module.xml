@@ -75,9 +75,9 @@ Cronjobs:
 	</files>
 	<link access="public" path="stripe/event/receive"/>
 	<config protected="yes" mandatory="no" type="string" name="mail.hook"></config>
-	<config protected="yes" mandatory="yes" type="string" name="api.key.public"></config>
+	<config protected="no" mandatory="yes" type="string" name="api.key.public"></config>
 	<config protected="yes" mandatory="yes" type="string" name="api.key.secret"></config>
-	<config protected="yes" mandatory="yes" type="string" name="api.url" title="URL of Stripe API environment">https://api.stripe.com/v1</config>
+	<config protected="no" mandatory="yes" type="string" name="api.url" title="URL of Stripe API environment">https://api.stripe.com/v1</config>
 	<relations>
 		<needs type="module">Resource_Payment</needs>
 	</relations>
