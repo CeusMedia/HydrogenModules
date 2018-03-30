@@ -9,7 +9,15 @@ class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
 	public function index(){
 		$conditions	= array();
 		$orders		= array( 'rank' => 'ASC' );
-		$this->addData( 'products', $this->modelProduct->getAll( $conditions, $orders ) );
+		$products	= $this->modelProduct->getAll( $conditions, $orders );
+		foreach( $products as $nr => $product ){
+			$licenses	= $this->modelLicense->getAllByIndices( array(
+				'productId'	=> $product->productId,
+			), array( 'rank' => 'ASC' ) );
+			if( !$licenses )
+				unset( $products[$nr] );
+		}
+		$this->addData( 'products', $products );
 	}
 
 	public function view( $productId ){

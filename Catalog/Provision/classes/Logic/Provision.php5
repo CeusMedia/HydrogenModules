@@ -2,13 +2,13 @@
 class Logic_Provision extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
-		$this->logicAuth		= Logic_Authentication::getInstance( $env );
-		$this->logicMail		= Logic_Mail::getInstance( $env );
-		$this->modelProduct		= new Model_Provision_Product( $env );
-		$this->modelLicense		= new Model_Provision_Product_License( $env );
-		$this->modelUserLicense	= new Model_Provision_User_License( $env );
-		$this->modelUserKey		= new Model_Provision_User_License_Key( $env );
-		$this->modelUser		= new Model_Provision_User( $env );
+		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->modelProduct		= new Model_Provision_Product( $this->env );
+		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
+//		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
+//		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
+//		$this->modelUser		= new Model_User( $this->env );
 	}
 
 	/**

@@ -9,7 +9,7 @@ if( $products ){
 				UI_HTML_Tag::create( 'h4', $product->title ),
 				UI_HTML_Tag::create( 'p', $product->description ),
 				UI_HTML_Tag::create( 'a', 'Lizenzen', array(
-					'href'		=> './catalog/product/view/'.$product->productId,
+					'href'		=> './catalog/provision/product/view/'.$product->productId,
 				 	'class'		=> 'btn',
 				) ),
 			) ),

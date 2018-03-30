@@ -43,7 +43,7 @@
 	<link access="public" path="catalog/provision/product/index"/>
 	<link access="public" path="catalog/provision/product/license"/>
 	<link access="public" path="catalog/provision/product/view"/>
-	<hook type="resource" resource="App" event="onDispatch">Controller_Provision_Product::___onAppDispatch</hook>
+	<hook type="resource" resource="App" event="onDispatch">Hook_Catalog_Provision::onAppDispatch</hook>
 	<hook type="resource" resource="Shop" event="onFinish">Hook_Catalog_Provision::onShopFinish</hook>
 <!--	<hook type="resource" resource="Shop" event="onService">Controller_Account::___onShopRenderService</hook>-->
 	<sql on="install" type="mysql" version="0.3.5"><![CDATA[
@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>provision_product_licenses` (
   `duration` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `users` tinyint(3) unsigned NOT NULL,
   `price` decimal(6,2) unsigned NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
   `description` text COLLATE utf8_unicode_ci,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
