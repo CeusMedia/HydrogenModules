@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<module>
+	<title>Catalog: Accounts</title>
+	<description><![CDATA[Catalog for product licenses.]]></description>
+	<category>Catalog</category>
+	<version>0.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extend models by duration.</log>
+	<log version="0.2.2">Add ranking for products and licenses.</log>
+	<log version="0.2.3">Add mails.</log>
+	<log version="0.3">Add REST controller.</log>
+	<log version="0.3.1">Add shop bridge.</log>
+	<log version="0.3.2">Improve logic and REST controller.</log>
+	<log version="0.3.3">Improved models.</log>
+	<log version="0.3.4">Support locales.</log>
+	<log version="0.3.5">Extract hook to controller.</log>
+	<log version="0.3.6">Add job to handle expired keys.</log>
+	<log version="0.4">Migrate module Resource:Accounting to Resource:Accounts.</log>
+	<log version="0.4.1">Add controller, view and templates for products.</log>
+	<log version="0.5">Derived from module Resource:Accounts.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Catalog/Provision.php5</class>
+		<class>Hook/Catalog/Provision.php5</class>
+		<class>Logic/Provision.php5</class>
+		<class>Logic/ShopBridge/Provision.php5</class>
+		<class>Model/Provision/Product.php5</class>
+		<class>Model/Provision/Product/License.php5</class>
+		<class>View/Catalog/Provision/Product.php5</class>
+		<template>catalog/provision/product/index.php</template>
+<!--		<template>catalog/provision/product/license.php</template>-->
+		<template>catalog/provision/product/view.php</template>
+		<locale>de/catalog/provision.ini</locale>
+	</files>
+	<config protected="yes" type="boolean" name="tax.included">1</config>
+	<config protected="yes" type="float" name="tax.rate">19</config>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+	<link access="public" path="catalog/provision/product/index"/>
+	<link access="public" path="catalog/provision/product/license"/>
+	<link access="public" path="catalog/provision/product/view"/>
+	<hook type="resource" resource="App" event="onDispatch">Controller_Provision_Product::___onAppDispatch</hook>
+	<hook type="resource" resource="Shop" event="onFinish">Hook_Catalog_Provision::onShopFinish</hook>
+<!--	<hook type="resource" resource="Shop" event="onService">Controller_Account::___onShopRenderService</hook>-->
+	<sql on="install" type="mysql" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>provision_products`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>provision_products` (
+  `productId` int(11) NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `rank` tinyint(1) DEFAULT '0',
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`productId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `rank` (`rank`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>provision_product_licenses`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>provision_product_licenses` (
+  `productLicenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `productId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `rank` tinyint(1) DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `duration` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `users` tinyint(3) unsigned NOT NULL,
+  `price` decimal(6,2) unsigned NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`productLicenseId`),
+  KEY `productId` (`productId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>shop_bridges` (`title`, `class`, `frontendController`, `frontendUriPath`, `backendController`, `backendUriPath`, `articleTableName`, `articleIdColumn`, `createdAt`) VALUES
+('Produktlizenzen', 'Provision', 'Catalog_Provision_Product', 'catalog/provision/product/license', 'Manage_Catalog_Provision_License', 'manage/catalog/provision/license/edit/0/%s', 'provision_product_licenses', 'productLicenseId', 1456446117);
+]]></sql>
+	<sql on="uninstall" type="mysql" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>provision_products`;
+DROP TABLE IF EXISTS `<%?prefix%>provision_product_licenses`;
+DELETE FROM `<%?prefix%shop_bridges` WHERE `class` = 'Provision';
+]]></sql>
+</module>
