@@ -1,0 +1,15 @@
+
+Hallo <%?keyOwner.firstname%> <%?keyOwner.surname%>!
+
+Du hast für deinen <%product.title%>-Account "<%?keyOwner.username%>" einen Lizenzschlüssel bekommen.
+
+Adresse:      <%product.url%>
+Lizenz:       <%license.title%>
+bestellt:     von <%licenseOwner.username%> (<%?licenseOwner.firstname%> <%?licenseOwner.surname%>) am <%dateLicense%>
+gilt für:     <%duration%>
+
+Wenn du bereits einen Lizenzschlüssel für <%product.title%> hast, wird dieser Schlüssel
+hinzugefügt und erst verwendet, wenn bisherige Lizenzschlüssel abgelaufen sind.
+
+Besuche "<%appTitle%>" um eine Übersicht über deine Lizenzschlüssel zu sehen.
+Adresse: <%appBaseUrl%>
