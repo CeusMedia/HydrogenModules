@@ -17,7 +17,7 @@ if( $licenses ){
 		$class		= isset( $licenseId ) && $licenseId == $license->productLicenseId ? 'active' : NULL;
 		$label		= $license->title.' <small class="muted">('.$license->count.')</small>';
 		$link		= UI_HTML_Tag::create( 'a', $iconsStatus[$license->status].'&nbsp;'.$label, array(
-			'href'	=> './manage/catalog/provision/product/license/edit/'.$product->productId.'/'.$license->productLicenseId,
+			'href'	=> './manage/catalog/provision/product/license/edit/'.$license->productLicenseId,
 		) );
 		$list[]		= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 	}

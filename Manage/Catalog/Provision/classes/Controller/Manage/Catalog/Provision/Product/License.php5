@@ -34,18 +34,22 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 		$this->addData( 'product', $this->logicProvision->getProduct( $productId ) );
 	}
 
-	public function edit( $productId, $licenseId ){
+	public function edit( $licenseId  ){
+		$license	= $this->modelLicense->get( $licenseId );
+		if( !$license ){
+			$this->messenger->noteError( 'Invalid license ID.' );
+			$this->restart( 'manage/catalog/provision/product' );
+		}
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
 			$data['modifiedAt']	= time();
 			$projectId	= $this->modelLicense->edit( $licenseId, $data, FALSE );
 			$this->messenger->noteSuccess( 'Product license saved.' );
-			$this->restart( './manage/catalog/provision/product/edit/'.$productId );
+			$this->restart( './manage/catalog/provision/product/edit/'.$license->productId );
 		}
-		$license	= $this->modelLicense->get( $licenseId );
 		$this->addData( 'license', $license );
-		$this->addData( 'productId', $productId );
-		$this->addData( 'product', $this->modelProduct->get( $productId ) );
+		$this->addData( 'productId', $license->productId );
+		$this->addData( 'product', $this->modelProduct->get( $license->productId ) );
 		$this->addData( 'licenses', $this->modelLicense->getAll() );
 	}
 

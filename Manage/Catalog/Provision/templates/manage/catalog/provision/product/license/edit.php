@@ -63,7 +63,7 @@ $panelEdit	= '
 			<div class="buttonbar">
 				<a href="./manage/catalog/provision/product/edit/'.$product->productId.'" class="btn btn-small">'.$iconCancel.'&nbsp;'.$w->buttonCancel.'</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'&nbsp;'.$w->buttonSave.'</button>
-				<a href="./manage/license/filter/reset?productLicenseId='.$license->productLicenseId.'" class="btn btn-info btn-mini">'.$iconView.'&nbsp;Bestellungen</a>
+				<a href="./manage/catalog/provision/license/filter/reset?productLicenseId='.$license->productLicenseId.'" class="btn btn-info btn-mini">'.$iconView.'&nbsp;Bestellungen</a>
 			</div>
 		</form>
 	</div>
