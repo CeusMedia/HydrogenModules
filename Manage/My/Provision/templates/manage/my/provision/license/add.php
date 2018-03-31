@@ -186,7 +186,7 @@ $panelFilter	= $view->loadTemplateFile( 'manage/my/provision/license/index.filte
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/provision/license/add/' ) );
 
-$tabs	= View_Manage_My_License::renderTabs( $env, 'add' );
+$tabs	= View_Manage_My_Provision_License::renderTabs( $env, 'add' );
 
 return $tabs.$textTop.'
 '.$position.'

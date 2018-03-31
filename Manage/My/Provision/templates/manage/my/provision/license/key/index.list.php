@@ -3,10 +3,10 @@
 $w	= (object) $words['index.list'];
 
 $iconsStatus	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
-	2	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) ),
-	3	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
+//	Model_Provision_User_License_Key::STATUS_	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
 );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';

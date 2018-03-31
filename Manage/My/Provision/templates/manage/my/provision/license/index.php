@@ -6,7 +6,7 @@ $panelFilter	= $view->loadTemplateFile( 'manage/my/provision/license/index.filte
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/provision/license/' ) );
 
-$tabs	= View_Manage_My_License::renderTabs( $env, '' );
+$tabs	= View_Manage_My_Provision_License::renderTabs( $env, '' );
 
 return $tabs.$textTop.'
 <div class="position-bar" style="font-size: 1.1em">

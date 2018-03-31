@@ -26,13 +26,13 @@ foreach( $userLicense->keys as $key ){
 //		$helper->setMode( 'inline' );
 		$user	= $helper->render();
 	}
-	if( $key->status == Model_User_License_Key::STATUS_NEW ){
+	if( $key->status == Model_Provision_User_License_Key::STATUS_NEW ){
 		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
 			'href'	=> './manage/my/provision/license/assign/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-success btn-small'
 		) );
 	}
-	if( $key->status == Model_User_License_Key::STATUS_ASSIGNED ){
+	if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
 		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
 			'href'	=> './manage/my/provision/license/revoke/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-inverse btn-small'

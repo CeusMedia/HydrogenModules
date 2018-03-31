@@ -20,9 +20,6 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 
 		$this->userId			= $this->logicAuth->getCurrentUserId();
 
-		$this->modelProduct			= new Model_Product( $this->env );
-		$this->modelUserKey			= new Model_User_License_Key( $this->env );
-
 		$this->products	= $this->logicProvision->getProducts( 1 );
 		if( count( $this->products ) == 1 ){
 			$productId	= $this->products[0]->productId;
@@ -47,9 +44,9 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 			$productLicenseId	= $this->request->get( 'productLicenseId' );
 
 		$logicShopBridge	= new Logic_ShopBridge( $this->env );
-		$bridgeId			= $logicShopBridge->getBridgeId( 'ProductLicense' );
+		$bridgeId			= $logicShopBridge->getBridgeId( 'Provision' );
 		if( !$bridgeId )
-			throw new RuntimeException( 'Missing shop bridge "ProductLicense"' );
+			throw new RuntimeException( 'Missing shop bridge "Provision"' );
 
 		$product			= NULL;
 		$productLicense		= NULL;
@@ -232,11 +229,10 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterProductId', $productId );
 
 		$logicShopBridge	= new Logic_ShopBridge( $this->env );
-		$bridgeId			= $logicShopBridge->getBridgeId( 'ProductLicense' );
+		$bridgeId			= $logicShopBridge->getBridgeId( 'Provision' );
 
 		$cartIsEmpty	= empty( $this->session->get( 'shop.order.positions' ) ) ;
 		foreach( $userLicenses as $userLicense ){
-//			$this->modelUserKey->get();
 			$userLicense->user	= $this->logicProvision->getUserLicenseOwner( $userLicense->userLicenseId );
 			if( $userLicense->status == 0 && $cartIsEmpty )
 				$userLicense->bridgeId	= $bridgeId;
@@ -250,7 +246,7 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 	public function view( $userLicenseId ){
 //		$userLicenseKey		= $this->logiclogicProvisionAccounting->getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId );
 		$userLicense		= $this->logicProvision->getUserLicense( $userLicenseId );
-		$userLicense->keys	= $this->logicProvision->getUserLicenseKeysFromUserLicense( $userLicenseId );
+		$userLicense->keys	= $this->logicProvision->getUserLicenseKeys( $userLicenseId );
 		foreach( $userLicense->keys as $key )
 			if( $key->userId )
 				$key->user	= $this->logicProvision->getUser( $key->userId );

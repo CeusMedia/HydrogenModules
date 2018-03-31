@@ -3,11 +3,11 @@
 $w	= (object) $words['index.list'];
 
 $iconsStatus	= array(
-	Model_User_License::STATUS_DEACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_User_License::STATUS_REVOKED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_User_License::STATUS_PREPARED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	Model_User_License::STATUS_ACTIVE		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
- 	Model_User_License::STATUS_EXPIRED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	Model_Provision_User_License::STATUS_DEACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_Provision_User_License::STATUS_REVOKED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_Provision_User_License::STATUS_NEW			=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
+	Model_Provision_User_License::STATUS_ACTIVE			=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
+ 	Model_Provision_User_License::STATUS_EXPIRED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
 );
 
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -75,12 +75,12 @@ if( $userLicenses ){
 		}
 
 		$duration	= '';
-		if( $userLicense->status == Model_User_License::STATUS_ACTIVE ){
+		if( $userLicense->status == Model_Provision_User_License::STATUS_ACTIVE ){
 			$dateStart	= date( 'd.m.Y', $userLicense->startsAt );
 			$dateEnd 	= date( 'd.m.Y', $userLicense->endsAt );
 			$duration	= 'läuft: '.$dateStart.' - '.$dateEnd;
 		}
-		if( $userLicense->status == Model_User_License::STATUS_EXPIRED ){
+		if( $userLicense->status == Model_Provision_User_License::STATUS_EXPIRED ){
 			$dateStart	= date( 'd.m.Y', $userLicense->startsAt );
 			$dateEnd 	= date( 'd.m.Y', $userLicense->endsAt );
 			$duration	= 'lief: '.$dateStart.' - '.$dateEnd;
