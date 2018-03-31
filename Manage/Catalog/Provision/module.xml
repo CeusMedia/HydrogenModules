@@ -21,19 +21,12 @@
 	<files>
 		<class>Controller/Manage/Catalog/Provision/Product.php5</class>
 		<class>Controller/Manage/Catalog/Provision/Product/License.php5</class>
-		<class>Controller/Manage/Catalog/Provision/License.php5</class>
 		<class>Logic/Catalog/Provision.php5</class>
 		<class>Logic/ShopBridge/Provision.php5</class>
 		<class>Model/Provision/Product.php5</class>
 		<class>Model/Provision/Product/License.php5</class>
 		<class>View/Manage/Catalog/Provision/Product.php5</class>
 		<class>View/Manage/Catalog/Provision/Product/License.php5</class>
-		<class>View/Manage/Catalog/Provision/License.php5</class>
-		<template>manage/catalog/provision/license/add.php</template>
-		<template>manage/catalog/provision/license/edit.php</template>
-		<template>manage/catalog/provision/license/index.php</template>
-		<template>manage/catalog/provision/license/index.filter.php</template>
-		<template>manage/catalog/provision/license/index.list.php</template>
 		<template>manage/catalog/provision/product/add.php</template>
 		<template>manage/catalog/provision/product/edit.php</template>
 		<template>manage/catalog/provision/product/index.php</template>
@@ -42,10 +35,8 @@
 		<template>manage/catalog/provision/product/license/edit.php</template>
 		<template>manage/catalog/provision/product/license/index.php</template>
 		<template>manage/catalog/provision/product/license/index.list.php</template>
-		<locale>de/manage/catalog/provision/license.ini</locale>
 		<locale>de/manage/catalog/provision/product.ini</locale>
 		<locale>de/manage/catalog/provision/product/license.ini</locale>
-		<locale>en/manage/catalog/provision/license.ini</locale>
 		<locale>en/manage/catalog/provision/product.ini</locale>
 		<locale>en/manage/catalog/provision/product/license.ini</locale>
 	</files>
