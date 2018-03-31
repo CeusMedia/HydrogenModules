@@ -8,7 +8,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
 		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
 		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
-		$this->modelUser		= new Model_Provision_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
 	}
 
 	/**
@@ -23,7 +23,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
 			throw new RangeException( 'Invalid user license ID.' );
-		if( $userLicense->status !== Model_Provision_User_License::STATUS_NEW )
+		if( $userLicense->status != Model_Provision_User_License::STATUS_NEW )
 			throw new RuntimeException( 'User license cannot be activated.' );
 
 		$duration	= $this->getDurationInSeconds( $userLicense->duration );
@@ -197,7 +197,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$userLicenses	= $this->getUserLicensesFromUser( $userId, $productId );
 		foreach( $userLicenses as $userLicense ){
 			foreach( $userLicense->userLicenseKeys as $userLicenseKey ){
-				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ACTIVE ){
+				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
 					return FALSE;
 				}
 			}
@@ -208,7 +208,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 			$userLicense	= $this->modelUserLicense->get( $nextUserKey->userLicenseId );
 			$duration		= $this->getDurationInSeconds( $userLicense->duration );
 			$this->modelUserKey->edit( $nextUserKeyId, array(
-				'status'	=> Model_Provision_User_License_Key::STATUS_ACTIVE,
+				'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 				'startsAt'	=> time(),
 				'endsAt'	=> time() + $duration,
 			) );
@@ -433,7 +433,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 */
 	public function getOutdatedUserLicenseKeys(){
 		$indices	= array(
-			'status'	=> Model_Provision_User_License_Key::STATUS_ACTIVE,
+			'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 			'endsAt'	=> '<'.time(),
 		);
 		return $this->modelUserKey->getAllByIndices( $indices );
@@ -565,7 +565,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 			'userId'	=> $userId,
 		);
 		if( $activeOnly ){
-			$indices['status']		= Model_Provision_User_License_Key::STATUS_ACTIVE;
+			$indices['status']		= Model_Provision_User_License_Key::STATUS_ASSIGNED;
 			$indices['startsAt']	= '<'.time();
 			$indices['endsAt']		= '>'.time();
 		}
@@ -582,7 +582,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		return $keys;
 	}
 
-	public function sendMailOnActivedUserLicense( $userLicenseId ){
+	public function sendMailOnActivatedUserLicense( $userLicenseId ){
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
 	}
 
