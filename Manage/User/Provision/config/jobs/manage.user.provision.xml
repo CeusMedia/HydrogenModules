@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <jobs>
 	<job id="User.Provision.manageLicenses">
-		<class>Job_User_Provision</class>
+		<class>User_Provision</class>
 		<method>manageLicenses</method>
 		<interval></interval>
 		<mode>dev</mode>
