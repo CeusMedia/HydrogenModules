@@ -23,16 +23,20 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-<!--		<class>Controller/Manage/User/Provision/License.php5</class>
-		<class>View/Manage/User/Provision/License.php5</class>
-		<template>manage/user/provision/license/....php</template>
-		<locale>de/manage/user/provision/license.ini</locale>-->
+		<class>Controller/Manage/User/Provision/Product.php5</class>
 		<class>Controller/Provision/Rest.php5</class>
 		<class>Hook/Manage/User/Provision.php5</class>
 		<class>Job/User/Provision.php5</class>
 		<class>Logic/User/Provision.php5</class>
 		<class>Model/Provision/User/License.php5</class>
 		<class>Model/Provision/User/License/Key.php5</class>
+		<class>View/Manage/User/Provision/Product.php5</class>
+		<template>manage/user/provision/product/add.php</template>
+		<template>manage/user/provision/product/edit.php</template>
+		<template>manage/user/provision/product/index.php</template>
+		<template>manage/user/provision/product/index.filter.php</template>
+		<template>manage/user/provision/product/index.list.php</template>
+		<locale>de/manage/catalog/provision/product.ini</locale>
 		<locale>de/mail/license/outdated.txt</locale>
 		<locale>de/mail/license/key/assigned.txt</locale>
 		<locale>de/mail/license/key/continued.txt</locale>
