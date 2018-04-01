@@ -20,7 +20,8 @@ class Controller_Provision_Rest extends CMF_Hydrogen_Controller{
 	}
 
 	public function getProducts(){
-		return $this->logic->getProducts( 1 );
+		$products	= $this->logic->getProducts( 1 );
+		$this->handleJsonErrorResponse( $products );							//  return with error
 	}
 
 	public function handleJsonErrorResponse( $message, $code = 0 ){
@@ -62,13 +63,11 @@ class Controller_Provision_Rest extends CMF_Hydrogen_Controller{
 			$data['product']	= $this->logic->getProduct( $productId );
 			$keys	= $this->logic->getUserLicenseKeysFromUser( $userId, FALSE, $productId );
 			foreach( $keys as $key ){
-				if( $key->status == 2 )
+//				if( $key->status == Model_Provision_User_License_Key::STATUS_NEW )
+//					$data['pending']	= $this->logic->getUserLicenseKey( $key->userLicenseKeyId );
+				if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED )
 					$data['active']		= $this->logic->getUserLicenseKey( $key->userLicenseKeyId );
-				if( $key->status == 1 )
-					$data['ready']		= $this->logic->getUserLicenseKey( $key->userLicenseKeyId );
-				if( $key->status == 0 )
-					$data['pending']	= $this->logic->getUserLicenseKey( $key->userLicenseKeyId );
-				if( $key->status == -1 )
+				if( $key->status == Model_Provision_User_License_Key::STATUS_EXPIRED )
 					$data['outdated']	= $this->logic->getUserLicenseKey( $key->userLicenseKeyId );
 			}
 		}

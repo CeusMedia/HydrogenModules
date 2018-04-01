@@ -36,7 +36,7 @@
 		<template>manage/user/provision/product/index.php</template>
 		<template>manage/user/provision/product/index.filter.php</template>
 		<template>manage/user/provision/product/index.list.php</template>
-		<locale>de/manage/catalog/provision/product.ini</locale>
+		<locale>de/manage/user/provision/product.ini</locale>
 		<locale>de/mail/license/outdated.txt</locale>
 		<locale>de/mail/license/key/assigned.txt</locale>
 		<locale>de/mail/license/key/continued.txt</locale>
@@ -50,6 +50,7 @@
 	<link access="public" path="provision/rest/getLicenses"/>
 	<link access="public" path="provision/rest/getProducts"/>
 	<link access="public" path="provision/rest/orderLicense"/>
+	<link access="public" path="provision/rest/hasActiveKey"/>
 	<link access="public" path="provision/rest/test"/>
 	<link xml:lang="de" access="acl" path="manage/user/provision" rank="73">Benutzer-Lizenzen</link>
 	<hook type="resource" resource="ManageUser" event="registerTabs">Hook_Manage_User_Provision::onRegisterTab</hook>

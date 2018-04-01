@@ -1,7 +1,7 @@
 <?php
 
-$panelFilter	= $view->loadTemplateFile( 'manage/catalog/provision/license/index.filter.php' );
-$panelList		= $view->loadTemplateFile( 'manage/catalog/provision/license/index.list.php' );
+$panelFilter	= $view->loadTemplateFile( 'manage/user/provision/product/index.filter.php' );
+$panelList		= $view->loadTemplateFile( 'manage/user/provision/product/index.list.php' );
 
 return '
 <div class="row-fluid">
