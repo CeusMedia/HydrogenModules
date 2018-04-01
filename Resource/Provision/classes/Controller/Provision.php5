@@ -10,7 +10,7 @@ class Controller_Provision extends CMF_Hydrogen_Controller{
 		$this->config		= $this->env->getConfig();
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_provision.', TRUE );
-		$this->resource		= new Resource_Provision_Client( $this->client );
+		$this->resource		= new Resource_Provision_Client( $this->env );
 	}
 
 	public function index(){

@@ -6,7 +6,7 @@ class Hook_Provision/* extends CMF_Hydrogen_Hook*/{
 	 */
 	static protected function getModuleConfig( $env, $moduleKey ){
 		$key	= 'modules.'.strtolower( $moduleKey ).'.';
-		return $this->env->getConfig()->getAll( $key, TRUE );
+		return $env->getConfig()->getAll( $key, TRUE );
 	}
 
 	static public function onAppDispatch( $env, $context, $module, $data ){

@@ -18,7 +18,7 @@ class Resource_Provision_Client{
 	}
 
 	public function getUserLicenseKey( $userId ){
-		$modelUser	= new Model_User( $env );
+		$modelUser	= new Model_User( $this->env );
 		$user		= $modelUser->get( $userId );
 		if( !$user )
 			throw new InvalidArgumentException( 'Invalid user ID' );
