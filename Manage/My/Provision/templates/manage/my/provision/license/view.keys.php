@@ -5,9 +5,9 @@ $iconRevoke		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remo
 
 $iconsStatus	= array(
 	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	2	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
-	3	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
 );
 
 $list	= array();
@@ -33,7 +33,7 @@ foreach( $userLicense->keys as $key ){
 		) );
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
-		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
+		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconRevoke.'&nbsp;entziehen', array(
 			'href'	=> './manage/my/provision/license/revoke/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-inverse btn-small'
 		) );
@@ -50,8 +50,9 @@ foreach( $userLicense->keys as $key ){
 	}
 	$list[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', $status.'<br/>'.$duration ),
-		UI_HTML_Tag::create( 'td', $user.$buttonAssign ),
+		UI_HTML_Tag::create( 'td', $status ),
+		UI_HTML_Tag::create( 'td', $user ),
+		UI_HTML_Tag::create( 'td', $buttonAssign ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( "15%", "25%", "30%") );
