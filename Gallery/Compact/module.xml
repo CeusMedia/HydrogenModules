@@ -20,9 +20,12 @@
 		<class>View/Gallery.php5</class>
 		<class>View/Helper/Gallery.php5</class>
 		<template>gallery/index.php</template>
+		<template>gallery/info.php</template>
 		<script>Gallery.js</script>
 		<style load="auto">module.gallery.css</style>
+		<locale>de/gallery.ini</locale>
 		<locale>de/html/gallery/index.bottom.html</locale>
+		<locale>de/html/gallery/index.top.html</locale>
 		<locale>de/html/gallery/license.html</locale>
 		<image source="theme">loadingAnimation.gif</image>
 	</files>
