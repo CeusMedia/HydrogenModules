@@ -533,7 +533,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			}
 			catch( Exception $e ){
 				$dbc->rollBack();
-				$this->env->getCaptain()->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
 				$this->messenger->noteFailure( $words->msgFailureException, $e->getMessage() );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}
