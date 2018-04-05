@@ -6,7 +6,7 @@
 Supports to log:
 list>
 - errors
-- warnings-
+- warnings
 - notices
 - infos
 - debug infos
@@ -17,29 +17,64 @@ list>
 - JSON serial
 - Plain text with whitespace
 
+**Features:**
+list>
+- stores exceptions into log file (serialized)
+- can send mails to one or more mail receivers
+<list
+
+**Call By Hook:**
+code>
+$this->env->getCaptain()->callHook( 'Env', 'log', $this, array(
+	'type'		=> 'error',
+	'message'	=> '...message...',
+) );
+<code
+
+**Static Call**
+code>
+Resource_Server_Log::staticLogError( $this->env, '...message...', $this );
+<code
+where the third argument is the calling object, logged as context.
+
+**Log Message Types:**
+list>
+- error
+- warn
+- note
+- info
+- debug
+<list
+
 Each log level can be enabled/disabled and filtered by IPs.
 ]]></description>
 	<category>Server</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extract hook to controller class.</log>
 	<log version="0.2.2">Make log file name configurable.</log>
 	<log version="0.3">Make log entry parts switchable.</log>
 	<log version="0.4">Make log levels switchable and filterable by IPs.</log>
+	<log version="0.4.1">Extract hook to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log.php5</class>
+		<class>Hook/Server/Log.php5</class>
+		<class>Model/Log/Message.php5</class>
+		<class>Resource/Server/Log.php5</class>
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active">yes</config>
 	<config protected="yes" type="string" mandatory="yes" name="file">app.log</config>
-	<config protected="yes" type="string" mandatory="yes" name="format" values="PHP,JSON,Plain">Plain</config>
+	<config protected="yes" type="string" mandatory="yes" name="format" values="JSON,PHP,WDDX,TEXT">JSON</config>
 	<config protected="yes" type="boolean" name="type.debug" title="Flag: log debug infos">yes</config>
 	<config protected="yes" type="string" name="type.debug.ips" title="Only for IPs (comma separated)"/>
 	<config protected="yes" type="boolean" name="type.error" title="Flag: log errors">yes</config>
 	<config protected="yes" type="string" name="type.error.ips" title="Only for IPs (comma separated)"/>
+	<config protected="yes" type="boolean" name="type.info" title="Flag: log infos">yes</config>
+	<config protected="yes" type="string" name="type.info.ips" title="Only for IPs (comma separated)"/>
 	<config protected="yes" type="boolean" name="type.note" title="Flag: log notices">yes</config>
 	<config protected="yes" type="string" name="type.note.ips" title="Only for IPs (comma separated)"/>
 	<config protected="yes" type="boolean" name="type.warn" title="Flag: log warnings">yes</config>
@@ -47,5 +82,5 @@ Each log level can be enabled/disabled and filtered by IPs.
 	<config protected="yes" type="string" name="use.date" values="datestamp,timestamp">datestamp</config>
 	<config protected="yes" type="boolean" name="use.ip">no</config>
 	<config protected="yes" type="boolean" name="use.userAgent">no</config>
-	<hook type="resource" resource="Env" event="log">Controller_Server_Log::___onEnvLog</hook>
+	<hook type="resource" resource="Env" event="log">Hook_Server_Log::onEnvLog</hook>
 </module>
