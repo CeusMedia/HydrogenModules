@@ -3,6 +3,13 @@ $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' )
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 
+
+$words	= array( 'statuses' => array(
+	-1		=> 'deaktiviert',
+	0		=> 'in Arbeit',
+	1		=> 'aktivert',
+) );
+
 $table	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $providers ){
 	$rows	= array();
@@ -15,18 +22,21 @@ if( $providers ){
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $provider->rank ),
 			UI_HTML_Tag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE ) ),
+			UI_HTML_Tag::create( 'td', $words['statuses'][$provider->status], array( 'style' => 'text-align: center; background-color: '.calculateColor( ( $provider->status + 1 ) / 2 ) ) ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
 		'50px',
 		'',
 		'6%',
+		'80px',
 		'140px',
 	) );
 	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'ID',
 		'Anbieter',
 		'Rank',
+		'Zustand',
 		'geändert',
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
@@ -49,3 +59,11 @@ return UI_HTML_Tag::create( 'div', array(
 		), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
+
+function calculateColor( $ratio ){
+	$hue	= 255;
+	$r		= $ratio < 0.5 ? 255 : round( ( 1 - $ratio ) * 2 * $hue );	//  calculate red channel
+	$g		= $ratio > 0.5 ? 255 : round( $ratio * 2 * $hue );			//  calculate green channel
+	$b		= 0;														//  calculate blue channel
+	return sprintf( 'rgb(%d,%d,%d)', $r, $g, $b );						//  return RGB property value
+}

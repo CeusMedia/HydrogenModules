@@ -15,7 +15,12 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
-//		$this->addData();
+
+		$provider	= array();
+		foreach( $this->modelProvider->getColumns() as $column )
+			if( !in_array( $column, array( 'oauthProviderId', 'createdAt', 'modifiedAt' ) ) )
+				$provider[$column]	= $this->request->get( $column );
+		$this->addData( 'provider', (object) $provider );
 	}
 
 	public function edit( $providerId ){
