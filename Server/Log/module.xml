@@ -23,6 +23,18 @@ list>
 - can send mails to one or more mail receivers
 <list
 
+**Call By Environment:**
+code>
+$this->env->getLog()->log( 'warn', '...message...', $this );
+<code
+where the third argument is the calling object, logged as context.
+
+**Static Call:**
+code>
+Resource_Server_Log::staticLogError( $this->env, '...message...', $this );
+<code
+where the third argument is the calling object, logged as context.
+
 **Call By Hook:**
 code>
 $this->env->getCaptain()->callHook( 'Env', 'log', $this, array(
@@ -30,12 +42,6 @@ $this->env->getCaptain()->callHook( 'Env', 'log', $this, array(
 	'message'	=> '...message...',
 ) );
 <code
-
-**Static Call**
-code>
-Resource_Server_Log::staticLogError( $this->env, '...message...', $this );
-<code
-where the third argument is the calling object, logged as context.
 
 **Log Message Types:**
 list>

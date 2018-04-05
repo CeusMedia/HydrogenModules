@@ -21,11 +21,15 @@ class Resource_Server_Log{
 				throw new RuntimeException( 'Invalid log message type: '.$type );
 		}
 		else{
+			$type	= $type === "warn" ? "warning" : $type;
+			$type	= $type === "note" ? "notice" : $type;
 			if( !array_key_exists( strtoupper( $type ), $types ) )
 				throw new RuntimeException( 'Invalid log message type: '.$type );
 			$type		= $logClass->getValue( strtoupper( $type ), 'TYPE' );
 		}
 		$typeKey	= strtolower( $logClass->getKeyByValue( $type, 'TYPE' ) );
+		$typeKey	= $typeKey === "warning" ? "warn" : $typeKey;
+		$typeKey	= $typeKey === "notice" ? "note" : $typeKey;
 
 		if( is_null( $format ) )
 			$format	= strtoupper( $options->get( 'format' ) );
