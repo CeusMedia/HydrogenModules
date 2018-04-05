@@ -55,7 +55,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Server:System', 'logException', $this, $e );
+			$this->callHook( 'Env', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -145,7 +145,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Server:System', 'logException', $this, $e );
+			$this->callHook( 'Env', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -176,7 +176,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Server:System', 'logException', $this, $e );
+			$this->callHook( 'Env', 'logException', $this, $e );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -220,7 +220,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Server:System', 'logException', $this, $e );
+			$this->callHook( 'Env', 'logException', $this, $e );
 		}
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 	}
