@@ -359,7 +359,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					$this->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+					$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -552,7 +552,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				catch( Exception $e ){
 //					$this->messenger->noteFailure( $words->msgSendingMailFailed );
 					$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
-					$this->callHook( 'Server:System', 'logException', $this, array( 'exception' => $e ) );
+					$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
