@@ -30,4 +30,40 @@
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth2::___onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Oauth2::___onAuthRegisterLoginTab</hook>
 <!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>oauth_providers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_providers` (
+  `oauthProviderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `rank` tinyint(1) unsigned NOT NULL,
+  `clientId` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `clientSecret` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `composerPackage` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `options` text COLLATE utf8_unicode_ci,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`oauthProviderId`),
+  UNIQUE KEY `clientId` (`clientId`),
+  UNIQUE KEY `title` (`title`),
+  UNIQUE KEY `className` (`className`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>oauth_users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_users` (
+  `oauthUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `oauthProviderId` int(11) unsigned NOT NULL,
+  `oauthId` varchar(32) CHARACTER SET latin1 NOT NULL,
+  `localUserId` int(11) unsigned NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`oauthUserId`),
+  KEY `oauthProviderId` (`oauthProviderId`,`oauthId`,`localUserId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>oauth_providers`;
+DROP TABLE IF EXISTS `<%?prefix%>oauth_users`;
+]]></sql>
 </module>
