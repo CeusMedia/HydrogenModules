@@ -76,7 +76,7 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 
 	public function logTestException( $message, $code = 0 ){
 		$exception	= new Exception( $message, $code );
-//		$this->callHook( 'Server:System', 'logException', $this, $exception );
+//		$this->callHook( 'Env', 'logException', $this, $exception );
 //		self::handleException( $this->env, $exception );
 		self::logException( $this->env, $exception );
 		$this->restart( NULL, TRUE );
