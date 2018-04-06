@@ -284,6 +284,16 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$useRememberByConfig	= $this->moduleConfig->get( 'login.remember' );
 		$useRememberByLimit		= !$this->limiter || !$this->limiter->denies( 'Auth.Local.Login:remember' );
 		$this->addData( 'useRemember', $useRememberByConfig && $useRememberByLimit );
+
+
+		if( $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) ){
+			$modelProvider	= new Model_Oauth_Provider( $this->env );
+			$providers		= $modelProvider->getAll(
+				array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE ),
+				array( 'rank' => 'ASC' )
+			);
+			$this->addData( 'oauth2Providers', $providers );
+		}
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
