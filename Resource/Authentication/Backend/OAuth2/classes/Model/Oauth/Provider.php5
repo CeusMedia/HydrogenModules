@@ -33,6 +33,7 @@ class Model_Oauth_Provider extends CMF_Hydrogen_Model {
 		'className',
 		'options',
 		'title',
+		'icon',
 		'createdAt',
 		'modifiedAt',
 	);

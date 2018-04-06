@@ -23,6 +23,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+		if( !class_exists( 'League\OAuth2\Client\Provider\GenericProvider' ) )
+			$this->messenger->noteFailure( '<strong>OAuth2-Client is missing.</strong><br/>Please install package "league/oauth2-client" using composer.' );
 
 		$this->refreshToken();
 	}
@@ -172,16 +174,16 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				$this->messenger->noteFailure( 'Access denied, no OAuth2 provider selected or not authentication requested.' );
 				$this->restart( 'login', TRUE );
 			}
+			$provider	= $modelProvider->get( $currentProviderId );
 			if( $currentState !== $this->request->get( 'state' ) ){
 				$this->session->remove( 'oauth2_state' );
 				$this->messenger->noteFailure( 'Access denied, invalid OAuth2 state.' );
 				$this->restart( 'login', TRUE );
 			}
 			try{
-				$providerObject	= $this->getProviderObject( $currentProviderId );
-				$token	= $providerObject->getAccessToken( 'authorization_code', array( 'code' => $code ) );
-				$user	= $providerObject->getResourceOwner( $token );
-				$this->messenger->noteNotice( print_m( $user, NULL, NULL, TRUE ) );
+				$client	= $this->getProviderObject( $currentProviderId );
+				$token	= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
+				$user	= $client->getResourceOwner( $token );
 				$localUser		= $modelUserOauth->getByIndices( array(
 					'oauthProviderId'	=> $currentProviderId,
 					'oauthId'			=> $user->getId(),
@@ -201,7 +203,9 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				}
 			}
 			catch( Exception $e ){
-				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+				$this->messenger->noteError( $msgs->msgErrorException, $provider->title, $e->getMessage() );
+				if( $this->env->getLog()->logException( $e, $this ) )
+					$this->restart( 'login', TRUE );
 				UI_HTML_Exception_Page::display( $e );
 				exit;
 			}
