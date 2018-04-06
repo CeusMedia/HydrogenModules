@@ -14,30 +14,35 @@ $table	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'aler
 if( $providers ){
 	$rows	= array();
 	foreach( $providers as $provider ){
-		$link	= UI_HTML_Tag::create( 'a', $provider->title, array(
-			'href'	=> './admin/oauth2/edit/'.$provider->oauthProviderId,
-		) );
+		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plug' ) ).'&nbsp;';
+		if( $provider->icon )
+			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $provider->icon ) ).'&nbsp;';
+		$label	= $icon.$provider->title;
+		if( $this->env->getAcl()->has( 'admin/oauth2', 'edit' ) )
+			$label	= UI_HTML_Tag::create( 'a', $label, array(
+				'href'	=> './admin/oauth2/edit/'.$provider->oauthProviderId,
+			) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $provider->oauthProviderId ),
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $provider->rank ),
-			UI_HTML_Tag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE ) ),
+//			UI_HTML_Tag::create( 'td', $provider->oauthProviderId, array( 'style' => 'text-align: right' ) ),
+			UI_HTML_Tag::create( 'td', $label ),
+			UI_HTML_Tag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE, 'vor' ) ),
 			UI_HTML_Tag::create( 'td', $words['statuses'][$provider->status], array( 'style' => 'text-align: center; background-color: '.calculateColor( ( $provider->status + 1 ) / 2 ) ) ),
+			UI_HTML_Tag::create( 'td', $provider->rank, array( 'style' => 'text-align: right' ) ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
-		'50px',
+//		'50px',
 		'',
-		'6%',
-		'80px',
+		'120px',
 		'140px',
+		'60px',
 	) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
-		'ID',
-		'Anbieter',
-		'Rank',
-		'Zustand',
-		'geändert',
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+//		UI_HTML_Tag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
+		UI_HTML_Tag::create( 'th', 'Anbieter' ),
+		UI_HTML_Tag::create( 'th', 'geändert' ),
+		UI_HTML_Tag::create( 'th', 'Zustand', array( 'style' => 'text-align: center' ) ),
+		UI_HTML_Tag::create( 'th', 'Rang', array( 'style' => 'text-align: right' ) ),
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
 	$table	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array(
@@ -45,12 +50,16 @@ if( $providers ){
 	) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anbieter', array(
-	'href'	=> './admin/oauth2/add',
-	'class' => 'btn btn-success',
-) );
+$buttonAdd	= '';
+if( $this->env->getAcl()->has( 'admin/oauth2', 'add' ) )
+	$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anbieter', array(
+		'href'	=> './admin/oauth2/add',
+		'class' => 'btn btn-success',
+	) );
 
-return UI_HTML_Tag::create( 'div', array(
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/oauth2/' ) );
+
+return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Providers' ),
 	UI_HTML_Tag::create( 'div', array(
 		$table,
@@ -58,7 +67,7 @@ return UI_HTML_Tag::create( 'div', array(
 			$buttonAdd,
 		), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+), array( 'class' => 'content-panel' ) ).$textBottom;
 
 function calculateColor( $ratio ){
 	$hue	= 255;
