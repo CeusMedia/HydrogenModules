@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Manage: Provision</title>
+	<title>Manage: Catalog: Provision</title>
 	<description><![CDATA[Management for provisioning of products, licenses and their keys.]]></description>
 	<category>Management</category>
 	<version>0.3</version>
