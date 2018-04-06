@@ -32,7 +32,7 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		if( $moduleConfig->get( 'file.active' ) ){
 			if( trim( $moduleConfig->get( 'file.path' ) ) ){
 				$pathLogs		= $env->getConfig()->get( 'path.logs' );
-				$filePath		= $pathLogs.$moduleConfig->get( 'file.name' );
+				$filePath		= $pathLogs.$moduleConfig->get( 'file.path' );
 				try{
 					$content	= @serialize( $exception );
 				}

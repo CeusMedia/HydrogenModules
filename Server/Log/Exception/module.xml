@@ -50,7 +50,7 @@ Please think about using the hook instead.
 		<locale>de/server/log/exception/sqlstate.ini</locale>
 	</files>
 	<config protected="yes" type="boolean" name="file.active" title="Enable log file">yes</config>
-	<config protected="yes" type="string" name="file.path" title="Path of log file">logs/exception.log</config>
+	<config protected="yes" type="string" name="file.name" title="Path of log file">exception.log</config>
 	<config protected="yes" type="boolean" name="mail.active" title="Enable sending mails">yes</config>
 	<config protected="yes" type="string" name="mail.receivers" title="Mail receiver address[es] (comma separated)"></config>
 	<relations>
