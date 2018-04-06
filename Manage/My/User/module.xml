@@ -45,8 +45,8 @@
 		<locale>en/manage/my/user.ini</locale>
 		<locale>en/html/manage/my/user/bottom.html</locale>
 		<locale>en/html/manage/my/user/top.html</locale>
-		<locale>de/html/manage/my/user/panel.email.info.html</locale>
-		<locale>de/html/manage/my/user/panel.username.info.html</locale>
+		<locale>en/html/manage/my/user/panel.email.info.html</locale>
+		<locale>en/html/manage/my/user/panel.username.info.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
