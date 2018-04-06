@@ -56,10 +56,10 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
-				'id'		=> $file->downloadFolderId,
+				'id'		=> $file->downloadFileId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
-				'url'		=> './info/file/download/'.$file->downloadFolderId,
+				'url'		=> './info/file/download/'.$file->downloadFileId,
 				'icon'		=> 'fa fa-fw fa-folder',
 			) ) );
 		}
