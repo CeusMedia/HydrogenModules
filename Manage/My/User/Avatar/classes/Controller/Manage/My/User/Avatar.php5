@@ -18,7 +18,7 @@ class Controller_Manage_My_User_Avatar extends CMF_Hydrogen_Controller{
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $this->userId );
 
-		$this->addData( 'config', $this->moduleConfig );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'user', $user );
 		$this->addData( 'avatar', $avatar );					//
 	}

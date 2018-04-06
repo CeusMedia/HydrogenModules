@@ -9,7 +9,7 @@ $helperUpload->setName( 'upload' );
 $helperUpload->setLabel( $iconFile );
 $helperUpload->setRequired( TRUE );
 
-$maxSize	= Alg_UnitParser::parse( $config->get( 'image.upload.maxFileSize' ), 'M' );
+$maxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
 $maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
 $maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
 
@@ -27,11 +27,11 @@ if( $avatar ){
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'info.avatar', 'info.gravatar' ), 'html/manage/my/user/avatar/', array(
 	'maxFileSize'	=> $maxSize,
-	'minImageSize'	=> $config->get( 'image.upload.minSize' ),
+	'minImageSize'	=> $moduleConfig->get( 'image.upload.minSize' ),
 ) ) );
 
 $panelAvatar	= '';
-if( $config->get( 'use.avatar' ) ){
+if( $moduleConfig->get( 'use.avatar' ) ){
 	$panelAvatar	= '
 		<div class="content-panel">
 			<h4>Avatar</h4>
@@ -60,7 +60,7 @@ if( $config->get( 'use.avatar' ) ){
 		</div>';
 }
 $panelGravatar	= '';
-if( $config->get( 'use.gravatar' ) && $env->getModules()->has( 'UI_Helper_Gravatar' ) ){
+if( $moduleConfig->get( 'use.gravatar' ) && $env->getModules()->has( 'UI_Helper_Gravatar' ) ){
 	$gravatar	= new View_Helper_Gravatar( $env );
 	$gravatar->setUser( $user );
 	$gravatar->setSize( 256 );
@@ -80,7 +80,7 @@ if( $config->get( 'use.gravatar' ) && $env->getModules()->has( 'UI_Helper_Gravat
 ';
 }
 
-if( $config->get( 'use.avatar' ) && $config->get( 'use.gravatar' ) )
+if( $moduleConfig->get( 'use.avatar' ) && $moduleConfig->get( 'use.gravatar' ) )
 	$content	= $tabs.'
 	<div class="row-fluid">
 		<div class="span8">
