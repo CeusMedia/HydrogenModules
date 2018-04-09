@@ -11,60 +11,66 @@ $iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-u
 $iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
 $rows			= array( 'folders' => array(), 'files' => array() );
 
-foreach( $files as $file ){
-	$timePhrase		= sprintf( $words['index']['timePhrase'], $helper->convert( $file->uploadedAt ) );
-	$size			= Alg_UnitFormater::formatBytes( $file->size );
-	$urlView		= './info/file/deliver/'.$file->downloadFileId;
-	$urlDownload	= './info/file/download/'.$file->downloadFileId;
-	$urlRemove		= './info/file/remove/'.$file->downloadFileId;
-	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
-	$downloads		= $file->nrDownloads > 2 ? ', '.$file->nrDownloads.' Downloads' : '';
+$w		= (object) $words['index'];
+
+foreach( $files as $item ){
+	$timePhrase		= sprintf( $w->timePhrase, $helper->convert( $item->uploadedAt ) );
+	$size			= Alg_UnitFormater::formatBytes( $item->size );
+	$urlView		= './info/file/deliver/'.$item->downloadFileId;
+	$urlDownload	= './info/file/download/'.$item->downloadFileId;
+	$urlRemove		= './info/file/remove/'.$item->downloadFileId;
+	$class			= 'type type-'.pathinfo( $item->title, PATHINFO_EXTENSION );
+	$downloads		= $item->nrDownloads > 2 ? ', '.$item->nrDownloads.' Downloads' : '';
 	$underline		= $size.', '.$timePhrase/*.$downloads*/;
 	$underline		= UI_HTML_Tag::create( 'small', $underline, array( 'class' => "muted" ) );
-	$label			= $file->title;
+	$label			= $item->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
 
 	$url			= in_array( 'view', $rights ) ? $urlView : $urlDownload;
 	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
-	$buttonView	= "";
-	$buttonDownload	= "";
-	$buttonRemove	= "";
+	$buttons		= array();
 	if( in_array( 'download', $rights ) ){
-		$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload, array(
+		$buttons[]	= UI_HTML_Tag::create( 'a', $iconDownload, array(
 			'href'	=> $urlDownload,
 			'class'	=> 'btn not-btn-small btn-primary',
-			'title'	=> $words['index']['buttonDownload']
+			'title'	=> $w->buttonDownload
+		) );
+	}
+	if( in_array( 'editFile', $rights ) ){
+		$buttons[]	= UI_HTML_Tag::create( 'a', $iconEdit, array(
+			'href'	=> './info/file/editFile/'.$item->downloadFileId,
+			'class'	=> 'btn not-btn-small',
+			'title'	=> $w->buttonEdit,
 		) );
 	}
 	if( in_array( 'remove', $rights ) ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'	=> $urlRemove,
 			'class'	=> 'btn not-btn-small btn-danger',
-			'title'	=> $words['index']['buttonRemove']
+			'title'	=> $w->buttonRemove
 		) );
 	}
-	$buttons		= $buttonDownload.'&nbsp;'.$buttonRemove;
-	$actions		= UI_HTML_Tag::create( 'div', $buttonView.$buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
+	$actions		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 //	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells			= array(
 		UI_HTML_Tag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
 		UI_HTML_Tag::create( 'td', $actions ),
 	);
 	$row			= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $class ) );
-	$rows['files'][$file->title]		= $row;
+	$rows['files'][$item->title]		= $row;
 }
 ksort( $rows['files'] );
 
-foreach( $folders as $folder ){
-	$url	= './info/file/index/'.$folder->downloadFolderId;
-	$label	= $folder->title.'<br/>';
-	if( $folder->nrFiles && $folder->nrFolders )
-		$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
-	else if( $folder->nrFiles )
-		$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien', array( 'class' => 'muted' ) );
-	else if( $folder->nrFolders )
-		$info	= UI_HTML_Tag::create( 'small', $folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+foreach( $folders as $item ){
+	$url	= './info/file/index/'.$item->downloadFolderId;
+	$label	= $item->title.'<br/>';
+	if( $item->nrFiles && $item->nrFolders )
+		$info	= UI_HTML_Tag::create( 'small', $item->nrFiles.' Dateien und '.$item->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+	else if( $item->nrFiles )
+		$info	= UI_HTML_Tag::create( 'small', $item->nrFiles.' Dateien', array( 'class' => 'muted' ) );
+	else if( $item->nrFolders )
+		$info	= UI_HTML_Tag::create( 'small', $item->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
 	else
 		$info	= '';
 	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
@@ -73,32 +79,39 @@ foreach( $folders as $folder ){
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconOpenFolder, array(
 		'href'	=> $url,
 		'class'	=> 'btn not-btn-small btn-info',
-		'title'	=> $words['index']['buttonOpenFolder']
+		'title'	=> $w->buttonOpenFolder
 	) );
-	if( in_array( 'ajaxRenameFolder', $rights ) ){
+	if( 0 && in_array( 'ajaxRenameFolder', $rights ) ){
 		$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
-			'onclick'	=> 'InfoFile.changeFolderName('.$folder->downloadFolderId.', \''.$folder->title.'\')',
+			'onclick'	=> 'InfoFile.changeFolderName('.$item->downloadFolderId.', \''.$item->title.'\')',
 			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonRename'],
+			'title'	=> $w->buttonRename,
 		) );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconUp, array(
-			'href'	=> './info/file/rankFolder/'.$folder->downloadFolderId,
+			'href'	=> './info/file/rankFolder/'.$item->downloadFolderId,
 			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonUp'],
+			'title'	=> $w->buttonUp,
 		) );
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconDown, array(
-			'href'	=> './info/file/rankFolder/'.$folder->downloadFolderId.'/down',
+			'href'	=> './info/file/rankFolder/'.$item->downloadFolderId.'/down',
 			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonUp'],
+			'title'	=> $w->buttonUp,
 		) );
 	}
-	if( in_array( 'removeFolder', $rights ) && !$folder->nrFiles && !$folder->nrFolders ){
+	if( in_array( 'editFolder', $rights ) ){
+		$buttons[]	= UI_HTML_Tag::create( 'a', $iconEdit, array(
+			'href'	=> './info/file/editFolder/'.$item->downloadFolderId,
+			'class'	=> 'btn not-btn-small',
+			'title'	=> $w->buttonEdit,
+		) );
+	}
+	if( in_array( 'removeFolder', $rights ) && !$item->nrFiles && !$item->nrFolders ){
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-			'href'	=> './info/file/removeFolder/'.$folder->downloadFolderId,
+			'href'	=> './info/file/removeFolder/'.$item->downloadFolderId,
 			'class'	=> 'btn not-btn-small btn-danger',
-			'title'	=> $words['index']['buttonRemove']
+			'title'	=> $w->buttonRemove
 		) );
 	}
 	$actions	= UI_HTML_Tag::create( 'div', join( $buttons ), array( 'class' => 'btn-group pull-right' ) );
@@ -108,32 +121,38 @@ foreach( $folders as $folder ){
 		UI_HTML_Tag::create( 'td', $actions ),
 	);
 	$row	= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => 'info folder' ) );
-	$rows['folders'][$folder->title]	= $row;
+	$rows['folders'][$item->title]	= $row;
 }
 //ksort( $rows['folders'] );
 $rows	= $rows['folders'] + $rows['files'];
 
 
+$table	= '<br/><div class="alert alert-info"><em class="not-muted">'.$w->empty.'</em></div>';
 if( $rows ){
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "85%", "15%" );
 	$heads		= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', $words['index'][( $search ? 'headFiles' : 'headFilesAndFolders' )] ),
-		UI_HTML_Tag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),
+		UI_HTML_Tag::create( 'th', $search ? $w->headFiles : $w->headFilesAndFolders ),
+		UI_HTML_Tag::create( 'th', $w->headActions, array( 'class' => 'pull-right' ) ),
 	) );
 	$thead		= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
-	$panelList	= '
-	<div class="content-panel">
-		<div class="content-panel-inner">
-			'.$table.'
-		</div>
-	</div>';
 }
-else
-	$panelList	= '<br/><div class="alert alert-info"><em class="not-muted">'.$words['index']['empty'].'</em></div>';
 
+$panelList	= '
+<div class="content-panel">
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+</div>';
 
+$linkUp		= '';
+if( !$search && $folderId && $folder->downloadFolderId > 0 ){
+	$linkUp	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonBack, array(
+		'href'		=> './info/file/index/'.$folder->parentId,
+		'class'		=> 'btn btn-small',
+	) );
+}
 
 $panels		= array();
 if( 1 )
@@ -147,33 +166,15 @@ if( in_array( 'addFolder', $rights ) )
 if( in_array( 'scan', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.scan.php' );
 
-$way		= '';
-$parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-home', !$folderPath );
-$buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './info/file/index', $iconHome );
-if( !$folderPath && !$search )
-	$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
-$buttons	= array( $buttonHome );
-foreach( $steps as $nr => $stepFolder ){
-	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
-	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
-	$url		= './info/file/index/'.$stepFolder->downloadFolderId;
-	$icon		= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-folder-open', $isCurrent );
-	$class		= $isCurrent ? 'btn-inverse' : NULL;
-	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
-}
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
-$position->setClass( 'position-bar' );
-
-
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
 
 return $textIndexTop.'
 <!--<h3>Dateien</h3>-->
-<div>'.$position.'</div><br/>
+<div>'.View_Info_File::renderPosition( $env, $folderId, $search ).'</div><br/>
 <div class="row-fluid">
 	<div class="span9">
 		'.$panelList.'
+			'.$linkUp.'
 	</div>
 	<div class="span3">
 		'.join( '<hr/>', $panels ).'

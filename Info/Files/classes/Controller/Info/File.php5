@@ -16,10 +16,14 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	/**	@var	string											$path				Base path to files */
 	protected $path;
 
+	/**	@var	ADT_List_Dictionary								$request			Object to map request parameters */
+	protected $request;
+
 	/**	@var	array											$rights				List of access rights of current user */
 	protected $rights		= array();
 
 	public function __onInit(){
+		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->options		= $this->env->getConfig()->getAll( 'module.info_files.', TRUE );
 		$this->rights		= $this->env->getAcl()->index( 'info/file' );
@@ -67,7 +71,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 
 	public function addFolder( $folderId = NULL ){
 		$path		= $this->getPathFromFolderId( $folderId );
-		$folder		= trim( $this->env->getRequest()->get( 'folder' ) );
+		$folder		= trim( $this->request->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
 			$url	= ( $folderId ? $folderId : NULL).'?input_folder='.rawurlencode( $folder );
@@ -92,8 +96,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxRenameFolder(){
-		$folderId	= $this->env->getRequest()->get( 'folderId' );
-		$title		= $this->env->getRequest()->get( 'name' );
+		$folderId	= $this->request->get( 'folderId' );
+		$title		= $this->request->get( 'name' );
 
 		$pathOld	= $this->getPathFromFolderId( $folderId, TRUE );
 		$pathNew	= dirname( $pathOld ).'/'.$title;
@@ -154,13 +158,14 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		if( $recursive ){
 			$index		= FS_Folder_RecursiveLister::getMixedList( $this->path.$path );
 			foreach( $index as $entry )
-//				if( !$entry->isDot() )
-					$entry->isDir() ? $folders++ : $files++;
+				$entry->isDir() ? $folders++ : $files++;
 		}
 		else{
-			die( "no implemented yet" );
+			$index		= FS_Folder_Lister::getMixedList( $this->path.$path );
+			foreach( $index as $entry )
+				$entry->isDir() ? $folders++ : $files++;
 		}
-		return array( 'folders' => $folders, 'files' => $files );
+		return (object) array( 'folders' => $folders, 'files' => $files );
 	}
 
 	public function deliver( $fileId = NULL ){
@@ -203,6 +208,102 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
+	public function editFile( $fileId ){
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
+			$this->restart( NULL, TRUE );
+		}
+		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+			$data		= array();
+			$path		= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+			$title		= $this->request->get( 'title' );
+			$folderId	= $this->request->get( 'folderId' );
+			if( $title != $file->title ){
+				$editor	= new FS_File_Editor( $path.$file->title );
+				$editor->rename( $path.$title );
+				$data['title']	= $title;
+			}
+			if( $folderId != $file->downloadFolderId ){
+				$pathTarget	= $this->getPathFromFolderId( $folderId, TRUE );
+				if( !file_exists( $pathTarget ) ){
+					$this->messenger->noteError( 'Target folder is not existing' );
+					$this->restart( 'editFile/'.$fileId, TRUE );
+				}
+				$editor		= new FS_File_Editor( $path.$file->title );
+				$editor->rename( $pathTarget.$file->title );
+				$this->updateNumbers( $file->downloadFolderId );
+				$this->updateNumbers( $folderId );
+				$data['downloadFolderId']	= $folderId;
+			}
+			if( $data )
+				$this->modelFile->edit( $fileId, $data );
+			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
+		}
+		$this->addData( 'file', $file );
+		$this->addData( 'folderId', -1 );//(int) $file->downloadFolderId );
+		$this->addData( 'folderPath', $this->getPathFromFolderId( $file->downloadFolderId ) );
+		$this->addData( 'folders', $this->listFolderNested() );
+		$this->addData( 'rights', $this->rights );
+	}
+
+	public function editFolder( $folderId ){
+		$folder		= $this->modelFolder->get( $folderId );
+		if( !$folder ){
+			$this->messenger->noteError( 'Invalid folder ID: %s', $folderId );
+			$this->restart( NULL, TRUE );
+		}
+		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+			$data		= array();
+			$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
+			$title		= $this->request->get( 'title' );
+			$parentId	= $this->request->get( 'parentId' );
+			if( $title != $folder->title ){
+				$editor	= new FS_Folder_Editor( $path.$folder->title );
+				$editor->rename( $path.$title );
+				$data['title']	= $title;
+			}
+			if( $parentId != $folder->parentId ){
+				$pathTarget	= $this->getPathFromFolderId( $parentId, TRUE );
+				if( !file_exists( $pathTarget ) ){
+					$this->messenger->noteError( 'Target folder is not existing' );
+					$this->restart( 'editFolder/'.$folderId, TRUE );
+				}
+				$editor		= new FS_Folder_Editor( $path.$folder->title );
+				$editor->move( $pathTarget );
+				$this->updateNumbers( $folder->parentId );
+				$this->updateNumbers( $parentId );
+				$data['parentId']	= $parentId;
+			}
+			if( $data )
+				$this->modelFolder->edit( $folderId, $data );
+			$this->restart( 'index/'.$folder->parentId, TRUE );
+		}
+		$files	= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), array( 'title' => 'ASC' ) );
+
+		$this->addData( 'folder', $folder );
+		$this->addData( 'folderPath', $this->getPathFromFolderId( $folder->parentId ) );
+		$this->addData( 'folders', $this->listFolderNested( 0, $folderId ) );
+		$this->addData( 'rights', $this->rights );
+		$this->addData( 'files', $files );
+	}
+
+	protected function listFolderNested( $parentId = 0, $excludeFolderId, $level = 0 ){
+		$list		= array();
+		$orders		= array( 'title' => 'ASC' );
+		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ), $orders );
+		$icon		= '<i class="fa fa-fw fa-folder-open"></i>';
+		foreach( $folders as $folder ){
+			if( $folder->downloadFolderId == $excludeFolderId )
+				continue;
+			$list[$folder->downloadFolderId]	= str_repeat( '- ', $level ).$folder->title;
+			$children	= $this->listFolderNested( $folder->downloadFolderId, $excludeFolderId, $level + 1 );
+			foreach( $children as $childId => $childLabel )
+				$list[$childId]	= $childLabel;
+		}
+		return $list;
+	}
+
 	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE ){
 		$path	= '';
 		while( $folderId ){
@@ -241,8 +342,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 
 
 	public function index( $folderId = NULL ){
-		$request	= $this->env->getRequest();
-		$search		= trim( $request->get( 'search' ) );
+		$search		= trim( $this->request->get( 'search' ) );
 		$folderId	= (int) $folderId;
 
 		$folders	= array();
@@ -266,6 +366,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 					$this->restart( NULL, TRUE );
 				}
+				$this->addData( 'folder', $folder );
 			}
 			$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
 			$orders		= array( 'title' => 'ASC' );
@@ -278,8 +379,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$this->addData( 'pathBase', $this->path );
 		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
 		$this->addData( 'rights', $this->rights );
-		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
-		$this->addData( 'search', $request->get( 'search' ) );
+		$this->addData( 'search', $this->request->get( 'search' ) );
 	}
 
 	public function rankFolder( $folderId, $downwards = NULL ){
@@ -413,6 +513,20 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	protected function updateNumbers( $folderId ){
+		if( $folderId ){
+			$path		= $this->getPathFromFolderId( $folderId, FALSE );
+			$counts		= $this->countIn( $path, TRUE );
+			$this->modelFolder->edit( $folderId, array(
+				'nrFolders'	=> $counts->folders,
+				'nrFiles'	=> $counts->files,
+			) );
+			$folder	= $this->modelFolder->get( $folderId );
+			if( $folder->parentId )
+				$this->updateNumbers( $folder->parentId );
+		}
+	}
+
 	protected function updateNumber( $folderId, $type, $diff = 1 ){
 		if( !in_array( $type, array( 'folder', 'file' ) ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
@@ -437,9 +551,8 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 	public function upload( $folderId = NULL ){
 		if( !in_array( 'upload', $this->rights ) )
 			$this->restart( NULL, TRUE );
-		$request	= $this->env->getRequest();
-		if( $request->has( 'save' ) ){
-			$upload	= (object) $request->get( 'upload' );
+		if( $this->request->has( 'save' ) ){
+			$upload	= (object) $this->request->get( 'upload' );
 			$logicUpload	= new Logic_Upload( $this->env );
 			try{
 				$logicUpload->setUpload( $upload );
@@ -453,7 +566,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 					'rank'				=> $rank,
 					'size'				=> $logicUpload->getFileSize(),
 					'title'				=> $logicUpload->getFileName(),
-					'description'		=> (string) $request->get( 'description' ),
+					'description'		=> (string) $this->request->get( 'description' ),
 					'uploadedAt'		=> time()
 				) );
 				$this->updateNumber( $folderId, 'file', 1 );
