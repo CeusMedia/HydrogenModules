@@ -183,3 +183,22 @@ body.style-blue-3 {
 body.style-blue-3 div.navbar-inner {
 	background-color: rgba(0,11,58, 0.75);
 	}
+
+body.style-gray-1 .navbar .nav li.dropdown>.dropdown-toggle .caret,
+body.style-blue-1 .navbar .nav li.dropdown>.dropdown-toggle .caret,
+body.style-blue-2 .navbar .nav li.dropdown>.dropdown-toggle .caret,
+body.style-blue-3 .navbar .nav li.dropdown>.dropdown-toggle .caret {
+	border-top-color: rgba(255,255,255,0.5);
+	border-bottom-color: rgba(255,255,255,0.5);
+	}
+
+.dropdown-menu > li > a {
+	margin: 2px;
+	}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li.active > a,
+.dropdown-menu > li.active > a:hover,
+.dropdown-menu > li.active > a:focus {
+	background-image: none;
+	background-color: rgba(0, 0, 0, 0.5);
+	}
