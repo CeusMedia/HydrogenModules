@@ -154,7 +154,15 @@ class Model_Menu {
 						$public		= !$free && $subpage->access == "public";
 						$outside	= !$free && !$isAuthenticated && $subpage->access == "outside";
 						$inside		= !$free && $isAuthenticated && $subpage->access == "inside";
-						$acl		= !$free && $subpage->access == "acl" && $this->env->getAcl()->has( $subpage->path );
+//						$acl		= !$free && $subpage->access == "acl" && $this->env->getAcl()->has( $subpage->path );
+						$acl		= FALSE;
+						if( !$free && $subpage->access == "acl" ){
+							$acl		= $this->env->getAcl()->has( $subpage->path, 'index' );
+							if( !$acl && ( $parts = preg_split( '/\//', $subpage->path ) ) ){
+								$action		= array_pop( $parts );
+								$acl		= $this->env->getAcl()->has( join( '/', $parts ), $action );
+							}
+						}
 						if( !( $public || $outside || $inside || $acl ) )
 							continue;
 						if( isset( $subpage->{"label@".$this->language} ) )
