@@ -23,7 +23,7 @@ class View_Blog extends CMF_Hydrogen_View{
 	}
 
 	public function add(){}
-	
+
 	public function article(){}
 
 	public function author(){}
@@ -48,7 +48,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		}
 		return $content;
 	}
-	
+
 	public function edit(){}
 
 	public function feed(){
@@ -61,7 +61,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		$channel	= array(
 			'link'		=> $baseUrl.'blog',
 			'language'	=> $module->get( 'feed.language' ),
-			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
+			'generator'	=> 'CeusMedia::Common::XML_RSS_Builder',
 			'title'		=> $words->title,
 		);
 		if( $config->get( 'app.name' ) )
@@ -94,7 +94,8 @@ class View_Blog extends CMF_Hydrogen_View{
 		$feed->setChannelData( $channel );
 		foreach( $articles as $article ){
 			$uri	= $baseUrl.'blog/article/'.$article->articleId;
-			$content	= array_shift( explode( "\n", strip_tags( $article->content ) ) );
+			$content	= explode( "\n", strip_tags( $article->content ) );
+			$content	= array_shift( $content );
 			$content	= View_Helper_ContentConverter::formatText( $this->env, $content );
 			$content	= View_Helper_ContentConverter::formatLinks( $this->env, $content );
 			$content	= View_Helper_ContentConverter::formatWikiLinks( $this->env, $content );
@@ -106,7 +107,7 @@ class View_Blog extends CMF_Hydrogen_View{
 			$content	= View_Helper_Blog::formatBlogLinks( $this->env, $content );
 			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
 				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
-				
+
 			$data	= array(
 				'title'			=> $article->title,
 				'description'	=> $content,

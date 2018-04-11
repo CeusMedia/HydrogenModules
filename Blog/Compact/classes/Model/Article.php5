@@ -3,7 +3,7 @@ class Model_Article extends CMF_Hydrogen_Model{
 	protected $name		= 'articles';
 	protected $columns	= array(
 		'articleId',
-		'authorId',
+//		'authorId',
 		'status',
 		'title',
 		'content',
@@ -12,7 +12,7 @@ class Model_Article extends CMF_Hydrogen_Model{
 	);
 	protected $primaryKey	= 'articleId';
 	protected $indices	= array(
-		'authorId',
+//		'authorId',
 		'status',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;

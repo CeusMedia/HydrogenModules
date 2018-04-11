@@ -148,7 +148,7 @@ class View_Helper_Blog{
 				at.tagId = t.tagId AND
 				at.articleId = a.articleId AND
 				a.status IN('.join( ", ", $states ) .')
-			GROUP BY at.tagId
+			GROUP BY at.tagId, t.title
 			ORDER BY nr DESC
 			LIMIT '.$offset.', '.$limit;
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
@@ -179,7 +179,7 @@ class View_Helper_Blog{
 				at.tagId = t.tagId AND
 				at.articleId = a.articleId AND
 				a.status IN('.join( ", ", $states ) .')
-			GROUP BY at.tagId
+			GROUP BY at.tagId, t.title
 			ORDER BY nr ASC
 			LIMIT '.$offset.', '.$limit;
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );

@@ -287,7 +287,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			$article->version		= count( $article->versions ) + 1;
 		}
 
-		$query		= 'SELECT COUNT(at.articleId) as nr, at.tagId, t.title FROM articles AS a, article_tags AS at, tags AS t WHERE at.tagId=t.tagId AND at.articleId=a.articleId AND a.status=1 GROUP BY at.tagId ORDER BY nr DESC LIMIT 0, 10';
+		$query		= 'SELECT COUNT(at.articleId) as nr, t.tagId, t.title FROM articles AS a, article_tags AS at, tags AS t WHERE at.tagId=t.tagId AND at.articleId=a.articleId AND a.status=1 GROUP BY t.tagId, t.title ORDER BY nr DESC LIMIT 0, 10';
 		$topTags	= $this->env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$data		= array(
 			'page'		=> $page,
