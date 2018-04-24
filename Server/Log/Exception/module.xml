@@ -56,5 +56,5 @@ Please think about using the hook instead.
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<hook type="resource" resource="Env" event="logException">Controller_System_Log_Exception::__onEnvLogException</hook>
+	<hook type="resource" resource="Env" event="logException">Controller_Server_Log_Exception::__onEnvLogException</hook>
 </module>

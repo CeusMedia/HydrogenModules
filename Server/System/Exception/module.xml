@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
 <module>
 	<title>Server: System Exception</title>
-	<description/>
+	<description><![CDATA[
+
+OUTDATED: Use modules Server:Log:Exception and Admin:Log:Exception instead!
+
+! END OF LIFE !
+---------------
+
+]]></description>
 	<category>Server</category>
 	<version>0.2</version>
 	<log version="0.1">Initial prototype.</log>
