@@ -28,6 +28,7 @@
 	<config type="integer" name="show.max">10</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">UI_Shortcode</needs>
 	</relations>
 	<link xml:lang="de" access="public" path="info/news">Neuigkeiten</link>
 	<link xml:lang="en" access="public" path="info/news">News</link>
