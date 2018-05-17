@@ -45,7 +45,7 @@ CREATE TABLE `<%?prefix%>bookmarks` (
 	<sql on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
 ]]></sql>
-	<link xml:lang="de" access="public" path="manage/bookmark" rank="67">Lesezeichen</link>
-	<link xml:lang="en" access="public" path="manage/bookmark" rank="67">Bookmarks</link>
+	<link xml:lang="de" access="acl" path="manage/bookmark" rank="67">Lesezeichen</link>
+	<link xml:lang="en" access="acl" path="manage/bookmark" rank="67">Bookmarks</link>
 	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Bookmark::___onTinyMCE_getLinkList</hook>
 </module>
