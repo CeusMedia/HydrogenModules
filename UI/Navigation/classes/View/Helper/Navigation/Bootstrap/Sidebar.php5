@@ -73,11 +73,12 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
 			return '';
 		$icon	= "";
+		$label	= $this->logoTitle;
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
 			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
+			$label	= $icon.'&nbsp;'.$this->logoTitle;
 		}
-		$label	= $icon.'&nbsp;'.$this->logoTitle;
 		if( !$this->logoLink )
 			return UI_HTML_Tag::create( 'div', $label, array(
 //				'id'	=> "logo",
