@@ -34,10 +34,22 @@ if( $mails ){
 		$senderMail		= UI_HTML_Tag::create( 'small', $mail->senderAddress, array( 'class' => 'mail-user-address muted' ) );
 		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './admin/mail/queue/view/'.$mail->mailId ) );
 
+		$statusClass	= 'success';
+		if( in_array( $mail->status, array( 1, 0 ) ) )
+			$statusClass	= 'info';
+		if( in_array( $mail->status, array( -1 ) ) )
+			$statusClass	= 'warning';
+		if( in_array( $mail->status, array( -2 ) ) )
+			$statusClass	= 'danger';
+		if( in_array( $mail->status, array( -3 ) ) )
+			$statusClass	= 'inverse';
+
+		$status		= UI_HTML_Tag::create( 'span', $words['states'][$mail->status], array( 'class' => 'label label-'.$statusClass ) );
+
 		$cells		= array();
-		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'cell-mail-subject' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'cell-mail-receiver' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $words['states'][$mail->status].'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'autocut cell-mail-subject' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'autocut cell-mail-receiver' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $status.'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
 
 		$class		= 'list-item-mail';
 		if( count( $filters->get( 'status' ) ) > 1 )
@@ -51,10 +63,10 @@ if( $mails ){
 		'Status',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( "55%", "25%", "15%" ) );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( array( "", "30%", "120px" ) );
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
-	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
 
 $optStatus		= array( '' => '- alle -' );
