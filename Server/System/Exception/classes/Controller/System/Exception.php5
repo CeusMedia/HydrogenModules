@@ -18,14 +18,21 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 	public function index(){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
+		$exception	= unserialize( $session->get( 'exception' ) );
 		if( $session->has( 'exception' ) ){
-			$this->addData( 'exception', unserialize( $session->get( 'exception' ) ) );
+			if( isset( $exception->code ) ){
+				if( $exception->code > 201 && $exception->code < 600 ){
+					Net_HTTP_Status::sendHeader( $exception->code );					//  send HTTP status code header
+					$this->env->getResponse()->setStatus( $exception->code );			//  indicate HTTP status 500 - internal server error
+				}
+			}
+			$this->addData( 'exception', $exception );
 //			$session->remove( 'exception' );
 		}
 		else{
 			if( !$request->get( 'controller' ) == 'system' )
  				if( !$request->get( 'action' ) == 'exception' )
-					$this->restart( NULL, FALSE );
+					$this->restart( NULL, FALSE, 400 );
 		}
 	}
 }
