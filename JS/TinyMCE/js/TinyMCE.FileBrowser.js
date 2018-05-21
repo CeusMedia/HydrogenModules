@@ -41,7 +41,8 @@ if(typeof tinymce !== "undefined"){															//  tinyMCE is available
 			var editor = parent.tinymce.editors[0];
 			var params = editor.windowManager.windows[1].params;
 //			console.log(params);
-			var label = data.url.split('/').pop();
+//			var label = data.url.split('/').pop();
+			var label = data.label;
 			if(params.meta.filetype == 'image')												//  provide image and alt text for the image dialog
 				params.callback(data.url, {alt: label});
 			else if(params.meta.filetype == 'file')											//  provide file and text for the link dialog

@@ -110,8 +110,9 @@ class View_Helper_TinyMce_FileBrowser{
 		) );
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		return UI_HTML_Tag::create( 'li', $image.$label, array(
-			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-folder trigger-folder',
-			'data-url'	=> './manage/tinyMce/setPath/'.$mode.'/'.$this->topicId.'/'.$path,
+			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-folder trigger-folder',
+			'data-url'		=> './manage/tinyMce/setPath/'.$mode.'/'.$this->topicId.'/'.$path,
+			'data-label'	=> $label,
 		) );
 	}
 
@@ -123,8 +124,8 @@ class View_Helper_TinyMce_FileBrowser{
 	}
 
 	protected function renderImageItem( $path, $filePath, $size = NULL, $icon = 'image' ){
-		$parts	= explode( "/", $filePath );
-		$label	= array_pop( $parts );
+		$labelParts	= explode( "/", $filePath );
+		$label	= $labelParts[count( $labelParts ) - 1];
 //		if( is_string( $size ) )
 //			$size	= UI_HTML_Tag::create( 'small', '('.$size.')', array( 'class' => 'muted' ) );
 //		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
@@ -160,21 +161,23 @@ class View_Helper_TinyMce_FileBrowser{
 		try{
 			$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
 			$thumbnail	= UI_HTML_Tag::create( 'div', NULL, array(
-				'class'		=> $this->cssClassPrefix.'-item-icon trigger-submit',
-				'style'		=> 'background-image: url('.$data.')',
-				'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
-				'data-type'	=> 'image',
+				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
+				'style'			=> 'background-image: url('.$data.')',
+				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-type'		=> 'image',
+				'data-label'	=> $filePath,
 			) );
 		}
 		catch( Exception $e ){
-			$thumbnail		= UI_HTML_Tag::create( 'div', NULL, array(
-				'class'		=> $this->cssClassPrefix.'-item-icon trigger-submit',
-				'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
-				'data-type'	=> 'image',
+			$thumbnail			= UI_HTML_Tag::create( 'div', NULL, array(
+				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
+				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-type'		=> 'image',
+				'data-label'	=> $filePath,
 			) );
 		}
 
-		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$facts, array(
+		$label	= UI_HTML_Tag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		return UI_HTML_Tag::create( 'li', $thumbnail.$label, array(
@@ -222,20 +225,25 @@ class View_Helper_TinyMce_FileBrowser{
 	}
 
 	protected function renderLinkItem( $path, $filePath, $size = NULL, $icon = 'link' ){
-		$parts	= explode( "/", $filePath );
-		$label	= array_pop( $parts );
+		$fullpath	= preg_replace( '/^\.\//', '', $path );
+		if( !preg_match( '/^https?:\/\//', $fullpath ) )
+			$fullpath	= $this->baseUrl.$fullpath;
+		$labelParts	= explode( "/", $filePath );
+		$label		= $labelParts[count( $labelParts ) - 1];
 		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
 		$url	= preg_replace( '/^\.\//', '', $path );
 		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-external-link' ) );
-		$icon	= UI_HTML_Tag::create( 'a', $icon, array( 'href' => $this->baseUrl.$url, 'target' => '_blank' ) );
+//		$icon	= UI_HTML_Tag::create( 'a', $icon, array( 'href' => $fullpath, 'target' => '_blank' ) );
 		$url	= UI_HTML_Tag::create( 'small', $url.'&nbsp;'.$icon, array( 'class' => 'muted' ) );
 		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$url, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		return UI_HTML_Tag::create( 'li', $image.$label, array(
-			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-link trigger-submit',
-			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getPath().$path,
-			'data-type'	=> 'link',
+			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-link trigger-submit',
+			'data-url'		=> $fullpath,
+			'data-path'		=> $path,
+			'data-label'	=> $filePath,
+			'data-type'		=> 'link',
 		) );
 	}
 
