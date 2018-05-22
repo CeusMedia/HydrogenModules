@@ -9,6 +9,9 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 	}
 
+	public function add(){
+	}
+
 	protected function checkId( $blockId ){
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );
@@ -23,21 +26,24 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		$this->checkIsPost();
-		$data		= $this->env->getRequest()->getAll();
-		$blockId	= $this->modelBlock->add( $data, FALSE );
-		$this->restart( '?action=block_edit&id='.$blockId );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data		= $this->env->getRequest()->getAll();
+			$blockId	= $this->modelBlock->add( $data, FALSE );
+			$this->restart( 'edit/'.$blockId, TRUE );
+		}
 	}
 
 	public function edit( $blockId ){
-		$this->checkIsPost();
-		$this->checkId( $blockId );
-		$data	= $this->env->getRequest()->getAll();
-		$this->modelBlock->edit( $blockId, $data, FALSE );
-		$this->restart( 'edit/'.$blockId, TRUE );
+		$block	= $this->checkId( $blockId );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data	= $this->env->getRequest()->getAll();
+			$this->modelBlock->edit( $blockId, $data, FALSE );
+			$this->restart( 'edit/'.$blockId, TRUE );
+		}
+		$this->addData( 'block', $block );
 	}
 
-	public function remove( $blockI ){
+	public function remove( $blockId ){
 		$this->checkId( $blockId );
 		$this->modelBlock->remove( $blockId );
 		$this->restart( NULL, TRUE );

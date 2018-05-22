@@ -23,24 +23,27 @@ class Controller_Manage_Form_Mail{
 	}
 
 	public function add(){
-		$this->checkIsPost();
-		$data		= $this->env->getRequest()->getAll();
-		$mailId	= $this->modelMail->add( $data, FALSE );
-		$this->restart( 'edit/'.$mailId, TRUE );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data		= $this->env->getRequest()->getAll();
+			$mailId	= $this->modelMail->add( $data, FALSE );
+			$this->restart( 'edit/'.$mailId, TRUE );
+		}
 	}
 
 	public function edit( $mailId ){
-		$this->checkIsPost();
-		$this->checkId( $mailId );
-		$data	= $this->env->getRequest()->getAll();
-		$this->modelMail->edit( $mailId, $data, FALSE );
-		$this->restart( 'edit/'.$mailId );
+		$mail	= $this->checkId( $mailId );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data	= $this->env->getRequest()->getAll();
+			$this->modelMail->edit( $mailId, $data, FALSE );
+			$this->restart( 'edit/'.$mailId );
+		}
+		$this->addData( 'mail', $mail );
 	}
 
 	public function remove( $mailId ){
 		$this->checkId( $mailId );
 		$this->modelMail->remove( $mailId );
-		$this->app->restart( NULL, TRUE );
+		$this->restart( NULL, TRUE );
 	}
 }
 

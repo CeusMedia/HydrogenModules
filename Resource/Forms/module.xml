@@ -25,4 +25,60 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
+	<sql type="mysql" on="install" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_blocks` (
+  `blockId` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `identifier` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`blockId`),
+  UNIQUE KEY `title` (`title`),
+  UNIQUE KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fills` (
+  `fillId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `referer` text COLLATE utf8_unicode_ci,
+  `agent` mediumtext COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`fillId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>forms`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forms` (
+  `formId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailId` int(10) UNSIGNED DEFAULT '0',
+  `type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `receivers` text COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_mails` (
+  `mailId` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `format` tinyint(1) UNSIGNED NOT NULL COMMENT '1-Text, 2-HTML',
+  `subject` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`mailId`),
+  UNIQUE KEY `identifier` (`identifier`),
+  KEY `format` (`format`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
 </module>

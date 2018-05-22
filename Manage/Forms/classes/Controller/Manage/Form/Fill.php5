@@ -120,8 +120,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function remove(){
-		$fillId		= $this->env->getRequest()->get( 'id' );
+	public function remove( $fillId ){
 		$page		= (int) $this->env->getRequest()->get( 'page' );
 		if( !$fillId )
 			throw new DomainException( 'No fill ID given' );
@@ -129,7 +128,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !$fill )
 			throw new DomainException( 'Invalid fill ID given' );
 		$this->modelFill->remove( $fillId );
-		$this->restart( '?action=fill_index'.( $page ? '&page='.$page : '' ) );
+		$this->restart( $page ? '/'.$page : '', TRUE );
 	}
 
 	protected function sendFillToReceivers( $fillId ){
