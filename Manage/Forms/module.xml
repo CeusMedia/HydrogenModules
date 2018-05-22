@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Forms</title>
+	<description><![CDATA[Basic handling for forms.]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+<!--		<class>Logic/Form.php5</class>-->
+		<class>Controller/Manage/Form.php5</class>
+		<class>Controller/Manage/Form/Block.php5</class>
+		<class>Controller/Manage/Form/Fill.php5</class>
+		<class>Controller/Manage/Form/Mail.php5</class>
+		<class>View/Manage/Form.php5</class>
+		<class>View/Manage/Form/Block.php5</class>
+		<class>View/Manage/Form/Fill.php5</class>
+		<class>View/Manage/Form/Mail.php5</class>
+		<template>manage/form/add.php</template>
+		<template>manage/form/edit.php</template>
+		<template>manage/form/index.php</template>
+		<template>manage/form/view.php</template>
+		<template>manage/form/block/add.php</template>
+		<template>manage/form/block/edit.php</template>
+		<template>manage/form/block/index.php</template>
+		<template>manage/form/block/view.php</template>
+		<template>manage/form/fill/index.php</template>
+		<template>manage/form/fill/view.php</template>
+		<template>manage/form/mail/add.php</template>
+		<template>manage/form/mail/edit.php</template>
+		<template>manage/form/mail/index.php</template>
+		<template>manage/form/mail/view.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Forms</needs>
+	</relations>
+</module>
