@@ -23,11 +23,12 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		$this->checkIsPost();
-		$data	= $this->env->getRequest()->getAll();
-		$data['timestamp']	= time();
-		$formId	= $this->modelForm->add( $data, FALSE );
-		$this->restart( '?action=form_edit&id='.$formId );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data	= $this->env->getRequest()->getAll();
+			$data['timestamp']	= time();
+			$formId	= $this->modelForm->add( $data, FALSE );
+			$this->restart( 'edit/'.$formId, TRUE );
+		}
 	}
 
 	public function confirm(){
@@ -41,12 +42,14 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $formId ){
-		$this->checkIsPost();
-		$this->checkId( $formId );
-		$data	= $this->env->getRequest()->getAll();
-		$data['timestamp']	= time();
-		$this->modelForm->edit( $formId, $data, FALSE );
-		$this->restart( 'edit/'.$formId, TRUE );
+		$form	= $this->checkId( $formId );
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$data	= $this->env->getRequest()->getAll();
+			$data['timestamp']	= time();
+			$this->modelForm->edit( $formId, $data, FALSE );
+			$this->restart( 'edit/'.$formId, TRUE );
+		}
+		$this->addData( 'form', $form );
 	}
 
 	public function fill( $formId ){
@@ -73,6 +76,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function index(){
+		$forms	= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
+		$this->addData( 'forms', $forms );
+	}
+
 	public function remove( $formId ){
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
@@ -88,4 +96,3 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$transport->send( $mail );
 	}
 }
-

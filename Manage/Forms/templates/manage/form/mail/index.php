@@ -15,10 +15,10 @@ $modelForm	= new Model_Form( $env );
 $rows		= array();
 foreach( $mails as $mail ){
 	$linkView	= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
-		'href'	=> './?action=mail_view&id='.$mail->mailId,
+		'href'	=> './manage/form/mail/view/'.$mail->mailId,
 		'class'	=> 'btn btn-mini btn-info',
 	) );
-	$linkEdit	= UI_HTML_Tag::create( 'a', $mail->title, array( 'href' => './?action=mail_edit&id='.$mail->mailId ) );
+	$linkEdit	= UI_HTML_Tag::create( 'a', $mail->title, array( 'href' => './manage/form/mail/edit/'.$mail->mailId ) );
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $linkEdit ),
 		UI_HTML_Tag::create( 'td', '<small><tt>'.$mail->identifier.'</tt></small>' ),
@@ -39,4 +39,3 @@ $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Mail', array(
 	'class'	=> 'btn btn-success'
 ) );
 return $heading.$table.$linkAdd;
-

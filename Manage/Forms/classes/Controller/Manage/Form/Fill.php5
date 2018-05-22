@@ -24,9 +24,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 
-	public function confirm(){
-		if( !( $fillId = $this->env->getRequest()->get( 'id' ) ) )
-			throw new DomainException( 'No fill ID given' );
+	public function confirm( $fillId ){
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
@@ -43,7 +41,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->sendFillToReceivers( $fillId );
 		if( $fill->referer )
 			$this->restart( $fill->referer.$urlGlue.'rc=2' );
-		$this->restart( '?action=fill_confirmed&id='.$fillId );
+		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
 	protected function getTransport(){
@@ -55,6 +53,23 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$config->get( 'password' )
 		);
 		return $transport;
+	}
+
+	public function index( $page = NULL ){
+
+		$limit		= 10;
+		$pages		= ceil( $this->modelFill->count() / $limit );
+		$page		= (int) $page;
+		if( $page >= $pages )
+			$page	= 0;
+		$orders		= array( 'fillId' => 'DESC' );
+		$limits		= array( $page * $limit, $limit );
+		$fills		= $this->modelFill->getAll( array(), $orders, $limits );
+
+		$this->addData( 'fills', $fills );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', $pages );
+		$this->addData( 'limit', $limit );
 	}
 
 	public function receive(){
@@ -227,4 +242,3 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		return $transport->send( $message );
 	}
 }
-

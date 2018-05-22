@@ -1,7 +1,7 @@
 <?php
 
-$modelBlock	= new Model_Block( $env );
 $modelForm	= new Model_Form( $env );
+$modelBlock	= new Model_Form_Block( $env );
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -10,7 +10,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remov
 $iconBlock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
-$withinForms	= $this->modelForm->getAll(
+$withinForms	= $modelForm->getAll(
 	array( 'content'	=> '%[block_'.$block->identifier.']%' ) ,
 	array( 'title'		=> 'ASC'
 ) );
@@ -26,7 +26,7 @@ if( $withinForms ){
 	$listWithinForms	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
-$withinBlocks	= $this->modelBlock->getAll(
+$withinBlocks	= $modelBlock->getAll(
 	array( 'content'	=> '%[block_'.$block->identifier.']%' ) ,
 	array( 'title'		=> 'ASC'
 ) );
@@ -48,7 +48,7 @@ preg_match_all( '/\[block_(\S+)\]/', $block->content, $matches );
 if( isset( $matches[0] ) && count( $matches[0] ) ){
 	$list	= array();
 	foreach( array_keys( $matches[0] ) as $nr ){
-		$item	= $this->modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
+		$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
 		if( !$item )
 			continue;
 		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
@@ -61,7 +61,7 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 }
 return '
 <h2><span class="muted">Block:</span> '.$block->title.'</h2>
-<form action="./manage/form/block/edit/'.$this->blockId.'" method="post">
+<form action="./manage/form/block/edit/'.$block->blockId.'" method="post">
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_title">Titel</label>
@@ -111,6 +111,3 @@ jQuery(document).ready(function(){
 	FormEditor.applyAceEditor("#input_content");
 });
 </script>';
-	}
-}
-

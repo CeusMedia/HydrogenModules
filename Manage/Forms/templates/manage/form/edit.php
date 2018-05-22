@@ -109,6 +109,3 @@ jQuery(document).ready(function(){
 	FormEditor.applyAceEditor("#input_content");
 });
 </script>';
-	}
-}
-

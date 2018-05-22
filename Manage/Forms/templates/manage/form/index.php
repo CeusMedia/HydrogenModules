@@ -20,11 +20,11 @@ $statuses	= array(
 	Model_Form::STATUS_ACTIVATED	=> UI_HTML_Tag::create( 'label', $statuses[Model_Form::STATUS_ACTIVATED], array( 'class' => 'label label-success' ) ),
 );
 
-$modelForm	= new Model_Form( $this->env );
-$modelMail	= new Model_Mail( $this->env );
+$modelForm	= new Model_Form( $env );
+$modelMail	= new Model_Mail( $env );
 
 $rows		= array();
-foreach( $modelForm->getAll( array(), array( 'title' => 'ASC' ) ) as $form ){
+foreach( $forms as $form ){
 //	$linkView	= UI_HTML_Tag::create( 'a', 'anzeigen', array( 'href' => './?action=form_view&id='.$form->formId.'&test', 'class' => 'btn btn-small' ) );
 
 	$mail	= UI_HTML_Tag::create( 'small', 'Standard', array( 'class' => "muted" ) );
@@ -33,7 +33,7 @@ foreach( $modelForm->getAll( array(), array( 'title' => 'ASC' ) ) as $form ){
 		$mail	= UI_HTML_Tag::create( 'small', $mail->title );
 	}
 
-	$linkEdit	= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => './?action=form_edit&id='.$form->formId ) );
+	$linkEdit	= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
 	$receivers	= array();
 	if( strlen( trim( $form->receivers ) ) ){
 		foreach( preg_split( '/\s*,\s*/', $form->receivers ) as $receiver )
@@ -56,7 +56,7 @@ $table	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' =
 
 $heading	= UI_HTML_Tag::create( 'h2', 'Formulare' );
 $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
-	'href'	=> './?action=form_add',
+	'href'	=> './manage/form/add',
 	'class'	=> 'btn btn-success',
 ) );
 return $heading.$table.$linkAdd;

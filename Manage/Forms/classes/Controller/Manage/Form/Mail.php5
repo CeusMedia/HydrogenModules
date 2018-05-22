@@ -50,5 +50,10 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$this->modelMail->remove( $mailId );
 		$this->restart( NULL, TRUE );
 	}
+
+	public function view( $mailId ){
+		$mail	= $this->checkId( $mailId );
+		$this->addData( 'mail', $mail );
+	}
 }
 

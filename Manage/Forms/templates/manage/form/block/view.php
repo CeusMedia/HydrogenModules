@@ -2,7 +2,7 @@
 
 $modelBlock	= new Model_Form_Block( $env );
 
-$blocks		= $this->modelBlock->getAll( array(), array( 'title' => 'ASC' ) );
+$blocks		= $modelBlock->getAll( array(), array( 'title' => 'ASC' ) );
 
 foreach( $blocks as $item ){
 	if( preg_match( '/\[block_'.$item->identifier.'\]/', $block->content ) ){

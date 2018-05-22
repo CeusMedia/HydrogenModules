@@ -9,9 +9,6 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 	}
 
-	public function add(){
-	}
-
 	protected function checkId( $blockId ){
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );
@@ -43,10 +40,17 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->addData( 'block', $block );
 	}
 
+	public function index(){
+	}
+
+	public function view( $blockId ){
+		$block	= $this->checkId( $blockId );
+		$this->addData( 'block', $block );
+	}
+
 	public function remove( $blockId ){
 		$this->checkId( $blockId );
 		$this->modelBlock->remove( $blockId );
 		$this->restart( NULL, TRUE );
 	}
 }
-

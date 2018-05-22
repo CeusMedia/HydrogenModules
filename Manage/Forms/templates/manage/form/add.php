@@ -1,7 +1,7 @@
 <?php
 
-$modelForm	= new Model_Form( $this->env );
-$modelBlock	= new Model_Block( $this->env );
+$modelForm	= new Model_Form( $env );
+$modelBlock	= new Model_Form_Block( $env );
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -20,7 +20,7 @@ $types		= array(
 $optType	= UI_HTML_Elements::Options( $types );
 
 $optDelivery	= array( '' => '- keine -' );
-foreach( $this->modelBlock->getAll( array( 'identifier' => 'email_customer_result_%' ) ) as $item )
+foreach( $modelBlock->getAll( array( 'identifier' => 'email_customer_result_%' ) ) as $item )
 	$optDelivery[$item->identifier] = $item->title;
 		$optDelivery	= UI_HTML_Elements::Options( $optDelivery );
 
@@ -90,6 +90,3 @@ jQuery(document).ready(function(){
 	}
 </style>
 ';
-	}
-}
-

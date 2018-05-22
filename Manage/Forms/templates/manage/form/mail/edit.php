@@ -1,6 +1,6 @@
 <?php
-$modelMail	= new Model_Mail( $this->app->getDatabase() );
-$modelForm	= new Model_Form( $this->app->getDatabase() );
+$modelForm	= new Model_Form( $env );
+$modelMail	= new Model_Form_Mail( $env );
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -9,7 +9,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remov
 $iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
-$withinForms		= $this->modelForm->getAllByIndex( 'mailId', $mail->mailId );
+$withinForms		= $modelForm->getAllByIndex( 'mailId', $mail->mailId );
 $listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= array();

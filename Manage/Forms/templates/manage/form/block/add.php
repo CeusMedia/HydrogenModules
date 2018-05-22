@@ -5,7 +5,7 @@ $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' 
 
 return '
 <h2><span class="muted">Block:</span> Neu</h2>
-<form action="./?action=block_add" method="post">
+<form action="./manage/form/block/add" method="post">
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_title">Titel</label>
@@ -24,7 +24,7 @@ return '
 		</div>
 	</div>
 	<div class="buttonbar">
-		<a href="./?action=block_index" class="btn">'.$iconList.'&nbsp;zur Liste</a>
+		<a href="./manage/form/block" class="btn">'.$iconList.'&nbsp;zur Liste</a>
 		<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'&nbsp;speichern</button>
 	</div>
 </form>
