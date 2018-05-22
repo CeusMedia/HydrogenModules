@@ -15,7 +15,7 @@
 		<script load="auto">module.manage.forms.js</script>
 	</files>
 	<relations>
-		<needs type="module">JS_ACE</needs>
+		<needs type="module">JS_Ace</needs>
 		<needs type="module">Resource_Forms</needs>
 		<needs type="module">UI_Shortcode</needs>
 	</relations>
