@@ -12,7 +12,8 @@
 	<files>
 		<class>View/Helper/Form.php5</class>
 		<class>Hook/Form.php5</class>
-		<script load="auto">module.manage.forms.js</script>
+		<script load="auto">module.ui.helper.forms.js</script>
+		<style source="common" load="auto">module.ui.helper.forms.css</script>
 	</files>
 	<relations>
 		<needs type="module">JS_Ace</needs>
