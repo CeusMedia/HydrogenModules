@@ -111,7 +111,9 @@ var Forms = {
 	},
 
 	init: function(urlServer, devMode, formId){
-		if( typeof devMode !== "undefined" )
+		if(Forms.urlServer)
+			return Forms;
+		if(typeof devMode !== "undefined")
 			Forms.mode = devMode ? 'dev' : 'live';
 		Forms.urlServer = urlServer;
 		Forms.status = 1;

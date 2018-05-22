@@ -45,10 +45,10 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		}
 		if( !$this->returnCode ){
 			$form		= $this->modelForm->get( $this->formId );
-			$clientUrl	= $this->env->getConfig()->get( 'app.url' );
+			$clientUrl	= $this->env->getConfig()->get( 'app.base.url' );
 			$devMode	= $form->status < Model_Form::STATUS_ACTIVATED ? 'true' : 'false';
 			$scripts	= join( '', array(
-				UI_HTML_Tag::create( 'script', 'Forms.init("'.$clientUrl.'", '.$devMode.').apply("form-'.$this->formId.'");' ),
+				UI_HTML_Tag::create( 'script', 'jQuery(document).ready(function(){Forms.init("'.$clientUrl.'", '.$devMode.').apply("form-'.$this->formId.'");});' ),
 	//			UI_HTML_Tag::create( 'script', 'FormOptionals.init();' ),
 			) );
 			$content	.= $scripts;
