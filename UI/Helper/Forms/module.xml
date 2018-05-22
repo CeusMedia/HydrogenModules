@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Forms</title>
+	<description><![CDATA[Helper to forms.]]></description>
+	<category>User Interface</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/Form.php5</class>
+		<class>Hook/Form.php5</class>
+		<script load="auto">module.manage.forms.js</script>
+	</files>
+	<relations>
+		<needs type="module">JS_ACE</needs>
+		<needs type="module">Resource_Forms</needs>
+		<needs type="module">UI_Shortcode</needs>
+	</relations>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Form::onViewRenderContent</hook>
+</module>
