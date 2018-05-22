@@ -33,6 +33,7 @@
 		<template>manage/form/mail/edit.php</template>
 		<template>manage/form/mail/index.php</template>
 		<template>manage/form/mail/view.php</template>
+		<script load="auto">module.manage.forms.js</script>
 	</files>
 	<relations>
 		<needs type="module">Resource_Forms</needs>
