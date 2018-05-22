@@ -1,5 +1,5 @@
 <?php
-class Controller_Manage_Form_Mail{
+class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 
 	protected $modelForm;
 	protected $modelMail;
@@ -38,6 +38,11 @@ class Controller_Manage_Form_Mail{
 			$this->restart( 'edit/'.$mailId );
 		}
 		$this->addData( 'mail', $mail );
+	}
+
+	public function index(){
+		$mails	= $this->modelMail->getAll( array(), array( 'title' => 'ASC' ) );
+		$this->addData( 'mails', $mails );
 	}
 
 	public function remove( $mailId ){
