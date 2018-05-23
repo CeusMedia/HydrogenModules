@@ -45,4 +45,7 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 		}
 		return $content;
 	}
+	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
+		$this->mail->setSubject( $subject, $this->encodingSubject );
+	}
 }

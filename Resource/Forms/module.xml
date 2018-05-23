@@ -22,6 +22,9 @@
 		<class>View/Helper/Form/Fill/Data.php5</class>
 		<class>View/Helper/Form/Fill/Person.php5</class>
 	</files>
+	<config protected="yes" type="string" name="mail.sender.address"></config>
+	<config protected="yes" type="string" name="mail.sender.name"></config>
+	<config protected="yes" type="integer" name="mail.template"></config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
