@@ -218,6 +218,7 @@ abstract class Mail_Abstract{
 		$appHost	= parse_url( $baseUrl, PHP_URL_HOST );
 		$appPath	= rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' );
 		$body	= str_replace( '[#content#]', $content, $template->html );
+		$body	= str_replace( '[#style#]', $template->css, $body );
 		$body	= str_replace( '[#app.email#]', $appEmail, $body );
 		$body	= str_replace( '[#app.url#]', $baseUrl, $body );
 		$body	= str_replace( '[#app.host#]', $appHost, $body );
@@ -293,6 +294,7 @@ abstract class Mail_Abstract{
 		$appHost	= parse_url( $baseUrl, PHP_URL_HOST );
 		$appPath	= rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' );
 		$body	= str_replace( '[#content#]', $content, $template->plain );
+		$body	= str_replace( '[#style#]', $content, $template->css );
 		$body	= str_replace( '[#app.email#]', $appEmail, $body );
 		$body	= str_replace( '[#app.url#]', $baseUrl, $body );
 		$body	= str_replace( '[#app.host#]', $appHost, $body );
@@ -439,23 +441,26 @@ abstract class Mail_Abstract{
 			$templateId	= $this->data['mailTemplateId' ];
 		if( $templateId )
 			$content	= $this->applyTemplateToHtml( $content, $templateId );
-		$page	= $this->getPage();
-		$page->addBody( $content );
 
-/*		$page->addMetaTag( 'name', 'viewport', join( ', ', array(
-			'width=device-width',
-			'initial-scale=1.0',
-			'minimum-scale=0.75',
-			'maximum-scale=2.0',
-			'user-scalable=yes',
-		) ) );*/
+		$html		= $content;
+		if( !preg_match( '/(<html>|<head>)/', $content ) ){
+			$page	= $this->getPage();
+			$page->addBody( $content );
 
-		$classes	= array_merge( array( 'mail' ), $this->bodyClasses );
-		$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
-		if( count( $options->getAll() ) )
-			$classes[]	= 'content-panel-style-'.$options->get( 'style' );
+	/*		$page->addMetaTag( 'name', 'viewport', join( ', ', array(
+				'width=device-width',
+				'initial-scale=1.0',
+				'minimum-scale=0.75',
+				'maximum-scale=2.0',
+				'user-scalable=yes',
+			) ) );*/
 
-		$html	= $page->build( array( 'class' => $classes ) );
+			$classes	= array_merge( array( 'mail' ), $this->bodyClasses );
+			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
+			if( count( $options->getAll() ) )
+				$classes[]	= 'content-panel-style-'.$options->get( 'style' );
+			$html	= $page->build( array( 'class' => $classes ) );
+		}
 		$this->contents['html']	= $html;
 		$this->mail->addHTML( $html, 'UTF-8', $this->encodingHtml );
 		return $html;
