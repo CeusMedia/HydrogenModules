@@ -5,17 +5,34 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 	public $form;
 	public $mail;
 
-	public function render(){
+	public function generate( $data = array() ){
+		if( !isset( $this->data['form'] ) )
+			throw new InvalidArgumentException( 'No form data given' );
+		if( !isset( $this->data['fill'] ) )
+			throw new InvalidArgumentException( 'No fill data given' );
+		if( !isset( $this->data['mail'] ) )
+			throw new InvalidArgumentException( 'No mail data given' );
+		$this->setForm( $this->data['form'] );
+		$this->setFill( $this->data['fill'] );
+		$this->setMail( $this->data['mail'] );
+
 		$content	= $this->mail->content;
 		$content	= str_replace( "[form_title]", $this->form->title, $content );
-		$data		= json_decode( $this->fill->data, TRUE );
 
-		$content	= $this->applyFillData( $content, $this->fill );
-		$content	= $this->applyHelpers( $content, $this->fill, $this->form );
-
-		if( $this->mail->format == Model_Mail::FORMAT_HTML )
-			return $this->renderPage( $content );
-		return $content;
+		if( $this->mail->format == Model_Form_Mail::FORMAT_HTML ){
+			$content	= $this->applyFillData( $content, $this->fill );
+			$content	= $this->applyHelpers( $content, $this->fill, $this->form );
+			$this->setHtml( $content );
+			return (object) array(
+				'html'	=> $content,
+				'text'	=> NULL,
+			);
+		}
+		$this->setText( $content );
+		return (object) array(
+			'text'	=> $content,
+			'html'	=> NULL,
+		);
 	}
 
 	public function setFill( $fill ){
@@ -33,4 +50,3 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 		return $this;
 	}
 }
-
