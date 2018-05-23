@@ -4,6 +4,8 @@ $modelFill	= new Model_Form_Fill( $env );
 
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconFilter	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
@@ -43,7 +45,7 @@ foreach( $fills as $fill ){
 		UI_HTML_Tag::create( 'td', $buttons ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '', '120px', '140px', '120px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '', '100px', '130px', '80px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', '' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
@@ -55,6 +57,66 @@ if( $pages > 1 ){
 	$pagination->patternUrl	= '%s';
 	$buttonbar	= UI_HTML_Tag::create( 'div', $pagination->render(), array( 'class' => 'buttonbar' ) );
 }
+$panelList	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', 'Einträge' ),
+	UI_HTML_Tag::create( 'div', array(
+		$table,
+		$buttonbar,
+	), array( 'class' => 'content-panel-inner' ) ),
+), array( 'class' => 'content-panel' ) );
 
-$heading	= UI_HTML_Tag::create( 'h2', 'Einträge' );
-return $heading.$table.$buttonbar;
+
+$optForm		= array( '' => '- alle -' );
+foreach( $forms as $item )
+	$optForm[$item->formId]	= $item->title;
+$optForm		= UI_HTML_Elements::Options( $optForm, $filterFormId );
+
+$optStatus		= array( '' => '- alle -', '0' => 'unbestätigt', '1' => 'gültig' );
+$optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+
+$panelFilter	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', 'Filter' ),
+	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'form', array(
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', 'E-Mail', array( 'for' => 'input_email' ) ),
+					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'email', 'id' => 'input_email', 'value' => htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ) ) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', 'E-Mail', array( 'for' => 'input_email' ) ),
+					UI_HTML_Tag::create( 'select', $optForm, array( 'name' => 'formId', 'id' => 'input_formId' ) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
+					UI_HTML_Tag::create( 'select', $optStatus, array( 'name' => 'status', 'id' => 'input_status' ) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;filtern', array(
+						'type'	=> 'submit',
+						'name'	=> 'filter',
+						'class'	=> 'btn btn-small btn-info',
+					) ),
+					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;leeren', array(
+						'href'	=> './manage/form/fill/filter/reset',
+						'class'	=> 'btn btn-small btn-inverse',
+					) ),
+				), array( 'class' => 'btn-group' ) ),
+			), array( 'class' => 'buttonbar' ) ),
+		), array( 'action' => './manage/form/fill/filter', 'method' => 'post' ) ),
+	), array( 'class' => 'content-panel-inner' ) ),
+), array( 'class' => 'content-panel' ) );
+
+//$heading	= UI_HTML_Tag::create( 'h2', 'Einträge' );
+//return $heading.$filter.$table.$buttonbar;
+
+return UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),
+	UI_HTML_Tag::create( 'div', $panelList, array( 'class' => 'span9' ) ),
+), array( 'class' => 'row-fluid' ) );

@@ -57,20 +57,57 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
+	public function filter( $reset = NULL ){
+		$session	= $this->env->getSession();
+		$request	= $this->env->getRequest();
+		if( $reset ){
+			$session->remove( 'manage_form_fill_email' );
+			$session->remove( 'manage_form_fill_formId' );
+			$session->remove( 'manage_form_fill_status' );
+		}
+		if( $request->has( 'email' ) )
+			$session->set( 'manage_form_fill_email', $request->get( 'email' ) );
+		if( $request->has( 'formId' ) )
+			$session->set( 'manage_form_fill_formId', $request->get( 'formId' ) );
+		if( $request->has( 'status' ) )
+			$session->set( 'manage_form_fill_status', $request->get( 'status' ) );
+		$this->restart( NULL, TRUE );
+	}
+
 	public function index( $page = NULL ){
+		$session		= $this->env->getSession();
+		$filterEmail	= $session->get( 'manage_form_fill_email' );
+		$filterFormId	= $session->get( 'manage_form_fill_formId' );
+		$filterStatus	= $session->get( 'manage_form_fill_status' );
+
+		$conditions		= array();
+		if( strlen( trim( $filterEmail ) ) )
+			$conditions['email']	= '%'.$filterEmail.'%';
+		if( strlen( trim( $filterFormId ) ) )
+			$conditions['formId']	= $filterFormId;
+		if( strlen( trim( $filterStatus ) ) )
+			$conditions['status']	= $filterStatus;
+
 		$limit		= 10;
-		$pages		= ceil( $this->modelFill->count() / $limit );
+		$pages		= ceil( $this->modelFill->count( $conditions ) / $limit );
 		$page		= (int) $page;
 		if( $page >= $pages )
 			$page	= 0;
 		$orders		= array( 'fillId' => 'DESC' );
 		$limits		= array( $page * $limit, $limit );
-		$fills		= $this->modelFill->getAll( array(), $orders, $limits );
+		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
+
+		$forms		= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
 
 		$this->addData( 'fills', $fills );
+		$this->addData( 'forms', $forms );
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', $pages );
 		$this->addData( 'limit', $limit );
+
+		$this->addData( 'filterEmail', $filterEmail );
+		$this->addData( 'filterFormId', $filterFormId );
+		$this->addData( 'filterStatus', $filterStatus );
 	}
 
 	public function receive(){
