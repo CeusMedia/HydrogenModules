@@ -38,10 +38,10 @@
 	<relations>
 		<needs type="module">Resource_Forms</needs>
 	</relations>
-	<link xml:lang="de" access="acl" rank="45" path="manage/form">Formulare</>
-	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</>
-	<link xml:lang="de" access="acl" rank="47" path="manage/form/block">Blöcke</>
-	<link xml:lang="de" access="acl" rank="48" path="manage/form/mail">E-Mails</>
+	<link xml:lang="de" access="acl" rank="45" path="manage/form">Formulare</link>
+	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</link>
+	<link xml:lang="de" access="acl" rank="47" path="manage/form/block">Blöcke</link>
+	<link xml:lang="de" access="acl" rank="48" path="manage/form/mail">E-Mails</link>
 	<link access="public" path="manage/form/fill/receive"/>
 	<link access="public" path="manage/form/fill/confirm"/>
 </module>
