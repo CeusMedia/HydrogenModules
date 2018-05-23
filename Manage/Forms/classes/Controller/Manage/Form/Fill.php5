@@ -10,9 +10,6 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelMail	= new Model_Form_Mail( $this->env );
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
-
-		$this->sendFillToReceivers( 8 );
-
 	}
 
 	protected function checkId( $fillId ){
@@ -46,7 +43,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
 			if( $fill->referer )
-				$this->env->restart( $fill->referer.$urlGlue.'rc=3' );
+				$this->restart( $fill->referer.$urlGlue.'rc=3' );
 			throw new DomainException( 'Fill already confirmed' );
 		}
 		$this->modelFill->edit( $fillId, array(
@@ -171,14 +168,17 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 
 		//  -  SEND MAIL  --  //
-		$subject	= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
-		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		$subject		= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
+		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( $configResource->get( 'sender.name' ) )
+			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
 		$mail		= new Mail_Form_Manager_Filled( $this->env, array(
 			'form'				=> $form,
 			'fill'				=> $fill,
-			'mailTemplateId'	=> 2,
+			'mailTemplateId'	=> $configResource->get( 'template' ),
 		) );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
@@ -201,13 +201,16 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			throw new RuntimeException( 'No confirmation mail defined' );
 
 		//  -  SEND MAIL  --  //
-		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( $configResource->get( 'sender.name' ) )
+			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
 		$data		= array(
 			'fill'				=> $fill,
 			'form'				=> $form,
-			'mailTemplateId'	=> 2,
+			'mailTemplateId'	=> $configResource->get( 'template' ),
 		);
 		$mail		= new Mail_Form_Customer_Confirm( $this->env, $data );
 		$mail->setSubject( $formMail->subject );
@@ -235,15 +238,18 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			throw new DomainException( 'Invalid mail ID connected to form' );
 
 		//  -  SEND MAIL  --  //
-		$subject	= $formMail->subject ? $formMail->subject : 'DtHPS: Anfrage erhalten';
-		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( $configResource->get( 'sender.name' ) )
+			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
+		$subject	= $formMail->subject ? $formMail->subject : 'DtHPS: Anfrage erhalten';
 		$mail		= new Mail_Form_Customer_Result( $this->env, array(
 			'fill'				=> $fill,
 			'form'				=> $form,
-			'mail'				=> $mail,
-			'mailTemplateId'	=> 2,
+			'mail'				=> $formMail,
+			'mailTemplateId'	=> $configResource->get( 'template' ),
 		) );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );

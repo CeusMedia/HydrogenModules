@@ -35,8 +35,6 @@
 		<template>manage/form/mail/view.php</template>
 		<script load="auto">module.manage.forms.js</script>
 	</files>
-	<config access="protected" mandatory="yes" type="string" name="sender.address"></config>
-	<config access="protected" mandatory="no" type="string" name="sender.name"></config>
 	<relations>
 		<needs type="module">Resource_Forms</needs>
 	</relations>

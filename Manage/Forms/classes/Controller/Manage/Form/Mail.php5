@@ -35,7 +35,7 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		if( $this->env->getRequest()->has( 'save' ) ){
 			$data	= $this->env->getRequest()->getAll();
 			$this->modelMail->edit( $mailId, $data, FALSE );
-			$this->restart( 'edit/'.$mailId );
+			$this->restart( 'edit/'.$mailId, TRUE );
 		}
 		$this->addData( 'mail', $mail );
 	}
@@ -56,4 +56,3 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$this->addData( 'mail', $mail );
 	}
 }
-
