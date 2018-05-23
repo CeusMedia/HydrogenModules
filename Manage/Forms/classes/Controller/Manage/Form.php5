@@ -62,6 +62,13 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'forms', $forms );
 	}
 
+	public function view( $formId ){
+		$form	= $this->checkId( (int) $formId );
+		$this->addData( 'formId', $formId );
+//		$helper	= new View_Helper_Form( $this->env );
+//		return $helper->setId( $formId )->render();
+	}
+
 	public function remove( $formId ){
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
