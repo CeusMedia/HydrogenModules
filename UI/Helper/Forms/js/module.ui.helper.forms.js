@@ -165,7 +165,7 @@ var Forms = {
 				var data = Forms.collectFormData(form);
 //				console.log(data);
 				jQuery.ajax({
-					url: Forms.urlServer+'?action=fill_receive',
+					url: Forms.urlServer+'manage/form/fill/receive',
 					method: 'POST',
 					data: {inputs: data},
 					dataType: 'json',
