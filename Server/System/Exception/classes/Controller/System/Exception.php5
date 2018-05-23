@@ -21,7 +21,7 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 		$exception	= unserialize( $session->get( 'exception' ) );
 		if( $session->has( 'exception' ) ){
 			if( isset( $exception->code ) ){
-				if( $exception->code > 201 && $exception->code < 600 ){
+				if( Net_HTTP_Status::isCode( $exception->code ) ){
 					Net_HTTP_Status::sendHeader( $exception->code );					//  send HTTP status code header
 					$this->env->getResponse()->setStatus( $exception->code );			//  indicate HTTP status 500 - internal server error
 				}
