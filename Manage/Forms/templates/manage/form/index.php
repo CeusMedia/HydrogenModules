@@ -21,7 +21,7 @@ $statuses	= array(
 );
 
 $modelForm	= new Model_Form( $env );
-$modelMail	= new Model_Mail( $env );
+$modelMail	= new Model_Form_Mail( $env );
 
 $rows		= array();
 foreach( $forms as $form ){
