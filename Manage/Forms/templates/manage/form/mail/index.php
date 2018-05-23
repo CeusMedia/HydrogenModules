@@ -27,7 +27,7 @@ foreach( $mails as $mail ){
 		UI_HTML_Tag::create( 'td', $linkView ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '', '300px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '', '30%', '120px', '40px', '120px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Titel', 'Shortcode', 'Format', UI_HTML_Tag::create( 'abbr', $iconForm, array( 'title' => 'Formulare' ) ) ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );

@@ -19,7 +19,7 @@ foreach( $modelBlock->getAll( array(), array( 'title' => 'ASC' ) ) as $block ){
 		UI_HTML_Tag::create( 'td', $linkView ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '', '300px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '', '40%', '120px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Titel', 'Shortcode' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
