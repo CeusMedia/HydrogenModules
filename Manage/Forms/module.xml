@@ -35,7 +35,15 @@
 		<template>manage/form/mail/view.php</template>
 		<script load="auto">module.manage.forms.js</script>
 	</files>
+	<config access="protected" mandatory="yes" type="string" name="sender.address"></config>
+	<config access="protected" mandatory="no" type="string" name="sender.name"></config>
 	<relations>
 		<needs type="module">Resource_Forms</needs>
 	</relations>
+	<link xml:lang="de" access="acl" rank="45" path="manage/form">Formulare</>
+	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</>
+	<link xml:lang="de" access="acl" rank="47" path="manage/form/block">Blöcke</>
+	<link xml:lang="de" access="acl" rank="48" path="manage/form/mail">E-Mails</>
+	<link access="public" path="manage/form/fill/receive"/>
+	<link access="public" path="manage/form/fill/confirm"/>
 </module>

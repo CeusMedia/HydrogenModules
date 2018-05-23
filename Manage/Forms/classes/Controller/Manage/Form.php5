@@ -17,13 +17,17 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		return $form;
 	}
 
-	protected function checkIsPost(){
-		if( !$this->env->getRequest()->isMethod( 'POST' ) )
+	protected function checkIsPost( $strict = TRUE ){
+		if( $this->env->getRequest()->isMethod( 'POST' ) )
+			return TRUE;
+		if( $strict )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
+		return FALSE;
 	}
 
 	public function add(){
 		if( $this->env->getRequest()->has( 'save' ) ){
+			$this->checkIsPost();
 			$data	= $this->env->getRequest()->getAll();
 			$data['timestamp']	= time();
 			$formId	= $this->modelForm->add( $data, FALSE );
@@ -44,36 +48,13 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	public function edit( $formId ){
 		$form	= $this->checkId( $formId );
 		if( $this->env->getRequest()->has( 'save' ) ){
+			$this->checkIsPost();
 			$data	= $this->env->getRequest()->getAll();
 			$data['timestamp']	= time();
 			$this->modelForm->edit( $formId, $data, FALSE );
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
 		$this->addData( 'form', $form );
-	}
-
-	public function fill( $formId ){
-		$this->checkId( $formId );
-		$request	= $this->env->getRequest();
-		$form		= $this->modelForm->get( $formId );
-		$data		= array(
-			'formId'		=> $formId,
-			'status'		=> $form->type ? Model_Fill::STATUS_CONFIRMED : Model_Fill::STATUS_NEW,
-			'createdAt'		=> time(),
-			'email'			=> $request->get( 'email' ),
-		);
-		$fillId		= $this->modelFill->add( $data );
-		$transport	= $this->getTransport();
-		if( $form->type == Model_Form::TYPE_NORMAL ){
-//			$this->sendFillToSender( $fillId );
-			$this->sendFillToReceivers( $fillId );
-			return 'Danke!';
-		}
-		else if( $form->type == Model_Form::TYPE_CONFIRM ){
-//			$this->sendFillToSender( $fillId );
-			$this->sendConfirmMail( $fillId );
-			return 'Danke! Sie müssen aber noch bestätigen. Siehe E-Mail...';
-		}
 	}
 
 	public function index(){
@@ -85,14 +66,5 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
 		$this->restart( NULL, TRUE );
-	}
-
-	protected function sendConfirmMail( $fillId ){
-		$fill		= $this->modelFill->get( $fillId );
-		$form		= $this->modelForm->get( $fill->formId );
-		$transport	= $this->getTransport();
-		$mail		= new \CeusMedia\Mail\Message();
-		$mail->addRecipient( $fill->email );
-		$transport->send( $mail );
 	}
 }

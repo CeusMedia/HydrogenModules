@@ -50,9 +50,10 @@ foreach( $forms as $form ){
 		UI_HTML_Tag::create( 'td', $mail ),
 	) );
 }
-$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Empfänger', 'Mail' ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '140px', '110px', '180px', '200px' );
+$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Empfänger', 'Mail' ) ) );
+$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
+$table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 
 $heading	= UI_HTML_Tag::create( 'h2', 'Formulare' );
 $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(

@@ -34,7 +34,7 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 		if( !$item )
 			continue;
 		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
-			'href'	=> './?action=block_edit&id='.$item->blockId,
+			'href'	=> './manage/form/block/edit/'.$item->blockId,
 		) );
 		$list[]	= UI_HTML_Tag::create( 'li', $link );
 	}

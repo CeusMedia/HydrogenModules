@@ -9,9 +9,14 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelMail	= new Model_Form_Mail( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+
+		$this->sendFillToReceivers( 8 );
+
 	}
 
 	protected function checkId( $fillId ){
+		$fillId	= (int) $fillId;
 		if( !$fillId )
 			throw new RuntimeException( 'No fill ID given' );
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
@@ -19,22 +24,33 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		return $fill;
 	}
 
-	protected function checkIsPost(){
+	protected function checkIsAjax( $strict = TRUE ){
+		if( $request->isAjax() )
+			return TRUE;
+		if( $strict )
+			throw new RuntimeException( 'AJAX requests allowed only' );
+		return FALSE;
+	}
+
+	protected function checkIsPost( $strict = TRUE ){
 		if( $this->env->getRequest()->isMethod( 'POST' ) )
+			return TRUE;
+		if( $strict )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
+		return FALSE;
 	}
 
 	public function confirm( $fillId ){
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
-		if( $fill->status != Model_Fill::STATUS_NEW ){
+		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
 			if( $fill->referer )
 				$this->env->restart( $fill->referer.$urlGlue.'rc=3' );
 			throw new DomainException( 'Fill already confirmed' );
 		}
 		$this->modelFill->edit( $fillId, array(
-			'status'		=> Model_Fill::STATUS_CONFIRMED,
+			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'modifiedAt'	=> time(),
 		) );
 		$this->sendResultMail( $fillId );
@@ -44,19 +60,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
-	protected function getTransport(){
-		$config		= $this->env->getConfig()->getAll( 'smtp.', TRUE );
-		$transport	= new \CeusMedia\Mail\Transport\SMTP(
-			$config->get( 'host' ),
-			$config->get( 'port' ),
-			$config->get( 'username' ),
-			$config->get( 'password' )
-		);
-		return $transport;
-	}
-
 	public function index( $page = NULL ){
-
 		$limit		= 10;
 		$pages		= ceil( $this->modelFill->count() / $limit );
 		$page		= (int) $page;
@@ -73,14 +77,12 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	}
 
 	public function receive(){
-		header('Access-Control-Allow-Origin: *');
-		ini_set( 'display_errors', FALSE );
+		header( 'Access-Control-Allow-Origin: *' );
+//		ini_set( 'display_errors', FALSE );
 		$request	= $this->env->getRequest();
-//		if( !$request->isAjax() )
-//			throw new RuntimeException( 'AJAX requests allowed only' );
+//		$this->checkIsAjax();
 		try{
-//			if( !$request->isMethod( 'POST' ) )
-//				throw new RuntimeException( 'POST requests allowed only' );
+//			$this->checkIsPost();
 			$data	= $request->getAll();
 //			if( !isset( $data['inputs'] ) || !$data['inputs'] )
 //				throw new Exception( 'No form data given.' );
@@ -101,7 +103,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$form		= $this->modelForm->get( $formId );
 			$data		= array(
 				'formId'	=> $formId,
-				'status'	=> $form->type == Model_Form::TYPE_CONFIRM ? Model_Fill::STATUS_NEW : Model_Fill::STATUS_CONFIRMED,
+				'status'	=> $form->type == Model_Form::TYPE_CONFIRM ? Model_Form_Fill::STATUS_NEW : Model_Form_Fill::STATUS_CONFIRMED,
 				'email'		=> $email,
 				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
 				'referer'	=> getEnv( 'HTTP_REFERER' ) ? getEnv( 'HTTP_REFERER' ) : '',
@@ -150,7 +152,6 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 		$form		= $this->modelForm->get( $fill->formId );
-		$transport	= $this->getTransport();
 
 		$receivers	= array();
 		if( strlen( trim( $form->receivers ) ) )
@@ -169,18 +170,24 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 					$receivers[]	= $receiver;
 
 
-		$mail		= new Mail_Manager_Filled( $this->app );
-		$mail->setFill( $fill )->setForm( $form );
+		//  -  SEND MAIL  --  //
+		$subject	= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
+		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		if( isset( $form->senderAddress ) && $form->senderAddress )
+			$sender		= $form->senderAddress;
+		$mail		= new Mail_Form_Manager_Filled( $this->env, array(
+			'form'				=> $form,
+			'fill'				=> $fill,
+			'mailTemplateId'	=> 2,
+		) );
+		$mail->setSubject( $subject );
+		$mail->setSender( $sender );
+		$language	= $this->env->getLanguage()->getLanguage();
 		foreach( $receivers as $receiver ){
-			$message	= new \CeusMedia\Mail\Message();
-			$message->addHtml( $mail->render() );
-			$message->setSubject( 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')' );
-			$message->setSender( $this->env->getConfig()->get( 'app.email' ) );
-			$message->addRecipient( $receiver );
-			$message->addInlineImage( 'image1', 'inc/DTHPS_LOGO.png' );
-			$transport->send( $message );
+			$receiver	= (object) array( 'email'	=> $receiver );
+			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
-		return TRUE;
+		return count( $receivers );
 	}
 
 	protected function sendConfirmMail( $fillId ){
@@ -193,20 +200,21 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !$formMail )
 			throw new RuntimeException( 'No confirmation mail defined' );
 
-		$transport	= $this->getTransport();
-		$mail		= new Mail_Customer_Confirm( $this->app );
-		$mail->setFill( $fill )->setForm( $form );
-		$message	= new \CeusMedia\Mail\Message();
-		$message->setSubject( $formMail->subject );
-		$message->setSender( $this->env->getConfig()->get( 'app.email' ) );
-		$message->addRecipient( $fill->email );
-		if( $formMail->format == Model_Mail::FORMAT_HTML ){
-			$message->addHtml( $mail->render() );
-			$message->addInlineImage( 'image1', 'inc/DTHPS_LOGO.png' );
-		}
-		else
-			$message->addText( $mail->render() );
-		return $transport->send( $message );
+		//  -  SEND MAIL  --  //
+		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		if( isset( $form->senderAddress ) && $form->senderAddress )
+			$sender		= $form->senderAddress;
+		$data		= array(
+			'fill'				=> $fill,
+			'form'				=> $form,
+			'mailTemplateId'	=> 2,
+		);
+		$mail		= new Mail_Form_Customer_Confirm( $this->env, $data );
+		$mail->setSubject( $formMail->subject );
+		$mail->setSender( $sender );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$receiver	= (object) array( 'email'	=> $fill->email );
+		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
 	protected function sendResultMail( $fillId ){
@@ -225,20 +233,28 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$formMail		= $this->modelMail->get( $form->mailId );
 		if( !$formMail )
 			throw new DomainException( 'Invalid mail ID connected to form' );
-		$transport	= $this->getTransport();
+
+		//  -  SEND MAIL  --  //
 		$subject	= $formMail->subject ? $formMail->subject : 'DtHPS: Anfrage erhalten';
-		$mail		= new Mail_Customer_Result( $this->app );
-		$mail->setFill( $fill )->setForm( $form )->setMail( $formMail );
-		$message	= new \CeusMedia\Mail\Message();
-		$message->setSubject( $subject );
-		$message->setSender( $this->env->getConfig()->get( 'app.email' ) );
-		$message->addRecipient( $fill->email );
-		if( $formMail->format == Model_Mail::FORMAT_HTML ){
-			$message->addHtml( $mail->render() );
-			$message->addInlineImage( 'image1', 'inc/DTHPS_LOGO.png' );
-		}
-		else
-			$message->addText( $mail->render() );
-		return $transport->send( $message );
+		$sender		= $this->env->getConfig()->get( 'module.manage_forms.sender.address' );
+		if( isset( $form->senderAddress ) && $form->senderAddress )
+			$sender		= $form->senderAddress;
+		$mail		= new Mail_Form_Customer_Result( $this->env, array(
+			'fill'				=> $fill,
+			'form'				=> $form,
+			'mail'				=> $mail,
+			'mailTemplateId'	=> 2,
+		) );
+		$mail->setSubject( $subject );
+		$mail->setSender( $sender );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$receiver	= (object) array( 'email'	=> $fill->email );
+		return $this->logicMail->handleMail( $mail, $receiver, $language );
+	}
+
+	public function view( $fillId ){
+		$fill	= $this->checkId( $fillId );
+		$this->addData( 'fill', $fill );
+		$this->addData( 'form', $this->modelForm->get( $fill->formId ) );
 	}
 }
