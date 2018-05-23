@@ -43,7 +43,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
 			if( $fill->referer )
-				$this->restart( $fill->referer.$urlGlue.'rc=3' );
+				$this->restart( $fill->referer.$urlGlue.'rc=3', FALSE, NULL, TRUE );
 			throw new DomainException( 'Fill already confirmed' );
 		}
 		$this->modelFill->edit( $fillId, array(
@@ -53,7 +53,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->sendResultMail( $fillId );
 		$this->sendFillToReceivers( $fillId );
 		if( $fill->referer )
-			$this->restart( $fill->referer.$urlGlue.'rc=2' );
+			$this->restart( $fill->referer.$urlGlue.'rc=2', FALSE, NULL, TRUE );
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
@@ -170,7 +170,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		//  -  SEND MAIL  --  //
 		$subject		= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( class_exists( '\CeusMedia\Mail\Participant' ) )
+			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		else
+			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
@@ -202,7 +205,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( class_exists( '\CeusMedia\Mail\Participant' ) )
+			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		else
+			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
@@ -239,7 +245,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		if( class_exists( '\CeusMedia\Mail\Participant' ) )
+			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		else
+			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
