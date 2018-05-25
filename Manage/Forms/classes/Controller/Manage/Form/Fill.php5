@@ -269,13 +269,8 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !$fill->email )
 			return FALSE;
 		$form		= $this->modelForm->get( $fill->formId );
-		if( !$form->mailId ){
-			$default	= $this->modelMail->getByIndex( 'identifier', 'customer_result_default' );
-			if( $default )
-				$form->mailId	= $default->mailId;
-		}
 		if( !$form->mailId )
-			return;
+			return NULL;
 		$formMail		= $this->modelMail->get( $form->mailId );
 		if( !$formMail )
 			throw new DomainException( 'Invalid mail ID connected to form' );

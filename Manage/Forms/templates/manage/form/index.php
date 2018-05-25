@@ -1,8 +1,11 @@
 <?php
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+
+$iconMail		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) );
+$iconReceiver	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-at' ) );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',
@@ -27,10 +30,10 @@ $rows		= array();
 foreach( $forms as $form ){
 //	$linkView	= UI_HTML_Tag::create( 'a', 'anzeigen', array( 'href' => './?action=form_view&id='.$form->formId.'&test', 'class' => 'btn btn-small' ) );
 
-	$mail	= UI_HTML_Tag::create( 'small', 'Standard', array( 'class' => "muted" ) );
+	$mail	= UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => "muted" ) );
 	if( $form->mailId > 0 ){
 		$mail	= $modelMail->get( $form->mailId );
-		$mail	= UI_HTML_Tag::create( 'small', $mail->title );
+		$mail	= UI_HTML_Tag::create( 'small', /*$iconMail.'&nbsp;'.*/$mail->title );
 	}
 
 	$linkEdit	= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
@@ -49,9 +52,21 @@ foreach( $forms as $form ){
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $receivers ) ),//$linkView ),
 		UI_HTML_Tag::create( 'td', $mail ),
 	) );
+/*	$type		= UI_HTML_Tag::create( 'small', $types[$form->type] );
+	$receivers	= UI_HTML_Tag::create( 'small', $iconReceiver.'&nbsp;'.$receivers );
+	$rows[]	= UI_HTML_Tag::create( 'tr', array(
+		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ) ),
+		UI_HTML_Tag::create( 'td', $linkEdit ),
+		UI_HTML_Tag::create( 'td', $type ),
+		UI_HTML_Tag::create( 'td', $statuses[$form->status] ),
+		UI_HTML_Tag::create( 'td', $mail.'<br/>'.$receivers ),
+	) );*/
+
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '140px', '110px', '180px', '200px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '140px', '120px', '180', '260px' );
+//$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '180px', '140px', '240px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Empfänger', 'Mail' ) ) );
+//$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Mail/Empfänger' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 

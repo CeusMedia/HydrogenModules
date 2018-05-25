@@ -49,7 +49,7 @@ foreach( $mails as $item )
 $optMail	= UI_HTML_Elements::Options( $optMail, $form->mailId );
 
 return '
-<h2><span class="muted">Formular:</span> '.$form->title.'</h2>
+<h2><a href="./manage/form" class="muted">Formular:</a> '.$form->title.'</h2>
 <form action="./manage/form/edit/'.$form->formId.'" method="post">
 	<div class="row-fluid">
 		<div class="span1">
