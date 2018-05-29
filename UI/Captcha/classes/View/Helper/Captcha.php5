@@ -2,6 +2,8 @@
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 
 	protected $background	= array( 255, 255, 255 );
+	protected $height		= 55;
+	protected $fontSize		= 16
 
 	public function __construct( $env ){
 		$this->env			= $env;
@@ -18,10 +20,19 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		return $this;
 	}
 
+	public function setHeight( $height ){
+		$this->height	= $height;
+		return $this;
+	}
+
+	public function setFontSize( $size ){
+		$this->fontSize	= $size;
+		return $this;
+	}
+
 	public function render(){
 		$captcha	= new UI_Image_Captcha();
 		$captcha->useUnique	= TRUE;
-		$filePath	= "captcha_".uniqid().".jpg";
 		if( $this->moduleConfig->get( 'strength' ) == 'hard' ){
 			$captcha->useDigits	= TRUE;
 			$captcha->useLarge	= TRUE;
@@ -30,13 +41,13 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		$this->session->set( 'captcha', $word );
 		$captcha->background	= $this->background;
 	//	$captcha->width			= 100;
-		$captcha->height		= 55;
-		$captcha->fontSize		= 16;
+		$captcha->height		= $this->height;
+		$captcha->fontSize		= $this->fontSize;
 		$captcha->offsetX		= 0;
 		$captcha->offsetY		= 0;
 		$captcha->font			= "./themes/common/font/Tahoma.ttf";
+		$filePath				= "captcha_".uniqid().".jpg";
 		$captcha->generateImage( $word, $filePath );
-		$this->session->set( 'captcha', $word );
 		$image	= base64_encode( file_get_contents( $filePath ) );
 		unlink( $filePath );
 		return UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'data:image/jpg;base64,'.$image ) );
