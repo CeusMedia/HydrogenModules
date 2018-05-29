@@ -111,21 +111,30 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	}
 
 	public function receive(){
-		header( 'Access-Control-Allow-Origin: *' );
+		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
+		$origin	= $origin ? $origin : $this->env->baseUrl;
+		$origin	= rtrim( $origin, '/' );
+		header( 'Access-Control-Allow-Origin: '.$origin );
+		header( 'Access-Control-Allow-Credentials: true' );
 //		ini_set( 'display_errors', FALSE );
 		$request	= $this->env->getRequest();
 //		$this->checkIsAjax();
 		try{
 //			$this->checkIsPost();
 			$data	= $request->getAll();
-//			if( !isset( $data['inputs'] ) || !$data['inputs'] )
-//				throw new Exception( 'No form data given.' );
+			if( !isset( $data['inputs'] ) || !$data['inputs'] )
+				throw new Exception( 'No form data given.' );
 
-			$formId	= 0;
-			$email	= '';
+			$formId		= 0;
+			$captcha	= '';
+			$email		= '';
 			foreach( $data['inputs'] as $nr => $input ){
 				if( $input['name'] === 'formId' ){
 					$formId	= $input['value'];
+					unset( $data['inputs'][$nr] );
+				}
+				else if( $input['name'] === 'captcha' ){
+					$captcha	= $input['value'];
 					unset( $data['inputs'][$nr] );
 				}
 				else if( $input['name'] === 'email' )
@@ -133,8 +142,22 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			}
 			if( !$formId )
 				throw new DomainException( 'No form ID given.' );
-
 			$form		= $this->modelForm->get( $formId );
+			if( $captcha ){
+				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
+					header( 'Content-Type: application/json' );
+					print( json_encode( array( 'status' => 'captcha', 'data' => array(
+						'captcha'	=> $captcha,
+						'real'		=> $this->env->getSession()->get( 'captcha' ),
+						'formId'	=> @$form->formId,
+						'formType'	=> @$form->type,
+					) ) ) );
+					exit;
+				}
+			}
+			if( !isset( $input) )
+				throw new DomainException( 'No form ID given.' );
+
 			$data		= array(
 				'formId'	=> $formId,
 				'status'	=> $form->type == Model_Form::TYPE_CONFIRM ? Model_Form_Fill::STATUS_NEW : Model_Form_Fill::STATUS_CONFIRMED,
@@ -162,8 +185,8 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$status	= 'error';
 			$data	= array(
 				'error'		=> $e->getMessage(),
-				'formId'	=> $form->formId,
-				'formType'	=> $form->type,
+				'formId'	=> @$form->formId,
+				'formType'	=> @$form->type,
 			);
 		}
 		header( 'Content-Type: application/json' );

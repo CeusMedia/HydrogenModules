@@ -35,6 +35,7 @@
 		<template>manage/form/mail/view.php</template>
 		<script load="auto">module.manage.forms.js</script>
 	</files>
+	<config protected="yes" type="string" name="origin"></config>
 	<relations>
 		<needs type="module">Resource_Forms</needs>
 	</relations>
