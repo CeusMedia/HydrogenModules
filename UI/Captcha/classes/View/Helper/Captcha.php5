@@ -45,7 +45,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		$captcha->fontSize		= $this->fontSize;
 		$captcha->offsetX		= 0;
 		$captcha->offsetY		= 0;
-		$captcha->font			= "./themes/common/font/Tahoma.ttf";
+		$captcha->font			= "./themes/common/font/tahoma.ttf";
 		$filePath				= "captcha_".uniqid().".jpg";
 		$captcha->generateImage( $word, $filePath );
 		$image	= base64_encode( file_get_contents( $filePath ) );
