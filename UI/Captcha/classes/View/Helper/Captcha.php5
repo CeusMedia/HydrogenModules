@@ -3,7 +3,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 
 	protected $background	= array( 255, 255, 255 );
 	protected $height		= 55;
-	protected $fontSize		= 16
+	protected $fontSize		= 16;
 
 	public function __construct( $env ){
 		$this->env			= $env;
