@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: MD5</title>
+	<description><![CDATA[MD5]]></description>
+	<category>JavaScript</category>
+	<version>2.10.0</version>
+	<files>
+		<script load="auto">md5.min.js</script>
+	</files>
+</module>
