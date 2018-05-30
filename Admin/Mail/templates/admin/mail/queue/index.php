@@ -4,9 +4,11 @@ $wl		= (object) $words['index-list'];
 $wf		= (object) $words['index-filter'];
 
 $statusClasses	= array(
+	-3	=> 'important',
+	-2	=> 'important',
 	-1	=> 'info',
 	0	=> 'warning',
-	1	=> 'important',
+	1	=> 'warning',
 	2	=> 'success',
 );
 
