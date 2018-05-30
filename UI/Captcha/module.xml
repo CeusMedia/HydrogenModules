@@ -3,7 +3,7 @@
 	<title>UI: Captcha</title>
 	<description><![CDATA[CAPTCHA.]]></description>
 	<category>User Interface</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
@@ -14,7 +14,8 @@
 		<class>View/Captcha.php5</class>
 		<class>Hook/Captcha.php5</class>
 		<class>View/Helper/Captcha.php5</class>
-		<script load="auto">module.ui.captcha.js</script>
+		<template>captcha/test.php</template>
+<!--		<script load="auto">module.ui.captcha.js</script>-->
 		<file>themes/common/font/tahoma.ttf</file>
 	</files>
 	<config protected="yes" type="string" name="path">./</config>
