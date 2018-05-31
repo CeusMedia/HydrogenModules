@@ -7,6 +7,35 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	protected function __onInit(){
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
+		$this->modelRule	= new Model_Form_Rule( $this->env );
+		$this->modelMail	= new Model_Form_Mail( $this->env );
+	}
+
+	public function addRule( $formId ){
+		$request	= $this->env->getRequest();
+		$data		= array();
+		for( $i=0; $i<3; $i++ ){
+			if( $request->get( 'ruleKey_'.$i ) ){
+				$data[]	= array(
+					'key'			=> $request->get( 'ruleKey_'.$i ),
+					'keyLabel'		=> $request->get( 'ruleKeyLabel_'.$i ),
+					'value'			=> $request->get( 'ruleValue_'.$i ),
+					'valueLabel'	=> $request->get( 'ruleValueLabel_'.$i ),
+				);
+			}
+		}
+		$this->modelRule->add( array(
+			'formId'		=> $formId,
+			'rules'			=> json_encode( $data ),
+			'mailAddresses'	=> $request->get( 'mailAddresses' ),
+			'mailId'		=> $request->get( 'mailId' ),
+		) );
+		$this->restart( 'edit/'.$formId, TRUE );
+	}
+
+	public function removeRule( $formId, $ruleId ){
+		$this->modelRule->remove( $ruleId );
+		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
 	protected function checkId( $formId ){
@@ -33,6 +62,10 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			$formId	= $this->modelForm->add( $data, FALSE );
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
+
+		$orders		= array( 'identifier' => 'customer_result_%' );
+		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$this->addData( 'mails', $mails );
 	}
 
 	public function confirm(){
@@ -55,6 +88,13 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
 		$this->addData( 'form', $form );
+
+		$orders		= array( 'identifier' => 'customer_result_%' );
+		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$this->addData( 'mails', $mails );
+
+		$rules	= $this->modelRule->getAllByIndex( 'formId', $formId );
+		$this->addData( 'rules', $rules );
 	}
 
 	public function index(){

@@ -20,7 +20,7 @@ $types		= array(
 $optType	= UI_HTML_Elements::Options( $types );
 
 $optDelivery	= array( '' => '- keine -' );
-foreach( $modelBlock->getAll( array( 'identifier' => 'email_customer_result_%' ) ) as $item )
+foreach( $mails as $item )
 	$optDelivery[$item->identifier] = $item->title;
 		$optDelivery	= UI_HTML_Elements::Options( $optDelivery );
 
