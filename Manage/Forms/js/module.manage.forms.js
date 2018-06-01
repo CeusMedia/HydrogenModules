@@ -18,9 +18,11 @@ var FormEditor = {
 
 var RuleManager = {
 	formId: 0,
+	modal: null,
 	selects: [],
 	init: function(formId){
 		this.formId = formId;
+		this.modal = jQuery("#rule-add");
 	},
 	loadFormView: function(){
 		jQuery.ajax({
@@ -33,10 +35,9 @@ var RuleManager = {
 		});
 	},
 	onReady: function(){
-		var modal = jQuery("#rule-add");
 		for(var i=0; i<3; i++){
-			var selectKey = modal.find("select#input_ruleKey_"+i);
-			var selectValue = modal.find("select#input_ruleValue_"+i);
+			var selectKey = RuleManager.modal.find("select#input_ruleKey_"+i);
+			var selectValue = RuleManager.modal.find("select#input_ruleValue_"+i);
 			selectKey.bind("change", {i: i}, function(event){
 				RuleManager.onRuleKeyChange(event.data.i);
 			});
@@ -47,18 +48,28 @@ var RuleManager = {
 				var option = jQuery("<option></option>");
 				option.attr("value", RuleManager.selects[j].name);
 				option.html(RuleManager.selects[j].label);
+//				option.data("current", RuleManager.selects[j]);
 				selectKey.append(option);
-				selectKey.data("current", RuleManager.selects[j]);
 			}
 		}
 	},
+	getCurrentSelect: function(i){
+		var selectKey = RuleManager.modal.find("select#input_ruleKey_"+i).val();
+		console.log("SEARCH: " + selectKey);
+		for(var j=0; j<RuleManager.selects.length; j++){
+			if(RuleManager.selects[j].name == selectKey){
+				console.log("FOUND: " + selectKey);
+				return RuleManager.selects[j];		
+			}
+		}
+		return null;
+	},
 	onRuleKeyChange: function(i){
 		console.log("onRuleKeyChange:"+i);
-		var modal = jQuery("#rule-add");
-		var selectKey = modal.find("select#input_ruleKey_"+i);
-		var selectValue = modal.find("select#input_ruleValue_"+i);
-		var current = selectKey.data("current");
-		modal.find("input#input_ruleKeyLabel_"+i).val(current.label);
+		var selectKey = RuleManager.modal.find("select#input_ruleKey_"+i);
+		var selectValue = RuleManager.modal.find("select#input_ruleValue_"+i);
+		var current = RuleManager.getCurrentSelect(i);
+		RuleManager.modal.find("input#input_ruleKeyLabel_"+i).val(current.label);
 		for(var i=0; i<current.values.length; i++){
 			var option = jQuery("<option></option>");
 			option.attr("value", current.values[i].value);
@@ -66,37 +77,14 @@ var RuleManager = {
 			selectValue.append(option);
 		}
 	},
-
 	onRuleValueChange: function(i){
-		var modal = jQuery("#rule-add");
-		var selectKey = modal.find("select#input_ruleKey_"+i);
-		var selectValue = modal.find("select#input_ruleValue_"+i);
-		var current = selectKey.data("current");
+		var selectKey = RuleManager.modal.find("select#input_ruleKey_"+i);
+		var selectValue = RuleManager.modal.find("select#input_ruleValue_"+i);
+		var current = RuleManager.getCurrentSelect(i);
 		for(var j=0; j<current.values.length; j++)
 			if(current.values[j].value == selectValue.val())
-				modal.find("input#input_ruleValueLabel_"+i).val(current.values[j].label);
+				RuleManager.modal.find("input#input_ruleValueLabel_"+i).val(current.values[j].label);
 	},
-/*	noteRule: function(){
-		var modal = jQuery("#rule-add");
-		var selectKey = modal.find("select#input_ruleKey");
-		var selectValue = modal.find("select#input_ruleValue");
-		var current = selectKey.data("current");
-		for(var i=0; i<current.values.length; i++){
-			if(current.values[i].value == selectValue.val()){
-				current.valueLabel = current.values[i].label;
-			}
-		}
-		var data = {
-			name: current.name,
-			value: selectValue.val(),
-			nameLabel: current.label,
-			valueLabel: current.valueLabel,
-		};
-		console.log(data);
-	},*/
-/*	renderRule: function(){
-
-	},*/
 	readFormSelects: function(){
 		RuleManager.selects	= [];
 		jQuery("#shadow-form select").each(function(){
