@@ -4,11 +4,13 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	protected $modelForm;
 	protected $modelFill;
 	protected $modelMail;
+	protected $modelRule;
 
 	public function __onInit(){
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelMail	= new Model_Form_Mail( $this->env );
+		$this->modelRule	= new Model_Form_Rule( $this->env );
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
@@ -209,23 +211,38 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 		$form		= $this->modelForm->get( $fill->formId );
-
+		$data		= json_decode( $fill->data, TRUE );
 		$receivers	= array();
-		if( strlen( trim( $form->receivers ) ) )
-			foreach( preg_split( '/\s*,\s*/', $form->receivers ) as $receiver )
-				if( preg_match( '/^\S+@\S+$/', $receiver ) )
-					$receivers[]	= $receiver;
-		$data	= json_decode( $fill->data, TRUE );
-		if( isset( $data['base'] ) && strlen( trim( $data['base'] ) ) )
-			foreach( preg_split( '/\s*,\s*/', $data['base']['value'] ) as $receiver )
-				if( preg_match( '/^\S+@\S+$/', $receiver ) )
-					$receivers[]	= $receiver;
-
-		if( isset( $data['interestBase'] ) && strlen( trim( $data['interestBase'] ) ) )
-			foreach( preg_split( '/\s*,\s*/', $data['interestBase']['value'] ) as $receiver )
-				if( preg_match( '/^\S+@\S+$/', $receiver ) )
-					$receivers[]	= $receiver;
-
+		$rulesets	= $this->modelRule->getAllByIndex( 'formId', $fill->formId );
+		foreach( $rulesets as $ruleset ){
+			$ruleset->rules	= json_decode( $ruleset->rules );
+			$valid	= TRUE;
+			foreach( $ruleset->rules as $rule ){
+				if( !isset( $data[$rule->key] ) )
+					$valid = FALSE;
+				else if( $data[$rule->key]['value'] != $rule->value )
+					$valid = FALSE;
+			}
+			if( $valid ){
+				foreach( preg_split( '/\s*,\s*/', $ruleset->mailAddresses ) as $address )
+					if( preg_match( '/^\S+@\S+$/', $address ) )
+						$receivers[]	= $address;
+			}
+		}
+		if( !$receivers ){
+			if( strlen( trim( $form->receivers ) ) )
+				foreach( preg_split( '/\s*,\s*/', $form->receivers ) as $address )
+					if( preg_match( '/^\S+@\S+$/', $address ) )
+						$receivers[]	= $address;
+			if( isset( $data['base'] ) && strlen( trim( $data['base']['value'] ) ) )
+				foreach( preg_split( '/\s*,\s*/', $data['base']['value'] ) as $address )
+					if( preg_match( '/^\S+@\S+$/', $address ) )
+						$receivers[]	= $address;
+			if( isset( $data['interestBase'] ) && strlen( trim( $data['interestBase'] ) ) )
+				foreach( preg_split( '/\s*,\s*/', $data['interestBase']['value'] ) as $address )
+					if( preg_match( '/^\S+@\S+$/', $address ) )
+						$receivers[]	= $address;
+		}
 
 		//  -  SEND MAIL  --  //
 		$subject		= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
