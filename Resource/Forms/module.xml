@@ -20,6 +20,7 @@
 		<class>Model/Form/Block.php5</class>
 		<class>Model/Form/Fill.php5</class>
 		<class>Model/Form/Mail.php5</class>
+		<class>Model/Form/Rule.php5</class>
 		<class>View/Helper/Form/Fill/Data.php5</class>
 		<class>View/Helper/Form/Fill/Person.php5</class>
 	</files>
