@@ -3,7 +3,7 @@
 	<title>JS: Cookie</title>
 	<description><![CDATA[A simple, lightweight JavaScript API for handling browser cookies.]]></description>
 	<category>JavaScript</category>
-	<version>2.1.1</version>
+	<version>2.2.0</version>
 	<source url="https://github.com/js-cookie/js-cookie">Github</source>
 	<license source="https://github.com/js-cookie/js-cookie/blob/master/MIT-LICENSE.txt">MIT</license>
 	<files>
