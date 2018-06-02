@@ -2,7 +2,7 @@
 <module>
 	<title>JS: jQuery</title>
 	<description><![CDATA[jQuery JavaScript Library]]></description>
-	<version>3.3.1-p1</version>
+	<version>3.3.1-p2</version>
 	<category>JavaScript</category>
 	<author site="http://jquery.org/team">jQuery Team</author>
 	<url>http://jquery.com/</url>
@@ -23,26 +23,29 @@
 		<script top="yes">jquery-migrate-3.0.1.js</script>
 		<script top="yes">jquery-migrate-3.0.1.min.js</script>
 	</files>
-	<config protected="yes" type="string" name="version" values="1.8.2,1.10.2,1.11.1,3.3.1">1.11.1</config>
-	<config protected="yes" type="boolean" name="migrate">no</config>
+	<config protected="yes" type="string" name="version" values="1.8.2,1.10.2,1.11.1,3.3.1">3.3.1</config>
+	<config protected="yes" type="boolean" name="migrate">yes</config>
+	<config protected="yes" type="string" name="migrate.debug" values="auto,on,off">auto</config>
 	<config protected="yes" type="boolean" name="load.minified">yes</config>
 	<config protected="yes" type="boolean" name="load.map">no</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-        $version    = $module->config['version']->value;
-		if( $module->config['load.minified']->value ){
+		$version	= $module->config['version']->value;
+		$minified	= $module->config['load.minified']->value;
+		if( $minified ){
 			if( $module->config['load.map']->value )
-		        $context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map' );
-	        $context->addJavaScript( $pathJs.'jquery-'.$version.'.min.js' );
+				$context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map', 9 );
+			$context->addJavaScript( $pathJs.'jquery-'.$version.'.min.js' );
 		}
 		else
-	        $context->addJavaScript( $pathJs.'jquery-'.$version.'.js' );
+			$context->addJavaScript( $pathJs.'jquery-'.$version.'.js' );
 
 		if( $module->config['migrate']->value ){
-			if( $module->config['load.minified']->value )
-	        	$context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.min.js' );
+			$debug	= $module->config['migrate.debug']->value;
+			if( $debug === "off" || $debug === "auto" && $minified )
+				$context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.min.js' );
 			else
-	        	$context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.js' );
+				$context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.js' );
 		}
 		$context->addBodyClass( 'uses-jQuery' );
 	]]></hook>
