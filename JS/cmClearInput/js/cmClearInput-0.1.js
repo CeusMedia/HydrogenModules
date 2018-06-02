@@ -29,10 +29,10 @@
 			var trigger = $("<span></span>").addClass("cmClearInput-trigger");	//  create trigger
 			var data = {input: input, trigger: trigger};						//  collect data for events
 			positionTrigger(input, trigger.insertAfter(input), settings);		//  inject and position trigger
-			input.bind("change.updateClearTrigger", data, function(event){		//  bind custom event on input field ...
+			input.on("change.updateClearTrigger", data, function(event){		//  bind custom event on input field ...
 				updateTriggerVisibility($(this), event.data.trigger);			//  ... to update trigger on change
 			}).trigger("change.updateClearTrigger");							//  call this event initially
-			trigger.bind("click", data, function(event){						//  bind click event on trigger
+			trigger.on("click", data, function(event){							//  bind click event on trigger
 				event.data.input.val("");										//  clear input field
 				event.data.input.trigger("keyup.*");							//  trigger bound key events
 				event.data.input.trigger("change.*");							//  trigger bound change events

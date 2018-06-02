@@ -43,7 +43,7 @@ class Job_Abstract{
 	public function noteArguments( $commands = array(), $parameters = array() ){
 		$this->commands		= $commands;
 		$this->parameters	= new ADT_List_Dictionary( $parameters );
-		$this->dryMode		= in_array( 'dry', $commands );
+		$this->dryMode		= in_array( 'dry', (array) $commands );
 	}
 
 	public function noteJob( $className, $jobName ){

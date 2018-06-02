@@ -1,18 +1,18 @@
 var WorkMailSync = {
 	init: function(){
-		jQuery("#input_sameUsername").bind("change", function(){
+		jQuery("#input_sameUsername").on("change", function(){
 			jQuery("#input_targetUsername").removeAttr("readonly");
 			if(jQuery("#input_sameUsername").is(":checked"))
 				jQuery("#input_targetUsername").attr("readonly", "readonly");
 			WorkMailSync.validateForm();
 		});
-		jQuery("#input_samePassword").bind("change", function(){
+		jQuery("#input_samePassword").on("change", function(){
 			jQuery("#input_targetPassword").removeAttr("readonly");
 			if(jQuery("#input_samePassword").is(":checked"))
 				jQuery("#input_targetPassword").attr("readonly", "readonly");
 			WorkMailSync.validateForm();
 		});
-		jQuery("#input_sourceMailHostId,#input_targetMailHostId").bind("change", function(){
+		jQuery("#input_sourceMailHostId,#input_targetMailHostId").on("change", function(){
 			WorkMailSync.validateForm();
 		});
 		jQuery("#input_sourceMailHostId").trigger("change");

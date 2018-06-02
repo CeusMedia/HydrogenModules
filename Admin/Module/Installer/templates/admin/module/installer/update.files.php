@@ -115,9 +115,9 @@ $(document).ready(function(){
 			isChecked ? rowsLinked.addClass("hidden") : rowsLinked.removeClass("hidden");
 			var rowsHidden = rows.filter(".hidden");
 			var rowsVisible = rows.not(rowsHidden);
-			rowsVisible.size() ? table.show() : table.hide();
+			rowsVisible.length ? table.show() : table.hide();
 		}
-		$("#input_update_files_show_unchanged").bind("change", onToggleUpdateFilesWithoutChanges );
+		$("#input_update_files_show_unchanged").on("change", onToggleUpdateFilesWithoutChanges );
 		$("#input_update_files_show_unchanged").trigger("change");
 	}
 });

@@ -6,7 +6,7 @@ $add	= '<a href="./work/uberlog/testRecord">test</a> | <button id="testRecordAja
 <script>
 $(document).ready(function(){
 	UberlogClient.host = "'.getEnv( 'HTTP_HOST' ).'";
-	$("#testRecordAjax").bind("click",function(){
+	$("#testRecordAjax").on("click",function(){
 		UberlogClient.record({
 			category: "test",
 			message: "test record @ "+new Date().getTime()

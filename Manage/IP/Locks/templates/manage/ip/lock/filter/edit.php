@@ -99,13 +99,10 @@ function onUpdateReasonDisplay(event){
 }
 
 $(document).ready(function(){
-	$("#input_reasonId").bind("change", onUpdateReasonDisplay).trigger("change");
+	$("#input_reasonId").on("change", onUpdateReasonDisplay).trigger("change");
 });
 </script>
 ';
 
 $tabs   = View_Manage_Ip_Lock::renderTabs( $env, 'filter' );
 return $tabs.HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $panelEdit ) );
-
-
-

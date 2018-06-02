@@ -36,7 +36,7 @@
 					paddingBottom: parseInt(area.css("padding-bottom")),		//  note bottom padding
 					lineHeight: lineHeight,										//  ...
 					lines: 0													//  prepare line count property, used by resize method
-				}).bind(events, {area: area}, function(event){					//  bind callback if a text is about to or has been changed
+				}).on(events, {area: area}, function(event){					//  bind callback if a text is about to or has been changed
 					resize(event);
 				}).trigger("keyup.cmGrowText");
 				return true;													//  indicate that setup succeeded
@@ -94,7 +94,7 @@
 			var space = isNewLine ? 2 : 1;										//  one empty line below text, if enter is pressed two empty lines for the moment to avoid scroll bars
 			var lines = countLines(area.val()) + space;							//  calculate text lines
 			if(parseInt(settings.maxLines))										//  upper line limit has been set
-				lines = Math.min(settings.maxLines, lines);						//  cut lines by upper limit  
+				lines = Math.min(settings.maxLines, lines);						//  cut lines by upper limit
 			if(parseInt(settings.minLines))										//  lower line limit has been set
 				lines = Math.max(settings.minLines, lines);						//  cut lines by lower limit
 			if(area.data("lines") != lines){									//  number of lines has changed since last event

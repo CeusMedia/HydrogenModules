@@ -5,7 +5,7 @@ function openCalculator(){
 
 function prepareCalculatorLink(){
 	$("ul.nav li>a[href=\"./#Calculator\"]").each(function(nr){
-		$(this).bind("click", function(e){
+		$(this).on("click", function(e){
 			openCalculator();
 			e.preventDefault();
 		});
@@ -21,19 +21,19 @@ class Calculator{
 		this.pad = this.instance.find(".calculator-pad");
 		this.messenger = this.instance.find(".calculator-messenger");
 		this.scroll	= this.instance.find(".calculator-scroll")
-		this.display.bind("keydown input", {instance: this}, this.onInput);
-		this.pad.find("button.input").bind("click", {instance: this}, function(event){
+		this.display.on("keydown input", {instance: this}, this.onInput);
+		this.pad.find("button.input").on("click", {instance: this}, function(event){
 			var context = event.data.instance;
 			context.display.val(context.display.val()+$(this).val());
 			context.display.trigger("input").focus();
 			this.blur();
 		});
-		this.pad.find("button.evaluate").bind("click", {instance: this}, function(event){
+		this.pad.find("button.evaluate").on("click", {instance: this}, function(event){
 			var e = jQuery.Event("keydown");
 			e.keyCode = 13;
 			event.data.instance.display.trigger(e);
 		});
-		this.pad.find("button.clear").bind("click", {instance: this}, function(event){
+		this.pad.find("button.clear").on("click", {instance: this}, function(event){
 			event.data.instance.display.val("").trigger("input");
 		});
 		this.display.focus();

@@ -70,9 +70,9 @@ ModuleSourceAdmin = {
 
 
 $(document).ready(function(){
-	if($("body.moduleAdminModuleSource").size()){
-		if($("body.site-admin-module-source-index").size())
+	if($("body.moduleAdminModuleSource").length){
+		if($("body.site-admin-module-source-index").length)
 			ModuleSourceAdmin.checkSources();
-		$("#input_path").bind("keyup change",ModuleSourceAdmin.checkSource).trigger("keyup");
+		$("#input_path").on("keyup change",ModuleSourceAdmin.checkSource).trigger("keyup");
 	}
 });

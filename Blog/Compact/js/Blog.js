@@ -1,6 +1,6 @@
 var Blog = {
 	initIndex: function(){
-		$("#blog input[name=states]").bind("change",function(){
+		$("#blog input[name=states]").on("change",function(){
 			$(this).parent().children("span").addClass("loading");
 			$.ajax({
 				url: "./blog/setFilter",

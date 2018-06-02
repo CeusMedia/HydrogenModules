@@ -43,7 +43,7 @@ var WorkMissionsList = {
 					$(this).parent().addClass("ordered");
 					$(this).parent().addClass("direction-"+options.direction.toLowerCase());
 				}
-				$(this).bind("click",function(){
+				$(this).on("click",function(){
 					var head = $(this);
 					var options = $("body").data("tablesort-options");
 					var column = head.data("column");

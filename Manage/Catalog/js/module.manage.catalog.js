@@ -11,36 +11,36 @@ var ModuleManageCatalog = {
 			height -= parseInt(list.css("padding-bottom"), 10);
 			height -= parseInt(list.css("border-top-width"), 10);
 			height -= parseInt(list.css("border-bottom-width"), 10);
-			if(list.prev("input").size())
+			if(list.prev("input").length)
 				height -= parseInt(list.prev("input").show().height(), 10);
 			else
 				height -= 10;
-			if($("#layout-footer").size())
+			if($("#layout-footer").length)
 				height -= $("#layout-footer").outerHeight();
 			list.height(height);
 		}).trigger("resize");
 	},
 	init: function(){
 		"use strict";
-		if($("body.moduleManageCatalogArticle").size()){
+		if($("body.moduleManageCatalogArticle").length){
 			var list = $("body.moduleManageCatalogArticle ul.nav-pills").eq(0);
 			ModuleManageCatalog.bindListResize(list);
 			ModuleManageCatalog.scrollToActiveListItem(list);
 		}
-		if($("body.moduleManageCatalogAuthor").size()){
+		if($("body.moduleManageCatalogAuthor").length){
 			var list = $("body.moduleManageCatalogAuthor ul.nav-pills").eq(0);
 			ModuleManageCatalog.bindListResize(list);
 			ModuleManageCatalog.scrollToActiveListItem(list);
-			$("#input_search").bind("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
-			if($("body.action-add").size())
+			$("#input_search").on("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
+			if($("body.action-add").length)
 				$("#input_firstname").focus();
 		}
-		if($("body.moduleManageCatalogCategory").size()){
+		if($("body.moduleManageCatalogCategory").length){
 			var list = $("body.moduleManageCatalogCategory ul.nav-pills.main").eq(0);
 			ModuleManageCatalog.bindListResize(list);
 			ModuleManageCatalog.scrollToActiveListItem(list);
-			$("#input_search").bind("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
-			if($("body.action-add").size())
+			$("#input_search").on("keyup", ModuleManageCatalog.onSearchChangeFilterList).focus();
+			if($("body.action-add").length)
 				$("#input_firstname").focus();
 		}
 	},
@@ -49,7 +49,7 @@ var ModuleManageCatalog = {
 		var input = $(this);
 		var query = input.val();
 		var list  = input.next("ul");
-		if(list.size()){
+		if(list.length){
 			if(query !== input.data("latestQuery")){
 				if(query.length){
 					list.find("li").each(function(){
@@ -72,7 +72,7 @@ var ModuleManageCatalog = {
 	},
 	scrollToActiveListItem: function(list){
 		"use strict";
-		if(list.find("li.active").size()){
+		if(list.find("li.active").length){
 			var pos = list.find("li.active").offset().top;
 			pos -= list.offset().top;
 			if(pos > list.height() / 2){

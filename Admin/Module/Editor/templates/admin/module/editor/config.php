@@ -135,10 +135,10 @@ function switchConfigInput(elemTr, event){
 }
 $(document).ready(function(){
 	$("#form_admin_module_config tr td.cell-config-value :input").not(".label").hide();
-	$("#form_admin_module_config :input.label").bind("mousedown",function(event){
+	$("#form_admin_module_config :input.label").on("mousedown",function(event){
 		switchConfigInput($(this).parent(), event);
 	});
-	$("#form_admin_module_config tr td.cell-config-key label").bind("click", function(event){
+	$("#form_admin_module_config tr td.cell-config-key label").on("click", function(event){
 		switchConfigInput($(this).parent().parent());
 	});
 	$("#form_admin_module_config_add #input_type").trigger("change");

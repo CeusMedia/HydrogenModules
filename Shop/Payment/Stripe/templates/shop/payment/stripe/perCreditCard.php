@@ -61,7 +61,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 </div><script>
 jQuery(document).ready(function(){
 	if('.count( $paymentBackends ).'){
-		jQuery("#card-submit").bind("click", function(event){
+		jQuery("#card-submit").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});
 	}

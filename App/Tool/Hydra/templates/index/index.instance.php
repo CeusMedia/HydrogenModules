@@ -17,7 +17,7 @@ foreach( $modulesMissing as $moduleId ){
 	}
 	$label	= '<span class="module">'.$label.'</span>';
 	$link	= '<a href="./admin/module/viewer/index/'.$moduleId.'">'.$label.'</a>';
-	$listModulesMissing[$title]	= '<li>'.$link.'</li>';	
+	$listModulesMissing[$title]	= '<li>'.$link.'</li>';
 }
 
 /*  --  LIST: MODULES POSSIBLE  --  */
@@ -32,7 +32,7 @@ foreach( $modulesPossible as $moduleId ){
 	}
 	$label	= '<span class="module">'.$label.'</span>';
 	$link	= '<a href="./admin/module/viewer/index/'.$moduleId.'">'.$label.'</a>';
-	$listModulesPossible[$title]	= '<li>'.$link.'</li>';	
+	$listModulesPossible[$title]	= '<li>'.$link.'</li>';
 }
 natcasesort( $listModulesMissing );
 natcasesort( $listModulesPossible );
@@ -85,12 +85,12 @@ if( $modulesInstalled )
 			</a>
 		</div>
 	</fieldset>';
-	
+
 return '
 <script>
 $(document).ready(function(){
-	$(".index-config-module a").bind("click",function(event){event.stopPropagation();});
-	$(".index-config-module").bind("click",function(){$(this).next().slideToggle();});
+	$(".index-config-module a").on("click",function(event){event.stopPropagation();});
+	$(".index-config-module").on("click",function(){$(this).next().slideToggle();});
 });
 </script>
 <br/>

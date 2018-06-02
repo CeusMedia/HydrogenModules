@@ -44,7 +44,7 @@ return $tabs.'
 </div>
 <script>
 $(document).ready(function(){
-	$("#manageMyUserModuleSettings :input").bind("keyup mouseup change",function(){
+	$("#manageMyUserModuleSettings :input").on("keyup mouseup change",function(){
 		var row = $(this).closest("div.row-fluid");
 		var changed = row.data("value") != $(this).val();
 		changed ? row.addClass("modified") : row.removeClass("modified");

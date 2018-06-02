@@ -36,7 +36,7 @@ UI.Form.Changes.Indicator = {
             var input = jQuery(this);
             input.data("original-value", input.val());
 			input.data("original-container", selectorOrContainer);
-            input.bind("keyup.FormChanges change.FormChanges", function () {
+            input.on("keyup.FormChanges change.FormChanges", function () {
                 if (jQuery(this).val() !== input.data("original-value")) {
                     jQuery(this).addClass("changed");
                     if (options.lock) {
@@ -50,7 +50,7 @@ UI.Form.Changes.Indicator = {
                 }
             });
         });
-        form.find("button[type='reset']").bind("click.FormChanges", function (event) {
+        form.find("button[type='reset']").on("click.FormChanges", function (event) {
             event.preventDefault();
             form.get(0).reset();
             UI.Form.Changes.getInputs(form).trigger("keyup.FormChanges");
@@ -58,7 +58,7 @@ UI.Form.Changes.Indicator = {
             return false;
         });
         if (options.lock) {
-            form.find("button[type='submit']").bind("click", UI.Form.Changes.Lock.disable);
+            form.find("button[type='submit']").on("click", UI.Form.Changes.Lock.disable);
         }
 /*    },
 	evaluateInput: function(selectorOrContainer){
@@ -77,7 +77,7 @@ UI.Form.Changes.Lock = {
         "use strict";
         selectorOrContainer = selectorOrContainer || "body";
         var container = jQuery(selectorOrContainer);
-        container.find(":input").bind("change.FormChangesLock", function () {
+        container.find(":input").on("change.FormChangesLock", function () {
             UI.Form.Changes.Lock.detect(selectorOrContainer);
         });
     },
@@ -85,7 +85,7 @@ UI.Form.Changes.Lock = {
     detect: function (selectorOrContainer) {
         "use strict";
         var container = jQuery(selectorOrContainer || "body"),
-            hasChanges = container.find(":input.changed").size();
+            hasChanges = container.find(":input.changed").length;
         if (hasChanges) {
             UI.Form.Changes.Lock.enable();
         } else {
@@ -107,7 +107,7 @@ UI.Form.Changes.Lock = {
         "use strict";
         if (UI.Form.Changes.Lock.state === 0) {
             UI.Form.Changes.Lock.state = 1;
-            jQuery(window).bind("beforeunload.FormChangesLock", function (event) {
+            jQuery(window).on("beforeunload.FormChangesLock", function (event) {
                 event.returnValue = UI.Form.Changes.Lock.message;
                 return UI.Form.Changes.Lock.message;
             });

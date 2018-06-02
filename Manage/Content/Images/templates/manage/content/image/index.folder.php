@@ -14,7 +14,7 @@ $labelFolder	= preg_replace( "/^\.\//", "", $path );
 return '
 <script>
 $(document).ready(function(){
-	$(".thumbs>li").bind("click", function(){
+	$(".thumbs>li").on("click", function(){
 		var url = "./manage/content/image/editImage/"+$(this).data("image-hash");
 		document.location.href = url;
 	});
@@ -23,7 +23,7 @@ $(document).ready(function(){
 <script>
 function resizeNavList(selector, offsetBottom){
 	var list = $(selector);
-	if(list.size()){
+	if(list.length){
 		offsetBottom = offsetBottom ? offsetBottom : 0;
 		var offset = list.offset().top;
 		var height = $(window).height();

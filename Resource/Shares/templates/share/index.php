@@ -41,7 +41,7 @@ $panel	= '
 var captchaLength = '.( (int) $captchaLength ).';
 jQuery(document).ready(function(){
 	if(captchaLength > 0){
-		jQuery("#input_captcha").bind("keyup", function(){
+		jQuery("#input_captcha").on("keyup", function(){
 			var button = jQuery(".panel-foot button");
 			button.attr("disabled", "disabled");
 			if(jQuery(this).val().length === captchaLength){

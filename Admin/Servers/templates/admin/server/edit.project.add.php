@@ -53,7 +53,7 @@ $panelAddProject	= '
 	</form>
 	<script>
 $(document).ready(function(){
-	$("#projectId").bind("change",function(){
+	$("#projectId").on("change",function(){
 		$.ajax({
 			url: "./admin/project/ajaxGetVersions/"+$("#projectId").val(),
 			dataType: "json",

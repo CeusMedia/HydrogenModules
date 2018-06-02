@@ -43,7 +43,7 @@ $(document).ready(function(){
 	var container = $("#module-scope-selector-radio");
 	container.find("#filter_type'.$filterModuleScope.'").prop("checked", "checked");
 	container.buttonset();
-	container.find("input").bind("change", function(){
+	container.find("input").on("change", function(){
 		var url = "./admin/module/viewer/setScope/" + $(this).val();
 		document.location.href = url;
 	});

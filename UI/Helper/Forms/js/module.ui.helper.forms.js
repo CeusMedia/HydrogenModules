@@ -33,14 +33,14 @@ var Forms = {
 				valueLabel: null,
 			};
 			var relatedLabel = jQuery("label[for='input_"+item.name+"']");
-			if(relatedLabel.size())
+			if(relatedLabel.length)
 				item.label = relatedLabel.get(0).innerText;
 
 			if(this.nodeName === "SELECT"){
 				item.type = "select";
 				var value = node.val();
 				var options = node.children('option');
-				for(i=0; i<options.size(); i++){
+				for(i=0; i<options.length; i++){
 					if(options.eq(i).val() == value){
 						item.valueLabel = options.eq(i).html();
 						break;
@@ -67,14 +67,14 @@ var Forms = {
 						item.id = 'input_'+this.name;
 //						item.value = '['+this.name+']';
 						item.valueLabel	= "";
-						if(relatedLabel.size())
+						if(relatedLabel.length)
 							item.label = relatedLabel.get(0).innerText;
 					}
 					if(node.is(":checked")){
 						item.value = this.value;
 						item.valueLabel	= node.parent().get(0).innerText;
 						var radioSpan = jQuery("span#input_"+this.name+"-"+this.value);
-						if(radioSpan.size())
+						if(radioSpan.length)
 							item.valueLabel	= radioSpan.get(0).innerText;
 					}
 				}
@@ -134,7 +134,7 @@ var Forms = {
 	initCollapsableRows: function(formId){
 		jQuery("#"+formId+" .cmforms-row").prepend(jQuery('<span></span>')
 			.attr({class: 'trigger-close'}).html('Zeile verbergen')
-			.bind('click', function(elem){jQuery(elem.target).parent().slideUp()}));
+			.on('click', function(elem){jQuery(elem.target).parent().slideUp()}));
 	},
 
 	prefillData: function(formId){

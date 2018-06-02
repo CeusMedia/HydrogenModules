@@ -3,9 +3,9 @@ var ModulePaymentMangopayCardRegistration = {
 	validDate: false,
 	validCvv: false,
 	init: function(){
-		jQuery("#input_cardNumber").bind("input", this.validateCardNumber);
-		jQuery("#input_cardDate").bind("input", this.validateCardDate);
-		jQuery("#input_cardCvx").bind("input", this.validateCardCvv);
+		jQuery("#input_cardNumber").on("input", this.validateCardNumber);
+		jQuery("#input_cardDate").on("input", this.validateCardDate);
+		jQuery("#input_cardCvx").on("input", this.validateCardCvv);
 		this.updateSubmitButton();
 	},
 	updateSubmitButton: function(){

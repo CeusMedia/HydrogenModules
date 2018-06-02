@@ -74,7 +74,7 @@ return '
 var Blog = {
 	init: function(){
 		var form = $("#form-info-blog-comment-add");
-		form.find(":input[required]").bind("keyup", Blog.updateSaveButton);
+		form.find(":input[required]").on("keyup", Blog.updateSaveButton);
 		this.updateSaveButton();
 	},
 	updateSaveButton: function(){
@@ -85,7 +85,7 @@ var Blog = {
 			if($(this).val().length)
 				got ++;
 		});
-		if(got == required.size())
+		if(got == required.length)
 			form.find("button").removeProp("disabled");
 		else
 			form.find("button").prop("disabled", "disabled");

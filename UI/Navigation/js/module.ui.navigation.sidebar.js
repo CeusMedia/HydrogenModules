@@ -16,9 +16,9 @@ ModuleUiNavigation.Sidebar = {
 			ModuleUiNavigation.Sidebar.verbose = verbose;
 		if(ModuleUiNavigation.Sidebar.verbose)
 			console.log("ModuleUiNavigationSidebar: init");
-		jQuery(window).bind("resize", ModuleUiNavigation.Sidebar.onWindowResize);
-		jQuery("#nav-sidebar-toggle").bind("click", ModuleUiNavigation.Sidebar.toggle);
-		jQuery("#layout-field").bind("click", ModuleUiNavigation.Sidebar.hide);
+		jQuery(window).on("resize", ModuleUiNavigation.Sidebar.onWindowResize);
+		jQuery("#nav-sidebar-toggle").on("click", ModuleUiNavigation.Sidebar.toggle);
+		jQuery("#layout-field").on("click", ModuleUiNavigation.Sidebar.hide);
 		ModuleUiNavigation.Sidebar.onWindowResize();
 	},
 	toggle: function(){

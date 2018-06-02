@@ -19,7 +19,7 @@ var ModuleCatalogBookstoreRelatedArticlesSlider = {
 	pos: 0,
 	animating: false,
 	init: function(width){
-		var number = $(".related-articles-list-item").size();
+		var number = $(".related-articles-list-item").length;
 		ModuleCatalogBookstoreRelatedArticlesSlider.number = number;
 		ModuleCatalogBookstoreRelatedArticlesSlider.width = width;
 		$(".related-articles-list").width(number * width);

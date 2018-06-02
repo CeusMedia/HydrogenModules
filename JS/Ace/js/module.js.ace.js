@@ -89,7 +89,7 @@ var ModuleAce = {
 		config = typeof config === "undefined" ? [] : config;
 		var container, editor, hotkeys = [], events = [];
 		container	= jQuery(elementOrSelectorOrContainer);								//  try to find HTML node
-		if(!container.size()){															//  no HTML node found
+		if(!container.length){															//  no HTML node found
 			if(ModuleAce.strict)														//  in strict mode:
 				throw "AceEditor: Apply failed - element not found";					//  ... throw an exception
 			ModuleAce.log("AceEditor: Apply failed - element not found");				//  in verbose mode: note fail in console log
@@ -354,7 +354,7 @@ var ModuleAce = {
 		"use strict";
 		var container, editor;
 		container	= jQuery(elementOrSelectorOrContainer);
-		if(!container.size())
+		if(!container.length)
 			throw "AceEditor.getEditor: Node not found";
 		editor = container.data("ace-editor-instance");
 		if(!editor)

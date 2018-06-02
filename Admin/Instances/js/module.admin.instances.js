@@ -30,7 +30,7 @@ var ModuleAdminInstances = {
 
 var ModuleAdminInstancesAdd = {
     init: function(){
-        $("#input_title").bind("keyup init", function(){
+        $("#input_title").on("keyup init", function(){
             var id = $("#input_title").val();
             $("#input_id").val(ModuleAdminInstances.suggestIdForTitle(id));
         });
@@ -72,9 +72,9 @@ var ModuleAdminInstancesIndex = {
                 dataType: "json",
                 context: this,
                 success: function(response){
-                    if(response !== null && typeof(response) == "object"){			//  
-                        var link = $("<a></a>").attr("href",$(this).data("url"));	//  
-                        $(this).find("td").eq(2).html(link.html(response.todos))	//  
+                    if(response !== null && typeof(response) == "object"){			//
+                        var link = $("<a></a>").attr("href",$(this).data("url"));	//
+                        $(this).find("td").eq(2).html(link.html(response.todos))	//
                     }
                 }
             });

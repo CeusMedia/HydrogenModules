@@ -44,7 +44,7 @@ return '
 </div>
 <script>
 jQuery(document).ready(function(){
-	jQuery("#input_ssl").bind("change", function(){
+	jQuery("#input_ssl").on("change", function(){
 		jQuery("#input_port").val(143);
 		if(jQuery("#input_ssl").is(":checked"))
 			jQuery("#input_port").val(993);

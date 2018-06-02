@@ -39,7 +39,7 @@ var intervalIssueSearch;
 $(document).ready(function(){
 	Issues.loadLatest("#list-latest");
 
-	$("#input_title").bind("keyup",function(){
+	$("#input_title").on("keyup",function(){
 		if(intervalIssueSearch)
 			window.clearTimeout(intervalIssueSearch);
 		intervalIssueSearch = window.setTimeout(function(){

@@ -2,11 +2,11 @@ var FormNoteFilter = {
 	form: null,
 	__init: function(){
 		this.form = $("#form_note_filter");
-		if(!this.form.size())
+		if(!this.form.length)
 			return false;
 		if(this.form.find("#input_filter_query").val().length)
 			this.form.find("#reset-button-container").show();
-		this.form.find("#reset-button-trigger").bind("click",this.clearQuery);
+		this.form.find("#reset-button-trigger").on("click",this.clearQuery);
 
 		$("li.note .note-title a").each(function(){
 			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
@@ -18,10 +18,10 @@ var FormNoteFilter = {
 			$(this).html(FormNoteFilter.highlightQuery($(this).html(),query));
 		})
 
-		$("ul.tags-list-inline button.tag-add").bind("click",function(){
+		$("ul.tags-list-inline button.tag-add").on("click",function(){
 			document.location.href = "./work/note/addSearchTag/"+$(this).data("tag-id");
 		});
-		$("ul.tags-list-inline button.tag-remove").bind("click",function(){
+		$("ul.tags-list-inline button.tag-remove").on("click",function(){
 			document.location.href = "./work/note/forgetTag/"+$(this).data("tag-id");
 		});
 
@@ -39,7 +39,7 @@ var FormNoteFilter = {
 	},
 
 	clearQuery: function(){
-		if(!FormNoteFilter.form.size())
+		if(!FormNoteFilter.form.length)
 			return false;
 		FormNoteFilter.form.find("#input_filter_query").val("");
 		FormNoteFilter.form.submit();

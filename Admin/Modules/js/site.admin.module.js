@@ -14,8 +14,8 @@ var ModuleAdminModule = {
 				var o = instance.options;
 				$(o.selectorItems).parent(o.selectorGroups).each(function(){
 					var got = $(this).find(o.selectorItems).filter(".found").stop(true,true);
-					var dur = got.size() ? o.durationFadeIn : o.durationFadeOut;
-					got.size() ? $(this).fadeIn(dur) : $(this).fadeOut(dur);
+					var dur = got.length ? o.durationFadeIn : o.durationFadeOut;
+					got.length ? $(this).fadeIn(dur) : $(this).fadeOut(dur);
 				});
 			},
 			onReset: function(instance){
@@ -24,29 +24,29 @@ var ModuleAdminModule = {
 				fieldSets.not(":visible").fadeIn(o.durationFadeIn);
 			}
 		}, options);
-		new InstantFilter(selector,options);	
+		new InstantFilter(selector,options);
 	}
 };
 
 $(document).ready(function(){
 	var selectorModuleFilter = 'div#search input#input_query';
-	if($(selectorModuleFilter).size())
+	if($(selectorModuleFilter).length)
 		ModuleAdminModule.init(selectorModuleFilter);
 
 	$("button.auto-back").each(function(){
 		$(this).removeAttr("disabled").removeAttr("readonly");
-		$(this).bind("click",function(){
+		$(this).on("click",function(){
 			history.back();
 		});
 	});
 
-	$("button.form-trigger").bind("click",function(){
+	$("button.form-trigger").on("click",function(){
 		$(this).parent().children().show();
 		$(this).parent().find(".hint").hide();
 		$(this).hide();
 	});
 
-	$("button.legend-form-trigger").bind("click",function(){				//  @todo	kriss: is this used or deprecated ?
+	$("button.legend-form-trigger").on("click",function(){				//  @todo	kriss: is this used or deprecated ?
 		$(this).hide();														//  @todo	kriss: can be combined with next line
 		$(this).parent().parent().children().show();
 	});

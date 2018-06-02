@@ -24,11 +24,11 @@ $optStatus['_selected']	= $bug->status;
 $script	= '
 $(document).ready(function(){
 	$("#panel-mode-1").hide();
-	$("#bug-edit-trigger-mode-0").bind("click",function(){
+	$("#bug-edit-trigger-mode-0").on("click",function(){
 		$("#panel-mode-0").show();
 		$("#panel-mode-1").hide();
 	});
-	$("#bug-edit-trigger-mode-1").bind("click",function(){
+	$("#bug-edit-trigger-mode-1").on("click",function(){
 		$("#panel-mode-0").hide();
 		$("#panel-mode-1").show();
 	});
@@ -45,7 +45,7 @@ $main	= '
 			<div class="bug-title">'.$bug->title.'</div>
 			<div class="bug-content">'.nl2br( $bug->content ).'</div>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' | 
+				'.UI_HTML_Elements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' |
 				<button type="button" id="bug-edit-trigger-mode-1" class="button edit"><span>verändern</span></button>
 			</div>
 		</div>

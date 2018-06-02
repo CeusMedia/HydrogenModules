@@ -6,7 +6,7 @@ var InfoForum = {
 	postEditors: [],
 	baseUrl: "./info/forum",
 	preparePostEditor: function(postId){
-		if(InfoForum.lastPostId && InfoForum.lastPostCell.find("textarea").size()){					//  post editor in current row is still open
+		if(InfoForum.lastPostId && InfoForum.lastPostCell.find("textarea").length){					//  post editor in current row is still open
 //			console.log(InfoForum.lastPostId);
 			InfoForum.lastPostCell.find("textarea").trigger("editor-change");						//  close editor by triggering change event
 			if(InfoForum.lastPostId === postId)														//  same edit button has been clicked
@@ -27,7 +27,7 @@ var InfoForum = {
 				InfoForum.lastPostText = json.content;												//  note current post text content
 				var input = InfoForum.lastPostCell.find("textarea");								//  find text area of current row
 				input.val(json.content).removeAttr("disabled").focus();								//  insert post text content, enable and focus
-				input.on("editor-change", function(){												//  bind custom event 
+				input.on("editor-change", function(){												//  bind custom event
 					if(InfoForum.lastPostText === $(this).val()){									//  post text content did not change
 		//				console.log("no change");
 						InfoForum.lastPostCell.html(InfoForum.lastPostHtml);						//  replace text area by old post HTML

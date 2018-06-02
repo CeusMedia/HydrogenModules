@@ -22,7 +22,7 @@ function clickItem(elem, panTo){
 
 function applyMapMarkers(selectorMap, selectorData){
 	var mapCanvas = $(selectorMap);
-	if(!mapCanvas.size())
+	if(!mapCanvas.length)
 		throw "Map "+selectorMap+" not found";
 	$(selectorData).each(function(nr){
 		var lat = $(this).data("latitude");

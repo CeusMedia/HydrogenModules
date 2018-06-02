@@ -35,7 +35,7 @@ var ModulePaymentMangopayBankPayin = {
 				return;
 			select.append(self.renderWalletOption(this));
 		});
-		if(select.find("option").size() == 1)
+		if(select.find("option").length == 1)
 			select.attr("readonly", "readonly");
 		else
 			select.removeAttr("readonly");

@@ -33,7 +33,7 @@ function onUpdateReasonDisplay(event){
 	$("#input_duration").val(ipLockReasons[id].duration);
 }
 $(document).ready(function(){
-	$("#input_reasonId").bind("change", onUpdateReasonDisplay).trigger("change");
+	$("#input_reasonId").on("change", onUpdateReasonDisplay).trigger("change");
 });
 </script>
 

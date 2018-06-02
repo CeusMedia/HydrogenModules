@@ -14,7 +14,7 @@ class View_Info_Event extends CMF_Hydrogen_View{
 	}
 
 	public function map(){
-		$script     = 'if($(".UI_Map").size()){applyMapMarkers(".UI_Map", ".map-point");}';
+		$script     = 'if($(".UI_Map").length){applyMapMarkers(".UI_Map", ".map-point");}';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 

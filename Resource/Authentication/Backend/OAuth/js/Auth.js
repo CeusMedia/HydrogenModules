@@ -25,7 +25,7 @@ var Auth = {
 		$("#input_email").keyup(Auth.Check.email).trigger("keyup");
 		$("#input_password").keyup(Auth.Check.password);
 
-		if($("#input_accept_tac").size()){
+		if($("#input_accept_tac").length){
 			$("#button_save").attr("disabled","disabled");
 			$("#input_accept_tac").change(function(){
 				$("#button_save").attr("disabled","disabled");

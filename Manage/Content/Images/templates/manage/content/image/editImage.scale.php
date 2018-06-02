@@ -50,19 +50,19 @@ $(document).ready(function(){
 	inputWidth = $("#input_width");
 	inputHeight = $("#input_height");
 	inputRatio = $("#input_keepRatio");
-	inputWidth.bind("not-change keyup", function(){
+	inputWidth.on("not-change keyup", function(){
 		inputWidth.val(inputWidth.val().replace(/[^0-9]/, ""));
 		if(inputRatio.attr("checked")){
 			inputHeight.val(Math.round(inputWidth.val()/imageRatio));
 		}
 	});
-	inputHeight.bind("not-change keyup", function(){
+	inputHeight.on("not-change keyup", function(){
 		inputHeight.val(inputHeight.val().replace(/[^0-9]/, ""));
 		if(inputRatio.attr("checked")){
 			inputWidth.val(Math.round(inputHeight.val()*imageRatio));
 		}
 	});
-	inputRatio.bind("change", function(){
+	inputRatio.on("change", function(){
 		if(inputRatio.attr("checked"))
 			inputWidth.trigger("keyup");
 	})

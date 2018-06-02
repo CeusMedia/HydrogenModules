@@ -25,7 +25,7 @@ var AdminModuleInstaller = {
 		this.appName = appName;
 
 //$(document).ready(function(){
-		$("#input_update_files_show_unchanged").bind("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
+		$("#input_update_files_show_unchanged").on("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
 		$("#input_update_files_show_unchanged").trigger("change");
 //});
 		return this;
@@ -66,7 +66,7 @@ var AdminModuleInstaller = {
 		isChecked ? rowsLinked.addClass("hidden") : rowsLinked.removeClass("hidden");
 		var rowsHidden = rows.filter(".hidden");
 		var rowsVisible = rows.not(rowsHidden);
-		rowsVisible.size() ? table.show() : table.hide();
+		rowsVisible.length ? table.show() : table.hide();
 	},
 
 	toggleSubmitButton: function(){
@@ -106,7 +106,7 @@ var AdminModuleUpdater = {
             })
         });
 //$(document).ready(function(){
-		$("#input_update_files_show_unchanged").bind("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
+		$("#input_update_files_show_unchanged").on("change", AdminModuleInstaller.toggleUpdateFilesWithoutChanges );
 		$("#input_update_files_show_unchanged").trigger("change");
 //});
     },

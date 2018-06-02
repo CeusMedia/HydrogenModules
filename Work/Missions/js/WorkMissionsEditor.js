@@ -32,12 +32,12 @@ var WorkMissionsEditor = {
 
 	_bindWorkerSelectUpdateOnProjectInputChange: function(idSelectWorker, idInputProject){
 		var selectProject = $("#"+idInputProject);
-		if(selectProject.size()){
+		if(selectProject.length){
 			if( !this.mission)
-				$("#"+idSelectWorker).bind("change", function(){
+				$("#"+idSelectWorker).on("change", function(){
 					WorkMissionsEditor.missionWorkerId = $(this).val();
 				});
-			selectProject.bind("change", function(){
+			selectProject.on("change", function(){
 				var workerId;
 				var projectId = selectProject.val();
 				if(WorkMissionsEditor.mission)
@@ -72,7 +72,7 @@ var WorkMissionsEditor = {
 		//  @link   http://trentrichardson.com/examples/timepicker/
 //		timeInputs.timepicker({});
 //		$("#input_type").trigger("change");
-		dateInputs.add(timeInputs).bind("change", WorkMissionsEditor._sanitizeDateAndTime);
+		dateInputs.add(timeInputs).on("change", WorkMissionsEditor._sanitizeDateAndTime);
 		this._bindWorkerSelectUpdateOnProjectInputChange("input_workerId", "input_projectId");
 	},
 

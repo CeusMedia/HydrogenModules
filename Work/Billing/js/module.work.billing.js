@@ -10,7 +10,7 @@ var WorkBilling = {
 		jQuery("form input.input-number").each(function(){
 			return;
 			var input = jQuery(this);
-			input.bind("keydown", function(event){
+			input.on("keydown", function(event){
 				if(event.keyCode == 188){
 					input.val(input.val() + '.');
 					if(!isNaN(input.val()))
@@ -21,7 +21,7 @@ var WorkBilling = {
 				if(!isNaN(input.val()))
 					input.data('oldValue', input.val());
 			});
-			input.bind("keyup", function(event){
+			input.on("keyup", function(event){
 				if(isNaN(input.val()))
 					input.val(input.data('oldValue')).trigger("keyup");
 

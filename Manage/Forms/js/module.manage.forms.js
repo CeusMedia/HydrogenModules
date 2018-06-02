@@ -38,10 +38,10 @@ var RuleManager = {
 		for(var i=0; i<3; i++){
 			var selectKey = RuleManager.modal.find("select#input_ruleKey_"+i);
 			var selectValue = RuleManager.modal.find("select#input_ruleValue_"+i);
-			selectKey.bind("change", {i: i}, function(event){
+			selectKey.on("change", {i: i}, function(event){
 				RuleManager.onRuleKeyChange(event.data.i);
 			});
-			selectValue.bind("change", {i: i}, function(event){
+			selectValue.on("change", {i: i}, function(event){
 				RuleManager.onRuleValueChange(event.data.i);
 			});
 			for(var j=0; j<RuleManager.selects.length; j++){
@@ -59,7 +59,7 @@ var RuleManager = {
 		for(var j=0; j<RuleManager.selects.length; j++){
 			if(RuleManager.selects[j].name == selectKey){
 				console.log("FOUND: " + selectKey);
-				return RuleManager.selects[j];		
+				return RuleManager.selects[j];
 			}
 		}
 		return null;

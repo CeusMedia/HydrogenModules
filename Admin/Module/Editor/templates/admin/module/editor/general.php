@@ -126,7 +126,7 @@ function getSourceInfo(elem){
 }
 
 $(document).ready(function(){
-	$("#input_source").bind("change",function(){
+	$("#input_source").on("change",function(){
 		getSourceInfo(this);
 	}).trigger("change");
 });

@@ -81,7 +81,7 @@ input.default {
 function showDefaultInputValues(selector){
 	$(selector).find("input").each(function(nr){
 		if($(this).data("default")){
-			$(this).bind("focus blue keyup init",function(){
+			$(this).on("focus blue keyup init",function(){
 				var i = $(this);
 				if(i.val() == i.data("default"))
 					i.addClass("default");

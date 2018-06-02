@@ -179,7 +179,7 @@ var ManageMyLicense = {
 							item = $("<div></div>").addClass("item");
 							item.html(json.data.list[i].html);
 							item.data("userId", json.data.list[i].user.userId);
-							item.bind("click", ManageMyLicense.selectThisUser);
+							item.on("click", ManageMyLicense.selectThisUser);
 							list.append(item);
 							ManageMyLicense.data[json.data.list[i].user.userId] = json.data.list[i];
 						}

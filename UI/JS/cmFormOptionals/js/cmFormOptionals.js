@@ -1,7 +1,7 @@
 
 var cmFormOptionals = {
     init: function () {
-        $("select.has-optionals").bind("change change-update", function () {
+        $("select.has-optionals").on("change change-update", function () {
             cmFormOptionals.showOptionals(this);
 		}).trigger("change-update");
     },
@@ -35,7 +35,7 @@ var cmFormOptionals = {
             toShow.show();
         }
     }
-    
+
 };
 
 function showOptionals (elem) {

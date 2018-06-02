@@ -8,8 +8,8 @@ var cmContextMenu = {
 	init: function(){
 		this.container = $("<div></div>").attr("id","contextMenu").hide();
 		this.container.attr("oncontextmenu","cmContextMenu.hide(); return false;").appendTo("body");
-		this.container.bind("mouseup", function(event){event.stopPropagation();});
-		$(this.containment).bind("mouseup contextmenu", function(event){
+		this.container.on("mouseup", function(event){event.stopPropagation();});
+		$(this.containment).on("mouseup contextmenu", function(event){
 			cmContextMenu.hide(event, false);
 			event.stopPropagation();
 			return false;
@@ -30,7 +30,7 @@ var cmContextMenu = {
 	},
 	addLinkItem: function(url, label, icon){
 		var icon = $("<i></i>").attr("class", icon);
-		var button = $("<a></a>").attr({href: url, class: 'btn btn-small btn-success link-icon'}).bind('click', function(event){
+		var button = $("<a></a>").attr({href: url, class: 'btn btn-small btn-success link-icon'}).on('click', function(event){
 			cmContextMenu.hide(event, true);
 		}).append(icon).append('&nbsp;').append(label);
 		var item = $("<li></li>").append(button);

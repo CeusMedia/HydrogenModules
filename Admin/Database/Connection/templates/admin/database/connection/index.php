@@ -65,7 +65,7 @@ function showOptionals(elem){
 	form.find(".optional."+type).show();
 }
 $(document).ready(function(){
-	$("#form_database_connection #input_access_driver").bind("change",function(){
+	$("#form_database_connection #input_access_driver").on("change",function(){
 		showOptionals(this);
 		$("#form_database_connection #status-info").fadeOut();
 		if($(this).val().length){
@@ -77,12 +77,12 @@ $(document).ready(function(){
 			$("#form_database_connection button.save").removeAttr("disabled");
 		}
 	}).trigger("change");
-	$("#form_database_connection input").bind("keyup change",function(){
+	$("#form_database_connection input").on("keyup change",function(){
 		$("#form_database_connection #button_check").removeAttr("disabled");
 		$("#form_database_connection button.save").attr("disabled",true);
 		$("#form_database_connection #status-info").fadeOut();
 	});
-	$("#form_database_connection #button_check").bind("click",function(){
+	$("#form_database_connection #button_check").on("click",function(){
 		var form = $("#form_database_connection");
 		$.ajax({
 			url: "./admin/database/connection/ajaxCheck",
@@ -111,7 +111,7 @@ $(document).ready(function(){
 	});
 });
 </script>
-	
+
 <div class="column-left-60">
 	'.$panelDatabase.'
 </div>

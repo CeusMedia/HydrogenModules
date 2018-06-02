@@ -2,19 +2,19 @@ var WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
 	form: null,
 	__init: function(mode){
-		$("#filter_query").bind("keydown", function(event){
+		$("#filter_query").on("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");
 		})
-		$("#button_filter_search").bind("click", function(){
+		$("#button_filter_search").on("click", function(){
 			var uri = "setFilter/query/"+encodeURI($("#filter_query").val());
 			document.location.href = WorkMissionsFilter.baseUrl + uri;
 		})
-		$("#button_filter_search_reset").bind("click", function(){
+		$("#button_filter_search_reset").on("click", function(){
 			if($("#filter_query").val().length)
 				document.location.href = WorkMissionsFilter.baseUrl+"setFilter/query/";
 		})
-		$("#button_filter_reset").bind("click", function(){
+		$("#button_filter_reset").on("click", function(){
 			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
 		});
 		this.initFilter("projects", "filter-work-missions-projects-list", "modal-work-mission-filter-projects-trigger");
@@ -39,7 +39,7 @@ var WorkMissionsFilter = {
 		document.location.href = url ;
 	},
 	clearQuery: function(){
-		if(!WorkMissionsFilter.form.size())
+		if(!WorkMissionsFilter.form.length)
 			return false;
 		WorkMissionsFilter.form.find("#filter_query").val("");
 		WorkMissionsFilter.form.submit();
@@ -52,10 +52,10 @@ var WorkMissionsFilter = {
 		var button		= container.find("button.dropdown-toggle");
 		if(buttonId)
 			button		= $("#"+buttonId);
-		container.find("ul").bind("click", function(event){							//  bind click event on dropdown list
+		container.find("ul").on("click", function(event){							//  bind click event on dropdown list
 			event.stopPropagation();												//  to stop propagation to avoid close event of bootstrap
 		});
-		container.find(".trigger-select-this").bind("click", function(event){						//  bind click event on ...
+		container.find(".trigger-select-this").on("click", function(event){						//  bind click event on ...
 			WorkMissionsList.blendOut(250);
 			var id = $(this).data("id");
 			checkboxes.each(function(nr){
@@ -74,7 +74,7 @@ var WorkMissionsFilter = {
 			});
 			return false;
 		});
-		container.find(".trigger-select-all").bind("click", function(event){						//  bind click event on ...
+		container.find(".trigger-select-all").on("click", function(event){			//  bind click event on ...
 			WorkMissionsList.blendOut(250);
 			checkboxes.each(function(nr){
 				$(this).prop("checked", "checked");
@@ -92,7 +92,7 @@ var WorkMissionsFilter = {
 			});
 			return false;
 		});
-		checkboxes.bind("change.clicked", function(event){							//  bind change event on every checkbox
+		checkboxes.on("change.clicked", function(event){							//  bind change event on every checkbox
 			WorkMissionsList.blendOut(250);
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			//  store changed filter
@@ -133,7 +133,7 @@ var WorkMissionsFilter = {
 		var i, value;
 		var countChecked = 0;
 		var countUnchecked = 0;
-		for(i=0; i<checkboxes.size(); i++){											//  iterate checkboxes
+		for(i=0; i<checkboxes.length; i++){											//  iterate checkboxes
 			value = checkboxes.eq(i).prop("checked") ? 1 : 0;						//  get check state
 			countChecked += value;													//  count if checked
 			countUnchecked -= value - 1;											//  count if unchecked
@@ -143,7 +143,7 @@ var WorkMissionsFilter = {
 		if(!countChecked){															//  no checkbox is checked
 			checkboxes.prop("checked", "checked");									//  check all checkboxes
 			countUnchecked = 0;														//  reset number of unchecked checkboxes
-			countChecked = checkboxes.size();										//  reset number if checked checkboxes
+			countChecked = checkboxes.length;										//  reset number if checked checkboxes
 		}
 
 		//  mark filter button if filters have changed
@@ -159,7 +159,7 @@ var WorkMissionsFilter = {
 		btn.prop("disabled", "disabled");											//  disable it by default
 		if(colored)																	//  button uses colors
 			btn.removeClass('btn-inverse').children("i").removeClass("icon-white");	//  remove color and icon paint
-		if($("#work-mission-buttons #toolbar-filters .btn-info").size()){		//  at least one filter is set
+		if($("#work-mission-buttons #toolbar-filters .btn-info").length){		//  at least one filter is set
 			btn.prop("disabled", null);												//  enabled button
 			if(colored)																//  button uses colors
 				btn.addClass('btn-inverse').children("i").addClass("icon-white");	//  set button color and icon paint

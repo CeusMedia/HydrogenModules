@@ -85,7 +85,7 @@ function onUpdateReasonDisplay(event){
 }
 
 $(document).ready(function(){
-	$("#input_reasonId").bind("change", onUpdateReasonDisplay).trigger("change");
+	$("#input_reasonId").on("change", onUpdateReasonDisplay).trigger("change");
 });
 </script>
 ';

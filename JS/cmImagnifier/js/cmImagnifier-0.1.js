@@ -64,7 +64,7 @@
 							image.data('status', 2);												//  note that loading succeeded
 							image.data('settings', settings);										//  store settings for image
 							image.wrap($('<div></div>').addClass(settings.classContainer));			//  wrap image into a new created container
-							image.bind('load', function(){											//  when image is loaded
+							image.on('load', function(){											//  when image is loaded
 								if(image.data('settings').autoEnable)								//  automatic setup on init is enabled
 									setupImage(image);												//  setup lense for image
 							});
@@ -151,12 +151,12 @@
 				var lensePosY = posY - image.data('lenseHeight') / 2;								//  calculate new lense position on y axis
 				lense.css({left: lensePosX, top: lensePosY});										//  move lense to calculated position
 				var selector = '.'+image.data('settings').classPosition.replace(/ /, '.');			//  get selector of position
-				lense.find(selector).html(posX+'/'+posY);											//	update position	
+				lense.find(selector).html(posX+'/'+posY);											//	update position
 				return true;
 			}
 			return false;
 		}
-	
+
 		function showLense(image){
 			if(image.data('status') == 3){															//  image is setup and lense is not open
 				image.addClass(image.data('settings').classMagnified);								//  mark image as magnified
@@ -184,7 +184,7 @@
 
 			//  --  LOAD ZOOMED IMAGE  --  //
 			var imageZoom	= $("<img/>").appendTo(lense);											//  create image container for zoomed image
-			$(imageZoom).bind('load ready', {image: image}, function(event){						//  when zoomed image is loaded
+			$(imageZoom).on('load ready', {image: image}, function(event){						//  when zoomed image is loaded
 				var zoom = $(this);																	//  shortcut zoomed image
 				var image = event.data.image;														//  shortcut normal image
 
@@ -212,13 +212,13 @@
 				}
 
 				//  --  EVENTS  --  //
-				image.parent().bind('mouseenter.cmImagnifier', {image: image}, function(event){		//  mouse enters image container
+				image.parent().on('mouseenter.cmImagnifier', {image: image}, function(event){		//  mouse enters image container
 					moveLense(event.data.image, event.pageX, event.pageY);							//  position lense of image in container and show (done by move automatically)
 				});
-				image.parent().bind('mouseleave.cmImagnifier', {image: image}, function(event){		//  mouse leaves image container
+				image.parent().on('mouseleave.cmImagnifier', {image: image}, function(event){		//  mouse leaves image container
 					hideLense(event.data.image);													//  hide lense of image in container
 				});
-				image.parent().bind('mousemove.cmImagnifier', {image: image}, function(event){		//  mouse moves inside image container (or fading lense)
+				image.parent().on('mousemove.cmImagnifier', {image: image}, function(event){		//  mouse moves inside image container (or fading lense)
 					moveLense(event.data.image, event.pageX, event.pageY);							//  position lense of image in container
 				});
 				image.addClass(image.data('settings').classImage);									//  mark image as magnifyable

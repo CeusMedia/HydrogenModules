@@ -1,6 +1,6 @@
 var ModuleJsTinyMce = {
 	applyAuto: function(){
-		if(jQuery(settings.JS_TinyMCE.auto_selector).size()){
+		if(jQuery(settings.JS_TinyMCE.auto_selector).length){
 			jQuery(settings.JS_TinyMCE.auto_selector).each(function(nr){
 				var options = {};
 				var textarea = jQuery(this);

@@ -22,7 +22,7 @@ var LockLayer = {
 		$(selector).each(function(){													//  iterate found elements
 			var eventName = this.nodeName === "FORM" ? "submit" : "click";				// 	event name for forms differs from clicks
 			var eventData = {elem: this, delay: delay, fade: fade};						//  collect event data for callback function
-			$(this).bind(eventName, eventData, LockLayer.onLockTrigger);				//  bind callback with data to event
+			$(this).on(eventName, eventData, LockLayer.onLockTrigger);					//  bind callback with data to event
 		});
 	},
 
@@ -58,20 +58,20 @@ var LockLayer = {
 				LockLayer.applyToLinks();
 				LockLayer.applyToForms();
 			}
-			this.layerBack.bind("click", LockLayer.unlock);								//  @todo: make this configurable
+			this.layerBack.on("click", LockLayer.unlock);								//  @todo: make this configurable
 		}
 	},
 
 	lockByElement: function (elem, delay, fade) {
 		var elem = $(elem);
-		if (!elem.size())
+		if (!elem.length)
 			throw "LockLayer::lockByElement: No element given";
 
 		//  message type
 		var type = LockLayer.defaultType;												//  set default message type
 		if (elem.data("locklayer-type"))												//  clicked element has message type
 			if (LockLayer.messages.hasOwnProperty(elem.data("locklayer-type")))			//  element message type is valid
-				type = elem.data("locklayer-type");										//  set element message type 
+				type = elem.data("locklayer-type");										//  set element message type
 
 		//  message
 		var message = LockLayer.messages[type];											//  set label from default messages by message type
@@ -109,7 +109,7 @@ var LockLayer = {
 		durationIn = Math.max(0, Math.min(1000, parseInt(durationIn)));					//  sanitize duration of fade in
 		durationOut = Math.max(0, Math.min(1000, parseInt(durationOut)));				//  sanitize duration of fade out
 		LockLayer.lock(message, delay, fade, durationIn, durationOut);					//  lock user interface with label
-	}, 
+	},
 
 	lock: function (message, delay, fade, durationIn, durationOut) {
 		"use strict";

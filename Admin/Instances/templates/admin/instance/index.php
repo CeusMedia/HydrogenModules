@@ -73,7 +73,7 @@ return '
 <script>
 $(document).ready(function(){
 	ModuleAdminInstancesIndex.labelsReachabilities = '.json_encode( $labelsStatusHttp ).';
-	$("#button_check").bind("click", function(){
+	$("#button_check").on("click", function(){
 		ModuleAdminInstancesIndex.checkReachabilities();
 	//	ModuleAdminInstancesIndex.loadTodos();
 	});

@@ -16,7 +16,7 @@ var Module_UI_Map = {
 	},
 	loadMap: function(id){
 		var container = $("#"+id);
-		if(!container.size())
+		if(!container.length)
 			return;
 		if(container.hasClass("UI_Map"))
 			return this.getMap(id);

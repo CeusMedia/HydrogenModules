@@ -10,7 +10,7 @@ var WorkMissionsViewer = {
 
 	initVersions: function(){
 		$(".version-list-item").each(function(){
-			$(this).bind("click", function(){
+			$(this).on("click", function(){
 				$(".version-list-item").removeClass( 'active' );
 				$(this).addClass( 'active' );
 				var version		= parseInt($(this).data("version"), 10);

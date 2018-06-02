@@ -19,7 +19,7 @@ UI.Messenger	= {
 					$("#layout-messenger>div>div").each(function(){
 						UI.Messenger.autoRemoveMessage(this);
 					});
-				});	
+				});
 			}
 			UI.Messenger.status = 2;
 		}
@@ -43,7 +43,7 @@ UI.Messenger	= {
 		$("#"+messageId+" div.button").hide();
 		$("#"+messageId).slideUp(UI.Messenger.timeSlideUp, function(){
 			$(this).remove();
-			if(!$("#layout-messenger>div>div").size())
+			if(!$("#layout-messenger>div>div").length)
 				$("#layout-messenger>div").remove();
 		})
 	},
@@ -63,7 +63,7 @@ UI.Messenger	= {
 		var list;
 		UI.Messenger.__init();
 		container = $("#layout-messenger");
-		if(!$("div",container).size()){
+		if(!$("div",container).length){
 			list = $("<div></div>");
 			list.addClass("messenger-messages messenger-bootstrap");
 			container.prepend(list);

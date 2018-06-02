@@ -71,9 +71,9 @@ $(document).ready(function(){
 				});
 			}
 		}
-		
+
 	});
-	if($("#input_accept_tac.mandatory").size()){
+	if($("#input_accept_tac.mandatory").length){
 		$("button.save").attr("disabled","disabled");
 		$("#input_accept_tac").change(function(){
 			if($(this).is(":checked"))

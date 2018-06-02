@@ -116,7 +116,7 @@ $panelFilter	= '
 			'.$filterItemSources.'
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp; 
+			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp;
 			'.UI_HTML_Elements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'button reset' ).'
 		</div>
 	</fieldset>
@@ -124,7 +124,7 @@ $panelFilter	= '
 <script>
 $(document).ready(function(){
 	var form = $("#form_module_filter");
-	form.find("input[type=checkbox]").bind("change",function(){
+	form.find("input[type=checkbox]").on("change",function(){
 		form.find("button[type=submit]").trigger("click");
 	});
 });

@@ -43,7 +43,7 @@ UI.Messenger	= {
 		$("#"+messageId+" div.button").hide();
 		$("#"+messageId).slideUp(UI.Messenger.timeSlideUp, function(){
 			$(this).remove();
-			if(!$("#layout-messenger>ul>li").size())
+			if(!$("#layout-messenger>ul>li").length)
 				$("#layout-messenger>ul").remove();
 		})
 	},
@@ -62,7 +62,7 @@ UI.Messenger	= {
 	renderMessage: function(message, typeClass, sticky){
 		UI.Messenger.__init();
 		container = $("#layout-messenger");
-		if(!$("ul",container).size())
+		if(!$("ul",container).length)
 			container.prepend($("<ul></ul>"));
 		list = $("#layout-messenger>ul");
 		item = $("<li></li>").addClass(typeClass).html(message);

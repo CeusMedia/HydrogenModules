@@ -14,13 +14,13 @@ var LocalServerFrontendController = {											//  define controller object
 		var	browser = this,														//  shortcut browser object
 			form = jQuery("#" + this.idInputForm),								//  find form
 			link = $("<a></a>").attr('href',document.location.href);			//  link to requested URL
-		form.bind("submit", function () {return browser.request();});			//  call request on form submit, prevent default form submit event if request uses GET
-		form.find("#" + browser.idInputController).bind("change", function () {	//  if controller value has been changed
+		form.on("submit", function () {return browser.request();});				//  call request on form submit, prevent default form submit event if request uses GET
+		form.find("#" + browser.idInputController).on("change", function () {	//  if controller value has been changed
 			form.find("#" + browser.idInputAction).val("index");				//  clear action value
 			form.find("#" + browser.idInputPath).val("");						//  clear path value
 			browser.request();													//  request form using GET
 		});
-		form.find("#" + browser.idInputAction).bind("change", function () {		//  if action value has been changed
+		form.find("#" + browser.idInputAction).on("change", function () {		//  if action value has been changed
 			form.find("#" + browser.idInputPath).val("");						//  clear path value
 			browser.request();													//  request form using GET
 		});

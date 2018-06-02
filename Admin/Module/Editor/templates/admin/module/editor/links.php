@@ -21,7 +21,7 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 	if( isset( $module->links[$linkNr] ) ){
 		$link	= $module->links[$linkNr];
 #		print_m( $link );
-		$optAccess	= UI_HTML_Elements::Options( $optAccess, $link->access ); 
+		$optAccess	= UI_HTML_Elements::Options( $optAccess, $link->access );
 		$panelEdit	= '
 <form id="form-module-editor-link-edit" action="./admin/module/editor/editLink/'.$moduleId.'/'.$linkNr.'" method="post">
 	<fieldset>
@@ -84,7 +84,7 @@ if( $module->links ){
 
 		$actions	= UI_HTML_Elements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links&linkNr='.$nr, '', 'button icon tiny edit' );
 		$actions	.= UI_HTML_Elements::LinkButton( './admin/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
-		
+
 		$row	= array(
 			UI_HTML_Tag::create( 'td', $labelLanguage ),
 			UI_HTML_Tag::create( 'td', $link->label ),
@@ -108,7 +108,7 @@ if( $module->links ){
 }
 
 $optAccess	= array( '' => $words['tab-links']['optAccessUndefined'] ) + $words['access-types'];
-$optAccess	= UI_HTML_Elements::Options( $optAccess ); 
+$optAccess	= UI_HTML_Elements::Options( $optAccess );
 
 $panelAdd	= '
 <form id="form-module-editor-link-add" action="./admin/module/editor/addLink/'.$moduleId.'" method="post">
@@ -167,7 +167,7 @@ var UI = {
 			var eventName = options.event;
 			if(input.prop("tagName").toLowerCase() == "select")
 				eventName	= "change";
-			input.bind(eventName,function(){
+			input.on(eventName,function(){
 				var input = $(this);
 				var isChanged = input.val() != input.data("original-value");
 				if(options.color)
@@ -198,7 +198,7 @@ function showLinkAddOptionals(animate){
 
 function showLinkEditOptionals(animate){
 	var form = $("#form-module-editor-link-edit");
-	if(form.size()){
+	if(form.length){
 		var elements1 = $("#input_rank",form).add("#input_language",form).add("#input_access",form);
 		var elements2 = $("#input_access_public",form);
 		var value = form.find("#input_label").val();
@@ -231,7 +231,5 @@ $(document).ready(function(){
 </div>
 <div class="column-clear"></div>
 ';
-					
+
 ?>
-
-

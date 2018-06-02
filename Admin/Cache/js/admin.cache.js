@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("button.btn-cache-remove").bind("click",function(){
+    $("button.btn-cache-remove").on("click",function(){
         var row = $(this).parent().parent();
         $.ajax({
             url: "./admin/cache/ajaxRemove",
@@ -13,4 +13,3 @@ $(document).ready(function(){
         });
     });
 });
-		

@@ -60,9 +60,9 @@ function getModuleIdFromString(string){
 }
 
 $(document).ready(function(){
-	
 
-	$("#input_add_title").bind("keydown keyup",function(){
+
+	$("#input_add_title").on("keydown keyup",function(){
 		var id = getModuleIdFromString($(this).val());
 		$("#input_add_id").val(id);
 		var path = id.replace(/_/g,"/");

@@ -38,9 +38,9 @@ return	'
 </div>
 <script>
 var modalForm = jQuery("#form-modal-event");
-if(modalForm.size()){
+if(modalForm.length){
 	modalForm.find("input[name=\'eventId\']").val('.$event->eventId.');
-	modalForm.find("#modal-button-details").bind("click", function(){
+	modalForm.find("#modal-button-details").on("click", function(){
 		modalForm.find("input[name=\'do\']").val("view");
 		modalForm.eq(0).submit();
 	});

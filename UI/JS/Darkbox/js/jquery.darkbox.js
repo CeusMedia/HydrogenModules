@@ -15,10 +15,10 @@
         }, options);
         var body = $('body');
         var container = $('#' + settings.prefix + 'container');
-        if (!container.size()) {
+        if (!container.length) {
             $('body').append('<div id="' + settings.prefix + 'container' + '"></div>');
             container = $('#' + settings.prefix + 'container');
-            container.bind('click', {body: body, container: container}, function (event) {
+            container.on('click', {body: body, container: container}, function (event) {
 				settings.onClose(event);
                 $(this).fadeOut(settings.durationFadeOut, function () {
                     event.data.body.css('overflow', event.data.container.data('darkbox-overflow'));
@@ -29,7 +29,7 @@
         }
         this.each(function () {
             var link = $(this);
-            link.bind('click', {body: body, container: container}, function (event) {
+            link.on('click', {body: body, container: container}, function (event) {
 				settings.onOpen(event);
                 event.data.container.data('darkbox-overflow', event.data.body.css('overflow'));
                 event.data.body.css('overflow', 'hidden');

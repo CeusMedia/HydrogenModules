@@ -19,7 +19,7 @@
 		var methods = {																				//  methods callable using constructor
 			init: function(options){
 				var settings = jQuery.extend({														//  options and defaults
-					classContainer: 'cmSelectBox',													//  
+					classContainer: 'cmSelectBox',													//
 					openOnHover: false,
 					easeIn: 'linear',																//  easing of showing Animation
 					easeOut: 'linear',																//  easing of hiding Animation
@@ -30,45 +30,45 @@
 					var width = $(this).outerWidth();												//  get width of original select box
 					var select = $(this).hide();													//  shortcut original select box and hide it
 					select.data('settings', settings);												//  store settings for image
-					var container = $("<div></div>").hide().insertAfter(select);					//  
-					var label = $("<div></div>").addClass("input").prependTo(container);			//  
-					var list = $("<div></div>").addClass("options").hide().appendTo(container);		//  
-					container.addClass(settings.classContainer);									//  
+					var container = $("<div></div>").hide().insertAfter(select);					//
+					var label = $("<div></div>").addClass("input").prependTo(container);			//
+					var list = $("<div></div>").addClass("options").hide().appendTo(container);		//
+					container.addClass(settings.classContainer);									//
 					container.addClass(settings.inverted ? "inverted" : '');
-					label.append($("<ul></ul>").addClass("input-inner"));							//  
-					list.append($("<ol></ol>"));													//  
+					label.append($("<ul></ul>").addClass("input-inner"));							//
+					list.append($("<ol></ol>"));													//
 					list.scroll(function(){
 //						console.log(this);
 					});
-					select.find("option").each(function(){											//  
-						var item = $("<li></li>").appendTo(list.find('ol'));						//  
-						item.html($(this).html().length ? $(this).html() : '&nbsp;');				//  
-						item.data("value",$(this).val());											//  
-						item.data("selected",$(this).prop("selected"));								//  
-						item.data("disabled",$(this).prop("disabled"));								//  
-						item.data("readonly",$(this).prop("readonly"));								//  
+					select.find("option").each(function(){											//
+						var item = $("<li></li>").appendTo(list.find('ol'));						//
+						item.html($(this).html().length ? $(this).html() : '&nbsp;');				//
+						item.data("value",$(this).val());											//
+						item.data("selected",$(this).prop("selected"));								//
+						item.data("disabled",$(this).prop("disabled"));								//
+						item.data("readonly",$(this).prop("readonly"));								//
 						item.addClass($(this).prop("class"));										//  copy class from option to list item
 					});
 					container.width(width);															//  copy width from select element
 					container.show();																//  show replacement
 					container.find("ol li").each(function(){										//	iterate all option items
-						$(this).bind("click",function(){											//  
+						$(this).on("click",function(){											//
 							selectItem(select,container,$(this).data("value"),true);
 						});
-						if($(this).data("selected"))												//  
+						if($(this).data("selected"))												//
 							selectItem(select,container,$(this).data("value"))
 					});
 					if(settings.openOnHover){														//  show options on mouse over
-						container.bind("mouseenter",function(){										//  mouse entered container
-							if(!$(this).hasClass("open"))											//  option list is not visible 
+						container.on("mouseenter",function(){										//  mouse entered container
+							if(!$(this).hasClass("open"))											//  option list is not visible
 								toggleOpen(select,container);										//  show option list
-						}).bind("mouseleave",function(){											//	mouse leaved container
+						}).on("mouseleave",function(){											//	mouse leaved container
 							if($(this).hasClass("open"))											//  option list is visible
 								toggleOpen(select,container);										//  hide option list
 						});
 					}
 					else{																			//  show options on click
-						label.click(function(event){												//  
+						label.click(function(event){												//
 							if(!container.hasClass("open"))											//  option list is to be opened
 								$("body").trigger("click");											//  close other open option lists
 							toggleOpen(select,container);											//  open this option list
@@ -80,11 +80,11 @@
 						})
 					}
 
-					select.closest("form").bind("reset",function(){									//  form reset button has been pressed
+					select.closest("form").on("reset",function(){									//  form reset button has been pressed
 						label.find("ul.input-inner").html(container.find("ol li[0]"));				//  reset selectbox to first option item
 						container.find("ol li").each(function(){									//	iterate all option items
 							if($(this).data("selected"))											//  found option which was selected on load
-								label.find("ul.input-inner").html($(this).clone());					//	
+								label.find("ul.input-inner").html($(this).clone());					//
 						});
 					})
 				});
@@ -110,23 +110,23 @@
 					return;
 				$(this).addClass("selected");
 				if(container.hasClass("open"))
-					toggleOpen(select,container);													//  
-				select.val(value);																	//  
-				container.find("ul.input-inner").html($(this).clone());								//  
+					toggleOpen(select,container);													//
+				select.val(value);																	//
+				container.find("ul.input-inner").html($(this).clone());								//
 				if(typeof(triggerEvents) == "boolean" && triggerEvents)
 					select.trigger("change");
 			});
 		}
 
 		function toggleOpen(select,container){
-			var s = select.data('settings');														//  
-			var isOpen = container.hasClass("open");												//  
-			var list = container.addClass("open").children("div.options");									//  
-			list.css("z-index", 1000 + isOpen ? 1 : 2);												//  
+			var s = select.data('settings');														//
+			var isOpen = container.hasClass("open");												//
+			var list = container.addClass("open").children("div.options");									//
+			list.css("z-index", 1000 + isOpen ? 1 : 2);												//
 			if(!isOpen){
-				list.slideDown(s.speedIn, s.easeIn);											//  
+				list.slideDown(s.speedIn, s.easeIn);											//
 				var selected = list.find(".selected");
-				if(selected.size()){
+				if(selected.length){
 					var itemOffsetY	= selected.position().top;
 					var itemHeight	= selected.outerHeight();
 					var listHeight	= selected.parent().outerHeight();
@@ -146,7 +146,7 @@
 				}
 			}
 			else
-				list.slideUp(s.speedOut, s.easeOut, function(){container.removeClass("open")});			//  
+				list.slideUp(s.speedOut, s.easeOut, function(){container.removeClass("open")});			//
 		}
 	};
 })( jQuery );

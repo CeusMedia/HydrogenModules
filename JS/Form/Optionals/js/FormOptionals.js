@@ -4,7 +4,7 @@ var FormOptionals = {
 		if(typeof selector === "undefined")
 			selector = "body";
 		var items = jQuery(selector).find(":input.has-optionals");
-		items.bind("change change-update", function () {
+		items.on("change change-update", function () {
 			FormOptionals.showOptionals(this);
 		}).trigger("change-update");
 	},
@@ -22,7 +22,7 @@ var FormOptionals = {
 		if (type === "radio") {													//  element input is of type radio
 			if (!jQuery(elem).prop("checked")) {								//  this radio is NOT checked
 				toShow = jQuery();												//  do not show anything, will be done on selected element
-				if (form.find(":input[name="+name+"]:checked").size()) {		//  there is a preselected radio in this group
+				if (form.find(":input[name="+name+"]:checked").length) {		//  there is a preselected radio in this group
 					toHide = jQuery();											//  do not hide anything, will be done on selected element
 				}
 			}

@@ -29,12 +29,12 @@ ContextHelp = {
 			var mask = $('<div></div>').attr('id', 'context-help-mask-' + nr).addClass('context-help-mask');
 			ContextHelp.visible ? mask.show() : mask.hide();
 			var help = $('<div></div>').attr('id', 'context-help-layer-' + nr).addClass('context-help-layer');
-			mask.bind('click', function(event){
+			mask.on('click', function(event){
 //				event.preventDefault();
 			});
 			mask.css('width', elem.outerWidth() + 1);
 			mask.css('height', elem.outerHeight() + 1);
-			mask.bind('mouseenter', {nr: nr}, function(event){
+			mask.on('mouseenter', {nr: nr}, function(event){
 				var mask = $(this);
 				var help = mask.next();
 				help.stop(true, true);
@@ -50,7 +50,7 @@ ContextHelp = {
 					clearTimeout(ContextHelp.lastTimeout);
 				help.fadeIn(300);
 			});
-			mask.bind('mouseleave', {nr: nr}, function(event){
+			mask.on('mouseleave', {nr: nr}, function(event){
 				$(this).removeClass('focused');
 				var help = $(this).next();
 				ContextHelp.lastTimeout[key] = setTimeout(function(){
@@ -60,7 +60,7 @@ ContextHelp = {
 						});
 				}, 80);
 			});
-			mask.bind('click', function(event){
+			mask.on('click', function(event){
 //				$(this).trigger('mouseleave');
 				help.trigger('click');
 				help.stop(true, true).fadeOut(150,function(){
@@ -68,16 +68,16 @@ ContextHelp = {
 				});
 				$(this).fadeOut(100);
 			});
-			help.bind('click', function(event){
+			help.on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
 			});
-			help.bind('mouseenter', function(event){
+			help.on('mouseenter', function(event){
 				if(ContextHelp.lastTimeout[key])
 					clearTimeout(ContextHelp.lastTimeout[key]);
 				$(this).addClass('focused');
 			});
-			help.bind('mouseleave', function(event){
+			help.on('mouseleave', function(event){
 				$(this).removeClass('focused');
 				var help = $(this);
 				var mask = help.prev();
@@ -107,7 +107,7 @@ ContextHelp = {
 	},
 	prepareNavLinkToggle: function(){
 		$("ul.nav li>a[href=\"./#ContextHelp\"]").each(function(nr){
-			$(this).bind("click", function(e){
+			$(this).on("click", function(e){
 				var item = $(this).parent();
 				var visible = ContextHelp.toggleMasks();
 				visible ? item.addClass("active") : item.removeClass("active");

@@ -184,14 +184,14 @@ var blogIsHistory = '.(int) $isHistory.';
 $(document).ready(function(){
 	$(".datepicker").datepicker({dateFormat: "yy-mm-dd"});
 
-	$("#input-content").bind("change",function(){			//  @todo	this only works without CodeMirror
+	$("#input-content").on("change",function(){			//  @todo	this only works without CodeMirror
 		if($(this).val().length && $("#button-save").attr("disabled"))
 			$("#button-save").removeAttr("disabled");
 		else
 			$("#button-save").attr("disabled", "disabled");
 	}).trigger("change");
 
-	$("#input-authorId").bind("change",function(){
+	$("#input-authorId").on("change",function(){
 		var url = "./blog/addAuthor/"+blogArticleId+"/"+$(this).val();
 		document.location.href = url;
 	})
@@ -202,7 +202,7 @@ $(document).ready(function(){
 		});
 	}
 
-	$("#input-now").bind("change",function(){
+	$("#input-now").on("change",function(){
 		if($(this).is(":checked")){
 			$("#input-date").attr("disabled", "disabled");
 			$("#input-time").attr("disabled", "disabled");
@@ -223,19 +223,19 @@ $(document).ready(function(){
 				event.preventDefault();											//  prevent default browser behaviour
 				var input = $("#input-content");								//  shortcut textarea
 				var mirror = $("div.CodeMirror-focused");						//  shortcut code mirror
-				if(mirror.size())												//  code mirror is enabled
+				if(mirror.length)												//  code mirror is enabled
 					input.data("codemirror").save();							//  save code mirror content to textarea
 				input.add(mirror).css("opacity", 0.5);							//  dim textarea and code mirror
 				$.ajax({														//  save content using AJAX
 					url: "./blog/setContent/"+blogArticleId,					//  controller action and article ID
 					data: {content: input.val()},								//  send content ...
 					type: "post",												//  ... via POST
-					success: function(response){								//  
+					success: function(response){								//
 						$("div.CodeMirror-focused").css("opacity", 1);			//  reset code mirror opacity
 						$("#input-content").css("opacity", 1);					//  reset textarea opacity
 					}
 				});
-				return false;													//  
+				return false;													//
 			}
 		}
 	});

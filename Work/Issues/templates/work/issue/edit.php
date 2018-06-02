@@ -29,11 +29,11 @@ if( !empty( $projects ) ){
 $script	= '
 $(document).ready(function(){
 	$("#panel-mode-1").hide();
-	$("#issue-edit-trigger-mode-0").bind("click",function(){
+	$("#issue-edit-trigger-mode-0").on("click",function(){
 		$("#panel-mode-0").show();
 		$("#panel-mode-1").hide();
 	});
-	$("#issue-edit-trigger-mode-1").bind("click",function(){
+	$("#issue-edit-trigger-mode-1").on("click",function(){
 		$("#panel-mode-0").hide();
 		$("#panel-mode-1").show();
 	});

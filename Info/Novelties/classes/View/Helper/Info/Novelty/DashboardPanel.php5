@@ -69,7 +69,7 @@ $script	= '
 <script>
 var InfoNoveltyDashboardPanel = {
 	init: function(){
-		jQuery("#dashboard-panel-info-novelty button.btn").bind("click", function(){
+		jQuery("#dashboard-panel-info-novelty button.btn").on("click", function(){
 			var _this = jQuery(this);
 			_this.parent().parent().fadeOut();
 			jQuery.ajax({

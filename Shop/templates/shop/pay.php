@@ -41,7 +41,7 @@ $tabContent	= '
 </div>
 <script>
 jQuery(document).ready(function(){
-	jQuery("ul.payment-method-list > li > a").bind("click", function(event){
+	jQuery("ul.payment-method-list > li > a").on("click", function(event){
 		jQuery("#modalLoadingPayment").modal();
 	});
 });

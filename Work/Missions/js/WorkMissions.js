@@ -1,6 +1,6 @@
 var WorkMissions = {
 	currentDay: 0,
-			
+
 	changeView: function(type){
 		document.location.href = "./work/mission?view="+parseInt(type);
 	},
@@ -24,18 +24,18 @@ var WorkMissions = {
 		WorkMissionsFilter.__init(mode);
 //		this.mode = mode;
 		var site = $("body.controller-work-mission");
-		if(!site.size())
+		if(!site.length)
 			return;
 
 		if(site.hasClass('action-calendar')){
-			WorkMissions.showTotalDayMissionCount($("#mission-calendar li").size());
+			WorkMissions.showTotalDayMissionCount($("#mission-calendar li").length);
 		}
 		if(site.hasClass('action-index') && mode === 'now'){
 			WorkMissions.showDayTable(WorkMissions.currentDay);
-			$("#input-import").bind("click", function(){
+			$("#input-import").on("click", function(){
 				$("#input-serial").trigger("click")
 			});
-			$("#input-serial").bind("change", function(){
+			$("#input-serial").on("change", function(){
 				var value = $("#input-serial").val().replace(/\\/g,"/");
 				$("#input-import").val(value.split(/\//).pop());
 				var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";

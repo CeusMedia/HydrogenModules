@@ -24,7 +24,7 @@ return '
 <h3>Evolution Graph</h3>
 An evolution graph is a two dimensional indicator. It shows several results (of whatever) as a line of colors.<br/>
 
-The aim is to be able to see the history 
+The aim is to be able to see the history
 <br/>
 <h4>Example</h4>
 In this example we got 4 values. Imagine these values to be results of tests or something like that.<br/>
@@ -49,7 +49,7 @@ If more values are given, class <cite>Math_Extrapolation</cite> is applied to sh
 <br/>
 <script>
 $(document).ready(function(){
-	$(".region-bar").bind("click",function(){
+	$(".region-bar").on("click",function(){
 		var bar = $(this);
 		var wasSelected = bar.hasClass("selected");
 		bar.parent().find(".region-bar.selected").removeClass("selected");

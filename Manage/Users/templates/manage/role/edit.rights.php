@@ -41,7 +41,7 @@ var ModuleManageUsers = {
 			}
 			else{
 				row.find(".label-module,.label-controller").hide();
-				var hasChangables = $(this).find("li.action.changable").size();
+				var hasChangables = $(this).find("li.action.changable").length;
 				if(!hasChangables)
 					row.fadeOut({duration: 0, queue: false});
 				else{
@@ -79,10 +79,10 @@ $env->getPage()->js->addScript( $script );
 
 $script	= '
 $(document).ready(function(){
-	$("#role-edit-rights li.changable").bind("mousedown", ModuleManageUsers.onChangeRightToggle );
-	$("#input-toggle-rights-all").bind("change", ModuleManageUsers.onChangeVisibleRightsToggle);
-	$("#button-toggle").bind("click", function(e){jQuery(this).children("label").trigger("click");});
-	$("#button-toggle>label").bind("click", function(e){e.stopPropagation();});
+	$("#role-edit-rights li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
+	$("#input-toggle-rights-all").on("change", ModuleManageUsers.onChangeVisibleRightsToggle);
+	$("#button-toggle").on("click", function(e){jQuery(this).children("label").trigger("click");});
+	$("#button-toggle>label").on("click", function(e){e.stopPropagation();});
 });
 ';
 $env->getPage()->js->addScript( $script );

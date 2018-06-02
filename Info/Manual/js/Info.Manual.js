@@ -1,7 +1,7 @@
 var InfoManual = {
 
 	renderer: "client",
-	
+
 	init: function(selectorContainer, selectorIndex){
 		InfoManual.renderMarkdown(selectorContainer);
 		InfoManual.renderIndex(selectorContainer, selectorIndex, [1,2,3,4,5], 'level-');
@@ -9,7 +9,7 @@ var InfoManual = {
 
 	renderMarkdown: function(selectorContainer){
 		var markdown = $(selectorContainer);
-		if(markdown.size()){
+		if(markdown.length){
 			if(this.renderer === "client"){
 				var converter = new Markdown.Converter();
 				var content = markdown.html().replace(/&gt;/, ">").replace(/&lt;/, "<");
@@ -37,11 +37,11 @@ var InfoManual = {
 	renderIndex: function(selectorSource, selectorTarget, levels, itemClassPrefix){
 		if(!selectorSource)
 			throw "No source selector given."
-		if(!jQuery(selectorSource).size())
+		if(!jQuery(selectorSource).length)
 			throw "No source element found by source selector."
 		if(!selectorTarget)
 			throw "No target selector given."
-		if(!jQuery(selectorTarget).size())
+		if(!jQuery(selectorTarget).length)
 			return;
 		if(!levels.length)
 			throw "No heading levels given."
@@ -60,7 +60,7 @@ var InfoManual = {
 			listItem	= jQuery("<li></li>").append(anchorLink).addClass(className);
 			list.append(listItem);
 		});
-		if(list.children().size() >= 3){
+		if(list.children().length >= 3){
 			var pathname = window.location.href.split('#')[0];
 			list.find('a[href^="#"]').each(function() {
 				$(this).attr('href', pathname + $(this).attr('href'));

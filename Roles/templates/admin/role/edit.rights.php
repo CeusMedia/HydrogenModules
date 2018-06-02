@@ -33,7 +33,7 @@ $tableRights	= '<table><tr><th>Controller</th><th>Aktionen</th><th>Status</th></
 
 $script	= '
 $(document).ready(function(){
-	$("#role-edit-rights li.changable").bind("mousedown",function(){
+	$("#role-edit-rights li.changable").on("mousedown",function(){
 		if(event.button != 0)
 			return;
 		var id = $(this).attr("id");

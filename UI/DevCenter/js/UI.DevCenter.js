@@ -2,18 +2,18 @@ if(typeof UI === "undefined")
 	UI = {};
 UI.DevCenter = {
 	init: function(){
-		$("#DevCenterHandleTop").bind("selectstart", function(event){
+		$("#DevCenterHandleTop").on("selectstart", function(event){
 			event.stopPropagation();
 			event.preventDefault();
 			return false;
 		});
-		$("#DevCenterHandleTop").bind("mousedown", function(event){
+		$("#DevCenterHandleTop").on("mousedown", function(event){
 			$(document).data("dragging", "#DevCenterHandleTop");
 			$("#DevCenterHandleTop").data("offset", event.pageY);
 			event.stopPropagation();
 			event.preventDefault();
 		});
-		$(document).bind("mousemove", function(event){
+		$(document).on("mousemove", function(event){
 			if($(this).data("dragging")){
 				var diff = $("#DevCenterHandleTop").data("offset") - event.pageY;
 				var height = ($("#DevCenter").height() + diff) / $(window).height() * 100;
@@ -27,7 +27,7 @@ UI.DevCenter = {
 				event.preventDefault();
 			}
 		});
-		$(document).bind("mouseup", function(event){
+		$(document).on("mouseup", function(event){
 				return;
 			if($(document).data("dragging") !== "#DevCenterHandleTop")
 			$.ajax({
@@ -40,7 +40,7 @@ UI.DevCenter = {
 			event.stopPropagation();
 			event.preventDefault();
 		});
-		$(window).bind("keyup", function(event){
+		$(window).on("keyup", function(event){
 			if(event.keyCode == 120){
 				if($("#DevCenter").is(":visible"))
 					UI.DevCenter.hide();
@@ -48,7 +48,7 @@ UI.DevCenter = {
 					UI.DevCenter.show();
 			}
 		});
-		$("#DevCenter #DevCenterContent .tabbable .navbar .nav-collapse a").bind("click", function(){
+		$("#DevCenter #DevCenterContent .tabbable .navbar .nav-collapse a").on("click", function(){
 			$.ajax({
 				url: "./?action=ajaxSetTab",
 				data: {tab: $(this).attr("href").substring(1)},

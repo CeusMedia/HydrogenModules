@@ -13,13 +13,13 @@ ModuleManagePages.PageEditor = {
 
 	init: function(format){
 //		console.log('init');
-		if($("#tabs-page-editor").size()){
+		if($("#tabs-page-editor").length){
 			$("#tabs-page-editor .optional-trigger").trigger("change");
 			$("#tabs-page-editor>ul>li>a").each(function(){
 				if($(this).parent().hasClass("active"))
 					$(this).parent().parent().parent().find($(this).attr("href")).addClass("active");
 			});
-			$("#tabs-page-editor>ul>li>a").bind("click", function(){
+			$("#tabs-page-editor>ul>li>a").on("click", function(){
 				var key = $(this).attr("href").replace(/#tab/, "");
 				if(key == 3){
 					if( ModuleManagePages.PageEditor.editor.toLowerCase() == "codemirror")
@@ -56,7 +56,7 @@ ModuleManagePages.PageEditor = {
 				$("#page-preview-mask").show();
 			});
 			ModuleManagePages.PageEditor.initDefaultMetaCopy();
-			$("#input_page_editor").bind("change", ModuleManagePages.PageEditor.setEditor);
+			$("#input_page_editor").on("change", ModuleManagePages.PageEditor.setEditor);
 		}
 		ModuleManagePages.PageEditor.initSortable();
 	},
@@ -83,7 +83,7 @@ ModuleManagePages.PageEditor = {
 		$("#meta-defaults dt").each(function(nr, term){
 			if($(term).hasClass("meta-default")){
 				var link = $("<a></a>").attr("href", "#").html("&larr;&nbsp;kopieren");
-				link.bind("click", {term: term, key: $(term).data("key")}, function(event){
+				link.on("click", {term: term, key: $(term).data("key")}, function(event){
 					var input = $("#input_"+event.data.key);
 					input.val($(event.data.term).next().html());
 					event.stopPropagation();
@@ -115,7 +115,7 @@ ModuleManagePages.PageEditor = {
 	},
 
 	setupAce: function(){
-		if(jQuery("textarea#input_page_content").size())
+		if(jQuery("textarea#input_page_content").length)
 			ModuleAce.applyTo("textarea#input_page_content");
 	},
 
