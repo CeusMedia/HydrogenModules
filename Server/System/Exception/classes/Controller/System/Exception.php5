@@ -3,7 +3,7 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppException( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
 		$exception	= $data['exception'];
-//UI_HTML_Exception_Page::display( $exception );die;
+UI_HTML_Exception_Page::display( $exception );die;
 		$env->getSession()->set( 'exception', serialize( (object) array(
 			'message'	=> $exception->getMessage(),
  			'code'		=> $exception->getCode(),

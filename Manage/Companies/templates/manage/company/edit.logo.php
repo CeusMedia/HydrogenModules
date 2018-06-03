@@ -22,7 +22,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_image">'.$w->labelImage.'</label>
-					'.View_Helper_Input_File::render( 'image', $iconOpen, 'Datei auswählen...' ).'
+					'.View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, 'Datei auswählen...' ).'
 				</div>
 			</div>
 			<div class="buttonbar">

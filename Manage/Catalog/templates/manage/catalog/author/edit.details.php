@@ -61,7 +61,7 @@ return '
 					<div class="row-fluid">
 						<div class="span10">
 							<label for="input_image">'.$w->labelImage.'</label>
-							'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', FALSE ).'
+							'.View_Helper_Input_File::renderStatic( $env, 'image', '<i class="icon-folder-open icon-white"></i>', FALSE ).'
 						</div>
 						<div class="span2 pull-right">
 							<label>&nbsp;</label>

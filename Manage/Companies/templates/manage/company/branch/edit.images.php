@@ -78,7 +78,7 @@ return HTML::DivClass( 'content-panel',
 	HTML::Form( './manage/company/branch/addImage/'.$branch->branchId, 'my_branch_image_add',
 		HTML::Label( 'image_title', $w->labelImage, '' ).
 		HTML::DivClass( 'row-fluid',
-			View_Helper_Input_File::render( 'image', $iconOpen, 'Datei auswählen...' )
+			View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, 'Datei auswählen...' )
 		).
 		HTML::DivClass( 'row-fluid',
 			HTML::DivClass( 'span12',

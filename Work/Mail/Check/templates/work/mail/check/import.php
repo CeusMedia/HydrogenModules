@@ -53,15 +53,16 @@ if( !empty( $type ) ){
 </div>';
 }
 else{
-
-return $tabs.'
+	$helperUpload	= new View_Helper_Input_File( $env );
+	$helperUpload->setName( 'file' )->setLabel( 'Datei' )->setRequired( TRUE );
+	return $tabs.'
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
 			<h3>Import (1/2)</h3>
 			<div class="content-panel-inner">
 				<form action="./work/mail/check/import" method="post" enctype="multipart/form-data">
-					'.View_Helper_Input_File::render( 'file', 'Datei', TRUE ).'
+					'.$helperUpload->render().'
 					<div class="buttonbar">
 						<button type="submit" name="save" class="btn btn-primary"><i class="icon-upload icon-white"></i>&nbsp;hochladen</button>
 					</div>

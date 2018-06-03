@@ -47,7 +47,7 @@ return '
 					<div class="row-fluid">
 						<div class="span11">
 							<label for="input_path">'.$w->labelImage.'</label>
-							'.View_Helper_Input_File::render( 'image', $iconUpload ).'
+							'.View_Helper_Input_File::renderStatic( $env, 'image', $iconUpload ).'
 						</div>
 					</div>
 				</div>

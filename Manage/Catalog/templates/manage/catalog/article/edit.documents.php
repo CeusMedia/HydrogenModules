@@ -67,7 +67,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_document">lokale Dokumentdatei <small class="muted"></small></label>
-					'.View_Helper_Input_File::render( 'document', '<i class="icon-folder-open icon-white"></i>', 'Datei auswählen...' ).'
+					'.View_Helper_Input_File::renderStatic( $env, 'document', '<i class="icon-folder-open icon-white"></i>', 'Datei auswählen...' ).'
 				</div>
 			</div>
 			<div class="row-fluid">

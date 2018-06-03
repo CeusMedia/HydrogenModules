@@ -78,7 +78,7 @@ $panelUpload	= '
 		</div>
 		<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 			<label for="input_image">Bilddatei <small class="muted"></small></label>
-			'.View_Helper_Input_File::render( 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
+			'.View_Helper_Input_File::renderStatic( $env, 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
 			</div>

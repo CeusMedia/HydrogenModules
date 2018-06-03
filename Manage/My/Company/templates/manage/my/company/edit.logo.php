@@ -21,7 +21,7 @@ return '
 				<div class="span12">
 					<label for="input_image">'.$words['uploadLogo']['labelImage'].'</label>
 					<div class="row-fluid">
-						'.View_Helper_Input_File::render( 'image', $iconOpen, 'Datei auswählen...' ).'
+						'.View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, 'Datei auswählen...' ).'
 					</div>
 				</div>
 			</div>

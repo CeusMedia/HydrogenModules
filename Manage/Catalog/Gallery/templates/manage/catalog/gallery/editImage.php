@@ -52,7 +52,7 @@ $panelEdit  	= '
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_upload">'.$w->labelUpload.'</label>
-							'.View_Helper_Input_File::render( 'upload', '<i class="icon-folder-open icon-white"></i>' ).'
+							'.View_Helper_Input_File::renderStatic( $env, 'upload', '<i class="icon-folder-open icon-white"></i>' ).'
 						</div>
 					</div>
 					<div class="row-fluid">

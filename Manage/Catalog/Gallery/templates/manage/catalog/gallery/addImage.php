@@ -13,6 +13,8 @@ $optStatus		= UI_HTML_Elements::Options( $words['states'], 0 );
 
 $image->price	= $image->price ? $image->price : $category->price;
 
+$iconFolder		= '<i class="icon-folder-open icon-white"></i>';
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -31,7 +33,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_upload">'.$w->labelUpload.'</label>
-					'.View_Helper_Input_File::render( 'upload', '<i class="icon-folder-open icon-white"></i>' ).'
+					'.View_Helper_Input_File::renderStatic( $env, 'upload', $iconFolder ).'
 				</div>
 			</div>
 			<div class="row-fluid">
