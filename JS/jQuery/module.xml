@@ -24,18 +24,20 @@
 		<script top="yes">jquery-migrate-3.0.1.min.js</script>
 	</files>
 	<config protected="yes" type="string" name="version" values="1.8.2,1.10.2,1.11.1,3.3.1">3.3.1</config>
-	<config protected="yes" type="boolean" name="migrate">yes</config>
-	<config protected="yes" type="string" name="migrate.debug" values="auto,on,off">auto</config>
 	<config protected="yes" type="boolean" name="load.minified">yes</config>
 	<config protected="yes" type="boolean" name="load.map">no</config>
+	<config protected="yes" type="boolean" name="migrate">yes</config>
+	<config protected="yes" type="string" name="migrate.debug" values="auto,on,off">auto</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
 		$version	= $module->config['version']->value;
 		$minified	= $module->config['load.minified']->value;
 		if( $minified ){
-			if( $module->config['load.map']->value )
-				$context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map', 9 );
 			$context->addJavaScript( $pathJs.'jquery-'.$version.'.min.js' );
+			if( $module->config['load.map']->value )
+				$versions	= array( '1.10.2', '1.11.1', '3.3.1' );
+				if( in_array( $version, versions ) )
+					$context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map', 9 );
 		}
 		else
 			$context->addJavaScript( $pathJs.'jquery-'.$version.'.js' );
