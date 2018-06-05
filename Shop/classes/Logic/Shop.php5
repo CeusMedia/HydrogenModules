@@ -1,5 +1,5 @@
 <?php
-class Logic_Shop extends CMF_Hydrogen_Environment_Resource_Logic{
+class Logic_Shop extends CMF_Hydrogen_Logic{
 
 	/**	@var	Logic_ShopBridge			$bridge */
 	protected $bridge;
