@@ -6,7 +6,9 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected $session;
 	protected $cookie;
 	protected $messenger;
+	protected $modules;
 	protected $useCsrf;
+	protected $useOauth2;
 	protected $moduleConfig;
 	protected $limiter;
 
@@ -18,11 +20,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_local.', TRUE );
-		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
-
-		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+		$this->modules		= $this->env->getModules();
+		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
+		$this->useOauth2	= $this->modules->has( 'Resource_Authentication_Backend_OAuth2' );
+		if( $this->modules->has( 'Resource_Limiter' ) )
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
+		$this->addData( 'useCsrf', $this->useCsrf );
+		$this->addData( 'useOauth2', $this->useOauth2 );
 	}
 
 /*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
@@ -284,16 +289,6 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$useRememberByConfig	= $this->moduleConfig->get( 'login.remember' );
 		$useRememberByLimit		= !$this->limiter || !$this->limiter->denies( 'Auth.Local.Login:remember' );
 		$this->addData( 'useRemember', $useRememberByConfig && $useRememberByLimit );
-
-
-		if( $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) ){
-			$modelProvider	= new Model_Oauth_Provider( $this->env );
-			$providers		= $modelProvider->getAll(
-				array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE ),
-				array( 'rank' => 'ASC' )
-			);
-			$this->addData( 'oauth2Providers', $providers );
-		}
 	}
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
@@ -552,6 +547,19 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 						$mailId		= $logic->enqueueMail( $mail, $language, $user );
 						$logic->sendQueuedMail( $mailId );
 						$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
+						if( $this->session->get( 'auth_register_oauth_user_id' ) ){
+							$modelOauthUser	= new Model_Oauth_User( $this->env );
+							$modelOauthUser->add( array(
+								'oauthProviderId'	=> $this->session->get( 'auth_register_oauth_provider_id' ),
+								'oauthId'			=> $this->session->get( 'auth_register_oauth_user_id' ),
+								'localUserId'		=> $userId,
+								'timestamp'			=> time(),
+							) );
+							$this->session->remove( 'auth_register_oauth_provider_id' );
+							$this->session->remove( 'auth_register_oauth_provider' );
+							$this->session->remove( 'auth_register_oauth_user_id' );
+							$this->session->remove( 'auth_register_oauth_data' );
+						}
 					}
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
@@ -568,12 +576,11 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 		}
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
-			if( !$input->has( 'username' ) )
-				$input->set( 'username', $this->session->get( 'auth_register_oauth_username' ) );
-			if( empty( $input['email'] ) )
-				$input['email']	= $this->session->get( 'auth_register_oauth_email' );
+			$fields	= array( 'username', 'email', 'gender', 'firstname', 'surname' );
+			foreach( $fields as $field )
+				if( !isset( $input[$field] ) || !strlen( trim( $input[$field] ) ) )
+					$input[$field]	= $this->session->get( 'auth_register_oauth_'.$field );
 		}
-
 		foreach( $input as $key => $value )
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
 		if( !$input->get( 'country' ) && $this->env->getLanguage()->getLanguage() == 'de' )

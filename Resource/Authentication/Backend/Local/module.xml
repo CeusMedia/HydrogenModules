@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -36,6 +36,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.4.3">Add config for roles allowed to login.</log>
 	<log version="0.4.4">Autologin user after account confirmation.</log>
 	<log version="0.4.5">Embed OAuth2 providers on login.</log>
+	<log version="0.4.6">Embed OAuth2 providers on registration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

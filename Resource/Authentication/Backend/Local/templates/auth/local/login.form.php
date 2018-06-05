@@ -12,26 +12,23 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconPassword	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
 }
 
-$fieldOauth2Providers	= '';
-if( isset( $oauth2Providers ) ){
-	$list		= array();
-	foreach( $oauth2Providers as $provider ){
-		$icon	= '';
-		if( $provider->icon )
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $provider->icon ) ).'&nbsp;';
-		$label	=  UI_HTML_Tag::create( 'a', $icon.$provider->title, array(
-			'href'	=> './auth/oauth2/login/'.$provider->oauthProviderId,
-			'class'	=> 'btn btn btn-info',
-		) );
-		$list[]	= $label;
-	}
-	$fieldOauth2Providers	=  HTML::DivClass( "row-fluid",
-		HTML::DivClass( "span12", array(
-			UI_HTML_Tag::create( 'br', NULL ),
-			UI_HTML_Tag::create( 'label', 'Oder anmelden mit' ),
-			UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', join( ' ', $list ), array( 'class' => 'span12' ) ), array( 'class' => 'row-fluid' ) ),
-		) )
-	);
+
+$fieldOauth2	= '';
+if( $useOauth2 ){
+	$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
+	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
+	$helper->setDropdownLabel( 'weitere' );
+	$helper->setLinkPath( './auth/oauth2/login/' );
+	$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
+ 			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'hr', NULL ),
+		), array( 'class' => 'span12' ) ),
+	), array( 'class' => 'row-fluid' ) );
 }
 
 $fieldRemember	= "";
@@ -80,7 +77,8 @@ $panelLogin	=
 HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),
 	HTML::DivClass( "content-panel-inner",
-		HTML::DivClass( "auth-login-form",
+		HTML::DivClass( "auth-login-form", array(
+			$fieldOauth2,
 			UI_HTML_Tag::create( 'form', array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
 				HTML::DivClass( "row-fluid",
@@ -116,7 +114,6 @@ HTML::DivClass( "content-panel content-panel-form", array(
 					) )
 				),
 				$fieldRemember,
-				$fieldOauth2Providers,
 				HTML::DivClass( "buttonbar", array(
 					HTML::DivClass( "btn_toolbar", array(
 						$buttonLogin,
@@ -129,7 +126,7 @@ HTML::DivClass( "content-panel content-panel-form", array(
 				'name'		=> "editUser",
 				'method'	=> "post"
 			) )
-		)
+		) )
 	)
 ) );
 
