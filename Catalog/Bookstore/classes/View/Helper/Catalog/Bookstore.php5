@@ -227,7 +227,7 @@ class View_Helper_Catalog_Bookstore{
 	public function renderCategoryArticleList( $category ){
 		$cacheKey	= 'catalog.bookstore.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
-			$orders		= array( 'ABS(volume)' => 'DESC', 'articleId' => 'DESC' );
+			$orders		= array( 'articleCategoryId' => 'DESC', 'articleId' => 'DESC' );
 			$articles	= $this->logic->getCategoryArticles( $category, $orders );
 			$list	= array();
 			foreach( $articles as $article )
