@@ -2,15 +2,24 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$form			= '';
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+	'href'		=> './admin/oauth2',
+	'class'		=> 'btn',
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+	'type'		=> 'submit',
+	'name'		=> 'save',
+	'class'		=> 'btn btn-primary',
+) );
+
 $form			= UI_HTML_Tag::create( 'form', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_', 'class' => 'required mandatory' ) ),
+			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title', 'class' => 'required mandatory' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
 				'type'			=> 'text',
-				'name'			=> '',
-				'id'			=> 'input_',
+				'name'			=> 'title',
+				'id'			=> 'input_title',
 				'class'			=> 'span12',
 				'value'			=> htmlentities( $provider->title, ENT_QUOTES, 'UTF-8' ),
 				'required'		=> 'required',
@@ -87,19 +96,13 @@ $form			= UI_HTML_Tag::create( 'form', array(
 			) ),
 		), array( 'class' => 'span5' ) ),
 	), array( 'class' => 'row-fluid' ) ),
+	UI_HTML_Tag::create( 'div', join( ' ', array(
+		$buttonCancel,
+		$buttonSave,
+	) ), array( 'class' => 'buttonbar' ) ),
 ), array(
 	'action'	=> './admin/oauth2/add',
 	'method'	=> 'post',
-) );
-
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
-	'href'		=> './admin/oauth2',
-	'class'		=> 'btn',
-) );
-$buttonSave		= UI_HTML_Tag::create( 'a', $iconSave.' speichern', array(
-	'type'		=> 'submit',
-	'name'		=> 'save',
-	'class'		=> 'btn btn-primary',
 ) );
 
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/add/' ) );
@@ -108,10 +111,6 @@ $panelForm	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'neuer Anbieter' ),
 	UI_HTML_Tag::create( 'div', array(
 		$form,
-		UI_HTML_Tag::create( 'div', join( ' ', array(
-			$buttonCancel,
-			$buttonSave,
-		) ), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 

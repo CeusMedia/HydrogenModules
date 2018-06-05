@@ -6,17 +6,40 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remo
 $iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
 $iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-off' ) );
 
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+	'href'		=> './admin/oauth2',
+	'class'		=> 'btn',
+) );
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+	'type'		=> 'submit',
+	'name'		=> 'save',
+	'class'		=> 'btn btn-primary',
+) );
+
+$buttonActivate		= UI_HTML_Tag::create( 'a', $iconActivate.' aktivieren', array(
+	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_ACTIVE,
+	'class'		=> 'btn btn-small btn-success',
+) );
+$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate.' deaktivieren', array(
+	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_INACTIVE,
+	'class'		=> 'btn btn-small btn-inverse',
+) );
+
+$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+	'href'		=> './admin/oauth2/remove/'.$providerId,
+	'class'		=> 'btn btn-danger btn-small',
+) );
+
 $form			= UI_HTML_Tag::create( 'form', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_', 'class' => 'required mandatory' ) ),
+			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title', 'class' => 'required mandatory' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
 				'type'			=> 'text',
-				'name'			=> '',
-				'id'			=> 'input_',
+				'name'			=> 'title',
+				'id'			=> 'input_title',
 				'class'			=> 'span12',
 				'value'			=> htmlentities( $provider->title, ENT_QUOTES, 'UTF-8' ),
-				'placeholder'	=> 'fa fa-fw fa-plug',
 				'required'		=> 'required',
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
@@ -28,6 +51,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'name'			=> 'icon',
 				'id'			=> 'input_icon',
 				'class'			=> 'span12',
+				'placeholder'	=> 'fa fa-fw fa-plug',
 				'value'			=> htmlentities( $provider->icon, ENT_QUOTES, 'UTF-8' ),
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
@@ -94,34 +118,17 @@ $form			= UI_HTML_Tag::create( 'form', array(
 			) ),
 		), array( 'class' => 'span5' ) ),
 	), array( 'class' => 'row-fluid' ) ),
+	UI_HTML_Tag::create( 'div', join( ' ', array(
+		$buttonCancel,
+		$buttonSave,
+		$provider->status > 0 ? $buttonDeactivate : $buttonActivate,
+		$buttonRemove,
+	) ), array( 'class' => 'buttonbar' ) ),
 ), array(
 	'action'	=> './admin/oauth2/edit/'.$providerId,
 	'method'	=> 'post',
 ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
-	'href'		=> './admin/oauth2',
-	'class'		=> 'btn',
-) );
-$buttonSave		= UI_HTML_Tag::create( 'a', $iconSave.' speichern', array(
-	'type'		=> 'submit',
-	'name'		=> 'save',
-	'class'		=> 'btn btn-primary',
-) );
-
-$buttonActivate		= UI_HTML_Tag::create( 'a', $iconActivate.' aktivieren', array(
-	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_ACTIVE,
-	'class'		=> 'btn btn-small btn-success',
-) );
-$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate.' deaktivieren', array(
-	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_INACTIVE,
-	'class'		=> 'btn btn-small btn-inverse',
-) );
-
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
-	'href'		=> './admin/oauth2/remove/'.$providerId,
-	'class'		=> 'btn btn-danger btn-small',
-) );
 
 $hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek (Composer-Paket "'.$provider->composerPackage.'") ist installiert.', array( 'class' => 'alert alert-success' ) );
 if( !$exists )
@@ -134,12 +141,6 @@ $panelForm	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		$hint,
 		$form,
-		UI_HTML_Tag::create( 'div', join( ' ', array(
-			$buttonCancel,
-			$buttonSave,
-			$provider->status > 0 ? $buttonDeactivate : $buttonActivate,
-			$buttonRemove,
-		) ), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
