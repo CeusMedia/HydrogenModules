@@ -2,10 +2,11 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add provider icon support.</log>
+	<log version="0.2.2">Add helper for provider buttons.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,6 +15,7 @@
 		<class>Model/Oauth/Provider.php5</class>
 		<class>Model/Oauth/User.php5</class>
 		<class>View/Auth/Oauth2.php5</class>
+		<class>View/Helper/Oauth/ProviderButtons.php5</class>
 <!--		<class>Logic/Authentication/Backend/Oauth2.php5</class>-->
 		<template>auth/oauth2/login.php</template>
 		<locale>de/auth/oauth2.ini</locale>
@@ -27,9 +29,14 @@
 	<link xml:lang="de" rank="99" access="inside" path="auth/oauth2/logout">Logout</link>
 	<link xml:lang="en" rank="10" access="outside" path="auth/oauth2/login">Login</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/oauth2/logout">Logout</link>
+
+	<link access="outside" path="auth/oauth2/register"></link>
+
+
 	<link rank="99" access="public" path="auth/oauth2/index"></link>
+	<link access="public" path="auth/oauth2/unbind"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth2::___onAuthRegisterBackend</hook>
-	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Oauth2::___onAuthRegisterLoginTab</hook>
+<!--	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Oauth2::___onAuthRegisterLoginTab</hook>-->
 <!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>oauth_providers`;
@@ -37,18 +44,18 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_providers` (
   `oauthProviderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) NOT NULL,
   `rank` tinyint(1) unsigned NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `clientId` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `clientSecret` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `composerPackage` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `className` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `options` text COLLATE utf8_unicode_ci,
-  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(50) COLLATE utf8_unicode_ci,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT '0',
   PRIMARY KEY (`oauthProviderId`),
-  UNIQUE KEY `clientId` (`clientId`),
   UNIQUE KEY `title` (`title`),
+  UNIQUE KEY `clientId` (`clientId`),
   UNIQUE KEY `className` (`className`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

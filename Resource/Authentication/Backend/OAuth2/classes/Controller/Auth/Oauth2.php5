@@ -44,17 +44,25 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$context->registerTab( 'auth/oauth2/login', $label, $rank );									//  register main tab
 	}
 
-	protected function getProviderObject( $providerId ){
+	protected function getProvider( $providerId ){
+		$modelProvider	= new Model_Oauth_Provider( $this->env );
+		$provider		= $modelProvider->get( $providerId );
+		if( !$provider )
+			throw new RangeException( 'Invalid provider ID' );
+		return $provider;
+	}
+
+	protected function getProviderObject( $providerId, $redirectPath = 'auth/oauth2/login' ){
 		$modelProvider	= new Model_Oauth_Provider( $this->env );
 		$provider		= $modelProvider->get( $providerId );
 		if( !$provider )
 			throw new RangeException( 'Invalid provider ID' );
 		if( !class_exists( $provider->className ) )
-			throw new RuntimeException( 'OAuth2 provider class ist not existing: '.$provider->className );
+			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
 		$options		= array(
 			'clientId'		=> $provider->clientId,
 			'clientSecret'	=> $provider->clientSecret,
-			'redirectUri'	=> $this->env->url.'auth/oauth2/login',
+			'redirectUri'	=> $this->env->url.$redirectPath,
 		);
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
@@ -251,6 +259,154 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 //				session_destroy();																	//  completely destroy session
 		}
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
+	}
+
+	public function unbind( $providerId = 0 ){
+		if( $providerId && class_exists( 'Logic_Authentication' ) ){
+			$logic	= $this->env->getLogic()->authentication;
+			$userId	= $logic->getCurrentUserId();
+			if( $userId && class_exists( 'Model_Oauth_User' ) ){
+				$model	= new Model_Oauth_User( $this->env );
+				$model->removeByIndices( array(
+					'localUserId'		=> $userId,
+					'oauthProviderId'	=> $providerId,
+				) );
+			}
+		}
+		$this->session->remove( 'auth_register_oauth_provider_id' );
+		$this->session->remove( 'auth_register_oauth_provider' );
+		$this->session->remove( 'auth_register_oauth_user_id' );
+		$this->session->remove( 'auth_register_oauth_data' );
+		if( ( $from = $this->request->get( 'from' ) ) )
+			$this->restart( $from, FALSE );
+		$this->restart( getEnv( 'HTTP_REFERER' ), FALSE );
+	}
+
+	public function register( $providerId = NULL ){
+		$modelProvider	= new Model_Oauth_Provider( $this->env );
+		$modelUserOauth	= new Model_Oauth_User( $this->env );
+		$modelUser		= new Model_User( $this->env );
+
+		$words		= $this->getWords();
+		$msgs		= (object) $words['login'];
+
+		if( ( $error = $this->request->get( 'error' ) ) ){
+			$this->messenger->noteError( $error );
+			$this->restart( 'register', TRUE );
+		}
+		if( ( $code = $this->request->get( 'code' ) ) ){
+			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
+			$currentState		= $this->session->get( 'oauth2_state' );
+			if( !$currentProviderId || !$currentState ){
+				$this->messenger->noteFailure( 'Access denied, no OAuth2 provider selected or not authentication requested.' );
+				$this->restart( 'register', TRUE );
+			}
+			$provider	= $modelProvider->get( $currentProviderId );
+			if( $currentState !== $this->request->get( 'state' ) ){
+				$this->session->remove( 'oauth2_state' );
+				$this->messenger->noteFailure( 'Access denied, invalid OAuth2 state.' );
+				$this->restart( 'register', TRUE );
+			}
+			try{
+				$client	= $this->getProviderObject( $currentProviderId, 'auth/oauth2/register' );
+				$token	= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
+				$user	= $client->getResourceOwner( $token );
+
+
+				$provider	= $this->getProvider( $currentProviderId );
+				$this->session->set( 'auth_register_oauth_provider_id', $currentProviderId );
+				$this->session->set( 'auth_register_oauth_provider', $provider->title );
+				$this->session->set( 'auth_register_oauth_user_id', $user->getId() );
+				$this->session->set( 'auth_register_oauth_data', $user->toArray() );
+
+				$data	= $this->getOauthUserData( $provider, $user );
+				foreach( $data as $key => $value )
+					$this->session->set( 'auth_register_oauth_'.$key, $value );
+				$this->restart( 'auth/local/register', FALSE );
+			}
+			catch( Exception $e ){
+				$this->messenger->noteError( $msgs->msgErrorException, $provider->title, $e->getMessage() );
+				$this->messenger->noteError( $e->getMessage() );
+				if( $this->env->getLog()->logException( $e, $this ) )
+					$this->restart( 'register', TRUE );
+				UI_HTML_Exception_Page::display( $e );
+				exit;
+			}
+		}
+		if( $providerId ){
+			$provider	= $modelProvider->get( $providerId );
+			if( !$provider ){
+				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
+				$this->restart( 'login', TRUE );
+			}
+			$this->session->set( 'oauth2_providerId', $providerId );
+			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
+			$scopes	= array();
+			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
+				$scopes	= array( 'scope' => 'identity.basic' );
+			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
+
+			$this->session->set( 'oauth2_state', $providerObject->getState() );
+			$this->restart( $authUrl, NULL, NULL, TRUE );
+		}
+		$providers	= $modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
+		$this->addData( 'providers', $providers );
+		return;
+	}
+
+	protected function getOauthUserData( $provider, $user ){
+		$data	= array( 'data' => $user->toArray() );
+		if( $provider->composerPackage === 'league/oauth2-facebook' ){
+			$data['username']	= $user->getName();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= $user->getGender() === 'male' ? 2 : 1;
+			$data['firstname']	= $user->getFirstName();
+			$data['surname']	= $user->getLastName();
+		}
+		if( $provider->composerPackage === 'league/oauth2-github' ){
+			$name	= preg_split( '/\s+/', $user->getName() );
+			$data['username']	= $user->getNickname();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= 0;
+			$data['firstname']	= array_pop( $name );
+			$data['surname']	= join( ' ', $name );
+		}
+		if( $provider->composerPackage === 'league/oauth2-google' ){
+			$data['username']	= $user->getName();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= 0;
+			$data['firstname']	= $user->getFirstName();
+			$data['surname']	= $user->getLastName();
+		}
+		if( $provider->composerPackage === 'hayageek/oauth2-yahoo' ){
+			$data['username']	= $user->getName();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= 0;
+			$data['firstname']	= $user->getFirstName();
+			$data['surname']	= $user->getLastName();
+		}
+		if( $provider->composerPackage === 'stevenmaguire/oauth2-paypal' ){
+			$data['username']	= $user->getName();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= $user->getGender();
+			$data['firstname']	= $user->getGivenName();
+			$data['surname']	= $user->getFamilyName();
+		}
+		if( $provider->composerPackage === 'adam-paterson/oauth2-slack' ){
+			$data['username']	= $user->getName();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= 0;
+			$data['firstname']	= $user->getFirstName();
+			$data['surname']	= $user->getLastName();
+		}
+		if( $provider->composerPackage === 'seinopsys/oauth2-deviantart' ){
+			$data['username']	= $user->getName();
+			$data['email']		= '';
+			$data['gender']		= 0;
+			$data['firstname']	= '';
+			$data['surname']	= '';
+		}
+		return $data;
 	}
 
 	/**
