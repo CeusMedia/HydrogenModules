@@ -23,6 +23,7 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 	public function add( $providerId ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
+		$provider	= $this->modelProvider->get( $providerId );
 		$client		= $this->getProviderObject( $providerId );
 		$words		= (object) $this->getWords( 'add' );
 		if( ( $error = $request->get( 'error' ) ) ){
@@ -61,7 +62,10 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		else{
-			$authUrl	= $client->getAuthorizationUrl();
+			$scopes	= array();
+			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
+				$scopes	= array( 'scope' => 'identity.basic' );
+			$authUrl	= $client->getAuthorizationUrl( $scopes );
 			$session->set( 'oauth2_state', $client->getState() );
 			$this->restart( $authUrl, FALSE, NULL, TRUE );
 		}
