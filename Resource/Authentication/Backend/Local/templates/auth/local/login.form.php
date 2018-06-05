@@ -16,7 +16,6 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 $fieldOauth2	= '';
 if( $useOauth2 ){
 	$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-	$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	$helper->setDropdownLabel( 'weitere' );
 	$helper->setLinkPath( './auth/oauth2/login/' );

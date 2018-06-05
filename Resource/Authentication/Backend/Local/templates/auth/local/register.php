@@ -54,12 +54,18 @@ if( $useOauth2 ){
 	if( $assignedProvider ){
 		$field		= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
-			UI_HTML_Tag::create( 'div', join( '<br/>', array(
-				'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
-				'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
-				'',
-				'',
-			) ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'div', join( '<br/>', array(
+						'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
+						'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
+						'',
+					) ), array( 'class' => 'span9' ) ),
+					UI_HTML_Tag::create( 'div', array(
+						'<span class="fa-stack fa-3x"><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
+					), array( 'class' => 'span3', 'style' => 'text-align: center' ) ),
+				), array( 'class' => 'row-fluid' ) ),
+			) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
 					'href'	=> './auth/oauth2/unbind/?___from=auth/local/register',
