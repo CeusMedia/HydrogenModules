@@ -4,6 +4,7 @@ class View_Helper_Input_File{
 	protected $buttonClass		= 'btn-primary';
 	protected $label			= 'durchsuchen';
 	protected $name				= 'upload';
+	protected $multiple			= FALSE;
 	protected $required			= FALSE;
 
 	public function __construct( $env ){
@@ -20,6 +21,7 @@ class View_Helper_Input_File{
 			'name'		=> $this->name,
 			'class'		=> 'bs-input-file',
 			'id'		=> 'input_'.$this->name,
+			'multiple'	=> $this->multiple ? 'multiple' : NULL,
 		) );
 		$toggle		= UI_HTML_Tag::create( 'a', $this->label, array(
 			'class'		=> 'btn '.$this->buttonClass.' bs-input-file-toggle',
@@ -56,6 +58,11 @@ class View_Helper_Input_File{
 
 	public function setLabel( $label ){
 		$this->label	= $label;
+		return $this;
+	}
+
+	public function setMultiple( $multiple ){
+		$this->multiple	= $multiple;
 		return $this;
 	}
 
