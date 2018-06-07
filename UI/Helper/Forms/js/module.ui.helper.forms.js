@@ -103,9 +103,9 @@ var Forms = {
 				form.parent().find(".form-message-error").slideDown(500);
 			});
 /*			form.css({opacity: 1});
-			form.find(':input').removeProp('disabled');
+			form.find(':input').prop('disabled', false);
 			form.find('button').each(function(){
-				jQuery(this).removeProp('disabled');
+				jQuery(this).prop('disabled',false);
 			});*/
 		}
 	},

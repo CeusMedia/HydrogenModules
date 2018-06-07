@@ -117,7 +117,7 @@ var AdminModuleUpdater = {
             $("#btn_switch_files").data("state", 1);
         }
         else{
-            $("#file-rows input.file-check").removeProp("checked");
+            $("#file-rows input.file-check").prop("checked", false);
             $("#btn_switch_files").data("state", 0);
         }
     }

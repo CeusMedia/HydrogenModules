@@ -13,7 +13,7 @@ var ModulePaymentMangopayCardRegistration = {
 		var valid = this.validNumber && this.validDate && this.validCvv;
 		button.prop("disabled", "disabled");
 		if(valid)
-			button.removeProp("disabled");
+			button.prop("disabled", false);
 	},
 	validateCardDate: function(){
 		var input = jQuery("#input_cardDate");

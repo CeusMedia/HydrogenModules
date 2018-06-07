@@ -16,8 +16,9 @@ var ShopPaymentStripe = {
 		card.mount(selectorInput);												// Add an instance of the card Element into the `card-element` <div>
 		card.addEventListener("change", function(event) {
 			var displayError = document.getElementById(idErrors);
+			console.log(event);
 			if (event.complete)
-				jQuery("#"+idButton).removeProp("disabled");
+				jQuery("#"+idButton).prop("disabled", false);
 			else
 				jQuery("#"+idButton).prop("disabled", "disabled");
 
