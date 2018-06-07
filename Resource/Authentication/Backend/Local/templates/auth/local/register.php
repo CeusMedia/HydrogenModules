@@ -44,56 +44,56 @@ $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 $env->getPage()->js->addScriptOnReady('Auth.Registration.init();');
 $env->getPage()->css->theme->addUrl( 'module.resource.auth.local.css' );
 
-//print_m( $moduleConfig->getAll() );die;
-//print_m( $w );die;
-
 $fieldOauth2	= '';
-if( $useOauth2 ){
-	$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-	$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
-	if( $assignedProvider ){
-		$icon		= '';
-		if( $assignedProvider->icon ){
-			$icon		= UI_HTML_Tag::create( 'div', array(
-				'<span class="fa-stack fa-3x"><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
-			), array( 'class' => 'span3', 'style' => 'text-align: center' ) );
+if( isset( $useOauth2 ) && $useOauth2 ){
+	$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
+	if( $helper->count() ){
+		$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
+		if( $assignedProvider ){
+			$icon		= '';
+			if( $assignedProvider->icon ){
+				$icon		= UI_HTML_Tag::create( 'div', array(
+					'<span class="fa-stack fa-3x"><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
+				), array( 'class' => 'span3', 'style' => 'text-align: center' ) );
 
-		}
-		$field		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
-			UI_HTML_Tag::create( 'div', array(
+			}
+			$field		= UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', join( '<br/>', array(
-						'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
-						'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
-						'',
-					) ), array( 'class' => $icon ? 'span9' : 'span12' ) ),
-					$icon,
-				), array( 'class' => 'row-fluid' ) ),
-			) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
-					'href'	=> './auth/oauth2/unbind',
-					'class'	=> 'btn btn-small not-btn-inverse'
+					UI_HTML_Tag::create( 'div', array(
+						UI_HTML_Tag::create( 'div', join( '<br/>', array(
+							'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
+							'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
+							'',
+						) ), array( 'class' => $icon ? 'span9' : 'span12' ) ),
+						$icon,
+					), array( 'class' => 'row-fluid' ) ),
 				) ),
-			) ),
-		), array( 'class' => 'alert alert-success' ) );
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
+						'href'	=> './auth/oauth2/unbind',
+						'class'	=> 'btn btn-small not-btn-inverse'
+					) ),
+				) ),
+			), array( 'class' => 'alert alert-success' ) );
+		}
+		else{
+			$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
+			$helper->setDropdownLabel( 'weitere Anbieter' );
+			$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
+			$field		=  array(
+				UI_HTML_Tag::create( 'label', 'Registrieren mit' ),
+				UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'span12' ) ), array( 'class' => 'row-fluid' ) ),
+			);
+		}
+		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'div', array(
+				$field,
+				UI_HTML_Tag::create( 'hr', NULL ),
+			), array( 'class' => 'span12' ) ),
+		), array( 'class' => 'row-fluid' ) );
 	}
-	else{
-		$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
-		$helper->setDropdownLabel( 'weitere Anbieter' );
-		$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
-		$field		=  array(
-			UI_HTML_Tag::create( 'label', 'Registrieren mit' ),
-			UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'span12' ) ), array( 'class' => 'row-fluid' ) ),
-		);
-	}
-	$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			$field,
-			UI_HTML_Tag::create( 'hr', NULL ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) );
 }
 
 $formExtensions	= $view->renderRegisterFormExtensions();

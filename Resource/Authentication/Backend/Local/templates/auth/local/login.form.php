@@ -12,22 +12,23 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconPassword	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
 }
 
-
 $fieldOauth2	= '';
 if( $useOauth2 ){
 	$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
-	$helper->setDropdownLabel( 'weitere' );
-	$helper->setLinkPath( './auth/oauth2/login/' );
-	$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
+	if( $helper->count() ){
+		$helper->setDropdownLabel( 'weitere' );
+		$helper->setLinkPath( './auth/oauth2/login/' );
+		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
- 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'hr', NULL ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) );
+				UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
+				), array( 'class' => 'row-fluid' ) ),
+				UI_HTML_Tag::create( 'hr', NULL ),
+			), array( 'class' => 'span12' ) ),
+		), array( 'class' => 'row-fluid' ) );
+	}
 }
 
 $fieldRemember	= "";

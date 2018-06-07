@@ -99,6 +99,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="register">yes</config>
 	<config protected="yes" type="boolean" name="relateToAllUsers">no</config>
 	<relations>
+		<needs type="module">Manage_My_User</needs>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Mail</needs>
