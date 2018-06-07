@@ -19,7 +19,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->cookie			= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
-		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
+		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth2.', TRUE );
 		$this->clientUri		= $this->env->url;
 		$this->clientId			= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret		= $this->moduleConfig->get( 'provider.client.secret' );
@@ -75,6 +75,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
+
 		$modelUser		= new Model_User( $this->env );
 
 		$words		= $this->getWords();
@@ -82,6 +83,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 
 		if( ( $error = $this->request->get( 'error' ) ) ){
 			$this->messenger->noteError( $error );
+			if( $from = $this->session->get( 'oauth2_from' ) )
+				$this->restart( $from );
 			$this->restart( 'auth/local/login', FALSE );
 		}
 		if( ( $code = $this->request->get( 'code' ) ) ){
@@ -89,12 +92,16 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$currentState		= $this->session->get( 'oauth2_state' );
 			if( !$currentProviderId || !$currentState ){
 				$this->messenger->noteFailure( $msgs->msgErrorOauthIncomplete );
+				if( $from = $this->session->get( 'oauth2_from' ) )
+					$this->restart( $from );
 				$this->restart( 'auth/local/login', FALSE );
 			}
 			$provider	= $this->modelProvider->get( $currentProviderId );
 			if( $currentState !== $this->request->get( 'state' ) ){
 				$this->session->remove( 'oauth2_state' );
 				$this->messenger->noteFailure( $msgs->msgErrorOauthInvalid );
+				if( $from = $this->session->get( 'oauth2_from' ) )
+					$this->restart( $from );
 				$this->restart( 'auth/local/login', FALSE );
 			}
 			try{
@@ -116,6 +123,10 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 					$this->session->set( 'roleId', $user->roleId );
 					if( $this->request->get( 'login_remember' ) )
 						$this->rememberUserInCookie( $user );
+					if( $from = $this->session->get( 'oauth2_from' ) ){
+						$this->session->remove( 'oauth2_from' );
+						$this->restart( $from );
+					}
 					$this->redirectAfterLogin();
 				}
 			}
@@ -137,6 +148,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$providerObject	= $this->getProviderObject( $providerId );
 			$authUrl = $providerObject->getAuthorizationUrl();
 			$this->session->set( 'oauth2_state', $providerObject->getState() );
+			$this->session->set( 'oauth2_from', $this->request->get( 'from' ) );
 			$this->restart( $authUrl, NULL, NULL, TRUE );
 		}
 		$providers	= $this->modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
@@ -186,6 +198,9 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
+//		if( !$from )
+//			$from	= $this->session->get( 'oauth2_from' ) );
+//		$this->session->remove( 'oauth2_from' ) );
 		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
 		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );							//  get forward path for this module

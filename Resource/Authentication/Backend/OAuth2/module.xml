@@ -2,11 +2,12 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add provider icon support.</log>
 	<log version="0.2.2">Add helper for provider buttons.</log>
+	<log version="0.2.3">Support redirecting after authorization.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
