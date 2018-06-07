@@ -24,10 +24,11 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$this->restart( NULL );
 		}
 		$logic	= Logic_Authentication::getInstance( $this->env );
-		if( !( $this->userId = $logic->getCurrentUserId() ) ){
-			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
-			$this->restart( NULL );
+		if( !$logic->isAuthenticated() ){
+//			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
+			$this->restart( 'auth/login' );
 		}
+		$this->userId = $logic->getCurrentUserId();
 		if( !$this->modelUser->get( $this->userId ) ){
 			$this->messenger->noteError( $msg->errorInvalidUser );
 			$this->restart( NULL );
