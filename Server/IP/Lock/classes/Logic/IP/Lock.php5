@@ -30,7 +30,7 @@ class Logic_IP_Lock{
 			foreach( $filters as $filter ){
 				if( !$filter->method || $filter->method == $method ){
 					if( preg_match( $filter->pattern, $uri ) ){
-						$ipLockId	= $this->lockIp( $ip, $filter->reasonId );
+						$ipLockId	= $this->lockIp( $ip, $filter->reasonId, $filter );
 						if( $filter->lockStatus != self::STATUS_LOCKED ){
 							$this->setStatus( $ipLockId, $filter->lockStatus );
 						}
@@ -62,6 +62,9 @@ class Logic_IP_Lock{
 			if( $lock->status >= self::STATUS_LOCKED && $lock->reason->duration ){
 				$lock->unlockAt	= $lock->lockedAt + $lock->reason->duration;
 				$lock->unlockIn	= $lock->unlockAt - time();
+			}
+			if( $lock->filterId ){
+				$lock->filter = $this->modelFilter->get( $lock->filterId );
 			}
 			return $lock;
 		}
@@ -124,10 +127,11 @@ class Logic_IP_Lock{
 		return NULL;																		//  indicate: lock not found
 	}
 
-	public function lockIp( $ip, $reasonId = NULL ){
+	public function lockIp( $ip, $reasonId = NULL, $filter = NULL ){
 		$lock	= $this->getByIp( $ip );
 		if( !$lock ){
 			$lockId	= $this->modelLock->add( array(
+				'filterId'	=> $filter ? $filter->ipLockFilterId : 0,
 				'reasonId'	=> (int) $reasonId ? (int) $reasonId : 0,
 				'status'	=> self::STATUS_REQUEST_LOCK,
 				'IP'		=> trim( $ip ),

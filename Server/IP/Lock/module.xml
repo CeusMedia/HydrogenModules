@@ -14,7 +14,8 @@
 	<log version="0.2.6">Added URI column to lock model.</log>
 	<log version="0.2.7">Extended logic class.</log>
 	<log version="0.3">Add support for IPv6.</log>
-<!--	<log version="0.3.1">Added whitelist.</log>-->
+	<log version="0.3.1">Added applied filter to lock.</log>
+<!--	<log version="0.3.2">Added whitelist.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -90,6 +91,10 @@ ALTER TABLE `<%?prefix%>ip_locks` ADD `uri` VARCHAR(255) NOT NULL AFTER `IPv4`;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.3"><![CDATA[
 ALTER TABLE `<%?prefix%>ip_locks` CHANGE `IPv4` `IP` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3.1"><![CDATA[
+ALTER TABLE  `ip_locks` ADD  `filterId` INT NULL DEFAULT  '0' AFTER  `ipLockId` ,
+ADD INDEX (  `filterId` ) ;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;

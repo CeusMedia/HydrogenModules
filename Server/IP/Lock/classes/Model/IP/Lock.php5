@@ -10,6 +10,7 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 	protected $name		= 'ip_locks';
 	protected $columns	= array(
 		'ipLockId',
+		'filterId',
 		'reasonId',
 		'status',
 		'IP',
