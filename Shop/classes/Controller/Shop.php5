@@ -407,6 +407,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'userId', $userId );
 		$this->addData( 'login', $this->request->get( 'login' ) );
+		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );
 	}
 
 	public function finish(){
