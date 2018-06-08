@@ -1,0 +1,51 @@
+<?php
+class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
+
+	protected $backends	= array();
+	protected $logicShop;
+	protected $logicAuth;
+
+	protected function __onInit(){
+		$this->logicShop	= $this->env->getLogic()->shop;
+		$this->logicAuth	= $this->env->getLogic()->authentication;
+
+		$captain	= $this->env->getCaptain();
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$backends	= array();
+		foreach( $this->backends as $backend )
+			$backends[$backend->key]	= $backend;
+		$this->addData( 'paymentBackends', $backends );
+	}
+
+	public function index( $page = 0 ){
+		$limit		= 10;
+		$conditions	= array( 'userId' => $this->logicAuth->getCurrentUserId() );
+		$orders		= array( 'orderId' => 'DESC' );
+		$limits		= array( $page * $limit, $limit );
+		$total		= count( $this->logicShop->getOrders( $conditions ) );
+		$orders		= $this->logicShop->getOrders( $conditions, $orders, $limits );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', ceil( $total / $limit ) );
+		$this->addData( 'orders', $orders );
+	}
+
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+		$this->backends[]	= (object) array(
+			'backend'	=> $backend,
+			'key'		=> $key,
+			'title'		=> $title,
+			'path'		=> $path,
+			'priority'	=> $priority,
+			'icon'		=> $icon,
+		);
+	}
+
+	public function view( $orderId ){
+		$order	= $this->logicShop->getOrder( $orderId, TRUE );
+		if( $order->userId !== $this->logicAuth->getCurrentUserId() ){
+			$this->env->getMessenger()->noteError( 'Zugriff verweigert.' );
+			$this->restart( NULL, TRUE );
+		}
+		$this->addData( 'order', $order );
+	}
+}
