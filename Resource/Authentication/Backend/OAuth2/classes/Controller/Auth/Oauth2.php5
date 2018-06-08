@@ -33,21 +33,6 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->refreshToken();
 	}
 
-	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_oauth2.enabled' ) ){
-			$words	= $env->getLanguage()->getWords( 'auth/oauth2' );
-			$context->registerBackend( 'Oauth2', 'oauth2', $words['backend']['title'] );
-		}
-	}
-
-	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
-		$words		= (object) $env->getLanguage()->getWords( 'auth/oauth2' );						//  load words
-		$prefix		= 'module.resource_authentication_backend_oauth2.login.';
-		$rank		= $env->getConfig()->get( $prefix.'rank' );
-		$label		= $words->login['tab'];
-		$context->registerTab( 'auth/oauth2/login', $label, $rank );									//  register main tab
-	}
-
 	protected function getProvider( $providerId ){
 		$provider		= $this->modelProvider->get( $providerId );
 		if( !$provider )
@@ -75,17 +60,18 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
-
 		$modelUser		= new Model_User( $this->env );
+		$modelRole		= new Model_Role( $this->env );
 
 		$words		= $this->getWords();
 		$msgs		= (object) $words['login'];
+
 
 		if( ( $error = $this->request->get( 'error' ) ) ){
 			$this->messenger->noteError( $error );
 			if( $from = $this->session->get( 'oauth2_from' ) )
 				$this->restart( $from );
-			$this->restart( 'auth/local/login', FALSE );
+			$this->restart( 'auth/login', FALSE );
 		}
 		if( ( $code = $this->request->get( 'code' ) ) ){
 			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
@@ -94,7 +80,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				$this->messenger->noteFailure( $msgs->msgErrorOauthIncomplete );
 				if( $from = $this->session->get( 'oauth2_from' ) )
 					$this->restart( $from );
-				$this->restart( 'auth/local/login', FALSE );
+				$this->restart( 'auth/login', FALSE );
 			}
 			$provider	= $this->modelProvider->get( $currentProviderId );
 			if( $currentState !== $this->request->get( 'state' ) ){
@@ -102,7 +88,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				$this->messenger->noteFailure( $msgs->msgErrorOauthInvalid );
 				if( $from = $this->session->get( 'oauth2_from' ) )
 					$this->restart( $from );
-				$this->restart( 'auth/local/login', FALSE );
+				$this->restart( 'auth/login', FALSE );
 			}
 			try{
 				$client	= $this->getProviderObject( $currentProviderId );
@@ -114,9 +100,39 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				) );
 				if( !$relation ){
 					$this->messenger->noteError( $msgs->msgErrorNoUserAssigned, $provider->title );
-					$this->restart( 'auth/local/login', FALSE );
+					if( $from = $this->session->get( 'oauth2_from' ) )
+						$this->restart( $from );
+					$this->restart( 'auth/login', FALSE );
 				}
 				if( ( $user = $modelUser->get( $relation->localUserId ) ) ){
+					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+						'backend'	=> 'oauth2',
+						'username'	=> $user ? $user->username : $username,
+		//				'password'	=> $password,															//  disabled for security
+						'userId'	=> $user ? $user->userId : 0,
+					) );
+					if( !$this->messenger->gotError() ){
+						$role			= $modelRole->get( $user->roleId );
+						$allowedRoles	= $this->env->getConfig()->get( 'module.resource_authentication_backend_local.login.roles' );
+						$allowedRoles	= explode( ',', $allowedRoles ? $allowedRoles : "*" );
+
+						if( !$role->access )
+							$this->messenger->noteError( $msgs->msgRoleLocked, $role->title );
+						else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
+							$this->messenger->noteError( $msgs->msgInvalidRole, $role->title );
+						else if( $user->status == 0 )
+							$this->messenger->noteError( $msgs->msgUserUnconfirmed );
+						else if( $user->status == -1 )
+							$this->messenger->noteError( $msgs->msgUserLocked );
+						else if( $user->status == -2 )
+							$this->messenger->noteError( $msgs->msgUserDisabled );
+					}
+					if( $this->messenger->gotError() ){
+						if( $from = $this->session->get( 'oauth2_from' ) )
+							$this->restart( $from );
+						$this->restart( 'auth/login', FALSE );
+					}
+
 					$this->messenger->noteSuccess( $msgs->msgSuccess, $provider->title );
 					$this->session->set( 'oauth2_token', $token );
 					$this->session->set( 'userId', $user->userId );

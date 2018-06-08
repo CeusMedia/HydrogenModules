@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated OAuth client functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -15,6 +15,7 @@
 	<log version="0.2.8">Support tabs for multiple login backends.</log>
 	<log version="0.2.9">Extend module relations.</log>
 	<log version="0.3">Migrate logic to support new logic pool.</log>
+	<log version="0.3.1">Extract hooks to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -23,6 +24,7 @@
 		<class>Mail/Auth/OAuth/Password.php5</class>
 		<class>View/Auth/Oauth.php5</class>
 		<class>Logic/Authentication/Backend/Oauth.php5</class>
+		<class>Hook/Auth/Oauth.php5</class>
 		<template>auth/oauth/login.php</template>
 		<template>auth/oauth/login.form.php</template>
 		<template>auth/oauth/password.php</template>
@@ -58,7 +60,7 @@
 	<link xml:lang="en" rank="10" access="outside" path="auth/oauth/login">Login</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/oauth/logout">Logout</link>
 	<link rank="99" access="public" path="auth/oauth/index"></link>
-	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth::___onAuthRegisterBackend</hook>
-	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Oauth::___onAuthRegisterLoginTab</hook>
-<!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
+	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Oauth::onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Oauth::onAuthRegisterLoginTab</hook>
+<!--	<hook type="resource" resource="Page" event="applyModules">Hook_Auth_Oauth::onPageApplyModules</hook>-->
 </module>

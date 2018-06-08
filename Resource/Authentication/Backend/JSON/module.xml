@@ -10,13 +10,14 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
 	<log version="0.2.2">Support tabs for multiple login backends.</log>
 	<log version="0.2.3">Extend module relations.</log>
 	<log version="0.2.4">Migrate logic to support new logic pool.</log>
+	<log version="0.2.5">Extract hooks to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -24,6 +25,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<class>Controller/Auth/Json.php5</class>
 		<class>View/Auth/Json.php5</class>
 		<class>Logic/Authentication/Backend/Json.php5</class>
+		<class>Hook/Auth/Json.php5</class>
 		<template>auth/json/login.php</template>
 		<template>auth/json/login.form.php</template>
 		<locale>de/auth/json.ini</locale>
@@ -58,6 +60,6 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/json/ajaxIsAuthenticated"></link>
 	<link rank="99" access="public" path="auth/json/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/json/index"></link>
-	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_JSON::___onAuthRegisterBackend</hook>
-	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_JSON::___onAuthRegisterLoginTab</hook>
+	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Json::onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Json::onAuthRegisterLoginTab</hook>
 </module>

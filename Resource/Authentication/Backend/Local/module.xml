@@ -37,6 +37,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.4.4">Autologin user after account confirmation.</log>
 	<log version="0.4.5">Embed OAuth2 providers on login.</log>
 	<log version="0.4.6">Embed OAuth2 providers on registration.</log>
+	<log version="0.4.7">Extract hooks to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,6 +47,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<class>Mail/Auth/Local/Password.php5</class>
 		<class>View/Auth/Local.php5</class>
 		<class>Logic/Authentication/Backend/Local.php5</class>
+		<class>Hook/Auth/Local.php5</class>
 		<template>auth/local/confirm.php</template>
 		<template>auth/local/login.php</template>
 		<template>auth/local/login.form.php</template>
@@ -123,7 +125,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link rank="99" access="public" path="auth/local/ajaxUsernameExists"></link>
 	<link rank="99" access="public" path="auth/local/ajaxPasswordStrength"></link>
 	<link rank="99" access="public" path="auth/local/index"></link>
-	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Local::___onAuthRegisterBackend</hook>
-	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Controller_Auth_Local::___onGetRelatedUsers</hook>
-	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Local::___onAuthRegisterLoginTab</hook>
+	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Local::onAuthRegisterBackend</hook>
+	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Local::onAuthRegisterLoginTab</hook>
+	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Hook_Auth_Local::onGetRelatedUsers</hook>
 </module>

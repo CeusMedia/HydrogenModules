@@ -30,47 +30,6 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'useOauth2', $this->useOauth2 );
 	}
 
-/*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
-		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
-		$remember	= (bool) $cookie->get( 'auth_remember' );
-		$env->getSession()->set( 'isRemembered', $remember );
-		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
-		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
-	}*/
-
-	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_local.enabled' ) ){
-			$words	= $env->getLanguage()->getWords( 'auth/local' );
-			$context->registerBackend( 'Local', 'local', $words['backend']['title'] );
-		}
-	}
-
-	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
-		$words		= (object) $env->getLanguage()->getWords( 'auth/local' );						//  load words
-		$prefix		= 'module.resource_authentication_backend_local.login.';
-		$rank		= $env->getConfig()->get( $prefix.'rank' );
-		$label		= $words->login['tab'];
-		$context->registerTab( 'auth/local/login', $label, $rank );									//  register main tab
-	}
-
-	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
-		$moduleId	= 'Resource_Authentication_Backend_Local';
-		if( !$env->getConfig()->get( 'module.'.strtolower( $moduleId ).'.relateToAllUsers' ) )
-			return;
-		$modelUser	= new Model_User( $env );
-		$words		= $env->getLanguage()->getWords( 'auth/local' );
-		$conditions	= array( 'status' => '>0' );
-		$users		= $modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
-		$data->list	= array( (object) array(
-			'module'		=> $moduleId,
-			'label'			=> $words['hook-getRelatedUsers']['label'],
-			'count'			=> count( $users ),
-			'list'			=> $users,
-		) );
-		return TRUE;
-	}
-
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
@@ -235,6 +194,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$this->restart( 'login?username='.$username, TRUE );
 
 			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+				'backend'	=> 'local',
 				'username'	=> $user ? $user->username : $username,
 //				'password'	=> $password,															//  disabled for security
 				'userId'	=> $user ? $user->userId : 0,
@@ -244,13 +204,12 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 			$role			= $modelRole->get( $user->roleId );
 			$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
-			$allowedRoles	= $allowedRoles ? $allowedRoles : "*";
-			$allowedRoles	= explode( ',', $this->moduleConfig->get( 'login.roles' ) );
+			$allowedRoles	= explode( ',', $allowedRoles ? $allowedRoles : "*" );
 
 			if( !$role->access )
-				$this->messenger->noteError( $words->msgInvalidRole );
+				$this->messenger->noteError( $words->msgRoleLocked, $role->title );
 			else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
-				$this->messenger->noteError( $words->msgInvalidRole );
+				$this->messenger->noteError( $words->msgInvalidRole, $role->title );
 			else if( $user->status == 0 )
 				$this->messenger->noteError( $words->msgUserUnconfirmed );
 			else if( $user->status == -1 )

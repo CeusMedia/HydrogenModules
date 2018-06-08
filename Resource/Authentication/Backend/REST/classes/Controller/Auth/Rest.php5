@@ -21,30 +21,6 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$this->logic		= Logic_Authentication_Backend_Rest::getInstance( $this->env );
 	}
 
-/*	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
-		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
-//		$remember	= (bool) $cookie->get( 'auth_remember' );
-//		$env->getSession()->set( 'isRemembered', $remember );
-		$script		= 'Auth.init('.$userId.', false);';											//  initialize Auth class with user ID
-		$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
-	}
-*/
-	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_rest.enabled' ) ){
-			$words	= $env->getLanguage()->getWords( 'auth/rest' );
-			$context->registerBackend( 'Rest', 'rest', $words['backend']['title'] );
-		}
-	}
-
-	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
-		$words		= (object) $env->getLanguage()->getWords( 'auth/rest' );						//  load words
-		$prefix		= 'module.resource_authentication_backend_rest.login.';
-		$rank		= $env->getConfig()->get( $prefix.'rank' );
-		$label		= $words->login['tab'];
-		$context->registerTab( 'auth/rest/login', $label, $rank );									//  register main tab
-	}
-
 	public function ajaxUsernameExists(){
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= $this->logic->checkUsername( $username );
@@ -173,9 +149,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 				else if( $user->data == -30 )
 					$this->messenger->noteError( $words->msgInvalidPassword );
 			}
-
-
 /*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+						'backend'	=> 'rest',
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,

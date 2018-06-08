@@ -27,21 +27,6 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->refreshToken();
 	}
 
-	static public function ___onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
-		if( $env->getConfig()->get( 'module.resource_authentication_backend_oauth.enabled' ) ){
-			$words	= $env->getLanguage()->getWords( 'auth/oauth' );
-			$context->registerBackend( 'Oauth', 'oauth', $words['backend']['title'] );
-		}
-	}
-
-	static public function ___onAuthRegisterLoginTab( $env, $context, $module, $data = array() ){
-		$words		= (object) $env->getLanguage()->getWords( 'auth/oauth' );						//  load words
-		$prefix		= 'module.resource_authentication_backend_oauth.login.';
-		$rank		= $env->getConfig()->get( $prefix.'rank' );
-		$label		= $words->login['tab'];
-		$context->registerTab( 'auth/oauth/login', $label, $rank );									//  register main tab
-	}
-
 /*	public function ajaxEmailExists(){
 		print( json_encode( NULL ) );
 		exit;

@@ -2,12 +2,13 @@
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.3</version>
+	<version>0.2.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add provider icon support.</log>
 	<log version="0.2.2">Add helper for provider buttons.</log>
 	<log version="0.2.3">Support redirecting after authorization.</log>
+	<log version="0.2.4">Extract hooks to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -18,6 +19,7 @@
 		<class>View/Auth/Oauth2.php5</class>
 		<class>View/Helper/Oauth/ProviderButtons.php5</class>
 <!--		<class>Logic/Authentication/Backend/Oauth2.php5</class>-->
+		<class>Hook/Auth/Oauth2.php5</class>
 		<template>auth/oauth2/login.php</template>
 		<locale>de/auth/oauth2.ini</locale>
 	</files>
@@ -30,15 +32,12 @@
 	<link xml:lang="de" rank="99" access="inside" path="auth/oauth2/logout">Logout</link>
 	<link xml:lang="en" rank="10" access="outside" path="auth/oauth2/login">Login</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/oauth2/logout">Logout</link>
-
+	<link access="public" path="auth/oauth2/index"></link>
+	<link access="outside" path="auth/oauth2/unbind"></link>
 	<link access="outside" path="auth/oauth2/register"></link>
-
-
-	<link rank="99" access="public" path="auth/oauth2/index"></link>
-	<link access="public" path="auth/oauth2/unbind"></link>
-	<hook type="resource" resource="Auth" event="registerBackends">Controller_Auth_Oauth2::___onAuthRegisterBackend</hook>
-<!--	<hook type="resource" resource="Auth" event="registerLoginTabs">Controller_Auth_Oauth2::___onAuthRegisterLoginTab</hook>-->
-<!--	<hook type="resource" resource="Page" event="applyModules">Controller_Auth::___onPageApplyModules</hook>-->
+	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Oauth2::onAuthRegisterBackend</hook>
+<!--	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Oauth2::onAuthRegisterLoginTab</hook>-->
+<!--	<hook type="resource" resource="Page" event="applyModules">Hook_Oauth2::onPageApplyModules</hook>-->
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>oauth_providers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_providers` (
