@@ -24,7 +24,7 @@
 		<locale>de/auth/oauth2.ini</locale>
 	</files>
 	<relations>
-		<needs type="module">Resource_Authentication_Backend_Local</needs>
+		<needs type="module">Resource_Users</needs>
 		<needs type="module">UI_Helper_HTML</needs>
 		<supports type="module">Security_CSRF</supports>
 	</relations>
