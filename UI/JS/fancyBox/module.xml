@@ -7,7 +7,7 @@ fancyBox is a tool that offers a nice and elegant way to add zooming functionali
 It is built on the top of the popular JavaScript framework jQuery and is both easy to implement and a snap to customize.
 ]]></description>
 	<category>User Interface</category>
-	<version>3.3.5</version>
+	<version>3.3.5-p1</version>
 	<company site="http://fancyapps.com/">fancyapps</company>
 	<author email="janis@fancyapps.com">Jānis Skarnelis</author>
 	<license source="http://opensource.org/licenses/gpl-3.0.html">GPL v3</license>
@@ -18,21 +18,32 @@ It is built on the top of the popular JavaScript framework jQuery and is both ea
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<config protected="no" type="boolean" name="auto">1</config>
+	<config protected="no" type="boolean" name="auto">yes</config>
 	<config protected="no" type="string" name="auto.class">fancybox-auto</config>
+	<config protected="no" type="boolean" name="auto.option.button.share">yes</config>
+	<config protected="no" type="boolean" name="auto.option.button.download">no</config>
+	<config protected="no" type="boolean" name="auto.option.button.thumbs">no</config>
+	<config protected="no" type="boolean" name="auto.option.button.slideShow">no</config>
+	<config protected="no" type="boolean" name="auto.option.button.zoom">no</config>
+	<config protected="no" type="boolean" name="auto.option.button.fullScreen">no</config>
+	<config protected="no" type="boolean" name="auto.option.button.close">yes</config>
+	<config protected="no" type="boolean" name="auto.option.arrows">yes</config>
+	<config protected="no" type="boolean" name="auto.option.keyboard">yes</config>
+	<config protected="no" type="boolean" name="auto.option.protect">yes</config>
+	<config protected="no" type="boolean" name="auto.option.hideOnContentClick">yes</config>
+	<config protected="no" type="string" name="auto.option.animationEffect" values="none,fade,zoom">fade</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 		$config	= $env->getConfig()->getAll( 'module.ui_js_fancybox.', TRUE );
 		if( $config->get( 'auto' ) ){
+			$options	= $config->getAll( 'auto.option.' );
+			$options['buttons']	= array();
+			foreach( $config->getAll( 'auto.option.button.' ) as $button => $enabled  ){
+				unset( $options['button.'.$button] );
+				$enabled ? ( $options['buttons'][] = $button ) : NULL;
+			}
 			$class		= $config->get( 'auto.class' );
-			$options	= json_encode( array(
-/*				'durationFadeIn'	=> $config->get( 'auto.duration.fade.in' ),
-				'durationFadeOut'	=> $config->get( 'auto.duration.fade.out' ),
-				'prefix'			=> $config->get( 'auto.prefix' ),
-				'btnCloseLabel'		=> $config->get( 'auto.close.label' ),
-				'btnCloseTitle'		=> $config->get( 'auto.close.title' ),
-*/			) );
-			$script		= '$(document).ready(function(){$(".'.$class.'").fancybox('./*$options.*/');});';
-			$context->js->addScript( $script );
+			$script		= 'jQuery(".'.$class.'").fancybox('.json_encode( $options ).');';
+			$env->getPage()->js->addScriptOnReady( $script );
 		}
 	]]></hook>
 </module>
