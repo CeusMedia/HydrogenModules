@@ -134,62 +134,44 @@ body.moduleCatalogBookstore div.buttonbar {
 	}
 
 
-
-
-
 /*  --  CATEGORY INDEX  --  */
-#layout-content #categoryList {}
-#layout-content #categoryList div.column {
-	float: left;
-	}
-#layout-content #categoryList div.column.column-2 {
-	width: 45%;
-	margin-right: 4%;
-	}
-#layout-content #categoryList div.column.column-3 {
-	width: 30%;
-	margin-right: 3%;
-	}
-#layout-content #categoryList div.column.column-4 {
-	width: 22%;
-	margin-right: 3%;
-	}
-
-
-#layout-content #categoryList div.column ul.branches {
+body.moduleCatalogBookstore #layout-content #categoryList {}
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches {
 	margin: 0;
 	padding: 0;
 	}
-#layout-content #categoryList div.column ul.branches li.branch {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch {
 	clear: left;
-	padding: 4px;
-	list-style: none;
-	font-weight: bold;
-	background-color: rgba(207, 207, 207, 0.2);
 	margin-top: 3px;
-	}
-#layout-content #categoryList div.column ul.branches li.branch ul.topics {
-	display: none;
-	margin-left: 1.5em;
-	}
-#layout-content #categoryList div.column ul.branches li.branch ul.topics li.topic {
-	margin-left: 16px;
+	padding: 8px;
+	line-height: 1.5em;
+	list-style: none;
 	font-weight: normal;
+	font-size: 1.2rem;
+	background-color: rgba(207, 207, 207, 0.2);
+	}
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch ul.topics {
+	display: none;
+	margin-left: 2em;
+	}
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch ul.topics li.topic {
+	margin-left: 20px;
+	font-weight: normal;
+	font-size: 0.9rem;
 	list-style: circle;
 	list-style-position: outside;
 	}
-#layout-content #categoryList div.column ul.branches li.branch a {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch a {
 	text-decoration: none;
 	display: compact;
 	}
-#layout-content #categoryList div.column ul.branches li.branch>a {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch>a {
 	margin-left: 30px;
 	display: block;
 	}
-
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty,
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open,
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.empty,
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.open,
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.closed {
 	background-position: 2px 3px;
 	background-repeat: no-repeat;
 	display: block;
@@ -198,36 +180,42 @@ body.moduleCatalogBookstore div.buttonbar {
 	height: 20px;
 	cursor: pointer;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.empty {
 /*	background-image: url(../img/icons/bullet_empty_large.png);*/
 /*	opacity: 0.5;*/
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.open {
 /*	background-image: url(../img/icons/bullet_minus_large.png);*/
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.closed {
 /*	background-image: url(../img/icons/bullet_plus_large.png);*/
 	}
-#layout-content #categoryList div.column ul.branches li.branch span {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span {
 	margin-left: 5px;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.empty:after {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.empty:after {
 	font-family: "FontAwesome";
 	content: "\f096";
 	opacity: 0.5;
 	font-size: 16px;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.open:after {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.open:after {
 	font-family: "FontAwesome";
 	content: "\f146";
 	opacity: 0.5;
 	font-size: 16px;
 	}
-#layout-content #categoryList div.column ul.branches li.branch span.hitarea.closed:after {
+body.moduleCatalogBookstore #layout-content #categoryList ul.branches li.branch span.hitarea.closed:after {
 	font-family: "FontAwesome";
 	content: "\f0fe";
 	opacity: 0.5;
 	font-size: 16px;
+	}
+body.moduleCatalogBookstore #layout-content #categoryList li.search-miss {
+	display: none;
+	}
+body.moduleCatalogBookstore #layout-content #categoryList li.search-hit {
+	display: list-item;
 	}
 
 /*  --  ARTICLE  --  */

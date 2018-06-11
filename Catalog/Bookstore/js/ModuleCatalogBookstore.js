@@ -1,7 +1,29 @@
-var ModuleCatalogBookstore = {
-	setupCategoryIndex: function(selector){
-		var container = typeof selector == "undefined" ? $("body") : $(selector);
-		container.find("span.hitarea:not(.empty)").click(function(){
+var ModuleCatalogBookstoreCategoryIndex = {
+	container: null,
+	find: function(selector){
+		return ModuleCatalogBookstoreCategoryIndex.container.find(selector);
+	},
+	closeAllBranches: function(){
+		ModuleCatalogBookstoreCategoryIndex.find("ul.branches > li.branch").each(function(){
+			var hitarea = jQuery(this).children(".hitarea")
+			if(hitarea.hasClass("open"))
+				hitarea.trigger("click");
+		});
+	},
+	openAllBranches: function(){
+		ModuleCatalogBookstoreCategoryIndex.find("ul.branches > li.branch").each(function(){
+			var hitarea = jQuery(this).children(".hitarea")
+			if(hitarea.hasClass("closed"))
+				hitarea.trigger("click");
+		});
+	},
+	init: function(selector){
+		ModuleCatalogBookstoreCategoryIndex.container = typeof selector == "undefined" ? $("body") : $(selector);
+		ModuleCatalogBookstoreCategoryIndex.setupCollapsable();
+		ModuleCatalogBookstoreCategoryIndex.setupFilterable();
+	},
+	setupCollapsable: function(){
+		ModuleCatalogBookstoreCategoryIndex.find("span.hitarea:not(.empty)").click(function(){
 			var list = jQuery(this).parent().children("ul.topics");
 			var area = jQuery(this);
 			if(area.hasClass("closed")){
@@ -11,6 +33,52 @@ var ModuleCatalogBookstore = {
 				area.removeClass("open").addClass("closed");
 				list.slideUp(250);
 			}
+		});
+	},
+	setupFilterable: function(){
+		ModuleCatalogBookstoreCategoryIndex.find("#input_search").on("input", function(){
+			var terms = jQuery(this).val().toLowerCase().trim().split(/\s+/);
+			if(terms.length == 1 && terms[0] == ""){
+				ModuleCatalogBookstoreCategoryIndex.find("ul.branches li").removeClass("search-miss").removeClass("search-hit");
+				ModuleCatalogBookstoreCategoryIndex.find("ul.branches span.hitarea").each(function(){
+					if(jQuery(this).hasClass("open"))
+						jQuery(this).trigger("click");
+				});
+				return;
+			}
+			ModuleCatalogBookstoreCategoryIndex.find("ul.branches > li.branch > ul.topics > li.topic").each(function(){
+				var item = jQuery(this);
+				var link = item.children("a");
+				for(i=0; i<terms.length; i++){
+					if(link.html().toLowerCase().indexOf(terms[i]) == -1){
+						item.removeClass("search-hit");
+						item.addClass("search-miss");
+						return;
+					}
+				}
+				item.addClass("search-hit");
+			});
+			ModuleCatalogBookstoreCategoryIndex.find("ul.branches > li.branch").each(function(){
+				var item = jQuery(this);
+				var hitarea = item.children(".hitarea");
+				var match = true;
+				for(i=0; i<terms.length; i++){
+					if(item.children("a").html().toLowerCase().indexOf(terms[i]) == -1){
+						match = false;
+						break;
+					}
+				}
+				if(item.find("ul > li.search-hit").length || match){
+					item.removeClass("search-miss").addClass("search-hit");
+					if(hitarea.hasClass("closed"))
+						hitarea.trigger("click");
+				}
+				else{
+					item.removeClass("search-hit").addClass("search-miss");
+					if(hitarea.hasClass("open"))
+						hitarea.trigger("click");
+				}
+			});
 		});
 	}
 };

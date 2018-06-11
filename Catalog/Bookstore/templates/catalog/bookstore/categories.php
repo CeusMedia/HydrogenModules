@@ -1,47 +1,43 @@
 <?php
 
 $language	= $env->getLanguage()->getLanguage();
+
+$filter		= '
+		<div class="well">
+			<div class="row-fluid">
+				<div class="span6">
+					<label for="input_search">Fachbereich oder Serie suchen</label>
+					<input type="search" name="search" id="input_search" class="span12" autocomplete="off"/>
+				</div>
+				<div class="span6" style="text-align: right">
+					<br/>
+					<button type="button" class="btn btn-small" onclick="ModuleCatalogBookstoreCategoryIndex.openAllBranches();">alle ausklappen</button>
+					<button type="button" class="btn btn-small" onclick="ModuleCatalogBookstoreCategoryIndex.closeAllBranches();">alle einklappen</button>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<small class="muted">Diese Suchfunktion filtert lediglich Fachbereiche und Serien, jedoch nicht die Veröffentlichungen.<br/>
+						Um nach Veröffentlichungen zu suchen, benutzen Sie bitte die <a href="./search">Suche</a>!
+					</small>
+				</div>
+			</div>
+		</div>';
+
 $helper		= new View_Helper_Catalog_Bookstore( $env );
-
-//$columns	= 2;
-//$columns	= max( 1, min( 3, $columns ) );
-//$total		= count( $categories );
-//$edge		= ceil( $total / $columns );
 $position	= $helper->renderPositionFromCategory();
-
-/*
-$lists	= array();
-for( $i=0; $i<$columns; $i++ ){
-	$column	= $helper->renderCategoryList( array_slice( $categories, $i*$edge, ($i+1)*$edge ), $language );
-	$column	= '<div class="column column-'.$columns.'">'.$column.'</div>';
-	$lists[]	= $column;
-}
-$lists	= join( $lists );
-*/
-
-$total	= count( $categories );
-$edge	= ceil( $total / 2 );
-$lists	= array();
-for( $i=0; $i<2; $i++ ){
-	$column		= $helper->renderCategoryList( array_slice( $categories, $i*$edge, ($i+1)*$edge ), $language );
-	$column		= '<div class="column span6">'.$column.'</div>';
-	$lists[]	= $column;
-}
-$lists	= UI_HTML_Tag::create( 'div', $lists, array( 'class' => 'row-fluid' ) );
+$total		= count( $categories );
+$list		= $helper->renderCategoryList( $categories, $language );
 
 return '
-	<script>
-$(document).ready(function(){
-	ModuleCatalogBookstore.setupCategoryIndex("#categoryList");
-});
-	</script>
 	<div id="categoryList">
 		<h2>'.$words['index']['heading'].'</h2>
 		'.$position.'<br/>
 <!--		<h3>Fachbereiche</h3>-->
 		<small>Bitte wählen Sie einen Fachbereich aus, um dessen Serien und Veröffentlichungen zu sehen.</small><br/>
 		<br/>
-		'.$lists.'
+		'.$filter.'
+		'.$list.'
 	</div>';
 
 ?>

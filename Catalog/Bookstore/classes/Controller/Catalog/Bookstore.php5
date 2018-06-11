@@ -96,6 +96,8 @@ class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller{
 			}
 			$cache->set( 'catalog.bookstore.categories', $categories );
 		}
+		$script	= 'ModuleCatalogBookstoreCategoryIndex.init("#categoryList");';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 		$this->addData( 'categories', $categories );
 	}
 
