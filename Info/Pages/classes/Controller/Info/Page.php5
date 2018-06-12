@@ -2,6 +2,10 @@
 class Controller_Info_Page extends CMF_Hydrogen_Controller{
 
 	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
+		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
+			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
+				return;																				//  no (frontend) pages for backend
+
 		$request	= $env->getRequest();
 		$path		= $request->get( '__path' );													//  get requested path
 		$logic		= new Logic_Page( $env );														//  get page logic instance

@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -28,6 +28,7 @@
 	<log version="0.7.1">Support search module.</log>
 	<log version="0.7.2">Support page access.</log>
 	<log version="0.7.3">Add language support using module Resource:Localization.</log>
+	<log versiob="0.7.4">Disable page dispatching on backend app instances.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
