@@ -83,8 +83,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_lock_reasons` (
   KEY `duration` (`duration`),
   KEY `createdAt` (`createdAt`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
 ]]></sql>
 	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
 ALTER TABLE `<%?prefix%>ip_locks` ADD `uri` VARCHAR(255) NOT NULL AFTER `IPv4`;
@@ -93,7 +91,7 @@ ALTER TABLE `<%?prefix%>ip_locks` ADD `uri` VARCHAR(255) NOT NULL AFTER `IPv4`;
 ALTER TABLE `<%?prefix%>ip_locks` CHANGE `IPv4` `IP` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.3.1"><![CDATA[
-ALTER TABLE  `ip_locks` ADD  `filterId` INT NULL DEFAULT  '0' AFTER  `ipLockId` ,
+ALTER TABLE `<%?prefix%>ip_locks` ADD `filterId` INT NULL DEFAULT '0' AFTER `ipLockId` ,
 ADD INDEX (  `filterId` ) ;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
