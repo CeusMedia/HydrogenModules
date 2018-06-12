@@ -22,6 +22,6 @@
 		<style>site.manage.gallery.css</style>
 	</files>
 	<relations/>
-	<config type="string" name="path"></config>	
-	<link xml:lang="de" path="manage/gallery">Galerien</link>
+	<config type="string" name="path"></config>
+	<link xml:lang="de" access="acl" path="manage/gallery">Galerien</link>
 </module>

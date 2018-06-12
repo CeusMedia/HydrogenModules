@@ -42,6 +42,6 @@
 		<supports type="module">JS_Ace</supports>
 		<supports type="module">JS_CodeMirror</supports>
 	</relations>
-	<link xml:lang="de" access="public" path="manage/news">Neuigkeiten</link>
-	<link xml:lang="en" access="public" path="manage/news">News</link>
+	<link xml:lang="de" access="acl" path="manage/news">Neuigkeiten</link>
+	<link xml:lang="en" access="acl" path="manage/news">News</link>
 </module>
