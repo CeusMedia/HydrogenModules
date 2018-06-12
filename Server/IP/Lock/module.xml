@@ -3,7 +3,7 @@
 	<title>Server: IP Lock</title>
 	<description><![CDATA[]]></description>
 	<category>Server</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Extracted logic to class.</log>
