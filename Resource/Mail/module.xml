@@ -283,6 +283,6 @@ ALTER TABLE `<%?prefix%>mails` ADD `mailClass` VARCHAR(200) NOT NULL AFTER `subj
 ALTER TABLE `<%?prefix%>mail_templates` CHANGE `styles` `styles` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
 	]]></sql>
 	<sql on="update" version="0.7.8" type="mysql"><![CDATA[
-ALTER TABLE `mail_attachments` CHANGE `countAttached` `countAttached` INT(11) NULL DEFAULT '0';
+ALTER TABLE `<%?prefix%>mail_attachments` CHANGE `countAttached` `countAttached` INT(11) NULL DEFAULT '0';
 	]]></sql>
 </module>
