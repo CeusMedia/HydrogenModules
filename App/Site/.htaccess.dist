@@ -4,7 +4,7 @@
 <Files ~ "(\.inc|\.dist|~)$">
     Deny From All
 </Files>
-
+RedirectMatch 404  ".*\/\..*"
 
 Options -MultiViews -Indexes +FollowSymLinks
 
