@@ -60,7 +60,7 @@ foreach( $rules as $rule ){
 
 	$addresses		= join( '<br/>', preg_split( '/\s*,\s*/', $rule->mailAddresses ) );
 	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-		'href'	=> './work/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
+		'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 		'class'	=> 'btn btn-danger btn-small',
 	) );
 	$listRules[]	= UI_HTML_Tag::create( 'tr', array(
