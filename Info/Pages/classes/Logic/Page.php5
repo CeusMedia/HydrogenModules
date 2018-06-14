@@ -25,6 +25,28 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
+	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
+	 */
+	public function getPage( $pathOrId ){
+		if( preg_match( '/^[0-9]+$/', $pathOrId ) ){
+			$page	= $this->modelPage->get( $pathOrId );
+			if( !$page )
+				return NULL;
+			$way	= array( $page->identifier );
+			$current	= $page;
+			while( $current->parentId !== 0 ){
+				$current	= $this->modelPage->get( $current->parentId );
+				if( !$current )
+					break;
+				array_unshift( $way, $current->identifier );
+			}
+			$page->fullpath	= join( '/', $way );
+			return $page;
+		}
+		return $this->modelPage->get( $pathOrId );
+	}
+
+	/**
 	 *	Tries to resolves URI path and returns found page.
 	 *	@access		public
 	 *	@param		string		$path			Path to find page for
@@ -89,18 +111,45 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 				return NULL;
 			throw new RangeException( 'No page set for controller: '.$controllerName );
 		}
+		$page	= $this->getPage( $page->pageId );
 		return $this->translatePage( $page );
 	}
 
 	/**
-	 *	Indicates wheter a page exists for an URI path.
+	 *	Tries to find page related to controller and returns found page.
 	 *	@access		public
-	 *	@param		string		$path			Path to find page for
+	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
+	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@throws		InvalidArgumentException	if no or empty module ID is given
+	 */
+	public function getPageFromControllerAction( $controllerName, $action, $strict = TRUE ){
+		if( !strlen( trim( $controllerName ) ) )
+			throw new InvalidArgumentException( 'No controller name given' );
+		$page	= $this->modelPage->getByIndices( array(
+			'controller'	=> $controllerName,
+			'action'		=> $action,
+		) );
+		if( !$page ){
+			if( !$strict )
+				return NULL;
+			throw new RangeException( 'No page set for controller action: '.$controllerName.':'.$action );
+		}
+		$page	= $this->getPage( $page->pageId );
+		return $this->translatePage( $page );
+	}
+
+	/**
+	 *	Indicates wheter a page exists for an URI path or a page ID .
+	 *	@access		public
+	 *	@param		string		$pathOrId		Path or ID to find page for
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
+	 *	@todo		move "by path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function hasPage( $path ){
-		return (bool) $this->getPageFromPath( $path );
+	public function hasPage( $pathOrId ){
+		if( preg_match( '/^[0-9]+$/', $pathOrId ) )
+			return (bool) $this->modelPage->get( $pathOrId );
+		return (bool) $this->getPageFromPath( $pathOrId );
 	}
 
 	public function isAccessible( $page ){
