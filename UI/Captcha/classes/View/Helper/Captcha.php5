@@ -13,6 +13,8 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
+		$this->captcha		= new UI_Image_Captcha();
+		$this->captcha->useUnique	= TRUE;
 	}
 
 	static public function checkCaptcha( $env, $word ){
@@ -34,28 +36,43 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 	}
 
 	public function setHeight( $height ){
-		$this->height	= $height;
+		$this->captcha->height	= $height;
 		return $this;
 	}
 
-	public function render(){
-		$captcha	= new UI_Image_Captcha();
-		$captcha->useUnique	= TRUE;
-		if( $this->moduleConfig->get( 'strength' ) == 'hard' ){
-			$captcha->useDigits	= TRUE;
-			$captcha->useLarge	= TRUE;
+	public function setWidth( $width ){
+		$this->captcha->width	= $width;
+		return $this;
+	}
+
+	public function setLength( $length ){
+		$this->captcha->length	= max( 1, min( 8, (int) $length ) );
+	}
+
+	public function setStrength( $strength ){
+		switch( strtolower( $strength ) ){
+			case 'soft':
+				$this->captcha->useDigits	= FALSE;
+				$this->captcha->useLarge	= FALSE;
+				break;
+			case 'hard':
+				$this->captcha->useDigits	= TRUE;
+				$this->captcha->useLarge	= TRUE;
+				break;
 		}
-		$word		= $captcha->generateWord();
+	}
+
+	public function render(){
+		$word		= $this->captcha->generateWord();
 		$this->session->set( 'captcha', $word );
-		$captcha->background	= $this->background;
-	//	$captcha->width			= 100;
-		$captcha->height		= $this->height;
-		$captcha->fontSize		= $this->fontSize;
-		$captcha->offsetX		= 0;
-		$captcha->offsetY		= 0;
-		$captcha->font			= "./themes/common/font/tahoma.ttf";
-		$filePath				= "captcha_".uniqid().".jpg";
-		$captcha->generateImage( $word, $filePath );
+		$this->captcha->background	= $this->background;
+		$this->captcha->fontSize	= $this->fontSize;
+		$this->captcha->offsetX		= 0;
+		$this->captcha->offsetY		= 0;
+		$this->captcha->font		= "./themes/common/font/tahoma.ttf";
+		$pathName	= $this->moduleConfig->get( 'path' );
+		$filePath	= $pathName."captcha_".uniqid().".jpg";
+		$this->captcha->generateImage( $word, $filePath );
 		$image	= file_get_contents( $filePath );
 		unlink( $filePath );
 		if( $this->format === self::FORMAT_RAW )
