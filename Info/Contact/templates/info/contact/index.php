@@ -2,6 +2,37 @@
 $w		= (object) $words['index'];
 
 extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom' ), 'html/info/contact/' ) );
+$newsletter    = '';
+if( $useNewsletter ){
+	$inputTopics	= '';
+	if( $newsletterTopics ){
+		$list	= array();
+		foreach( $newsletterTopics as $topic ){
+			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'checkbox',
+				'name'		=> 'topics[]',
+				'value'		=> $topic->newsletterTopicId,
+			);
+			$label		= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$topic->title, array( 'class' => 'checkbox' ) );
+			$list[]		= UI_HTML_Tag::create( 'li', $label );
+		}
+		$listTopics		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$inputTopics	= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', $w->labelNewsletterTopics ),
+			$listTopics,
+		), array( 'class' => 'optional newsletter newssletter-yes' ) );
+	}
+	$newsletter     = '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_captcha" class="checkbox">
+					<input type="checkbox" name="newsletter" id="input_newsletter" value="yes" class="has-optionals" data-animation="slide"/>
+					'.$w->labelNewsletter.'
+				</label>
+				'.$inputTopics.'
+			</div>
+		</div>';
+}
 
 $captcha	= '';
 if( $useCaptcha ){
@@ -13,7 +44,7 @@ if( $useCaptcha ){
 	$captcha->fontSize		= 16;
 	$captcha->offsetX		= 0;
 	$captcha->offsetY		= 0;
-	$captcha->font			= "./themes/custom/font/tahoma.ttf";
+	$captcha->font			= "./themes/common/font/tahoma.ttf";
 	$captcha->generateImage( $captchaWord, $captchaFilePath );
 
 	$captcha	= '
@@ -64,6 +95,7 @@ $content	= $textTop.'
 					<textarea name="message" id="input_message" class="span12" rows="10" required="required">'.htmlentities( $message, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
+			'.$newsletter.'
 			'.$captcha.'
 			'.$honeypot.'
 			<div class="buttonbar">

@@ -3,8 +3,10 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
-		$this->useCaptcha	= $this->moduleConfig->get( 'captcha.enable' );
+		$this->useCaptcha		= $this->moduleConfig->get( 'captcha.enable' );
+		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
 		$this->addData( 'useCaptcha', $this->useCaptcha );
+		$this->addData( 'useNewsletter', $this->useNewsletter );
 		$this->addData( 'useHoneypot', $this->moduleConfig->get( 'honeypot.enable' ) );
 	}
 
@@ -74,6 +76,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 					$logic->handleMail( $mail, $receiver, 'de' );
 					$messenger->noteSuccess( $words->msgSuccess );
 					$this->restart( NULL, TRUE );
+
+				//	@todo handle newsletter registration
 				}
 				catch( Exception $e ){
 					$messenger->noteFailure( $e->getMessage() );
@@ -87,6 +91,17 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			$model	= new Model_Page( $this->env );
 			$page	= $model->getByIndex( 'controller', 'Info_Contact' );
 			$path	= "./".$page->identifier;
+		}
+
+		if( $this->useNewsletter ){
+			$topics		= array();
+			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
+	//			$model	= new Model_Newsletter_Group( $this->env );
+	//			$conditions	= array( 'status' => '', 'type' => '' );
+	//			$orders		= array( 'title' => 'ASC' );
+	//			$topics		= $model->getAll( $conditions, $orders );
+			}
+			$this->addData( 'newsletterTopics', $topics );
 		}
 
 		if( $this->useCaptcha ){
