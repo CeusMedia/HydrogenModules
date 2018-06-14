@@ -3,7 +3,7 @@
 	<title>Info: Contact</title>
 	<description><![CDATA[Simple contact form.]]></description>
 	<category>Info</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for static content blocks (top, right, bottom).</log>
@@ -18,7 +18,8 @@
 	<log version="0.3.0">Implement contact form modals.</log>
 	<log version="0.3.1">Improve contact form modals and triggers.</log>
 	<log version="0.3.2">Use module UI_Shortcode to perform contact forms.</log>
-	<log version="0.3.3">Prepare support for newsletter registration.</log>
+	<log version="0.3.3">Support for newsletter registration.</log>
+	<log version="0.3.4">Add privacy text placeholder.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,10 +31,14 @@
 		<class>View/Helper/Info/Contact/Form/Trigger.php5</class>
 		<class>View/Info/Contact.php5</class>
 		<template>info/contact/index.php</template>
+		<locale>de/html/info/contact/bottom.html</locale>
+		<locale>de/html/info/contact/privacy.html</locale>
 		<locale>de/html/info/contact/top.html</locale>
 		<locale>de/info/contact.ini</locale>
 		<locale>de/mail/info/contact.html</locale>
 		<locale>de/mail/info/contact/form.html</locale>
+		<locale>en/html/info/contact/bottom.html</locale>
+		<locale>en/html/info/contact/privacy.html</locale>
 		<locale>en/html/info/contact/top.html</locale>
 		<locale>en/info/contact.ini</locale>
 		<locale>en/mail/info/contact.html</locale>

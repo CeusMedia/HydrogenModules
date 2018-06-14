@@ -18,6 +18,7 @@ class Mail_Info_Contact extends Mail_Abstract{
 			'subject'		=> htmlentities( strip_tags( $data->subject ), ENT_QUOTES, 'UTF-8' ),
 			'name'			=> htmlentities( strip_tags( $data->name ), ENT_QUOTES, 'UTF-8' ),
 			'message'		=> nl2br( htmlentities( strip_tags( $data->message ), ENT_QUOTES, 'UTF-8' ) ),
+			'newsletter'	=> !empty( $data->newsletter ) ? 'ja' : 'nein',
 		) );
 		$this->addHtmlBody( $html );
 

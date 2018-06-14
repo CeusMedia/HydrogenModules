@@ -1,31 +1,34 @@
 <?php
 $w		= (object) $words['index'];
 
-extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom' ), 'html/info/contact/' ) );
+extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom', 'privacy' ), 'html/info/contact/' ) );
+
 $newsletter    = '';
 if( $useNewsletter ){
 	$inputTopics	= '';
-	if( $newsletterTopics ){
+	if( 0 && $newsletterTopics ){
 		$list	= array();
 		foreach( $newsletterTopics as $topic ){
 			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',
 				'name'		=> 'topics[]',
-				'value'		=> $topic->newsletterTopicId,
-			);
+				'value'		=> $topic->newsletterGroupId,
+				'checked'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'checked' : NULL,
+				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
+			) );
 			$label		= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$topic->title, array( 'class' => 'checkbox' ) );
 			$list[]		= UI_HTML_Tag::create( 'li', $label );
 		}
 		$listTopics		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
-		$inputTopics	= UI_HTML_Tag::create( 'div', array(
+		$inputTopics	= UI_HTML_Tag::create( 'blockquote', array(
 			UI_HTML_Tag::create( 'label', $w->labelNewsletterTopics ),
 			$listTopics,
-		), array( 'class' => 'optional newsletter newssletter-yes' ) );
+		), array( 'class' => 'optional newsletter newsletter-true' ) );
 	}
 	$newsletter     = '
 		<div class="row-fluid">
 			<div class="span12">
-				<label for="input_captcha" class="checkbox">
+				<label for="input_newsletter" class="checkbox">
 					<input type="checkbox" name="newsletter" id="input_newsletter" value="yes" class="has-optionals" data-animation="slide"/>
 					'.$w->labelNewsletter.'
 				</label>
@@ -75,11 +78,11 @@ $content	= $textTop.'
 		<form action="'.$formPath.'" method="post">
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_name">'.$w->labelName.'</label>
+					<label for="input_name" class="mandatory required">'.$w->labelName.'</label>
 					<input type="text" name="name" id="input_name" class="span12" maxlength="40" required="required" value="'.htmlentities( $name, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span7">
-					<label for="input_email">'.$w->labelEmail.'</label>
+					<label for="input_email" class="mandatory required">'.$w->labelEmail.'</label>
 					<input type="text" name="email" id="input_email" class="span12" maxlength="50" required="required" value="'.htmlentities( $email, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
@@ -98,6 +101,7 @@ $content	= $textTop.'
 			'.$newsletter.'
 			'.$captcha.'
 			'.$honeypot.'
+			'.$textPrivacy.'
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-envelope icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>
