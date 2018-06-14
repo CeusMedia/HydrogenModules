@@ -39,25 +39,14 @@ if( $useNewsletter ){
 
 $captcha	= '';
 if( $useCaptcha ){
-	$captcha	= new UI_Image_Captcha();
-	$captcha->background	= array( 0, 0, 0 );
-	$captcha->background	= array( 255, 255, 255 );
-//	$captcha->width			= 100;
-	$captcha->height		= 55;
-	$captcha->fontSize		= 16;
-	$captcha->offsetX		= 0;
-	$captcha->offsetY		= 0;
-	$captcha->font			= "./themes/common/font/tahoma.ttf";
-	$captcha->generateImage( $captchaWord, $captchaFilePath );
-
 	$captcha	= '
 	<div class="row-fluid">
-		<div class="span5">
+		<div class="span6">
 			<label for="input_captcha">'.$w->labelCaptcha.'&nbsp;<small class="muted">('.$w->labelCaptcha_suffix.')</small></label>
 			<input type="text" name="captcha" id="input_captcha" value="" class="span12"/>
 		</div>
-		<div class="span7">
-			<img src="'.$captchaFilePath.'" title="CAPTCHA" class="img-captcha">
+		<div class="span5 offset1">
+			[captcha length="'.$captchaLength.'" strength="'.$captchaStrength.'"]
 		</div>
 	</div>';
 }

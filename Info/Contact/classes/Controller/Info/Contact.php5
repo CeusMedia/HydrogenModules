@@ -6,6 +6,10 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
 		$this->useCaptcha		= $this->moduleConfig->get( 'captcha.enable' );
+		if( $this->useCaptcha && !$this->env->getModules()->has( 'UI_Captcha' ) ){
+			$this->messenger->noteFailure( 'Module "UI_Captcha" needs to be installed to use CAPTCHA.' );
+			$this->useCaptcha	= FALSE;
+		}
 		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
 		$this->addData( 'useCaptcha', $this->useCaptcha );
 		$this->addData( 'useNewsletter', $this->useNewsletter );
@@ -62,8 +66,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			if( trim( $this->request->get( 'trap' ) ) )
 				$this->messenger->noteError( $words->msgErrorAccessDenied );
 			if( $this->useCaptcha ){
-				$word	= $this->env->getSession()->get( 'captcha' );
-				if( $this->request->get( 'captcha' ) !== $word )
+				$captchaWord	= $this->request->get( 'captcha' );
+				if( View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) )
 					$this->messenger->noteError( $words->msgErrorCaptchaFailed );
 			}
 			if( !$this->messenger->gotError() ){
@@ -134,20 +138,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		}
 
 		if( $this->useCaptcha ){
-			$captcha	= new UI_Image_Captcha();
-			$captcha->useUnique	= TRUE;
-			$filePath	= $this->moduleConfig->get( 'captcha.path' );
-			$filePath	= $filePath ? $filePath : $this->env->getConfig()->get( 'path.images' );
-			$filePath	= $filePath ? $filePath : 'tmp/';
-			$filePath	= $filePath."/captcha.jpg";
-			if( $this->moduleConfig->get( 'captcha.strength' ) == 'hard' ){
-				$captcha->useDigits	= TRUE;
-				$captcha->useLarge	= TRUE;
-			}
-			$word	= $captcha->generateWord();
-			$this->env->getSession()->set( 'captcha', $word );
-			$this->addData( 'captchaWord', $word );
-			$this->addData( 'captchaFilePath', $filePath );
+			$this->addData( 'captchaLength', $this->moduleConfig->get( 'captcha.length' ) );
+			$this->addData( 'captchaStrength', $this->moduleConfig->get( 'captcha.strength' ) );
 		}
 		$this->addData( 'formPath', $path );
 		$this->addData( 'name', $this->request->get( 'name' ) );
