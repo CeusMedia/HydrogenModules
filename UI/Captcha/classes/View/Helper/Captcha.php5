@@ -24,11 +24,6 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		return $this;
 	}
 
-	public function setHeight( $height ){
-		$this->height	= $height;
-		return $this;
-	}
-
 	public function setFontSize( $size ){
 		$this->fontSize	= $size;
 		return $this;
@@ -36,6 +31,11 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 
 	public function setFormat( $format ){
 		$this->format	= $format;
+	}
+
+	public function setHeight( $height ){
+		$this->height	= $height;
+		return $this;
 	}
 
 	public function render(){
@@ -61,7 +61,8 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		if( $this->format === self::FORMAT_RAW )
 			return $image;
 		return UI_HTML_Tag::create( 'img', NULL, array(
-			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image )
+			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image ),
+			'class'	=> 'captcha-image',
 		) );
 	}
 }
