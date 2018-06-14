@@ -8,7 +8,8 @@ if( $page->type == 1 ){
 $optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->changefreq );
 $optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
 
-$buttonSuggest	= '';
+$buttonSuggest		= '';
+$buttonBlacklist	= '';
 if( $page->type == 0 ){
 	$buttonSuggest		= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.suggestKeyWords('.$page->pageId.', \'#input_page_keywords\');">vorschlagen</button>';
 	$buttonBlacklist	= '<button type="button" class="btn btn-mini" onclick="ModuleManagePages.PageEditor.blacklistSuggestedWords('.$page->pageId.', \'#input_page_keywords\');">Wörter ausschließen</button>';
