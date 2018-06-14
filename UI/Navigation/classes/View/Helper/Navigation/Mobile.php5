@@ -49,7 +49,7 @@ class View_Helper_Navigation_Mobile{
 	}
 
 	protected function renderLabelWithIcon( $entry ){
-		if( !isset( $entry->icon ) )
+		if( empty( $entry->icon ) || !isset( $entry->icon ) )
 			return $entry->label;
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
