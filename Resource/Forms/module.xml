@@ -3,10 +3,11 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
+	<log version="0.3.1">Support manager and customer rules.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -96,6 +97,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_rules` (
   PRIMARY KEY (`formRuleId`),
   KEY `formId` (`formId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql type="mysql" on="update" version="0.3.1"><![CDATA[
+ALTER TABLE `<%?prefix%>form_rules` ADD `type` TINYINT(1) UNSIGNED NOT NULL AFTER `formId`, ADD INDEX (`type`);
 	]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
