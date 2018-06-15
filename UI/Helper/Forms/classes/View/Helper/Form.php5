@@ -71,15 +71,21 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		if( substr_count( $form->content, '[block_row_button]' ) )
 			$button	= '';
 		return UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'formId', 'value' => $this->formId ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'hidden',
+				'name'		=> 'formId',
+				'id'		=> 'input_formId',
+				'value'		=> $this->formId,
+			) ),
 			$form->content,
 			$button,
 		), array(
-			'id'		=> 'form-'.$this->formId,
-			'action' 	=> '#',//'./?action=fill&id='.$this->formId,
-			'method' 	=> 'post',
-			'class'		=> 'cmforms',
-			'onsubmit'	=> 'Forms.sendForm(this); return false;',
+			'id'			=> 'form-'.$this->formId,
+			'data-id'		=> $this->formId,
+			'action' 		=> '#',//'./?action=fill&id='.$this->formId,
+			'method' 		=> 'post',
+			'class'			=> 'cmforms',
+			'onsubmit'		=> 'Forms.sendForm(this); return false;',
 		) );
 	}
 
