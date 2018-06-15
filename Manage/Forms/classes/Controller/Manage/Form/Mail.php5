@@ -40,9 +40,16 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$this->addData( 'mail', $mail );
 	}
 
-	public function index(){
-		$mails	= $this->modelMail->getAll( array(), array( 'title' => 'ASC' ) );
+	public function index( $page = 0 ){
+		$limit		= 15;
+		$conditions	= array();
+		$orders		= array( 'title' => 'ASC' );
+		$limits		= array( $page * $limit, $limit );
+		$total		= $this->modelMail->count( $conditions );
+		$mails		= $this->modelMail->getAll( $conditions, $orders, $limits );
 		$this->addData( 'mails', $mails );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
 	public function remove( $mailId ){

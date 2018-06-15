@@ -21,9 +21,10 @@ foreach( $fills as $fill ){
 		'title'	=> 'anzeigen',
 	) );
 	$linkRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-		'href'	=> './manage/form/fill/remove/'.$fill->fillId.'?page='.$page,
-		'class'	=> 'btn btn-mini btn-danger',
-		'title'	=> 'entfernen',
+		'href'		=> './manage/form/fill/remove/'.$fill->fillId.'?page='.$page,
+		'class'		=> 'btn btn-mini btn-danger',
+		'title'		=> 'entfernen',
+		'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 		) );
 	$buttons	= UI_HTML_Tag::create( 'div', array( $linkView, $linkRemove ), array( 'class' => 'btn-group' ) );
 	$date		= UI_HTML_Tag::create( 'small', date( 'Y-m-d H:i:s', $fill->createdAt ) );

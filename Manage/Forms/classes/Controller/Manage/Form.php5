@@ -11,7 +11,21 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->modelMail	= new Model_Form_Mail( $this->env );
 	}
 
-	public function addRule( $formId ){
+	public function add(){
+		if( $this->env->getRequest()->has( 'save' ) ){
+			$this->checkIsPost();
+			$data	= $this->env->getRequest()->getAll();
+			$data['timestamp']	= time();
+			$formId	= $this->modelForm->add( $data, FALSE );
+			$this->restart( 'edit/'.$formId, TRUE );
+		}
+
+		$orders		= array( 'identifier' => 'customer_result_%' );
+		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$this->addData( 'mails', $mails );
+	}
+
+	public function addRule( $formId, $formType ){
 		$request	= $this->env->getRequest();
 		$data		= array();
 		for( $i=0; $i<3; $i++ ){
@@ -26,15 +40,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		}
 		$this->modelRule->add( array(
 			'formId'		=> $formId,
+			'type'			=> $formType,
 			'rules'			=> json_encode( $data ),
 			'mailAddresses'	=> $request->get( 'mailAddresses' ),
 			'mailId'		=> $request->get( 'mailId' ),
 		) );
-		$this->restart( 'edit/'.$formId, TRUE );
-	}
-
-	public function removeRule( $formId, $ruleId ){
-		$this->modelRule->remove( $ruleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
@@ -54,20 +64,6 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 
-	public function add(){
-		if( $this->env->getRequest()->has( 'save' ) ){
-			$this->checkIsPost();
-			$data	= $this->env->getRequest()->getAll();
-			$data['timestamp']	= time();
-			$formId	= $this->modelForm->add( $data, FALSE );
-			$this->restart( 'edit/'.$formId, TRUE );
-		}
-
-		$orders		= array( 'identifier' => 'customer_result_%' );
-		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
-		$this->addData( 'mails', $mails );
-	}
-
 	public function confirm(){
 		$fillId		= $this->env->getRequest()->get( 'fillId' );
 		$fill		= $this->modelFill->get( $fillId );
@@ -79,7 +75,9 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $formId ){
-		$form	= $this->checkId( $formId );
+		$session	= $this->env->getSession();
+		$this->addData( 'activeTab', $session->get( 'manage_forms_tab' ) );
+		$form		= $this->checkId( $formId );
 		if( $this->env->getRequest()->has( 'save' ) ){
 			$this->checkIsPost();
 			$data	= $this->env->getRequest()->getAll();
@@ -91,15 +89,36 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 
 		$orders		= array( 'identifier' => 'customer_result_%' );
 		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
-		$this->addData( 'mails', $mails );
+		$this->addData( 'mailsCustomer', $mails );
 
-		$rules	= $this->modelRule->getAllByIndex( 'formId', $formId );
-		$this->addData( 'rules', $rules );
+		$orders		= array( 'identifier' => 'manager_%' );
+		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$this->addData( 'mailsManager', $mails );
+
+		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( array(
+			'formId'	=> $formId,
+			'type'		=> Model_Form_Rule::TYPE_MANAGER,
+		) ) );
+		$this->addData( 'rulesCustomer', $this->modelRule->getAllByIndices( array(
+			'formId'	=> $formId,
+			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
+		) ) );
+
+		$fills	= $this->modelFill->getAll( array( 'formId' => $formId ) );
+		$this->addData( 'fills', $fills );
+		$this->addData( 'hasFills', count( $fills ) > 0 );
 	}
 
-	public function index(){
-		$forms	= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
+	public function index( $page = 0 ){
+		$limit		= 15;
+		$conditions	= array();
+		$orders		= array( 'status' => 'DESC', 'title' => 'ASC' );
+		$limits		= array( $page * $limit, $limit );
+		$total		= $this->modelForm->count( $conditions );
+		$forms		= $this->modelForm->getAll( $conditions, $orders, $limits );
 		$this->addData( 'forms', $forms );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
 	public function view( $formId ){
@@ -113,5 +132,22 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
 		$this->restart( NULL, TRUE );
+	}
+
+	public function removeRule( $formId, $ruleId ){
+		$this->modelRule->remove( $ruleId );
+		$this->restart( 'edit/'.$formId, TRUE );
+	}
+
+	public function setTab( $formId, $tabId ){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+		$session->set( 'manage_forms_tab', $tabId );
+		if( $request->isAjax() ){
+			header( "Content-Type: application/json" );
+			print( json_encode( array( 'status' => 'data', 'data' => 'ok' ) ) );
+			exit;
+		}
+		$this->restart( 'edit/'.$formId, TRUE );
 	}
 }

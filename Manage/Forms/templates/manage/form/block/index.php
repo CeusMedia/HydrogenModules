@@ -4,10 +4,8 @@ $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) 
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
-$modelBlock	= new Model_Form_Block( $env );
-
 $rows		= array();
-foreach( $modelBlock->getAll( array(), array( 'title' => 'ASC' ) ) as $block ){
+foreach( $blocks as $block ){
 	$linkView	= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
 		'href'	=> './manage/form/block/view/'.$block->blockId,
 		'class'	=> 'btn btn-mini btn-info',
@@ -24,10 +22,21 @@ $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Ti
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 
-$heading	= UI_HTML_Tag::create( 'h2', 'Blöcke' );
-
 $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neuer Block', array(
 	'href'	=> './manage/form/block/add',
 	'class'	=> 'btn btn-success'
 ) );
-return $heading.$table.$linkAdd;
+
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/block', $page, $pages );
+
+return '
+<div class="content-panel">
+	<h3>Blöcke</h3>
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+	<div class="buttonbar">
+		'.$linkAdd.'
+		'.$pagination.'
+	</div>
+</div>';

@@ -32,10 +32,21 @@ $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Ti
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 
-$heading	= UI_HTML_Tag::create( 'h2', 'Mails' );
-
-$linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Mail', array(
+$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Mail', array(
 	'href'	=> './manage/form/mail/add',
 	'class'	=> 'btn btn-success'
 ) );
-return $heading.$table.$linkAdd;
+
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/mail', $page, $pages );
+
+return '
+<div class="content-panel">
+	'.UI_HTML_Tag::create( 'h3', 'Mails-Vorlagen' ).'
+	<div class="content-panel-inner">
+		'.$table.'
+		<div class="buttonbar">
+			'.$buttonAdd.'
+			'.$pagination.'
+		</div>
+	</div>
+</div>';

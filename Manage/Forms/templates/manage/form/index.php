@@ -75,4 +75,16 @@ $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
 	'href'	=> './manage/form/add',
 	'class'	=> 'btn btn-success',
 ) );
-return $heading.$table.$linkAdd;
+
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form', $page, $pages );
+
+return $heading.'
+<div class="content-panel">
+	<div class="content-panel-inner">
+		'.$table.'
+		<div class="buttonbar">
+			'.$linkAdd.'
+			'.$pagination.'
+		</div>
+	</div>
+</div>';

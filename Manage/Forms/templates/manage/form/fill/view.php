@@ -54,8 +54,9 @@ $buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'class'	=> 'btn',
 ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
-	'href'	=> './manage/form/fill/remove/'.$fill->fillId.( $page ? '&page='.$page : '' ),
-	'class'	=> 'btn btn-danger',
+	'href'		=> './manage/form/fill/remove/'.$fill->fillId.( $page ? '&page='.$page : '' ),
+	'class'		=> 'btn btn-danger',
+	'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 ) );
 $buttons	= join( ' ', array( $buttonList, $buttonRemove ) );
 $buttonbar	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );

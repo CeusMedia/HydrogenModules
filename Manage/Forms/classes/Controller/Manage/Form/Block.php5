@@ -40,7 +40,16 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->addData( 'block', $block );
 	}
 
-	public function index(){
+	public function index( $page = 0 ){
+		$limit		= 15;
+		$conditions	= array();
+		$orders		= array( 'title' => 'ASC' );
+		$limits		= array( $page * $limit, $limit );
+		$total		= $this->modelBlock->count( $conditions );
+		$blocks		= $this->modelBlock->getAll( $conditions, $orders, $limits );
+		$this->addData( 'blocks', $blocks );
+		$this->addData( 'page', $page );
+		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
 	public function view( $blockId ){
