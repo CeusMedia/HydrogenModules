@@ -18,6 +18,8 @@ class Logic_Catalog_Gallery{
 	/**	@var	string							$pathModule */
 	public $pathModule;
 
+	protected $articleUriTemplate				= 'catalog/gallery/image/%2$d-%3$s';
+
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -73,6 +75,7 @@ class Logic_Catalog_Gallery{
 	}
 
 	public function getCategory( $categoryId ){
+		$categoryId	= (int) $categoryId;
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId;
 		$category	= $this->cache->get( $cacheKey );
 		if( !$category ){
@@ -109,6 +112,7 @@ class Logic_Catalog_Gallery{
 	}
 
 	public function getImage( $imageId ){
+		$imageId	= (int) $imageId;
 		$cacheKey	= 'catalog.gallery.image.'.$imageId;
 		$image		= $this->cache->get( $cacheKey );
 		if( !$image ){
@@ -117,6 +121,34 @@ class Logic_Catalog_Gallery{
 			$this->cache->set( $cacheKey, $image );
 		}
 		return $image;
+	}
+
+	public function getImageUri( $imageOrId, $absolute = FALSE ){
+		$image		= $imageOrId;
+		if( is_int( $imageOrId ) )
+			$image	= $this->getImage( $imageOrId );
+		if( !is_object( $productLicense ) )
+			throw new InvalidArgumentException( 'Given article data is invalid' );
+		$uri	= vsprintf( $this->articleUriTemplate, array(
+			$image->galleryCategoryId,
+			$image->galleryImageId,
+			$this->getUriPart( $image->title ),
+		) );
+		return $absolute ? $this->env->url.$uri : './'.$uri;
+	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
+	public function getUriPart( $label, $delimiter = "_" ){
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
+	}
+
+	public function setArticleUri( $articleUriTemplate ){
+		$this->articleUriTemplate	= $articleUriTemplate;
 	}
 }
 ?>

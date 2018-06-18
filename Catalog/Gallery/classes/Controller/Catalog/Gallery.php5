@@ -111,6 +111,7 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 	}
 
 	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL ){
+		$imageId	= (int) $imageId;
 		$image	= $this->logic->getImage( $imageId );
 		if( !$image ){
 			$this->messenger->noteError( 'Invalid image ID "'.$imageId.'".' );
