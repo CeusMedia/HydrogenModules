@@ -28,6 +28,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**	@var	Model_Bookstore_Catalog_Category			$modelCategory */
 	protected $modelCategory;
 
+	protected $articleUriTemplate							= 'catalog/bookstore/article/%2$d-%3$s';
+
 	/**
 	 *	Constructor.
 	 *	@access		public
@@ -274,8 +276,11 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 			$article	= $this->getArticle( $articleOrId );
 		if( !is_object( $article ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
-		$keywords	= $this->getUriPart( $article->title );
-		$uri		= 'catalog/bookstore/article/'.$article->articleId.'-'.$keywords;
+		$uri		= vsprintf( $this->articleUriTemplate, array(
+			0,
+			$article->articleId,
+			$this->getUriPart( $article->title ),
+		) );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
@@ -576,6 +581,10 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$model->focusForeign( "categoryId", $categoryId );
 		$data	= $model->getData();
 		return (bool)count( $data );
+	}
+
+	public function setArticleUri( $articleUriTemplate ){
+		$this->articleUriTemplate	= $articleUriTemplate;
 	}
 }
 ?>
