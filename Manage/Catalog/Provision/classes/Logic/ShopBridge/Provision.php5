@@ -14,7 +14,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@return		void
 	 */
 	public function __onInit(){
-		$this->logic		= Logic_Provision::getInstance( $this->env );
+		$this->logic		= Logic_Catalog_ProvisionManager::getInstance( $this->env );
 		$this->taxRate		= $this->env->getConfig()->get( 'module.manage_catalog_provision.tax.rate' );
 	}
 
@@ -87,9 +87,9 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@todo fix link which is between two world: client (product in catalog) and admin (catalog manager)
 	 */
 	public function getLink( $articleId ){
-		$productLicense		= $this->check( $articleId );
-		return 'manage/my/provision/license/add/'.$productLicense->productId.'/'.$articleId;
+		return $this->logic->getProductLicenseUri( $articleId );
 	}
+
 
 	/**
 	 *	...

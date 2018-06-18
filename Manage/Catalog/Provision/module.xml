@@ -3,7 +3,7 @@
 	<title>Manage: Catalog: Provision</title>
 	<description><![CDATA[Management for provisioning of products, licenses and their keys.]]></description>
 	<category>Management</category>
-	<version>0.3</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -14,14 +14,15 @@
 	<log version="0.2.6">Use module JS:TinyMCE for HTML descriptions.</log>
 	<log version="0.2.7">Moved hasActiveKey to Resource_Accounting::Controller_Rest.</log>
 	<log version="0.3">Migrated Manage:Accounting to Manage:Accounts.</log>
-	<log version="0.4">Migrated Manage:Accounts to Manage:Provision.</log>
+	<log version="0.4">Migrated Manage:Accounts to Manage:Catalog:Provision.</log>
+	<log version="0.4.1">Use own logic class, forked from module Catalog:Provision.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Catalog/Provision/Product.php5</class>
 		<class>Controller/Manage/Catalog/Provision/Product/License.php5</class>
-		<class>Logic/Catalog/Provision.php5</class>
+		<class>Logic/Catalog/ProvisionManager.php5</class>
 		<class>Logic/ShopBridge/Provision.php5</class>
 		<class>Model/Provision/Product.php5</class>
 		<class>Model/Provision/Product/License.php5</class>

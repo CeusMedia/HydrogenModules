@@ -2,7 +2,7 @@
 class Controller_Manage_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
-		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
+		$this->logicProvision		= Logic_Catalog_ProvisionManager::getInstance( $this->env );
 		$this->request				= $this->env->getRequest();
 		$this->messenger			= $this->env->getMessenger();
 		$this->modelProduct			= new Model_Provision_Product( $this->env );
