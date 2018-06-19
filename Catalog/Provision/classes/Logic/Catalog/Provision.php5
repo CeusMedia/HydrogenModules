@@ -1,14 +1,14 @@
 <?php
-class Logic_Provision extends CMF_Hydrogen_Logic{
+class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
-//		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
-//		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
-//		$this->modelUser		= new Model_User( $this->env );
+		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
+		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
 	}
 
 	/**
@@ -102,6 +102,43 @@ class Logic_Provision extends CMF_Hydrogen_Logic{
 		foreach( $productLicenses as $nr => $productLicense )
 			$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
 		return $productLicenses;
+	}
+
+	public function getProductUri( $productOrId, $absolute = FALSE ){
+		$product	= $productOrId;
+		if( is_int( $productOrId ) )
+			$product	= $this->getProductLicense( $productOrId );
+		if( !is_object( $product ) )
+			throw new InvalidArgumentException( 'Given product data is invalid (neither product object nor valid product ID)' );
+		$uri	= vsprintf( 'catalog/provision/product/%1$d-%2$s', array(
+			$product->productId,
+			$this->getUriPart( $product->title ),
+		) );
+		return $absolute ? $this->env->url.$uri : './'.$uri;
+	}
+
+	public function getProductLicenseUri( $productLicenseOrId, $absolute = FALSE ){
+		$productLicense	= $productLicenseOrId;
+		if( is_int( $productLicenseOrId ) )
+			$productLicense	= $this->getProductLicense( $productLicenseOrId );
+		if( !is_object( $productLicense ) )
+			throw new InvalidArgumentException( 'Given product license data is invalid (neither product license object nor valid product license ID)' );
+		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', array(
+			$productLicense->productId,
+			$productLicense->productLicenseId,
+			$this->getUriPart( $productLicense->title ),
+		) );
+		return $absolute ? $this->env->url.$uri : './'.$uri;
+	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
+	public function getUriPart( $label, $delimiter = "_" ){
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
 	}
 
 	public function getProducts( $status = NULL ){

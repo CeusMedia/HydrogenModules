@@ -1,7 +1,7 @@
 <?php
 class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 
-	/**	@var	Logic_Provision						$logic */
+	/**	@var	Logic_Catalog_Provision				$logic */
 	protected $logic;
 
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
@@ -14,7 +14,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@return		void
 	 */
 	public function __onInit(){
-		$this->logic		= Logic_Provision::getInstance( $this->env );
+		$this->logic		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->taxRate		= $this->env->getConfig()->get( 'module.catalog_provision.tax.rate' );
 	}
 

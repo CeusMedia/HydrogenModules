@@ -1,0 +1,36 @@
+
+//  --  PROVISION: PROUCT LIST  --  //
+.catalog-provision-product-list {
+	}
+.catalog-provision-product-list-item {
+	clear: both;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	padding: 1em 2em;
+	}
+.catalog-provision-product-list-item-container {
+	}
+.catalog-provision-product-list-item-container h4 {
+	font-weight: normal;
+	font-size: 175%;
+	line-height: 1.5em;
+	}
+
+//  --  PROVISION: LICENSE LIST  --  //
+.catalog-provision-license-list {
+	}
+.catalog-provision-license-list-item {
+	clear: both;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border: 1px solid rgba(191, 191, 191, 0.5);
+	padding: 1em 2em;
+	}
+.catalog-provision-license-list-item-container {
+	}
+.catalog-provision-license-list-item-container h4 {
+	font-weight: normal;
+	font-size: 175%;
+	line-height: 1.5em;
+	}
