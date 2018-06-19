@@ -1,28 +1,35 @@
 <?php
 
+
+$iconProducts	= '';
+$iconLicense	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'arrow-right' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconProducts	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cubes' ) );
+	$iconLicense	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+}
+
 $list	= UI_HTML_Tag::create( 'div', 'Keine Produkte vorhanden.', array( 'class' => 'alert alert-notice' ) );
 if( $products ){
 	$list	= array();
 	foreach( $products as $product ){
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', array(
+		$list[]	= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'h4', $product->title ),
 				UI_HTML_Tag::create( 'p', $product->description ),
-				UI_HTML_Tag::create( 'a', 'Lizenzen', array(
-					'href'		=> './catalog/provision/product/view/'.$product->productId,
-				 	'class'		=> 'btn',
+				UI_HTML_Tag::create( 'p', array(
+					UI_HTML_Tag::create( 'a', $iconLicense.'&nbsp;weiter', array(
+	//					'href'		=> './catalog/provision/product/'.$product->productId.'-'.$logic->getUriPart( $product->title ),
+						'href'		=> $logic->getProductUri( $product ),
+					 	'class'		=> 'btn btn-large',
+					) ),
 				) ),
-			) ),
-		) );
+			), array( 'class' => 'catalog-provision-product-list-container' ) ),
+		), array( 'class' => 'catalog-provision-product-list-item' ) );
 	}
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', array( $tbody ), array( 'class' => 'table' ) );
+	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'catalog-provision-product-list' ) );
 }
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Produkte' ),
-	UI_HTML_Tag::create( 'div', array(
-		$list,
-//		UI_HTML_Tag::create( 'div', array(), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'catalog/provision/product/index' ) );
+$textTop	= $textTop ? $textTop : '<h2>'.$iconProducts.'&nbsp;Produkte</h2>';
+
+return $textTop.$list.$textBottom;

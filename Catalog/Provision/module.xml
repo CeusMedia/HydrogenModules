@@ -3,7 +3,7 @@
 	<title>Catalog: Accounts</title>
 	<description><![CDATA[Catalog for product licenses.]]></description>
 	<category>Catalog</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extend models by duration.</log>
@@ -19,21 +19,24 @@
 	<log version="0.4">Migrate module Resource:Accounting to Resource:Accounts.</log>
 	<log version="0.4.1">Add controller, view and templates for products.</log>
 	<log version="0.5">Derived from module Resource:Accounts.</log>
+	<log version="0.5.1">Implement articleUriTemplate.</log>
+	<log version="0.5.2">Add style file.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Catalog/Provision/Product.php5</class>
 		<class>Hook/Catalog/Provision.php5</class>
-		<class>Logic/Provision.php5</class>
+		<class>Logic/Catalog/Provision.php5</class>
 		<class>Logic/ShopBridge/Provision.php5</class>
 		<class>Model/Provision/Product.php5</class>
 		<class>Model/Provision/Product/License.php5</class>
 		<class>View/Catalog/Provision/Product.php5</class>
 		<template>catalog/provision/product/index.php</template>
-<!--		<template>catalog/provision/product/license.php</template>-->
+		<template>catalog/provision/product/license.php</template>
 		<template>catalog/provision/product/view.php</template>
 		<locale>de/catalog/provision.ini</locale>
+		<style theme="common">module.catalog.provision.css</style>
 	</files>
 	<config protected="yes" type="boolean" name="tax.included">1</config>
 	<config protected="yes" type="float" name="tax.rate">19</config>

@@ -14,7 +14,7 @@ class Hook_Catalog_Provision/* extends CMF_Hydrogen_Hook*/{
 	 *	@todo not working, needs Logic_User_Provision, find better solution!
 	 */
 	static public function onShopFinish( $env, $context, $module, $data = array() ){
-		$logicProvision		= Logic_Provision::getInstance( $env );
+		$logicProvision		= Logic_Catalog_Provision::getInstance( $env );
 		$logicShop			= new Logic_Shop( $env );
 		$logicShopBridge	= new Logic_ShopBridge( $env );
 		$order				= $logicShop->getOrder( $data['orderId'], TRUE );
