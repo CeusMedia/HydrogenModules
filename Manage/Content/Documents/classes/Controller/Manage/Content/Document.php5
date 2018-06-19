@@ -32,12 +32,12 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 		$this->addData( 'rights', $this->rights );
 	}
 
-	public static function ___onRegisterHints( $env, $context, $module, $arguments = NULL ){
+	public static function ___onRegisterHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL ){
 		$words	= $env->getLanguage()->getWords( 'manage/content/document' );
 		View_Helper_Hint::registerHints( $words['hints'], 'Manage_Content_Documents' );
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		$moduleConfig	= $env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$pathFront		= $frontend->getPath();

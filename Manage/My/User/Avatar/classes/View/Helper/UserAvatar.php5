@@ -73,7 +73,7 @@ class View_Helper_UserAvatar{
 		return '';
 	}
 
-	static public function renderStatic( $env, $userObjectOrId, $size ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $size ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		$helper->setSize( $size );

@@ -40,7 +40,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -77,7 +77,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		$logic		= new Logic_Catalog_Bookstore( $env );
 		$frontend	= Logic_Frontend::getInstance( $env );

@@ -4,12 +4,12 @@ class Resource_XMPP{
 	protected $env;
 	protected $options;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->options	= $env->getConfig()->getAll( 'module.resource_xmpp.', TRUE );
 	}
 
-	static public function ___onModulesInit( CMF_Hydrogen_Environment_Abstract $env ){
+	static public function ___onModulesInit( CMF_Hydrogen_Environment $env ){
 		$env->set( 'xmpp', new self( $env ) );
 		if( $env->modules )
 			$env->modules->callHook( 'XMPP', 'init', $env );

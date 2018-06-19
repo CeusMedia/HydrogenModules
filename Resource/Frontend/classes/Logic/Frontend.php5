@@ -21,7 +21,7 @@ class Logic_Frontend{
 
 	protected function __clone(){}
 
-	protected function __construct( $env, $path = NULL ){
+	protected function __construct( CMF_Hydrogen_Environment $env, $path = NULL ){
 		$this->env		= $env;
 		$this->path		= $path;
 		if( !$path )

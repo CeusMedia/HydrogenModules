@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Shop{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->config	= $env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->words	= $env->getLanguage()->getWords( 'shop' );

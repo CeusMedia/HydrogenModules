@@ -26,7 +26,7 @@ class View_Helper_HtmlDiff{
 		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
 	}
 
-	static public function renderStatic( $env, $html1, $html2 ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $html1, $html2 ){
 		$helper	= new View_Helper_HtmlDiff( $env );
 		$helper->setContents( $html1, $html2 );
 		return $helper->render();

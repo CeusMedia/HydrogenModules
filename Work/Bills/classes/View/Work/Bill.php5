@@ -17,13 +17,13 @@ class View_Work_Bill extends CMF_Hydrogen_View{
 	public function remove(){}
 	public function graph(){}
 
-	public static function ___onRegisterTab( $env, $context, $module, $data ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'work/bill' );							//  load words
 		$context->registerTab( '', $words->tabs['list'], 0 );										//  register main tab
 		$context->registerTab( 'graph', $words->tabs['graph'], 5 );										//  register graph tab
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/bill/' );
 		$env->getModules()->callHook( "Work:Bills", "registerTabs", $tabs/*, $data*/ );						//  call tabs to be registered

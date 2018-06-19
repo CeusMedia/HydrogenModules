@@ -21,7 +21,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 
-	static public function ___onAppException( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+	static public function ___onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$exception	= $data['exception'];
 		$request	= $env->getRequest();
 		$session	= $env->getSession();
@@ -43,7 +43,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		return FALSE;
 	}
 
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
 		if( $userId ){
 			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );

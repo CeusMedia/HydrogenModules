@@ -42,7 +42,7 @@ class View_Helper_Input_File{
 		return $container;
 	}
 
-	static public function renderStatic( $env, $name = NULL, $label = NULL, $required = FALSE, $buttonClass = 'btn-primary' ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $name = NULL, $label = NULL, $required = FALSE, $buttonClass = 'btn-primary' ){
 		$instance	= new self( $env );
 		if( $name )
 			$instance->setName( $name );

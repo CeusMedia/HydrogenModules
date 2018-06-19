@@ -4,7 +4,7 @@ class Model_Joblock {
 	public $lockExt		= ".lock";
 	public $lockPath	= "config/locks/";
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env = NULL ){
 		$this->env		= $env;
 		$config			= $this->env->getConfig();
 		if( $config->get( 'path.jobs.locks' ) )
@@ -57,8 +57,8 @@ class Model_Joblock {
 	}
 
 	public function lock( $className, $methodName, $lifetime = 0 ){
-		$filename	= $this->getLockFileName( $className, $methodName );							//  
-		FS_File_Writer::save( $filename, (string) $lifetime );											//  
+		$filename	= $this->getLockFileName( $className, $methodName );							//
+		FS_File_Writer::save( $filename, (string) $lifetime );											//
 	}
 
 	/**

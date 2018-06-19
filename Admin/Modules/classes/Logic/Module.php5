@@ -19,7 +19,7 @@ class Logic_Module {
 
 	protected function __clone(){}
 
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env	= $env;
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Module( $env );
@@ -206,7 +206,7 @@ class Logic_Module {
 		return $list;
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Module( $env );
 		return self::$instance;

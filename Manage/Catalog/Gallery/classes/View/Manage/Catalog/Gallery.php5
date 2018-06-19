@@ -1,7 +1,7 @@
 <?php
 class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 
-	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$frontend	= Logic_Frontend::getInstance( $env );
 		$basePath	= $frontend->getConfigValue( 'path.images' );
 		$options	= $env->getConfig()->getAll( 'module.manage_catalog_gallery.', TRUE );
@@ -52,7 +52,7 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 
 		$modelImage		= new Model_Catalog_Gallery_Image( $env );
 		$modelCategory	= new Model_Catalog_Gallery_Category( $env );

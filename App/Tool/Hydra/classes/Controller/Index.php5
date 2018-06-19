@@ -4,7 +4,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 	/**	@var	Tool_Hydrogen_Setup_Environment		$env		Environment object */
 	protected $env;
 
-	static public function ___onCheckAccess( $env, $module, $context, $data = array() ){
+	static public function ___onCheckAccess( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$allowUnsecuredLocalhost	= !TRUE;
 		$isAuthorized	= (bool) $env->getRequest()->getHeader( 'Authorization', FALSE );
 		$isLocalhost	= getEnv( 'HTTP_HOST' ) === "localhost";
@@ -14,7 +14,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 			$env->getMessenger()->noteFailure( $message );
 		}
 	}
-	
+
 	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ){
 		if( $this->env->getRequest()->has( 'resetInstanceId' ) ){
 			$this->env->getSession()->remove( 'instanceId' );

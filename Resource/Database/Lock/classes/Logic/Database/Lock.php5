@@ -12,7 +12,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onAutoModuleLockRelease( $env, $context/*, $module, $data = array()*/ ){
+	static public function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context/*, $module, $data = array()*/ ){
 		$request	= $env->getRequest();
 		if( $request->isAjax() )
 			return FALSE;
@@ -93,7 +93,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		return $this->lock( $subject, $entryId, $this->userId );
 	}
 
-	static public function release( $env, $subject, $entryId = NULL ){
+	static public function release( CMF_Hydrogen_Environment $env, $subject, $entryId = NULL ){
 		$lock	= new self( $env );
 		$lock->unlock( $subject, $entryId );
 	}

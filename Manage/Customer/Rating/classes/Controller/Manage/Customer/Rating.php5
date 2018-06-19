@@ -13,10 +13,10 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
 	}
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment_Abstract $env, $context ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context ){
 		View_Manage_Customer::registerTab( 'rating/%s', 'Bewertungen' );
 	}
-	
+
 	public function add( $customerId ){
 		$request		= $this->env->getRequest();
 		$customer		= $this->modelCustomer->get( $customerId );
@@ -59,7 +59,7 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 */
 	public function index( $customerId ){
 		$modelCustomer	= new Model_Customer( $this->env );
-		$modelRating	= new Model_Customer_Rating( $this->env );		
+		$modelRating	= new Model_Customer_Rating( $this->env );
 
 		$customer	= $modelCustomer->get( $customerId );
 		$order		= array( 'timestamp' => 'DESC' );

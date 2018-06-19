@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Footer{
 
-	static public function ___onPageBuild( $env, $context, $module, $data = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
 		if( preg_match( $pattern, $data->content ) ){
 			$links	= array();

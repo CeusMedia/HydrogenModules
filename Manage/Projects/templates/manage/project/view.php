@@ -11,7 +11,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconEdit		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 }
 
-function renderUserBlock( $env, $user ){
+function renderUserBlock( CMF_Hydrogen_Environment $env, $user ){
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );
@@ -25,7 +25,7 @@ function renderUserBlock( $env, $user ){
 	return UI_HTML_Tag::create( 'div', $link.$sub );
 }
 
-function renderUserInline( $env, $user ){
+function renderUserInline( CMF_Hydrogen_Environment $env, $user ){
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );

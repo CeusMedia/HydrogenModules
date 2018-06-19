@@ -34,7 +34,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$this->session->set( 'filter_manage_project_limit', 15 );
 	}
 
-	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
+	static public function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelUser			= new Model_User( $env );
 		$modelProjectUser	= new Model_Project_User( $env );
 		$projectIds			= array();
@@ -56,20 +56,20 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	static public function ___onUpdate( $env, $context, $module, $data = array() ){
+	static public function ___onUpdate( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( empty( $data['projectId'] ) )
 			throw new InvalidArgumentException( 'Missing project ID' );
 		$model	= new Model_Project( $env );
 		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
 	}
 
-	static public function ___onProjectRemove( $env, $context, $module, $data ){
+	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
 		$model		= new Model_Project_User( $env );
 		$model->removeByIndices( array( 'projectId' => $projectId ) );
 	}
 
-	static public function ___onListRelations( $env, $context, $module, $data ){
+	static public function ___onListRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Project::___onListRelations" is missing project ID in data';
 			$env->getMessenger()->noteFailure( $message );

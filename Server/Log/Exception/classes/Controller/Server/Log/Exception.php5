@@ -70,7 +70,7 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		return TRUE;															//  mark hook as handled
 	}
 
-	static public function logException( $env, $exception ){
+	static public function logException( CMF_Hydrogen_Environment $env, $exception ){
 		$env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $exception ) );
 	}
 

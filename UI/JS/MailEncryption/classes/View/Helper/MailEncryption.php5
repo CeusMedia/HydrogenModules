@@ -1,14 +1,14 @@
 <?php
 class View_Helper_MailEncryption{
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
 		if( !$options->get( 'enabled' ) )
 			return;
 		$context->js->addScriptOnReady( 'UI.MailEncryption.decrypt();', 8 );
 	}
 
-	static public function ___onPageBuild( $env, $context, $module, $data ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
 		if( !$options->get( 'enabled' ) )
 			return;

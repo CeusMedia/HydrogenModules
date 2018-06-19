@@ -16,7 +16,7 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller{
 
 	static protected $resources	= array();
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $setupView = TRUE ){
+	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE ){
 		parent::__construct( $env, FALSE );
 	}
 
@@ -37,7 +37,7 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller{
 
 	}
 
-	static public function registerResource( $env, $path, $class, $method, $scope = NULL ){
+	static public function registerResource( CMF_Hydrogen_Environment $env, $path, $class, $method, $scope = NULL ){
 		self::$resources[]	= (object) array(
 			'env'		=> $env,
 			'path'		=> $path,

@@ -1,7 +1,7 @@
 <?php
 class View_Helper_CookieWarning{
 
-	static public function ___onPageBuild( $env, $context, $module, $data ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$config		= $env->getConfig();
 		$options	= $config->getAll( 'module.ui_js_cookiewarning.', TRUE );
 		if( $options->get( 'enabled' ) && !$env->getRequest()->has( 'acceptCookies' ) ){

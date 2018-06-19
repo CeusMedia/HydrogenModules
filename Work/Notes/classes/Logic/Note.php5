@@ -11,7 +11,7 @@ class Logic_Note{
 	protected $userNoteIds	= array();
 	protected $userProjects	= array();
 
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->modelNote	= new Model_Note( $env );
 		$this->prefix		= $env->getConfig()->get( 'database.prefix' );
@@ -19,7 +19,7 @@ class Logic_Note{
 
 	protected function __clone(){}
 
-	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Note( $env );
 		return self::$instance;

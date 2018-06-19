@@ -1,25 +1,25 @@
 <?php
 class View_Helper_Catalog{
 
-	/**	@var	CMF_Hydrogen_Environment_Abstract			$env */
+	/**	@var	CMF_Hydrogen_Environment					$env */
 	protected $env;
 	/**	@var	CMF_Hydrogen_Environment_Resource_Language	$language */
 	protected $language;
 	/**	@var	Logic_Catalog								$logic */
 	protected $logic;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env	= $env;
+	public function __construct( CMF_Hydrogen_Environment $env ){
+		$this->env		= $env;
 		$this->logic	= new Logic_Catalog( $env );
 		$this->language	= $this->env->getLanguage();
 		$this->cache	= $this->env->getCache();
 	}
 
-	static public function ___onRenderNewsItem( CMF_Hydrogen_Environment_Abstract $env, &$context, $module, $data = array() ){
+	static public function ___onRenderNewsItem( CMF_Hydrogen_Environment $env, &$context, $module, $data = array() ){
 		$context->content	= self::applyLinks( $env, $context->content );
 	}
 
-	static public function applyLinks( CMF_Hydrogen_Environment_Abstract $env, $content/*&$item*/ ){
+	static public function applyLinks( CMF_Hydrogen_Environment $env, $content/*&$item*/ ){
 //		$content	= $item->content;
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
 		$logic	= new Logic_Catalog( $env );

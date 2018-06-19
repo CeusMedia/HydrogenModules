@@ -9,10 +9,10 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment object
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		parent::__construct( $env );
 		$config			= $env->getConfig();
 		$roleId			= $env->getSession()->get( 'roleId');

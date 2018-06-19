@@ -14,10 +14,10 @@ class Logic_Work_Mission{
 	/**
 	 *	Constructor. Protected to force singleton use.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Hydrogen framework environment object
+	 *	@param		CMF_Hydrogen_Environment	$env		Hydrogen framework environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env				= $env;
 		$this->modelMission		= new Model_Mission( $env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );

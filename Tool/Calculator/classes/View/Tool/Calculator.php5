@@ -1,7 +1,7 @@
 <?php
 class View_Tool_Calculator extends CMF_Hydrogen_View{
 
-	static public function ___onPageBuild( $env, $module, $context, $data = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$data	= (object) $data;
 		$helper	= new View_Helper_Tool_Calculator( $env );
 		$helper->setId( 'calc-modal' );

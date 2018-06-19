@@ -1,7 +1,7 @@
 <?php
 class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 
-	static public function ___onRenderContent( $env, $context, $module, $data ){
+	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$pattern		= "/^(.*)(\[CatalogBookstoreRelations([^\]]+)?\])(.*)$/sU";
 		$helper			= new View_Helper_Catalog_Bookstore_Relations( $env );
 		$defaultAttr	= array(
@@ -39,7 +39,7 @@ class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 	}
 
 
-	static public function ___onRenderSearchResults( $env, $context, $module, $data ){
+	static public function ___onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$helper			= new View_Helper_Catalog_Bookstore( $env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $env );
 		$modelAuthor	= new Model_Catalog_Bookstore_Author( $env );

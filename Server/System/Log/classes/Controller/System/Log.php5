@@ -27,7 +27,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 
 	}
 
-	static public function ___onLogException( $env, $context, $module, $data = array() ){
+	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )
@@ -89,7 +89,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		return $lines;
 	}
 
-	static public function handleException( $env, $exception ){
+	static public function handleException( CMF_Hydrogen_Environment $env, $exception ){
 		self::logException( $env, $exception );
 		self::mailException( $env, $exception );
 	}
@@ -108,7 +108,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		$this->addData( 'limit', $limit );
 	}
 
-	static public function logException( $env, $exception ){
+	static public function logException( CMF_Hydrogen_Environment $env, $exception ){
 		$config		= $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( $config->get( 'file.active' ) && $config->get( 'file.name' ) ){
 			$serial		= base64_encode( serialize( (object) array(
@@ -123,7 +123,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function mailException( $env, $exception ){
+	static public function mailException( CMF_Hydrogen_Environment $env, $exception ){
 		$config		= $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( $config->get( 'email.active' ) && $config->get( 'email.receivers' ) ){
 			$language	= $env->getLanguage()->getLanguage();

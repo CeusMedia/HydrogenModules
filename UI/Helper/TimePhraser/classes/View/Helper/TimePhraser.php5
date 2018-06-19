@@ -1,7 +1,7 @@
 <?php
 class View_Helper_TimePhraser{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env	= $env;
 	}
 
@@ -15,7 +15,7 @@ class View_Helper_TimePhraser{
 		return $phrase;
 	}
 
-	static public function convertStatic( $env, $timestamp, $asHtml = FALSE, $prefix = NULL, $suffix = NULL ){
+	static public function convertStatic( CMF_Hydrogen_Environment $env, $timestamp, $asHtml = FALSE, $prefix = NULL, $suffix = NULL ){
 		$helper	= new self( $env );
 		return $helper->convert( $timestamp, $asHtml, $prefix, $suffix );
 	}

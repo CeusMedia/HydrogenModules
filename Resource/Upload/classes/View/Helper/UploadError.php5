@@ -41,7 +41,7 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		return $message;
 	}
 
-	static public function renderStatic( $env, Logic_Upload $upload ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, Logic_Upload $upload ){
 		$helper	= new self( $env );
 		$helper->setUpload( $upload );
 		return $helper->render();

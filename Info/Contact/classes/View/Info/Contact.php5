@@ -1,7 +1,7 @@
 <?php
 class View_Info_Contact extends CMF_Hydrogen_View{
 
-	static public function ___onRenderContent( $env, $context, $module, $data = array() ){
+	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$processor		= new Logic_Shortcode( $env );
 		$words			= $env->getLanguage()->getWords( 'info/contact' );
 		$shortCodes		= array(

@@ -112,7 +112,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		$this->env->getModules()->callHook( 'Test', 'test', array() );
 	}
 
-	static public function ___onCollectNovelties( $env, $context, $module, $data = array() ){
+	static public function ___onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Mission_Document( $env );
 		$conditions	= array( 'modifiedAt' => '>'.( time() - 30 * 24 * 60 * 60 ) );
 		$orders		= array( 'modifiedAt' => 'DESC' );
@@ -129,7 +129,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
+	static public function ___onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Missions',
 			'typeLabel'		=> 'Aufgabe',
@@ -138,7 +138,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	static public function ___onDatabaseLockReleaseCheck( $env, $context, $module, $data = array() ){
+	static public function ___onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$controllerAction	= $data['controller'].'/'.$data['action'];
 		$skipActions		= array(
 			'work/mission/export/ical',
@@ -163,14 +163,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onProjectRemove( $env, $context, $module, $data ){
+	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
 		foreach( $this->model->getAllByIndex( 'projectId', $projectId ) as $mission ){
 			$this->logic->removeMission( $mission->missionId );
 		}
 	}
 
-	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+	static public function ___onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Missions::___onListProjectRelations" is missing project ID in data.';
@@ -222,7 +222,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	static public function ___onStartTimer( $env, $context, $module, $data ){
+	static public function ___onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$timer	= $data['timer'];
 		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
 			$model		= new Model_Mission( $env );
@@ -233,15 +233,15 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onPauseTimer( $env, $context, $module, $data ){
+	static public function ___onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function ___onStopTimer( $env, $context, $module, $data ){
+	static public function ___onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$context->registerPanel( 'work-mission-my-today', array(
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
 			'title'		=> 'Heute & Termine',

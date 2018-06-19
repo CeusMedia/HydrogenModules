@@ -1,7 +1,7 @@
 <?php
 class View_Info_News extends CMF_Hydrogen_View{
 
-	static public function ___onRenderContent( $env, $context, $module, $data = array() ){
+	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$pattern	= "/^(.*)(\[news:?(\w+)?\])(.*)$/sU";
 		$helper		= new View_Helper_News( $env );
 		while( preg_match( $pattern, $data->content ) ){

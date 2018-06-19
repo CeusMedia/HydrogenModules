@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Blog{
 
-	static public function formatBlogLinks( $env, $content ){
+	static public function formatBlogLinks( CMF_Hydrogen_Environment $env, $content ){
 		$baseUri	= $env->getConfig()->get( 'app.base.url' );
 		$matches	= array();
 		preg_match_all( '/\[blog:([0-9]+)(\|(.*))?\]/U', $content, $matches );
@@ -24,7 +24,7 @@ class View_Helper_Blog{
 		return $content;
 	}
 
-	static public function formatEmoticons( $env, $content ){
+	static public function formatEmoticons( CMF_Hydrogen_Environment $env, $content ){
 		$path		= './images/emoticons/';
 		$emoticons	= array(
 			' :)'	=> '1.ico',
@@ -40,7 +40,7 @@ class View_Helper_Blog{
 		return $content;
 	}
 
-	static public function formatImages( $env, $content ){
+	static public function formatImages( CMF_Hydrogen_Environment $env, $content ){
 		$config		= $env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.blog_compact.path.images' );
 		$matches	= array();
@@ -66,7 +66,7 @@ class View_Helper_Blog{
 		return $content;
 	}
 
-	static public function formatIFrames( $env, $content ){
+	static public function formatIFrames( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[iframe:(\S+)\]\r?\n/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -93,12 +93,12 @@ class View_Helper_Blog{
 		return rawurlencode( $label.'.html' );														//  return encoded URL component
 	}
 
-	static public function getFeedUrl( CMF_Hydrogen_Environment_Abstract $env, $limit = NULL ){
+	static public function getFeedUrl( CMF_Hydrogen_Environment $env, $limit = NULL ){
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'blog/feed'.$limit;
 	}
 
-	static public function renderArticleLink( $env, $article, $version = 0 ){
+	static public function renderArticleLink( CMF_Hydrogen_Environment $env, $article, $version = 0 ){
 		$label		= str_replace( '&', '&amp;', $article->title );
 		$keywords	= "";
 		if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
@@ -111,7 +111,7 @@ class View_Helper_Blog{
 		return UI_HTML_Tag::create( 'a', $icon.$label, $attributes );
 	}
 
-	static public function renderLatestArticles( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0 ){
+	static public function renderLatestArticles( CMF_Hydrogen_Environment $env, $limit, $offset = 0 ){
 		$list		= array();
 		$model		= new Model_Article( $env );
 		$conditions	= array( 'status' => 1, 'createdAt' => '<='.time() );
@@ -123,7 +123,7 @@ class View_Helper_Blog{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
 	}
 
-	static public function renderTagLink( CMF_Hydrogen_Environment_Abstract $env, $tagName ){
+	static public function renderTagLink( CMF_Hydrogen_Environment $env, $tagName ){
 		$attributes	= array(
 			'href'	=> './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tagName ) ),
 			'class'	=> 'not-icon-label not-link-tag'
@@ -132,7 +132,7 @@ class View_Helper_Blog{
 		return UI_HTML_Tag::create( 'a', $icon.$tagName, $attributes );
 	}
 
-	static public function renderTopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
+	static public function renderTopTags( CMF_Hydrogen_Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
 		$states		= is_array( $states ) ? $states : array( $states );
 		$prefix		= $env->getDatabase()->getPrefix();
 		$query		= '
@@ -163,7 +163,7 @@ class View_Helper_Blog{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
 	}
 
-	static public function renderFlopTags( CMF_Hydrogen_Environment_Abstract $env, $limit, $offset = 0, $states = array( 1 ) ){
+	static public function renderFlopTags( CMF_Hydrogen_Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
 		$states		= is_array( $states ) ? $states : array( $states );
 		$prefix		= $env->getDatabase()->getPrefix();
 		$query		= '

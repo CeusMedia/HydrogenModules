@@ -1,8 +1,7 @@
 <?php
 class View_Bug extends CMF_Hydrogen_View{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		parent::__construct( $env );
+	public function __onInit(){
 		$this->env->getPage()->addThemeStyle( 'site.bug.css' );
 	}
 
@@ -31,6 +30,6 @@ class View_Bug extends CMF_Hydrogen_View{
 			$list[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
 		}
 		return join( $list );
-	}	
+	}
 }
 ?>

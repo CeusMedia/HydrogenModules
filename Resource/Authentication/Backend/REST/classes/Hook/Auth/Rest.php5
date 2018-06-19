@@ -3,14 +3,14 @@ class Hook_Auth_Rest/* extends CMF_Hydrogen_Hook*/{
 
 	static protected $configPrefix	= 'module.resource_authentication_backend_rest.';
 
-	static public function onAuthRegisterBackend( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+	static public function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( !$env->getConfig()->get( self::$configPrefix.'enabled' ) )
 			return;
 		$words	= $env->getLanguage()->getWords( 'auth/rest' );
 		$context->registerBackend( 'Rest', 'rest', $words['backend']['title'] );
 	}
 
-	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( !$env->getConfig()->get( self::$configPrefix.'enabled' ) )
 			return;
 		$words		= (object) $env->getLanguage()->getWords( 'auth/rest' );					//  load words
@@ -19,7 +19,7 @@ class Hook_Auth_Rest/* extends CMF_Hydrogen_Hook*/{
 		$context->registerTab( 'auth/rest/login', $label, $rank );								//  register main tab
 	}
 
-/*	static public function onPageApplyModules( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+/*	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$userId		= (int) $env->getSession()->get( 'userId' );								//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
 //		$remember	= (bool) $cookie->get( 'auth_remember' );

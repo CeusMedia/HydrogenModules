@@ -19,7 +19,7 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
 	}
 
-	static public function ___onRemoveCompany( $env, $module, $content, $data = array() ){
+	static public function ___onRemoveCompany( CMF_Hydrogen_Environment $env, $module, $content, $data = array() ){
 		$modelBranch	= new Model_Branch( $env );
 		$modelImage		= new Model_Branch_Image( $env );
 		$modelTag		= new Model_Branch_Tag( $env );

@@ -227,7 +227,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
 	 */
-	public function __onChangeUserStatus( $env, $context, $module, $data = array() ){
+	public function __onChangeUserStatus( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( !isset( $data['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
 		if( !isset( $data['userId'] ) )

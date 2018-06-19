@@ -14,7 +14,7 @@ class View_Helper_Mangopay_Entity_CardNumber extends View_Helper_Mangopay_Abstra
 		) );
 	}
 
-	static public function renderStatic( $env, $number, $nodeName = NULL, $nodeClass = NULL ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
 		$instance	= new View_Helper_Mangopay_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )
 			$this->setNodeName( $nodeName );

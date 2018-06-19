@@ -1,14 +1,14 @@
 <?php
 class View_Helper_DevProfiler{
 
-	static public function ___onPageBuild( $env, $context, $module, $arguments = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		if( $env->getConfig()->get( 'module.ui_devlayers_profiler.enabled' ) ){
 			$context->addThemeStyle( 'module.ui.dev.layer.profiler.css' );
 			$content	= View_Helper_DevProfiler::render( $env );
 			View_Helper_DevLayers::add( 'profiler', 'Profiler', $content );
 		}
 	}
-	
+
 	static protected function formatTime( $microseconds ){
 		$time	= Alg_UnitFormater::formatMicroSeconds( $microseconds );
 		return substr( str_replace( ' ', '', $time ), 0, -1 );

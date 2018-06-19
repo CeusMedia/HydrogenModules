@@ -5,7 +5,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View{
 		$this->env	= $env;
 	}
 
-	static public function ___onRenderContent( $env, $context, $module, $data ){
+	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		if( in_array( strtolower( $data->type ), array( 'markdown', 'md' ) ) )
 			$data->content	= Markdown::defaultTransform( $data->content );
 	}
@@ -17,7 +17,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View{
 		return preg_replace( "/^<p>(.*)<\/p>$/s", "\\1", $html );
 	}
 
-	static public function transformStatic( $env, $markdown, $wrapped = TRUE ){
+	static public function transformStatic( CMF_Hydrogen_Environment $env, $markdown, $wrapped = TRUE ){
 		$helper	= new self( $env );
 		return $helper->transform( $markdown, $wrapped );
 	}

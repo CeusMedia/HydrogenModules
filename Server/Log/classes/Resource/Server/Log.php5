@@ -121,28 +121,28 @@ class Resource_Server_Log{
 		return $this->log( Model_Log_Message::TYPE_WARNING, $message, $format, $context );
 	}
 
-	static public function staticLog( $env, $type, $message, $context = NULL, $format = NULL ){
+	static public function staticLog( CMF_Hydrogen_Environment $env, $type, $message, $context = NULL, $format = NULL ){
 		$resource	= new static( $env );
 		return $resource->log( $type, $message, $format, $context );
 	}
 
-	static public function staticLogDebug( $env, $message, $context = NULL, $format = NULL ){
+	static public function staticLogDebug( CMF_Hydrogen_Environment $env, $message, $context = NULL, $format = NULL ){
 		return static::staticLog( $env, Model_Log_Message::TYPE_DEBUG, $message, $format, $context );
 	}
 
-	static public function staticLogError( $env, $message, $context = NULL, $format = NULL ){
+	static public function staticLogError( CMF_Hydrogen_Environment $env, $message, $context = NULL, $format = NULL ){
 		return static::staticLog( $env, Model_Log_Message::TYPE_ERROR, $message, $format, $context );
 	}
 
-	static public function staticLogInfo( $env, $message, $context = NULL, $format = NULL ){
+	static public function staticLogInfo( CMF_Hydrogen_Environment $env, $message, $context = NULL, $format = NULL ){
 		return static::staticLog( $env, Model_Log_Message::TYPE_INFO, $message, $format, $context );
 
 	}
-	static public function staticLogNotice( $env, $message, $context = NULL, $format = NULL ){
+	static public function staticLogNotice( CMF_Hydrogen_Environment $env, $message, $context = NULL, $format = NULL ){
 		return static::staticLog( $env, Model_Log_Message::TYPE_NOTICE, $message, $format, $context );
 	}
 
-	static public function staticLogWarning( $env, $message, $context = NULL, $format = NULL ){
+	static public function staticLogWarning( CMF_Hydrogen_Environment $env, $message, $context = NULL, $format = NULL ){
 		return static::staticLog( $env, Model_Log_Message::TYPE_WARNING, $message, $format, $context );
 	}
 }

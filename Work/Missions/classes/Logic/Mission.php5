@@ -13,7 +13,7 @@ class Logic_Mission{
 	protected $modelDocument;
 	public $useProjects			= FALSE;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env				= $env;
 		$this->modelMission		= new Model_Mission( $env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );

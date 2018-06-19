@@ -14,7 +14,7 @@ class Logic_IP_Lock{
 	const STATUS_REQUEST_UNLOCK = 2;
 
 
-	protected function  __construct( CMF_Hydrogen_Environment_Abstract $env ) {
+	protected function  __construct( CMF_Hydrogen_Environment $env ) {
 		$this->env	= $env;
 		$this->modelLock	= new Model_IP_Lock( $env );
 		$this->modelFilter	= new Model_IP_Lock_Filter( $env );
@@ -86,7 +86,7 @@ class Logic_IP_Lock{
 		return NULL;
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ) {
+	static public function getInstance( CMF_Hydrogen_Environment $env ) {
 		if( !self::$instance )
 			self::$instance	= new Logic_IP_Lock( $env );
 		return self::$instance;

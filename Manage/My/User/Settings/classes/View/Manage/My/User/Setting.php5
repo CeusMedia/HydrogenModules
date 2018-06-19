@@ -2,7 +2,7 @@
 class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 
 
-	public static function ___onRegisterTab( $env, $context, $module, $data ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user/setting' );				//  load words
 		$context->registerTab( 'setting', $words->module['tab'], 4 );								//  register main tab
 	}

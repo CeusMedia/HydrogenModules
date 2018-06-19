@@ -43,7 +43,7 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'bridgeId', $this->bridgeId );
 	}
 
-	static public function __onRenderServicePanels( $env, $context, $module, $data = array() ){
+	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$arguments	= new ADT_List_Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Gallery( $env );

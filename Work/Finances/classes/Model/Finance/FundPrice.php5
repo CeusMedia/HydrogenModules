@@ -13,7 +13,7 @@ class Model_Finance_FundPrice extends CMF_Hydrogen_Model{
 	protected $indices		= array( 'fundId' );
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function  __construct( CMF_Hydrogen_Environment_Abstract $env, $id = NULL ){
+	public function  __construct( CMF_Hydrogen_Environment $env, $id = NULL ){
 		parent::__construct( $env, $id );
 	}
 }

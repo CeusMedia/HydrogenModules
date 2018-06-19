@@ -21,7 +21,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 	protected $lock;
 	protected $jobs	= array();
 
-	public function __construct( \CMF_Hydrogen_Environment_Abstract $env = NULL ){
+	public function __construct( \CMF_Hydrogen_Environment $env = NULL ){
 		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
 		$this->pathLogs		= $config->get( 'path.logs' );
@@ -107,7 +107,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 			$this->modelLock->lock( $job->class, $job->method );									//  set lock on job
 			$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );			//  ... create job class instance with arguments
 			$jobObject->noteJob( $job->class, $job->method );										//  ... inform job instance about method to be called
-			$jobObject->noteArguments( $commands, $parameters );									//  ... inform job instance about request arguments 
+			$jobObject->noteArguments( $commands, $parameters );									//  ... inform job instance about request arguments
 			$result		= \Alg_Object_MethodFactory::call( $jobObject, $job->method, $arguments );	//  ... call job method of job instance
 			$this->modelLock->unlock( $job->class, $job->method );									//  remove job lock
 			if( is_integer( $result ) ){

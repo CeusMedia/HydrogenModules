@@ -11,10 +11,10 @@ class Resource_REST_Client{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );
 		$this->__initClient();

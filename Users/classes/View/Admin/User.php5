@@ -18,8 +18,7 @@
  */
 class View_Admin_User extends CMF_Hydrogen_View {
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		parent::__construct( $env );
+	public function __onInit(){
 		$this->env->getPage()->addThemeStyle( 'site.user.css' );
 	}
 

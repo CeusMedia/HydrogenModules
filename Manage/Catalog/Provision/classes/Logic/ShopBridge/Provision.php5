@@ -10,7 +10,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env
 	 *	@return		void
 	 */
 	public function __onInit(){

@@ -9,7 +9,7 @@ abstract class Mail_Abstract{
 
 	/**	@var		ADT_List_Dictionary					$config			Application configuration object */
 	protected $config;
-	/*	@var		CMF_Hydrogen_Environment_Abstract	$env			Environment object */
+	/*	@var		CMF_Hydrogen_Environment			$env			Environment object */
 	protected $env;
 	/**	@var		Net_Mail							$mail			Mail objectm, build on construction */
 	public $mail;
@@ -37,11 +37,11 @@ abstract class Mail_Abstract{
 	/**
 	 *	Contructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env			Environment object
+	 *	@param		CMF_Hydrogen_Environment			$env			Environment object
 	 *	@param		array								$data			Map of template mail data
 	 *	@param		boolean								$defaultStyle	Flag: load default mail style file
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $data = array(), $defaultStyle = TRUE ){
+	public function __construct( CMF_Hydrogen_Environment $env, $data = array(), $defaultStyle = TRUE ){
 		$this->setEnv( $env );
 		$this->mail		= new \CeusMedia\Mail\Message();
 		$this->view		= new CMF_Hydrogen_View( $env );
@@ -423,7 +423,7 @@ abstract class Mail_Abstract{
 		return $this->sendTo( $user );
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment_Abstract $env ){
+	public function setEnv( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 	}
 

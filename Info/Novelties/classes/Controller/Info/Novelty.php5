@@ -1,7 +1,7 @@
 <?php
 class Controller_Info_Novelty extends CMF_Hydrogen_Controller{
 
-	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data = array() ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
         if( !$env->getAcl()->has( 'info/novelty', 'ajaxRenderDashboardPanel' ) )
             return;
 		$context->registerPanel( 'info-novelty', array(

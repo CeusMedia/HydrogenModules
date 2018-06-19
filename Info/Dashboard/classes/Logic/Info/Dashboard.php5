@@ -13,10 +13,10 @@ class Logic_Info_Dashboard{
 	/**
 	 *	Constructor. Protected to force singleton use.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Hydrogen framework environment object
+	 *	@param		CMF_Hydrogen_Environment		$env		Hydrogen framework environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->model		= new Model_Dashboard( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
@@ -35,7 +35,7 @@ class Logic_Info_Dashboard{
 	 *	@access		public
 	 *	@return		object			Singleton instance of logic
 	 */
-	static public function getInstance( $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;

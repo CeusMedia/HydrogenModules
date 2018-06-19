@@ -1,19 +1,19 @@
 <?php
 class Logic_ShopBridge{
 
-	/**	@var	CMF_Hydrogen_Environment_Abstract	$env			Environment instance */
+	/**	@var	CMF_Hydrogen_Environment	$env			Environment instance */
 	protected $env;
 
-	/**	@var	array								$bridges		Map of registered bridges by ID */
-	protected $bridges								= array();
+	/**	@var	array						$bridges		Map of registered bridges by ID */
+	protected $bridges						= array();
 
-	/**	@var	array								$bridgeClasses	Map of registered bridges by class name */
-	protected $bridgeClasses						= array();
+	/**	@var	array						$bridgeClasses	Map of registered bridges by class name */
+	protected $bridgeClasses				= array();
 
-	/**	@var	string								$pathToBridges */
-	static public $pathToBridges						= "classes/Logic/ShopBridge/";
+	/**	@var	string						$pathToBridges */
+	static public $pathToBridges			= "classes/Logic/ShopBridge/";
 
-	/**	@var	Model_Shop_Bridge					$model			Model of shop bridges */
+	/**	@var	Model_Shop_Bridge			$model			Model of shop bridges */
 	protected $model;
 
 
@@ -21,10 +21,10 @@ class Logic_ShopBridge{
 	 *	Constructor.
 	 *	Autodetects available bridge classes.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment
+	 *	@param		CMF_Hydrogen_Environment	$env	Environment
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->model	= new Model_Shop_Bridge( $env );
 		$this->readBridges();

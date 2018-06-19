@@ -10,7 +10,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
 	}
 
-	static public function ___onRegisterTab( $env, $context, $module, $data ){
+	static public function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_User_Provision::getInstance( $env );
 		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
@@ -21,7 +21,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$context->registerTab( 'add', self::renderTabLabel( $env, 'add', 0, 'plus' ) );
 	}
 /*
-	static public function ___onMyUserRegisterTab( $env, $context, $module, $data ){
+	static public function ___onMyUserRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_Accounting::getInstance( $env );
 		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
@@ -31,7 +31,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$context->registerTab( '../license/key', self::renderTabLabel( $env, 'keys', $nrKeys, 'key' ) );
 	}*/
 
-	static protected function renderTabLabel( $env, $labelKey, $count = 0, $icon = NULL ){
+	static protected function renderTabLabel( CMF_Hydrogen_Environment $env, $labelKey, $count = 0, $icon = NULL ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
 		$label	= $words->tabs[$labelKey];
 		if( $count )
@@ -93,7 +93,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 //			return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 
 //		$tabs->setBasePath( './manage/my/user/' );

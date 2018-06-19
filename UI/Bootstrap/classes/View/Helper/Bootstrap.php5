@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Bootstrap{
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
 		if( !$options->get( 'enabled' ) )
 			return;

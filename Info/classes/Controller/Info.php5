@@ -1,7 +1,7 @@
 <?php
 class Controller_Info extends CMF_Hydrogen_Controller{
 
-	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
+	static public function ___onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$path	= $env->getRequest()->get( '__path' );
 		if( !preg_match( "/^info/", $path ) )
 			return;

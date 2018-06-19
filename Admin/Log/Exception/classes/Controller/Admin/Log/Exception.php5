@@ -27,7 +27,7 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 
 	}
 
-	static public function ___onLogException( $env, $context, $module, $data = array() ){
+	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )

@@ -17,7 +17,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		$this->captcha->useUnique	= TRUE;
 	}
 
-	static public function checkCaptcha( $env, $word ){
+	static public function checkCaptcha( CMF_Hydrogen_Environment $env, $word ){
 		return $env->getSession()->get( 'captcha' ) == $word;
 	}
 

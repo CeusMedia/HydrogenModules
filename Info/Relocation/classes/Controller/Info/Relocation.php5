@@ -10,7 +10,7 @@ class Controller_Info_Relocation extends CMF_Hydrogen_Controller{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_relocation.', TRUE );
 	}
 
-	static public function ___onReadyCheckShortcutRoute( $env, $module, $context, $data = array() ){
+	static public function ___onReadyCheckShortcutRoute( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$config	= $env->getConfig()->getAll( 'module.info_relocation.', TRUE );	//  shortcut config
 		if( $env->getModules()->has( 'Server_Router' ) ){						//  router module is installed
 			if( $config->get( 'shortcut' ) ){									//  shortcut is enabled

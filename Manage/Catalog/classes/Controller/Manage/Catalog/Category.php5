@@ -10,7 +10,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Category::init done' );
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
 			$logic		= new Logic_Catalog( $env );

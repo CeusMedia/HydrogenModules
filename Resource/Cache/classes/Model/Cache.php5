@@ -5,7 +5,7 @@ class Model_Cache{
 	protected $env;
 	protected $config;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->config	= (object) $this->env->getConfig()->getAll( 'module.resource_cache.' );
 

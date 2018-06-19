@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.7.5</version>
+	<version>0.7.6</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -30,11 +30,13 @@
 	<log version="0.7.3">Add language support using module Resource:Localization.</log>
 	<log version="0.7.4">Disable page dispatching on backend app instances.</log>
 	<log version="0.7.5">Identify page by controller and action.</log>
+	<log version="0.7.6">Extract hooks to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Page.php5</class>
+		<class>Hook/Info/Page.php5</class>
 		<class>Logic/Page.php5</class>
 		<class>Model/Page.php5</class>
 		<class>View/Info/Page.php5</class>
@@ -52,11 +54,11 @@
 		<needs type="module">UI_MetaTags</needs>
 		<supports type="module">Resource_Localization</supports>
 	</relations>
-	<hook type="resource" resource="App" event="onDispatch">Controller_Info_Page::___onAppDispatch</hook>
-	<hook type="resource" resource="View" event="onRenderContent">View_Info_Page::___onRenderContent</hook>
-	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Page::___onRegisterSitemapLinks</hook>
-	<hook type="resource" resource="Controller" event="onDetectPath">Controller_Info_Page::___onControllerDetectPath</hook>
-	<hook type="resource" resource="Env" event="constructEnd">Controller_Info_Page::___onEnvConstructEnd</hook>
+	<hook type="resource" resource="App" event="onDispatch">Hook_Info_Page::onAppDispatch</hook>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Page::onRenderContent</hook>
+	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Page::onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="Controller" event="onDetectPath">Hook_Info_Page::onControllerDetectPath</hook>
+	<hook type="resource" resource="Env" event="constructEnd">Hook_Info_Page::onEnvConstructEnd</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (

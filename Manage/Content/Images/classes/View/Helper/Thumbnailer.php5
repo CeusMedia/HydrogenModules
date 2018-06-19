@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Thumbnailer{
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $maxWidth = 120, $maxHeight = 80 ){
+	public function __construct( CMF_Hydrogen_Environment $env, $maxWidth = 120, $maxHeight = 80 ){
 		$this->env			= $env;
 		$this->config		= $this->env->getConfig();
 		$this->model		= new Model_Image_Thumbnail( $this->env );

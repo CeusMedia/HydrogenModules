@@ -20,7 +20,7 @@ class Model_Document {
 
 	protected $path;
 
-	public function __construct( $env, $path ){
+	public function __construct( CMF_Hydrogen_Environment $env, $path ){
 		$this->path	= $path;
 	}
 

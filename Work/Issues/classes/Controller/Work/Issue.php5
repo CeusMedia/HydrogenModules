@@ -33,7 +33,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
 	}
 
-	static public function ___onRegisterTimerModule( $env, $context, $module, $data = array() ){
+	static public function ___onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Issues',
 			'typeLabel'		=> 'Problem',
@@ -42,7 +42,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'work-issues', array(
@@ -54,7 +54,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	static public function ___onProjectRemove( $env, $context, $module, $data ){
+	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
 		$model		= new Model_Issue( $env );
 		$logic		= new Logic_Issue( $env );
@@ -63,7 +63,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+	static public function ___onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Issues::___onListProjectRelations" is missing project ID in data.';

@@ -31,17 +31,6 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	protected $articleUriTemplate							= 'catalog/bookstore/article/%2$d-%3$s';
 
 	/**
-	 *	Constructor.
-	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment
-	 *	@param		mixed		$a		Test argument
-	 *	@return		void
-	 */
-	public function  __construct( CMF_Hydrogen_Environment_Abstract $env, $a = NULL ) {
-		parent::__construct( $env, $a );
-	}
-
-	/**
 	 *	@todo		kriss: code doc
 	 */
 	protected function __onInit( $a = NULL ){

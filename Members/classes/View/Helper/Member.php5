@@ -101,7 +101,7 @@ class View_Helper_Member{
 		return $image;
 	}
 
-	static public function renderImageStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+	static public function renderImageStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $url = NULL, $mode = NULL ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		if( $url )
@@ -111,7 +111,7 @@ class View_Helper_Member{
 		return $helper->renderImage();
 	}
 
-	static public function renderStatic( $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $url = NULL, $mode = NULL ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		if( $url )

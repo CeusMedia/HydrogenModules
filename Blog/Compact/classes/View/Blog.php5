@@ -187,7 +187,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
 	}
 
-	static public function renderAuthorList( $env, $authors, $linked = FALSE ){
+	static public function renderAuthorList( CMF_Hydrogen_Environment $env, $authors, $linked = FALSE ){
 		$authorList	= array();
 		if( !$authors )
 			return '';
@@ -202,7 +202,7 @@ class View_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
 	}
 
-	static public function renderTagList( $env, $tags ){
+	static public function renderTagList( CMF_Hydrogen_Environment $env, $tags ){
 		$tagList	= array();
 		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
 		if( $tags ){

@@ -19,7 +19,7 @@ class View_Helper_Panel{
 	static protected $defaultClassHead		= 'panel-head';
 	static protected $defaultTheme			= 'default';
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->setAttributes( static::$attributes );
 		$this->setClass( static::$defaultClass );
@@ -52,7 +52,7 @@ class View_Helper_Panel{
 		throw new RangeException( 'Given argument is not renderable' );
 	}
 
-	static public function create( $env, $head, $body, $foot, $attributes = array(), $classes = array(), $theme = NULL, $id = NULL ){
+	static public function create( CMF_Hydrogen_Environment $env, $head, $body, $foot, $attributes = array(), $classes = array(), $theme = NULL, $id = NULL ){
 		$instance	= new static( $env );
 		$instance->setHead( $head )->setBody( $body )->setFoot( $foot );
 		$instance->setAttributes( $attributes );
@@ -94,7 +94,7 @@ class View_Helper_Panel{
 	 *	@access		public
 	 *	@return		string		Rendered output of this view helper component
 	 */
-	static public function renderStatic( $env, $head, $body, $foot, $attributes = array(), $classes = array(),  $theme = NULL, $id = NULL ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $head, $body, $foot, $attributes = array(), $classes = array(),  $theme = NULL, $id = NULL ){
 		$instance	= static::create( $env, $head, $body, $foot, $attributes, $classes, $theme, $id );
 		return $instance->render();
 	}

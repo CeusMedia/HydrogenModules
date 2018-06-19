@@ -6,7 +6,7 @@ class View_Helper_DevCenter{
 	protected $height;
 	protected $open;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->session	= $env->getSession();
 		$height			= $this->session->get( 'DevCenterHeight' );
 		$this->height	= $height ? $height."%" : NULL;

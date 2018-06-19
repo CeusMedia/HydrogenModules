@@ -29,7 +29,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	/**
 	 *	@todo		extract to future View_Helper_TinyMCE
 	 */
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		self::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
@@ -168,7 +168,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		}
 	}
 
-	static public function load( $env ){
+	static public function load( CMF_Hydrogen_Environment $env ){
 		if( self::$loaded )
 			return;
 
@@ -193,7 +193,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		self::$loaded	= TRUE;
 	}
 
-	static public function getLanguage( $env ){
+	static public function getLanguage( CMF_Hydrogen_Environment $env ){
 		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$languages	= explode( ",", $config->get( 'languages' ) );

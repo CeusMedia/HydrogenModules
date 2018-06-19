@@ -1,7 +1,7 @@
 <?php
 class Controller_Compressor extends CMF_Hydrogen_Controller{
 
-	static public function ___onPageBuild( CMF_Hydrogen_Environment_Abstract $env, $module, $context, $data = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$config		= (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
 		$pathCache  = $env->getConfig()->get( 'path.cache' );
 		$page		= $env->getPage();

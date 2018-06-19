@@ -41,7 +41,7 @@ class Resource_Database extends \DB_PDO_Connection
 	/**	@var	ADT_List_Dictionary		$options	Module configuration options */
 	protected $options;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_database.', TRUE );
 		$this->setUp();

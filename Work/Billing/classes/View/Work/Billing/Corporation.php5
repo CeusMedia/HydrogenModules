@@ -4,7 +4,7 @@ class View_Work_Billing_Corporation extends CMF_Hydrogen_View{
 	public function edit(){}
 	public function index(){}
 
-	public static function ___onRegisterTab( $env, $context, $module, $data ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
 		$context->registerTab( 'edit/'.$data['corporationId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
@@ -15,7 +15,7 @@ class View_Work_Billing_Corporation extends CMF_Hydrogen_View{
 		$context->registerTab( 'payout/'.$data['corporationId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $corporationId, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $corporationId, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/corporation/' );
 		$data	= array( 'corporationId' => $corporationId );

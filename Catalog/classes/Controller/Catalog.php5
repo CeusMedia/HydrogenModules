@@ -16,7 +16,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 	}
 
-	static public function ___onRegisterSitemapLinks( $env, $context, $module, $data ){
+	static public function ___onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$baseUrl	= $env->url.'catalog/';
 		$logic		= new Logic_Catalog( $env );
 		$articles	= $logic->getArticles( array(), array( 'articleId' => 'DESC' ) );

@@ -5,7 +5,7 @@ class View_Helper_ContentConverter{
 	static public $linkClass		= 'icon-label';
 	static public $linkTarget		= '_self';
 
-	static public function formatBreaks( $env, $content ){
+	static public function formatBreaks( CMF_Hydrogen_Environment $env, $content ){
 		$content	= preg_replace( "/(----){4,}\r?\n/",' <hr/>', $content );						//  four dashes make a horizontal row
 		$content	= preg_replace( "/([^>])\r?\n\r?\n\r?\n/", '\\1<br class="clearfloat">', $content );
 		$content	= preg_replace( "/([^>])\r?\n\r?\n/", '\\1<br/><br/>', $content );
@@ -14,7 +14,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatCodeBlocks( $env, $content ){
+	static public function formatCodeBlocks( CMF_Hydrogen_Environment $env, $content ){
 		$content	= preg_replace( '/<(\/?)code>/', "_____\\1code_____", $content );				//  preserve <code> tags
 		$pattern	= "/(\r?\n)*code:?(\w+)?>(.*)<code(\r?\n)*/siU";
 		$matches	= array();
@@ -29,8 +29,8 @@ class View_Helper_ContentConverter{
 		$content	= preg_replace( '/_____(\/?)code_____/', '<\\1code>', $content );				//  recreate <code> tags
 		return $content;
 	}
-	
-	static public function formatLinks( $env, $content ){
+
+	static public function formatLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[link:(\S+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -43,7 +43,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatImageSearch( $env, $content ){
+	static public function formatImageSearch( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[image-search:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -57,7 +57,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatMapSearch( $env, $content ){
+	static public function formatMapSearch( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[map-search:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -71,18 +71,18 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatCurrencies( $env, $content ){
+	static public function formatCurrencies( CMF_Hydrogen_Environment $env, $content ){
 		$content	= preg_replace( '/([0-9]+) Euro/', '\\1&nbsp;&euro;', $content );
 		$content	= preg_replace( '/([0-9]+) Cent/', '\\1&nbsp;&cent;', $content );
 		$content	= preg_replace( '/([0-9]+) Pound/', '\\1&nbsp;&pound;', $content );
-		$content	= preg_replace( '/([0-9]+) Yen/', '\\1&nbsp;&yen;', $content ); 
+		$content	= preg_replace( '/([0-9]+) Yen/', '\\1&nbsp;&yen;', $content );
 		$content	= preg_replace( '/([0-9]+) Dollar/', '\\1&nbsp;&#36;', $content );
-		$content	= preg_replace( '/([0-9]+) Baht/', '\\1&nbsp;&#3647;', $content ); 
-		$content	= str_replace( '/€', '&euro;', $content ); 
+		$content	= preg_replace( '/([0-9]+) Baht/', '\\1&nbsp;&#3647;', $content );
+		$content	= str_replace( '/€', '&euro;', $content );
 		return $content;
 	}
 
-	static public function formatWikiLinks( $env, $content ){
+	static public function formatWikiLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[wiki:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count($matches[0]); $i++ ){
@@ -96,7 +96,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatYoutubeLinks( $env, $content ){
+	static public function formatYoutubeLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[youtube:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -110,7 +110,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatMapLinks( $env, $content ){
+	static public function formatMapLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[(link-)?map:([0-9,.]+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -127,8 +127,8 @@ class View_Helper_ContentConverter{
 		}
 		return $content;
 	}
-	
-	static public function formatDiscogsLinks( $env, $content ){
+
+	static public function formatDiscogsLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[discogs:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -141,8 +141,8 @@ class View_Helper_ContentConverter{
 		}
 		return $content;
 	}
-	
-	static public function formatMyspaceLinks( $env, $content ){
+
+	static public function formatMyspaceLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[myspace:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -155,8 +155,8 @@ class View_Helper_ContentConverter{
 		}
 		return $content;
 	}
-	
-	static public function formatImdbLinks( $env, $content ){
+
+	static public function formatImdbLinks( CMF_Hydrogen_Environment $env, $content ){
 		$matches	= array();
 		preg_match_all( '/\[imdb:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -170,7 +170,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatText( $env, $content ){
+	static public function formatText( CMF_Hydrogen_Environment $env, $content ){
 		$converters	= array(
 			"/####(.+)####\r?\n/U"	=> "<h5>\\1</h5>\n",
 			"/###(.+)###\r?\n/U"	=> "<h4>\\1</h4>\n",
@@ -188,7 +188,7 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	static public function formatLists( $env, $content ){
+	static public function formatLists( CMF_Hydrogen_Environment $env, $content ){
 		$pattern	= "/(\r?\n)*(o|u)?list:?(\w+)?>(.*)<(o|u)?list(\r?\n)*/siU";
 		$matches	= array();
 		preg_match_all( $pattern, $content, $matches );
@@ -206,8 +206,8 @@ class View_Helper_ContentConverter{
 		return $content;
 	}
 
-	
-	static public function render( $env, $content ){
+
+	static public function render( CMF_Hydrogen_Environment $env, $content ){
 		foreach( self::$callbacks as $callback ){
 #			remark( 'Applying:'.$callback[0].'::'.$callback[1] );
 			$content	= call_user_func( $callback, $env, $content );

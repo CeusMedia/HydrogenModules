@@ -1,7 +1,7 @@
 <?php
 class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
 
-	static public function onViewRenderContent( $env, $context, $module, $data = array() ){
+	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$config	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 
 		$length		= $config->get( 'length' ) > 2 ? $config->get( 'length' ) : 4;

@@ -1,7 +1,7 @@
 <?php
 class Hook_Resource_Mail_Group{
 
-	static public function onConfirmAfterJoin( $env, $context, $module, $data = array() ){
+	static public function onConfirmAfterJoin( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
@@ -101,7 +101,7 @@ class Hook_Resource_Mail_Group{
 		return FALSE;
 	}
 
-	static public function onDeactivateAfterLeaving(  $env, $context, $module, $data = array() ){
+	static public function onDeactivateAfterLeaving( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );

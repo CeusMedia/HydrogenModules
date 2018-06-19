@@ -1,7 +1,7 @@
 <?php
 class Resource_Theme{
 
-	static public function ___onPageBuild( $env, $module, $context, $data = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		foreach( $env->getModules()->getAll() as $module ){
 			if( !preg_match( '/^Theme_/', $module->id ) )
 				continue;

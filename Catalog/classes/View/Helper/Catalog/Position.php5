@@ -7,8 +7,8 @@ class View_Helper_Catalog_Position{
 	/**	@var	View_Helper_Catalog	$helper */
 	protected $helper;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env	= $env;
+	public function __construct( CMF_Hydrogen_Environment $env ){
+		$this->env		= $env;
 		$this->logic	= new Logic_Catalog( $env );
 		$this->language	= $this->env->getLanguage();
 		$this->helper	= new View_Helper_Catalog( $env );
@@ -36,7 +36,7 @@ class View_Helper_Catalog_Position{
 		$categories	= array_reverse( $list );
 		return $this->renderList( $categories, FALSE );
 	}
-	
+
 	protected function renderList( $categories, $linkLast = TRUE ){
 		$level		= count( $categories );
 		$labelKey	= 'label_'.$this->language->getLanguage();
@@ -57,6 +57,6 @@ class View_Helper_Catalog_Position{
 		$list	= join( '&nbsp;>&nbsp;', $list );
 		return '<div id="layout-position">'.$list.'</div>';
 	}
-	
+
 }
 ?>

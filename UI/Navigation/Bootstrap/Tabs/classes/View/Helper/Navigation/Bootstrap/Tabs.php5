@@ -12,7 +12,7 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 	protected $current			= 0;
 	protected $basePath			= '';
 
-	public function __construct( $env, $basePath = './' ){
+	public function __construct( CMF_Hydrogen_Environment $env, $basePath = './' ){
 		$this->setEnv( $env );
 		$this->setBasePath( $basePath );
 	}

@@ -3,7 +3,7 @@ class Controller_Provision_Rest extends CMF_Hydrogen_Controller{
 
 	protected $logic;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, $setupView = TRUE ){
+	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE ){
 		parent::__construct( $env, FALSE );
 	}
 

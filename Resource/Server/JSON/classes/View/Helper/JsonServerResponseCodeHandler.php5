@@ -2,16 +2,16 @@
 class View_Helper_JsonServerResponseCodeHandler extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public static $labelUnknownIdentifier	= 'unknown';
-	
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env	= $env;
 	}
 
-	public static function handle( $env, $code, $identifier = NULL ){
+	public static function handle( CMF_Hydrogen_Environment $env, $code, $identifier = NULL ){
 		$helper	= new View_Helper_JsonServerResponseCodeHandler( $env );
 		return $helper->handleCode( $code, $identifier );
 	}
-	
+
 	public function handleCode( $code, $identifier = NULL ){
 		$controller	= $this->env->getRequest()->get( 'controller' );
 		$action		= $this->env->getRequest()->get( 'action' );

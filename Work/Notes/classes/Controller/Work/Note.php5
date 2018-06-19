@@ -19,7 +19,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
-	static public function ___onProjectRemove( $env, $context, $module, $data ){
+	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
 		$model		= new Model_Note( $env );
 		$logic		= Logic_Note::getInstance( $env );
@@ -28,7 +28,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onListProjectRelations( $env, $context, $module, $data ){
+	static public function ___onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Notes::___onListProjectRelations" is missing project ID in data.';

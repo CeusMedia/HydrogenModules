@@ -33,7 +33,7 @@ abstract class View_Helper_Panel_Mangopay{
 		return $helper->set( $number )->render();
 	}
 
-	static public function renderStatic( $env, $data, $options = array() ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $data, $options = array() ){
 		$helper	= new static( $env );
 		return $helper->setData( $data )->setOptions( $options )->render();
 	}

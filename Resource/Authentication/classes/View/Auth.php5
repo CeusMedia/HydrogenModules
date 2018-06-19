@@ -21,7 +21,7 @@ class View_Auth extends CMF_Hydrogen_View {
 		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, array() );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './' );
 		$env->getModules()->callHook( "Auth", "registerLoginTabs", $tabs/*, $data*/ );						//  call tabs to be registered

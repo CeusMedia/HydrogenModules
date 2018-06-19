@@ -23,14 +23,14 @@ class Resource_TokenStore {
 	/**	@var	Model_Token		$token		Token storage in database */
 	protected $model;
 	protected static $instance;
-	
+
 	/**
 	 *	Constructor, not callable. Use Resource_TokenStore::getInstance( $env ) instead.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment object
+	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
+	protected function __construct( CMF_Hydrogen_Environment $env ) {
 		$this->env		= $env;																		//  store environment
 		$this->model	= new Model_Token( $this->env );											//  create new token store model
 		$this->config	= $this->env->getConfig();													//  shurtcut configuration
@@ -47,10 +47,10 @@ class Resource_TokenStore {
 	/**
 	 *	Returns singleton instance.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment object
+	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
 	 *	@return		Resource_TokenStore
 	 */
-	public static function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+	public static function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Resource_TokenStore( $env );
 		return self::$instance;
@@ -100,7 +100,7 @@ class Resource_TokenStore {
 	public function getToken( $credentials ) {
 		$config	= $this->env->getConfig();
 		$ip		= $this->getClientIp();																//  get IP of client
-		if( $config->get( 'module.resource_tokenstore.secret' ) )									//  a common secret is 
+		if( $config->get( 'module.resource_tokenstore.secret' ) )									//  a common secret is
 			if( !$this->verifySecret( $credentials ) )												//  secret in given credentials is not matching
 				throw new RuntimeException( 'Secret invalid' );										//  break with exception
 		$token	= $this->calculateToken();															//  generate a new token string
@@ -138,7 +138,7 @@ class Resource_TokenStore {
 	 *	@access		public
 	 *	@param		string		$token		Token to validate
 	 *	@throws		RuntimeException		if no token is stored for an IP at all
-	 *	@return		boolean 
+	 *	@return		boolean
 	 */
 	public function validateToken( $token ) {
 		$ip		= $this->getClientIp();																//  get IP of client

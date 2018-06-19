@@ -69,7 +69,7 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	static protected function renderThumbnail( $env, $mode, $path, $relativePath ){
+	static protected function renderThumbnail( CMF_Hydrogen_Environment $env, $mode, $path, $relativePath ){
 		switch( $mode ){
 			case 'image':
 				return UI_HTML_Tag::create( 'div', '&nbsp;', array(

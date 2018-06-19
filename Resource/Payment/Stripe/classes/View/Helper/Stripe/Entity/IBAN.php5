@@ -13,7 +13,7 @@ class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract{
 		) );
 	}
 
-	static public function renderStatic( $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
 		$instance	= new self( $env );
 		if( $nodeName !== NULL )
 			$this->setNodeName( $nodeName );

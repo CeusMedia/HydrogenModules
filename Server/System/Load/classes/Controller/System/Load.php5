@@ -24,7 +24,7 @@ class Controller_System_Load extends CMF_Hydrogen_Controller{
 		$this->addData( 'cpuCores', $this->cpuCores );
 	}
 
-	static public function ___onEnvInit( $env, $context, $module, $arguments = array() ){
+	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$moduleConfig		= $env->getConfig()->getAll( 'module.server_system_load.', TRUE );		//  shortcut module configuration
 
 		$cores	= (int) $moduleConfig->get( 'cores' );												//  get number of cpu cores from module config
@@ -50,7 +50,7 @@ class Controller_System_Load extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data = array() ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$context->registerPanel( 'system-server-load', array(
 			'url'		=> './system/load/ajaxRenderDashboardPanel',
 			'icon'		=> 'fa fa-fw fa-bar-chart',

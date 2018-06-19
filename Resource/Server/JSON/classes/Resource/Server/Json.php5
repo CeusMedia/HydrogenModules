@@ -53,10 +53,10 @@ class Resource_Server_Json {
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment
+	 *	@param		CMF_Hydrogen_Environment		$env	Environment
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ) {
+	public function __construct( CMF_Hydrogen_Environment $env ) {
 		$this->env	= $env;
 		$config		= $env->getConfig();
 		$module		= new ADT_List_Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
@@ -89,7 +89,7 @@ class Resource_Server_Json {
 	 *	@todo			localization of messages
 	 *	@todo			allow other auth methods than 'shared secred'
 	 */
-	static public function ___onEnvInit( CMF_Hydrogen_Environment_Abstract $env, $context, $module, $data = array() ){
+	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$server		= new Resource_Server_Json( $context );
 		$context->set( 'server', $server );
 		$config		= $context->getConfig();

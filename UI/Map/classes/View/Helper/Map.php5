@@ -5,7 +5,7 @@ class View_Helper_Map {
 		$this->env	= $env;
 	}
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$key	= $env->getConfig()->get( 'module.ui_map.apiKey' );
 		if( $key ){
 			$env->getPage()->js->addUrl( "https://maps.google.com/maps/api/js?key=".$key );

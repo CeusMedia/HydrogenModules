@@ -27,7 +27,7 @@ class View_Helper_Pagination{
 	 *	@return		void
 	 *	@todo		implement, remove render attributes, change all calling modules
 	 */
-/*	public function __construct( $env, $total, $limit, $page, $count ){
+/*	public function __construct( CMF_Hydrogen_Environment $env, $total, $limit, $page, $count ){
 		$this->env		= $env;
 		$this->total	= $total;
 		$this->limit	= $limit;
@@ -35,7 +35,7 @@ class View_Helper_Pagination{
 		$this->count	= $count;
 	}*/
 
-	public function __construct( $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL ){
 		$this->env	= $env;
 		$this->total	= $total;
 		$this->limit	= $limit;

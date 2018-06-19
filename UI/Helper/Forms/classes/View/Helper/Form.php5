@@ -18,7 +18,7 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		$this->returnCode	= (int) $this->env->getRequest()->get( 'rc' );
 	}
 
-	public function renderStatic( $env, $formId ){
+	public function renderStatic( CMF_Hydrogen_Environment $env, $formId ){
 		$helper	= new View_Helper_Form( $env );
 		return $helper->setId( $formId )->render();
 	}

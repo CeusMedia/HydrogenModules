@@ -16,7 +16,7 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
 	}
 
-	public static function ___registerHints( $env, $context, $module, $arguments = NULL ){
+	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL ){
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
 	}
@@ -67,7 +67,7 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$customers		=  $this->modelCustomer->getAll();
-		if( $this->modelRating ) 
+		if( $this->modelRating )
 			foreach( $customers as $nr => $customer ){
 				$order		= array( 'timestamp' => 'DESC' );
 				$limit		= array( 0, 1 );
@@ -99,7 +99,7 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid customer' );
 			$this->restart( './manage/customer' );
 		}
-		
+
 		if( $request->has( 'save' ) ){
 			$data	= array(
 				'affability'	=> $request->get( 'affability' ) >= 1 ? min( 5, $request->get( 'affability' ) ) : 0,

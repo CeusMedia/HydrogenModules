@@ -6,15 +6,15 @@ class Logic_Sitemap{
 	protected $config;
 	protected $env;
 	protected $links		= array();
-    protected $frequencies  = array(
-        'always',
-        'hourly',
-        'daily',
-        'weekly',
-        'monthly',
-        'yearly',
-        'never'
-    );
+	protected $frequencies  = array(
+		'always',
+		'hourly',
+		'daily',
+		'weekly',
+		'monthly',
+		'yearly',
+		'never'
+	);
 
 	protected $defaultFrequency	= 'yearly';
 	protected $defaultPriority	= 0.1;
@@ -26,7 +26,7 @@ class Logic_Sitemap{
 		'moreover'	=> "http://api.moreover.com/ping?u=%s",
     );
 
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
 	}
@@ -50,7 +50,7 @@ class Logic_Sitemap{
 		);
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Sitemap( $env );
 		return self::$instance;
@@ -65,8 +65,8 @@ class Logic_Sitemap{
 		foreach( $this->providers as $key => $value ){
 			$url	= sprintf( $value, urlencode( $this->env->url.'sitemap' ) );
 //print_m( $this->env->getConfig()->getAll() );
-xmp( $url );die;
-	        try{
+//xmp( $url );die;
+			try{
 				$curl   = new Net_CURL( $url );
 				$curl->exec();
 				if( (int) $curl->getInfo( Net_CURL::INFO_HTTP_CODE ) === 200 ){

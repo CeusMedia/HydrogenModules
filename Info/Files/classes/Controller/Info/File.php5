@@ -33,7 +33,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$this->messages		= (object) $this->getWords( 'msg' );
 	}
 
-	static public function ___onCollectNovelties( $env, $context, $module, $data = array() ){
+	static public function ___onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
@@ -51,7 +51,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onPageCollectNews( $env, $context, $module, $data = array() ){
+	static public function ___onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );

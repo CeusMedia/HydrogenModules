@@ -5,7 +5,7 @@ class View_Admin_Config extends CMF_Hydrogen_View {
 		$this->env->getPage()->addThemeStyle( 'module.admin.config.css' );
 	}
 
-/*	public static function ___onRegisterTab( $env, $context, $module, $data ){
+/*	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'admin/config' );						//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );										//  register index tab
 //		$context->registerTab( 'module', $words->tabs['module'], 1 );										//  register module tab

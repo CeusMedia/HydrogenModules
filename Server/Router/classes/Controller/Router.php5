@@ -1,7 +1,7 @@
 <?php
 class Controller_Router extends CMF_Hydrogen_Controller{
 
-	static public function ___onAppDispatch( $env, $context, $module, $data = array() ){
+	static public function ___onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$source	= $env->getConfig()->get( 'module.server_router.source' );
 		$path	= $env->getRequest()->get( '__path' );
 		$list	= array();

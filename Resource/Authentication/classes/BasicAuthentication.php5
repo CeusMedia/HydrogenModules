@@ -4,7 +4,7 @@
  */
 class BasicAuthentication{
 
-	public function __construct( $env, $realm ){
+	public function __construct( CMF_Hydrogen_Environment $env, $realm ){
 		$this->env		= $env;
 		$this->realm	= $realm;
 	}

@@ -22,7 +22,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract{
 		return $this->url.$param;
 	}
 
-	static public function renderStatic( $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE ){
 		$instance	= new self( $env );
 		$instance->set( $url );
 		$instance->setForwardTo( $forwardTo );

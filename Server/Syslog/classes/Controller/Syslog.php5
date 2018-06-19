@@ -21,7 +21,7 @@ class Controller_Syslog extends Controller_Abstract {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
 
-	static public function ___onLogException( $env, $context, $module, $data = array() ){
+	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$fileName	= $env->getConfig()->get( 'log.exception' );
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
@@ -89,17 +89,17 @@ class Controller_Syslog extends Controller_Abstract {
 		$receiver	= $this->env->config->get( 'app.email.developer' );								//  @todo	replace by module email address (line below)
 #		$receiver	= $this->env->config->get( 'module.server_syslog.email.developer' );
 		$prefix		= trim( $this->env->config->get( 'module.resource_mail.subject.prefix' ) );
-		
+
 		if( !trim( $fromAddress ) )
-			return -1; 
+			return -1;
 		if( !trim( $fromName ) )
-			return -2; 
+			return -2;
 		if( !trim( $subject ) )
-			return -3; 
+			return -3;
 		if( !trim( $body ) )
-			return -4; 
+			return -4;
 		if( !trim( $receiver ) )
-			return -5; 
+			return -5;
 		try
 		{
 			$mail	= new Mail_Syslog( $this->env, array(
@@ -109,7 +109,7 @@ class Controller_Syslog extends Controller_Abstract {
 				'sender'	=> $fromName ? $fromName.' <'.$fromAddress.'>' : $fromAddress,
 			) );
 			$mail->sendToAddress( $receiver );
-			return 1; 
+			return 1;
 		}
 		catch( Exception $e ){
 			return $e->getMessage();

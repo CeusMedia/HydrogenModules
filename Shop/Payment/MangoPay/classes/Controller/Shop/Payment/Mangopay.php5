@@ -66,13 +66,13 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
-	 *	@param		object								$context	Hook context object
-	 *	@param		object								$module		Module object
-	 *	@param		public								$arguments	Map of hook arguments
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
+	 *	@param		object						$context	Hook context object
+	 *	@param		object						$module		Module object
+	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRegisterShopPaymentBackends( $env, $context, $module, $arguments = array() ){
+	static public function __onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_mangopay.method.', TRUE );
 		if( $methods->get( 'CreditCardWeb' ) ){
 			$context->registerPaymentBackend(
@@ -110,13 +110,13 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
-	 *	@param		object								$context	Hook context object
-	 *	@param		object								$module		Module object
-	 *	@param		public								$arguments	Map of hook arguments
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
+	 *	@param		object						$context	Hook context object
+	 *	@param		object						$module		Module object
+	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRenderServicePanels( $env, $context, $module, $data = array() ){
+	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
 			return;
 		$model	= new Model_Shop_Order( $env );

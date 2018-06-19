@@ -33,7 +33,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		return $label;
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Info_Blog' ) )
 			return;

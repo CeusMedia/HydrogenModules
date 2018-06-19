@@ -1,7 +1,7 @@
 <?php
 class View_Helper_CodeMirror{
 
-	static public function ___onPageApplyModules( $env, $context, $module, $data = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$page		= $env->getPage();
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
 		$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );

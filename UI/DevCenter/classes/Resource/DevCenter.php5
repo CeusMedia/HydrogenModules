@@ -1,7 +1,7 @@
 <?php
 class Resource_DevCenter{
 
-	/**	@var	CMF_Hydrogen_Environment_Abstract		$env		*/
+	/**	@var	CMF_Hydrogen_Environment		$env		*/
 	protected $env;
 
 	protected static $instance	= NULL;
@@ -10,7 +10,7 @@ class Resource_DevCenter{
 
 	protected $resources		= array();
 
-	protected function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->modules	= array(
 			'request'		=> array(
@@ -57,7 +57,7 @@ class Resource_DevCenter{
 		$this->add( $module, $label, $this->modules[$module]['resource'] );
 	}
 
-	public static function getInstance( CMF_Hydrogen_Environment_Abstract $env ){
+	public static function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Resource_DevCenter( $env );
 		return self::$instance;

@@ -16,7 +16,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onRegisterDashboardPanels( $env, $context, $module, $data ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		if( !$env->getAcl()->has( 'admin/mail/queue', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'admin-mail-queue', array(

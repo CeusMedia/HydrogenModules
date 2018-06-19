@@ -1,18 +1,18 @@
 <?php
 abstract class Logic_ShopBridge_Abstract{
 
-	/**	@var	Logic_ShopBridge					$bridge		Shop bridge logic instance */
+	/**	@var	Logic_ShopBridge			$bridge		Shop bridge logic instance */
 	protected $bridge;
-	/**	@var	CMF_Hydrogen_Environment_Abstract	$env		Environment instance */
+	/**	@var	CMF_Hydrogen_Environment	$env		Environment instance */
 	protected $env;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env
+	 *	@param		CMF_Hydrogen_Environment	$env
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env, Logic_ShopBridge $bridge ){
+	public function __construct( CMF_Hydrogen_Environment $env, Logic_ShopBridge $bridge ){
 		$this->env		= $env;
 		$this->bridge	= $bridge;
 		$this->__onInit();

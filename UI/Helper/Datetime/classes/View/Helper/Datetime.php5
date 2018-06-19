@@ -46,18 +46,18 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 	public $formatTime			= 'H:i:s';
 	public $languageFileKey		= 'datetime';
 	public $languageSection		= 'phrases-time';
-	
+
 	/**	@var	Alg_Time_DurationPhraser	$phraser */
 	protected $phraser			= NULL;
-	
+
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env	Environment object
+	 *	@param		CMF_Hydrogen_Environment	$env	Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->setEnv( $env );
 	}
 
@@ -87,7 +87,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 		$attr	= array( 'class' => 'datetime' );
 		$date	= UI_HTML_Tag::create( 'span', $date, $attr );
 		return $date;
-	}	
+	}
 
 	public function getDurationPhraseFromTimestamp( $timestamp, $showDatetime = FALSE ){
 		if( (int)$timestamp < 0 )

@@ -20,7 +20,7 @@ class View_Helper_CSRF{
 		return $input1.$input2;
 	}
 
-	static public function renderStatic( $env, $formName ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $formName ){
 		$helper	= new self( $env );
 		return $helper->render( $formName );
 	}

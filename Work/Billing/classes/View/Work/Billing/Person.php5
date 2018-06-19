@@ -4,7 +4,7 @@ class View_Work_Billing_Person extends CMF_Hydrogen_View{
 	public function edit(){}
 	public function index(){}
 
-	public static function ___onRegisterTab( $env, $context, $module, $data ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
 		$context->registerTab( 'edit/'.$data['personId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
@@ -16,7 +16,7 @@ class View_Work_Billing_Person extends CMF_Hydrogen_View{
 		$context->registerTab( 'unbooked/'.$data['personId'], '<i class="fa fa-fw fa-question-circle-o"></i> Ausstehend', 5 );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment_Abstract $env, $personId, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $personId, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/person/' );
 		$data	= array( 'personId' => $personId );

@@ -5,13 +5,13 @@ class Hook_Shop_FinishPanel{
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
-	 *	@param		object								$context	Hook context object
-	 *	@param		object								$module		Module object
-	 *	@param		public								$arguments	Map of hook arguments
+	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
+	 *	@param		object						$context		Hook context object
+	 *	@param		object						$module			Module object
+	 *	@param		public						$arguments		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRenderServicePanels( $env, $context, $module, $data = array() ){
+	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
 			return;
 		$view		= new CMF_Hydrogen_View( $env );

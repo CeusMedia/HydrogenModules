@@ -14,7 +14,7 @@ class View_Info_File extends CMF_Hydrogen_View{
 	public function view(){}
 
 
-	static public function renderPosition( $env, $folderId, $search ){
+	static public function renderPosition( CMF_Hydrogen_Environment $env, $folderId, $search ){
 		$steps		= self::getStepsFromFolderId( $env, $folderId );
 		$folderPath	= self::getPathFromFolderId( $env, $folderId );
 		$way		= '';
@@ -37,7 +37,7 @@ class View_Info_File extends CMF_Hydrogen_View{
 		return $position;
 	}
 
-	static protected function getStepsFromFolderId( $env, $folderId ){
+	static protected function getStepsFromFolderId( CMF_Hydrogen_Environment $env, $folderId ){
 		$model	= new Model_Download_Folder( $env );
 		$steps		= array();
 		while( $folderId ){
@@ -51,7 +51,7 @@ class View_Info_File extends CMF_Hydrogen_View{
 		return $steps;
 	}
 
-	static protected function getPathFromFolderId( $env, $folderId ){
+	static protected function getPathFromFolderId( CMF_Hydrogen_Environment $env, $folderId ){
 		$model	= new Model_Download_Folder( $env );
 		$path	= '';
 		while( $folderId ){

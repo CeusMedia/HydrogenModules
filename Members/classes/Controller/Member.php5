@@ -15,7 +15,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 	}
 
-	static public function ___onGetRelatedUsers( $env, $context, $module, $data ){
+	static public function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelUser	= new Model_User( $env );
 		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $data->userId, 2 );
 		$list		= array();

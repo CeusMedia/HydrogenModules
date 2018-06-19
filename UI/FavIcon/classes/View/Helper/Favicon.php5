@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Favicon{
 
-	static public function ___onPageBuild( $env, $context, $module, $data = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$config			= $env->getConfig();
 		$configFav		= $config->getAll( 'module.ui_favicon.favorite.', TRUE );
 		$configTouch	= $config->getAll( 'module.ui_favicon.touch.', TRUE );

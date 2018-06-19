@@ -23,7 +23,7 @@ class Logic_Catalog_Gallery{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env
+	 *	@param		CMF_Hydrogen_Environment	$env
 	 *	@return		void
 	 */
 	public function __construct( $env ){

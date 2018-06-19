@@ -89,11 +89,11 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		return $list;
 	}
 
-	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );
 		$pathFront		= trim( $frontend->getPath() );

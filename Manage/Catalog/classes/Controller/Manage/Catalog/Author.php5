@@ -23,7 +23,7 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Author::init done' );
 	}
 
-	static public function ___onTinyMCE_getImageList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.authors' ) ) ){
 			$logic		= new Logic_Catalog( $env );
@@ -52,7 +52,7 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		) ) );
 	}
 
-	static public function ___onTinyMCE_getLinkList( $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.authors' ) ) ){
 			$logic		= new Logic_Catalog( $env );

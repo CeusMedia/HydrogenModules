@@ -7,8 +7,8 @@ class View_Helper_Catalog_Bookstore_Position{
 	/**	@var	View_Helper_Catalog_Bookstore	$helper */
 	protected $helper;
 
-	public function __construct( CMF_Hydrogen_Environment_Abstract $env ){
-		$this->env	= $env;
+	public function __construct( CMF_Hydrogen_Environment $env ){
+		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
 		$this->language	= $this->env->getLanguage();
 		$this->helper	= new View_Helper_Catalog_Bookstore( $env );

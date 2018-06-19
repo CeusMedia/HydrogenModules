@@ -1,7 +1,7 @@
 <?php
 class Job_Abstract{
 
-	/**	@var	CMF_Hydrogen_Environment_Abstract	$env		Environment object */
+	/**	@var	CMF_Hydrogen_Environment				$env		Environment object */
 	protected $env;
 	protected $logFile;
 	protected $jobClass;
@@ -17,11 +17,11 @@ class Job_Abstract{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Abstract	$env		Environment instance
+	 *	@param		CMF_Hydrogen_Environment			$env		Environment instance
 	 *	@param		Jobber								$manager	Job manage instance
 	 *	@return		void
 	 */
-	public function __construct( $env, $manager, $jobClassName = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env, $manager, $jobClassName = NULL ){
 		$this->env			= $env;
 		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';

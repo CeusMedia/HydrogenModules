@@ -16,7 +16,7 @@ class View_Helper_Navigation{
 		$this->moduleConfig	= $env->getConfig()->getAll( "module.ui_navigation.", TRUE );
 	}
 
-	static public function ___setupSidebar( $env, $context, $module, $data = array() ){
+	static public function ___setupSidebar( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$desktopRendererClass = $moduleConfig->get( 'render.desktop.class' );
 		if( $desktopRendererClass === 'View_Helper_Navigation_Bootstrap_Sidebar' ){
