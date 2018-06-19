@@ -1,6 +1,8 @@
 <?php
 class Logic_Catalog_ProvisionManager extends CMF_Hydrogen_Logic{
 
+	protected $articleUriTemplate	= 'catalog/provision/product/license/%2$d-%3$s';
+
 	protected function __onInit(){
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
@@ -104,18 +106,27 @@ class Logic_Catalog_ProvisionManager extends CMF_Hydrogen_Logic{
 		return $productLicenses;
 	}
 
-	public function getProductLicenseUri( $productLicenseIdOrId = 0, $absolute = FALSE ){
+	public function getProductLicenseUri( $productLicenseOrId = 0, $absolute = FALSE ){
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) )
 			$productLicense	= $this->getProductLicense( $productLicenseOrId );
 		if( !is_object( $productLicense ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
-		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', array(
+		$uri	= vsprintf( $this->articleUriTemplate, array(
 			$productLicense->productId,
 			$productLicense->productLicenseId,
 			$this->getUriPart( $productLicense->title ),
 		) );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
+	}
+
+	public function getProducts( $status = NULL ){
+		$indices	= array();
+		if( $status !== NULL )
+			$indices['status']	= $status;
+		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$products	= $this->modelProduct->getAll( $indices, $orders );
+		return $products;
 	}
 
 	/**
@@ -128,13 +139,8 @@ class Logic_Catalog_ProvisionManager extends CMF_Hydrogen_Logic{
 		return $label;
 	}
 
-	public function getProducts( $status = NULL ){
-		$indices	= array();
-		if( $status !== NULL )
-			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
-		$products	= $this->modelProduct->getAll( $indices, $orders );
-		return $products;
+	public function setArticleUri( $articleUriTemplate ){
+		$this->articleUriTemplate	= $articleUriTemplate;
 	}
 }
 ?>
