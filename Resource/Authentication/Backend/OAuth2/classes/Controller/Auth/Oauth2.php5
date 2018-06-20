@@ -162,7 +162,14 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );
 			$providerObject	= $this->getProviderObject( $providerId );
-			$authUrl = $providerObject->getAuthorizationUrl();
+			$scopes	= array();
+			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
+				$scopes	= array( 'scope' => ['identity.basic'] );
+			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
+				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
+			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
+				$scopes	= array( 'scope' => ['read_user'] );
+			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
 			$this->session->set( 'oauth2_state', $providerObject->getState() );
 			$this->session->set( 'oauth2_from', $this->request->get( 'from' ) );
 			$this->restart( $authUrl, NULL, NULL, TRUE );
@@ -307,6 +314,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 				$client		= $this->getProviderObject( $currentProviderId, 'auth/oauth2/register' );
 				$token		= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
 				$user		= $client->getResourceOwner( $token );
+//print_m( $user->toArray() );die;
 				$provider	= $this->getProvider( $currentProviderId );
 				$indices	= array(
 					'oauthProviderId'	=> $currentProviderId,
@@ -345,7 +353,11 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
 			$scopes	= array();
 			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => 'identity.basic' );
+				$scopes	= array( 'scope' => ['identity.basic'] );
+			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
+				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
+			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
+				$scopes	= array( 'scope' => ['read_user'] );
 			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
 
 			$this->session->set( 'oauth2_state', $providerObject->getState() );
@@ -366,12 +378,14 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$data['surname']	= $user->getLastName();
 		}
 		if( $provider->composerPackage === 'league/oauth2-github' ){
+			$all	= $user->toArray();
 			$name	= preg_split( '/\s+/', $user->getName() );
 			$data['username']	= $user->getNickname();
 			$data['email']		= $user->getEmail();
 			$data['gender']		= 0;
 			$data['firstname']	= array_pop( $name );
 			$data['surname']	= join( ' ', $name );
+			$data['city']		= $all['location'] ?: '';
 		}
 		if( $provider->composerPackage === 'league/oauth2-google' ){
 			$data['username']	= $user->getName();
@@ -388,11 +402,25 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$data['surname']	= $user->getLastName();
 		}
 		if( $provider->composerPackage === 'stevenmaguire/oauth2-paypal' ){
+			$name		= preg_split( '/\s+/', $user->getName() );
+			$surname	= array_pop( $name );
+			$firstname	= join( ' ', $name );
 			$data['username']	= $user->getName();
 			$data['email']		= $user->getEmail();
 			$data['gender']		= $user->getGender();
-			$data['firstname']	= $user->getGivenName();
-			$data['surname']	= $user->getFamilyName();
+			$data['firstname']	= $user->getGivenName() ?: $firstname;
+			$data['surname']	= $user->getFamilyName() ?: $surname;
+			$address			= $user->getAddress();
+			if( isset( $address['street_address'] ) )
+				$data['street']	= $address['street_address'];
+			if( isset( $address['locality'] ) )
+				$data['city']	= $address['locality'];
+			if( isset( $address['postal_code'] ) )
+				$data['postcode']	= $address['postal_code'];
+			if( isset( $address['country'] ) )
+				$data['country']	= $address['country'];
+			if( isset( $address['phone_number'] ) )
+				$data['phone']	= $address['phone_number'];
 		}
 		if( $provider->composerPackage === 'adam-paterson/oauth2-slack' ){
 			$data['username']	= $user->getName();
@@ -408,14 +436,25 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$data['firstname']	= '';
 			$data['surname']	= '';
 		}
+		if( $provider->composerPackage === 'omines/oauth2-gitlab' ){
+//print_m( $user->toArray() );die;
+			$all		= $user->toArray();
+			$location	= preg_split( '/\s*,\s*/', $all['location'] );
+			$name		= preg_split( '/\s+/', $user->getName() );
+			$data['username']	= $user->getUsername();
+			$data['email']		= $user->getEmail();
+			$data['gender']		= 0;
+			$data['surname']	= array_pop( $name );
+			$data['firstname']	= join( ' ', $name );
+			$data['city']		= array_shift( $location );
+		}
 		return $data;
 	}
 
 	public function unbind(){
-		$this->session->remove( 'auth_register_oauth_provider_id' );
-		$this->session->remove( 'auth_register_oauth_provider' );
-		$this->session->remove( 'auth_register_oauth_user_id' );
-		$this->session->remove( 'auth_register_oauth_data' );
+		$keys	= array_keys( $this->session->getAll( 'auth_register_oauth_' ) );
+		foreach( $keys as $key )
+			$this->session->remove( 'auth_register_oauth_'.$key );
 		if( ( $from = $this->request->get( 'from' ) ) )
 			$this->restart( $from, FALSE );
 		$this->restart( getEnv( 'HTTP_REFERER' ), FALSE );

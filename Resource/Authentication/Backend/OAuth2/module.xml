@@ -1,14 +1,44 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
-	<description><![CDATA[Module for authentication against OAuth provider.]]></description>
-	<version>0.2.4</version>
+	<description><![CDATA[Module for authentication against OAuth provider.
+
+Official providers:
+http://oauth2-client.thephpleague.com/providers/league/
+
+Third-party providers:
+http://oauth2-client.thephpleague.com/providers/thirdparty/
+
+Popular provider packages:
+list>
+- facebook: league/oauth2-facebook
+- Google: league/oauth2-google
+- GitHub: league/oauth2-github
+- GitLab: omines/oauth2-gitlab
+- PayPal: stevenmaguire/oauth2-paypal
+- Slack: adam-paterson/oauth2-slack
+<list
+
+Register app on providers and install composer package:
+list>
+- facebook: https://developers.facebook.com/apps/
+- Google: https://console.cloud.google.com/apis/credentials
+- GitHub: https://github.com/settings/developers (scope: user_read)
+- GitLab: https://gitlab.com/profile/applications (scope: api)
+- PayPal: https://developer.paypal.com/developer/applications/ (scope: Full name, Email, Street, City, Country, Zip, Phone)
+- Slack: https://api.slack.com/apps (scope: identity.basic)
+<list
+
+
+]]></description>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add provider icon support.</log>
 	<log version="0.2.2">Add helper for provider buttons.</log>
 	<log version="0.2.3">Support redirecting after authorization.</log>
 	<log version="0.2.4">Extract hooks to own hook class.</log>
+	<log version="0.2.5">Improve use of resource owner data.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
