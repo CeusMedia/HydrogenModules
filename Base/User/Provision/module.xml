@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<module>
+	<title>Base: User: Provision</title>
+	<description><![CDATA[Management for user-ordered provisioning of products, licenses and their keys.]]></description>
+	<category>Base</category>
+	<version>0.2</version>
+	<log version="0.1">.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Provision/Rest.php5</class>
+		<class>Job/User/Provision.php5</class>
+		<class>Logic/User/Provision.php5</class>
+		<class>Mail/Provision/Customer/Key/Assigned.php5</class>
+		<class>Mail/Provision/Customer/Key/Continued.php5</class>
+		<class>Mail/Provision/Customer/Key/Expired.php5</class>
+		<class>Mail/Provision/Customer/Key/Revoked.php5</class>
+		<class>Mail/Provision/Customer/License/Activated.php5</class>
+		<class>Mail/Provision/Customer/License/Deactivated.php5</class>
+		<class>Mail/Provision/Customer/License/Expired.php5</class>
+		<class>Mail/Provision/Customer/License/Replaced.php5</class>
+		<class>Mail/Provision/Customer/License/Revoked.php5</class>
+		<class>Model/Provision/User/License.php5</class>
+		<class>Model/Provision/User/License/Key.php5</class>
+		<locale>de/mail/provision/customer/key/assigned.html</locale>
+		<locale>de/mail/provision/customer/key/assigned.txt</locale>
+		<locale>de/mail/provision/customer/key/continued.html</locale>
+		<locale>de/mail/provision/customer/key/continued.txt</locale>
+		<locale>de/mail/provision/customer/key/expired.html</locale>
+		<locale>de/mail/provision/customer/key/expired.txt</locale>
+		<locale>de/mail/provision/customer/key/revoked.html</locale>
+		<locale>de/mail/provision/customer/key/revoked.txt</locale>
+		<locale>de/mail/provision/customer/license/activated.html</locale>
+		<locale>de/mail/provision/customer/license/activated.txt</locale>
+		<locale>de/mail/provision/customer/license/deactivated.html</locale>
+		<locale>de/mail/provision/customer/license/deactivated.txt</locale>
+		<locale>de/mail/provision/customer/license/expired.html</locale>
+		<locale>de/mail/provision/customer/license/expired.txt</locale>
+		<locale>de/mail/provision/customer/license/replaced.html</locale>
+		<locale>de/mail/provision/customer/license/replaced.txt</locale>
+		<locale>de/mail/provision/customer/license/revoked.html</locale>
+		<locale>de/mail/provision/customer/license/revoked.txt</locale>
+		<locale>de/user/provision.ini</locale>
+		<file>config/jobs/user.provision.xml</file>
+	</files>
+	<config protected="yes" type="boolean" name="REST">1</config>
+	<relations/>
+	<link access="public" path="provision/rest/getLicense"/>
+	<link access="public" path="provision/rest/getLicenses"/>
+	<link access="public" path="provision/rest/getProducts"/>
+	<link access="public" path="provision/rest/orderLicense"/>
+	<link access="public" path="provision/rest/hasActiveKey"/>
+	<link access="public" path="provision/rest/test"/>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_provision_licenses`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_provision_licenses` (
+  `userLicenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `productLicenseId` int(10) unsigned NOT NULL,
+  `productId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `uid` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
+  `duration` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `users` tinyint(3) unsigned NOT NULL,
+  `price` decimal(6,2) unsigned NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `startsAt` decimal(12,0) unsigned DEFAULT '0',
+  `endsAt` decimal(12,0) unsigned DEFAULT '0',
+  PRIMARY KEY (`userLicenseId`),
+  KEY `userId` (`userId`),
+  KEY `licenseId` (`productLicenseId`),
+  KEY `status` (`status`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>user_provision_license_keys`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>user_provision_license_keys` (
+  `userLicenseKeyId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userLicenseId` int(10) unsigned NOT NULL,
+  `userId` int(10) unsigned NOT NULL,
+  `productLicenseId` int(10) unsigned NOT NULL,
+  `productId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `uid` varchar(13) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `startsAt` decimal(12,0) unsigned DEFAULT NULL,
+  `endsAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`userLicenseKeyId`),
+  KEY `userLicenseId` (`userLicenseId`),
+  KEY `userId` (`userId`),
+  KEY `productLicenseId` (`productLicenseId`),
+  KEY `productId` (`productId`),
+  KEY `status` (`status`),
+  KEY `startsAt` (`startsAt`),
+  KEY `endsAt` (`endsAt`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_provision_licenses`;
+DROP TABLE IF EXISTS `<%?prefix%>user_provision_license_keys`;
+]]></sql>
+</module>

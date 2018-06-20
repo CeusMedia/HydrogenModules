@@ -1,0 +1,20 @@
+<h2>Lizenzschlüssel erneuert</h2>
+<p>
+	Hallo <%?user.firstname%> <%?user.surname%>!
+</p>
+<p>
+	Dein Lizenzschlüssel "<%productLicense.title%>" für das Produkt <%product.title%> ist heute abgelaufen.<br/>
+	Der nächste verfügbare Schlüssel wurde automatisch aktiviert.<br/>
+	Du kannst "<%product.title%>" also ganz normal weiter benutzen.<br/>
+</p>
+<table>
+	<tbody>
+		<tr><th>Adresse</th><td><%product.url%></td></tr>
+		<tr><th>Lizenz</th><td><%productLicense.title%></td></tr>
+		<tr><th>bestellt</th><td> von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%></td></tr>
+		<tr><th>gilt für</th><td> <%userLicense.duration%></td></tr>
+	</tbody>
+</table>
+<p>
+	Besuche <a href="<%appBaseUrl%>manage/my/provision"><%appTitle%></a> um eine Übersicht über deine Lizenzschlüssel zu sehen.
+</p>

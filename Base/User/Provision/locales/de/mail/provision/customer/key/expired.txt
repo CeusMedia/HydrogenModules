@@ -1,0 +1,18 @@
+Lizenzschlüssel abgelaufen
+--------------------------
+
+Hallo <%?user.firstname%> <%?user.surname%>!
+
+Dein Lizenzschlüssel für das Produkt "<%productLicense.title%>"" ist heute abgelaufen.
+Leider steht kein weiterer Schlüssel bereit, der jetzt automatisch aktiv werden könnte.
+
+Adresse:      <%product.url%>
+Lizenz:       <%productLicense.title%>
+bestellt:     von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%>
+galt für:     <%userLicense.duration%>
+
+Wenn Du "<%product.title%>" weiter benutzen willst, kannst Du eine Lizenz und damit neue Schlüssel bestellen.<br/>
+Besuche "<%appTitle%>" um eine Übersicht über deine Lizenzschlüssel zu sehen.
+Adresse: <%appBaseUrl%>manage/my/provision
+
+Anderenfalls bedanken wir uns für Ihre Nutzung und verbleiben mit einem freundlichen Gruß.

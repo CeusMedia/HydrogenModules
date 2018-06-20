@@ -1,0 +1,17 @@
+Lizenzschlüssel erhalten
+------------------------
+
+Hallo <%?user.firstname%> <%?user.surname%>!
+
+Du hast für deinen <%product.title%>-Account "<%?user.username%>" einen Lizenzschlüssel erhalten.
+
+Adresse:      <%product.url%>
+Lizenz:       <%productLicense.title%>
+bestellt:     von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%>
+gilt für:     <%userLicense.duration%>
+
+Wenn du bereits einen Lizenzschlüssel für <%product.title%> hast, wird dieser Schlüssel
+hinzugefügt und erst verwendet, wenn bisherige Lizenzschlüssel abgelaufen sind.
+
+Besuche "<%appTitle%>" um eine Übersicht über deine Lizenzschlüssel zu sehen.
+Adresse: <%appBaseUrl%>manage/my/provision

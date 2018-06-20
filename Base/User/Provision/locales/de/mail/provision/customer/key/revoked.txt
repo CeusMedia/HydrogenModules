@@ -1,0 +1,15 @@
+
+Hallo <%?keyOwner.firstname%> <%?keyOwner.surname%>!
+
+Ein für deinen <%product.title%>-Account "<%?user.username%>" vergebener Lizenzschlüssel wurde dir wieder entzogen.
+
+Adresse:      <%product.url%>
+Lizenz:       <%productLicense.title%>
+bestellt:     von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%>
+galt für:     <%userLicense.duration%>
+
+Falls du jetzt für <%product.title%> keinen gültigen Lizenzschlüssel mehr haben, kannst du selber
+einen Lizenzschlüssel erwerben.
+
+Besuche "<%appTitle%>" für weitere Informationen und eine Übersicht über deine Lizenzschlüssel.
+Adresse: <%appBaseUrl%>manage/my/provision

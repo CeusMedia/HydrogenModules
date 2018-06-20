@@ -1,0 +1,12 @@
+Lizenz entzogen
+---------------
+
+Hallo <%?user.firstname%> <%?user.surname%>!
+
+...
+
+Adresse:      <%product.url%>
+Lizenz:       <%productLicense.title%>
+
+Besuche "<%appTitle%>" um eine Übersicht über deine Lizenzschlüssel zu sehen.
+Adresse: <%appBaseUrl%>manage/my/provision

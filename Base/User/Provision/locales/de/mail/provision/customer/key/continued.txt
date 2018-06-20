@@ -1,0 +1,16 @@
+Lizenzschlüssel erneuert
+------------------------
+
+Hallo <%?user.firstname%> <%?user.surname%>!
+
+Dein Lizenzschlüssel "<%productLicense.title%>" für das Produkt <%product.title%> ist heute abgelaufen.
+Der nächste verfügbare Schlüssel wurde automatisch aktiviert.
+Du kannst "<%product.title%>" also ganz normal weiter benutzen.
+
+Adresse:      <%product.url%>
+Lizenz:       <%productLicense.title%>
+bestellt:     von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%>
+gilt für:     <%userLicense.duration%>
+
+Besuche "<%appTitle%>" um eine Übersicht über deine Lizenzschlüssel zu sehen.
+Adresse: <%appBaseUrl%>manage/my/provision

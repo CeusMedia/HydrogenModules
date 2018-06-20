@@ -1,0 +1,23 @@
+<h2>Lizenzschlüssel abgelaufen</h2>
+<p>
+	Hallo <%?user.firstname%> <%?user.surname%>!
+</p>
+<p>
+	Dein Lizenzschlüssel "<%productLicense.title%>" für das Produkt <%product.title%> ist heute abgelaufen.<br/>
+	Leider steht kein weiterer Schlüssel bereit, der jetzt automatisch aktiv werden könnte.<br/>
+</p>
+<table>
+	<tbody>
+		<tr><th>Adresse</th><td><%product.url%></td></tr>
+		<tr><th>Lizenz</th><td><%productLicense.title%></td></tr>
+		<tr><th>bestellt</th><td> von <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) am <%userLicense.date%></td></tr>
+		<tr><th>galt für</th><td> <%userLicense.duration%></td></tr>
+	</tbody>
+</table>
+<p>
+	Wenn Du "<%product.title%>" weiter benutzen willst, kannst Du eine Lizenz und damit neue Schlüssel bestellen.<br/>
+	Besuche <a href="<%appBaseUrl%>manage/my/provision"><%appTitle%></a> um eine Übersicht über deine Lizenzschlüssel zu sehen.
+</p>
+<p>
+	Anderenfalls bedanken wir uns für Ihre Nutzung verbleiben mit einem freundlichen Gruß.<br/>
+</p>
