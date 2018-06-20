@@ -61,7 +61,7 @@ class View_Helper_Mail_Facts{
 			$definition	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
 			$list[]		= $term.$definition;
 		}
-		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $classList ) );
+		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $this->listClass ) );
 	}
 
 	public function renderAsText(){
