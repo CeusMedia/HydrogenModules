@@ -1,9 +1,10 @@
 <?php
 class View_Helper_Shop_Tabs{
 
-	protected $current;
-	protected $content;
 	protected $backends;
+	protected $cartTotal			= 0;
+	protected $content;
+	protected $current;
 	protected $env;
 	protected $whiteIcons;
 
@@ -16,8 +17,8 @@ class View_Helper_Shop_Tabs{
 		return $this->render();
 	}
 
-	public function setPaymentBackends( $backends ){
-		$this->backends	= $backends;
+	public function setCartTotal( $cartTotal ){
+		$this->cartTotal	= $cartTotal;
 	}
 
 	public function setContent( $content ){
@@ -26,6 +27,10 @@ class View_Helper_Shop_Tabs{
 
 	public function setCurrent( $current ){
 		$this->current	= $current;
+	}
+
+	public function setPaymentBackends( $backends ){
+		$this->backends	= $backends;
 	}
 
 	public function setWhiteIcons( $bool ){
@@ -89,7 +94,7 @@ class View_Helper_Shop_Tabs{
 			$iconConditions.$tabLabels->conditions,
 			$this->current === 'shop-conditions' ? $this->content : ''
 		);
-		if( count( $this->backends ) > 1 )
+		if( count( $this->backends ) > 1 && $this->cartTotal > 0 )
 			$tabs->add(
 				'shop-payment',
 				'./shop/payment',

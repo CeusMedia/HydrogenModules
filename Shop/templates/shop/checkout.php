@@ -13,11 +13,11 @@ $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 extract( $view->populateTexts( array( 'top', 'bottom', 'checkout.top', 'checkout.bottom' ), 'html/shop/' ) );
 
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-if( count( $paymentBackends ) > 1 )
+if( count( $paymentBackends ) > 1 && $cartTotal > 0 )
 	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 $buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
-if( !$paymentBackends /* || !$price*/ )
+if( !$paymentBackends || $cartTotal == 0 )
 	$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
 $tabContent	= UI_HTML_Tag::create( 'div', array(
@@ -59,7 +59,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	</div>
 </div><script>
 jQuery(document).ready(function(){
-	if('.count( $paymentBackends ).'){
+	if('.( count( $paymentBackends ) && $cartTotal > 0 ).'){
 		jQuery("#form-shop-checkout button[type=submit]").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});
@@ -72,6 +72,7 @@ extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-checkout' );
 $helperTabs->setContent( $tabContent );
+$helperTabs->setCartTotal( $cartTotal );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
 return $textTop.$helperTabs->render().$textBottom.$modalLoading;

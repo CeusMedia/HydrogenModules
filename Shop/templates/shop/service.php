@@ -18,6 +18,7 @@ $panels		= join( $panels );
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-service' );
 $helperTabs->setContent( $panels );
+$helperTabs->setCartTotal( $cartTotal );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
 return $textTop.$helperTabs->render().$textBottom;

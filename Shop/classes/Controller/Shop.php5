@@ -14,6 +14,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	protected $backends			= array();
 	protected $servicePanels	= array();
 
+	protected $cartTotal		= 0;
+
 	public function __onInit() {
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -45,6 +47,10 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		if( (int) $this->orderId > 0 ){
 			$this->addData( 'order', $this->logic->getOrder( $this->orderId ) );
 		}
+		if( $this->session->get( 'shop.order.positions' ) )
+			foreach( $this->session->get( 'shop.order.positions' ) as $position )
+				$this->cartTotal	+= $position->article->price->all;
+		$this->addData( 'cartTotal', $this->cartTotal );
 	}
 
 	public function addArticle( $bridgeId, $articleId, $quantity = 1 ){
@@ -406,7 +412,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'userId', $userId );
-		$this->addData( 'login', $this->request->get( 'login' ) );
+		$this->addData( 'username', $this->request->get( 'username' ) );
 		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );
 	}
 
@@ -441,40 +447,9 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->redirect( 'shop', 'cart' );
 	}
 
-	public function login(){
-		$logic		= new Logic_Authentication( $this->env );
-		$modelUser	= new Model_User( $this->env );
-		$login		= $this->request->get( 'login' );
-		$password	= $this->request->get( 'password' );
-
-		$user		= $modelUser->getByIndices( array(							//  find user by email address
-			'roleId'	=> 4,
-			'status'	=> 1,
-			'email'		=> $login,
-		) );
-		if( !$user )
-			$user		= $modelUser->getByIndices( array(						//  find user by username
-				'roleId'	=> 4,
-				'status'	=> 1,
-				'username'	=> $login,
-			) );
-		if( !$user ){
-			$this->messenger->noteError( 'Kein gültiges Benutzerkonto gefunden.' );
-			$this->restart( 'customer?login='.$login, TRUE );
-		}
-		if( !$logic->checkPassword( $user->userId, $password ) ){
-			$this->messenger->noteError( 'Das Passwort ist ungültig.' );
-			$this->restart( 'customer?login='.$login, TRUE );
-		}
-		$this->session->set( 'userId', $user->userId );
-		$this->session->set( 'roleId', $user->roleId );
-		$this->session->set( 'authBackend', 'Local' );
-		$this->restart( 'customer', TRUE );
-	}
-
 	public function payment(){
-		if( count( $this->backends ) === 1 ){
-			$paymentBackend		= array_pop( $this->backends );
+		if( $this->cartTotal == 0 || count( $this->backends ) === 1 ){
+			$paymentBackend		= $this->backends[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
 		$orderId	= $this->session->get( 'shop.orderId' );

@@ -28,14 +28,14 @@ return '<div class="row-fluid">
 			<h3>'.$wLogin->heading.'</h3>
 			<div class="content-panel-inner">
 				<p>'.$wLogin->textTop.'</p>
-				<form action="./shop/login" method="post">
+				<form action="./auth/local/login?from=shop/customer" method="post">
 					'.$fieldOauth2.'
-					<label for="input_login">'.$wLogin->labelLogin.'</label>
-					<input type="text" name="login" id="input_login" class="span10" value="'.htmlentities( $login, ENT_QUOTES, 'UTF-8' ).'"/>
-					<label for="input_password">'.$wLogin->labelPassword.'</label>
-					<input type="password" name="password" id="input_password" class="span10"/>
+					<label for="input_login_username">'.$wLogin->labelUsername.'</label>
+					<input type="text" name="login_username" id="input_login_username" class="span10" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_login_password">'.$wLogin->labelPassword.'</label>
+					<input type="password" name="login_password" id="input_login_password" class="span10"/>
 					<div class="buttonbar">
-						<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-sign-in"></i> '.$wLogin->buttonLogin.'</button>
+						<button type="submit" name="doLogin" class="btn btn-primary"><i class="fa fa-fw fa-sign-in"></i> '.$wLogin->buttonLogin.'</button>
 					</div>
 				</form>
 			</div>

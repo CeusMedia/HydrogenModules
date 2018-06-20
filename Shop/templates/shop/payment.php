@@ -52,6 +52,7 @@ $w			= (object) $words['payment'];
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-payment' );
 $helperTabs->setContent( $tabContent );
+$helperTabs->setCartTotal( $cartTotal );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
 return $textTop.$helperTabs->render().$textBottom;
