@@ -64,7 +64,11 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 		else{
 			$scopes	= array();
 			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => 'identity.basic' );
+				$scopes	= array( 'scope' => ['identity.basic'] );
+			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
+				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
+			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
+				$scopes	= array( 'scope' => ['read_user'] );
 			$authUrl	= $client->getAuthorizationUrl( $scopes );
 			$session->set( 'oauth2_state', $client->getState() );
 			$this->restart( $authUrl, FALSE, NULL, TRUE );
