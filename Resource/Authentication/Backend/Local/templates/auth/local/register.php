@@ -54,27 +54,29 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			$icon		= '';
 			if( $assignedProvider->icon ){
 				$icon		= UI_HTML_Tag::create( 'div', array(
-					'<span class="fa-stack fa-3x"><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
-				), array( 'class' => 'span3', 'style' => 'text-align: center' ) );
+					'<span class="fa-stack fa-2x" style=""><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
+				), array( 'class' => 'span4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;' ) );
 
 			}
 			$field		= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
 				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'div', join( '<br/>', array(
-							'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
-							'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
-							'',
-						) ), array( 'class' => $icon ? 'span9' : 'span12' ) ),
+						UI_HTML_Tag::create( 'div', array(
+							UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
+							UI_HTML_Tag::create( 'p', join( '<br/>', array(
+								'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
+								'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
+								'',
+							) ) ),
+							UI_HTML_Tag::create( 'div', array(
+								UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
+									'href'	=> './auth/oauth2/unbind',
+									'class'	=> 'btn btn-small not-btn-inverse'
+								) ),
+							) ),
+						), array( 'class' => $icon ? 'span8' : 'span12' ) ),
 						$icon,
 					), array( 'class' => 'row-fluid' ) ),
-				) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
-						'href'	=> './auth/oauth2/unbind',
-						'class'	=> 'btn btn-small not-btn-inverse'
-					) ),
 				) ),
 			), array( 'class' => 'alert alert-success' ) );
 		}

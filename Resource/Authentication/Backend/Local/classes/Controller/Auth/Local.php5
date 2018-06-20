@@ -167,13 +167,14 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
-		$username = trim( $this->request->get( 'login_username' ) );
-
 		$this->tryLoginByCookie();
+
 		$words		= (object) $this->getWords( 'login' );
+		$username	= trim( $this->request->get( 'login_username' ) );
+		$from		= $this->request->get( 'from' );
+
 
 		if( $this->request->has( 'doLogin' ) ) {
-
 			if( $this->useCsrf ){
 				$controller	= new Controller_Csrf( $this->env );
 				$controller->checkToken();
@@ -190,37 +191,39 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$user	= $modelUser->getByIndex( 'email', $username );								//  find user by email address
 			if( !$user )
 				$this->messenger->noteError( $words->msgInvalidUser );
-			if( $this->messenger->gotError() )
+			if( !$this->messenger->gotError() ){
+				$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+					'backend'	=> 'local',
+					'username'	=> $user ? $user->username : $username,
+	//				'password'	=> $password,															//  disabled for security
+					'userId'	=> $user ? $user->userId : 0,
+				) );
+			}
+
+			if( !$this->messenger->gotError() ){
+				$role			= $modelRole->get( $user->roleId );
+				$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
+				$allowedRoles	= explode( ',', $allowedRoles ? $allowedRoles : "*" );
+
+				if( !$role->access )
+					$this->messenger->noteError( $words->msgRoleLocked, $role->title );
+				else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
+					$this->messenger->noteError( $words->msgInvalidRole, $role->title );
+				else if( $user->status == 0 )
+					$this->messenger->noteError( $words->msgUserUnconfirmed );
+				else if( $user->status == -1 )
+					$this->messenger->noteError( $words->msgUserLocked );
+				else if( $user->status == -2 )
+					$this->messenger->noteError( $words->msgUserDisabled );
+				else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
+					$this->messenger->noteError( $words->msgInvalidPassword );
+			}
+
+			if( $this->messenger->gotError() ){
+				if( $from )
+					$this->restart( $from.'?login='.$username );
 				$this->restart( 'login?username='.$username, TRUE );
-
-			$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
-				'backend'	=> 'local',
-				'username'	=> $user ? $user->username : $username,
-//				'password'	=> $password,															//  disabled for security
-				'userId'	=> $user ? $user->userId : 0,
-			) );
-			if( $this->messenger->gotError() )
-				$this->restart( 'login?login_username='.$username, TRUE );
-
-			$role			= $modelRole->get( $user->roleId );
-			$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
-			$allowedRoles	= explode( ',', $allowedRoles ? $allowedRoles : "*" );
-
-			if( !$role->access )
-				$this->messenger->noteError( $words->msgRoleLocked, $role->title );
-			else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
-				$this->messenger->noteError( $words->msgInvalidRole, $role->title );
-			else if( $user->status == 0 )
-				$this->messenger->noteError( $words->msgUserUnconfirmed );
-			else if( $user->status == -1 )
-				$this->messenger->noteError( $words->msgUserLocked );
-			else if( $user->status == -2 )
-				$this->messenger->noteError( $words->msgUserDisabled );
-			else if( !$this->checkPasswordOnLogin( $user, $password ) )						//  validate password
-				$this->messenger->noteError( $words->msgInvalidPassword );
-
-			if( $this->messenger->gotError() )
-				$this->restart( 'login?login_username='.$username, TRUE );
+			}
 
 			$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 			if( $this->request->isPost() )
@@ -234,7 +237,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		}
 
 //		$this->cookie->remove( 'auth_remember' );
-		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
+		$this->addData( 'from', $from );													//  forward redirect URL to form action
 		$this->addData( 'login_username', $username );
 		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
 
@@ -535,7 +538,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 		}
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
-			$fields	= array( 'username', 'email', 'gender', 'firstname', 'surname' );
+			$fields	= array( 'username', 'email', 'gender', 'firstname', 'surname', 'street', 'postcode', 'city', 'phone' );
 			foreach( $fields as $field )
 				if( !isset( $input[$field] ) || !strlen( trim( $input[$field] ) ) )
 					$input[$field]	= $this->session->get( 'auth_register_oauth_'.$field );
