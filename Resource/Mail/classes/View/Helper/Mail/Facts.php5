@@ -6,9 +6,12 @@ class View_Helper_Mail_Facts{
 	protected $changedFactClassInfo	= 'label label-info';
 	protected $facts				= array();
 	protected $labels				= array();
+	protected $format				= 0;
 	protected $listClass			= 'dl-horizontal';
 	protected $textLabelLength		= 23;
 
+	const FORMAT_HTML				= 0;
+	const FORMAT_TEXT				= 1;
 /*
 	public function __onInit(){
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
@@ -28,12 +31,19 @@ class View_Helper_Mail_Facts{
 			'valueText'	=> $valueAsText,
 			'direction'	=> $direction,
 		);
+		return $this;
 	}
 
-	public function render( $classList = NULL ){
+	public function render(){
 		if( !count( $this->facts ) )
 			return '';
-		$classList	= $classList ? $classList : $this->listClass;
+		if( $this->format == self::FORMAT_HTML )
+			return $this->renderAsHtml();
+		if( $this->format == self::FORMAT_TEXT )
+			return $this->renderAsText();
+	}
+
+	protected function renderAsHtml(){
 		$list	= array();
 		foreach( $this->facts as $fact ){
 			$value	= $fact->valueHtml;
@@ -65,16 +75,26 @@ class View_Helper_Mail_Facts{
 		return join( "\n", $list );
 	}
 
-	public function setLabels( $labels ){
-		$this->labels	= $labels;
+	public function setFormat( $format ){
+		if( !in_array( $format, array( self::FORMAT_HTML, self::FORMAT_TEXT ) ) )
+			throw new RangeException( 'Invalid helper output format' );
+		$this->format	= $format;
+		return $this;
 	}
 
-	public function setTextLabelLength( $integer ){
-		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
+	public function setLabels( $labels ){
+		$this->labels	= $labels;
+		return $this;
 	}
 
 	public function setListClass( $listClass ){
 		$this->listClass	= $listClass;
+		return $this;
+	}
+
+	public function setTextLabelLength( $integer ){
+		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
+		return $this;
 	}
 }
 ?>

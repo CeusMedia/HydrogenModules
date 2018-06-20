@@ -294,7 +294,6 @@ abstract class Mail_Abstract{
 		$appHost	= parse_url( $baseUrl, PHP_URL_HOST );
 		$appPath	= rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' );
 		$body	= str_replace( '[#content#]', $content, $template->plain );
-		$body	= str_replace( '[#style#]', $content, $template->css );
 		$body	= str_replace( '[#app.email#]', $appEmail, $body );
 		$body	= str_replace( '[#app.url#]', $baseUrl, $body );
 		$body	= str_replace( '[#app.host#]', $appHost, $body );

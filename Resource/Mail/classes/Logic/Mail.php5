@@ -26,9 +26,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
 		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+		$this->frontendPath		= './';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend				= Logic_Frontend::getInstance( $this->env );
-			$this->pathAttachments	= $frontend->getPath().$this->pathAttachments;
+			$this->frontendPath		= $frontend->getPath();
+			$this->pathAttachments	= $this->frontendPath.$this->pathAttachments;
 		}
 		if( !file_exists( $this->pathAttachments ) ){
 			mkdir( $this->pathAttachments, 0755, TRUE );
@@ -120,8 +122,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		if( !class_exists( $className ) )
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
 		$env	= $this->env;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$env	= Logic_Frontend::getRemoteEnv( $this->env );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$this->frontendPath	= $this->env->getConfig()->get( 'module.resource_frontend.path' );
+			if( $this->frontendPath != './' )
+				$env	= Logic_Frontend::getRemoteEnv( $this->env );
+		}
 		return Alg_Object_Factory::createObject( $className, array( $env, $data ) );
 	}
 
