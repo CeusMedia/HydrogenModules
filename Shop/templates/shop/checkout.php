@@ -44,8 +44,7 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 	), array( 'method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout' ) ),
 ) );
 
-
-$w				= (object) $words['modal-loading'];
+$w				= (object) $words['modal-loading-payment'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	<div class="modal-header">
 		<h4>'.$w->heading.'</h4>

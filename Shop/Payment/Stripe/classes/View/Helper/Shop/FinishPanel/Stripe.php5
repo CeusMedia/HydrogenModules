@@ -20,7 +20,8 @@ class View_Helper_Shop_FinishPanel_Stripe{
 
 	public function render(){
 		if( !$this->payment )
-			throw new RuntimeException( 'No payment selected' );
+//			throw new RuntimeException( 'No payment selected' );
+			return '';
 
 		switch( $this->order->paymentMethod ){
 			case 'Stripe:Card':
