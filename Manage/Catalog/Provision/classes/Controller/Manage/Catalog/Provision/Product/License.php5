@@ -4,7 +4,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 	protected function __onInit(){
 		$this->request				= $this->env->getRequest();
 		$this->messenger			= $this->env->getMessenger();
-		$this->logicProvision		= Logic_Catalog_ProvisionManager::getInstance( $this->env );
+		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->modelProduct			= new Model_Provision_Product( $this->env );
 		$this->modelLicense			= new Model_Provision_Product_License( $this->env );
 		$this->addData( 'products', $this->logicProvision->getProducts() );
