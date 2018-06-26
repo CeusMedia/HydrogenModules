@@ -22,17 +22,22 @@ abstract class Mail_Abstract{
 	/** @var		string								$baseUrl		Application base URL */
 	protected $baseUrl;
 	/** @var		array								$bodyClasses	List of Stylesheet files to integrate into HTML body */
-	protected $addedStyles	= array();
+	protected $addedStyles				= array();
 	/** @var		array								$bodyClasses	List of classes to apply to HTML body */
-	protected $bodyClasses	= array();
+	protected $bodyClasses				= array();
 
-	protected $encodingHtml		= 'quoted-printable';
-	protected $encodingSubject	= 'quoted-printable';
-	protected $encodingText		= 'quoted-printable';
+	protected $encodingHtml				= 'quoted-printable';
+	protected $encodingSubject			= 'quoted-printable';
+	protected $encodingText				= 'quoted-printable';
 
 	public $content;									//  @todo remove argument, implement $this->data instead
 
-	public $contents			= array( 'html' => '', 'text' => '' );
+	public $contents					= array(
+		'html'		=> '',
+		'text'		=> ''
+	);
+
+	public $usedTemplateId				= 0;
 
 	/**
 	 *	Contructor.

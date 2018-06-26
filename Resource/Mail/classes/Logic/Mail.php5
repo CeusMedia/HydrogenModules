@@ -173,6 +173,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			$senderAddress	= $mail->mail->getSender()->address;
 
 		$data		= array(
+			'templateId'		=> $mail->templateId,
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $senderAddress,

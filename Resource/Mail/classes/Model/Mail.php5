@@ -38,6 +38,7 @@ class Model_Mail extends CMF_Hydrogen_Model {
 		'mailId',
 		'senderId',
 		'receiverId',
+		'templateId',
 		'status',
 		'attempts',
 		'language',
@@ -56,6 +57,7 @@ class Model_Mail extends CMF_Hydrogen_Model {
 	protected $indices		= array(
 		'senderId',
 		'receiverId',
+		'templateId',
 		'status',
 		'attempts',
 		'language',

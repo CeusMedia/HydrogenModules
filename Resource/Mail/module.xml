@@ -20,7 +20,7 @@ To enable queued mails you need to set a cron job:
 code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.8.1</version>
+	<version>0.8.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -68,6 +68,7 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<log version="0.7.9">Refactored mail jobs heavily.</log>
 	<log version="0.8">Add job to remove old mails and support dry mode.</log>
 	<log version="0.8.1">Update logic to inherit framework base logic class.</log>
+	<log version="0.8.2">Note used mail template in mail table.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -106,8 +107,8 @@ code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
 	<config protected="yes" type="integer" name="retry.attempts" title="Maximum number of attempts before sending has failed">10</config>
 	<config protected="yes" type="integer" name="retry.delay" title="Seconds until new attempt to send">900</config>
 	<config protected="yes" type="integer" name="template" title="ID of template to apply automatically">0</config>
-	<config protected="yes" type="string" name="encoding.html" values="base64,quoted-printable">quoted-printable</config>
-	<config protected="yes" type="string" name="encoding.text" values="base64,quoted-printable">quoted-printable</config>
+	<config protected="yes" type="string" name="encoding.html" values="base64,quoted-printable">base64</config>
+	<config protected="yes" type="string" name="encoding.text" values="base64,quoted-printable">base64</config>
 	<config protected="yes" type="string" name="encoding.subject" values="base64,quoted-printable">quoted-printable</config>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
@@ -284,5 +285,9 @@ ALTER TABLE `<%?prefix%>mail_templates` CHANGE `styles` `styles` TEXT CHARACTER 
 	]]></sql>
 	<sql on="update" version="0.7.8" type="mysql"><![CDATA[
 ALTER TABLE `<%?prefix%>mail_attachments` CHANGE `countAttached` `countAttached` INT(11) NULL DEFAULT '0';
+	]]></sql>
+	<sql on="update" version="0.8.2" type="mysql"><![CDATA[
+ALTER TABLE  `<%?prefix%>mails` ADD `templateId` INT UNSIGNED NULL DEFAULT '0' AFTER `receiverId` ,
+ADD INDEX ( `templateId` ) ;
 	]]></sql>
 </module>
