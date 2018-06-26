@@ -70,13 +70,18 @@ class Logic_Upload{
 	/**
 	 *	Indicates whether uploaded file is of allowed MIME type.
 	 *	@access		public
-	 *	@param		array			$allowedMimeTypes	List of allowed file extensions
+	 *	@param		array|string	$allowedMimeTypes	List of allowed file extensions, as array or comma separated string
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 */
 	public function checkMimeType( $allowedMimeTypes, $noteError = FALSE ){
 		if( $this->upload->error )
 			return FALSE;
+		if( is_string( $allowedMimeTypes ) ){
+			if( !strlen( trim( $allowedMimeTypes ) ) )
+				throw new InvalidArgumentException( 'No allowed MIME types given' );
+			$allowedMimeTypes	= preg_split( '/\s*.\s*/', trim( $allowedMimeTypes ) );
+		}
 		if( !is_array( $allowedMimeTypes ) )
 			throw new InvalidArgumentException( 'Allowed MIME types must be given as list' );
 		$this->upload->allowedMimeTypes	= $allowedMimeTypes;
@@ -117,7 +122,8 @@ class Logic_Upload{
 	public function checkVirus( $noteError = FALSE ){
 		try{
 			if( $this->upload->error )
-				throw new Exception( 'Upload failed beforehand' );
+//				throw new Exception( 'Upload failed beforehand' );
+				return FALSE;
 			$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
 			copy( realpath( $this->upload->tmp_name ), $copy );
 			$scanner	= new Resource_ClamScan();
@@ -139,6 +145,8 @@ class Logic_Upload{
 	}
 
 	public function getContent(){
+		if( $this->upload->error )
+			throw new Exception( 'Upload failed beforehand' );
 		return file_get_contents( $this->upload->tmp_name );
 	}
 

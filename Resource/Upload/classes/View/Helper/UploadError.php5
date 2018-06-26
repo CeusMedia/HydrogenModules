@@ -55,5 +55,6 @@ class View_Helper_UploadError extends CMF_Hydrogen_View_Helper_Abstract{
 		if( !isset( $upload->error ) )
 			throw new InvalidArgumentException( 'Not a valid upload object given' );
 		$this->upload	= $upload;
+		return $this;
 	}
 }
