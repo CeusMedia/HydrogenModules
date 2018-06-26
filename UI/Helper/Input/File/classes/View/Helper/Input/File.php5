@@ -50,7 +50,7 @@ class View_Helper_Input_File{
 			$instance->setLabel( $label );
 		$instance->setRequired( $required );
 		$instance->setButtonClass( $buttonClass );
-		return $instanc->render();
+		return $instance->render();
 	}
 
 	public function setButtonClass( $class ){
