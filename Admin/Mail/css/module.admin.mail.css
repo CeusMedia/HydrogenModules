@@ -5,6 +5,10 @@
 	top: 5vh;
 	margin-left: -40% !important;
 	}
+#modal-admin-mail-template-preview .modal-header {
+	position: relative;
+	z-index: 1900;
+	}
 #modal-admin-mail-template-preview .modal-body {
 	position: absolute;
 	top: 0;

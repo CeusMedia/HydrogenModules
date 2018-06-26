@@ -5,6 +5,7 @@ $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check'
 $iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconExport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
 
 $modal			= new View_Helper_Bootstrap_Modal( $env );
 $modal->setHeading( $words['modal-preview']['heading'] );
@@ -29,10 +30,14 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$words['edit'][
 	'class'	=> 'btn btn-primary',
 ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$words['edit']['buttonRemove'], array(
-	'href'	=> './admin/mail/template/remove/'.$template->mailTemplateId,
-	'class'	=> 'btn btn-small btn-inverse',
+	'href'		=> './admin/mail/template/remove/'.$template->mailTemplateId,
+	'class'		=> 'btn btn-small btn-danger',
+	'onclick'	=> 'if(!confirm(\'Wirklich ?\'))return false;'
 ) );
-
+$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;'.$words['edit']['buttonExport'], array(
+	'href'	=> './admin/mail/template/export/'.$template->mailTemplateId,
+	'class'	=> 'btn btn-small',
+) );
 
 return '
 	<div class="row-fluid">
@@ -47,6 +52,7 @@ return '
 							'.$buttonCancel.'
 							'.$buttonSave.'
 							'.$buttonPreview.'
+							'.$buttonExport.'
 							'.$buttonRemove.'
 						</div>
 					</div>

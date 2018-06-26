@@ -59,49 +59,12 @@ $tabs->add( 'admin-mail-template-edit-tab-images', '#', $w->tabImages, $contentI
 $tabs->add( 'admin-mail-template-edit-tab-preview', '#', $w->tabPreview, $contentPreview );
 $tabs->setActive( $tabId ? $tabId : 'admin-mail-template-edit-tab-facts' );
 
-return '
-<h3>'.sprintf( $w->heading, htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ) ).'</h3>
-<p>
-	<a href="./admin/mail/template" class="btn btn-mini">'.$iconList.'&nbsp;zur Liste</a>
-</p>
-<div class="not-content-panel-inner">
-	'.$tabs.'
-</div>
-<script>
-var templateId = '.$template->mailTemplateId.';
+$heading3	= UI_HTML_Tag::create( 'h3', vsprintf( $w->heading, array(
+	'./admin/mail/template',
+	htmlentities( $template->title, ENT_QUOTES, 'UTF-8' )
+) ) );
 
-$(document).ready(function(){
-	ModuleAce.verbose = false;
-	var onUpdate	= function(chance){
-		jQuery("#modal-admin-mail-template-preview .modal-body iframe").get(0).contentWindow.location.reload();
-		jQuery("#frame-template-preview").get(0).contentWindow.location.reload();
-	};
-	ModuleAceAutoSave.applyToEditor(
-		ModuleAce.applyTo("#input_template_html"),
-		"admin/mail/template/ajaxSaveHtml/"+templateId,
-		{callbacks: {update: onUpdate}}
-	);
-	ModuleAceAutoSave.applyToEditor(
-		ModuleAce.applyTo("#input_template_plain"),
-		"admin/mail/template/ajaxSavePlain/"+templateId,
-		{callbacks: {update: onUpdate}}
-	);
-	ModuleAceAutoSave.applyToEditor(
-		ModuleAce.applyTo("#input_template_css"),
-		"admin/mail/template/ajaxSaveCss/"+templateId,
-		{callbacks: {update: onUpdate}}
-	);
-/*	onUpdate();*/
-});
+extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/template/edit/' ) );
 
-jQuery(document).ready(function(){
-	jQuery("#admin-mail-template-edit li a").on("click", function(){
-		var targetUrl	= jQuery(this).attr("href").substr(1);
-		jQuery.ajax({
-			url: "./admin/mail/template/ajaxSetTab/"+targetUrl
-		});
-	});
-})
-</script>
-';
+return $textTop.$heading3.$tabs.$textBottom;
 ?>

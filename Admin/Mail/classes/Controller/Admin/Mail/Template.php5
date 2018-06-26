@@ -174,8 +174,119 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->addData( 'template', $template );
 	}
 
+	/**
+	 *	Export mail template as JSON.
+	 *	Will provide file download by default.
+	 *	@access		public
+	 *	@param		integer		$templateId		ID of template to export
+	 *	@return		void
+	 */
+	public function export( $templateId, $output = 'download' ){
+		$template	= $this->checkTemplate( $templateId );
+//print_m( $template );
+		$data	= array(
+			'type'		=> 'mail-template',
+			'title'		=> $template->title,
+			'version'	=> '0',
+			'language'	=> $template->language ? $template->language : '*',
+			'contents'	=> array(
+				'text'		=> $template->plain,
+				'html'		=> $template->html,
+				'css'		=> $template->css,
+			),
+			'files'		=> array(
+				'css'	=> json_decode( $template->styles ),
+				'image'	=> array(),
+			),
+			'links'		=> array(
+				'css'	=> array(),
+				'image'	=> json_decode( $template->images ),
+			),
+			'dates'		=> array(
+				'createdAt'		=> $template->createdAt,
+				'modifiedAt'	=> $template->modifiedAt,
+			)
+		);
+		$json		= json_encode( $data, JSON_PRETTY_PRINT );
+		$title		= new ADT_String( $template->title );
+		$title		= $title->hyphenate();											//  preserve whitespace in title as hyphen
+		$fileName	= vsprintf( '%s%s%s%s', array(
+			'MailTemplate_',													//  file name prefix @todo make configurable
+			preg_replace( '/[: "\']/', '', $title	),							//  template title as file ID (stripped invalid characters)
+			'_'.date( 'Y-m-d' ),
+			'.json',															//  file extension @todo make configurable
+		) );
+		switch( $output ){
+			case 'print':
+			case 'dev':
+				remark( 'Ttile: '.$template->title );
+				remark( 'File: '.$fileName );
+				remark( 'JSON:' );
+				xmp( $json );
+				die;
+			case 'download':
+			default:
+				Net_HTTP_Download::sendString( $json, $fileName, TRUE );
+		}
+	}
+
+	public function import(){
+		if( $this->request->isPost() ){
+			$upload	= $this->env->getLogic()->upload;
+			try{
+				$upload->setUpload( $this->request->get( 'template' ) );
+//				$this->messenger->noteNotice( 'MIME: '.$upload->getMimeType() );
+//				$upload->checkMimeType( 'application/json', TRUE  );
+				$upload->checkSize( $upload->getMaxUploadSize(), TRUE  );
+				$upload->checkVirus( TRUE );
+				if( $upload->getError() )
+					throw new RuntimeException( 'Upload failed' );
+				$template	= json_decode( $upload->getContent() );
+				if( !$template )
+					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
+				if( !$template->title )
+					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
+				$title		= $template->title;
+				$counter	= 0;
+				while( $this->modelTemplate->getAllByIndex( 'title', $title ) ){
+					$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
+					$title	= $template->title.$suffix;
+					$counter++;
+				}
+				$data	= array(
+					'title'			=> $title,
+					'version'		=> $template->version,
+					'language'		=> $template->language,
+					'plain'			=> $template->contents->text,
+					'html'			=> $template->contents->html,
+					'css'			=> $template->contents->css,
+					'styles'		=> $template->files->css ? json_encode( $template->files->css ) : NULL,
+					'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
+					'createdAt'		=> time(),
+					'modifiedAt'	=> time(),
+				);
+				$templateId	= $this->modelTemplate->add( $data, FALSE );
+				$this->messenger->noteSuccess( 'Template imported as '.$title );
+				$this->restart( 'edit/'.$templateId, TRUE );
+			}
+			catch( Exception $e ){
+				$helper		= new View_Helper_UploadError( $this->env );
+				$message	= $helper->setUpload( $upload )->render();
+				if( !$message )
+					$message	= $e->getMessage();
+				$this->messenger->noteError( $message );
+				$this->restart( 'import', TRUE );
+			}
+		}
+	}
+
 	public function index(){
-		$this->addData( 'templates', $this->modelTemplate->getAll() );
+		$templates	= $this->modelTemplate->getAll();
+		$modelMail	= new Model_Mail( $this->env );
+		foreach( $templates as $template ){
+			$template->used	= $modelMail->countByIndex( 'templateId', $template->mailTemplateId );
+		}
+		$this->addData( 'templates', $templates );
 	}
 
 	public function preview( $templateId, $mode = NULL ){
