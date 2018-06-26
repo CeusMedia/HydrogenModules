@@ -43,16 +43,18 @@ class View_Helper_Input_File{
 	}
 
 	static public function renderStatic( CMF_Hydrogen_Environment $env, $name = NULL, $label = NULL, $required = FALSE, $buttonClass = 'btn-primary' ){
-		$instance	= new self( $env );
+		$instance	= new static( $env );
 		if( $name )
 			$instance->setName( $name );
 		if( $label )
 			$instance->setLabel( $label );
-		return $instance->setRequired( $required )->setButtonClass( $buttonClass );
+		$instance->setRequired( $required );
+		$instance->setButtonClass( $buttonClass );
+		return $instanc->render();
 	}
 
 	public function setButtonClass( $class ){
-		$this->class	= $class;
+		$this->buttonClass	= $class;
 		return $this;
 	}
 
