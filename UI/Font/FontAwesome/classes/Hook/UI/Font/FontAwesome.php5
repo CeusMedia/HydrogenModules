@@ -1,5 +1,5 @@
 <?php
-class Hook_UI_Font_FontAweseome/* extends CMF_Hook*/{
+class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 
 	static protected function addV5CdnLink( $env, $style = 'all' ){
 		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.' );

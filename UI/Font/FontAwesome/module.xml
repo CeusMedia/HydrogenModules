@@ -8,7 +8,7 @@
 	<author twitter="@davegandy">Dave Gandy</author>
 	<license source="http://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
 	<files>
-		<class>Hook_UI_Font_FontAweseome</class>
+		<class>Hook/UI/Font/FontAwesome.php5</class>
 	</files>
 	<config protected="yes" type="boolean" name="enabled">1</config>
 	<config protected="yes" type="string" name="version" values="4.7.0,5.1.0">4.7.0</config>
