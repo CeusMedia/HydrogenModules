@@ -12,16 +12,19 @@
 	</files>
 	<config protected="yes" type="boolean" name="enabled">1</config>
 	<config protected="yes" type="string" name="version" values="4.7.0,5.1.0">4.7.0</config>
+	<config protected="yes" type="boolean" name="v4.cdn">yes</config>
 	<config protected="yes" type="string" name="v5.license" values="free,pro">free</config>
-	<config protected="yes" type="boolean" name="v5.free.all">yes</config>
-	<config protected="yes" type="boolean" name="v5.free.solid">no</config>
-	<config protected="yes" type="boolean" name="v5.free.regular">no</config>
-	<config protected="yes" type="boolean" name="v5.free.brand">no</config>
-	<config protected="yes" type="boolean" name="v5.pro.all">yes</config>
-	<config protected="yes" type="boolean" name="v5.pro.solid">no</config>
-	<config protected="yes" type="boolean" name="v5.pro.regular">no</config>
-	<config protected="yes" type="boolean" name="v5.pro.light">no</config>
-	<config protected="yes" type="boolean" name="v5.pro.brand">no</config>
+	<config protected="yes" type="string" name="v5.mode" values="css+font,js+svg">css+font</config>
+	<config protected="yes" type="boolean" name="v5.shims" title="Flag: load upgrade shims">yes</config>
+	<config protected="yes" type="boolean" name="v5.free.all" title="Flag: load all styles">yes</config>
+	<config protected="yes" type="boolean" name="v5.free.solid" title="Flag: load solid style">no</config>
+	<config protected="yes" type="boolean" name="v5.free.regular" title="Flag: load regular style">no</config>
+	<config protected="yes" type="boolean" name="v5.free.brand" title="Flag: load brand pack">no</config>
+	<config protected="yes" type="boolean" name="v5.pro.all" title="Flag: load all styles">yes</config>
+	<config protected="yes" type="boolean" name="v5.pro.solid" title="Flag: load solid style">no</config>
+	<config protected="yes" type="boolean" name="v5.pro.regular" title="Flag: load regular style">no</config>
+	<config protected="yes" type="boolean" name="v5.pro.light" title="Flag: load light style">no</config>
+	<config protected="yes" type="boolean" name="v5.pro.brand" title="Flag: load brand pack">no</config>
 	<relations>
 		<needs type="module">UI_Font</needs>
 	</relations>
