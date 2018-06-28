@@ -3,7 +3,7 @@
 	<title>UI: Font: FontAwesome</title>
 	<description><![CDATA[Integration of Font Awesome icons.]]></description>
 	<category>User Interface</category>
-	<version>5.1.0</version>
+	<version>5.1.0-p1</version>
 	<company site="https://fontawesome.com">fontawesome.com</company>
 	<author twitter="@davegandy">Dave Gandy</author>
 	<license source="http://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
