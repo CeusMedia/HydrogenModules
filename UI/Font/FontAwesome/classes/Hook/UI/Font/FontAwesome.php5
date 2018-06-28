@@ -2,7 +2,7 @@
 class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 
 	static protected function addV5CdnLink( $env, $style = 'all' ){
-		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.' );
+		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
 		$urlTemplate	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
 		$env->getPage()->addHead( UI_HTML_Tag::create( 'link', NULL, array(
 			'rel'			=> 'stylesheet',
@@ -17,7 +17,7 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$config	= $env->getConfig();
-		$mc		= $config->getAll( 'module.ui_font_fontawesome.' );
+		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
 		if( !$config->get( 'module.ui_font.enabled' ) )
 			return;
 		if( !$config->get( 'module.ui_font_fontawesome.enabled' ) )
@@ -29,7 +29,7 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 			return;
 		}
 		$license	= $mc->get( 'v5.license' );
-		$styles		= $mc->getAll( 'v5.'.$license.'.' );
+		$styles		= $mc->getAll( 'v5.'.$license.'.', TRUE );
 		if( $styles->get( 'all' ) )
 			self::addV5CdnLink( $env, 'all' );
 		else{

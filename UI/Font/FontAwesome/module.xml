@@ -25,5 +25,5 @@
 	<relations>
 		<needs type="module">UI_Font</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_FontAweseome::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_FontAwesome::onPageApplyModules</hook>
 </module>
