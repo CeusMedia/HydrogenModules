@@ -24,8 +24,8 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->path );
 			$this->restart();
 		}
-		if( !file_exists( $this->path.'.htaccess' ) )
-			file_put_contents( $this->path.'.htaccess', 'Deny from all'.PHP_EOL );
+//		if( !file_exists( $this->path.'.htaccess' ) )
+//			file_put_contents( $this->path.'.htaccess', 'Deny from all'.PHP_EOL );
 
 		$this->model	= new Model_Document( $this->env, $this->path );
 		$this->rights	= $this->env->getAcl()->index( 'manage/content/document' );
