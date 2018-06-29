@@ -32,29 +32,29 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 				if( !$page->items )
 					continue;
 				$title		= $this->renderLabelWithIcon( $page );
-				$list[]		= UI_HTML_Tag::create( 'li', $title, array( 'class' => 'nav-header'	) );
+				$list[]		= UI_HTML_Tag::create( 'li', $title, array( 'class' => 'bs4-nav-link nav-header'	) );
 
 				foreach( $page->items as $subpage ){
-					$class		= 'nav-list-sub-item '.( $subpage->active ? 'active' : NULL );
+					$class		= 'bs4-nav-item nav-list-sub-item '.( $subpage->active ? 'active' : NULL );
 					$href		= './'.$subpage->link;
 //					$link		= UI_HTML_Tag::create( 'a', $subpage->label, array( 'href' => $href ) );
-					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
+					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
 					$list[]		= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 				}
 			}
 			else{
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
-				$class	= $page->active ? 'active' : NULL;
+				$class	= 'bs4-nav-item '.( $page->active ? 'active' : NULL );
 				$href	= $page->path == "index" ? './' : './'.$page->link;
 //				$link	= UI_HTML_Tag::create( 'a', $page->label, array( 'href' => $href ) );
-				$link	= UI_HTML_Tag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href ) );
+				$link	= UI_HTML_Tag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
 				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 			}
 		}
 		$logo	= $this->renderLogo();
 		$this->env->getPage()->addBodyClass( 'nav-sidebar' );
-		return $logo.UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list') );
+		return $logo.UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
 	}
 
 	protected function renderLabelWithIcon( $entry ){

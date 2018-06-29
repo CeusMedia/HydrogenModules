@@ -1,5 +1,5 @@
 
-
+/*  --  LAYOUT  --  */
 body.nav-sidebar #layout-container {
 	height: 100%;
 	}
@@ -16,6 +16,14 @@ body.nav-sidebar #layout-container #layout-nav {
 	-moz-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
 	box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
 	}
+body.nav-sidebar #layout-container #layout-field {
+	margin-left: 242px;
+	margin-right: 1.5em;
+	margin-top: 1em;
+	padding-left: 2em;
+	}
+
+/*  --  LIST  --  */
 body.nav-sidebar #layout-container #layout-nav .nav.nav-list {
 	height: 100%;
 	padding-top: 0.5em;
@@ -32,6 +40,22 @@ body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-header {
 	color: rgba(0,0,0,0.66);
 	border-bottom: 1px solid rgba(127, 127, 127, 0.25);
 	}
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list a {
+	padding: 3px 15px;
+	}
+
+/*  List > Bootstrap 4  */
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-link {
+	font-size: 0.95em;
+	padding: 3px 15px;
+	}
+body.nav-sidebar #layout-container #layout-nav .nav.nav-list .nav-link.nav-header {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 0.9em;
+	}
+
+/*  --  BRAND  --  */
 body.nav-sidebar #layout-container #layout-nav div.brand {
 	text-align: left;
 	margin-top: 0.5em;
@@ -47,14 +71,7 @@ body.nav-sidebar #layout-container #layout-nav div.brand > a:visited {
 	text-decoration: none;
 	}
 
-body.nav-sidebar #layout-container #layout-field {
-	margin-left: 242px;
-	margin-right: 1.5em;
-	margin-top: 1em;
-	padding-left: 2em;
-	}
-
-
+/*  --  RESPONSIVE  --  */
 @media (min-width: 768px) {
 	body #layout-container #layout-field {
 		margin-top: 45px;
