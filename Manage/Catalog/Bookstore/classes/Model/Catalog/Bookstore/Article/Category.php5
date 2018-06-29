@@ -23,6 +23,7 @@ class Model_Catalog_Bookstore_Article_Category extends CMF_Hydrogen_Model {
 		"articleCategoryId",
 		"articleId",
 		"categoryId",
+		"rank",
 		"volume",
 	);
 	protected $primaryKey	= 'articleCategoryId';

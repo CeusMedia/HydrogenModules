@@ -1,6 +1,44 @@
 <?php
 class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controller{
 
+	public function ajaxGetNextRank( $categoryId ){
+		$nextRank			= 0;
+		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, array( 'rank' => 'DESC' ) );
+		if( $categoryArticles )
+			$nextRank	= $categoryArticles[0]->rank + 1;
+		header( 'Content-Type: application/json' );
+		print( json_encode( $nextRank ) );
+		exit;
+	}
+
+	public function rankArticle( $categoryId, $articleId, $direction ){
+		$model		= new Model_Catalog_Bookstore_Article_Category( $this->env );
+		$category	= $this->logic->getCategory( $categoryId );
+		$article	= $this->logic->getArticle( $articleId );
+		$articles	= $this->logic->getCategoryArticles( $category, array( 'rank' => 'ASC' ) );
+		foreach( $articles as $nr => $item ){
+			if( $item->articleId == $article->articleId ){
+				if( $direction === "up" ){
+					if( $nr > 0 ){
+						$other	= $articles[$nr - 1];
+						$model->edit( $other->articleCategoryId, array( 'rank' => $item->rank ) );
+						$model->edit( $item->articleCategoryId, array( 'rank' => $other->rank ) );
+					}
+					break;
+				}
+				else if( $direction === "down" ){
+					if( ( $nr + 1 ) < count( $articles ) ){
+						$other	= $articles[$nr + 1];
+						$model->edit( $other->articleCategoryId, array( 'rank' => $item->rank ) );
+						$model->edit( $item->articleCategoryId, array( 'rank' => $other->rank ) );
+					}
+					break;
+				}
+			}
+		}
+		$this->restart( './manage/catalog/bookstore/category/edit/'.$categoryId );
+	}
+
 	protected function __onInit(){
 		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
@@ -85,7 +123,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->addData( 'category', $this->logic->getCategory( $categoryId ) );
 		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
 		$this->addData( 'nrArticles', $this->logic->countArticlesInCategory( $categoryId, TRUE ) );
-		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
+		$this->addData( 'articles', $this->logic->getCategoryArticles( $category, array( 'rank' => 'ASC' ) ) );
 	}
 
 	public function index(){

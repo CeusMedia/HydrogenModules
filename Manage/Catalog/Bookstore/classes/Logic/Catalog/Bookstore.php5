@@ -191,9 +191,11 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL ){
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
+		$rank		= count( $this->getCategoryArticles( $categoryId ) ) + 1;
 		$indices	= array(
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
+			'rank'			=> $rank,
 			'volume'		=> $volume,
 		);
 		$this->clearCacheForArticle( $articleId );													//
@@ -519,10 +521,22 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$relations		= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );
 		foreach( $relations as $relation ){
 			$category	= $this->modelCategory->get( $relation->categoryId );
-			if( $category->parentId )
-				$category->parent	= $this->modelCategory->get( $category->parentId );
-			$category->volume	= $relation->volume;
-			$list[$category->categoryId]		= $category;
+			if( $category ){
+				if( $category->parentId )
+					$category->parent	= $this->modelCategory->get( $category->parentId );
+				$category->volume	= $relation->volume;
+				$list[$category->categoryId]		= $category;
+			}
+			else{
+				$list[$relation->categoryId]		= (object) array(
+					'categoryId'	=> $relation->categoryId,
+					'parentId'		=> 0,
+					'label_de'		=> '- verwaist -',
+					'volume'		=> $relation->volume,
+					'rank'			=> 0,
+				);
+			}
+
 		}
 		return $list;
 	}
@@ -548,13 +562,17 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 #		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
 #			return $data;
-		$conditions	= array( 'categoryId' => $category->categoryId );
+		$conditions	= array( 'categoryId' => $category );
+		if( is_object( $category ) )
+			$conditions	= array( 'categoryId' => $category->categoryId );
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= array();
 		$volumes	= array();
 
 		foreach( $relations as $relation ){
 			$article			= $this->getArticle( $relation->articleId );
+			$article->articleCategoryId	= $relation->articleCategoryId;
+			$article->rank		= $relation->rank;
 			$article->volume	= $relation->volume;
 			$articles[]			= $article;
 		}
