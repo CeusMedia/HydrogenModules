@@ -12,11 +12,11 @@ extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manag
 return $textIndexTop.'
 <div>
 	'.$heading.'
-	<div class="row-fluid">
-		<div class="span3">
+	<div class="bs2-row-fluid bs3-row bs4-row">
+		<div class="bs2-span3 bs3-col-md-3 bs4-col-md-3">
 			'.$filter.'
 		</div>
-		<div class="span9">
+		<div class="bs2-span9 bs3-col-md-9 bs4-col-md-9">
 			'.$list.'
 		</div>
 	</div>

@@ -89,87 +89,87 @@ $panelEdit	= '
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
-			<div class="row-fluid">
-				<div class="span2">
+			<div class="bs2-row-fluid bs3-row bs4-row">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
-					<input type="text" name="username" id="input_username" class="span12 mandatory" autocomplete="off" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="username" id="input_username" class="bs2-span12 bs3-form-control bs4-form-control mandatory" autocomplete="off" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="span2">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_password" class="">'.$w->labelPassword.'</label>
-					<input type="password" name="password" id="input_password" autocomplete="new-password" class="span12"/>
+					<input type="password" name="password" id="input_password" autocomplete="new-password" class="bs2-span12 bs3-form-control bs4-form-control"/>
 				</div>
-				<div class="span4">
+				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
 					'.UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "email",
 						'id'		=> "input_email",
-						'class'		=> "span12 ".( $needsEmail ? 'mandatory' : '' ),
+						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsEmail ? 'mandatory' : '' ),
 						'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsEmail ? "required" : NULL
 					) ).'
 				</div>
-				<div class="span2">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
-					<select name="status" id="input_status" class="span12 mandatory">'.$optStatus.'</select>
+					<select name="status" id="input_status" class="bs2-span12 bs3-form-control bs4-form-control mandatory">'.$optStatus.'</select>
 				</div>
-				<div class="span2">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_roleId" class="mandatory">'.$w->labelRole.'</label>
-					<select name="roleId" id="input_roleId" class="span12 mandatory">'.$optRole.'</select>
+					<select name="roleId" id="input_roleId" class="bs2-span12 bs3-form-control bs4-form-control mandatory">'.$optRole.'</select>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span2">
+			<div class="bs2-row-fluid bs3-row bs4-row">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_gender" class="">'.$w->labelGender.'</label>
-					<select name="gender" id="input_gender" class="span12">'.$optGender.'"</select>
+					<select name="gender" id="input_gender" class="bs2-span12 bs3-form-control bs4-form-control">'.$optGender.'"</select>
 				</div>
-				<div class="span2">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_salutation" class="">'.$w->labelSalutation.'</label>
-					<input type="text" name="salutation" id="input_salutation" class="span12" value="'.$user->salutation.'"/>
+					<input type="text" name="salutation" id="input_salutation" class="bs2-span12 bs3-form-control bs4-form-control" value="'.$user->salutation.'"/>
 				</div>
-				<div class="span4">
+				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_firstname" class="'.( $needsFirstname ? 'mandatory' : '' ).'">'.$w->labelFirstname.'</label>
 					'.UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "firstname",
 						'id'		=> "input_firstname",
-						'class'		=> "span12 ".( $needsFirstname ? 'mandatory' : '' ),
+						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsFirstname ? 'mandatory' : '' ),
 						'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsFirstname ? "required" : NULL
 					) ).'
 				</div>
-				<div class="span4">
+				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_surname" class="'.( $needsSurname ? 'mandatory' : '' ).'">'.$w->labelSurname.'</label>
 					'.UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "surname",
 						'id'		=> "input_surname",
-						'class'		=> "span12 ".( $needsSurname ? 'mandatory' : '' ),
+						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsSurname ? 'mandatory' : '' ),
 						'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsSurname ? "required" : NULL
 					) ).'
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span3">
+			<div class="bs2-row-fluid bs3-row bs4-row">
+				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">
 					<label for="input_country" class="">'.$w->labelCountry.'</label>
-					<input type="text" name="country" id="input_country" class="span12 typeahead" data-provide="typeahead" autocomplete="off" value="'.$user->country.'"/>
+					<input type="text" name="country" id="input_country" class="bs2-span12 bs3-form-control bs4-form-control typeahead" data-provide="typeahead" autocomplete="off" value="'.$user->country.'"/>
 				</div>
-				<div class="span2">
+				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_postcode" class="">'.$w->labelPostcode.'</label>
-					<input type="text" name="postcode" id="input_postcode" class="span12" value="'.$user->postcode.'"/>
+					<input type="text" name="postcode" id="input_postcode" class="bs2-span12 bs3-form-control bs4-form-control" value="'.$user->postcode.'"/>
 				</div>
-				<div class="span3">
+				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">
 					<label for="input_city" class="">'.$w->labelCity.'</label>
-					<input type="text" name="city" id="input_city" class="span12" value="'.$user->city.'"/>
+					<input type="text" name="city" id="input_city" class="bs2-span12 bs3-form-control bs4-form-control" value="'.$user->city.'"/>
 				</div>
-				<div class="span4">
+				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_street" class="">'.$w->labelStreet.'</label>
-					<input type="text" name="street" id="input_street" class="span12" value="'.$user->street.'"/>
+					<input type="text" name="street" id="input_street" class="bs2-span12 bs3-form-control bs4-form-control" value="'.$user->street.'"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<div class="btn-toolbar">
+				<div class="bs2-btn-toolbar bs3-btn-toolbar">
 					'.$buttonList.'
 					'.$buttonSave.'
 					'.$buttonRole.'
@@ -196,19 +196,19 @@ $panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
 
 return $textIndexTop.'
-<div class="row-fluid">
-	<div class="span9">
+<div class="bs2-row-fluid bs3-row bs4-row">
+	<div class="bs2-span9 bs3-col-md-9 bs4-col-md-9">
 		'.$panelEdit.'
-		<div class="row-fluid">
-			<div class="span6">
+		<div class="bs2-row-fluid bs3-row bs4-row">
+			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
 				'.$panelStatus.'
 			</div>
-			<div class="span6">
+			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
 				'.$panelRights.'
 			</div>
 		</div>
 	</div>
-	<div class="span3">
+	<div class="bs2-bs2-span3 bs3-col-md-3 bs4-col-md-3">
 		'.$panelInfo.'
 	</div>
 </div>
