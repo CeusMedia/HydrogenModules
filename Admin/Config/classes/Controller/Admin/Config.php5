@@ -124,8 +124,8 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 				$pairs	= $list[$moduleId];
 				$this->configureLocalModule( $moduleId, $pairs );
 				$this->env->getMessenger()->noteSuccess( $words->successSaved );
-				$this->restart( NULL, TRUE );
 				$this->restart( 'edit/'.$moduleId, TRUE );
+				$this->restart( NULL, TRUE );
 			}
 
 			$versions	= array();
