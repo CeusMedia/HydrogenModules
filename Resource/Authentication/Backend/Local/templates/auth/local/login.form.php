@@ -41,12 +41,14 @@ if( $useRemember )
 					'name'		=> "login_remember",
 					'id'		=> "input_login_remember",
 					'value'		=> "1",
-					'checked'	=> $login_remember ? 'checked' : NULL
+					'checked'	=> $login_remember ? 'checked' : NULL,
+					'class'		=> 'bs4-form-check-input',
 				) ),
 				UI_HTML_Tag::create( 'abbr', $w->labelRemember, array(
-					'title'		=> $w->labelRemember_title
+					'title'		=> $w->labelRemember_title,
+					'class'		=> 'bs4-form-check-label',
 				) ),
-			), array( 'class' => "checkbox" ) )
+			), array( 'class' => "bs2-checkbox bs4-form-check" ) )
 		)
 	), array(
 		'style'	=> $useRemember ? 'display: none' : NULL
@@ -60,7 +62,7 @@ $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLog
 
 $buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
 	'href'		=> './auth/local/password',
-	'class'		=> 'btn btn-small btn-block',
+	'class'		=> 'btn btn-block bs3-btn-default bs4-btn-light',
 ) );
 if( isset( $limiter ) && $limiter->get( 'Auth.Local.Login:resetPassword' ) === FALSE )
 	$buttonPassword	= '';
@@ -81,15 +83,15 @@ HTML::DivClass( "content-panel content-panel-form", array(
 			$fieldOauth2,
 			UI_HTML_Tag::create( 'form', array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
-				HTML::DivClass( "row-fluid",
-					HTML::DivClass( "span12", array(
+				HTML::DivClass( "bs2-row-fluid bs3-row bs4-row",
+					HTML::DivClass( "bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group", array(
 						UI_HTML_Tag::create( 'label', $w->labelUsername, array(
 							'for'	=> "input_login_username",
 							'class'	=> "mandatory"
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
 							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
-							'class'		=> 'span12 mandatory',
+							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
 							'type'		=> 'text',
 							'name'		=> 'login_username',
 							'id'		=> 'input_login_username',
@@ -97,15 +99,15 @@ HTML::DivClass( "content-panel content-panel-form", array(
 						) )
 					) )
 				),
-				HTML::DivClass( "row-fluid",
-					HTML::DivClass( "span12", array(
+				HTML::DivClass( "bs2-row-fluid bs3-row bs4-row",
+					HTML::DivClass( "bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group", array(
 						UI_HTML_Tag::create( 'label', $w->labelPassword, array(
 							'for'	=> "input_login_password",
 							'class'	=> "mandatory"
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
 							'value'		=> NULL,
-							'class'		=> 'span12 mandatory',
+							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
 							'type'		=> 'password',
 							'name'		=> 'login_password',
 							'id'		=> 'input_login_password',
