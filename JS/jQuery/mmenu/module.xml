@@ -1,75 +1,104 @@
 <?xml version="1.0"?>
 <module>
-    <title>JS: jQuery: mmenu</title>
-    <description><![CDATA[jQuery plugin for mobile navigation.]]></description>
-    <category>JavaScript</category>
-    <version>5.5.3-p1</version>
+	<title>JS: jQuery: mmenu</title>
+	<description><![CDATA[jQuery plugin for mobile navigation.]]></description>
+	<category>JavaScript</category>
+	<version>7.0.5</version>
 	<log version="5.5.3-p1">Moved theme from custom to common.</log>
-    <author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
+	<log version="7.0.5">Support version 7.0.5.</log>
+	<author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
 	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
-    <url>http://mmenu.frebsite.nl/</url>
-    <license source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
+	<url>http://mmenu.frebsite.nl/</url>
+	<license version="5" source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
+	<license version="7" source="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
 	<files>
-		<script>jquery.mmenu.dragclose.min.js</script>
-		<script>jquery.mmenu.currentitem.min.js</script>
-		<script>jquery.mmenu.sectionindexer.min.js</script>
-		<script>jquery.mmenu.dragopen.min.js</script>
-		<script>jquery.mmenu.backbutton.min.js</script>
-		<script>jquery.mmenu.offcanvas.min.js</script>
-		<script>jquery.mmenu.navbars.min.js</script>
-		<script>jquery.mmenu.searchfield.min.js</script>
-		<script>jquery.mmenu.counters.min.js</script>
-		<script>jquery.mmenu.dividers.min.js</script>
-		<script>jquery.mmenu.iconpanels.min.js</script>
-		<script>jquery.mmenu.autoheight.min.js</script>
-		<script>jquery.mmenu.toggles.min.js</script>
-		<script>jquery.mmenu.fixedelements.min.js</script>
-		<script>jquery.mmenu.min.all.js</script>
-		<script>jquery.mmenu.min.js</script>
-		<script>jquery.mmenu.oncanvas.min.js</script>
-		<style source="common">jquery.mmenu.leftsubpanels.css</style>
-		<style source="common">jquery.mmenu.panelshadow.css</style>
-		<style source="common">jquery.mmenu.offcanvas.css</style>
-		<style source="common">jquery.mmenu.counters.css</style>
-		<style source="common">jquery.mmenu.dragopen.css</style>
-		<style source="common">jquery.mmenu.searchfield.css</style>
-		<style source="common">jquery.mmenu.sectionindexer.css</style>
-		<style source="common">jquery.mmenu.navbars.css</style>
-		<style source="common">jquery.mmenu.toggles.css</style>
-		<style source="common">jquery.mmenu.iconpanels.css</style>
-		<style source="common">jquery.mmenu.dividers.css</style>
-		<style source="common">jquery.mmenu.autoheight.css</style>
-		<style source="common">jquery.mmenu.oncanvas.css</style>
-		<style source="common">jquery.mmenu.all.css</style>
-		<style source="common">jquery.mmenu.css</style>
-		<style source="common">jquery.mmenu.fullscreen.css</style>
-		<style source="common">jquery.mmenu.iconbar.css</style>
-		<style source="common">jquery.mmenu.tileview.css</style>
-		<style source="common">jquery.mmenu.pageshadow.css</style>
-		<style source="common">jquery.mmenu.widescreen.css</style>
-		<style source="common">jquery.mmenu.effects.css</style>
-		<style source="common">jquery.mmenu.multiline.css</style>
-		<style source="common">jquery.mmenu.pagedim.css</style>
-		<style source="common">jquery.mmenu.themes.css</style>
-		<style source="common">jquery.mmenu.positioning.css</style>
-		<style source="common">jquery.mmenu.borderstyle.css</style>
+		<script>mmenu/5.5.3/jquery.mmenu.dragclose.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.currentitem.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.sectionindexer.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.dragopen.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.backbutton.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.offcanvas.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.navbars.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.searchfield.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.counters.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.dividers.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.iconpanels.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.autoheight.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.toggles.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.fixedelements.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.min.all.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.oncanvas.min.js</script>
+		<script>mmenu/7.0.5/jquery.mmenu.min.js</script>
+		<script>mmenu/7.0.5/jquery.mmenu.all.min.js</script>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.leftsubpanels.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.panelshadow.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.offcanvas.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.counters.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.dragopen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.searchfield.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.sectionindexer.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.navbars.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.toggles.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.iconpanels.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.dividers.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.autoheight.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.oncanvas.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.all.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.fullscreen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.iconbar.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.tileview.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.pageshadow.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.widescreen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.effects.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.multiline.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.pagedim.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.themes.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.positioning.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.borderstyle.css</style>
+		<style source="common">mmenu/7.0.5/jquery.mmenu.min.css</style>
+		<style source="common">mmenu/7.0.5/jquery.mmenu.all.min.css</style>
 		<file>licenses/jQuery.mmenu.license.txt</file>
 	</files>
 	<config protected="yes" type="boolean" name="auto">yes</config>
 	<config protected="yes" type="string" name="auto.selector">.mmenu-auto</config>
 	<config protected="yes" type="string" name="load" values="all,core">all</config>
-	<config protected="yes" type="string" name="load.addons"></config>
-	<config protected="yes" type="string" name="load.extensions"></config>
+	<config protected="yes" type="string" name="load.addons"/>
+	<config protected="yes" type="string" name="load.extensions"/>
+	<config protected="yes" type="string" name="version" values="5.5.3,7.0.5">7.0.5</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config	= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
-$pathJs	= $env->getConfig()->get( 'path.scripts' );
-if( $config->get( 'load' ) == "all" ){
-	$context->js->addUrl( $pathJs.'jquery.mmenu.min.all.js' );
-	$context->addCommonStyle( 'jquery.mmenu.all.css' );
+$config		= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
+$version	= $config->get( 'version' );
+$pathJs		= $env->getConfig()->get( 'path.scripts' ).'mmenu/'.$version.'/';
+$files		= (object) array( 'js' => array(), 'css' => array() );
+if( $config->get( 'version' ) === '7.0.5' ){
+	if( $config->get( 'load' ) == "all" ){
+		$files->js[]	= 'jquery.mmenu.all.min.js';
+		$files->css[]	= 'jquery.mmenu.all.min.css';
+	}
+	else{
+		$files->js[]	= 'jquery.mmenu.min.js';
+		$files->css[]	= 'jquery.mmenu.min.css';
+	}
 }
 else{
-	$context->js->addUrl( $pathJs.'jquery.mmenu.min.js' );
-	$context->addCommonStyle( 'jquery.mmenu.css' );
+	if( $config->get( 'load' ) == "all" ){
+		$files->js[]	= 'jquery.mmenu.min.all.js';
+		$files->css[]	= 'jquery.mmenu.min.all.css';
+	}
+	else{
+		$files->js[]	= 'jquery.mmenu.min.js';
+		$files->css[]	= 'jquery.mmenu.min.css';
+	}
 }
+
+// @todo support addons and extensions if core was loaded, only
+// @todo support CDN: https://cdnjs.com/libraries/jQuery.mmenu
+
+foreach( $list->js as $filePath )
+	$context->js->addUrl( $pathJs.$filePath );
+foreach( $list->css as $filePath )
+	$context->addCommonStyle( $filePath );
 ]]></hook>
 </module>
