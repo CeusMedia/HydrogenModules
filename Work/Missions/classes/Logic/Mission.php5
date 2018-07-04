@@ -5,21 +5,46 @@
  */
 class Logic_Mission{
 
+	static protected $instance;
+
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
 	public $generalConditions	= array();
 	protected $modelMission;
 	protected $modelVersion;
 	protected $modelChange;
 	protected $modelDocument;
-	public $useProjects			= FALSE;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	/**
+	 *	Constructor. Protected to force singleton use.
+	 *	@access		protected
+	 *	@param		CMF_Hydrogen_Environment	$env		Hydrogen framework environment object
+	 *	@return		void
+	 */
+	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env				= $env;
 		$this->modelMission		= new Model_Mission( $env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );
 		$this->modelChange		= new Model_Mission_Change( $this->env );
 		$this->modelDocument	= new Model_Mission_Document( $this->env );
-		$this->useProjects	= $this->env->getModules()->has( 'Manage_Projects' );
+	}
+
+	/**
+	 *	Cloning is disabled to force singleton use.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __clone(){}
+
+	/**
+	 *	Get singleton instance of logic.
+	 *	@static
+	 *	@access		public
+	 *	@return		object			Singleton instance of logic
+	 */
+	static public function getInstance( $env ){
+		if( !self::$instance )
+			self::$instance	= new self( $env );
+		return self::$instance;
 	}
 
 	public function getDate( $string ){
@@ -92,8 +117,6 @@ class Logic_Mission{
 	}
 
 	public function getUserProjects( $userId, $activeOnly = FALSE ){
-		if( !$this->useProjects )																	//  projects module not enabled
-			return array();																			//  return empty map
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
 			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
@@ -110,26 +133,30 @@ class Logic_Mission{
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
 		if( $this->hasFullAccess() )																//  user has full access
-			return $this->modelMission->getAll( $conditions, $orders, $limits );							//  return all missions matched by conditions
+			return $this->modelMission->getAll( $conditions, $orders, $limits );					//  return all missions matched by conditions
 
 		$havings	= array(																		//  additional conditions
 			'creatorId = '.(int) $userId,															//  user is creator
+			'modifierId = '.(int) $userId,															//  or user is last modifier
 			'workerId = '.(int) $userId,															//  or user is worker
 		);
-		if( $this->useProjects ){																	//  projects module is enabled
-			$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );				//  get user projects from model
-			if( $userProjects )																		//  user has projects
-				$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';						//  add projects condition
-			array_unshift( $userProjects, 0 );														//
-			if( isset( $conditions['projectId'] ) )													//  projects have been selected
-				$userProjects	= array_intersect( $conditions['projectId'], $userProjects );		//  intersect user projectes and selected projects
-			$conditions['projectId']	= $userProjects;											//
-			if( !$conditions['projectId'] )															//  no projects by filter
-				unset( $conditions['projectId'] );													//  do not filter projects then
-		}
-		$groupings	= array( 'missionId' );															//  HAVING needs grouping
-		$havings	= array( join( ' OR ', $havings ) );											//  combine havings with OR
-		return $this->modelMission->getAll( $conditions, $orders, $limits, NULL, $groupings, $havings );	//  return missions matched by conditions
+		$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );					//  get user projects from model
+		if( $userProjects )																			//  user has projects
+			$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';							//  add projects condition
+		array_unshift( $userProjects, 0 );															//
+		if( isset( $conditions['projectId'] ) )														//  projects have been selected
+			$userProjects	= array_intersect( $conditions['projectId'], $userProjects );			//  intersect user projectes and selected projects
+		$conditions['projectId']	= $userProjects;												//
+		if( !$conditions['projectId'] )																//  no projects by filter
+			unset( $conditions['projectId'] );														//  do not filter projects then
+		return $this->modelMission->getAll(															//  return missions matched by conditions
+			$conditions,
+			$orders,
+			$limits,
+			array_diff( $this->modelMission->getColumns(), array( 'content' ) ),					//  all columns except content
+			array( 'missionId' ),																	//  HAVING needs grouping
+			array( join( ' OR ', $havings ) )														//  combine havings with OR
+		);
 	}
 
 	public function getVersion( $missionId, $version ){
@@ -151,8 +178,6 @@ class Logic_Mission{
 	protected function hasFullAccess(){
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
-
-	public function moveDate(){}
 
 	public function noteChange( $type, $missionId, $data, $currentUserId ){
 		$model	= new Model_Mission_Change( $this->env );
@@ -203,9 +228,11 @@ class Logic_Mission{
 	public function removeMission( $missionId ){
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );
-		foreach( $this->modelDocument->getAllByIndex( 'projectId', $projectId ) as $document )
+		$missionDocuments	= $this->modelDocument->getAllByIndex( 'missionId', $missionId );
+		foreach( $missionDocuments as $document )
 			$this->removeDocument( $document->missionDocumentId );
 		$this->modelMission->remove( $missionId );
+		return count( $missionDocuments );
 	}
 
 }

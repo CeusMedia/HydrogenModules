@@ -1,5 +1,18 @@
 <?php
-class Logic_Work_Mission{
+/**
+ *	Logic for missions.
+ *	@category		Hydrogen.Module
+ *	@package		Work.Missions
+ *	@extends		CMF_Hydrogen_Logic
+ */
+/**
+ *	Logic for missions.
+ *	@category		Hydrogen.Module
+ *	@package		Work.Missions
+ *	@extends		CMF_Hydrogen_Logic
+ *	@todo			code doc
+ */
+class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 
 	static protected $instance;
 
@@ -9,7 +22,6 @@ class Logic_Work_Mission{
 	protected $modelVersion;
 	protected $modelChange;
 	protected $modelDocument;
-	public $useProjects			= TRUE;																//  @deprecated: projects module is required by now
 
 	/**
 	 *	Constructor. Protected to force singleton use.
@@ -87,8 +99,14 @@ class Logic_Work_Mission{
 		$types		= $session->get( $sessionFilterKeyPrefix.'types' );
 		$priorities	= $session->get( $sessionFilterKeyPrefix.'priorities' );
 		$states		= $session->get( $sessionFilterKeyPrefix.'states' );
-		$projects	= $session->get( $sessionFilterKeyPrefix.'projects' );
 		$workers	= $session->get( $sessionFilterKeyPrefix.'workers' );
+		$projects	= $session->get( $sessionFilterKeyPrefix.'projects' );
+		$direction	= $session->get( $sessionFilterKeyPrefix.'direction' );
+//		$order		= $session->get( $sessionFilterKeyPrefix.'order' );
+//		$orders		= array(					//  collect order pairs
+//			$order		=> $direction,			//  selected or default order and direction
+//			'timeStart'	=> 'ASC',				//  order events by start time
+//		);
 		$conditions	= array();
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
@@ -108,8 +126,6 @@ class Logic_Work_Mission{
 	}
 
 	public function getUserProjects( $userId, $activeOnly = FALSE ){
-		if( !$this->useProjects )																	//  projects module not enabled
-			return array();																			//  return empty map
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
 			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
@@ -130,19 +146,18 @@ class Logic_Work_Mission{
 
 		$havings	= array(																		//  additional conditions
 			'creatorId = '.(int) $userId,															//  user is creator
+			'modifierId = '.(int) $userId,															//  or user is last modifier
 			'workerId = '.(int) $userId,															//  or user is worker
 		);
-		if( $this->useProjects ){																	//  projects module is enabled
-			$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );				//  get user projects from model
-			if( $userProjects )																		//  user has projects
-				$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';						//  add projects condition
-			array_unshift( $userProjects, 0 );														//
-			if( isset( $conditions['projectId'] ) )													//  projects have been selected
-				$userProjects	= array_intersect( $conditions['projectId'], $userProjects );		//  intersect user projectes and selected projects
-			$conditions['projectId']	= $userProjects;											//
-			if( !$conditions['projectId'] )															//  no projects by filter
-				unset( $conditions['projectId'] );													//  do not filter projects then
-		}
+		$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );					//  get user projects from model
+		if( $userProjects )																			//  user has projects
+			$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';							//  add projects condition
+		array_unshift( $userProjects, 0 );															//
+		if( isset( $conditions['projectId'] ) )														//  projects have been selected
+			$userProjects	= array_intersect( $conditions['projectId'], $userProjects );			//  intersect user projectes and selected projects
+		$conditions['projectId']	= $userProjects;												//
+		if( !$conditions['projectId'] )																//  no projects by filter
+			unset( $conditions['projectId'] );														//  do not filter projects then
 		return $this->modelMission->getAll(															//  return missions matched by conditions
 			$conditions,
 			$orders,
@@ -222,9 +237,11 @@ class Logic_Work_Mission{
 	public function removeMission( $missionId ){
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );
-		foreach( $this->modelDocument->getAllByIndex( 'projectId', $projectId ) as $document )
+		$missionDocuments	= $this->modelDocument->getAllByIndex( 'missionId', $missionId );
+		foreach( $missionDocuments as $document )
 			$this->removeDocument( $document->missionDocumentId );
 		$this->modelMission->remove( $missionId );
+		return count( $missionDocuments );
 	}
 
 }
