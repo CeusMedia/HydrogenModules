@@ -10,12 +10,14 @@ class View_Helper_ItemRelationLister{
 	protected $renderMode	= 'table';
 	protected $activeOnly	= FALSE;
 	protected $linkable		= TRUE;
+	protected $limit		= 20;
 
 	protected $types;
+	protected $words;
 
 	public function __construct( $env ){
 		$this->env		= $env;
-//		$this->env->getLanguage();
+		$this->words	= $this->env->getLanguage()->getWords( 'helper/relation' );
 		$this->types	= array(
 			'relation'	=> UI_HTML_Tag::create( 'abbr', '%d Verknüpfungen', array( 'title' => 'Bleiben beim Entfernen dieses Eintrages erhalten.' ) ),
 			'entity'	=> UI_HTML_Tag::create( 'abbr', '%d Einträge', array( 'title' => 'Werden beim Entfernen dieses Eintrages gelöscht.' ) ),
@@ -55,6 +57,7 @@ class View_Helper_ItemRelationLister{
 		$data	= array_merge( $this->hookIndices, array(
 			'activeOnly'	=> $this->activeOnly,
 			'linkable'		=> $this->linkable,
+			'list'			=> array(),
 		) );
 		$data	= (object) $data;
 		$this->env->getCaptain()->callHook( $this->hookResource, $this->hookEvent, $this, $data );
@@ -76,6 +79,7 @@ class View_Helper_ItemRelationLister{
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$list		= array();
+		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
 			$type	= sprintf( $this->types[$relation->type], $relation->count );
 			$items	= array();
@@ -83,6 +87,9 @@ class View_Helper_ItemRelationLister{
 			if( !empty( $relation->icon ) )
 				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
 			$access	= $acl->has( $relation->controller, $relation->action );
+			$total		= count( $relation->items );
+			if( $this->limit > 0 )
+				$relation->items	= array_slice( $relation->items, 0, $this->limit );
 			foreach( $relation->items as $item ){
 				$label		= $icon.$item->label;
 				if( $access && (bool) $item->id ){
@@ -92,6 +99,10 @@ class View_Helper_ItemRelationLister{
 					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 				}
 				$items[]	= UI_HTML_Tag::create( 'li', $label );
+			}
+			if( $this->limit > 0 && $total > count( $items ) ){
+				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
+				$items[]	= UI_HTML_Tag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
 			$items	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'unstyled' ) );
 			$count	= UI_HTML_Tag::create( 'small', '('.$type.')', array( 'class' => 'muted' ) );
@@ -107,12 +118,16 @@ class View_Helper_ItemRelationLister{
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$rows		= array();
+		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
 			$items	= array();
 			$icon	= '';
 			if( !empty( $relation->icon ) )
 				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
-			$access	= $acl->has( $relation->controller, $relation->action );
+			$access		= $acl->has( $relation->controller, $relation->action );
+			$total		= count( $relation->items );
+			if( $this->limit > 0 )
+				$relation->items	= array_slice( $relation->items, 0, $this->limit );
 			foreach( $relation->items as $item ){
 				$label		= $icon.$item->label;
 				if( $access && $item->id ){
@@ -122,6 +137,10 @@ class View_Helper_ItemRelationLister{
 					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 				}
 				$items[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'autocut' ) );
+			}
+			if( $this->limit > 0 && $total > count( $items ) ){
+				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
+				$items[]	= UI_HTML_Tag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
 
 			$type	= sprintf( $this->types[$relation->type], $relation->count );
@@ -144,26 +163,7 @@ class View_Helper_ItemRelationLister{
 		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
 			'class'		=> 'table table-striped item-relation-lister '.$this->tableClass,
 		) );
-
-		$style	= '<style>
-table.item-relation-lister {
-	table-layout: fixed;
-	}
-table.item-relation-lister ul {
-	}
-table.item-relation-lister.limited ul {
-	padding: 2px 4px;
-	margin: 0px;
-	max-height: 180px;
-	overflow-y: auto;
-/*	border: 1px solid #CFCFCF;
-	border-radius: 3px;*/
-/*	background-color: #FFF7EE;
-	background-color: #FFFFFF;*/
-	}
-</style>';
-
-		return $table.$style;
+		return $table;
 	}
 
 	public function setActiveOnly( $boolean ){
@@ -189,6 +189,10 @@ table.item-relation-lister.limited ul {
 
 	public function setTableClass( $class ){
 		$this->tableClass	= $class;
+	}
+
+	public function setLimit( $limit ){
+		$this->limit		= $limit;
 	}
 }
 ?>

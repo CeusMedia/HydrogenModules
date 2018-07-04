@@ -6,9 +6,14 @@ table.item-relation-lister ul {
 	margin: 0px;
 	max-height: 180px;
 	overflow-y: auto;
+	}
+table.item-relation-lister.limited ul {
+	padding: 2px 4px;
+	margin: 0px;
+	max-height: 180px;
+	overflow-y: auto;
 /*	border: 1px solid #CFCFCF;
-	border-radius: 3px;
-	background-color: #FFF7EE;
+	border-radius: 3px;*/
+/*	background-color: #FFF7EE;
 	background-color: #FFFFFF;*/
 	}
-
