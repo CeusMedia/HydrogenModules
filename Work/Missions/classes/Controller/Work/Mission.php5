@@ -1,11 +1,13 @@
 <?php
 /**
  *	Controller.
- *	@version		$Id$
+ *	@category		Hydrogen.Module
+ *	@package		Work.Missions
  */
 /**
  *	Controller.
- *	@version		$Id$
+ *	@category		Hydrogen.Module
+ *	@package		Work.Missions
  *	@todo			implement
  *	@todo			code documentation
  */
@@ -28,7 +30,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected $request;
 	protected $session;
 	protected $useIssues		= FALSE;
-	protected $useProjects		= TRUE;																//  @deprecated since projects module is required
 	protected $userMap			= array();
 	protected $userId			= 0;
 	protected $userRoleId		= 0;
@@ -66,12 +67,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->acl			= $this->env->getAcl();
 
 		$this->model		= new Model_Mission( $this->env );
+		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->logic		= Logic_Work_Mission::getInstance( $this->env );
 		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
-		$this->useProjects	= TRUE;//$this->env->getModules()->has( 'Manage_Projects' );
+			= TRUE;//$this->env->getModules()->has( 'Manage_Projects' );
 		$this->useIssues	= $this->env->getModules()->has( 'Work_Issues' );
 		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
@@ -95,7 +97,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //			$this->userMap[$user->userId]	= $user;
 
 		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'useProjects', $this->useProjects );										//  @todo remove deprecated 'useProjects'
 		$this->addData( 'useTimer', $this->useTimer );
 		$this->addData( 'useIssues', $this->useIssues );
 		$this->addData( 'acl', $this->acl );
@@ -112,154 +113,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		$this->env->getModules()->callHook( 'Test', 'test', array() );
 	}
 
-	static public function ___onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$model		= new Model_Mission_Document( $env );
-		$conditions	= array( 'modifiedAt' => '>'.( time() - 30 * 24 * 60 * 60 ) );
-		$orders		= array( 'modifiedAt' => 'DESC' );
-		foreach( $model->getAll( $conditions, $orders ) as $item ){
-			$context->add( (object) array(
-				'module'	=> 'Work_Missions',
-				'type'		=> 'document',
-				'typeLabel'	=> 'Dokument',
-				'id'		=> $item->missionDocumentId,
-				'title'		=> $item->filename,
-				'timestamp'	=> max( $item->createdAt, $item->modifiedAt ),
-				'url'		=> './work/mission/downloadDocument/'.$item->missionId.'/'.$item->missionDocumentId,
-			) );
-		}
-	}
-
-	static public function ___onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$context->registerModule( (object) array(
-			'moduleId'		=> 'Work_Missions',
-			'typeLabel'		=> 'Aufgabe',
-			'modelClass'	=> 'Model_Mission',
-			'linkDetails'	=> 'work/mission/view/{id}',
-		) );
-	}
-
-	static public function ___onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$controllerAction	= $data['controller'].'/'.$data['action'];
-		$skipActions		= array(
-			'work/mission/export/ical',
-			'work/mission/addDocument',
-			'work/mission/edit',
-			'work/time/add',
-			'work/time/start',
-			'work/time/pause',
-			'work/time/stop',
-		);
-		if( in_array( $controllerAction, $skipActions ) )
-			return FALSE;
-		if( !$data['userId'] )
-			return FALSE;
-		$logicLock	= new Logic_Database_Lock( $env );
-		$locks		= $logicLock->getUserLocks( $data['userId'] );
-		foreach( $locks as $lock ){
-			if( $lock->subject === "Work_Missions" ){
-//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $data['request']->get( '__path') )."\n", 3, "unlock.log" );
-				$logicLock->unlock( $lock->subject, $lock->entryId, $data['userId'] );
-			}
-		}
-	}
-
-	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
-		foreach( $this->model->getAllByIndex( 'projectId', $projectId ) as $mission ){
-			$this->logic->removeMission( $mission->missionId );
-		}
-	}
-
-	static public function ___onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$modelProject	= new Model_Project( $env );
-		if( empty( $data->projectId ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations" is missing project ID in data.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations": Invalid project ID.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-		$language		= $env->getLanguage();
-		$statusesActive	= array( 0, 1, 2, 3 );
-		$list			= array();
-		$modelMission	= new Model_Mission( $env );
-		$indices		= array( 'projectId' => $data->projectId );
-		if( $data->activeOnly )
-			$indices['status']	= $statusesActive;
-		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
-		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
-
-		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
-		);
-		$words		= $language->getWords( 'work/mission' );
-		foreach( $missions as $mission ){
-			$icon		= $icons[$mission->type];
-			$isOpen		= in_array( $mission->status, $statusesActive );
-			$status		= '('.$words['states'][$mission->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
-			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) array(
-				'id'		=> $data->linkable ? $mission->missionId : NULL,
-				'label'		=> $label,
-			);
-		}
-		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
-			$module,																				//  module called by hook
-			'entity',																				//  relation type: entity or relation
-			$list,																					//  list of related items
-			$words['hook-relations']['label'],														//  label of type of related items
-			'Work_Mission',																			//  controller of entity
-			'edit'																					//  action to view or edit entity
-		);
-	}
-
-	static public function ___onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$timer	= $data['timer'];
-		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
-			$model		= new Model_Mission( $env );
-			$mission	= $model->get( $timer->moduleId );
-			if( in_array( $mission->status, array( -2, -1, 0, 1, 3, 4 ) ) ){
-				$model->edit( $timer->moduleId, array( 'status' => 2 ) );
-			}
-		}
-	}
-
-	static public function ___onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-//		self::___onStartTimer( $env, $context, $module, $data );
-	}
-
-	static public function ___onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-//		self::___onStartTimer( $env, $context, $module, $data );
-	}
-
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$context->registerPanel( 'work-mission-my-today', array(
-			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
-			'title'		=> 'Heute & Termine',
-			'heading'	=> 'Heute & Termine',
-			'icon'		=> 'fa fa-fw fa-calendar-o',
-			'rank'		=> 10,
-			'refresh'	=> 60,
-		) );
-		$context->registerPanel( 'work-mission-my-tasks', array(
-			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
-			'title'		=> 'Aufgaben: Meine - Heute',
-			'heading'	=> 'Meine heutigen Aufgaben',
-			'icon'		=> 'fa fa-fw fa-thumb-tack',
-			'rank'		=> 20,
-			'refresh'	=> 120,
-		) );
-	}
-
 	/**
 	 *	Add a new mission.
 	 *	Redirects to index if editor right is missing.
@@ -274,9 +127,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgNotEditor );
 			$this->restart( NULL, TRUE, 403 );
 		}
-		if( $this->useProjects && !$this->userProjects ){											//  @todo remove deprecated 'useProjects'
-			$this->messenger->noteNotice( $words->msgNoProjectYet );
-			$this->restart( './manage/project/add?from=work/mission/add' );
+		if( !$this->userProjects ){																//  @todo user has no project
+			$this->messenger->noteNotice( $words->msgNoProjectYet );							//  inform user about redirection
+			$this->restart( './manage/project/add?from=work/mission/add' );						//  redirect to create a project
 		}
 
 		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
@@ -350,9 +203,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'day', (int) $this->session->get( $this->filterKeyPrefix.'day' ) );
 		$this->addData( 'format', $format );
 
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			$this->addData( 'userProjects', $this->userProjects );
-		}
+		$this->addData( 'userProjects', $this->userProjects );
 	}
 
 	public function addDocument( $missionId ){
@@ -399,13 +250,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function ajaxGetProjectUsers( $projectId ){
 		$list	= array();
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			$model	= new Model_Project( $this->env );
-			$users	= $model->getProjectUsers( (int) $projectId );
-			if( array_key_exists( $this->userId, $users ) || $this->hasFullAccess() ){
-				foreach( $users as $user )
-					$list[$user->username]    = $user;
-			}
+		$model	= new Model_Project( $this->env );
+		$users	= $model->getProjectUsers( (int) $projectId );
+		if( array_key_exists( $this->userId, $users ) || $this->hasFullAccess() ){
+			foreach( $users as $user )
+				$list[$user->username]    = $user;
 		}
 		ksort( $list );
 		print( json_encode( array_values( $list ) ) );
@@ -772,10 +621,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' )
 			$this->session->set( 'filter.work.mission.mode', 'now' );
 
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			if( !array_key_exists( $mission->projectId, $this->userProjects ) )
-				$this->messenger->noteError( $words->msgInvalidProject );
-		}
+		if( !array_key_exists( $mission->projectId, $this->userProjects ) )
+			$this->messenger->noteError( $words->msgInvalidProject );
+
 		if( $this->messenger->gotError() )
 			$this->restart( NULL, TRUE );
 
@@ -846,12 +694,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			$model		= new Model_Project( $this->env );
-			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
-				$missionUsers[$user->userId]	= $user;
-			$this->addData( 'userProjects', $this->userProjects );
-		}
+		$model		= new Model_Project( $this->env );
+		foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
+			$missionUsers[$user->userId]	= $user;
+		$this->addData( 'userProjects', $this->userProjects );
 		$this->addData( 'missionUsers', $missionUsers );
 		$this->addData( 'format', $mission->format ? $mission->format : $this->contentFormat );
 
@@ -1279,11 +1125,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgInvalidId );
 			$this->restart( NULL, TRUE );
 		}
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			if( !array_key_exists( $mission->projectId, $this->userProjects ) ){
-				$this->messenger->noteError( $words->msgInvalidProject );
-				$this->restart( NULL, TRUE );
-			}
+		if( !array_key_exists( $mission->projectId, $this->userProjects ) ){
+			$this->messenger->noteError( $words->msgInvalidProject );
+			$this->restart( NULL, TRUE );
 		}
 
 /*		$mode	= $this->session->get( 'filter.work.mission.mode' );
@@ -1313,13 +1157,11 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
-		if( $this->useProjects ){																	//  @todo remove deprecated 'useProjects'
-			$model		= new Model_Project( $this->env );
-			foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
-				$missionUsers[$user->userId]	= $user;
-			$this->addData( 'userProjects', $this->userProjects );
-			$mission->project	= $model->get( (int) $mission->projectId );
-		}
+		$model		= new Model_Project( $this->env );
+		foreach( $model->getProjectUsers( (int) $mission->projectId ) as $user )
+			$missionUsers[$user->userId]	= $user;
+		$this->addData( 'userProjects', $this->userProjects );
+		$mission->project	= $model->get( (int) $mission->projectId );
 		$this->addData( 'missionUsers', $missionUsers );
 
 		if( $this->useIssues ){

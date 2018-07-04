@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.59</version>
+	<version>0.9.60</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -106,6 +106,7 @@ code>
 	<log version="0.9.57">Shorten filter buttons on phone viewport size.</log>
 	<log version="0.9.58">Add job to remove content versions of closed missions.</log>
 	<log version="0.9.59">Replace CDN resource.</log>
+	<log version="0.9.60">Extract hooks from controller to own hook class.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -116,6 +117,7 @@ code>
 		<class>Controller/Work/Mission/Export.php5</class>
 		<class>Controller/Work/Mission/Future.php5</class>
 		<class>Controller/Work/Mission/Kanban.php5</class>
+		<class>Hook/Work/Mission.php5</class>
 		<class>Model/Mission.php5</class>
 		<class>Model/Mission/Change.php5</class>
 		<class>Model/Mission/Document.php5</class>
@@ -244,15 +246,17 @@ code>
 	<link access="inside" path="work/mission/future/ajaxRenderContent"/>
 	<link access="inside" path="work/mission/future/ajaxRenderIndex"/>
 	<link access="inside" path="work/mission/future/index"/>
-	<hook type="resource" resource="Database_Lock" event="checkRelease">Controller_Work_Mission::___onDatabaseLockReleaseCheck</hook>
-	<hook type="resource" resource="Project" event="listRelations">Controller_Work_Mission::___onListProjectRelations</hook>
-	<hook type="resource" resource="Project" event="onRemove">Controller_Work_Mission::___onProjectRemove</hook>
-	<hook type="resource" resource="Work_Timer" event="registerModule">Controller_Work_Mission::___onRegisterTimerModule</hook>
-	<hook type="resource" resource="Work_Timer" event="onStartTimer">Controller_Work_Mission::___onStartTimer</hook>
-	<hook type="resource" resource="Work_Timer" event="onPauseTimer">Controller_Work_Mission::___onPauseTimer</hook>
-	<hook type="resource" resource="Work_Timer" event="onStopTimer">Controller_Work_Mission::___onStopTimer</hook>
-	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Work_Mission::___onRegisterDashboardPanels</hook>
-	<hook type="resource" resource="Novelties" event="collect">Controller_Work_Mission::___onCollectNovelties</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels"> Hook_Work_Mission::onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="Database_Lock" event="checkRelease"> Hook_Work_Mission::onDatabaseLockReleaseCheck</hook>
+	<hook type="resource" resource="Project" event="listRelations"> Hook_Work_Mission::onListProjectRelations</hook>
+	<hook type="resource" resource="Project" event="onRemove"> Hook_Work_Mission::onProjectRemove</hook>
+	<hook type="resource" resource="Novelties" event="collect"> Hook_Work_Mission::onCollectNovelties</hook>
+	<hook type="resource" resource="User" event="listRelations"> Hook_Work_Mission::onListUserRelations</hook>
+	<hook type="resource" resource="User" event="remove">Hook_Work_Mission::onUserRemove</hook>
+	<hook type="resource" resource="Work_Timer" event="registerModule"> Hook_Work_Mission::onRegisterTimerModule</hook>
+	<hook type="resource" resource="Work_Timer" event="onStartTimer"> Hook_Work_Mission::onStartTimer</hook>
+	<hook type="resource" resource="Work_Timer" event="onPauseTimer"> Hook_Work_Mission::onPauseTimer</hook>
+	<hook type="resource" resource="Work_Timer" event="onStopTimer"> Hook_Work_Mission::onStopTimer</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (
