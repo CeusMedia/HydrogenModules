@@ -34,98 +34,6 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$this->session->set( 'filter_manage_project_limit', 15 );
 	}
 
-	static public function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$modelUser			= new Model_User( $env );
-		$modelProjectUser	= new Model_Project_User( $env );
-		$projectIds			= array();
-		$userIds			= array( -1 );
-		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
-		foreach( $myProjects as $relation )
-			$projectIds[]   = $relation->projectId;
-		if( !$projectIds )
-			return;
-		$logic				= new Logic_Project( $env );
-		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), array( 'status' => '>0' ) );
-//		unset( $users[$data->userId] );
-		$words				= $env->getLanguage()->getWords( 'manage/project' );
-		$data->list[]		= (object) array(
-			'module'		=> 'Manage_Projects',
-			'label'			=> $words['hook-getRelatedUsers']['label'],
-			'count'			=> count( $users ),
-			'list'			=> $users,
-		);
-	}
-
-	static public function ___onUpdate( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( empty( $data['projectId'] ) )
-			throw new InvalidArgumentException( 'Missing project ID' );
-		$model	= new Model_Project( $env );
-		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
-	}
-
-	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
-		$model		= new Model_Project_User( $env );
-		$model->removeByIndices( array( 'projectId' => $projectId ) );
-	}
-
-	static public function ___onListRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		if( empty( $data->projectId ) ){
-			$message	= 'Hook "Project::___onListRelations" is missing project ID in data';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		$modelProject	= new Model_Project( $env );
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations": Invalid project ID.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-
-		$modelUser			= new Model_User( $env );
-
-		$conditions		= array();
-		if( $data->activeOnly )
-			$conditions['status']	= 1;
-
-		$logic			= new Logic_Project( $env );
-		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, array( 'username' => 'ASC' ) );
-
-		$list				= array();
-		$iconUser			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
-		foreach( $projectUsers as $user ){
-			if( $env->getModules()->has( 'Members' ) ){
-				$helper	= new View_Helper_Member( $env );
-				$helper->setUser( $user );
-				$helper->setMode( 'inline' );
-				$helper->setLinkUrl( 'member/view/'.$user->userId );
-				$link	= $helper->render();
-			}
-			else{
-				$fullname	= '('.$user->firstname.' '.$user->surname.')';
-				$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
-				$link		= UI_HTML_Tag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
-					'href'	=> 'member/view/'.$user->userId,
-				) );
-			}
-			$list[]		= (object) array(
-				'id'		=> $data->linkable ? $user->userId : NULL,
-				'label'		=> $link,
-			);
-		}
-		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
-			$module,																				//  module called by hook
-			'relation',																				//  relation type: entity or relation
-			$list,																					//  list of related items
-			'Projekt-Teilnehmer',																	//  label of type of related items
-			'Manage_User',																			//  controller of entity
-			'edit'																					//  action to view or edit entity
-		);
-	}
-
 	public function acceptInvite( $projectId ){
 		$indices	= array(
 			'projectId'	=> $projectId,
@@ -560,21 +468,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgInvalidUser );
 		}
 		else{
-			$this->modelProjectUser->removeByIndices( array(
-				'projectId'		=> $projectId,
-				'userId'		=> $userId
-			) );
+			$this->logic->removeProjectUser( $projectId, $userId, TRUE );
 			$this->messenger->noteSuccess( $words->msgUserRemoved, $user->username, $project->title );
-
-			$language		= $this->env->getLanguage();
-			foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
-				if( $member->userId !== $this->userId ){
-					$user	= $this->modelUser->get( $member->userId );
-					$data	= array( 'project' => $project, 'user' => $user );
-					$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
-					$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-				}
-			}
 		}
 		if( $userId == $this->userId )
 			$this->restart( NULL, TRUE );

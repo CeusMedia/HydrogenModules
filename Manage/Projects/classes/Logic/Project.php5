@@ -1,12 +1,13 @@
 <?php
-class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
+class Logic_Project extends CMF_Hydrogen_Logic{
 
 	protected $model;
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->modelProject		= new Model_Project( $this->env );                                          //  create projects model
+		$this->modelProject		= new Model_Project( $this->env );								//  create projects model
 		$this->modelProjectUser	= new Model_Project_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );									//  create user model
 	}
 
 	public function get( $projectId ){
@@ -156,6 +157,30 @@ class Logic_Project extends CMF_Hydrogen_Environment_Resource_Logic{
 			'isDefault'		=> "1",
 			'modifiedAt'	=> time()
 		) );
+	}
+
+	public function removeProjectUser( $projectId, $userId, $informOthers = TRUE ){
+		try{
+			$this->modelProjectUser->removeByIndices( array(
+				'projectId'		=> $projectId,
+				'userId'		=> $userId
+			) );
+			if( $informOthers ){
+				$logicMail		= Logic_Mail::getInstance( $this->env );
+				$language		= $this->env->getLanguage();
+				foreach( $this->getProjectUsers( $projectId ) as $member ){
+					if( $member->userId !== $userId ){
+						$user	= $this->modelUser->get( $member->userId );
+						$data	= array( 'project' => $project, 'user' => $user );
+						$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
+						$logicMail->handleMail( $mail, $user, $language->getLanguage() );
+					}
+				}
+			}
+		}
+		catch( Exception $e ){
+			throw new RuntimeException( 'Removing project user failed', 0, $e );
+		}
 	}
 }
 ?>
