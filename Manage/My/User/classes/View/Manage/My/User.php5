@@ -3,6 +3,8 @@ class View_Manage_My_User extends CMF_Hydrogen_View {
 
 	public function index(){}
 
+	public function remove(){}
+
 	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab

@@ -13,6 +13,7 @@ $panelEmail		= $view->loadTemplateFile( 'manage/my/user/index.email.php' );
 $panelUsername	= $view->loadTemplateFile( 'manage/my/user/index.username.php' );
 $panelEdit		= $view->loadTemplateFile( 'manage/my/user/index.edit.php' );
 $panelAccount	= $view->loadTemplateFile( 'manage/my/user/index.account.php' );
+$panelRemove	= $view->loadTemplateFile( 'manage/my/user/index.remove.php' );
 
 $rows	= array();
 foreach( $passwords as $password ){
@@ -61,6 +62,7 @@ HTML::DivClass( 'row-fluid', array(
 		$panelEmail,
 //		$panelPasswords,
 		$panelUsername,
+		$panelRemove,
 	) ),
 	HTML::DivClass( 'span4', array(
 		$panelInfo,

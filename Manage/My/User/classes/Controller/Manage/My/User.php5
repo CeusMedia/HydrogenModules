@@ -239,6 +239,24 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/my/user' );
 	}
 
+	public function remove( $confirmed = NULL ){
+		$this->addData( 'userId', $this->userId );
+		if( $this->request->isPost() && $confirmed ){
+			$dbc	= $this->env->getDatabase();
+			$dbc->beginTransaction();
+			try{
+				$this->callHook( 'User', 'remove', $this, array( 'userId' => $this->userId ) );
+				$dbc->commit();
+			}
+			catch( Exception $e ){
+			//	 @todo handle exception
+				$this->messenger->noteError( 'Failed: '.$e->getMessage() );
+				$dbc->rollBack();
+			}
+			$this->restart( 'remove', TRUE );
+		}
+	}
+
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new username
