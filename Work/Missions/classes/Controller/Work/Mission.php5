@@ -73,7 +73,6 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
 		$this->isViewer		= $this->acl->has( 'work/mission', 'view' );
-			= TRUE;//$this->env->getModules()->has( 'Manage_Projects' );
 		$this->useIssues	= $this->env->getModules()->has( 'Work_Issues' );
 		$this->useTimer		= $this->env->getModules()->has( 'Work_Timer' );
 
@@ -88,7 +87,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
-		$this->logicProject	= new Logic_Project( $this->env );
+		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->userMap		= $this->logicProject->getCoworkers( $this->userId, NULL, TRUE );
 
 		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)

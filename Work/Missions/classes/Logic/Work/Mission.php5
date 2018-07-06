@@ -24,14 +24,12 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 	protected $modelDocument;
 
 	/**
-	 *	Constructor. Protected to force singleton use.
+	 *	Load models after construction.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment	$env		Hydrogen framework environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env				= $env;
-		$this->modelMission		= new Model_Mission( $env );
+	protected function __onInit(){
+		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );
 		$this->modelChange		= new Model_Mission_Change( $this->env );
 		$this->modelDocument	= new Model_Mission_Document( $this->env );
@@ -48,9 +46,10 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 	 *	Get singleton instance of logic.
 	 *	@static
 	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		object			Singleton instance of logic
 	 */
-	static public function getInstance( $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;

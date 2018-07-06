@@ -38,7 +38,7 @@ $worker			= renderUserLabel( $mission->worker );
 $modifier		= renderUserLabel( $mission->modifier );
 
 $project		= $mission->project->title;
-if( $useProjects && $canEditProject )
+if( $canEditProject )
 	$project	= UI_HTML_Tag::create( 'a', $project, array( 'href' => './manage/project/edit/'.$mission->projectId ) );
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );

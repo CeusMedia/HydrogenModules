@@ -33,12 +33,10 @@ foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
 $optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
 
-if( $useProjects ){
-	$optProject	= array();
-	foreach( $userProjects as $projectId => $project )
-		$optProject[$projectId]	= $project->title;
-	$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
-}
+$optProject	= array();
+foreach( $userProjects as $projectId => $project )
+	$optProject[$projectId]	= $project->title;
+$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
 
 $timeProjected		= View_Work_Mission::formatSeconds( $mission->minutesProjected * 60 );
 

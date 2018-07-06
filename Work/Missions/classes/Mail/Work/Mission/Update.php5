@@ -35,7 +35,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$this->helperFacts->add( 'type', $typeHtml, $typeText );
 
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$logicProject	= new Logic_Project( $this->env );
+			$logicProject	= Logic_Project::getInstance( $this->env );
 			$projectOld		= $old->projectId ? $logicProject->getProject( $old->projectId ) : '-';
 			$linkProjectOld	= UI_HTML_Tag::create( 'a', $projectOld->title, array( 'href' => './manage/project/view/'.$projectOld->projectId ) );
 			$projectHtml	= $linkProjectOld;
