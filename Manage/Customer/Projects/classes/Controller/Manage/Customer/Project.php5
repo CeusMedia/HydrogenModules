@@ -31,7 +31,7 @@ class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller{
 
 		$relations	= $this->logic->getProjects( $customerId );
 
-		$logic		= new Logic_Project( $this->env );
+		$logic		= Logic_Project::getInstance( $this->env );
 		$list		= array();
 		$projects	= $logic->getProjects( array( 'status' => array( 1, 2, 3, 4, 5 ) ) );
 		foreach( $projects as $project ){
