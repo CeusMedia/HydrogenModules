@@ -5,7 +5,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	}
 
 	public function ajaxRenderDashboardPanel(){
-		$logicProject	= new Logic_Project( $this->env );
+		$logicProject	= Logic_Project::getInstance( $this->env );
 		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$modelIssue		= new Model_Issue( $this->env );
 		$userProjects	= $logicProject->getUserProjects( $currentUserId );

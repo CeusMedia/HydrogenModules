@@ -16,7 +16,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract{
 		$this->addThemeStyle( 'site.work.issue.css' );
 		$this->addBodyClass( 'moduleWorkIssues' );
 		$this->words		= (array) $this->getWords( 'work/issue' );
-		$this->logicProject		= new Logic_Project( $this->env );
+		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );										//  get model of users
 		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues
 		$this->modelIssueNote	= new Model_Issue_Note( $this->env );								//  get model of issue notes

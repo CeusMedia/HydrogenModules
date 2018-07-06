@@ -35,7 +35,7 @@ class View_Helper_Work_Issue_ChangeFact{
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
-				$logic	= new Logic_Project( $this->env );
+				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 				$to		= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 				if( $this->change->from )
@@ -94,7 +94,7 @@ class View_Helper_Work_Issue_ChangeFact{
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
-				$logic	= new Logic_Project( $this->env );
+				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= 'unbekannt';
 				$to		= 'unbekannt';
 				if( $this->change->from )

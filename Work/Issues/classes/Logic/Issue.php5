@@ -29,7 +29,7 @@ class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
 	protected $modelIssueChange;
 
 	public function __onInit(){
-		$this->logicProject		= new Logic_Project( $this->env );
+		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );										//  get model of users
 		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues
 		$this->modelIssueNote	= new Model_Issue_Note( $this->env );								//  get model of issue notes
