@@ -127,7 +127,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$logic		= new Logic_Project( $this->env );
+			$logic		= Logic_Project::getInstance( $this->env );
 			$userId		= $this->env->getSession()->get( 'userId' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
@@ -212,7 +212,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$logic		= new Logic_Project( $this->env );
+			$logic		= Logic_Project::getInstance( $this->env );
 			$userId		= $this->env->getSession()->get( 'userId' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
@@ -304,7 +304,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$userId		= $this->session->get( 'userId' );
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$logic		= new Logic_Project( $this->env );
+			$logic		= Logic_Project::getInstance( $this->env );
 			$projects	= $logic->getUserProjects( $userId );
 		}
 		$notes		= array();

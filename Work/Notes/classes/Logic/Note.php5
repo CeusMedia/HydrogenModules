@@ -33,7 +33,7 @@ class Logic_Note{
 		$this->userProjects		= array();
 		if( $this->userId ){
 			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-				$logicProject	= new Logic_Project( $this->env );
+				$logicProject	= Logic_Project::getInstance( $this->env );
 				$userProjects	= $logicProject->getUserProjects( $this->userId );
 				foreach( $userProjects as $userProject )
 					$this->userProjects[$userProject->projectId]	= $userProject;
@@ -56,7 +56,7 @@ class Logic_Note{
 //			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
 //				$conditions['public']	= 1;
 
-/*		$logic			= new Logic_Project( $this->env );
+/*		$logic			= Logic_Project::getInstance( $this->env );
 		$userProjects	= array( 0 );
 		foreach( $logic->getUserProjects( $this->userId ) as $relation )
 			$userProjects[]	= $relation->projectId;
