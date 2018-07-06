@@ -14,7 +14,7 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
 
 	protected function collectFacts( $project ){
 		$view		= new CMF_Hydrogen_View( $this->env );
-		$logic		= new Logic_Project( $this->env );
+		$logic		= Logic_Project::getInstance( $this->env );
 		$words		= $this->getWords( 'manage/project' );
 		$members	= $logic->getProjectUsers( $project->projectId );
 

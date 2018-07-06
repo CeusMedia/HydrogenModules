@@ -11,7 +11,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 			$projectIds[]   = $relation->projectId;
 		if( !$projectIds )
 			return;
-		$logic				= new Logic_Project( $env );
+		$logic				= Logic_Project::getInstance( $env );
 		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), array( 'status' => '>0' ) );
 //		unset( $users[$data->userId] );
 		$words				= $env->getLanguage()->getWords( 'manage/project' );

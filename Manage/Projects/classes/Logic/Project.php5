@@ -3,8 +3,7 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 
 	protected $model;
 
-	public function __construct( $env ){
-		parent::__construct( $env );
+	protected function __onInit(){
 		$this->modelProject		= new Model_Project( $this->env );								//  create projects model
 		$this->modelProjectUser	= new Model_Project_User( $this->env );
 		$this->modelUser		= new Model_User( $this->env );									//  create user model
@@ -34,7 +33,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 				unset( $users[$userId] );
 			return $users;
 		}
-		$users	= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $userId );
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
+		$users	= $logicAuth->getRelatedUsers( $userId );
 		if( !$includeSelf )
 			unset( $users[$userId] );
 		return $users;
