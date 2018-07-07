@@ -1,19 +1,31 @@
-table.item-relation-lister {
+
+/*  TABLE  */
+div.item-relations table.item-relation-lister {
 	table-layout: fixed;
 	}
-table.item-relation-lister ul {
+div.item-relations table.item-relation-lister ul {
 	padding: 2px 4px;
 	margin: 0px;
 	max-height: 180px;
 	overflow-y: auto;
 	}
-table.item-relation-lister.limited ul {
+div.item-relations table.item-relation-lister.limited ul {
 	padding: 2px 4px;
 	margin: 0px;
 	max-height: 180px;
 	overflow-y: auto;
-/*	border: 1px solid #CFCFCF;
-	border-radius: 3px;*/
-/*	background-color: #FFF7EE;
-	background-color: #FFFFFF;*/
 	}
+
+/*  LIST  */
+div.item-relations ul {
+	padding: 2px 4px;
+	margin: 0px;
+	border: 1px solid rgba(191, 191, 191, 0.33);
+	border-radius: 3px;
+	background-color: rgba(191, 191, 191, 0.16);
+	}
+div.item-relations ul.limited {
+	max-height: 180px;
+	overflow-y: auto;
+	}
+div.item-relations ul.limited > li {}

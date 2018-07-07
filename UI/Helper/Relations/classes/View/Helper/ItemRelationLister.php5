@@ -104,11 +104,11 @@ class View_Helper_ItemRelationLister{
 				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
 				$items[]	= UI_HTML_Tag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
-			$items	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'unstyled' ) );
+			$items	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'unstyled '.$this->tableClass ) );
 			$count	= UI_HTML_Tag::create( 'small', '('.$type.')', array( 'class' => 'muted' ) );
 			$list[]	= UI_HTML_Tag::create( 'h5', $relation->label.'&nbsp;'.$count ).$items;
 		}
-		return UI_HTML_Tag::create( 'div', $list );
+		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'item-relations' ) );
 	}
 
 	protected function renderRelationsAsTable(){
@@ -163,36 +163,42 @@ class View_Helper_ItemRelationLister{
 		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
 			'class'		=> 'table table-striped item-relation-lister '.$this->tableClass,
 		) );
-		return $table;
+		return UI_HTML_Tag::create( 'div', $table, array( 'class' => 'item-relations' ) );
 	}
 
 	public function setActiveOnly( $boolean ){
 		$this->activeOnly	= $boolean;
 		$this->relations	= NULL;
+		return $this;
 	}
 
 	public function setHook( $resource, $event, $indices ){
 		$this->hookResource		= $resource;
 		$this->hookEvent		= $event;
 		$this->hookIndices		= $indices;
-		$this->relations	= NULL;
+		$this->relations		= NULL;
+		return $this;
 	}
 
 	public function setLinkable( $boolean ){
 		$this->linkable		= $boolean;
 		$this->relations	= NULL;
+		return $this;
 	}
 
 	public function setMode( $mode ){
 		$this->renderMode	= $mode;
+		return $this;
 	}
 
 	public function setTableClass( $class ){
 		$this->tableClass	= $class;
+		return $this;
 	}
 
 	public function setLimit( $limit ){
 		$this->limit		= $limit;
+		return $this;
 	}
 }
 ?>
