@@ -30,6 +30,7 @@ abstract class Mail_Abstract{
 	protected $encodingSubject			= 'quoted-printable';
 	protected $encodingText				= 'quoted-printable';
 
+
 	public $content;									//  @todo remove argument, implement $this->data instead
 
 	public $contents					= array(
@@ -37,7 +38,7 @@ abstract class Mail_Abstract{
 		'text'		=> ''
 	);
 
-	public $usedTemplateId				= 0;
+	public $templateId					= 0;
 
 	/**
 	 *	Contructor.
@@ -216,6 +217,7 @@ abstract class Mail_Abstract{
 			if( !$template )
 				throw new RangeException( 'Invalid template ID' );
 		}
+		$this->templateId	= $templateId;
 		$words		= $this->env->getLanguage()->getWords( 'main' );
 		$baseUrl	= $this->env->getBaseUrl();
 		$appEmail	= $this->env->getConfig()->get( 'app.email' );
