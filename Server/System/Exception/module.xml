@@ -9,10 +9,11 @@ Is called by hook App::onException.
 Suggested for any web application if you do not have your own exception handling.
 ]]></description>
 	<category>Server</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extract hook to class.</log>
+	<log version="0.2.2">Make handling mode configurable.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -23,6 +24,7 @@ Suggested for any web application if you do not have your own exception handling
 		<template>system/exception/index.php</template>
 	</files>
 	<config type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="string" name="mode" values="info,dev,strict" title="How to interpret unhandled exceptions (info: embed in info page, dev|strict|*: exit with exception page)">info</config>
 	<relations/>
 	<link access="public" path="system/exception/index"/>
 	<hook type="resource" resource="App" event="onException">Hook_System_Exception::onAppException</hook>
