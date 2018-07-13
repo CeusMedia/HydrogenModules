@@ -53,21 +53,36 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
-		foreach( $this->model->getAllByIndex( 'projectId', $projectId ) as $mission ){
-			$this->logic->removeMission( $mission->missionId );
+		$data				= (object) $data;
+		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
+		if( empty( $data->projectId ) ){
+			$message	= 'Hook "Work_Missions::onProjectRemove" is missing project ID in data.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$modelProject	= new Model_Project( $env );
+		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+			$message	= 'Hook "Work_Missions::onProjectRemove": Invalid project ID.';
+			$env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$logicMission	= Logic_Work_Mission::getInstance( $env );
+		$modelMission	= new Model_Mission( $env );
+		$missions		= $modelMission->getAllByIndex( 'projectId', $data->projectId );
+		foreach( $missions as $mission ){
+			$logicMission->removeMission( $mission->missionId );
 		}
 	}
 
 	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations" is missing project ID in data.';
+			$message	= 'Hook "Work_Missions::onListProjectRelations" is missing project ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		if( !( $project = $modelProject->get( $data->projectId ) ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations": Invalid project ID.';
+			$message	= 'Hook "Work_Missions::onListProjectRelations": Invalid project ID.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -112,15 +127,14 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$modelProject	= new Model_Project( $env );
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Work_Missions::___onListUserRelations" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$logic			= Logic_Project::getInstance( $env );
+		$modelProject	= new Model_Project( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
-		$missionIds		= array();
 
 		$projectIds		= array();
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
@@ -157,7 +171,6 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 				'id'		=> $data->linkable ? $mission->missionId : NULL,
 				'label'		=> $label,
 			);
-			$missionIds[]	= $mission->missionId;
 		}
 		if( $list )
 			View_Helper_ItemRelationLister::enqueueRelations(
@@ -174,33 +187,29 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data				= (object) $data;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
-		$modelProject		= new Model_Project( $env );
-
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Work_Missions::___onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$logicProject	= Logic_Project::getInstance( $env );
+		$logicMission	= Logic_Work_Mission::getInstance( $env );
+		$modelProject	= new Model_Project( $env );
+		$modelMission	= new Model_Mission( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
 		$lists			= (object) array( 'entities' => array(), 'relations' => array() );
 
-
-		$lists			= (object) array(
-			'missions'	=> array(),
-			'creators'	=> array(),
-			'modifiers'	=> array(),
-			'workers'	=> array(),
-		);
-
+		$nrMissionsRemoved	= 0;
+		$nrMissionsChanged	= 0;
 		$projectIds		= array();
 		$projects		= $logicProject->getUserProjects( $data->userId, FALSE );
 		foreach( $projects as $project ){
 			$users		= $logicProject->getProjectUsers( $project->projectId );
-			$missions	= $this->model->getAllByIndex( 'projectId', $project->projectId );
+			$missions	= $modelMission->getAllByIndex( 'projectId', $project->projectId );
 			if( count( $users ) === 1 && isset( $users[$data->userId] ) ){						//  no other users in project
 				foreach( $missions as $mission ){
-					$lists->missions[$mission->missionId]	= $mission;
+					$logicMission->removeMission( $mission->missionId );
+					$nrMissionsRemoved++;
 				}
 				continue;
 			}
@@ -212,39 +221,25 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 				}
 			}
 			foreach( $missions as $mission ){
-				if( $mission->creatorId == $data->userId ){
+				$old	= clone $mission;
+				if( $mission->creatorId == $data->userId )
 					$mission->creatorId		= $nextUserId;
-					$lists->creators[]		= $mission;
-				}
-				if( $mission->workerId == $data->userId ){
+				if( $mission->workerId == $data->userId )
 					$mission->workerId		= $mission->creatorId;
-					$lists->workers[]		= $mission;
-				}
-				if( $mission->modifierId == $data->userId ){
+				if( $mission->modifierId == $data->userId )
 					$mission->modifierId	= 0;
-					$lists->modifiers[]		= $mission;
+				if( $old != $mission ){
+					$nrMissionsChanged++;
+					$modelMission->edit( $mission->missionId, (array) $mission );
+					if( $data->informOthers && in_array( $mission->status, array( 1, 2, 3, 4 ) ) )
+						$logicMission->noteChange( 'update', $mission->missionId, $old, $data->userId );
 				}
 			}
 		}
-
-		if( $lists->missions ){
-			foreach( $lists->missions as $item ){
-//				$this->logic->removeMission( $item->missionId );
-			}
-			$env->getMessenger()->noteSuccess( 'Removed %d missions.', count( $lists->missions ) );
-		}
-		if( $lists->creators ){
-			foreach( $lists->creators as $item ){
-//				$this->model->edit( $item->missionId, array( 'creatorId' => $item->creatorId ) );
-			}
-			$env->getMessenger()->noteSuccess( 'Changed ownership of %d missions.', count( $lists->creators ) );
-		}
-		if( $lists->workers ){
-			foreach( $lists->workers as $item ){
-//				$this->model->edit( $item->missionId, array( 'workerId' => $item->workerId ) );
-			}
-			$env->getMessenger()->noteSuccess( 'Changed assignment of %d missions.', count( $lists->workers ) );
-		}
+		if( $nrMissionsRemoved )
+			$env->getMessenger()->noteSuccess( 'Removed %d missions.', $nrMissionsRemoved );
+		if( $nrMissionsChanged )
+			$env->getMessenger()->noteSuccess( 'Reassigned %d missions.', $nrMissionsChanged );
 	}
 
 	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){

@@ -33,11 +33,9 @@ class Job_Work_Mission extends Job_Abstract{
 	protected function getUpdateMailReceivers( $projectIds, $includes = array(), $excludes = array() ){
 		$list	= array();																		//  prepare empty user list
 		$projectIds	= array_unique( $projectIds );
-		if( $this->env->getModules()->has( 'Manage_Projects' ) ){								//  projects are enabled
-			foreach( $projectIds as $projectId )												//  iterate given projects IDs
-				foreach( $this->modelProject->getProjectUsers( (int) $projectId ) as $user )	//  iterate project users
-					$list[(int) $user->userId]	= $user;										//  enlist user
-		}
+		foreach( $projectIds as $projectId )												//  iterate given projects IDs
+			foreach( $this->modelProject->getProjectUsers( (int) $projectId ) as $user )	//  iterate project users
+				$list[(int) $user->userId]	= $user;										//  enlist user
 		foreach( $includes as $userId )															//  iterate users to include
 			if( !array_key_exists( (int) $userId, $list ) )										//  user is not in list yet
 				if( $user = $this->modelUser->get( $userId ) )									//  user exists
@@ -63,8 +61,12 @@ class Job_Work_Mission extends Job_Abstract{
     public function informAboutChanges(){
 		$language		= $this->language;														//  @todo get user language instead of current language
 		$count			= 0;																	//  init mail counter
-		foreach( $this->modelChange->getAll() as $change ){										//  iterate mission changes
+		foreach( $this->modelChange->getAll( array(), array(), array( 0, 10 ) ) as $change ){										//  iterate mission changes
 			$missionNew	= $this->modelMission->get( $change->missionId );						//  get current mission data
+			if( !$missionNew ){																	//  mission is not existing anymore
+				$this->modelChange->remove( $change->missionChangeId );							//  remove change
+				continue;
+			}
 			switch( strtolower( $change->type ) ){												//  which change type?
 				case 'new':																		//  inform about new mission
 					$receivers	= $this->getUpdateMailReceivers(								//  get mail receivers

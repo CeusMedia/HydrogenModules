@@ -9,8 +9,12 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		$this->setSubjectFromMission( $data['missionBefore'] );
 		$this->prepareFacts( $data );
 		$this->addBodyClass( 'job-work-mission-mail-update' );
-		$this->setHtml( $this->renderHtml( $data ) );
-		$this->setText( $this->renderText( $data ) );
+		$this->setHtml( $html = $this->renderHtml( $data ) );
+		$this->setText( $text = $this->renderText( $data ) );
+		return (object) array(
+			'html'	=> $html,
+			'text'	=> $text,
+		);
 	}
 
 	protected function renderLabel( $content, $class = NULL ){
