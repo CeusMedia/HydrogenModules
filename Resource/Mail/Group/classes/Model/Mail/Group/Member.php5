@@ -18,7 +18,9 @@
  */
 class Model_Mail_Group_Member extends CMF_Hydrogen_Model {
 
+	const STATUS_ARCHIVED			= -9;
 	const STATUS_DEACTIVATED		= -2;
+	const STATUS_REJECTED			= -2;
 	const STATUS_UNREGISTERED		= -1;
 	const STATUS_REGISTERED			= 0;
 	const STATUS_CONFIRMED			= 1;
