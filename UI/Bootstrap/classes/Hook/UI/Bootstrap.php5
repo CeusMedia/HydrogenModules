@@ -1,5 +1,5 @@
 <?php
-class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook{
+class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 
 	static protected function getMajorVersion( $version ){
 		$versionParts	= explode( '.', $version );
