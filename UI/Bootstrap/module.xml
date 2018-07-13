@@ -62,7 +62,7 @@
 	<config protected="no" type="boolean" name="responsive">yes</config>
 	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1">2.3.2</config>
 
-	<config protected="yes" type="string" name="missing.library" values="ignore,note-failure,throw">throw</config>
+	<config protected="yes" type="string" name="missing.library" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.module" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.fontawesome" values="ignore,note,throw">throw</config>
 	<config protected="no" type="boolean" name="icon.fixedWidth">yes</config>
