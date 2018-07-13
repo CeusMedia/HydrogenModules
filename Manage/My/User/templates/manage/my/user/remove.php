@@ -3,6 +3,7 @@
 $w	= (object) $words['remove'];
 
 extract( $view->populateTexts( array( 'remove.right', 'remove.panel.top' ), 'html/manage/my/user/' ) );
+extract( $view->populateTexts( array( 'panel.remove.above', 'panel.remove.below', 'panel.remove.info' ), 'html/manage/my/user/' ) );
 
 $relations			= '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
@@ -11,13 +12,8 @@ $helperRelations->setLinkable( TRUE );
 $helperRelations->setActiveOnly( FALSE );
 //$helperRelations->setTableClass( 'limited' );
 $helperRelations->setMode( 'list' );
+$helperRelations->setLimit( 7 );
 $helperRelations->setTableClass( 'limited' );
-if( $helperRelations->hasRelations() ){
-	$relations	= $helperRelations->render();
-}
-
-//$iconCancel   = HTML::Icon( 'icon-arrow-left' );
-//$iconSave = HTML::Icon( 'icon-ok', TRUE );
 
 $iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
@@ -34,7 +30,27 @@ return HTML::DivClass( 'row-fluid', array(
 				HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', array(
 					HTML::H4( $w->heading ),
 					$textRemovePanelTop,
-					$relations,
+					$helperRelations->render(),
+					UI_HTML_Tag::create( 'hr' ),
+					HTML::DivClass( 'row-fluid', array(
+						HTML::DivClass( 'span6', array(
+							HTML::DivClass( 'row-fluid', array(
+								HTML::DivClass( 'span12', array(
+									HTML::Label( 'username', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
+									UI_HTML_Tag::create( 'input', NULL, array(
+										'type'			=> "password",
+										'name'			=> "password",
+										'id'			=> "input_password_username",
+										'class'			=> "span11 mandatory",
+										'required'		=> 'required',
+										'value'			=> '',
+										'autocomplete'	=> "off"
+									) ),
+								) )
+							) ),
+						) ),
+						HTML::DivClass( 'span6', $textPanelRemoveInfo ),
+					) ),
 					HTML::DivClass( 'buttonbar', array(
 						HTML::DivClass( 'btn-toolbar', array(
 							UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(

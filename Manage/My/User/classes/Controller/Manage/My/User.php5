@@ -16,6 +16,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
 
 		$msg	= (object) $this->getWords( 'msg' );
@@ -23,27 +24,30 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$this->messenger->noteFailure( $msg->failureNoAuthentication );
 			$this->restart( NULL );
 		}
-		$logic	= Logic_Authentication::getInstance( $this->env );
-		if( !$logic->isAuthenticated() ){
+		if( !$this->logicAuth->isAuthenticated() ){
 //			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
 			$this->restart( 'auth/login' );
 		}
-		$this->userId = $logic->getCurrentUserId();
+		$this->userId = $this->logicAuth->getCurrentUserId();
 		if( !$this->modelUser->get( $this->userId ) ){
 			$this->messenger->noteError( $msg->errorInvalidUser );
 			$this->restart( NULL );
 		}
 	}
 
-	protected function checkConfirmationPassword(){
+	protected function checkConfirmationPassword( $from = NULL ){
 		$msg		= (object) $this->getWords( 'msg' );
 		$password	= trim( $this->request->get( 'password' ) );
 		if( !strlen( $password ) ){
 			$this->messenger->noteError( $msg->errorPasswordMissing );
+			if( $from )
+				$this->restart( $from );
 			$this->restart( NULL, TRUE );
 		}
 		if( !$this->checkPassword( $this->modelUser->get( $this->userId ), $password ) ){
 			$this->messenger->noteError( $msg->errorPasswordMismatch );
+			if( $from )
+				$this->restart( $from );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -242,11 +246,17 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 	public function remove( $confirmed = NULL ){
 		$this->addData( 'userId', $this->userId );
 		if( $this->request->isPost() && $confirmed ){
+			$this->checkConfirmationPassword( 'manage/my/user/remove' );
 			$dbc	= $this->env->getDatabase();
 			$dbc->beginTransaction();
 			try{
-				$this->callHook( 'User', 'remove', $this, array( 'userId' => $this->userId ) );
+				$this->callHook( 'User', 'remove', $this, array(
+					'userId'		=> $this->userId,
+					'informOthers'	=> TRUE,
+				) );
+				$this->modelUser->remove( $this->userId );
 				$dbc->commit();
+				$this->restart( 'auth/logout' );
 			}
 			catch( Exception $e ){
 			//	 @todo handle exception
