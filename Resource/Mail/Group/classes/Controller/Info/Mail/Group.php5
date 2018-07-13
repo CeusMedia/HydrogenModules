@@ -58,7 +58,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 			$this->restart( NULL );
 		}
 		if( $action->status == 1 ){
-			$this->messenger->noteError( 'Action already taken.' );
+			$this->messenger->noteError( 'Der Bestätigungslink ist nicht mehr gültig.' );
 			$this->restart( NULL );
 		}
 		try{
@@ -247,5 +247,9 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'group', $group );
 		$this->addData( 'groupId', (int) $groupId );
 		$this->addData( 'data', (object) $this->request->getAll() );
+	}
+
+	public function view( $groupId ){
+		$this->addData( 'group', $this->checkId( $groupId ) );
 	}
 }

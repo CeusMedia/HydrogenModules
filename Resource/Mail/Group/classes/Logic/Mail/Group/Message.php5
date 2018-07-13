@@ -14,7 +14,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	protected $transports		= array();*/
 
 	public function __onInit(){
-		$this->logicGroup	= new Logic_Mail_Group( $this->env );
+		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
 		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
 		$this->modelMessage	= new Model_Mail_Group_Message( $this->env );
 /*		$this->modelGroup	= new Model_Mail_Group( $this->env );

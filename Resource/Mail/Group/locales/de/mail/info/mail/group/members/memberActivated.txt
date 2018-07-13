@@ -1,6 +1,7 @@
 
-Mitglied in der Gruppe "<%group.title%>" wurde aktivert
---------------------------------------------------------------------------------
+Hallo <%user.title%>!
+
+In der Gruppe "<%group.title%>" wurde ein Mitglied aktiviert.
 
 Mitglied:
 - Name:      <%?member.title%>

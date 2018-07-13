@@ -98,6 +98,7 @@
 	<link access="public" path="info/mail/group/index"/>
 	<link access="public" path="info/mail/group/join"/>
 	<link access="public" path="info/mail/group/leave"/>
+	<link access="public" path="info/mail/group/view"/>
 	<link access="public" path="info/mail/group/completeMemberAction"/>
 	<hook type="resource" resource="MailGroup" event="groupActivated">Hook_Resource_Mail_Group::onGroupActivated</hook>
 	<hook type="resource" resource="MailGroup" event="groupDeactivated">Hook_Resource_Mail_Group::onGroupDeactivated</hook>
@@ -105,6 +106,7 @@
 	<hook type="resource" resource="MailGroup" event="memberDeactivated">Hook_Resource_Mail_Group_Member::onMemberDeactivated</hook>
 	<hook type="resource" resource="MailGroup" event="memberJoined">Hook_Resource_Mail_Group_Member::onMemberJoined</hook>
 	<hook type="resource" resource="MailGroup" event="memberLeft">Hook_Resource_Mail_Group_Member::onMemberLeft</hook>
+	<hook type="resource" resource="MailGroup" event="memberRejected">Hook_Resource_Mail_Group_Member::onMemberReject</hook>
 	<hook type="resource" resource="MailGroupAction" event="confirmAfterJoin">Hook_Resource_Mail_Group::onConfirmAfterJoin</hook>
 	<hook type="resource" resource="MailGroupAction" event="deactivateAfterLeaving">Hook_Resource_Mail_Group::onDeactivateAfterLeaving</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
@@ -240,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_actions` (
 ]]></sql>
 	<sql type="mysql" on="update" version="0.4.1"><![CDATA[
 UPDATE `<%?prefix%>mail_groups` SET status = 2 WHERE status = 1;
+UPDATE `<%?prefix%>mail_group_members` SET status = -3 WHERE status = -2;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;

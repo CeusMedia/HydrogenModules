@@ -6,11 +6,15 @@ class Mail_Info_Mail_Group_Members_MemberJoined extends Mail_Abstract{
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
 		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
-		$this->setSubject( 'Gruppe "'.$data['group']->title.'": '.$member.' ist beigetreten' );
+		$this->setSubject( 'Mitglied '.$member.' ist der Gruppe "'.$data['group']->title.'" beigetreten' );
+		$this->setSender( new \CeusMedia\Mail\Address( $group->address, $group->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
+		$data['link']		= array(
+			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
+		);
 		$data['greeting']	= strlen( trim( $data['greeting'] ) ) ? $data['greeting'] : '-';
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberJoined.txt', $data );

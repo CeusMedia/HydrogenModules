@@ -411,6 +411,105 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
+
+	public function setMemberStatus( $groupId, $memberId, $status ){
+		$member	= $this->checkMemberId( $memberId );
+		if( (int) $member->status === (int) $status )
+			return FALSE;
+		$group		= $this->checkGroupId( $groupId );
+		$mailData	= array(
+			'group'		=> $group,
+			'member'	=> $member,
+		);
+		switch( $status ){
+			case Model_Mail_Group_Member::STATUS_ACTIVATED;
+				$this->setMemberStatusToActivated( $group, $member );
+				break;
+			case Model_Mail_Group_Member::STATUS_DEACTIVATED;
+				$this->setMemberStatusToDeactivated( $group, $member );
+				break;
+			case Model_Mail_Group_Member::STATUS_REJECTED;
+				$this->setMemberStatusToRejected( $group, $member );
+				break;
+		}
+		return TRUE;
+	}
+
+	protected function setMemberStatusToActivated( $group, $member ){
+		$mailData	= array(
+			'group'		=> $group,
+			'member'	=> $member,
+		);
+		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
+			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
+				$action	= $this->modelAction->getByIndices( array(
+					'mailGroupId'		=> $group->mailGroupId,
+					'mailGroupMemberId'	=> $member->mailGroupMemberId,
+					'action'			=> 'confirmAfterJoin',
+					'status'			=> Model_Mail_Group_Action::STATUS_HANDLED,
+				) );
+				if( $action ){
+					$this->modelAction->add( array(
+						'mailGroupId'		=> $group->mailGroupId,
+						'mailGroupMemberId'	=> $member->mailGroupMemberId,
+						'uuid'				=> Alg_ID::uuid(),
+						'action'			=> 'informAfterFirstActivate',
+						'message'			=> $action->message,
+						'createdAt'			=> time(),
+						'modifiedAt'		=> time(),
+					) );
+				}
+			}
+		}
+		$this->modelMember->edit( $member->mailGroupMemberId, array(
+			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
+			'modifiedAt'	=> time(),
+		) );
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberActivated', $this, array(
+			'group'			=> $group,
+			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
+			'informMembers'	=> TRUE,
+		) );
+	}
+
+	protected function setMemberStatusToDeactivated( $group, $member ){
+		$mailData	= array(
+			'group'		=> $group,
+			'member'	=> $member,
+		);
+		$memberWasActive	= TRUE;
+		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
+			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
+				$memberWasActive	= FALSE;
+			}
+		}
+		$this->modelMember->edit( $member->mailGroupMemberId, array(
+			'status'		=> Model_Mail_Group_Member::STATUS_DEACTIVATED,
+			'modifiedAt'	=> time(),
+		) );
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberDeactivated', $this, array(
+			'group'			=> $group,
+			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
+			'informMembers'	=> $memberWasActive,
+		) );
+	}
+
+	protected function setMemberStatusToRejected( $group, $member ){
+		$mailData	= array(
+			'group'		=> $group,
+			'member'	=> $member,
+		);
+		$this->modelMember->edit( $member->mailGroupMemberId, array(
+			'status'		=> Model_Mail_Group_Member::STATUS_REJECTED,
+			'modifiedAt'	=> time(),
+		) );
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberRejected', $this, array(
+			'group'			=> $group,
+			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
+		) );
+	}
+
+
 	public function testGestMail( $groupId, $limit = 1 ){
 		return;
 	}

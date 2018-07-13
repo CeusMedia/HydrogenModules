@@ -19,7 +19,7 @@ if( $groups ){
 			'Adresse: '.$address,
 		) ), array( 'class' => "not-muted" ) );
 
-		$title		= UI_HTML_Tag::create( 'big', $group->title );
+		$title		= UI_HTML_Tag::create( 'a', $group->title, array( 'href' => './info/mail/group/view/'.$group->mailGroupId ) );
 		$subtitle	= strlen( trim( $group->subtitle ) ) ? UI_HTML_Tag::create( 'strong', $group->subtitle ).'<br/>' : '';
 
 		$buttons	= array();

@@ -37,12 +37,18 @@ class Hook_Resource_Mail_Group{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
-		$logic			= new Logic_Mail_Group( $env );
+		$logicGroup		= Logic_Mail_Group::getInstance( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 
-		if( in_array( $group->type, array( Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_PUBLIC ) ) ){
+		$member		= $logicGroup->checkMemberId( $action->mailGroupMemberId );
+		if( $member->status == Model_Mail_Group_Member::STATUS_REJECTED ){
+			$env->getMessenger()->noteError( 'Ihr Beitritt wurde bereits vom Verwalter der Gruppe abgelehnt.' );
+			return TRUE;
+		}
+
+		if( in_array( $group->type, array( Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_AUTOJOIN ) ) ){
 			$modelMember->edit( $action->mailGroupMemberId, array(
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
@@ -60,7 +66,7 @@ class Hook_Resource_Mail_Group{
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $manager, $language );
 
-			$members	= $logic->getGroupMembers( $action->mailGroupId, TRUE );
+			$members	= $logicGoup->getGroupMembers( $action->mailGroupId, TRUE );
 			foreach( $members as $entry ){
 				if( $entry->address === $manager->email )
 					continue;
