@@ -75,6 +75,7 @@ $modalImport		= new \CeusMedia\Bootstrap\Modal( 'modal-mail-template-upload' );
 $modalImport->setBody( $modalImportBody );
 $modalImport->setHeading( 'Import eines Mail-Templates <small class="muted">(aus einer Datei)</small>' );
 $modalImport->setFormAction( './admin/mail/template/import' );
+$modalImport->setFormIsUpload();
 $modalImport->setSubmitButtonLabel( $iconImport.'&nbsp;hochladen' );
 $modalImport->setSubmitButtonClass( 'btn btn-primary' );
 $modalImport->setCloseButtonLabel( $iconCancel.'&nbsp;abbrechen' );

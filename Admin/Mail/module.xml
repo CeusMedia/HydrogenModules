@@ -117,6 +117,7 @@
 		<needs type="module">JS_Ace</needs>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">Resource_Upload</needs>
+		<needs type="module">UI_Bootstrap_Modal</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 		<needs type="module">UI_Helper_Input_Resource</needs>

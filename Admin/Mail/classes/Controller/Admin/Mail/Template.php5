@@ -1,15 +1,24 @@
 <?php
 class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 
+	protected $request;
+	protected $messenger;
+	protected $modelTemplate;
+	protected $appPath;
+	protected $appUrl;
+
 	public function __onInit(){
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend	= Logic_Frontend::getInstance( $this->env );
 			$this->appPath	= $frontend->getPath();
 			$this->appUrl	= $frontend->getUri();
+		}
+		else{
+			$this->appPath	= $this->env->path;
+			$this->appUrl	= $this->env->url;
 		}
 		$this->addData( 'appPath', $this->appPath );
 		$this->addData( 'appUrl', $this->appUrl );
@@ -235,6 +244,12 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			$upload	= $this->env->getLogic()->upload;
 			try{
 				$upload->setUpload( $this->request->get( 'template' ) );
+			}
+			catch( Exception $e ){
+				$this->messenger->noteFailure( $e->getMessage() );
+				$this->restart( NULL, TRUE );
+			}
+			try{
 //				$this->messenger->noteNotice( 'MIME: '.$upload->getMimeType() );
 //				$upload->checkMimeType( 'application/json', TRUE  );
 				$upload->checkSize( $upload->getMaxUploadSize(), TRUE  );
@@ -275,7 +290,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				if( !$message )
 					$message	= $e->getMessage();
 				$this->messenger->noteError( $message );
-				$this->restart( 'import', TRUE );
+				$this->restart( NULL, TRUE );
 			}
 		}
 	}
@@ -373,8 +388,9 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
-		$mail	= $this->logicMail->createMail( 'Test', array( 'mailTemplateId' => $templateId ) );
-		$this->logicMail->sendMail( $mail, (object) array( 'email' => $email ) );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
+		$mail		= $logicMail->createMail( 'Test', array( 'mailTemplateId' => $templateId ) );
+		$logicMail->sendMail( $mail, (object) array( 'email' => $email ) );
 		$this->messenger->noteSuccess( 'E-Mail für Test an "%s" versendet.', htmlentities( $email, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}

@@ -1,43 +1,14 @@
 <?php
+use \CeusMedia\Bootstrap\Icon;
+use \CeusMedia\Bootstrap\Modal;
+use \CeusMedia\Bootstrap\Modal\Trigger;
+use \CeusMedia\Bootstrap\LinkButton;
+use \CeusMedia\Bootstrap\SubmitButton;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconExport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-
-$modal			= new View_Helper_Bootstrap_Modal( $env );
-$modal->setHeading( $words['modal-preview']['heading'] );
-$modal->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/html"></iframe>' );
-$modal->setId( 'modal-admin-mail-template-preview' );
-$modal->setFade( FALSE );
-//	$modal->setButtonLabelCancel( $iconCancel.'&nbsp;'.$modalWords->buttonCancel );
-//	$modal->setButtonLabelSubmit( $iconSave.'&nbsp;'.$modalWords->buttonSubmit );
-$trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
-$trigger->setModalId( 'modal-admin-mail-template-preview' );
-$trigger->setLabel( $iconPreview.'&nbsp;'.$words['edit']['buttonPreview'] );
-$trigger->setAttributes( array( 'class' => 'btn btn-info' ) );
-$buttonPreview	= $trigger->render();
-
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$words['edit']['buttonCancel'], array(
-	'href'	=> './admin/mail/template',
-	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$words['edit']['buttonSave'], array(
-	'type'	=> 'submit',
-	'name'	=> 'save',
-	'class'	=> 'btn btn-primary',
-) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$words['edit']['buttonRemove'], array(
-	'href'		=> './admin/mail/template/remove/'.$template->mailTemplateId,
-	'class'		=> 'btn btn-small btn-danger',
-	'onclick'	=> 'if(!confirm(\'Wirklich ?\'))return false;'
-) );
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;'.$words['edit']['buttonExport'], array(
-	'href'	=> './admin/mail/template/export/'.$template->mailTemplateId,
-	'class'	=> 'btn btn-small',
-) );
+$modalPreview		= new Modal( 'modal-admin-mail-template-preview' );
+$modalPreview->setHeading( $words['modal-preview']['heading'] );
+$modalPreview->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/html"></iframe>' );
+$modalPreview->setFade( FALSE );
 
 return '
 	<div class="row-fluid">
@@ -49,11 +20,35 @@ return '
 						<label for="input_template_title">'.$words['edit']['labelTitle'].'</label>
 						<input type="text" name="template_title" id="input_template_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						<div class="buttonbar">
-							'.$buttonCancel.'
-							'.$buttonSave.'
-							'.$buttonPreview.'
-							'.$buttonExport.'
-							'.$buttonRemove.'
+							'.LinkButton::create(
+								'./admin/mail/template',
+								$words['edit']['buttonCancel'],
+								'btn btn-small',
+								'list'
+							).'
+							'.SubmitButton::create(
+								'save',
+								$words['edit']['buttonSave'],
+								'btn btn-primary',
+								'check'
+							).'
+							'.Trigger::create(
+								'modal-admin-mail-template-preview',
+								$words['edit']['buttonPreview']
+							)	->setIcon( 'eye' )
+								->setAttributes( array( 'class' => 'btn btn-info' ) ).'
+							'.LinkButton::create(
+								'./admin/mail/template/export/'.$template->mailTemplateId,
+								$words['edit']['buttonExport'],
+								'btn btn-small',
+								'download'
+							).'
+							'.LinkButton::create(
+								'./admin/mail/template/remove/'.$template->mailTemplateId,
+								$words['edit']['buttonRemove'],
+								'btn btn-small btn-danger',
+								'remove'
+							)->setConfirm( 'Wirklich?' ).'
 						</div>
 					</div>
 				</div>
@@ -77,6 +72,6 @@ return '
 				</div>
 			</div>
 		</div>
-	</div>'.$modal;
+	</div>'.$modalPreview;
 
 ?>
