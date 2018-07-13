@@ -1,0 +1,13 @@
+
+Die E-Mail-Gruppe "<%group.title%>" wurde deaktivert
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>
+
+Sie können jetzt keine E-Mails mehr an die Gruppe senden.
+Falls es geplant ist, die Gruppe später wieder zu aktivieren, werden Sie wieder
+aktiv teilnehmen können.
+
+Sie können aber auch die nun inaktive Gruppe verlassen:
+<%link.leave%>

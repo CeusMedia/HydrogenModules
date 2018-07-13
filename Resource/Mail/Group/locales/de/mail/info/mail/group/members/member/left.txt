@@ -1,9 +1,0 @@
-
-Austritt in der Gruppe "<%group.title%>"
---------------------------------------------------------------------------------
-
-E-Mail:    <%member.address%>
-Name:      <%?member.title%>
-
-Verabschiedung:
-<%?greeting%>

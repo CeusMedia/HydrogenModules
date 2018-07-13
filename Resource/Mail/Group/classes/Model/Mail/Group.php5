@@ -18,11 +18,14 @@
  */
 class Model_Mail_Group extends CMF_Hydrogen_Model {
 
+	const STATUS_ARCHIVED		= -9;
 	const STATUS_DEACTIVATED	= -1;
 	const STATUS_NEW			= 0;
-	const STATUS_ACTIVATED		= 1;
+	const STATUS_EXISTING		= 1;
+	const STATUS_ACTIVATED		= 2;
+	const STATUS_WORKING		= 3;
 
-	const TYPE_PUBLIC			= 0;
+	const TYPE_AUTOJOIN			= 0;
 	const TYPE_JOIN				= 1;
 	const TYPE_REGISTER			= 2;
 	const TYPE_INVITE			= 3;

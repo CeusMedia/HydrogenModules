@@ -1,0 +1,5 @@
+Hallo <%?name%>!
+
+Ihre Mitgliedschaft in der Gruppe "<%group.title%>" wurde abgelehnt.
+
+Sie können keine E-Mails an die Gruppe schreiben.

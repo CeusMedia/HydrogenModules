@@ -22,29 +22,139 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
+	public function addGroup( $data ){
+		$data		= array_merge( array(
+			"defaultRoleId"			=> 1,
+			"managerId"				=> 0,
+			"type"					=> Model_Mail_Group::TYPE_REGISTER,
+			"visibility"			=> Model_Mail_Group::VISIBILITY_INSIDE,
+			"status"				=> Model_Mail_Group::STATUS_NEW,
+			"title"					=> NULL,
+			"address"				=> NULL,
+			"password"				=> NULL,
+			"bounce"				=> NULL,
+			"subtitle"				=> NULL,
+			"description"			=> NULL,
+		), $data, array(
+			'createdAt'				=> time(),
+			'modifiedAt'			=> time(),
+		) );
+		if( !strlen( trim( $data['address'] ) ) )
+			throw new InvalidArgumentException( 'No mailbox address given' );
+		if( !strlen( trim( $data['password'] ) ) )
+			throw new InvalidArgumentException( 'No mailbox password given' );
+		if( !strlen( trim( $data['title'] ) ) )
+			throw new InvalidArgumentException( 'No title' );
+		$groupId	= $this->modelGroup->add( $data );
+		$this->createGroupMailAccountUsingPlesk( $groupId );
+		return $groupId;
+	}
+
+	public function addGroupMember( $groupId, $address, $title ){
+		$group	= $this->checkGroupId( $groupId );
+		$member	= $this->getGroupMemberByAddress( $groupId, $address, FALSE, FALSE );
+		if( $member )
+			return $member->mailGroupMemberId;
+		$groupMemberId	= $this->modelMember->add( array(
+			'mailGroupId'	=> $groupId,
+			'roleId'		=> $group->defaultRoleId,
+			'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
+			'address'		=> $address,
+			'title'			=> $title,
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		) );
+		return $groupMemberId;
+	}
+
+/*	public function addGroupMember( $groupId, $memberId ){
+		$group	= $this->checkGroupId( $groupId );
+		if( $this->isGroupMember( $groupId, $memberId ) )
+			return;
+		$member	= $this->checkMemberId( $memberId );
+		$groupMemberId	= $this->modelMember->add( array(
+			'mailGroupId'	=> $groupId,
+			'roleId'		=> $group->defaultRoleId,
+			'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
+			'address'		=> $member->address,
+			'title'			=> $member->title,
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		) );
+		return $groupMemberId;
+	}*/
+
+	public function autojoinMemberByMessage( $groupId, $message ){
+		$allowedGroupStatuses	= array(
+			Model_Mail_Group::STATUS_ACTIVATED,
+ 			Model_Mail_Group::STATUS_WORKING,
+		);
+		$group	= $this->getGroup( $message->mailGroupId );
+		if( !$group )
+			throw new RuntimeException( 'Invalid group ID' );
+		if( !in_array( $group->status, $allowedGroupStatuses ) )
+			throw new RuntimeException( 'Group is not activated' );
+		if( (int) $group->type !== Model_Mail_Group::TYPE_AUTOJOIN )
+			throw new RuntimeException( 'Group type is not AUTOJOIN' );
+
+		$mail			= $this->env->logic->mailGroupMessage->getMessageObject( $message );
+		$senderAddress	= $mail->getSender()->getAddress();
+		$senderName		= $mail->getSender()->getName();
+		if( !$senderName )
+			$senderName	= $mail->getSender()->getLocalPart();
+		$senderMember	= $this->getGroupMemberByAddress( $groupId, $senderAddress, FALSE, FALSE );
+		if( !$senderMember ){
+			$senderMemberId	= $this->addGroupMember(
+ 				$groupId,
+				$senderAddress,
+				$senderName
+			);
+			$senderMember	= $this->checkMemberId( $senderMemberId );
+			$this->modelMessage->edit( $message->mailGroupMessageId, array(
+				'mailGroupMemberId'	=> $senderMember->mailGroupMemberId,
+			) );
+		}
+//		$action		= $this->registerMemberAction( 'confirmAfterJoin', $groupId, $senderMember->mailGroupMemberId, '' );
+		$mailData	= array(
+			'member'	=> $senderMember,
+			'group'		=> $group,
+//			'action'	=> $action,
+		);
+		$receiver	= (object) array(
+			'username'	=> $senderMember->title,
+			'email'		=> $senderMember->address,
+		);
+		$this->logicMail->handleMail(
+			new Mail_Info_Mail_Group_Autojoined( $this->env, $mailData ),
+			$receiver,
+			$this->env->getLanguage()->getLanguage()
+		);
+		return $senderMember->mailGroupMemberId;
+	}
+
 	/**
 	 *	Check mail group by ID.
 	 *	Alias for checkGroupId.
-	 *	@access		protected
+	 *	@access		public
 	 *	@param		integer			$groupId		...
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
 	 *	@return		object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 *	@todo 		make this the main implementation after extraction of this large logic to sub logic classes.
 	 */
-	protected function checkId( $groupId, $strict = TRUE ){
+	public function checkId( $groupId, $strict = TRUE ){
 		return $this->checkGroupId( $groupId, $strict );
 	}
 
 	/**
 	 *	Check mail group by ID.
-	 *	@access		protected
+	 *	@access		public
 	 *	@param		integer			$groupId		...
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
 	 *	@return		object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 */
-	protected function checkGroupId( $groupId, $strict = TRUE ){
+	public function checkGroupId( $groupId, $strict = TRUE ){
 		$group	= $this->modelGroup->get( $groupId );
 		if( $group )
 			return $group;
@@ -53,7 +163,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	protected function checkMemberId( $memberId, $strict = TRUE ){
+	public function checkMemberId( $memberId, $strict = TRUE ){
 		$member	= $this->modelMember->get( $memberId );
 		if( $member )
 			return $member;
@@ -62,7 +172,7 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	protected function checkServerId( $serverId, $strict = TRUE ){
+	public function checkServerId( $serverId, $strict = TRUE ){
 		$server	= $this->modelServer->get( $serverId );
 		if( $server )
 			return $server;
@@ -85,6 +195,30 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return $this->modelMessage->count( $indices );
 	}
 
+	/**
+	 *	Tries to create a mailbox usind Plesk command line utilities
+	 *	@see		https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/mail-mail-accounts.39181/
+	 *	@todo		finish impl (find a way to execute command as root), run checks beforehand
+	 */
+	protected function createGroupMailAccountUsingPlesk( $groupId ){
+		$group			= $this->checkGroupId( $mailGroupId );
+		if( $group->status !== Model_Mail_Group::STATUS_NEW )
+			throw new RuntimeException( 'Mail group be in status STATUS_NEW' );
+		$options		= array(
+			'--create '.$group->address,
+			'--passwd '.$group->password,
+			'-mailbox true',
+			'-mbox_quota 50M',
+			'-antivirus inout',
+			'-description "'.$group->title.'"',
+		);
+		$command		= 'plesk bin mail '.join( ' ', $options );
+
+	//	@todo: find a way to execute command as root
+		error_log( $command.PHP_EOL, 3, 'commands.log' );
+		$this->modelGroup->edit( $groupId, array( 'status' => Model_Mail_Group::STATUS_EXISTING ) );
+	}
+
 	public function getActiveGroups(){
 		return $this->getGroups( TRUE );
 	}
@@ -92,7 +226,10 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 	public function getGroup( $groupId, $activeOnly = FALSE, $strict = TRUE ){
 		$indices	= array( 'mailGroupId' => $groupId );
 		if( $activeOnly )
-			$indices['status']	= Model_Mail_Group::STATUS_ACTIVATED;
+			$indices['status']	= array(
+				Model_Mail_Group::STATUS_ACTIVATED,
+				Model_Mail_Group::STATUS_WORKING,
+			);
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -103,7 +240,10 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 	public function getGroups( $activeOnly = FALSE ){
 		$indices	= array();
 		if( $activeOnly )
-			$indices['status']	= Model_Mail_Group::STATUS_ACTIVATED;
+			$indices['status']	= array(
+				Model_Mail_Group::STATUS_ACTIVATED,
+				Model_Mail_Group::STATUS_WORKING,
+			);
 		$list	= array();
 		foreach( $this->modelGroup->getAll( $indices ) as $group )
 			$list[$group->mailGroupId]	= $group;
@@ -160,7 +300,10 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 	public function getMailGroupFromAddress( $address, $activeOnly = FALSE, $strict = TRUE ){
 		$indices	= array( 'address' => $address );
 		if( $activeOnly )
-			$indices['status']	= Model_Mail_Group::STATUS_ACTIVATED;
+			$indices['status']	= array(
+				Model_Mail_Group::STATUS_ACTIVATED,
+				Model_Mail_Group::STATUS_WORKING,
+			);
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -172,58 +315,57 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		) );
 	}
 
-	public function handleMailgroup( $groupId, $dry = FALSE, $verbose = NULL ){
-		trigger_error( "Deprecated function called.", E_USER_NOTICE );
-		$group		= $this->checkGroupId( $groupId );
-		$mailbox	= $this->getMailbox( $groupId );
-		$mails		= $this->getUnhandledNewMails( $mailbox );
-		if( !$mails )
-			return (object) array( 'mails' => array() );
-//		remark( 'Handling mailgroup: '.$group->title );
-		$list		= array();
-		foreach( $mails as $mailId => $mail ){
-//			remark( '- Mail #'.$mailId );
-//			remark( '  Sender: '.$mail->fromAddress );
-//			remark( '  Subject: '.$mail->subject );
-			if( !$this->isGroupMember( $groupId, $mail->fromAddress ) ){
-//				remark( '    Skipped since <'.$mail->fromAddress.'>" is not a member' );
-			//	@todo: send negative reply mail, inform mail admin, find decision based on future mail group settings
-				continue;
-			}
-			$member	= $this->getGroupMemberByAddress( $groupId, $mail->fromAddress );
-			$sender	= new \CeusMedia\Mail\Address( $member->address );
-			$sender->setName( $member->title );
-
-			$mail->receivers	= array();
-			$members	= $this->modelMember->getAllByIndices( array(
-				'mailGroupId'	=> $groupId,
-				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-			) );
-			foreach( $members as $member ){
-				if( $mail->fromAddress === $member->address )
-					continue;
-				$recipient	= new \CeusMedia\Mail\Address( $member->address );
-				if( $member->title )
-					$recipient->setName( $member->title );
-				$mail->receivers[]	= $recipient;
-			}
-			if( !$mail->receivers ){
-//				remark( ' - Skipped since no members than other than sender' );
-			//	@todo: send negative reply mail, inform mail admin, find decision based on future mail group settings
-				continue;
-			}
-
-//			remark( '  Forwarding to '.count( $mail->receivers ).' receivers:' );
-			foreach( $mail->receivers as $receiver )
-				$this->forwardMailTo( $groupId, $mail, $sender, $receiver, $dry );
-			if( !$dry )
-				$mailbox->markMailAsRead( $mailId );
-			$list[]	= $mail;
-		}
-		return (object) array( 'mails' => $list );
+	public function getMemberByAddress( $address, $activeOnly = FALSE, $strict = TRUE ){
+		$indices	= array( 'address' => $address );
+		if( $activeOnly )
+			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
+		if( ( $member = $this->modelMember->getByIndices( $indices ) ) )
+			return $member;
+		if( !$strict )
+			return NULL;
 	}
 
-	public function isGroupMember( $groupId, $address ){
+	/**
+	 *	Reads mailbox to find unseen mails and imports them with status STATUS_NEW.
+	 *	Imported messages need to be handled afterwards by handleImportedGroupMessages.
+	 *	@access		public
+	 *	@param		integer		$groupId		Group ID
+	 *	@param		boolean		$dry			Flag: Dry mode (default: no)
+	 *	@return		array		list of resulting message ids or import error
+	 */
+	public function importGroupMails( $groupId, $dry = FALSE ){
+		$results	= (object) array(
+			'mailsImported'	=> array(),
+			'errors'		=> array(),
+		);
+		$mailbox	= $this->getMailbox( $groupId );
+		$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
+//		$mailIds	= $limit > 0 ? array_slice( $mailIds, 0, $limit ) : $mailIds;
+		foreach( $mailIds as $mailId ){
+			$mail		= $mailbox->getRawMail( $mailId, FALSE );
+			try{
+				$messageId	= 0;
+				if( !$dry ){
+					$messageId	= $this->env->logic->mailGroupMessage->addFromRawMail( $groupId, $mail );
+					$mailbox->markMailAsRead( $mailId );
+				}
+				$results->mailsImported[]	= $messageId;
+			}
+			catch( Exception $e ){
+				$results->errors[]	= $e->getMessage();
+			}
+		}
+		return $results;
+	}
+
+	public function isGroupMember( $groupId, $memberId ){
+		return (bool) $this->modelMember->count( array(
+			'mailGroupMemberId'		=> $memberId,
+			'mailGroupId'			=> $groupId,
+		) );
+	}
+
+	public function isGroupMemberAddress( $groupId, $address ){
 		return (bool) $this->modelMember->count( array(
 			'mailGroupId'		=> $groupId,
 			'address'			=> $address,
@@ -244,22 +386,46 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic{
 		return $this->modelAction->get( $actionId );
 	}
 
+	public function setGroupBounce( $groupId, $bounce ){
+		$data		= array( 'bounce' => $bounce );
+		$this->updateGroup( $groupId, $data, __METHOD__ );
+	}
+
+	public function setGroupStatus( $groupId, $status ){
+		$data		= array( 'status' => $status );
+		$this->updateGroup( $groupId, $data, __METHOD__ );
+	}
+
+	public function setGroupTitle( $groupId, $title ){
+		$data		= array( 'title' => $title );
+		$this->updateGroup( $groupId, $data, __METHOD__ );
+	}
+
+	public function setGroupType( $groupId, $type ){
+		$data		= array( 'type' => $type );
+		$this->updateGroup( $groupId, $data, __METHOD__ );
+	}
+
+	public function setGroupVisibility( $groupId, $visibility ){
+		$data		= array( 'visibility' => $visibility );
+		$this->updateGroup( $groupId, $data, __METHOD__ );
+	}
 
 	public function testGestMail( $groupId, $limit = 1 ){
 		return;
 	}
 
+	//  --  PROTECTED METHODS --  //
 
-/*
-	protected function getUnhandledNewMails( $mailbox, $limit = NULL ){
-		$mails		= array();
-		$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
-		$mailIds	= $limit > 0 ? array_slice( $mailIds, 0, $limit ) : $mailIds;
-		foreach( $mailIds as $mailId )
-			$mails[$mailId]	= $mailbox->getMail( $mailId, FALSE );
-		return $mails;
+	protected function updateGroup( $groupId, $data, $method = NULL ){
+		$group		= $this->checkGroupId( $groupId );
+		$this->modelGroup->edit( $groupId, $data );
+		return $this->env->getCaptain()->callHook( 'MailGroup', 'change', $this, array(
+			'groupId'		=> $groupId,
+			'before'		=> $group,
+			'changes'		=> $data,
+			'method'		=> $method,
+		) );
 	}
-*/
 }
-
 ?>

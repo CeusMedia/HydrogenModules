@@ -1,0 +1,6 @@
+
+Die E-Mail-Gruppe "<%group.title%>" wurde deaktivert
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>

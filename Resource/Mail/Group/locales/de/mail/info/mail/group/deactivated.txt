@@ -1,3 +1,0 @@
-Hallo <%?member.title%>!
-
-Ihre Mitgliedschaft in der E-Mail-Gruppe "<%group.title%>" wurde abgelehnt.

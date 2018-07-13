@@ -23,7 +23,7 @@ if( $groups ){
 		$subtitle	= strlen( trim( $group->subtitle ) ) ? UI_HTML_Tag::create( 'strong', $group->subtitle ).'<br/>' : '';
 
 		$buttons	= array();
-		if( in_array( $group->type, array( Model_Mail_Group::TYPE_PUBLIC, Model_Mail_Group::TYPE_JOIN, Model_Mail_Group::TYPE_REGISTER ) ) )
+		if( in_array( $group->type, array( Model_Mail_Group::TYPE_AUTOJOIN, Model_Mail_Group::TYPE_JOIN, Model_Mail_Group::TYPE_REGISTER ) ) )
 			$buttons[]	= UI_HTML_Tag::create( 'a', $iconJoin.'&nbsp;beitreten', array(
 				'href'	=> './info/mail/group/join/'.$group->mailGroupId,
 				'class'	=> 'btn not-btn-small btn-primary',

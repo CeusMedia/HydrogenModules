@@ -1,0 +1,9 @@
+
+Die E-Mail-Gruppe "<%group.title%>" wurde aktivert
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>
+
+Sie können jetzt E-Mails an die Gruppe senden, die an alle anderen Mitglieder
+weitergeleitet werden.

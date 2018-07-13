@@ -1,6 +1,38 @@
 <?php
 class Hook_Resource_Mail_Group{
 
+
+	static public function onGroupActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$logicGroup		= new Logic_Mail_Group( $env );
+		$logicMail		= Logic_Mail::getInstance( $env );
+
+		$data	= (object) $data;
+		if( property_exists( $data->group ) && is_object( $data->group ) )
+			$group	= $data->group;
+		else if( property_exists( $data->groupId ) && $data->groupId )
+			$group	= $logicGroup->getGroup( $data->groupId );
+		else
+			throw new DomainException( 'No group data set' );
+
+	//	@todo implement
+	}
+
+	static public function onGroupDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$logicGroup		= new Logic_Mail_Group( $env );
+		$logicMail		= Logic_Mail::getInstance( $env );
+
+		$data	= (object) $data;
+		if( property_exists( $data->group ) && is_object( $data->group ) )
+			$group	= $data->group;
+		else if( property_exists( $data->groupId ) && $data->groupId )
+			$group	= $logicGroup->getGroup( $data->groupId );
+		else
+			throw new DomainException( 'No group data set' );
+
+	//	@todo implement
+	}
+
+
 	static public function onConfirmAfterJoin( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
@@ -142,7 +174,7 @@ class Hook_Resource_Mail_Group{
 		}
 
 		$member		= $modelMember->get( $action->mailGroupMemberId );
-		$mail		= new Mail_Info_Mail_Group_Left( $env, $mailData );
+		$mail		= new Mail_Info_Mail_Group_Member_Left( $env, $mailData );
 		$receiver	= (object) array( 'email' => $member->address );
 		$language	= $env->getLanguage()->getLanguage();
 		$logicMail->appendRegisteredAttachments( $mail, $language );

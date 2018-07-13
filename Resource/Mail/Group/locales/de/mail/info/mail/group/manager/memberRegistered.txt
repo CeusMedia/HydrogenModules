@@ -2,8 +2,15 @@
 Neuer Beitritt in der Gruppe "<%group.title%>"
 --------------------------------------------------------------------------------
 
-E-Mail:    <%member.address%>
-Name:      <%?member.title%>
+Mitglied:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+- Link:      <%member.link%>
+
+Gruppe:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>
 
 Begrüßung:
 <%?greeting%>

@@ -14,7 +14,7 @@ class Mail_Info_Mail_Group_Members_MemberDeactivated extends Mail_Abstract{
 		$data['link']		= array(
 		);
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/member/deactivated.txt', $data );
+		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberDeactivated.txt', $data );
 		$this->setText( $plain );
 
 		return (object) array(

@@ -1,9 +1,0 @@
-
-Neuer Beitritt in der Gruppe "<%group.title%>"
---------------------------------------------------------------------------------
-
-E-Mail:    <%member.address%>
-Name:      <%?member.title%>
-
-Begrüßung:
-<%?greeting%>

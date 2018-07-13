@@ -7,8 +7,8 @@ class Job_Mail_Group extends Job_Abstract{
 
 	protected function __onInit(){
 		$this->logicGroup		= new Logic_Mail_Group( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->logicMessage		= new Logic_Mail_Group_Message( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 	}
 
 	public function activateConfirmedMembers(){
@@ -153,23 +153,76 @@ class Job_Mail_Group extends Job_Abstract{
 	}
 
 	public function handle(){
-		$groups			= $this->logicGroup->getActiveGroups();
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+//			$this->out( 'Would send '.$count.' mails.' );
+		}
+		$groups		= $this->logicGroup->getActiveGroups();
 		foreach( $groups as $group ){
-			$results	= $this->logicGroup->handleMailgroup( $group->mailGroupId );
-			if( $results->mails ){
-				$this->out( date( 'r' ).': Handling mailgroup: '.$group->title );
- 				foreach( $results->mails as $mailId => $handledMail ){
-//					if( !$handledMail->receivers )
-//						continue;
-					$this->out( '- Mail #'.$handledMail->id );
-					$this->out( '  Sender: '.$handledMail->fromAddress );
-					$this->out( '  Subject: '.$handledMail->subject );
-					$this->out( '  Receivers: '.count( $handledMail->receivers ) );
-					foreach( $handledMail->receivers as $receiver ){
-						$this->out( '    To: '.$receiver->getAddress().' ('.$receiver->getName().')' );
+			if( (int) $group->status === Model_Mail_Group::STATUS_WORKING )
+				continue;
+			$groupId	= $group->mailGroupId;
+			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_WORKING );
+			$this->out( '* '.date( 'r' ).': Group: ['.$groupId.'] '.$group->title );
+
+			try{
+				//  handle formerly stalled messages
+				$results	= $this->logicMessage->handleStalledGroupMessages( $groupId, $this->dryMode );
+				if( $results->forwarded ){
+					$this->out( '  - '.count( $results->forwarded ).' messages forwarded' );
+					foreach( $results->forwarded as $message ){
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '  Subject: '.$mailObject->getSubject() );
+						$this->out( '  Sender: '.$mailObject->getSender() );
 					}
 				}
+				if( $results->rejected ){
+					$this->out( '  - '.count( $results->rejected ).' messages rejected' );
+				}
+
+				//  import new mails from mailbox
+				$results	= $this->logicGroup->importGroupMails( $groupId, $this->dryMode );
+				if( $results->errors ){
+					$this->out( '  - '.count( $results->errors ).' errors:' );
+						foreach( $results->errors as $error )
+						$this->out( '    * '.$error );
+				}
+				if( $results->mailsImported ){
+					$this->out( '  - '.count( $results->mailsImported ).' mails imported' );
+					foreach( $results->mailsImported as $messageId ){
+						if( !$messageId )															//  dry mode has been enabled
+							continue;
+						$message	= $this->logicMessage->checkId( $messageId );
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '  Subject: '.$mailObject->getSubject() );
+						$this->out( '  Sender: '.$mailObject->getSender() );
+	/*					$this->out( '- Mail #'.$handledMail->id );
+						$this->out( '  Sender: '.$handledMail->fromAddress );
+						$this->out( '  Receivers: '.count( $handledMail->receivers ) );
+	*/				}
+				}
+
+				//  handle new messages
+				$results	= $this->logicMessage->handleImportedGroupMessages( $groupId, $this->dryMode );
+				if( $results->forwarded ){
+					$this->out( '  - '.count( $results->forwarded ).' messages forwarded' );
+					foreach( $results->forwarded as $message ){
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '  Subject: '.$mailObject->getSubject() );
+						$this->out( '  Sender: '.$mailObject->getSender() );
+					}
+				}
+				if( $results->stalled ){
+					$this->out( '  - '.count( $results->stalled ).' messages stalled' );
+				}
+				if( $results->rejected ){
+					$this->out( '  - '.count( $results->rejected ).' messages rejected' );
+				}
+			} catch( Exception $e ){
+				$this->logError( $e->getMessage() );
+				$this->out( 'ERROR: '.$e->getMessage().' @ '.$e->getFile().':'.$e->getLine().PHP_EOL.$e->getTraceAsString() );
 			}
+			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_ACTIVATED );
 		}
 	}
 }

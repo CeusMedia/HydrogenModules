@@ -23,6 +23,41 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
 	}
 
+	public function addFromRawMail( $groupId, $rawMail ){
+		$message	= \CeusMedia\Mail\Message\Parser::parse( $rawMail );
+		$headers	= $message->getHeaders();
+		$member		= $this->modelMember->getByIndices( array(
+			'mailGroupId'	=> $groupId,
+			'address'		=> $message->getSender()->getAddress(),
+		) );
+		$parentId	= 0;
+		if( $headers->hasField( 'References' ) ){
+			$referenceId	= $headers->getField( 'References' )->getValue();
+			$indices		= array( 'messageId' => '%'.$referenceId );
+			if( ( $parent = $this->modelMessage->getByIndices( $indices ) ) )
+				$parentId	= $parent->mailGroupMessageId;
+		}
+		$timestamp	= strtotime( $headers->getField( 'Date' )->getValue() );
+		$data		= array(
+			'mailGroupId'		=> $groupId,
+			'mailGroupMemberId'	=> $member ? $member->mailGroupMemberId : 0,
+			'status'			=> Model_Mail_Group_Message::STATUS_NEW,
+			'parentId'			=> $parentId,
+			'messageId'			=> $headers->getField( 'Message-ID' )->getValue(),
+			'createdAt'			=> $timestamp,
+		);
+		$compression	= "bzip2";
+		if( $compression === "bzip2" ){
+			$data['raw']		= 'BZIP2:'.bzcompress( $rawMail );
+			$data['object']		= 'BZIP2:'.bzcompress( serialize( $message ) );
+		}
+		else if( $compression === "gzip" ){
+			$data['raw']		= 'GZIP:'.gzdeflate( $rawMail );
+			$data['object']		= 'GZIP:'.gzdeflate( serialize( $message ) );
+		}
+		return $this->modelMessage->add( $data, FALSE );
+	}
+
 	public function checkId( $messageId, $strict = TRUE ){
 		$message	= $this->modelMessage->get( $messageId );
 		if( $message )
@@ -45,12 +80,12 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	 *	@return		object			Mail message object
 	 */
 	public function getMessageObject( $messageOrMessageId ){
-		if( is_object( $messageOrMessageId ) )
-			$message	= $messageOrMessageId;
-		else if( is_int( $messageOrMessageId ) )
+		if( is_int( $messageOrMessageId ) )
 			$message	= $this->modelMessage->get( $messageOrMessageId );
-		if( !$message || !isset( $message->object ) )
-			throw new InvalidArgumentException( 'Given message is invalid' );
+		else if( is_object( $messageOrMessageId ) )
+			$message	= $messageOrMessageId;
+		else
+			throw new InvalidArgumentException( 'No valid message object or ID given' );
 
 		$object	= explode( ":", $message->object, 2 );
 		if( $object[0] === "BZIP2" )
@@ -60,7 +95,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		return unserialize( $object[1] );
 	}
 
-	public function getRawMailFromMessage( $messageOrMessageId ){
+	public function getMessageRawMail( $messageOrMessageId ){
 //		trigger_error( "Oh! I thought this method is not used anymore.", E_USER_ERROR );
 		if( is_object( $messageOrMessageId ) )
 			$message	= $messageOrMessageId;
@@ -99,65 +134,93 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		}
 	}*/
 
-	public function handleNewMessages( $groupId ){
+	public function handleImportedGroupMessages( $groupId, $dry = FALSE ){
+print( 'handleImportedGroupMessages'.PHP_EOL );
 		$senderMemberStatusesToReject	= array(
 			Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			Model_Mail_Group_Member::STATUS_UNREGISTERED,
 		);
 		$senderMemberStatusesToStall	= array(
-			Model_Mail_Group_Member::STATUS_NEW,
+			Model_Mail_Group_Member::STATUS_REGISTERED,
 			Model_Mail_Group_Member::STATUS_CONFIRMED,
 		);
-		$group		= $this->getMailGroupLogic( 'mailGroup' )->checkGroupId( $groupId );
+		$group		= $this->logicGroup->checkGroupId( $groupId );
+print( 'Group:'.PHP_EOL );
+print_m( $group );
+		if( !$group )
+			throw new InvalidArgumentException( 'Invalid group ID' );
+		$results	= (object) array(
+			'rejected'		=> array(),
+			'stalled'		=> array(),
+			'forwarded'		=> array(),
+		);
 		$indices	= array(
-			'mailGroupId'	=> $groupId,
-			'status'		=> Model_Mail_Group_Message::STATUS_NEW,
+			'mailGroupId'		=> $groupId,
+			'status'			=> Model_Mail_Group_Message::STATUS_NEW,
 		);
 		$orders		= array( 'createdAt' => 'ASC' );
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
-			if( $message->mailGroupMemberId ){
-				if( in_array( (int) $member->status, $senderMemberStatusesToReject ) ){
-					$this->rejectMessage( $group, $message );
+
+			if( (int) $message->mailGroupMemberId ){
+				$sender	= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );
+				if( !$this->logicGroup->isGroupMember( $groupId, $sender->mailGroupMemberId ) ){
+					if( (int) $group->type === Model_Mail_Group::TYPE_AUTOJOIN ){
+						$this->logicGroup->addGroupMember( $message->mailGroupMemberId, $sender->mailGroupMemberId );
+					}
+					else{
+
+					}
+				}
+
+				if( in_array( (int) $sender->status, $senderMemberStatusesToReject ) ){
+					$results->rejected[]	= $message;
+					if( !$dry )
+						$this->rejectMessage( $message );
 					continue;
 				}
-				if( in_array( (int) $member->status, $senderMemberStatusesToStall ) ){
-					$this->stallMessage( $group, $message );
+				if( in_array( (int) $sender->status, $senderMemberStatusesToStall ) ){
+					$results->stalled[]	= $message;
+					if( !$dry )
+						$this->stallMessage( $message );
 					continue;
 				}
+				if( !$dry )
+					$message->sentMails	= $this->forwardMessage( $message, $dry );
+				$results->forwarded[]	= $message;
 			}
 			else{
 				switch( (int) $group->type ){
-					case Model_Mail_Group::TYPE_PUBLIC:
-						throw new Exception( 'Not implemented yet (see Logic_Mail_Group@270)' );
-						//  @todo extract sender address from mail
-						$member	= array(
-							'username'	=> '',
-							'email'		=> '',
-						);
-						$mailData	= array(
-							'member'	=> $member,
-							'group'		=> $group,
-							'greeting'	=> $action->message,
-						);
-						$mail		= new Mail_Info_Mail_Group_Autojoined( $this->env );
-						$receiver	= (object) $member;
-						$language	= $this->env->getLanguage()->getLanguage();
-						$this->logicMail->handleMail( $mail, $receiver, $language );
+					case Model_Mail_Group::TYPE_AUTOJOIN:
+						if( !$dry ){
+							$this->logicGroup->autojoinMemberByMessage( $groupId, $message );
+							$message	= $this->checkId( $message->mailGroupMessageId );
+//							$this->stallMessage( $message );
+//							$results->stalled[]	= $message;
+							$message->sentMails	= $this->forwardMessage( $message, $dry );
+							$results->forwarded[]	= $message;
+						}
 						break;
 					case Model_Mail_Group::TYPE_JOIN:
 					case Model_Mail_Group::TYPE_REGISTER:
 					case Model_Mail_Group::TYPE_INVITE:
-						$this->rejectMessage( $group, $message );
+						$results->rejected[]	= $message;
+						if( !$dry )
+							$this->rejectMessage( $message );
 						break;
 				}
 			}
 		}
+		return $results;
 	}
 
-	public function handleStalledMessages( $groupId ){
-		$group		= $this->getMailGroupLogic( 'mailGroup' )->checkGroupId( $groupId );
-//		$group		= $this->env->logic->mailGroup->checkGroupId( $groupId );
+	public function handleStalledGroupMessages( $groupId, $dry = FALSE ){
+		$group		= $this->logicGroup->checkGroupId( $groupId );
+
+		$results	= (object) array(
+			'forwarded'	=> array(),
+			'rejected'	=> array(),
+		);
 		$indices	= array(
 			'mailGroupId'	=> $groupId,
 			'status'		=> Model_Mail_Group_Message::STATUS_STALLED,
@@ -166,71 +229,93 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
 			if( $message->status ){
-
-			}
-		}
-	}
-
-	public function importNewMails( $groupId = 0, $dry = FALSE ){
-		$groupIds	= array_keys( $this->getGroups() );
-		$groupIds	= $groupId > 0 ? array( $groupId ) : $groupIds;
-		$results	= (object) array(
-			'mailsImported'	=> array(),
-			'errors'		=> array(),
-		);
-		foreach( $groupIds as $groupId ){
-			$mailbox	= $this->getMailbox( $groupId );
-			$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
-//			$mailIds	= $limit > 0 ? array_slice( $mailIds, 0, $limit ) : $mailIds;
-			foreach( $mailIds as $mailId ){
-				$mail		= $mailbox->getRawMail( $mailId );
-				try{
-					$messageId	= $this->importNewMail( $groupId, $mail );
-					$results->mailsImported[]	= $messageId;
-					if( !$dry )
-						$mailbox->markMailAsRead( $mailId );
-				}
-				catch( Exception $e ){
-					$results->errors[]	= $e->getMessage();
-				}
+//				@todo: implement
+//				$results->forwarded[]	= $message;
 			}
 		}
 		return $results;
 	}
 
 
-
 	//  --  PROTECTED METHODS  --  //
 
-	protected function forwardMailTo( $groupId, $mail, \CeusMedia\Mail\Address $sender, \CeusMedia\Mail\Address $receiver, $dry = FALSE ){
-		trigger_error( "Deprecated function called.", E_USER_NOTICE );
-		$group		= $this->checkGroupId( $groupId );
-		$message	= new \CeusMedia\Mail\Message();
-		if( strlen( trim( $mail->textPlain ) ) )
-			$message->addText( $mail->textPlain );
-		if( strlen( trim( $mail->textHtml ) ) )
-			$message->addHtml( $mail->textHtml );
-		if( !count( $message->getParts() ) )
+	protected function forwardMessage( $message, $dryMode = FALSE ){
+		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
+		if( (int) $message->status !== Model_Mail_Group_Message::STATUS_NEW )
+			throw new RuntimeException( 'Only new messages can be sent' );
+		if( !$message->mailGroupMemberId )
+			throw new RuntimeException( 'Message sender is not assigned to a group member' );
+		$mails		= array();
+		$members	= $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE );
+		foreach( $members as $member ){
+			$mails[]	= $this->forwardMessageToMember( $message, $member, $dryMode );
+		}
+		return $mails;
+	}
+
+	protected function forwardMessageToMember( $messageObjectOrId, $memberObjectOrId, $dry = FALSE ){
+		if( is_object( $messageObjectOrId ) )
+			$message	= $messageObjectOrId;
+		else if( is_int( $messageObjectOrId ) )
+			$message	= $this->checkId( $messageObjectOrId );
+		else
+			throw new InvalidArgumentException( 'No valid message object or ID given' );
+
+		if( is_object( $memberObjectOrId ) )
+			$member	= $memberObjectOrId;
+		else if( is_int( $memberObjectOrId ) )
+			$member	= $this->checkMemberId( $memberObjectOrId );
+		else
+			throw new InvalidArgumentException( 'No valid member object or ID given' );
+
+		$group		= $this->logicGroup->checkGroupId( $message->mailGroupId );
+		if( !$group )
+			throw new InvalidArgumentException( 'Invalid group ID' );
+
+		if( !$message->mailGroupMemberId )
+			throw new RuntimeException( 'Message sender is not assigned' );
+		$senderMember		= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );
+		if( !$senderMember )
+			throw new RuntimeException( 'Message sender is not valid' );
+		$senderAddress	= new \CeusMedia\Mail\Address( $senderMember->address, $senderMember->title );
+
+		$mailObject		= $this->getMessageObject( (int) $message->mailGroupMessageId );
+		$forwardMail	= new \CeusMedia\Mail\Message();
+		foreach( $mailObject->getParts( TRUE ) as $part ){
+			if( strlen( trim( $part->getContent() ) ) )
+				$forwardMail->addPart( $part );
+		}
+		if( !count( $forwardMail->getParts( TRUE ) ) ){
+			// @todo	handle this situation - do not return only
+			remark( 'No mails parts set' );
 			return;
-		$message->setSender( $sender );
-		$message->addReplyTo( new \CeusMedia\Mail\Address( $group->address ) );
-		$message->setSubject( $mail->subject );
-		$message->addHeaderPair( 'Precedence', 'list' );
-		$message->addHeaderPair( 'List-Post', '<mailto:'.$group->address.'>' );
-		$message->addHeaderPair( 'Reply-To', $group->address );
+		}
+
+		$forwardMail->setSender( $senderAddress );
+		$forwardMail->addReplyTo( new \CeusMedia\Mail\Address( $group->address ) );
+		$forwardMail->setSubject( $mailObject->getSubject() );
+		$forwardMail->addHeaderPair( 'Precedence', 'list' );
+		$forwardMail->addHeaderPair( 'List-Post', '<mailto:'.$group->address.'>' );
+		$forwardMail->addHeaderPair( 'Reply-To', $group->address );
 		if( !empty( $group->bounce ) )
 			$message->addHeaderPair( 'Errors-To', $group->bounce );
-		$message->addRecipient( $receiver );
-//		remark( '    Send to: '.$receiver->get() );
+		$recipient	= new \CeusMedia\Mail\Address( $member->address, $member->title );
+		$forwardMail->addRecipient( $recipient );
+//		remark( '    Send to: '.$recipient->get() );
 		if( !$dry )
-			$this->getTransport( $groupId )->send( $message );
+			$this->getTransport( $message->mailGroupId )->send( $forwardMail );
+		$this->setMessageStatus(
+			$message->mailGroupMessageId,
+			Model_Mail_Group_Message::STATUS_FORWARDED,
+			__METHOD__
+		);
+		return $forwardMail;
 	}
 
 	protected function getTransport( $groupId ){
-		$group	= $this->checkGroupId( $groupId );
-		$server	= $this->checkServerId( $group->mailGroupServerId );
-
 		if( !isset( $this->transports[(int) $groupId] ) )
+			$group	= $this->logicGroup->checkGroupId( $groupId );
+			$server	= $this->logicGroup->checkServerId( $group->mailGroupServerId );
 			$this->transports[(int) $groupId]  = new \CeusMedia\Mail\Transport\SMTP(
 				$server->smtpHost,
 				(int) $server->smtpPort,
@@ -240,53 +325,52 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		return $this->transports[(int) $groupId];
 	}
 
-	protected function importNewMail( $groupId, $rawMail ){
-		$message	= \CeusMedia\Mail\Message\Parser::parse( $rawMail );
-		$headers	= $message->getHeaders();
-		$member		= $this->modelMember->getByIndices( array(
-			'mailGroupId'	=> $groupId,
-			'address'		=> $message->getSender()->getAddress(),
-		) );
-		$parentId	= 0;
-		if( $headers->hasField( 'References' ) ){
-			$referenceId	= $headers->getField( 'References' )->getValue();
-			$indices		= array( 'messageId' => '%'.$referenceId );
-			if( ( $parent = $this->modelMessage->getByIndices( $indices ) ) )
-				$parentId	= $parent->mailGroupMessageId;
-		}
-		$timestamp	= strtotime( $headers->getField( 'Date' )->getValue() );
-		$data	= array(
-			'mailGroupId'		=> $groupId,
-			'mailGroupMemberId'	=> $member ? $member->mailGroupMemberId : 0,
-			'status'			=> Model_Mail_Group_Message::STATUS_FORWARDED,
-			'parentId'			=> $parentId,
-			'messageId'			=> $headers->getField( 'Message-ID' )->getValue(),
-			'createdAt'			=> $timestamp,
+	protected function rejectMessage( $messageObjectOrId ){
+		if( is_object( $messageObjectOrId ) )
+			$message	= $messageObjectOrId;
+		else if( is_int( $messageObjectOrId ) )
+			$message	= $this->checkId( $messageObjectOrId );
+		else
+			throw new InvalidArgumentException( 'No valid message object or ID given' );
+
+		$this->setMessageStatus(
+			$message->mailGroupMessageId,
+			Model_Mail_Group_Message::STATUS_REJECTED,
+			__METHOD__
 		);
-		$compression	= "bzip2";
-		if( $compression === "bzip2" ){
-			$data['raw']		= 'BZIP2:'.bzcompress( $rawMail );
-			$data['object']		= 'BZIP2:'.bzcompress( serialize( $message ) );
-		}
-		else if( $compression === "gzip" ){
-			$data['raw']		= 'GZIP:'.gzdeflate( $rawMail );
-			$data['object']		= 'GZIP:'.gzdeflate( serialize( $message ) );
-		}
-		return $this->modelMessage->add( $data, FALSE );
-	}
-
-	protected function rejectMessage( $group, $message ){
 		//	... @todo send mail to sender
-		return $this->modelMessage->edit( $message->mailGroupMessageId, array(
-			'status'		=> Model_Mail_Group_Message::STATUS_REJECTED,
-			'modifiedAt'	=> time(),
-		) );
 	}
 
-	protected function stallMessage( $group, $message ){
-		return $this->modelMessage->edit( $message->mailGroupMessageId, array(
-			'status'		=> Model_Mail_Group_Message::STATUS_STALLED,
+	protected function stallMessage( $messageObjectOrId ){
+		if( is_object( $messageObjectOrId ) )
+			$message	= $messageObjectOrId;
+		else if( is_int( $messageObjectOrId ) )
+			$message	= $this->checkId( $messageObjectOrId );
+		else
+			throw new InvalidArgumentException( 'No valid message object or ID given' );
+
+		$this->setMessageStatus(
+			$message->mailGroupMessageId,
+			Model_Mail_Group_Message::STATUS_STALLED,
+			__METHOD__
+		);
+		//	... @todo send mail to sender
+	}
+
+	//  --  PRIVATE METHODS  --  //
+
+	private function setMessageStatus( $messageId, $status, $method = NULL ){
+		$message	= $this->checkId( $messageId );
+		$data		= array(
+			'status'		=> $status,
 			'modifiedAt'	=> time(),
+		);
+		$result	= $this->modelMessage->edit( $messageId, $data );
+		$this->env->getCaptain()->callHook( 'MailGroupMessage', 'change', $this, array(
+			'before'	=> $message,
+			'changes'	=> $data,
+			'method'	=> $method,
 		) );
+		return $result;
 	}
 }

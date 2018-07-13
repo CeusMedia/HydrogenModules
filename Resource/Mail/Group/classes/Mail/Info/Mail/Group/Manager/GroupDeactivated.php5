@@ -1,22 +1,25 @@
 <?php
-class Mail_Info_Mail_Group_Leaving extends Mail_Abstract{
+class Mail_Info_Mail_Group_Manager_GroupDeactivated extends Mail_Abstract{
 
 	protected function generate( $data = array() ){
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
-		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
-		$this->setSubject( 'Ihr Austritt aus der Gruppe "'.$data['group']->title.'"' );
+		$this->setSubject( 'Gruppe "'.$data['group']->title.'" deaktiviert' );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
 		$data['link']		= array(
-			'confirm'		=> $this->env->url.'info/mail/group/completeMemberAction/'.$data['action']->mailGroupActionId.'/'.$data['action']->uuid,
+			'group'			=> $this->env->url.'work/mail/group/view/'.$data['group']->mailGroupId,
 		);
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/leaving.txt', $data );
+		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/groupDeactivated.txt', $data );
 		$this->setText( $plain );
+
+/*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );
+		$html	= nl2br( $html );
+		$this->setHtml( $html );*/
 
 		return (object) array(
 			'plain'	=> $plain,

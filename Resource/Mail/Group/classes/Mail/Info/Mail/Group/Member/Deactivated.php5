@@ -12,6 +12,8 @@ class Mail_Info_Mail_Group_Member_Deactivated extends Mail_Abstract{
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
 		$data['link']		= array(
+			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
+			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 		);
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/deactivated.txt', $data );

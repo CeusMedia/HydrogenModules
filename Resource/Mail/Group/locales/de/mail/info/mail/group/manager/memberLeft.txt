@@ -1,0 +1,16 @@
+
+Austritt in der Gruppe "<%group.title%>"
+--------------------------------------------------------------------------------
+
+Mitglied:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+- Link:      <%member.link%>
+
+Gruppe:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>
+
+Verabschiedung:
+<%?greeting%>

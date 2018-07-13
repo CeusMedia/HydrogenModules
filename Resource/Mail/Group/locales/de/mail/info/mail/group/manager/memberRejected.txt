@@ -1,0 +1,12 @@
+
+Mitgliedsregistrierung in der Gruppe "<%group.title%>" abgelehnt
+--------------------------------------------------------------------------------
+
+Mitglied:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+
+Gruppe:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>

@@ -112,6 +112,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		);
 		if( $filterType )
 			$conditions['type']	= $filterType;
+		$orders	= array( 'title' => 'ASC' );
 		$limits	= array( $limit, $page * $limit );
 		$total	= $this->modelGroup->count( $conditions );
 		$groups	= $this->modelGroup->getAll( $conditions, $orders, $limits );
@@ -177,7 +178,7 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 				$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
 
 				$member	= $this->logic->getGroupMember( $memberId, FALSE );
-				$mail	= new Mail_Info_Mail_Group_Joining( $this->env, array(
+				$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, array(
 					'member'	=> $member,
 					'group'		=> $group,
 					'action'	=> $action,
@@ -224,12 +225,15 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 					else{
 						$action	= $this->logic->registerMemberAction( 'deactivateAfterLeaving', $groupId, $memberId, $greeting );
 
-						$mail	= new Mail_Info_Mail_Group_Leaving( $this->env, array(
+						$mail	= new Mail_Info_Mail_Group_Member_Leaving( $this->env, array(
 							'member'	=> $member,
 							'group'		=> $group,
 							'action'	=> $action,
 						) );
-						$receiver	= (object) array( 'email' => $member->address );
+						$receiver	= (object) array(
+							'email'		=> $member->address,
+							'username'	=> $member->title
+						);
 						$language	= $this->env->getLanguage()->getLanguage();
 						$this->logicMail->appendRegisteredAttachments( $mail, $language );
 						$this->logicMail->handleMail( $mail, $receiver, $language );
