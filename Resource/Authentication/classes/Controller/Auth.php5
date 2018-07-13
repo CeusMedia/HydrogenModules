@@ -22,10 +22,14 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	static public function ___onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$exception	= $data['exception'];
+		$payload	= (object) $data;
+		if( !property_exists( $payload, 'exception' ) )
+			throw new Exception( 'No exception data given' );
+		if( !( $payload->exception instanceof Exception ) )
+			throw new Exception( 'Given exception data is not an exception object' );
 		$request	= $env->getRequest();
 		$session	= $env->getSession();
-		if( $exception->getCode() == 403 ){
+		if( $payload->exception->getCode() == 403 ){
 			if( !$session->get( 'userId' ) ){
 				$forwardUrl	= $request->get( 'controller' );
 				if( $request->get( 'action' ) )
