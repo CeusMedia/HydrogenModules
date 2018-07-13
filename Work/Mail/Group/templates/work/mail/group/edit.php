@@ -22,6 +22,7 @@ foreach( $roles as $role )
 	$roleMap[$role->mailGroupRoleId]	= $role->title;
 
 $statusClasses	= array(
+	-3	=> 'label-inverse',
 	-2	=> 'label-inverse',
 	-1	=> 'label-inverse',
 	0	=> 'label-info',
@@ -109,27 +110,51 @@ if( $members ){
 			'title'	=> 'aktivieren',
 		) );
 		$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate, array(
-			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
+			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-3',
 			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'deaktivieren',
+		) );
+		$buttonReject	= UI_HTML_Tag::create( 'a', $iconDeactivate, array(
+			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
+			'class'	=> 'btn btn-inverse btn-mini',
+			'title'	=> 'ablehnen',
 		) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'	=> './work/mail/group/removeMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId,
 			'class'	=> 'btn btn-danger btn-mini',
 			'title'	=> 'entfernen',
 		) );
+		if( $member->status == Model_Mail_Group_Member::STATUS_REJECTED ){
+			$buttonDeactivate	= '';
+			$buttonReject		= '';
+		}
 		if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED ){
-			$buttonActivate	= '';
-			$buttonRemove	= '';
+			$buttonActivate		= '';
+			$buttonReject		= '';
+			$buttonRemove		= '';
 		}
 		if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED ){
+			$buttonReject		= '';
 			$buttonDeactivate	= '';
+		}
+		if( $member->status == Model_Mail_Group_Member::STATUS_REGISTERED ){
+			$buttonActivate		= '';
+			$buttonRemove		= '';
+			$buttonDeactivate	= '';
+/*			if( $group->type == Model_Mail_Group::TYPE_JOIN ){
+				$buttonReject		= '';
+			}*/
+		}
+		if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
+			$buttonDeactivate	= '';
+			$buttonRemove		= '';
 		}
 		if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
 			$buttonActivate		= '';
 			$buttonDeactivate	= '';
+			$buttonReject		= '';
 		}
-		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonActivate, $buttonDeactivate, $buttonRemove ), array( 'class' => 'btn-group' ) );
+		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonActivate, $buttonReject, $buttonDeactivate, $buttonRemove ), array( 'class' => 'btn-group' ) );
 		$address	= UI_HTML_Tag::create( 'span', $member->address, array( 'class' => 'muted' ) );
 		$name		= UI_HTML_Tag::create( 'small', $member->title, array( 'class' => '' ) );
 		$status		= UI_HTML_Tag::create( 'span', $words['member-statuses'][$member->status], array( 'class' => 'label '.$statusClasses[$member->status] ) );

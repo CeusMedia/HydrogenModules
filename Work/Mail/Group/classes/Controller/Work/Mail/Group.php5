@@ -9,6 +9,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	protected $modelRole;
 	protected $modelServer;
 	protected $modelAction;
+	protected $modelUser;
 	protected $logicGroup;
 	protected $logicMail;
 
@@ -17,46 +18,15 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 
-		if( 0 ){
-			$this->messenger->noteNotice( 'Old style :(' );
-			$this->modelGroup	= new Model_Mail_Group( $this->env );
-			$this->modelMember	= new Model_Mail_Group_Member( $this->env );
-			$this->modelRole	= new Model_Mail_Group_Role( $this->env );
-			$this->modelAction	= new Model_Mail_Group_Action( $this->env );
-	//		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
-			$this->modelUser	= new Model_User( $this->env );
-			$this->logicGroup	= new Logic_Mail_Group( $this->env );
-			$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		}
-		else{
-			$this->messenger->noteNotice( 'New style :)' );
-			$this->modelGroup	= $this->getModel( 'mailGroup1' );
-			$this->modelMember	= $this->getModel( 'mailGroupMember' );
-			$this->modelGroup	= $this->getModel( 'mailGroupRole' );
-			$this->modelAction	= $this->getModel( 'mailGroupAction' );
-	//		$this->modelServer	= $this->getModel( 'mailGroupServer' );
-			$this->modelGroup	= $this->getModel( 'mailGroup' );
-			$this->logicGroup	= $this->getLogic( 'mailGroup' );
-			$this->logicMail	= $this->getLogic( 'mail' );
-		}
-
-
-	//	@todo perhaps "new style"?
-	//	$this->modelGroup	= $this->getModel( 'mailGroup' );
-	//	$this->modelMember	= $this->getModel( 'mailGroupMember' );
-	//	$this->modelGroup	= $this->getModel( 'mailGroupRole' );
-	//	$this->modelAction	= $this->getModel( 'mailGroupAction' );
-//	//	$this->modelServer	= $this->getModel( 'mailGroupServer' );
-	//	$this->modelGroup	= $this->getModel( 'mailGroup' );
-
-	//	@todo perhaps "new style"?
-	//	$this->logicGroup	= $this->env->getLogic()->get( 'mailGroup' );
-	//	$this->logicMail	= $this->env->getLogic()->get( 'mail' );
-
-	//	@todo perhaps "new style"?
-	//	$this->logicGroup	= $this->env->getLogic()->mailGroup;
-	//	$this->logicMail	= $this->env->getLogic()->mail;
-
+		$this->modelGroup	= $this->getModel( 'mailGroup' );
+		$this->modelMember	= $this->getModel( 'mailGroupMember' );
+		$this->modelRole	= $this->getModel( 'mailGroupRole' );
+		$this->modelAction	= $this->getModel( 'mailGroupAction' );
+//		$this->modelServer	= $this->getModel( 'mailGroupServer' );
+		$this->modelGroup	= $this->getModel( 'mailGroup' );
+		$this->modelUser	= $this->getModel( 'user' );
+		$this->logicGroup	= $this->getLogic( 'mailGroup' );
+		$this->logicMail	= $this->getLogic( 'mail' );
 	}
 
 	public function add(){
@@ -146,19 +116,11 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	}
 
 	protected function checkGroupId( $groupId, $strict = TRUE ){
-		if( $this->modelGroup->has( $groupId ) )
-			return $this->modelGroup->get( $groupId );
-		if( $strict )
-			throw new RuntimeException( 'Invalid Mail Group ID' );
+		return $this->logicGroup->checkGroupId( $groupId, $strict );
 	}
 
 	protected function checkMemberId( $memberId, $strict = TRUE ){
-		$member	= $this->modelMember->get( $memberId );
-		if( $member )
-			return $member;
-		if( $strict )
-			throw new RangeException( 'Invalid member ID: '.$memberId );
-		return NULL;
+		return $this->logicGroup->checkMemberId( $memberId, $strict );
 	}
 
 	public function edit( $groupId ){
@@ -219,150 +181,19 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	protected function setMemberStatusToActivated( $group, $member ){
-		$mailData	= array(
-			'group'		=> $group,
-			'member'	=> $member,
-		);
-		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
-			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
-				$action	= $this->modelAction->getByIndices( array(
-					'mailGroupId'		=> $group->mailGroupId,
-					'mailGroupMemberId'	=> $member->mailGroupMemberId,
-					'action'			=> 'confirmAfterJoin',
-					'status'			=> Model_Mail_Group_Action::STATUS_HANDLED,
-				) );
-				if( $action ){
-					$this->modelAction->add( array(
-						'mailGroupId'		=> $group->mailGroupId,
-						'mailGroupMemberId'	=> $member->mailGroupMemberId,
-						'uuid'				=> Alg_ID::uuid(),
-						'action'			=> 'informAfterFirstActivate',
-						'message'			=> $action->message,
-						'createdAt'			=> time(),
-						'modifiedAt'		=> time(),
-					) );
-					$this->modelMember->edit( $member->mailGroupMemberId, array(
-						'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-						'modifiedAt'	=> time(),
-					) );
-					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
-					$receiver	= (object) array(
-						'username'	=> $member->title,
-						'email'		=> $member->address
-					);
-					$language	= $this->env->getLanguage()->getLanguage();
-					$this->logicMail->appendRegisteredAttachments( $mail, $language );
-					$this->logicMail->handleMail( $mail, $receiver, $language );
-					return TRUE;
-				}
-			}
-		}
-		$this->modelMember->edit( $member->mailGroupMemberId, array(
-			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-			'modifiedAt'	=> time(),
-		) );
-		$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
-		$receiver	= (object) array(
-			'username'	=> $member->title,
-			'email'		=> $member->address
-		);
-		$language	= $this->env->getLanguage()->getLanguage();
-		$this->logicMail->appendRegisteredAttachments( $mail, $language );
-		$this->logicMail->handleMail( $mail, $receiver, $language );
-
-		$manager	= $this->modelUser->get( $group->managerId );
-		$members	= $this->modelMember->getAllByIndices( array(
-			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-			'mailGroupId'	=> $group->mailGroupId,
-		) );
-		foreach( $members as $entry ){
-			if( $entry->address == $manager->email )
-				continue;
-			if( $entry->mailGroupMemberId == $member->mailGroupMemberId )
-				continue;
-			$mail		= new Mail_Info_Mail_Group_Members_MemberActivated( $this->env, $mailData );
-			$receiver	= (object) array(
-				'username'	=> $entry->title,
-				'email'		=> $entry->address
-			);
-			$language	= $this->env->getLanguage()->getLanguage();
-			$this->logicMail->handleMail( $mail, $receiver, $language );
-		}
-	}
-
-	protected function setMemberStatusToDeactivated( $group, $member ){
-		$mailData	= array(
-			'group'		=> $group,
-			'member'	=> $member,
-		);
-		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
-			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
-				$this->modelMember->edit( $member->mailGroupMemberId, array(
-					'status'		=> Model_Mail_Group_Member::STATUS_DEACTIVATED,
-					'modifiedAt'	=> time(),
-				) );
-				$mail		= new Mail_Info_Mail_Group_Deactivated( $this->env, $mailData );
-				$receiver	= (object) array(
-					'username'	=> $member->title,
-					'email'		=> $member->address
-				);
-				$language	= $this->env->getLanguage()->getLanguage();
-				$this->logicMail->appendRegisteredAttachments( $mail, $language );
-				$this->logicMail->handleMail( $mail, $receiver, $language );
-				return TRUE;
-			}
-		}
-		$this->modelMember->edit( $member->mailGroupMemberId, array(
-			'status'		=> Model_Mail_Group_Member::STATUS_DEACTIVATED,
-			'modifiedAt'	=> time(),
-		) );
-		$mail		= new Mail_Info_Mail_Group_Member_Deactivated( $this->env, $mailData );
-		$receiver	= (object) array(
-			'username'	=> $member->title,
-			'email'		=> $member->address
-		);
-		$language	= $this->env->getLanguage()->getLanguage();
-		$this->logicMail->appendRegisteredAttachments( $mail, $language );
-		$this->logicMail->handleMail( $mail, $receiver, $language );
-
-		$manager	= $this->modelUser->get( $group->managerId );
-		$members	= $this->modelMember->getAllByIndices( array(
-			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-			'mailGroupId'	=> $group->mailGroupId,
-		) );
-		foreach( $members as $entry ){
-			if( $entry->address == $manager->email )
-				continue;
-			if( $entry->mailGroupMemberId == $member->mailGroupMemberId )
-				continue;
-			$mail		= new Mail_Info_Mail_Group_Members_MemberDeactivated( $this->env, $mailData );
-			$receiver	= (object) array(
-				'username'	=> $entry->title,
-				'email'		=> $entry->address
-			);
-			$language	= $this->env->getLanguage()->getLanguage();
-			$this->logicMail->handleMail( $mail, $receiver, $language );
-		}
-	}
-
 	public function setMemberStatus( $mailGroupId, $mailGroupMemberId, $status ){
-		$member	= $this->checkMemberId( $mailGroupMemberId );
-		if( (int) $member->status !== (int) $status ){
-			$group		= $this->checkGroupId( $mailGroupId );
-			$mailData	= array(
-				'group'		=> $group,
-				'member'	=> $member,
-			);
-			if( $status == Model_Mail_Group_Member::STATUS_ACTIVATED ){
-				$this->setMemberStatusToActivated( $group, $member );
-				$this->messenger->noteSuccess( 'Das Mitglied wurde aktiviert und darüber informiert.' );
-
-			}
-			else if( $status == Model_Mail_Group_Member::STATUS_DEACTIVATED ){
-				$this->setMemberStatusToDeactivated( $group, $member );
-				$this->messenger->noteSuccess( 'Das Mitglied wurde deaktiviert und darüber informiert.' );
-			}
+		$group		= $this->checkGroupId( $mailGroupId );
+		$member		= $this->checkMemberId( $mailGroupMemberId );
+		$message	= '';
+		if( $this->logicGroup->setMemberStatus( $mailGroupId, $mailGroupMemberId, $status ) ){
+			if( $status == Model_Mail_Group_Member::STATUS_ACTIVATED )
+				$message	= 'Das Mitglied wurde aktiviert und darüber informiert.';
+			else if( $status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
+				$message	= 'Das Mitglied wurde deaktiviert und darüber informiert.';
+			else if( $status == Model_Mail_Group_Member::STATUS_REJECTED )
+				$message	= 'Das Mitglied wurde abgelehnt und darüber informiert.';
+			if( $message )
+				$this->messenger->noteSuccess( $message );
 		}
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
