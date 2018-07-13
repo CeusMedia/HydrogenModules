@@ -1,9 +1,52 @@
 <?php
-class Hook_UI_Bootstrap/* extends CMF_Hook*/{
+class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook{
 
 	static protected function getMajorVersion( $version ){
 		$versionParts	= explode( '.', $version );
 		return (int) array_shift( $versionParts );
+	}
+
+	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$config		= $env->getConfig();
+		$modules	= $env->getModules();
+		$options	= $config->getAll( 'module.ui_bootstrap_library.missing.', TRUE );
+		if( !class_exists( '\CeusMedia\Bootstrap\Modal' ) ){
+			if( $options->get( 'library' ) === 'throw' ){
+				$exception	= new RuntimeException( 'Bootstrap library (ceus-media/bootstrap) is not installed - please use composer to install' );
+				$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+		//		throw $exception;
+			}
+			else if( $options->get( 'library' ) === 'note' ){
+				$env->getMessenger()->noteFailure( join( '<br/>', array(
+					'<strong>Bootstrap Code Library is not found.</strong>',
+					'Please install by: <code><tt>composer require ceus-media/bootstrap</tt></code>',
+				) ) );
+			}
+		}
+		if( !$modules->has( 'UI_Font_FontAwesome' ) ){
+			if( $options->get( 'fontawesome' ) === 'throw' ){
+				$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );
+				$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+		//		throw $exception;
+			}
+			else if( $options->get( 'module' ) === 'note' ){
+				$env->getMessenger()->noteFailure( join( '<br/>', array(
+					'<strong>Module "UI:Font:FontAwesome" is not installed.</strong>',
+					'Please install by: <code><tt>hymn app-install UI_Font_FontAwesome</tt></code>',
+				) ) );
+			}
+		}
+		else{
+			$configAwesome		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
+			$configBootstrap	= $config->getAll( 'module.ui_bootstrap.', TRUE );
+			$versionParts		= explode( '.', $configAwesome->get( 'version' ) );
+			$majorVersion		= (int) array_shift( $versionParts );
+			\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$majorVersion;
+			if( $configBootstrap->get( 'icon.fixedWidth' ) )
+				\CeusMedia\Bootstrap\Icon::$defaultSize	= array( 'fixed' );
+			if( $majorVersion === 5 && $configAwesome->get( 'v5.style' ) )
+				\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
+		}
 	}
 
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
