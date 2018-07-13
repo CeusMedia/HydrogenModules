@@ -180,6 +180,11 @@ class View_Helper_ItemRelationLister{
 		return $this;
 	}
 
+	public function setLimit( $limit ){
+		$this->limit		= $limit;
+		return $this;
+	}
+
 	public function setLinkable( $boolean ){
 		$this->linkable		= $boolean;
 		$this->relations	= NULL;
@@ -193,11 +198,6 @@ class View_Helper_ItemRelationLister{
 
 	public function setTableClass( $class ){
 		$this->tableClass	= $class;
-		return $this;
-	}
-
-	public function setLimit( $limit ){
-		$this->limit		= $limit;
 		return $this;
 	}
 }
