@@ -5,19 +5,14 @@ $iconUsers			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user
 
 $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
-$statusLabels	= array(
-	-9	=> 'archiviert',
-	-2	=> 'gesperrt',
-	-1	=> 'inaktiv',
-	0	=> 'neu',
-	1	=> 'aktiv',
-);
 $statusClasses	= array(
 	-9	=> 'label-info',
 	-2	=> 'label-error',
 	-1	=> '',
 	0	=> 'label-warning',
-	1	=> 'label-success',
+	1	=> 'label-warning',
+	2	=> 'label-success',
+	3	=> 'label-success',
 );
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
@@ -25,7 +20,7 @@ if( count( $groups ) ){
 	$list	= array();
 	foreach( $groups as $group ){
 		$label	= UI_HTML_Tag::create( 'a', $group->title, array( 'href' => './work/mail/group/edit/'.$group->mailGroupId ) );
-		$status	= UI_HTML_Tag::create( 'span', $statusLabels[$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
+		$status	= UI_HTML_Tag::create( 'span', $words['group-statuses'][$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $label ),
 			UI_HTML_Tag::create( 'td', $group->address ),

@@ -110,19 +110,21 @@ if( $members ){
 		) );
 		$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate, array(
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
-			'class'	=> 'btn btn-danger btn-mini',
+			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'deaktivieren',
 		) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'	=> './work/mail/group/removeMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId,
-			'class'	=> 'btn btn-inverse btn-mini',
+			'class'	=> 'btn btn-danger btn-mini',
 			'title'	=> 'entfernen',
 		) );
-		$buttonRemove	= '';
-		if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED )
+		if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED ){
 			$buttonActivate	= '';
-		if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
+			$buttonRemove	= '';
+		}
+		if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED ){
 			$buttonDeactivate	= '';
+		}
 		if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
 			$buttonActivate		= '';
 			$buttonDeactivate	= '';

@@ -9,21 +9,54 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	protected $modelRole;
 	protected $modelServer;
 	protected $modelAction;
-	protected $logic;
+	protected $logicGroup;
 	protected $logicMail;
 
-	public function __onInit(){
+	protected function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->modelGroup	= new Model_Mail_Group( $this->env );
-		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
-		$this->modelRole	= new Model_Mail_Group_Role( $this->env );
-		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
-//		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
-		$this->modelUser	= new Model_User( $this->env );
-		$this->logic		= new Logic_Mail_Group( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+
+		if( 0 ){
+			$this->messenger->noteNotice( 'Old style :(' );
+			$this->modelGroup	= new Model_Mail_Group( $this->env );
+			$this->modelMember	= new Model_Mail_Group_Member( $this->env );
+			$this->modelRole	= new Model_Mail_Group_Role( $this->env );
+			$this->modelAction	= new Model_Mail_Group_Action( $this->env );
+	//		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
+			$this->modelUser	= new Model_User( $this->env );
+			$this->logicGroup	= new Logic_Mail_Group( $this->env );
+			$this->logicMail	= Logic_Mail::getInstance( $this->env );
+		}
+		else{
+			$this->messenger->noteNotice( 'New style :)' );
+			$this->modelGroup	= $this->getModel( 'mailGroup1' );
+			$this->modelMember	= $this->getModel( 'mailGroupMember' );
+			$this->modelGroup	= $this->getModel( 'mailGroupRole' );
+			$this->modelAction	= $this->getModel( 'mailGroupAction' );
+	//		$this->modelServer	= $this->getModel( 'mailGroupServer' );
+			$this->modelGroup	= $this->getModel( 'mailGroup' );
+			$this->logicGroup	= $this->getLogic( 'mailGroup' );
+			$this->logicMail	= $this->getLogic( 'mail' );
+		}
+
+
+	//	@todo perhaps "new style"?
+	//	$this->modelGroup	= $this->getModel( 'mailGroup' );
+	//	$this->modelMember	= $this->getModel( 'mailGroupMember' );
+	//	$this->modelGroup	= $this->getModel( 'mailGroupRole' );
+	//	$this->modelAction	= $this->getModel( 'mailGroupAction' );
+//	//	$this->modelServer	= $this->getModel( 'mailGroupServer' );
+	//	$this->modelGroup	= $this->getModel( 'mailGroup' );
+
+	//	@todo perhaps "new style"?
+	//	$this->logicGroup	= $this->env->getLogic()->get( 'mailGroup' );
+	//	$this->logicMail	= $this->env->getLogic()->get( 'mail' );
+
+	//	@todo perhaps "new style"?
+	//	$this->logicGroup	= $this->env->getLogic()->mailGroup;
+	//	$this->logicMail	= $this->env->getLogic()->mail;
+
 	}
 
 	public function add(){
@@ -85,9 +118,9 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			'modifiedAt'	=> time(),
 		) );
 		if( !$quiet )
-			$action	= $this->logic->registerMemberAction( 'informAfterFirstActivate', $groupId, $memberId, '' );
+			$action	= $this->logicGroup->registerMemberAction( 'informAfterFirstActivate', $groupId, $memberId, '' );
 		if( $invite ){
-			$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, '' );
+			$action	= $this->logicGroup->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, '' );
 			$mailData	= array(
 				'group'		=> $this->checkGroupId( $groupId ),
 				'member'	=> $this->modelMember->get( $memberId ),
