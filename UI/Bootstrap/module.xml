@@ -73,5 +73,5 @@
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Bootstrap::onPageApplyModules</hook>
 	<hook type="resource" resource="Page" event="build">Hook_UI_Bootstrap::onPageBuild</hook>
-	<hook type="resource" resource="Env" event="init">Hook_UI_Bootstrap_Library::onEnvInit</hook>
+	<hook type="resource" resource="Env" event="init">Hook_UI_Bootstrap::onEnvInit</hook>
 </module>
