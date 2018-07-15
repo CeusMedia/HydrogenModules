@@ -16,8 +16,37 @@ $facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', array(
 	'Adresse: '.$address,
 ) );
 
+$termsOfUse		= $view->loadContentFile( 'html/info/mail/group/termsOfUse.html' );
+$privacyNotice	= $view->loadContentFile( 'html/info/mail/group/privacyNotice.html' );
+$panelLegal		= '
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="framed-content">
+				'.$termsOfUse.'
+			</div>
+			<br/>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="framed-content">
+				'.$privacyNotice.'
+			</div>
+			<br/>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<label class="checkbox">
+				<input type="checkbox" name="accept" id="input_accept"/>
+				Ich habe die Nutzungsbedingungen und die Datenschutzbestimmungen gelesen und stimme der Nutzung des Services unter den aufgeführten Bedingungen zu.
+			</label>
+		</div>
+	</div>
+';
 
-if( 0 && $group->type == Model_Mail_Group::TYPE_PUBLIC ){
+
+if( 0 && $group->type == Model_Mail_Group::TYPE_AUTOJOIN ){
 	$address	= new \CeusMedia\Mail\Address( $group->address );
 	$form	= '
 <div class="row-fluid">
@@ -90,10 +119,8 @@ else{
 					</div>
 				</div>
 				<input type="text" name="vt" value="" style="display: none"/>
-				<h4>Nutzungsbedingungen und Datenschutzbestimmungen</h4>
-				<p>
-					...
-				</p>
+				<hr/>
+				'.$panelLegal.'
 			</div>
 		</div>
 		<div class="buttonbar">
@@ -127,4 +154,26 @@ return '<div class="row-fluid">
 		<br/>
 		'.$panelForm.'
 	</div>
-</div>';
+</div>
+<style>
+.framed-content {
+	height: 250px;
+	overflow-y: auto;
+	padding: 1em 2em;
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	zoom: 0.8;
+	-moz-transform: scale(0.8);
+	background-color: rgba(255, 255, 255, 0.75);
+	color: #666;
+	}
+</style>
+<script>
+jQuery(document).ready(function(){
+	jQuery("#input_accept").on("input", function(){
+		var button = jQuery("button");
+		var isAccepted = jQuery(this).is(":checked");
+		button.prop("disabled", isAccepted ? null : "disabled");
+	}).trigger("input");
+});
+</script>
+';

@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -21,6 +21,7 @@
 	<log version="0.3.9">Support automatic mail attachments.</log>
 	<log version="0.4">Extract message logic to own class.</log>
 	<log version="0.4.1">Refactor mail classes and plain part locales.</log>
+	<log version="0.4.2">Add terms of use and privacy note.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -59,6 +60,8 @@
 		<class>Model/Mail/Group/Role.php5</class>
 		<class>Model/Mail/Group/Server.php5</class>
 		<class>View/Info/Mail/Group.php5</class>
+		<locale>de/html/info/mail/group/privacyNotice.html</locale>
+		<locale>de/html/info/mail/group/termsOfUse.html</locale>
 		<locale>de/info/mail/group.ini</locale>
 		<locale>de/mail/info/mail/group/manager/groupActivated.txt</locale>
 		<locale>de/mail/info/mail/group/manager/groupDeactivated.txt</locale>
