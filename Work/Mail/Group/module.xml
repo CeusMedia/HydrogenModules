@@ -3,7 +3,7 @@
 	<title>Work: Mail Group</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -16,6 +16,7 @@
 	<log version="0.3.5">Add members per invite or already activated.</log>
 	<log version="0.3.6">Support automatic mail attachments.</log>
 	<log version="0.3.7">Set receiver name in sent mails.</log>
+	<log version="0.3.8">Improve mail view for manager.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

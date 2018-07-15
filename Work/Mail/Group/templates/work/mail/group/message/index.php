@@ -49,23 +49,23 @@ if( count( $messages ) ){
 //		print_m( $message->object );die;
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $message->mailGroupMessageId ),
-			UI_HTML_Tag::create( 'td', $sender ),
 			UI_HTML_Tag::create( 'td', $link ),
+			UI_HTML_Tag::create( 'td', $sender ),
 			UI_HTML_Tag::create( 'td', $words['message-statuses'][$message->status] ),
 			UI_HTML_Tag::create( 'td', date( 'd.m.y ', $message->createdAt ).' <small>'.date( 'H:i:s', $message->createdAt ).'</small>' ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
 		'20px',
-		'30%',
 		'',
+		'30%',
 		'120px',
 		'140px',
 	) );
 	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'#',
-		'Absender',
 		'Betreff',
+		'Absender',
 		'Zustand',
 		'Datum',
 	) ) );

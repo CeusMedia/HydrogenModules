@@ -69,7 +69,7 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 
 	public function view( $messageId ){
 		$message		= $this->checkId( $messageId );
-		$message->raw		= $this->logicMessage->getRawMailFromMessage( $message );
+		$message->raw		= $this->logicMessage->getMessageRawMail( $message );
 		$message->object	= $this->logicMessage->getMessageObject( $message );
 		$this->addData( 'message', $message );
 	}
