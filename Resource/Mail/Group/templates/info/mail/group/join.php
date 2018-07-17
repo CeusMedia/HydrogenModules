@@ -173,7 +173,7 @@ jQuery(document).ready(function(){
 		var button = jQuery("button");
 		var isAccepted = jQuery(this).is(":checked");
 		button.prop("disabled", isAccepted ? null : "disabled");
-	}).trigger("input");
+	}).trigger("change");
 });
 </script>
 ';

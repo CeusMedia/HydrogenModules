@@ -90,7 +90,7 @@ class Hook_Resource_Mail_Group{
 
 		if( $group->type == Model_Mail_Group::TYPE_JOIN ){
 			$modelMember->edit( $action->mailGroupMemberId, array(
-				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
+				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
 			) );
 			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Sie können jetzt mit der Gruppe kommunizieren.' );
