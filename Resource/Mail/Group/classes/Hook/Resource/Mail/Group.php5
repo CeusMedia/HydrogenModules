@@ -66,7 +66,7 @@ class Hook_Resource_Mail_Group{
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $manager, $language );
 
-			$members	= $logicGoup->getGroupMembers( $action->mailGroupId, TRUE );
+			$members	= $logicGroup->getGroupMembers( $action->mailGroupId, TRUE );
 			foreach( $members as $entry ){
 				if( $entry->address === $manager->email )
 					continue;
@@ -78,13 +78,13 @@ class Hook_Resource_Mail_Group{
 					$env->getLanguage()->getLanguage()
 				);
 			}
-
+/*
 			$mail		= new Mail_Info_Mail_Group_Activated( $env, $mailData );
 			$member		= $modelMember->get( $action->mailGroupMemberId );
 			$receiver	= (object) array( 'email' => $member->address );
 			$language	= $env->getLanguage()->getLanguage();
 			$logicMail->appendRegisteredAttachments( $mail, $language );
-			$logicMail->handleMail( $mail, $receiver, $language );
+			$logicMail->handleMail( $mail, $receiver, $language );*/
 			return TRUE;
 		}
 
@@ -107,12 +107,25 @@ class Hook_Resource_Mail_Group{
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $manager, $language );
 
+			$members	= $logicGroup->getGroupMembers( $action->mailGroupId, TRUE );
+			foreach( $members as $entry ){
+				if( $entry->address === $manager->email )
+					continue;
+				if( $entry->mailGroupMemberId === $action->mailGroupMemberId )
+					continue;
+				$logicMail->handleMail(
+					new Mail_Info_Mail_Group_Members_MemberJoined( $env, $mailData ),
+					(object) array( 'email' => $entry->address ),
+					$env->getLanguage()->getLanguage()
+				);
+			}
+/*
 			$logicGroup->registerMemberAction(
 				'activateAfterConfirm',
 				$action->mailGroupId,
 				$action->mailGroupMemberId,
 				$action->message
-			);
+			);*/
 			return TRUE;
 		}
 		else if( $group->type == Model_Mail_Group::TYPE_REGISTER ){

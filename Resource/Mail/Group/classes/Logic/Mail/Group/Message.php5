@@ -135,7 +135,6 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	}*/
 
 	public function handleImportedGroupMessages( $groupId, $dry = FALSE ){
-print( 'handleImportedGroupMessages'.PHP_EOL );
 		$senderMemberStatusesToReject	= array(
 			Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			Model_Mail_Group_Member::STATUS_UNREGISTERED,
@@ -228,9 +227,10 @@ print_m( $group );
 		$orders		= array( 'createdAt' => 'ASC' );
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
-			if( $message->status ){
-//				@todo: implement
-//				$results->forwarded[]	= $message;
+			$member	= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );
+			if( $member && $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED ){
+				$message->sentMails	= $this->forwardMessage( $message, $dry );
+				$results->forwarded[]	= $message;
 			}
 		}
 		return $results;
@@ -241,8 +241,12 @@ print_m( $group );
 
 	protected function forwardMessage( $message, $dryMode = FALSE ){
 		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
-		if( (int) $message->status !== Model_Mail_Group_Message::STATUS_NEW )
-			throw new RuntimeException( 'Only new messages can be sent' );
+		$allowedMessageStatuses	= array(
+			Model_Mail_Group_Message::STATUS_NEW,
+			Model_Mail_Group_Message::STATUS_STALLED,
+		);
+		if( !in_array( (int) $message->status, $allowedMessageStatuses ) )
+			throw new RuntimeException( 'Only new or stalled messages can be sent' );
 		if( !$message->mailGroupMemberId )
 			throw new RuntimeException( 'Message sender is not assigned to a group member' );
 		$mails		= array();
