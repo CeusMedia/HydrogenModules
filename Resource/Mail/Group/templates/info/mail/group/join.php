@@ -169,7 +169,7 @@ return '<div class="row-fluid">
 </style>
 <script>
 jQuery(document).ready(function(){
-	jQuery("#input_accept").on("input", function(){
+	jQuery("#input_accept").on("change", function(){
 		var button = jQuery("button");
 		var isAccepted = jQuery(this).is(":checked");
 		button.prop("disabled", isAccepted ? null : "disabled");

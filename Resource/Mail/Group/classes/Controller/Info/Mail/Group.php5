@@ -187,13 +187,20 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->appendRegisteredAttachments( $mail, $language );
 				$this->logicMail->handleMail( $mail, $receiver, $language );
-				$this->messenger->noteSuccess( 'Okay.' );
-				$this->restart( NULL, TRUE );
+				$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
+				$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
 			}
 		}
 		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;
 		$this->addData( 'group', $group );
 		$this->addData( 'data', (object) $this->request->getAll() );
+	}
+
+	public function joined( $groupId, $memberId ){
+		$group = $this->checkId( (int) $groupId );
+		$member = $this->logic->checkMemberId( (int) $memberId );
+		$this->addData( 'group', $group );
+		$this->addData( 'member', $member );
 	}
 
 	public function leave( $groupId = NULL ){

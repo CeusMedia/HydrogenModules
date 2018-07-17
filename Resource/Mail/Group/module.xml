@@ -88,6 +88,7 @@
 		<locale>de/mail/info/mail/group/members/memberLeft.txt</locale>
 		<template>info/mail/group/index.php</template>
 		<template>info/mail/group/join.php</template>
+		<template>info/mail/group/joined.php</template>
 		<template>info/mail/group/leave.php</template>
 		<template>info/mail/group/view.php</template>
 		<template>info/mail/group/register.php</template>
@@ -100,6 +101,7 @@
 	</relations>
 	<link access="public" path="info/mail/group/index"/>
 	<link access="public" path="info/mail/group/join"/>
+	<link access="public" path="info/mail/group/joined"/>
 	<link access="public" path="info/mail/group/leave"/>
 	<link access="public" path="info/mail/group/view"/>
 	<link access="public" path="info/mail/group/completeMemberAction"/>

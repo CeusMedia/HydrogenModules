@@ -93,7 +93,7 @@ class Hook_Resource_Mail_Group{
 				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
 				'modifiedAt'	=> time(),
 			) );
-			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Die Freigabe durch den Verwalter steht noch aus.' );
+			$env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Sie können jetzt mit der Gruppe kommunizieren.' );
 
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
@@ -107,7 +107,7 @@ class Hook_Resource_Mail_Group{
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $manager, $language );
 
-			$logic->registerMemberAction(
+			$logicGroup->registerMemberAction(
 				'activateAfterConfirm',
 				$action->mailGroupId,
 				$action->mailGroupMemberId,
@@ -143,7 +143,7 @@ class Hook_Resource_Mail_Group{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
-		$logic			= new Logic_Mail_Group( $env );
+		$logicGroup		= new Logic_Mail_Group( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
@@ -166,7 +166,7 @@ class Hook_Resource_Mail_Group{
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 		$logicMail->handleMail( $mail, $manager, $language );
 
-		$members	= $logic->getGroupMembers( $action->mailGroupId, TRUE );
+		$members	= $logicGroup->getGroupMembers( $action->mailGroupId, TRUE );
 		foreach( $members as $entry ){
 			if( $entry->address === $manager->email )
 				continue;
