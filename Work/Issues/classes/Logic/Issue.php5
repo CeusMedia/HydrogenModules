@@ -5,7 +5,7 @@
 /**
  *	@todo		Code Doc
  */
-class Logic_Issue extends CMF_Hydrogen_Environment_Resource_Logic {
+class Logic_Issue extends CMF_Hydrogen_Logic {
 
 	const CHANGE_UNKNOWN		= 0;
 	const CHANGE_REPORTER		= 1;
