@@ -39,7 +39,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Project::___onUserRemove" is missing user ID in data';
+			$message	= 'Hook "Project::onUserRemove" is missing user ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -68,7 +68,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Project::___onListRelations" is missing user ID in data';
+			$message	= 'Hook "Project::onListRelations" is missing user ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -115,7 +115,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 
 	static public function onListRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		if( empty( $data->projectId ) ){
-			$message	= 'Hook "Project::___onListRelations" is missing project ID in data';
+			$message	= 'Hook "Project::onListRelations" is missing project ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -123,7 +123,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 		$words			= $env->getLanguage()->getWords( 'manage/project' );
 
 		if( !( $project = $modelProject->get( $data->projectId ) ) ){
-			$message	= 'Hook "Work_Missions::___onListProjectRelations": Invalid project ID.';
+			$message	= 'Hook "Work_Missions::onListProjectRelations": Invalid project ID.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
