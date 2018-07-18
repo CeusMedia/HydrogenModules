@@ -1,7 +1,12 @@
 <?php
-class Logic_Note{
+class Logic_Note extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
+	protected $modelNote;
+	protected $modelNoteLink;
+	protected $modelNoteTag;
+	protected $modelLink;
+	protected $modelTag;
+	protected $prefix;
 
 	protected $projectId	= 0;
 	protected $userId		= 0;
@@ -11,69 +16,18 @@ class Logic_Note{
 	protected $userNoteIds	= array();
 	protected $userProjects	= array();
 
-	protected function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env			= $env;
-		$this->modelNote	= new Model_Note( $env );
-		$this->prefix		= $env->getConfig()->get( 'database.prefix' );
-	}
-
-	protected function __clone(){}
-
-	static public function getInstance( CMF_Hydrogen_Environment $env ){
-		if( !self::$instance )
-			self::$instance	= new Logic_Note( $env );
-		return self::$instance;
-	}
-
-	public function setContext( $userId, $roleId, $projectId ){
-		$this->userId			= $userId;
-		$this->roleId			= $roleId;
-		$this->projectId		= $projectId;
-		$this->userNoteIds		= array();
-		$this->userProjects		= array();
-		if( $this->userId ){
-			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-				$logicProject	= Logic_Project::getInstance( $this->env );
-				$userProjects	= $logicProject->getUserProjects( $this->userId );
-				foreach( $userProjects as $userProject )
-					$this->userProjects[$userProject->projectId]	= $userProject;
-				$projectIds	= array_merge( array( 0 ), array_keys( $this->userProjects ) );
-				if( strlen( trim( $this->projectId ) ) )
-					$projectIds	= array_merge( array( $this->projectId ) );
-				$userNotes	= $this->modelNote->getAll( array( 'projectId' => $projectIds ) );
-				foreach( $userNotes as $userNote )
-					$this->userNoteIds[]	= $userNote->noteId;
-			}
-		}
-	}
-
-	protected function sharpenConditions( $conditions ){
-		if( $this->env->has( 'acl' ) )
-			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
-				return $conditions;
-
-//		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )
-//			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
-//				$conditions['public']	= 1;
-
-/*		$logic			= Logic_Project::getInstance( $this->env );
-		$userProjects	= array( 0 );
-		foreach( $logic->getUserProjects( $this->userId ) as $relation )
-			$userProjects[]	= $relation->projectId;
-		if( !array_key_exists( 'projectId', $conditions ) || !in_array( $conditions['projectId'], $userProjects ) )
-			$conditions['projectId']	= $userProjects;
-*/		return $conditions;
-	}
-
-	public function countNoteView( $noteId ){
-		$query	= 'UPDATE '.$this->prefix.'notes SET numberViews=numberViews+1 WHERE noteId='.(int)$noteId;
-		$this->env->getDatabase()->query( $query );
+	protected function __onInit(){
+		$this->modelNote		= new Model_Note( $this->env );
+		$this->modelNoteLink	= new Model_Note_Link( $this->env );
+		$this->modelNoteTag		= new Model_Note_Tag( $this->env );
+		$this->modelLink		= new Model_Link( $this->env );
+		$this->modelTag			= new Model_Tag( $this->env );
+		$this->prefix			= $this->env->getDatabase()->getPrefix();
 	}
 
 	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict= TRUE ){
-		$model		= new Model_Note_Link( $this->env );
 		$conditions	= array( 'noteId' => $noteId, 'linkId' => $linkId, 'title' => $title );
-		$relation	= $model->getAll( $conditions );
+		$relation	= $this->modelNoteLink->getAll( $conditions );
 		if( $relation ){
 			if( $strict )
 				throw new InvalidArgumentException( 'link already related to note' );
@@ -85,13 +39,12 @@ class Logic_Note{
 			'title'		=> $title,
 			'createdAt'	=> time(),
 		);
-		return $model->add( $data );
+		return $this->modelNoteLink->add( $data );
 	}
 
 	public function addTagToNote( $tagId, $noteId, $strict= TRUE ){
-		$model		= new Model_Note_Tag( $this->env );
 		$indices	= array( 'noteId' => $noteId, 'tagId' => $tagId );
-		$relation	= $model->getByIndices( $indices );
+		$relation	= $this->modelNoteTag->getByIndices( $indices );
 		if( $relation ){
 			if( $strict )
 				throw new InvalidArgumentException( 'tag already related to note' );
@@ -102,70 +55,100 @@ class Logic_Note{
 			'tagId'		=> (int) $tagId,
 			'createdAt'	=> time(),
 		);
-		return $model->add( $data );
+		return $this->modelNoteTag->add( $data );
+	}
+
+	public function countNoteView( $noteId ){
+		$query	= 'UPDATE '.$this->prefix.'notes SET numberViews=numberViews+1 WHERE noteId='.(int)$noteId;
+		$this->env->getDatabase()->query( $query );
 	}
 
 	public function createLink( $url, $strict = TRUE ){
-		$modelLink			= new Model_Link( $this->env );
-		$existingLink		= $modelLink->getByIndex( 'url', $url );
+		$existingLink		= $this->modelLink->getByIndex( 'url', $url );
 		if( $existingLink ){
 			if( $strict )
 				throw new InvalidArgumentException( 'link already existing' );
 			return $existingLink->linkId;
 		}
-		return $modelLink->add( array( 'url' => $url, 'createdAt' => time() ) );
+		return $this->modelLink->add( array( 'url' => $url, 'createdAt' => time() ) );
 	}
 
 	public function createTag( $content, $strict = TRUE ){
-		$modelTag			= new Model_Tag( $this->env );
-		$existingTag		= $modelTag->getByIndex( 'content', $content );
+		$existingTag		= $this->modelTag->getByIndex( 'content', $content );
 		if( $existingTag ){
 			if( $strict )
 				throw new InvalidArgumentException( 'tag already existing' );
 			return $existingTag->tagId;
 		}
-		return $modelTag->add( array( 'content' => $content, 'createdAt' => time() ) );
+		return $this->modelTag->add( array( 'content' => $content, 'createdAt' => time() ) );
 	}
 
 	public function getNoteData( $noteId ){
-		$modelNote		= new Model_Note( $this->env );
-		$modelNoteLink	= new Model_Note_Link( $this->env );
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelLink		= new Model_Link( $this->env );
-		$modelTag		= new Model_Tag( $this->env );
-		$note		= $modelNote->get( $noteId );
+		$note		= $this->modelNote->get( $noteId );
 		if( !$note ){
 			$this->env->getMessenger()->noteError( 'Invalid note ID' );
 			$this->restart( './work/note/index' );
 		}
 
 		$note->links	= array();
-		foreach( $modelNoteLink->getAllByIndex( 'noteId', $noteId ) as $relation ){
-			$link		= clone $modelLink->get( $relation->linkId );
+		foreach( $this->modelNoteLink->getAllByIndex( 'noteId', $noteId ) as $relation ){
+			$link		= clone $this->modelLink->get( $relation->linkId );
 			$link->noteLinkId	= $relation->noteLinkId;
 			$link->title		= $relation->title;
 			$note->links[]		= $link;
 		}
 
 		$note->tags	= array();
-		foreach( $modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $tag )
-			$note->tags[]	= $modelTag->get( $tag->tagId );
+		foreach( $this->modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $tag )
+			$note->tags[]	= $this->modelTag->get( $tag->tagId );
 		return $note;
 	}
 
+	/**
+	 *	Returns list of note IDs related to tag IDs.
+	 *	@access		public
+	 *	@param		array		$tagIds		List of tag IDs
+	 *	@param		boolean		$strict		Notes must be related to ALL tag IDs (slower)
+	 *	@return		array					List of note IDs related to tag IDs
+	 */
+	public function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
+		if( !is_array( $tagIds ) )
+			throw new InvalidArgumentException( 'Tag list must be an array' );
+		if( !count( $tagIds ) )
+			throw new InvalidArgumentException( 'Tag list cannot be empty' );
+
+		if( $strict ){
+			$noteIds	= array();
+			$tagIds		= array_unique( $tagIds );
+			foreach( $tagIds as $tagId ){
+				foreach( $this->modelNoteTag->getAll( array( 'tagId' => $tagId ) ) as $relation ){
+					if( !isset( $noteIds[$relation->noteId] ) )
+						$noteIds[$relation->noteId]	= array();
+					$noteIds[$relation->noteId][]	= $relation->tagId;
+				}
+			}
+			foreach( $noteIds as $noteId => $tagsFound )
+				if( count( $tagsFound ) !== count( $tagIds ) )
+					unset( $noteIds[$noteId] );
+			return array_keys( $noteIds );
+		}
+
+		$noteIds			= array();
+		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
+			$noteIds[]	= $relation->noteId;
+		return $noteIds;
+	}
+
 	public function getRelatedTags( $noteId ){
-		$modelNote		= new Model_Note( $this->env );
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelTag			= new Model_Tag( $this->env );
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
 		$noteTags		= array();
-		foreach( $modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $noteTag )
+		foreach( $this->modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $noteTag )
 			$noteTags[]	= $noteTag->tagId;
 
 		$list		= array();
 		foreach( $relatedNoteIds as $relatedNoteId => $count ){
-			$relatedNoteTags	= $modelNoteTag->getAllByIndex( 'noteId', $relatedNoteId );
+			$relatedNoteTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $relatedNoteId );
 			foreach( $relatedNoteTags as $relatedNoteTag ){
 				if( !isset( $list[$relatedNoteTag->tagId] ) )
 					$list[$relatedNoteTag->tagId]	= 0;
@@ -178,7 +161,7 @@ class Logic_Note{
 		foreach( $list as $tagId => $count ){
 			if( in_array( $tagId, $noteTags ) )
 				continue;
-			$relatedTag	= $modelTag->get ( $tagId );
+			$relatedTag	= $this->modelTag->get ( $tagId );
 			$relatedTag->relevance	= $count;
 			$relatedTagIds[]	= $relatedTag;
 		}
@@ -187,10 +170,9 @@ class Logic_Note{
 
 	public function getRelatedNoteIds( $noteId ){
 		$relatedNoteIds	= array();
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$noteTags		= $modelNoteTag->getAllByIndex( 'noteId', $noteId );
+		$noteTags		= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );
 		foreach( $noteTags as $noteTag ){
-			$notes		= $modelNoteTag->getAllByIndex( 'tagId', $noteTag->tagId );
+			$notes		= $this->modelNoteTag->getAllByIndex( 'tagId', $noteTag->tagId );
 			foreach( $notes as $note ){
 				if( $note->noteId != $noteId ){
 					if( !isset( $list[$note->noteId] ) )
@@ -211,17 +193,15 @@ class Logic_Note{
 		if( !count( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
 		$noteIds			= array();
-		foreach( $modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
+		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
 	}
 */
 	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() ){
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
 		$tagIds	= array();
-		foreach( $modelNoteTag->getAllByIndices( array( 'noteId' => $noteIds ) ) as $relation ){
+		foreach( $this->modelNoteTag->getAllByIndices( array( 'noteId' => $noteIds ) ) as $relation ){
 			if( !in_array( $relation->tagId, $skipTagIds ) ){
 				if( !isset( $tagIds[$relation->tagId] ) )
 					$tagIds[$relation->tagId]	= 0;
@@ -232,6 +212,9 @@ class Logic_Note{
 		return $tagIds;
 	}
 
+	/**
+	 *	@todo finish implementation or remove
+	 */
 	public function getRelatedTagsFromTags( $tagIds = array() ){
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
@@ -239,87 +222,7 @@ class Logic_Note{
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 	}
 
-	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() ){
-		$modelNotes		= new Model_Note( $this->env );
-		$modelTag		= new Model_Tag( $this->env );
-
-		if( $notTagIds ){
-			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
-			if( $this->userId && $this->userProjects )
-				$noteIds	= array_intersect( $noteIds, $this->userNoteIds );
-			if( $noteIds ){
-				$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $notTagIds );
-				$tags		= array();
-				if( $tagIds ){
-					$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
-					$tags		= array_slice( $tags, $offset, $limit, TRUE );
-					foreach( $tags as $nr => $tag )
-						$tags[$nr]->relations	= $tagIds[$tag->tagId];
-				}
-			}
-			return $tags;
-		}
-
-		$tagIds	= array();
-		$modelRel	= new Model_Note_Tag( $this->env );
-		$conditions	= array();
-		if( $this->userId && $this->userProjects )
-			$conditions['noteId']	= array_merge( array( 0 ), $this->userNoteIds );
-		foreach( $modelRel->getAll( $conditions ) as $relation ){
-			if( !isset( $tagIds[$relation->tagId] ) )
-				$tagIds[$relation->tagId]	= 0;
-			$tagIds[$relation->tagId]++;
-		}
-		arsort( $tagIds );
-		$tagIds		= array_slice( $tagIds, $offset, $limit, TRUE );
-		if( $tagIds ){
-			$tags		= $modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
-			foreach( $tags as $nr => $tag ){
-				$tag->relations	= $tagIds[$tag->tagId];
-				$tagIds[$tag->tagId]	= $tag;
-			}
-		}
-		return array_values( $tagIds );
-	}
-
-	public function removeNote( $noteId ){
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelNoteLink	= new Model_Note_Link( $this->env );
-		$modelNoteTag->removeByIndex( 'noteId', $noteId );
-		$modelNoteLink->removeByIndex( 'noteId', $noteId );
-		$this->modelNote->remove( $noteId );
-	}
-
-	public function removeNoteLink( $noteLinkId ){
-		$modelNoteLink	= new Model_Note_Link( $this->env );
-		if( !$modelNoteLink->get( $noteLinkId ) )
-			return FALSE;
-		$modelNoteLink->remove( $noteLinkId );
-		return TRUE;
-	}
-
-	public function removeLinkFromNote( $linkId, $noteId ){
-		$modelNoteLink	= new Model_Note_Link( $this->env );
-		$modelLink		= new Model_Link( $this->env );
-		$indices		= array( 'noteId' => $noteId, 'linkId' => $linkId );						//  focus on note and link
-		$modelNoteLink->removeByIndices( $indices );												//  remove note link relation
-		$relations	= $modelNoteLink->getAllByIndex( 'linkId', $linkId );							//  find other link relations
-		if( !count( $relations ) )																	//  link is unrelated now
-			$modelLink->remove( $linkId );															//  remove link
-	}
-
-	public function removeTagFromNote( $tagId, $noteId ){
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelTag		= new Model_Tag( $this->env );
-		$indices		= array( 'noteId' => $noteId, 'tagId' => $tagId );							//  focus on note and tag
-		$modelNoteTag->removeByIndices( $indices );													//  remove note tag relation
-		$relations	= $modelNoteTag->getAllByIndex( 'tagId', $tagId );								//  find other tag relations
-		if( !count( $relations ) )																	//  tag is unrelated now
-			$modelTag->remove( $tagId );															//  remove tag
-	}
-
 	public function getTopNotes( $conditions = array(), $orders = array(), $limits = array() ){
-		$model		= new Model_Note( $this->env );
 		$clock		= new Alg_Time_Clock();
 		if( !$orders )
 			$orders		= array(
@@ -330,10 +233,10 @@ class Logic_Note{
 		if( !$limits )
 			$limits		= array( 0, 10 );
 		$conditions	= $this->sharpenConditions( $conditions );
-		$number		= $model->count( $conditions );
+		$number		= $this->modelNote->count( $conditions );
 		if( $number < $limits[0] )
 			$limits[0]	= 0;
-		$notes	= $model->getAll( $conditions, $orders, $limits );
+		$notes	= $this->modelNote->getAll( $conditions, $orders, $limits );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		return array(
@@ -343,41 +246,101 @@ class Logic_Note{
 		);
 	}
 
-	/**
-	 *	Returns list of note IDs related to tag IDs.
-	 *	@access		public
-	 *	@param		array		$tagIds		List of tag IDs
-	 *	@param		boolean		$strict		Notes must be related to ALL tag IDs (slower)
-	 *	@return		array					List of note IDs related to tag IDs
-	 */
-	public function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
-		if( !is_array( $tagIds ) )
-			throw new InvalidArgumentException( 'Tag list must be an array' );
-		if( !count( $tagIds ) )
-			throw new InvalidArgumentException( 'Tag list cannot be empty' );
-
-		if( $strict ){
-			$noteIds	= array();
-			$model		= new Model_Note_Tag( $this->env );
-			$tagIds		= array_unique( $tagIds );
-			foreach( $tagIds as $tagId ){
-				foreach( $model->getAll( array( 'tagId' => $tagId ) ) as $relation ){
-					if( !isset( $noteIds[$relation->noteId] ) )
-						$noteIds[$relation->noteId]	= array();
-					$noteIds[$relation->noteId][]	= $relation->tagId;
+	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() ){
+		if( $notTagIds ){
+			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
+			if( $this->userId && $this->userProjects )
+				$noteIds	= array_intersect( $noteIds, $this->userNoteIds );
+			if( $noteIds ){
+				$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $notTagIds );
+				$tags		= array();
+				if( $tagIds ){
+					$tags		= $this->modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
+					$tags		= array_slice( $tags, $offset, $limit, TRUE );
+					foreach( $tags as $nr => $tag )
+						$tags[$nr]->relations	= $tagIds[$tag->tagId];
 				}
 			}
-			foreach( $noteIds as $noteId => $tagsFound )
-				if( count( $tagsFound ) !== count( $tagIds ) )
-					unset( $noteIds[$noteId] );
-			return array_keys( $noteIds );
+			return $tags;
 		}
 
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$noteIds			= array();
-		foreach( $modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
-			$noteIds[]	= $relation->noteId;
-		return $noteIds;
+		$tagIds	= array();
+		$conditions	= array();
+		if( $this->userId && $this->userProjects )
+			$conditions['noteId']	= array_merge( array( 0 ), $this->userNoteIds );
+		foreach( $this->modelNoteTag->getAll( $conditions ) as $relation ){
+			if( !isset( $tagIds[$relation->tagId] ) )
+				$tagIds[$relation->tagId]	= 0;
+			$tagIds[$relation->tagId]++;
+		}
+		arsort( $tagIds );
+		$tagIds		= array_slice( $tagIds, $offset, $limit, TRUE );
+		if( $tagIds ){
+			$tags		= $this->modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
+			foreach( $tags as $nr => $tag ){
+				$tag->relations	= $tagIds[$tag->tagId];
+				$tagIds[$tag->tagId]	= $tag;
+			}
+		}
+		return array_values( $tagIds );
+	}
+
+	public function populateNote( $note ){
+		$note->links	= array();
+		$note->tags		= array();
+
+		$links	= $this->modelNoteLink->getAllByIndex( 'noteId', $note->noteId );
+		$tags	= $this->modelNoteTag->getAllByIndex( 'noteId', $note->noteId );
+
+		foreach( $links as $relation ){
+			$link			= $this->modelLink->get( $relation->linkId );
+			$link->title	= $relation->title;
+			$note->links[]	= $link;
+		}
+
+		foreach( $tags as $tag )
+			$note->tags[]	= $this->modelTag->get( $tag->tagId );
+
+		return $note;
+	}
+
+	public function removeNote( $noteId ){
+		$relatedTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );					//  get tag relations
+		foreach( $relatedTags as $relatedTag ){														//  iterate tag relations
+			$this->modelNoteTag->remove( $relatedTag->noteTagId );									//  remove relation to tag
+			if( !$this->modelNoteTag->countByIndex( 'tagId', $relatedTag->tagId ) )					//  tag is not related by other notes
+				$this->modelTag->remove( $relatedTag->tagId );										//  remove tag itself
+		}
+		$relatedLinks	= $this->modelNoteLink->getAllByIndex( 'noteId', $noteId );					//  get link relations
+		foreach( $relatedLinks as $relatedLink ){													//  iterate link relations
+			$this->modelNoteLink->remove( $relatedLink->noteLinkId );								//  remove relation to link
+			if( !$this->modelNoteLink->countByIndex( 'linkId', $relatedLink->linkId ) )				//  link is not related by other notes
+				$this->modelLink->remove( $relatedLink->linkId );									//  remote link itself
+		}
+		$this->modelNote->remove( $noteId );														//  remote note
+	}
+
+	public function removeNoteLink( $noteLinkId ){
+		if( !$this->modelNoteLink->get( $noteLinkId ) )
+			return FALSE;
+		$this->modelNoteLink->remove( $noteLinkId );
+		return TRUE;
+	}
+
+	public function removeLinkFromNote( $linkId, $noteId ){
+		$indices		= array( 'noteId' => $noteId, 'linkId' => $linkId );						//  focus on note and link
+		$this->modelNoteLink->removeByIndices( $indices );											//  remove note link relation
+		$relations	= $this->modelNoteLink->getAllByIndex( 'linkId', $linkId );						//  find other link relations
+		if( !count( $relations ) )																	//  link is unrelated now
+			$this->modelLink->remove( $linkId );													//  remove link
+	}
+
+	public function removeTagFromNote( $tagId, $noteId ){
+		$indices		= array( 'noteId' => $noteId, 'tagId' => $tagId );							//  focus on note and tag
+		$this->modelNoteTag->removeByIndices( $indices );											//  remove note tag relation
+		$relations	= $this->modelNoteTag->getAllByIndex( 'tagId', $tagId );						//  find other tag relations
+		if( !count( $relations ) )																	//  tag is unrelated now
+			$this->modelTag->remove( $tagId );														//  remove tag
 	}
 
 	/**
@@ -456,28 +419,44 @@ ORDER BY
 		);
 	}
 
-	public function populateNote( $note ){
-		$modelNoteLink	= new Model_Note_Link( $this->env );
-		$modelNoteTag	= new Model_Note_Tag( $this->env );
-		$modelLink			= new Model_Link( $this->env );
-		$modelTag			= new Model_Tag( $this->env );
-
-		$note->links	= array();
-		$note->tags	= array();
-
-		$links	= $modelNoteLink->getAllByIndex( 'noteId', $note->noteId );
-		$tags	= $modelNoteTag->getAllByIndex( 'noteId', $note->noteId );
-
-		foreach( $links as $relation ){
-			$link			= $modelLink->get( $relation->linkId );
-			$link->title	= $relation->title;
-			$note->links[]	= $link;
+	public function setContext( $userId, $roleId, $projectId ){
+		$this->userId			= $userId;
+		$this->roleId			= $roleId;
+		$this->projectId		= $projectId;
+		$this->userNoteIds		= array();
+		$this->userProjects		= array();
+		if( $this->userId ){
+			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+				$logicProject	= Logic_Project::getInstance( $this->env );
+				$userProjects	= $logicProject->getUserProjects( $this->userId );
+				foreach( $userProjects as $userProject )
+					$this->userProjects[$userProject->projectId]	= $userProject;
+				$projectIds	= array_merge( array( 0 ), array_keys( $this->userProjects ) );
+				if( strlen( trim( $this->projectId ) ) )
+					$projectIds	= array_merge( array( $this->projectId ) );
+				$userNotes	= $this->modelNote->getAll( array( 'projectId' => $projectIds ) );
+				foreach( $userNotes as $userNote )
+					$this->userNoteIds[]	= $userNote->noteId;
+			}
 		}
+	}
 
-		foreach( $tags as $tag )
-			$note->tags[]	= $modelTag->get( $tag->tagId );
+	protected function sharpenConditions( $conditions ){
+		if( $this->env->has( 'acl' ) )
+			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
+				return $conditions;
 
-		return $note;
+//		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )
+//			if( !array_key_exists( 'public', $conditions ) || $conditions['public'] != 1 )
+//				$conditions['public']	= 1;
+
+/*		$logic			= Logic_Project::getInstance( $this->env );
+		$userProjects	= array( 0 );
+		foreach( $logic->getUserProjects( $this->userId ) as $relation )
+			$userProjects[]	= $relation->projectId;
+		if( !array_key_exists( 'projectId', $conditions ) || !in_array( $conditions['projectId'], $userProjects ) )
+			$conditions['projectId']	= $userProjects;
+*/		return $conditions;
 	}
 }
 ?>

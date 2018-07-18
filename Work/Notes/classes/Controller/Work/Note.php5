@@ -19,67 +19,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
-	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
-		$model		= new Model_Note( $env );
-		$logic		= Logic_Note::getInstance( $env );
-		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $note ){
-			$logic->removeNote( $note->noteId );
-		}
-	}
-
-	static public function ___onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$modelProject	= new Model_Project( $env );
-		if( empty( $data->projectId ) ){
-			$message	= 'Hook "Work_Notes::___onListProjectRelations" is missing project ID in data.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
-			$message	= 'Hook "Work_Notes::___onListProjectRelations": Invalid project ID.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-		$language		= $env->getLanguage();
-//		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
-		$list			= array();
-		$modelNote		= new Model_Note( $env );
-		$indices		= array( 'projectId' => $data->projectId );
-//		if( $data->activeOnly )
-//			$indices['status']	= $statusesActive;
-		$orders			= array( 'status' => 'ASC', 'title' => 'ASC' );
-		$notes			= $modelNote->getAllByIndices( $indices, $orders );	//  ...
-/*		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
-		);*/
-		$words		= $language->getWords( 'work/note' );
-		foreach( $notes as $note ){
-			$icon		= '';//$icons[$note->type];
-			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
-//			$status		= '('.$words['states'][$issue->status].')';
-//			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $note->title : UI_HTML_Tag::create( 'del', $note->title );
-			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
-			$list[]		= (object) array(
-				'id'		=> $data->linkable ? $note->noteId : NULL,
-				'label'		=> $label,
-			);
-		}
-		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
-			$module,																				//  module called by hook
-			'entity',																				//  relation type: entity or relation
-			$list,																					//  list of related items
-			$words['hook-relations']['label'],														//  label of type of related items
-			'Work_Note',																			//  controller of entity
-			'view'																					//  action to view or edit entity
-		);
-	}
-
 	public function add(){
 		$model		= new Model_Note( $this->env );
 		$words		= (object) $this->getWords( 'add' );
@@ -128,7 +67,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->env->getSession()->get( 'userId' );
+			$userId		= $this->session->get( 'userId' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -139,7 +78,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$linkId	= $this->logic->createLink( $this->request->get( 'link_url' ), FALSE );
 		$this->logic->addLinkToNote( $linkId, $noteId, $this->request->get( 'link_title' ), FALSE );
 		$words		= (object) $this->getWords( 'msg' );
-		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkAdded );
+		$this->messenger->noteSuccess( $words->successNoteLinkAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
@@ -148,7 +87,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$model		= new Model_Tag( $this->env );
 		$tag		= $model->get( $tagId );
 		if( !$tag )
-			$this->env->getMessenger()->noteError( 'invalid tag ID: '.$tagId );
+			$this->messenger->noteError( 'invalid tag ID: '.$tagId );
 		else{
 			foreach( $tags as $item )
 				if( $item->tagId == $tag->tagId )
@@ -164,7 +103,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$words			= (object) $this->getWords( 'msg' );
 		if( !is_null( $tagId ) ){
 			$this->logic->addTagToNote( $tagId, $noteId, FALSE );
-			$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
+			$this->messenger->noteSuccess( $words->successNoteTagAdded );
 		}
 		else{
 			if( ( $parts = explode( ' ', trim( $this->request->get( 'tag_content' ) ) ) ) ){
@@ -172,7 +111,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 					$tagId	= $this->logic->createTag( $part, FALSE );
 					$this->logic->addTagToNote( $tagId, $noteId, FALSE );
 				}
-				$this->env->getMessenger()->noteSuccess( $words->successNoteTagAdded );
+				$this->messenger->noteSuccess( $words->successNoteTagAdded );
 			}
 		}
 		$this->restart( './work/note/edit/'.$noteId );
@@ -213,7 +152,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->env->getSession()->get( 'userId' );
+			$userId		= $this->session->get( 'userId' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -349,7 +288,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$model	= new Model_Link( $this->env );
 		$link	= $model->get( $linkId );
 		if( !$link ){
-			$this->env->getMessenger()->noteError( 'Invalid link ID' );
+			$this->messenger->noteError( 'Invalid link ID' );
 			$this->restart( NULL, TRUE );
 		}
 		header( 'Location: '.$link->url );
@@ -359,21 +298,21 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function remove( $noteId ){
 		$this->logic->removeNote( $noteId );
 		$words		= (object) $this->getWords( 'msg' );
-		$this->env->getMessenger()->noteSuccess( $words->successNoteRemoved );
+		$this->messenger->noteSuccess( $words->successNoteRemoved );
 		$this->restart( './work/note' );
 	}
 
 	public function removeTag( $noteId, $tagId ){
 		$words		= (object) $this->getWords( 'msg' );
 		$this->logic->removeTagFromNote( $tagId, $noteId );
-		$this->env->getMessenger()->noteSuccess( $words->successNoteTagRemoved );
+		$this->messenger->noteSuccess( $words->successNoteTagRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
 	public function removeLink( $noteId, $noteLinkId ){
 		$this->logic->removeNoteLink( $noteLinkId );
 		$words		= (object) $this->getWords( 'msg' );
-		$this->env->getMessenger()->noteSuccess( $words->successNoteLinkRemoved );
+		$this->messenger->noteSuccess( $words->successNoteLinkRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
@@ -383,7 +322,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$note		= $this->logic->getNoteData( $noteId );
 		$note->user	= $modelUser->get( $note->userId );
 		if( !$note ){
-			$this->env->getMessenger()->noteError( 'Invalid Note ID');
+			$this->messenger->noteError( 'Invalid Note ID');
 			$this->restart( './work/note/' );
 		}
 		$this->addData( 'note', $note );
