@@ -54,10 +54,10 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 				'managerId'	=> $managedIssue->reporterId,
 			) );
 
-		foreach( $modelChange->getByIndex( 'userId', $data->userId ) as $change )
+		foreach( $modelChange->getAllByIndex( 'userId', $data->userId ) as $change )
 			$modelNote->remove( $change->issueChangeId );
 
-		foreach( $modelNote->getByIndex( 'userId', $data->userId ) as $note )
+		foreach( $modelNote->getAllByIndex( 'userId', $data->userId ) as $note )
 			$modelNote->remove( $note->issueNoteId );
 	}
 
