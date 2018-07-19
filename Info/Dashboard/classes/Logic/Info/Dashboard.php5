@@ -2,43 +2,19 @@
 /**
  *	@todo		code doc
  */
-class Logic_Info_Dashboard{
+class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 
-	static protected $instance;
-
-	protected $env;
 	protected $model;
 	protected $moduleConfig;
 
 	/**
 	 *	Constructor. Protected to force singleton use.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment		$env		Hydrogen framework environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env			= $env;
-		$this->model		= new Model_Dashboard( $env );
-		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
-	}
-
-	/**
-	 *	Cloning is disabled to force singleton use.
-	 *	@access		protected
-	 *	@return		void
-	 */
-	protected function __clone(){}
-
-	/**
-	 *	Get singleton instance of logic.
-	 *	@static
-	 *	@access		public
-	 *	@return		object			Singleton instance of logic
-	 */
-	static public function getInstance( CMF_Hydrogen_Environment $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
+	protected function __onInit(){
+		$this->model		= new Model_Dashboard( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
 	}
 
 	/**

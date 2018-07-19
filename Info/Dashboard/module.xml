@@ -6,7 +6,7 @@
 Calls hook Dashboard::registerPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.4.3</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
@@ -23,10 +23,13 @@ Calls hook Dashboard::registerPanels.
 	<log version="0.4.1">Preselect default panels on new user dashboard.</log>
 	<log version="0.4.2">Finish locale extraction.</log>
 	<log version="0.4.3">Improve info on empty dashboard.</log>
+	<log version="0.4.4">Extract hooks own hook class.</log>
+	<log version="0.4.5">Add hooks to list and remove user related entities.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/Dashboard.php5</class>
+		<class>Hook/Info/Dashboard.php5</class>
 		<class>Logic/Info/Dashboard.php5</class>
 		<class>Model/Dashboard.php5</class>
 		<class>View/Info/Dashboard.php5</class>
@@ -52,7 +55,9 @@ Calls hook Dashboard::registerPanels.
 	<config protected="yes" type="integer" name="perUser.maxBoards">5</config>
 	<config protected="yes" type="integer" name="perUser.maxPanels">12</config>
 	<relations/>
-	<hook type="resource" resource="View" event="renderContent">View_Info_Dashboard::___onRenderContent</hook>
+<!--	<hook type="resource" resource="View" event="renderContent">Hook_Info_Dashboard::onRenderContent</hook>-->
+	<hook type="resource" resource="User" event="listRelations">Hook_Info_Dashboard::onListUserRelations</hook>
+	<hook type="resource" resource="User" event="remove">Hook_Info_Dashboard::onUserRemove</hook>
 	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>dashboards`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>dashboards` (
