@@ -5,9 +5,9 @@
 
 Additionally contains editing features which need to be enabled.
 
-Features of viewer:	
+Features of viewer:
 list>
-- Documents are existing as files and can be stored in (nested) folders 
+- Documents are existing as files and can be stored in (nested) folders
 - Markdown syntax can be rendered:
 list>
 	- before delivery using serverside Markdown renderer (server-inline)
@@ -15,7 +15,7 @@ list>
 	- before display using PageDown.js (client)
 <list
 <list
-Features of editor:	
+Features of editor:
 list>
 - Documents can be added, updated, renamed/moved or removed
 - Document list order can be managed by pushing documents up or down
@@ -23,7 +23,7 @@ list>
 <list
 This module can be localized.
 ]]></description>
-	<version>0.6.9</version>
+	<version>0.7.0</version>
 	<log version="0.6.3">Extract CSS to style file.</log>
 	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
 	<log version="0.6.5">Add configuration and detection of renderer.</log>
@@ -31,6 +31,7 @@ This module can be localized.
 	<log version="0.6.7">Add support for new AJAJ client.</log>
 	<log version="0.6.8">Add relation to module JS:CodeMirror.</log>
 	<log version="0.6.9">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.7.0">Replace file base solution by database.</log>
 <!--	<log version="0.6.x">Use editor configuration switch for read-only mode.</log>-->
 	<category>Info</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
@@ -38,6 +39,8 @@ This module can be localized.
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Manual.php5</class>
+		<class>Model/Manual/Category.php5</class>
+		<class>Model/Manual/Page.php5</class>
 		<class>View/Info/Manual.php5</class>
 		<template>info/manual/add.php</template>
 		<template>info/manual/edit.php</template>
@@ -57,6 +60,48 @@ This module can be localized.
 		<needs type="module">JS_jQuery</needs>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_Markdown</needs>
+		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_Markdown</needs>
 	</relations>
+	<sql type="mysql" on="install" version="0.7.0"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>manual_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>manual_categories` (
+  `manualCategoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `format` tinyint(1) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`manualCategoryId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `format` (`format`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>manual_pages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>manual_pages` (
+  `manualPageId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `manualCategoryId` int(11) unsigned NOT NULL,
+  `creatorId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `format` tinyint(1) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`manualPageId`),
+  KEY `manualCategoryId` (`manualCategoryId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `format` (`format`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>manual_pages`;
+DROP TABLE IF EXISTS `<%?prefix%>manual_categories`;
+]]></sql>
 </module>

@@ -1,11 +1,10 @@
 <?php
 $list	= '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
-if( $files ){
+if( $pages ){
 	$list	= array();
-	foreach( $files as $entry ){
-		$entry	= preg_replace( "/\.md$/", "", $entry );
-		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
-		$class	= $file == $entry ? 'active' : '';
+	foreach( $pages as $entry ){
+		$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
+		$class	= 'autocut '.( $pageId == $entry->manualPageId ? 'active' : '' );
 		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 	}
 	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );

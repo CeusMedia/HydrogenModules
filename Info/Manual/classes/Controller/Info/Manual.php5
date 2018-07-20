@@ -135,12 +135,19 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		$this->modelPage		= new Model_Manual_Page( $this->env );
+
+		$conditions	= array( 'status' => '>0' );
+		$orders		= array();
+		$pages	= $this->modelPage->getAll( $conditions, $orders );
+		$this->addData( 'pages', $pages );
+/*
 		if( $this->files && $this->order ){
 			$file	= preg_replace( "/\.md/", "", $this->order[0] );
 			$this->restart( 'view/'.$this->urlencode( $file ), TRUE );
 		}
 		$this->messenger->noteNotice( 'Keine Seiten vorhanden.' );
-		$this->addData( 'files', $this->files );
+		$this->addData( 'files', $this->files );*/
 	}
 
 	public function moveDown( $fileHash ){
