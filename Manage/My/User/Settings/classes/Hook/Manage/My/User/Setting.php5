@@ -18,8 +18,8 @@ class Hook_Manage_My_User_Setting /*extends CMF_Hydrogen_Hook*/{
 	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data	= (object) $data;
 		if( !empty( $data->userId ) ){
-			$model	= new Model_User_Settings( $env );
-			$model->removeByIndex( 'userId', $data->userId )
+			$model	= new Model_User_Setting( $env );
+			$model->removeByIndex( 'userId', $data->userId );
 		}
 	}
 }

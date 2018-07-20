@@ -254,7 +254,6 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 					'userId'		=> $this->userId,
 					'informOthers'	=> TRUE,
 				) );
-				$this->modelUser->remove( $this->userId );
 				$dbc->commit();
 				$this->restart( 'auth/logout' );
 			}
