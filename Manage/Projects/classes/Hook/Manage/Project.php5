@@ -32,8 +32,10 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 
 	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$projectId	= $data['projectId'];
-		$model		= new Model_Project_User( $env );
-		$model->removeByIndices( array( 'projectId' => $projectId ) );
+		$modelProject	= new Model_Project( $env );
+		$modelUsers		= new Model_Project_User( $env );
+		$modelUsers->removeByIndices( array( 'projectId' => $projectId ) );
+		$modelProject->remove( $projectId );
 	}
 
 	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
@@ -45,25 +47,31 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 		}
 
 		$logic			= Logic_Project::getInstance( $env );
+		$modelRelation	= new Model_Project_User( $env );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 
 		$lists	= (object) array( 'entities' => array(), 'relations' => array() );
 		foreach( $projects as $project ){
+			$modelRelation->removeByIndices( array(
+				'projectId'	=> $project->projectId,
+				'userId'	=> $data->userId
+			) );
+			$lists->relations[]	= $project;
 			$users		= $logic->getProjectUsers( $project->projectId );
-			if( count( $users ) === 1 && isset( $users[$data->userId] ) ){								//  no other users in project
+			if( count( $users ) === 0 ){
 				$lists->entities[]	= $project;
-//				$env->getCaptain()->callHook( 'Project', 'remove', $context, array( 'projectId' => $project->projectId ) );
-			}
-			else{
-				$lists->relations[]	= $project;
-//				$logic->removeProjectUser( $project->projectId, $data->userId, TRUE );
+				$env->getCaptain()->callHook( 'Project', 'remove', $context, array( 'projectId' => $project->projectId ) );
+				$modelProject	= new Model_Project( $env );
+				$modelRelation	= new Model_Project_User( $env );
+				$modelRelation->removeByIndex( 'projectId', $project->projectId );
+				$modelProject->remove( $project->projectId );
 			}
 		}
-		if( $lists->entities )
+/*		if( $lists->entities )
 			$env->getMessenger()->noteSuccess( 'Removed %d projects.', count( $lists->entities ) );
 		if( $lists->relations )
 			$env->getMessenger()->noteSuccess( 'Removed %d project relations.', count( $lists->relations ) );
-	}
+*/	}
 
 	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data	= (object) $data;

@@ -86,12 +86,12 @@
 	</relations>
 	<link path="manage/project" access="acl" xml:lang="de" rank="82">Projekte</link>
 	<link path="manage/project" access="acl" xml:lang="en" rank="82">Projects</link>
-	<hook type="resource" resource="Project" event="listRelations">Hook_Manage_Project::onListRelations</hook>
-	<hook type="resource" resource="Project" event="update">Hook_Manage_Project::onUpdate</hook>
-	<hook type="resource" resource="Project" event="onRemove">Hook_Manage_Project::onProjectRemove</hook>
-	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Hook_Manage_Project::onGetRelatedUsers</hook>
-	<hook type="resource" resource="User" event="listRelations">Hook_Manage_Project::onListUserRelations</hook>
-	<hook type="resource" resource="User" event="remove">Hook_Manage_Project::onUserRemove</hook>
+	<hook type="resource" resource="Project" event="listRelations" level="3">Hook_Manage_Project::onListRelations</hook>
+	<hook type="resource" resource="Project" event="update" level="3">Hook_Manage_Project::onUpdate</hook>
+	<hook type="resource" resource="Project" event="remove" level="9">Hook_Manage_Project::onProjectRemove</hook>
+	<hook type="resource" resource="Resource:Users" event="getRelatedUsers" level="3">Hook_Manage_Project::onGetRelatedUsers</hook>
+	<hook type="resource" resource="User" event="listRelations" level="3">Hook_Manage_Project::onListUserRelations</hook>
+	<hook type="resource" resource="User" event="remove" level="8">Hook_Manage_Project::onUserRemove</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>projects`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>projects` (

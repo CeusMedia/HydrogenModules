@@ -142,23 +142,6 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
 
-	public function setDefaultProject( $userId, $projectId ){
-		$this->modelProjectUser->editByIndices( array(
-			'userId'		=> $userId,
-			'isDefault'		=> 1
-		), array(
-			'isDefault'		=> "0",
-			'modifiedAt'	=> time()
-		) );
-		return $this->modelProjectUser->editByIndices( array(
-			'projectId'		=> $projectId,
-			'userId'		=> $userId,
-		), array(
-			'isDefault'		=> "1",
-			'modifiedAt'	=> time()
-		) );
-	}
-
 	public function removeProjectUser( $projectId, $userId, $informOthers = TRUE ){
 		try{
 			$this->modelProjectUser->removeByIndices( array(
@@ -181,6 +164,23 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		catch( Exception $e ){
 			throw new RuntimeException( 'Removing project user failed', 0, $e );
 		}
+	}
+
+	public function setDefaultProject( $userId, $projectId ){
+		$this->modelProjectUser->editByIndices( array(
+			'userId'		=> $userId,
+			'isDefault'		=> 1
+		), array(
+			'isDefault'		=> "0",
+			'modifiedAt'	=> time()
+		) );
+		return $this->modelProjectUser->editByIndices( array(
+			'projectId'		=> $projectId,
+			'userId'		=> $userId,
+		), array(
+			'isDefault'		=> "1",
+			'modifiedAt'	=> time()
+		) );
 	}
 }
 ?>

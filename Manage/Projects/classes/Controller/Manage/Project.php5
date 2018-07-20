@@ -433,8 +433,6 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 					}
 				}
 				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, array( 'projectId' => $projectId ) );
-				$this->modelProjectUser->removeByIndex( 'projectId', $projectId );
-				$this->modelProject->remove( $projectId );
 				$dbc->commit();
 				$this->messenger->noteSuccess( $words->msgSuccessRemoved, $project->title );
 				$this->restart( NULL, TRUE );
