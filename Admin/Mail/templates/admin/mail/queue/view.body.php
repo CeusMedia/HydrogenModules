@@ -18,6 +18,129 @@ else if( !isset( $mail->parts ) )
 else{
 
 	try{
+		$libraries		= Logic_Mail::detectAvailableMailLibraries();
+		$usedLibrary	= Logic_Mail::detectMailLibraryFromMailObject( $mail->object );
+
+		$html			= '';
+		$text			= '';
+		$attachments	= array();
+		$images			= array();
+
+		if( $libraries & $usedLibrary ){
+			if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+				foreach( $mail->parts as $key => $part ){
+	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_COMMON: '.get_class( $part ) );
+	//				$this->env->getMessenger()->noteNotice( 'TYPE: '.$part->getMimeType() );
+					if( $part instanceof Net_Mail_Body ){
+						if( $part->getMimeType() == 'text/html' ){
+							$html	= TRUE;//$part->getContent();
+						}
+						else if( $part->getMimeType() == 'text/plain' )
+							$text	= $part->getContent();
+							if( $part->getContentEncoding() === "base64" )
+								$text	= base64_decode( $text );
+							if( $part->getContentEncoding() === "quoted-printable" ){
+								$text	= str_replace( Net_Mail::$delimiter, '', $text );
+								$text	= quoted_printable_decode( $text );
+							}
+					}
+					else if( $part instanceof Net_Mail_Attachment ){
+						$attachments[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+					}
+				}
+			}
+			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL1 ){
+				foreach( $mail->parts as $key => $part ){
+	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
+					if( $part instanceof \CeusMedia\Mail\Part\HTML )
+						$html	= TRUE;//$part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Part\Text )
+						$text	= $part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Part\Attachment )
+						$attachments[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+					else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
+						$images[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+				}
+			}
+			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL2 ){
+				foreach( $mail->parts as $key => $part ){
+					if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
+						$html	= TRUE;//$part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\Text )
+						$text	= $part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
+						$attachments[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
+						$images[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+				}
+			}
+		}
+
+		$parts	= array();
+
+		if( $html ){																			//  realize HTML view if available
+			$headingHtml	= UI_HTML_Tag::create( 'h4', 'HTML' );
+			$displayHtml	= UI_HTML_Tag::create( 'iframe', '', array(
+				'src'			=> './admin/mail/queue/html/'.$mail->mailId,
+				'frameborder'	=> '0',
+				'style'			=> "width: 100%; height: 450px; border: 1px solid gray; border-radius: 2px;",
+			) );
+			$parts[]	= $headingHtml.$displayHtml;
+		}
+
+		if( $attachments ){																		//  realize attachments view if available
+			foreach( $attachments as $nr => $attachment ){
+				$size	= Alg_UnitFormater::formatBytes( $attachment->fileSize );
+				$size	= UI_HTML_Tag::create( 'small', $size, array( 'class' => 'muted' ) );
+				$label	= $attachment->fileName.' '.$size;
+				$attachments[$nr]	= UI_HTML_Tag::create( 'li', $label );
+			}
+			$displayAttachments	= UI_HTML_Tag::create( 'ul', $attachments );
+			$headingAttachments	= '<h4>Anhänge</h4>';
+			$parts[]	= $headingAttachments.$displayAttachments;
+		}
+
+		if( $images ){																			//  realize inline images view if available
+			foreach( $images as $nr => $image ){
+				$size	= Alg_UnitFormater::formatBytes( $image->fileSize );
+				$size	= UI_HTML_Tag::create( 'small', $size, array( 'class' => 'muted' ) );
+				$label	= $image->fileName.' '.$size;
+				$images[$nr]	= UI_HTML_Tag::create( 'li', $label );
+			}
+				$images[$nr]	= UI_HTML_Tag::create( 'li', $image->fileName.' <small class="muted">('.Alg_UnitFormater::formatBytes( $image->fileSize ).')</small>' );
+			$displayImages	= UI_HTML_Tag::create( 'ul', $images );
+			$headingImages	= '<h4>Eingebundene Bilder</h4>';
+			$parts[]	= $headingImages.$displayImages;
+		}
+
+		//  realize plain text view if available
+		if( $text ){
+			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
+			$displayText	= UI_HTML_Tag::create( 'pre', $text, array(
+				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
+			) );
+			$parts[]	= $headingText.$displayText;
+		}
+
 		$helperSource	= new View_Helper_Mail_View_Source( $env );
 		$helperSource->setMail( $mail );
 		$helperSource->setMode( View_Helper_Mail_View_Source::MODE_CONDENSED );
@@ -26,65 +149,12 @@ else{
 		$viewSource		= UI_HTML_Tag::create( 'pre', $valueSource, array(
 			'style'	=> "max-height: 300px; scroll-y: auto; overflow: auto",
 		) );
-		$list['9-source']	= $headingSource.$viewSource;
+		$parts[]	= $headingSource.$viewSource;
 
-		foreach( $mail->parts as $key => $part ){
-			if( $part instanceof \CeusMedia\Mail\Part\HTML )
-				$list['1-html']	= TRUE;
-			else if( $part instanceof \CeusMedia\Mail\Part\Attachment )
-				$list['2-attachments'][]	= $part;
-			else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
-				$list['3-images'][]	= $part;
-			else if( $part instanceof \CeusMedia\Mail\Part\Text )
-				$list['5-text']	= $part->getContent();
-		}
-		//  support for mails saved with older implementation using CeusMedia::Common:Net_Mail
-		//  @deprecated for all instances having saved mails using CeusMedia::Mail
-		//  @todo remove this outdated support in version 0.9
-		foreach( $mail->parts as $key => $part ){
-			if( !$list['1-html'] && $part->getMimeType() === "text/html" )
-				$list['1-html']	= TRUE;
-			else if( !$list['5-text'] && $part->getMimeType() === "text/plain" )
-				$list['5-text']	= $part->getContent();
-		}
-
-
-		//  realize HTML view if available
-		if( $list['1-html'] ){
-			$headingHtml	= UI_HTML_Tag::create( 'h4', 'HTML' );
-			$displayHtml	= UI_HTML_Tag::create( 'iframe', $list['5-text'], array(
-				'src'			=> './admin/mail/queue/html/'.$mail->mailId,
-				'frameborder'	=> '0',
-				'style'			=> "width: 100%; height: 450px; border: 1px solid gray; border-radius: 2px;",
-			) );
-			$list['1-html']	= $headingHtml.$displayHtml;
-		}
-
-		//  realize attachments view if available
-		$rows	= array();
-		foreach( $list['2-attachments'] as $attachment )
-			$rows[]	= UI_HTML_Tag::create( 'li', $attachment->getFileName() );
-		$list['2-attachments']	= $rows ? '<h4>Anhänge</h4>'.UI_HTML_Tag::create( 'ul', $rows ) : '';
-
-		//  realize inline images view if available
-		$rows	= array();
-		foreach( $list['3-images'] as $attachment )
-			$rows[]	= UI_HTML_Tag::create( 'li', $attachment->getFilename() );
-		$list['3-images']	= $rows ? '<h4>Eingebundene Bilder</h4>'.UI_HTML_Tag::create( 'ul', $rows ) : '';
-
-		//  realize plain text view if available
-		if( $list['5-text'] ){
-			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
-			$displayText	= UI_HTML_Tag::create( 'pre', $list['5-text'], array(
-				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
-			) );
-			$list['5-text']	= $headingText.$displayText;
-		}
-		ksort( $list );
 	}
 	catch( Exception $e ){
 		$message	= $e->getMessage();
-		$list		= array();
+		$parts		= array();
 	}
 }
 return '
@@ -92,7 +162,7 @@ return '
 	<h4>'.$words['view-body']['heading'].'</h4>
 	<div class="content-panel-inner">
 		<b>'.$message.'</b>
-		'.join( $list ).'
+		'.join( $parts ).'
 	</div>
 </div>';
 ?>

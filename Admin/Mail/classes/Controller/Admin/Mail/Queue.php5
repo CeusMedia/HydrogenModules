@@ -169,15 +169,15 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	public function send(){
 		$count	= $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) );
 		if( $count ){
-			$this->env->getMessenger()->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
+			$this->messenger->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
 			if( $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) ){
 				foreach( $this->logic->getQueuedMails( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) as $mail ){
 					try{
 						$this->logic->sendQueuedMail( $mail->mailId );
-						$this->env->getMessenger()->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
+						$this->messenger->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
 					}
 					catch( Exception $e ){
-						$this->env->getMessenger()->noteFailure( $e->getMessage() );
+						$this->messenger->noteFailure( $e->getMessage() );
 					}
 				}
 			}
@@ -186,9 +186,15 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	}
 
 	public function view( $mailId ){
-		$mail			= $this->logic->getMail( $mailId );
-		$mail->parts	= $this->logic->getMailParts( $mail );
-		$this->addData( 'mail', $mail );
+		try{
+			$mail			= $this->logic->getMail( $mailId );
+			$mail->parts	= $this->logic->getMailParts( $mail );
+			$this->addData( 'mail', $mail );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $e->getMessage() );
+			$this->restart( NULL, TRUE );
+		}
 	}
 }
 ?>
