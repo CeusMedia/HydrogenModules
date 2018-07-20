@@ -1,15 +1,8 @@
 <?php
-$list	= '<div><em class="muted">Keine Dokumente</em></div><br/>';
-if( $files ){
-	$list	= array();
-	foreach( $order as $entry ){
-		$entry	= preg_replace( "/\.md$/", "", $entry );
-		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
-		$class	= $file == $entry ? 'active' : '';
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
-	}
-	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
-}
+
+$helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
+$helperNav->setCategoryId( 1 );
+$helperNav->setActivePageId( $page->manualPageId );
 
 $buttonAdd		= "";
 $buttonEdit		= "";
@@ -21,7 +14,7 @@ if( $moduleConfig->get( 'editor' ) ){
 	if( in_array( 'add', $rights ) )
 		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
 	if( in_array( 'edit', $rights ) )
-		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], array( 'href' => './info/manual/edit/'.base64_encode( $file), 'class' => "btn btn-small" ) );
+		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], array( 'href' => './info/manual/edit/'.$page->manualPageId.'-'.$view->urlencode( $page->title ), 'class' => "btn btn-small" ) );
 	if( in_array( 'reload', $rights ) )
 		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
@@ -47,7 +40,7 @@ return '
 <div class="row-fluid">
 	<div class="span3">
 		<h3>'.$words['list']['heading'].'</h3>
-		'.$list.'
+		'.$helperNav->render().'
 		'.$buttonAdd.'
 		'.$buttonReload.'
 	</div>

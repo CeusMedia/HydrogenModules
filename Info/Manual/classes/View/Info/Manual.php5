@@ -28,6 +28,7 @@ class View_Info_Manual extends CMF_Hydrogen_View{
 	}
 
 	public function urlencode( $name ){
+		return urlencode( $name );
 		return str_replace( "%2F", "/", rawurldecode( $name ) );
 	}
 

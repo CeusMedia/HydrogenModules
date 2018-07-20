@@ -21,6 +21,9 @@ if( $moduleConfig->get( 'editor' ) ){
 		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
+$optFormat	= $words['formats'];
+$optFormat	= UI_HTML_Elements::Options( $optFormat, Model_Manual_Page::FORMAT_MARKDOWN );
+
 return '
 <div class="row-fluid">
 	<div class="span3">
@@ -33,17 +36,21 @@ return '
 		<h3>'.$words['edit']['heading'].'</h3>
 		<form action="./info/manual/add" method="post">
 			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_content">'.$words['edit']['labelContent'].'</label>
-					<textarea class="span12 CodeMirror-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
+				<div class="span4">
+					<label for="input_title">'.$words['edit']['labelFilename'].'</label>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+				</div>
+				<div class="span4">
+				<div class="span4">
+					<label for="input_format">'.$words['edit']['labelFormat'].'</label>
+					<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
+				</div>
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span4">
-					<label for="input_filename">'.$words['edit']['labelFilename'].'</label>
-					<input type="text" name="filename" class="span12" value="'.htmlentities( $filename, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
-				</div>
-				<div class="span4">
+				<div class="span12">
+					<label for="input_content">'.$words['edit']['labelContent'].'</label>
+					<textarea class="span12 CodeMirror-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">

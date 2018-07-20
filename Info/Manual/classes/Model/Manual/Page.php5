@@ -1,8 +1,9 @@
 <?php
 class Model_Manual_Page extends CMF_Hydrogen_Model{
 
-	const FORMAT_HTML		= 0;
-	const FORMAT_MARKDOWN	= 1;
+	const FORMAT_TEXT		= 0;
+	const FORMAT_HTML		= 1;
+	const FORMAT_MARKDOWN	= 2;
 
 	const STATUS_ARCHIVED	= -9;
 	const STATUS_OUTDATED	= -1;
@@ -18,6 +19,8 @@ class Model_Manual_Page extends CMF_Hydrogen_Model{
 		'creatorId',
 		'status',
 		'format',
+		'version',
+		'rank',
 		'title',
 		'content',
 		'createdAt',

@@ -17,6 +17,8 @@ class Model_Manual_Category extends CMF_Hydrogen_Model{
 		'creatorId',
 		'status',
 		'format',
+		'version',
+		'rank',
 		'title',
 		'content',
 		'createdAt',

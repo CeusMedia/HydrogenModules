@@ -6,6 +6,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	protected $messenger;
 	protected $config;
 	protected $files		= array();
+	protected $userId		= 0;
+	protected $modelCategory;
+	protected $modelPage;
+	protected $modelUser;
+	protected $modelVersion;
 
 	/** @var	ADT_List_Dictionary	$order */
 	protected $order;
@@ -26,14 +31,20 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->config		= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
-		$this->path			= $this->config->get( 'path' );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
+		$this->path			= $this->moduleConfig->get( 'path' );
 		$this->order		= new ADT_List_Dictionary();
 		$this->rights		= $this->env->getAcl()->index( 'info/manual' );
-		$this->isEditable	= $this->config->get( 'editor' );
+		$this->isEditable	= $this->moduleConfig->get( 'editor' );
 
-		if( !file_exists( $this->path ) )
-			throw new RuntimeException( 'Path "'.$this->path.'" is not existing' );
+		$this->modelCategory	= new Model_Manual_Category( $this->env );
+		$this->modelPage		= new Model_Manual_Page( $this->env );
+		$this->modelVersion		= new Model_Manual_Version( $this->env );
+
+		if( $this->env->getModules()->has( 'Resource_Users' ) ){
+			$this->modelUser	= new Model_User( $this->env );
+			$this->userId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		}
 
 		$this->scanFiles();
 		$orderFile	= $this->path.'order.list';
@@ -47,145 +58,146 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 
 		$this->addData( 'path', $this->path );
-		$this->addData( 'moduleConfig', $this->config );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'order', $this->order );
 		$this->addData( 'rights', $this->rights );
+
+		$this->categories	= array();
+		$conditions			= array( 'status' => '>='.Model_Manual_Category::STATUS_NEW );
+		$orders				= array( 'rank' => 'ASC' );
+		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
+			$this->categories[$category->manualCategoryId]	= $category;
+		$this->addData( 'categories', $this->categories );
 	}
 
 	public function add(){
+		$categoryId		= 0;
 		if( !$this->isEditable || !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
-			$fileName	= trim( $this->request->get( 'filename' ) );
-			if( !$fileName )
+			$title		= trim( $this->request->get( 'title' ) );
+			$content	= trim( $this->request->get( 'content' ) );
+			if( !strlen( trim( $title ) ) )
 				$this->messenger->noteError( $words->msgErrorFilenameMissing );
 			else{
-				$filePath	= $this->path.$fileName.$this->ext;
-				if( file_exists( $filePath ) )
-					$this->messenger->noteError( $words->msgErrorFileExisting, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-				else{
-					FS_Folder_Editor::createFolder( dirname( $filePath ) );
-					FS_File_Writer::save( $filePath, $this->request->get( 'content' ) );
-					$this->order[]	= $fileName.$this->ext;
-					$this->saveOrder();
-					$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-					$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
-				}
+				$pageId	= $this->modelPage->add( array(
+					'manualCategoryId'	=> $categoryId,
+					'creatorId'			=> $this->userId,
+					'status'			=> Model_Manual_Page::STATUS_NEW,
+					'format'			=> Model_Manual_Page::FORMAT_MARKDOWN,
+					'version'			=> 1,
+					'rank'				=> $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1,
+					'title'				=> $title,
+					'content'			=> $content,
+					'createdAt'			=> time(),
+					'modifiedAt'		=> time(),
+				) );
+				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
+				$this->restart( 'view/'.$pageId.'-'.$this->urlencode( $title ), TRUE );
 			}
 		}
-		$this->addData( 'filename', $this->request->get( 'filename' ) );
+		$this->addData( 'title', $this->request->get( 'title' ) );
 		$this->addData( 'content', $this->request->get( 'content' ) );
 	}
 
-	public function edit( $fileHash, $version = NULL ){
-		$fileName	= base64_decode( $fileHash );
-		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
-			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
+	protected function checkPageId( $pageId ){
+		if( !strlen( trim( $pageId ) ) )
+			throw new InvalidArgumentException( 'No page ID given' );
+		$page	= $this->modelPage->get( $pageId );
+		if( !$page )
+			throw new InvalidArgumentException( 'Invalid page ID given' );
+		if( $page->manualCategoryId )
+			$page->category	= $this->modelCategory->get( $page->manualCategoryId );
+		return $page;
+	}
 
-		$filePath	= $this->path.$fileName.$this->ext;
-		$resource	= new FS_File_Editor( $filePath );
-		$content	= $resource->readString();
+	public function edit( $pageId, $version = NULL ){
+		$page	= $this->checkPageId( $pageId );
+		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
+			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
 
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'edit' );
-			if( !is_writable( $filePath ) ){
-				$this->messenger->noteFailure( $words->msgErrorNotWritable );
+			$title		= $this->request->get( 'title' );
+			$content	= $this->request->get( 'content' );
+			if( $page->title === $title && $page->content === $content ){
+				$this->messenger->noteNotice( $words->msgNoChanges );
+				$this->restart( 'view/'.$page->manualPageId.'-'.$this>urlencode( $page->title ), TRUE );
 			}
-			else{
-				$backup		= new FS_File_Backup( $filePath );
-				if( $content === $this->request->get( 'content' ) )
-					$this->messenger->noteNotice( $words->msgNoChanges );
-				else{
-					if( $this->request->has( 'backup' ) )
-						$backup->store();
-					$resource->writeString( $this->request->get( 'content' ) );
-					$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-				}
-				if( $this->request->get( 'filename' ) !== $fileName ){
-					$newName	= $this->request->get( 'filename' );
-					$targetFile	= $this->path.$newName.$this->ext;
-					if( file_exists( $targetFile ) ){
-						$this->messenger->noteError( $words->msgErrorFileExists, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-						$this->restart( 'edit/'.$fileHash, TRUE );
-					}
-					else{
-						try{
-							FS_Folder_Editor::createFolder( dirname( $targetFile ) );
-							$resource->rename( $targetFile );
-							$index		= $this->order->getKeyOf( $fileName.$this->ext );
-							$this->order->set( $index, $newName.$this->ext );
-							$this->saveOrder();
-							$this->relink( $fileName, $newName );
-							$this->messenger->noteSuccess( $words->msgSuccessRenamed, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ), htmlentities( $newName, ENT_QUOTES, 'UTF-8' ) );
-							$fileName	= $newName;
-						}
-						catch( Exception $e ){
-							$this->messenger->noteFailure( $words->msgErrorRename, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-							$this->restart( 'edit/'.$fileHash, TRUE );
-						}
-					}
-				}
-			}
-			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
+			$this->modelVersion->add( array(
+				'userId'	=> $this->userId,
+				'objectId'	=> $page->manualPageId,
+				'type'		=> Model_Manual_Version::TYPE_PAGE,
+				'version'	=> $page->version,
+				'object'	=> serialize( $page ),
+				'timestamp'	=> time(),
+			), FALSE );
+
+			$this->modelPage->edit( $page->manualPageId, array(
+				'title'			=> $title,
+				'content'		=> $content,
+				'version'		=> $page->version + 1,
+				'modifiedAt'	=> time(),
+			), FALSE );
+			$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
+			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
 		}
-		$this->addData( 'file', $fileName );
-		$this->addData( 'content', $content );
+		$this->addData( 'file', $page->title );
+		$this->addData( 'content', $page->content );
+		$this->addData( 'page', $page );
 	}
 
-	public function index(){
-		$this->modelPage		= new Model_Manual_Page( $this->env );
+	public function index( $categoryId = NULL ){
+		$categoryId	= (int) $categoryId;
 
-		$conditions	= array( 'status' => '>0' );
+		if( !$categoryId ){
+			if( $this->session->get( 'filter_info_manual_categoryId' ) ){
+				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
+				$category	= $this->modelCategory->get( $categoryId );
+				$this->restart( $category->manualCategoryId.'-'.$this->urlencode( $category->title ), TRUE );
+			}
+			else if( count( $this->categories ) === 1 ){
+				$categories	= array_values( $this->categories );
+				$category	= $categories[0];
+				$this->restart( $category->manualCategoryId.'-'.$this->urlencode( $category->title ), TRUE );
+			}
+			else{
+
+			}
+		}
+
+		$conditions	= array( 'status' => '>='.Model_Manual_Page::STATUS_NEW );
 		$orders		= array();
 		$pages	= $this->modelPage->getAll( $conditions, $orders );
 		$this->addData( 'pages', $pages );
-/*
-		if( $this->files && $this->order ){
-			$file	= preg_replace( "/\.md/", "", $this->order[0] );
-			$this->restart( 'view/'.$this->urlencode( $file ), TRUE );
-		}
-		$this->messenger->noteNotice( 'Keine Seiten vorhanden.' );
-		$this->addData( 'files', $this->files );*/
 	}
 
-	public function moveDown( $fileHash ){
+	public function moveDown( $pageId ){
+		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
-		$fileName	= base64_decode( $fileHash );
+
 		if( !$this->isEditable || !in_array( 'moveDown', $this->rights ) )
-			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
-		if( !in_array( $fileName.$this->ext, $this->files ) ){
-			$this->messenger->noteError( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-			$this->restart( NULL, TRUE );
-		}
-		$index	= $this->order->getKeyOf( $fileName.$this->ext );
-		if( is_int( $index ) && $index >= 0 && $index < $this->order->count() - 1 ){
-			$temp	= $this->order->get( $index + 1 );
-			$this->order->set( $index + 1, $fileName.$this->ext );
-			$this->order->set( $index, $temp );
-			$this->saveOrder();
-		}
-		$this->restart( 'edit/'.$fileHash, TRUE );
+			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+
+		// @todo implement
+		if( $page->manualCategoryId )
+			$this->rankPagesOfCategory( $page->manualCategoryId );
+		$this->restart( 'edit/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
 	}
 
-	public function moveUp( $fileHash ){
+	public function moveUp( $pageId ){
+		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
-		$fileName	= base64_decode( $fileHash );
+
 		if( !$this->isEditable || !in_array( 'moveUp', $this->rights ) )
-			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
-		if( !in_array( $fileName.$this->ext, $this->files ) ){
-			$this->messenger->noteError( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-			$this->restart( NULL, TRUE );
-		}
-		$index	= $this->order->getKeyOf( $fileName.$this->ext );
-		if( is_int( $index ) && $index > 0 ){
-			$temp	= $this->order->get( $index - 1 );
-			$this->order->set( $index - 1, $fileName.$this->ext );
-			$this->order->set( $index, $temp );
-			$this->saveOrder();
-		}
-		$this->restart( 'edit/'.$fileHash, TRUE );
+			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+
+		// @todo implement
+		if( $page->manualCategoryId )
+			$this->rankPagesOfCategory( $page->manualCategoryId );
+		$this->restart( 'edit/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
 	}
 
 	protected function relink( $oldName, $newName ){
@@ -214,24 +226,18 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->restart( getEnv( 'HTTP_REFERER' ) );
 	}
 
-	public function remove( $fileHash ){
+	public function remove( $pageId ){
+		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'remove' );
-		$fileName	= base64_decode( $fileHash );
+
 		if( !$this->isEditable || !in_array( 'remove', $this->rights ) )
-			$this->restart( 'view/'.$this->urlencode( $fileName ), TRUE );
+			$this->restart( 'view/'.$pageId.'-'.$this->urlencode( $page->title ), TRUE );
 		$filePath	= $this->path.$fileName.$this->ext;
 
-		if( !file_exists( $filePath ) )
-			$this->messenger->noteError( $words->msgErrorFileMissing, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-		else{
-			if( !FS_File_Editor::delete( $filePath ) )
-				$this->messenger->noteFailure( $words->msgErrorDelete, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-			else{
-				$this->order->remove( $this->order->getKeyOf( $fileName.$this->ext ) );
-				$this->saveOrder();
-				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-			}
-		}
+		$this->modelPage->remove( $page->manualPageId );
+		if( $page->manualCategoryId )
+			$this->rankPagesOfCategory( $page->manualCategoryId );
+		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -251,35 +257,27 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	}
 
 	protected function urlencode( $name ){
+		return urlencode( $name );
 		$name	= rawurldecode( $name );
 		$name	= str_replace( "%2F", "/", $name );
 		$name	= str_replace( " ", "%20", $name );
 		return $name;
 	}
 
-	public function view( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ){
+	public function view( $pageId ){
+		$pageId		= (int) $pageId;
+		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'index' );
-		$fileName	= join( "/", func_get_args() );
-
-		if( !strlen( trim( $fileName ) ) )
-			$this->restart( NULL, TRUE );
-
-		if( !in_array( $fileName.$this->ext, $this->files ) ){
-			$this->messenger->noteNotice( $words->msgErrorFileNotFound, htmlentities( $fileName, ENT_QUOTES, 'UTF-8' ) );
-			$this->restart( NULL, TRUE );
-		}
-
-		$content	= FS_File_Reader::load( $this->path.$fileName.$this->ext );
 
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );
-			$content	= str_replace( "](".$entry.")", "](./info/manual/view/".$this->urlencode( $entry ).")", $content );
-			$content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/view/".$this->urlencode( $entry )."\r\n", $content );
+			$page->content	= str_replace( "](".$entry.")", "](./info/manual/view/".$this->urlencode( $entry ).")", $page->content );
+			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/view/".$this->urlencode( $entry )."\r\n", $page->content );
 		}
-		$content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $content );
+		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $page->content );
 
 		/*  --  EVALUATE RENDERER  --  */
-		$renderer			= $this->config->get( 'renderer' );
+		$renderer			= $this->moduleConfig->get( 'renderer' );
 		$markdownOnServer	= $this->env->getModules()->has( 'UI_Markdown' );
 		$markdownOnClient	= $this->env->getModules()->has( 'JS_Markdown' );
 		if( !$markdownOnServer && preg_match( "/^server/", $renderer ) )
@@ -287,10 +285,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		if( !$markdownOnClient && $renderer === 'client' )
 			$this->env->getMessenger()->noteFailure( 'No Markdown renderer installed.' );
 
-		$this->addData( 'file', $fileName );
+		$this->addData( 'file', $page->title );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'renderer', $renderer );
-		$this->addData( 'content', $content );
+		$this->addData( 'content', $page->content );
+		$this->addData( 'page', $page );
 	}
 }
 ?>

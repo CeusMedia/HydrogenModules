@@ -32,7 +32,7 @@ return '
 	</div>
 	<div class="span9">
 		<h3><span class="muted">'.$words['edit']['heading'].' </span> '.htmlentities( $file, ENT_QUOTES, 'UTF-8' ).'</h3>
-		<form action="./info/manual/edit/'.base64_encode( $file ).'" method="post">
+		<form action="./info/manual/edit/'.$page->manualPageId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_content">'.$words['edit']['labelContent'].'</label>
@@ -41,8 +41,8 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_filename">'.$words['edit']['labelFilename'].'</label>
-					<input type="text" name="filename" class="span12" value="'.htmlentities( $file, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_title">'.$words['edit']['labelFilename'].'</label>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span4">
 					<label>&nbsp;</label>
