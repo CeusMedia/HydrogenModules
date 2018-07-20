@@ -13,20 +13,52 @@ class View_Helper_Mail_View_HTML{
 	public function render(){
 		if( !$this->mail )
 			throw new RuntimeException( 'No mail object or ID set' );
+
+		$libraries		= Logic_Mail::detectAvailableMailLibraries();
+		$usedLibrary	= Logic_Mail::detectMailLibraryFromMailObject( $this->mail->object );
+
+		if( !( $libraries & $usedLibrary ) ){
+			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
+			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
+		}
+		$mailObject	= $this->mail->object;
+
+		$code	= '';
+		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
+			$code	= $mailObject->mail->getBody();												//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL1 ){									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Renderer::render( $mailObject->mail );						//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL2 ){									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Message\Renderer::render( $mailObject->mail );				//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else{
+			throw new RangeException( 'No source renderer for mail object available' );
+		}
+
+
+
 		$images		= array();
 		$parts		= $this->logicMail->getMailParts( $this->mail );
 		foreach( $parts as $key => $part ){
-			if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
+			if( is_a( $part, 'CeusMedia\Mail\Part\InlineImage' ) )
 				$images[$part->getId()]	= $part;
-			else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
+			else if( is_a( $part, 'CeusMedia\Mail\Message\Part\InlineImage' ) )
 				$images[$part->getId()]	= $part;
-			else if( $part instanceof \CeusMedia\Mail\Part\HTML )
+			else if( is_a( $part, 'CeusMedia\Mail\Part\HTML' ) )
 				$html	= $part->getContent();
-			else if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
+			else if( is_a( $part, 'CeusMedia\Mail\Message\Part\HTML' ) )
 				$html	= $part->getContent();
-			else if( $part instanceof Net_Mail_Body )
-				if( $part->getMimeType() === "text/html" )
+			else if( is_a( $part, 'Net_Mail_Body' ) ){
+				if( $part->getMimeType() === "text/html" ){
 					$html	= $part->getContent();
+					if( $part->getContentEncoding() === "base64" )
+						$html	= base64_decode( $html );
+					if( $part->getContentEncoding() === "quoted-printable" )
+						$html	= quoted_printable_decode( $html );
+				}
+			}
 		}
 		if( empty( $html ) )
 			throw new Exception( 'No HTML part found' );

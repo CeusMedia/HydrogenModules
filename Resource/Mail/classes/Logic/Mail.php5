@@ -8,13 +8,22 @@
  */
 class Logic_Mail extends CMF_Hydrogen_Logic{
 
-/*	protected $modelQueue;
-	protected $modelAttachment;
+	const LIBRARY_UNKNOWN		= 0;
+	const LIBRARY_COMMON		= 1;
+	const LIBRARY_MAIL1			= 2;
+	const LIBRARY_MAIL2			= 4;
+
+	protected $libraries		= 0;
 	protected $options;
-	protected $pathAttachments;*/
+	protected $modelQueue;
+	protected $phpHasGzip;
+	protected $phpHasBzip;
+	protected $modelAttachment;
+	protected $pathAttachments;
 
 	public function __onInit(){
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->libraries		= static::detectAvailableMailLibraries();
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
@@ -129,6 +138,74 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		}
 		return Alg_Object_Factory::createObject( $className, array( $env, $data ) );
 	}
+
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@return		integer			Falgs of available mail library contants
+	 */
+	static public function detectAvailableMailLibraries(){
+		$libraries	= static::LIBRARY_UNKNOWN;
+		if( class_exists( 'Net_Mail_Body' ) )
+			$libraries	|= static::LIBRARY_COMMON;
+		if( class_exists( 'CeusMedia\Mail\Part\HTML' ) )
+			$libraries	|= static::LIBRARY_MAIL1;
+		if( class_exists( 'CeusMedia\Mail\Message\Part\HTML' ) )
+			$libraries	|= static::LIBRARY_MAIL2;
+		return $libraries;
+	}
+
+	/**
+	 *	Tries to detect mail library used for mail by its ID.
+	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
+	 *	@access		public
+	 *	@param		integer		$mailId		ID of mail to get used library for
+	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
+	 */
+	public function detectMailLibraryFromMailId( $mailId ){
+		$mail	= $this->getMail( $mailId );
+		return $this->detectMailLibraryFromMail( $mail );
+	}
+
+	/**
+	 *	Tries to detect mail library used for mail data object.
+	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
+	 *	@access		public
+	 *	@param		object		$mail		Mail data object from database to get used library for
+	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
+	 */
+	public function detectMailLibraryFromMail( $mail ){
+		if( !is_object( $mail ) )
+			throw new InvalidArgumentException( 'No mail object given' );
+		if( !isset( $mail->object ) || empty( $mail->object ) || !is_object( $mail->object ) )
+			throw new InvalidArgumentException( 'Mail object has not been unpacked yet' );
+		return static::detectMailLibraryFromMailObject( $mail->object );
+	}
+
+	/**
+	 *	Tries to detect mail library used for unpacked mail object.
+	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
+	 *	@static
+	 *	@access		public
+	 *	@param		object		$mail		Mail data object from database to get used library for
+	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
+	 */
+	static public function detectMailLibraryFromMailObject( $mailObject ){
+		if( is_a( $mailObject, 'Mail_Abstract' ) ){
+			if( is_a( $mailObject->mail, 'Net_Mail' ) )
+				return Logic_Mail::LIBRARY_COMMON;
+			if( is_a( $mailObject->mail, 'CeusMedia\Mail\Message' ) ){
+				$agent		= $mailObject->mail->getUserAgent();
+				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/1.', '/' ).'/', $agent ) )
+					return Logic_Mail::LIBRARY_MAIL1;
+				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/2.', '/' ).'/', $agent ) )
+					return Logic_Mail::LIBRARY_MAIL2;
+			}
+		}
+		return Logic_Mail::LIBRARY_UNKNOWN;
+	}
+
 
 	/**
 	 *	Send prepared mail later.
@@ -315,16 +392,16 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			if( isset( $mail->compression ) ){
 				if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
 					if( !$this->phpHasBzip )
-					throw new RuntimeException( 'Missing extension for BZIP compression' );
+						throw new RuntimeException( 'Missing extension for BZIP compression' );
 					$mail->serial	= bzdecompress( $mail->object );
 				}
 				else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
 					if( !$this->phpHasGzip )
-					throw new RuntimeException( 'Missing extension for BZIP compression' );
+						throw new RuntimeException( 'Missing extension for BZIP compression' );
 					$mail->serial	= gzinflate( $mail->object );
 				}
 				else
-				$mail->serial	= base64_decode( $mail->object );
+					$mail->serial	= base64_decode( $mail->object );
 			}
 			else{																							// @todo compression detection is deprecated, use model compression column instead
 				if( substr( $mail->object, 0, 2 ) == "BZ" ){												//  BZIP compression detected
@@ -346,7 +423,6 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		if( !is_object( $object ) ){
 			print( substr( $mail->serial, 0, 50 ) );
 			throw new RuntimeException( 'Deserialization of mail failed' );
-
 		}
 		$mail->object	= $object;
 		return $mail;
@@ -369,11 +445,15 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			$mail	= $this->getMail( $mail );
 		if( !is_object( $mail->object ) )
 			throw new Exception( 'No mail object available' );
-		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )								//  modern mail message with parsed body parts
+		if( !is_a( $mail->object, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
+			throw new Exception( 'Mail object is not extending Mail_Abstract' );
+		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
 			return $mail->object->mail->getParts( TRUE );
-		else if( $mail->object->mail instanceof Net_Mail ){											//  outdated mail message using cmClasses implementation
-			if( !class_exists( 'CMM_Mail_Parser' ) )												//  Net_Mail need Parser from cmModules
-				throw new RuntimeException( 'Mail parser "CMM_Mail_Parser" is not available.' );	//  ... which is not available
+		else if( $mail->object->mail instanceof Net_Mail ){										//  outdated mail message using cmClasses implementation
+			if( method_exists( $mail->object->mail, 'getParts' ) )
+				return $mail->object->mail->getParts();
+			if( !class_exists( 'CMM_Mail_Parser' ) )											//  Net_Mail needs Parser from cmModules
+				throw new RuntimeException( 'Mail parser "CMM_Mail_Parser" is not available.' );
 			return CMM_Mail_Parser::parseBody( $mail->object->mail->getBody() );
 		}
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available

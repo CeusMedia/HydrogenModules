@@ -17,14 +17,29 @@ class View_Helper_Mail_View_Source{
 	public function render(){
 		if( !$this->mail )
 			throw new RuntimeException( 'No mail object or ID set' );
-		if( class_exists( '\CeusMedia\Mail\Message\Renderer' ) )							//  use library CeusMedia/Mail version 2
-			$code	= \CeusMedia\Mail\Message\Renderer::render( $this->mail->object->mail );
-		else if( $this->mail->object->mail instanceof \CeusMedia\Mail\Message )				//  use library CeusMedia/Mail version 1
-			$code	= \CeusMedia\Mail\Renderer::render( $this->mail->object->mail );
-		else if( $this->mail->object->mail instanceof Net_Mail )							//  use ibrary CeusMedia/Common
-			$code	= $this->mail->object->mail->getBody();
-		else
+
+		$libraries		= Logic_Mail::detectAvailableMailLibraries();
+		$usedLibrary	= Logic_Mail::detectMailLibraryFromMailObject( $this->mail->object );
+
+		if( !( $libraries & $usedLibrary ) ){
+			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
+			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
+		}
+		$mailObject	= $this->mail->object;
+
+		$code	= '';
+		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
+			$code	= $mailObject->mail->getBody();												//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL1 ){									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Renderer::render( $mailObject->mail );						//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL2 ){									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Message\Renderer::render( $mailObject->mail );				//  @todo find better way: currently only parts content displayed but no headers
+		}
+		else{
 			throw new RangeException( 'No source renderer for mail object available' );
+		}
 		switch( $this->mode ){
 			case self::MODE_CONDENSED:
 				$code	= $this->shortenMailCode( $code );
@@ -56,7 +71,7 @@ class View_Helper_Mail_View_Source{
 		$list	= array();
 		foreach( explode( PHP_EOL, $code ) as $nr => $line ){
 			$isEmpty	= !strlen( trim( $line ) );
-			$isBased	= preg_match( '/^[\S]{75,78}$/', trim( $line ) );
+			$isBased	= preg_match( '/^[\S]{74,80}$/', trim( $line ) );
 			if( !$isEmpty && !$isBased ){
 				if( $status === 3 ){
 					$status	= 0;
