@@ -196,8 +196,11 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 		$logicMission	= Logic_Work_Mission::getInstance( $env );
 		$modelProject	= new Model_Project( $env );
 		$modelMission	= new Model_Mission( $env );
+		$modelFilter	= new Model_Mission_Filter( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
 		$lists			= (object) array( 'entities' => array(), 'relations' => array() );
+
+		$modelFilter->removeByIndex( 'userId', $data->userId );
 
 		$nrMissionsRemoved	= 0;
 		$nrMissionsChanged	= 0;
