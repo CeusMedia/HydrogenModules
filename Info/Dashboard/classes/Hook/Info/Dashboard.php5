@@ -35,7 +35,7 @@ class Hook_Info_Dashboard /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onRemoveUser( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Info_Dashboard::onRemoveUser" is missing user ID in data.';
