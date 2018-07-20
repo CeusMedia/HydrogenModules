@@ -89,28 +89,26 @@ class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onRemoveUser( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Hook_Info_Mail::onRemoveUser" is missing user ID in data.';
+			$message	= 'Hook "Hook_Info_Mail::onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 
 		$modelMail	= new Model_Mail( $env );
-		if( !( $user = $modelUser->get( $data->userId ) ) )
-			return;
-
 		$orders		= array( 'mailId' => 'ASC' );
-		$limits		= array();
 		$fields		= array( 'mailId' );
 
 		$indices	= array( 'senderId' => $data->userId );
-		foreach( $modelMail->getAll( $indices, $orders, $limits, $fields ) as $mail )
-			$modelMail->remove( $mail->mailId );
+		$mailsSent	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		foreach( $mailsSent as $mailId )
+			$modelMail->remove( $mailId );
 
 		$indices	= array( 'receiverId' => $data->userId );
-		foreach( $modelMail->getAll( $indices, $orders, array(), $fields ) as $mail )
-			$modelMail->remove( $mail->mailId );
+		$mailsReceived	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		foreach( $mailsReceived as $mailId )
+			$modelMail->remove( $mailId );
 	}
 }
