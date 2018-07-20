@@ -89,7 +89,7 @@
 	<link xml:lang="en" access="acl" rank="80" path="work/issue">Issues</link>
 	<hook type="resource" resource="Work_Timer" event="registerModule">Hook_Work_Issue::onRegisterTimerModule</hook>
 	<hook type="resource" resource="Project" event="listRelations">Hook_Work_Issue::onListProjectRelations</hook>
-	<hook type="resource" resource="Project" event="onRemove">Hook_Work_Issue::onProjectRemove</hook>
+	<hook type="resource" resource="Project" event="remove">Hook_Work_Issue::onProjectRemove</hook>
 	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Work_Issue::onRegisterDashboardPanels</hook>
 	<hook type="resource" resource="User" event="listRelations">Hook_Work_Issue::onListUserRelations</hook>
 	<hook type="resource" resource="User" event="remove">Hook_Work_Issue::onUserRemove</hook>

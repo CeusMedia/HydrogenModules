@@ -58,7 +58,7 @@
 	<link xml:lang="de" access="acl" path="work/note" rank="44">Notizen</link>
 	<link xml:lang="en" access="acl" path="work/note" rank="44">Notes</link>
 	<hook type="resource" resource="Project" event="listRelations">Hook_Work_Note::onListProjectRelations</hook>
-	<hook type="resource" resource="Project" event="onRemove">Hook_Work_Note::onProjectRemove</hook>
+	<hook type="resource" resource="Project" event="remove">Hook_Work_Note::onProjectRemove</hook>
 	<hook type="resource" resource="User" event="listRelations">Hook_Work_Note::onListUserRelations</hook>
 	<hook type="resource" resource="User" event="remove">Hook_Work_Note::onUserRemove</hook>
 	<sql on="install" type="mysql" version="0.2"><![CDATA[
