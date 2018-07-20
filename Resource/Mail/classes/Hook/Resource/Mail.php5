@@ -50,7 +50,7 @@ class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$list		= array();
-		$mails	 	= $modelMail->getAll( $indics, $orders, array(), $fields );
+		$mails	 	= $modelMail->getAll( $indices, $orders, array(), $fields );
 		foreach( $mails as $mail )
 			$list[]		= (object) array(
 				'id'		=> $linkable ? $mail->mailId : NULL,

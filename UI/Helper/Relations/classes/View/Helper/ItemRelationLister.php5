@@ -96,9 +96,9 @@ class View_Helper_ItemRelationLister{
 					$controller	= str_replace( "_", "/", strtolower( $relation->controller ) );
 					$arguments	= !empty( $item->arguments ) ? join( "/", $item->arguments ) : $item->id;
 					$url		= './'.$controller.'/'.$relation->action.'/'.$arguments;
-					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
 				}
-				$items[]	= UI_HTML_Tag::create( 'li', $label );
+				$items[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'autocut' ) );
 			}
 			if( $this->limit > 0 && $total > count( $items ) ){
 				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
@@ -134,7 +134,7 @@ class View_Helper_ItemRelationLister{
 					$controller	= str_replace( "_", "/", strtolower( $relation->controller ) );
 					$arguments	= !empty( $item->arguments ) ? join( "/", $item->arguments ) : $item->id;
 					$url		= './'.$controller.'/'.$relation->action.'/'.$arguments;
-					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
 				}
 				$items[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'autocut' ) );
 			}

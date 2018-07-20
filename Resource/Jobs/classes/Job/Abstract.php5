@@ -76,11 +76,9 @@ class Job_Abstract{
 	protected function showErrors( $taskName, $errors ){
 		if( !$errors )
 			return;
-		$this->out( 'Errors:' );
+		$this->out( 'Errors on '.$taskName.':' );
 		foreach( $errors as $mailId => $message )
 			$this->out( '- '.$mailId.': '.$message );
 	}
-
-
 }
 ?>

@@ -51,9 +51,9 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
 			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
 		);*/
+		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
 		$words		= $language->getWords( 'work/note' );
 		foreach( $notes as $note ){
-			$icon		= '';//$icons[$note->type];
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
 //			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
@@ -92,8 +92,8 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		$language	= $env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
+		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
 		foreach( $notes as $note ){
-			$icon		= '';//$icons[$note->type];
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
 //			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
