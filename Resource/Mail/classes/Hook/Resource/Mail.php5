@@ -110,7 +110,7 @@ class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
 			$modelMail->remove( $mail->mailId );
 
 		$indices	= array( 'receiverId' => $data->userId );
-		foreach( $modelMail->getAllByIndices( $indics, $orders, array(), $fields ) as $mail )
+		foreach( $modelMail->getAll( $indices, $orders, array(), $fields ) as $mail )
 			$modelMail->remove( $mail->mailId );
 	}
 }
