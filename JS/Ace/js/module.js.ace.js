@@ -88,12 +88,21 @@ var ModuleAce = {
 		"use strict";
 		config = typeof config === "undefined" ? [] : config;
 		var container, editor, hotkeys = [], events = [];
+		if(elementOrSelectorOrContainer === "")
+			return;
 		container	= jQuery(elementOrSelectorOrContainer);								//  try to find HTML node
+
 		if(!container.length){															//  no HTML node found
 			if(ModuleAce.strict)														//  in strict mode:
 				throw "AceEditor: Apply failed - element not found";					//  ... throw an exception
 			ModuleAce.log("AceEditor: Apply failed - element not found");				//  in verbose mode: note fail in console log
+			return;
 		}
+		if(container.data('applied-editor')){
+			ModuleAce.log("AceEditor: Apply skipped - some editor already applied");	//  in verbose mode: note fail in console log
+			return;
+		}
+		container.data("applied-editor", "Ace");
 //		if(!container.attr("id"))														//  no ID attribute set
 //			container.attr("id", "ace-container-" + Math.random() * 100000);			//  set random ID attribute
 
