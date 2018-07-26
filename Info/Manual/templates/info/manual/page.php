@@ -1,7 +1,11 @@
 <?php
 
+$helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
+$helperCategory->setCategories( $categories );
+$helperCategory->setActiveCategoryId( $categoryId );
+
 $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
-$helperNav->setCategoryId( 1 );
+$helperNav->setCategoryId( $categoryId );
 $helperNav->setActivePageId( $page->manualPageId );
 
 $buttonAdd		= "";
@@ -40,6 +44,7 @@ return '
 <div class="row-fluid">
 	<div class="span3">
 		<h3>'.$words['list']['heading'].'</h3>
+		'.$helperCategory->render().'
 		'.$helperNav->render().'
 		'.$buttonAdd.'
 		'.$buttonReload.'

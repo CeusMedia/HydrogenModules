@@ -18,7 +18,7 @@ class View_Helper_Info_Manual_CategoryPageList{
 			return '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 		$list	= array();
 		foreach( $this->pages as $entry ){
-			$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/view/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
+			$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
 			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 		}

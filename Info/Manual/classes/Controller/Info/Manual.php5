@@ -20,16 +20,17 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		if( preg_match( "/^[a-z]+:\/\//i", $matches[2] ) )
 			return $matches[1].'('.$matches[2].')';
 		if( preg_match( "/^\.\/info\/manual\/view\//i", $matches[2] ) ){
-			$fileName	= str_replace( './info/manual/view/', '', $matches[2] );
+			$fileName	= str_replace( './info/manual/page/', '', $matches[2] );
 			if( file_exists( $this->path.urldecode( $fileName ).$this->ext ) )
-				return $matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).')';
-			return '<strike>'.$matches[1].'('.'./info/manual/view/'.urlencode( $fileName ).').</strike>';
+				return $matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).')';
+			return '<strike>'.$matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).').</strike>';
 		}
 		return '<strike>'.$matches[1].'('.urlencode( $matches[2] ).')</strike>';
 	}
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
 		$this->path			= $this->moduleConfig->get( 'path' );
@@ -47,7 +48,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 
 		$this->scanFiles();
-		$orderFile	= $this->path.'order.list';
+/*		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
 			$order			= trim( FS_File_Reader::load( $orderFile ) );
 			$this->order	= new ADT_List_Dictionary( explode( "\n", $order ) );
@@ -56,7 +57,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->order	= new ADT_List_Dictionary( array_values( $this->files ) );
 			$this->saveOrder();
 		}
-
+*/
 		$this->addData( 'path', $this->path );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'files', $this->files );
@@ -68,17 +69,58 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$orders				= array( 'rank' => 'ASC' );
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$this->categories[$category->manualCategoryId]	= $category;
+		if( !$this->categories ){
+			$this->modelCategory->add( array( 'title', array(
+				'creatorId'		=> $this->userId,
+				'status'		=> Model_Manual_Category::STATUS_NEW,
+				'format'		=> Model_Manual_Category::FORMAT_TEXT,
+				'version'		=> 1,
+				'rank'			=> 1,
+				'title'			=> 'Default',
+				'content'		=> '',
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
+			) ) );
+			$this->restart( NULL, TRUE );
+		}
+		if( count( $this->categories ) === 1 ){
+			if( !$this->session->get( 'filter_info_manual_categoryId' ) ){
+				$categories	= array_values( $this->categories );
+				$category	= $categories[0];
+				$this->session->set( 'filter_info_manual_categoryId', $category->manualCategoryId );
+				$this->restartToCategory( $category );
+/*				$this->restart( vsprintf( 'category/%d-%s', array(
+					$category->manualCategoryId,
+					$this->urlencode( $category->title ),
+				) ), TRUE );*/
+			}
+		}
 		$this->addData( 'categories', $this->categories );
+		$this->addData( 'categoryId', $this->session->get( 'filter_info_manual_categoryId' ) );
 	}
 
 	public function add(){
-		$categoryId		= 0;
 		if( !$this->isEditable || !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
+
+		$title		= trim( $this->request->get( 'title' ) );
+		$content	= trim( $this->request->get( 'content' ) );
+
+		$format		= $this->request->get( 'format' );
+		if( !$format )
+			$format	= Model_Manual_Page::FORMAT_MARKDOWN;						// @todo support module config default or user setting
+
+		$categoryId	= $this->request->get( 'categoryId' );
+		if( !$categoryId )
+			$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
+
+		$version	= max( $this->request->get( 'version' ), 1 );
+
+		$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
+		$rank		= max( $this->request->get( 'rank' ), $nextRank );
+
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
-			$title		= trim( $this->request->get( 'title' ) );
-			$content	= trim( $this->request->get( 'content' ) );
 			if( !strlen( trim( $title ) ) )
 				$this->messenger->noteError( $words->msgErrorFilenameMissing );
 			else{
@@ -86,20 +128,48 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 					'manualCategoryId'	=> $categoryId,
 					'creatorId'			=> $this->userId,
 					'status'			=> Model_Manual_Page::STATUS_NEW,
-					'format'			=> Model_Manual_Page::FORMAT_MARKDOWN,
-					'version'			=> 1,
-					'rank'				=> $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1,
+					'format'			=> $format,
+					'version'			=> $version,
+					'rank'				=> $rank,
 					'title'				=> $title,
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
 				) );
 				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
-				$this->restart( 'view/'.$pageId.'-'.$this->urlencode( $title ), TRUE );
+				$this->restartToPage( $this->modelPage->get( $pageId ) );
 			}
 		}
-		$this->addData( 'title', $this->request->get( 'title' ) );
-		$this->addData( 'content', $this->request->get( 'content' ) );
+		$this->addData( 'categoryId', $categoryId );
+		$this->addData( 'format', $format );
+		$this->addData( 'version', $version );
+		$this->addData( 'rank', $rank );
+		$this->addData( 'title', $title );
+		$this->addData( 'content', $content );
+	}
+
+	public function category( $categoryId ){
+		$category	= $this->checkCategoryId( $categoryId );
+		$conditions	 = array(
+			'manualCategoryId'	=> $category->manualCategoryId,
+			'status'			=> '>='.Model_Manual_Category::STATUS_NEW,
+		);
+		$orders		= array( 'rank' => 'ASC' );
+		$pages		= $this->modelPage->getAll( $conditions, $orders );
+
+		$this->session->set( 'filter_info_manual_categoryId', $category->manualCategoryId );
+		$this->addData( 'categoryId', $category->manualCategoryId );
+		$this->addData( 'category', $category );
+		$this->addData( 'pages', $pages );
+	}
+
+	protected function checkCategoryId( $categoryId ){
+		if( !strlen( trim( $categoryId ) ) )
+			throw new InvalidArgumentException( 'No category ID given' );
+		$category	= $this->modelCategory->get( $categoryId );
+		if( !$category )
+			throw new InvalidArgumentException( 'Invalid category ID given' );
+		return $category;
 	}
 
 	protected function checkPageId( $pageId ){
@@ -116,7 +186,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function edit( $pageId, $version = NULL ){
 		$page	= $this->checkPageId( $pageId );
 		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
-			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+			$this->restarttoPage( $page );
 
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'edit' );
@@ -124,7 +194,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$content	= $this->request->get( 'content' );
 			if( $page->title === $title && $page->content === $content ){
 				$this->messenger->noteNotice( $words->msgNoChanges );
-				$this->restart( 'view/'.$page->manualPageId.'-'.$this>urlencode( $page->title ), TRUE );
+				$this->restartToPage( $page );
 			}
 			$this->modelVersion->add( array(
 				'userId'	=> $this->userId,
@@ -142,11 +212,26 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 				'modifiedAt'	=> time(),
 			), FALSE );
 			$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
-			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+			$this->restartToPage( $page );
 		}
 		$this->addData( 'file', $page->title );
 		$this->addData( 'content', $page->content );
 		$this->addData( 'page', $page );
+		$this->addData( 'pageId', $page->manualPageId );
+	}
+
+	protected function restartToCategory( $category ){
+		$this->restart( vsprintf( 'category/%d-%s', array(
+			$category->manualCategoryId,
+			$this->urlencode( $category->title ),
+ 		) ), TRUE );
+	}
+
+	protected function restartToPage( $page ){
+		$this->restart( vsprintf( 'page/%d-%s', array(
+			$page->manualPageId,
+			$this->urlencode( $page->title ),
+ 		) ), TRUE );
 	}
 
 	public function index( $categoryId = NULL ){
@@ -156,12 +241,12 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			if( $this->session->get( 'filter_info_manual_categoryId' ) ){
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$category	= $this->modelCategory->get( $categoryId );
-				$this->restart( $category->manualCategoryId.'-'.$this->urlencode( $category->title ), TRUE );
+				$this->restartToCategory( $category );
 			}
 			else if( count( $this->categories ) === 1 ){
 				$categories	= array_values( $this->categories );
 				$category	= $categories[0];
-				$this->restart( $category->manualCategoryId.'-'.$this->urlencode( $category->title ), TRUE );
+				$this->restartToCategory( $category );
 			}
 			else{
 
@@ -174,30 +259,30 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', $pages );
 	}
 
-	public function moveDown( $pageId ){
+	public function movePageDown( $pageId ){
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
 
 		if( !$this->isEditable || !in_array( 'moveDown', $this->rights ) )
-			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+			$this->restartToPage( $page );
 
 		// @todo implement
 		if( $page->manualCategoryId )
 			$this->rankPagesOfCategory( $page->manualCategoryId );
-		$this->restart( 'edit/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+		$this->restartToPage( $page );
 	}
 
-	public function moveUp( $pageId ){
+	public function movePageUp( $pageId ){
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
 
 		if( !$this->isEditable || !in_array( 'moveUp', $this->rights ) )
-			$this->restart( 'view/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+			$this->restartToPage( $page );
 
 		// @todo implement
 		if( $page->manualCategoryId )
 			$this->rankPagesOfCategory( $page->manualCategoryId );
-		$this->restart( 'edit/'.$page->manualPageId.'-'.$this->urlencode( $page->title ), TRUE );
+		$this->restartToPage( $page );
 	}
 
 	protected function relink( $oldName, $newName ){
@@ -222,29 +307,30 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 			$this->order[]	= $entry;
 		foreach( $outdated as $entry )
 			$this->order->remove( $this->order->getKeyOf( $entry ) );
-		$this->saveOrder();
+//		$this->saveOrder();
 		$this->restart( getEnv( 'HTTP_REFERER' ) );
 	}
 
-	public function remove( $pageId ){
+	public function removePage( $pageId ){
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'remove' );
 
 		if( !$this->isEditable || !in_array( 'remove', $this->rights ) )
-			$this->restart( 'view/'.$pageId.'-'.$this->urlencode( $page->title ), TRUE );
-		$filePath	= $this->path.$fileName.$this->ext;
+			$this->restartToPage( $page );
 
+//		$filePath	= $this->path.$fileName.$this->ext;
 		$this->modelPage->remove( $page->manualPageId );
 		if( $page->manualCategoryId )
 			$this->rankPagesOfCategory( $page->manualCategoryId );
 		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
+			$this->restartToCategory( $this->modelCategory->get( $page->manualCategoryId ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function saveOrder(){
+/*	protected function saveOrder(){
 		$orderFile	= $this->path.'order.list';
 		FS_File_Writer::save( $orderFile, implode( "\n", $this->order->getAll() ) );
-	}
+	}*/
 
 	public function scanFiles(){
 		$this->files	= array();
@@ -264,15 +350,15 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		return $name;
 	}
 
-	public function view( $pageId ){
+	public function page( $pageId ){
 		$pageId		= (int) $pageId;
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'index' );
 
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );
-			$page->content	= str_replace( "](".$entry.")", "](./info/manual/view/".$this->urlencode( $entry ).")", $page->content );
-			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/view/".$this->urlencode( $entry )."\r\n", $page->content );
+			$page->content	= str_replace( "](".$entry.")", "](./info/manual/page/".$this->urlencode( $entry ).")", $page->content );
+			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/page/".$this->urlencode( $entry )."\r\n", $page->content );
 		}
 		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $page->content );
 
@@ -290,6 +376,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'renderer', $renderer );
 		$this->addData( 'content', $page->content );
 		$this->addData( 'page', $page );
+		$this->addData( 'categoryId', $page->manualCategoryId );
 	}
 }
 ?>

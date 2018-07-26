@@ -1,4 +1,12 @@
 <?php
+
+$helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
+$helperCategory->setCategories( $categories );
+$helperCategory->setActiveCategoryId( $categoryId );
+
+$helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
+$helperNav->setCategoryId( $categoryId );
+
 $list	= '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 if( $files ){
 	$list	= array();
@@ -28,33 +36,41 @@ return '
 <div class="row-fluid">
 	<div class="span3">
 		<h3>'.$words['list']['heading'].'</h3>
+		'.$helperCategory->render().'
+		'.$helperNav->render().'
 		'.$list.'
 		'.$buttonAdd.'
 		'.$buttonReload.'
 	</div>
 	<div class="span9">
-		<h3>'.$words['edit']['heading'].'</h3>
+		<h3>'.$words['add']['heading'].'</h3>
 		<form action="./info/manual/add" method="post">
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_title">'.$words['edit']['labelFilename'].'</label>
+					<label for="input_title">'.$words['add']['labelTitle'].'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
-				<div class="span4">
-				<div class="span4">
-					<label for="input_format">'.$words['edit']['labelFormat'].'</label>
+				<div class="span2">
+					<label for="input_format">'.$words['add']['labelFormat'].'</label>
 					<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 				</div>
+				<div class="span2">
+					<label for="input_version">'.$words['add']['labelVersion'].'</label>
+					<input type="number" min="1" name="version" id="input_version" class="span12" value="'.htmlentities( max( 1, $version ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+				</div>
+				<div class="span2">
+					<label for="input_rank">'.$words['add']['labelRank'].'</label>
+					<input type="number" min="1" name="rank" id="input_rank" class="span12" value="'.htmlentities( max( 1, $rank ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_content">'.$words['edit']['labelContent'].'</label>
+					<label for="input_content">'.$words['add']['labelContent'].'</label>
 					<textarea class="span12 CodeMirror-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'].'</button>
+				<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> '.$words['add']['buttonSave'].'</button>
 			</div>
 		</form>
 	</div>

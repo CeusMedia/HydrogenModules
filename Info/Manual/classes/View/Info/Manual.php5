@@ -12,19 +12,22 @@ class View_Info_Manual extends CMF_Hydrogen_View{
 	public function add(){
 	}
 
+	public function category(){
+	}
+
 	public function edit(){
 	}
 
 	public function index(){
 	}
 
-	public function view(){
+	public function page(){
 		$renderer	= $this->getData( 'renderer' );
-        if( $renderer === "server-inline" ){
+		if( $renderer === "server-inline" ){
 			$content	= $this->getData( 'content' );
-            $content    = View_Helper_Markdown::transformStatic( $this->env, $content );
-            $this->addData( 'content', $content );
-        }
+			$content	= View_Helper_Markdown::transformStatic( $this->env, $content );
+			$this->addData( 'content', $content );
+		}
 	}
 
 	public function urlencode( $name ){

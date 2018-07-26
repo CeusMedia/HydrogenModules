@@ -7,8 +7,7 @@ $helperCategory->setActiveCategoryId( $categoryId );
 $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 
-
-$buttonAdd	= "";
+$buttonAdd		= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
 	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
@@ -27,6 +26,9 @@ return '
 		'.$helperNav->render().'
 		'.$buttonAdd.'
 		'.$buttonReload.'
+	</div>
+	<div class="span9">
+		'.print_m( $category, NULL, NULL, TRUE ).'
 	</div>
 </div>';
 ?>
