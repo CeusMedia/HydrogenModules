@@ -49,7 +49,7 @@ This module can be localized.
 		<template>info/manual/add.php</template>
 		<template>info/manual/edit.php</template>
 		<template>info/manual/index.php</template>
-		<template>info/manual/view.php</template>
+		<template>info/manual/page.php</template>
 		<locale>de/info/manual.ini</locale>
 		<locale>de/info/manual/demo.syntax.md</locale>
 		<locale>de/info/manual/order.list</locale>
