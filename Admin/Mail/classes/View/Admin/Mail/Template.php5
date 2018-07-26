@@ -3,7 +3,7 @@ class View_Admin_Mail_Template extends CMF_Hydrogen_View{
 
 	public function __onInit(){
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
-		$this->env->getPage()->js->addModuleScript( 'module.admin.mail.js' );
+		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );
 	}
 
 	public function add(){
