@@ -72,6 +72,7 @@ class Model_Job{
 				$jobObj->source		= 'xml';
 				$jobObj->mode		= array( 'dev' );
 				$jobObj->multiple	= $job->hasAttribute( 'multiple' ) ? TRUE : FALSE;
+				$jobObj->deprecated	= NULL;
 				foreach( $job->children() as $nodeName => $node ){
 					$value	= (string) $node;
 					if( $nodeName == 'mode' )
