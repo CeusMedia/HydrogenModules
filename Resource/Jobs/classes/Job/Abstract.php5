@@ -9,6 +9,7 @@ class Job_Abstract{
 
 	protected $commands			= array();
 	protected $dryMode			= FALSE;
+	protected $verbose			= FALSE;
 	protected $parameters;
 
 	/**	@var		Jobber								$manager		Job manager instance */
@@ -41,9 +42,11 @@ class Job_Abstract{
 	}
 
 	public function noteArguments( $commands = array(), $parameters = array() ){
-		$this->commands		= $commands;
+		$this->commands		= array_diff( $commands, array( 'dry', 'verbose' ) );
 		$this->parameters	= new ADT_List_Dictionary( $parameters );
 		$this->dryMode		= in_array( 'dry', (array) $commands );
+		$this->verbose		= in_array( 'verbose', (array) $commands );
+
 	}
 
 	public function noteJob( $className, $jobName ){

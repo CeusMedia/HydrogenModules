@@ -13,7 +13,7 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -42,6 +42,7 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<log version="0.6">Use newer argument parser reading commands and parameters.</log>
 	<log version="0.6.1">Add new protected job methods to show progress and errors.</log>
 	<log version="0.6.2">Note request arguments (commands and parameters) in job.</log>
+	<log version="0.6.3">Detect verbose mode by command.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
