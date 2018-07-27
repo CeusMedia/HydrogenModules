@@ -18,6 +18,18 @@
 		<interval></interval>
 		<mode>dev</mode>
 	</job>
+	<job id="Job.Test.reflect">
+		<class>Job</class>
+		<method>reflect</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Job.Test.reflectCommands">
+		<class>Job</class>
+		<method>reflectCommands</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
 	<job id="Job.Test.reflectParameters">
 		<class>Job</class>
 		<method>reflectParameters</method>

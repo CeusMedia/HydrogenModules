@@ -21,31 +21,42 @@ class Job_Job extends Job_Abstract{
 		$this->out();
 	}
 
-	protected function getLocks( $skip = array() ){
-		$list	= array();
-		if( file_exists( $this->pathLocks ) ){
-			$index	= new DirectoryIterator( $this->pathLocks );
-			foreach( $index as $entry ){
-				if( $entry->isDot() )
-					continue;
-				$jobId	= preg_replace( '/\.lock$/', '', $entry->getFilename() );
-				if( !in_array( $jobId, $skip ) )
-					$list[]	= $jobId;
-			}
+	/**
+	 *	Returns current date time depending on format parameter.
+	 *	Uses parameter --format (-f), default: 'r' (RFC 2822).
+	 *	Supports all date formats (http://php.net/manual/de/function.date.php).
+	 *	Supports format constants, like DATE_W3C.
+	 *	Removes milliseconds (.v) below PHP version 7.
+	 *	@access		public
+	 *	@return		string		Current date time in requested format
+	 *	@todo		use environment date after framework update, see below
+	 */
+	public function getDate(){
+		$format	= 'r';
+		if( $this->parameters->get( '-f' ) && !$this->parameters->get( '--format' ) )
+			$this->parameters->set( '--format', $this->parameters->get( '-f' ) );
+		if( $this->parameters->get( '--format' ) )
+			$format	= $this->parameters->get( '--format' );
+		if( preg_match( '/^[A-Z0-9_]+$/', $format ) && ADT_Constant::has( $format ) ){
+			if( $this->verbose )
+				$this->out( 'Found format by constant.' );
+			$format	= ADT_Constant::get( $format );
 		}
-		return $list;
+		else if( version_compare( PHP_VERSION, '7.0', '<' ) ){
+			if( $this->verbose )
+				$this->out( 'Removing milliseconds for PHP < 7.' );
+			$format	= preg_replace( '/\.v/', '', $format );
+		}
+		$this->out( date_create()->format( $format ) );							//  @todo replace by line below after framework update
+//		$this->out( $this->env->date->now->format( $format ) );
 	}
 
-	public function getPhpVersion(){
-		$this->out( preg_replace( '/(-.+)$/', '', phpversion() ) );
-	}
-
-	public function getExtensionVersion( $commands, $parameters ){
-		if( !$commands ){
+	public function getExtensionVersion(){
+		if( !$this->commands ){
 			$this->out( 'No extension given' );
 			return;
 		}
-		foreach( $commands as $command ){
+		foreach( $this->commands as $command ){
 			$version	= preg_replace( '/(-.+)$/', '', phpversion( $command ) );
 			if( count( $commands ) > 1 )
 				$version		= $command.': '.$version;
@@ -53,15 +64,8 @@ class Job_Job extends Job_Abstract{
 		}
 	}
 
-	public function reflectParameters( $commands, $parameters ){
-		$this->out( json_encode( $parameters ) );
-	}
-
-	public function getDate( $commands, $parameters ){
-		$format	= 'r';
-		if( isset( $parameters['--format'] ) && $parameters['--format'] )
-			$format	= $parameters['--format'];
-		$this->out( date( $format ) );
+	public function getPhpVersion(){
+		$this->out( preg_replace( '/(-.+)$/', '', phpversion() ) );
 	}
 
 	public function index(){
@@ -80,6 +84,39 @@ class Job_Job extends Job_Abstract{
 		foreach( $list as $item )
 			$this->out( ' - '.$item );
 		$this->out();
+	}
+
+	public function reflect(){
+		$this->reflectCommands();
+		$this->reflectParameters();
+	}
+
+	public function reflectCommands(){
+//		$this->out( json_encode( $this->commands ) );
+		$this->out( 'Commands: '.join( ', ', $this->commands ) );
+	}
+
+	public function reflectParameters(){
+//		$this->out( json_encode( $this->parameters->getAll() ) );
+		$this->out( 'Parameters: ' );
+		foreach( $this->parameters as $key => $value )
+			$this->out( '  '.$key.' => '.$value );
+	}
+
+	//  --  PRIVATE  METHODS  --  //
+	protected function getLocks( $skip = array() ){
+		$list	= array();
+		if( file_exists( $this->pathLocks ) ){
+			$index	= new DirectoryIterator( $this->pathLocks );
+			foreach( $index as $entry ){
+				if( $entry->isDot() )
+					continue;
+				$jobId	= preg_replace( '/\.lock$/', '', $entry->getFilename() );
+				if( !in_array( $jobId, $skip ) )
+					$list[]	= $jobId;
+			}
+		}
+		return $list;
 	}
 }
 ?>
