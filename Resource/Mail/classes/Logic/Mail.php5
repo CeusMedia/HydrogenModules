@@ -16,10 +16,16 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	protected $libraries		= 0;
 	protected $options;
 	protected $modelQueue;
-	protected $phpHasGzip;
-	protected $phpHasBzip;
 	protected $modelAttachment;
 	protected $pathAttachments;
+
+	static public function canBzip(){
+		return function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
+	}
+
+	static public function canGzip(){
+		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
+	}
 
 	public function __onInit(){
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
@@ -28,8 +34,6 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
 
-		$this->phpHasGzip	= function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
-		$this->phpHasBzip	= function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
 		$this->_repair();
 
 		/*  --  INIT ATTACHMENTS  --  */
@@ -143,7 +147,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@return		integer			Falgs of available mail library contants
+	 *	@return		integer			Flags of available mail library contants
 	 */
 	static public function detectAvailableMailLibraries(){
 		$libraries	= static::LIBRARY_UNKNOWN;
@@ -229,11 +233,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
 		$serial			= serialize( $mail );
-		if( $this->phpHasBzip ){
+		if( static::canBzip() ){
 			$serial			= bzcompress( $serial );
 			$compression	= Model_Mail::COMPRESSION_BZIP;
 		}
-		else if( $this->phpHasGzip ){
+		else if( static::canGzip() ){
 			$serial			= gzdeflate( $serial );
 			$compression	= Model_Mail::COMPRESSION_GZIP;
 		}
@@ -302,12 +306,12 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 				$serial	= base64_decode( $mail->object );
 				break;
 			case Model_Mail::COMPRESSION_GZIP:
-				if( !$this->phpHasGzip )
+				if( !static::canGzip() )
 					throw new RuntimeException( 'Extension for gzip is not installed' );
 				$serial	= gzinflate( $mail->object );
 				break;
 			case Model_Mail::COMPRESSION_BZIP2:
-				if( !$this->phpHasBzip )
+				if( !static::canBzip() )
 					throw new RuntimeException( 'Extension for bzip2 is not installed' );
 				$serial	= bzdecompress( $mail->object );
 				break;
@@ -342,11 +346,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 					$code	= base64_encode( $serial );
 					break;
 				case Model_Mail::COMPRESSION_GZIP:
-					if( $this->phpHasGzip )
+					if( static::canGzip() )
 						$code	= gzdeflate( $serial );
 					break;
 				case Model_Mail::COMPRESSION_BZIP2:
-					if( $this->phpHasBzip )
+					if( static::canBzip() )
 						$code	= bzcompress( $serial );
 					break;
 			}
@@ -391,12 +395,12 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		else{
 			if( isset( $mail->compression ) ){
 				if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-					if( !$this->phpHasBzip )
+					if( !static::canBzip() )
 						throw new RuntimeException( 'Missing extension for BZIP compression' );
 					$mail->serial	= bzdecompress( $mail->object );
 				}
 				else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-					if( !$this->phpHasGzip )
+					if( !static::canGzip() )
 						throw new RuntimeException( 'Missing extension for BZIP compression' );
 					$mail->serial	= gzinflate( $mail->object );
 				}

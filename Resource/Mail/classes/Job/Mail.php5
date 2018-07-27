@@ -3,37 +3,66 @@ class Job_Mail extends Job_Abstract{
 
 	protected $logic;
 	protected $model;
-	protected $greylistingDelay	= 900;
-	protected $cmMailMajorVersion	= 0;
+//	protected $greylistingDelay	= 900;
+	protected $libraries;
+	protected $statusesHandledMails	= array(
+		Model_Mail::STATUS_ABORTED,																//  status: -3
+		Model_Mail::STATUS_FAILED,																//  status: -2
+		Model_Mail::STATUS_SENT,																//  status: 2
+		Model_Mail::STATUS_RECEIVED,															//  status: 3
+		Model_Mail::STATUS_OPENED,																//  status: 4
+		Model_Mail::STATUS_REPLIED,																//  status: 5
+	);
 
 	public function __onInit(){
-		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->logic	= Logic_Mail::getInstance( $this->env );
-		$this->model	= new Model_Mail( $this->env );
-		$this->phpHasGzip	= function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
-		$this->phpHasBzip	= function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
-
-		$this->cmMailMajorVersion	= $this->_detectLibraryVersion();
+		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->logic		= Logic_Mail::getInstance( $this->env );
+		$this->model		= new Model_Mail( $this->env );
+		$this->libraries	= Logic_Mail::detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 
 	public function clean(){
-		$this->_removeNewsletters();
-		$this->_removeOldMails();
+		$age	= $this->parameters->get( '--age', '1Y' ) ;
+		$age	= $age ? $age : '1Y';
+		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$conditions	= array(
+			'status'		=> $this->statusesHandledMails,
+			'mailClass'		=> 'Mail_Newsletter',
+			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
+		);
+		$orders		= array( 'mailId' => 'ASC' );
+		$mails		= $this->model->getAll( $conditions, $orders );
+		if( $this->dryMode ){
+			$this->out( 'DRY RUN - no changes will be made.' );
+			$this->out( 'Would remove '.count( $mails ).' old mails.' );
+		}
+		else{
+			$count	= 0;
+	//		$fails	= array();
+			foreach( $mails as $mail ){
+				$this->model->remove( $mail->mailId );
+				$this->showProgress( ++$count, count( $mails ) );
+			}
+			if( $mails )
+				$this->out();
+			$this->out( 'Removed '.$count.' old mails.' );
+//			$this->showErrors( 'removeOldMails', $fails );
+		}
 	}
 
 	public function countQueuedMails(){
-		$conditions	= array( 'status' => array( Model_Mail::STATUS_NEW ) );
+		$conditions		= array( 'status' => array( Model_Mail::STATUS_NEW ) );
 		$countNew		= $this->logic->countQueue( $conditions );
-		$conditions	= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
+		$conditions		= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
 		$countRetry		= $this->logic->countQueue( $conditions );
-		$this->out( sprintf( "%d mails to send, %d mail to retry.\n", $countNew, $countRetry ) );
+		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
 	}
 
 	public function migrate(){
-		$conditions	= array();
+		$conditions	= array( 'status' > $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'ASC' );
-		$mails		= $this->model->getAll( array(), $orders, array(), array( 'mailId' ) );
+		$mails		= $this->model->getAll( $conditions, $orders, array(), array( 'mailId' ) );
 		$count		= 0;
 		$fails		= array();
 		foreach( $mails as $mailId ){
@@ -69,10 +98,10 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	public function removeAttachments(){
-		$conditions	= array( 'status' => array( -2, 2 ) );
+		$conditions	= array( 'status' => $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'DESC' );
 		$fails		= array();
-		$results	= array(
+		$results	= (object) array(
 			'mails'			=> 0,
 			'attachments'	=> 0,
 			'sizeBefore'	=> 0,
@@ -93,33 +122,32 @@ class Job_Mail extends Job_Abstract{
 							$mail->object->mail->removePart( $nr );
 							$object	= $this->_packMailObject( $mail, $mail->object );
 							$this->model->edit( $mail->mailId, array( 'object' => $object), FALSE );
-							$results['attachments']++;
-							$results['sizeBefore']	+= $sizeBefore;
-							$results['sizeAfter']	+= strlen( $object );
+							$results->attachments++;
+							$results->sizeBefore	+= $sizeBefore;
+							$results->sizeAfter		+= strlen( $object );
 						}
 					}
 				}
-				$this->showProgress( ++$results['mails'], count( $mails ) );
+				$this->showProgress( ++$results->mails, count( $mails ) );
 			}
 			catch( Exception $e ){
-				$this->showProgress( ++$results['mails'], count( $mails ), 'E' );
+				$this->showProgress( ++$results->mails, count( $mails ), 'E' );
 				$fails[$mail->mailId]	= $e->getMessage();
 			}
 		}
 		if( $mails )
 			$this->out();
-		if( $results['attachments'] ){
+		if( $results->attachments ){
 			$message	= 'Detached %s attachments, deflated mails from %s to %s.';
 			$this->out( vsprintf( $message, array(
-				$results['attachments'],
-				Alg_UnitFormater::formatBytes( $results['sizeBefore'] ),
-				Alg_UnitFormater::formatBytes( $results['sizeAfter'] )
+				$results->attachments,
+				Alg_UnitFormater::formatBytes( $results->sizeBefore ),
+				Alg_UnitFormater::formatBytes( $results->sizeAfter )
 			) ) );
 		}
 		else
 			$this->out( 'No detachable attachments found.' );
 		$this->showErrors( 'removeAttachments', $fails );
-
 	}
 
 	public function sendQueuedMails(){
@@ -178,20 +206,6 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	//  --  PRIVATE  --  //
-	private function _detectLibraryVersion(){
-		$version	= 0;
-		if( class_exists( '\CeusMedia\Mail\Message' ) ){
-			$instance	= new \CeusMedia\Mail\Message();
-			$regExp1	= '/^'.preg_quote( 'CeusMedia::Mail/1', '/' ).'/';
-			if( preg_match( $regExp1, $instance->getUserAgent() ) )
-				$version	= 1;
-			$regExp2	= '/^'.preg_quote( 'CeusMedia::Mail/2', '/' ).'/';
-			if( preg_match( $regExp2, $instance->getUserAgent() ) )
-				$version	= 2;
-		}
-		return $version;
-	}
-
 	private function _detectMailClass( $mail ){
 		$serial			= $this->_unpackMailObject( $mail, FALSE );
 		$serialStart	= substr( $serial, 0, 80 );
@@ -257,8 +271,10 @@ class Job_Mail extends Job_Abstract{
 
 	private function _migrateMailObject( $mail ){
 		$object		= $this->_unpackMailObject( $mail );
-		if( get_class( $object->mail ) === 'Net_Mail' ){
-			if( in_array( $this->cmMailMajorVersion, array( 1/*, 2*/ ) ) ){	// @todo finish support for v2, see todo below
+		$usedLibrary	 = Logic_Mail::detectMailLibraryFromMailObject( $object );
+
+		if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL1 | Logic_Mail::LIBRARY_MAIL1 ) ){	// @todo finish support for v2, see todo below
 				$newInstance	= new \CeusMedia\Mail\Message();
 
 				$newInstance->setSubject( $object->mail->getSubject() );
@@ -267,7 +283,7 @@ class Job_Mail extends Job_Abstract{
 					$sender	= $object->mail->getSender();
 				$newInstance->setSender( $sender );
 
-				if( $this->cmMailMajorVersion == 1 ){
+				if( $this->libraries & Logic_Mail::LIBRARY_MAIL1 ){
 					$receiver	= new \CeusMedia\Mail\Participant();
  					$receiver->setAddress( $mail->receiverAddress );
 					if( $mail->receiverName )
@@ -277,7 +293,7 @@ class Job_Mail extends Job_Abstract{
 					foreach( $parts as $part )
 						$newInstance->addPart( $part );
 				}
-				else if( $this->cmMailMajorVersion == 2 ){
+				if( $this->libraries & Logic_Mail::LIBRARY_MAIL2 ){
 					$receiver	= new \CeusMedia\Mail\Address();
  					$receiver->set( $mail->receiverAddress );
 					if( $mail->receiverName )
@@ -326,12 +342,12 @@ class Job_Mail extends Job_Abstract{
 
 		$object	= $serial;
 		if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-			if( !$this->phpHasBzip )
+			if( !Logic_Mail::canBzip() )
 				throw new RuntimeException( 'Missing extension for BZIP compression' );
 			$object	= bzcompress( $serial );
 		}
 		else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-			if( !$this->phpHasGzip )
+			if( !Logic_Mail::canGzip() )
 				throw new RuntimeException( 'Missing extension for BZIP compression' );
 			$object	= gzdeflate( $serial );
 		}
@@ -340,80 +356,17 @@ class Job_Mail extends Job_Abstract{
 		return $object;
 	}
 
-	private function _removeNewsletters(){
-		$conditions	= array(
-			'status'		=> array( -2, 2 ),
-			'mailClass'		=> 'Mail_Newsletter',
-			'enqueuedAt' 	=> '<'.( time() - 7 * 24 * 3600 ),
-		);
-		$orders		= array( 'mailId' => 'ASC' );
-		$limits		= array();
-		$mails		= $this->model->getAll( $conditions, $orders, $limits );
-		if( $this->dryMode ){
-			$this->out( 'DRY RUN - no changes will be made.' );
-			$this->out( 'Would remove '.count( $mails ).' old newsletter mails.' );
-		}
-		else{
-			$count		= 0;
-//			$fails		= array();
-			foreach( $mails as $mail ){
-				$this->model->remove( $mail->mailId );
-				$this->showProgress( ++$count, count( $mails ) );
-			}
-			if( $mails )
-				$this->out();
-			$this->out( 'Removed '.$count.' newsletter mails.' );
-//			$this->showErrors( 'removeNewsletters', $fails );
-		}
-	}
-
-	private function _removeOldMails(){
-		$age	= 365;
-		if( $this->parameters->get( 'age' ) > 0 )
-			$age	= (int) $this->parameters->get( 'age' );
-		$conditions	= array(
-			'status'		=> array(
-				Model_Mail::STATUS_ABORTED,
-				Model_Mail::STATUS_FAILED,
-				Model_Mail::STATUS_SENT,
-				Model_Mail::STATUS_RECEIVED,
-				Model_Mail::STATUS_OPENED,
-				Model_Mail::STATUS_REPLIED,
-			),
-			'enqueuedAt' 	=> '<'.( time() - $age * 24 * 3600 ),
-		);
-		$orders		= array( 'mailId' => 'ASC' );
-		$limits		= array();
-		$mails		= $this->model->getAll( $conditions, $orders, $limits );
-		if( $this->dryMode ){
-			$this->out( 'DRY RUN - no changes will be made.' );
-			$this->out( 'Would remove '.count( $mails ).' old mails.' );
-		}
-		else{
-			$count	= 0;
-	//		$fails	= array();
-			foreach( $mails as $mail ){
-				$this->model->remove( $mail->mailId );
-				$this->showProgress( ++$count, count( $mails ) );
-			}
-			if( $mails )
-				$this->out();
-			$this->out( 'Removed '.$count.' old mails.' );
-//			$this->showErrors( 'removeOldMails', $fails );
-		}
-	}
-
 	private function _unpackMailObject( $mail, $unserialize = TRUE ){
 		$serial	= $mail->object;
 		if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-			if( !$this->phpHasBzip )
+			if( !Logic_Mail::canBzip() )
 				throw new RuntimeException( 'Missing extension for BZIP compression' );
 			$serial	= bzdecompress( $mail->object );
 			if( is_int( $serial ) )
 				throw new RuntimeException( 'Decompression failed' );
 		}
 		else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-			if( !$this->phpHasGzip )
+			if( !Logic_Mail::canGzip() )
 				throw new RuntimeException( 'Missing extension for BZIP compression' );
 			$serial	= gzinflate( $mail->object );
 		}
