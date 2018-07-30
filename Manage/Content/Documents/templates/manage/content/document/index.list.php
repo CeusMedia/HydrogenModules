@@ -13,7 +13,7 @@ if( $documents ){
 	foreach( $documents as $entry ){
 		$attributes	= array(
 			'class'		=> 'btn btn-mini btn-danger pull-right',
-			'href'		=> './manage/content/document/remove/?documentId='.base64_encode( $entry ),
+			'href'		=> './manage/content/document/remove/?documentId='.base64_encode( $entry ).( $page ? '&page='.$page : '' ),
 			'title'		=> $w->buttonRemove,
 		);
 		$remove		= UI_HTML_Tag::create( 'a', $iconRemove, $attributes );
@@ -47,10 +47,19 @@ if( $documents ){
 		'id'	=> 'table-documents',
 	) );
 }
+
+
+$buttonbar	= '';
+if( $total > $limit ){
+	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/content/document', $page, ceil( $total / $limit ) );
+	$buttonbar	= '<div class="buttonbar">'.$pagination.'</div>';
+}
+
 return '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
+		'.$buttonbar.'
 	</div>
 </div>';

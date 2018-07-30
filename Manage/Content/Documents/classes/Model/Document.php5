@@ -38,7 +38,11 @@ class Model_Document {
 		return TRUE;
 	}
 
-	public function index(){
+	public function count(){
+		return count( $this->index() );
+	}
+
+	public function index( $limit = 0, $offset = 0 ){
 		$index	= new DirectoryIterator( $this->path );
 		$list	= array();
 		foreach( $index as $entry ){
@@ -49,6 +53,8 @@ class Model_Document {
 			$list[]	= $entry->getFilename();
 		}
 		natcasesort( $list );
+		if( $limit )
+			$list	= array_splice( $list, $offset, $limit );
 		return $list;
 	}
 

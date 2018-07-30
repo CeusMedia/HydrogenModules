@@ -8,10 +8,11 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	protected $rights;
 
 	public function __onInit(){
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$this->path			= $this->frontend->getPath().$this->moduleConfig->get( 'path.documents' );
-		$this->messenger	= $this->env->getMessenger();
 
 		$words				= (object) $this->getWords( 'msg' );
 		if( !$this->path ){
@@ -69,8 +70,6 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	public function add(){
 		if( !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		if( $request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
 			$upload		= $request->get( 'upload' );
@@ -88,36 +87,39 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 					if( $logicUpload->getError() ){
 						$helper	= new View_Helper_UploadError( $this->env );
 						$helper->setUpload( $logicUpload );
-						$messenger->noteError( $helper->render() );
+						$this->messenger->noteError( $helper->render() );
 					}
 					else{
 						if( $filename )
 							unlink( $this->path.$filename );
 						$filename	= $logicUpload->getFileName();
 						$logicUpload->saveTo( $this->path.$filename );
-						$messenger->noteSuccess( $words->successDocumentUploaded, $filename );
+						$this->messenger->noteSuccess( $words->successDocumentUploaded, $filename );
 					}
 				}
 				catch( Exception $e ){
-					$messenger->noteFailure( $words->errorUploadFailed );
+					$this->messenger->noteFailure( $words->errorUploadFailed );
 				}
 			}
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index( $page = 0, $limit = 15 ){
 		if( !in_array( 'index', $this->rights ) )
 			$this->restart();
 		$this->addData( 'frontendPath', $this->frontend->getPath() );
 		$this->addData( 'frontendUrl', $this->frontend->getUri() );
 		$this->addData( 'pathDocuments', $this->moduleConfig->get( 'path.documents' ) );
-		$this->addData( 'documents', $this->model->index() );
+		$this->addData( 'documents', $this->model->index( $limit, $page * $limit ) );
+		$this->addData( 'total', $this->model->count() );
+		$this->addData( 'page', $page );
+		$this->addData( 'limit', $limit );
 	}
 
 	public function rename( $documentId ){
-		$document	= $this->env->getRequest()->get( 'document' );
-		$name		= $this->env->getRequest()->get( 'name' );
+		$document	= $this->request->get( 'document' );
+		$name		= $this->request->get( 'name' );
 		$path		= $this->moduleConfig->get( 'path.documents' );
 		if( !file_exists( $path.$document ) ){
 			$this->messenger->noteError( "Dokument nicht gefunden." );
@@ -130,9 +132,11 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	public function remove(){
 		if( !in_array( 'remove', $this->rights ) )
 			$this->restart( NULL, TRUE );
-		$document	= base64_decode( $this->env->getRequest()->get( 'documentId' ) );
+		$document	= base64_decode( $this->request->get( 'documentId' ) );
 		if( file_exists( $this->path.$document ) )
 			unlink( $this->path.$document );
+		if( ( $page = $this->request->get( 'page' ) ) )
+			$this->restart( $page, TRUE );
 		$this->restart( NULL, TRUE );
 	}
 }
