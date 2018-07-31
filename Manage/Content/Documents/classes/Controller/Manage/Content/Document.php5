@@ -70,12 +70,12 @@ class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller{
 	public function add(){
 		if( !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
-		if( $request->has( 'save' ) ){
+		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
-			$upload		= $request->get( 'upload' );
-			$filename	= $request->get( 'filename' );
+			$upload		= $this->request->get( 'upload' );
+			$filename	= $this->request->get( 'filename' );
 
-			if( $request->get( 'upload' ) ){
+			if( $this->request->get( 'upload' ) ){
 				if( $filename )
 					$upload['name']	= $filename;
 				try{
