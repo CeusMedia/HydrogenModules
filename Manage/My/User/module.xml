@@ -37,6 +37,7 @@
 		<template>manage/my/user/index.email.php</template>
 		<template>manage/my/user/index.info.php</template>
 		<template>manage/my/user/index.password.php</template>
+		<template>manage/my/user/index.remove.php</template>
 		<template>manage/my/user/index.username.php</template>
 		<locale>de/manage/my/user.ini</locale>
 		<locale>de/html/manage/my/user/bottom.html</locale>
