@@ -16,8 +16,8 @@ var ModuleAce = {
 		width: "100%",
 		height: "auto",
 		options: {
-			lineHeight: 1.15,							//  add top and bottom padding, @see https://stackoverflow.com/a/37976142
-			minLines: 4,							//  show atleast 4 lines
+			lineHeight: 1.15,								//  add top and bottom padding, @see https://stackoverflow.com/a/37976142
+			minLines: 4,									//  show atleast 4 lines
 			maxLines: 'Infinity',							//  ...
 			useWorker: false,
 			showGutter: true,
@@ -25,23 +25,23 @@ var ModuleAce = {
 		events: [{
 		}],
 		hotkeys: [{
-	    	key: "F11",
-	    	name: "Toggle Fullscreen",
+			key: "F11",
+			name: "Toggle Fullscreen",
 			callback: function(editor){
 				var dom = require("ace/lib/dom");
-		        var fullScreen = dom.toggleCssClass(document.body, "fullScreen");
-		        dom.setCssClass(editor.container, "fullScreen", fullScreen);
-		        editor.setAutoScrollEditorIntoView(!fullScreen);
-		        editor.resize();
+				var fullScreen = dom.toggleCssClass(document.body, "fullScreen");
+				dom.setCssClass(editor.container, "fullScreen", fullScreen);
+				editor.setAutoScrollEditorIntoView(!fullScreen);
+				editor.resize();
 			}
 		},{
 			key: "Ctrl-Shift-s",
 			name: "showSettingsMenu",
 			callback: function(editor) {
 				ace.config.loadModule("ace/ext/settings_menu", function(module) {
-                	module.init(editor);
-                	editor.showSettingsMenu()
-            	})
+					module.init(editor);
+					editor.showSettingsMenu()
+				})
 			},
 			readOnly: true
 		}],
@@ -258,6 +258,14 @@ var ModuleAce = {
 			}
 
 			switch(this.name.toLowerCase()){
+				case "mode":
+					config.options.mode = mode;
+					ModuleAce.log(
+						"AceEditor: Found HTML attribute \"%s\" to override option \"mode\" with %d",
+						this.name,
+						this.value
+					);
+					break;
 				case "rows":
 					config.options.minLines = parseInt(this.value, 10);
 					ModuleAce.log(

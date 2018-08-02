@@ -2,7 +2,7 @@
 <module>
 	<title>JS: Ace</title>
 	<description><![CDATA[Ace Text Editor.]]></description>
-	<version>1.3.0</version>
+	<version>1.3.0-p1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Implement auto apply.</log>
@@ -13,6 +13,7 @@
 	<log version="0.4.4">Auto apply only if no other editor has been applied before.</log>
 	<log version="0.4.5">Sanitize load/run level using frameworks captain.</log>
 	<log version="1.3.0">Support v1.3.0.</log>
+	<log version="1.3.0-p1">Support mode option.</log>
 	<category>JavaScript</category>
 	<company site="https://ace.c9.io/">ace.c9.io</company>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
