@@ -5,14 +5,17 @@ $page		= (int) $env->getRequest()->get( 'page' );
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconCheck	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconResend	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-reload' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconExport	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
 	Model_Form_Fill::STATUS_CONFIRMED	=> UI_HTML_Tag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
+	Model_Form_Fill::STATUS_HANDLED		=> UI_HTML_Tag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
 );
 
 $helperPerson	= new View_Helper_Form_Fill_Person( $env );
@@ -53,12 +56,32 @@ $buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/fill'.( $page ? '/'.$page : '' ),
 	'class'	=> 'btn',
 ) );
+$buttonConfirm	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als bestätigt markieren', array(
+	'href'	=> './manage/form/markAsConfirmed/'.$fill->fillId.( $page ? '&page='.$page : '' ),
+	'class'	=> 'btn btn-success',
+) );
+if( $fill->status != Model_Form_Fill::STATUS_NEW )
+	$buttonConfirm	= '';
+
+$buttonHandled	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als behandelt markieren', array(
+	'href'	=> './manage/form/markAsHandled/'.$fill->fillId.( $page ? '&page='.$page : '' ),
+	'class'	=> 'btn btn-info',
+) );
+if( $fill->status != Model_Form_Fill::STATUS_CONFIRMED )
+	$buttonHandled	= '';
+
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'		=> './manage/form/fill/remove/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'		=> 'btn btn-danger',
 	'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 ) );
-$buttons	= join( ' ', array( $buttonList, $buttonRemove ) );
+
+$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;exportieren', array(
+	'href'		=> './manage/form/fill/export/csv/fill/'.$fill->fillId,
+	'class'		=> 'btn',
+) );
+
+$buttons	= join( ' ', array( $buttonList, $buttonExport, $buttonConfirm, $buttonHandled, $buttonRemove ) );
 $buttonbar	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );
 $heading	= UI_HTML_Tag::create( 'h2', array(
 	UI_HTML_Tag::create( 'span', 'Eintrag: ', array( 'class' => 'muted' ) ),

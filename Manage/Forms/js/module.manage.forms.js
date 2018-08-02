@@ -78,17 +78,17 @@ var RuleManager = {
 		else if(type === 0){
 			var selectKey = RuleManager.modalCustomer.find("select#input_customer_ruleKey_"+i).val();
 		}
-		console.log("SEARCH: " + selectKey);
+//		console.log("SEARCH: " + selectKey);
 		for(var j=0; j<RuleManager.selects.length; j++){
 			if(RuleManager.selects[j].name == selectKey){
-				console.log("FOUND: " + selectKey);
+//				console.log("FOUND: " + selectKey);
 				return RuleManager.selects[j];
 			}
 		}
 		return null;
 	},
 	onRuleKeyChange: function(type, i){
-		console.log({on: 'onRuleKeyChange', type: type, row: i});
+//		console.log({on: 'onRuleKeyChange', type: type, row: i});
 		var current = RuleManager.getCurrentSelect(type, i);
 		if(type === 1){
 			var selectKey = RuleManager.modalManager.find("select#input_manager_ruleKey_"+i);
@@ -100,6 +100,7 @@ var RuleManager = {
 			var selectValue = RuleManager.modalCustomer.find("select#input_customer_ruleValue_"+i);
 			RuleManager.modalCustomer.find("input#input_customer_ruleKeyLabel_"+i).val(current.label);
 		}
+		selectValue.html("");
 		for(var i=0; i<current.values.length; i++){
 			var option = jQuery("<option></option>");
 			option.attr("value", current.values[i].value);
@@ -126,16 +127,31 @@ var RuleManager = {
 		}
 	},
 	readFormSelects: function(){
+		var i, select;
 		RuleManager.selects	= [];
 		jQuery("#shadow-form select").each(function(){
 			var input = jQuery(this);
 			var options = [];
 			input.children("option").each(function(){
-				options.push({
-					value: jQuery(this).attr("value"),
-					label: jQuery(this).html(),
-				});
+				if(jQuery(this).attr("value")){
+					options.push({
+						value: jQuery(this).attr("value"),
+						label: jQuery(this).html(),
+					});
+				}
 			});
+			for( i=0; i<RuleManager.selects.length; i++){
+				select = RuleManager.selects[i];
+				if(select.id == input.attr("id")){
+					map = select.values.map(function(option){return option.value});
+					for(j=0; j<options.length; j++){
+						if(jQuery.inArray(options[j].value, map) === -1){
+							select.values.push(options[j]);
+						}
+					}
+					return;
+				}
+			}
 			RuleManager.selects.push({
 				label: input.prev().html(),
 				name: input.attr("name"),

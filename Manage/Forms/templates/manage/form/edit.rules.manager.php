@@ -26,8 +26,11 @@ if( $rulesManager ){
 		}
 
 		$list	= array();
-		foreach( json_decode( $rule->rules ) as $item )
-			$list[]	= UI_HTML_Tag::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
+		foreach( json_decode( $rule->rules ) as $item ){
+			$keyLabel	= UI_HTML_Tag::create( 'acronym', $item->keyLabel, array( 'title' => 'Interner Schlüssel: '.$item->key ) );
+			$valueLabel	= UI_HTML_Tag::create( 'acronym', $item->valueLabel, array( 'title' => 'Interner Schlüssel: '.$item->value ) );
+			$list[]	= UI_HTML_Tag::create( 'li', $keyLabel.' => '.$valueLabel );
+		}
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
 
 		$addresses		= join( '<br/>', preg_split( '/\s*,\s*/', $rule->mailAddresses ) );

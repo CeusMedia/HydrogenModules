@@ -2,14 +2,16 @@
 $modelForm	= new Model_Form( $env );
 $modelFill	= new Model_Form_Fill( $env );
 
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconFilter	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
 	Model_Form_Fill::STATUS_CONFIRMED	=> UI_HTML_Tag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
+	Model_Form_Fill::STATUS_HANDLED		=> UI_HTML_Tag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
 );
 
 $rows		= array();
@@ -51,13 +53,26 @@ $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
 
-$buttonbar	= '';
+
+
+$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
+	'href'		=> './manage/form/fill/export/csv/form/'.$filterFormId,
+	'class'		=> 'btn',
+) );
+if( !$filterFormId )
+	$buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
+		'type'		=> 'button',
+		'disabled'	=> 'disabled',
+		'class'		=> 'btn',
+	) );
+
+$pagination	= '';
 if( $pages > 1 ){
 	\CeusMedia\Bootstrap\Icon::$iconSet	= 'fontawesome';
 	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/fill/', $page, $pages );
 	$pagination->patternUrl	= '%s';
-	$buttonbar	= UI_HTML_Tag::create( 'div', $pagination->render(), array( 'class' => 'buttonbar' ) );
 }
+$buttonbar	= UI_HTML_Tag::create( 'div', join( '&nbsp;', array( $buttonExport, $pagination ) ), array( 'class' => 'buttonbar' ) );
 $panelList	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Einträge' ),
 	UI_HTML_Tag::create( 'div', array(
@@ -65,6 +80,8 @@ $panelList	= UI_HTML_Tag::create( 'div', array(
 		$buttonbar,
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
+
+
 
 
 $optForm		= array( '' => '- alle -' );
@@ -87,7 +104,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'E-Mail', array( 'for' => 'input_email' ) ),
+					UI_HTML_Tag::create( 'label', 'Formular', array( 'for' => 'input_email' ) ),
 					UI_HTML_Tag::create( 'select', $optForm, array( 'name' => 'formId', 'id' => 'input_formId' ) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),

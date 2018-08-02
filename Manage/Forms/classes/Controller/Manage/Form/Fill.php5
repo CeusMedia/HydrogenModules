@@ -65,6 +65,53 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
+	public function export( $format, $type, $id ){
+		$data	= array();
+		$keys	= array( 'dateCreated', 'dateConfirmed' );
+
+		if( $type == "form" ){
+			$fills	= $this->modelFill->getAllByIndex( 'formId', $id );
+		}
+		else if( $type == "fill" ){
+			$fills	= $this->modelFill->getAllByIndex( 'fillId', $id );
+		}
+		foreach( $fills as $fill ){
+//print_m( $fill );
+			$fill->data	= json_decode( $fill->data );
+			$row	= array(
+				'dateCreated'	=> date( 'Y-m-d H:i:s', $fill->createdAt ),
+				'dateConfirmed'	=> $fill->modifiedAt ? date( 'Y-m-d H:i:s', $fill->modifiedAt ) : '',
+			);
+			foreach( $fill->data as $item ){
+				if( !empty( $item->valueLabel ) )
+					$row[$item->name]	= $item->valueLabel;
+				else
+					$row[$item->name]	= $item->value;
+				if( !in_array( $item->name, $keys ) ){
+					$keys[]	= $item->name;
+				}
+			}
+			$data[]	= $row;
+		}
+		$lines	= array( join( ';', $keys ) );
+		foreach( $data as $line ){
+			$row	= array(
+			);
+			foreach( $keys as $key ){
+				$value = isset( $line[$key] ) ? $line[$key] : '';
+				$row[]	= '"'.addslashes( $value ).'"';
+			}
+			$lines[]	= join( ';', $row );
+		}
+		$csv	= join( "\r\n", $lines );
+		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
+		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
+		xmp( $csv );
+//		print_m( $keys );
+//		print_m( $data );
+		die;
+	}
+
 	public function filter( $reset = NULL ){
 		$session	= $this->env->getSession();
 		$request	= $this->env->getRequest();
@@ -115,6 +162,24 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterEmail', $filterEmail );
 		$this->addData( 'filterFormId', $filterFormId );
 		$this->addData( 'filterStatus', $filterStatus );
+	}
+
+	public function markAsConfirmed( $fillId ){
+		$this->checkId( $fillId );
+		$this->modelFill->setStatus( $fillId, array(
+			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
+		) );
+		$page		= (int) $this->env->getRequest()->get( 'page' );
+		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
+	}
+
+	public function markAsHandled( $fillId ){
+		$this->checkId( $fillId );
+		$this->modelFill->setStatus( $fillId, array(
+			'status'	=> Model_Form_Fill::STATUS_HANDLED
+		) );
+		$page		= (int) $this->env->getRequest()->get( 'page' );
+		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
 	public function receive(){
@@ -207,6 +272,12 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			throw new DomainException( 'Invalid fill ID given' );
 		$this->modelFill->remove( $fillId );
 		$this->restart( $page ? '/'.$page : '', TRUE );
+	}
+
+	public function resendManagerMails( $fillId ){
+		$this->sendManagerResultMails( $fillId );
+		$page		= (int) $this->env->getRequest()->get( 'page' );
+		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
 	protected function sendConfirmMail( $fillId ){
