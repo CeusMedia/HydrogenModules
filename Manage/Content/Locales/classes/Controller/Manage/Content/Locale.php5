@@ -45,6 +45,9 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 
 		$this->basePath		= preg_replace( '/^\.\//', '', $this->basePath );
 		$this->file			= $this->session->get( static::$filterPrefix.'file' );
+		$this->folder		= $this->session->get( static::$filterPrefix.'folder' );
+		if( !$this->folder )
+			$this->setFolder( 'html' );
 //		$this->addData( 'basePath', $this->basePath );
 //		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$folderPath		= static::$folders[$this->folder];

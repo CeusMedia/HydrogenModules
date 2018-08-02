@@ -16,12 +16,12 @@
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
-class View_Manage_Content extends CMF_Hydrogen_View {
+class View_Manage_Content_Locale extends CMF_Hydrogen_View {
 
 	public function __onInit() {
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
 		$page	= $this->env->getPage();
-		$page->addThemeStyle( 'module.manage.content.locale.css' );
+		$page->addCommonStyle( 'module.manage.content.locale.css' );
 		$page->js->addUrl( $pathJs.'module.manage.content.locale.js' );
 		$page->js->addScriptOnReady( 'ModuleManageContentLocale.init();' );
 		$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );

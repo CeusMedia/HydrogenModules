@@ -1,21 +1,21 @@
 
-body.moduleManageContent ul#list-files,
-body.moduleManageContent ul#list-files li {
+body.moduleManageContentLocales ul#list-files,
+body.moduleManageContentLocales ul#list-files li {
 	padding: 0;
 	margin: 0;
 	list-style: none;
 	}
-body.moduleManageContent ul#list-files li a {
+body.moduleManageContentLocales ul#list-files li a {
 	font-size: 0.9em;
 	padding: 4px 6px;
 	margin-top: 1px;
 	margin-bottom: 0px;
 	margin-left: 20px;
 	}
-body.moduleManageContent ul#list-files li a.empty {
+body.moduleManageContentLocales ul#list-files li a.empty {
 	opacity: 0.6;
 	}
-body.moduleManageContent ul#list-files li.folder {
+body.moduleManageContentLocales ul#list-files li.folder {
 	padding: 4px 6px;
 	background-color: #DDD;
 	color: #444;
@@ -26,7 +26,7 @@ body.moduleManageContent ul#list-files li.folder {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	}
-body.moduleManageContent ul.boxed {
+body.moduleManageContentLocales ul.boxed {
 	border: 1px solid #BBB;
 	border-radius: 0.3em;
 	padding: 2px 2px;
@@ -34,6 +34,6 @@ body.moduleManageContent ul.boxed {
 	overflow-x: auto;
 	box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset;
 	}
-body.moduleManageContent ul#list-files {
+body.moduleManageContentLocales ul#list-files {
 	height: 500px;
 	}
