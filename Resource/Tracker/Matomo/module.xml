@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<module>
+	<title>Matomo Tracker</title>
+	<description><![CDATA[Request tracking using Matomo (aka Piwik).
+
+This module allows to use Matomo as web request tracker.
+
+It will load the Matomo script of an defined Matomo installation
+and enable JavaScript side tracking.
+
+Using a global Matomo installation will need the server URI and Matomo site ID to be set.
+Login to your Matomo server and create a new Matomo site, first. You will get the ID.
+
+Having a local Matomo installation, this module will enable PHP side tracking, too.
+
+Future features:
+list>
+- provide view for users to deactivate tracking
+<list
+
+]]></description>
+	<category>Resource</category>
+	<version>0.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Add hooks for server and client.</log>
+	<log version="0.3.1">Extract hooks to new controller class.</log>
+	<log version="0.3.2">Improve configuration.</log>
+	<log version="0.3.3">Improve controller code syntax.</log>
+	<log version="0.3.4">Reintegrate script into helper to avoid load block of browser plugins.</log>
+	<log version="0.4">Add view for deactivation-by-user.</log>
+	<log version="0.4.1">Add public link to index in module configuration.</log>
+	<log version="0.4.2">Switch to HTTPS.</log>
+	<log version="0.4.3">Extract hook methods from controller to own hook class.</log>
+	<log version="0.4.4">Redesign module configuration.</log>
+	<log version="0.5">Migrate from Resource:Tracker:Piwik to Resource:Tracker:Matomo.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Matomo.php5</class>
+		<class>Hook/Tracker/Matomo.php5</class>
+		<class>View/Matomo.php5</class>
+		<template>matomo/index.php</template>
+		<locale>de/html/matomo/index.html</locale>
+		<script>module.tracker.matomo.js</script>
+	</files>
+	<relations/>
+	<config protected="user" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="no" mandatory="yes" type="integer" name="ID" title="Matomo Site ID"></config>
+	<config protected="yes" mandatory="no" type="boolean" name="local.active" title="use local installation">no</config>
+	<config protected="yes" mandatory="no" type="string" name="local.path" title="path to local installation">vendor/piwik/piwik/</config>
+	<config protected="no" mandatory="no" type="boolean" name="server.active" title="Use Matomo service">yes</config>
+	<config protected="no" mandatory="yes" type="string" name="server.URL" title="URL of Matomo service"></config>
+	<config protected="user" mandatory="no" type="boolean" name="option.doNotTrack" title="Support clientside Do-Not-Track">yes</config>
+	<config protected="user" mandatory="no" type="boolean" name="option.cookies" title="Allow to set Matomo cookies">yes</config>
+	<link access="public" path="matomo/index"/>
+	<hook type="resource" resource="Env" event="init">Hook_Tracker_Matomo::onEnvInit</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Tracker_Matomo::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="build">Hook_Tracker_Matomo::onPageBuild</hook>
+</module>
