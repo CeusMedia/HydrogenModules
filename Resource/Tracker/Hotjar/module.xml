@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Piwik Tracker</title>
+	<title>Hotjar Tracker</title>
 	<description><![CDATA[Request tracking using Hotjar.]]></description>
 	<category>Resource</category>
 	<version>0.2</version>
