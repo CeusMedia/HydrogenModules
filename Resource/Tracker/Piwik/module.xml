@@ -20,7 +20,7 @@ list>
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -31,6 +31,7 @@ list>
 	<log version="0.4">Add view for deactivation-by-user.</log>
 	<log version="0.4.1">Add public link to index in module configuration.</log>
 	<log version="0.4.2">Switch to HTTPS.</log>
+	<log version="0.4.3">Announce deprecation. Use Resource:Tracker:Matomo instead.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

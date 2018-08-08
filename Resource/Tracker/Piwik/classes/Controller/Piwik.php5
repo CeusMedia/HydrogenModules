@@ -39,6 +39,11 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 	 */
 	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as array map
+		CMF_Hydrogen_Deprecation::getInstance()
+			->setVersion( $env->getModules()->get( 'Resource_Tracker_Piwik' )->version )
+			->setErrorVersion( '0.4.2' )
+			->setExceptionVersion( '0.4.2' )
+			->message( 'Module Resource:Tracker:Piwik is deprecated, use Resource:Tracker:Matomo instead' );
 		if( !$config->get( 'enabled' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set
 			return;
 		if( !( $uri = $config->get( 'URI' ) ) )														//  URI to piwik is not defined
