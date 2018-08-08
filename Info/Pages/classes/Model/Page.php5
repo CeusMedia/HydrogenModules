@@ -18,6 +18,14 @@
  */
 class Model_Page extends CMF_Hydrogen_Model {
 
+	const TYPE_CONTENT		= 0;
+	const TYPE_BRANCH		= 1;
+	const TYPE_MODULE		= 2;
+
+	const STATUS_DISABLED	= -1;
+	const STATUS_HIDDEN		= 0;
+	const STATUS_VISIBLE	= 1;
+
 	protected $name		= 'pages';
 	protected $columns	= array(
 		'pageId',
@@ -51,6 +59,9 @@ class Model_Page extends CMF_Hydrogen_Model {
 		'controller',
 		'action',
 		'access',
+		'format',
+		'changefreq',
+		'priority',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
