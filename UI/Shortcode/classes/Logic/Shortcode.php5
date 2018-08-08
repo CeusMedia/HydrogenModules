@@ -30,21 +30,8 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		if( preg_match( $pattern, $content ) ){
 			$code		= preg_replace( $pattern, "\\2", $content );
-/*			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
-			$code		= preg_replace( '/( ){2,}/', " ", $code );
-			$code		= preg_replace( '/^([\S]+):([\S]+)[\s]/', "\\1_\\2 ", $code );
-			$code		= preg_replace( '/(=")([^"]*)(")/', "\\1<![CDATA[[\\2]]>\\3", $code );
-			$code		= str_replace( ':', "<![CDATA[:]]>", trim( $code ) );
-			$code		= str_replace( ':', "_", trim( $code ) );
-			$node		= new XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
-			$attr		= array_merge( $defaultAttributes, $node->getAttributes() );*/
-
 			$shortcode	= $this->parse( $code );
-//	xmp( $code );
-//	print_m( $shortcode );
-//	die;
 			$attr		= array_merge( $defaultAttributes, $shortcode->attributes );
-
 			return $attr;
 		}
 		return FALSE;
@@ -58,7 +45,6 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 		$length		= strlen( $string );
 		while( $position < $length ){
 			$char	= $string[$position];
-//print( 'lvl: '.$status.' | char: '.$char.'<br/>' );
 			if( $status == 0 ){
 				if( $char !== "[" )
 					throw new Exception( 'Must start with [' );
@@ -114,14 +100,37 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 		);
 	}
 
+	/**
+	 *	Remove next shortcode appearance in content.
+	 *	Removal will be applies to given content reference.
+	 *	The new content will be returned as well,
+	 *	@access		protected
+	 *	@param		string		$content		Reference to content to remove next appearance in
+	 *	@param		string		$shortCode		Shortcode to remove
+	 *	@return		string		Content having next appearance of shortcode removed
+	 */
+	public function removeNext( &$content, $shortCode ){
+		return $this->replaceNext( $content, $shortCode, '' );
+	}
 
-	public function replaceNext( $content, $shortCode, $replacement ){
+	/**
+	 *	Replaces next shortcode appearance in content by replacement code.
+	 *	Replacement will be applies to given content reference.
+	 *	The new content will be returned as well,
+	 *	@access		protected
+	 *	@param		string		$content		Reference to content to replace next appearance in
+	 *	@param		string		$shortCode		Shortcode to insert content for
+	 *	@param		string		$replacement	Content to insert instead of shortcode-
+	 *	@return		string		Content having next appearance of shortcode removed
+	 */
+	public function replaceNext( &$content, $shortCode, $replacement ){
 		if( !is_string( $content ) )
 			throw new InvalidArgumentException( 'Content must be of string' );
 		if( !is_string( $replacement ) )
 			throw new InvalidArgumentException( 'Replacement must be of string' );
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		$replacement	= "\\1".$replacement."\\4";													//  insert content of nested page...
-		return preg_replace( $pattern, $replacement, $content, 1 );									//  apply replacement once
+		$content		= preg_replace( $pattern, $replacement, $content, 1 );						//  apply replacement once
+		return $content;
 	}
 }
