@@ -16,7 +16,7 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
-class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
+class Logic_Page extends CMF_Hydrogen_Logic{
 
 	protected $modelPage;
 
@@ -56,6 +56,8 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getPageFromPath( $path, $withParents = FALSE ){
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
+		if( ( $page = $this->modelPage->getByIndices( array( 'identifier' => $path ) ) ) )
+			return $this->getPage( $page->pageId );
 		$parts		= explode( '/', $path );
 		$parentId	= 0;
 		$parents	= array();
@@ -68,9 +70,8 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
 			$page		= $this->modelPage->getByIndices( $indices );
 			if( !$page ){																			//  no page found for this identifier
-				if( $lastPage && $lastPage->type == 2 ){											//  last page is a module controller
+				if( $lastPage && (int) $lastPage->type === Model_Page::TYPE_BRANCH )				//  last page is a module controller
 					return $lastPage;																//  return this module controlled page
-				}
 				return NULL;
 			}
 			$parentId	= $page->pageId;
@@ -91,7 +92,7 @@ class Logic_Page extends CMF_Hydrogen_Environment_Resource_Logic{
 			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
 		$indices	= array( 'parentId'	=> $pageId );
 		if( $activeOnly )
-			$indices['status']	= 1;
+			$indices['status']	= Model_Page::STATUS_VISIBLE;
 		return $this->modelPage->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 	}
 
