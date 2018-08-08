@@ -1,5 +1,5 @@
 <?php
-class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
+class Hook_Info_Page extends CMF_Hydrogen_Hook{
 
 	static public function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
@@ -8,60 +8,58 @@ class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
 
 		$request	= $env->getRequest();
 		$path		= $request->get( '__path' );													//  get requested path
-		$logic		= new Logic_Page( $env );														//  get page logic instance
+		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		$page		= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
-
 		if( !$page )																				//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
-
-		if( $page->status < 0 ){																	//  page is deactivated
+		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
 			if( ( $previewCode = $request->get( 'preview' ) ) ){									//  page has been requested for preview
 				if( $previewCode != $page->createdAt.$page->modifiedAt )							//  not a valid preview request (from page management)
 					return FALSE;																	//  quit hook call and return without result
 			}
 		}
-
-		$controller	= new Controller_Info_Page( $env, FALSE );										//  get controller instance
-		switch( (int) $page->type ){
-			case 0:																					//  page is static
-				$request->set( '__redirected', TRUE );												//  note redirection for access check
-				$controller->redirect( 'info/page', 'index', array( $pagePath ) );					//  redirect to page controller
-				break;
-			case 1:																					//  page is node (and has no content)
-				$children	= $logic->getChildren( $page->pageId );									//  get direct child pages
-				if( $children )																		//  idetified node has children
-					if( $children[0]->status > 0 )													//  child page is active (hidden or visible)
-						$controller->restart( $page->identifier.'/'.$children[0]->identifier );		//  redirect to child page
-				return FALSE;																		//  otherwise quit hook call and return without result
-				break;
-			case 2:																					//  page is a module
-				if( !$page->controller )															//  but no module controller has been selected
-					return FALSE;																	//  quit hook call and return without result
-				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
-				if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )			//  module has been addresses by page link
-					return TRUE;																	//  nothing to do here
-				$action	= $page->action ? $page->action : 'index';									//  default action is 'index'
-				if( $page->arguments ){																//  but there are path arguments
-					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
-					if( in_array( $page->arguments[0], $classMethods ) ){							//  first argument seems to be a controller method
-						$action	= $page->arguments[0];												//  set first argument as action
-						array_shift( $page->arguments );											//  remove first argument from argument list
-					}
-				}
-				$controller->redirect( $controllerName, $action, $page->arguments );				//  redirect to module controller action
-				break;
-			default:
-				throw new RangeException( 'Page type '.$page->type.' is unsupported' );
+		$types	= Alg_Object_Constant::staticGetAll( 'Model_Page', 'TYPE' );
+		if( !in_array( (int) $page->type, $types ) )
+			throw new RangeException( 'Page type '.$page->type.' is unsupported' );
+		if( (int) $page->type === Model_Page::TYPE_CONTENT ){										//  page is static content
+			$request->set( '__redirected', TRUE );													//  note redirection for access check
+			return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );				//  redirect to page controller and quit hook
 		}
-		return TRUE;																				//  stop ongoing dispatching
+
+		if( (int) $page->type === Model_Page::TYPE_BRANCH ){										//  page is branch (and has no content)
+			if( !( $children = $logic->getChildren( $page->pageId ) ) )								//  identified branch page has children
+				throw new RangeException( 'Page branch '.$page->title.' has no pages' );
+			if( (int) $children[0]->status === Model_Page::STATUS_DISABLED )						//  child page is disabled
+				throw new RangeException( 'Page branch '.$page->title.' has no active pages' );
+			static::restart( $env, $page->identifier.'/'.$children[0]->identifier );				//  redirect to child page and exit hook
+		}
+
+		if( (int) $page->type === Model_Page::TYPE_MODULE ){										//  page is a module controlled
+			if( !$page->controller )																//  but no module controller has been selected
+				throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
+			$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );				//  get module controller path
+			if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )				//  module has been addresses by page link
+				return TRUE;																		//  nothing to do here
+			$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
+			$action	= $page->action ? $page->action : 'index';										//  default action is 'index'
+			if( $page->arguments ){																	//  but there are path arguments
+				$classMethods	= get_class_methods( 'Controller_'.$page->controller );				//  get methods of module controller class
+				if( in_array( $page->arguments[0], $classMethods ) ){								//  first argument seems to be a controller method
+					$action	= $page->arguments[0];													//  set first argument as action
+					array_shift( $page->arguments );												//  remove first argument from argument list
+				}
+			}
+			return static::redirect( $env, $controllerName, $action, $page->arguments );			//  redirect to module controller action
+		}
+		return FALSE;																				//  continue ongoing dispatching
 	}
 
 	static public function onControllerDetectPath( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelPage			= new Model_Page( $env );
 		$controllerPages	= $modelPage->getAllByIndices( array(
-			'status'		=> array( 0, 1 ),														//  invisible or active, only (no disabled)
-			'type'			=> 2,																	//  type 'module', only
+			'status'		=> array( Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE ),		//  hidden or visible, only (not disabled)
+			'type'			=> Model_Page::TYPE_MODULE,												//  type 'module', only
 			'controller'	=> $data['controllerName'],
 		) );
 		if( $controllerPages ){
@@ -114,15 +112,20 @@ class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
 				$model		= new Model_Page( $env );												//  get model of pages
-				$indices	= array( 'status' => '>0', 'parentId' => 0, 'scope' => 0 );				//  focus on active top pages of main navigation scope
-				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
+				$indices	= array(																//  focus on ...
+					'status'	=> Model_Page::STATUS_VISIBLE,										//  ... visible pages ...
+					'parentId'	=> 0,																//  ... in top level ...
+					'scope'		=> 0,																//  ... of main navigation
+					'access'	=> array( 'public', 'outside' ),									//  ... accessible by everyone
+				);
+				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );	//  collect latest changed pages first
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
-					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
-						$indices	= array(														//  focus on active pages on sub level
-							'status'	=> '>0',
-							'access'	=> array( 'public', 'outside' ),
-							'parentId'	=> $page->pageId
+					if( (int) $page->type === Model_Page::TYPE_BRANCH ){							//  page is a branch only (without content)
+						$indices	= array(														//  focus on ...
+							'status'	=> array( Model_Page::STATUS_VISIBLE ),						//  ... visible pages ...
+							'parentId'	=> $page->pageId,											//  ... on sub level
+							'access'	=> array( 'public', 'outside' ),							//  ... accessible by everyone
 						);
 						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
 						foreach( $subpages as $subpage ){											//  iterate found pages
@@ -142,17 +145,20 @@ class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
 					}
 				}
 
-				$indices	= array(																//  focus on active top pages of main navigation scope
-					'status'	=> '>0',
-					'access'	=> array( 'public', 'outside' ),
-					'parentId'	=> 0,
-					'scope'		=> 1
+				$indices	= array(																//  focus on ...
+					'status'	=> array( Model_Page::STATUS_VISIBLE ),								//  ... visible pages ...
+					'parentId'	=> 0,																//  ... on top level ...
+					'scope'		=> 1,																//  ... of top navigation scope ...
+					'access'	=> array( 'public', 'outside' ),									//  ... accessible by everyone
 				);
 				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
 				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
 				foreach( $pages as $page ){															//  iterate found pages
 					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
-						$indices	= array( 'status' => '>0', 'parentId' => $page->pageId );		//  focus on active pages on sub level
+						$indices	= array(														//  focus on ...
+							'status'	=> array( Model_Page::STATUS_VISIBLE ),						//  ... visible pages ...
+							'parentId'	=> $page->pageId,											//  ... on sub level
+						);
 						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
 						foreach( $subpages as $subpage ){											//  iterate found pages
 							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
@@ -177,10 +183,22 @@ class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
 		}
 	}
 
-	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $modules, $data ){
+	/**
+	 *	@todo			log errors
+	 *	@todo			localize error messages
+	 */
+	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+
+		//  OLD CODE
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
-		$logic		= new Logic_Page( $env );
+		$logic		= $env->getLogic()->get( 'page' );
 		while( preg_match( $pattern, $data->content ) ){
+			CMF_Hydrogen_Deprecation::getInstance()
+				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )
+				->setErrorVersion( '0.7.7' )
+				->setExceptionVersion( '0.9' )
+				->message( 'Page inclusion should use shortcode with id or nr attribute' );
+
 			$path	= trim( preg_replace( $pattern, "\\3", $data->content ) );
 			$page	= $logic->getPageFromPath( $path, TRUE );
 			if( !$page ){
@@ -194,11 +212,71 @@ class Hook_Info_Page/* extends CMF_Hydrogen_Hook*/{
 				$data->content	= preg_replace( $pattern, $replacement, $data->content );		//  ...into page content
 			}
 		}
+
+		//  NEW CODE USING UI:SHORTCODE
+		if( !$env->getModules()->has( 'UI_Shortcode' ) )
+			return;
+		$processor		= new Logic_Shortcode( $env );
+		$shortCodes		= array(
+			'page'		=> array(
+				'nr'	=> 0,
+				'id'	=> '',
+			)
+		);
+		$words	= $env->getLanguage()->getWords( 'info/pages' );
+		$msgs	= (object) $words['hook-dispatch'];
+		foreach( $shortCodes as $shortCode => $defaultAttributes ){
+			if( !$processor->has( $data->content, $shortCode ) )
+				continue;
+			while( ( $attr = $processor->find( $data->content, $shortCode, $defaultAttributes ) ) ){
+				try{
+					if( (int) $attr['nr'] ){													//  page is defined by number
+						if( !( $page = $logic->getPage( $attr['nr'] ) ) ){						//  no page found by number
+							$message	= $msgs->errorInvalidId;								//  get error message
+							$env->getMessenger()->noteFailure( $message, $attr['nr'] );			//  note failure in UI
+							$processor->removeNext( $data->content, $shortCode );				//  remove erroneous shortcode
+							continue;															//  skip to next appearance
+						}
+						$attr['id']	= $page->identifier;										//  override requested page path
+					}
+					if( !strlen( ( $pagePath = trim( $attr['id'] ) ) ) ){						//  no page path given
+						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
+						continue;																//  skip to next appearance
+					}
+					if( !( $page = $logic->getPageFromPath( $pagePath ) ) ){					//  no page found by full path
+						$message	= $msgs->errorInvalidPath;									//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
+						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
+						continue;																//  skip to next appearance
+					}
+					if( (int) $page->status == Model_Page::STATUS_DISABLED ){
+						$message	= $msgs->errorPageDisabled;									//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
+						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
+						continue;																//  skip to next appearance
+					}
+					if( (int) $page->type === Model_Page::TYPE_BRANCH ){
+						$message	= $$msgs->errorPageIsBranch;								//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
+						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
+						continue;																//  skip to next appearance
+					}
+					$data->content	= $processor->replaceNext(									//  replace next appearance
+						$data->content,															//  ... within content
+						$shortCode,																//  ... of short code
+						$page->content															//  ... by page content
+					);
+				}
+				catch( Exception $e ){
+					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					break;
+				}
+			}
+		}
 	}
 
-
 	static public function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$logic		= new Logic_Page( $env );
+		$logic		= $env->getLogic()->get( 'page' );
 		$options	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'main' );
 
