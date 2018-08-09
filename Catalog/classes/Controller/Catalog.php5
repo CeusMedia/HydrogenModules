@@ -106,8 +106,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 
 	public function index( $categoryId = NULL ){
 		if( $categoryId && (int) $categoryId )
-			$this->redirect( 'catalog', 'category', array( $categoryId ) );
-		$this->redirect( 'catalog', 'categories' );
+			$this->restart( 'category/'.$categoryId, TRUE );
+		$this->restart( 'categories', TRUE );
 	}
 
 	/**

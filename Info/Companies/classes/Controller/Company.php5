@@ -11,7 +11,7 @@ class Controller_Company extends CMF_Hydrogen_Controller{
 
 	public function index( $companyId = NULL ){
 		if( $companyId !== NULL && strlen( trim( $companyId ) ) && (int) $companyId > 0 ){
-			$this->redirect( 'company', 'view', array( $companyId ) );
+			$this->restart( 'view/'.$companyId );
 		}
 		$companies	= $this->modelCompany->getAll();
 		$this->addData( 'companies', $companies );

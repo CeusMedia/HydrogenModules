@@ -9,7 +9,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		$model->edit( $branchId, array( 'status' => 1 ) );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function deactivate( $branchId )
@@ -20,7 +20,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		$model->edit( $branchId, array( 'status' => -1 ) );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function addImage( $branchId ){
@@ -58,7 +58,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		);
 		$model->add( $data );
 		$messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
-		$this->restart( './manage/branch/edit/'.$branchId );
+		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
 	public function removeImage( $branchId, $imageId ){
@@ -72,7 +72,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 			$model->remove( $imageId );
 			$messenger->noteSuccess( 'Das Bild "'.$image->title.'" wurde entfernt.' );
 		}
-		$this->restart( './manage/branch/edit/'.$branchId );
+		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
 	public function add(){
@@ -102,7 +102,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 				$data['createdAt']	= time();
 				$model->add( $data );
 				$messenger->noteSuccess( 'Added: '.$data['title'] );
-				$this->restart( './manage/branch' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$data	= new stdClass();
@@ -121,11 +121,11 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		$data			= $model->get( $branchId );
 		if( !$data ){
 			$messenger->noteError( 'Invalid ID: '.$branchId );
-			return $this->redirect( 'branch' );
+			return $this->restart( NULL, TRUE );
 		}
 		$model->remove( $branchId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function edit( $branchId ){
@@ -159,7 +159,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 				$modelBranch->edit( $branchId, $data );
 				$messenger->noteSuccess( 'Updated: '.$data['title'] );
 				$modelBranch->extendWithGeocodes( $branchId );
-				$this->restart( './manage/branch' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$branch			= $modelBranch->get( $branchId );
@@ -180,7 +180,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 
 	public function filter(){
 		$this->env->getMessenger()->noteSuccess( "Companies have been filtered." );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){

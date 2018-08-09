@@ -23,7 +23,7 @@ class Controller_Test_Table extends CMF_Hydrogen_Controller
 					);
 					$model->add( $data );
 					$messenger->noteSuccess( 'Added: '.$title );
-					$this->restart( 'test/table' );
+					$this->restart( NULL, TRUE );
 				}
 			}
 		}
@@ -39,11 +39,11 @@ class Controller_Test_Table extends CMF_Hydrogen_Controller
 		if( !$data )
 		{
 			$messenger->noteError( 'Invalid ID: '.$testId );
-			return $this->redirect( 'test' );
+			return $this->restart( NULL, TRUE );
 		}
 		$model->remove( $testId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( 'test/table' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function edit( $testId )
@@ -69,7 +69,7 @@ class Controller_Test_Table extends CMF_Hydrogen_Controller
 					);
 					$model->edit( $testId, $data );
 					$messenger->noteSuccess( 'Updated: '.$title );
-					$this->restart( 'test/table' );
+					$this->restart( NULL, TRUE );
 				}
 			}
 		}
@@ -84,7 +84,7 @@ class Controller_Test_Table extends CMF_Hydrogen_Controller
 	public function filter()
 	{
 		$this->env->getMessenger()->noteSuccess( "Tests have been filtered." );
-		$this->restart( 'test/table' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index()

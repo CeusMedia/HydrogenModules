@@ -30,7 +30,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 	public function index( $moduleId = NULL ){
 #		$c	= new Alg_Time_Clock();
 		if( $moduleId )
-			return $this->redirect( 'admin/module/viewer', 'view', array( $moduleId ) );
+			return $this->restart( 'view/'.$moduleId, TRUE );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'modules', $this->logic->model->getAll() );
@@ -46,7 +46,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module ){
 			$this->messenger->noteError( 'Invalid module ID "'.$moduleId.'".' );
-			$this->restart( './admin/module/viewer' );
+			$this->restart( NULL, TRUE );
 		}
 		switch( (int) $request->get( 'stage' ) ){
 			case 0:
@@ -57,20 +57,20 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 					$cache->remove( $cacheKey );													//  remove whole module source from cache
 				$this->logic->invalidateFileCache( $this->env->getRemote() );
 				$this->logic->invalidateFileCache( $this->env );
-				$this->restart( './admin/module/viewer/reload/'.$moduleId.'?stage=1&oldVersion='.$version );
+				$this->restart( 'reload/'.$moduleId.'?stage=1&oldVersion='.$version, TRUE );
 				break;
 			case 1:
 				$title		= $module->title;
 				$newVersion	= $module->versionAvailable;											//  take version number of source module
 				if( version_compare( $module->versionInstalled, $module->versionAvailable ) > 0  )	//  local version is newer
 					$newVersion	= $module->versionInstalled;										//  take version number of local module
-				
+
 				$oldVersion	= $request->get( 'oldVersion' );										//  get old version from request
 				if( $newVersion != $oldVersion )													//  if version numbers differ
 					$this->messenger->noteSuccess( $words->msgNewVersion, $title, $newVersion );	//  inform about new version
 				else																				//  otherwise if no module update
 					$this->messenger->noteNotice( $words->msgNoNewVersion, $title, $newVersion );	//	note not changes
-				$this->restart( './admin/module/viewer/view/'.$moduleId );
+				$this->restart( 'view/'.$moduleId, TRUE );
 				break;
 		}
 	}
@@ -120,7 +120,7 @@ class Controller_Admin_Module_Viewer extends CMF_Hydrogen_Controller{								// 
 		}
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
-		
+
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'type', $type );
 		$this->addData( 'fileName', $fileName );

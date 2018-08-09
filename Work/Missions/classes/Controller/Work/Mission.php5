@@ -306,7 +306,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function ajaxRenderIndex(){
 		$mode	= $this->session->get( 'filter.work.mission.mode' );
 		if( $mode && $mode !== 'now' )
-			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );
+			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
 		else{
 			$words		= $this->getWords();
 
@@ -990,7 +990,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
 		if( $this->env->getRequest()->isAjax() ){
-			$this->redirect( 'work/mission/ajaxRenderIndex' );
+			$this->redirect( 'work/mission/ajaxRenderIndex' );										//  @todo replace redirect but keep AJAX request in mind
 //			header( 'Content-Type: application/json' );
 //			print( json_encode( TRUE ) );
 //			exit;

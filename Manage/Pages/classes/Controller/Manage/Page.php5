@@ -96,7 +96,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			else{
 				$pageId		= $this->model->add( $data );
 				$this->env->getMessenger()->noteSuccess( 'Neue Seite "'.$data['title'].'" angelegt.' );
-				$this->restart( 'manage/page/edit/'.$pageId );
+				$this->restart( 'edit/'.$pageId, TRUE );
 			}
 		}
 
@@ -345,7 +345,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				unset( $data['pageId'] );
 				$model->edit( $pageId, $data, FALSE );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
-				$this->restart( './manage/page/edit/'.$pageId );
+				$this->restart( 'edit/'.$pageId, TRUE );
 			}
 		}
 

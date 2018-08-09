@@ -205,7 +205,7 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $imageId ){
-		$this->redirect( 'manage/catalog/gallery', 'editImage', array( $imageId ) );
+		$this->restart( 'editImage/'.$imageId, TRUE );
 	}
 
 	public function editImage( $imageId ){

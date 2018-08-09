@@ -15,7 +15,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
 		$this->restart( './manage/my/branch' );
 	}
-	
+
 	public function add(){
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
@@ -27,8 +27,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$modelUser		= new Model_User( $this->env );
 		$user			= $modelUser->get( (int) $session->get( 'userId' ) );
 		$data['companyId']	= $user->companyId;
-		
-		
+
+
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
@@ -66,7 +66,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 
 		if( $image['error'] ){
 			$w			= (object) $this->getWords( 'upload-errors', 'main' );
-			
+
 			$messages		= array(
 				UPLOAD_ERR_INI_SIZE		=> $w->UPLOAD_ERR_INI_SIZE,
 				UPLOAD_ERR_FORM_SIZE	=> $w->UPLOAD_ERR_FORM_SIZE,
@@ -85,16 +85,16 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 				$messenger->noteError( $e->getMessage() );
 				$this->restart( './manage/my/branch/edit/'.$branchId );
 			}
-			
+
 		}
 		$model	= new Model_Branch_Image( $this->env );
-		
+
 		$imageName	= $branchId.'_'.md5( time() ).'.'.pathinfo( $image['name'], PATHINFO_EXTENSION );
 		$imagePath	= './images/branches/';
 		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
 			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
 		$data	= array(
-			'branchId'		=> $branchId, 
+			'branchId'		=> $branchId,
 			'filename'		=> $imageName,
 			'title'			=> $request->get( 'image_title' ),
 			'uploadedAt'	=> time()
@@ -118,11 +118,11 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$data			= $model->get( $branchId );
 		if( !$data ){
 			$messenger->noteError( 'Invalid ID: '.$branchId );
-			return $this->redirect( 'branch' );
+			return $this->restart( NULL, TRUE );
 		}
 		$model->remove( $branchId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}*/
 
 	public function deactivate( $branchId )
@@ -133,7 +133,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$model->edit( $branchId, array( 'status' => -1 ) );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
-		$this->restart( './manage/my/branch' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function edit( $branchId ){
@@ -165,7 +165,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 				$messenger->noteSuccess( 'Updated: '.$data['title'] );
 #				if( !$modelBranch->get( $branchId )->x )
 					$modelBranch->extendWithGeocodes( $branchId );
-				$this->restart( './manage/my/branch' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$branch			= $modelBranch->get( $branchId );
@@ -183,7 +183,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		}
 		$this->view->addData( 'coupons', $coupons );
 	}
-	
+
 	protected function getCurrentUser( $redirect = 'auth/logout' ){
 		$modelUser	= new Model_User( $this->env );
 		$userId		= (int) $this->env->getSession()->get( 'userId' );
@@ -229,7 +229,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 			$messenger->noteFailure( 'Ungültiges Unternehmen. Zugriff verweigert.' );
 			$this->restart( './manage/my' );
 		}
-		
+
 		$branches		= $modelBranch->getAllByIndex( 'companyId', $user->companyId );
 		foreach( $branches as $nr => $branch )
 			$branches[$nr]->company	= $modelCompany->get( $branch->companyId );
@@ -249,7 +249,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$conditions	= array( 'companyId' => $user->companyId, 'companyId' => $companyId );
 		return (bool) $model->count( $conditions );
 	}
-	
+
 	protected function isMyCoupon( $couponId ){
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Coupon( $this->env );
@@ -269,13 +269,13 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		if( !$image )
 			$messenger->noteFailure( $words->msgImageIdInvalid );
 		if( !$this->isMyBranch( $image->branchId ) )
-			$messenger->noteFailure( $words->msgImageNotOwned ); 
+			$messenger->noteFailure( $words->msgImageNotOwned );
 		if( !$messenger->gotError() ){
 			@unlink( './images/branches/'.$image->filename);
 			$model->remove( $imageId );
 			$messenger->noteSuccess( $words->msgSuccess, $image->title );
 		}
-		$this->restart( './manage/my/branch/edit/'.$branchId );
+		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 }
 ?>

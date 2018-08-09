@@ -158,7 +158,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 	public function index( $moduleId = NULL, $mainModuleId = NULL ){
 		if( $moduleId )
-			return $this->redirect( 'admin/module/installer', 'view', array( $moduleId, $mainModuleId ) );
+			return $this->restart( 'view/'.$moduleId.'/'.$mainModuleId, TRUE );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'modules', $this->logic->model->getAll() );
@@ -171,7 +171,7 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 
 		if( $this->logic->isInstalled( $moduleId ) ){
 			$this->messenger->noteNotice( 'Das Modul "'.$moduleId.'" ist bereits installiert. Weiterleitung zur Aktualisierung.' );
-			$this->restart( './admin/module/installer/update/'.$moduleId );
+			$this->restart( 'update/'.$moduleId, TRUE );
 		}
 
 		$words		= (object) $this->getWords( 'msg' );
@@ -197,13 +197,13 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 				if( count( $order ) > 1 ){
 					$next	= array_shift( $order );
 #					remark( 'Restart: '.'./admin/module/installer/'.$next.'/'.$mainModuleId );
-					$this->restart( './admin/module/installer/install/'.$next.'/'.$moduleId.'/'.++$step );
+					$this->restart( 'install/'.$next.'/'.$moduleId.'/'.++$step, TRUE );
 				}
 				else if( $this->logic->model->isInstalled( $moduleId ) ){
 					$messenger->noteSuccess( 'Fehlende Module wurden installiert. Nun zum Modul <b>'.$module->title.'</b>.' );
 					$this->restart( './admin/module/viewer/view/'.$moduleId );
 				}
-				$this->restart( './admin/module/installer/'.$mainModuleId.'/'.$step );
+				$this->restart( 'view/'.$mainModuleId.'/'.$step, TRUE );
 			}
 			try{
 /*  --  kriss: new impl start */
@@ -265,7 +265,7 @@ die;																								//  @todo handle exception without die
 				$this->restart( './admin/module/viewer/index/'.$moduleId );
 			}
 			$this->messenger->noteError( $words->moduleNotUninstalled, $module->title );
-			$this->restart( './admin/module/installer/uninstall/'.$moduleId );
+			$this->restart( 'uninstall/'.$moduleId, TRUE );
 		}
 		else{
 			$module->neededModules		= $this->logic->model->getAllNeededModules( $moduleId );
@@ -287,7 +287,7 @@ die;																								//  @todo handle exception without die
 		foreach( $moduleSource->relations->needs as $module ){
 			if( !$this->logic->isInstalled( $module ) ){
 				$this->messenger->noteNotice( 'Das Modul "'.$module.'" wird benötigt. Weiterleitung zur Installation.' );
-				$this->restart( './admin/module/installer/'.$module.'/'.$moduleId );
+				$this->restart( 'view/'.$module.'/'.$moduleId, TRUE );
 			}
 		}
 
@@ -317,7 +317,7 @@ die;																								//  @todo handle exception without die
 				UI_HTML_Exception_Page::display( $e );
 				exit;
 			}
-			$this->restart( './admin/module/installer/update/'.$moduleId );
+			$this->restart( 'update/'.$moduleId, TRUE );
 		}
 
 		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );

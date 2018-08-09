@@ -77,7 +77,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth/json', 'login' );
+			return $this->redirect( 'auth/json', 'login' );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );

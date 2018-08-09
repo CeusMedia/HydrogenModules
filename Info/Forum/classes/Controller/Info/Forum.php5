@@ -212,7 +212,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		$thread		= $this->modelThread->get( $threadId );
 		$this->messenger->noteSuccess( $words->successThreadAdded, $data['title'] );
 		$request->set( 'threadId', $threadId );
-		$this->redirect( 'info/forum', 'addPost', array( $threadId ) );
+		$this->restart( 'addPost/'.$threadId, TRUE );
 	}
 
 	public function addTopic(){
@@ -280,7 +280,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$this->modelPost->edit( $postId, array( 'status' => 1 ) );
-		$this->restart( './info/forum/thread/'.$post->threadId );
+		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}
 
 	public function index(){

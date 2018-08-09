@@ -17,7 +17,7 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller{
 			$this->addData( 'page', $page );														//  provide page object to view
 		}
 		else{																						//  otherwise
-			$this->redirect();																		//  redirect to index controller
+			$this->restart( NULL );																	//  redirect to index controller
 /*			$words	= (object) $this->getWords( 'index', 'info/pages' );
 			$words	= (object) $this->getWords( 'index', 'main' );
 			$this->env->getMessenger()->noteNotice( $words->msgPageNotFound );

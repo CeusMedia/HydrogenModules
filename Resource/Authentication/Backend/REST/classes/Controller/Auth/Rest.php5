@@ -61,7 +61,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth/rest', 'login' );
+			return $this->redirect( 'auth/rest', 'login' );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );

@@ -14,7 +14,7 @@ class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
 
 	public function index( $productId = NULL ){
 		if( !is_null( $productId ) && strlen( trim( $productId ) ) )
-			$this->redirect( 'catalog/provision/product', 'view', array( $productId ) );
+			$this->restart( 'view/'.$productId );
 		$conditions	= array();
 		$orders		= array( 'rank' => 'ASC' );
 		$products	= $this->modelProduct->getAll( $conditions, $orders );

@@ -100,7 +100,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'login' );
+			return $this->restart( 'login', TRUE );
 		$this->redirectAfterLogin();
 	}
 

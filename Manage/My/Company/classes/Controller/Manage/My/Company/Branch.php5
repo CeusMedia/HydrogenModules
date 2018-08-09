@@ -54,7 +54,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 				$branchId			= $this->modelBranch->add( $data );
 				$this->modelBranch->extendWithGeocodes( $branchId );
 				$this->messenger->noteSuccess( $words->successCreated, $data['title'] );
-				$this->restart( './manage/my/company/branch' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$data	= new stdClass();
@@ -99,7 +99,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		catch( Exception $e ){
 			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
 		}
-		$this->restart( './manage/my/company/branch/edit/'.$branchId );
+		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
 	protected function checkBranch( $branchId ){
@@ -126,11 +126,11 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$data			= $this->modelBranch->get( $branchId );
 		if( !$data ){
 			$this->messenger->noteError( 'Invalid ID: '.$branchId );
-			return $this->redirect( 'branch' );
+			return $this->restart( NULL, TRUE );
 		}
 		$model->remove( $branchId );
 		$this->messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( './manage/branch' );
+		$this->restart( NULL, TRUE );
 	}*/
 
 	public function edit( $branchId ){
@@ -162,7 +162,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 				$this->messenger->noteSuccess( $words->successModified, $data['title'] );
 #				if( !$modelBranch->get( $branchId )->x )
 					$this->modelBranch->extendWithGeocodes( $branchId );
-				$this->restart( './manage/my/company/branch/edit/'.$branchId );
+				$this->restart( 'edit/'.$branchId, TRUE );
 			}
 		}
 		$branch->images		= $this->modelBranchImage->getAllByIndex( 'branchId', $branchId );
@@ -198,7 +198,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$words		= (object) $this->getWords( 'index' );
 		$branches	= $this->getMyBranches( 'title' );
 		if( count( $branches ) === 1 ){
-			$this->restart( 'edit/'.$branches[0]->branchId );
+			$this->restart( 'edit/'.$branches[0]->branchId, TRUE );
 		}
 		$this->view->addData( 'branches', $branches );
 	}
@@ -228,7 +228,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 			$model->remove( $imageId );
 			$this->messenger->noteSuccess( $words->successImageRemoved, $image->title );
 		}
-		$this->restart( './manage/my/company/branch/edit/'.$branchId );
+		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 }
 ?>

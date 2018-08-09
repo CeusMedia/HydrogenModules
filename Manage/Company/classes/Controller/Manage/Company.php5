@@ -9,7 +9,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$model->edit( $companyId, array( 'status' => 1, 'modifiedAt' => time() ) );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
-		$this->restart( './manage/company' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function deactivate( $companyId )
@@ -20,7 +20,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$model->edit( $companyId, array( 'status' => -1, 'modifiedAt' => time() ) );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
-		$this->restart( './manage/company' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function add(){
@@ -48,7 +48,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 				$data['createdAt']	= time();
 				$model->add( $data );
 				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
-				$this->restart( './manage/company' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$data	= new stdClass();
@@ -64,11 +64,11 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$data			= $model->get( $companyId );
 		if( !$data ){
 			$messenger->noteError( 'Invalid ID: '.$companyId );
-			return $this->redirect( 'company' );
+			return $this->restart( NULL, TRUE );
 		}
 		$model->remove( $companyId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );
-		$this->restart( './manage/company' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function edit( $companyId ){
@@ -97,7 +97,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 				$data['modifiedAt']	= time();
 				$modelCompany->edit( $companyId, $data );
 				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
-				$this->restart( './manage/company' );
+				$this->restart( NULL, TRUE );
 			}
 		}
 		$company		= $modelCompany->get( $companyId );
@@ -114,7 +114,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 
 	public function filter(){
 		$this->env->getMessenger()->noteSuccess( "Companies have been filtered." );
-		$this->restart( './manage/company' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){

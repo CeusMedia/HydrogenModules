@@ -145,7 +145,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
-			return $this->redirect( 'auth', 'login' );
+			return $this->redirect( 'auth', 'login' );											// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );

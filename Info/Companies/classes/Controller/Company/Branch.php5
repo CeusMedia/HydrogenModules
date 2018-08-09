@@ -13,7 +13,7 @@ class Controller_Company_Branch extends CMF_Hydrogen_Controller{
 
 	public function index( $branchId = NULL ){
 		if( $branchId !== NULL && strlen( trim( $branchId ) ) && (int) $branchId > 0 ){
-			$this->redirect( 'company/branch', 'view', array( $branchId ) );
+			$this->restart( 'view/'.$branchId, TRUE );
 		}
 		else
 			$this->restart( './company', FALSE, 301 );
