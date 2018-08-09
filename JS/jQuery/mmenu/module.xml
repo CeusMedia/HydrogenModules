@@ -85,11 +85,11 @@ if( $config->get( 'version' ) === '7.0.5' ){
 else{
 	if( $config->get( 'load' ) == "all" ){
 		$files->js[]	= 'jquery.mmenu.min.all.js';
-		$files->css[]	= 'jquery.mmenu.min.all.css';
+		$files->css[]	= 'jquery.mmenu.all.css';
 	}
 	else{
 		$files->js[]	= 'jquery.mmenu.min.js';
-		$files->css[]	= 'jquery.mmenu.min.css';
+		$files->css[]	= 'jquery.mmenu.css';
 	}
 }
 
