@@ -27,7 +27,7 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
 		if( !class_exists( 'PiwikTracker' ) )													//  include was NOT successful
 			throw new RuntimeException( 'Piwik tracker inclusion failed ('.$classFile.')' );
 		PiwikTracker::$URL = $serverUrl;														//  set URL of Matomo service
-		$env->set( 'piwik', new PiwikTracker( $id ) );											//  register Piwik tracker instance in environment
+		$env->set( 'piwik', new PiwikTracker( $config->get( 'ID' ) ) );							//  register Piwik tracker instance in environment
 	}
 
 	/**
@@ -46,6 +46,8 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
 			return;
 		if( !$config->get( 'server.active' ) || !$config->get( 'server.URL' ) )					//  do not use Matomo service
 			return;
+		$pathJs		= $env->getConfig()->get( 'path.scripts' );
+		$context->js->addUrl( $pathJs.'module.tracker.matomo.js' );
 		$serverUrl	= rtrim( $config->get( 'server.URL' ), '/' ).'/';
 		$script	= '
 ModuleTrackerMatomo.id = '.$config->get( 'ID' ).';
@@ -74,7 +76,7 @@ ModuleTrackerMatomo.init();';
 		$serverUrl	= rtrim( $config->get( 'server.URL' ), '/' ).'/';
 		$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',				//  create noscript HTML tag
 			UI_HTML_Tag::create( 'img', NULL, array(											//  create tracking image
-				'src'	=> $serverUrl.'piwik.php?idsite='.$id.'&amp;rec=1',						//
+				'src'	=> $serverUrl.'piwik.php?idsite='.$config->get( 'ID' ).'&amp;rec=1',	//
 				'style'	=> 'border: 0',															//  no borders
 				'alt'	=> ''																	//  atleast empty alternative text for XHTML validity
 			) )

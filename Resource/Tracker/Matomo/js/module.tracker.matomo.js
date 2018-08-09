@@ -1,3 +1,4 @@
+var _paq = _paq || [];
 var ModuleTrackerMatomo = {
 	id: null,
 	serverUrl: null,
@@ -7,7 +8,6 @@ var ModuleTrackerMatomo = {
 			throw "No Matomo Site ID set.";
 		if(!this.serverUrl)
 			throw "No Matomo Server URL set.";
-		var _paq = _paq || [];
 		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
 		if(this.options.doNotTrack)
 			_paq.push(["setDoNotTrack", true]);
