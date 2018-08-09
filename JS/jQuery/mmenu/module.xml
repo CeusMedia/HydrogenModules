@@ -96,9 +96,9 @@ else{
 // @todo support addons and extensions if core was loaded, only
 // @todo support CDN: https://cdnjs.com/libraries/jQuery.mmenu
 
-foreach( $list->js as $filePath )
+foreach( $files->js as $filePath )
 	$context->js->addUrl( $pathJs.$filePath );
-foreach( $list->css as $filePath )
-	$context->addCommonStyle( $filePath );
+foreach( $files->css as $filePath )
+	$context->addCommonStyle( 'mmenu/'.$version.'/'.$filePath );
 ]]></hook>
 </module>
