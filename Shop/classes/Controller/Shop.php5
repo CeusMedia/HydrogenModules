@@ -444,7 +444,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
-		$this->redirect( 'shop', 'cart' );
+		$this->restart( 'cart', TRUE );
 	}
 
 	public function payment(){
