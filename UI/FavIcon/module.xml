@@ -23,8 +23,8 @@
 	<config protected="yes" mandatory="no" type="boolean" name="favorite.active">yes</config>
 	<config protected="yes" mandatory="no" type="boolean" name="favorite.fromTheme">yes</config>
 	<config protected="yes" mandatory="yes" type="string" name="favorite.name">favicon.ico</config>
-	<config protected="yes" mandatory="no" type="boolean" name="touch.active">yes</config>
+	<config protected="yes" mandatory="no" type="boolean" name="touch.active">no</config>
 	<config protected="yes" mandatory="no" type="boolean" name="touch.fromTheme">yes</config>
-	<config protected="yes" mandatory="yes" type="string" name="touch.name">apple-touch-icon.png</config>
+	<config protected="yes" mandatory="no" type="string" name="touch.name">apple-touch-icon.png</config>
 	<hook type="resource" resource="Page" event="build">View_Helper_Favicon::___onPageBuild</hook>
 </module>
