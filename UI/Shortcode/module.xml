@@ -1,14 +1,31 @@
 <?xml version="1.0"?>
 <module>
 	<title>UI: Shortcode</title>
-	<description><![CDATA[Short replacement in HTML view contents.]]></description>
+	<slogan>Processor for shortcodes in response content, called by hooks.</slogan>
+	<description format="md"><![CDATA[
+This module provides an advanced mechanism to apply shortcodes to renderable HTML content.
+
+Shortcodes can be used to apply a module resource to output content.
+
+To mark content to be IGNORED by replacement, wrap block in:
+
+<pre>
+<!--noShortcode-->
+...
+<!--/noShortcode-->
+</pre>
+
+This may apply mostly to content editors.
+
+]]></description>
 	<category>User Interface</category>
-	<version>0.3.2</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
  	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add own shortcode parser instead of using XML.</log>
 	<log version="0.3.1">Add removeNext to skip this shortcode appearance.</log>
 	<log version="0.3.2">Add example shortcode and hook.</log>
+	<log version="0.4">Support to ignore block in content for applying shortcodes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
