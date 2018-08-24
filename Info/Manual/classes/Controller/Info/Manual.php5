@@ -37,6 +37,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->order		= new ADT_List_Dictionary();
 		$this->rights		= $this->env->getAcl()->index( 'info/manual' );
 		$this->isEditable	= $this->moduleConfig->get( 'editor' );
+		$this->helperUrl	= new View_Helper_Info_Manual_Url( $this->env );
 
 		$this->modelCategory	= new Model_Manual_Category( $this->env );
 		$this->modelPage		= new Model_Manual_Page( $this->env );
@@ -48,16 +49,17 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 
 		$this->scanFiles();
-/*		$orderFile	= $this->path.'order.list';
+
+		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
 			$order			= trim( FS_File_Reader::load( $orderFile ) );
 			$this->order	= new ADT_List_Dictionary( explode( "\n", $order ) );
 		}
-		else{
+		else if( count( $this->files ) ){
 			$this->order	= new ADT_List_Dictionary( array_values( $this->files ) );
 			$this->saveOrder();
 		}
-*/
+
 		$this->addData( 'path', $this->path );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'files', $this->files );
@@ -97,6 +99,66 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'categories', $this->categories );
 		$this->addData( 'categoryId', $this->session->get( 'filter_info_manual_categoryId' ) );
+	}
+
+	public function import( $fileHash = NULL ){
+		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+			$categoryId	= $this->request->get( 'categoryId' );
+			$format		= $this->request->get( 'format' );
+			$files		= $this->request->get( 'files' );
+			$newPages	= array();
+			foreach( $files as $fileHash ){
+				$fileName	= base64_decode( $fileHash );
+				if( file_exists( $this->path.$fileName ) ){
+					$content	= FS_File_Reader::load( $this->path.$fileName );
+					$category	= $this->checkCategoryId( $categoryId );
+					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
+					$newPages[]	= $this->modelPage->add( array(
+						'manualCategoryId'	=> $categoryId,
+						'creatorId'			=> $this->userId,
+						'status'			=> Model_Manual_Page::STATUS_NEW,
+						'format'			=> $format,
+						'version'			=> 1,
+						'rank'				=> $nextRank,
+						'title'				=> rtrim( $fileName, '.md' ),
+						'content'			=> $content,
+						'createdAt'			=> time(),
+						'modifiedAt'		=> time(),
+					) );
+					@unlink( $this->path.$fileName );
+				}
+			}
+			$message	= vsprintf( 'Imported %d pages into category "%s".', array(
+				count( $newPages ),
+				$category->title,
+			) );
+			$this->messenger->noteSuccess( $message );
+			$this->restart( 'import', TRUE );
+		}
+		if( $fileHash ){
+			$fileName	= base64_decode( $fileHash );
+			if( file_exists( $this->path.$fileName ) ){
+				$content	= FS_File_Reader::load( $this->path.$fileName );
+				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
+				$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
+				$this->modelPage->add( array(
+					'manualCategoryId'	=> $categoryId,
+					'creatorId'			=> $this->userId,
+					'status'			=> Model_Manual_Page::STATUS_NEW,
+					'format'			=> Model_Manual_Page::FORMAT_MARKDOWN,
+					'version'			=> 1,
+					'rank'				=> $nextRank,
+					'title'				=> rtrim( $fileName, '.md' ),
+					'content'			=> $content,
+					'createdAt'			=> time(),
+					'modifiedAt'		=> time(),
+				) );
+				@unlink( $this->path.$fileName );
+				$this->restart( 'import', TRUE );
+			}
+		}
+//		print_m( $this->files );
+		$this->addData( 'files', $this->files );
 	}
 
 	public function add(){
@@ -221,17 +283,15 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	}
 
 	protected function restartToCategory( $category ){
-		$this->restart( vsprintf( 'category/%d-%s', array(
-			$category->manualCategoryId,
-			$this->urlencode( $category->title ),
- 		) ), TRUE );
+		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
+			->setCategory( $category )
+			->render() );
 	}
 
 	protected function restartToPage( $page ){
-		$this->restart( vsprintf( 'page/%d-%s', array(
-			$page->manualPageId,
-			$this->urlencode( $page->title ),
- 		) ), TRUE );
+		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
+			->setPage( $page )
+			->render() );
 	}
 
 	public function index( $categoryId = NULL ){
@@ -357,8 +417,9 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 
 		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );
-			$page->content	= str_replace( "](".$entry.")", "](./info/manual/page/".$this->urlencode( $entry ).")", $page->content );
-			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ./info/manual/page/".$this->urlencode( $entry )."\r\n", $page->content );
+			$urlPage	= $this->helperUrl->setPage( $entry )->render();
+			$page->content	= str_replace( "](".$entry.")", "](".$urlPage.")", $page->content );
+			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ".$urlPages."\r\n", $page->content );
 		}
 		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $page->content );
 

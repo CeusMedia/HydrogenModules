@@ -18,6 +18,9 @@ class View_Info_Manual extends CMF_Hydrogen_View{
 	public function edit(){
 	}
 
+	public function import(){
+	}
+
 	public function index(){
 	}
 
