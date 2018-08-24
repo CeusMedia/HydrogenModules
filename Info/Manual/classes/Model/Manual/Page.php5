@@ -17,6 +17,7 @@ class Model_Manual_Page extends CMF_Hydrogen_Model{
 		'manualPageId',
 		'manualCategoryId',
 		'creatorId',
+		'parentId',
 		'status',
 		'format',
 		'version',
@@ -30,6 +31,7 @@ class Model_Manual_Page extends CMF_Hydrogen_Model{
 	protected $indices		= array(
 		'manualCategoryId',
 		'creatorId',
+		'parentId',
 		'status',
 		'format',
 		'title',

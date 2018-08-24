@@ -7,6 +7,9 @@ $helperCategory->setActiveCategoryId( $categoryId );
 $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 
+$helperNav	= new View_Helper_Info_Manual_PageTree( $env );
+$helperNav->setCategoryId( $categoryId );
+
 
 $buttonAdd	= "";
 $buttonReload	= "";
@@ -21,7 +24,7 @@ if( $moduleConfig->get( 'editor' ) ){
 
 return '
 <div class="row-fluid">
-	<div class="span3">
+	<div class="span3 bs4-col-lg-3">
 		<h3>'.$words['list']['heading'].'</h3>
 		'.$helperCategory->render().'
 		'.$helperNav->render().'

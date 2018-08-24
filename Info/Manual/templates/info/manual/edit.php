@@ -8,6 +8,10 @@ $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 $helperNav->setActivePageId( $pageId );
 
+$helperNav	= new View_Helper_Info_Manual_PageTree( $env );
+$helperNav->setCategoryId( $categoryId );
+$helperNav->setActivePageId( $pageId );
+
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
 $iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-eye-open" ) );
@@ -36,15 +40,15 @@ if( $moduleConfig->get( 'editor' ) ){
 }
 
 return '
-<div class="row-fluid">
-	<div class="span3">
+<div class="bs2-row-fluid bs4-row">
+	<div class="bs2-span3 bs4-col-lg-3">
 		<h3>'.$words['list']['heading'].'</h3>
 		'.$helperCategory->render().'
 		'.$helperNav->render().'
 		'.$buttonAdd.'
 		'.$buttonReload.'
 	</div>
-	<div class="span9">
+	<div class="bs2-span9 bs4-col-lg-9">
 		<div class="content-panel">
 			<h3><span class="muted">'.$words['edit']['heading'].' </span> '.htmlentities( $file, ENT_QUOTES, 'UTF-8' ).'</h3>
 			<div class="content-panel-inner">
@@ -52,7 +56,9 @@ return '
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_content">'.$words['edit']['labelContent'].'</label>
+							<!--noShortcode-->
 							<textarea class="span12 CodeMirror-auto ace-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
+							<!--/noShortcode-->
 						</div>
 					</div>
 					<div class="row-fluid">

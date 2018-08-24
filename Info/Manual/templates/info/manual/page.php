@@ -8,6 +8,10 @@ $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 $helperNav->setActivePageId( $page->manualPageId );
 
+$helperNav	= new View_Helper_Info_Manual_PageTree( $env );
+$helperNav->setCategoryId( $categoryId );
+$helperNav->setActivePageId( $page->manualPageId );
+
 $buttonAdd		= "";
 $buttonEdit		= "";
 $buttonReload	= "";
@@ -41,15 +45,15 @@ switch( $renderer ){
 $contentContainer	= UI_HTML_Tag::create( 'div', $content, $attributes );
 
 return '
-<div class="row-fluid">
-	<div class="span3">
+<div class="bs2-row-fluid bs4-row">
+	<div class="bs2-span3 bs4-col-lg-3">
 		<h3>'.$words['list']['heading'].'</h3>
 		'.$helperCategory->render().'
 		'.$helperNav->render().'
 		'.$buttonAdd.'
 		'.$buttonReload.'
 	</div>
-	<div class="span9" style="position: relative">
+	<div class="bs2-span9 bs4-col-lg-9" style="position: relative">
 		<div id="content-index">
 			<div class="heading">Inhalt</div>
 		</div>
