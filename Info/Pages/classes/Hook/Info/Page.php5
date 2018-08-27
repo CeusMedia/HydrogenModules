@@ -217,6 +217,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
 		$processor		= new Logic_Shortcode( $env );
+		$processor->setContent( $data->content );
 		$shortCodes		= array(
 			'page'		=> array(
 				'nr'	=> 0,
@@ -226,45 +227,44 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		$words	= $env->getLanguage()->getWords( 'info/pages' );
 		$msgs	= (object) $words['hook-dispatch'];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
-			if( !$processor->has( $data->content, $shortCode ) )
+			if( !$processor->has( $shortCode ) )
 				continue;
-			while( ( $attr = $processor->find( $data->content, $shortCode, $defaultAttributes ) ) ){
+			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
-					if( (int) $attr['nr'] ){													//  page is defined by number
-						if( !( $page = $logic->getPage( $attr['nr'] ) ) ){						//  no page found by number
-							$message	= $msgs->errorInvalidId;								//  get error message
-							$env->getMessenger()->noteFailure( $message, $attr['nr'] );			//  note failure in UI
-							$processor->removeNext( $data->content, $shortCode );				//  remove erroneous shortcode
-							continue;															//  skip to next appearance
+					if( (int) $attr['nr'] ){														//  page is defined by number
+						if( !( $page = $logic->getPage( $attr['nr'] ) ) ){							//  no page found by number
+							$message	= $msgs->errorInvalidId;									//  get error message
+							$env->getMessenger()->noteFailure( $message, $attr['nr'] );				//  note failure in UI
+							$processor->removeNext( $shortCode );									//  remove erroneous shortcode
+							continue;																//  skip to next appearance
 						}
-						$attr['id']	= $page->identifier;										//  override requested page path
+						$attr['id']	= $page->identifier;											//  override requested page path
 					}
-					if( !strlen( ( $pagePath = trim( $attr['id'] ) ) ) ){						//  no page path given
-						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
-						continue;																//  skip to next appearance
+					if( !strlen( ( $pagePath = trim( $attr['id'] ) ) ) ){							//  no page path given
+						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
+						continue;																	//  skip to next appearance
 					}
-					if( !( $page = $logic->getPageFromPath( $pagePath ) ) ){					//  no page found by full path
-						$message	= $msgs->errorInvalidPath;									//  get error message
-						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
-						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
-						continue;																//  skip to next appearance
+					if( !( $page = $logic->getPageFromPath( $pagePath ) ) ){						//  no page found by full path
+						$message	= $msgs->errorInvalidPath;										//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );					//  note failure in UI
+						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
+						continue;																	//  skip to next appearance
 					}
 					if( (int) $page->status == Model_Page::STATUS_DISABLED ){
-						$message	= $msgs->errorPageDisabled;									//  get error message
-						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
-						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
-						continue;																//  skip to next appearance
+						$message	= $msgs->errorPageDisabled;										//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );					//  note failure in UI
+						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
+						continue;																	//  skip to next appearance
 					}
 					if( (int) $page->type === Model_Page::TYPE_BRANCH ){
-						$message	= $$msgs->errorPageIsBranch;								//  get error message
-						$env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
-						$processor->removeNext( $data->content, $shortCode );					//  remove erroneous shortcode
-						continue;																//  skip to next appearance
+						$message	= $$msgs->errorPageIsBranch;									//  get error message
+						$env->getMessenger()->noteFailure( $message, $pagePath );					//  note failure in UI
+						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
+						continue;																	//  skip to next appearance
 					}
-					$data->content	= $processor->replaceNext(									//  replace next appearance
-						$data->content,															//  ... within content
-						$shortCode,																//  ... of short code
-						$page->content															//  ... by page content
+					$processor->replaceNext(														//  replace next appearance
+						$shortCode,																	//  ... of short code
+						$page->content																//  ... by page content
 					);
 				}
 				catch( Exception $e ){
@@ -273,6 +273,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 				}
 			}
 		}
+		$data->content	= $processor->getContent();
 	}
 
 	static public function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
