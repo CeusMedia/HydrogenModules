@@ -3,6 +3,7 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 
 	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$processor		= new Logic_Shortcode( $env );
+		$processor->setContent( $data->content );
 		$words			= $env->getLanguage()->getWords( 'info/contact' );
 		$shortCodes		= array(
 			'contact:form'		=> array(
@@ -15,11 +16,11 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 			)
 		);
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
-			if( !$processor->has( $data->content, $shortCode ) )
+			if( !$processor->has( $shortCode ) )
 				continue;
 			$helperModal	= new View_Helper_Info_Contact_Form_Modal( $env );
 			$helperTrigger	= new View_Helper_Info_Contact_Form_Trigger( $env );
-			while( ( $attr = $processor->find( $data->content, $shortCode, $defaultAttributes ) ) ){
+			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					if( substr( $attr['button-class'], 0, 4 ) === 'btn-' )
 						$attr['button-class']	= 'btn '.$attr['button-class'];
@@ -36,9 +37,8 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 					$helperTrigger->setLabel( $attr['button-label'] );
 					$helperTrigger->setIcon( $attr['icon-class'] );
 					$helperTrigger->setIconPosition( $attr['icon-position'] );
-					$replacement	= $helperTrigger->render().$helperModal->render();													//  load news panel
-					$data->content	= $processor->replaceNext(
-						$data->content,
+					$replacement	= $helperTrigger->render().$helperModal->render();		//  load news panel
+					$processor->replaceNext(
 						$shortCode,
 						$replacement
 					);
@@ -49,6 +49,7 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 				}
 			}
 		}
+		$data->content	= $processor->getContent();
 	}
 
 	public function index(){}
