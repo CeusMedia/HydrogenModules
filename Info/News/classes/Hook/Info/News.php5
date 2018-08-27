@@ -3,6 +3,7 @@ class Hook_Info_News/* extends CMF_Hydrogen_Hook*/{
 
 	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$processor		= new Logic_Shortcode( $env );
+		$processor->setContent( $data->content );
 		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
 			'news'	=> array(
@@ -13,10 +14,10 @@ class Hook_Info_News/* extends CMF_Hydrogen_Hook*/{
 			)
 		);
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
-			if( !$processor->has( $data->content, $shortCode ) )
+			if( !$processor->has( $shortCode ) )
 				continue;
 			$helper		= new View_Helper_News( $env );
-			while( ( $attr = $processor->find( $data->content, $shortCode, $defaultAttributes ) ) ){
+			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					$helper->setLimit( $attr['limit'] );
 					$replacement	= $helper->render();											//  get newslist content
@@ -34,17 +35,18 @@ class Hook_Info_News/* extends CMF_Hydrogen_Hook*/{
 							), array( 'class' => 'content-panel' ) );
 						}
 					}
-					$data->content	= $processor->replaceNext(
-						$data->content,
+					$processor->replaceNext(
 						$shortCode,
 						$replacement
 					);
 				}
 				catch( Exception $e ){
 					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$processor->removeNext( $shortCode );
 					break;
 				}
 			}
 		}
+		$data->content	= $processor->getContent();
 	}
 }

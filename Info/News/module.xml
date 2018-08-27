@@ -3,13 +3,14 @@
 	<title>Info: News</title>
 	<description></description>
 	<category>Info</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.2.5">Prepared extraction of still bundled catalog news.</log>
 	<log version="0.2.6">Add helper to render news.</log>
 	<log version="0.2.7">Improve HTML customisation.</log>
 	<log version="0.2.8">Add hook to render news from shortcode.</log>
 	<log version="0.2.9">Use shortcode logic to apply shortcode hook.</log>
 	<log version="0.3">Imported module from protected repository.</log>
+	<log version="0.3.1">Adjust to new shortcode handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
