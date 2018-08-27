@@ -10,6 +10,7 @@ class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
 		$height		= $config->get( 'height' ) > 0 ? $config->get( 'height' ) : 40;
 
 		$processor		= new Logic_Shortcode( $env );
+		$processor->setContent( $data->content );
 		$shortCodes		= array(
 			'captcha'	=> array(
 				'length'	=> $length,
@@ -19,18 +20,17 @@ class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
 			)
 		);
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
-			if( !$processor->has( $data->content, $shortCode ) )
+			if( !$processor->has( $shortCode ) )
 				continue;
 			$helper		= new View_Helper_Captcha( $env );
-			while( is_array( $attr = $processor->find( $data->content, $shortCode, $defaultAttributes ) ) ){
+			while( is_array( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					$helper->setLength( $attr['length'] );
 					$helper->setStrength( $attr['strength'] );
 					$helper->setWidth( $attr['width'] );
 					$helper->setHeight( $attr['height'] );
 					$replacement	= $helper->render();											//  get newslist content
-					$data->content	= $processor->replaceNext(
-						$data->content,
+					$processor->replaceNext(
 						$shortCode,
 						$replacement
 					);
@@ -41,5 +41,6 @@ class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
 				}
 			}
 		}
+		$data->content	= $processor->getContent();
 	}
 }
