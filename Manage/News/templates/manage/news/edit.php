@@ -47,10 +47,12 @@ return '
 					<input type="date" name="endsAt" id="input_endsAt" class="span12" value="'.( $news->endsAt ? date( 'Y-m-d', $news->endsAt ) : '' ).'"/>
 				</div>
 			</div>
+			<!--noShortcode-->
 			<div class="row-fluid">
 				<label for="input_content" class="mandatory required">'.$w->labelContent.'</label>
 				<textarea name="content" id="input_content" class="span12 '.$editorClass.'" data-tinymce-mode="minimal" rows="12">'.htmlentities( $news->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
+			<!--/noShortcode-->
 			<br/>
 			'.UI_HTML_Tag::create( 'div', join( '&nbsp;', array(
 				$buttonAdd,
