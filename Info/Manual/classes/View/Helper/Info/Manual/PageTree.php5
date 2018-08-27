@@ -3,10 +3,12 @@ class View_Helper_Info_Manual_PageTree{
 
 	protected $activePageId	= 0;
 	protected $pages		= array();
+	protected $openParents	= array();
+	protected $modelPage;
 
 	public function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env		= $env;
-		$this->model	= new Model_Manual_Page( $env );
+		$this->env			= $env;
+		$this->modelPage	= new Model_Manual_Page( $env );
 	}
 
 	public function __toString(){
@@ -23,7 +25,7 @@ class View_Helper_Info_Manual_PageTree{
 				'manualCategoryId'	=> $this->categoryId,
 			);
 			$orders		= array( 'rank' => 'ASC' );
-			$pages		= $this->model->getAll( $conditions, $orders );
+			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
 		else if( $this->parentPageId ){
 			$conditions		= array(
@@ -31,7 +33,7 @@ class View_Helper_Info_Manual_PageTree{
 				'parentId'		=> $this->parentPageId,
 			);
 			$orders		= array( 'rank' => 'ASC' );
-			$pages		= $this->model->getAll( $conditions, $orders );
+			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
 		else
 			throw new RuntimeException( 'Neither category nor parent page set' );
@@ -40,10 +42,9 @@ class View_Helper_Info_Manual_PageTree{
 
 		$tree		= $this->renderPageTree( $tree );
 		$container	= UI_HTML_Tag::create( 'div', '', array( 'id' => 'page-tree' ) );
-		$this->env->getPage()->js->addScriptOnReady( '
-function getPageTreeData(){return '.json_encode( $tree ).';}
+		$script		= '
 jQuery("#page-tree").treeview({
-	data: getPageTreeData(),
+	data: '.json_encode( $tree ).',
 	enableLinks: true,
 	showBorder: false,
 	emptyIcon: "fa fa-fw fa-file-o",
@@ -55,7 +56,8 @@ jQuery("#page-tree").treeview({
 });
 jQuery("#page-tree li.list-group-item").on("click", function(){
 //	document.location.href=jQuery(this).children("a").prop("href");
-})' );
+})';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 		return $container;
 
 
@@ -89,7 +91,7 @@ jQuery("#page-tree li.list-group-item").on("click", function(){
 //				'icon'	=> $icon,
 				'selectable'	=> false,
 				'state'	=> (object) array(
-					'expanded'	=> FALSE,
+					'expanded'	=> in_array( $entry->manualPageId, $this->openParents ),
 					'selected'	=> $this->activePageId == $entry->manualPageId,
 				),
 				'nodes'	=> $children ? $children : NULL,
@@ -120,7 +122,7 @@ jQuery("#page-tree li.list-group-item").on("click", function(){
 				'parentId'		=> $page->manualPageId,
 			);
 			$orders		= array( 'rank' => 'ASC' );
-			$children	= $this->model->getAll( $conditions, $orders );
+			$children	= $this->modelPage->getAll( $conditions, $orders );
 			$page->children	= $this->getPageTree( $children );
 			$tree[]	= $page;
 		}
@@ -129,6 +131,13 @@ jQuery("#page-tree li.list-group-item").on("click", function(){
 
 	public function setActivePageId( $pageId ){
 		$this->activePageId	= $pageId;
+		$this->openParents	= array();
+		$page	= $this->modelPage->get( $pageId );
+		while( $page && $page->parentId ){
+			$page	= $this->modelPage->get( $page->parentId );
+			if( $page )
+				$this->openParents[]	= $page->manualPageId;
+		}
 	}
 
 	public function setCategoryId( $categoryId ){

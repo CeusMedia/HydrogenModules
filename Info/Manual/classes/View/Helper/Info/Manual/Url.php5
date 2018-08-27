@@ -28,7 +28,7 @@ class View_Helper_Info_Manual_Url{
 			throw new RuntimeException( 'Neither category nor page set' );
 		if( $this->mode === static::MODE_CATEGORY ){
 			$title		= urlencode( $this->category->title );
-			return $this->baseUri.'page/'.$this->category->manualCategoryId.'-'.$title;
+			return $this->baseUri.'category/'.$this->category->manualCategoryId.'-'.$title;
 		}
 		if( $this->mode === static::MODE_PAGE ){
 			$title		= urlencode( $this->page->title );

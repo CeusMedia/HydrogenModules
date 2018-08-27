@@ -49,7 +49,6 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		}
 
 		$this->scanFiles();
-
 		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
 			$order			= trim( FS_File_Reader::load( $orderFile ) );
@@ -218,11 +217,10 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		);
 		$orders		= array( 'rank' => 'ASC' );
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
-
-		$this->session->set( 'filter_info_manual_categoryId', $category->manualCategoryId );
-		$this->addData( 'categoryId', $category->manualCategoryId );
-		$this->addData( 'category', $category );
-		$this->addData( 'pages', $pages );
+		if( !$pages )
+			throw new RuntimeException( 'No page found in category' );
+		$firstPage	= current( $pages );
+		$this->restartToPage( $firstPage );
 	}
 
 	protected function checkCategoryId( $categoryId ){
@@ -248,7 +246,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	public function edit( $pageId, $version = NULL ){
 		$page	= $this->checkPageId( $pageId );
 		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
-			$this->restarttoPage( $page );
+			$this->restartToPage( $page );
 
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'edit' );
@@ -282,15 +280,15 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$this->addData( 'pageId', $page->manualPageId );
 	}
 
-	protected function restartToCategory( $category ){
+	protected function restartToCategory( $categoryOrId ){
 		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
-			->setCategory( $category )
+			->setCategory( $categoryOrId )
 			->render() );
 	}
 
-	protected function restartToPage( $page ){
+	protected function restartToPage( $pageOrId ){
 		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
-			->setPage( $page )
+			->setPage( $pageOrId )
 			->render() );
 	}
 
@@ -308,8 +306,8 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 				$category	= $categories[0];
 				$this->restartToCategory( $category );
 			}
-			else{
 
+			else{
 			}
 		}
 
@@ -415,14 +413,14 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'index' );
 
-		foreach( $this->files as $entry ){
+/*		foreach( $this->files as $entry ){
 			$entry	= preg_replace( "/\.md$/", "", $entry );
 			$urlPage	= $this->helperUrl->setPage( $entry )->render();
 			$page->content	= str_replace( "](".$entry.")", "](".$urlPage.")", $page->content );
 			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ".$urlPages."\r\n", $page->content );
 		}
 		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $page->content );
-
+*/
 		/*  --  EVALUATE RENDERER  --  */
 		$renderer			= $this->moduleConfig->get( 'renderer' );
 		$markdownOnServer	= $this->env->getModules()->has( 'UI_Markdown' );

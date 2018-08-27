@@ -4,12 +4,12 @@ $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
 $helperCategory->setActiveCategoryId( $categoryId );
 
-$helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
+/*$helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
-$helperNav->setActivePageId( $page->manualPageId );
+$helperNav->setActivePageId( $page->manualPageId );*/
 
 $helperNav	= new View_Helper_Info_Manual_PageTree( $env );
-$helperNav->setCategoryId( $categoryId );
+$helperNav->setCategoryId( $page->manualCategoryId );
 $helperNav->setActivePageId( $page->manualPageId );
 
 $buttonAdd		= "";
