@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Bootstrap: Treeview</title>
+	<description><![CDATA[]]></description>
+	<category>User Interface</category>
+	<version>1.2.0</version>
+	<log version="1.2.0">Initial version.</log>
+	<author site="https://github.com/jonmiles">Jonathan Miles</author>
+	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
+	<files>
+		<style source="common" load="auto">bootstrap-treeview.min.css</style>
+		<style source="common" load="auto">module.ui.bootstrap.treeview.css</style>
+		<script load="auto">bootstrap-treeview.min.js</script>
+	</files>
+	<relations>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+]]></hook>
+</module>
