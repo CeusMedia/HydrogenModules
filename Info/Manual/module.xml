@@ -75,6 +75,7 @@ This module can be localized.
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_Bootstrap_Treeview</needs>
 		<needs type="module">UI_Markdown</needs>
+		<needs type="module">UI_Shortcode</needs>
 	</relations>
 	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Manual_Shortcode::onViewRenderContent</hook>
 	<sql type="mysql" on="install" version="0.7.0"><![CDATA[
