@@ -16,7 +16,7 @@ class Hook_UI_Shortcode_Example extends CMF_Hydrogen_Hook{
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				$replacement	= '';
 				try{
-					if( $shortCode === 'example' )
+					if( $shortCode === 'example' ){
 //						$helper		= new View_Helper_Module_Id_Helper( $env );
 //						$helper->setLabel( $words['...section...']['...key...'] );
 //						$helper->setType( $attr['type'] );
