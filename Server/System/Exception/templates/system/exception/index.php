@@ -20,7 +20,7 @@ return '<h2>Ups!</h2>
 <div id="exception-facts" style="display: none">
 	'.$facts.'
 </div>
-<button type="button" id="exception-facts-trigger" onclick="showExceptionFacts();" class="btn btn-mini"><i class="fa fa-info-circle"></i> '.$words['exception']['buttonMore'].'</button>
+<button type="button" id="exception-facts-trigger" onclick="showExceptionFacts();" class="btn btn-mini"><i class="fa fa-info-circle"></i> '.$words['index']['buttonMore'].'</button>
 <script>
 function showExceptionFacts(){
 	jQuery("#exception-facts").show();
