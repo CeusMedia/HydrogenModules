@@ -54,7 +54,7 @@ else
 $buttonAdd	= '';
 if( $hasRightToAdd ){
 	$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
+	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 		$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 	$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
 		'href'	=> './manage/user/add',
