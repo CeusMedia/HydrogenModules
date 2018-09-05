@@ -60,7 +60,7 @@ class Logic_Catalog_Gallery{
 		return 1;
 		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
-		if( !$article && $strict ){
+		if( !$article && $strict )
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
