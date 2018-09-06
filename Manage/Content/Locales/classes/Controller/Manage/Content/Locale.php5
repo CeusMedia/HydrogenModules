@@ -143,6 +143,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 			$editor	= $editor ? $editor : 'Plain';
 			$this->addData( 'editor', $editor );
 			$this->addData( 'editorByExt', $this->session->get( static::$filterPrefix.'editor_'.$ext ) );
+			$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
 		}
 	}
 

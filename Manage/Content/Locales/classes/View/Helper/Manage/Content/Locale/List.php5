@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Manage_Content_List{
+class View_Helper_Manage_Content_Locale_List{
 
 	protected $current;
 	protected $env;

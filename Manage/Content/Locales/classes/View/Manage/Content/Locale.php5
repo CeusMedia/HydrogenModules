@@ -24,7 +24,6 @@ class View_Manage_Content_Locale extends CMF_Hydrogen_View {
 		$page->addCommonStyle( 'module.manage.content.locale.css' );
 		$page->js->addUrl( $pathJs.'module.manage.content.locale.js' );
 		$page->js->addScriptOnReady( 'ModuleManageContentLocale.init();' );
-		$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
 	}
 
 	public function index() {

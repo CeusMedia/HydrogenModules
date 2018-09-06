@@ -25,7 +25,7 @@ foreach( $folders as $folderKey => $folderPath )
 	$optFolder[$folderKey]	= $words['folders'][$folderKey];
 $optFolder	= UI_HTML_Elements::Options( $optFolder, $folder );
 
-$helper	= new View_Helper_Manage_Content_List( $env );
+$helper	= new View_Helper_Manage_Content_Locale_List( $env );
 $helper->setFiles( $files );
 $helper->setCurrent( $file );
 $helper->setLanguage( $language );
