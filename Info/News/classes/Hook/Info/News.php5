@@ -1,5 +1,5 @@
 <?php
-class Hook_Info_News/* extends CMF_Hydrogen_Hook*/{
+class Hook_Info_News extends CMF_Hydrogen_Hook{
 
 	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$processor		= new Logic_Shortcode( $env );
