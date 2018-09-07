@@ -50,8 +50,8 @@ class Logic_Frontend{
  	 *	@throws		RuntimeException				if URL is not defined
 	 */
 	protected function detectBaseUrl(){
-		if( $env->url )
-			$this->url		= $env->url;
+		if( $this->env->url )
+			$this->url		= $this->env->url;
 		else if( $this->getAppConfigValue( 'base.url' ) )
 			$this->url	= $this->getAppConfigValue( 'base.url' );
 		else if( $this->getAppConfigValue( 'baseHref' ) )											//  @todo remove in v1.0.0
