@@ -1,4 +1,5 @@
 <?php
+use CMF_Hydrogen_Environment_Resource_Module_Reader as HydrogenModuleReader;
 class Logic_Frontend{
 
 	static protected $instance;
@@ -18,21 +19,23 @@ class Logic_Frontend{
 		'locales'	=> 'locales/',
 		'templates'	=> 'templates/',
 	);
+	protected $url;
 
 	protected function __clone(){}
 
 	protected function __construct( CMF_Hydrogen_Environment $env, $path = NULL ){
 		$this->env		= $env;
 		$this->path		= $path;
-		if( !$path )
-			$this->path		= $env->getConfig()->get( 'module.resource_frontend.path' );
+		$moduleConfig	= $env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
+		if( !$this->path )
+			$this->path		= $moduleConfig->get( 'path' );
 		$this->detectConfig();
 		$this->detectModules();
-		$this->detectBaseUri();
+		$this->detectBaseUrl();
 	}
 
 	protected function detectConfig(){
-		$configFile		= $this->path."config/config.ini";
+		$configFile		= $this->path.'config/config.ini';
 		if( !file_exists( $configFile ) )
 			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
 		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
@@ -40,40 +43,40 @@ class Logic_Frontend{
 		unset( $this->paths['scripts.lib'] );
 	}
 
-	protected function detectBaseUri(){
-		if( $this->config->get( 'app.baseHref' ) )
-			$this->uri	= $this->config->get( 'app.baseHref' );
-		else if( $this->config->get( 'app.base.url' ) )
-			$this->uri	= $this->config->get( 'app.base.url' );
-		else{
-			$path	= dirname( getEnv( 'SCRIPT_NAME' ) ).'/'.$this->path;
-			while( preg_match( "@/\.\./@", $path ) ){
-				$parts	= explode( "/", $path );
-				foreach( $parts as $nr => $part ){
-					if( $part === ".." ){
-						unset( $parts[$nr] );
-						unset( $parts[$nr-1] );
-						break;
-					}
-				}
-				$path	= join( "/", $parts );
-			}
-			while( preg_match( "@/\./@", $path ) )
-				$path	= preg_replace( "@/\./@", "/", $path );
-			$path		= rtrim( $path, "\//" )."/";
-			$this->uri	= "http://".getEnv( 'HTTP_HOST' ).$path;
-		}
+	/**
+	 *	Tries to resolves frontend URL.
+ 	 *	@access		protected
+ 	 *	@return		void
+ 	 *	@throws		RuntimeException				if URL is not defined
+	 */
+	protected function detectBaseUrl(){
+		if( $env->url )
+			$this->url		= $env->url;
+		else if( $this->getAppConfigValue( 'base.url' ) )
+			$this->url	= $this->getAppConfigValue( 'base.url' );
+		else if( $this->getAppConfigValue( 'baseHref' ) )											//  @todo remove in v1.0.0
+			$this->url	= $this->getAppConfigValue( 'baseHref' );									//  @todo remove in v1.0.0
+		else
+			throw new RuntimeException( 'Frontend URL could not been detected' );
 	}
 
 	protected function detectModules(){
 		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
 		foreach( $index as $entry ){
-			if( preg_match( "@^(.+)(\.xml)$@", $entry->getFilename() ) ){
-				$key	= preg_replace( "@^(.+)(\.xml)$@", "\\1", $entry->getFilename() );
-				$this->modules[$key]	= $entry->getPathname();
+			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
+				$key	= preg_replace( '@^(.+)(\.xml)$@', '\\1', $entry->getFilename() );
+				$this->modules[$key]	= (object) array(
+					'id'			=> $key,
+					'configFile'	=> $entry->getPathname(),
+					'config'		=> NULL,
+				);
 			}
 		}
 		ksort( $this->modules );
+	}
+
+	public function getAppConfigValue( $key ){
+		return array_pop( $this->getAppConfigValues( array( $key ) ) );
 	}
 
 	public function getAppConfigValues( $keys = array() ){
@@ -104,7 +107,7 @@ class Logic_Frontend{
 	public function getLanguages(){
 		$data		= $this->config->getAll( 'locale.', TRUE );
 		$list		= array( trim( $data->get( 'default' ) ) );
-		foreach( explode( ",", $data->get( 'allowed' ) ) as $locale ){
+		foreach( explode( ',', $data->get( 'allowed' ) ) as $locale ){
 			if( !in_array( $locale, $list ) ){
 				$list[]	= trim( $locale );
 			}
@@ -113,34 +116,62 @@ class Logic_Frontend{
 	}
 
 	public function getModuleConfigValue( $moduleId, $key ){
-		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
-		if( !file_exists( $fileName ) )
-			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
-		$list	= array();
-		$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
-		foreach( $lines as $nr => $line ){
-			if( preg_match( "@<config @", $line ) ){
-				$lineKey	= preg_replace( "@^.+name=\"(.+)\".+$@U", "\\1", $line );
-				if( $key == $lineKey )
-					return preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
-			}
-		}
-		return NULL;
+		return array_pop( $this->getModuleConfigValues( $moduleId, array( $key ) ) );
 	}
 
-	public function getModuleConfigValues( $moduleId, $keys = array() ){
-		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
+	public function getModuleConfigValues( $moduleId, $keys = array(), $useFasterUncachedSolution = TRUE ){
+		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
 		if( !file_exists( $fileName ) )
 			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
+
 		$list	= array();
-		$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
-		foreach( $lines as $nr => $line ){
-			if( preg_match( "@<config @", $line ) ){
-//				print_m( $line );
-				$key	= preg_replace( "@^.+name=\"(.+)\".+$@U", "\\1", $line );
-				if( !$keys || in_array( $key, $keys ) )
-					$list[$key]	= preg_replace( "@^.+>(.*)</.+$@", "\\1", $line );
+
+		if( $useFasterUncachedSolution ){
+			//  version 1
+			//  description: get config pairs using regular expressions
+			//  performance: fast, but maybe unstable
+			//  use default: no
+			//  benefits:    - speed (>5x faster than version 1)
+			//               - minimal code usage
+			//               - no valid XML needed
+			//  downsides:   - maybe unstable (using regexp)
+			//               - must handle empty nodes
+			//               - not OOP
+			$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
+			foreach( $lines as $nr => $line ){
+				if( preg_match( '@<config @', $line ) ){
+					$key	= preg_replace( '@^.+name="(.+)".+$@U', '\\1', $line );
+					if( !$key || ( $keys && !in_array( $key, $keys ) ) )
+						continue;
+					if( preg_match( '@/>$@', $line ) ){
+						$list[$key]	= NULL;
+						continue;
+					}
+					$list[$key]	= preg_replace( '@^.+>(.*)</.+$@', '\\1', $line );
+				}
 			}
+		}
+		else{
+			//  version 2
+			//  description: get module config object using XML parser
+			//  performance: slow, but stable
+			//  stability:   stable
+			//  use default: yes
+			//  benefits:    - stable (using DOM via framework class)
+			//               - handle empty nodes automatically
+			//               - use cache for each module (good for future methods)
+			//               - modern (more OOP)
+			//  downsides:   - >5x slower than version 1
+			//               - more code to use
+			//               - DOM use (needs to be valid XML)
+			if( empty( $this->modules[$moduleId]->config ) ){
+				$module	= HydrogenModuleReader::load( $fileName, $moduleId );
+				$this->modules[$moduleId]->config	= $module;
+			}
+			$list	= array();
+			foreach( $this->modules[$moduleId]->config->config as $configKey => $configData )
+				if( !$keys || in_array( $configKey, $keys ) )
+					$list[$configKey]	= (string) $configData->value;
 		}
 		return $list;
 	}
@@ -166,13 +197,29 @@ class Logic_Frontend{
 		) );
 	}
 
+	/**
+	 *	Returns frontend URI.
+	 *	Alias for getUrl();
+	 *	@access		public
+	 *	@return		string		Frontend URL
+	 *	@deprecated	use getUrl instead
+	 *	@toto		to be removed in 0.4
+	 */
 	public function getUri(){
-		return $this->uri;
+		return $this->getUrl();
+	}
+
+	/**
+	 *	Returns frontend URL.
+	 *	@access		public
+	 *	@return		string		Frontend URL
+	 */
+	public function getUrl(){
+		return $this->url;
 	}
 
 	public function hasModule( $moduleId ){
-		$fileName	= $this->getPath( 'modules' ).$moduleId.".xml";
-		return file_exists( $fileName );
+		return isset( $this->modules[$moduleId] );
 	}
 }
 ?>
