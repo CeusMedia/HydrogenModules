@@ -44,6 +44,8 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 	}
 
 	protected function getShortCodePattern( $shortCode ){
+		if( !strlen( trim( $shortCode) ) || preg_match( "/\n/", $shortCode ) )
+			throw new InvalidArgumentException( 'Invalid shortcode given' );
 		return str_replace( "##shortcode##", preg_quote( $shortCode, '/' ), $this->pattern );
 	}
 
