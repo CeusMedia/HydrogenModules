@@ -34,13 +34,16 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 				return NULL;
 			$way	= array( $page->identifier );
 			$current	= $page;
+			$parents	= array();
 			while( $current->parentId !== 0 ){
 				$current	= $this->modelPage->get( $current->parentId );
 				if( !$current )
 					break;
+				$parents[]	= $current;
 				array_unshift( $way, $current->identifier );
 			}
 			$page->fullpath	= join( '/', $way );
+			$page->parents	= $parents;
 			return $page;
 		}
 		return $this->modelPage->get( $pathOrId );
@@ -70,8 +73,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
 			$page		= $this->modelPage->getByIndices( $indices );
 			if( !$page ){																			//  no page found for this identifier
-				if( $lastPage && (int) $lastPage->type === Model_Page::TYPE_BRANCH )				//  last page is a module controller
-					return $lastPage;																//  return this module controlled page
+				if( $lastPage && (int) $lastPage->type === Model_Page::TYPE_MODULE )				//  last page is a module controller
+					return $this->translatePage( $lastPage );																//  return this module controlled page
 				return NULL;
 			}
 			$parentId	= $page->pageId;
