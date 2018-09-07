@@ -1,5 +1,8 @@
 <?php
 
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconSortable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-v' ) );
+
 //print_m( $tree );die;
 
 $filterLanguage		= '';
@@ -24,14 +27,13 @@ $optScope	= UI_HTML_Elements::Options( $optScope, $scope );
 $filterScope	= '
 <div class="row-fluid">
 	<div class="span12">
-			<label for="input_page_scope">'.$words['filter']['labelScope'].'</label>
-			<select class="span12" name="page_scope" id="input_page_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
+		<label for="input_page_scope">'.$words['filter']['labelScope'].'</label>
+		<select class="span12" name="page_scope" id="input_page_scope" onchange="document.location.href=\'./manage/page/setScope/\'+this.value;">'.$optScope.'</select>
 	</div>
 </div>';
 
 
 $urlAdd		= './manage/page/add';
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 if( !empty( $pageId ) && isset( $page ) )
 	$urlAdd	.= "/".( $page->parentId > 0 ? $page->parentId : $pageId );
 else if( !empty( $parentId ) && isset( $page ) )
@@ -42,6 +44,13 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
 	'class'		=> 'btn btn-small btn-success',
 ) );
 
+$buttonSortable	= UI_HTML_Tag::create( 'button', $iconSortable, array(
+	'type'		=> 'button',
+	'id'		=> 'toggle-sortable',
+	'onclick'	=> 'ModuleManagePages.PageEditor.toggleSortable()',
+	'class'		=> 'btn btn-small',
+) );
+
 $currentId	= !empty( $pageId ) ? $pageId : $parentId;
 $listPages	= $view->renderTree( $tree, $currentId );
 
@@ -50,10 +59,10 @@ return '
 	<div class="content-panel-inner">
 		'.$filterLanguage.'
 		'.$filterScope.'
-		<hr/>
 		'.$listPages.'
 		<div class="buttonbar">
 			'.$buttonAdd.'
+			'.$buttonSortable.'
 		</div>
 	</div>
 </div>';

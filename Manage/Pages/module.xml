@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.0.6</version>
+	<version>1.0.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -39,6 +39,8 @@
 	<log version="1.0.4">Suggest keywords from page content term extraction.</log>
 	<log version="1.0.5">Allow to blacklist suggested keywords from page content term extraction.</log>
 	<log version="1.0.6">Add english locales.</log>
+	<log version="1.0.7">Extract sitemap settings view from meta view.</log>
+	<log version="1.0.8">Make sortable switchable.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -53,6 +55,7 @@
 		<template>manage/page/edit.meta.php</template>
 		<template>manage/page/edit.preview.php</template>
 		<template>manage/page/edit.settings.php</template>
+		<template>manage/page/edit.sitemap.php</template>
 		<template>manage/page/index.php</template>
 		<template>manage/page/tree.php</template>
 		<locale>de/manage/page.ini</locale>

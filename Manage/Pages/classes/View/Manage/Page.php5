@@ -17,11 +17,11 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	protected function getPageIcon( $page ){
 		switch( $page->type ){
 			case 0:
-				return '<i class="icon-leaf"></i>';
+				return '<i class="fa fa-fw fa-file-text-o"></i>';
 			case 1:
-				return '<i class="icon-chevron-down"></i>';
+				return '<i class="fa fa-fw fa-chevron-down"></i>';
 			case 2:
-				return '<i class="icon-fire"></i>';
+				return '<i class="fa fa-fw fa-plug"></i>';
 		}
 	}
 
@@ -37,7 +37,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
 			$isActive		= ($nr+1) == $current;
 			$class			= $isActive ? "active" : NULL;
-			if( $page->type == 1 && $nr >= 2 || $page->type == 2 && $nr == 2 )
+			if( $page->type == 1 && $nr >= 2 || $page->type == 2 && $nr >= 2 )
 				$class	.= ' disabled';
 			$attributes		= array( 'id' => 'page-editor-tab-'.($nr+1), 'class' => $class );
 			$listTabs[]		= UI_HTML_Tag::create( 'li', $link, $attributes );

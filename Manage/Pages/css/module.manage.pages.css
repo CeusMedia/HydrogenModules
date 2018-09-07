@@ -2,6 +2,7 @@
 /*  --  MANAGE: PAGE: TREE  --  */
 body.moduleManagePage #manage-page-tree {
 	padding-bottom: 2em;
+	font-size: 1.1em;
 	}
 body.moduleManagePage #manage-page-tree h4 {
 	display: none;
@@ -70,15 +71,17 @@ body.moduleManagePage #manage-page-main {
 	border: 0px;
 	}
 
-/*  --  META TAGS  --  */
-dl#meta-defaults dt {
-	width: 120px;
-	}
-dl#meta-defaults dd {
-	margin-left: 130px;
-	}
 
-
+#manage-page-tree ul.sortable  li {
+	margin-top: 2px;
+	}
+#manage-page-tree ul.sortable  li a {
+	background-color: rgba(127, 127, 127, 0.1);
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	color: black;
+	box-sizing: border-box;
+	cursor: move;
+	}
 
 .mceLayout {
 	margin-bottom: 8px !important;

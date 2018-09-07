@@ -6,6 +6,7 @@ $tabTemplates	= array(
 	1	=> 'edit.preview.php',
 	2	=> 'edit.content.php',
 	3	=> 'edit.meta.php',
+	4	=> 'edit.sitemap.php',
 );
 $tabs		= $view->renderTabs( $words['tabs'], $tabTemplates, $tab );
 

@@ -221,6 +221,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$html	= Alg_Text_Filter::stripStyles( $html );
 		$html	= Alg_Text_Filter::stripEventAttributes( $html );
 		//$html	= Alg_Text_Filter::stripTags( $html );
+//		$html	= htmlspecialchars_decode( $html );
 		$html	= preg_replace( "@<[\/\!]*?[^<>]*?>@si", " ", $html );
 		$html	= str_replace( "&nbsp;", " ", $html );
 		$blacklist	= 'config/terms.blacklist.txt';
@@ -231,7 +232,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		foreach( $terms as $term => $count )
 			if( preg_match( '/^[A-Z]/', $term ) )
 				if( preg_match( '/[A-Z]$/i', $term ) )
-					$list[]	= $term;
+					$list[]	= htmlspecialchars_decode( $term );
 		print( json_encode( array(
 			'status'	=> 'data',
 			'data'		=> $list

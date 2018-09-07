@@ -55,14 +55,32 @@ ModuleManagePages.PageEditor = {
 			}).mouseleave(function(){
 				$("#page-preview-mask").show();
 			});
-			ModuleManagePages.PageEditor.initDefaultMetaCopy();
 			$("#input_page_editor").on("change", ModuleManagePages.PageEditor.setEditor);
 		}
+		ModuleManagePages.PageEditor.initDefaultMetaCopy();
 		ModuleManagePages.PageEditor.initSortable();
+	},
+
+	toggleSortable: function(){
+		var container = jQuery("#manage-page-tree ul");
+		if(container.sortable("option", "disabled")){
+			container.sortable("option", "disabled", false);
+			container.addClass("sortable");
+			container.find("a").on("click", function(){
+				return false;
+			});
+		}
+		else{
+			container.sortable("option", "disabled", true)
+			container.removeClass("sortable");
+			container.find("a").off("click");
+		}
+		jQuery("#toggle-sortable").blur();
 	},
 
 	initSortable: function(){
 		$("#manage-page-tree ul").sortable({
+			disabled: true,
 			stop: function(event, ui) {
 				var pageIds = [];
 				ui.item.parent().children("li").each(function(){
@@ -80,18 +98,17 @@ ModuleManagePages.PageEditor = {
 
 	initDefaultMetaCopy: function(){
 //		console.log('initDefaultMetaCopy');
-		$("#meta-defaults dt").each(function(nr, term){
-			if($(term).hasClass("meta-default")){
-				var link = $("<a></a>").attr("href", "#").html("&larr;&nbsp;kopieren");
-				link.on("click", {term: term, key: $(term).data("key")}, function(event){
-					var input = $("#input_"+event.data.key);
-					input.val($(event.data.term).next().html());
-					event.stopPropagation();
-					return false;
-				});
-				link.wrap("<small></small>");
-				$(term).append("<br/>").append(link);
-			}
+		$("#btn-copy-description").on("click", function(event){
+			var source = $("#input_page_default_description");
+			var target = $("#input_page_description");
+			target.val(source.val());
+			$(this).blur();
+		});
+		$("#btn-copy-keywords").on("click", function(event){
+			var source = $("#input_page_default_keywords");
+			var target = $("#input_page_keywords");
+			target.val(source.val());
+			$(this).blur();
 		});
 	},
 

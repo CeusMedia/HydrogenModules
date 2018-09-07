@@ -2,7 +2,7 @@
 $w				= (object) $words['edit'];
 $wMeta			= (object) $words['edit-meta'];
 
-print_m( $meta );die;
+$iconCopy		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
 if( $page->type == 1 ){
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta.'</em></div>';
@@ -22,7 +22,7 @@ return '
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
 		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
-			<!--<h3>'.$wMeta->headingSettings.'</h3>-->
+			<!--<h3>'.$wMeta->heading.'</h3>-->
 			<div class="row-fluid">
 				<div class="span6">
 					<h4>Werte für diese Seite</h4>
@@ -41,8 +41,9 @@ return '
 					</div>
 					<div class="span6">
 						<label for="input_page_description">'.$wMeta->labelDefaultDescription.'</label>
-						<textarea class="span12" rows="3" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['default.description']->value, ENT_QUOTES, 'UTF-8' ).'</textarea>
-						<button type="button" class="btn btn-small">save</button>
+						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['default.description'], ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<button type="button" class="btn btn-mini" id="btn-copy-description">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
+						<button type="button" class="btn btn-mini" disabled="disabled">save</button>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -51,12 +52,11 @@ return '
 						<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						'.$buttonSuggest.' '.$buttonBlacklist.'
 					</div>
-				</div>
-				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_page_description">'.$wMeta->labelDefaultKeywords.'</label>
-						<textarea class="span12" rows="3" name="page_default_keywords" id="input_page_default_keywords">'.htmlentities( $meta['default.keywords'], ENT_QUOTES, 'UTF-8' ).'</textarea>
-						<button type="button" class="btn btn-small">save</button>
+						<textarea class="span12" rows="4" name="page_default_keywords" id="input_page_default_keywords">'.htmlentities( $meta['default.keywords'], ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<button type="button" class="btn btn-mini" id="btn-copy-keywords">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
+						<button type="button" class="btn btn-mini" disabled="disabled">save</button>
 					</div>
 				</div>
 	<!--
@@ -82,29 +82,7 @@ return '
 						<input class="span12" type="text" name="page_default_publisher" id="input_page_default_publisher" value="'.htmlentities( $meta['default.publisher'], ENT_QUOTES, 'UTF-8' ).'"/>
 						<button type="button" class="btn btn-small">save</button>
 					</div>
-				</div>
-			</div>
-			<h3>'.$wMeta->headingSeo.'</h3>
-			<p>
-				<small class="muted">
-					Diese Angaben sind für die <a href="https://de.wikipedia.org/wiki/Webcrawler" target="_blank">Crawler</a> der Suchmaschinen bestimmt
-					und werden bei der automatischen Erzeugung von <a href="https://de.wikipedia.org/wiki/Sitemaps-Protokoll" target="_blank">Sitemaps</a> verwendet.<br/>
-					Anhand dieser Einstellungen bestimmen die Crawler, wann sie diese Seite wieder besuchen werden.
-				</small>
-			</p>
-			<br/>
-			<div class="row-fluid">
-				<div class="span3">
-					<label for="input_page_changefreq">'.$wMeta->labelChangefreq.'</label>
-					<select name="page_changefreq" id="input_page_changefreq" class="span12">'.$optChangefreq.'</select>
-				</div>
-				<div class="span3">
-					<label for="input_page_priority">'.$wMeta->labelPriority.'</label>
-					<select name="page_priority" id="input_page_priority" class="span12">'.$optPriority.'</select>
-				</div>
-			</div>
-			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$wMeta->buttonSave.'</button>
+				</div>-->
 			</div>
 		</form>
 	</div>
