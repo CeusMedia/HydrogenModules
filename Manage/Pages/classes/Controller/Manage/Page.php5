@@ -483,6 +483,8 @@ ModuleManagePages.PageEditor.init();
 		$this->preparePageTree();
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'parentId', 0 );
+		$script	= 'ModuleManagePages.PageEditor.initSortable();';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
 	protected function translatePage( $page ){
