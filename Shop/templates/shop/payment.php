@@ -32,7 +32,7 @@ if( !$order->paymentMethod )
 
 $buttonbar	= '
 <br/>
-<form action="shop/customer" method="post">
+<form action="shop/checkout" method="post">
 	<div class="buttonbar well well-small">
 		'.$buttonPrev.'
 		'.$buttonNext.'
