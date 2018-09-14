@@ -506,6 +506,16 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	/**
+	 *	Remove mail by its ID.
+	 *	@access		public
+	 *	@param		integer			$mailId			ID of mail to remove
+	 *	@return		boolean
+	 */
+	public function removeMail( $mailId ){
+		return (bool) $this->modelQueue->remove( $mailId );
+	}
+
+	/**
 	 *	Send prepared mail right now.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
