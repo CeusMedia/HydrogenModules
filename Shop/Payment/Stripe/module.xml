@@ -4,11 +4,12 @@
 	<description><![CDATA[Integrates Stripe into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate credit card payment.</log>
 	<log version="0.2.2">Extract hooks to own hook class.</log>
+	<log version="0.2.3">Add module main switch.</log>
 <!--	<log version="0.2.1">Improve relations.</log>
 	<log version="0.2.2">Set access for inside links.</log>
 	<log version="0.2.3">Add model for stripe payments.</log>
@@ -37,6 +38,7 @@
 		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
 		<file>config/jobs/shop.payment.stripe.xml</file>
 	</files>
+	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
 	<config protected="yes" type="integer" name="method.Card" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
 	<config protected="yes" type="integer" name="method.Giropay" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
 	<config protected="yes" type="integer" name="method.Sofort" title="priority: 0-disabled, 1-highest, ..., 9-lowest">2</config>
