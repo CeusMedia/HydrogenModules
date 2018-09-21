@@ -29,11 +29,12 @@
 		<locale>de/shop/payment/stripe.ini</locale>
 		<file>config/jobs/shop.payment.stripe.xml</file>-->
 	</files>
+	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
+	<config protected="no" type="string" mandatory="yes" name="bank.name" title="Bank name company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.holder" title="Holder of company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.iban" title="IBAN of company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.bic" title="BIC of company bank account"></config>
 	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
-	<config protected="no" type="string" name="bank.name" title="Bank name company bank account">My Bank</config>
-	<config protected="no" type="string" name="bank.holder" title="Holder of company bank account">My Company</config>
-	<config protected="no" type="string" name="bank.iban" title="IBAN of company bank account">DE12 3456 4567 8900</config>
-	<config protected="no" type="string" name="bank.bic" title="BIC of company bank account">ABC123123XX</config>
 	<relations>
 <!--		<needs type="module">Shop_Payment</needs>-->
 <!--		<needs type="module">Resource_Payment_Stripe</needs>-->
