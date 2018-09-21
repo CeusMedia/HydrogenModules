@@ -47,9 +47,13 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		if( (int) $this->orderId > 0 ){
 			$this->addData( 'order', $this->logic->getOrder( $this->orderId ) );
 		}
-		if( $this->session->get( 'shop.order.positions' ) )
-			foreach( $this->session->get( 'shop.order.positions' ) as $position )
-				$this->cartTotal	+= $position->article->price->all;
+		if( $this->session->get( 'shop.order.positions' ) ){
+			foreach( $this->session->get( 'shop.order.positions' ) as $position ){
+				$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
+				$article	= $source->get( $position->articleId, $position->quantity );
+				$this->cartTotal	+= $article->price->all;
+			}
+		}
 		$this->addData( 'cartTotal', $this->cartTotal );
 	}
 
