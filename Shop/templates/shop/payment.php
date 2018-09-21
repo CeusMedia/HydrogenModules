@@ -26,18 +26,19 @@ $iconSubmit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow
 
 
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+//$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+$buttonNext	= new \CeusMedia\Bootstrap\LinkButton( './shop/checkout', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 if( !$order->paymentMethod )
 	$buttonNext	= new \CeusMedia\Bootstrap\Button( $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', TRUE );
 
 $buttonbar	= '
 <br/>
-<form action="shop/checkout" method="post">
+<!--<form action="shop/checkout" method="post">-->
 	<div class="buttonbar well well-small">
 		'.$buttonPrev.'
 		'.$buttonNext.'
 	</div>
-</form>';
+<!--</form>-->';
 
 $tabContent	= '
 <h3>'.$w->heading.'</h3>
