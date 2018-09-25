@@ -1,22 +1,27 @@
 <?php
 class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 
-	protected $mode	= 0;
+	protected $dropdownAlign	= 'right';
+	protected $mode				= 0;
 
-	const MODE_SELECT		= 0;
-	const MODE_DROPDOWN		= 1;
+	const MODE_SELECT			= 0;
+	const MODE_DROPDOWN			= 1;
 
 	public function __construct( $env ){
 		$this->setEnv( $env );
-		$this->language		= $this->env->getLanguage();
-		$this->languages	= $this->language->getLanguages();
-		$this->current		= $this->language->getLanguage();
-		$this->words		= $this->language->getWords( 'language' );
-		$this->labels		= $this->words['languages'];
-		$this->mode			= (int) ( $this->env->getConfig()->get( 'module.ui_languageselector.mode' ) !== "select" );
+		$this->language			= $this->env->getLanguage();
+		$this->languages		= $this->language->getLanguages();
+		$this->current			= $this->language->getLanguage();
+		$this->words			= $this->language->getWords( 'language' );
+		$this->labels			= $this->words['languages'];
+		$this->mode				= (int) ( $this->env->getConfig()->get( 'module.ui_languageselector.mode' ) !== "select" );
+//		$this->dropdownAlign	= $this->env->getConfig()->get( 'module.ui_languageselector.mode.dropdown.align' );
+		$path					= $this->env->getRequest()->get( '__path' );			//  @todo use path key from App or Env
+		$this->path				= rtrim( $path ? $path : "./", "/" )."/";
+	}
 
-		$path				= $this->env->getRequest()->get( '__path' );			//  @todo use path key from App or Env
-		$this->path			= rtrim( $path ? $path : "./", "/" )."/";
+	public function getMode(){
+		return $this->mode;
 	}
 
 	public function render(){
@@ -42,7 +47,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 			}
 		}
 		$listMenu		= UI_HTML_Tag::create( 'ul', $list, array(
-			'class'		=> 'dropdown-menu pull-right'
+			'class'		=> 'dropdown-menu pull-'.$this->dropdownAlign,
 		) );
 
 		$label			= $this->words['selector']['label'];
@@ -78,10 +83,6 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 		return $select;
 	}
 
-	public function setMode( $mode = 0 ){
-		$this->mode	= (int) $mode;
-	}
-
 	static public function renderStatic( $env ){
 		$helper = new View_Helper_LanguageSelector( $env );
 		$config	= $env->getConfig()->getAll( 'module.ui_languageselector.', TRUE );
@@ -91,5 +92,17 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 			$helper->setMode( View_Helper_LanguageSelector::MODE_DROPDOWN );
 
 		return $helper->render();
+	}
+
+	public function setDropdownAlign( $align = 'right' ){
+		if( !in_array( $align, array( 'left', 'right' ) ) )
+			throw new InvalidArgumentException( 'Align must be left or right' );
+		$this->dropdownAlign	= $align;
+		return $this;
+	}
+
+	public function setMode( $mode = 0 ){
+		$this->mode	= (int) $mode;
+		return $this;
 	}
 }
