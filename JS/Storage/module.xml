@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Storage</title>
+	<description><![CDATA[JavaScript Storage API.]]></description>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<category>JavaScript</category>
+	<source url="https://github.com/julien-maurel/js-storage">github.com</source>
+	<author site="https://github.com/julien-maurel">Julien Maurel</author>
+	<license source="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+	<files>
+		<script>js.storage.js</script>
+		<script load="auto">js.storage.min.js</script>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch of module">yes</config>
+	<config protected="yes" type="boolean" name="load.minified" title="">yes</config>
+	<relations>
+		<needs type="module">JS_Cookie</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+		if( !$module->config['active']->value )
+			return;
+		$pathJs		= $env->getConfig()->get( 'path.scripts' );
+		$fileSuffix	= $module->config['load.minified']->value ? '.min' : '';
+		$context->js->addUrl( $pathJs.'js.storage'.fileSuffix.'.js', 3 );
+	]]></hook>
+</module>
