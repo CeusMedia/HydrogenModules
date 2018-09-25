@@ -44,11 +44,11 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					),
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
-							HTML::Label( 'username', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
+							HTML::Label( 'password', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'			=> "password",
 								'name'			=> "password",
-								'id'			=> "input_password_username",
+								'id'			=> "input_password_email",
 								'class'			=> "span11 mandatory",
 								'required'		=> 'required',
 								'value'			=> '',
