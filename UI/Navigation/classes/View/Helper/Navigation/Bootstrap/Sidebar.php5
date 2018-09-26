@@ -54,7 +54,8 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 		}
 		$logo	= $this->renderLogo();
 		$this->env->getPage()->addBodyClass( 'nav-sidebar' );
-		return $logo.UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
+		$list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
+		return $logo.UI_HTML_Tag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
 	}
 
 	protected function renderLabelWithIcon( $entry ){

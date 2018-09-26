@@ -1,79 +1,145 @@
 if(typeof ModuleUiNavigation == "undefined")
 	var ModuleUiNavigation = {};
 ModuleUiNavigation.Sidebar = {
-	status: 0,
+
+	//  --  PUBLIC  --  //
 	verbose: false,
-	widthDefault: 240,
 	durations: {
 		hide: 350,
-		show: 250
+		show: 250,
+		scrollSave: 200,
 	},
-	isPhone: false,
+	selectors: {
+		field: "document",
+		nav: '#layout-nav',
+		navMenu: '#nav-sidebar-list',
+		navToggle: '#nav-sidebar-toggle',
+	},
+	phone: {
+		detected: false,
+		deviceWidthLimit: 768,
+		factorWidth: 1.2,
+		factorWidthMax: 0.7,
+	},
 
+	//  --  PROTECTED  --  //
+	widthDefault: 240,
+	intervalScroll: null,
+	storage: null,
+	containers: {},
+	status: 0,																	//  0:uninitialized, 1:hidden, 2:shown
+
+	//  --  PUBLIC  --  //
 	init: function(verbose){
-		ModuleUiNavigation.Sidebar.widthDefault = jQuery("#layout-nav").outerWidth();
+		this.containers.field		= jQuery(this.selectors.field);
+		this.containers.nav			= jQuery(this.selectors.nav);
+		this.containers.navMenu		= jQuery(this.selectors.navMenu);
+		this.containers.navToggle	= jQuery(this.selectors.navToggle);
+		this.containers.window		= jQuery(window);
+		this.widthDefault		= this.containers.nav.outerWidth();
 		if(typeof verbose !== "undefined")
-			ModuleUiNavigation.Sidebar.verbose = verbose;
-		if(ModuleUiNavigation.Sidebar.verbose)
-			console.log("ModuleUiNavigationSidebar: init");
-		jQuery(window).on("resize", ModuleUiNavigation.Sidebar.onWindowResize);
-		jQuery("#nav-sidebar-toggle").on("click", ModuleUiNavigation.Sidebar.toggle);
-		jQuery("#layout-field").on("click", ModuleUiNavigation.Sidebar.hide);
-		ModuleUiNavigation.Sidebar.onWindowResize();
-	},
-	toggle: function(){
-		if(!ModuleUiNavigation.Sidebar.isPhone)
-			return;
-		if(ModuleUiNavigation.Sidebar.verbose)
-			console.log("ModuleUiNavigationSidebar: toggle");
-		if(ModuleUiNavigation.Sidebar.isOpen())
-			ModuleUiNavigation.Sidebar.hide();
-		else
-			ModuleUiNavigation.Sidebar.show();
+			this.verbose = verbose;
+		if(this.verbose)
+			console.log("ModuleUiNavigation.Sidebar: init");
+		this.containers.window.on("resize resize-sidebar", this.onWindowResize);
+		this.containers.navToggle.on("click", this.onToggle);
+		this.containers.field.on("click", this.onBlur);
+		this.containers.nav.on("click", function(e){e.stopPropagation()});
+		if(typeof Storages !== "undefined"){
+			this.storage = Storages.cookieStorage;
+			this.storage.setDomain(settings.Env.domain);
+			this.storage.setPath(settings.Env.path);
+			this.containers.navMenu.on('scroll', this.onScroll);
+		}
+		this.status = 1;
 	},
 	show: function(){
-		if(!ModuleUiNavigation.Sidebar.isPhone)
+		if(!this.status)
+			throw "ModuleUiNavigation.Sidebar not initialized";
+		if(!this.phone.detected)
 			return;
-		var widthDefault	= ModuleUiNavigation.Sidebar.widthDefault;
-		var widthMax		= jQuery(window).width() * 0.7;
-		ModuleUiNavigation.Sidebar.width	= Math.min(widthDefault, widthMax);
-		jQuery("#layout-nav").width(ModuleUiNavigation.Sidebar.width);
-		if(ModuleUiNavigation.Sidebar.isOpen())
+		var widthDefault	= this.widthDefault;
+		var widthMax		= this.containers.window.width() * this.phone.factorWidthMax;
+		this.width	= Math.min(widthDefault, widthMax);
+		this.containers.nav.width(this.width);
+		if(this.isOpen())
 			return;
-		if(ModuleUiNavigation.Sidebar.verbose)
-			console.log("ModuleUiNavigationSidebar: show");
-		ModuleUiNavigation.Sidebar.status = 1;
-		jQuery("#layout-nav").stop(true).animate({
+		if(this.verbose)
+			console.log("ModuleUiNavigation.Sidebar: show");
+		this.status = 2;
+		this.containers.nav.stop(true).animate({
 			left: "0px"
-		}, ModuleUiNavigation.Sidebar.durations.show);
+		}, this.durations.show);
 	},
 	hide: function(){
-		if(!ModuleUiNavigation.Sidebar.isPhone)
+		if(!this.status)
+			throw "ModuleUiNavigation.Sidebar not initialized";
+		if(!this.phone.detected)
 			return;
-		if(!ModuleUiNavigation.Sidebar.isOpen())
+		if(!this.isOpen())
 			return;
-		if(ModuleUiNavigation.Sidebar.verbose)
-			console.log("ModuleUiNavigationSidebar: hide");
-		ModuleUiNavigation.Sidebar.status = 0;
-		jQuery("#layout-nav").stop(true).animate({
-			left: "-" + (ModuleUiNavigation.Sidebar.width * 1.2) + "px"
-		}, ModuleUiNavigation.Sidebar.durations.hide);
+		if(this.verbose)
+			console.log("ModuleUiNavigation.Sidebar: hide");
+		this.status = 1;
+		this.containers.nav.stop(true).animate({
+			left: "-" + (this.width * this.phone.factorWidth) + "px"
+		}, this.durations.hide);
 	},
 	isOpen: function(){
-		return ModuleUiNavigation.Sidebar.status > 0;
+		return this.status > 1;
+	},
+	onBlur: function(event){
+		if(typeof event === "undefined")
+			throw "ModuleUiNavigation.Sidebar.onBlur: No event given";
+		ModuleUiNavigation.Sidebar.hide();
+	},
+
+	//  --  PROTECTED  --  //
+	onScroll: function(event){
+		if(typeof event === "undefined")
+			throw "ModuleUiNavigation.Sidebar.onScroll: No event given";
+		var offset = jQuery(event.target).scrollTop();
+		var sidebar = ModuleUiNavigation.Sidebar;
+		if(sidebar.timeoutScroll)
+			window.clearTimeout(sidebar.timeoutScroll);
+		sidebar.timeoutScroll = window.setTimeout(function(){
+			sidebar.storage.set('sidebarOffset', offset);
+			if(sidebar.verbose)
+				console.log('offset set');
+		}, sidebar.durations.scrollSave);
+	},
+	onToggle: function(event){
+		if(typeof event === "undefined")
+			throw "ModuleUiNavigation.Sidebar.onToggle: No event given";
+		var sidebar = ModuleUiNavigation.Sidebar;
+		if(!sidebar.phone.detected)
+			return;
+		if(sidebar.verbose)
+			console.log("ModuleUiNavigation.Sidebar: toggle");
+		if(sidebar.isOpen())
+			sidebar.hide();
+		else
+			sidebar.show();
+		event.stopPropagation();
 	},
 	onWindowResize: function(event){
+		if(typeof event === "undefined")
+			throw "ModuleUiNavigation.Sidebar.onWindowResize: No event given";
 //		var width = Math.round(window.outerWidth / window.devicePixelRatio);
-		var width = jQuery(window).width();
-		if(ModuleUiNavigation.Sidebar.verbose)
-			console.log("ModuleUiNavigationSidebar: onWindowResize: " + width);
-		ModuleUiNavigation.Sidebar.isPhone = width < 768;
-		if(event){
-			var left = 0;
-			if(ModuleUiNavigation.Sidebar.isPhone)
-				if(!ModuleUiNavigation.Sidebar.isOpen())
-					left	= "-" + (ModuleUiNavigation.Sidebar.width * 1.2) + "px"
-			jQuery("#layout-nav").css({left: left});
-		}
+		var sidebar	= ModuleUiNavigation.Sidebar;
+		var width	= sidebar.containers.window.width();
+		if(sidebar.verbose)
+			console.log("ModuleUiNavigation.Sidebar: onWindowResize: " + width);
+		sidebar.phone.detected = width < sidebar.phone.deviceWidthLimit;
+		var left = 0;
+		if(sidebar.phone.detected)
+			if(!sidebar.isOpen())
+				left	= "-" + (sidebar.width * sidebar.phone.factorWidth) + "px"
+		sidebar.containers.nav.css({left: left});
+		var offsetPage	= sidebar.containers.nav.offset().top;
+		var offsetNav	= sidebar.containers.navMenu.offset().top;
+		var height = window.innerHeight - offsetNav + offsetPage;
+		sidebar.containers.navMenu.height(height);
+		sidebar.containers.navMenu.trigger('scroll');
 	}
 }

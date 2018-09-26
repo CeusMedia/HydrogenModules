@@ -5,7 +5,7 @@
 
 This module combines several navigation types to provide a standard navigation composition.
 ]]></description>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -31,6 +31,7 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.4.2">Add language support using module Resource:Localization.</log>
 	<log version="0.4.3">Improve sidebar responsive design.</log>
 	<log version="0.4.4">Support Bootstrap 3 and 4 for sidebar navigation.</log>
+	<log version="0.4-5">Restore scroll offset on sidebar using cookie storage.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -61,6 +62,7 @@ This module combines several navigation types to provide a standard navigation c
 	<relations>
 		<supports type="module">JS_jQuery_mmenu</supports>
 		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
+		<supports type="module">JS_Storage</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">View_Helper_Navigation::___setupSidebar</hook>
 </module>
