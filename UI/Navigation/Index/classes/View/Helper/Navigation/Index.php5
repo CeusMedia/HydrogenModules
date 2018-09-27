@@ -33,26 +33,26 @@ class View_Helper_Navigation_Index{
 			else
 				$list[]		= $this->renderItem( $page );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled cover' ) );
+		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled nav-index' ) );
 	}
 
 	protected function renderItem( $page ){
 		$link	= $this->renderItemLink( $page );
-		return UI_HTML_Tag::create( 'li', $link, array( 'class' => 'cover-topic-item' ) );
+		return UI_HTML_Tag::create( 'li', $link, array( 'class' => 'nav-index-topic-item' ) );
 	}
 
 	protected function renderItemLink( $page ){
 		$href		= $page->path == "index" ? './' : './'.$page->link;
 		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
 		$title		= $icon.$page->label;
-		$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $href, 'class' => 'btn btn-large btn-block cover-topic-item-link' ) );
+		$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $href, 'class' => 'btn btn-large btn-block nav-index-topic-item-link' ) );
 		return $link;
 	}
 
 	protected function renderTopicHeadingItem( $page ){
 		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
-		$heading	= UI_HTML_Tag::create( 'div', $icon.$page->label, array( 'class' => 'cover-topic-heading' ) );
-		return UI_HTML_Tag::create( 'li', $heading, array( 'class' => 'cover-topic' ) );
+		$heading	= UI_HTML_Tag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
+		return UI_HTML_Tag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
 	}
 
 	public function setLinksToSkip( $linksToSkip ){
