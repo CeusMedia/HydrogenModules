@@ -10,7 +10,7 @@ ModuleUiNavigation.Sidebar = {
 		scrollSave: 200,
 	},
 	selectors: {
-		field: "document",
+		field: "#layout-container",
 		nav: '#layout-nav',
 		navMenu: '#nav-sidebar-list',
 		navToggle: '#nav-sidebar-toggle',
@@ -52,6 +52,7 @@ ModuleUiNavigation.Sidebar = {
 			this.containers.navMenu.on('scroll', this.onScroll);
 		}
 		this.status = 1;
+		this.containers.window.trigger("resize-sidebar");
 	},
 	show: function(){
 		if(!this.status)
@@ -91,6 +92,8 @@ ModuleUiNavigation.Sidebar = {
 	onBlur: function(event){
 		if(typeof event === "undefined")
 			throw "ModuleUiNavigation.Sidebar.onBlur: No event given";
+		if(this.verbose)
+			console.log("ModuleUiNavigation.Sidebar: onblur");
 		ModuleUiNavigation.Sidebar.hide();
 	},
 

@@ -5,7 +5,7 @@ body.nav-sidebar #layout-container {
 	}
 body.nav-sidebar #layout-container #layout-nav {
 	position: fixed;
-	z-index: 1200;
+	z-index: 800;
 	left: 0;
 	top: 0;
 	width: 240px;
