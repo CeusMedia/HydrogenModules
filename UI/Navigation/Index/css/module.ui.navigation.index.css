@@ -1,0 +1,23 @@
+
+.cover {}
+.cover .cover-topic {
+	clear: left;
+	}
+.cover .cover-topic .cover-topic-heading {
+	display: inline-block;
+	margin: 1rem 0;
+	padding-left: 1rem;
+	font-weight: lighter;
+	font-size: 1.6rem;
+	color: rgba(0, 0, 0, 0.75);
+	text-transform: uppercase;
+	}
+.cover .cover-topic-item {
+	float: left;
+	width: 230px;
+	padding: 0em 1.2em 1.1em 0em;
+	}
+.cover .cover-topic-item-link {
+	padding: 1em;
+	text-align: left;
+	}
