@@ -1,24 +1,34 @@
 <?php
 class Model_Menu {
 
-	protected $pages		= array();
-	protected $pageMap		= array();
-	protected $current		= NULL;
-	protected $localization	= NULL;
-	public static $pathRequestKey		= "__path";
+	protected $acl;
+	protected $current				= NULL;
+	protected $env;
+	protected $language;			//  @todo rename to current language or user language
+	protected $localization			= NULL;
+	protected $moduleConfig;
+	protected $pageMap				= array();
+	protected $pages				= array();
+	protected $scopes				= array();
+	protected $source;				//  @todo needed?
+	protected $userId;
+	protected $useAcl;				//  @todo needed?
 
-	public function __construct( $env ){
+	public static $pathRequestKey	= "__path";			//  @todo get from env or router?
+
+	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
-		$this->userId		= $env->getSession()->get( 'userId' );
-		$this->language		= $env->getLanguage()->getLanguage();
-		$this->useAcl		= $env->getModules()->has( 'Resource_Users' );
+		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->language		= $this->env->getLanguage()->getLanguage();
+		$this->useAcl		= $this->env->getModules()->has( 'Resource_Users' );
+		$this->acl			= $this->env->getAcl();
 		$this->source		= $this->moduleConfig->get( 'menu.source' );
-//		if( $this->env->getModules()->has( '' ))
-		if( class_exists( 'Logic_Localization' ) )
+
+		if( $this->env->getModules()->has( 'Resource_Localization' ) )
 			$this->localization	= new Logic_Localization( $this->env );
 
-		if( $this->source === "Database" && !$env->getModules()->has( 'Info_Pages' ) ){
+		if( $this->source === "Database" && !$this->env->getModules()->has( 'Info_Pages' ) ){
 			$this->env->getMessenger()->noteNotice( 'Navigation source "Database" is not available. Module "Info_Pages" is not installed. Falling back to navigation source "Config".' );
 			$this->source	= "Config";
 		}
@@ -82,7 +92,7 @@ class Model_Menu {
 				$selected[$page->path]	= $i / $pathLength;											//  qualification = number of matching characters relative to page link parts
 		}
 		arsort( $selected );																		//  sort link paths by its length, longest on top
-//print_m( $selected );die;
+
 		$paths	= array_keys( $selected );
 		if( $paths && $first = array_shift( $paths ) ){
 			$page		= $this->pageMap[$first];
@@ -120,6 +130,7 @@ class Model_Menu {
 			throw new RuntimeException( 'Page configuration file "'.$pagesFile.'" is not existing' );
 
 		$scopes				= FS_File_JSON_Reader::load( $pagesFile );
+		$this->scopes		= array_keys( get_object_vars( $scopes ) );
 		$this->pages		= array();
 		$this->pageMap		= array();
 		$isAuthenticated	= (bool) $this->userId;
@@ -157,10 +168,10 @@ class Model_Menu {
 //						$acl		= !$free && $subpage->access == "acl" && $this->env->getAcl()->has( $subpage->path );
 						$acl		= FALSE;
 						if( !$free && $subpage->access == "acl" ){
-							$acl		= $this->env->getAcl()->has( $subpage->path, 'index' );
+							$acl		= $this->acl->has( $subpage->path, 'index' );
 							if( !$acl && ( $parts = preg_split( '/\//', $subpage->path ) ) ){
 								$action		= array_pop( $parts );
-								$acl		= $this->env->getAcl()->has( join( '/', $parts ), $action );
+								$acl		= $this->acl->has( join( '/', $parts ), $action );
 							}
 						}
 						if( !( $public || $outside || $inside || $acl ) )
@@ -187,7 +198,7 @@ class Model_Menu {
 				$public		= !$free && $page->access == "public";
 				$outside	= !$free && !$isAuthenticated && $page->access == "outside";
 				$inside		= !$free && $isAuthenticated && $page->access == "inside";
-				$acl		= !$free && $page->access == "acl" && $this->env->getAcl()->has( $page->path );
+				$acl		= !$free && $page->access == "acl" && $this->acl->has( $page->path );
 				$menu		= isset( $page->pages ) && count( $page->pages ) && $subpages;
 				if( !( $public || $outside || $inside || $acl || $menu ) )
 					continue;
@@ -201,6 +212,11 @@ class Model_Menu {
 		}
 	}
 
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@todo		repair flag "active"
+	 */
 	protected function readUserPagesFromDatabase(){
 		$model		= new Model_Page( $this->env );
 		$scopes		= array(
@@ -208,6 +224,7 @@ class Model_Menu {
 			1		=> 'footer',
 			2		=> 'top',
 		);
+		$this->scopes		= array_values( $scopes );
 		$this->pages		= array();
 		$this->pageMap		= array();
 		$isAuthenticated	= (bool) $this->userId;
@@ -272,7 +289,7 @@ class Model_Menu {
 						$public		= $subpage->access == "public";
 						$outside	= !$isAuthenticated && $subpage->access == "outside";
 						$inside		= $isAuthenticated && $subpage->access == "inside";
-						$acl		= $subpage->access == "acl" && $this->env->getAcl()->has( $subitem->path );
+						$acl		= $subpage->access == "acl" && $this->acl->has( $subitem->path );
 						if( !( $public || $outside || $inside || $acl ) )
 							continue;
 						$item->items[]	= $subitem;
@@ -282,7 +299,7 @@ class Model_Menu {
 				$public		= $page->access == "public";
 				$outside	= !$isAuthenticated && $page->access == "outside";
 				$inside		= $isAuthenticated && $page->access == "inside";
-				$acl		= $page->access == "acl" && $this->env->getAcl()->has( $item->path );
+				$acl		= $page->access == "acl" && $this->acl->has( $item->path );
 				$menu		= $page->type == 1 && count( $subpages );
 				if( !( $public || $outside || $inside || $acl || $menu ) )
 					continue;
@@ -292,9 +309,14 @@ class Model_Menu {
 		}
 	}
 
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@todo		repair flag "active"
+	 */
 	protected function readUserPagesFromModules(){
 		$scopes			= array( 'main' );
-		$acl			= $this->env->getAcl();
+		$this->scopes	= array_keys( $scopes );
 		$this->pages	= array();
 		$this->pageMap	= array();
 		foreach( $scopes as $scope ){
@@ -320,8 +342,8 @@ class Model_Menu {
 					$action		= array_pop( $pathParts );
 					$controller	= implode( '_', $pathParts );
 					if( $this->useAcl ){
-						$right1	= (int) $acl->has( $controller.'_'.$action );
-						$right2	= (int) $acl->has( $controller, $action );
+						$right1	= (int) $this->acl->has( $controller.'_'.$action );
+						$right2	= (int) $this->acl->has( $controller, $action );
 						if( !( $right1 + $right2 ) )
 							continue;
 					}
@@ -349,9 +371,16 @@ class Model_Menu {
 		}
 	}
 
+	/**
+	 *	Sets currenty active path.
+	 *	@access		public
+	 *	@param		string		Path to set as currently active
+	 *	@return		self		This instance for chainability
+	 */
 	public function setCurrent( $path ){
 //		$this->current	= $path;
 		$this->identifyActive( $path );
+		return $this;
 	}
 }
 ?>
