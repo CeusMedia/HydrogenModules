@@ -9,13 +9,22 @@
  */
 class View_Auth_Local extends CMF_Hydrogen_View {
 
+	public function __onInit(){
+		$this->env->getPage()->addThemeStyle('module.resource.auth.local.css');
+		$this->env->getPage()->js->addModuleFile( 'module.resource.auth.local.js');
+	}
+
 	public function confirm(){}
 
-	public function login() {}
+	public function login() {
+		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Login.init();');
+	}
 
 	public function password(){}
 
-	public function register(){}
+	public function register(){
+		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Registration.init();');
+	}
 
 	public function renderRegisterFormExtensions(){
 		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, array() );

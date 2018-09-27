@@ -1,4 +1,5 @@
-Auth.Login = {
+var ModuleResourceAuthLocal = {};
+ModuleResourceAuthLocal.Login = {
 	init: function(){
 		if(jQuery("#input_login_username").val())
 			jQuery("#input_login_password").focus();
@@ -7,11 +8,11 @@ Auth.Login = {
 	}
 };
 
-Auth.Registration = {
+ModuleResourceAuthLocal.Registration = {
 	init: function(){
-		$("#input_username").keyup(Auth.Registration.checkUsername).trigger("keyup");
-		$("#input_email").keyup(Auth.Registration.checkEmail).trigger("keyup");
-		$("#input_password").keyup(Auth.Registration.checkPassword);
+		$("#input_username").keyup(this.checkUsername).trigger("keyup");
+		$("#input_email").keyup(this.checkEmail).trigger("keyup");
+		$("#input_password").keyup(this.checkPassword);
 
 		if($("#input_accept_tac").length){
 			$("#button_save").attr("disabled","disabled");

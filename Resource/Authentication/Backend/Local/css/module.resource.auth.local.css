@@ -28,3 +28,19 @@ div.framed {
 	margin-bottom: 1em;
 	font-size: 0.9em;
 	}
+
+/*  --  CENTERED PANE  --  */
+/*  @todo transport to main auth module if possible */
+body.moduleAuthLocal.action-login #layout-content,
+body.moduleAuthLocal.action-login #layout-field,
+body.moduleAuthLocal.action-login #layout-content{
+	height: 100vh;
+	}
+body.moduleAuthLocal.action-login #layout-content .centered-pane-container{
+	height: 100vh;
+	}
+body.moduleAuthLocal.action-login #layout-content .centered-pane{
+	width: 400px;
+	margin: 0px auto;
+	margin-top: calc((90vh - 400px) / 2);
+	}

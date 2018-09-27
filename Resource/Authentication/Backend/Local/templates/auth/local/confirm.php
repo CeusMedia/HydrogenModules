@@ -1,5 +1,6 @@
 <?php
 $w		= (object) $words['confirm'];
+
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/confirm/' ) );
 
 $panelConfirm	= HTML::DivClass( "content-panel", array(

@@ -1,9 +1,10 @@
 <?php
 
-$w		= (object) $words['register'];
+$w				= (object) $words['register'];
+
+$moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
 $iconRegister	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-
 $optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
@@ -38,11 +39,6 @@ if( $tacHtml ){
 		) )
 	) );
 }
-
-$moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
-
-$env->getPage()->js->addScriptOnReady('Auth.Registration.init();');
-$env->getPage()->css->theme->addUrl( 'module.resource.auth.local.css' );
 
 $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
@@ -134,12 +130,13 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				HTML::DivClass( 'span6', array(
 					HTML::Label( "email", $w->labelEmail, $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'email',
-						'id'		=> 'input_email',
-						'class'		=> 'span12 '.( $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
-						'value'		=> $user->get( 'email' ),
-						'required'	=> $moduleConfig->get( 'email.mandatory' ) ? 'required' : NULL,
+						'type'			=> 'text',
+						'name'			=> 'email',
+						'id'			=> 'input_email',
+						'class'			=> 'span12 '.( $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
+						'value'			=> $user->get( 'email' ),
+						'required'		=> $moduleConfig->get( 'email.mandatory' ) ? 'required' : NULL,
+						'autocomplete'	=> 'email',
 					) )
 				) ),
 			) ).
@@ -166,23 +163,25 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				HTML::DivClass( 'span3', array(
 					HTML::Label( "firstname", $w->labelFirstname, $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'firstname',
-						'id'		=> 'input_firstname',
-						'class'		=> 'span12 '.( $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
-						'value'		=> $user->get( 'firstname' ),
-						'required'	=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
+						'type'			=> 'text',
+						'name'			=> 'firstname',
+						'id'			=> 'input_firstname',
+						'class'			=> 'span12 '.( $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
+						'value'			=> $user->get( 'firstname' ),
+						'required'		=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
+						'autocomplete'	=> 'given-name',
 					) )
 				) ),
 				HTML::DivClass( 'span4', array(
 					HTML::Label( "surname", $w->labelSurname, $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'surname',
-						'id'		=> 'input_surname',
-						'class'		=> 'span12 '.( $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
-						'value'		=> $user->get( 'surname' ),
-						'required'	=> $moduleConfig->get( 'surname.mandatory' ) ? 'required' : NULL,
+							'type'		=> 'text',
+						'name'			=> 'surname',
+						'id'			=> 'input_surname',
+						'class'			=> 'span12 '.( $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
+						'value'			=> $user->get( 'surname' ),
+						'required'		=> $moduleConfig->get( 'surname.mandatory' ) ? 'required' : NULL,
+						'autocomplete'	=> 'family-name',
 					) )
 				) ),
 			) ).
@@ -193,36 +192,40 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'span12',
+						'autocomplete'	=> 'country',
 					) )
 				) ),
 				HTML::DivClass( 'span2', array(
 					HTML::Label( "postcode", $w->labelPostcode ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'postcode',
-						'id'		=> 'input_postcode',
-						'class'		=> 'span12',
-						'value'		=> $user->get( 'postcode' ),
+						'type'			=> 'text',
+						'name'			=> 'postcode',
+						'id'			=> 'input_postcode',
+						'class'			=> 'span12',
+						'value'			=> $user->get( 'postcode' ),
+						'autocomplete'	=> 'postal-code',
 					) )
 				) ),
 				HTML::DivClass( 'span3', array(
 					HTML::Label( "city", $w->labelCity ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'city',
-						'id'		=> 'input_city',
-						'class'		=> 'span12',
-						'value'		=> $user->get( 'city' ),
+						'type'			=> 'text',
+						'name'			=> 'city',
+						'id'			=> 'input_city',
+						'class'			=> 'span12',
+						'value'			=> $user->get( 'city' ),
+						'autocomplete'	=> 'address-level2',
 					) )
 				) ),
 				HTML::DivClass( 'span4', array(
 					HTML::Label( "street", $w->labelStreet ),
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'type'		=> 'text',
-						'name'		=> 'street',
-						'id'		=> 'input_street',
-						'class'		=> 'span12',
-						'value'		=> $user->get( 'street' ),
+						'type'			=> 'text',
+						'name'			=> 'street',
+						'id'			=> 'input_street',
+						'class'			=> 'span12',
+						'value'			=> $user->get( 'street' ),
+						'autocomplete'	=> 'address-line1',
 					) )
 				) ),
 			) ).

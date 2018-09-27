@@ -1,5 +1,5 @@
 <?php
-$w		= (object) $words['password'];
+$w			= (object) $words['password'];
 
 $iconSend	= HTML::Icon( 'envelope', TRUE );
 
