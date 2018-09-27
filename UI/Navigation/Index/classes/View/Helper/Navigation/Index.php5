@@ -7,7 +7,9 @@ class View_Helper_Navigation_Index{
 	protected $linksToSkip		= array();
 
 	/**
-	 *	Constructur.
+	 *	Constructor.
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment	Environment instance
 	 *	@throws		RuntimeException	if module UI_Navigation is not installed
 	 */
 	public function __construct( $env ){
@@ -17,6 +19,12 @@ class View_Helper_Navigation_Index{
 		$this->menu	= new Model_Menu( $this->env );
 	}
 
+	/**
+	 *	Renders nav index of all known and accessible pages of currently selected scope.
+	 *	Pages will be filtered by accessibility by current user, if enabled.
+	 *	@access		public
+	 *	@return		string		Rendered index
+	 */
 	public function render(){
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
@@ -36,30 +44,65 @@ class View_Helper_Navigation_Index{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled nav-index' ) );
 	}
 
+	/**
+	 *	Renders nav index list item of a menu page.
+	 *	@access		protected
+	 *	@param		object		$page		Page object to render list item for
+	 *	@return		string
+	 *	@todo		add page type check
+	 */
 	protected function renderItem( $page ){
-		$link	= $this->renderItemLink( $page );
+//		if( $page->type !== '...' )
+//			return;
+		$href		= $page->path == "index" ? './' : './'.$page->link;
+		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
+		$link		= UI_HTML_Tag::create( 'a', $icon.$page->label, array(
+			'href'	=> $href,
+			'class'	=> 'btn btn-large btn-block nav-index-topic-item-link'
+		) );
 		return UI_HTML_Tag::create( 'li', $link, array( 'class' => 'nav-index-topic-item' ) );
 	}
 
-	protected function renderItemLink( $page ){
-		$href		= $page->path == "index" ? './' : './'.$page->link;
-		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
-		$title		= $icon.$page->label;
-		$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $href, 'class' => 'btn btn-large btn-block nav-index-topic-item-link' ) );
-		return $link;
-	}
-
+	/**
+	 *	Renders list item containing heading of a menu page.
+	 *	@access		protected
+	 *	@param		object		$page		Page object to render topic list item for
+	 *	@return		string		List item containing heading of menu page, if page is of type menu
+	 *	@todo		add page type check
+	 */
 	protected function renderTopicHeadingItem( $page ){
+//		if( $page->type !== 'menu' )
+//			return;
 		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
 		$heading	= UI_HTML_Tag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
 		return UI_HTML_Tag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
 	}
 
+	/**
+	 *	Set list of paths to skip on rendering.
+	 *	@access		public
+	 *	@param		array		$linksToSkip		List of paths to skip on rendering
+	 *	@return		self		This instance for chainability
+	 *	@throws		InvalidArgumentException	if given argument is not an array
+	 */
 	public function setLinksToSkip( $linksToSkip ){
+		if( !is_array( $linksToSkip ) )
+			throw new InvalidArgumentException( 'Must be an array' );
 		$this->linksToSkip	= $linksToSkip;
+		return $this;
 	}
 
+	/**
+	 *	Sets menu scope to render index for.
+	 *	@access		public
+	 *	@param		string		Menu scope to render index for
+	 *	@return		self		This instance for chainability
+	 *	@throws		RangeException		if scope is not known
+	 */
 	public function setScope( $scope ){
+		if( !in_array( $this->menu->getScopes() ) )
+			throw new RangeException( 'Invalid scope' );
 		$this->scope		= $scope;
+		return $this;
 	}
 }
