@@ -246,11 +246,17 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 
 $formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
 
-return HTML::DivClass( "auth-register-text-top", $textTop ).
-HTML::Form( $formUrl, "form_auth_register_user",
-	HTML::DivClass( 'row-fluid', array(
-		HTML::DivClass( 'span8 offset0', $panelUser ),
-		HTML::DivClass( 'span4', $textInfo ),
-	) )
-).HTML::DivClass( "auth-register-text-bottom", $textBottom );
+$textTop	= $textTop ? HTML::DivClass( "auth-register-text-top", $textTop ) : '';
+$textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBottom ) : '';
+
+if( strlen( strip_tags( $textInfo ) ) ){
+	return $textTop.
+	HTML::Form( $formUrl, "form_auth_register_user",
+		HTML::DivClass( 'row-fluid', array(
+			HTML::DivClass( 'span8 offset0', $panelUser ),
+			HTML::DivClass( 'span4', $textInfo ),
+		) )
+	).$textBottom;
+}
+return $panelUser;
 ?>

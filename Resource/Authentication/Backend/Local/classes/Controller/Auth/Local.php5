@@ -10,19 +10,28 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected $useCsrf;
 	protected $useOauth2;
 	protected $moduleConfig;
+	protected $moduleConfigAuth;
+	protected $moduleConfigUsers;
 	protected $limiter;
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) ){
+			version_compare( $this->env->version, '0.8.6.4', '>=' ) {
+				$this->cookie	= $this->env->getCookie();
+			}
+		}
 		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_local.', TRUE );
 		$this->modules		= $this->env->getModules();
 		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
 		$this->useOauth2	= $this->modules->has( 'Resource_Authentication_Backend_OAuth2' );
+
+		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
+		$this->moduleConfigAuth		= $this->config->getAll( 'module.resource_authentication.', TRUE );
+		$this->moduleConfigUsers	= $this->config->getAll( 'module.resource_users.', TRUE );
 		if( $this->modules->has( 'Resource_Limiter' ) )
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
@@ -89,7 +98,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				}
 			}
 			else{																					//  @todo  remove whole block if old user password support decays
-				$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+				$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
 				if( $user->password === md5( $password.$pepper ) ){
 					$logic->migrateOldUserPassword( $user->userId, $password );
 					return TRUE;
@@ -97,7 +106,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 		}
 		else{																						//  @todo  remove whole block if old user password support decays
-			$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+			$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
 			if( $user->password === md5( $password.$pepper ) )
 				return TRUE;
 		}
@@ -241,9 +250,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'login_username', $username );
 		$this->addData( 'login_remember', (boolean) $this->cookie->get( 'auth_remember' ) );
 
-		$motherModuleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
-
-		$useRegisterByConfig	= $this->moduleConfig->get( 'register' ) && $motherModuleConfig->get( 'register' );
+		$useRegisterByConfig	= $this->moduleConfig->get( 'register' ) && $this->moduleConfigAuth->get( 'register' );
 		$useRegisterByLimit		= !$this->limiter || !$this->limiter->denies( 'Auth.Local.Login:register' );
 
 		$this->addData( 'useRegister', $useRegisterByConfig && $useRegisterByLimit );
@@ -281,7 +288,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$words			= (object) $this->getWords( 'password' );
 		$modelUser		= new Model_User( $this->env );
 
-		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
+		$options		= $this->moduleConfigUsers;
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
 		if( $this->request->has( 'sendPassword' ) ){
@@ -409,7 +416,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			$rolesAllowed[]	= $role->roleId;
 
 		$input			= $this->request->getAllFromSource( 'post' );
-		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
+		$options		= $this->moduleConfigUsers;
 
 		$nameMinLength	= $options->get( 'name.length.min' );
 		$nameMaxLength	= $options->get( 'name.length.max' );

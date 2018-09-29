@@ -43,4 +43,5 @@ body.moduleAuthLocal.action-login #layout-content .centered-pane{
 	width: 400px;
 	margin: 0px auto;
 	margin-top: calc((90vh - 400px) / 2);
+/*	box-shadow: 0 0 12vw 5vw rgba(127, 127, 127, 0.25), 0 0 2vw rgba(127, 127, 127, 0.25);*/
 	}
