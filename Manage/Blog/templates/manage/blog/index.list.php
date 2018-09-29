@@ -25,7 +25,7 @@ if( $posts ){
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-\CeusMedia\Bootstrap\Icon::$iconSet	= 'FontAwesome';
+\CeusMedia\Bootstrap\Icon::$defaultSet	= 'FontAwesome';
 $pagination	= new \CeusMedia\Bootstrap\PageControl( "./manage/blog/", $page, $pages );
 
 
