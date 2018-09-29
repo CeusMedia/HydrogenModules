@@ -20,7 +20,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->session		= $this->env->getSession();
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) ){
-			version_compare( $this->env->version, '0.8.6.4', '>=' ) {
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) ){
 				$this->cookie	= $this->env->getCookie();
 			}
 		}
