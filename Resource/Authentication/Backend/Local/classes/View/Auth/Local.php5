@@ -10,7 +10,7 @@
 class View_Auth_Local extends CMF_Hydrogen_View {
 
 	public function __onInit(){
-		$this->env->getPage()->addThemeStyle('module.resource.auth.local.css');
+		$this->env->getPage()->addCommonStyle('module.resource.auth.local.css');
 		$this->env->getPage()->js->addModuleFile( 'module.resource.auth.local.js');
 	}
 
