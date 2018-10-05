@@ -110,5 +110,9 @@ class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
 		$mailsReceived	= $modelMail->getAll( $indices, $orders, array(), $fields );
 		foreach( $mailsReceived as $mailId )
 			$modelMail->remove( $mailId );
+		if( isset( $data->counts ) )
+			$data->counts['Resource_Mail']	= (object) array(
+				'entities' => count( $mailsSent ) + count( $mailsReceived )
+			);
 	}
 }
