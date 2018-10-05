@@ -47,5 +47,7 @@ class Hook_Info_Dashboard /*extends CMF_Hydrogen_Hook*/{
 		$dashboards = $logic->getUserDashboards( $data->userId );
 		foreach( $dashboards as $dashboard )
 			$model->remove( $dashboard->dashboardId );
+		if( isset( $data->counts ) )
+			$data->counts['Info_Dashboard']	= (object) array( 'entities' => count( $dashboards ) );
 	}
 }
