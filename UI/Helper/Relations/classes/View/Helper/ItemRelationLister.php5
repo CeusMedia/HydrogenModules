@@ -5,12 +5,16 @@ class View_Helper_ItemRelationLister{
 	protected $relations;
 	protected $hookResource;
 	protected $hookEvent;
-	protected $hookIndices	= array();
-	protected $tableClass	= '';
-	protected $renderMode	= 'table';
-	protected $activeOnly	= FALSE;
-	protected $linkable		= TRUE;
-	protected $limit		= 20;
+	protected $hookIndices				= array();
+	protected $tableClass				= '';
+	protected $renderMode				= 'table';
+	protected $activeOnly				= FALSE;
+	protected $linkable					= TRUE;
+	protected $limit					= 20;
+	protected $labelCountEntities		= '';
+	protected $labelCountRelations		= '';
+	protected $hintEntities;
+	protected $hintRelations;
 
 	protected $types;
 	protected $words;
@@ -18,9 +22,11 @@ class View_Helper_ItemRelationLister{
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'helper/relation' );
-		$this->types	= array(
-			'relation'	=> UI_HTML_Tag::create( 'abbr', '%d Verknüpfungen', array( 'title' => 'Bleiben beim Entfernen dieses Eintrages erhalten.' ) ),
-			'entity'	=> UI_HTML_Tag::create( 'abbr', '%d Einträge', array( 'title' => 'Werden beim Entfernen dieses Eintrages gelöscht.' ) ),
+		$this->labels	= array(
+			'entities.count.label'		=> $this->words['entities']['countLabel'],
+			'entities.count.hint'		=> $this->words['entities']['countHint'],
+			'relations.count.label'		=> $this->words['relations']['countLabel'],
+			'relations.count.hint'		=> $this->words['entities']['countHint'],
 		);
 	}
 
@@ -67,6 +73,7 @@ class View_Helper_ItemRelationLister{
 	public function render( ){
 		if( $this->relations === NULL )
 			$this->load();
+		$this->renderTypes();
 		if( $this->renderMode == 'table' )
 			return $this->renderRelationsAsTable();
 		return $this->renderRelationsAsList();
@@ -166,10 +173,31 @@ class View_Helper_ItemRelationLister{
 		return UI_HTML_Tag::create( 'div', $table, array( 'class' => 'item-relations' ) );
 	}
 
+	/**
+	 *	@todo			code style
+	 */
+	protected function renderTypes(){
+		$this->types	= array();
+		$this->types['entity']		= $this->labels['entities.count.label'];
+		$this->types['relation']	= $this->labels['relations.count.label'];
+		if( $this->labels['entities.count.hint'] )
+			$this->types['entity']		=  UI_HTML_Tag::create( 'abbr', $this->types['entity'], array( 'title' => $this->labels['entities.count.hint'] ) );
+		if( $this->labels['relations.count.hint'] )
+			$this->types['relation']	=  UI_HTML_Tag::create( 'abbr', $this->types['relation'], array( 'title' => $this->labels['relations.count.hint'] ) );
+	}
+
 	public function setActiveOnly( $boolean ){
 		$this->activeOnly	= $boolean;
 		$this->relations	= NULL;
 		return $this;
+	}
+
+	public function setHintTextForEntities( $text ){
+		$this->labels['entities.count.hint']	= $text;
+	}
+
+	public function setHintTextForRelations( $text ){
+		$this->labels['relations.count.hint']	= $text;
 	}
 
 	public function setHook( $resource, $event, $indices ){
