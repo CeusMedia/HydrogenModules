@@ -53,6 +53,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<config protected="yes" type="boolean" name="password.salt.decay">1</config>
 	<config protected="yes" type="integer" name="password.salt.decay.seconds">86400</config>
 	<config protected="yes" type="string" name="password.pepper" title="string to pepper password with"/>
+	<config protected="no" type="boolean" name="address.mandatory" title="user needs an address"></config>
 	<hook type="resource" resource="User" event="remove" level="9">Hook_Resource_User::onUserRemove</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
