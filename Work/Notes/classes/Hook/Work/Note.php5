@@ -80,8 +80,11 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		$userId		= $data->userId;
 		$model		= new Model_Note( $env );
 		$logic		= Logic_Note::getInstance( $env );
-		foreach( $model->getAllByIndex( 'userId', $userId ) as $note )
+		$notes		= $model->getAllByIndex( 'userId', $userId );
+		foreach( $notes as $note )
 			$logic->removeNote( $note->noteId );
+		if( isset( $data->counts ) )
+			$data->counts['Work_Notes']	= (object) array( 'entities' => count( $notes ) );
 	}
 
 	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
