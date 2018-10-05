@@ -243,6 +243,11 @@ class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
 			$env->getMessenger()->noteSuccess( 'Removed %d missions.', $nrMissionsRemoved );
 		if( $nrMissionsChanged )
 			$env->getMessenger()->noteSuccess( 'Reassigned %d missions.', $nrMissionsChanged );
+		if( isset( $data->counts ) )
+			$data->counts['Work_Missions']	= (object) array(
+				'entities'		=> $nrMissionsRemoved,
+				'relations'		=> $nrMissionsChanged,
+			);
 	}
 
 	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
