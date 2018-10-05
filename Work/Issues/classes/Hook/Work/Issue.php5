@@ -31,7 +31,9 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		}
 	}
 
-
+	/**
+	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
+	 */
 	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
@@ -48,17 +50,25 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		foreach( $reportedIssues as $reportedIssue )
 			$logic->remove( $reportedIssue->issueId );
 
+		//  @todo		problem: what if manager is reporter?
 		$managedIssues	= $modelIssue->getAllByIndex( 'managerId', $data->userId );
 		foreach( $managedIssues as $managedIssue )
 			$modelIssue->edit( $managedIssue->issueId, array(
 				'managerId'	=> $managedIssue->reporterId,
 			) );
 
-		foreach( $modelChange->getAllByIndex( 'userId', $data->userId ) as $change )
+		$changes	= $modelChange->getAllByIndex( 'userId', $data->userId );
+		foreach( $changes as $change )
 			$modelNote->remove( $change->issueChangeId );
 
-		foreach( $modelNote->getAllByIndex( 'userId', $data->userId ) as $note )
+		$notes		= $modelNote->getAllByIndex( 'userId', $data->userId );
+		foreach( $notes as $note )
 			$modelNote->remove( $note->issueNoteId );
+
+		if( isset( $data->counts ) )
+			$data->counts['Work_Issues']	= (object) array(
+				'entities'	=> count( $reportedIssues ) + count( $managedIssues ) + count( $changes ) + count( $notes ),
+			);
 	}
 
 	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
