@@ -67,6 +67,11 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 				$modelProject->remove( $project->projectId );
 			}
 		}
+		if( isset( $data->counts ) )
+			$data->counts['Manage_Project']	= (object) array(
+				'entities'	=> count( $lists->entities ),
+				'relations'	=> count( $lists->relations ),
+			);
 /*		if( $lists->entities )
 			$env->getMessenger()->noteSuccess( 'Removed %d projects.', count( $lists->entities ) );
 		if( $lists->relations )
