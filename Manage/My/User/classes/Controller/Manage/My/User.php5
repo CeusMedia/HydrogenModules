@@ -193,6 +193,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$this->addData( 'mandatoryEmail', $options->get( 'email.mandatory' ) );
 		$this->addData( 'mandatoryFirstname', $options->get( 'firstname.mandatory' ) );
 		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
+		$this->addData( 'mandatoryAddress', $options->get( 'address.mandatory' ) );
 		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
@@ -245,6 +246,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 
 	public function remove( $confirmed = NULL ){
 		$this->addData( 'userId', $this->userId );
+		$this->addData( 'user', $this->modelUser->get( $this->userId ) );
 		if( $this->request->isPost() && $confirmed ){
 			$this->checkConfirmationPassword( 'manage/my/user/remove' );
 			$dbc	= $this->env->getDatabase();

@@ -9,46 +9,13 @@ $ind1		= $indicator->build( 75, 100 );
 
 $panelInfo		= $view->loadTemplateFile( 'manage/my/user/index.info.php' );
 $panelPassword	= $view->loadTemplateFile( 'manage/my/user/index.password.php' );
+$panelPasswords	= $view->loadTemplateFile( 'manage/my/user/index.passwords.php' );
 $panelEmail		= $view->loadTemplateFile( 'manage/my/user/index.email.php' );
 $panelUsername	= $view->loadTemplateFile( 'manage/my/user/index.username.php' );
 $panelEdit		= $view->loadTemplateFile( 'manage/my/user/index.edit.php' );
 $panelAccount	= $view->loadTemplateFile( 'manage/my/user/index.account.php' );
+$panelRelations	= $view->loadTemplateFile( 'manage/my/user/index.relations.php' );
 $panelRemove	= $view->loadTemplateFile( 'manage/my/user/index.remove.php' );
-
-$rows	= array();
-foreach( $passwords as $password ){
-	$rowClass	= 'info';
-	if( $password->status == 0 )
-		$rowClass	= 'warning';
-	if( $password->status == 1 )
-		$rowClass	= 'success';
-	$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
-	$dateUsed		= $password->usedAt ? date( 'd.m.Y', $password->usedAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->usedAt ).'</small>' : '-';
-	$labelStatus	= $words['password-statuses'][$password->status];
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $labelStatus ),
-		UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
-		UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
-	), array( 'class' => $rowClass ) );
-}
-
-$panelPasswords	= HTML::DivClass( 'content-panel content-panel-form', array(
-	UI_HTML_Tag::create( 'h4', 'Passwörter' ),
-	HTML::DivClass( 'content-panel-inner', array(
-		UI_HTML_Tag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '', '120px', '120px' ),
-			UI_HTML_Tag::create( 'thead', UI_HTML_Elements::tableHeads( array(
-				'Zustand',
-				'erstellt',
-				'zuletzt genutzt',
-			) ) ),
-			UI_HTML_Tag::create( 'tbody', $rows )
-		), array( 'class' => 'table table-condensed table-fixed' ) )
-	) ),
-) );
-
-//print_m( $passwords );die;
-
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
 
@@ -56,17 +23,18 @@ extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/user/' 
 
 return $textTop.$tabs.
 HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span8', array(
-		$panelAccount,
+	HTML::DivClass( 'span7', array(
+//		$panelAccount,
 		$panelEdit,
+		$panelPassword,
 		$panelEmail,
-//		$panelPasswords,
 		$panelUsername,
 		$panelRemove,
 	) ),
-	HTML::DivClass( 'span4', array(
+	HTML::DivClass( 'span5', array(
 		$panelInfo,
-		$panelPassword,
+		$panelRelations,
+		$panelPasswords,
 	) ),
 ) ).$textBottom;
 

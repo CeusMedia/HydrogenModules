@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.5.7</version>
+	<version>0.5.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -24,6 +24,8 @@
 	<log version="0.5.5">Support texts for email and username panels.</log>
 	<log version="0.5.6">Replace CDN resource.</log>
 	<log version="0.5.7">Add panel to remove own user account.</log>
+	<log version="0.5.8">Move password panel in line.</log>
+	<log version="0.5.9">Add relations panel.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -37,22 +39,34 @@
 		<template>manage/my/user/index.email.php</template>
 		<template>manage/my/user/index.info.php</template>
 		<template>manage/my/user/index.password.php</template>
+		<template>manage/my/user/index.passwords.php</template>
+		<template>manage/my/user/index.relations.php</template>
 		<template>manage/my/user/index.remove.php</template>
 		<template>manage/my/user/index.username.php</template>
+		<template>manage/my/user/remove.php</template>
 		<locale>de/manage/my/user.ini</locale>
 		<locale>de/html/manage/my/user/bottom.html</locale>
 		<locale>de/html/manage/my/user/top.html</locale>
 		<locale>de/html/manage/my/user/panel.email.info.html</locale>
+		<locale>de/html/manage/my/user/panel.password.above.html</locale>
+		<locale>de/html/manage/my/user/panel.password.info.html</locale>
+		<locale>de/html/manage/my/user/panel.remove.above.html</locale>
 		<locale>de/html/manage/my/user/panel.username.info.html</locale>
+		<locale>de/html/manage/my/user/remove.info.html</locale>
 		<locale>en/manage/my/user.ini</locale>
 		<locale>en/html/manage/my/user/bottom.html</locale>
 		<locale>en/html/manage/my/user/top.html</locale>
 		<locale>en/html/manage/my/user/panel.email.info.html</locale>
+		<locale>en/html/manage/my/user/panel.password.above.html</locale>
+		<locale>en/html/manage/my/user/panel.password.info.html</locale>
+		<locale>en/html/manage/my/user/panel.remove.above.html</locale>
 		<locale>en/html/manage/my/user/panel.username.info.html</locale>
+		<locale>en/html/manage/my/user/remove.info.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Helper_Relations</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<config protected="yes" type="boolean" name="email.changeable">yes</config>

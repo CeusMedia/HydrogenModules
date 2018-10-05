@@ -42,25 +42,28 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 							) ),
 						) )
 					),
-					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
-							HTML::Label( 'password', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
-							UI_HTML_Tag::create( 'input', NULL, array(
-								'type'			=> "password",
-								'name'			=> "password",
-								'id'			=> "input_password_email",
-								'class'			=> "span11 mandatory",
-								'required'		=> 'required',
-								'value'			=> '',
-								'autocomplete'	=> "off"
-							) ),
-						) )
-					),
 				) ),
 				$hasInfo ? HTML::DivClass( 'span6', $textPanelEmailInfo ) : '',
 			) ),
 			HTML::Buttons( array(
-				UI_HTML_Elements::Button( 'save', '<i class="icon-ok icon-white"></i> '.$w->buttonSave, 'btn btn-primary' )
+				UI_HTML_Tag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HTML::DivClass( 'row-fluid',
+					HTML::DivClass( 'span6', array(
+						HTML::DivClass( 'input-prepend input-append',
+							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
+							UI_HTML_Tag::create( 'input', '', array(
+								'type'			=> 'password',
+								'name'			=> 'password',
+								'id'			=> 'input_password',
+								'class'			=> 'span7',
+								'required'		=> 'required',
+								'autocomplete'	=> 'current-password',
+								'placeholder'	=> $w->labelPasswordCurrent,
+							) ).
+							UI_HTML_Elements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+						)
+					) )
+				)
 			) )
 		), array( 'autocomplete' => 'off' ) )
 	) )

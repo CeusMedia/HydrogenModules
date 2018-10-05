@@ -13,42 +13,53 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::Select( 'gender', $optGender, 'span12' )
 				).
 				HTML::DivClass( 'span2',
-					HTML::Label( 'salutation', $w->labelSalutation, '' ).
-					HTML::Input( 'salutation', $user->salutation, 'span12' )
+					HTML::Label( 'salutation', $w->labelSalutation, '', $w->labelSalutation_title ).
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'name'			=> 'salutation',
+						'id'			=> 'input_salutation',
+						'value'			=> htmlentities( $user->salutation, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12',
+						'type'			=> 'text',
+						'autocomplete'	=> 'honorific-prefix'
+					) )
 				).
 				HTML::DivClass( 'span3',
 					HTML::Label( 'firstname', $w->labelFirstname, $mandatoryFirstname ? 'mandatory' : '' ).
 		//				HTML::Input( 'firstname', $user->firstname, 'span12' )
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'name'		=> 'firstname',
-						'id'		=> 'input_firstname',
-						'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
-						'class'		=> 'span12',
-						'required'	=> $mandatoryFirstname ? 'required' : NULL,
-						'type'		=> 'text',
+						'name'			=> 'firstname',
+						'id'			=> 'input_firstname',
+						'value'			=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12',
+						'required'		=> $mandatoryFirstname ? 'required' : NULL,
+						'type'			=> 'text',
+						'autocomplete'	=> 'given-name'
 					) )
 				).
 				HTML::DivClass( 'span4',
 					HTML::Label( 'surname', $w->labelSurname, $mandatorySurname ? 'mandatory' : '' ).
 		//				HTML::Input( 'surname', $user->surname, 'span12' )
 					UI_HTML_Tag::create( 'input', NULL, array(
-						'name'		=> 'surname',
-						'id'		=> 'input_surname',
-						'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
-						'class'		=> 'span12',
-						'required'	=> $mandatorySurname ? 'required' : NULL,
-						'type'		=> 'text',
+						'type'			=> 'text',
+						'name'			=> 'surname',
+						'id'			=> 'input_surname',
+						'value'			=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12',
+						'required'		=> $mandatorySurname ? 'required' : NULL,
+						'autocomplete'	=> 'family-username'
 					) )
 				)
 			),
 //			HTML::HR,
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
-					HTML::Label( 'number', $w->labelCountry, '' ).
+					HTML::Label( 'number', $w->labelCountry, $mandatoryAddress ? 'mandatory' : '' ).
 					UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->country ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'span12',
+						'required'		=> $mandatoryAddress ? 'required' : NULL,
+						'autocomplete'	=> 'country'
 					) )
 /*					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
@@ -61,16 +72,40 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					) )*/
 				).
 				HTML::DivClass( 'span2',
-					HTML::Label( 'postcode', $w->labelPostcode, '', $w->labelPostcode_title ).
-					HTML::Input( 'postcode', $user->postcode, 'span12 numeric' )
+					HTML::Label( 'postcode', $w->labelPostcode, $mandatoryAddress ? 'mandatory' : '', $w->labelPostcode_title ).
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'postcode',
+						'id'			=> 'input_postcode',
+						'value'			=> htmlentities( $user->postcode, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12 numeric',
+						'required'		=> $mandatoryAddress ? 'required' : NULL,
+						'autocomplete'	=> 'postal-code'
+					) )
 				).
 				HTML::DivClass( 'span3',
-					HTML::Label( 'city', $w->labelCity, '' ).
-					HTML::Input( 'city', $user->city, 'span12' )
+					HTML::Label( 'city', $w->labelCity, $mandatoryAddress ? 'mandatory' : '' ).
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'city',
+						'id'			=> 'input_city',
+						'value'			=> htmlentities( $user->city, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12',
+						'required'		=> $mandatoryAddress ? 'required' : NULL,
+						'autocomplete'	=> 'address-level2'
+					) )
 				).
 				HTML::DivClass( 'span4',
-					HTML::Label( 'street', $w->labelStreet, '' ).
-					HTML::Input( 'street', $user->street, 'span12' )
+					HTML::Label( 'street', $w->labelStreet, $mandatoryAddress ? 'mandatory' : '' ).
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'street',
+						'id'			=> 'input_street',
+						'value'			=> htmlentities( $user->street, ENT_QUOTES, 'UTF-8' ),
+						'class'			=> 'span12',
+						'required'		=> $mandatoryAddress ? 'required' : NULL,
+						'autocomplete'	=> 'address-line1'
+					) )
 				)
 			),
 //			HTML::HR,
@@ -85,7 +120,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				)
 			),
 			HTML::Buttons( array(
-				UI_HTML_Tag::create( 'small', 'Änderungen bitte mit dem Passwort bestätigen.', array( 'class' => 'not-muted' ) ),
+				UI_HTML_Tag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
@@ -96,8 +131,8 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'id'			=> 'input_password',
 								'class'			=> 'span7',
 								'required'		=> 'required',
-								'autocomplete'	=> 'new-password',
-								'placeholder'	=> $w->labelPassword,
+								'autocomplete'	=> 'current-password',
+								'placeholder'	=> $w->labelPasswordCurrent,
 							) ).
 							UI_HTML_Elements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)

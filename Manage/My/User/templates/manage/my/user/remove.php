@@ -2,8 +2,14 @@
 
 $w	= (object) $words['remove'];
 
-extract( $view->populateTexts( array( 'remove.right', 'remove.panel.top' ), 'html/manage/my/user/' ) );
-extract( $view->populateTexts( array( 'panel.remove.above', 'panel.remove.below', 'panel.remove.info' ), 'html/manage/my/user/' ) );
+extract( $view->populateTexts( array(
+	'remove.top',
+	'remove.above',
+	'remove.info',
+	'remove.right',
+	'remove.below',
+	'remove.bottom',
+), 'html/manage/my/user/' ) );
 
 $relations			= '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
@@ -12,8 +18,10 @@ $helperRelations->setLinkable( TRUE );
 $helperRelations->setActiveOnly( FALSE );
 //$helperRelations->setTableClass( 'limited' );
 $helperRelations->setMode( 'list' );
-$helperRelations->setLimit( 7 );
+$helperRelations->setLimit( 10 );
 $helperRelations->setTableClass( 'limited' );
+if( $helperRelations->hasRelations() )
+	$relations	= $helperRelations->render();
 
 $iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
@@ -25,12 +33,12 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 return HTML::DivClass( 'row-fluid', array(
 	HTML::DivClass( 'span8', array(
 		HTML::DivClass( 'content-panel', array(
-			UI_HTML_Tag::create( 'h3', UI_HTML_Tag::create( 'span', 'Benutzer: ', array( 'class' => 'muted' ) ).$userId ),
+			UI_HTML_Tag::create( 'h3', UI_HTML_Tag::create( 'span', 'Benutzer: ', array( 'class' => 'muted' ) ).$user->username ),
 			HTML::DivClass( 'content-panel-inner', array(
 				HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', array(
 					HTML::H4( $w->heading ),
-					$textRemovePanelTop,
-					$helperRelations->render(),
+					$textRemoveTop,
+					$relations,
 					UI_HTML_Tag::create( 'hr' ),
 					HTML::DivClass( 'row-fluid', array(
 						HTML::DivClass( 'span6', array(
@@ -44,17 +52,18 @@ return HTML::DivClass( 'row-fluid', array(
 										'class'			=> "span11 mandatory",
 										'required'		=> 'required',
 										'value'			=> '',
-										'autocomplete'	=> "off"
+										'placeholder'	=> $w->labelPassword_holder,
+										'autocomplete'	=> "current-password"
 									) ),
 								) )
 							) ),
 						) ),
-						HTML::DivClass( 'span6', $textPanelRemoveInfo ),
+						HTML::DivClass( 'span6', $textRemoveInfo ),
 					) ),
 					HTML::DivClass( 'buttonbar', array(
 						HTML::DivClass( 'btn-toolbar', array(
 							UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
-								'href'  => './manage/my/user/'.$userId,
+								'href'  => './manage/my/user',
 								'class' => 'btn btn-small',
 							) ),
 							UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, array(
