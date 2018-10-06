@@ -24,13 +24,9 @@ RenderToFile = function(url, filename, width, height, username, password) {
 }
 
 if (system.args.length > 2) {
-console.log("!");
 	args = Array.prototype.slice.call(system.args, 1);
 	RenderToFile.apply(this, args);
 } else {
 	console.log("Usage: phantomjs page.js URL FILENAME [WIDTH] [HEIGHT] [USERNAME] [PASSWORD]");
 	phantom.exit();
 }
-
-
-

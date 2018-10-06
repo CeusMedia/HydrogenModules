@@ -1,10 +1,26 @@
 <?xml version="1.0"?>
 <module>
 	<title>Tools: PhantomJS</title>
-	<description><![CDATA[PhantomJS binding and script collection.]]></description>
-	<version>0.1</version>
+	<description><![CDATA[PhantomJS binding and script collection.
+
+*Attention:* PhantomJS needs to be installed.
+
+## Way 1: Use composer package
+
+Add composer package <code>jakoch/phantomjs-installer</code>.
+See section "Installation" on https://packagist.org/packages/jakoch/phantomjs-installer.
+
+## Way 2: Use global/manual binary
+
+Manual installation: http://phantomjs.org/download.html
+Set module config "path.binary" to global or manual path.
+Example for Linux: <code>/usr/local/bin/phantomjs</code>
+
+]]></description>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Improve binary path handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -13,5 +29,5 @@
 		<class>Resource/PhantomJS.php5</class>
 		<script>phantomjs/screenshot.js</script>
 	</files>
+	<config protected="yes" type="string" name="path.binary">bin/phantomjs</config>
 </module>
-
