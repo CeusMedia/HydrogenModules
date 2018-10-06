@@ -88,7 +88,7 @@ class Resource_PhantomJS{
 	 */
 	public function setBinaryPath( $path ){
 		$this->binaryPath	= $path;
-		return self;
+		return $this;
 	}
 
 	/**
@@ -100,6 +100,6 @@ class Resource_PhantomJS{
 	 */
 	public function setDebug( $level = 1 ){
 		$this->debug	= $level;
-		return self;
+		return $this;
 	}
 }
