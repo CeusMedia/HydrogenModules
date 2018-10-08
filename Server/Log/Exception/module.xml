@@ -25,7 +25,7 @@ If you are sure, that this module is installed, you can use:
 code>
 ...
 catch( Exception $e ){
-	Controller_System_Log::handleException( $e );
+	Controller_Server_Log_Exception::logException( $e );
 }
 ...
 <code
@@ -35,17 +35,21 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
 	<log version="0.3">Add mail component for collecting exceptions facts for HTML and text mail.</log>
+	<log version="0.3.1">Add exception index and view.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log/Exception.php5</class>
 		<class>Mail/Log/Exception.php5</class>
 		<class>View/Helper/Mail/Exception/Facts.php5</class>
+		<class>View/Server/Log/Exception.php5</class>
+		<template>server/log/exception/index.php</template>
+		<template>server/log/exception/view.php</template>
 		<locale>de/server/log/exception.ini</locale>
 		<locale>de/server/log/exception/sqlstate.ini</locale>
 	</files>

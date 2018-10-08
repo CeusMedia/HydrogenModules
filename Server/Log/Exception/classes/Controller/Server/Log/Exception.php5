@@ -17,6 +17,7 @@
 class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 
 	static public function __onEnvLogException( $env, $context, $module, $data = array() ){
+		error_log( "__onEnvLogException".time()."\n", 3, 'e.log');
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )
@@ -30,9 +31,9 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		$exception		= $data['exception'];
 
 		if( $moduleConfig->get( 'file.active' ) ){
-			if( trim( $moduleConfig->get( 'file.path' ) ) ){
+			if( trim( $moduleConfig->get( 'file.name' ) ) ){
 				$pathLogs		= $env->getConfig()->get( 'path.logs' );
-				$filePath		= $pathLogs.$moduleConfig->get( 'file.path' );
+				$filePathName	= $pathLogs.$moduleConfig->get( 'file.name' );
 				try{
 					$content	= @serialize( $exception );
 				}
@@ -44,21 +45,24 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 						'file'			=> $exception->getFile(),
 						'line'			=> $exception->getLine(),
 						'trace'			=> $exception->getTraceAsString(),
+						'request'		=> $env->getRequest()->getAll(),
+						'session'		=> $env->getSession()->getAll(),
+					//	'cookie'		=> $env->getCookie()->getAll(),			// @todo activate for Hydrogen 0.8.6.5+
 	//					'traceAsString'	=> $exception->getTraceAsString(),
 	//					'traceAsHtml'	=> UI_HTML_Exception_Trace::render( $exception ),
 					) );
 				}
 				$msg	= time().":".base64_encode( $content );
-				error_log( $msg.PHP_EOL, 3, $filePath );
+				error_log( $msg.PHP_EOL, 3, $filePathName );
 			}
 		}
 
 		if( $moduleConfig->get( 'mail.active' ) ){
-			if( trim( $moduleConfig->get( 'mail.receiver' ) ) ){
+			if( trim( $moduleConfig->get( 'mail.receivers' ) ) ){
 				$language		= $env->getLanguage()->getLanguage();
 				$logicMail		= Logic_Mail::getInstance( $env );
 				$mail			= new Mail_Log_Exception( $env, $data );
-				$receivers		= preg_split( '/(,|;)/', $moduleConfig->get( 'mail.receiver' ) );
+				$receivers		= preg_split( '/(,|;)/', $moduleConfig->get( 'mail.receivers' ) );
 				foreach( $receivers as $receiver ){
 					if( trim( $receiver ) ){
 						$receiver	= (object) array( 'email' => $receiver );
