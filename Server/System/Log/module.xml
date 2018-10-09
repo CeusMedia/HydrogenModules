@@ -3,7 +3,7 @@
 	<title>Server: System Log</title>
 	<description><![CDATA[System component for logging and mailing exceptions.
 
-OUTDATED: Use modules Server:Log instead!
+OUTDATED: Use modules Server:Log:Exception instead!
 
 ! END OF LIFE !
 ---------------
