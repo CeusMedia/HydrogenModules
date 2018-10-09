@@ -16,66 +16,31 @@
  */
 class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 
-	static public function __onEnvLogException( $env, $context, $module, $data = array() ){
-		error_log( "__onEnvLogException".time()."\n", 3, 'e.log');
-		if( is_object( $data ) && $data instanceof Exception )
-			$data	= array( 'exception' => $data );
-		if( !isset( $data['exception'] ) )
-			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
-		if( !is_object( $data['exception'] ) )
-			throw new InvalidArgumentException( 'Given exception is not an object' );
-		if( !( $data['exception'] instanceof Exception ) )
-			throw new InvalidArgumentException( 'Given exception object is not an exception instance' );
+	protected $pathLogs;
+	protected $moduleConfig;
 
-		$moduleConfig	= $env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
-		$exception		= $data['exception'];
+	protected function __onInit(){
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
+		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
 
-		if( $moduleConfig->get( 'file.active' ) ){
-			if( trim( $moduleConfig->get( 'file.name' ) ) ){
-				$pathLogs		= $env->getConfig()->get( 'path.logs' );
-				$filePathName	= $pathLogs.$moduleConfig->get( 'file.name' );
-				try{
-					$content	= @serialize( $exception );
-				}
-				catch( Exception $_e ){
-					$content	= serialize( (object) array(
-						'message'		=> $exception->getMessage(),
-						'code'			=> $exception->getCode(),
-						'class'			=> get_class( $exception ),
-						'file'			=> $exception->getFile(),
-						'line'			=> $exception->getLine(),
-						'trace'			=> $exception->getTraceAsString(),
-						'request'		=> $env->getRequest()->getAll(),
-						'session'		=> $env->getSession()->getAll(),
-					//	'cookie'		=> $env->getCookie()->getAll(),			// @todo activate for Hydrogen 0.8.6.5+
-	//					'traceAsString'	=> $exception->getTraceAsString(),
-	//					'traceAsHtml'	=> UI_HTML_Exception_Trace::render( $exception ),
-					) );
-				}
-				$msg	= time().":".base64_encode( $content );
-				error_log( $msg.PHP_EOL, 3, $filePathName );
-			}
-		}
+	}
 
-		if( $moduleConfig->get( 'mail.active' ) ){
-			if( trim( $moduleConfig->get( 'mail.receivers' ) ) ){
-				$language		= $env->getLanguage()->getLanguage();
-				$logicMail		= Logic_Mail::getInstance( $env );
-				$mail			= new Mail_Log_Exception( $env, $data );
-				$receivers		= preg_split( '/(,|;)/', $moduleConfig->get( 'mail.receivers' ) );
-				foreach( $receivers as $receiver ){
-					if( trim( $receiver ) ){
-						$receiver	= (object) array( 'email' => $receiver );
-						$logicMail->handleMail( $mail, $receiver, $language );
-					}
-				}
-			}
-		}
-		return TRUE;															//  mark hook as handled
+	public function index( $page = 0, $limit = 10 ){
+		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
+		if( $page > 0 && $page * $limit >= $this->count() )
+			$page--;
+		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 10;
+		$this->env->getSession()->set( 'filter_server_system_page', $page );
+		$this->env->getSession()->set( 'filter_server_system_limit', $limit );
+		$lines	= $this->getLinesFromLog( $limit, $page * $limit );
+		$this->addData( 'exceptions', $lines );
+		$this->addData( 'total', $this->count() );
+		$this->addData( 'page', $page );
+		$this->addData( 'limit', $limit );
 	}
 
 	static public function logException( CMF_Hydrogen_Environment $env, $exception ){
-		$env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $exception ) );
+		$env->getCaptain()->callHook( 'Env', 'logException', $env, array( 'exception' => $exception ) );
 	}
 
 	public function logTestException( $message, $code = 0 ){
@@ -85,4 +50,105 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		self::logException( $this->env, $exception );
 		$this->restart( NULL, TRUE );
 	}
+
+	public function remove( $id ){
+		$fileName	= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+		if( file_exists( $fileName ) ){
+			$content	= trim( FS_File_Reader::load( $fileName ) );
+			$lines		= explode( "\n", $content );
+			if( count( $lines ) > $id ){
+				unset( $lines[$id] );
+				$lines	= join( "\n", $lines )."\n";
+				FS_File_Writer::save( $fileName, $lines );
+			}
+		}
+		$page	= $this->env->getSession()->get( 'filter_server_system_page' );
+		$this->restart( $page ? $page : NULL, TRUE );
+	}
+
+	public function view( $id ){
+		$fileName	= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+		if( !( $fileName && file_exists( $fileName ) ) ){
+			$this->env->getMessenger()->noteError( 'No exception log found.' );
+			$this->restart( NULL, TRUE );
+		}
+		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$lines		= explode( "\n", $content );
+		if( count( $lines ) <= $id ){
+			$this->env->getMessenger()->noteError( 'Invalid exception number.' );
+			$this->restart( NULL, TRUE );
+		}
+		$exception	= $this->parseLine( $lines[$id] );
+		$exception->id	= $id;
+		$this->addData( 'exception', $exception );
+		$this->addData( 'page', $this->env->getSession()->get( 'filter_server_system_page' ) );
+	}
+
+	/*  --  PROTECTED  --  */
+
+	protected function count(){
+		$fileName	= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+		if( !file_exists( $fileName ) )
+			return 0;
+#			throw new RuntimeException( 'Log not existing' );
+		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$lines		= explode( "\n", $content );
+		return count( $lines );
+	}
+
+	/**
+	 *	Returns a request line from exception log.
+	 *	@access		protected
+	 *	@param		integer		$nr			Line number in log file
+	 *	@return		string		Line content with timestamp and encoded exception view
+	 */
+	protected function getLineFromLog( $nr, $descending = TRUE ){
+		$lines	= $this->getLinesFromLog();
+		$line	= isset( $lines[$nr] ) ? trim( $lines[$nr] ) : '';
+		if( !$line )
+			throw new InvalidArgumentException( 'Line #'.$nr.' not existing' );
+		return $this->parseLine( $line );
+	}
+
+	/**
+	 *	Returns all lines from exception log.
+	 *	@access		protected
+	 *	@return		array		List if lines with timestamp and encoded exception view
+	 */
+	protected function getLinesFromLog( $limit, $offset = 0, $descending = TRUE ){
+		$fileName	= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+		if( !file_exists( $fileName ) )
+			return array();
+#			throw new Exception_IO( 'Log not existing', 0, 'Log folder' );
+#			throw new RuntimeException( 'Log not existing' );
+		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$lines		= explode( "\n", $content );
+		$total		= count( $lines );
+		if( $descending )
+			$lines	= array_reverse( $lines );
+		$lines		= array_slice( $lines, $offset, $limit );
+		foreach( $lines as $nr => $line ){
+			try{
+				$id	= $descending ? $total - 1 - ( $nr + $offset ) : $nr + $offset;
+				$lines[$nr]	= $this->parseLine( $line );
+				$lines[$nr]->id	= $id;
+			}
+			catch( Exception $e ){
+				unset( $lines[$nr] );
+			}
+		}
+		return $lines;
+	}
+
+	protected function parseLine( $line ){
+		list($timestamp, $data)	= explode( ":", $line );
+		$data	= base64_decode( $data );
+		$object	= unserialize( $data );
+		if( !is_object( $object ) )
+			throw new InvalidArgumentException( "Line is not containing an exception data object" );
+		$object->timestamp	= $timestamp;
+		return $object;
+	}
+
 }
+?>

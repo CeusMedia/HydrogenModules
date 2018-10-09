@@ -1,25 +1,40 @@
 <?php
 
+$w	= (object) $words['index'];
+
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+	$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+}
 
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= array();
 	foreach( $exceptions as $nr => $exception ){
-
-		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './system/log/view/'.$exception->id ) );
+		if( isset( $exception->exception ) ){
+			$exception->message	= $exception->exception->getMessage();
+			$exception->code	= $exception->exception->getCode();
+			$exception->file	= $exception->exception->getFile();
+			$exception->line	= $exception->exception->getLine();
+		}
+		$link	= UI_HTML_Tag::create( 'a', $exception->message, array(
+			'href'	=> './server/log/exception/view/'.$exception->id,
+			'class'	=> 'autocut',
+		) );
 		$date	= date( 'Y.m.d', $exception->timestamp );
 		$time	= date( 'H:i:s', $exception->timestamp );
-
 		$buttons	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'a', $iconView, array(
 				'class'	=> 'btn btn-mini not-btn-info',
-				'href'	=> './system/log/view/'.$exception->id
+				'href'	=> './server/log/exception/view/'.$exception->id,
+				'title'	=> $w->buttonView,
 			) ),
 			UI_HTML_Tag::create( 'a', $iconRemove, array(
 				'class'	=> 'btn btn-mini btn-danger',
-				'href'	=> './system/log/remove/'.$exception->id
+				'href'	=> './server/log/exception/remove/'.$exception->id,
+				'title'	=> $w->buttonRemove,
 			) ),
 		), array( 'class' => 'btn-group' ) );
 
@@ -34,12 +49,12 @@ if( $exceptions ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './system/log', $page, ceil( $total / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './server/log/exception', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 $panelList	= '
 		<div class="content-panel">
-			<h3>Exceptions</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				'.$list.'
 				'.$pagination.'

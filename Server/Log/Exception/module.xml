@@ -35,16 +35,19 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.3.1</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
 	<log version="0.3">Add mail component for collecting exceptions facts for HTML and text mail.</log>
 	<log version="0.3.1">Add exception index and view.</log>
+	<log version="0.3.2">Extract hook to own class.</log>
+	<log version="0.4">Major overhaul.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log/Exception.php5</class>
+		<class>Hook/Server/Log/Exception.php5</class>
 		<class>Mail/Log/Exception.php5</class>
 		<class>View/Helper/Mail/Exception/Facts.php5</class>
 		<class>View/Server/Log/Exception.php5</class>
@@ -60,5 +63,5 @@ Please think about using the hook instead.
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 	</relations>
-	<hook type="resource" resource="Env" event="logException">Controller_Server_Log_Exception::__onEnvLogException</hook>
+	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 </module>
