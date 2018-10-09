@@ -1,5 +1,5 @@
 <?php
-class Hook_Server_Log/* extends CMF_Hydrogen_Hook*/{
+class Hook_Server_Log extends CMF_Hydrogen_Hook{
 
 	static public function onEnvLog( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$resource	= new Resource_Server_Log( $env );
