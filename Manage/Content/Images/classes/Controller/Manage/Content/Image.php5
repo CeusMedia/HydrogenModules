@@ -289,6 +289,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		}
 
 		$image	= new UI_Image( $this->basePath.$imagePath );
+		$megapixels = $image->getWidth() * $image->getHeight() / 1024 / 1024;
 
 		$this->addData( 'frontend', $this->frontend );
 		$this->addData( 'pathImages', $this->basePath );
@@ -301,7 +302,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'imageMimeType', image_type_to_mime_type( exif_imagetype( $this->basePath.$imagePath ) ) );
 		$this->addData( 'imageFileSize', filesize( $this->basePath.$imagePath ) );
 		$this->addData( 'imageFileTime', filemtime( $this->basePath.$imagePath ) );
-		$this->addData( 'imageMegaPixels', round( $image->getWidth() * $image->getHeight() / 1024 / 1024, 1 ) );
+		$this->addData( 'imageMegaPixels', round( $megapixels, $megapixels < 1 ? 2 : 1 ) );
 	}
 
 	public function index( $folderHash = NULL ){
