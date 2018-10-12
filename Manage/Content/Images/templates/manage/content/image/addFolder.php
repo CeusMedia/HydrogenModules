@@ -1,6 +1,5 @@
 <?php
 
-
 $optFolder	= array( '.' => '' );
 foreach( $folders as $folder )
 	$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );

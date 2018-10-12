@@ -318,6 +318,45 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function process( $imageHash ){
+		$words		= (object) $this->getWords( 'msg' );
+
+		$imagePath	= base64_decode( $imageHash );
+		if( !strlen( trim( $imagePath ) ) )
+			$this->restart( NULL, TRUE );
+//		if( substr( $imagePath, 0, strlen( $this->basePath ) ) == $this->basePath )
+//			$imagePath	= substr( $imagePath, strlen( $this->basePath ) );
+		$imageFolder	= dirname( $imagePath ).'/';
+		$imageName		= basename( $imagePath );
+		if( !file_exists( $this->basePath.$imagePath ) ){
+			$this->messenger->noteError( $words->errorImageNotExisting, $imagePath );
+			$this->restart( '?path='.dirname( $imagePath ), TRUE );
+		}
+		if( $this->request->has( 'save' ) ){
+//			$image	= new \CeusMedia\Image\Image( $imagePath );
+//			$processor	= new \CeusMedia\Image\Processor( $image );
+			$image	= new UI_Image( $this->basePath.$imagePath );
+			$processor	= new UI_Image_Processing( $image );
+			switch( $this->request->get( 'process' ) ){
+				case 'turn':
+					$degree			= (int) $this->request->get( 'turnDegree' );
+					$direction	= (int) $this->request->get( 'turnDirection' );
+					$degree			= $direction * $degree;
+					$processor->rotate( $degree );
+					$image->save();
+					break;
+				case 'flip':
+					$direction	= $this->request->get( 'flipDirection' );
+					$processor->flip( $direction );
+					$image->save();
+					break;
+			}
+		}
+		$helperThumbnailer	= new View_Helper_Thumbnailer( $this->env );
+		$helperThumbnailer->uncacheFile( $this->basePath.$imagePath );
+		$this->restart( 'editImage/'.$imageHash, TRUE );
+	}
+
 	public function removeFolder( $folderHash = NULL ){
 		$words		= (object) $this->getWords( 'msg' );
 		$folderPath	= $this->setPathFromHash( $folderHash );
