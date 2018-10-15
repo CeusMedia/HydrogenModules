@@ -26,7 +26,7 @@ class Hook_Auth_Local/* extends CMF_Hydrogen_Hook*/{
 		$conditions	= array( 'status' => '>0' );
 		$users		= $modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
 		$data->list	= array( (object) array(
-			'module'		=> $moduleId,
+			'module'		=> $module,
 			'label'			=> $words['hook-getRelatedUsers']['label'],
 			'count'			=> count( $users ),
 			'list'			=> $users,
