@@ -28,7 +28,7 @@ $panelFilter	= '
 			<div class="content-panel-inner">
 				<form action="./manage/catalog/bookstore/tag/filter" method="post">
 					<label for="input_search">'.$w->heading.'</label>
-					<input type="text" name="search" id="input_search" value="'.htmlentities( $filterSearch, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="search" id="input_search" class="span12" value="'.htmlentities( $filterSearch, ENT_QUOTES, 'UTF-8' ).'"/>
 					<div class="buttonbar">
 						<a href="./manage/catalog/bookstore/tag/filter/reset" class="btn btn-small btn-inverse">'.$w->buttonReset.'</a>
 						<button type="submit" name="filter" class="btn btn-small btn-primary">'.$w->buttonFilter.'</button>
