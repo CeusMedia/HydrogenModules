@@ -1,18 +1,20 @@
 <?php
-class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
+class Hook_Captcha extends CMF_Hydrogen_Hook{
 
 	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$config	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 
-		$length		= $config->get( 'length' ) > 2 ? $config->get( 'length' ) : 4;
-		$strength	= $config->get( 'strength' ) ? $config->get( 'strength' ) : 'soft';
-		$width		= $config->get( 'width' ) > 0 ? $config->get( 'width' ) : 100;
-		$height		= $config->get( 'height' ) > 0 ? $config->get( 'height' ) : 40;
+		$default	= $config->getAll( 'default.', TRUE );
+		$length		= $default->get( 'length' ) > 2 ? $default->get( 'length' ) : 4;
+		$strength	= $default->get( 'strength' ) ? $default->get( 'strength' ) : 'soft';
+		$width		= $default->get( 'width' ) > 0 ? $default->get( 'width' ) : 100;
+		$height		= $default->get( 'height' ) > 0 ? $default->get( 'height' ) : 40;
 
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $data->content );
 		$shortCodes		= array(
 			'captcha'	=> array(
+				'mode'		=> $config->get( 'mode' ),
 				'length'	=> $length,
 				'strength'	=> $strength,
 				'width'		=> $width,
@@ -25,6 +27,7 @@ class Hook_Captcha /*extends CMF_Hydrogen_Hook*/{
 			$helper		= new View_Helper_Captcha( $env );
 			while( is_array( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
+					$helper->setMode( $attr['mode'] );
 					$helper->setLength( $attr['length'] );
 					$helper->setStrength( $attr['strength'] );
 					$helper->setWidth( $attr['width'] );
