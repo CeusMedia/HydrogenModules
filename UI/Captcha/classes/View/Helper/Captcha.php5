@@ -6,7 +6,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 	protected $fontSize		= 16;
 	protected $format		= 'image';
 	protected $mode			= 'default';
-	protected $recaptchaUrl	= 'https://www.google.com/recaptcha/api/siteverify';
+	protected $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
 
 	CONST FORMAT_IMAGE		= 0;
 	CONST FORMAT_RAW		= 1;
@@ -20,10 +20,11 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 	}
 
 	static public function checkCaptcha( CMF_Hydrogen_Environment $env, $word ){
-		if( $this->mode === 'recaptcha' ){
-			$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
-			$request	= new Net_HTTP_Post( $this->env );
-			$response	= json_encode( $request->send( $this->recaptchaUrl, array(
+		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
+		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
+			$request	= new Net_HTTP_Post();
+			$url			= 'https://www.google.com/recaptcha/api/siteverify';
+			$response	= json_encode( $request->send( $url, array(
 				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),
 				'secret'		=> $moduleConfig->get( 'recaptcha.secret' ),
 				'remoteip'	=> getEnv( 'REMOTE_ADDR' ),
@@ -61,6 +62,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 	}
 
 	protected function renderRecaptcha(){
+		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
 		return UI_HTML_Tag::create( 'div', '', array(
 			'class'					=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
