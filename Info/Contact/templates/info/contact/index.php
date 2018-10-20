@@ -39,7 +39,10 @@ if( $useNewsletter ){
 
 $captcha	= '';
 if( $useCaptcha ){
-	$captcha	= '
+	if( $useCaptcha === 'recaptcha' )
+		$captcha	= '[captcha mode="recaptcha"]';
+	else{
+		$captcha	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_captcha">'.$w->labelCaptcha.'&nbsp;<small class="muted">('.$w->labelCaptcha_suffix.')</small></label>
@@ -49,6 +52,7 @@ if( $useCaptcha ){
 			[captcha length="'.$captchaLength.'" strength="'.$captchaStrength.'"]
 		</div>
 	</div>';
+	}
 }
 
 $honeypot	= '';

@@ -5,10 +5,14 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
-		$this->useCaptcha		= $this->moduleConfig->get( 'captcha.enable' );
-		if( $this->useCaptcha && !$this->env->getModules()->has( 'UI_Captcha' ) ){
-			$this->messenger->noteFailure( 'Module "UI_Captcha" needs to be installed to use CAPTCHA.' );
-			$this->useCaptcha	= FALSE;
+		$this->useCaptcha		= NULL;
+
+		if( $this->moduleConfig->get( 'captcha.enable' ) ){
+			$configCaptcha	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
+			if( !$configCaptcha->get( 'active' ) )
+				$this->messenger->noteFailure( 'Module "UI_Captcha" needs to be installed to use CAPTCHA.' );
+			else
+				$this->useCaptcha	= $configCaptcha->get( 'mode' );
 		}
 		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
 		$this->addData( 'useCaptcha', $this->useCaptcha );
@@ -137,7 +141,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			$this->addData( 'newsletterTopics', $topics );
 		}
 
-		if( $this->useCaptcha ){
+		if( $this->useCaptcha === "default" ){
 			$this->addData( 'captchaLength', $this->moduleConfig->get( 'captcha.length' ) );
 			$this->addData( 'captchaStrength', $this->moduleConfig->get( 'captcha.strength' ) );
 		}
