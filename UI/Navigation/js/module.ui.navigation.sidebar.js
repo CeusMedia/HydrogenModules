@@ -47,8 +47,12 @@ ModuleUiNavigation.Sidebar = {
 		this.containers.nav.on("click", function(e){e.stopPropagation()});
 		if(typeof Storages !== "undefined"){
 			this.storage = Storages.cookieStorage;
-			this.storage.setDomain(settings.Env.domain);
-			this.storage.setPath(settings.Env.path);
+			if(typeof settings.Env !== "undefined"){
+				if(typeof settings.Env.domain !== "undefined")
+					this.storage.setDomain(settings.Env.domain);
+				if(typeof settings.Env.domain !== "undefined")
+					this.storage.setPath(settings.Env.path);
+			}
 			this.containers.navMenu.on('scroll', this.onScroll);
 		}
 		this.status = 1;

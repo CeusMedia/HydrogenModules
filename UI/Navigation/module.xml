@@ -63,8 +63,8 @@ This module combines several navigation types to provide a standard navigation c
 	<config protected="no" type="string" name="render.mobile.theme" values="light,dark" title="Theme of mobile main navigation bar">light</config>
 	<relations>
 		<supports type="module">JS_jQuery_mmenu</supports>
-		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 		<supports type="module">JS_Storage</supports>
+		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">View_Helper_Navigation::___setupSidebar</hook>
 </module>
