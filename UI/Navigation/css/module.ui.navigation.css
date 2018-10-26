@@ -12,9 +12,6 @@ body.nav-sidebar #layout-container #layout-nav {
 	height: 100%;
 	background-color: rgba(255, 255, 255, 1);
 /*	border-right: 2px solid rgba(0,0,0,0.5);*/
-	-webkit-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
-	box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
 	}
 body.nav-sidebar #layout-container #layout-field {
 	margin-left: 242px;
@@ -76,22 +73,60 @@ body.nav-sidebar #layout-container #layout-nav div.brand > a:visited {
 	body #layout-container #layout-field {
 		margin-top: 45px;
 		}
-	body.nav-sidebar #layout-container #nav-sidebar-toggle {
+	body.nav-sidebar #layout-container #layout-field {
+		margin-left: 240px;
+		}
+	body #layout-container #nav-sidebar-toggle {
 		display: none;
 		}
-}
+	}
 @media (max-width: 767px) {
 	body.nav-sidebar #layout-container #layout-field {
-		margin-left: 1.5em;
-		margin-right: 1.5em;
-		margin-top: 1em;
+	/*  Field  */
+		min-height: 95vh;
+		margin-left: 0;
+		margin-right: 0;
+		margin-top: 2.5vh;
+		margin-bottom: 2.5vh;
+		-webkit-transition: 0.5s ease;
+		-moz-transition: 0.5s ease;
+		-o-transition: 0.5s ease;
+		-ms-transition: 0.5s ease;
+		transition: 0.5s ease;
 		}
+	body.nav-sidebar.nav-sidebar-open #layout-container #layout-field {
+		filter: blur(5px);
+		}
+	/*  Field Mask  */
+	body.nav-sidebar #nav-sidebar-field-mask {
+		position: fixed;
+		left: -100vw;
+		top: 0;
+		z-index: 799;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(0, 0, 0, 0);
+		-webkit-transition: background-color 0.5s ease;
+		-moz-transition: background-color 0.5s ease;
+		-o-transition: background-color 0.5s ease;
+		-ms-transition: background-color 0.5s ease;
+		transition: background-color 0.5s ease;
+		}
+	body.nav-sidebar.nav-sidebar-open #nav-sidebar-field-mask {
+		background-color: rgba(0, 0, 0, 0.5);
+		}
+	/*  Sidebar Nav Layout Container  */
 	body.nav-sidebar #layout-container #layout-nav {
 		position: fixed;
 		top: 0;
-		left: -262px;
-		height; 100%;
+		left: -100vw;
+		height: 100%;
+	/*	border-right: 1px solid rgba(0,0,0,0.25);*/
+		-webkit-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
+		box-shadow: -6px 0px 20px 0px rgba(0,0,0,0.75);
 		}
+	/*  Siderbar Nav Toggle  */
 	body.nav-sidebar #layout-container #nav-sidebar-toggle {
 		display: block;
 		position: fixed;
@@ -100,5 +135,5 @@ body.nav-sidebar #layout-container #layout-nav div.brand > a:visited {
 		padding: 0.5em;
 		font-size: 2em;
 		cursor: pointer;
+		}
 	}
-}
