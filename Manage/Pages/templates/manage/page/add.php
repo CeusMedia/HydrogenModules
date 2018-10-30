@@ -15,12 +15,10 @@ $optController	= UI_HTML_Elements::Options( $optController, $page->controller );
 $fieldAccess	= '';
 if( $useAuth ){
 	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
-	$fieldAccess	= '
-		<div class="row-fluid">
-			<div class="span5">
-				<label for="input_page_access">'.$w->labelAccess.'</label>
-				<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
-			</div>
+	$colAccess	= '
+		<div class="span5">
+			<label for="input_page_access">'.$w->labelAccess.'</label>
+			<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
 		</div>';
 }
 
@@ -34,34 +32,33 @@ return '
 	<div id="manage-page-tree" class="span3">
 		'.$panelTree.'
 	</div>
-	<div class="span9">
-		<div class="content-panel">
+	<div class="span6">
+		<div class="content-panel" id="panel-page-add">
 			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./manage/page/add" method="post" class="cmFormChange-auto">
-					<div class="row-fluid">
-						<div class="span12">
-							<label for="input_page_identifier">'.$w->labelIdentifier.'</label>
-							<div class="input-prepend">
-								<span class="add-on"><small>'.$path.'</small></span>
-								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
-							</div>
-						</div>
-					</div>
+					<h4>Erscheinungsbild</h4>
 					<div class="row-fluid">
 						<div class="span6">
-							<label for="input_page_title">'.$w->labelTitle.'</label>
-							<input type="text" name="page_title" id="input_page_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
-						</div>
-						<div class="span3">
-							<label for="input_page_status" class="muted">'.$w->labelStatus.'</label>
-							<select name="page_status" class="span12 muted" id="input_page_status">'.$optStatus.'</select>
+							<label for="input_page_title" class="mandatory required">'.$w->labelTitle.'</label>
+							<input type="text" name="page_title" id="input_page_title" class="span12" required="required" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span3">
 							<label for="input_page_icon">'.$w->labelIcon.'</label>
 							<input type="text" name="page_icon" id="input_page_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
+							<div class="input-prepend">
+								<span class="add-on"><small>'.$path.'</small></span>
+								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" required="required" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'"/>
+							</div>
+						</div>
+					</div>
+					<hr/>
+					<h4>Einordnung</h4>
 					<div class="row-fluid">
 						<div class="span5">
 							<label for="input_page_scope">'.$w->labelScope.'</label>
@@ -76,6 +73,8 @@ return '
 							<select name="page_parentId" class="span12" id="input_page_parentId">'.$optParent.'</select>
 						</div>
 					</div>
+					<hr/>
+					<h4>Inhalt</h4>
 					<div class="row-fluid">
 						<div class="span5">
 							<label for="input_page_type">'.$w->labelType.'</label>
@@ -94,7 +93,15 @@ return '
 							<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
-					'.$fieldAccess.'
+					<hr/>
+					<h4>Erreichbarkeit</h4>
+					<div class="row-fluid">
+						<div class="span3">
+							<label for="input_page_status" class="muted">'.$w->labelStatus.'</label>
+							<select name="page_status" class="span12 muted" id="input_page_status">'.$optStatus.'</select>
+						</div>
+						'.$colAccess.'
+					</div>
 					<div class="buttonbar">
 						<button type="submit" name="save" class="btn btn-small btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 					</div>

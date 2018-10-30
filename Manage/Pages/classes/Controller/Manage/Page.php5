@@ -131,6 +131,13 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree();
+		$script	= '
+ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+ModuleManagePages.PageEditor.editor = "'.$this->session->get( 'module.manage_pages.editor' ).'";
+ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+ModuleManagePages.PageEditor.init();
+';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
 	public function ajaxOrderPages(){
@@ -188,21 +195,48 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 	public function ajaxBlacklistSuggestedKeywords(){
 		try{
-			$pageId		= $this->request->get( 'pageId' );						//  get page ID from request
-			$page		= $this->checkPageId( $pageId );						//  check if page ID is valid
-			$blacklist	= 'config/terms.blacklist.txt';
-			$words		= trim( $this->request->get( 'words' ) );				//  get string of whitespace concatenated words from request
-			if( $words ){														//  atleast one word is given
-				if( !file_exists( $blacklist ) )								//  blacklist file is not existing, yet
+			$pageId			= $this->request->get( 'pageId' );					//  get page ID from request
+			$page			= $this->checkPageId( $pageId );					//  check if page ID is valid
+			$blacklistFile	= 'config/terms.blacklist.txt';
+			$wordsInput		= trim( $this->request->get( 'words' ) );			//  get string of whitespace concatenated words from request
+			$wordsGiven		= array();											//  prepare empty list of given words to add to blacklist
+			if( strlen( trim( $wordsInput ) ) )									//  given string of listed keywords is not empty
+				$wordsGiven		= preg_split( '/\s*(,|\s)\s*/', $wordsInput );	//  split to list of words to add to blacklist
+			$wordsAdded		= array();											//  prepare empty list of words added to blacklist
+			if( count( $wordsGiven ) ){											//  atleast one word is given
+				if( !file_exists( $blacklistFile ) )							//  blacklist file is not existing, yet
 					touch( $blacklist );										//  create empty list file
-				$editor	= new \FS_File_List_Editor( $blacklist );				//  start list editor
-				foreach( preg_split( '/\s*(,|\s)\s*/', $words ) as $word )		//  iterate trimmed words
-					$editor->add( trim( $word ) );								//  add word to list and save
+				$editor	= new \FS_File_List_Editor( $blacklistFile );			//  start list editor
+				foreach( $wordsGiven as $wordToAdd ){							//  iterate trimmed words
+					if( !$editor->hasItem( $wordToAdd ) )						//  word is not in list
+						$editor->add( trim( $wordToAdd ) );						//  add word to list and save
+				}
 			}
+			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );			//  read list of words in blacklist
+
+			$pages	= $this->model->getAll();
+			foreach( $pages as $page ){
+				$keywords	= array();
+				if( strlen( trim( $page->keywords ) ) )
+					$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
+				if( $keywords ){
+					$reduced	= array_diff( $keywords, $blacklist );
+					if( count( $reduced ) !== count( $keywords ) ){
+						$this->model->edit( $page->pageId, array(
+							'keywords'	=> join( ', ', $reduced )
+						) );
+					}
+				}
+			}
+			$page		= $this->checkPageId( $pageId );						//  get updated page object
+			$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
 			print( json_encode( array(											//  respond to client
 				'status'	=> 'data',											//  that this operation has been successful
-				'data'		=> is_array( $words ) ? count( $words ) : 0,		//  provider number of added words
-			) ) );
+				'data'		=> array(
+//					'changed'	=> count( $wordsGiven ),
+					'keywords'	=> $keywords,									//  updated page keywords
+					'blacklist'	=> $blacklist,									//  updated blacklisted words
+			) ) ) );
 		}
 		catch( Exception $e ){													//  an exception has been thrown
 			print( json_encode( array(											//  respond to client
@@ -232,7 +266,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		foreach( $terms as $term => $count )
 			if( preg_match( '/^[A-Z]/', $term ) )
 				if( preg_match( '/[A-Z]$/i', $term ) )
-					$list[]	= htmlspecialchars_decode( $term );
+					$list[]	= htmlspecialchars_decode( html_entity_decode( $term ) );
 		print( json_encode( array(
 			'status'	=> 'data',
 			'data'		=> $list
@@ -247,10 +281,13 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $this->getWords( 'msg' )['errorMissingPageId'] );
 			$this->restart( NULL, TRUE );
 		}
+//remark('PageId: '.$pageId);
 		$page	= $this->model->get( $pageId );
 		if( !$page ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid page ID given' );
+//print_m($page);
+//die;
 			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
 			$this->restart( NULL, TRUE );
 		}
@@ -270,14 +307,13 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 
 	public function edit( $pageId, $version = NULL ){
 		$page		= $this->checkPageId( $pageId );
-		$session	= $this->env->getSession();
 		$model		= new Model_Page( $this->env );
-		$scope		= (int) $session->get( 'module.manage_pages.scope' );
+		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
-		if( !$session->get( 'module.manage_pages.editor' ) )
-			$session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
+		if( !$this->session->get( 'module.manage_pages.editor' ) )
+			$this->session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
 
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -351,7 +387,11 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 
 		$pages	= array();
-		foreach( $model->getAllByIndex( 'status', 1, array( 'title' => "ASC" ) ) as $item ){
+		$visiblePages	= $model->getAllByIndices(
+			array( 'status'	=> Model_Page::STATUS_VISIBLE ),
+			array( 'title' => "ASC" )
+		);
+		foreach( $visiblePages as $item ){
 			if( $item->parentId ){
 				$parent	= $model->get( $item->parentId );
 				if( $parent && $parent->parentId ){
@@ -404,14 +444,28 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'version', $version );
 		$this->addData( 'versions', $versions );
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
-		$this->addData( 'tab', max( 1, (int) $session->get( 'module.manage_pages.tab' ) ) );
+		$this->addData( 'tab', max( 1, (int) $this->session->get( 'module.manage_pages.tab' ) ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
-		$this->addData( 'editor', $session->get( 'module.manage_pages.editor' ) );
+		$this->addData( 'editor', $this->session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
 		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree( $pageId );
 
+//		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
+		$script	= '
+ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+ModuleManagePages.PageEditor.pageId = "'.$page->pageId.'";
+ModuleManagePages.PageEditor.pageIdentifier = "'.$page->identifier.'";
+ModuleManagePages.PageEditor.parentPageId = "'.$page->parentId.'";
+ModuleManagePages.PageEditor.editor = "'.$this->session->get( 'module.manage_pages.editor' ).'";
+ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+ModuleManagePages.PageEditor.format = "'.$page->format.'";
+ModuleManagePages.PageEditor.init();
+';
+		$this->env->getPage()->js->addScriptOnReady( $script );
+
+		/*  --  META: TAGS  --  */
 		if( !$this->frontend->hasModule( 'UI_MetaTags' ) )
 			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
 		else{
@@ -426,23 +480,19 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				foreach( explode( "\n", file_get_contents( $this->frontend->getPath().$meta['default.keywords'] ) ) as $line )
 					if( trim( $line ) )
 						$list[]	= trim( $line );
+				natcasesort( $list );
 				$meta['default.keywords']	= join( ", ", $list );
 			}
 			$this->addData( 'meta', $meta );
 		}
 
-//		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
-		$script	= '
-ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
-ModuleManagePages.PageEditor.pageId = "'.$page->pageId.'";
-ModuleManagePages.PageEditor.pageIdentifier = "'.$page->identifier.'";
-ModuleManagePages.PageEditor.parentPageId = "'.$page->parentId.'";
-ModuleManagePages.PageEditor.editor = "'.$session->get( 'module.manage_pages.editor' ).'";
-ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
-ModuleManagePages.PageEditor.format = "'.$page->format.'";
-ModuleManagePages.PageEditor.init();
-';
-		$this->env->getPage()->js->addScriptOnReady( $script );
+		/*  --  META: KEYWORD BLACKLIST  --  */
+		$blacklist		= array();																	//  prepare empty blacklist
+		$blacklistFile	= 'config/terms.blacklist.txt';												//  @todo make configurable
+		if( file_exists( $blacklistFile ) )															//  blacklist file is existing
+			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );								//  read blacklist
+		natcasesort( $blacklist );
+		$this->addData( 'metaBlacklist', $blacklist );
 	}
 
 	protected function getFrontendControllers(){
