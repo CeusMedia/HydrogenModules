@@ -14,14 +14,15 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		if( !$page )																				//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
 		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
-			if( ( $previewCode = $request->get( 'preview' ) ) ){									//  page has been requested for preview
-				if( $previewCode != $page->createdAt.$page->modifiedAt )							//  not a valid preview request (from page management)
-					return FALSE;																	//  quit hook call and return without result
-			}
+			$reasons		= 0;																	//  reasons to pass disabled state
+			$previewCode	= $request->get( 'preview' );											//  get preview code if requested (iE. by page management)
+			$reasons		+= (int) ( $previewCode == $page->createdAt.$page->modifiedAt );		//  add pass by valid preview code
+			if( !$reasons )																			//  no reasons found to bypass disabled state
+				return FALSE;																		//  quit hook call and return without result
 		}
-		$types	= Alg_Object_Constant::staticGetAll( 'Model_Page', 'TYPE' );
-		if( !in_array( (int) $page->type, $types ) )
-			throw new RangeException( 'Page type '.$page->type.' is unsupported' );
+		$types	= Alg_Object_Constant::staticGetAll( 'Model_Page', 'TYPE' );						//  get page types from model constants
+		if( !in_array( (int) $page->type, $types ) )												//  found unknown page type
+			throw new RangeException( 'Page type '.$page->type.' is unsupported' );					//  quit with exception
 		if( (int) $page->type === Model_Page::TYPE_CONTENT ){										//  page is static content
 			$request->set( '__redirected', TRUE );													//  note redirection for access check
 			return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );				//  redirect to page controller and quit hook
@@ -87,24 +88,32 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 			return;
 		$acl	= $env->getAcl();
 		$model	= new Model_Page( $env );
-		$pages	= $model->getAll( array( 'type' => 2 ) );
-
-		$paths	= array( 'public' => array(), 'inside' => array(), 'outside' => array() );
-		$paths['public'][] = 'info_page_index';
-
-		foreach( $pages as $page ){
-			$path	= strtolower( $page->controller );
-			$methods = [];
-			$reflection = new ReflectionClass( 'Controller_'.$page->controller );
-			foreach( $reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method )
-				if( !$method->isStatic() && substr( $method->name, 0, 1 ) !== '_' )
-					if( $method->class == $reflection->getName() )
-						if( array_key_exists( $page->access, $paths ) )
-							$paths[$page->access][] = $path.'_'.$method->name;
+		$paths	= array(
+			'public'	=> array( 'info_page_index' ),
+			'inside'	=> array(),
+			'outside'	=> array()
+		);
+		$pages	= $model->getAll( array( 'type' => Model_Page::TYPE_MODULE ) );						//  get all module based pages
+		foreach( $pages as $page ){																	//  iterate pages
+			$className	= 'Controller_'.$page->controller;											//  page delivers unprefixed controller class name
+			if( !class_exists( $className ) )														//  controller class is not existing
+				continue;																			//  skip this page
+			$path		= strtolower( $page->controller );											//  derive path from shortened controller class name
+			$reflection = new ReflectionClass( $className );										//  reflect controller class
+			foreach( $reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method ){			//  iterate reflected public methods
+				if( $method->isStatic() || substr( $method->name, 0, 1 ) === '_' )					//  static or protected method
+					continue;																		//  skip this method
+				if( $method->class !== $reflection->getName() )										//  inherited method
+					continue;																		//  skip this method
+				if( strtolower( substr( $method->name, 0, 4 ) ) === 'ajax' )						//  ajax method
+					continue;																		//  skip this method
+				if( array_key_exists( $page->access, $paths ) )										//  valid page visibility
+					$paths[$page->access][] = $path.'_'.$method->name;								//  append page path to path index
+			}
 		}
-			$acl->setPublicLinks( $paths['public'], 'append' );
-			$acl->setPublicInsideLinks( $paths['inside'], 'append' );
-			$acl->setPublicOutsideLinks( $paths['outside'], 'append' );
+		$acl->setPublicLinks( $paths['public'], 'append' );											//  append collected public paths to ACL
+		$acl->setPublicInsideLinks( $paths['inside'], 'append' );									//  append collected inside paths to ACL
+		$acl->setPublicOutsideLinks( $paths['outside'], 'append' );									//  append collected outside paths to ACL
 	}
 
 	static public function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
