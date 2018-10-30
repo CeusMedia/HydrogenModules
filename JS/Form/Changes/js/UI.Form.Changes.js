@@ -30,13 +30,14 @@ UI.Form.Changes.Indicator = {
 
     applyTo: function (selectorOrContainer, options) {
         "use strict";
-        options = jQuery.extend({}, options);
+        var options = jQuery.extend({}, options);
         var form = jQuery(selectorOrContainer).addClass("ui-form-changes");
         UI.Form.Changes.getInputs(form).each(function () {
             var input = jQuery(this);
             input.data("original-value", input.val());
-			input.data("original-container", selectorOrContainer);
-            input.on("keyup.FormChanges change.FormChanges", function () {
+            input.data("original-container", selectorOrContainer);
+            input.addClass("form-change-aware");
+            input.on("input.FormChanges", function (event) {
                 if (jQuery(this).val() !== input.data("original-value")) {
                     jQuery(this).addClass("changed");
                     if (options.lock) {
