@@ -212,7 +212,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 								continue;
 						}
 						$content	= FS_File_Reader::load( $item->getPathname() );
-						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );
+						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
 						$pathName	= substr( $pathName, strlen( $folderPath ) );
 						$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
 						$list[$root.'_'.$pathName]	= (object) array(

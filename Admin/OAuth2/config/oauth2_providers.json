@@ -1,0 +1,36 @@
+[{
+	"title": "Amazon",
+	"package": "michaelkaefer/oauth2-amazon",
+	"class": "\\MichaelKaefer\\OAuth2\\Client\\Provider\\Amazon",
+	"icon": ""
+},{
+	"title": "Dropbox",
+	"package": "stevenmaguire/oauth2-dropbox",
+	"class": "Stevenmaguire\\OAuth2\\Client\\Provider\\Dropbox",
+	"icon": "fa fa-fw fa-dropbox"
+},{
+	"title": "facebook",
+	"package": "league/oauth2-facebook",
+	"class": "League\\OAuth2\\Client\\Provider\\Facebook",
+	"icon": "fa fa-fw fa-facebook"
+},{
+	"title": "GitHub",
+	"package": "league/oauth2-github",
+	"class": "League\\OAuth2\\Client\\Provider\\Github",
+	"icon": "fa fa-fw fa-github"
+},{
+	"title": "Google",
+	"package": "league/oauth2-google",
+	"class": "League\\OAuth2\\Client\\Provider\\Google",
+	"icon": "fa fa-fw fa-google"
+},{
+	"title": "Instagram",
+	"package": "league/oauth2-instagram",
+	"class": "League\\OAuth2\\Client\\Provider\\Instagram",
+	"icon": "fa fa-fw fa-instagram"
+},{
+	"title": "LinkedIn",
+	"package": "league/oauth2-linkedin",
+	"class": "League\\OAuth2\\Client\\Provider\\LinkedIn",
+	"icon": "fa fa-fw fa-linkedin"
+}]

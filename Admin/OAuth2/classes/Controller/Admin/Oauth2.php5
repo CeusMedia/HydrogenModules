@@ -1,12 +1,26 @@
 <?php
 class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $moduleConfig;
+	protected $modelProvider;
+	protected $providerIndex				= array();
+	protected $providersAvailable			= array();
+
 	public function __onInit(){
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
+		$this->providersIndex		= FS_File_JSON_Reader::load( 'config/oauth2_providers.json' );
+		$this->providersAvailable	= array();
+		foreach( $this->providersIndex as $provider ){
+			if( class_exists( $provider->class ) )
+				$this->providersAvailable[]	= $provider;
+		}
 	}
 
 	public function add(){
@@ -20,6 +34,17 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		foreach( $this->modelProvider->getColumns() as $column )
 			if( !in_array( $column, array( 'oauthProviderId', 'createdAt', 'modifiedAt' ) ) )
 				$provider[$column]	= $this->request->get( $column );
+		if( ( $providerKey = $this->request->get( 'providerKey' ) ) ){
+			foreach( $this->providersIndex as $item ){
+				if( $item->package === $providerKey ){
+					$provider['title']				= $item->title;
+					$provider['icon']				= $item->icon;
+					$provider['className']			= $item->class;
+					$provider['composerPackage']	= $item->package;
+					break;
+				}
+			}
+		}
 		$this->addData( 'provider', (object) $provider );
 	}
 
@@ -60,5 +85,32 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		}
 		$this->modelProvider->edit( $providerId, array( 'status' => $status ) );
 		$this->restart( 'edit/'.$providerId, TRUE );
+	}
+
+	/*  --  PROTECTED  --  */
+	protected function scanInstalledProviders(){
+		$list	= array();
+		$regexPackage	= '/^oauth2-(\S+)$/';
+		foreach( new DirectoryIterator( 'vendor' ) as $vendor ){
+			if( $vendor->isDot() || !$vendor->isDir() )
+				continue;
+			$pathPackages	= 'vendor/'.$vendor->getFilename();
+			foreach( new DirectoryIterator( $pathPackages ) as $package ){
+				if( $package->isDot() || !$package->isDir() )
+					continue;
+				$packageKey	= $package->getFilename();
+				if( preg_match( $regexPackage, $packageKey ) ){
+					$provider	= preg_replace( $regexPackage, '\\1', $packageKey );
+					if( $provider === "client" )
+						continue;
+					$list[]	= array(
+						'vendor'		=> $vendor->getFilename(),
+						'package'		=> $packageKey,
+						'provider'		=> $provider,
+					);
+				}
+			}
+		}
+		$this->providersAvailable	= $list;
 	}
 }
