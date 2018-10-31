@@ -19,7 +19,8 @@ textarea.monospace {
 	fontface: "Monospace";
 	}
 
-div.framed {
+/*  --  FRAMED DOCUMENT  --  */
+body.moduleAuthLocal div.framed {
 	border: 1px solid gray;
 	border-radius: 4px;
 	padding: 1em 2em;
@@ -28,6 +29,25 @@ div.framed {
 	margin-bottom: 1em;
 	font-size: 0.9em;
 	}
+body.moduleAuthLocal div.framed {
+	padding: 1em 2em;
+	font-size: 0.8rem;
+	}
+body.moduleAuthLocal div.framed .address {
+	margin: 2em;
+	border: 1px solid gray;
+	background-color: #EFEFEF;
+	}
+body.moduleAuthLocal div.framed h2 {
+	font-size: 1.9em !important;
+	text-transform: none !important;
+	border: none !important;
+	}
+body.moduleAuthLocal div.framed h3 {
+	font-size: 1.3em !important;
+	border: none !important;
+	}
+
 
 /*  --  CENTERED PANE  --  */
 /*  @todo transport to main auth module if possible */

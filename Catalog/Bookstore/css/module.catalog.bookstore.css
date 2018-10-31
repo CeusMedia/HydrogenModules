@@ -279,23 +279,23 @@ body.moduleCatalog #layout-content ul li.document a {
 
 /*  ARTICLE STATUS  */
 span.status_-2 {
-    font-weight: bold;
-    font-style: italic;
-    color: gray;
-    }
+	font-weight: bold;
+	font-style: italic;
+	color: gray;
+	}
 span.status_-1 {
-    font-weight: bold;
-    font-style: italic;
-    }
+	font-weight: bold;
+	font-style: italic;
+	}
 span.status_0 {
-    font-weight: bold;
-    color: green;
-    }
+	font-weight: bold;
+	color: green;
+	}
 span.status_1 {
 	font-weight: bold;
-    font-style: italic;
-    color: gray;
-    }
+	font-style: italic;
+	color: gray;
+	}
 
 
 .catalog-bookstore-article-item span.title {

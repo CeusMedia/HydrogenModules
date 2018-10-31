@@ -10,18 +10,38 @@ $optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' 
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
 extract( $view->populateTexts( $texts, 'html/auth/local/register/' ) );
 
-$formTerms	= '';
-$tacHtml	= '';
-$tacFile	= 'html/auth/local/tac';
-if( $env->getModules()->has( 'UI_Markdown') && $view->hasContentFile( $tacFile.'.md' ) ){
-	$tacMarkdown	= $view->loadContentFile( $tacFile.'.md' );
-	$tacHtml		= View_Helper_Markdown::transformStatic( $env, $tacMarkdown );
+$files		= array(
+	'html/auth/local/tac',
+	'html/auth/local/privacy',
+);
+
+function reduceContentFile( $view, $fileName ){
+	$contentFile	= $view->getContentUri( $fileName );
+	if( !file_exists( $contentFile ) )
+		return '';
+	$content	= FS_File_Reader::load( $contentFile );
+	$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );
+	return $content;
 }
-else if( $view->hasContentFile( $tacFile.'.html' ) ){
-	$tacHtml		= $view->loadContentFile( $tacFile.'.html' );
+
+function getLegalFileContent( $env, $view, $legal ){
+	if( ( $html = reduceContentFile( $view, $legal.'.html' ) ) )
+		return $html;
+	if( ( $markdown = reduceContentFile( $legal.'.md' ) ) )
+		return View_Helper_Markdown::transformStatic( $env, $markdown );
+}
+
+
+$list	= array();
+foreach( $files as $file ){
+	if( ( $html = getLegalFileContent( $env, $view, $file ) ) )
 	if( $env->getModules()->has( 'UI_Helper_Content' ) )
-		$tacHtml	= View_Helper_ContentConverter::render( $env, $tacHtml );
+		$html	= View_Helper_ContentConverter::render( $env, $html );
+	$list[]		= $html;
 }
+$tacHtml	= join( '<hr/>', $list );
+
+$formTerms	= '';
 if( $tacHtml ){
 	$formTerms		= HTML::DivClass( 'row-fluid', array(
 		HTML::DivClass( "span12", array(
