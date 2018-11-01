@@ -25,7 +25,21 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		if( $this->request->isPost() && $this->request->has( 'save' ) ){
-			$providerId	= $this->modelProvider->add( $this->request->getAll(), FALSE );
+			$data	= $this->request->getAll();
+			$data['status']	= Model_Oauth_Provider::STATUS_NEW;
+			$data['createdAt']	= time();
+			$data['modifiedAt']	= time();
+			if( ( $providerKey = $this->request->get( 'providerKey' ) ) ){
+				foreach( $this->providersIndex as $item ){
+					if( $item->package === $providerKey ){
+						$data['icon']				= $item->icon;
+						$data['className']			= $item->class;
+						$data['composerPackage']	= $item->package;
+						break;
+					}
+				}
+			}
+			$providerId	= $this->modelProvider->add( $data, FALSE );
 			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
@@ -46,6 +60,9 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'provider', (object) $provider );
+		$this->addData( 'providersIndex', $this->providersIndex );
+		$this->addData( 'providersAvailable', $this->providersAvailable );
+		$this->addData( 'providers', $this->modelProvider->getAll() );
 	}
 
 	public function edit( $providerId ){

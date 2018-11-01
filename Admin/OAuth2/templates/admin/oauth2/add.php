@@ -12,8 +12,28 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 	'class'		=> 'btn btn-primary',
 ) );
 
+$providerMap	= array();
+$optProvider	= array( '' => '- keine -' );
+foreach( $providersIndex as $indexItem ){
+	$key	= preg_replace( '~/~', '__', $indexItem->package );
+	$providerMap[$key]	= $indexItem;
+	foreach( $providers as $hasItem )
+		if( $indexItem->package === $hasItem->composerPackage )
+			continue 2;
+	$optProvider[$key]	= $indexItem->title;
+}
+$optProvider	= UI_HTML_Elements::Options( $optProvider );
+
 $form			= UI_HTML_Tag::create( 'form', array(
 	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Provider-Vorlage', array( 'for' => 'input_providerKey' ) ),
+			UI_HTML_Tag::create( 'select', $optProvider, array(
+				'name'			=> 'providerKey',
+				'id'			=> 'input_providerKey',
+				'class'			=> 'span12 has-optionals',
+			) ),
+		), array( 'class' => 'span3' ) ),
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title', 'class' => 'required mandatory' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
@@ -24,7 +44,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'value'			=> htmlentities( $provider->title, ENT_QUOTES, 'UTF-8' ),
 				'required'		=> 'required',
 			) ),
-		), array( 'class' => 'span8' ) ),
+		), array( 'class' => 'span5' ) ),
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'label', 'Icon', array( 'for' => 'input_icon' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
@@ -35,7 +55,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'value'			=> htmlentities( $provider->icon, ENT_QUOTES, 'UTF-8' ),
 				'placeholder'	=> 'fa fa-fw fa-plug',
 			) ),
-		), array( 'class' => 'span3' ) ),
+		), array( 'class' => 'span3 optional providerKey providerKey-' ) ),
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'label', 'Rang', array( 'for' => 'input_rank' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
@@ -95,7 +115,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'placeholder'	=> 'league/oauth2-...',
 			) ),
 		), array( 'class' => 'span5' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
 	UI_HTML_Tag::create( 'div', join( ' ', array(
 		$buttonCancel,
 		$buttonSave,
@@ -114,6 +134,25 @@ $panelForm	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
+$script	= '<script>
+var oauth2ProviderMap = '.json_encode( $providerMap ).';
+jQuery(document).ready(function(){
+	jQuery("#input_providerKey").on("input", function(){
+		var providerKey = jQuery(this).val();
+		var title, icon, className, package;
+		if(providerKey){
+			title = oauth2ProviderMap[providerKey].title;
+			icon = oauth2ProviderMap[providerKey].icon;
+			className = oauth2ProviderMap[providerKey].class;
+			package = oauth2ProviderMap[providerKey].package;
+		}
+		jQuery("#input_title").val(title);
+		jQuery("#input_icon").val(icon);
+		jQuery("#input_className").val(className);
+		jQuery("#input_composerPackage").val(package);
+	})
+});
+</script>';
 
 return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
@@ -122,4 +161,4 @@ return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		$textInfo,
 	), array( 'class' => 'span4' ) ),
-), array( 'class' => 'row-fluid' ) ).$textBottom;
+), array( 'class' => 'row-fluid' ) ).$textBottom.$script;
