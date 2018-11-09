@@ -38,7 +38,7 @@ $panelRoles	= UI_HTML_Tag::create( 'div', array(
 		$list,
 		UI_HTML_Tag::create( 'div', array(
 /*			UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;...', array( 'href' => './work/mail/group', 'class' => 'btn' ) ),*/
-			UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'href' => './work/mail/group/role/add', 'class' => 'btn btn-primary' ) ),
+			UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'href' => './work/mail/group/role/add', 'class' => 'btn btn-success' ) ),
 		), array( 'class' => 'buttonbar' ) )
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );

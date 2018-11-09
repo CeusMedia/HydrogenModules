@@ -15,6 +15,7 @@ foreach( $users as $user )
 $optManagerId	= UI_HTML_Elements::Options( $optManagerId, $group->managerId );
 
 $optStatus		= $words['group-statuses'];
+unset( $optStatus[Model_Mail_Group::STATUS_WORKING] );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $group->status );
 
 $roleMap	= array();

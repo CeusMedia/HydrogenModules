@@ -46,4 +46,4 @@ $panelAdd	= '
 
 $tabs	= $view->renderTabs( $env, 'server' );
 
-return $tabs.'<div class="content-panel"><div class="span6">'.$panelAdd.'</div></div>';
+return $tabs.'<div class="row-fluid"><div class="span6">'.$panelAdd.'</div></div>';
