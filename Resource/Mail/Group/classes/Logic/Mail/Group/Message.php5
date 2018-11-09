@@ -4,14 +4,15 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	protected $logicGroup;
 	protected $modelMember;
 	protected $modelMessage;
+
 /*
 	protected $modelGroup;
 	protected $modelRole;
 	protected $modelServer;
 	protected $modelAction;
 	protected $modelUser;
-	protected $logicMail;
-	protected $transports		= array();*/
+	protected $logicMail;*/
+	protected $transports		= array();
 
 	public function __onInit(){
 		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
@@ -144,8 +145,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 			Model_Mail_Group_Member::STATUS_CONFIRMED,
 		);
 		$group		= $this->logicGroup->checkGroupId( $groupId );
-print( 'Group:'.PHP_EOL );
-print_m( $group );
+//print( 'Group:'.PHP_EOL );
+//print_m( $group );
 		if( !$group )
 			throw new InvalidArgumentException( 'Invalid group ID' );
 		$results	= (object) array(
@@ -317,16 +318,18 @@ print_m( $group );
 	}
 
 	protected function getTransport( $groupId ){
-		if( !isset( $this->transports[(int) $groupId] ) )
+		$groupId	= (int) $groupId;
+		if( !array_key_exists( $groupId, $this->transports ) ){
 			$group	= $this->logicGroup->checkGroupId( $groupId );
 			$server	= $this->logicGroup->checkServerId( $group->mailGroupServerId );
-			$this->transports[(int) $groupId]  = new \CeusMedia\Mail\Transport\SMTP(
+			$this->transports[$groupId]  = new \CeusMedia\Mail\Transport\SMTP(
 				$server->smtpHost,
 				(int) $server->smtpPort,
 				$group->address,
 				$group->password
 			);
-		return $this->transports[(int) $groupId];
+		}
+		return $this->transports[$groupId];
 	}
 
 	protected function rejectMessage( $messageObjectOrId ){
