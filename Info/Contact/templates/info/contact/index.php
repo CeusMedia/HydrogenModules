@@ -6,7 +6,7 @@ extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom
 $newsletter    = '';
 if( $useNewsletter ){
 	$inputTopics	= '';
-	if( 0 && $newsletterTopics ){
+	if( isset( $newsletterTopics ) && count( $newsletterTopics ) ){
 		$list	= array();
 		foreach( $newsletterTopics as $topic ){
 			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
