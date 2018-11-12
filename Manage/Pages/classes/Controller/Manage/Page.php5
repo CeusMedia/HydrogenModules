@@ -443,6 +443,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'path', $path );
 		$this->addData( 'version', $version );
 		$this->addData( 'versions', $versions );
+		$this->addData( 'pageUrl', $path.$page->identifier );
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
 		$this->addData( 'tab', max( 1, (int) $this->session->get( 'module.manage_pages.tab' ) ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );

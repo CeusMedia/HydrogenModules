@@ -13,9 +13,12 @@ $divPreview		= UI_HTML_Tag::create( 'div', $divContainer, array(
 	'data-url'	=> $pagePreviewUrl
 ) );
 
-return $divPreview;
+$linkPage		= UI_HTML_Tag::create( 'a', $pageUrl, array( 'href' => $pageUrl ) );
+
+return $linkPage.$divPreview;
 
 return '
+<div>Adresse: <a href="'.$pagePreviewUrl.'" target="_blank">'.$pagePreviewUrl.'</a></div>
 <div id="page-preview" data-url="'.$pagePreviewUrl.'">
 	<div id="page-preview-container">
 		<div id="page-preview-iframe-container"></div>
