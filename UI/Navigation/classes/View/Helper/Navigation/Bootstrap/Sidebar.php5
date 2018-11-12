@@ -59,10 +59,10 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 	}
 
 	protected function renderLabelWithIcon( $entry ){
-		if( empty( $entry->icon ) || !isset( $entry->icon ) )
+		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) )  )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
+		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
 		if( strlen( $entry->label ) )
