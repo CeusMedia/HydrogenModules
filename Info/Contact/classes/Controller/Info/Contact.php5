@@ -71,7 +71,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( $words->msgErrorAccessDenied );
 			if( $this->useCaptcha ){
 				$captchaWord	= $this->request->get( 'captcha' );
-				if( View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) )
+				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) )
 					$this->messenger->noteError( $words->msgErrorCaptchaFailed );
 			}
 			if( !$this->messenger->gotError() ){
