@@ -24,7 +24,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
 			$request	= new Net_HTTP_Post();
 			$url			= 'https://www.google.com/recaptcha/api/siteverify';
-			$response	= json_encode( $request->send( $url, array(
+			$response	= json_decode( $request->send( $url, array(
 				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),
 				'secret'		=> $moduleConfig->get( 'recaptcha.secret' ),
 				'remoteip'	=> getEnv( 'REMOTE_ADDR' ),
