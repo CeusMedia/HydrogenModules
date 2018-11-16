@@ -29,12 +29,15 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			$data['status']	= Model_Oauth_Provider::STATUS_NEW;
 			$data['createdAt']	= time();
 			$data['modifiedAt']	= time();
-			if( ( $providerKey = $this->request->get( 'providerKey' ) ) ){
+			$providerKey = str_replace( '__', '/', $this->request->get( 'providerKey' ) );
+			if( $providerKey ){
 				foreach( $this->providersIndex as $item ){
 					if( $item->package === $providerKey ){
 						$data['icon']				= $item->icon;
 						$data['className']			= $item->class;
 						$data['composerPackage']	= $item->package;
+						if( isset( $item->options ) )
+							$data['options']		= json_encode( $item->options );
 						break;
 					}
 				}
@@ -55,6 +58,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 					$provider['icon']				= $item->icon;
 					$provider['className']			= $item->class;
 					$provider['composerPackage']	= $item->package;
+					if( isset( $item->options ) )
+						$provider['options']		= json_encode( $item->options );
 					break;
 				}
 			}
@@ -75,6 +80,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->addData( 'providerId', $providerId );
 		if( $this->request->isPost() && $this->request->has( 'save' ) ){
 			$this->modelProvider->edit( $providerId, $this->request->getAll(), FALSE );
+			$this->restart( 'edit/'.$providerId, TRUE );
 		}
 		$this->addData( 'providerId', $providerId );
 		$this->addData( 'provider', $provider );
@@ -92,6 +98,20 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$orders		= array( 'rank' => 'ASC' );
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$this->addData( 'providers', $providers );
+	}
+
+	public function remove( $providerId ){
+		$provider	= $this->modelProvider->get( $providerId );
+		if( !$provider ){
+			$this->messenger->noteError( 'Invalid provider ID.' );
+			$this->restart( 'edit/'.$providerId, TRUE );
+		}
+		if( $provider->status == Model_Oauth_Provider::STATUS_ACTIVE ){
+			$this->messenger->noteError( 'Provider is active right now. Deactivate first!' );
+			$this->restart( 'edit/'.$providerId, TRUE );
+		}
+		$this->modelProvider->remove( $providerId );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function setStatus( $providerId, $status ){

@@ -12,7 +12,8 @@
 	"title": "facebook",
 	"package": "league/oauth2-facebook",
 	"class": "League\\OAuth2\\Client\\Provider\\Facebook",
-	"icon": "fa fa-fw fa-facebook"
+	"icon": "fa fa-fw fa-facebook",
+	"options": {"graphApiVersion": "v2.12"}
 },{
 	"title": "GitHub",
 	"package": "league/oauth2-github",

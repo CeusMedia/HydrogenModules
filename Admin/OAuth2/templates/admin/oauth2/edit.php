@@ -25,10 +25,16 @@ $buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate.' deaktivieren', a
 	'class'		=> 'btn btn-small btn-inverse',
 ) );
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
-	'href'		=> './admin/oauth2/remove/'.$providerId,
+$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' entfernen', array(
+	'type'		=> 'button',
 	'class'		=> 'btn btn-danger btn-small',
+	'disabled'	=> 'disabled',
 ) );
+if( $provider->status != Model_Oauth_Provider::STATUS_ACTIVE )
+	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+		'href'		=> './admin/oauth2/remove/'.$providerId,
+		'class'		=> 'btn btn-danger btn-small',
+	) );
 
 $form			= UI_HTML_Tag::create( 'form', array(
 	UI_HTML_Tag::create( 'div', array(
