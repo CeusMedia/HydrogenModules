@@ -33,8 +33,8 @@ class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic{
 			'modifiedAt'	=> time(),
 		) );
 		$this->logicShop->setOrderPaymentId( $orderId, $paymentId );
-		$this->session->set( 'shop.payment.stripe.id', $paymentId );
-		$this->session->set( 'shop.payment.stripe.sourceId', $source->id );
+		$this->session->set( 'shop_payment_stripe_id', $paymentId );
+		$this->session->set( 'shop_payment_stripe_sourceId', $source->id );
 		return $paymentId;
 	}
 

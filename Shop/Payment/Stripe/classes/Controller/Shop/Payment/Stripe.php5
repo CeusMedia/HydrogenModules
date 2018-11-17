@@ -40,7 +40,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 
-		$this->orderId		= $this->session->get( 'shop.orderId' );
+		$this->orderId		= $this->session->get( 'shop_order_id' );
 		if( !$this->orderId ){
 			$this->messenger->noteError( 'Invalid order' );
 			$this->restart( 'shop' );
@@ -85,7 +85,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	public function index(){
 		if( !( $sourceId = $this->request->get( 'source' ) ) )
 			$this->restart( 'shop/payment' );
-		if( $sourceId != $this->session->get( 'shop.payment.stripe.sourceId' ) ){
+		if( $sourceId != $this->session->get( 'shop_payment_stripe_sourceId' ) ){
 			$this->messenger->noteError( 'Invalid payment source ID' );
 			$this->restart( 'shop/payment' );
 		}
