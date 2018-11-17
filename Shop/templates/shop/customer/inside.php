@@ -34,8 +34,8 @@ $panelDelivery	= '<div class="content-panel">
 	<h3>'.$wDelivery->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$helperAddress->setAddress( $addressDelivery ).'<br/>
-		<a href="./shop/address/'.$addressDelivery->addressId.'/4" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wDelivery->buttonEdit.'</a>
-		<a href="./shop/address/'.$addressDelivery->addressId.'/4/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wDelivery->buttonRemove.'</a>
+		<a href="./shop/customer/address/'.$addressDelivery->addressId.'/4" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wDelivery->buttonEdit.'</a>
+		<a href="./shop/customer/address/'.$addressDelivery->addressId.'/4/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wDelivery->buttonRemove.'</a>
 	</div>
 </div>';
 
@@ -43,8 +43,8 @@ $panelBilling	= '<div class="content-panel">
 	<h3>'.$wBilling->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$helperAddress->setAddress( $addressBilling ).'<br/>
-		<a href="./shop/address/'.$addressBilling->addressId.'/2" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wBilling->buttonEdit.'</a>
-		<a href="./shop/address/'.$addressBilling->addressId.'/2/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wBilling->buttonRemove.'</a>
+		<a href="./shop/customer/address/'.$addressBilling->addressId.'/2" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wBilling->buttonEdit.'</a>
+		<a href="./shop/customer/address/'.$addressBilling->addressId.'/2/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wBilling->buttonRemove.'</a>
 	</div>
 </div>';
 

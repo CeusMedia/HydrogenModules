@@ -40,9 +40,9 @@ class View_Helper_Shop_Tabs{
 	public function render(){
 		$tabs	= new \CeusMedia\Bootstrap\Tabs( "tabs-cart" );
 		$session	= $this->env->getSession();
-		$order		= $session->get( 'shop.order' );
-		$positions	= $session->get( 'shop.order.positions' );
-		$customer	= $session->get( 'shop.order.customer' );
+		$order		= $session->get( 'shop_order' );
+		$positions	= $session->get( 'shop_order_positions' );
+		$customer	= $session->get( 'shop_order_customer' );
 		$disabled	= array(
 			'shop-customer',
 			'shop-conditions',

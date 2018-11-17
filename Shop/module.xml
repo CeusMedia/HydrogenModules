@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.7.7</version>
+	<version>0.8</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -43,12 +43,17 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.7.5">Add payment block in customer order mail.</log>
 	<log version="0.7.6">Integrate OAuth2 in customer login.</log>
 	<log version="0.7.7">Hide payment tab if cart content is free or empty.</log>
+	<log version="0.7.8">Extract customer handling to own controller and view.</log>
+	<log version="0.7.9">Reintegrate guest customer.</log>
+	<log version="0.8">Migrate old customer date into new structure.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop.php5</class>
+		<class>Controller/Shop/Customer.php5</class>
 		<class>Hook/Shop/FinishPanel.php5</class>
+		<class>Job/Shop.php5</class>
 		<class>Logic/Shop.php5</class>
 		<class>Mail/Shop/Customer/NotPayed.php5</class>
 		<class>Mail/Shop/Customer/Ordered.php5</class>
@@ -57,9 +62,11 @@ For payment you need to install a payment module.]]></description>
 		<class>Mail/Shop/Manager/Ordered.php5</class>
 		<class>Mail/Shop/Manager/Payed.php5</class>
 		<class>Model/Shop/Customer.php5</class>
+		<class>Model/Shop/CustomerOld.php5</class>
 		<class>Model/Shop/Order.php5</class>
 		<class>Model/Shop/Order/Position.php5</class>
 		<class>View/Shop.php5</class>
+		<class>View/Shop/Customer.php5</class>
 		<class>View/Helper/Shop.php5</class>
 		<class>View/Helper/Shop/AddressForm.php5</class>
 		<class>View/Helper/Shop/AddressView.php5</class>
@@ -67,6 +74,7 @@ For payment you need to install a payment module.]]></description>
 		<class>View/Helper/Shop/OrderFacts.php5</class>
 		<class>View/Helper/Shop/Tabs.php5</class>
 		<locale>de/shop.ini</locale>
+		<locale>de/shop/customer.ini</locale>
 		<locale>de/html/shop/bottom.html</locale>
 		<locale>de/html/shop/top.html</locale>
 		<locale>de/html/shop/conditions.html</locale>
@@ -86,6 +94,7 @@ For payment you need to install a payment module.]]></description>
 		<locale>de/html/shop/panel/finish.html</locale>
 		<locale>de/html/shop/panel/finishTop.html</locale>
 		<locale>en/shop.ini</locale>
+		<locale>en/shop/customer.ini</locale>
 		<locale>en/html/shop/bottom.html</locale>
 		<locale>en/html/shop/top.html</locale>
 		<locale>en/html/shop/conditions.html</locale>
@@ -104,16 +113,17 @@ For payment you need to install a payment module.]]></description>
 		<locale>en/mail/shop/manager/payed.html</locale>
 		<locale>en/html/shop/panel/finish.html</locale>
 		<locale>en/html/shop/panel/finishTop.html</locale>
-		<template>shop/address.php</template>
 		<template>shop/cart.php</template>
 		<template>shop/checkout.php</template>
 		<template>shop/conditions.php</template>
-		<template>shop/customer.php</template>
-		<template>shop/customer.inside.php</template>
-		<template>shop/customer.outside.php</template>
+		<template>shop/customer/address.php</template>
+		<template>shop/customer/index.php</template>
+		<template>shop/customer/inside.php</template>
+		<template>shop/customer/outside.php</template>
 		<template>shop/payment.php</template>
 		<template>shop/service.php</template>
 		<style sourc="theme" load="auto">module.shop.css</style>
+		<file>config/jobs/shop.xml</file>
 		<file>contents/attachments/Widerrufsformular.odt</file>
 		<file>contents/attachments/Widerrufsformular.pdf</file>
 		<file>contents/attachments/Widerrufsformular.txt</file>
@@ -126,19 +136,18 @@ For payment you need to install a payment module.]]></description>
 	<config protected="yes" mandatory="yes" type="string" name="price.point">,</config>
 	<config protected="yes" type="boolean" name="tabs.icons.white">no</config>
 <!--	<config protected="yes" type="" name=""></config>-->
-	<link access="public" path="shop/address"/>
 	<link access="public" path="shop/addArticle"/>
 	<link access="public" path="shop/cart"/>
-	<link access="public" path="shop/index"/>
-	<link access="public" path="shop/customer"/>
-	<link access="public" path="shop/login"/>
 	<link access="public" path="shop/changePositionQuantity"/>
-	<link access="public" path="shop/conditions"/>
 	<link access="public" path="shop/checkout"/>
-	<link access="public" path="shop/payment"/>
+	<link access="public" path="shop/conditions"/>
 	<link access="public" path="shop/finish"/>
+	<link access="public" path="shop/index"/>
+	<link access="public" path="shop/payment"/>
 	<link access="public" path="shop/removeArticle"/>
 	<link access="public" path="shop/service"/>
+	<link access="public" path="shop/customer/address"/>
+	<link access="public" path="shop/customer/index"/>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">Resource_Users</needs>
@@ -275,6 +284,13 @@ ALTER TABLE `<%?prefix%>shop_orders` ADD `paymentId` INT( 11 ) UNSIGNED NULL DEF
 ]]></sql>
 	<sql type="mysql" on="update" version="0.6.6"><![CDATA[
 UPDATE `<%?prefix%>mail_attachments` SET `className` = "Mail_Shop_Customer_Ordered" WHERE `className` = "Mail_Shop_Order_Customer";
+]]></sql>
+	<sql type="mysql" on="update" version="0.7.9"><![CDATA[
+RENAME TABLE `<%?prefix%>shop_customers` TO `<%?prefix%>shop_customers_old`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_customers` (
+  `customerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`customerId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;

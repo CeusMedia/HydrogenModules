@@ -25,8 +25,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$this->customer		= $this->logicShop->getCustomer( $this->order->userId, TRUE );
-//		print_m( $this->customer );die;
+		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
 		$this->positions	= $this->logicShop->getOrderPositions( $this->order->orderId );
 		foreach( $this->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
@@ -39,7 +38,6 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract{
 		$subject	= str_replace( "%time%", date( 'H:i:s' ), $subject );
 		$subject	= str_replace( "%orderId%", $this->order->orderId, $subject );
 		$this->setSubject( $subject );
-
 		$this->addTextBody( $this->renderText( $data ) );
 		$this->addHtmlBody( $this->renderHtml( $data ) );
 	}

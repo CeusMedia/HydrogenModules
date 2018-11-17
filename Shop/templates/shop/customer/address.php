@@ -1,8 +1,8 @@
 <?php
 
-$w	= (object) $words['panel-customer-address-delivery'];
+$w	= (object) $words['customer-delivery'];
 if( $address->type == 2 )
-	$w	= (object) $words['panel-customer-address-billing'];
+	$w	= (object) $words['customer-billing'];
 
 $helper		= new View_Helper_Shop_AddressForm( $env );
 $helper->setAddress( $address );

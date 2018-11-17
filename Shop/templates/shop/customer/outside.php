@@ -49,6 +49,16 @@ return '<div class="row-fluid">
 						<a href="./auth/register?from=shop/customer" class="btn btn-primary"><i class="fa fa-fw fa-pencil"></i> '.$wRegister->buttonRegister.'</a>
 				</form>
 			</div>
+			<hr/>
+			<h3>Ohne Benutzerkonto</h3>
+			<div class="content-panel-inner">
+				<p>
+					Sie können auch fortfahren, ohne ein Benutzerkonto zu erstellen.
+					Dazu geben Sie bitte die Liefer- und Rechnungsadresse ein.
+				</p>
+				<a href="shop/customer/'.Model_Shop_Order::CUSTOMER_MODE_GUEST.'" class="btn btn-primary"><i class="fa fa-fw fa-arrow-right"></i> weiter ohne Benutzerkonto</a>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>';

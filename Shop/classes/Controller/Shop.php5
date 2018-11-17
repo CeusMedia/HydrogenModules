@@ -24,19 +24,19 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->words		= (object) $this->getWords( 'msg' );
 		$this->bridge		= new Logic_ShopBridge( $this->env );
 		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
-		$this->orderId		= $this->session->get( 'shop.orderId' );
+		$this->orderId		= $this->session->get( 'shop_order_id' );
 
-		if( !$this->session->get( 'shop.order' ) ){
-			$this->session->set( 'shop.order', (object) array(
+		if( !$this->session->get( 'shop_order' ) ){
+			$this->session->set( 'shop_order', (object) array(
 				'status'		=> 0,
 				'rules'			=> FALSE,
 				'paymentMethod'	=> NULL,
 				'paymentId'		=> NULL,
 				'currency'		=> 'EUR',
 			) );
-			$this->session->set( 'shop.order.customer', array() );
-			$this->session->set( 'shop.order.billing', array() );
-			$this->session->set( 'shop.order.positions', array() );
+			$this->session->set( 'shop_order_customer', array() );
+			$this->session->set( 'shop_order_billing', array() );
+			$this->session->set( 'shop_order_positions', array() );
 		}
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
@@ -47,8 +47,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		if( (int) $this->orderId > 0 ){
 			$this->addData( 'order', $this->logic->getOrder( $this->orderId ) );
 		}
-		if( $this->session->get( 'shop.order.positions' ) ){
-			foreach( $this->session->get( 'shop.order.positions' ) as $position ){
+		if( $this->session->get( 'shop_order_positions' ) ){
+			foreach( $this->session->get( 'shop_order_positions' ) as $position ){
 				$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
 				$article	= $source->get( $position->articleId, $position->quantity );
 				$this->cartTotal	+= $article->price->all;
@@ -62,7 +62,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
 		$forwardUrl		= $this->request->get( 'forwardTo' );
-		$positions		= $this->session->get( 'shop.order.positions' );
+		$positions		= $this->session->get( 'shop_order_positions' );
 		if( array_key_exists( $articleId, $positions ) && $positions[$articleId]->quantity ){
 			foreach( $positions as $nr => $position ){
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
@@ -78,133 +78,22 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			'articleId'	=> $articleId,
 			'quantity'	=> $quantity,
 		);
-		$this->session->set( 'shop.order.positions', $positions );
-		$order		= $this->session->get( 'shop.order' );
+		$this->session->set( 'shop_order_positions', $positions );
+		$order		= $this->session->get( 'shop_order' );
 		if( $order->status == Model_Shop_Order::STATUS_NEW ){
 			$order->status = Model_Shop_Order::STATUS_AUTHENTICATED;
-			$this->session->set( 'shop.order', $order );
+			$this->session->set( 'shop_order', $order );
 		}
 		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
 		$this->messenger->noteSuccess( $this->words->successAddedToCart, $title, $quantity );
 		$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
 	}
 
-	public function address( $addressId, $type = NULL, $remove = NULL ){
-		$userId		= $this->session->get( 'userId' );
-		$from		= $this->request->get( 'from' );
-		if( !$userId )
-			$this->restart( 'customer', TRUE );
-
-		$model		= new Model_Address( $this->env );
-		$labels		= $this->getWords( 'customer' );
-		$countries	= $this->env->getLanguage()->getWords( 'countries' );
-
-		$mandatory	= array(
-			'firstname',
-			'surname',
-			'email',
-			'country',
-			'city',
-			'postcode',
-			'street',
-		);
-		if( $addressId && $remove ){
-			$model->removeByIndices( array(
-				'addressId'		=> $addressId,
- 				'relationId'	=> $userId,
-				'relationType'	=> 'user',
-				'type'			=> $type,
-			) );
-			$this->restart( 'customer', TRUE );
-		}
-		if( $this->request->has( 'save' ) ){
-			if( $addressId > 0 ){
-				$address	= $model->getByIndices( array(
-					'addressId'		=> $addressId,
-	 				'relationId'	=> $userId,
-					'relationType'	=> 'user'
-				) );
-				if( !$address ){
-				//	@todo: handle this situation!
-				}
-				$data	= $this->request->getAll( NULL, TRUE );
-				$data->set( 'country', array_search( $data->get( 'country' ), $countries ) );
-				$data->set( 'modifiedAt', time() );
-				$model->edit( $addressId, $data->getAll() );
-				$this->restart( 'customer', TRUE );
-			}
-			else{
-				if( !$type || !in_array( (int) $type, array( Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING ) ) ){
-				//	@todo: handle this situation!
-				}
-				$data	= $this->request->getAll( NULL, TRUE );
-				foreach( $mandatory as $name ){
-					if( !$data->get( $name ) ){
-						$label	= Alg_Text_CamelCase::convert( $name, FALSE );
-						$this->messenger->noteError(
-							$this->words->errorFieldEmpty,
-							'billing_'.$name,
-							$labels['labelBilling'.$label]
-						);
-					}
-				}
-				if( !$this->messenger->gotError() ){
-					$data->set( 'relationId', $userId );
-					$data->set( 'relationType', 'user' );
-					$data->set( 'type', $type );
-					$data->set( 'createdAt', time() );
-					$data->set( 'country', array_search( $data->get( 'country' ), $countries ) );
-//					print_m( $data->getAll() );die;
-					$addressId	= $model->add( $data->getAll() );
-				}
-				$this->restart( 'customer', TRUE );
-			}
-		}
-		if( !$addressId ){
-			$this->messenger->noteError( 'No address ID given.' );
-			$this->restart( 'customer', TRUE );
-		}
-		$address	= $model->get( $addressId );
-		if( !$address ){
-			$this->messenger->noteError( 'Invalid address ID given.' );
-			$this->restart( 'customer', TRUE );
-		}
-		if( !( $address->relationType === 'user' && $address->relationId == $userId ) ){
-			$this->messenger->noteError( 'Access to address denied.' );
-			$this->restart( 'customer', TRUE );
-		}
-		$this->addData( 'address', $address );
-	}
-
-	protected function calculateCharges(){
-		if( !$this->env->getModules()->has( 'Shop_Shipping' ) )
-			return 0;
-		$customer	= $this->session->get( 'shop.order.customer', TRUE );
-
-		$charges	= 0;
-//		if( $customer->get( 'country' ) )
-/*		$grade		= new Model_Shop_Shipping_Grade();
-		$grade		= $grade->getGradeID( $total['weight'] );
-		$zone		= new Model_Shop_Shipping_Country();
-		$zone		= $zone->getZoneID( $udata['country'] );
-		$price		= new Model_Shop_Shipping_Price();
-		$charges	= $price->getPrice( $zone, $grade );
-*/		$option		= new Model_Shop_Shipping_Option( $this->env );
-		$options	= $option->getAll();
-		if( count( $options ) ){
-			$set_options	= explode( "|", $order['options'] );
-			foreach( $options as $option )
-				if( in_array( $option['shippingoption_id'], $set_options ) )
-					$charges	+= (float)$option['price'];
-		}
-		return $charges;
-	}
-
 	public function cart(){
-		$this->addData( 'order', $this->session->get( 'shop.order' ) );
-		$this->addData( 'customer', $this->session->get( 'shop.order.customer' ) );
-		$this->addData( 'billing', $this->session->get( 'shop.order.billing' ) );
-		$positions	= $this->session->get( 'shop.order.positions' );
+		$this->addData( 'order', $this->session->get( 'shop_order' ) );
+		$this->addData( 'customer', $this->session->get( 'shop_order_customer' ) );
+		$this->addData( 'billing', $this->session->get( 'shop_order_billing' ) );
+		$positions	= $this->session->get( 'shop_order_positions' );
 		foreach( $positions as $nr => $position ){
 			$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
 			$article	= $source->get( $position->articleId, $position->quantity );
@@ -218,7 +107,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
 		$forwardUrl		= $this->request->get( 'forwardTo' );
-		$positions		= $this->session->get( 'shop.order.positions' );
+		$positions		= $this->session->get( 'shop_order_positions' );
 		foreach( $positions as $nr => $position ){
 			if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
 				switch( $operation ){
@@ -241,7 +130,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				else{
 					$this->messenger->noteSuccess( $this->words->successChangedQuantity, $title, $position->quantity );
 				}
-				$this->session->set( 'shop.order.positions', $positions );
+				$this->session->set( 'shop_order_positions', $positions );
 				$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
 			}
 		}
@@ -250,9 +139,9 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 
 	public function checkout(){
 		if( $this->request->has( 'save' ) && $this->request->isMethod( 'POST' ) ){
-			$orderId	= $this->session->get( 'shop.orderId' );
+			$orderId	= $this->session->get( 'shop_order_id' );
 			$orderId	= $this->logic->storeCartFromSession( $orderId );
-			$this->session->set( 'shop.orderId', $orderId );
+			$this->session->set( 'shop_order_id', $orderId );
 			$price      = $this->logic->calculateOrderTotalPrice( $orderId );
 			$order		= $this->logic->getOrder( $orderId );
 
@@ -273,73 +162,50 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				$this->restart( 'finish', TRUE );
 			}
 		}
-
-//		print_m( $this->session->getAll() );die;
-/*		if( ( $orderId = $this->session->get( 'shop.orderId' ) ) ){
-			$order		= $this->logic->getOrder( $orderId );
-			$customer	= $this->logic->getCustomer( $order->userId );
-			$language	= $this->env->getLanguage()->getLanguage();
-			$logic		= Logic_Mail::getInstance( $this->env );
-			$mail		= new Mail_Shop_Manager_Ordered( $this->env, array(
-				'orderId'			=> $orderId,
-				'paymentBackends'	=> $this->backends,
-			) );
-			print( $mail->contents['html'] );die;
-			$logic->appendRegisteredAttachments( $mail, $language );
-			$logic->handleMail( $mail, $customer, $language );
-			die;
-		}*/
-/*		if( ( $orderId = $this->session->get( 'shop.orderId' ) ) ){
-			$order		= $this->logic->getOrder( $orderId );
-			$customer	= $this->logic->getCustomer( $order->userId );
-			$language	= $this->env->getLanguage()->getLanguage();
-			$logic		= Logic_Mail::getInstance( $this->env );
-			$mail		= new Mail_Shop_Customer_Ordered( $this->env, array(
-				'orderId'			=> $orderId,
-				'paymentBackends'	=> $this->backends,
-			) );
-			print( $mail->contents['html'] );die;
-			$logic->appendRegisteredAttachments( $mail, $language );
-			$logic->handleMail( $mail, $customer, $language );
-			die;
-		}*/
-
-		$order		= $this->session->get( 'shop.order' );
-		$customerId	= $this->session->get( 'shop.order.customer' );
-		$positions	= $this->session->get( 'shop.order.positions' );
-		$billing	= $this->session->get( 'shop.order.billing' );
+		$order		= $this->session->get( 'shop_order' );
+		$customerId	= $this->session->get( 'shop_order_customer' );
+		$positions	= $this->session->get( 'shop_order_positions' );
 		if( !$positions ){
 			$this->messenger->noteNotice( $this->words->errorCheckoutEmptyCart );
 			$this->restart( 'cart', TRUE );
 		}
 		$this->addData( 'order', $order );
 		$this->addData( 'positions', $positions );
-		$this->addData( 'customer', $this->logic->getCustomer( $customerId ) );
-		$this->addData( 'billing', $billing );
+		switch( $this->session->get( 'shop_customer_mode' ) ){
+		 	case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
+				$customerId	= $this->session->get( 'shop_customer_id' );
+				$customer	= $this->logic->getAccountCustomer( $customerId );
+				break;
+		 	case Model_Shop_Order::CUSTOMER_MODE_GUEST:
+				$customerId	= $this->session->get( 'shop_customer_id' );
+				$customer	= $this->logic->getGuestCustomer( $customerId );
+				break;
+		}
+		$this->addData( 'customer', $customer );
 	}
 
 	public function conditions(){
-		$order		= $this->session->get( 'shop.order' );
-		$positions	= $this->session->get( 'shop.order.positions' );
-		$customer	= $this->session->get( 'shop.order.customer' );
+		$order		= $this->session->get( 'shop_order' );
+		$positions	= $this->session->get( 'shop_order_positions' );
+		$customer	= $this->session->get( 'shop_order_customer' );
 
 		if( !$positions )
 			$this->restart( 'cart', TRUE );
 
-		if( !$this->session->get( 'shop.order.customer' ) )
+		if( !$this->session->get( 'shop_order_customer' ) )
 			$this->restart( 'customer', TRUE );
 
 		if( $this->request->has( 'saveConditions' ) ){
 			if( !$this->request->get( 'accept_rules' ) ){
 				$this->messenger->noteError( $this->words->errorRulesNotAccepted );
 				$order->status	= -1;
-				$this->session->set( 'shop.order', $order );
+				$this->session->set( 'shop_order', $order );
 			}
 			else{
 //				$this->messenger->noteSuccess( $this->words->successRulesAccepted );
 				$order->status	= 1;
 				$order->rules	= TRUE;
-				$this->session->set( 'shop.order', $order );
+				$this->session->set( 'shop_order', $order );
 				$this->restart( 'payment', TRUE );
 			}
 		}
@@ -348,80 +214,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'order', $order );
 	}
 
-	public function customer(){
-		$order		= $this->session->get( 'shop.order' );
-		$positions	= $this->session->get( 'shop.order.positions' );
-		$customer	= $this->session->get( 'shop.order.customer' );
-		$billing	= $this->session->get( 'shop.order.billing' );
-
-		if( !$positions ){
-			$this->messenger->noteNotice( $this->words->errorCustomerEmptyCart );
-			$this->restart( 'cart', TRUE );
-		}
-
-		$userId	= 0;
-		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
-			if( $this->session->has( 'userId' ) ){
-				$logicAuth	= Logic_Authentication::getInstance( $this->env );
-				$countries	= $this->env->getLanguage()->getWords( 'countries' );
-				$userId		= $logicAuth->getCurrentUserId( FALSE );
-				if( $userId ){
-					if( $this->request->has( 'save' ) ){
-						$this->session->set( 'shop.order.customer', $userId );
-						$this->restart( 'conditions', TRUE );
-					}
-
-					$modelUser	= new Model_User( $this->env );
-					$user		= $modelUser->get( $userId );
-					if( $user ){
-						$customer	= (object) array(
-							'institution'	=> NULL,
-							'firstname'		=> $user->firstname,
-							'surname'		=> $user->surname,
-							'email'			=> $user->email,
-							'phone'			=> $user->phone,
-							'address'		=> $user->street.' '.$user->number,
-							'postcode'		=> $user->postcode,
-							'city'			=> $user->city,
-							'state'			=> NULL,
-							'region'		=> NULL,
-							'country'		=> (object) array(
-								'code'		=> $user->country,
-								'label'		=> $countries[$user->country],
-							),
-						);
-					}
-					$model	= new Model_Address( $this->env );
-					$indices	= array(
-						'relationType'	=> 'user',
-						'relationId'	=> $userId,
-						'type'			=> Model_Address::TYPE_DELIVERY,
-					);
-					$addressDelivery	= $model->getByIndices( array(
-						'relationType'	=> 'user',
-						'relationId'	=> $userId,
-						'type'			=> Model_Address::TYPE_DELIVERY,
-					) );
-					$addressBilling		= $model->getByIndices( array(
-						'relationType'	=> 'user',
-						'relationId'	=> $userId,
-						'type'			=> Model_Address::TYPE_BILLING,
-					) );
-					$this->addData( 'customer', $customer );
-					$this->addData( 'countries', $countries );
-					$this->addData( 'user', $user );
-					$this->addData( 'addressBilling', $addressBilling );
-					$this->addData( 'addressDelivery', $addressDelivery );
-				}
-			}
-		}
-		$this->addData( 'userId', $userId );
-		$this->addData( 'username', $this->request->get( 'username' ) );
-		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );
-	}
-
 	public function finish(){
-		$orderId	= $this->session->get( 'shop.orderId' );
+		$orderId	= $this->session->get( 'shop_order_id' );
 		if( !$orderId ){
 			$this->env->getMessenger()->noteError( $this->words->errorFinishEmptyCart );
 			$this->restart( 'cart', TRUE );
@@ -432,12 +226,12 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$this->logic->setOrderStatus( $orderId, Model_Shop_Order::STATUS_ORDERED );
 		$this->sentOrderMailCustomer( $orderId );
 		$this->sentOrderMailManager( $orderId );
-		$this->session->set( 'shop.lastOrderId', $orderId );
-		$this->session->remove( 'shop.order' );
-		$this->session->remove( 'shop.order.customer' );
-		$this->session->remove( 'shop.order.billing' );
-		$this->session->remove( 'shop.order.positions' );
-		$this->session->remove( 'shop.orderId' );
+		$this->session->set( 'shop_order_lastId', $orderId );
+		$this->session->remove( 'shop_order' );
+		$this->session->remove( 'shop_order_customer' );
+		$this->session->remove( 'shop_order_billing' );
+		$this->session->remove( 'shop_order_positions' );
+		$this->session->remove( 'shop_order_id' );
 		$this->env->getMessenger()->noteSuccess( $this->words->successFinished );
 		$order	= $this->logic->getOrder( $orderId );
 		$this->env->getModules()->callHook( 'Shop', 'onFinish', $this, array(
@@ -456,19 +250,11 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$paymentBackend		= $this->backends[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
-		$orderId	= $this->session->get( 'shop.orderId' );
-		$this->addData( 'order', $this->session->get( 'shop.order' ) );
+		$orderId	= $this->session->get( 'shop_order_id' );
+		$this->addData( 'order', $this->session->get( 'shop_order' ) );
 	}
 
-	public function setPaymentBackend( $paymentBackendKey = NULL ){
-		if( $paymentBackendKey ){
-			$orderId	= $this->session->get( 'shop.orderId' );
-			$this->logic->setOrderPaymentMethod( $orderId, $paymentBackendKey );
-			$this->restart( 'checkout', TRUE );
-		}
-	}
-
-	public function register(){
+/*	public function register(){
 		if( $this->request->has( 'save' ) ){
 			$customer	= $this->request->getAll( 'customer_', TRUE );
 			$labels		= $this->getWords( 'customer' );
@@ -512,7 +298,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'customer', $customer );
 		$this->addData( 'address', $address );
-	}
+	}*/
 
 	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
 		$this->backends[]	= (object) array(
@@ -535,20 +321,69 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 
 	public function removeArticle( $articleId ){
 		$forwardUrl		= $this->request->get( 'forwardTo' );
-		$positions		= $this->session->get( 'shop.order.positions' );
+		$positions		= $this->session->get( 'shop_order_positions' );
 		foreach( $positions as $nr => $position )
 			if( $position->articleId == $articleId )
 				unset( $positions[$nr] );
-		$this->session->set( 'shop.order.positions', $positions );
+		$this->session->set( 'shop_order_positions', $positions );
 		$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
 	}
 
 	public function rules(){
 	}
 
+	public function service(){
+		$orderId	= $this->session->get( 'shop_order_lastId' );
+		if( !$orderId )
+			$this->restart( 'cart', TRUE );
+		$this->addData( 'orderId', $orderId );
+		$this->addData( 'order', $this->logic->getOrder( $orderId, TRUE ) );
+
+		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
+		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
+		$this->addData( 'servicePanels', $this->servicePanels );
+
+		$arguments	= array( 'orderId' => $orderId );
+		$this->addData( 'delivery', NULL );
+		$this->env->getModules()->callHook( 'Shop', 'onPaymentSuccess', $this, $arguments );
+	}
+
+	public function setPaymentBackend( $paymentBackendKey = NULL ){
+		if( $paymentBackendKey ){
+			$orderId	= $this->session->get( 'shop_order_id' );
+			$this->logic->setOrderPaymentMethod( $orderId, $paymentBackendKey );
+			$this->restart( 'checkout', TRUE );
+		}
+	}
+
+	/*  --  PROTECTED  --  */
+	protected function calculateCharges(){
+		if( !$this->env->getModules()->has( 'Shop_Shipping' ) )
+			return 0;
+		$customer	= $this->session->get( 'shop_order_customer', TRUE );
+
+		$charges	= 0;
+//		if( $customer->get( 'country' ) )
+/*		$grade		= new Model_Shop_Shipping_Grade();
+		$grade		= $grade->getGradeID( $total['weight'] );
+		$zone		= new Model_Shop_Shipping_Country();
+		$zone		= $zone->getZoneID( $udata['country'] );
+		$price		= new Model_Shop_Shipping_Price();
+		$charges	= $price->getPrice( $zone, $grade );
+*/		$option		= new Model_Shop_Shipping_Option( $this->env );
+		$options	= $option->getAll();
+		if( count( $options ) ){
+			$set_options	= explode( "|", $order['options'] );
+			foreach( $options as $option )
+				if( in_array( $option['shippingoption_id'], $set_options ) )
+					$charges	+= (float)$option['price'];
+		}
+		return $charges;
+	}
+
 	protected function sentOrderMailCustomer( $orderId ){
 		$order		= $this->logic->getOrder( $orderId );
-		$customer	= $this->logic->getCustomer( $order->userId );
+		$customer	= $this->logic->getOrderCustomer( $orderId );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$language   = !empty( $customer->language ) ? $customer->language : $language;
 
@@ -571,22 +406,6 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		) );
 		$logic->appendRegisteredAttachments( $mail, $language );
 		$logic->handleMail( $mail, (object) array( 'email' => $email ), $language );
-	}
-
-	public function service(){
-		$orderId	= $this->session->get( 'shop.lastOrderId' );
-		if( !$orderId )
-			$this->restart( 'cart', TRUE );
-		$this->addData( 'orderId', $orderId );
-		$this->addData( 'order', $this->logic->getOrder( $orderId, TRUE ) );
-
-		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
-		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
-		$this->addData( 'servicePanels', $this->servicePanels );
-
-		$arguments	= array( 'orderId' => $orderId );
-		$this->addData( 'delivery', NULL );
-		$this->env->getModules()->callHook( 'Shop', 'onPaymentSuccess', $this, $arguments );
 	}
 
 	protected function submitOrder(){

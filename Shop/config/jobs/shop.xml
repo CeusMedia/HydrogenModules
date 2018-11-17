@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Shop.migrate">
+		<class>Shop</class>
+		<method>migrate</method>
+		<mode>live</mode>
+	</job>
+</jobs>

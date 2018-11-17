@@ -1,8 +1,8 @@
 <?php
 class View_Shop extends CMF_Hydrogen_View{
 
-	public function address(){
-	}
+/*	public function address(){
+}*/
 
 	public function cart(){
 	}
@@ -13,8 +13,8 @@ class View_Shop extends CMF_Hydrogen_View{
 	public function conditions(){
 	}
 
-	public function customer(){
-	}
+/*	public function customer(){
+}*/
 
 	public function payment(){
 	}

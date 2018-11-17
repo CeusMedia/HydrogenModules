@@ -47,7 +47,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	}
 
 	public function countArticleInCart( $bridgeId, $articleId ){
-		$positions	= $this->env->getSession()->get( 'shop.order.positions' );
+		$positions	= $this->env->getSession()->get( 'shop_order_positions' );
 		if( is_array( $positions ) )
 			foreach( $positions as $position )
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId )
@@ -56,7 +56,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	}
 
 	public function countArticlesInCart( $countEach = FALSE ){
-		$positions	= $this->env->getSession()->get( 'shop.order.positions' );
+		$positions	= $this->env->getSession()->get( 'shop_order_positions' );
 		if( !is_array( $positions ) )
 			return 0;
 		if( !$countEach )
@@ -71,7 +71,36 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getCustomer( $userId ){
+	public function getOrderCustomer( $orderId ){
+		$order	= $this->modelOrder->get( $orderId );
+		if( !$order )
+			throw new RangeException( 'Invalid order ID: '.$orderId );
+		if( $order->userId )
+			return $this->getAccountCustomer( $order->userId );
+		else if( $order->customerId )
+			return $this->getGuestCustomer( $order->customerId );
+		throw new Exception( 'No user or customer assigned to order' );
+	}
+
+	public function getGuestCustomer( $customerId ){
+		$model	= new Model_Shop_Customer( $this->env );
+		$user	= $model->get( $customerId );
+		if( !$user )
+			throw new RangeException( 'Invalid customer ID: '.$customerId );
+		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'customer',
+			'relationId'	=> $customerId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'customer',
+			'relationId'	=> $customerId,
+			'type'			=> Model_Address::TYPE_DELIVERY,
+		) );
+		return $user;
+	}
+
+	public function getAccountCustomer( $userId ){
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
@@ -91,7 +120,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	public function getOrder( $orderId, $extended = FALSE ){
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){
-			$order->customer	= $this->getCustomer( $order->userId );
+			$order->customer	= $this->getOrderCustomer( $orderId );
 			$order->positions	= $this->getOrderPositions( $orderId );
 		}
 		return $order;
@@ -169,9 +198,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 			) );
 		}
 		$session	= $this->env->getSession();
-		$order		= $session->get( 'shop.order' );
+		$order		= $session->get( 'shop_order' );
 		$order->paymentMethod	= $paymentMethod;
-		$session->set( 'shop.order', $order );
+		$session->set( 'shop_order', $order );
 	}
 
 	public function setOrderPaymentId( $orderId, $paymentId ){
@@ -221,10 +250,10 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 
 	public function storeCartFromSession( $orderId = NULL ){
 		$session		= $this->env->getSession();
-		$order			= (array) $session->get( 'shop.order' );
-		$positions		= $session->get( 'shop.order.positions' );
-		$customer		= $session->get( 'shop.order.customer' );
-		$billing		= $session->get( 'shop.order.billing' );
+		$order			= (array) $session->get( 'shop_order' );
+		$positions		= $session->get( 'shop_order_positions' );
+		$customer		= $session->get( 'shop_order_customer' );
+		$billing		= $session->get( 'shop_order_billing' );
 		$taxIncluded	= $this->moduleConfig->get( 'tax.included' );
 
 		if( empty( $customer ) || empty( $order ) || empty( $positions ) )
@@ -252,7 +281,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		}
 		else{
 			if( !$this->modelOrder->get( $orderId ) ){
-				$session->remove( 'shop.orderId' );
+				$session->remove( 'shop_order_id' );
 				return $this->storeCartFromSession();
 			}
 		}

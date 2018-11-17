@@ -26,7 +26,7 @@ class View_Helper_Shop_AddressForm{
 	<h3>'.$this->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$this->textTop.'
-		<form action="./shop/address/'.$addressId.'/'.$this->type.'" method="post">
+		<form action="./shop/customer/address/'.$addressId.'/'.$this->type.'" method="post">
 			<!--	HACK: Force autocomplete to be off for newer Chrome versions.
 					DESC: Chrome has new AutoFill feature whichs need autocomplete="false" which breaks other browsers.
 					LINK: http://stackoverflow.com/a/33766566
@@ -90,7 +90,7 @@ class View_Helper_Shop_AddressForm{
 						</div>
 						<div class="span6">
 							<label for="input_region">'.$w->labelRegion.'</label>
-							<input type="text" name="region" id="input_region" class="span12" value="'.htmlentities( NULL, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="region" id="input_region" class="span12" value="'.htmlentities( $d->region, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 				</div>
