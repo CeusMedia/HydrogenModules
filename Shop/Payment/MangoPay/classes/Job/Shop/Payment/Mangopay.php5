@@ -57,7 +57,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 				);
 				$logic->handleMail(
 					new Mail_Shop_Customer_NotPayed( $this->env, $data ),
-					$this->logicShop->getCustomer( $order->userId ),
+					$this->logicShop->getOrderCustomer( $order->orderId ),
 					'de'
 				);
 				$logic->handleMail(
@@ -106,7 +106,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 					);
 					$logic->handleMail(
 						new Mail_Shop_Customer_Payed( $this->env, $data ),
-						$this->logicShop->getCustomer( $order->userId ),
+						$this->logicShop->getOrderCustomer( $order->orderId ),
 						'de'
 					);
 					$logic->handleMail(

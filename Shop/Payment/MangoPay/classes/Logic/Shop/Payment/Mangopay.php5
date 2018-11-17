@@ -33,8 +33,8 @@ class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logi
 			'createdAt'		=> time(),
 		) );
 		$this->logicShop->setOrderPaymentId( $orderId, $paymentId );
-		$this->session->set( 'shop.payment.mangopay.id', $paymentId );
-		$this->session->set( 'shop.payment.mangopay.payInId', $payIn->Id );
+		$this->session->set( 'shop_payment_mangopay_id', $paymentId );
+		$this->session->set( 'shop_payment_mangopay_payInId', $payIn->Id );
 		return $paymentId;
 	}
 

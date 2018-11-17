@@ -31,7 +31,7 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 
-		$this->orderId		= $this->session->get( 'shop.orderId' );
+		$this->orderId		= $this->session->get( 'shop_order_id' );
 		if( !$this->orderId ){
 			$this->messenger->noteError( 'Invalid order' );
 			$this->restart( 'shop' );
@@ -147,7 +147,7 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 		if( !( $transactionId = $this->request->get( 'transactionId' ) ) ){
 			$this->restart( 'shop/payment' );
 		}
-		if( $transactionId != $this->session->get( 'shop.payment.mangopay.payInId' ) ){
+		if( $transactionId != $this->session->get( 'shop_payment_mangopay_payInId' ) ){
 			$this->messenger->noteError( 'Invalid payment transaction ID' );
 			$this->restart( 'shop/payment' );
 		}
