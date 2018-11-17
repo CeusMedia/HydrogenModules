@@ -19,7 +19,7 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		$this->shop			= new Logic_Shop( $this->env );
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->orderId		= $this->session->get( 'shop.orderId' );
+		$this->orderId		= $this->session->get( 'shop_order_id' );
 		if( !$this->orderId ){
 			$this->messenger->noteError( 'Invalid order' );
 			$this->restart( 'shop' );
