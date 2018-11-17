@@ -231,7 +231,7 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 		$logicShopBridge	= new Logic_ShopBridge( $this->env );
 		$bridgeId			= $logicShopBridge->getBridgeId( 'Provision' );
 
-		$cartIsEmpty	= empty( $this->session->get( 'shop.order.positions' ) ) ;
+		$cartIsEmpty	= empty( $this->session->get( 'shop_order_positions' ) ) ;
 		foreach( $userLicenses as $userLicense ){
 			$userLicense->user	= $this->logicProvision->getUserLicenseOwner( $userLicense->userLicenseId );
 			if( $userLicense->status == 0 && $cartIsEmpty )

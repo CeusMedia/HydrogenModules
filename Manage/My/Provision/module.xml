@@ -3,7 +3,7 @@
 	<title>Manage: My: Provision</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Experimental prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Prepare view to add a license.</log>
@@ -16,6 +16,7 @@
 	<log version="0.3.4">Apply module UI:Font:FontAwesome.</log>
 	<log version="0.3.5">Add position bar.</log>
 	<log version="0.4">Derived from module Manage:My:License.</log>
+	<log version="0.4.1">Update to support Shop version 0.8.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
