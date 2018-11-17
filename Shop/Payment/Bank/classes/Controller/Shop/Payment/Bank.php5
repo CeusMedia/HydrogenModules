@@ -32,7 +32,7 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 
-		$this->orderId		= $this->session->get( 'shop.orderId' );
+		$this->orderId		= $this->session->get( 'shop_order_id' );
 		if( !$this->orderId ){
 			$this->messenger->noteError( 'Invalid order' );
 			$this->restart( 'shop' );
