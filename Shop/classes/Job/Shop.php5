@@ -10,10 +10,11 @@ class Job_Shop extends Job_Abstract{
 //		$modelOrders->getAll()
 		$conditions	= array();
 		$orders		= array( 'customerId' => 'ASC' );
-		$limit		= array( 0, 100 );
+		$limit		= array( 0, 1000 );
 		$countries	= FS_File_INI_Reader::load( $pathLocales.'de/countries.ini' );
-		$customers	= $modelCustomerOld->getAll( $conditions, $orders, $limit );
-		remark( 'Found: '.count( $customers ) );
+		$customers	= $modelCustomerOld->getAll( $conditions, $orders/*, $limit*/ );
+//		remark( 'Found: '.count( $customers ) );
+		$count		= 0;
 		foreach( $customers as $customer ){
 			$order	= $modelOrders->getByIndex( 'customerId', $customer->customerId );
 			if( $order ){
@@ -70,7 +71,9 @@ class Job_Shop extends Job_Abstract{
 				}
 				$modelCustomerNew->add( array( 'customerId' => $customer->customerId ) );
 				$modelCustomerOld->remove( $customer->customerId );
-				$this->out( 'Imported customer '.$customer->customerId );
+				$this->showProgress( ++$count, count( $customers ) );
+
+//				$this->out( 'Imported customer '.$customer->customerId );
 			}
 		}
 	}
