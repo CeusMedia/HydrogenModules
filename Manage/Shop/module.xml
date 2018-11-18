@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added shipping.</log>
@@ -25,6 +25,7 @@
 	<log version="0.4.1">Use new user model instead of customer.</log>
 	<log version="0.4.2">Use new user address model.</log>
 	<log version="0.4.3">Use users resource module.</log>
+	<log version="0.4.4">Update to support Shop version 0.8.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -34,6 +35,7 @@
 		<class>Controller/Manage/Shop/Report.php5</class>
 		<class>Logic/ShopManager.php5</class>
 		<class>Model/Shop/Customer.php5</class>
+		<class>Model/Shop/CustomerOld.php5</class>
 		<class>Model/Shop/Order.php5</class>
 		<class>Model/Shop/Order/Position.php5</class>
 		<class>Model/Shop/Shipping/Country.php5</class>

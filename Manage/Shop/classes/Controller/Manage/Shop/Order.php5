@@ -85,7 +85,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		foreach( $orders as $nr => $order ){
 			$customerIds[]	= $order->userId;
 			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->orderId );
-			$orders[$nr]->customer	= $this->logicShop->getCustomer( $order->userId, TRUE );
+			$orders[$nr]->customer	= $this->logicShop->getOrderCustomer( $order->orderId );
 		}
 //		$customers		= $this->modelCustomer->getAll( array( 'userId' => $customerIds ) );
 		$this->addData( 'orders', $orders );

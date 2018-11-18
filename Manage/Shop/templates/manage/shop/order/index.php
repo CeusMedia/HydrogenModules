@@ -25,7 +25,7 @@ foreach( $orders as $order ){
 	$attributes		= array( 'href' => './manage/shop/order/edit/'.$order->orderId );
 	$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$order->status] ) );
 	$link	= UI_HTML_Tag::create( 'a', "#".$order->orderId, $attributes );
-	$customer	= $order->customer ? $order->customer->surname.', '.$order->customer->firstname : "-";
+	$customer	= $order->customer ? $order->customer->addressDelivery->surname.', '.$order->customer->addressDelivery->firstname : "-";
 	$customer	= UI_HTML_Tag::create( 'div', $customer, array( 'class' => 'autocut' ) );
 	$customer	= UI_HTML_Tag::create( 'a', $customer, $attributes );
 	$link		= UI_HTML_Tag::create( 'small', "#".$order->orderId, array( 'class' => 'muted' ) );
