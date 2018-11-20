@@ -31,7 +31,7 @@ list>
 
 
 ]]></description>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add provider icon support.</log>
@@ -40,6 +40,7 @@ list>
 	<log version="0.2.4">Extract hooks to own hook class.</log>
 	<log version="0.2.5">Improve use of resource owner data.</log>
 	<log version="0.2.6">Add loading modal.</log>
+	<log version="0.2.7">Use general module main switch.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -54,6 +55,7 @@ list>
 		<template>auth/oauth2/login.php</template>
 		<locale>de/auth/oauth2.ini</locale>
 	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<relations>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">UI_Helper_HTML</needs>

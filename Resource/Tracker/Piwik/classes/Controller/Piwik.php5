@@ -13,7 +13,7 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 	 */
 	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
-		if( !$config->get( 'enabled' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
+		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;
 		if( !( $uri = $config->get( 'URI' ) ) )														//  URI to piwik is not defined
 			return;
@@ -44,7 +44,7 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 			->setErrorVersion( '0.4.2' )
 			->setExceptionVersion( '0.4.2' )
 			->message( 'Module Resource:Tracker:Piwik is deprecated, use Resource:Tracker:Matomo instead' );
-		if( !$config->get( 'enabled' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set
+		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set
 			return;
 		if( !( $uri = $config->get( 'URI' ) ) )														//  URI to piwik is not defined
 			return;
@@ -76,7 +76,7 @@ initPiwik('.json_encode( $config->getAll() ).');';
 	 */
 	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
-		if( !$config->get( 'enabled' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
+		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;
 		if( !( $uri = $config->get( 'URI' ) ) )														//  URI to piwik is not defined
 			return;

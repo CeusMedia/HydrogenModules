@@ -40,5 +40,5 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_CSS_Panel</needs>
 	</relations>
-   <config type="boolean" name="enabled" protected="yes">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 </module>

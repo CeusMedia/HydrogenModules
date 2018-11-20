@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class View_Helper_DevLayers{
 
 	static protected $layers	= array();

@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Resource_Oauth{
 
 	public function __construct( $env ){

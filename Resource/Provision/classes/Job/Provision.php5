@@ -1,5 +1,8 @@
 <?php
-class Job_Accounting extends Job_Abstract{
+/**
+ *	@todo		apply module config main switch
+ */
+class Job_Provision extends Job_Abstract{
 
 	public function __onInit(){
 		$this->modules	= $this->env->getModules();

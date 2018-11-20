@@ -1,5 +1,5 @@
 <?php
-class Hook_Provision/* extends CMF_Hydrogen_Hook*/{
+class Hook_Provision extends CMF_Hydrogen_Hook{
 
 	/**
 	 *	@todo    		extract to (atm-not-yet-existing) abstract framework hook class
@@ -14,7 +14,7 @@ class Hook_Provision/* extends CMF_Hydrogen_Hook*/{
 		$modules		= $env->getModules();
 		$resource		= new Resource_Provision_Client( $env );
 
-		if( !$moduleConfig->get( 'enabled' ) )
+		if( !$moduleConfig->get( 'active' ) )
 			return;
 
 		$hasCache	= $modules->has( 'Resource_Cache' );
@@ -69,7 +69,7 @@ class Hook_Provision/* extends CMF_Hydrogen_Hook*/{
 	static public function onAuthAfterConfirm( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
 		$resource		= new Resource_Provision_Client( $env );
-		if( !$moduleConfig->get( 'enabled' ) )
+		if( !$moduleConfig->get( 'active' ) )
 			return;
 		if( $moduleConfig->get( 'mode' ) === "OAuth" )
 			return;
@@ -114,7 +114,7 @@ class Hook_Provision/* extends CMF_Hydrogen_Hook*/{
 	static public function onAuthCheckBeforeLogin( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 return;
 //		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
-//		if( !$moduleConfig->get( 'enabled' ) )
+//		if( !$moduleConfig->get( 'active' ) )
 //			return;
 		$resource		= new Resource_Provision_Client( $env );
 		if( !empty( $data['userId'] ) ){
@@ -133,7 +133,7 @@ return;
 
 	static public function onAuthCheckBeforeRegister( $env, $context, $module, $data ){
 		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
-		if( !$moduleConfig->get( 'enabled' ) )
+		if( !$moduleConfig->get( 'active' ) )
 			return;
 		if( $moduleConfig->get( 'mode' ) === "OAuth" )
 			return;

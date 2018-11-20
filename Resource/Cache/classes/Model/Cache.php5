@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Model_Cache{
 
 	protected $model;

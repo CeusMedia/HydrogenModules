@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Resource_Provision_Client{
 
 	protected $env;

@@ -1,17 +1,17 @@
 <?php
-class Hook_Auth_Rest/* extends CMF_Hydrogen_Hook*/{
+class Hook_Auth_Rest extends CMF_Hydrogen_Hook{
 
 	static protected $configPrefix	= 'module.resource_authentication_backend_rest.';
 
 	static public function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( !$env->getConfig()->get( self::$configPrefix.'enabled' ) )
+		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 		$words	= $env->getLanguage()->getWords( 'auth/rest' );
 		$context->registerBackend( 'Rest', 'rest', $words['backend']['title'] );
 	}
 
 	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( !$env->getConfig()->get( self::$configPrefix.'enabled' ) )
+		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 		$words		= (object) $env->getLanguage()->getWords( 'auth/rest' );					//  load words
 		$rank		= $env->getConfig()->get( self::$configPrefix.'login.rank' );

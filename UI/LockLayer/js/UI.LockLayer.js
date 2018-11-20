@@ -53,7 +53,7 @@ var LockLayer = {
 //			this.layerFront = $("#layer-lock-front");
 			this.isSetUp = true;
 			this.settings = settings.UI_LockLayer;
-			if (this.settings.enabled) {
+			if (this.settings.active) {
 				LockLayer.applyToButtons();
 				LockLayer.applyToLinks();
 				LockLayer.applyToForms();

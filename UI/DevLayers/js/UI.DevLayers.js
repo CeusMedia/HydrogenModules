@@ -1,3 +1,6 @@
+/**
+ *	@todo		apply module config main switch
+ */
 if(typeof UI === "undefined")
 	UI = {};
 UI.DevLayers = {

@@ -50,7 +50,7 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( !$env->getConfig()->get( 'module.ui_bootstrap.enabled' ) )
+		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
 
 		$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
@@ -105,7 +105,7 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( !$env->getConfig()->get( 'module.ui_bootstrap.enabled' ) )
+		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
 		$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
 		$majorVersion	= self::getMajorVersion( $options->get( 'version' ) );

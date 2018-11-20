@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Authentication: Backend: REST</title>
 	<description><![CDATA[Module for authentication against a REST server.]]></description>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.4">Add registration support.</log>
 	<log version="0.2.5">Migrate logic to support new logic pool.</log>
 	<log version="0.2.6">Extract hooks to own hook class.</log>
+	<log version="0.2.7">Use general module main switch.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -34,7 +35,7 @@
 		<style source="theme">module.resource.auth.rest.css</style>
 		<script load="auto">Auth.REST.js</script>
 	</files>
-	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" type="string" name="login.forward.path"/>
 	<config protected="yes" type="boolean" name="login.forward.force">no</config>
 	<config protected="yes" type="string" name="logout.forward.path"/>

@@ -2,11 +2,12 @@
 <module>
 	<title>Theme: Tool</title>
 	<description><![CDATA[Basic theme to tool apps.]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support Bootstrap tabs.</log>
 	<log version="0.2.2">Support Bootstrap dropdowns.</log>
+	<log version="0.2.3">Use general module main switch.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -14,7 +15,7 @@
 	<files>
 		<style source="common">theme.tool.css</style>
 	</files>
-	<config access="protected" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config access="protected" type="string" name="style" values="gray-1,blue-1,blue-2,blue-3">gray-1</config>
 	<relations>
 		<needs type="module">Resource_Theme</needs>

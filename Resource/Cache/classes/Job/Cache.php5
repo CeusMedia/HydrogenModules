@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Job_Cache extends Job_Abstract{
 
 	public function __onInit(){

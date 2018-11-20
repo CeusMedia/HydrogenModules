@@ -12,7 +12,7 @@ code>
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Refactor hooks.</log>
@@ -20,6 +20,7 @@ code>
 	<log version="0.3.2">Add switch for disabling accounting completely for local instances.</log>
 	<log version="0.3.3">Add cache support and clearing job.</log>
 	<log version="0.4">Derived from module Resource:Authentication:Accounting from protected repository.</log>
+	<log version="0.4.1">Use general module main switch.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -38,7 +39,7 @@ code>
 		<locale>de/html/provision/status/outdated.html</locale>
 		<file>config/jobs/provision.xml</file>
 	</files>
-	<config protected="yes" mandatory="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" mandatory="yes" type="string" name="mode" values="OAuth,Remote">OAuth</config>
 	<config protected="yes" mandatory="yes" type="integer" name="productId"/>
 	<config protected="yes" mandatory="yes" type="string" name="server.url"/>

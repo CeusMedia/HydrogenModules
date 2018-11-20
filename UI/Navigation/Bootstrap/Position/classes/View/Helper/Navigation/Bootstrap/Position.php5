@@ -15,7 +15,7 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 	}
 
 	public function render(){
-		if( 0 && !$this->moduleConfig->get( 'enabled' ) )
+		if( !$this->moduleConfig->get( 'active' ) )
 			return;
 		if( !$this->hasPageSupport){
 			$this->env->getMessenger()->noteFailure( 'Module "UI:Navigation:Bootstrap:Position" needs module "Info:Pages".' );

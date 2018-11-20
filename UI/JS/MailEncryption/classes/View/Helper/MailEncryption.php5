@@ -3,14 +3,14 @@ class View_Helper_MailEncryption{
 
 	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
-		if( !$options->get( 'enabled' ) )
+		if( !$options->get( 'active' ) )
 			return;
 		$context->js->addScriptOnReady( 'UI.MailEncryption.decrypt();', 8 );
 	}
 
 	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
-		if( !$options->get( 'enabled' ) )
+		if( !$options->get( 'active' ) )
 			return;
 		$matches		= array();
 		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+\@\S+)".*>(.+)</a>(.*)$@siU';						//  pattern to match mail shortcode

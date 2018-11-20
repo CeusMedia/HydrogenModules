@@ -32,9 +32,9 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$config	= $env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
-		if( !$config->get( 'module.ui_font.enabled' ) )
+		if( !$config->get( 'module.ui_font.active' ) )
 			return;
-		if( !$config->get( 'module.ui_font_fontawesome.enabled' ) )
+		if( !$config->get( 'module.ui_font_fontawesome.active' ) )
 			return;
 
 		if( version_compare( $mc->get( 'version' ), 5 ) < 0 ){

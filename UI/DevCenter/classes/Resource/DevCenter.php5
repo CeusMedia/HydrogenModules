@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Resource_DevCenter{
 
 	/**	@var	CMF_Hydrogen_Environment		$env		*/

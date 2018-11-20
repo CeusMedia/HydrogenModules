@@ -12,7 +12,7 @@ class Hook_System_Exception extends CMF_Hydrogen_Hook{
 
 		if( $env->getRequest()->get( 'controller' ) === 'system/exception' )
 			return FALSE;
-		if( !$env->getConfig()->get( 'module.server_system_exception.enabled' ) )
+		if( !$env->getConfig()->get( 'module.server_system_exception.active' ) )
 			return FALSE;
 
 		$options	= $env->getConfig()->getAll( 'module.server_system_exception.', TRUE );

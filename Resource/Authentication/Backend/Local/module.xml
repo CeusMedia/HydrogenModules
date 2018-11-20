@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -42,6 +42,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.4.9">Support Bootstrap 3 and 4.</log>
 	<log version="0.5">Load stylesheet from common source and rename JavsScript file.</log>
 	<log version="0.5.1">Improve legal contents handling on registration.</log>
+	<log version="0.5.2">Use general module main switch.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -96,7 +97,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<style source="common">module.resource.auth.local.css</style>
 		<script>module.resource.auth.local.js</script>
 	</files>
-	<config protected="yes" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" type="string" name="login.forward.path"/>
 	<config protected="yes" type="boolean" name="login.forward.force">no</config>
 	<config protected="yes" type="string" name="logout.forward.path"/>

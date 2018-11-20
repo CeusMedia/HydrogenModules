@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>4.1.1-p1</version>
+	<version>4.1.1-p2</version>
 	<log version="2.3.2">Add Bootstrap v2.3.2.</log>
 	<log version="3.3.6">Add Bootstrap v3.3.6 and option to set used version.</log>
 	<log version="3.3.6-p1">Improve file handling in hook.</log>
@@ -14,6 +14,7 @@
 	<log version="3.3.6-p6">Add hook to realize templates supporting multiple versions.</log>
 	<log version="4.1.1">Add Bootstrap v4.1.1.</log>
 	<log version="4.1.1-p1">Add hook to check required or supported libraries on environment init.</log>
+	<log version="4.1.1-p2">Use general module main switch.</log>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -51,7 +52,7 @@
 		<script>bootstrap/4.1.1/bootstrap.min.js</script>
 		<script>bootstrap/4.1.1/bootstrap.min.js.map</script>
 	</files>
-	<config protected="no" type="boolean" name="enabled">yes</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="boolean" name="cdn">no</config>
 	<config protected="no" type="string" name="cdn.path">https://maxcdn.bootstrapcdn.com/bootstrap/%s/</config>
 	<config protected="no" type="boolean" name="local">yes</config>
@@ -61,7 +62,6 @@
 	<config protected="no" type="boolean" name="minified">yes</config>
 	<config protected="no" type="boolean" name="responsive">yes</config>
 	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1">2.3.2</config>
-
 	<config protected="yes" type="string" name="missing.library" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.module" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.fontawesome" values="ignore,note,throw">throw</config>

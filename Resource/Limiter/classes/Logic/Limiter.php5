@@ -1,4 +1,7 @@
 <?php
+/**
+ *	@todo		apply module config main switch
+ */
 class Logic_Limiter{
 
 	protected $env;
@@ -13,7 +16,7 @@ class Logic_Limiter{
 	protected function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
-		$this->enabled		= $this->moduleConfig->get( 'enabled' );
+		$this->enabled		= $this->moduleConfig->get( 'active' );
 		$this->rules		= new ADT_List_Dictionary();
 		$this->__onInit();
 	}
