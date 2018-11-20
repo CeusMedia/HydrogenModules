@@ -2,7 +2,9 @@
 <module>
 	<title>UI: DevLayer: Profiler</title>
 	<description><![CDATA[Runtime profiler view layer.]]></description>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
+	<log version="0.3.2">Import from nonfree module UI:Helper:Dev:Profiler.</log> 
+	<log version="0.3.3">Use general module main switch.</log> 
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
