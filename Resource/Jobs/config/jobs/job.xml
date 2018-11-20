@@ -6,6 +6,12 @@
 		<interval></interval>
 		<mode>dev</mode>
 	</job>
+	<job id="Job.info">
+		<class>Job</class>
+		<method>info</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
 	<job id="Job.Lock.list">
 		<class>Job</class>
 		<method>listLocks</method>

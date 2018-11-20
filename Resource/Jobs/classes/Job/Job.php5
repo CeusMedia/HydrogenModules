@@ -78,6 +78,25 @@ class Job_Job extends Job_Abstract{
 		}
 	}
 
+	public function info( $jobKeys = NULL ){
+		if( !( $this->manager instanceof Jobber ) ){
+			$class	= get_class( $this->manager );
+			throw new RuntimeException( 'Manager "'.$class.'" is not supported, yet' );
+		}
+		$jobs	= $this->manager->getJobs();
+		if( !count( $jobKeys ) ){
+			$this->out( 'No job keys given' );
+			return;
+		}
+		foreach( $jobKeys as $jobKey ){
+			if( !array_key_exists( (string) $jobKey, $jobs ) ){
+				$this->out( 'Job "'.$jobKey.'" is not existing' );
+				continue;
+			}
+			print_m( $jobs[$jobKey] );
+		}
+	}
+
 	public function listLocks(){
 		$skip	= array(
 			'Job.Lock.list',
