@@ -4,7 +4,7 @@
  *	@type		jQuery
  *	@cat		Plugins/UI
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2013 Christian Würker <christian.wuerker@ceusmedia.de> (http://ceusmedia.de)
+ *	@copyright	2013 Christian Würker <christian.wuerker@ceusmedia.de> (https://ceusmedia.de)
  *	@license	LGPL/CC
  *	@option		offsetTop			vertical offset (downwards from top border of input field)
  *	@option		offsetRight			horizontal offset (to the left from right border of input field)

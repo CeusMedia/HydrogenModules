@@ -4,7 +4,7 @@
  *	@type		jQuery
  *	@cat		Plugins/UI
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2013 Christian Würker <christian.wuerker@ceusmedia.de> (http://ceusmedia.de)
+ *	@copyright	2013 Christian Würker <christian.wuerker@ceusmedia.de> (https://ceusmedia.de)
  *	@license	LGPL/CC
  *	@option		string		autoEnable				Setup on init
  *	@option		float		lineHeightFactor		Default line height factor in HTML5 (=1.231)

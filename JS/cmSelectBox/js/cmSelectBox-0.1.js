@@ -4,7 +4,7 @@
  *	@type		jQuery
  *	@cat		Plugins/UI
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2012 Christian Würker <christian.wuerker@ceusmedia.de> (http://ceusmedia.de)
+ *	@copyright	2012 Christian Würker <christian.wuerker@ceusmedia.de> (https://ceusmedia.de)
  *	@license	LGPL/CC
  *	@option		string		autoEnable				Setup image on init
  *	@option		string		classContainer			CSS class(es) set to select container
