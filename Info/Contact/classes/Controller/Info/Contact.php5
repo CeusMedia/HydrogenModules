@@ -87,46 +87,46 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 					$valid	= FALSE;
 				}
 			}
-			if( !$valid )
-				$this->restart( NULL, TRUE );
-			$data	= $this->request->getAll();
-			try{
-				$logic		= Logic_Mail::getInstance( $this->env );
-				$mail		= new Mail_Info_Contact( $this->env, $data );
-				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
-				$logic->handleMail( $mail, $receiver, 'de' );
-				$this->messenger->noteSuccess( $words->msgSuccess );
+			if( $valid ){
+				$data	= $this->request->getAll();
+				try{
+					$logic		= Logic_Mail::getInstance( $this->env );
+					$mail		= new Mail_Info_Contact( $this->env, $data );
+					$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+					$logic->handleMail( $mail, $receiver, 'de' );
+					$this->messenger->noteSuccess( $words->msgSuccess );
 
-				//  --  NEWSLETTER  FORWARDING  --  //
-				if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
-					if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
-						$path	= 'info/newsletter';
-						if( $this->env->getModules()->has( 'Info_Pages' ) ){
-							$logicPage	= $this->env->getLogic()->page;
-							$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
-							if( !$page )
-								$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
-							if( $page )
-								$path	= $page->fullpath;
+					//  --  NEWSLETTER  FORWARDING  --  //
+					if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
+						if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
+							$path	= 'info/newsletter';
+							if( $this->env->getModules()->has( 'Info_Pages' ) ){
+								$logicPage	= $this->env->getLogic()->page;
+								$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
+								if( !$page )
+									$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
+								if( $page )
+									$path	= $page->fullpath;
+							}
+							$name	= trim( $this->request->get( 'name' ) );
+							$parts	= preg_split( '/\s+/', $name.' ' );
+							$path	= $path.'?'.http_build_query( array(
+								'firstname'		=> $parts[0],
+								'surname'		=> $parts[1],
+								'email'			=> $this->request->get( 'email' ),
+								'groups'		=> $this->request->get( 'topics' ),
+							), '', '&' );
+							$this->restart( $path, FALSE );
 						}
-						$name	= trim( $this->request->get( 'name' ) );
-						$parts	= preg_split( '/\s+/', $name.' ' );
-						$path	= $path.'?'.http_build_query( array(
-							'firstname'		=> $parts[0],
-							'surname'		=> $parts[1],
-							'email'			=> $this->request->get( 'email' ),
-							'groups'		=> $this->request->get( 'topics' ),
-						), '', '&' );
-						$this->restart( $path, FALSE );
 					}
-				}
-				$this->restart( NULL, TRUE );
+					$this->restart( NULL, TRUE );
 
-			//	@todo handle newsletter registration
-			}
-			catch( Exception $e ){
-				$this->messenger->noteFailure( $e->getMessage() );
-				$this->restart( NULL, TRUE );
+				//	@todo handle newsletter registration
+				}
+				catch( Exception $e ){
+					$this->messenger->noteFailure( $e->getMessage() );
+					$this->restart( NULL, TRUE );
+				}
 			}
 		}
 

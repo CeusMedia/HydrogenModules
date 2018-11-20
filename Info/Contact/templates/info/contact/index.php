@@ -81,13 +81,13 @@ $content	= $textTop.'
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_subject">'.$w->labelSubject.'</label>
+					<label for="input_subject" class="mandatory required">'.$w->labelSubject.'</label>
 					<input type="text" name="subject" id="input_subject" class="span12" maxlength="80" required="required" value="'.htmlentities( $subject, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_message">'.$w->labelMessage.'</label>
+					<label for="input_message" class="mandatory required">'.$w->labelMessage.'</label>
 					<textarea name="message" id="input_message" class="span12" rows="10" required="required">'.htmlentities( $message, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
