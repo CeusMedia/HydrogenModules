@@ -2,8 +2,8 @@
 <module>
 	<title>UI: Panel</title>
 	<description><![CDATA[Support for (collapsable) panels.
-	
-See [http://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel Demo] for more information.
+
+See [https://ceusmedia.de/demos/cmClasses/UI_HTML_CollapsePanel/ Collapse Panel Demo] for more information.
 	]]></description>
 	<category>User Interface</category>
 	<version>0.4.0</version>

@@ -3,7 +3,7 @@
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
+ *	@copyright		2012 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@since			01.08.2012
  *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
@@ -12,7 +12,7 @@
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media <http://ceusmedia.de/>
+ *	@copyright		2012 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@since			01.08.2012
  *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
