@@ -62,6 +62,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
 		$forwardUrl		= $this->request->get( 'forwardTo' );
+		if( $this->request->get( 'from' ) )
+			$forwardUrl	.= '?from='.$this->request->get( 'from' );
 		$positions		= $this->session->get( 'shop_order_positions' );
 		if( array_key_exists( $articleId, $positions ) && $positions[$articleId]->quantity ){
 			foreach( $positions as $nr => $position ){
