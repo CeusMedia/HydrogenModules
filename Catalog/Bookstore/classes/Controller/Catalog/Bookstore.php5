@@ -55,6 +55,19 @@ class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller{
 //			$fileImageLarge = NULL;
 		$this->addData( 'uriCoverLarge', $fileImageLarge );
 
+		if( getEnv( 'HTTP_REFERER' ) ){
+			$urlFrom	=  new ADT_URL( getEnv( 'HTTP_REFERER' ), $this->env->url );
+			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+				$this->addData( 'from', $urlFrom->getRelative() );
+			}
+		}
+		if( $this->request->get( 'from' ) ){
+			$urlFrom	=  new ADT_URL( $this->request->get( 'from' ), $this->env->url );
+			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+				$this->addData( 'from', $urlFrom->getRelative() );
+			}
+		}
+
 		$tags	= array();
 		foreach( $this->logic->getTagsOfArticle( $articleId, FALSE ) as $tag )
 			$tags[]	= $tag->tag;
@@ -202,9 +215,11 @@ class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$articleId	= (int) $request->get( 'articleId' );
 		$article	= $this->logic->getArticle( $articleId );
-		$forwardUrl	= urlencode( $this->logic->getArticleUri( $articleId ) );
+		$forwardUrl	= $this->logic->getArticleUri( $articleId );
+		if( $request->get( 'from' ) )
+			$forwardUrl	.= '?from='.$request->get( 'from' );
 		$quantity	= (int) preg_replace( "/[^0-9-]/", "", $request->get( 'quantity' ) );
-		$url		= 'shop/addArticle/'.$this->bridgeId.'/'.$articleId.'/'.$quantity.'?forwardTo='.$forwardUrl;
+		$url		= 'shop/addArticle/'.$this->bridgeId.'/'.$articleId.'/'.$quantity.'?forwardTo='.urlencode( $forwardUrl );
 		if( $quantity < 1 )
 			$url		= $this->logic->getArticleUri( $articleId );
 		$this->restart( $url );

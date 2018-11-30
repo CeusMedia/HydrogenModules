@@ -55,6 +55,7 @@ return '<div class="content-panel">
 	<div class="content-panel-inner well alert alert-success" id="panel-catalog-article-order">
 		<form action="./catalog/bookstore/order" method="post" class="form-horizontal">
 			<input type="hidden" name="articleId" value="'.$article->articleId.'"/>
+			<input type="hidden" name="from" value="'.$from.'"/>
 			<label for="input_quantity">'.$w->quantity.'</label>
 			'.$inputQuantity.'
 			'.$buttonOrder.'
