@@ -49,14 +49,12 @@ if( $tacHtml ){
 			UI_HTML_Tag::create( 'div', $tacHtml, array(
 				'class'	=> 'framed monospace',
 				'id'	=> 'input_conditions',
-			) )
-		) ),
-		HTML::DivClass( "span12", array(
+			) ),
 			HTML::Label( 'accept_tac', array(
 				HTML::Checkbox( 'accept_tac', 1, FALSE ),
 				$w->labelAccept,
-			), 'checkbox mandatory' )
-		) )
+			), 'checkbox mandatory' ),
+		) ),
 	) );
 }
 
@@ -269,14 +267,14 @@ $formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
 $textTop	= $textTop ? HTML::DivClass( "auth-register-text-top", $textTop ) : '';
 $textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBottom ) : '';
 
-if( strlen( strip_tags( $textInfo ) ) ){
+if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $textTop.
-	HTML::Form( $formUrl, "form_auth_register_user",
-		HTML::DivClass( 'row-fluid', array(
-			HTML::DivClass( 'span8 offset0', $panelUser ),
-			HTML::DivClass( 'span4', $textInfo ),
-		) )
-	).$textBottom;
+		HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
+			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs2-col-md-4", array(
+				HTML::Form( $formUrl, "form_auth_register_user", $panelUser ),
+			) ),
+			HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
+		) ).$textBottom;
 }
 return $panelUser;
 ?>

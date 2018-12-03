@@ -1,4 +1,21 @@
-var ModuleResourceAuthLocal = {};
+var ModuleResourceAuthLocal = {
+	regExpEmail: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+};
+ModuleResourceAuthLocal.Password = {
+	init: function(){
+		$("#input_password_email").on("input", function(event){
+			var button = $("#button_save");
+			var value = $(event.target).val();
+			button.attr("disabled","disabled");
+			if(!value.replace(/\s/, '').length)
+				return;
+			if(!value.match(ModuleResourceAuthLocal.regExpEmail))
+				return;
+			button.removeAttr("disabled");
+		});
+	}
+};
+
 ModuleResourceAuthLocal.Login = {
 	init: function(){
 		if(jQuery("#input_login_username").val())
@@ -30,6 +47,10 @@ ModuleResourceAuthLocal.Registration = {
 	checkEmail: function(event){
 		var input = $(event.target);
 		if(!input.val().length){
+			input.removeClass("state-good").removeClass("state-bad");
+			return;
+		}
+		if(!input.val().match(ModuleResourceAuthLocal.regExpEmail)){
 			input.removeClass("state-good").removeClass("state-bad");
 			return;
 		}

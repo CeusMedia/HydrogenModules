@@ -16,15 +16,14 @@ if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textBottom ) ) ) ){
 	return $tabs.$textTop.$panelLogin.$textBottom;
 }
-else if( $tabs ){
+if( $tabs ){
 	return $tabs.'<br/></br/><br/><br/><br/><br/>'.
 	HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
 		HTML::DivClass( "bs2-span4 bs2-offset4 bs3-col-md-4 bs3-md-offset-4 bs4-col-md-4 bs4-offset-md-4", $panelLogin )
 	) );
 }
-else {
-	return UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', $panelLogin, array( 'class' => 'centered-pane' ) )
-	), array( 'class' => 'centered-pane-container' ) );
-}
+
+return UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'div', $panelLogin, array( 'class' => 'centered-pane' ) )
+), array( 'class' => 'centered-pane-container' ) );
 ?>
