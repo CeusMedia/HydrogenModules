@@ -1,10 +1,6 @@
 <?php
 class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 
-	protected $clientId;
-	protected $clientSecret;
-	protected $clientUri;
-	protected $providerUri;
 	protected $config;
 	protected $session;
 	protected $reqest;
@@ -18,13 +14,10 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
-		$this->cookie			= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		$this->cookie			= $this->env->getCookie();
 		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth2.', TRUE );
-		$this->clientUri		= $this->env->url;
-		$this->clientId			= $this->moduleConfig->get( 'provider.client.ID' );
-		$this->clientSecret		= $this->moduleConfig->get( 'provider.client.secret' );
-		$this->providerUri		= $this->moduleConfig->get( 'provider.URI' );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+
 		if( !class_exists( 'League\OAuth2\Client\Provider\GenericProvider' ) )
 			$this->messenger->noteFailure( '<strong>OAuth2-Client is missing.</strong><br/>Please install package "league/oauth2-client" using composer.' );
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
@@ -68,7 +61,11 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 
 
 		if( ( $error = $this->request->get( 'error' ) ) ){
-			$this->messenger->noteError( $error );
+			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
+			if( $currentProviderId ){
+				$provider	= $this->modelProvider->get( $currentProviderId );
+				$this->messenger->noteNotice( $msgs->msgErrorFailed, $provider->title );
+			}
 			if( $from = $this->session->get( 'oauth2_from' ) )
 				$this->restart( $from );
 			$this->restart( 'auth/login', FALSE );
@@ -155,6 +152,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			}
 		}
 		if( $providerId ){
+			if( $this->moduleConfig->get( 'loginMode' ) === 'tab' )
+				$this->session->set( 'authBackend', 'Oauth2' );
 			$provider	= $this->modelProvider->get( $providerId );
 			if( !$provider ){
 				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );

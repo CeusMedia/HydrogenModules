@@ -13,6 +13,11 @@ class Hook_Auth_Oauth2 extends CMF_Hydrogen_Hook{
 	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
+//		if( !$env->getConfig()->get( self::$configPrefix.'loginTab' ) )
+//			return;
+		if( $env->getConfig()->get( self::$configPrefix.'loginMode' ) !== 'tab' )
+			return;
+
 		$words		= (object) $env->getLanguage()->getWords( 'auth/oauth2' );						//  load words
 		$rank		= $env->getConfig()->get( self::$configPrefix.'login.rank' );
 		$label		= $words->login['tab'];
