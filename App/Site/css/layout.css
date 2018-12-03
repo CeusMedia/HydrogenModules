@@ -31,5 +31,8 @@ abbr[title], abbr[data-original-title] {
 	user-select: none;				/* Non-prefixed version, currently supported by Chrome and Opera */
 	}
 .typeahead {
-	margin-top: 0px;				/* override Bootstrap
+	margin-top: 0px;				/* override Bootstrap */
 	}
+form {
+	margin: 0;
+}
