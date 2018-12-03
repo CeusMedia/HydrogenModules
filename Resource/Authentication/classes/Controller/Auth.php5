@@ -14,8 +14,10 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->logic		= Logic_Authentication::getInstance( $this->env );
-//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
@@ -67,43 +69,11 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->ajaxIsAuthenticated();
 	}
 
-	protected function redirectAfterLogin(){
-		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
-		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
-		$forwardPath	= $moduleConfig->get( 'login.forward.path' );
-		$forwardForce	= $moduleConfig->get( 'login.forward.force' );
-
-		if( $forwardPath && $forwardForce )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		if( $from )
-			$this->restart( $from );
-		if( $forwardPath )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		$this->restart( NULL );
-	}
-
-	protected function redirectAfterLogout(){
-		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
-		$from			= $this->request->get( 'from' );
-		$forwardPath	= $moduleConfig->get( 'logout.forward.path' );
-		$forwardForce	= $moduleConfig->get( 'logout.forward.force' );
-
-		if( $forwardPath && $forwardForce )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		if( $from )
-			$this->restart( $from );
-		if( $forwardPath )
-			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		$this->restart( NULL );
-
-	}
-
 	public function index(){
 		if( !$this->session->has( 'userId' ) )
 			return $this->restart( 'login', TRUE );
 		$this->redirectAfterLogin();
 	}
-
 
 	protected function getBackend(){
 		$backends		= $this->logic->getBackends();
@@ -111,7 +81,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$backendKeys	= array_keys( $backends );
 		if( !$backends )
 			throw new RuntimeException( 'No authentication backend available' );
-		if( !$backendKey || in_array( $backendKey, $backendKeys ) )
+		if( !$backendKey || !array_key_exists( $backendKey, $backends ) )
 			$backendKey	= $backendKeys[0];
 		return $backends[$backendKey];
 	}
@@ -150,6 +120,36 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$from		= $this->request->get( 'from' );
 		$from		= str_replace( "index/index", "", $from );
 		$this->restart( $from ? $path.'?from='.$from : $path );
+	}
+
+	protected function redirectAfterLogin(){
+		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
+		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
+		$forwardPath	= $moduleConfig->get( 'login.forward.path' );
+		$forwardForce	= $moduleConfig->get( 'login.forward.force' );
+
+		if( $forwardPath && $forwardForce )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		if( $from )
+			$this->restart( $from );
+		if( $forwardPath )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		$this->restart( NULL );
+	}
+
+	protected function redirectAfterLogout(){
+		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
+		$from			= $this->request->get( 'from' );
+		$forwardPath	= $moduleConfig->get( 'logout.forward.path' );
+		$forwardForce	= $moduleConfig->get( 'logout.forward.force' );
+
+		if( $forwardPath && $forwardForce )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		if( $from )
+			$this->restart( $from );
+		if( $forwardPath )
+			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
+		$this->restart( NULL );
 	}
 
 	protected function rememberUserInCookie( $user ){
