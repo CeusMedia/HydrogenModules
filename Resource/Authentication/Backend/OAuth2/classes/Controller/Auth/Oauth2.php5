@@ -26,29 +26,6 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->refreshToken();
 	}
 
-	protected function getProvider( $providerId ){
-		$provider		= $this->modelProvider->get( $providerId );
-		if( !$provider )
-			throw new RangeException( 'Invalid provider ID' );
-		return $provider;
-	}
-
-	protected function getProviderObject( $providerId, $redirectPath = 'auth/oauth2/login' ){
-		$provider		= $this->modelProvider->get( $providerId );
-		if( !$provider )
-			throw new RangeException( 'Invalid provider ID' );
-		if( !class_exists( $provider->className ) )
-			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
-		$options		= array(
-			'clientId'		=> $provider->clientId,
-			'clientSecret'	=> $provider->clientSecret,
-			'redirectUri'	=> $this->env->url.$redirectPath,
-		);
-		if( $provider->options )
-			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
-	}
-
 	public function login( $providerId = NULL ){
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
@@ -161,13 +138,12 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );
 			$providerObject	= $this->getProviderObject( $providerId );
-			$scopes	= array();
-			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => ['identity.basic'] );
-			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
-				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
-			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
-				$scopes	= array( 'scope' => ['read_user'] );
+			$scopes	= array( $providerObject->getDefaultScopes );
+			if( trim( $provider->scopes ) )
+				foreach( preg_split( '/\s*,\s/', $provider->scopes ) as $scope )
+					if( strlen( trim( $scope ) ) )
+						if( !in_array( $scope, $scopes ) )
+							$scopes[]	= $scope;
 			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
 			$this->session->set( 'oauth2_state', $providerObject->getState() );
 			$this->session->set( 'oauth2_from', $this->request->get( 'from' ) );
@@ -202,6 +178,128 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 //				session_destroy();																	//  completely destroy session
 		}
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
+	}
+
+	public function register( $providerId = NULL ){
+		$modelUser		= new Model_User( $this->env );
+
+		$words		= $this->getWords();
+		$msgs		= (object) $words['register'];
+
+		if( ( $error = $this->request->get( 'error' ) ) ){
+			$this->messenger->noteError( $error );
+			$this->restart( 'auth/local/register', FALSE );
+		}
+		if( ( $code = $this->request->get( 'code' ) ) ){
+			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
+			$currentState		= $this->session->get( 'oauth2_state' );
+			if( !$currentProviderId || !$currentState ){
+				$this->messenger->noteFailure( $msgs->msgErrorOauthIncomplete );
+				$this->restart( 'auth/local/register', FALSE );
+			}
+			$provider	= $this->modelProvider->get( $currentProviderId );
+			if( $currentState !== $this->request->get( 'state' ) ){
+				$this->session->remove( 'oauth2_state' );
+				$this->messenger->noteFailure( $msgs->msgErrorOauthInvalid );
+				$this->restart( 'auth/local/register', FALSE );
+			}
+			try{
+				$client		= $this->getProviderObject( $currentProviderId, 'auth/oauth2/register' );
+				$token		= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
+				$user		= $client->getResourceOwner( $token );
+//print_m( $user->toArray() );die;
+				$provider	= $this->getProvider( $currentProviderId );
+				$indices	= array(
+					'oauthProviderId'	=> $currentProviderId,
+					'oauthId'			=> $user->getId(),
+				);
+				if( $this->modelRelation->getByIndices( $indices ) ){
+					$this->messenger->noteError( $msgs->msgErrorUserAssigned, $provider->title );
+					$this->restart( 'auth/local/register', FALSE );
+				}
+				$this->session->set( 'auth_register_oauth_provider_id', $currentProviderId );
+				$this->session->set( 'auth_register_oauth_provider', $provider );
+				$this->session->set( 'auth_register_oauth_user_id', $user->getId() );
+				$this->session->set( 'auth_register_oauth_data', $user->toArray() );
+
+				$data	= $this->retrieveOwnerDate( $provider, $user );
+				foreach( $data as $key => $value )
+					$this->session->set( 'auth_register_oauth_'.$key, $value );
+				$this->restart( 'auth/local/register', FALSE );
+			}
+			catch( Exception $e ){
+				$this->messenger->noteError( $msgs->msgErrorException, $provider->title, $e->getMessage() );
+				$this->messenger->noteError( $e->getMessage() );
+				if( $this->env->getLog()->logException( $e, $this ) )
+					$this->restart( 'register', TRUE );
+				UI_HTML_Exception_Page::display( $e );
+				exit;
+			}
+		}
+		if( $providerId ){
+			$provider	= $this->modelProvider->get( $providerId );
+			if( !$provider ){
+				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
+				$this->restart( 'login', TRUE );
+			}
+			$this->session->set( 'oauth2_providerId', $providerId );
+			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
+			$scopes	= array();
+			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
+				$scopes	= array( 'scope' => ['identity.basic'] );
+			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
+				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
+			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
+				$scopes	= array( 'scope' => ['read_user'] );
+			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
+
+			$this->session->set( 'oauth2_state', $providerObject->getState() );
+			$this->restart( $authUrl, NULL, NULL, TRUE );
+		}
+		$providers	= $this->modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
+		$this->addData( 'providers', $providers );
+		return;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@return		void
+	 *	@todo		code doc: what is this method doing at all?
+	 *	@todo		check where this is used
+	 */
+	public function unbind(){
+		$keys	= array_keys( $this->session->getAll( 'auth_register_oauth_' ) );
+		foreach( $keys as $key )
+			$this->session->remove( 'auth_register_oauth_'.$key );
+		if( ( $from = $this->request->get( 'from' ) ) )
+			$this->restart( $from, FALSE );
+		$this->restart( getEnv( 'HTTP_REFERER' ), FALSE );
+	}
+
+	/*  --  PROTECTED --  */
+
+	protected function getProvider( $providerId ){
+		$provider		= $this->modelProvider->get( $providerId );
+		if( !$provider )
+			throw new RangeException( 'Invalid provider ID' );
+		return $provider;
+	}
+
+	protected function getProviderObject( $providerId, $redirectPath = 'auth/oauth2/login' ){
+		$provider		= $this->modelProvider->get( $providerId );
+		if( !$provider )
+			throw new RangeException( 'Invalid provider ID' );
+		if( !class_exists( $provider->className ) )
+			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
+		$options		= array(
+			'clientId'		=> $provider->clientId,
+			'clientSecret'	=> $provider->clientSecret,
+			'redirectUri'	=> $this->env->url.$redirectPath,
+		);
+		if( $provider->options )
+			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
+		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
 	}
 
 	/**
@@ -286,87 +384,6 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	public function register( $providerId = NULL ){
-		$modelUser		= new Model_User( $this->env );
-
-		$words		= $this->getWords();
-		$msgs		= (object) $words['register'];
-
-		if( ( $error = $this->request->get( 'error' ) ) ){
-			$this->messenger->noteError( $error );
-			$this->restart( 'auth/local/register', FALSE );
-		}
-		if( ( $code = $this->request->get( 'code' ) ) ){
-			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
-			$currentState		= $this->session->get( 'oauth2_state' );
-			if( !$currentProviderId || !$currentState ){
-				$this->messenger->noteFailure( $msgs->msgErrorOauthIncomplete );
-				$this->restart( 'auth/local/register', FALSE );
-			}
-			$provider	= $this->modelProvider->get( $currentProviderId );
-			if( $currentState !== $this->request->get( 'state' ) ){
-				$this->session->remove( 'oauth2_state' );
-				$this->messenger->noteFailure( $msgs->msgErrorOauthInvalid );
-				$this->restart( 'auth/local/register', FALSE );
-			}
-			try{
-				$client		= $this->getProviderObject( $currentProviderId, 'auth/oauth2/register' );
-				$token		= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
-				$user		= $client->getResourceOwner( $token );
-//print_m( $user->toArray() );die;
-				$provider	= $this->getProvider( $currentProviderId );
-				$indices	= array(
-					'oauthProviderId'	=> $currentProviderId,
-					'oauthId'			=> $user->getId(),
-				);
-				if( $this->modelRelation->getByIndices( $indices ) ){
-					$this->messenger->noteError( $msgs->msgErrorUserAssigned, $provider->title );
-					$this->restart( 'auth/local/register', FALSE );
-				}
-				$this->session->set( 'auth_register_oauth_provider_id', $currentProviderId );
-				$this->session->set( 'auth_register_oauth_provider', $provider );
-				$this->session->set( 'auth_register_oauth_user_id', $user->getId() );
-				$this->session->set( 'auth_register_oauth_data', $user->toArray() );
-
-				$data	= $this->retrieveOwnerDate( $provider, $user );
-				foreach( $data as $key => $value )
-					$this->session->set( 'auth_register_oauth_'.$key, $value );
-				$this->restart( 'auth/local/register', FALSE );
-			}
-			catch( Exception $e ){
-				$this->messenger->noteError( $msgs->msgErrorException, $provider->title, $e->getMessage() );
-				$this->messenger->noteError( $e->getMessage() );
-				if( $this->env->getLog()->logException( $e, $this ) )
-					$this->restart( 'register', TRUE );
-				UI_HTML_Exception_Page::display( $e );
-				exit;
-			}
-		}
-		if( $providerId ){
-			$provider	= $this->modelProvider->get( $providerId );
-			if( !$provider ){
-				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
-				$this->restart( 'login', TRUE );
-			}
-			$this->session->set( 'oauth2_providerId', $providerId );
-			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
-			$scopes	= array();
-			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => ['identity.basic'] );
-			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
-				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
-			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
-				$scopes	= array( 'scope' => ['read_user'] );
-			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
-
-			$this->session->set( 'oauth2_state', $providerObject->getState() );
-			$this->restart( $authUrl, NULL, NULL, TRUE );
-		}
-		$providers	= $this->modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
-		$this->addData( 'providers', $providers );
-		return;
-	}
-
 	protected function retrieveOwnerDate( $provider, $user ){
 		$data	= array( 'data' => $user->toArray() );
 		if( $provider->composerPackage === 'league/oauth2-facebook' ){
@@ -436,7 +453,6 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$data['surname']	= '';
 		}
 		if( $provider->composerPackage === 'omines/oauth2-gitlab' ){
-//print_m( $user->toArray() );die;
 			$all		= $user->toArray();
 			$location	= preg_split( '/\s*,\s*/', $all['location'] );
 			$name		= preg_split( '/\s+/', $user->getName() );
@@ -448,14 +464,5 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$data['city']		= array_shift( $location );
 		}
 		return $data;
-	}
-
-	public function unbind(){
-		$keys	= array_keys( $this->session->getAll( 'auth_register_oauth_' ) );
-		foreach( $keys as $key )
-			$this->session->remove( 'auth_register_oauth_'.$key );
-		if( ( $from = $this->request->get( 'from' ) ) )
-			$this->restart( $from, FALSE );
-		$this->restart( getEnv( 'HTTP_REFERER' ), FALSE );
 	}
 }

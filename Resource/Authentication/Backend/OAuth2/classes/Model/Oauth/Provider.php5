@@ -32,6 +32,7 @@ class Model_Oauth_Provider extends CMF_Hydrogen_Model {
 		'composerPackage',
 		'className',
 		'options',
+		'scopes',
 		'title',
 		'icon',
 		'createdAt',
@@ -44,6 +45,7 @@ class Model_Oauth_Provider extends CMF_Hydrogen_Model {
 		'clientSecret',
 		'composerPackage',
 		'className',
+		'title',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
