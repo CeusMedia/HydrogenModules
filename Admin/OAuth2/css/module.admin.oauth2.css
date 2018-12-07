@@ -1,0 +1,7 @@
+
+body.moduleAdminOAuth2 #input_options.valid {
+	background-color: rgba(63, 255, 31, 0.1);
+	}
+body.moduleAdminOAuth2 #input_options.invalid {
+	background-color: rgba(255, 63, 31, 0.1);
+	}

@@ -124,6 +124,30 @@ $form			= UI_HTML_Tag::create( 'form', array(
 			) ),
 		), array( 'class' => 'span5' ) ),
 	), array( 'class' => 'row-fluid' ) ),
+	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Provider-Optionen <small class="muted">(als JSON)</small>', array( 'for' => 'input_options', 'class' => '', 'title' => 'JSON-Objekt, wie {"key":"value"}' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'			=> 'text',
+				'name'			=> 'options',
+				'id'			=> 'input_options',
+				'class'			=> 'span12',
+				'value'			=> htmlentities( $provider->options, ENT_QUOTES, 'UTF-8' ),
+				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
+			) ),
+		), array( 'class' => 'span5' ) ),
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Privilegien <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_scopes' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'			=> 'text',
+				'name'			=> 'scopes',
+				'id'			=> 'input_scopes',
+				'class'			=> 'span12',
+				'value'			=> htmlentities( $provider->scopes, ENT_QUOTES, 'UTF-8' ),
+				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
+			) ),
+		), array( 'class' => 'span7' ) ),
+	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
 	UI_HTML_Tag::create( 'div', join( ' ', array(
 		$buttonCancel,
 		$buttonSave,
@@ -140,7 +164,7 @@ $hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek (Composer-Paket "'.$pro
 if( !$exists )
 	$hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket "'.$provider->composerPackage.'" installiert!', array( 'class' => 'alert alert-important' ) );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/edit/' ) );
+$view->env->getPage()->runScript( 'ModuleAdminOAuth2.init()' );
 
 $panelForm	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Provider' ),
@@ -149,6 +173,8 @@ $panelForm	= UI_HTML_Tag::create( 'div', array(
 		$form,
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
+
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/edit/' ) );
 
 return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(

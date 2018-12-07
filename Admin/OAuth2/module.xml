@@ -3,31 +3,36 @@
 	<title>Admin: OAuth2</title>
 	<description><![CDATA[Manage connected OAuth2 providers.]]></description>
 	<category>Administration</category>
-	<version>0.2.5</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add activate and deactivate.</log>
 	<log version="0.2.2">Add check of provider package.</log>
 	<log version="0.2.3">Update views.</log>
 	<log version="0.2.4">Add index of OAuth2 providers.</log>
-	<log version="0.2.5">Use provder index for presetting.</log>
+	<log version="0.2.5">Use provider index for presetting.</log>
+	<log version="0.2.6">Add model for provider defaults.</log>
+	<log version="0.2.7">Extract JavaScript to file.</log>
+	<log version="0.2.8">Extract style to file.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Oauth2.php5</class>
+		<class>Model/Admin/Oauth2.php5</class>
+		<class>Model/Oauth/ProviderDefault.php5</class>
 		<class>View/Admin/Oauth2.php5</class>
 		<template>admin/oauth2/add.php</template>
 		<template>admin/oauth2/edit.php</template>
 		<template>admin/oauth2/index.php</template>
 		<locale>de/admin/oauth2.ini</locale>
 		<file>config/oauth2_providers.json</file>
-<!--		<style load="auto">module.admin.oauth2.css</style>-->
-<!--		<script></script>-->
+		<script level="end">module.admin.oauth2.js</script>
+		<style source="common" level="end">module.admin.oauth2.css</style>
 	</files>
 <!--	<config name="testKey1">This is a test!</config>-->
 	<relations>
-		<needs type="module">Resource_Authentication_Backend_OAuth2</needs>
+		<needs type="module" version="0.3">Resource_Authentication_Backend_OAuth2</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="admin/server" rank="96">OAuth2 Anbieter</link>
 	<link xml:lang="en" access="acl" path="admin/server" rank="96">OAuth2 Providers</link>

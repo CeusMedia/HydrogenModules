@@ -116,6 +116,28 @@ $form			= UI_HTML_Tag::create( 'form', array(
 			) ),
 		), array( 'class' => 'span5' ) ),
 	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
+	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Provider-Optionen <small class="muted">(als JSON)</small>', array( 'for' => 'input_options', 'class' => '', 'title' => 'JSON-Objekt, wie {"key":"value"}' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'			=> 'text',
+				'name'			=> 'options',
+				'id'			=> 'input_options',
+				'class'			=> 'span12',
+				'value'			=> htmlentities( $provider->options, ENT_QUOTES, 'UTF-8' ),
+			) ),
+		), array( 'class' => 'span5' ) ),
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Privilegien <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_scopes' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'			=> 'text',
+				'name'			=> 'scopes',
+				'id'			=> 'input_scopes',
+				'class'			=> 'span12',
+				'value'			=> htmlentities( $provider->scopes, ENT_QUOTES, 'UTF-8' ),
+			) ),
+		), array( 'class' => 'span7' ) ),
+	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
 	UI_HTML_Tag::create( 'div', join( ' ', array(
 		$buttonCancel,
 		$buttonSave,
@@ -125,8 +147,6 @@ $form			= UI_HTML_Tag::create( 'form', array(
 	'method'	=> 'post',
 ) );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/add/' ) );
-
 $panelForm	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'neuer Anbieter' ),
 	UI_HTML_Tag::create( 'div', array(
@@ -134,25 +154,12 @@ $panelForm	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
-$script	= '<script>
-var oauth2ProviderMap = '.json_encode( $providerMap ).';
-jQuery(document).ready(function(){
-	jQuery("#input_providerKey").on("input", function(){
-		var providerKey = jQuery(this).val();
-		var title, icon, className, package;
-		if(providerKey){
-			title = oauth2ProviderMap[providerKey].title;
-			icon = oauth2ProviderMap[providerKey].icon;
-			className = oauth2ProviderMap[providerKey].class;
-			package = oauth2ProviderMap[providerKey].package;
-		}
-		jQuery("#input_title").val(title);
-		jQuery("#input_icon").val(icon);
-		jQuery("#input_className").val(className);
-		jQuery("#input_composerPackage").val(package);
-	})
-});
-</script>';
+$script	= '
+	ModuleAdminOAuth2.setProviders('.json_encode( $providerMap ).');
+	ModuleAdminOAuth2.init();';
+$view->env->getPage()->runScript( $script );
+
+extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/add/' ) );
 
 return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
@@ -161,4 +168,4 @@ return $textTop.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		$textInfo,
 	), array( 'class' => 'span4' ) ),
-), array( 'class' => 'row-fluid' ) ).$textBottom.$script;
+), array( 'class' => 'row-fluid' ) ).$textBottom;

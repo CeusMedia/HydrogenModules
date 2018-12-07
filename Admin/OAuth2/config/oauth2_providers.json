@@ -34,4 +34,22 @@
 	"package": "league/oauth2-linkedin",
 	"class": "League\\OAuth2\\Client\\Provider\\LinkedIn",
 	"icon": "fa fa-fw fa-linkedin"
+},{
+	"title": "Slack",
+	"package": "adam-paterson/oauth2-slack",
+	"class": "AdamPaterson\\OAuth2\\Client\\Provider\\Slack",
+	"icon": "fa fa-fw fa-slack",
+	"scopes": ["identity.basic"]
+},{
+	"title": "PayPal",
+	"package": "stevenmaguire/oauth2-paypal",
+	"class": "Stevenmaguire\\OAuth2\\Client\\Provider\\Paypal",
+	"icon": "fa fa-fw fa-paypal",
+	"scopes": ["openid", "profile", "email", "phone", "address"]
+},{
+	"title": "GitLab",
+	"package": "omines/oauth2-gitlab",
+	"class": "Omines\\OAuth2\\Client\\Provider\\Gitlab",
+	"icon": "fa fa-fw fa-gitlab",
+	"scopes": ["read_user"]
 }]

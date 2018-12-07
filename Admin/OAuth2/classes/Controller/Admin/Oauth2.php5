@@ -6,16 +6,19 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 	protected $messenger;
 	protected $moduleConfig;
 	protected $modelProvider;
-	protected $providerIndex				= array();
+	protected $modelProviderDefault;
+	protected $providersIndex				= array();
 	protected $providersAvailable			= array();
+	protected $filterPrefix					= 'filter_admin_oauth2_';
 
 	public function __onInit(){
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
-		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
-		$this->providersIndex		= FS_File_JSON_Reader::load( 'config/oauth2_providers.json' );
+		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
+		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
+		$this->providersIndex		= $this->modelProviderDefault->getAll();
 		$this->providersAvailable	= array();
 		foreach( $this->providersIndex as $provider ){
 			if( class_exists( $provider->class ) )
@@ -31,13 +34,15 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			$data['modifiedAt']	= time();
 			$providerKey = str_replace( '__', '/', $this->request->get( 'providerKey' ) );
 			if( $providerKey ){
-				foreach( $this->providersIndex as $item ){
+				foreach( $this->modelProviderDefault->getAll() as $item ){
 					if( $item->package === $providerKey ){
 						$data['icon']				= $item->icon;
 						$data['className']			= $item->class;
 						$data['composerPackage']	= $item->package;
-						if( isset( $item->options ) )
+						if( isset( $item->options ) && count( (array) $item->options ) )
 							$data['options']		= json_encode( $item->options );
+						if( isset( $item->scopes ) )
+							$data['scopes']		= join( ',', $item->scopes );
 						break;
 					}
 				}
@@ -88,8 +93,16 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 
 	public function filter( $reset = NULL ){
 		if( $reset ){
-
+			$filters	= $this->session->getAll( $this->filterPrefix );
+			foreach( array_keys( $filters ) as $filterKey )
+				$this->session->remove( $this->filterPrefix.$filterKey );
 		}
+/*		$filters	= array();
+		foreach( $filters as $filter ){
+			if( $this->request->has( $filter ) ){
+				$this->session->set( $this->filterPrefix.$filter, $this->request->get( $filter ) );
+			}
+		}*/
 		$this->restart( NULL, TRUE );
 	}
 
@@ -122,32 +135,5 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		}
 		$this->modelProvider->edit( $providerId, array( 'status' => $status ) );
 		$this->restart( 'edit/'.$providerId, TRUE );
-	}
-
-	/*  --  PROTECTED  --  */
-	protected function scanInstalledProviders(){
-		$list	= array();
-		$regexPackage	= '/^oauth2-(\S+)$/';
-		foreach( new DirectoryIterator( 'vendor' ) as $vendor ){
-			if( $vendor->isDot() || !$vendor->isDir() )
-				continue;
-			$pathPackages	= 'vendor/'.$vendor->getFilename();
-			foreach( new DirectoryIterator( $pathPackages ) as $package ){
-				if( $package->isDot() || !$package->isDir() )
-					continue;
-				$packageKey	= $package->getFilename();
-				if( preg_match( $regexPackage, $packageKey ) ){
-					$provider	= preg_replace( $regexPackage, '\\1', $packageKey );
-					if( $provider === "client" )
-						continue;
-					$list[]	= array(
-						'vendor'		=> $vendor->getFilename(),
-						'package'		=> $packageKey,
-						'provider'		=> $provider,
-					);
-				}
-			}
-		}
-		$this->providersAvailable	= $list;
 	}
 }
