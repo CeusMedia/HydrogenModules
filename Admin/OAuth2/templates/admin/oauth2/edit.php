@@ -133,7 +133,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'id'			=> 'input_options',
 				'class'			=> 'span12',
 				'value'			=> htmlentities( $provider->options, ENT_QUOTES, 'UTF-8' ),
-				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
+			//	'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
 		), array( 'class' => 'span5' ) ),
 		UI_HTML_Tag::create( 'div', array(
@@ -144,7 +144,7 @@ $form			= UI_HTML_Tag::create( 'form', array(
 				'id'			=> 'input_scopes',
 				'class'			=> 'span12',
 				'value'			=> htmlentities( $provider->scopes, ENT_QUOTES, 'UTF-8' ),
-				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
+			//	'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
 		), array( 'class' => 'span7' ) ),
 	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
