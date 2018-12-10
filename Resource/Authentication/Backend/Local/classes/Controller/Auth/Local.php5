@@ -187,6 +187,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 		$words		= (object) $this->getWords( 'login' );
 		$username	= trim( $this->request->get( 'login_username' ) );
+		$password	= trim( $this->request->get( 'login_password' ) );
 		$from		= $this->request->get( 'from' );
 
 		if( $this->request->has( 'doLogin' ) ) {
@@ -196,14 +197,15 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			}
 			if( !strlen( $username ) )
 				$this->messenger->noteError( $words->msgNoUsername );
-			if( !trim( $password = $this->request->get( 'login_password' ) ) )
+			if( !trim( $password ) )
 				$this->messenger->noteError( $words->msgNoPassword );
 
 			$modelUser	= new Model_User( $this->env );
 			$modelRole	= new Model_Role( $this->env );
 			$user		= $modelUser->getByIndex( 'username', $username );							//  find user by username
-			if( !$user )																			//  no user found by username
+			if( !$user ){																			//  no user found by username
 				$user	= $modelUser->getByIndex( 'email', $username );								//  find user by email address
+			}
 			if( !$user )
 				$this->messenger->noteError( $words->msgInvalidUser );
 			if( !$this->messenger->gotError() ){

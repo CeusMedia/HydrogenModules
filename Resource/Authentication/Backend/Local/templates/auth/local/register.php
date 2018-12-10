@@ -114,9 +114,11 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 
 $formExtensions	= $view->renderRegisterFormExtensions();
 
+$formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
 $panelUser	= HTML::DivClass( 'content-panel', array(
 	HTML::H3( $w->heading ),
 	HTML::DivClass( 'content-panel-inner', array(
+		HTML::Form( $formUrl, "form_auth_register_user", array(
 			$fieldOauth2,
 			HTML::DivClass( 'row-fluid', array(
 				HTML::DivClass( 'span3', array(
@@ -260,9 +262,8 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) )
 			) )
 		) )
-	) );
-
-$formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
+	) )
+) );
 
 $textTop	= $textTop ? HTML::DivClass( "auth-register-text-top", $textTop ) : '';
 $textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBottom ) : '';
@@ -270,9 +271,7 @@ $textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBotto
 if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $textTop.
 		HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
-			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs2-col-md-4", array(
-				HTML::Form( $formUrl, "form_auth_register_user", $panelUser ),
-			) ),
+			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs2-col-md-4", $panelUser ),
 			HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
 		) ).$textBottom;
 }
