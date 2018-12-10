@@ -7,7 +7,7 @@ if( !$addressDelivery ){
 	$address				= $user;
 	$address->street		= $user->street;
 	$address->institution	= '';
-//	$address->region	= $user->region;
+	$address->region		= '';//$user->region;
 
 	$helper		= new View_Helper_Shop_AddressForm( $env );
 	$helper->setAddress( $address );

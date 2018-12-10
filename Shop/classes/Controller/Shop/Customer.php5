@@ -140,13 +140,20 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 		}
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$logicAuth	= Logic_Authentication::getInstance( $this->env );
-			$userId		= $logicAuth->getCurrentUserId( FALSE );
+			if( $logicAuth->isAuthenticated() )
+				$this->session->set( 'shop_customer_mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
 			if( !$this->session->get( 'shop_customer_mode' ) )
 				$this->session->set( 'shop_customer_mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
 		}
-		if( $this->session->get( 'shop_customer_mode' ) === Model_Shop_Order::CUSTOMER_MODE_GUEST )
-			return $this->handleGuest();
-		$this->handleAccount( $userId );
+		switch( $this->session->get( 'shop_customer_mode' ) ){
+			case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
+				$this->handleAccount();
+				break;
+			case Model_Shop_Order::CUSTOMER_MODE_GUEST:
+			default:
+				$this->handleGuest();
+				break;
+		}
 	}
 
 	protected function handleGuest(){
@@ -193,10 +200,12 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	}
 
 	protected function handleAccount(){
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$customer	= $this->session->get( 'shop_order_customer' );
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$userId		= 0;
-		if( $this->session->has( 'userId' ) ){
+		if( $logicAuth->isAuthenticated() ){
+			$userId	= $logicAuth->getCurrentUserId();
 			if( $userId ){
 				$modelUser	= new Model_User( $this->env );
 				$user		= $modelUser->get( $userId );
@@ -211,12 +220,12 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 					'type'			=> Model_Address::TYPE_BILLING,
 				) );
 				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
-//					$this->session->set( 'shop_order_customer', $userId );
+					$this->session->set( 'shop_order_customer', $userId );
 					$this->restart( 'shop/conditions' );
 				}
 				if( !array_key_exists( $user->country, $countries ) )
 					$user->country	= 'DE';
-				if( $user ){
+/*				if( $user ){
 					$customer	= (object) array(
 						'institution'	=> NULL,
 						'firstname'		=> $user->firstname,
@@ -233,8 +242,8 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 							'label'		=> $countries[$user->country],
 						),
 					);
-				}
-				$this->addData( 'customer', $customer );
+				}*
+				$this->addData( 'customer', $customer );*/
 				$this->addData( 'countries', $countries );
 				$this->addData( 'user', $user );
 				$this->addData( 'addressBilling', $addressBilling );

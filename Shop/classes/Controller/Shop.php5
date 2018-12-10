@@ -175,11 +175,9 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'positions', $positions );
 		switch( $this->session->get( 'shop_customer_mode' ) ){
 		 	case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
-				$customerId	= $this->session->get( 'shop_customer_id' );
 				$customer	= $this->logic->getAccountCustomer( $customerId );
 				break;
 		 	case Model_Shop_Order::CUSTOMER_MODE_GUEST:
-				$customerId	= $this->session->get( 'shop_customer_id' );
 				$customer	= $this->logic->getGuestCustomer( $customerId );
 				break;
 		}
