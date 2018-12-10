@@ -13,7 +13,7 @@ class View_Helper_Shop_FinishPanel_Bank{
 
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->modelPayment	= new Model_Shop_Payment_Stripe( $env );
+//		$this->modelPayment	= new Model_Shop_Payment_Bank( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
 		$this->heading		= 'Bezahlvorgang';
 		$this->config		= $env->getConfig()->getAll( 'module.shop_payment_bank.', TRUE );
@@ -57,11 +57,11 @@ class View_Helper_Shop_FinishPanel_Bank{
 
 	public function setOrderId( $orderId ){
 		$this->order	= $this->modelOrder->get( $orderId );
-		if( $this->order->paymentId > 0 ){
+/*		if( $this->order->paymentId > 0 ){
 			$this->payment	= $this->modelPayment->get( $this->order->paymentId );
 			if( strlen( $this->payment->object ) )
 				$this->payin	= json_decode( $this->payment->object );
-		}
+		}*/
 	}
 
 	public function setOutputFormat( $format ){
@@ -70,8 +70,8 @@ class View_Helper_Shop_FinishPanel_Bank{
 
 	public function setPaymentId( $paymentId ){
 		$this->payment	= $this->modelPayment->get( $paymentId );
-		if( strlen( $this->payment->object ) )
-			$this->payin	= json_decode( $this->payment->object );
+/*		if( strlen( $this->payment->object ) )
+			$this->payin	= json_decode( $this->payment->object );*/
 		$this->order	= $this->modelOrder->get( $this->payment->orderId );
 	}
 }

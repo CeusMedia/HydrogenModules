@@ -23,7 +23,7 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 		$this->session			= $this->env->getSession();
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
-//		$this->configPayment	= $this->env->getConfig()->getAll( 'module.shop_payment.', TRUE );
+//		$this->configPayment	= $this->env->getConfig()->getAll( 'module.shop_payment.bank.', TRUE );
 		$this->configShop		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->logicShop		= new Logic_Shop( $this->env );
 
@@ -38,16 +38,6 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 			$this->restart( 'shop' );
 		}
 		$this->order		= $this->logicShop->getOrder( $this->orderId );
-	}
-
-	protected function handleStripeResponseException( $e ){
-		$error		= (object) array_merge( $e->getJsonBody()['error'], array(
-			'http'		=> $e->getHttpStatus(),
-			'class'		=> get_class( $e ),
-		) );
-		$details	= print_m( $error, NULL, NULL, TRUE );
-		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
-		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
 	}
 
 	public function index(){
