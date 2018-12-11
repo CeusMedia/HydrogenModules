@@ -1,5 +1,5 @@
 <?php
-class Hook_Shop_Payment_Stripe/* extends CMF_Hydrogen_Hook*/{
+class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook{
 
 	/**
 	 *	...

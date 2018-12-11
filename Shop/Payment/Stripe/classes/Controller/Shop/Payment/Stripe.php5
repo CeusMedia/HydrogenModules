@@ -250,6 +250,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'mode'		=> 'instant',
 		);
 	}
 }
