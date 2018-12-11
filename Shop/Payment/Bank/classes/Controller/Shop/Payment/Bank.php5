@@ -40,9 +40,6 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 		$this->order		= $this->logicShop->getOrder( $this->orderId );
 	}
 
-	public function index(){
-	}
-
 	public function perTransfer(){
 		$this->restart( 'shop/finish' );
 	}
@@ -55,6 +52,7 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'mode'		=> 'delayed',
 		);
 	}
 }
