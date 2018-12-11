@@ -57,18 +57,27 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'cartTotal', $this->cartTotal );
 	}
 
+	/**
+	 *	Add article to cart.
+	 *	Uses restart to Shop::changePositionQuantity to apply cart changes.
+	 *	Will restart application to shop cart if forwarding is not used.
+	 *	Otherwise: Will direct to given forward path if set by request (GET parameter forwardTo).
+	 *	@access		public
+	 *	@param		integer		$articleId			ID of article to remove from cart
+	 *	@return		void
+	 */
 	public function addArticle( $bridgeId, $articleId, $quantity = 1 ){
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
-		$forwardUrl		= $this->request->get( 'forwardTo' );
+		$forwardTo		= $this->request->get( 'forwardTo' );
 		if( $this->request->get( 'from' ) )
-			$forwardUrl	.= '?from='.$this->request->get( 'from' );
+			$forwardTo	.= '?from='.$this->request->get( 'from' );
 		$positions		= $this->session->get( 'shop_order_positions' );
 		if( array_key_exists( $articleId, $positions ) && $positions[$articleId]->quantity ){
 			foreach( $positions as $nr => $position ){
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
-					$param	= '?forwardTo='.urlencode( $forwardUrl );
+					$param	= '?forwardTo='.urlencode( $forwardTo );
 					$url	= 'changePositionQuantity/'.$bridgeId.'/'.$articleId.'/'.$quantity;
 					$this->restart( $url.$param, TRUE );
 				}
@@ -88,7 +97,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
 		$this->messenger->noteSuccess( $this->words->successAddedToCart, $title, $quantity );
-		$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
+		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
 	public function cart(){
@@ -108,7 +117,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
-		$forwardUrl		= $this->request->get( 'forwardTo' );
+		$forwardTo		= $this->request->get( 'forwardTo' );
 		$positions		= $this->session->get( 'shop_order_positions' );
 		foreach( $positions as $nr => $position ){
 			if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
@@ -133,10 +142,9 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 					$this->messenger->noteSuccess( $this->words->successChangedQuantity, $title, $position->quantity );
 				}
 				$this->session->set( 'shop_order_positions', $positions );
-				$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
 			}
 		}
-		$this->restart( 'cart', TRUE );
+		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
 	public function checkout(){
@@ -167,6 +175,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$order		= $this->session->get( 'shop_order' );
 		$customerId	= $this->session->get( 'shop_order_customer' );
 		$positions	= $this->session->get( 'shop_order_positions' );
+		if( !$customerId )
+			$this->restart( 'customer', TRUE );
 		if( !$positions ){
 			$this->messenger->noteNotice( $this->words->errorCheckoutEmptyCart );
 			$this->restart( 'cart', TRUE );
@@ -319,14 +329,23 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		);
 	}
 
+	/**
+	 *	Remove article from cart by cart position article ID.
+	 *	Will restart application to shop cart if forwarding is not used.
+	 *	Otherwise: Will direct to given forward path if set by request (GET parameter forwardTo).
+	 *	@access		public
+	 *	@param		integer		$articleId			ID of article to remove from cart
+	 *	@return		void
+	 */
 	public function removeArticle( $articleId ){
-		$forwardUrl		= $this->request->get( 'forwardTo' );
 		$positions		= $this->session->get( 'shop_order_positions' );
 		foreach( $positions as $nr => $position )
 			if( $position->articleId == $articleId )
 				unset( $positions[$nr] );
 		$this->session->set( 'shop_order_positions', $positions );
-		$this->restart( $forwardUrl ? $forwardUrl : 'shop/cart' );
+		if( ( $forwardTo = $this->request->get( 'forwardTo' ) ) )
+			$this->restart( $forwardTo );
+		$this->restart( 'cart', TRUE );
 	}
 
 	public function rules(){

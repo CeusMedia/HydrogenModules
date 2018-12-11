@@ -12,6 +12,7 @@ class View_Helper_Shop_CartPositions{
 
 	protected $bridge;
 	protected $changeable;
+	protected $forwardPath;
 	protected $env;
 	protected $positions;
 	protected $display				= self::DISPLAY_BROWSER;
@@ -177,10 +178,10 @@ class View_Helper_Shop_CartPositions{
 		}
 		$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140', '140' );
 		$thead			= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $wordsCart->headPicture, array( 'class' => 'column-cart-picture' ) ),
+				UI_HTML_Tag::create( 'th', $wordsCart->headPicture, array( 'class' => 'column-cart-picture th-center' ) ),
 				UI_HTML_Tag::create( 'th', $wordsCart->headLabel, array( 'class' => 'column-cart-label' ) ),
-				UI_HTML_Tag::create( 'th', $wordsCart->headQuantity, array( 'class' => 'column-cart-quantity' ) ),
-				UI_HTML_Tag::create( 'th', $wordsCart->headPrice, array( 'class' => 'column-cart-price' ) ),
+				UI_HTML_Tag::create( 'th', $wordsCart->headQuantity, array( 'class' => 'column-cart-quantity th-center' ) ),
+				UI_HTML_Tag::create( 'th', $wordsCart->headPrice, array( 'class' => 'column-cart-price th-right' ) ),
 		) ) );
 		$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 
@@ -310,6 +311,12 @@ class View_Helper_Shop_CartPositions{
 		$urlDecrease	= './shop/changePositionQuantity/'.$position->bridgeId.'/'.$position->articleId.'/1/minus';
 		$urlRemove		= './shop/removeArticle/'.$position->articleId;
 
+		if( $this->forwardPath ){
+			$urlIncrease	.= '?forwardTo='.urlencode( $this->forwardPath );
+			$urlDecrease	.= '?forwardTo='.urlencode( $this->forwardPath );
+			$urlRemove		.= '?forwardTo='.urlencode( $this->forwardPath );
+		}
+
 		$buttonPlus		= UI_HTML_Tag::create( 'a', $iconPlus, array(
 			'href'		=> $urlIncrease,
 			'class'		=> 'btn btn-mini btn-success',
@@ -336,6 +343,11 @@ class View_Helper_Shop_CartPositions{
 
 	public function setChangeable( $isChangeable = TRUE ){
 		$this->changeable	= $isChangeable;
+		return $this;
+	}
+
+	public function setForwardPath( $forwardPath ){
+		$this->forwardPath		= $forwardPath;
 		return $this;
 	}
 
