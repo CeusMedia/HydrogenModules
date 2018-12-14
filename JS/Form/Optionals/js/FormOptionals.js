@@ -53,7 +53,9 @@ var FormOptionals = {
 		}
 	},
 	disableRequired: function(container){
-		container.find(":input").each(function(){
+		var $selfInput		= container.filter(":input")
+		var $childInputs	= container.find(":input");
+		$selfInput.add($childInputs).each(function(){
 			var elem = jQuery(this);
 			if(elem.attr("required")){
 				elem.data("optionals-required", elem.attr("required"));
@@ -62,7 +64,9 @@ var FormOptionals = {
 		});
 	},
 	enableRequired: function(container){
-		container.find(":input").each(function(){
+		var $selfInput		= container.filter(":input")
+		var $childInputs	= container.find(":input");
+		$selfInput.add($childInputs).each(function(){
 			var elem = jQuery(this);
 			if(elem.data("optionals-required")){
 				elem.attr("required", elem.data("optionals-required"));
