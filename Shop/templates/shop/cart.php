@@ -4,7 +4,7 @@ $w		= (object) $words['cart'];
 $tablePositions	= '<p><em class="muted">'.$w->empty.'</em></p>';
 $buttonbar		= '';
 
-if( count( $positions ) ){
+if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
 	$helperCart->setChangeable( TRUE );

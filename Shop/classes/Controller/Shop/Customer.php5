@@ -7,39 +7,41 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	protected $backends			= array();
 	protected $cartTotal		= 0;
 
+	/**	@var	Model_Address				$modelAddress */
 	protected $modelAddress;
+
+	/**	@var	Model_Shop_Cart				$modelCart */
+	protected $modelCart;
 
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->bridge		= new Logic_ShopBridge( $this->env );
 		$this->modelAddress	= new Model_Address( $this->env );
+		$this->modelCart	= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
 		$this->addData( 'paymentBackends', $this->backends );
 
-		if( $this->session->get( 'shop_order_positions' ) ){
-			foreach( $this->session->get( 'shop_order_positions' ) as $position ){
-				$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
-				$article	= $source->get( $position->articleId, $position->quantity );
-				$this->cartTotal	+= $article->price->all;
+		if( $this->modelCart->get( 'positions' ) ){
+			foreach( $this->modelCart->get( 'positions' ) as $position ){
+				$this->cartTotal	+= $position->article->price->all;
 			}
 		}
 		$this->addData( 'cartTotal', $this->cartTotal );
 	}
 
 	public function address( $addressId, $type = NULL, $remove = NULL ){
-		$customerMode	= $this->session->get( 'shop_customer_mode' );
+		$customerMode	= $this->modelCart->get( 'customerMode' );
 		$countries		= $this->env->getLanguage()->getWords( 'countries' );
 		switch( $customerMode ){
 			case Model_Shop_Order::CUSTOMER_MODE_GUEST:
-				$relationId		= $this->session->get( 'shop_customer_id' );
+				$relationId		= $this->modelCart->get( 'customerId' );
 				$relationType	= 'customer';
 				break;
 			case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
-				$relationId		= $this->session->get( 'userId' );
+				$relationId		= $this->modelCart->get( 'userId' );
 				$relationType	= 'user';
 				if( !$relationId )
 					$this->restart( 'shop/customer' );
@@ -130,22 +132,28 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $mode = NULL ){
-		if( (int) $mode > 0 ){
-			$this->session->set( 'shop_customer_mode', (int) $mode );
+		if( $mode === 'account' )
+			$mode	= Model_Shop_Order::CUSTOMER_MODE_ACCOUNT;
+		else if( $mode === 'guest' )
+			$mode	= Model_Shop_Order::CUSTOMER_MODE_GUEST;
+		if( is_int( $mode ) && $mode > 0 ){
+			$logicShop	= new Logic_Shop( $this->env );
+			$this->modelCart->set( 'customerMode', (int) $mode );
 			$this->restart( NULL, TRUE );
 		}
-		if( !$this->session->get( 'shop_order_positions' ) ){
+		if( !$this->modelCart->get( 'positions' ) ){
 			$this->messenger->noteNotice( $this->words->errorCustomerEmptyCart );
 			$this->restart( 'shop/cart' );
 		}
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$logicAuth	= Logic_Authentication::getInstance( $this->env );
 			if( $logicAuth->isAuthenticated() )
-				$this->session->set( 'shop_customer_mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
-			if( !$this->session->get( 'shop_customer_mode' ) )
-				$this->session->set( 'shop_customer_mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
+				$this->modelCart->set( 'customerMode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
+			if( !$this->modelCart->get( 'customerMode' ) )
+				$this->modelCart->set( 'customerMode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
 		}
-		switch( $this->session->get( 'shop_customer_mode' ) ){
+		$this->addData( 'cart', $this->modelCart );
+		switch( $this->modelCart->get( 'customerMode' ) ){
 			case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
 				$this->handleAccount();
 				break;
@@ -161,11 +169,11 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'mode', Model_Shop_Order::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
 
-		$customerId		= $this->session->get( 'shop_customer_id' );
+		$customerId		= $this->modelCart->get( 'customerId' );
 		if( !$customerId ){
 			$model		= new Model_Shop_Customer( $this->env );
 			$customerId	= $model->add( array() );
-			$this->session->set( 'shop_customer_id', $customerId );
+			$this->modelCart->set( 'customerId', $customerId );
 		}
 		$addressDelivery	= $this->modelAddress->getByIndices( array(
 			'relationType'	=> 'customer',
@@ -180,8 +188,14 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'addressBilling', $addressBilling );
 		$this->addData( 'addressDelivery', $addressDelivery );
 
+		if( !$addressBilling || !$addressDelivery ){
+			$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_NEW );
+		}
+
 		if( $this->request->has( 'save' ) && $addressBilling && $addressDelivery ){
-			$this->session->set( 'shop_order_customer', $customerId );
+			$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
+			$this->modelCart->set( 'customerId', $customerId );
+			$this->modelCart->set( 'userId', 0 );
 			$this->restart( 'shop/conditions' );
 		}
 
@@ -201,7 +215,6 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 
 	protected function handleAccount(){
 		$logicAuth	= Logic_Authentication::getInstance( $this->env );
-		$customer	= $this->session->get( 'shop_order_customer' );
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$userId		= 0;
 		if( $logicAuth->isAuthenticated() ){
@@ -220,37 +233,20 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 					'type'			=> Model_Address::TYPE_BILLING,
 				) );
 				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
-					$this->session->set( 'shop_order_customer', $userId );
+					$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
+					$this->modelCart->set( 'userId', $userId );
+					$this->modelCart->set( 'customerId', 0 );
 					$this->restart( 'shop/conditions' );
 				}
 				if( !array_key_exists( $user->country, $countries ) )
 					$user->country	= 'DE';
-/*				if( $user ){
-					$customer	= (object) array(
-						'institution'	=> NULL,
-						'firstname'		=> $user->firstname,
-						'surname'		=> $user->surname,
-						'email'			=> $user->email,
-						'phone'			=> $user->phone,
-						'address'		=> $user->street.' '.$user->number,
-						'postcode'		=> $user->postcode,
-						'city'			=> $user->city,
-						'state'			=> NULL,
-						'region'		=> NULL,
-						'country'		=> (object) array(
-							'code'		=> $user->country,
-							'label'		=> $countries[$user->country],
-						),
-					);
-				}*
-				$this->addData( 'customer', $customer );*/
 				$this->addData( 'countries', $countries );
 				$this->addData( 'user', $user );
 				$this->addData( 'addressBilling', $addressBilling );
 				$this->addData( 'addressDelivery', $addressDelivery );
 			}
 		}
-		$this->addData( 'mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
+//		$this->addData( 'mode', Model_Shop_Order::CUSTOMER_MODE_ACCOUNT );
 		$this->addData( 'userId', $userId );
 		$this->addData( 'username', $this->request->get( 'username' ) );
 		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );

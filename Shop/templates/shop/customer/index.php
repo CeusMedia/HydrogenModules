@@ -3,13 +3,14 @@ $w			= (object) $words['customer'];
 
 $hint		= '';
 
-if( $mode === Model_Shop_Order::CUSTOMER_MODE_ACCOUNT ){
+$customerMode   = $cart->get( 'customerMode' );
+if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_ACCOUNT ){
  	if( $userId )
 		$tabContent	= $this->loadTemplateFile( 'shop/customer/inside.php' );
 	else
 		$tabContent	= $this->loadTemplateFile( 'shop/customer/outside.php' );
 }
-if( $mode === Model_Shop_Order::CUSTOMER_MODE_GUEST ){
+if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_GUEST ){
 	$tabContent	= $this->loadTemplateFile( 'shop/customer/inside.php' );
 	$hint		= '<small class="alert"><a href="./shop/customer/account">doch mit Benutzerkonto</a></small>';
 }

@@ -26,6 +26,8 @@ class Hook_System_Exception extends CMF_Hydrogen_Hook{
 					'line'		=> $payload->exception->getLine(),
 					'trace'		=> $payload->exception->getTraceAsString(),
 				) ) );
+				$env->getSession()->set( 'exceptionRequest', $env->getRequest() );
+				$env->getSession()->set( 'exceptionUrl', $env->getRequest()->getUrl() );
 				static::restart( $env, 'system/exception', 500 );
 			case 'dev':
 			case 'strict':

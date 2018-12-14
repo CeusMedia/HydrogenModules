@@ -10,6 +10,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	protected $logic;
 	/**	@var	ADT_List_Dictionary		$options */
 	protected $options;
+	/**	@var	Model_Shop_Cart				$modelCart */
+	protected $modelCart;
 
 	protected $backends			= array();
 	protected $servicePanels	= array();
@@ -21,39 +23,19 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Shop( $this->env );
-		$this->words		= (object) $this->getWords( 'msg' );
 		$this->bridge		= new Logic_ShopBridge( $this->env );
+		$this->modelCart	= new Model_Shop_Cart( $this->env );
+		$this->words		= (object) $this->getWords( 'msg' );
 		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
-		$this->orderId		= $this->session->get( 'shop_order_id' );
 
-		if( !$this->session->get( 'shop_order' ) ){
-			$this->session->set( 'shop_order', (object) array(
-				'status'		=> 0,
-				'rules'			=> FALSE,
-				'paymentMethod'	=> NULL,
-				'paymentId'		=> NULL,
-				'currency'		=> 'EUR',
-			) );
-			$this->session->set( 'shop_order_customer', array() );
-			$this->session->set( 'shop_order_billing', array() );
-			$this->session->set( 'shop_order_positions', array() );
-		}
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
 		$this->addData( 'paymentBackends', $this->backends );
-//		$this->orderId	= 41;
-		$this->addData( 'orderId', (int) $this->orderId );
-		if( (int) $this->orderId > 0 ){
-			$this->addData( 'order', $this->logic->getOrder( $this->orderId ) );
-		}
-		if( $this->session->get( 'shop_order_positions' ) ){
-			foreach( $this->session->get( 'shop_order_positions' ) as $position ){
-				$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
-				$article	= $source->get( $position->articleId, $position->quantity );
-				$this->cartTotal	+= $article->price->all;
-			}
-		}
+		$this->addData( 'cart', $this->modelCart );
+		if( $this->modelCart->get( 'positions' ) )
+			foreach( $this->modelCart->get( 'positions' ) as $position )
+				$this->cartTotal	+= $position->article->price->all;
 		$this->addData( 'cartTotal', $this->cartTotal );
 	}
 
@@ -73,7 +55,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$forwardTo		= $this->request->get( 'forwardTo' );
 		if( $this->request->get( 'from' ) )
 			$forwardTo	.= '?from='.$this->request->get( 'from' );
-		$positions		= $this->session->get( 'shop_order_positions' );
+		$positions		= $this->modelCart->get( 'positions' );
 		if( array_key_exists( $articleId, $positions ) && $positions[$articleId]->quantity ){
 			foreach( $positions as $nr => $position ){
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
@@ -83,34 +65,32 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				}
 			}
 		}
-
+		$source		= $this->bridge->getBridgeObject( (int) $bridgeId );
+		$article	= $source->get( $articleId, $quantity );
 		$positions[$articleId]	= (object) array(
 			'bridgeId'	=> $bridgeId,
 			'articleId'	=> $articleId,
 			'quantity'	=> $quantity,
+			'article'	=> $article,
 		);
-		$this->session->set( 'shop_order_positions', $positions );
-		$order		= $this->session->get( 'shop_order' );
-		if( $order->status == Model_Shop_Order::STATUS_NEW ){
-			$order->status = Model_Shop_Order::STATUS_AUTHENTICATED;
-			$this->session->set( 'shop_order', $order );
-		}
+		$this->modelCart->set( 'positions', $positions );
 		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
-		$this->messenger->noteSuccess( $this->words->successAddedToCart, $title, $quantity );
+		$this->messenger->noteSuccess( $this->words->successAddedToCart, $article->title, $quantity );
 		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
 	public function cart(){
-		$this->addData( 'order', $this->session->get( 'shop_order' ) );
+/*		$this->addData( 'order', $this->session->get( 'shop_order' ) );
 		$this->addData( 'customer', $this->session->get( 'shop_order_customer' ) );
 		$this->addData( 'billing', $this->session->get( 'shop_order_billing' ) );
-		$positions	= $this->session->get( 'shop_order_positions' );
+		$positions	= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position ){
 			$source		= $this->bridge->getBridgeObject( (int)$position->bridgeId );
 			$article	= $source->get( $position->articleId, $position->quantity );
 			$positions[$nr]->article	= $article;
 		}
-		$this->addData( 'positions', $positions );
+		$this->addData( 'positions', $positions );*/
+		$this->addData( 'cart', $this->modelCart );
 	}
 
 	public function changePositionQuantity( $bridgeId, $articleId, $quantity, $operation = NULL ){
@@ -118,7 +98,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
 		$forwardTo		= $this->request->get( 'forwardTo' );
-		$positions		= $this->session->get( 'shop_order_positions' );
+		$positions		= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position ){
 			if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
 				switch( $operation ){
@@ -132,26 +112,44 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 						$position->quantity	= (int)$quantity;
 				}
 				$positions[$nr]	= $position;
-				$title			= $this->bridge->getArticleTitle( $bridgeId, $articleId );
-				$link			= $this->bridge->getArticleLink( $bridgeId, $articleId );
 				if( !$position->quantity ){
 					unset( $positions[$nr] );
-					$this->messenger->noteSuccess( $this->words->successRemovedFromCart, $title );
+					$this->messenger->noteSuccess( $this->words->successRemovedFromCart, $position->article->title );
 				}
 				else{
-					$this->messenger->noteSuccess( $this->words->successChangedQuantity, $title, $position->quantity );
+					$this->messenger->noteSuccess( $this->words->successChangedQuantity, $position->article->title, $position->quantity );
 				}
-				$this->session->set( 'shop_order_positions', $positions );
+				$this->modelCart->set( 'positions', $positions );
 			}
 		}
 		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
 	public function checkout(){
+		$customerMode	= $this->modelCart->get( 'customerMode' );
+//		print_m( $this->session->getAll( 'shop_' ) );die;
+		if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_ACCOUNT ){
+			$logicAuth	= new Logic_Authentication( $this->env );
+			if( !$logicAuth->isAuthenticated() ){
+				$this->modelCart->set( 'userId', 0 );
+				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_NEW );
+				$this->modelCart->remove( 'customerId' );
+				$this->restart( 'customer', TRUE );
+			}
+		}
+		else if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_GUEST ){
+			if( !$this->modelCart->get( 'customerId' ) )
+				$this->restart( 'customer', TRUE );
+//			if( !$this->session->get( 'customer' ) )
+//				$this->restart( 'customer', TRUE );
+		}
 		if( $this->request->has( 'save' ) && $this->request->isMethod( 'POST' ) ){
-			$orderId	= $this->session->get( 'shop_order_id' );
-			$orderId	= $this->logic->storeCartFromSession( $orderId );
-			$this->session->set( 'shop_order_id', $orderId );
+			$orderId	= $this->modelCart->get( 'orderId' );
+			if( !$orderId )
+				$orderId	= $this->modelCart->saveOrder();
+
+/*			$orderId	= $this->logic->storeCartFromSession( $orderId );
+			$this->session->set( 'shop_order_id', $orderId );*/
 			$price      = $this->logic->calculateOrderTotalPrice( $orderId );
 			$order		= $this->logic->getOrder( $orderId );
 
@@ -172,76 +170,75 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				$this->restart( 'finish', TRUE );
 			}
 		}
-		$order		= $this->session->get( 'shop_order' );
-		$customerId	= $this->session->get( 'shop_order_customer' );
-		$positions	= $this->session->get( 'shop_order_positions' );
-		if( !$customerId )
+//		$order		= $this->session->get( 'shop_order' );
+		$userId		= $this->modelCart->get( 'userId' );
+		$customerId	= $this->modelCart->get( 'customerId' );
+		$positions	= $this->modelCart->get( 'positions' );
+		if( !$userId && !$customerId )
 			$this->restart( 'customer', TRUE );
 		if( !$positions ){
 			$this->messenger->noteNotice( $this->words->errorCheckoutEmptyCart );
 			$this->restart( 'cart', TRUE );
 		}
-		$this->addData( 'order', $order );
-		$this->addData( 'positions', $positions );
-		switch( $this->session->get( 'shop_customer_mode' ) ){
+//		$this->addData( 'order', $order );
+//		$this->addData( 'positions', $positions );
+		$this->addData( 'cart', $this->modelCart );
+		switch( $this->modelCart->get( 'customerMode' ) ){
 		 	case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
-				$customer	= $this->logic->getAccountCustomer( $customerId );
+				$customer	= $this->logic->getAccountCustomer( $userId );
 				break;
 		 	case Model_Shop_Order::CUSTOMER_MODE_GUEST:
+			default:
 				$customer	= $this->logic->getGuestCustomer( $customerId );
 				break;
 		}
+		if( !$customer->addressDelivery )
+			$this->restart( 'customer', TRUE );
 		$this->addData( 'customer', $customer );
 	}
 
 	public function conditions(){
-		$order		= $this->session->get( 'shop_order' );
-		$positions	= $this->session->get( 'shop_order_positions' );
-		$customer	= $this->session->get( 'shop_order_customer' );
+//		$order		= $this->session->get( 'shop_order' );
+		$positions	= $this->modelCart->get( 'positions' );
 
 		if( !$positions )
 			$this->restart( 'cart', TRUE );
 
-		if( !$this->session->get( 'shop_order_customer' ) )
+		if( $this->modelCart->get( 'orderStatus' ) < Model_Shop_Order::STATUS_AUTHENTICATED )
 			$this->restart( 'customer', TRUE );
 
 		if( $this->request->has( 'saveConditions' ) ){
 			if( !$this->request->get( 'accept_rules' ) ){
 				$this->messenger->noteError( $this->words->errorRulesNotAccepted );
-				$order->status	= -1;
-				$this->session->set( 'shop_order', $order );
+//				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_NEW );
+				$this->modelCart->set( 'acceptRules', FALSE );
 			}
 			else{
 //				$this->messenger->noteSuccess( $this->words->successRulesAccepted );
-				$order->status	= 1;
-				$order->rules	= TRUE;
-				$this->session->set( 'shop_order', $order );
+//				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
+				$this->modelCart->set( 'acceptRules', TRUE );
 				$this->restart( 'payment', TRUE );
 			}
 		}
 
 		$this->addData( 'charges', $this->calculateCharges() );
-		$this->addData( 'order', $order );
+//		$this->addData( 'order', $order );
+		$this->addData( 'cart', $this->modelCart );
 	}
 
 	public function finish(){
-		$orderId	= $this->session->get( 'shop_order_id' );
+		$orderId	= $this->modelCart->get( 'orderId' );
 		if( !$orderId ){
 			$this->env->getMessenger()->noteError( $this->words->errorFinishEmptyCart );
 			$this->restart( 'cart', TRUE );
 		}
-
 		$order	= $this->logic->getOrder( $orderId );
 		if( $order->status < Model_Shop_Order::STATUS_ORDERED )
 			$this->logic->setOrderStatus( $orderId, Model_Shop_Order::STATUS_ORDERED );
 		$this->sentOrderMailCustomer( $orderId );
 		$this->sentOrderMailManager( $orderId );
 		$this->session->set( 'shop_order_lastId', $orderId );
-		$this->session->remove( 'shop_order' );
-		$this->session->remove( 'shop_order_customer' );
-		$this->session->remove( 'shop_order_billing' );
-		$this->session->remove( 'shop_order_positions' );
-		$this->session->remove( 'shop_order_id' );
+		$this->modelCart->releaseOrder();
 		$this->env->getMessenger()->noteSuccess( $this->words->successFinished );
 		$order	= $this->logic->getOrder( $orderId );
 		$this->env->getModules()->callHook( 'Shop', 'onFinish', $this, array(
@@ -260,8 +257,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			$paymentBackend		= $this->backends[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
-		$orderId	= $this->session->get( 'shop_order_id' );
-		$this->addData( 'order', $this->session->get( 'shop_order' ) );
+		$orderId	= $this->modelCart->get( 'orderId' );
+		$this->addData( 'cart', $this->modelCart );
 	}
 
 /*	public function register(){
@@ -338,11 +335,11 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 */
 	public function removeArticle( $articleId ){
-		$positions		= $this->session->get( 'shop_order_positions' );
+		$positions		= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position )
 			if( $position->articleId == $articleId )
 				unset( $positions[$nr] );
-		$this->session->set( 'shop_order_positions', $positions );
+		$this->modelCart->set( 'positions', $positions );
 		if( ( $forwardTo = $this->request->get( 'forwardTo' ) ) )
 			$this->restart( $forwardTo );
 		$this->restart( 'cart', TRUE );
@@ -369,8 +366,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 
 	public function setPaymentBackend( $paymentBackendKey = NULL ){
 		if( $paymentBackendKey ){
-			$orderId	= $this->session->get( 'shop_order_id' );
-			$this->logic->setOrderPaymentMethod( $orderId, $paymentBackendKey );
+			$this->modelCart->set( 'paymentMethod', $paymentBackendKey );
 			$this->restart( 'checkout', TRUE );
 		}
 	}
@@ -379,7 +375,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	protected function calculateCharges(){
 		if( !$this->env->getModules()->has( 'Shop_Shipping' ) )
 			return 0;
-		$customer	= $this->session->get( 'shop_order_customer', TRUE );
+//		$customer	= $this->session->get( 'shop_order_customer', TRUE );
 
 		$charges	= 0;
 //		if( $customer->get( 'country' ) )

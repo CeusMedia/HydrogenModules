@@ -5,6 +5,12 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$exception	= unserialize( $session->get( 'exception' ) );
+		if( $session->has( 'exceptionRequest' ) ){
+			$this->addData( 'exceptionRequest', $session->get( 'exceptionRequest' ) );
+		}
+		if( $session->has( 'exceptionUrl' ) ){
+			$this->addData( 'exceptionUrl', $session->get( 'exceptionUrl' ) );
+		}
 		if( $session->has( 'exception' ) ){
 			if( isset( $exception->code ) ){
 				if( Net_HTTP_Status::isCode( $exception->code ) ){

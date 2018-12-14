@@ -40,9 +40,8 @@ class View_Helper_Shop_Tabs{
 	public function render(){
 		$tabs	= new \CeusMedia\Bootstrap\Tabs( "tabs-cart" );
 		$session	= $this->env->getSession();
-		$order		= $session->get( 'shop_order' );
-		$positions	= $session->get( 'shop_order_positions' );
-		$customer	= $session->get( 'shop_order_customer' );
+		$modelCart	= new Model_Shop_Cart( $this->env );
+		$positions	= $modelCart->get( 'positions' );
 		$disabled	= array(
 			'shop-customer',
 			'shop-conditions',
@@ -51,13 +50,13 @@ class View_Helper_Shop_Tabs{
 			'shop-service'
 		);
 
-		if( count( $positions ) ){
+		if( is_array( $positions ) && count( $positions ) ){
 			unset( $disabled[array_search( 'shop-customer', $disabled )] );
-			if( $customer ){
+			if( $modelCart->get( 'orderStatus' ) >= Model_Shop_Order::STATUS_AUTHENTICATED ){
 				unset( $disabled[array_search( 'shop-conditions', $disabled )] );
-				if( $order->rules ){
+				if( $modelCart->get( 'acceptRules' ) ){
 					unset( $disabled[array_search( 'shop-payment', $disabled )] );
-					if( $order->paymentMethod || !count( $this->backends ) )
+					if( $modelCart->get( 'paymentMethod' ) || !count( $this->backends ) )
 						unset( $disabled[array_search( 'shop-checkout', $disabled )] );
 				}
 			}

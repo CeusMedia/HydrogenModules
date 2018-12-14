@@ -4,6 +4,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	/**	@var	Logic_ShopBridge			$bridge */
 	protected $bridge;
 
+	/**	@var	Model_Shop_Cart				$modelCart */
+	protected $modelCart;
+
 	/**	@var	Model_User					$modelUser */
 	protected $modelUser;
 
@@ -26,6 +29,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		$this->bridge				= new Logic_ShopBridge( $this->env );
 		$this->modelUser			= new Model_User( $this->env );
 		$this->modelAddress			= new Model_Address( $this->env );
+		$this->modelCart			= new Model_Shop_Cart( $this->env );
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
 		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
@@ -47,8 +51,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	}
 
 	public function countArticleInCart( $bridgeId, $articleId ){
-		$positions	= $this->env->getSession()->get( 'shop_order_positions' );
-		if( is_array( $positions ) )
+		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) )
 			foreach( $positions as $position )
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId )
 					return $position->quantity;
@@ -56,14 +59,13 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	}
 
 	public function countArticlesInCart( $countEach = FALSE ){
-		$positions	= $this->env->getSession()->get( 'shop_order_positions' );
-		if( !is_array( $positions ) )
-			return 0;
-		if( !$countEach )
-			return count( $positions );
 		$number	= 0;
-		foreach( $positions as $position )
-			$number	+= $position->quantity;
+		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) ){
+			if( !$countEach )
+				return count( $positions );
+			foreach( $positions as $position )
+				$number	+= $position->quantity;
+		}
 		return $number;
 	}
 
@@ -83,21 +85,29 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	}
 
 	public function getGuestCustomer( $customerId ){
-		$model	= new Model_Shop_Customer( $this->env );
-		$user	= $model->get( $customerId );
-		if( !$user )
+		$model		= new Model_Shop_Customer( $this->env );
+		$customer	= $model->get( $customerId );
+		if( !$customer )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$customer->addressBilling	= $this->modelAddress->getByIndices( array(
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_BILLING,
 		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		$customer->addressDelivery	= $this->modelAddress->getByIndices( array(
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
 		) );
-		return $user;
+		if( $customer->addressDelivery ){
+			$customer->userId		= 0;
+			$customer->gender		= 0;
+			$customer->email		= $customer->addressDelivery->email;
+			$customer->firstname	= $customer->addressDelivery->firstname;
+			$customer->surname		= $customer->addressDelivery->surname;
+			$customer->username		= $customer->addressDelivery->firstname.' '.$customer->addressDelivery->surname;
+		}
+		return $customer;
 	}
 
 	public function getAccountCustomer( $userId ){
@@ -138,13 +148,16 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->modelOrderPosition->get( $positionId );
 	}
 
-	public function getOpenSessionOrder( $sessionId ){
+	/**
+	 *	@deprecated		use Model_Shop_Cart instead
+	 */
+/*	public function getOpenSessionOrder( $sessionId ){
 		$conditions	= array(
 			'sessionId'		=> $sessionId,
 			'status'		=> '<2',
 		);
 		return $this->modelOrder->getAll( $conditions );
-	}
+	}*/
 
 	public function getShipping( $strict = TRUE ){
 		if( !$this->shipping && $strict )
@@ -190,6 +203,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->countArticleInCart( $bridgeId, $articleId ) > 0;
 	}
 
+	/**
+	 * @deprecated	use Model_Shop_Cart::set instead
+	 */
 	public function setOrderPaymentMethod( $orderId, $paymentMethod ){
 		if( $orderId ){
 			return $this->modelOrder->edit( $orderId, array(
@@ -197,12 +213,12 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 				'modifiedAt'	=> time(),
 			) );
 		}
-		$session	= $this->env->getSession();
-		$order		= $session->get( 'shop_order' );
-		$order->paymentMethod	= $paymentMethod;
-		$session->set( 'shop_order', $order );
+		$this->modelCart->set( 'paymentMethod', $paymentMethod );
 	}
 
+	/**
+	 * @deprecated	use Model_Shop_Cart::set instead
+	 */
 	public function setOrderPaymentId( $orderId, $paymentId ){
 		if( $orderId ){
 			return $this->modelOrder->edit( $orderId, array(
@@ -219,6 +235,13 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		) );
 	}
 
+	public function setOrderUserId( $orderId, $userId ){
+		return $this->modelOrder->edit( $orderId, array(
+			'userId'		=> $userId,
+			'modifiedAt'	=> time(),
+		) );
+	}
+
 	public function setOrderStatus( $orderId, $status ){
 		$order	= $this->getOrder( $orderId );
 		if( $status == Model_Shop_Order::STATUS_PAYED ){
@@ -228,11 +251,6 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 					$bridge	= $this->bridge->getBridge( $position->bridgeId );
 					$change	= -1 * (int) $position->quantity;
 					$bridge->object->changeQuantity( $position->articleId, $change );
-/*					print_m( $position );
-					print_m( $order );
-					print_m( $bridge );
-					print_m( $bridge->object->get( $position->articleId ) );
-					die;*/
 				}
 			}
 		}
@@ -246,65 +264,6 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		if( !( $logic instanceof CMF_Hydrogen_Environment_Resource_Logic ) )
 			throw new RuntimeException( 'Invalid logic object (must extend CMF_Hydrogen_Environment_Resource_Logic)' );
 		$this->shipping		= $logic;
-	}
-
-	public function storeCartFromSession( $orderId = NULL ){
-		$session		= $this->env->getSession();
-		$order			= (array) $session->get( 'shop_order' );
-		$positions		= $session->get( 'shop_order_positions' );
-		$customer		= $session->get( 'shop_order_customer' );
-		$billing		= $session->get( 'shop_order_billing' );
-		$taxIncluded	= $this->moduleConfig->get( 'tax.included' );
-
-		if( empty( $customer ) || empty( $order ) || empty( $positions ) )
-			throw new RuntimeException( 'No cart found in session' );
-
-		if( !$orderId ){
-			if( $session->has( 'userId' ) )
-				$order['userId']	= (int) $session->get( 'userId' );
-
-			$total			= 0;
-			$totalTaxed		= 0;
-			foreach( $positions as $position ){
-				$article	= $position->article;
-				$total		+= $article->price->all;
-				$totalTaxed	+= $article->price->all + $article->tax->all;
-				if( $taxIncluded ){												//  tax already is included
-					$total		-= $article->tax->all;							//  reduce by tax added by default
-					$totalTaxed	-= $article->tax->all;							//  reduce by tax added by default
-				}
-			}
-			$order['price']			= $total;
-			$order['priceTaxed']	= $totalTaxed;
-			$order['createdAt']		= time();
-			$orderId	= $this->modelOrder->add( $order );
-		}
-		else{
-			if( !$this->modelOrder->get( $orderId ) ){
-				$session->remove( 'shop_order_id' );
-				return $this->storeCartFromSession();
-			}
-		}
-		$this->modelOrderPosition->removeByIndex( 'orderId', $orderId );		//  @todo is this removal needed?
-		foreach( $positions as $position ){
-			$article	= $position->article;
-			$data	= array(
-				'orderId'		=> $orderId,
-				'bridgeId'		=> $position->bridgeId,
-				'articleId'		=> $position->articleId,
-				'status'		=> 0,
-				'quantity'		=> $position->quantity,
-				'createdAt'		=> time(),
-				'price'			=> $article->price->one,
-				'priceTaxed'	=> $article->price->one + $article->tax->one,
-			);
-			if( $taxIncluded ){													//  tax already is included
-				$data['price']		-= $article->tax->one;						//  reduce by tax added by default
-				$data['priceTaxed']	-= $article->tax->one;						//  reduce by tax added by default
-			}
-			$this->modelOrderPosition->add( $data );
-		}
-		return $orderId;
 	}
 }
 ?>

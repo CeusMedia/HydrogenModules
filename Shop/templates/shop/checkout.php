@@ -3,7 +3,7 @@ $w				= (object) $words['checkout'];
 
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
-$helperCart->setPositions( $positions );
+$helperCart->setPositions( $cart->get( 'positions' ) );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );
 $tablePositionsDesktop	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
@@ -37,7 +37,6 @@ $tabContent	= UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'span6' ) ),
 		), array( 'class' => 'row-fluid' ) ),
 		$textCheckoutBottom,
-		UI_HTML_Tag::create( 'br', NULL ),
 		UI_HTML_Tag::create( 'div', array(
 			$buttonPrev, ' ',
 			$buttonNext,

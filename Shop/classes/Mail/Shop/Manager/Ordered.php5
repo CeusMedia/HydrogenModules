@@ -23,7 +23,7 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->userId );
+		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
 		$this->positions	= $this->logicShop->getOrderPositions( $this->order->orderId );
 		foreach( $this->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );

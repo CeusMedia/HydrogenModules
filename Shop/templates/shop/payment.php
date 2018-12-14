@@ -13,7 +13,7 @@ foreach( $paymentBackends as $paymentBackend ){
 	}
 	$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title, array(
 		'href'	=> './shop/setPaymentBackend/'.$paymentBackend->key,
-		'class' => ' '.( $order->paymentMethod === $paymentBackend->key ? 'current' : '' ),
+		'class' => ' '.( $cart->get( 'paymentMethod' ) === $paymentBackend->key ? 'current' : '' ),
 //		'style' => 'display: inline-block; float: left; padding: 0.5em',
 	) );
 	$key	= $paymentBackend->priority.'.'.uniqid();
@@ -28,7 +28,7 @@ $iconSubmit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 //$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 $buttonNext	= new \CeusMedia\Bootstrap\LinkButton( './shop/checkout', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
-if( !$order->paymentMethod )
+if( !$cart->get( 'paymentMethod' ) )
 	$buttonNext	= new \CeusMedia\Bootstrap\Button( $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', TRUE );
 
 $buttonbar	= '

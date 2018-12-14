@@ -15,8 +15,21 @@ foreach( $words['facts'] as $key => $label ){
 }
 $facts	= UI_HTML_Tag::create( 'dl', $facts, array( 'class' => 'dl-horizontal' ) );
 
-return '<h2>Ups!</h2>
-<p>'.$words['index']['heading'].'</p>
+$buttonTryAgain	= '';
+if( isset( $exceptionUrl ) ){
+	$buttonTryAgain	= UI_HTML_Tag::create( 'a', 'nochmal probieren', array(
+		'href'	=> $exceptionUrl->get( TRUE ),
+		'class'	=> 'btn',
+	) );
+}
+
+return '<h3>'.$words['index']['heading'].'</h3>
+'.$textTop.'
+<!--<p>'.$words['index']['heading'].'</p>-->
+<div>
+	'.$buttonTryAgain.'
+</div>
+<hr/>
 <div id="exception-facts" style="display: none">
 	'.$facts.'
 </div>
@@ -26,5 +39,5 @@ function showExceptionFacts(){
 	jQuery("#exception-facts").show();
 	jQuery("#exception-facts-trigger").hide();
 }
-</script>';
+</script>'.$textBottom;
 ?>
