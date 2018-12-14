@@ -6,11 +6,14 @@ class Job_Abstract{
 	protected $logFile;
 	protected $jobClass;
 	protected $jobMethod;
+	protected $jobModuleId;
 
 	protected $commands			= array();
 	protected $dryMode			= FALSE;
 	protected $verbose			= FALSE;
 	protected $parameters;
+
+	protected $versionModule;
 
 	/**	@var		Jobber								$manager		Job manager instance */
 	protected $manager;
@@ -22,12 +25,13 @@ class Job_Abstract{
 	 *	@param		Jobber								$manager	Job manage instance
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $manager, $jobClassName = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env, $manager, $jobClassName = NULL, $jobModuleId = NULL ){
 		$this->env			= $env;
 		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
-		$this->jobClass		= $jobClassName === NULL ? get_class( $this ) : $jobClassName;
 		$this->parameters	= new ADT_List_Dictionary();
+		$this->setJobClassName( $jobClassName );
+		$this->setJobModuleId( $jobModuleId );
 		$this->__onInit();
 	}
 
@@ -46,42 +50,65 @@ class Job_Abstract{
 		$this->parameters	= new ADT_List_Dictionary( $parameters );
 		$this->dryMode		= in_array( 'dry', (array) $commands );
 		$this->verbose		= in_array( 'verbose', (array) $commands );
-
+		return $this;
 	}
 
-	public function noteJob( $className, $jobName ){
-		$this->jobClass		= $className;
+	public function noteJob( $className, $jobName, $moduleId = NULL ){
+		$this->setJobClassName( $className );
 		$this->jobMethod	= $jobName;
+		$this->setJobModuleId( $moduleId );
+		return $this;
 	}
 
 	protected function log( $message ){
 		$this->manager->log( $this->getLogPrefix().$message );
+		return $this;
 	}
 
 	protected function logError( $message ){
 		$this->manager->logError( $this->getLogPrefix().$message );
+		return $this;
 	}
 
 	protected function logException( $exception ){
 		$this->manager->logException( $exception );
+		return $this;
 	}
 
 	public function out( $message = NULL ){
 		print( $message."\n" );
+		return $this;
+	}
+
+	protected function setJobClassName( $jobClassName ){
+		$this->jobClass		= strlen( trim( $jobClassName ) ) ? $jobClassName : get_class( $this );
+		return $this;
+	}
+
+	protected function setJobModuleId( $jobModuleId ){
+		$this->jobModuleId		= strlen( trim( $jobModuleId ) ) ? $jobModuleId : NULL;
+		$this->versionModule	= NULL;
+		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
+			$module	= $this->env->getModules()->get( $this->jobModuleId );
+			$this->versionModule	= $module->versionInstalled;
+		}
+		return $this;
 	}
 
 	protected function showProgress( $count, $total, $sign = '.', $length = 60 ){
 		echo $sign;
 		if( $count % $length === 0 )
 			echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+		return $this;
 	}
 
 	protected function showErrors( $taskName, $errors ){
-		if( !$errors )
-			return;
-		$this->out( 'Errors on '.$taskName.':' );
-		foreach( $errors as $mailId => $message )
-			$this->out( '- '.$mailId.': '.$message );
+		if( is_array( $errors ) && count( $errors ) ){
+			$this->out( 'Errors on '.$taskName.':' );
+			foreach( $errors as $mailId => $message )
+				$this->out( '- '.$mailId.': '.$message );
+		}
+		return $this;
 	}
 }
 ?>

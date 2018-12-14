@@ -27,6 +27,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->pathJobs		= 'config/jobs/';
 		$this->modelJob		= new \Model_Job( $this->env );
+		$this->modelJob->setFormat( Model_Job::FORMAT_XML );
 		$this->modelLock	= new \Model_Joblock( $this->env );
 	}
 

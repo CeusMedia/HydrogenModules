@@ -2,6 +2,7 @@
 class Job_Job extends Job_Abstract{
 
 	protected $pathLocks	= 'config/locks/';
+	protected $pathJobs		= 'config/jobs/';
 
 	public function __onInit(){
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
@@ -19,6 +20,44 @@ class Job_Job extends Job_Abstract{
 		foreach( $list as $item )
 			$this->out( ' - '.$item );
 		$this->out();
+	}
+
+	public function convertJobConfigToJson(){
+		$model		= new Model_Job( $this->env );
+		$modes		= array();																		//  no specific modes
+		$index		= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
+		foreach( $index as $file ){
+			$this->out( 'Reading job XML: '.$file->getFilename() );
+			$moduleJobs		= (object) array(
+				'moduleId'	=> NULL,
+				'version'	=> NULL,
+				'jobs'		=> array(),
+			);
+			$fileJobs	= $model->readJobsFromXmlFile( $file->getPathname(), $modes );
+			foreach( $fileJobs as $jobId => $jobSource ){
+				$jobTarget	= (object) array(
+					'class'		=> $jobSource->class,
+					'method'	=> $jobSource->method,
+					'mode'		=> $jobSource->mode,
+				);
+				if( !empty( $jobSource->interval ) )
+					$jobTarget->interval	= $jobSource->interval;
+				if( $jobSource->deprecated )
+					$jobTarget->deprecated	= $jobSource->deprecated;
+				if( $jobSource->multiple )
+					$jobTarget->multiple	= $jobSource->multiple;
+				if( !empty( $jobSource->arguments ) )
+					$jobTarget->arguments	= $jobSource->arguments;
+				$moduleJobs->jobs[$jobId]	= $jobTarget;
+			}
+			$fileName	= preg_replace( '@\.[^.]+$@', '', $file->getFilename() );
+			$default	= str_replace( ' ', '_', ucwords( str_replace( '.', ' ', $fileName ) ) );
+			$moduleId	= CLI_Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
+			$moduleJobs->moduleId	= $moduleId;
+			$targetFile	= $this->pathJobs.$moduleId.'.json';
+			$this->out( 'Writing job JSON: '.$targetFile );
+			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
+		}
 	}
 
 	/**

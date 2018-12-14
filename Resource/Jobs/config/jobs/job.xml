@@ -24,6 +24,12 @@
 		<interval></interval>
 		<mode>dev</mode>
 	</job>
+	<job id="Job.jsonfy">
+		<class>Job</class>
+		<method>convertJobConfigToJson</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
 	<job id="Job.Test.reflect">
 		<class>Job</class>
 		<method>reflect</method>
