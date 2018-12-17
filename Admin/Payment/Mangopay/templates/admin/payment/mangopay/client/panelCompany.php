@@ -15,7 +15,7 @@ $form	= '<form action="./admin/payment/mangopay/client/edit" method="post">
 	<div class="row-fluid">
 		<div class="span4">
 			<label for="input_platformType">'.$w->labelPlatformType.'</label>
-			<input type="text" name="platformType" id="input_platformType" class="span12" disabled="disabled" value="'.htmlentities( $client->PlatformType, ENT_QUOTES, 'UTF-8' ).'">
+			<input type="text" name="platformType" id="input_platformType" class="span12" disabled="disabled" value="'.htmlentities( $client->PlatformCategorization->BusinessType, ENT_QUOTES, 'UTF-8' ).'">
 		</div>
 		<div class="span8">
 			<label for="input_platformUrl">'.$w->labelPlatformUrl.'</label>
