@@ -48,5 +48,17 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
 		( $this->request->getAll() );
 		$this->restart( NULL, TRUE );
 	}
+
+	public function removeGrade( $gradeId ){
+		$this->modelPrice->removeByIndex( 'gradeId', $gradeId );
+		$this->modelGrade->remove( $gradeId );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function removeZone( $zoneId ){
+		$this->modelPrice->removeByIndex( 'zoneId', $zoneId );
+		$this->modelZone->remove( $zoneId );
+		$this->restart( NULL, TRUE );
+	}
 }
 ?>
