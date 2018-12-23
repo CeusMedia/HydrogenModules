@@ -18,15 +18,15 @@
  */
 final class Model_Shop_Shipping_Grade extends CMF_Hydrogen_Model{
 
-	protected $name		= 'shippinggrades';
+	protected $name		= 'shop_shipping_grades';
 	protected $columns	= array(
-		"shippinggrade_id",
-		"title",
-		"quantity",
+		'gradeId',
+		'title',
+		'quantity',
 	);
-	protected $primaryKey	= 'shippinggrade_id';
+	protected $primaryKey	= 'gradeId';
 	protected $indices		= array(
-		"quantity"
+		'quantity'
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

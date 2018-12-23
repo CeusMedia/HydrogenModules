@@ -18,17 +18,17 @@
  */
 final class Model_Shop_Shipping_Price extends CMF_Hydrogen_Model{
 
-	protected $name		= 'shippingprices';
+	protected $name		= 'shop_shipping_prices';
 	protected $columns	= array(
-		"shippingprice_id",
-		"shippingzone_id",
-		"shippinggrade_id",
-		"price",
+		'priceId',
+		'zoneId',
+		'gradeId',
+		'price',
 	);
-	protected $primaryKey	= 'shippingprice_id';
+	protected $primaryKey	= 'priceId';
 	protected $indices		= array(
-		"shippingzone_id",
-		"shippinggrade_id",
+		'zoneId',
+		'gradeId',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
