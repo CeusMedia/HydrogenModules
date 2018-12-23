@@ -20,14 +20,14 @@ final class Model_Shop_Shipping_Country extends CMF_Hydrogen_Model{
 
 	protected $name		= 'shop_shipping_countries';
 	protected $columns	= array(
-		"shippingcountryId",
-		"shippingzoneId",
-		"countryId",
+		'countryId',
+		'zoneId',
+		'countryCode',
 	);
-	protected $primaryKey	= 'shippingcountryId';
+	protected $primaryKey	= 'countryId';
 	protected $indices		= array(
-		"shippingzoneId",
-		"countryId",
+		'zoneId',
+		'countryCode',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

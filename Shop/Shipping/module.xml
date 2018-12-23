@@ -3,7 +3,11 @@
 	<title>Shop: Shipping</title>
 	<description><![CDATA[Extends shop by shipping options and calculations.]]></description>
 	<category>Shop</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Sepration to Hydrogen module.</log>
+	<log version="0.2.1">Add logic class.</log>
+	<log version="0.2.3">Improve model structure.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -22,46 +26,46 @@
 <![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_countries`;
 CREATE TABLE `<%?prefix%>shop_shipping_countries` (
-  `shippingcountryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `shippingzoneId` int(11) unsigned NOT NULL DEFAULT '0',
-  `countryId` int(4) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`shippingcountryId`),
-  KEY `shippingzoneId` (`shippingzoneId`),
-  KEY `countryId` (`countryId`)
+  `countryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `zoneId` int(11) unsigned NOT NULL DEFAULT '0',
+  `countryCode` varchar(3) NOT NULL,
+  PRIMARY KEY (`countryId`),
+  KEY `zoneId` (`zoneId`),
+  KEY `countryCode` (`countryCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_grades`;
 CREATE TABLE `<%?prefix%>shop_shipping_grades` (
-  `shippinggradeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `gradeId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `quantity` float(6,3) unsigned NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`shippinggradeId`)
+  PRIMARY KEY (`gradeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_options`;
 CREATE TABLE `<%?prefix%>shop_shipping_options` (
-  `shippingoptionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `optionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `price` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`shippingoptionId`)
+  PRIMARY KEY (`optionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_prices`;
 CREATE TABLE `<%?prefix%>shop_shipping_prices` (
-  `shippingpriceId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `shippingzoneId` int(11) unsigned NOT NULL DEFAULT '0',
-  `shippinggradeId` int(11) unsigned NOT NULL DEFAULT '0',
+  `priceId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `zoneId` int(11) unsigned NOT NULL DEFAULT '0',
+  `gradeId` int(11) unsigned NOT NULL DEFAULT '0',
   `price` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`shippingpriceId`),
-  KEY `shippingzoneId` (`shippingzoneId`),
-  KEY `shippinggradeId` (`shippinggradeId`)
+  PRIMARY KEY (`priceId`),
+  KEY `zoneId` (`zoneId`),
+  KEY `gradeId` (`gradeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_zones`;
 CREATE TABLE `<%?prefix%>shop_shipping_zones` (
-  `shippingzoneId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `zoneId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`shippingzoneId`)
+  PRIMARY KEY (`zoneId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]>
 	</sql>

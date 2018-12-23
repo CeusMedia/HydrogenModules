@@ -20,13 +20,13 @@ final class Model_Shop_Shipping_Option extends CMF_Hydrogen_Model{
 
 	protected $name		= 'shop_shipping_options';
 	protected $columns	= array(
-		"shippingoptionId",
-		"title",
-		"price",
+		'optionId',
+		'title',
+		'price',
 	);
-	protected $primaryKey	= 'shippingoptionId';
+	protected $primaryKey	= 'optionId';
 	protected $indices		= array(
-		"price",
+		'price',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -20,10 +20,10 @@ final class Model_Shop_Shipping_Zone extends CMF_Hydrogen_Model{
 
 	protected $name		= 'shop_shipping_zones';
 	protected $columns	= array(
-		"shippingzoneId",
-		"title",
+		'zoneId',
+		'title',
 	);
-	protected $primaryKey	= 'shippingzoneId';
+	protected $primaryKey	= 'zoneId';
 	protected $indices		= array(
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
