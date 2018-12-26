@@ -22,11 +22,13 @@ final class Model_Shop_Shipping_Grade extends CMF_Hydrogen_Model{
 	protected $columns	= array(
 		'gradeId',
 		'title',
-		'quantity',
+		'weight',
+		'fallback',
 	);
 	protected $primaryKey	= 'gradeId';
 	protected $indices		= array(
-		'quantity'
+		'weight',
+		'fallback',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

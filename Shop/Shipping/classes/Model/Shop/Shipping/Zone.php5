@@ -22,9 +22,11 @@ final class Model_Shop_Shipping_Zone extends CMF_Hydrogen_Model{
 	protected $columns	= array(
 		'zoneId',
 		'title',
+		'fallback',
 	);
 	protected $primaryKey	= 'zoneId';
 	protected $indices		= array(
+		'fallback',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
