@@ -11,6 +11,6 @@ class View_Manage_Shop_Shipping extends CMF_Hydrogen_View{
 
 	public function index(){
 		$this->env->getPage()->addCommonStyle( 'module.manage.shop.css' );
-		$this->env->getPage()->js->addModuleFile( 'module.manage.shop.css' );
+		$this->env->getPage()->js->addModuleFile( 'module.manage.shop.js' );
 	}
 }

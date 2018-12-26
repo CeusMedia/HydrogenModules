@@ -51,12 +51,6 @@ $modalBody	= array(
 	), array( 'class' => 'row-fluid' ) ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Preise' ),
-			$listGrades
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'label', 'Länder' ),
 			UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'label', join( array(
 				UI_HTML_Tag::create( 'input', NULL, array(
@@ -73,6 +67,12 @@ $modalBody	= array(
 				'class'	=> '',
 				'style'	=> 'max-height: 120px; overflow: hidden; overflow-y: auto; padding: 0.5em; border: 1px solid gray; border: 1px solid rgba(127, 127, 127, 0.45); border-radius: 0.3em 0em 0em 0.3em',
 			) ),
+		), array( 'class' => 'span12' ) ),
+	), array( 'class' => 'row-fluid' ) ),
+	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'label', 'Preise' ),
+			$listGrades
 		), array( 'class' => 'span12' ) ),
 	), array( 'class' => 'row-fluid' ) ),
 );

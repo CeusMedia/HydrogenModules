@@ -12,4 +12,4 @@ return $tabs.'
 <div class="row-fluid">
 	<div class="span6">'.$panelZones.'</div>
 	<div class="span6">'.$panelGrades.'</div>
-</div>'.$style;
+</div>';
