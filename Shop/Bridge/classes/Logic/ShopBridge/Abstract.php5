@@ -96,5 +96,13 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@return		string
 	 */
 	abstract public function getTitle( $articleId );
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$articleId		Article ID
+	 *	@return		string
+	 */
+	abstract public function getWeight( $articleId );
 }
 ?>

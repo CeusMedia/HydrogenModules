@@ -3,7 +3,7 @@
 	<title>Resource: Shop Bridge</title>
 	<description><![CDATA[Abstraction layer for different shop article types.]]></description>
 	<category>Resource</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for article description.</log>
@@ -15,6 +15,7 @@
 	<log version="0.3.1">Add strict mode for article check.</log>
 	<log version="0.3.2">Fixed two bugs.</log>
 	<log version="0.3.3">Extend bridge logic for quantity changes.</log>
+	<log version="0.3.4">Extend model by weight.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
