@@ -2,8 +2,6 @@
 class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 
 	protected $order;
-	protected $customer;
-	protected $positions;
 	protected $logicBridge;
 	protected $logicShop;
 	protected $helperAddress;
@@ -20,16 +18,14 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 		if( empty( $data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 
-		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
+		$this->order		= $this->logicShop->getOrder( $data['orderId'], TRUE );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
-		$this->positions	= $this->logicShop->getOrderPositions( $this->order->orderId );
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->order->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}
-		$this->helperCart->setPositions( $this->positions );
+		$this->helperCart->setPositions( $this->order->positions );
 
 		$wordsMail	= (object) $this->words['mail-manager-ordered'];
 		$subject	= str_replace( "%date%", date( 'd.m.Y' ), $wordsMail->subject );
@@ -64,8 +60,8 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 			'priceTotal'		=> $helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
-			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
-			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
+			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 		) );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );

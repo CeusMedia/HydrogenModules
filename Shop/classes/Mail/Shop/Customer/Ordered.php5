@@ -2,8 +2,6 @@
 class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 
 	protected $order;
-	protected $customer;
-	protected $positions;
 	protected $logicBridge;
 	protected $logicShop;
 	protected $helperAddress;
@@ -23,16 +21,15 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 		if( empty( $data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 
-		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
+		$this->order		= $this->logicShop->getOrder( $data['orderId'], TRUE );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
-		$this->positions	= $this->logicShop->getOrderPositions( $this->order->orderId );
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->order->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}
-		$this->helperCart->setPositions( $this->positions );
+		$this->helperCart->setPositions( $this->order->positions );
+		$this->helperCart->setDeliveryAddress( $this->order->customer->addressDelivery );
 
 		$wordsMail	= (object) $this->words['mail-customer-ordered'];
 		$subject	= str_replace( "%date%", date( 'd.m.Y' ), $wordsMail->subject );
@@ -72,12 +69,12 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'main'				=> (object) $this->getWords( 'main', 'main' ),
 			'words'				=> $this->words,
 			'order'				=> $this->order,
-			'customer'			=> $this->customer,
+			'customer'			=> $this->order->customer,
 			'priceTotal'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
-			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
-			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
+			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
 		) );
@@ -113,12 +110,12 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract{
 			'main'				=> (object) $this->getWords( 'main', 'main' ),
 			'words'				=> $this->words,
 			'order'				=> $this->order,
-			'customer'			=> $this->customer,
+			'customer'			=> $this->order->customer,
 			'priceTotal'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
 			'paymentBackend'	=> $paymentBackend,
 			'tableCart'			=> $this->helperCart->render(),
-			'addressDelivery'	=> $this->helperAddress->setAddress( $this->customer->addressDelivery )->render(),
-			'addressBilling'	=> $this->helperAddress->setAddress( $this->customer->addressBilling )->render(),
+			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
+			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
 		);

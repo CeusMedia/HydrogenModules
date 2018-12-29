@@ -67,7 +67,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 		$source		= $this->bridge->getBridgeObject( (int) $bridgeId );
 		$article	= $source->get( $articleId, $quantity );
-		$positions[$articleId]	= (object) array(
+		$positions[$bridgeId.'_'.$articleId]	= (object) array(
 			'bridgeId'	=> $bridgeId,
 			'articleId'	=> $articleId,
 			'quantity'	=> $quantity,
@@ -91,6 +91,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'positions', $positions );*/
 		$this->addData( 'cart', $this->modelCart );
+		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
 	public function changePositionQuantity( $bridgeId, $articleId, $quantity, $operation = NULL ){
@@ -103,14 +104,18 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
 				switch( $operation ){
 					case 'plus':
-						$position->quantity	+= (int)$quantity;
+						$position->quantity	+= (int) $quantity;
 						break;
 					case 'minus':
-						$position->quantity	-= (int)$quantity;
+						$position->quantity	-= (int) $quantity;
 						break;
 					default:
-						$position->quantity	= (int)$quantity;
+						$position->quantity	= (int) $quantity;
 				}
+
+				$source		= $this->bridge->getBridgeObject( (int) $bridgeId );
+				$article	= $source->get( $articleId, $position->quantity );
+				$position->article	= $article;
 				$positions[$nr]	= $position;
 				if( !$position->quantity ){
 					unset( $positions[$nr] );
@@ -128,7 +133,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	public function checkout(){
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 //		print_m( $this->session->getAll( 'shop_' ) );die;
-		if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_ACCOUNT ){
+		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
 			$logicAuth	= new Logic_Authentication( $this->env );
 			if( !$logicAuth->isAuthenticated() ){
 				$this->modelCart->set( 'userId', 0 );
@@ -137,23 +142,16 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				$this->restart( 'customer', TRUE );
 			}
 		}
-		else if( $customerMode === Model_Shop_Order::CUSTOMER_MODE_GUEST ){
+		else if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
 			if( !$this->modelCart->get( 'customerId' ) )
 				$this->restart( 'customer', TRUE );
-//			if( !$this->session->get( 'customer' ) )
-//				$this->restart( 'customer', TRUE );
 		}
-		if( $this->request->has( 'save' ) && $this->request->isMethod( 'POST' ) ){
+		if( $this->request->has( 'save' ) && $this->request->getMethod()->is( 'POST' ) ){
 			$orderId	= $this->modelCart->get( 'orderId' );
 			if( !$orderId )
 				$orderId	= $this->modelCart->saveOrder();
-
-/*			$orderId	= $this->logic->storeCartFromSession( $orderId );
-			$this->session->set( 'shop_order_id', $orderId );*/
-			$price      = $this->logic->calculateOrderTotalPrice( $orderId );
-			$order		= $this->logic->getOrder( $orderId );
-
-			if( $price && $this->backends ){
+			$order		= $this->logic->getOrder( $orderId, TRUE );
+			if( $order->price && $this->backends ){
 				if( count( $this->backends ) === 1 )
 					$order->paymentMethod	= $this->backends[0]->key;
 				if( $order->paymentMethod ){
@@ -184,10 +182,10 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 //		$this->addData( 'positions', $positions );
 		$this->addData( 'cart', $this->modelCart );
 		switch( $this->modelCart->get( 'customerMode' ) ){
-		 	case Model_Shop_Order::CUSTOMER_MODE_ACCOUNT:
+		 	case Model_Shop_CART::CUSTOMER_MODE_ACCOUNT:
 				$customer	= $this->logic->getAccountCustomer( $userId );
 				break;
-		 	case Model_Shop_Order::CUSTOMER_MODE_GUEST:
+		 	case Model_Shop_CART::CUSTOMER_MODE_GUEST:
 			default:
 				$customer	= $this->logic->getGuestCustomer( $customerId );
 				break;
@@ -195,6 +193,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		if( !$customer->addressDelivery )
 			$this->restart( 'customer', TRUE );
 		$this->addData( 'customer', $customer );
+		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
 	public function conditions(){

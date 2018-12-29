@@ -1,6 +1,10 @@
 <?php
 class Model_Shop_Cart{
 
+	const CUSTOMER_MODE_UNKNOWN		= 0;
+	const CUSTOMER_MODE_GUEST		= 1;
+	const CUSTOMER_MODE_ACCOUNT		= 2;
+
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;
 
@@ -18,7 +22,6 @@ class Model_Shop_Cart{
 		$this->modelPosition	= new Model_Shop_Order_Position( $env );
 		$this->taxIncluded		= $env->getConfig()->get( 'module.shop.tax.included' );
 		$this->defaultCurrency	= $env->getConfig()->get( 'module.shop.price.currency' );
-
 
 		$data	= $this->session->get( 'shop_cart' );
 		if( !is_array( $data ) ){
@@ -45,7 +48,7 @@ class Model_Shop_Cart{
 			'positions'			=> array(),
 			'customer'			=> array(),
 			'customerId'		=> 0,
-			'customerMode'		=> Model_Shop_Order::CUSTOMER_MODE_UNKNOWN,
+			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
 		) );
 		$this->session->set( 'shop_cart', $this->data->getAll() );
 	}
@@ -134,11 +137,11 @@ class Model_Shop_Cart{
 			'status'		=> $this->data->get( 'orderStatus' ),
 			'paymentMethod'	=> $this->data->get( 'paymentMethod' ),
 //			'options'		=> $this->data->get( 'options' ),
-//			'price'			=> $this->data->get( 'price' ),
-//			'priceTaxed'	=> $this->data->get( 'priceTaxed' ),
+			'price'			=> 0,
+			'priceTaxed'	=> 0,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		)  );
+		) );
 
 		foreach( $this->data->get( 'positions' ) as $item ){
 			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
@@ -154,8 +157,6 @@ class Model_Shop_Cart{
 				'bridgeId'		=> $item->bridgeId,
 				'articleId'		=> $item->articleId,
 				'status'		=> 0,
-//				'userId'		=> 0,
-//				'size'			=> 0,
 				'quantity'		=> $item->quantity,
 				'currency'		=> $article->currency,
 				'price'			=> $price,
@@ -200,8 +201,8 @@ class Model_Shop_Cart{
 			$price		= $article->price->one;
 			$priceTaxed	= $article->price->one + $article->tax->one;
 			if( $this->taxIncluded ){														//  tax already is included
-				$price		-= $article->tax->one;											//  reduce by tax added by default
-				$priceTaxed	-= $article->tax->one;											//  reduce by tax added by default
+				$price		= $article->price->one - $article->tax->one;					//  reduce by tax added by default
+				$priceTaxed	= $article->price->one;											//  reduce by tax added by default
 			}
 			if( $relation ){
 				if( $relation->quantity != $item->quantity ){
@@ -237,17 +238,25 @@ class Model_Shop_Cart{
 	protected function updateOrderPrices( $orderId ){
 		$price			= 0;
 		$priceTaxed		= 0;
-		$relations		= $this->modelPosition->getAllByIndex( 'orderId', $orderId );
-		foreach( $relations as $relation ){
-			$source		= $this->bridge->getBridgeObject( (int) $relation->bridgeId );
-			$article	= $source->get( $relation->articleId, $relation->quantity );
-			$price		+= $article->price->all;
-			$priceTaxed	+= $article->price->all + $article->tax->all;
+		$logicShop		= Logic_Shop::getInstance( $this->env );
+		$order			= $logicShop->getOrder( $orderId, TRUE );
+		foreach( $order->positions as $position ){
+			$price		+= $position->article->price->all;
+			$priceTaxed	+= $position->article->price->all + $article->tax->all;
 			if( $this->taxIncluded ){
-				$price		-= $article->tax->all;
-				$priceTaxed	-= $article->tax->all;
+				$price		-= $position->article->tax->all;
+				$priceTaxed	-= $position->article->tax->all;
 			}
 		}
+
+		//  --  SHIPPING  --  //
+		$shipping	= $logicShop->getOrderShipping( $orderId );
+		$price		+= $shipping->price;
+		$priceTaxed	+= $shipping->priceTaxed;
+
+		//  --  OPTIONS  --  //
+		// @todo implement!
+
 		$this->modelOrder->edit( $orderId, array(
 			'price'			=> $price,
 			'priceTaxed'	=> $priceTaxed,

@@ -13,6 +13,7 @@ class View_Helper_Shop_CartPositions{
 	protected $bridge;
 	protected $changeable;
 	protected $forwardPath;
+	protected $deliveryAddress;
 	protected $env;
 	protected $positions;
 	protected $display				= self::DISPLAY_BROWSER;
@@ -98,6 +99,23 @@ class View_Helper_Shop_CartPositions{
 
 		//  @todo add shipping
 		$priceShipping	= 0;
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+			if( $this->deliveryAddress ){
+				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
+					$this->deliveryAddress->country,
+					$totalWeight
+				);
+				$rows[]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', '&nbsp;' ),
+					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
+					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
+				) );
+			}
+		}
+		$priceTotal		= $totalPrice + $priceShipping;
+
 		$priceTax		= $this->formatPrice( $totalTax );
 		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
 		$rows	= array();
@@ -136,12 +154,13 @@ class View_Helper_Shop_CartPositions{
 		$rows		= array();
 		$totalPrice	= 0;
 		$totalTax	= 0;
+		$totalWeight	= 0;
 		$taxes		= array();
 		$allSingle	= TRUE;
 		foreach( $this->positions as $nr => $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
-
+//print_m( $position );die;
 			if( !isset( $taxes[$position->article->tax->rate] ) )
 				$taxes[$position->article->tax->rate]	= 0;
 			$taxes[$position->article->tax->rate]	+= $position->article->tax->all;
@@ -149,6 +168,7 @@ class View_Helper_Shop_CartPositions{
 			$priceX			= $this->formatPrice( $position->article->price->all );
 			$totalPrice		+= $position->article->price->all;
 			$totalTax		+= $position->article->tax->all;
+			$totalWeight	+= $position->article->weight->all;
 			$title			= $position->article->title; //htmlspecialchars( $position->article->title, ENT_QUOTES, 'UTF-8' );
 			$titleLinked	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $position->article->link ) );
 			$titleCut		= UI_HTML_Tag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
@@ -198,19 +218,22 @@ class View_Helper_Shop_CartPositions{
 				UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'price' ) )
 			), array( 'class' => 'tax' ) );
 		}
-/*		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+		$priceShipping	= 0;
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
 			$logicShipping	= new Logic_Shop_Shipping( $this->env );
-			$zoneId			= ...
-			$gradeId		= ...
-			$priceShipping	= $logicShipping->getPrice( $zoneId, $gradeId );
-
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', '&nbsp;' ),
-				UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
-				UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-				UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
-			) );
-		}*/
+			if( $this->deliveryAddress ){
+				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
+					$this->deliveryAddress->country,
+					$totalWeight
+				);
+				$rows[]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', '&nbsp;' ),
+					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
+					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
+				) );
+			}
+		}
 		$priceTotal		= $totalPrice + $priceShipping;
 		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
@@ -349,6 +372,10 @@ class View_Helper_Shop_CartPositions{
 	public function setForwardPath( $forwardPath ){
 		$this->forwardPath		= $forwardPath;
 		return $this;
+	}
+
+	public function setDeliveryAddress( $address ){
+		$this->deliveryAddress	= $address;
 	}
 
 	public function setDisplay( $display ){

@@ -7,6 +7,7 @@ $buttonbar		= '';
 if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
+	$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
 	$buttonbar		= UI_HTML_Tag::create( 'div', array(

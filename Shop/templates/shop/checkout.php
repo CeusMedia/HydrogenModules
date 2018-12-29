@@ -4,10 +4,11 @@ $w				= (object) $words['checkout'];
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $cart->get( 'positions' ) );
+$helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );
+//$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
 $tablePositionsDesktop	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
-$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
 $tablePositionsPhone	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
 $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 

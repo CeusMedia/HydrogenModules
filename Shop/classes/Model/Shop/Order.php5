@@ -32,10 +32,6 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 	const STATUS_DELIVERED			= 5;
 	const STATUS_COMPLETED			= 6;
 
-	const CUSTOMER_MODE_UNKNOWN		= 0;
-	const CUSTOMER_MODE_GUEST		= 1;
-	const CUSTOMER_MODE_ACCOUNT		= 2;
-
 	protected $name		= 'shop_orders';
 	protected $columns	= array(
 		"orderId",

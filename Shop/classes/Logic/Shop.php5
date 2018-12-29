@@ -22,7 +22,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	/** @var	Alg_List_Dictionary			$moduleConfig */
 	protected $moduleConfig;
 
-	/**	@var	Logic_Shop_Shipping			$shipping			Instance of shipping logic if module is installed */
+	/**	@var	Logic_Shop_Shipping|NULL	$shipping			Instance of shipping logic if module is installed */
 	protected $shipping;
 
 	protected function __onInit(){
@@ -47,6 +47,27 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 			$article	= $source->get( $position->articleId, $position->quantity );				//  get article data
 			$sum		+= (float) $article->price->all;											//  add price of position
 		}
+
+		$priceShipping	= 0;
+		if( $this->getShipping())
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+			if( $this->deliveryAddress ){
+				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
+					$this->deliveryAddress->country,
+					$totalWeight
+				);
+				$rows[]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', '&nbsp;' ),
+					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
+					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
+				) );
+			}
+		}
+		$priceTotal		= $totalPrice + $priceShipping;
+
+
 		return $sum;																				//  return total price sum
 	}
 
@@ -73,15 +94,43 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getOrderCustomer( $orderId ){
-		$order	= $this->modelOrder->get( $orderId );
-		if( !$order )
-			throw new RangeException( 'Invalid order ID: '.$orderId );
-		if( $order->userId )
-			return $this->getAccountCustomer( $order->userId );
-		else if( $order->customerId )
-			return $this->getGuestCustomer( $order->customerId );
-		throw new Exception( 'No user or customer assigned to order' );
+	public function getAccountCustomer( $userId ){
+		$user	= $this->modelUser->get( $userId );
+		if( !$user )
+			throw new RangeException( 'No customer found for user ID '.$userId );
+		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
+			'type'			=> Model_Address::TYPE_DELIVERY,
+		) );
+		return $user;
+	}
+
+	public function getDeliveryAddressFromCart(){
+		$address		= NULL;
+		$addressUserId	= 0;
+		$customerMode	= $this->modelCart->get( 'customerMode' );
+		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
+			$addressUserId	= $this->modelCart->get( 'userId' );
+			$relationType	= 'user';
+		}
+		else if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+			$addressUserId	= $this->modelCart->get( 'customerId' );
+			$relationType	= 'customer';
+		}
+		if( $addressUserId ){
+			$address	= $this->modelAddress->getByIndices( array(
+				'relationId'	=> $addressUserId,
+				'relationType'	=> $relationType,
+				'type'			=> Model_Address::TYPE_DELIVERY,
+			) );
+		}
+		return $address;
 	}
 
 	public function getGuestCustomer( $customerId ){
@@ -110,42 +159,113 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $customer;
 	}
 
-	public function getAccountCustomer( $userId ){
-		$user	= $this->modelUser->get( $userId );
-		if( !$user )
-			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
-			'relationType'	=> 'user',
-			'relationId'	=> $userId,
-			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
-			'relationType'	=> 'user',
-			'relationId'	=> $userId,
-			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
-		return $user;
-	}
-
 	public function getOrder( $orderId, $extended = FALSE ){
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){
 			$order->customer	= $this->getOrderCustomer( $orderId );
-			$order->positions	= $this->getOrderPositions( $orderId );
+			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
+			$order->shipping	= $this->getOrderShipping( $orderId );
+			$order->options		= $this->getOrderOptions( $orderId );
+			$order->taxes		= $this->getOrderTaxes( $orderId );
 		}
 		return $order;
+	}
+
+	public function getOrderCustomer( $orderId ){
+		$order	= $this->modelOrder->get( $orderId );
+		if( !$order )
+			throw new RangeException( 'Invalid order ID: '.$orderId );
+		if( $order->userId )
+			return $this->getAccountCustomer( $order->userId );
+		else if( $order->customerId )
+			return $this->getGuestCustomer( $order->customerId );
+		throw new Exception( 'No user or customer assigned to order' );
+	}
+
+	/**
+	 *	@todo		to be implemented: use Model_Shop_Shipping_Option
+	 */
+	public function getOrderOptions( $orderId ){
+		return (object) array();
+	}
+
+	public function getOrderPosition( $positionId, $extended = FALSE ){
+		$position	= $this->modelOrderPosition->get( $positionId );
+		if( $extended ){
+			$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );				//  get bridge source of article
+			$position->article	= $source->get( $position->articleId, $position->quantity );		//  get article data
+		}
+		return $position;
+	}
+
+	public function getOrderPositions( $orderId, $extended = FALSE ){
+		$positions	= $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
+		if( $extended ){
+			foreach( $positions as $position ){
+				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );			//  get bridge source of article
+				$position->article	= $source->get( $position->articleId, $position->quantity );	//  get article data
+			}
+		}
+		return $positions;
 	}
 
 	public function getOrders( $conditions = array(), $orders = array(), $limits = array() ){
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getOrderPositions( $orderId ){
-		return $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
+	/**
+	 *	@todo		make tax rate configurable - store rate on shipping price or service
+	 */
+	public function getOrderShipping( $orderId ){
+		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
+		$taxRate		= 19;				//  @todo: make configurable
+		$price			= 0;
+		$priceTaxed		= 0;
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+			$customer		= $this->getOrderCustomer( $orderId );
+			if( $customer && $customer->addressDelivery ){
+				$weight			= 0;
+				$positions		= $this->getOrderPositions( $orderId, TRUE );
+				foreach( $positions as $position )
+					$weight	+= $position->article->weight->all;
+				$price	= $logicShipping->getPriceFromCountryCodeAndWeight(
+					$customer->addressDelivery->country,
+					$weight
+				);
+				$tax			= $price * ( $taxRate / 100 );
+				$priceTaxed		+= $tax;
+				if( $taxIncluded ){
+					$priceTaxed	= $price;
+					$price		-= $tax;
+				}
+			}
+		}
+		return (object) array(
+			'price'			=> $price,
+			'tax'			=> $tax,
+			'priceTaxed'	=> $priceTaxed,
+			'taxRate'		=> $taxRate,
+		);
 	}
 
-	public function getOrderPosition( $positionId ){
-		return $this->modelOrderPosition->get( $positionId );
+	public function getOrderTaxes( $orderId ){
+		$taxes		= array();
+		$sum		= 0;
+		$positions	= $this->getOrderPositions( $orderId, TRUE );
+		foreach( $positions as $position ){
+			if( !isset( $taxes[$position->article->tax->rate] ) )
+				$taxes[$position->article->tax->rate]	= 0;
+			$taxes[$position->article->tax->rate]	+= $position->article->tax->all;
+			$sum	+= $position->article->tax->all;
+		}
+		$shipping	= $this->getOrderShipping( $orderId );
+		if( !isset( $taxes[$shipping->taxRate] ) )
+			$taxes[$shipping->taxRate]	= 0;
+		$taxes[$shipping->taxRate]	+= $shipping->tax;
+		$sum	+= $shipping->tax;
+		$taxes['total']	= $sum;
+		return $taxes;
 	}
 
 	/**
@@ -159,7 +279,14 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->modelOrder->getAll( $conditions );
 	}*/
 
+	/**
+	 *	@deprecated
+	 */
 	public function getShipping( $strict = TRUE ){
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'getShipping is deprecated' );
 		if( !$this->shipping && $strict )
 			throw new RuntimeException( "Shipping module is not installed" );
 		return $this->shipping ? $this->shipping : NULL;
@@ -171,8 +298,13 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	 *	@param		integer		 $countryId		ID of Country
 	 *	@return		integer|NULL
 	 *	@todo		rename to getShippingZoneOfCountryId and change behaviour
+	 *	@deprecated
 	 */
 	public function getShippingZoneId( $countryId ){
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'getShippingZoneId is deprecated' );
 		return $this->getShipping()->getZoneId( $countryId );
 	}
 
@@ -181,9 +313,14 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	 *	@access		public
 	 *	@param		integer		 $quantity		Quantity to ge Shipping Grade for
 	 *	@return		int
+	 *	@deprecated
 	 */
 	public function getShippingGradeIdByQuantity( $quantity )
 	{
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'getShippingGradeIdByQuantity is deprecated' );
 		return $this->getShipping()->getGradeID( $shippingZoneId, $shippingGradeId );
 	}
 
@@ -193,9 +330,14 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$shippingZoneId 		ID of Shipping Zone
 	 *	@param		integer		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
+	 *	@deprecated
 	 */
 	public function getShippingPrice( $shippingZoneId, $shippingGradeId )
 	{
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'getShippingPrice is deprecated' );
 		return $this->getShipping()->getPrice( $shippingZoneId, $shippingGradeId );
 	}
 
@@ -206,7 +348,27 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	/**
 	 * @deprecated	use Model_Shop_Cart::set instead
 	 */
+	public function setOrderPaymentId( $orderId, $paymentId ){
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'setOrderPaymentId is deprecated - use Model_Shop_Cart::set instead' );
+		if( $orderId ){
+			return $this->modelOrder->edit( $orderId, array(
+				'paymentId'		=> $paymentId,
+				'modifiedAt'	=> time(),
+			) );
+		}
+	}
+
+	/**
+	 * @deprecated	use Model_Shop_Cart::set instead
+	 */
 	public function setOrderPaymentMethod( $orderId, $paymentMethod ){
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'setOrderPaymentMethod is deprecated - use Model_Shop_Cart::set instead' );
 		if( $orderId ){
 			return $this->modelOrder->edit( $orderId, array(
 				'paymentMethod'	=> $paymentMethod,
@@ -214,18 +376,6 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 			) );
 		}
 		$this->modelCart->set( 'paymentMethod', $paymentMethod );
-	}
-
-	/**
-	 * @deprecated	use Model_Shop_Cart::set instead
-	 */
-	public function setOrderPaymentId( $orderId, $paymentId ){
-		if( $orderId ){
-			return $this->modelOrder->edit( $orderId, array(
-				'paymentId'		=> $paymentId,
-				'modifiedAt'	=> time(),
-			) );
-		}
 	}
 
 	public function setOrderPositionStatus( $positionId, $status ){
@@ -260,9 +410,16 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		) );
 	}
 
+	/**
+	 *	@deprecated
+	 */
 	public function setShipping( $logic ){
-		if( !( $logic instanceof CMF_Hydrogen_Environment_Resource_Logic ) )
-			throw new RuntimeException( 'Invalid logic object (must extend CMF_Hydrogen_Environment_Resource_Logic)' );
+		Deprecation::getInstance()
+			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
+			->setExceptionVersion( '0.8.3' )
+			->message( 'setShipping is deprecated' );
+		if( !( $logic instanceof CMF_Hydrogen_Logic ) )
+			throw new RuntimeException( 'Invalid logic object (must extend CMF_Hydrogen_Logic)' );
 		$this->shipping		= $logic;
 	}
 }
