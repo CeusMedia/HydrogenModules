@@ -25,16 +25,58 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	}
 
 	/**
-	 *	Returns Shipping Grade ID by Quantity.
+	 *	Returns shipping price by country code and total weight of cart content.
 	 *	@access		public
-	 *	@param		int		 $quantity		Quantity to get Shipping Grade for
-	 *	@return		int
-	 *	@todo		remove method and its calls
+	 *	@param		string		$countryCode		Country code, like DE or AT
+	 *	@param		integer		$weight				Total weight of cart content
+	 *	@return		float
 	 */
-/*	public function getGradeId( $quantity ){
-		$conditions	= array( 'zoneId' => $zoneId, 'gradeId' => $gradeId );
-		return array_shift( $this->modelGrade->getAll( $conditions, array ('quantity' => 'DESC' ) ) );
-	}*/
+	public function getPriceFromCountryCodeAndWeight( $countryCode, $weight ){
+		$zone	= $this->getZoneFromCountryCode( $countryCode );
+		$grade	= $this->getGradeFromWeight( $weight );
+		$price	= $this->modelPrice->getByIndices( array(
+			'zoneId'	=> $zone->zoneId,
+			'gradeId'	=> $grade->gradeId,
+		) );
+		return (float) $price->price;
+	}
+
+	/**
+	 *	Get shipping zone from country code.
+	 *	If country code is not assigned to a zone, the fallback zone will be returned, if existing.
+	 *	@access		public
+	 *	@param		string		$countryCode		Country code, like DE or AT
+	 *	@return 	object
+	 *	@throws		RangeException if country code is neither assigned to a zone nor a fallback zone is existing.
+	 */
+	public function getZoneFromCountryCode( $countryCode ){
+		$country	= $this->modelCountry->getByIndex( 'countryCode', $countryCode );
+		if( $country )
+			return $this->modelZone->get( $country->zoneId );
+		$zone	= $this->modelZone->getByIndex( 'fallback', 1 );
+		if( $zone )
+			return $zone;
+		throw new RangeException( 'No zone found for country code: '.$countryCode );
+	}
+
+	/**
+	 *	Get shipping grade from weight.
+	 *	If weight is not covered by a grade, the fallback grade will be returned, if existing.
+	 *	@access		public
+	 *	@param		integer		$weight			Total weight of cart content in grams
+	 *	@return 	object
+	 *	@throws		RangeException if weight is neither covered by a zone nor a fallback grade is existing.
+	 */
+	public function getGradeFromWeight( $weight ){
+		$grades	= $this->modelGrade->getAll( array( 'fallback' => 0 ), array( 'weight' => 'ASC' ) );
+		foreach( $grades as $grade )
+			if( $grade->weight > $weight )
+				return $grade;
+		$grade	= $this->modelGrade->getByIndex( 'fallback', 1 );
+		if( $grade )
+			return $grade;
+		throw new RangeException( 'No grade found for weight: '.$weight );
+	}
 
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
@@ -43,6 +85,7 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@param		int		$gradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@todo		remove method and its calls
+	 *	@deprecated
 	 */
 	public function getPrice( $zoneId, $gradeId ){
 		$indices	= array( 'zoneId' => $zoneId, 'gradeId' => $gradeId );
@@ -57,6 +100,7 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$countryId
 	 *	@return		integer|NULL
 	 *	@todo		remove method and its calls
+	 *	@deprecated
 	 */
 	public function getZoneId( $countryId ){
 		$data	= $this->modelZone->getByIndex( 'countryId', $countryId );
