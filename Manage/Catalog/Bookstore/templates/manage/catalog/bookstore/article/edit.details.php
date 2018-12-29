@@ -30,6 +30,10 @@ return '
 					<label for="input_isn">'.$w->labelIsn.'</label>
 					<input class="span12" type="text" name="isn" id="input_isn" value="'.htmlentities( $article->isn, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
+				<div class="span3">
+					<label for="input_weight">'.$w->labelWeight.'</label>
+					<input class="span12" type="text" name="weight" id="input_weight" value="'.number_format( $article->weight, 0 ).'"/>
+				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span2">
