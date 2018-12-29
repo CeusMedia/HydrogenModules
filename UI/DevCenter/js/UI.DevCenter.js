@@ -31,7 +31,6 @@ UI.DevCenter = {
 			}
 		});
 		$(document).on("mouseup", function(event){
-				return;
 			if($(document).data("dragging") !== "#DevCenterHandleTop")
 			$.ajax({
 				url: "./DevCenter/ajaxSetHeight",
