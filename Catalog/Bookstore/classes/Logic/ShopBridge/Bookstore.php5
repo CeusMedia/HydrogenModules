@@ -7,6 +7,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 	public $path		= "catalog/bookstore/article/%articleId%";
 	public $taxPercent;
 	public $taxIncluded;
+	public $cache		= array();
 
 	public function __onInit(){
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
@@ -27,9 +28,13 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 	 *	@throws		InvalidArgumentException	if not found
 	 */
 	public function check( $articleId, $strict = TRUE ){
+		if( isset( $this->cache[$articleId] ) )
+			return $this->cache[$articleId];
 		$article	= $this->logic->getArticle( $articleId );
-		if( $article )
+		if( $article ){
+			$this->cache[$articleId]	= $article;
 			return $article;
+		}
 		if( !$strict )
 			return FALSE;
 		throw new Exception( 'Invalid article ID: '.$articleId );
@@ -50,13 +55,17 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 				'absolute'	=> $this->getPicture( $articleId, TRUE ),
 			),
 			'price'	=> (object) array(
-				'one'	=> $this->getPrice( $articleId ),
-				'all'	=> $this->getPrice( $articleId, $quantity ),
+				'one'		=> $this->getPrice( $articleId ),
+				'all'		=> $this->getPrice( $articleId, $quantity ),
 			),
 			'tax'	=> (object) array(
-				'rate'	=> $this->taxPercent,
-				'one'	=> $this->getTax( $articleId ),
-				'all'	=> $this->getTax( $articleId, $quantity ),
+				'rate'		=> $this->taxPercent,
+				'one'		=> $this->getTax( $articleId ),
+				'all'		=> $this->getTax( $articleId, $quantity ),
+			),
+			'weight'		=> (object) array(
+				'one'		=> $this->getWeight( $articleId ),
+				'all'		=> $this->getWeight( $articleId, $quantity ),
 			),
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
@@ -87,14 +96,14 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 	 */
 	public function getPicture( $articleId, $absolute = FALSE ){
 		$uri		= $this->env->getConfig()->get( 'path.images' )."bookstore/no_picture.png";
-		$article	= $this->logic->getArticle( $articleId );
+		$article	= $this->check( $articleId );
 		if( $article->cover ){
 /*			$pathCovers	= $this->env->getConfig()->get( 'path.contents' ).'articles/covers/';
 			$id			= str_pad( $article->articleId, 5, 0, STR_PAD_LEFT );
 			$uri		= $pathCovers.'s/'.$id.'_'.$article->cover;*/
 			$uri		= './file/bookstore/article/s/'.$article->cover;
 		}
-		return $absolute ? $this->env->url.$uri : $uri;
+		return $absolute ? str_replace( '/./', '/', $this->env->url.$uri ) : $uri;
 	}
 
 	/**
@@ -129,9 +138,10 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 	public function getTax( $articleId, $amount = 1 ){
 		$amount		= abs( (integer) $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
+		$factor		= $this->taxPercent / 100;												//  calculate tax factor on top of price
 		if( $this->taxIncluded )															//  tax is already included in price
-			return $price * $this->taxPercent / ( 100 + $this->taxPercent );				//  calculate tax within price
-		return $price * ( $this->taxPercent / 100 ) * $amount ;								//  otherwise calculate tax on top of price
+			$factor	= $this->taxPercent / ( 100 + $this->taxPercent );						//  calculate tax factor within price
+		return $price * $factor * $amount ;													//  calculate tax amount
 	}
 
 	/**
@@ -142,6 +152,16 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 	 */
 	public function getTitle( $articleId ){
 		return $this->check( $articleId )->title;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$articleId
+	 *	@return		string
+	 */
+	public function getWeight( $articleId, $amount = 1 ){
+		return $this->check( $articleId )->weight * $amount;
 	}
 }
 ?>
