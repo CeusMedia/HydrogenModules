@@ -117,7 +117,8 @@ class Logic_Frontend{
 	}
 
 	public function getModuleConfigValue( $moduleId, $key ){
-		return array_pop( $this->getModuleConfigValues( $moduleId, array( $key ) ) );
+		$values	= $this->getModuleConfigValues( $moduleId, array( $key ) );
+		return array_pop( $values );
 	}
 
 	public function getModuleConfigValues( $moduleId, $keys = array(), $useFasterUncachedSolution = TRUE ){
