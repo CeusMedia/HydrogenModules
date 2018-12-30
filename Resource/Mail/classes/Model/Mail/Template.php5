@@ -14,6 +14,11 @@
  */
 class Model_Mail_Template extends CMF_Hydrogen_Model{
 
+	const STATUS_NEW		= 0;
+	const STATUS_IMPORTED	= 1;
+	const STATUS_USABLE		= 2;
+	const STATUS_ACTIVE		= 3;
+
 	protected $name		= 'mail_templates';
 	protected $columns	= array(
 		"mailTemplateId",

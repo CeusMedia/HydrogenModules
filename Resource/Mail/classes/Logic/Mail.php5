@@ -35,6 +35,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$this->modelQueue		= new Model_Mail( $this->env );
 
 		$this->_repair();
+		$this->checkActiveTemplate();
 
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
@@ -50,6 +51,28 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
 				copy( 'classes/.htaccess', $this->pathAttachments.'.htaccess' );
 		}
+	}
+
+	protected function checkActiveTemplate(){
+		$modelTemplate	= new Model_Mail_Template( $this->env );
+		$template		= $modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE );
+		if( $template )
+			return $template;
+		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend			= Logic_Frontend::getInstance( $this->env );
+			$moduleTemplateId	= $frontend->getModuleConfigValue( 'Resource_Mail', 'template' );
+		}
+		if( $moduleTemplateId ){
+			$template	= $modelTemplate->get( $moduleTemplateId );
+			if( $template && $template->status == Model_Mail_Template::STATUS_USABLE ){
+				$modelTemplate->edit( $moduleTemplateId, array(
+					'status'	=> Model_Mail_Template::STATUS_ACTIVE
+				) );
+				return $modelTemplate->get( $moduleTemplateId );
+			}
+		}
+		return NULL;
 	}
 
 	public function abortMailsWithTooManyAttempts(){

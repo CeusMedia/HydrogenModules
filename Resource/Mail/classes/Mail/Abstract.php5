@@ -208,7 +208,7 @@ abstract class Mail_Abstract{
 	protected function applyTemplateToHtml( $content, $templateId = NULL ){
 		$model		= new Model_Mail_Template( $this->env );
 		if( !$templateId ){
-			$template	= $model->getByIndex( 'status', 3 );
+			$template	= $model->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE );
 			if( !$template )
 				return $content;
 		}
@@ -285,7 +285,7 @@ abstract class Mail_Abstract{
 	protected function applyTemplateToText( $content, $templateId = NULL ){
 		$model		= new Model_Mail_Template( $this->env );
 		if( !$templateId ){
-			$template	= $model->getByIndex( 'status', 3 );
+			$template	= $model->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE );
 			if( !$template )
 				return $content;
 		}
