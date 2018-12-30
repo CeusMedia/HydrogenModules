@@ -12,8 +12,24 @@ foreach( $templates as $template ){
 		'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
 		'class'	=> 'autocut',
 	) );
+	switch( $template->status ){
+		default:
+			$badgeClass	= 'badge';
+		case Model_Mail_Template::STATUS_NEW:
+		case Model_Mail_Template::STATUS_IMPORTED:
+			$badgeClass	= 'badge badge-warning';
+			break;
+		case Model_Mail_Template::STATUS_USABLE:
+			$badgeClass	= 'badge badge-info';
+			break;
+		case Model_Mail_Template::STATUS_ACTIVE:
+			$badgeClass	= 'badge badge-success';
+			break;
+	}
+	$badgeStatus	= UI_HTML_Tag::create( 'span', $words['status'][$template->status], array( 'class' => $badgeClass ) );
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $title ),
+		UI_HTML_Tag::create( 'td', $badgeStatus ),
 		UI_HTML_Tag::create( 'td', sprintf( $words['index']['valueUsedInMail'], $modelMail->countByIndex( 'templateId', $template->mailTemplateId ) ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
@@ -21,13 +37,14 @@ foreach( $templates as $template ){
 }
 $tableHeads	= UI_HTML_Elements::tableHeads( array(
 	$words['index']['headTitle'],
+	$words['index']['headStatus'],
 	$words['index']['headUsed'],
 	$words['index']['headCreated'],
 	$words['index']['headModified']
 ) );
 
 $table	= UI_HTML_Tag::create( 'table', array(
-	UI_HTML_Elements::ColumnGroup( array( '', '120', '140', '140' ) ),
+	UI_HTML_Elements::ColumnGroup( array( '', '120', '120', '140', '140' ) ),
 	UI_HTML_Tag::create( 'thead', $tableHeads ),
 	UI_HTML_Tag::create( 'tbody', $rows ),
 ), array( 'class' => 'table table-fixed' ) );

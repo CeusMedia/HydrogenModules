@@ -22,6 +22,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'appPath', $this->appPath );
 		$this->addData( 'appUrl', $this->appUrl );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	public function ajaxSetTab( $tabId ){
@@ -83,7 +84,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( 'Template with this title already existing.' );
 			else{
 				$templateId	= $this->modelTemplate->add( array(
-					'status'		=> 1,
+					'status'		=> Model_Mail_Template::STATUS_NEW,
 					'title'			=> $title,
 					'language'		=> $this->request->get( 'template_language' ),
 					'plain'			=> strip_tags( $this->request->get( 'template_plain' ) ),
@@ -120,8 +121,10 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $templateId ){
-		$template	= $this->checkTemplate( $templateId );
-		$tabId		= $this->env->getSession()->get( 'admin-mail-template-edit-tab' );
+		$modelMail		= new Model_Mail( $this->env );
+		$template		= $this->checkTemplate( $templateId );
+		$template->used	= $modelMail->countByIndex( 'templateId', $templateId );
+		$tabId			= $this->env->getSession()->get( 'admin-mail-template-edit-tab' );
 		$this->addData( 'tabId', $tabId );
 
 		if( $this->request->has( 'save' ) ){
@@ -296,12 +299,15 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
-		$templates	= $this->modelTemplate->getAll();
-		$modelMail	= new Model_Mail( $this->env );
+		$templates			= $this->modelTemplate->getAll();
+		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
+		$modelMail			= new Model_Mail( $this->env );
 		foreach( $templates as $template ){
 			$template->used	= $modelMail->countByIndex( 'templateId', $template->mailTemplateId );
+			$template->activeByModule = ( $template->mailTemplateId == $moduleTemplateId );
 		}
 		$this->addData( 'templates', $templates );
+		$this->addData( 'moduleTemplateId', $moduleTemplateId );
 	}
 
 	public function preview( $templateId, $mode = NULL ){
@@ -338,7 +344,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 
 	public function remove( $templateId ){
 		$template	= $this->checkTemplate( $templateId );
-		if( $template->status == 3 ){
+		if( $template->status == Model_Mail_Template::STATUS_ACTIVE ){
 			$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" entfernt.' );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
@@ -373,13 +379,28 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function set( $templateId ){
+	public function setStatus( $templateId, $status ){
 		$template	= $this->checkTemplate( $templateId );
-		$active		= $this->modelTemplate->getByStatus( 3 );
-		if( $active )
-			$this->modelTemplate->edit( $active->mailTemplateId, array( '2' ) );
-		$this->modelTemplate->edit( $templateId, array( 'status' => 3 ) );
-		$this->env->getMessenger()->noteSuccess( 'Template "'.$template->title.'" aktiviert.' );
+		if( $status == Model_Mail_Template::STATUS_ACTIVE ){
+			if( $template->status != $status ){
+				$active		= $this->modelTemplate->getByIndex( 'status', $status );
+				if( $active )
+					$this->modelTemplate->edit( $active->mailTemplateId, array(
+						'status'	=> Model_Mail_Template::STATUS_USABLE
+					) );
+				$this->modelTemplate->edit( $templateId, array( 'status' => $status ) );
+				$this->env->getMessenger()->noteSuccess( sprintf(
+					'Template "%s" aktiviert.',
+					$template->title
+				) );
+			}
+		}
+		if( $status == Model_Mail_Template::STATUS_USABLE ){
+			if( $template->status != $status ){
+				$this->modelTemplate->edit( $templateId, array( 'status' => $status ) );
+			}
+		}
+		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
 	public function test( $templateId ){
