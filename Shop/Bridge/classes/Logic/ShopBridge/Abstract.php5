@@ -3,6 +3,7 @@ abstract class Logic_ShopBridge_Abstract{
 
 	/**	@var	Logic_ShopBridge			$bridge		Shop bridge logic instance */
 	protected $bridge;
+
 	/**	@var	CMF_Hydrogen_Environment	$env		Environment instance */
 	protected $env;
 
@@ -47,44 +48,44 @@ abstract class Logic_ShopBridge_Abstract{
 	}
 
 	/**
-	 *	...
+	 *	Returns short description of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
+	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
 	abstract public function getDescription( $articleId );
 
 	/**
-	 *	...
+	 *	Returns link to article description.
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
+	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
 	abstract public function getLink( $articleId );
 
 	/**
-	 *	...
+	 *	Returns URL of article picture, if existing.
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
+	 *	@param		integer		$articleId		ID of article
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 */
 	abstract public function getPicture( $articleId, $absolute = FALSE );
 
 	/**
-	 *	...
+	 *	Returns price of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
-	 *	@param		integer		$amount
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
 	 */
 	abstract public function getPrice( $articleId, $amount = 1 );
 
 	/**
-	 *	...
+	 *	Returns tax of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
-	 *	@param		integer		$amount
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
 	 */
 	abstract public function getTax( $articleId, $amount = 1 );
@@ -98,11 +99,12 @@ abstract class Logic_ShopBridge_Abstract{
 	abstract public function getTitle( $articleId );
 
 	/**
-	 *	...
+	 *	Returns weight of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		Article ID
-	 *	@return		string
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$amount			Amount to articles to get weight for
+	 *	@return		integer
 	 */
-	abstract public function getWeight( $articleId );
+	abstract public function getWeight( $articleId, $amount = 1 );
 }
 ?>

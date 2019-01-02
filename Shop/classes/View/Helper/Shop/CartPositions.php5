@@ -151,12 +151,12 @@ class View_Helper_Shop_CartPositions{
 	public function renderAsHtml(){
 		$words		= (object) $this->words['panel-cart'];
 		$wordsCart	= (object) $this->words['cart'];
-		$rows		= array();
-		$totalPrice	= 0;
-		$totalTax	= 0;
+		$rows			= array();
+		$totalPrice		= 0;
+		$totalTax		= 0;
 		$totalWeight	= 0;
-		$taxes		= array();
-		$allSingle	= TRUE;
+		$taxes			= array();
+		$allSingle		= TRUE;
 		foreach( $this->positions as $nr => $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
@@ -269,13 +269,15 @@ class View_Helper_Shop_CartPositions{
 		) );
 		$list[]	= $helperText->line( "-", 78 );
 
-		$totalCount	= 0;
-		$totalPrice	= 0;
-		$totalTax	= 0;
+		$totalCount		= 0;
+		$totalPrice		= 0;
+		$totalTax		= 0;
+		$totalWeight	= 0;
 		foreach( $this->positions as $position ){
-			$totalCount	+= $position->quantity;
-			$totalPrice	+= $position->article->price->all;
-			$totalTax	+= $position->article->tax->all;
+			$totalCount		+= $position->quantity;
+			$totalPrice		+= $position->article->price->all;
+			$totalTax		+= $position->article->tax->all;
+			$totalWeight	+= $position->article->weight->all;
 			$list[]	= join( ' ', array(
 				$helperText->fit( $position->article->title, 60 ),
 				$helperText->fit( $position->quantity, 6, 0 ),
@@ -298,13 +300,19 @@ class View_Helper_Shop_CartPositions{
 		) );
 
 		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
-			$priceShipping	= 10;												//  @todo calculate shipping price
-			$totalPrice	+= $priceShipping;
-			$list[]	= join( ' ', array(
-				$helperText->fit( $words->labelShipping, 60 ),
-				$helperText->fit( "", 6, 0 ),
-				$helperText->fit( $this->formatPrice( $priceShipping, TRUE, FALSE ), 10, 0 ),
-			) );
+			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+			if( $this->deliveryAddress ){
+				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
+					$this->deliveryAddress->country,
+					$totalWeight
+				);
+				$totalPrice	+= $priceShipping;
+				$list[]	= join( ' ', array(
+					$helperText->fit( $words->labelShipping, 60 ),
+					$helperText->fit( "", 6, 0 ),
+					$helperText->fit( $this->formatPrice( $priceShipping, TRUE, FALSE ), 10, 0 ),
+				) );
+			}
 		}
 
 		$list[]	= $helperText->line( "-", 78 );
