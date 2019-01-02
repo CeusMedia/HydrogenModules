@@ -69,9 +69,10 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 */
 	public function getGradeFromWeight( $weight ){
 		$grades	= $this->modelGrade->getAll( array( 'fallback' => 0 ), array( 'weight' => 'ASC' ) );
-		foreach( $grades as $grade )
-			if( $grade->weight > $weight )
+		foreach( $grades as $grade ){
+			if( (int) $grade->weight > (int) $weight )
 				return $grade;
+		}
 		$grade	= $this->modelGrade->getByIndex( 'fallback', 1 );
 		if( $grade )
 			return $grade;
