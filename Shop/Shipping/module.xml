@@ -3,12 +3,13 @@
 	<title>Shop: Shipping</title>
 	<description><![CDATA[Extends shop by shipping options and calculations.]]></description>
 	<category>Shop</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Sepration to Hydrogen module.</log>
 	<log version="0.2.1">Add logic class.</log>
 	<log version="0.2.3">Improve model structure.</log>
 	<log version="0.3">Refactored logic class.</log>
+	<log version="0.3.1">Add uninstall SQL.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -23,8 +24,7 @@
 	<relations>
 		<needs type="module">Shop</needs>
 	</relations>
-	<sql type="mysql" on="install">
-<![CDATA[
+	<sql type="mysql" on="install"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_countries`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_shipping_countries` (
   `countryId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,6 +73,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_shipping_zones` (
   PRIMARY KEY (`zoneId`),
   KEY `fallback` (`fallback`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]>
-	</sql>
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_countries`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_grades`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_options`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_prices`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_shipping_zones`;
+]]></sql>
 </module>
