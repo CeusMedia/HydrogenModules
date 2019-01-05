@@ -146,9 +146,12 @@ class Logic_Payment_PayPal{
 		$customer	= $order->customer;
 		$positions	= $order->positions;
 
-$shipping	= 0;
 $handling	= 0;
 $insurance	= 0;
+
+		$shipping	= 0;
+		if( isset( $order->shipping ) )
+			$shipping	= $order->shipping->priceTaxed;
 
 		$data	= array(
 			'SUBJECT'		=> $subject,
@@ -204,6 +207,7 @@ $insurance	= 0;
 		$data['PAYMENTREQUEST_0_HANDLINGAMT']	= number_format( $handling, 2, ".", "," );;
 		$data['PAYMENTREQUEST_0_INSURANCEAMT']	= number_format( $insurance, 2, ".", "," );;
 		$data['PAYMENTREQUEST_0_AMT']			= number_format( $total, 2, ".", "," );
+
 		try{
 			$response	= (object) $this->request( $data );
 			if( !$response || $response->ACK !== "Success" ){

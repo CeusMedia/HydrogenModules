@@ -14,7 +14,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 <code
 ]]></description>
 	<category>Shop</category>
-	<version>0.4.8</version>
+	<version>0.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished database design.</log>
@@ -31,6 +31,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<log version="0.4.6">Add module main switch.</log>
 	<log version="0.4.7">Update to support Shop version 0.8.</log>
 	<log version="0.4.8">Use framework hook.</log>
+	<log version="0.4.9">Support new shipping system.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

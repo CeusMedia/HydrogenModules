@@ -5,20 +5,20 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 	protected $config;
 
 	/**	@var	Logic_Payment				$provider		Payment provider logic instance */
-	protected $provider;
+	protected $logicProvider;
 
 	/**	@var	Logic_Shop					$shop			Shop logic instance */
-	protected $shop;
+	protected $logicShop;
 
 	/**	@var	Net_HTTP_PartitionSession	$session		Session resource */
 	protected $session;
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
-		$this->provider		= new Logic_Payment_Paypal( $this->env );
-		$this->shop			= new Logic_Shop( $this->env );
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		$this->logicProvider	= new Logic_Payment_Paypal( $this->env );
+		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$modelCart			= new Model_Shop_Cart( $this->env );
 		$this->orderId		= $modelCart->get( 'orderId' );
@@ -26,8 +26,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid order' );
 			$this->restart( 'shop' );
 		}
-		$this->order		= $this->shop->getOrder( $this->orderId );
-		$this->provider->setAccount(
+		$this->order		= $this->logicShop->getOrder( $this->orderId );
+		$this->logicProvider->setAccount(
 			$this->config->get( 'merchant.username' ),
 			$this->config->get( 'merchant.password' ),
 			$this->config->get( 'merchant.signature' )
@@ -35,10 +35,9 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 	}
 
 	public function authorize(){
-//		$this->session->clear();
-		$price		= $this->shop->calculateOrderTotalPrice( $this->orderId );
-		$paymentId	= $this->provider->requestToken( $this->orderId, $price );
-		$payment	= $this->provider->getPayment( $paymentId );
+		$price		= $this->order->priceTaxed;
+		$paymentId	= $this->logicProvider->requestToken( $this->orderId, $price );
+		$payment	= $this->logicProvider->getPayment( $paymentId );
 		$this->session->set( 'paymentId', $paymentId );
 		$this->session->set( 'paymentToken', $payment->token );
 		$mode		= $this->config->get( 'mode' );
@@ -51,8 +50,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 	public function authorized(){
 		$token		= $this->env->getRequest()->get( 'token' );
 		try{
-			$payment	= $this->provider->getPaymentFromToken( $token );
-			$this->provider->requestPayerDetails( $payment->paymentId );
+			$payment	= $this->logicProvider->getPaymentFromToken( $token );
+			$this->logicProvider->requestPayerDetails( $payment->paymentId );
 			$this->restart( 'pay', TRUE );
 		}
 		catch( Exception $e){
@@ -74,7 +73,7 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 			$messenger->noteError( 'Kein Bezahlvorgang eingeleitet. Weiterleitung zum Warenkorb.' );
 			$this->restart( './shop/cart' );
 		}
-		$payment	= $this->provider->getPayment( $paymentId );
+		$payment	= $this->logicProvider->getPayment( $paymentId );
 		if( $payment->status < 1 )
 			$this->restart( 'authorize', TRUE );
 		if( $this->config->get( 'option.instantPay' ) )
@@ -91,14 +90,14 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 			$this->restart( './shop/cart' );
 		}
 		try{
-			$payment	= $this->provider->getPayment( $paymentId );
+			$payment	= $this->logicProvider->getPayment( $paymentId );
 		}
 		catch( Exception $e ){
 			$messenger->noteError( 'Ungültiger Bezahlvorgang. Weiterleitung zum Warenkorb.' );
 			$this->restart( './shop/cart' );
 		}
 		try{
-			$this->provider->finishPayment( $paymentId );
+			$this->logicProvider->finishPayment( $paymentId );
 			$this->session->remove( 'paymentId' );
 			$this->session->remove( 'token' );
 		}
@@ -106,7 +105,7 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 			$messenger->noteErrorFailure( 'Bezahlvorgang gescheitert. Weiterleitung zum Warenkorb.' );
 			$this->restart( './shop/cart' );
 		}
-		$this->shop->setOrderStatus( $payment->orderId, 3 );
+		$this->logicShop->setOrderStatus( $payment->orderId, 3 );
 		$this->restart( './shop/finish' );
 	}
 }
