@@ -23,7 +23,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	protected $moduleConfig;
 
 	/**	@var	Logic_Shop_Shipping|NULL	$shipping			Instance of shipping logic if module is installed */
-	protected $shipping;
+	protected $logicShipping;
+
+	protected $useShipping					= FALSE;
 
 	protected function __onInit(){
 		$this->bridge				= new Logic_ShopBridge( $this->env );
@@ -33,42 +35,20 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
 		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
-		if( $this->env->getModules()->has( 'Shop_Shipping' ) )
-			$this->shipping		= new Logic_Shop_Shipping( $this->env );
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+			$this->useShipping		= TRUE;
+			$this->logicShipping	= new Logic_Shop_Shipping( $this->env );
+		}
 	}
 
+	/**
+	 * @deprecated	get Model_Shop_Order::priceTaxed instead
+	 */
 	public function calculateOrderTotalPrice( $orderId ){
-		if( !$this->modelOrder->get( $orderId ) )													//  check if order exists
+		$order	= $this->modelOrder->get( $orderId ):
+		if( !$order )
 			throw new InvalidArgumentException( 'Invalid order ID' );								//  else quit with exception
-
-		$sum	= 0;																				//  prepare total price sum
-		foreach( $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId ) as $position ){	//  iterate order positions
-			$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );				//  get bridge source of article
-			$article	= $source->get( $position->articleId, $position->quantity );				//  get article data
-			$sum		+= (float) $article->price->all;											//  add price of position
-		}
-
-		$priceShipping	= 0;
-		if( $this->getShipping())
-		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
-			$logicShipping	= new Logic_Shop_Shipping( $this->env );
-			if( $this->deliveryAddress ){
-				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
-					$this->deliveryAddress->country,
-					$totalWeight
-				);
-				$rows[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', '&nbsp;' ),
-					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
-					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
-				) );
-			}
-		}
-		$priceTotal		= $totalPrice + $priceShipping;
-
-
-		return $sum;																				//  return total price sum
+		return $order->priceTaxed;
 	}
 
 	public function countArticleInCart( $bridgeId, $articleId ){
@@ -221,15 +201,14 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		$taxRate		= 19;				//  @todo: make configurable
 		$price			= 0;
 		$priceTaxed		= 0;
-		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
-			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+		if( $this->useShipping ){
 			$customer		= $this->getOrderCustomer( $orderId );
 			if( $customer && $customer->addressDelivery ){
 				$weight			= 0;
 				$positions		= $this->getOrderPositions( $orderId, TRUE );
 				foreach( $positions as $position )
 					$weight	+= $position->article->weight->all;
-				$price	= $logicShipping->getPriceFromCountryCodeAndWeight(
+				$price	= $this->logicShipping->getPriceFromCountryCodeAndWeight(
 					$customer->addressDelivery->country,
 					$weight
 				);
@@ -287,9 +266,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
 			->setExceptionVersion( '0.8.3' )
 			->message( 'getShipping is deprecated' );
-		if( !$this->shipping && $strict )
+		if( !$this->useShipping && $strict )
 			throw new RuntimeException( "Shipping module is not installed" );
-		return $this->shipping ? $this->shipping : NULL;
+		return $this->useShipping ? $this->useShipping : NULL;
 	}
 
 	/**
@@ -345,14 +324,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $this->countArticleInCart( $bridgeId, $articleId ) > 0;
 	}
 
-	/**
-	 * @deprecated	use Model_Shop_Cart::set instead
-	 */
 	public function setOrderPaymentId( $orderId, $paymentId ){
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'setOrderPaymentId is deprecated - use Model_Shop_Cart::set instead' );
 		if( $orderId ){
 			return $this->modelOrder->edit( $orderId, array(
 				'paymentId'		=> $paymentId,
@@ -361,21 +333,13 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	/**
-	 * @deprecated	use Model_Shop_Cart::set instead
-	 */
 	public function setOrderPaymentMethod( $orderId, $paymentMethod ){
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'setOrderPaymentMethod is deprecated - use Model_Shop_Cart::set instead' );
 		if( $orderId ){
 			return $this->modelOrder->edit( $orderId, array(
 				'paymentMethod'	=> $paymentMethod,
 				'modifiedAt'	=> time(),
 			) );
 		}
-		$this->modelCart->set( 'paymentMethod', $paymentMethod );
 	}
 
 	public function setOrderPositionStatus( $positionId, $status ){
@@ -420,7 +384,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 			->message( 'setShipping is deprecated' );
 		if( !( $logic instanceof CMF_Hydrogen_Logic ) )
 			throw new RuntimeException( 'Invalid logic object (must extend CMF_Hydrogen_Logic)' );
-		$this->shipping		= $logic;
+		$this->logicShipping		= $logic;
 	}
 }
 ?>

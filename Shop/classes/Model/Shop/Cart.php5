@@ -158,7 +158,7 @@ class Model_Shop_Cart{
 				'articleId'		=> $item->articleId,
 				'status'		=> 0,
 				'quantity'		=> $item->quantity,
-				'currency'		=> $article->currency,
+//				'currency'		=> $article->currency,
 				'price'			=> $price,
 				'priceTaxed'	=> $priceTaxed,
 				'createdAt'		=> time(),
@@ -242,7 +242,7 @@ class Model_Shop_Cart{
 		$order			= $logicShop->getOrder( $orderId, TRUE );
 		foreach( $order->positions as $position ){
 			$price		+= $position->article->price->all;
-			$priceTaxed	+= $position->article->price->all + $article->tax->all;
+			$priceTaxed	+= $position->article->price->all + $position->article->tax->all;
 			if( $this->taxIncluded ){
 				$price		-= $position->article->tax->all;
 				$priceTaxed	-= $position->article->tax->all;
