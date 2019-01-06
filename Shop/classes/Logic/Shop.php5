@@ -45,7 +45,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	 * @deprecated	get Model_Shop_Order::priceTaxed instead
 	 */
 	public function calculateOrderTotalPrice( $orderId ){
-		$order	= $this->modelOrder->get( $orderId ):
+		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
 			throw new InvalidArgumentException( 'Invalid order ID' );								//  else quit with exception
 		return $order->priceTaxed;
