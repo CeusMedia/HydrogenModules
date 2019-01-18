@@ -7,6 +7,22 @@ $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert
 if( $dumps ){
 	$list	= array();
 	foreach( $dumps as $dump ){
+		if( is_string( $dump->comment ) ){
+			$dump->comment	= array(
+				'comment'		=> $dump->comment,
+			);
+		}
+		$rowClass	= '';
+		$status		= '';
+		if( !empty( $dump->comment['copyPrefix'] ) ){
+			$rowClass	= 'info';
+			$status		= 'Kopie installiert';
+			if( $dump->comment['copyPrefix'] === $currentCopyPrefix ){
+				$rowClass	= 'success';
+				$status		= 'Kopie aktiviert';
+			}
+		}
+
 		$link	= UI_HTML_Tag::create( 'a', $dump->filename, array( 'href' => './admin/database/backup/view/'.$dump->id ) );
 		if( class_exists ( 'View_Helper_TimePhraser' ) ){
 			$helper			= new View_Helper_TimePhraser( $env );
@@ -19,13 +35,14 @@ if( $dumps ){
 		}
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $dump->comment, array( 'class' => 'muted' ) ) ),
+			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $dump->comment['comment'], array( 'class' => 'muted' ) ) ),
 			UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $dump->filesize ) ),
 			UI_HTML_Tag::create( 'td', $creationDate ),
-		) );
+		), array( 'class' => $rowClass ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '33%', '', '100px', '150px' ) );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Datei', 'Kommentar', 'Größe', 'Erstellungsdatum' ) ) );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '33%', '15%', '', '100px', '150px' ) );
+	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum' ) ) );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }

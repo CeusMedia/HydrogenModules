@@ -8,6 +8,7 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
 		$this->path			= $this->moduleConfig->get( 'path' );
@@ -24,6 +25,132 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		}
 		$this->dumps	= $this->readIndex();
 	}
+
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@return		void
+	 *	@todo		export to hook class
+	 */
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$database		= $env->getDatabase();
+		$copyPrefix		= $env->getSession()->get( 'admin-database-backup-copy-prefix' );
+		$copyDbName		= $env->getConfig()->get( 'module.admin_database_backup.copy.database' );
+		if( $copyPrefix ){
+			try{
+				if( $copyDbName && $database->getName() !== $copyDbName )
+					$database->setName( $copyDbName );
+				$database->setPrefix( $copyPrefix );
+			}
+			catch( Exception $e ){
+				$dbName	= $copyDbName ? $copyDbName : $database->getName();
+				$env->getMessenger()->noteFailure( 'Switching to database prefix "'.$dbName.' > '.$copyPrefix.'" failed: '.$e->getMessage() );
+			}
+		}
+	}
+
+	/**
+	 *	Shows panel on top with note of activated copy database.
+	 *	@static
+	 *	@access		public
+	 *	@return		void
+	 *	@todo		implement hook and export to hook class
+	 */
+	static public function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$defaultDbName	= (string) $env->getConfig()->get( 'module.resource_database.access.name' );
+		$defaultPrefix	= (string) $env->getConfig()->get( 'module.resource_database.access.prefix' );
+		$copyDbName		= (string) $env->getConfig()->get( 'module.admin_database_backup.copy.database' );
+		$copyPrefix		= (string) $env->getSession()->get( 'admin-database-backup-copy-prefix' );
+		$dbName			= $copyDbName ? $copyDbName : $defaultDbName;
+		if( $defaultPrefix !== $copyPrefix ){
+			$prefix	= $copyPrefix ? $copyPrefix : $defaultPrefix;
+			$env->getMessenger()->noteNotice( '<strong><big>Dieser Datenbestand ist nur eine Kopie.</big></strong><br/>Datenbank: '.$dbName.' | Präfix: '.$prefix.'' );
+		}
+	}
+
+	/**
+	 *	Creates dump copy in copy database with copy prefix.
+	 *	@access		public
+	 *	@dodo		...
+	 */
+	public function createCopy( $id ){
+		$dump			= $this->check( $id );
+		if( $dump->comment['copyPrefix'] ){
+			$this->messenger->noteError( 'Eine Kopie dieser Sicherung wurde bereits installiert.' );
+			$this->restart( 'view/'.$id, TRUE );
+		}
+		$copyPrefix		= 'copy_'.substr( md5( $dump->id ), 16 ).'_';
+		$copyDbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
+		$defaultDbName	= $this->env->config->get( 'module.resource_database.access.name' );
+		$dbName			= $copyDbName ? $copyDbName : $defaultDbName;
+		try{
+			$this->load( $id, $copyDbName, $copyPrefix );
+			$this->storeDataInComment( $id, array(
+				'copyDumpId'	=> $id,
+				'copyDatabase'	=> $dbName,
+				'copyPrefix'	=> $prefix,
+				'copyTimestamp'	=> time(),
+			) );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $e->getMessage );
+		}
+		$this->restart( 'view/'.$id, TRUE );
+	}
+
+	public function activateCopy( $id ){
+		$dump	= $this->check( $id );
+		$prefix	= isset( $dump->comment['copyPrefix'] ) ? $dump->comment['copyPrefix'] : NULL;
+		if( strlen( trim( $prefix ) ) ){
+			$this->session->set( 'admin-database-backup-copy-prefix', $prefix );
+		}
+		$this->restart( 'view/'.$id, TRUE );
+	}
+
+	public function deactivateCopy( $id ){
+		$database	= $this->env->getDatabase();
+		$dump		= $this->check( $id );
+		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
+		if( $prefix && isset( $dump->comment['copyPrefix'] ) ){
+			if( $dump->comment['copyPrefix'] === $prefix ){
+				try{
+					$efaultDbName	= $this->config->get( 'module.resource_database.access.name' );
+					$database->setName( $efaultDbName );
+					$prefix	= $this->session->remove( 'admin-database-backup-copy-prefix' );
+					$this->messenger->clear();
+					$this->messenger->noteSuccess( 'Switching back to default database.' );
+				}
+				catch( Exception $e ){
+					$this->messenger->noteFailure( 'Switching to database "'.$dbName.'" failed.' );
+				}
+			}
+		}
+		$this->restart( 'view/'.$id, TRUE );
+	}
+
+	public function dropCopy( $id ){
+		$dump		= $this->check( $id );
+		$database	= $this->env->getDatabase();
+		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
+		$dbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
+		if( isset( $dump->comment['copyPrefix'] ) && $dump->comment['copyPrefix'] == $prefix ){
+			$this->messenger->noteError( 'Die Kopie ist noch aktiviert und kann daher nicht gelöscht werden.' );
+			$this->restart( 'view/'.$id, TRUE );
+		}
+		$currentDbName	= $database->getName();
+		if( $currentDbName != $dbName )
+			$database->setName( $dbName );
+	//	$database->...
+		$this->storeDataInComment( $id, array(
+			'copyPrefix'	=> NULL,
+			'copyDate'		=> NULL,
+		) );
+		if( $currentDbName != $dbName )
+			$database->setName( $currentDbName );
+		$this->restart( 'view/'.$id, TRUE );
+	}
+
 
 	protected function _callbackReplacePrefix( $matches ){
 		if( $matches[1] === 'for table' )
@@ -57,10 +184,18 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
+		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'dumps', $this->dumps );
+		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
 	public function download( $id ){
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$userId			= $logicAuth->getCurrentUserId();
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
+			$this->restart( 'view/'.$id, TRUE );
+		}
 		$dump	= $this->check( $id );
 		\Net_HTTP_Download::sendFile( $dump->pathname, $dump->filename, TRUE );
 	}
@@ -114,14 +249,15 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		return $filename;
 	}
 
-	protected function load( $id ){
+	protected function load( $id, $dbName, $prefix = NULL ){
 		$dump	= $this->check( $id );
 		if( !is_readable( $dump->pathname ) )
 			throw new RuntimeException( 'Missing read access to SQL script' );
 
 		$dbc		= $this->env->getDatabase();
 		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
-		$prefix		= $dba->get( 'prefix' );
+		$dbName		= $dbName ? $dbName : $dba->get( 'name' );
+		$prefix		= $prefix ? $prefix : $dba->get( 'prefix' );
 
 		$tempName	= $dump->pathname.".tmp";
 		$fpIn		= fopen( $dump->pathname, "r" );									//  open source file
@@ -139,7 +275,7 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306 ),			//  configured port as escaped shell arg
 			escapeshellarg( $dba->get( 'username' ) ),									//  configured username as escaped shell arg
 			escapeshellarg( $dba->get( 'password' ) ),									//  configured pasword as escaped shell arg
-			escapeshellarg( $dba->get( 'name' ) ),										//  configured database name as escaped shell arg
+			escapeshellarg( $dbName ),													//  configured database name as escaped shell arg
 			escapeshellarg( $tempName ),												//  temp file name as escaped shell arg
 		) );
 		exec( $command );
@@ -153,7 +289,7 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )
 				continue;
-			if( !preg_match( '/\.sql$/', $entry->getFilename() ) )
+			if( !preg_match( '/^dump_.+\.sql$/', $entry->getFilename() ) )
 				continue;
 			$id			= base64_encode( $entry->getFilename() );
 
@@ -193,6 +329,12 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	}
 
 	public function restore( $id ){
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$userId			= $logicAuth->getCurrentUserId();
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
+			$this->restart( 'view/'.$id, TRUE );
+		}
 		$dump	= $this->check( $id );
 		try{
 			$this->load( $id );
@@ -204,9 +346,26 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$id, TRUE );
 	}
 
+	protected function storeDataInComment( $id, $data ){
+		$dump	= $this->check( $id );
+		if( !array_key_exists( $id, $this->comments ) )
+			$this->comments[$id]	= array( 'comment' => '' );
+		if( is_string( $this->comments[$id] ) )
+			$this->comments[$id]	= array( 'comment' => $dump->comment );
+		foreach( $data as $key => $value ){
+			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
+				unset( $this->comments[$id][$key] );
+			else
+				$this->comments[$id][$key]	= $value;
+		}
+		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+	}
+
 	public function view( $id ){
 		$dump	= $this->check( $id );
+		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'dump', $this->check( $id ) );
+		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 }
 ?>

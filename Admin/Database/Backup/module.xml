@@ -3,11 +3,18 @@
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and resort database dumps.]]></description>
 	<category>Administration</category>
-	<version>0.2.2</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve index timestamp handling.</log>
 	<log version="0.2.2">Use general module main switch.</log>
+	<log version="0.3">Allow to install and use dump copies.</log>
+<!--	<log version="0.3.1">Support dump switch.</log>-->
+<!--	<log version="0.3.2">Add locale files.</log>-->
+<!--	<log version="0.3.2">Extract view panels.</log>-->
+<!--	<log version="0.4">Replace dump comment file by dump model.</log>-->
+<!--	<log version="0.4.1">Improve notice on using dump copy.</log>-->
+<!--	<log version="0.4.2">Add compression for dumps.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -19,7 +26,11 @@
 		<template>admin/database/backup/view.php</template>
 <!--		<file>config/jobs/admin.backup.database.xml</file>-->
 	</files>
-	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
-	<config protected="yes" type="string" name="path" mandatory="yes">config/sql/</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module" default="yes" original="yes">yes</config>
+	<config protected="yes" type="string" name="path" mandatory="yes" default="config/sql/" original="config/sql/">../config/sql/</config>
+<!--	<config protected="yes" type="boolean" name="copy.active">yes</config>-->
+	<config protected="yes" type="string" name="copy.database"></config>
 	<relations/>
+	<hook type="event" resource="Page" event="applyModules">Controller_Admin_Database_Backup::onPageApplyModules</hook>
+	<hook type="event" resource="Env" event="constructEnd">Controller_Admin_Database_Backup::onPageBuild</hook>
 </module>
