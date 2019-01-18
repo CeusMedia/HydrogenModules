@@ -37,9 +37,25 @@
  */
 class Resource_Database extends \DB_PDO_Connection
 {
+	const STATUS_LOST			= -1;
+	const STATUS_UNKNOWN		= 0;
+	const STATUS_PREPARED		= 1;
+	const STATUS_CONNECTED		= 2;
+
 	protected $env;
 	/**	@var	ADT_List_Dictionary		$options	Module configuration options */
 	protected $options;
+
+	protected $defaultDriverOptions	= array(
+		'ATTR_PERSISTENT'				=> TRUE,
+		'ATTR_ERRMODE'					=> "PDO::ERRMODE_EXCEPTION",
+		'ATTR_DEFAULT_FETCH_MODE'		=> "PDO::FETCH_OBJ",
+		'ATTR_CASE'						=> "PDO::CASE_NATURAL",
+		'MYSQL_ATTR_USE_BUFFERED_QUERY'	=> TRUE,
+		'MYSQL_ATTR_INIT_COMMAND'		=> "SET NAMES 'utf8';",
+	);
+
+	protected $status	= self::STATUS_UNKNOWN;
 
 	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
@@ -48,7 +64,37 @@ class Resource_Database extends \DB_PDO_Connection
 	}
 
 	/**
-	 *	Returns table prefix from configuration.
+	 *	Wrapper for PDO::exec to support lazy connection mode.
+	 *	Tries to connect database if not connected yet (lazy mode).
+	 *	@access		public
+	 *	@param		string		$statement		SQL statement to execute
+	 *	@return		integer		Number of affected rows
+	 */
+	public function exec( $statement ){
+		if( $this->status == self::STATUS_UNKNOWN )
+			$this->tryToConnect();
+		return parent::exec( $statement );
+	}
+
+	public function getMode(){
+		return isset( $this->options->mode ) ? $this->options->mode : 'instant';
+	}
+
+	/**
+	 *	Returns database name from database or configuration.
+	 *	Returns configuration value if database is not connected.
+	 *	@access		public
+	 *	@param		boolean		$used		Get currently used database (default) or by configuration
+	 *	@return		string
+	 */
+	public function getName( $used = TRUE ){
+		if( $this->status === self::STATUS_CONNECTED && $used )
+			return $this->query( 'SELECT DATABASE();' )->fetch( PDO::FETCH_NUM )[0];
+		return $this->options->get( 'access.name' );
+	}
+
+	/**
+	 *	Returns table prefix from configuration used on connecting.
 	 *	@access		public
 	 *	@return		string
 	 */
@@ -57,43 +103,25 @@ class Resource_Database extends \DB_PDO_Connection
 	}
 
 	/**
-	 *	Sets up connection to database, if configured with database module or main config (deprecated).
-	 *
-	 *	Attention: If using MySQL and UTF-8 the charset must bet set after connection established.
-	 *	Therefore the option MYSQL_ATTR_INIT_COMMAND is set by default, which hinders lazy connection mode (which is not implemented yet).
-	 *	In future, having lazy mode, the config pair "charset" will be realized by implementing a statement queue, which is run before a lazy connection is used the first time.
-	 *
-	 *	Attention: Using statement log means that EVERY statement send to database will be logged.
-	 *	Applications with heavy database use will slow down and create large log files.
-	 *	Be sure to rotate the logs or remove them frequently to avoid low hard disk space.
-	 *	Disable this feature after development/debugging!
-	 *
-	 *	@todo		implement lazy mode
-	 *	@todo		0.7: clean deprecated code
+	 *	Wrapper for PDO::query to support lazy connection mode.
+	 *	Tries to connect database if not connected yet (lazy mode).
+	 *	@access		public
+	 *	@param		string		$statement		SQL statement to query
+	 *	@param		integer		$fetchMode		... (default: 2)
+	 *	@return		PDOStatement				PDO statement containing fetchable results
 	 */
-	protected function setUp(){
-		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
-		if( empty( $access->driver ) )
-			throw new RuntimeException( 'No database driver set' );
-		$dsn		= new \DB_PDO_DataSourceName( $access->driver, $access->name );
-		!empty( $access->host )		? $dsn->setHost( $access->host ) : NULL;
-		!empty( $access->port )		? $dsn->setPort( $access->port ) : NULL;
-		!empty( $access->username )	? $dsn->setUsername( $access->username ) : NULL;
-		!empty( $access->password )	? $dsn->setPassword( $access->password ) : NULL;
+	public function query( $statement, $fetchMode = 2 ){
+		if( $this->status == self::STATUS_UNKNOWN )
+			$this->tryToConnect();
+		return parent::query( $statement, $fetchMode );
+	}
 
-		$options	= $this->options->getAll( 'option.' );											//  get connection options
-		$defaultOptions	= array(
-			'ATTR_PERSISTENT'				=> TRUE,
-			'ATTR_ERRMODE'					=> "PDO::ERRMODE_EXCEPTION",
-			'ATTR_DEFAULT_FETCH_MODE'		=> "PDO::FETCH_OBJ",
-			'ATTR_CASE'						=> "PDO::CASE_NATURAL",
-			'MYSQL_ATTR_USE_BUFFERED_QUERY'	=> TRUE,
-			'MYSQL_ATTR_INIT_COMMAND'		=> "SET NAMES 'utf8';",
+	protected function realizeDriverOptions(){
+		$options	= array_merge(																	//  merge option pairs ...
+			$this->defaultDriverOptions,															//  ... from default driver options
+			$this->options->getAll( 'option.' )														//  ...  and options configured by module
 		);
-		$options	+= $defaultOptions;
-
-		//  --  DATABASE OPTIONS  --  //
-		$driverOptions	= array();																	//  @todo: to be implemented
+		$list		= array();
 		foreach( $options as $key => $value ){														//  iterate all database options
 			if( $key == "ATTR_ERRMODE" ){
 				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
@@ -120,9 +148,74 @@ class Resource_Database extends \DB_PDO_Connection
 				throw new InvalidArgumentException( 'Unknown constant PDO::'.$key );				//  quit with exception
 			if( is_string( $value ) && preg_match( "/^[A-Z][A-Z0-9_:]+$/", $value ) )				//  option value is a constant name
 				$value	= constant( $value );														//  replace option value string by constant value
-			$driverOptions[constant( "PDO::".$key )]	= $value;									//  note option
+			$list[constant( "PDO::".$key )]	= $value;												//  note option
 		}
+		return $list;
+	}
+
+	/**
+	 *	Sets database name in configuration.
+	 *	@access		public
+	 *	@param		boolean		$use		Use in database connection (default) or only edit configuration
+	 *	@return		string
+	 *	@todo		check persistent mode change on instant connections, see disabled lines below
+	 */
+	public function setName( $name, $use = TRUE ){
+		if( $name !== $this->getName( $use ) ){
+			if( $use ){
+//				if( $this->getMode() !== 'lazy' )
+//					$this->setAttribute( PDO::ATTR_PERSISTENT, FALSE );
+				$this->query( 'USE '.$name.';' );
+			}
+			$this->options->set( 'access.name', $name );
+		}
+	}
+
+	/**
+	 *	Returns table prefix from configuration.
+	 *	@access		public
+	 *	@return		string
+	 */
+	public function setPrefix( $prefix ){
+		$this->options->set( 'access.prefix', $prefix );
+	}
+
+	/**
+	 *	Sets up connection to database, if configured with database module or main config (deprecated).
+	 *
+	 *	Attention: If using MySQL and UTF-8 the charset must bet se after connection is established.
+	 *	Therefore the option MYSQL_ATTR_INIT_COMMAND is set by default, which hinders lazy connection mode (which is not implemented yet).
+	 *	In future, having lazy mode, the config pair "charset" will be realized by implementing a statement queue, which is run before a lazy connection is used the first time.
+	 *
+	 *	Attention: Using statement log means that EVERY statement send to database will be logged.
+	 *	Applications with heavy database use will slow down and create large log files.
+	 *	Be sure to rotate the logs or remove them frequently to avoid low hard disk space.
+	 *	Disable this feature after development/debugging!
+	 *
+	 *	@todo		implement lazy mode
+	 *	@todo		0.7: clean deprecated code
+	 *	@todo		realize todos above now that lazy mode has been integrated by a different solution
+	 */
+	protected function setUp(){
+		if( $this->getMode() === 'instant' )
+			$this->tryToConnect();
+	}
+
+	protected function tryToConnect(){
+		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
+		if( empty( $access->driver ) )
+			throw new RuntimeException( 'No database driver set' );
+		$dsn		= new \DB_PDO_DataSourceName( $access->driver, $access->name );
+		!empty( $access->host )		? $dsn->setHost( $access->host ) : NULL;
+		!empty( $access->port )		? $dsn->setPort( $access->port ) : NULL;
+		!empty( $access->username )	? $dsn->setUsername( $access->username ) : NULL;
+		!empty( $access->password )	? $dsn->setPassword( $access->password ) : NULL;
+
+		$driverOptions	= $this->realizeDriverOptions();
+
 		parent::__construct( $dsn, $access->username, $access->password, $driverOptions );			//  connect to database
+		$this->status = self::STATUS_CONNECTED;
+		$this->query( 'USE '.$access->name.';' );
 
 		$log		= $this->options->getAll( 'log.', TRUE);
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );

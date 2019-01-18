@@ -3,11 +3,12 @@
 	<title>Resource: Database</title>
 	<description><![CDATA[Database connection support.]]></description>
 	<category>Resource</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Use CeusMedia:Common (on GitHub) instead of cmClasses (on GoogleCode).</log>
 	<log version="0.3.1">Shorten and order PDO options in module configuration.</log>
+	<log version="0.3.2">Add lazy mode.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -21,7 +22,7 @@
 	<config protected="yes" type="string" name="access.username"></config>
 	<config protected="yes" type="string" name="access.password"></config>
 	<config protected="yes" type="string" name="access.prefix" title="Table name prefix"></config>
-<!--	<config protected="yes" type="string" name="access.lazy"></config>-->
+	<config protected="yes" type="string" name="access.mode" values="instant,lazy" title="Database connection mode">instant</config>
 <!--	<config protected="yes" type="string" name="access.charset"></config>-->
 	<config protected="yes" type="boolean" name="log.statements">no</config>
 	<config protected="yes" type="boolean" name="log.errors">yes</config>
