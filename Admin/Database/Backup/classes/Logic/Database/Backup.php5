@@ -6,9 +6,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 	protected $prefixPlaceholder	= '<%?prefix%>';
 
 	public function __onInit(){
-		die("Logic_Database_Backup::onInit!");
 		$this->config		= $this->env->getConfig();
-		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
 		$this->path			= $this->moduleConfig->get( 'path' );
 		$this->commentsFile	= $this->path.'comments.json';
@@ -28,7 +26,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function dump(){
+	public function dump( $comment = NULL ){
 		$filename	= "dump_".date( "Y-m-d_H:i:s" ).".sql";
 		$pathname	= $this->path.$filename;
 		$dbc		= $this->env->getDatabase();
@@ -72,7 +70,18 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		fclose( $fpOut );																			//  close target file
 		fclose( $fpIn );																			//  close source file
 		unlink( $pathname."_" );
-		return $filename;
+		$id		= base64_encode( $filename );
+		$this->dumps[$id]	= (object) array(
+			'id'			=> $id,
+			'filename'		=> $filename,
+			'pathname'		=> $pathname,
+			'filesize'		=> filesize( $pathname ),
+			'timestamp'		=> filemtime( $pathname ),
+			'comment'		=> $comment,
+		);
+		if( $comment )
+			$this->storeDataInComment( $id, array( 'comment' => $comment ) );
+		return $id;
 	}
 
 	public function index(){
@@ -121,6 +130,21 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		}
 	}
 
+	public function storeDataInComment( $id, $data ){
+		$dump	= $this->check( $id );
+		if( !array_key_exists( $id, $this->comments ) )
+			$this->comments[$id]	= array( 'comment' => '' );
+		if( is_string( $this->comments[$id] ) )
+			$this->comments[$id]	= array( 'comment' => $dump->comment );
+		foreach( $data as $key => $value ){
+			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
+				unset( $this->comments[$id][$key] );
+			else
+				$this->comments[$id][$key]	= $value;
+		}
+		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+	}
+
 	//  --  PROTECTED METHODS  --  //
 
 	protected function _callbackReplacePrefix( $matches ){
@@ -145,7 +169,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 			if( !$timestamp )
 				$timestamp	= filemtime( $entry->getPathname() );
 
-			$comment	= '';
+			$comment	= NULL;
 			if( array_key_exists( $id, $this->comments ) )
 				$comment	= $this->comments[$id];
 
@@ -162,20 +186,5 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		foreach( $list as $item )
 			$map[$item->id]	= $item;
 		return $map;
-	}
-
-	protected function storeDataInComment( $id, $data ){
-		$dump	= $this->check( $id );
-		if( !array_key_exists( $id, $this->comments ) )
-			$this->comments[$id]	= array( 'comment' => '' );
-		if( is_string( $this->comments[$id] ) )
-			$this->comments[$id]	= array( 'comment' => $dump->comment );
-		foreach( $data as $key => $value ){
-			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
-				unset( $this->comments[$id][$key] );
-			else
-				$this->comments[$id][$key]	= $value;
-		}
-		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
 	}
 }

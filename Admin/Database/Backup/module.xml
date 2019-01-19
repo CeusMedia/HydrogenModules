@@ -3,7 +3,7 @@
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and resort database dumps.]]></description>
 	<category>Administration</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve index timestamp handling.</log>
@@ -11,6 +11,7 @@
 	<log version="0.3">Allow to install and use dump copies.</log>
 	<log version="0.3.1">Extract logic from controller.</log>
 	<log version="0.3.2">Split dump view into panels.</log>
+	<log version="0.3.3">Extract hook method from controller to own hook class.</log>
 <!--	<log version="0.3.1">Support dump switch.</log>-->
 <!--	<log version="0.3.2">Add locale files.</log>-->
 <!--	<log version="0.3.2">Extract view panels.</log>-->
@@ -26,6 +27,8 @@
 		<class>Logic/Database/Backup.php5</class>
 		<class>Logic/Database/Backup/Copy.php5</class>
 		<class>View/Admin/Database/Backup.php5</class>
+		<class>View/Admin/Database/Backup/Copy.php5</class>
+		<class>Hook/Admin/Database/Backup/Copy.php5</class>
 		<template>admin/database/backup/backup.php</template>
 		<template>admin/database/backup/index.php</template>
 		<template>admin/database/backup/view.php</template>
@@ -40,6 +43,6 @@
 <!--	<config protected="yes" type="boolean" name="copy.active">yes</config>-->
 	<config protected="yes" type="string" name="copy.database"></config>
 	<relations/>
-	<hook type="event" resource="Page" event="applyModules">Controller_Admin_Database_Backup::onPageApplyModules</hook>
-	<hook type="event" resource="Env" event="constructEnd">Controller_Admin_Database_Backup::onPageBuild</hook>
+	<hook type="event" resource="Page" event="applyModules">Hook_Admin_Database_Backup_Copy::onPageApplyModules</hook>
+	<hook type="event" resource="Env" event="constructEnd">Hook_Admin_Database_Backup_Copy::onPageBuild</hook>
 </module>
