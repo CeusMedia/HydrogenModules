@@ -4,40 +4,40 @@ $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' )
 
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
-if( $dumps ){
+if( $backups ){
 	$list	= array();
-	foreach( $dumps as $dump ){
-		if( is_string( $dump->comment ) ){
-			$dump->comment	= array(
-				'comment'		=> $dump->comment,
+	foreach( $backups as $backup ){
+		if( is_string( $backup->comment ) ){
+			$backup->comment	= array(
+				'comment'		=> $backup->comment,
 			);
 		}
 		$rowClass	= '';
 		$status		= '';
-		if( !empty( $dump->comment['copyPrefix'] ) ){
+		if( !empty( $backup->comment['copyPrefix'] ) ){
 			$rowClass	= 'info';
 			$status		= 'Kopie installiert';
-			if( $dump->comment['copyPrefix'] === $currentCopyPrefix ){
+			if( $backup->comment['copyPrefix'] === $currentCopyPrefix ){
 				$rowClass	= 'success';
 				$status		= 'Kopie aktiviert';
 			}
 		}
 
-		$link	= UI_HTML_Tag::create( 'a', $dump->filename, array( 'href' => './admin/database/backup/view/'.$dump->id ) );
+		$link	= UI_HTML_Tag::create( 'a', $backup->filename, array( 'href' => './admin/database/backup/view/'.$backup->id ) );
 		if( class_exists ( 'View_Helper_TimePhraser' ) ){
 			$helper			= new View_Helper_TimePhraser( $env );
-			$creationDate	= $helper->convert( $dump->timestamp, TRUE, 'vor ' );
+			$creationDate	= $helper->convert( $backup->timestamp, TRUE, 'vor ' );
 		}
 		else {
-			$date			= UI_HTML_Tag::create( 'span', date( 'd.m.Y', $dump->timestamp ), array( 'class' => '' ) );
-			$time			= UI_HTML_Tag::create( 'small', date( 'H:i:s', $dump->timestamp ), array( 'class' => 'muted' ) );
+			$date			= UI_HTML_Tag::create( 'span', date( 'd.m.Y', $backup->timestamp ), array( 'class' => '' ) );
+			$time			= UI_HTML_Tag::create( 'small', date( 'H:i:s', $backup->timestamp ), array( 'class' => 'muted' ) );
 			$creationDate	= $date.' '.$time;
 		}
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
 			UI_HTML_Tag::create( 'td', $status ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $dump->comment['comment'], array( 'class' => 'muted' ) ) ),
-			UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $dump->filesize ) ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $backup->comment['comment'], array( 'class' => 'muted' ) ) ),
+			UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $backup->filesize ) ),
 			UI_HTML_Tag::create( 'td', $creationDate ),
 		), array( 'class' => $rowClass ) );
 	}

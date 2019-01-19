@@ -142,7 +142,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 			else
 				$this->comments[$id][$key]	= $value;
 		}
-		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+		\FS_File_Writer::save( $this->commentsFile, json_encode( $this->comments, JSON_PRETTY_PRINT ) );
 	}
 
 	//  --  PROTECTED METHODS  --  //

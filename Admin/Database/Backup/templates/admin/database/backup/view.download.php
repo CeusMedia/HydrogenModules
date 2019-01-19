@@ -15,7 +15,7 @@ return '
 <div class="content-panel">
 	<h3>Download</h3>
 	<div class="content-panel-inner">
-		<form action="./admin/database/backup/download/'.$dump->id.'" method="post">
+		<form action="./admin/database/backup/download/'.$backup->id.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<p>

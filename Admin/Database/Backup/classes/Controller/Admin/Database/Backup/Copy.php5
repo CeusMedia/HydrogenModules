@@ -27,10 +27,10 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 	}
 
 	public function activate( $backupId ){
-		$backup	= $this->checkBackupId( $backupId );
-		$prefix	= isset( $backup->comment['copyPrefix'] ) ? $backup->comment['copyPrefix'] : NULL;
-		if( strlen( trim( $prefix ) ) ){
-			$this->session->set( 'admin-database-backup-copy-prefix', $prefix );
+		$backup		= $this->checkBackupId( $backupId );
+		$copyPrefix	= isset( $backup->comment['copyPrefix'] ) ? $backup->comment['copyPrefix'] : NULL;
+		if( strlen( trim( $copyPrefix ) ) ){
+			$this->session->set( 'admin-database-backup-copy-prefix', $copyPrefix );
 			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde aktiviert.' );
 		}
 		if( ( $from = $this->request->get( 'from' ) ) )
@@ -58,7 +58,7 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 			$this->logicBackup->storeDataInComment( $backupId, array(
 				'copyBackupId'	=> $backupId,
 				'copyDatabase'	=> $dbName,
-				'copyPrefix'	=> $prefix,
+				'copyPrefix'	=> $copyPrefix,
 				'copyTimestamp'	=> time(),
 			) );
 			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde installiert.' );
@@ -74,13 +74,13 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 	public function deactivate( $backupId ){
 		$database	= $this->env->getDatabase();
 		$backup		= $this->checkBackupId( $backupId );
-		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
-		if( $prefix && isset( $backup->comment['copyPrefix'] ) ){
-			if( $backup->comment['copyPrefix'] === $prefix ){
+		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
+		if( $copyPrefix && isset( $backup->comment['copyPrefix'] ) ){
+			if( $backup->comment['copyPrefix'] === $copyPrefix ){
 				try{
 					$efaultDbName	= $this->config->get( 'module.resource_database.access.name' );
 					$database->setName( $efaultDbName );
-					$prefix	= $this->session->remove( 'admin-database-backup-copy-prefix' );
+					$copyPrefix	= $this->session->remove( 'admin-database-backup-copy-prefix' );
 					$this->messenger->clear();
 					$this->messenger->noteSuccess( 'Switching back to default database.' );
 				}
@@ -97,9 +97,9 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 	public function drop( $backupId ){
 		$backup		= $this->checkBackupId( $backupId );
 		$database	= $this->env->getDatabase();
-		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
+		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
 		$dbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
-		if( isset( $backup->comment['copyPrefix'] ) && $backup->comment['copyPrefix'] == $prefix ){
+		if( isset( $backup->comment['copyPrefix'] ) && $backup->comment['copyPrefix'] == $copyPrefix ){
 			$this->messenger->noteError( 'Die Kopie ist noch aktiviert und kann daher nicht gelöscht werden.' );
 			$this->restart( 'view/'.$backupId, TRUE );
 		}

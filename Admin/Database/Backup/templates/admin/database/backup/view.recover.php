@@ -15,7 +15,7 @@ return '
 <div class="content-panel">
 	<h3>Wiederherstellen</h3>
 	<div class="content-panel-inner">
-		<form action="./admin/database/backup/restore/'.$dump->id.'" method="post">
+		<form action="./admin/database/backup/restore/'.$backup->id.'" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<div class="alert alert-danger">

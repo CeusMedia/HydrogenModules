@@ -10,11 +10,11 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste',
 	'class'	=> 'btn'
 ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
-	'href'	=> './admin/database/backup/remove/'.$dump->id,
+	'href'	=> './admin/database/backup/remove/'.$backup->id,
 	'class'	=> 'btn btn-danger'
 ) );
 
-$comment	= $dump->comment['comment'] ? $dump->comment['comment'] : '<em class="muted">Kein Kommentar</em>';
+$comment	= $backup->comment['comment'] ? $backup->comment['comment'] : '<em class="muted">Kein Kommentar</em>';
 
 return '
 <div class="content-panel">
@@ -24,15 +24,15 @@ return '
 			<div class="span12">
 				<dl class="dl-horizontal">
 					<dt>Dateiname</dt>
-					<dd>'.$dump->filename.'</dd>
+					<dd>'.$backup->filename.'</dd>
 					<dt>Kommentar</dt>
 					<dd>'.$comment.'</dd>
 					<dt>Speicherort</dt>
-					<dd>'.substr( $dump->pathname, 0, -1 * strlen( $dump->filename ) ).'</dd>
+					<dd>'.substr( $backup->pathname, 0, -1 * strlen( $backup->filename ) ).'</dd>
 					<dt>Dateigröße</dt>
-					<dd>'.Alg_UnitFormater::formatBytes( $dump->filesize ).'</dd>
+					<dd>'.Alg_UnitFormater::formatBytes( $backup->filesize ).'</dd>
 					<dt>Erstellungsdatum</dt>
-					<dd>'.date( 'Y-m-d', $dump->timestamp ).' <small class="muted">'.date( 'H:i:s', $dump->timestamp ).'</small></dd>
+					<dd>'.date( 'Y-m-d', $backup->timestamp ).' <small class="muted">'.date( 'H:i:s', $backup->timestamp ).'</small></dd>
 				</dl>
 			</div>
 		</div>

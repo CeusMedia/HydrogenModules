@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <module>
 	<title>Admin: Database: Backup</title>
-	<description><![CDATA[Backup and resort database dumps.]]></description>
+	<description><![CDATA[Backup and restore database dumps.]]></description>
 	<category>Administration</category>
 	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
