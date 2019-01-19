@@ -1,0 +1,181 @@
+<?php
+class Logic_Database_Backup extends CMF_Hydrogen_Logic{
+
+	protected $moduleConfig;
+	protected $dumps;
+	protected $prefixPlaceholder	= '<%?prefix%>';
+
+	public function __onInit(){
+		die("Logic_Database_Backup::onInit!");
+		$this->config		= $this->env->getConfig();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+		$this->path			= $this->moduleConfig->get( 'path' );
+		$this->commentsFile	= $this->path.'comments.json';
+		if( !file_exists( $this->path ) )
+			\FS_Folder_Editor::createFolder( $this->path );
+		if( !file_exists( $this->commentsFile ) )
+			file_put_contents( $this->commentsFile, '[]' );
+		$this->comments	= \FS_File_JSON_Reader::load( $this->commentsFile, TRUE );
+		$this->dumps	= $this->readIndex();
+	}
+
+	public function check( $id, $strict = TRUE ){
+		if( array_key_exists( $id, $this->dumps ) )
+			return $this->dumps[$id];
+		if( $strict )
+			throw new RuntimeException( 'Invalid dump ID' );
+		return FALSE;
+	}
+
+	public function dump(){
+		$filename	= "dump_".date( "Y-m-d_H:i:s" ).".sql";
+		$pathname	= $this->path.$filename;
+		$dbc		= $this->env->getDatabase();
+		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
+		$prefix		= $dba->get( 'prefix' );
+		$tables		= '';																	//  no table selection by default
+		if( $prefix ){																		//  prefix has been set
+			$tables		= array();															//  prepare list of tables matching prefix
+			foreach( $dbc->query( "SHOW TABLES LIKE '".$prefix."%'" ) as $table )			//  iterate found tables with prefix
+				$tables[]	= escapeshellarg( $table[0] );									//  collect table as escaped shell arg
+			$tables	= join( ' ', $tables );													//  reduce tables list to tables arg
+		}
+
+		$command	= call_user_func_array( "sprintf", array(								//  call sprintf with arguments list
+			"mysqldump -h%s -P%s -u%s -p%s %s %s > %s",										//  command to replace within
+			escapeshellarg( $dba->get( 'host' ) ),											//  configured host name as escaped shell arg
+			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),			//  configured port as escaped shell arg
+			escapeshellarg( $dba->get( 'username' ) ),										//  configured username as escaped shell arg
+			escapeshellarg( $dba->get( 'password' ) ),										//  configured password as escaped shell arg
+			escapeshellarg( $dba->get( 'name' ) ),											//  configured database name as escaped shell arg
+			$tables,																		//  collected found tables
+			escapeshellarg( $pathname ),													//  dump output filename
+		) );
+		$resultCode		= 0;
+		$resultOutput	= array();
+		exec( $command, $resultOutput, $resultCode );
+		if( $resultCode !== 0 )
+			throw new RuntimeException( 'Database dump failed' );
+
+		/*  --  REPLACE PREFIX  --  */
+		$regExp		= "@(EXISTS|FROM|INTO|TABLE|TABLES|for table)( `)(".$prefix.")(.+)(`)@U";		//  build regular expression
+		$callback	= array( $this, '_callbackReplacePrefix' );										//  create replace callback
+		rename( $pathname, $pathname."_" );															//  move dump file to source file
+		$fpIn		= fopen( $pathname."_", "r" );													//  open source file
+		$fpOut		= fopen( $pathname, "a" );														//  prepare empty target file
+		while( !feof( $fpIn ) ){																	//  read input file until end
+			$line	= fgets( $fpIn );																//  read line buffer
+			$line	= preg_replace_callback( $regExp, $callback, $line );							//  perform replace in buffer
+			fwrite( $fpOut, $line );																//  write buffer to target file
+		}
+		fclose( $fpOut );																			//  close target file
+		fclose( $fpIn );																			//  close source file
+		unlink( $pathname."_" );
+		return $filename;
+	}
+
+	public function index(){
+		return $this->dumps;
+	}
+
+	public function load( $id, $dbName, $prefix = NULL ){
+		$dump	= $this->check( $id );
+		if( !is_readable( $dump->pathname ) )
+			throw new RuntimeException( 'Missing read access to SQL script' );
+
+		$dbc		= $this->env->getDatabase();
+		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
+		$dbName		= $dbName ? $dbName : $dba->get( 'name' );
+		$prefix		= $prefix ? $prefix : $dba->get( 'prefix' );
+
+		$tempName	= $dump->pathname.".tmp";
+		$fpIn		= fopen( $dump->pathname, "r" );									//  open source file
+		$fpOut		= fopen( $tempName, "a" );											//  prepare empty target file
+		while( !feof( $fpIn ) ){														//  read input file until end
+			$line	= fgets( $fpIn );													//  read line buffer
+			$line	= str_replace( "<%?prefix%>", $prefix, $line );						//  replace table prefix placeholder
+			fwrite( $fpOut, $line );													//  write buffer to target file
+		}
+		fclose( $fpOut );																//  close target file
+		fclose( $fpIn );																//  close source file
+		$command	= call_user_func_array( "sprintf", array(							//  call sprintf with arguments list
+			"mysql -h%s -P%s -u%s -p%s %s < %s",										//  command to replace within
+			escapeshellarg( $dba->get( 'host' ) ),										//  configured host as escaped shell arg
+			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306 ),			//  configured port as escaped shell arg
+			escapeshellarg( $dba->get( 'username' ) ),									//  configured username as escaped shell arg
+			escapeshellarg( $dba->get( 'password' ) ),									//  configured pasword as escaped shell arg
+			escapeshellarg( $dbName ),													//  configured database name as escaped shell arg
+			escapeshellarg( $tempName ),												//  temp file name as escaped shell arg
+		) );
+		exec( $command );
+		unlink( $tempName );
+	}
+
+	public function remove( $id ){
+		$dump	= $this->check( $id );
+		@unlink( $dump->pathname );
+		if( array_key_exists( $id, $this->comments ) ){
+			unset( $this->comments[$id] );
+			\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+		}
+	}
+
+	//  --  PROTECTED METHODS  --  //
+
+	protected function _callbackReplacePrefix( $matches ){
+		if( $matches[1] === 'for table' )
+			return $matches[1].$matches[2].$matches[4].$matches[5];
+		return $matches[1].$matches[2].$this->prefixPlaceholder.$matches[4].$matches[5];
+	}
+
+	protected function readIndex(){
+		$list	= array();
+		$map	= array();
+		$index	= new DirectoryIterator( $this->path );
+		foreach( $index as $entry ){
+			if( $entry->isDir() || $entry->isDot() )
+				continue;
+			if( !preg_match( '/^dump_.+\.sql$/', $entry->getFilename() ) )
+				continue;
+			$id			= base64_encode( $entry->getFilename() );
+
+			$timestamp	= preg_replace( '/[a-z_]/', ' ', $entry->getFilename() );
+			$timestamp	= strtotime( rtrim( trim( $timestamp ), '.' ) );
+			if( !$timestamp )
+				$timestamp	= filemtime( $entry->getPathname() );
+
+			$comment	= '';
+			if( array_key_exists( $id, $this->comments ) )
+				$comment	= $this->comments[$id];
+
+			$list[$timestamp.uniqid()]	= (object) array(
+				'id'			=> $id,
+				'filename'		=> $entry->getFilename(),
+				'pathname'		=> $entry->getPathname(),
+				'filesize'		=> filesize( $entry->getPathname() ),
+				'timestamp'		=> $timestamp,
+				'comment'		=> $comment,
+			);
+		}
+		krsort( $list );
+		foreach( $list as $item )
+			$map[$item->id]	= $item;
+		return $map;
+	}
+
+	protected function storeDataInComment( $id, $data ){
+		$dump	= $this->check( $id );
+		if( !array_key_exists( $id, $this->comments ) )
+			$this->comments[$id]	= array( 'comment' => '' );
+		if( is_string( $this->comments[$id] ) )
+			$this->comments[$id]	= array( 'comment' => $dump->comment );
+		foreach( $data as $key => $value ){
+			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
+				unset( $this->comments[$id][$key] );
+			else
+				$this->comments[$id][$key]	= $value;
+		}
+		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+	}
+}

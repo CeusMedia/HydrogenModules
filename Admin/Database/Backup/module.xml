@@ -3,12 +3,14 @@
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and resort database dumps.]]></description>
 	<category>Administration</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve index timestamp handling.</log>
 	<log version="0.2.2">Use general module main switch.</log>
 	<log version="0.3">Allow to install and use dump copies.</log>
+	<log version="0.3.1">Extract logic from controller.</log>
+	<log version="0.3.2">Split dump view into panels.</log>
 <!--	<log version="0.3.1">Support dump switch.</log>-->
 <!--	<log version="0.3.2">Add locale files.</log>-->
 <!--	<log version="0.3.2">Extract view panels.</log>-->
@@ -20,10 +22,17 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Database/Backup.php5</class>
+		<class>Controller/Admin/Database/Backup/Copy.php5</class>
+		<class>Logic/Database/Backup.php5</class>
+		<class>Logic/Database/Backup/Copy.php5</class>
 		<class>View/Admin/Database/Backup.php5</class>
 		<template>admin/database/backup/backup.php</template>
 		<template>admin/database/backup/index.php</template>
 		<template>admin/database/backup/view.php</template>
+		<template>admin/database/backup/view.facts.php</template>
+		<template>admin/database/backup/view.copy.php</template>
+		<template>admin/database/backup/view.download.php</template>
+		<template>admin/database/backup/view.recover.php</template>
 <!--		<file>config/jobs/admin.backup.database.xml</file>-->
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module" default="yes" original="yes">yes</config>

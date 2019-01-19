@@ -161,10 +161,9 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	public function backup(){
 		if( $this->request->has( 'save' ) ){
 			try{
-				$filename	= $this->dump();
+				$filename	= $this->logicBackup->dump();
 				$id	= base64_encode( $filename );
-				$this->comments[$id]	= $this->request->get( 'comment' );
-				\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+				$this->logicBackup->storeDataInComment( array( 'comment' => $this->request->get( 'comment' ) ) );
 				$this->messenger->noteSuccess( 'Database dump "%s" created.', $filename );
 				$this->restart( 'view/'.$id, TRUE );
 			}
@@ -176,16 +175,15 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	}
 
 	protected function check( $id ){
-		if( !array_key_exists( $id, $this->dumps ) ){
-			$this->messenger->noteError( 'Invalid dump ID' );
-			$this->restart( NULL, TRUE );
-		}
-		return $this->dumps[$id];
+		if( ( $dump = $this->logicBackup->check( $id, FALSE ) ) )
+			return $dump;
+		$this->messenger->noteError( 'Ungültige Sicherungs-ID.' );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){
-		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
-		$this->addData( 'dumps', $this->dumps );
+		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
+		$this->addData( 'dumps', $this->logicBackup->index() );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
@@ -200,131 +198,10 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		\Net_HTTP_Download::sendFile( $dump->pathname, $dump->filename, TRUE );
 	}
 
-	protected function dump(){
-		$filename	= "dump_".date( "Y-m-d_H:i:s" ).".sql";
-		$pathname	= $this->path.$filename;
-		$dbc		= $this->env->getDatabase();
-		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
-		$prefix		= $dba->get( 'prefix' );
-		$tables		= '';																	//  no table selection by default
-		if( $prefix ){																		//  prefix has been set
-			$tables		= array();															//  prepare list of tables matching prefix
-			foreach( $dbc->query( "SHOW TABLES LIKE '".$prefix."%'" ) as $table )			//  iterate found tables with prefix
-				$tables[]	= escapeshellarg( $table[0] );									//  collect table as escaped shell arg
-			$tables	= join( ' ', $tables );													//  reduce tables list to tables arg
-		}
-
-		$command	= call_user_func_array( "sprintf", array(								//  call sprintf with arguments list
-			"mysqldump -h%s -P%s -u%s -p%s %s %s > %s",										//  command to replace within
-			escapeshellarg( $dba->get( 'host' ) ),											//  configured host name as escaped shell arg
-			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),			//  configured port as escaped shell arg
-			escapeshellarg( $dba->get( 'username' ) ),										//  configured username as escaped shell arg
-			escapeshellarg( $dba->get( 'password' ) ),										//  configured password as escaped shell arg
-			escapeshellarg( $dba->get( 'name' ) ),											//  configured database name as escaped shell arg
-			$tables,																		//  collected found tables
-			escapeshellarg( $pathname ),													//  dump output filename
-		) );
-		$resultCode		= 0;
-		$resultOutput	= array();
-		exec( $command, $resultOutput, $resultCode );
-		if( $resultCode !== 0 ){
-			$this->messenger->noteFailure( 'Database dump failed.' );
-			$this->restart( NULL, TRUE );
-		}
-
-		/*  --  REPLACE PREFIX  --  */
-		$regExp		= "@(EXISTS|FROM|INTO|TABLE|TABLES|for table)( `)(".$prefix.")(.+)(`)@U";		//  build regular expression
-		$callback	= array( $this, '_callbackReplacePrefix' );										//  create replace callback
-		rename( $pathname, $pathname."_" );															//  move dump file to source file
-		$fpIn		= fopen( $pathname."_", "r" );													//  open source file
-		$fpOut		= fopen( $pathname, "a" );														//  prepare empty target file
-		while( !feof( $fpIn ) ){																	//  read input file until end
-			$line	= fgets( $fpIn );																//  read line buffer
-			$line	= preg_replace_callback( $regExp, $callback, $line );							//  perform replace in buffer
-			fwrite( $fpOut, $line );																//  write buffer to target file
-		}
-		fclose( $fpOut );																			//  close target file
-		fclose( $fpIn );																			//  close source file
-		unlink( $pathname."_" );
-		return $filename;
-	}
-
-	protected function load( $id, $dbName, $prefix = NULL ){
-		$dump	= $this->check( $id );
-		if( !is_readable( $dump->pathname ) )
-			throw new RuntimeException( 'Missing read access to SQL script' );
-
-		$dbc		= $this->env->getDatabase();
-		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
-		$dbName		= $dbName ? $dbName : $dba->get( 'name' );
-		$prefix		= $prefix ? $prefix : $dba->get( 'prefix' );
-
-		$tempName	= $dump->pathname.".tmp";
-		$fpIn		= fopen( $dump->pathname, "r" );									//  open source file
-		$fpOut		= fopen( $tempName, "a" );											//  prepare empty target file
-		while( !feof( $fpIn ) ){														//  read input file until end
-			$line	= fgets( $fpIn );													//  read line buffer
-			$line	= str_replace( "<%?prefix%>", $prefix, $line );						//  replace table prefix placeholder
-			fwrite( $fpOut, $line );													//  write buffer to target file
-		}
-		fclose( $fpOut );																//  close target file
-		fclose( $fpIn );																//  close source file
-		$command	= call_user_func_array( "sprintf", array(							//  call sprintf with arguments list
-			"mysql -h%s -P%s -u%s -p%s %s < %s",										//  command to replace within
-			escapeshellarg( $dba->get( 'host' ) ),										//  configured host as escaped shell arg
-			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306 ),			//  configured port as escaped shell arg
-			escapeshellarg( $dba->get( 'username' ) ),									//  configured username as escaped shell arg
-			escapeshellarg( $dba->get( 'password' ) ),									//  configured pasword as escaped shell arg
-			escapeshellarg( $dbName ),													//  configured database name as escaped shell arg
-			escapeshellarg( $tempName ),												//  temp file name as escaped shell arg
-		) );
-		exec( $command );
-		unlink( $tempName );
-	}
-
-	protected function readIndex(){
-		$list	= array();
-		$map	= array();
-		$index	= new DirectoryIterator( $this->path );
-		foreach( $index as $entry ){
-			if( $entry->isDir() || $entry->isDot() )
-				continue;
-			if( !preg_match( '/^dump_.+\.sql$/', $entry->getFilename() ) )
-				continue;
-			$id			= base64_encode( $entry->getFilename() );
-
-			$timestamp	= preg_replace( '/[a-z_]/', ' ', $entry->getFilename() );
-			$timestamp	= strtotime( rtrim( trim( $timestamp ), '.' ) );
-			if( !$timestamp )
-				$timestamp	= filemtime( $entry->getPathname() );
-
-			$comment	= '';
-			if( array_key_exists( $id, $this->comments ) )
-				$comment	= $this->comments[$id];
-
-			$list[$timestamp.uniqid()]	= (object) array(
-				'id'			=> $id,
-				'filename'		=> $entry->getFilename(),
-				'pathname'		=> $entry->getPathname(),
-				'filesize'		=> filesize( $entry->getPathname() ),
-				'timestamp'		=> $timestamp,
-				'comment'		=> $comment,
-			);
-		}
-		krsort( $list );
-		foreach( $list as $item )
-			$map[$item->id]	= $item;
-		return $map;
-	}
-
 	public function remove( $id ){
 		$dump	= $this->check( $id );
-		@unlink( $dump->pathname );
-		if( array_key_exists( $id, $this->comments ) ){
-			unset( $this->comments[$id] );
-			\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
-		}
-		$this->messenger->noteSuccess( 'Database dump "%s" removed.', $dump->filename );
+		$this->logicBackup->remove( $id );
+		$this->messenger->noteSuccess( 'Die Sicherung "%s" wurde entfernt.', $dump->filename );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -337,8 +214,8 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		}
 		$dump	= $this->check( $id );
 		try{
-			$this->load( $id );
-			$this->messenger->noteSuccess( 'Database dump "%s" imported.', $dump->filename );
+			$this->logicBackup->load( $id );
+			$this->messenger->noteSuccess( 'Die Sicherung "%s" wurde wiederhergestellt.', $dump->filename );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
@@ -346,25 +223,18 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$id, TRUE );
 	}
 
-	protected function storeDataInComment( $id, $data ){
-		$dump	= $this->check( $id );
-		if( !array_key_exists( $id, $this->comments ) )
-			$this->comments[$id]	= array( 'comment' => '' );
-		if( is_string( $this->comments[$id] ) )
-			$this->comments[$id]	= array( 'comment' => $dump->comment );
-		foreach( $data as $key => $value ){
-			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
-				unset( $this->comments[$id][$key] );
-			else
-				$this->comments[$id][$key]	= $value;
-		}
-		\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
-	}
-
 	public function view( $id ){
-		$dump	= $this->check( $id );
+		$dump		= $this->check( $id );
 		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
-		$this->addData( 'dump', $this->check( $id ) );
+		/*   @todo remove this fallback */
+		if( is_string( $dump->comment ) ){
+			$dump->comment	= array(
+				'comment'		=> $dump->comment,
+				'copyPrefix'	=> NULL,
+				'copyTimestamp'	=> NULL,
+			);
+		}
+		$this->addData( 'dump', $dump );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 }
