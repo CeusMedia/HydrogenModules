@@ -28,6 +28,7 @@ class View_Helper_Form_Fill_Data{
 //print_m( $inputs );die;
 		foreach( $inputs as $name => $input ){
 			$value	= $input['value'];
+			$text	= isset( $input['text'] ) ? $input['text'] : '';
 
 			if( $input['type'] == 'date' && strlen( $value ) )
 				$value	= date( 'd.m.Y', strtotime( $value ) );
@@ -40,7 +41,10 @@ class View_Helper_Form_Fill_Data{
 
 			if( !strlen( $value ) )
 				$value		= '<em class="muted">keine Angabe</em>';
-			$listInfo[]	= (object) array( 'label' => $input['label'], 'value' => $value );
+			else if( preg_match( '/iban/i', $name ) )
+				$value = join( ' ', str_split( $value, 4 ) );
+
+			$listInfo[]	= (object) array( 'label' => $input['label'], 'value' => $value, 'text' => $text );
 			unset( $inputs[$name] );
 		}
 
@@ -57,15 +61,18 @@ class View_Helper_Form_Fill_Data{
 	protected function renderTable( $rows ){
 		$list	= array();
 		foreach( $rows as $row ){
+			$text	= '';
+			if( !empty( $row->text ) )
+				$text	= '<br/>'.UI_HTML_Tag::create( 'small', $row->text, array( 'class' => 'muted' ) );
 			$list[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $row->label ),
+				UI_HTML_Tag::create( 'th', $row->label.$text ),
 				UI_HTML_Tag::create( 'td', $row->value ),
 			) );
 		}
 		return UI_HTML_Tag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( array( '50%', '50%' ) ),
 			UI_HTML_Tag::create( 'tbody', $list ),
-		), array( 'class' => 'table table-striped table-fixed table-bordered' ) );
+		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}
 
 	public function setFill( $fill ){

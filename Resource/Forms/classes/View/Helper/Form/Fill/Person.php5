@@ -67,7 +67,7 @@ class View_Helper_Form_Fill_Person{
 		return UI_HTML_Tag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( array( '50%', '50%' ) ),
 			UI_HTML_Tag::create( 'tbody', $list ),
-		), array( 'class' => 'table table-striped table-fixed table-bordered' ) );
+		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}
 
 
