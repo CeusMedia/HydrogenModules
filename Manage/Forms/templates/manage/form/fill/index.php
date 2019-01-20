@@ -68,7 +68,7 @@ if( !$filterFormId )
 
 $pagination	= '';
 if( $pages > 1 ){
-	\CeusMedia\Bootstrap\Icon::$iconSet	= 'fontawesome';
+	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
 	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/fill/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }

@@ -57,14 +57,14 @@ $buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'class'	=> 'btn',
 ) );
 $buttonConfirm	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als bestätigt markieren', array(
-	'href'	=> './manage/form/markAsConfirmed/'.$fill->fillId.( $page ? '&page='.$page : '' ),
+	'href'	=> './manage/form/fill/markAsConfirmed/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-success',
 ) );
 if( $fill->status != Model_Form_Fill::STATUS_NEW )
 	$buttonConfirm	= '';
 
 $buttonHandled	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als behandelt markieren', array(
-	'href'	=> './manage/form/markAsHandled/'.$fill->fillId.( $page ? '&page='.$page : '' ),
+	'href'	=> './manage/form/fill/markAsHandled/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-info',
 ) );
 if( $fill->status != Model_Form_Fill::STATUS_CONFIRMED )

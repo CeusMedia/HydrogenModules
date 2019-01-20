@@ -166,7 +166,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 	public function markAsConfirmed( $fillId ){
 		$this->checkId( $fillId );
-		$this->modelFill->setStatus( $fillId, array(
+		$this->modelFill->edit( $fillId, array(
 			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
 		) );
 		$page		= (int) $this->env->getRequest()->get( 'page' );
@@ -175,7 +175,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 	public function markAsHandled( $fillId ){
 		$this->checkId( $fillId );
-		$this->modelFill->setStatus( $fillId, array(
+		$this->modelFill->edit( $fillId, array(
 			'status'	=> Model_Form_Fill::STATUS_HANDLED
 		) );
 		$page		= (int) $this->env->getRequest()->get( 'page' );
@@ -408,6 +408,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 						$receivers[]	= $address;
 		}
 
+		$receivers		= array_unique( $receivers );
 		//  -  SEND MAIL  --  //
 		$subject		= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
