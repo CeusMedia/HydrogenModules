@@ -92,16 +92,23 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	public function filter( $reset = NULL ){
 		if( $reset ){
-			$this->session->remove( $this->filterPrefix.'receiverAddress' );
+			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
+				$this->session->remove( $this->filterPrefix.$key );
+/*			$this->session->remove( $this->filterPrefix.'receiverAddress' );
 			$this->session->remove( $this->filterPrefix.'status' );
 //			$this->session->remove( $this->filterPrefix.'way' );
 			$this->session->remove( $this->filterPrefix.'limit' );
 			$this->session->remove( $this->filterPrefix.'order' );
-			$this->session->remove( $this->filterPrefix.'direction' );
+			$this->session->remove( $this->filterPrefix.'direction' );*/
 		}
 		else{
+			$this->session->set( $this->filterPrefix.'subject', $this->request->get( 'subject' ) );
 			$this->session->set( $this->filterPrefix.'receiverAddress', $this->request->get( 'receiverAddress' ) );
 			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status' ) );
+			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
+			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
+			$this->session->set( $this->filterPrefix.'timeStart', $this->request->get( 'timeStart' ) );
+			$this->session->set( $this->filterPrefix.'timeEnd', $this->request->get( 'timeEnd' ) );
 //			$this->session->set( $this->filterPrefix.'way', $this->request->get( 'way' ) );
 			$this->session->set( $this->filterPrefix.'limit', $this->request->get( 'limit' ) );
 			$this->session->set( $this->filterPrefix.'order', $this->request->get( 'order' ) );
@@ -129,14 +136,26 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		if( !$this->session->get( $this->filterPrefix.'direction' ) )
 			$this->session->set( $this->filterPrefix.'direction', 'DESC' );
 		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
+		$dateStart	= $filters->get( 'dateStart' );
+		$dateEnd	= $filters->get( 'dateEnd' );
 
 		$page		= max( 0, (int) $page );
 		$offset		= $page * $filters->get( 'limit' );
 		$conditions	= array();
+
+		if( $filters->get( 'subject' ) )
+			$conditions['subject'] = '%'.$filters->get( 'subject' ).'%';
 		if( $filters->get( 'receiverAddress' ) )
 			$conditions['receiverAddress'] = '%'.$filters->get( 'receiverAddress' ).'%';
 		if( $filters->get( 'status' ) )
 			$conditions['status'] = $filters->get( 'status' );
+		if( $dateStart && $dateEnd )
+			$conditions['enqueuedAt']	= '><'.strtotime( $dateStart ).'&'.( strtotime( $dateEnd ) + 24 * 3600 - 1);
+		else if( $dateStart )
+			$conditions['enqueuedAt']	= '>='.strtotime( $dateStart );
+		else if( $dateEnd )
+			$conditions['enqueuedAt']	= '<='.( strtotime( $dateEnd ) + 24 * 36000 - 1);
+
 		$orders		= array( $filters->get( 'order' ) => $filters->get( 'direction' ) );
 		$limits		= array( $offset, $filters->get( 'limit' ) );
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );

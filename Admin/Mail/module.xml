@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.8.6</version>
+	<version>0.8.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -52,6 +52,7 @@
 	<log version="0.8.4">Add default contents for new templates.</log>
 	<log version="0.8.5">Add import and export for mail templates.</log>
 	<log version="0.8.6">Add template preview panels and make status changable.</log>
+	<log version="0.8.7">Extend mail queue filters by subject and date range.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -70,6 +71,8 @@
 		<template>admin/mail/attachment/upload.php</template>
 		<template>admin/mail/queue/enqueue.php</template>
 		<template>admin/mail/queue/index.php</template>
+		<template>admin/mail/queue/index.filter.php</template>
+		<template>admin/mail/queue/index.list.php</template>
 		<template>admin/mail/queue/view.php</template>
 		<template>admin/mail/queue/view.body.php</template>
 		<template>admin/mail/queue/view.facts.php</template>
