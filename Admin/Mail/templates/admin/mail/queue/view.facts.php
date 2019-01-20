@@ -14,7 +14,7 @@ if( in_array( $mail->status, array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_R
 		'class'	=> 'btn btn-danger btn-small'
 	) );
 }
-if( $mail->status == 2 ){
+if( $mail->status == 2 || $mail->status == -2 ){
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;noch einmal versenden', array(
 		'href'	=> './admin/mail/queue/resend/'.$mail->mailId,
 		'class'	=> 'btn btn-primary btn-small'
