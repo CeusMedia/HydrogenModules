@@ -99,21 +99,30 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 		$database	= $this->env->getDatabase();
 		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
 		$dbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
-		if( isset( $backup->comment['copyPrefix'] ) && $backup->comment['copyPrefix'] == $copyPrefix ){
+
+		if( empty( $backup->comment['copyPrefix'] ) ){
+			$this->messenger->noteError( 'Es wurde bisher keine Kopie dieser Sicherung installiert.' );
+			$this->restart( 'view/'.$backupId, TRUE );
+		}
+		if( $backup->comment['copyPrefix'] == $copyPrefix ){
 			$this->messenger->noteError( 'Die Kopie ist noch aktiviert und kann daher nicht gelöscht werden.' );
 			$this->restart( 'view/'.$backupId, TRUE );
 		}
 		$currentDbName	= $database->getName();
+
 		if( $currentDbName != $dbName )
 			$database->setName( $dbName );
-	//	$database->...
-		$this->storeDataInComment( $backupId, array(
+
+		$tables	= $database->getTables( $backup->comment['copyPrefix'] );
+		foreach( $tables as $tableName )
+			$database->query( 'DROP TABLE `'.$tableName.'`;' );
+		$this->logicBackup->storeDataInComment( $backupId, array(
 			'copyBackupId'	=> NULL,
 			'copyDatabase'	=> NULL,
 			'copyPrefix'	=> NULL,
 			'copyTimestamp'	=> NULL,
 		) );
-		$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde entfernt.' );
+		$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde entfernt <small>('.count( $tables ).' Tabellen entfernt)</small>.' );
 		if( $currentDbName != $dbName )
 			$database->setName( $currentDbName );
 		if( $from = $this->request->get( 'from' ) )

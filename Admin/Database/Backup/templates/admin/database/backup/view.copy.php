@@ -7,19 +7,20 @@ $buttonCreateCopy	= UI_HTML_Tag::create( 'a', $iconRestore.' Kopie installieren'
 	'href'	=> './admin/database/backup/copy/create/'.$backup->id,
 	'class'	=> 'btn btn-primary'
 ) );
-$buttonRemoveCopy	= UI_HTML_Tag::create( 'a', $iconRemove.' Kopie entfernen', array(
-	'href'	=> './admin/database/backup/copy/remove/'.$backup->id,
-	'class'	=> 'btn btn-danger'
-) );
 $facts					= 'Eine Sicherung kann als Kopie in der Datenbank installiert werden.<br/>Diese Kopie kann zur temporären Ansicht für den aktuellen Benutzer aktiviert werden.<br/>Der Kopiervorgang kann, abhängig von der Datenbankgröße, einige Zeit beanspruchen.';
 $buttonActivateCopy		= '';
 $buttonDeactivateCopy	= '';
+$buttonRemoveCopy		= '';
 if( !empty( $backup->comment['copyPrefix'] ) ){
 	$buttonCreateCopy		= '';
 	$buttonDeactivateCopy	= '';
 	$buttonActivateCopy		= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp; Kopie aktivieren', array(
 		'href'	=> './admin/database/backup/copy/activate/'.$backup->id,
 		'class'	=> 'btn btn-success'
+	) );
+	$buttonRemoveCopy	= UI_HTML_Tag::create( 'a', $iconRemove.' Kopie entfernen', array(
+		'href'	=> './admin/database/backup/copy/drop/'.$backup->id,
+		'class'	=> 'btn btn-danger'
 	) );
 	$facts	= '
 		<dl class="dl-horizontal">
