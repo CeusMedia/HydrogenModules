@@ -125,7 +125,7 @@ code>
 		<class>Model/Mission/Document.php5</class>
 		<class>Model/Mission/Filter.php5</class>
 		<class>Model/Mission/Version.php5</class>
-		<class>Logic/Mission.php5</class>
+		<class>Logic/Work/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
 		<class>View/Work/Mission/Archive.php5</class>
 		<class>View/Work/Mission/Calendar.php5</class>
