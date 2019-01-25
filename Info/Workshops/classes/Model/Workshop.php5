@@ -39,6 +39,7 @@ class Model_Workshop extends CMF_Hydrogen_Model {
 	const STATUS_NEW			= 0;
 	const STATUS_ACTIVATED		= 1;
 	const STATUS_OUTDATED		= 2;
+	const STATUS_CLOSED			= 3;
 
 	protected $name		= 'workshops';
 	protected $columns	= array(
