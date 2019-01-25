@@ -1,0 +1,54 @@
+body.moduleInfoWorkshop .workshop-list {
+	margin: 1.5em 0;
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	cursor: pointer;
+/*	border-bottom: 1px solid rgba(29,71,16,0.25);
+	padding-bottom: 1.5em;
+	margin-bottom: 1.5em;*/
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item:hover {
+	background-color: rgba(127, 255, 127, 0.5);
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item .workshop-item-image-container {
+	width: 240px;
+	height: 180px;
+	border-style: solid;
+	border-width: 0px;
+	border-radius: 0.5em;
+	overflow: hidden;
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item .workshop-item-facts-container {
+	padding: 0.5em 1.5em 0.5em 2.5em;
+	}
+
+body.moduleInfoWorkshop .workshop-list .workshop-item-image {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top center;
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item-title {
+	font-size: 1.5em;
+	font-weight: bold;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	}
+body.moduleInfoWorkshop .workshop-list .workshop-item-abstract {
+	}
+
+/*  --  VIEW  --  */
+body.moduleInfoWorkshop .workshop-view .workshop-image {
+	width: 100%;
+	height: 240px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top center;
+	}
+
+
