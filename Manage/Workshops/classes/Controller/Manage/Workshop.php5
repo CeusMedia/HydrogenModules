@@ -21,13 +21,18 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 			) );
 			$workshopId	= $this->model->add( $data, FALSE );
 			$this->messenger->noteSuccess( 'Added.' );
-			$this->restart( './edit/'.$workshopId );
+			$this->restart( './edit/'.$workshopId, TRUE );
 		}
 		$data	= array();
 		foreach( $this->model->getColumns() as $column )
 			if( !in_array( $column, array( 'workshopId', 'createdAt', 'modifiedAt' ) ) )
 				$data[$column]	= NULL;
-		$defaults	= array( 'status' => 0, 'rank' => 3 );
+		$defaults	= array(
+			'status'		=> 0,
+			'rank'			=> 3,
+			'imageAlignH'	=> 2,
+			'imageAlignV'	=> 2,
+		);
 		$given	= array_intersect_key( $this->request->getAll(), $data );
 		$this->addData( 'workshop', (object) array_merge( $data, $defaults, $given ) );
 	}
@@ -41,13 +46,15 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 		if( $this->request->isPost() && $this->request->has( 'save' ) ){
 			$this->model->edit( $workshopId, $this->request->getAll(), FALSE );
 			$this->messenger->noteSuccess( 'Updated.' );
-			$this->restart( './edit/'.$workshopId );
+			$this->restart( './edit/'.$workshopId, TRUE );
 		}
 		$this->addData( 'workshop', $workshop );
 	}
 
 	public function index(){
-		$this->addData( 'workshops', $this->model->getAll() );
+		$conditions	= array();
+		$orders		= array( 'status' => 'ASC', 'rank' => 'ASC' );
+		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 
 	public function remove( $workshopId ){

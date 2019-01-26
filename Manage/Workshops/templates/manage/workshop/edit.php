@@ -18,10 +18,12 @@ $trigger->setInputId( 'input_image' );
 
 //print_m( $workshop );die;
 
-$optStatus		= UI_HTML_FormElements::Options( $words['statuses'], $workshop->status );
-$optRank		= UI_HTML_FormElements::Options( $words['ranks'], $workshop->rank );
-$optImageAlignH	= UI_HTML_FormElements::Options( $words['image-align-h'], $workshop->imageAlignH );
-$optImageAlignV	= UI_HTML_FormElements::Options( $words['image-align-v'], $workshop->imageAlignV );
+$optStatus		= UI_HTML_Elements::Options( $words['statuses'], $workshop->status );
+$optRank		= UI_HTML_Elements::Options( $words['ranks'], $workshop->rank );
+$optImageAlignH	= array_diff_key( $words['image-align-h'], array( 0 ) );
+$optImageAlignV	= array_diff_key( $words['image-align-v'], array( 0 ) );
+$optImageAlignH	= UI_HTML_Elements::Options( $optImageAlignH, $workshop->imageAlignH );
+$optImageAlignV	= UI_HTML_Elements::Options( $optImageAlignV, $workshop->imageAlignV );
 
 $panelEdit	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Workshop ändern' ),

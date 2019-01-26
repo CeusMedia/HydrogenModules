@@ -17,11 +17,19 @@ $trigger->setModalId( 'modal-manage-workshop-select-image' );
 $trigger->setInputId( 'input_image' );
 
 //print_m( $workshop );die;
+print_m( $words );die;
 
-$optStatus		= UI_HTML_FormElements::Options( $words['statuses'], $workshop->status );
-$optRank		= UI_HTML_FormElements::Options( $words['ranks'], $workshop->rank );
-$optImageAlignH	= UI_HTML_FormElements::Options( $words['image-align-h'], $workshop->imageAlignH );
-$optImageAlignV	= UI_HTML_FormElements::Options( $words['image-align-v'], $workshop->imageAlignV );
+$optStatus		= array_diff_key( $words['statuses'], array( -2, -1, 2, 3 ) );
+$optStatus		= UI_HTML_Elements::Options( $optStatus, $workshop->status );
+
+$optRank		= array_diff_key( $words['ranks'], array( 0 ) );
+$optRank		= UI_HTML_Elements::Options( $optRank, $workshop->rank );
+
+$optImageAlignH	= array_diff_key( $words['image-align-h'], array( 0 ) );
+$optImageAlignH	= UI_HTML_Elements::Options( $optImageAlignH, $workshop->imageAlignH );
+
+$optImageAlignV	= array_diff_key( $words['image-align-v'], array( 0 ) );
+$optImageAlignV	= UI_HTML_Elements::Options( $optImageAlignV, $workshop->imageAlignV );
 
 $panelEdit	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'neuer Workshop' ),

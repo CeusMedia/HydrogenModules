@@ -9,13 +9,20 @@ if( $workshops ){
 		$link	= UI_HTML_Tag::create( 'a', $item->title, array(
 			'href'	=> './manage/workshop/edit/'.$item->workshopId,
 		) );
+		$status		= $words['statuses'][$item->status];
+		$rank		= $words['ranks'][$item->rank];
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link ),
+			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', $rank ),
 			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $item->modifiedAt ) ),
 
 		), array() );
 	}
-	$list	= UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped' ) );
+	$heads	= UI_HTML_Elements::TableHeads( array( 'Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung' ) );
+	$thead	= UI_HTML_Tag::create( 'thead', $heads );
+	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+	$list	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );
 }
 
 $panelList	= UI_HTML_Tag::create( 'div', array(
