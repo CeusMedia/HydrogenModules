@@ -13,7 +13,8 @@ $imageAlignV	= array(
 	Model_Workshop::IMAGE_ALIGN_V_BOTTOM	=> 'bottom',
 );
 
-$heading	= UI_HTML_Tag::create( 'h3', $workshop->title );
+$heading		= UI_HTML_Tag::create( 'h3', $workshop->title );
+$buttonCancel	= UI_HTML_Tag::create( 'a', 'zur Übersicht', array( 'href' => './info/workshop', 'class' => 'btn' ) );
 
 $image		= '';
 if( $workshop->image ){
@@ -23,8 +24,15 @@ if( $workshop->image ){
 		'alignV'	=> $imageAlignV[$workshop->imageAlignV],
 	) );
 }
-$facts		= UI_HTML_Tag::create( 'div', $workshop->description );
-$panel	= UI_HTML_Tag::create( 'div', array( $image, $heading, $facts ), array( 'class' => 'workshop-view' ) );
+$facts		= UI_HTML_Tag::create( 'div', $workshop->description ).'<br/>';
+$panel		= UI_HTML_Tag::create( 'div', array(
+	$heading,
+	$image,
+	$facts,
+	UI_HTML_Tag::create( 'div', array(
+		$buttonCancel
+	), array( 'class' => 'buttonbar' ) ),
+), array( 'class' => 'workshop-view' ) );
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/workshop/view/' ) );
 

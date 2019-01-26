@@ -9,7 +9,9 @@ class Controller_Info_Workshop extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
-		$this->addData( 'workshops', $this->model->getAll() );
+		$conditions	= array( 'status' => array( 1, 2 ) );
+		$orders		= array( 'status' => 'ASC', 'rank' => 'ASC' );
+		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 
 	public function view( $id ){

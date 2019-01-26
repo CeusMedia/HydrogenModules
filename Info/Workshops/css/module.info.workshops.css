@@ -45,10 +45,12 @@ body.moduleInfoWorkshop .workshop-list .workshop-item-abstract {
 /*  --  VIEW  --  */
 body.moduleInfoWorkshop .workshop-view .workshop-image {
 	width: 100%;
-	height: 240px;
+	height: 340px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top center;
+	border-radius: 6px;
+	margin-bottom: 1.5em;
 	}
 
 
