@@ -60,7 +60,7 @@ Please think about using the hook instead.
 		<class>Controller/Server/Log/Exception.php5</class>
 		<class>Hook/Server/Log/Exception.php5</class>
 		<class>Job/Server/Log/Exception.php5</class>
-		<class>Logic/Server/Log/Exception.php5</class>
+		<class>Logic/Log/Exception.php5</class>
 		<class>Mail/Log/Exception.php5</class>
 		<class>Model/Log/Exception.php5</class>
 		<class>View/Helper/Mail/Exception/Facts.php5</class>
