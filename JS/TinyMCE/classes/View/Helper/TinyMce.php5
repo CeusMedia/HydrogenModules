@@ -163,7 +163,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 				$options['listImages']	= json_encode( $helper->getImageList() );
 				$options['listLinks']	= json_encode( $helper->getLinkList() );
 			}
-			$context->js->addScript( 'ModuleJsTinyMce.configAuto('.json_encode( $options ).')' );
+			$context->js->addScriptOnReady( 'ModuleJsTinyMce.configAuto('.json_encode( $options ).')' );
 			$context->js->addScriptOnReady( 'ModuleJsTinyMce.applyAuto()' );
 		}
 	}
