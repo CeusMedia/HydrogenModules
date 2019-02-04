@@ -12,28 +12,22 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= array();
-	foreach( $exceptions as $nr => $exception ){
-		if( isset( $exception->exception ) ){
-			$exception->message	= $exception->exception->getMessage();
-			$exception->code	= $exception->exception->getCode();
-			$exception->file	= $exception->exception->getFile();
-			$exception->line	= $exception->exception->getLine();
-		}
-		$link	= UI_HTML_Tag::create( 'a', $exception->message, array(
-			'href'	=> './server/log/exception/view/'.$exception->id,
+	foreach( $exceptions as $item ){
+		$link	= UI_HTML_Tag::create( 'a', $item->message, array(
+			'href'	=> './server/log/exception/view/'.$item->exceptionId,
 			'class'	=> 'autocut',
 		) );
-		$date	= date( 'Y.m.d', $exception->timestamp );
-		$time	= date( 'H:i:s', $exception->timestamp );
+		$date	= date( 'Y.m.d', $item->createdAt );
+		$time	= date( 'H:i:s', $item->createdAt );
 		$buttons	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'a', $iconView, array(
 				'class'	=> 'btn btn-mini not-btn-info',
-				'href'	=> './server/log/exception/view/'.$exception->id,
+				'href'	=> './server/log/exception/view/'.$item->exceptionId,
 				'title'	=> $w->buttonView,
 			) ),
 			UI_HTML_Tag::create( 'a', $iconRemove, array(
 				'class'	=> 'btn btn-mini btn-danger',
-				'href'	=> './server/log/exception/remove/'.$exception->id,
+				'href'	=> './server/log/exception/remove/'.$item->exceptionId,
 				'title'	=> $w->buttonRemove,
 			) ),
 		), array( 'class' => 'btn-group' ) );
