@@ -168,6 +168,9 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 	}
 
 	public function sendCollectedDataAsMail( $data ){
+	}
+
+	public function sendExceptionAsMail( $exception ){
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
 		$hasReceivers	= trim( $this->moduleConfig->get( 'mail.receivers' ) );
@@ -177,7 +180,7 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 			return FALSE;
 		$language		= $this->env->getLanguage()->getLanguage();
 		$logicMail		= Logic_Mail::getInstance( $this->env );
-		$mail			= new Mail_Log_Exception( $this->env, $data );
+		$mail			= new Mail_Log_Exception( $this->env, array( 'exception' => $exception ) );
 		$receivers		= preg_split( '/(,|;)/', $this->moduleConfig->get( 'mail.receivers' ) );
 		foreach( $receivers as $receiver ){
 			if( trim( $receiver ) ){
