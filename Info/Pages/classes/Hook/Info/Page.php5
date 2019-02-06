@@ -11,6 +11,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		$page		= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
+
 		if( !$page )																				//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
 		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
@@ -23,6 +24,10 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		$types	= Alg_Object_Constant::staticGetAll( 'Model_Page', 'TYPE' );						//  get page types from model constants
 		if( !in_array( (int) $page->type, $types ) )												//  found unknown page type
 			throw new RangeException( 'Page type '.$page->type.' is unsupported' );					//  quit with exception
+		if( (int) $page->type === Model_Page::TYPE_COMPONENT ){										//  page is static component
+			return FALSE;																			//  ignore this page
+		}
+
 		if( (int) $page->type === Model_Page::TYPE_CONTENT ){										//  page is static content
 			$request->set( '__redirected', TRUE );													//  note redirection for access check
 			return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );				//  redirect to page controller and quit hook
@@ -201,12 +206,13 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		//  OLD CODE
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= $env->getLogic()->get( 'page' );
-		while( preg_match( $pattern, $data->content ) ){
+		$matches	= array();
+		while( preg_match( $pattern, $data->content, $matches ) ){
 			CMF_Hydrogen_Deprecation::getInstance()
 				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )
 				->setErrorVersion( '0.7.7' )
 				->setExceptionVersion( '0.9' )
-				->message( 'Page inclusion should use shortcode with id or nr attribute' );
+				->message( 'Page inclusion should use shortcode with id or nr attribute (having: page:'.$matches[3].')' );
 
 			$path	= trim( preg_replace( $pattern, "\\3", $data->content ) );
 			$page	= $logic->getPageFromPath( $path, TRUE );
@@ -229,8 +235,10 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		$processor->setContent( $data->content );
 		$shortCodes		= array(
 			'page'		=> array(
-				'nr'	=> 0,
-				'id'	=> '',
+				'nr'		=> 0,
+				'id'		=> '',
+				'disabled'	=> FALSE,
+				'ignore'	=> FALSE,
 			)
 		);
 		$words	= $env->getLanguage()->getWords( 'info/pages' );
@@ -240,6 +248,10 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 				continue;
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
+					if( $attr['disabled'] || $attr['ignore'] ){										//  appearance is to be disabled
+						$processor->removeNext( $shortCode );										//  remove disabled shortcode
+						continue;																	//  skip to next appearance
+					}
 					if( (int) $attr['nr'] ){														//  page is defined by number
 						if( !( $page = $logic->getPage( $attr['nr'] ) ) ){							//  no page found by number
 							$message	= $msgs->errorInvalidId;									//  get error message
@@ -258,6 +270,16 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 						$env->getMessenger()->noteFailure( $message, $pagePath );					//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
+					}
+					if( (int) $page->type == Model_Page::TYPE_COMPONENT ){
+						if( (int) $page->status == Model_Page::STATUS_HIDDEN ){						//  page component is hidden
+							$processor->removeNext( $shortCode );									//  remove hidden shortcode
+							continue;																//  skip to next appearance
+						}
+						if( (int) $page->status == Model_Page::STATUS_DISABLED ){					//  page component is disabled
+							$processor->removeNext( $shortCode );									//  remove hidden shortcode
+							continue;																//  skip to next appearance
+						}
 					}
 					if( (int) $page->status == Model_Page::STATUS_DISABLED ){
 						$message	= $msgs->errorPageDisabled;										//  get error message
