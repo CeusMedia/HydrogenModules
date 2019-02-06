@@ -1,11 +1,17 @@
 <?php
 class Logic_Shortcode extends CMF_Hydrogen_Logic{
 
-	protected $content;
-	protected $ignoredBlocks			= array();
+	const PARSE_STATUS_START					= 0;
+	const PARSE_STATUS_READ_CODE				= 1;
+	const PARSE_STATUS_READ_ATTR_KEY			= 2;
+	const PARSE_STATUS_READ_ATTR_VALUE_QUOTE	= 3;
+	const PARSE_STATUS_READ_ATTR_VALUE			= 4;
+	const PARSE_STATUS_FINAL					= 5;
 
+	protected $content;
+	protected $ignoredBlocks		= array();
 	protected $moduleConfig;
-	protected $pattern			= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
+	protected $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
 
 	public function __onInit(){
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_shortcode.', TRUE );
@@ -44,7 +50,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 	}
 
 	protected function getShortCodePattern( $shortCode ){
-		if( !strlen( trim( $shortCode) ) || preg_match( "/\n/", $shortCode ) )
+		if( !strlen( trim( $shortCode ) ) || preg_match( "/\n/", $shortCode ) )
 			throw new InvalidArgumentException( 'Invalid shortcode given' );
 		return str_replace( "##shortcode##", preg_quote( $shortCode, '/' ), $this->pattern );
 	}
@@ -54,57 +60,66 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 	}
 
 	protected function parse( $string ){
-		$status		= 0;
+		$status		= self::PARSE_STATUS_START;
 		$position	= 0;
 		$nodename	= '';
 		$attributes	= array();
 		$length		= strlen( $string );
 		while( $position < $length ){
 			$char	= $string[$position];
-			if( $status == 0 ){
+			if( $status == self::PARSE_STATUS_START ){
 				if( $char !== "[" )
 					throw new Exception( 'Must start with [' );
-				$status = 1;
+				$status = self::PARSE_STATUS_READ_CODE;
 			}
-			else if( $status == 1 ){
+			else if( $status == self::PARSE_STATUS_READ_CODE ){
 				if( in_array( $char, array( " ", "\n" ) ) ){
 					$bufferAttrKey	= '';
-					$status	= 2;
+					$status	= self::PARSE_STATUS_READ_ATTR_KEY;
 				}
 				else{
 					$nodename	.= $char;
 				}
 			}
-			else if( $status == 2 ){
-				if( in_array( $char, array( " ", "\n" ) ) ){}
+			else if( $status == self::PARSE_STATUS_READ_ATTR_KEY ){
+				if( in_array( $char, array( " ", "\n" ) ) ){
+					if( $bufferAttrKey ){
+						$attributes[$bufferAttrKey] = TRUE;
+						$bufferAttrKey	= '';
+						$status	= self::PARSE_STATUS_READ_ATTR_KEY;
+						continue;
+					}
+				}
 				else if( $char == "=" ){
-					$status	= 3;
+					$status	= self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE;
 				}
 				else if( $char == "]" ){
-					$status	= 5;
+					if( $bufferAttrKey )
+						$attributes[$bufferAttrKey] = TRUE;
+					$status	= self::PARSE_STATUS_FINAL;
 					break;
 				}
 				else if( preg_match( '/[a-z0-9_-]/', $char ) ){
 					$bufferAttrKey	.= $char;
 				}
 			}
-			else if( $status == 3 ){
+			else if( $status == self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE ){
 				if( $char !== '"' )
 					throw new Exception( 'Attribute value must be double quoted' );
 				$bufferAttrVal	= '';
-				$status	= 4;
+				$status	= self::PARSE_STATUS_READ_ATTR_VALUE;
 			}
-			else if( $status == 4 ){
+			else if( $status == self::PARSE_STATUS_READ_ATTR_VALUE ){
 				if( $char == '"' ){
 					$attributes[$bufferAttrKey] = $bufferAttrVal;
 					$bufferAttrKey	= '';
-					$status	= 2;
+					$status	= self::PARSE_STATUS_READ_ATTR_KEY;
 				}
 				else{
 					$bufferAttrVal	.= $char;
 				}
 			}
-			if( $status == 5 ){
+			if( $status == self::PARSE_STATUS_FINAL ){
 				break;
 			}
 			$position++;
@@ -124,7 +139,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic{
 	 *	@return		void
 	 */
 	public function removeNext( $shortCode ){
-		return $this->replaceNext( $this->content, $shortCode, '' );
+		return $this->replaceNext( $shortCode, '' );
 	}
 
 	/**

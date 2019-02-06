@@ -19,13 +19,15 @@ This may apply mostly to content editors.
 
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
  	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add own shortcode parser instead of using XML.</log>
 	<log version="0.3.1">Add removeNext to skip this shortcode appearance.</log>
 	<log version="0.3.2">Add example shortcode and hook.</log>
 	<log version="0.4">Support to ignore block in content for applying shortcodes.</log>
+	<log version="0.4.1">Improve parser code quality by using constants.</log>
+	<log version="0.4.2">Extend parser to allow empty attributes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
