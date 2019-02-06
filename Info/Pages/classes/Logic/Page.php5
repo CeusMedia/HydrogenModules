@@ -27,66 +27,101 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function getPage( $pathOrId ){
-		if( preg_match( '/^[0-9]+$/', $pathOrId ) ){
-			$page	= $this->modelPage->get( $pathOrId );
-			if( !$page )
-				return NULL;
-			$way	= array( $page->identifier );
-			$current	= $page;
-			$parents	= array();
-			while( $current->parentId !== 0 ){
-				$current	= $this->modelPage->get( $current->parentId );
-				if( !$current )
-					break;
-				$parents[]	= $current;
-				array_unshift( $way, $current->identifier );
-			}
-			$page->fullpath	= join( '/', $way );
-			$page->parents	= $parents;
-			return $page;
+	public function getPage( $pageId, $strict = TRUE  ){
+		if( !preg_match( '/^[0-9]+$/', $pageId ) )
+			throw new RangeException( 'Given page is not an ID' );
+		$page	= $this->modelPage->get( $pageId );
+		if( !$page ){
+			if( $strict )
+				throw new RangeException( 'Given page is not an ID' );
+			return NULL;
 		}
-		return $this->modelPage->get( $pathOrId );
+/*		$way	= array( $page->identifier );
+		$current	= $page;
+		$parents	= array();
+		while( $current->parentId !== 0 ){
+			$current	= $this->modelPage->get( $current->parentId );
+			if( !$current )
+				break;
+			$parents[]	= $current;
+			array_unshift( $way, $current->identifier );
+		}
+		$page->fullpath	= join( '/', $way );
+		$page->parents	= $parents;*/
+		return $page;
+	}
+
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@param		string		$path			Path to find page for
+	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
+	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
+	 *	@return		object						Data object of found page or NULL if nothing found
+	 *	@throws		RuntimeException			if path is not resolvable
+	 *	@throws		RuntimeException			if path parent part is not resolvable
+	 */
+	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
+		if( preg_match( '/\//', $path ) ){
+			$parts	= preg_split( '/\//', $path, 2 );
+			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
+			if( !$parent )
+				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
+			$parents[]	= $parent;
+			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
+		}
+		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
+		$page		= $this->modelPage->getByIndices( $indices );
+		if( !$page )
+			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
+		return $this->getPage( $page->pageId );
 	}
 
 	/**
 	 *	Tries to resolves URI path and returns found page.
 	 *	@access		public
 	 *	@param		string		$path			Path to find page for
-	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
+	 *	@return		object						Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
+	 *	@throws		RuntimeException			if path is not resolvable
+	 *	@throws		RuntimeException			if path parent part is not resolvable
+	 *	@throws		RuntimeException			if parents are enabled and page it its own parent
+	 *	@throws		RuntimeException			if parents are enabled and page nesting loop is detected
+	 *	@throws		RuntimeException			if parents are enabled and page has parent which is missing
 	 */
 	public function getPageFromPath( $path, $withParents = FALSE ){
-		if( !strlen( trim( $path ) ) )
-			throw new InvalidArgumentException( 'No path given' );
-		if( ( $page = $this->modelPage->getByIndices( array( 'identifier' => $path ) ) ) )
-			return $this->getPage( $page->pageId );
-		$parts		= explode( '/', $path );
-		$parentId	= 0;
 		$parents	= array();
-		$lastPage	= NULL;
-		$way		= "";
-		if( !$parts )
-			return NULL;
-		while( $part = array_shift( $parts ) ){
-			$way		= $way ? $way.'/'.$part : $part;
-			$indices	= array( 'parentId' => $parentId, 'identifier' => $part );
-			$page		= $this->modelPage->getByIndices( $indices );
-			if( !$page ){																			//  no page found for this identifier
-				if( $lastPage && (int) $lastPage->type === Model_Page::TYPE_MODULE )				//  last page is a module controller
-					return $this->translatePage( $lastPage );																//  return this module controlled page
-				return NULL;
-			}
-			$parentId	= $page->pageId;
-			$page->fullpath	= $way;
-			if( $parts )
-				$parents[]	= $page;
-			$lastPage	= $page;
-			$lastPage->arguments	= $parts;
-		}
-		if( $withParents )
+		$page		= $this->getPageFromPathRecursive( $path, 0, $parents );
+
+		if( $withParents ){
+			foreach( $parents as $nr => $parent )
+				$parents[$nr]	= $this->translatePage( $parent );											//  apply localization to page
+			array_reverse( $parents );
 			$page->parents	= $parents;
-		return $this->translatePage( $page );
+		}
+/*		if( $withParents ){
+			$page->parents	= array();
+			$copy = clone $page;
+			$hadIds	= array();
+			while( $copy->parentId ){
+				if( $copy->pageId === $copy->parentId )
+					throw new RuntimeException( 'Page '.$copy->pageId.' cannot be its own parent' );
+				if( in_array( $copy->pageId, $hadIds ) )
+					throw new RuntimeException( 'Page nesting loop detected starting with page '.$copy->pageId );
+				$hadIds[]	= $copy->pageId;
+				$parent	= $this->getPage( $copy->parentId );
+				if( !$parent )
+					throw new RuntimeException( 'Page '.$copy->pageId.' has missing parent page '.$copy->parentId );
+
+//				if( (int) $parent->type === Model_Page::TYPE_MODULE )								//  parent page is a module controller
+				$parent	= $this->translatePage( $parent );											//  apply localization to page
+				$page->parents[]	= $parent;
+				$copy	= clone $parent;
+			}
+			array_reverse( $page->parents );
+		}*/
+		return $this->translatePage( $page );																//  return this module controlled page
 	}
 
 	public function getChildren( $pageId, $activeOnly = TRUE ){
