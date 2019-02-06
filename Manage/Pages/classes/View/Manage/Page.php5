@@ -22,6 +22,8 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 				return '<i class="fa fa-fw fa-chevron-down"></i>';
 			case 2:
 				return '<i class="fa fa-fw fa-plug"></i>';
+			case 3:
+				return '<i class="fa fa-fw fa-puzzle-piece"></i>';
 		}
 	}
 

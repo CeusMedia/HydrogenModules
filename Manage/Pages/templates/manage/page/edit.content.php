@@ -1,11 +1,11 @@
 <?php
 $w				= (object) $words['edit'];
 
-if( $page->type == 2 )
+if( $page->type == Model_Page::TYPE_MODULE )
 	$content	= '<div class="alert alert-info"><em>'.$w->no_editor.'</em></div>';
-else if( $page->type == 1 )
+else if( $page->type == Model_Page::TYPE_BRANCH )
 	$content	= '<div class="alert alert-info"><em>'.$w->no_content.'</em></div>';
-else if( $page->type == 0 ){
+else{
 	$optVersion	= array( '' => '- latest -' );
 	foreach( $versions as $entry )
 		$optVersion[$entry->version]	= $entry->version;
