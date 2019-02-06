@@ -51,8 +51,8 @@ class Hook_Info_Contact extends CMF_Hydrogen_Hook{
 							'success'	=> $view->loadContentFile( 'html/info/contact/form/success.html' ),
 							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),
 						);
-						$script	= 'ModuleInfoContactForm.setBlocks('.json_encode( $blocks ).');';
-						$env->getPage()->addScriptOnReady($script);
+						$script	= 'ModuleInfoContactForm.setResultBlocks('.json_encode( $blocks ).');';
+						$env->getPage()->js->addScriptOnReady($script);
 						$isFirst = FALSE;
 					}
 				}
