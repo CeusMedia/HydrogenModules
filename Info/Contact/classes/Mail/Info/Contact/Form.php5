@@ -6,6 +6,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract{
 		$words			= $this->env->getLanguage()->getWords( 'info/contact' );
 		$data			= (object) array(
 			'email'		=> htmlentities( strip_tags( @$data['email'] ), ENT_QUOTES, 'UTF-8' ),
+			'phone'		=> htmlentities( strip_tags( @$data['phone'] ), ENT_QUOTES, 'UTF-8' ),
 			'type'		=> (int) strip_tags( @$data['type'] ),
 			'subject'	=> strip_tags( @$data['subject'] ),
 			'person'	=> strip_tags( @$data['person'] ),

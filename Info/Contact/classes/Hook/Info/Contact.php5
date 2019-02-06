@@ -1,7 +1,9 @@
 <?php
-class View_Info_Contact extends CMF_Hydrogen_View{
+class Hook_Info_Contact extends CMF_Hydrogen_Hook{
 
-	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		if( !$env->getModules()->has( 'UI_Shortcode' ) )
+			return;
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $data->content );
 		$words			= $env->getLanguage()->getWords( 'info/contact' );
@@ -18,6 +20,7 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
+			$isFirst		= TRUE;
 			$helperModal	= new View_Helper_Info_Contact_Form_Modal( $env );
 			$helperTrigger	= new View_Helper_Info_Contact_Form_Trigger( $env );
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
@@ -42,6 +45,16 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 						$shortCode,
 						$replacement
 					);
+					if( $isFirst ){
+						$view		= new CMF_Hydrogen_View( $env );
+						$blocks		= (object) array(
+							'success'	=> $view->loadContentFile( 'html/info/contact/form/success.html' ),
+							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),
+						);
+						$script	= 'ModuleInfoContactForm.setBlocks('.json_encode( $blocks ).');';
+						$env->getPage()->addScriptOnReady($script);
+						$isFirst = FALSE;
+					}
 				}
 				catch( Exception $e ){
 					$env->getMessenger()->noteFailure( 'Short code failed: '.$code );
@@ -51,7 +64,5 @@ class View_Info_Contact extends CMF_Hydrogen_View{
 		}
 		$data->content	= $processor->getContent();
 	}
-
-	public function index(){}
 }
 ?>

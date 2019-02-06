@@ -1,6 +1,10 @@
 <?php
 $w		= (object) $words['index'];
 
+$iconSave	= '<i class="icon-envelope icon-white"></i>';
+if( $env->hasModule( 'UI_Font_FontAwesome' ) )
+	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+
 extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom', 'privacy' ), 'html/info/contact/' ) );
 
 $newsletter    = '';
@@ -96,7 +100,7 @@ $content	= $textTop.'
 			'.$honeypot.'
 			'.$textPrivacy.'
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="icon-envelope icon-white"></i> '.$w->buttonSave.'</button>
+				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>
 			</div>
 		</form>

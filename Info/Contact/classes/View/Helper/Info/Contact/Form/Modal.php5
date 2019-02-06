@@ -14,63 +14,156 @@ class View_Helper_Info_Contact_Form_Modal{
 			throw new RuntimeException( 'No ID set' );
 
 		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
+		$w			= (object) $words['form'];
 		$optType	= $words['form-types'];
 		$optType	= UI_HTML_Elements::Options( $optType );
 
+		$fieldSubject	= array(
+			UI_HTML_Tag::create( 'label', $w->labelSubject, array( 'for' => 'input_subject', 'class' => 'mandatory required' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'subject',
+				'id'		=> 'input_subject',
+				'class'		=> 'span12',
+				'required'	=> 'required',
+				'value'		=> htmlentities( $this->subject, ENT_QUOTES, 'utf-8' ),
+			) ),
+		);
+		$fieldType	= array(
+			UI_HTML_Tag::create( 'label', $w->labelType, array( 'for' => 'input_type' ) ),
+			UI_HTML_Tag::create( 'select', $optType, array(
+				'name'		=> 'type',
+				'id'		=> 'input_type',
+				'class'		=> 'span12 has-optionals',
+			) ),
+		);
+		$fieldBodyQuestion	= array(
+			UI_HTML_Tag::create( 'label', $w->labelBodyQuestion, array( 'for' => 'input_body0', 'class' => 'mandatory required'  ) ),
+			UI_HTML_Tag::create( 'textarea', NULL, array(
+				'name'		=> 'body0',
+				'id'		=> 'input_body0',
+				'class'		=> 'span12',
+				'rows'		=> 4,
+				'required'	=> 'required',
+			) ),
+		);
+		$fieldBodyRequest	= array(
+			UI_HTML_Tag::create( 'label', $w->labelBodyRequest, array( 'for' => 'input_body1', 'class' => 'mandatory required'  ) ),
+			UI_HTML_Tag::create( 'textarea', NULL, array(
+				'name'		=> 'body1',
+				'id'		=> 'input_body1',
+				'class'		=> 'span12',
+				'rows'		=> 4,
+				'required'	=> 'required',
+			) ),
+		);
+		$fieldBodyProblem	= array(
+			UI_HTML_Tag::create( 'label', $w->labelBodyProblem, array( 'for' => 'input_body2', 'class' => 'mandatory required'  ) ),
+			UI_HTML_Tag::create( 'textarea', NULL, array(
+				'name'		=> 'body2',
+				'id'		=> 'input_body2',
+				'class'		=> 'span12',
+				'rows'		=> 4,
+				'required'	=> 'required',
+			) ),
+		);
+		$fieldEmail	= array(
+			UI_HTML_Tag::create( 'label', $w->labelEmail, array( 'for' => 'input_email', 'class' => 'mandatory required' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'email',
+				'id'		=> 'input_email',
+				'class'		=> 'span12',
+				'required'	=> 'required',
+			) ),
+		);
+		$fieldPhone	= array(
+			UI_HTML_Tag::create( 'label', $w->labelPhone, array( 'for' => 'input_phone', 'class' => '' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'phone',
+				'id'		=> 'input_phone',
+				'class'		=> 'span12',
+			) ),
+		);
+		$fieldPerson	= array(
+			UI_HTML_Tag::create( 'label', $w->labelPerson, array( 'for' => 'input_person', 'class' => 'mandatory required' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'person',
+				'id'		=> 'input_person',
+				'class'		=> 'span12',
+				'required' => 'required',
+			) ),
+		);
+		$fieldCompany	= array(
+			UI_HTML_Tag::create( 'label', $w->labelCompany, array( 'for' => 'input_company' ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'company',
+				'id'		=> 'input_company',
+				'class'		=> 'span12',
+			) ),
+		);
+		$fieldStreet	= array(
+			UI_HTML_Tag::create( 'label', $w->labelStreet, array( 'for' => 'input_street'/*, 'class' => 'mandatory required'*/ ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'street',
+				'id'		=> 'input_street',
+				'class'		=> 'span12',
+//				'required'	=> 'required',
+			) ),
+		);
+		$fieldCity	= array(
+			UI_HTML_Tag::create( 'label', $w->labelCity, array( 'for' => 'input_city'/*, 'class' => 'mandatory required'*/ ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'city',
+				'id'		=> 'input_city',
+				'class'		=> 'span12',
+//				'required'	=> 'required',
+			) ),
+		);
+		$fieldPostcode	= array(
+			UI_HTML_Tag::create( 'label', 'PLZ', array( 'for' => 'input_postcode'/*, 'class' => 'mandatory required'*/ ) ),
+			UI_HTML_Tag::create( 'input', NULL, array(
+				'type'		=> 'text',
+				'name'		=> 'postcode',
+				'id'		=> 'input_postcode',
+				'class'		=> 'span12',
+//				'required'	=> 'required',
+			) ),
+		);
+
 		$form	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Thema', array( 'for' => 'input_subject', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'subject', 'id' => 'input_subject', 'class' => 'span12', 'required' => 'required', 'value' => $this->subject ) ),
-				), array( 'class' => 'span10 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldSubject, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Was ist ihr Anliegen?', array( 'for' => 'input_type' ) ),
-					UI_HTML_Tag::create( 'select', $optType, array( 'name' => 'type', 'id' => 'input_type', 'class' => 'span12 has-optionals' ) ),
-				), array( 'class' => 'span10 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldType, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Ihre Frage', array( 'for' => 'input_body0' ) ),
-					UI_HTML_Tag::create( 'textarea', NULL, array( 'name' => 'body0', 'id' => 'input_body0', 'class' => 'span12', 'rows' => 4, 'required' => 'required' ) ),
-				), array( 'class' => 'span10 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldBodyQuestion, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid optional type type-0' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Ihre Anfrage', array( 'for' => 'input_body1' ) ),
-					UI_HTML_Tag::create( 'textarea', NULL, array( 'name' => 'body1', 'id' => 'input_body1', 'class' => 'span12', 'rows' => 4, 'required' => 'required' ) ),
-				), array( 'class' => 'span10 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldBodyRequest, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid optional type type-1' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'E-Mail-Adresse', array( 'for' => 'input_email', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'email', 'id' => 'input_email', 'class' => 'span12', 'required' => 'required' ) ),
-				), array( 'class' => 'span10 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldBodyProblem, array( 'class' => 'span10 offset1' ) ),
+			), array( 'class' => 'row-fluid optional type type-2' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', $fieldEmail, array( 'class' => 'span6 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldPhone, array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Ihr Name <small class="muted">(oder Ansprechpartner)</small>', array( 'for' => 'input_person', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'person', 'id' => 'input_person', 'class' => 'span12', 'required' => 'required' ) ),
-				), array( 'class' => 'span5 offset1' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Unternehmen <small class="muted">(optional)</small>', array( 'for' => 'input_company' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'company', 'id' => 'input_company', 'class' => 'span12' ) ),
-				), array( 'class' => 'span5' ) ),
+				UI_HTML_Tag::create( 'div', $fieldPerson, array( 'class' => 'span5 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldCompany, array( 'class' => 'span5' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Anschrift', array( 'for' => 'input_street', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'street', 'id' => 'input_street', 'class' => 'span12', 'required' => 'required' ) ),
-				), array( 'class' => 'span5 offset1' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Stadt', array( 'for' => 'input_city', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'city', 'id' => 'input_city', 'class' => 'span12', 'required' => 'required' ) ),
-				), array( 'class' => 'span3' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'PLZ', array( 'for' => 'input_postcode', 'class' => 'mandatory required' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'postcode', 'id' => 'input_postcode', 'class' => 'span12', 'required' => 'required' ) ),
-				), array( 'class' => 'span2' ) ),
+				UI_HTML_Tag::create( 'div', $fieldStreet, array( 'class' => 'span5 offset1' ) ),
+				UI_HTML_Tag::create( 'div', $fieldCity, array( 'class' => 'span3' ) ),
+				UI_HTML_Tag::create( 'div', $fieldPostcode, array( 'class' => 'span2' ) ),
 			), array( 'class' => 'row-fluid optional type type-1' ) ),
 			UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'row-fluid' ) ),
