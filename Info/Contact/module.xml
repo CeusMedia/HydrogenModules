@@ -26,7 +26,7 @@
 	<log version="0.6.3">Extract contact form modals shortcode to own hook class.</log>
 	<log version="0.7">Extend contact form modals by phone number and refactor fields.</log>
 	<log version="0.7.1">Export contact form modals result layers to HTML blocks.</log>
-	<log version="0.7.2">Prepare for Bootstrap 3 & 4.</log>
+	<log version="0.7.2">Prepare for Bootstrap 3 and 4.</log>
 	<log version="0.7.3">Refactor contact form field name to fullname.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
