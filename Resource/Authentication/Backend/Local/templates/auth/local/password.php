@@ -38,7 +38,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 	HTML::DivClass( 'content-panel-inner', array(
 		UI_HTML_Tag::create( 'form', array(
 			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span12', array(
+				HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', array(
 					UI_HTML_Tag::create( 'label',$labelEmail, array(
 						'for'			=> 'input_password_email',
 						'class'			=> 'mandatory'
@@ -47,7 +47,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 						'type'			=> 'text',
 						'name'			=> 'password_email',
 						'id'			=> 'input_password_email',
-						'class'			=> 'span12 mandatory',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
 						'value'			=> htmlentities( $password_email, ENT_QUOTES, 'UTF-8' ),
 						'autocomplete'	=> 'email',
 					) )
@@ -69,7 +69,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $textTop.
 		HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
-			HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs2-col-md-4', $panelPassword ),
+			HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4', $panelPassword ),
 			HTML::DivClass( 'bs2-span8 bs3-col-md-8 bs4-col-md-8', $textInfo ),
 		) ).$textBottom;
 }

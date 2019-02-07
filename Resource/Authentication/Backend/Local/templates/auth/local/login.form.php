@@ -23,18 +23,18 @@ if( $useOauth2 ){
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
-				), array( 'class' => 'row-fluid' ) ),
+					UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
+				), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
 				UI_HTML_Tag::create( 'hr', NULL ),
-			), array( 'class' => 'span12' ) ),
-		), array( 'class' => 'row-fluid' ) );
+			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
+		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
 	}
 }
 
 $fieldRemember	= '';
 if( $useRemember )
-	$fieldRemember	= HTML::DivClass( 'row-fluid',
-		HTML::DivClass( 'span12', array(
+	$fieldRemember	= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
+		HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', array(
 			UI_HTML_Tag::create( 'label', array(
 				UI_HTML_Tag::create( 'input', NULL, array(
 					'type'		=> 'checkbox',

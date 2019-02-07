@@ -9,7 +9,7 @@ $tabs	= View_Auth::renderTabs( $env, 'auth/local/login' );
 if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $tabs.$textTop.
 		HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
-			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs2-col-md-4", $panelLogin ),
+			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs4-col-md-4", $panelLogin ),
 			HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
 		) ).$textBottom;
 }

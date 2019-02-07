@@ -43,8 +43,8 @@ $tacHtml	= join( '<hr/>', $list );
 
 $formTerms	= '';
 if( $tacHtml ){
-	$formTerms		= HTML::DivClass( 'row-fluid', array(
-		HTML::DivClass( "span12", array(
+	$formTerms		= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
+		HTML::DivClass( "bs2-span12 bs3-col-md-12 bs4-col-md-12", array(
 			HTML::Label( 'conditions', $w->labelTerms, '' ),
 			UI_HTML_Tag::create( 'div', $tacHtml, array(
 				'class'	=> 'framed monospace',
@@ -69,7 +69,7 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			if( $assignedProvider->icon ){
 				$icon		= UI_HTML_Tag::create( 'div', array(
 					'<span class="fa-stack fa-2x" style=""><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
-				), array( 'class' => 'span4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;' ) );
+				), array( 'class' => 'bs2-span4 bs3-col-md-4 bs4-col-md-4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;' ) );
 
 			}
 			$field		= UI_HTML_Tag::create( 'div', array(
@@ -88,9 +88,9 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 									'class'	=> 'btn btn-small not-btn-inverse'
 								) ),
 							) ),
-						), array( 'class' => $icon ? 'span8' : 'span12' ) ),
+						), array( 'class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
 						$icon,
-					), array( 'class' => 'row-fluid' ) ),
+					), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
 				) ),
 			), array( 'class' => 'alert alert-success' ) );
 		}
@@ -100,15 +100,17 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
 			$field		=  array(
 				UI_HTML_Tag::create( 'label', 'Registrieren mit' ),
-				UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'span12' ) ), array( 'class' => 'row-fluid' ) ),
+				UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', $buttons, array(
+					'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'
+				) ), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
 			);
 		}
 		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
 				$field,
 				UI_HTML_Tag::create( 'hr', NULL ),
-			), array( 'class' => 'span12' ) ),
-		), array( 'class' => 'row-fluid' ) );
+			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
+		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
 	}
 }
 
@@ -120,20 +122,20 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 	HTML::DivClass( 'content-panel-inner', array(
 		HTML::Form( $formUrl, "form_auth_register_user", array(
 			$fieldOauth2,
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span3', array(
+			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "username", $w->labelUsername, "mandatory" ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'username',
 						'id'			=> 'input_username',
-						'class'			=> 'span12 mandatory',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
 						'value'			=> $user->get( 'username' ),
 						'required'		=> 'required',
 						'autocomplete'	=> 'off'
 					) )
 				) ),
-				HTML::DivClass( 'span3', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "password", UI_HTML_Tag::create( 'abbr', $w->labelPassword, array(
 						'title'	=> sprintf( $w->labelPassword_title, $moduleConfig->get( 'password.length.min' ) )
 					) ), "mandatory" ),
@@ -141,19 +143,19 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 						'type'			=> 'password',
 						'name'			=> 'password',
 						'id'			=> 'input_password',
-						'class'			=> 'span12 mandatory',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
 						'value'			=> '',
 						'required'		=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
 						'autocomplete'	=> 'off'
 					) )
 				) ),
-				HTML::DivClass( 'span6', array(
+				HTML::DivClass( 'bs2-span6 bs3-col-md-6 bs4-col-md-6', array(
 					HTML::Label( "email", $w->labelEmail, $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'email',
 						'id'			=> 'input_email',
-						'class'			=> 'span12 '.( $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 '.( $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
 						'value'			=> $user->get( 'email' ),
 						'required'		=> $moduleConfig->get( 'email.mandatory' ) ? 'required' : NULL,
 						'autocomplete'	=> 'email',
@@ -161,89 +163,89 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 			) ).
 			UI_HTML_Tag::create( 'hr' ).
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span3', array(
+			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "gender", $w->labelGender ),
 					UI_HTML_Tag::create( 'select', $optGender, array(
 						'name'		=> "gender",
 						'id'		=> "input_gender",
-						'class'		=> "span12"
+						'class'		=> "bs2-span12 bs3-col-md-12 bs4-col-md-12"
 					) )
 				) ),
-				HTML::DivClass( 'span2', array(
+				HTML::DivClass( 'bs2-span2 bs3-col-md-2 bs4-col-md-2', array(
 					HTML::Label( "salutation", $w->labelSalutation ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'salutation',
 						'id'		=> 'input_salutation',
-						'class'		=> 'span12',
+						'class'		=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'value'		=> $user->get( 'salutation' ),
 					) )
 				) ),
-				HTML::DivClass( 'span3', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "firstname", $w->labelFirstname, $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'firstname',
 						'id'			=> 'input_firstname',
-						'class'			=> 'span12 '.( $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 '.( $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
 						'value'			=> $user->get( 'firstname' ),
 						'required'		=> $moduleConfig->get( 'firstname.mandatory' ) ? 'required' : NULL,
 						'autocomplete'	=> 'given-name',
 					) )
 				) ),
-				HTML::DivClass( 'span4', array(
+				HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4', array(
 					HTML::Label( "surname", $w->labelSurname, $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 							'type'		=> 'text',
 						'name'			=> 'surname',
 						'id'			=> 'input_surname',
-						'class'			=> 'span12 '.( $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 '.( $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
 						'value'			=> $user->get( 'surname' ),
 						'required'		=> $moduleConfig->get( 'surname.mandatory' ) ? 'required' : NULL,
 						'autocomplete'	=> 'family-name',
 					) )
 				) ),
 			) ).
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span3', array(
+			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "country", $w->labelCountry ),
 					UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->get( 'country' ) ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
-						'class'			=> 'span12',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'autocomplete'	=> 'country',
 					) )
 				) ),
-				HTML::DivClass( 'span2', array(
+				HTML::DivClass( 'bs2-span2 bs3-col-md-2 bs4-col-md-2', array(
 					HTML::Label( "postcode", $w->labelPostcode ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'postcode',
 						'id'			=> 'input_postcode',
-						'class'			=> 'span12',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'value'			=> $user->get( 'postcode' ),
 						'autocomplete'	=> 'postal-code',
 					) )
 				) ),
-				HTML::DivClass( 'span3', array(
+				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "city", $w->labelCity ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'city',
 						'id'			=> 'input_city',
-						'class'			=> 'span12',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'value'			=> $user->get( 'city' ),
 						'autocomplete'	=> 'address-level2',
 					) )
 				) ),
-				HTML::DivClass( 'span4', array(
+				HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4', array(
 					HTML::Label( "street", $w->labelStreet ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'street',
 						'id'			=> 'input_street',
-						'class'			=> 'span12',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'value'			=> $user->get( 'street' ),
 						'autocomplete'	=> 'address-line1',
 					) )
@@ -271,7 +273,7 @@ $textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBotto
 if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $textTop.
 		HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
-			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs2-col-md-4", $panelUser ),
+			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs4-col-md-4", $panelUser ),
 			HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
 		) ).$textBottom;
 }
