@@ -7,7 +7,7 @@ class Mail_Info_Contact extends Mail_Abstract{
 		$data			= (object) $data;
 
 		$mailSubject	= $words['mail']['subject'];
-		$mailSubject	= sprintf( $mailSubject, $data->subject, $data->name, $data->email );
+		$mailSubject	= sprintf( $mailSubject, $data->subject, $data->fullname, $data->email );
 		$this->setSubject( $mailSubject );
 		$this->setSender( $config->get( 'mail.sender' ) );
 
@@ -16,7 +16,7 @@ class Mail_Info_Contact extends Mail_Abstract{
 			'salutation'	=> $salutations[array_rand($salutations)],
 			'email'			=> htmlentities( strip_tags( $data->email ), ENT_QUOTES, 'UTF-8' ),
 			'subject'		=> htmlentities( strip_tags( $data->subject ), ENT_QUOTES, 'UTF-8' ),
-			'name'			=> htmlentities( strip_tags( $data->name ), ENT_QUOTES, 'UTF-8' ),
+			'fullname'		=> htmlentities( strip_tags( $data->fullname ), ENT_QUOTES, 'UTF-8' ),
 			'message'		=> nl2br( htmlentities( strip_tags( $data->message ), ENT_QUOTES, 'UTF-8' ) ),
 			'newsletter'	=> !empty( $data->newsletter ) ? 'ja' : 'nein',
 		) );

@@ -60,8 +60,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 
 		if( $this->request->has( 'save' ) ){
 			$valid	= TRUE;
-			if( !strlen( trim( $this->request->get( 'name' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorNameMissing );
+			if( !strlen( trim( $this->request->get( 'fullname' ) ) ) ){
+				$this->messenger->noteError( $words->msgErrorFullNameMissing );
 				$valid	= FALSE;
 			}
 			if( !strlen( trim( $this->request->get( 'email' ) ) ) ){
@@ -108,11 +108,12 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 								if( $page )
 									$path	= $page->fullpath;
 							}
-							$name	= trim( $this->request->get( 'name' ) );
-							$parts	= preg_split( '/\s+/', $name.' ' );
-							$path	= $path.'?'.http_build_query( array(
-								'firstname'		=> $parts[0],
-								'surname'		=> $parts[1],
+							$fullname	= trim( $this->request->get( 'fullname' ) );
+							$parts		= preg_split( '/\s+/', $fullname.' ', 2 );
+							$path		= $path.'?'.http_build_query( array(
+								'fullname'		=> $fullname,
+								'firstname'		=> trim( $parts[0] ),
+								'surname'		=> trim( $parts[1] ),
 								'email'			=> $this->request->get( 'email' ),
 								'groups'		=> $this->request->get( 'topics' ),
 							), '', '&' );
@@ -158,7 +159,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			$this->addData( 'captchaStrength', $this->moduleConfig->get( 'captcha.strength' ) );
 		}
 		$this->addData( 'formPath', $path );
-		$this->addData( 'name', $this->request->get( 'name' ) );
+		$this->addData( 'fullname', $this->request->get( 'fullname' ) );
 		$this->addData( 'email', $this->request->get( 'email' ) );
 		$this->addData( 'subject', $this->request->get( 'subject' ) );
 		$this->addData( 'message', $this->request->get( 'message' ) );

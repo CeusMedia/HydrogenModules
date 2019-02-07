@@ -33,7 +33,14 @@ if( $useNewsletter ){
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_newsletter" class="checkbox">
-					<input type="checkbox" name="newsletter" id="input_newsletter" value="yes" class="has-optionals" data-animation="slide"/>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'				=> 'checkbox',
+						'name'				=> 'newsletter',
+						'id'				=> 'input_newsletter',
+						'class'				=> 'has-optionals',
+						'value'				=> 'yes',
+						'data-animation'	=> 'slide',
+					) ).'
 					'.$w->labelNewsletter.'
 				</label>
 				'.$inputTopics.'
@@ -50,7 +57,15 @@ if( $useCaptcha ){
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_captcha">'.$w->labelCaptcha.'&nbsp;<small class="muted">('.$w->labelCaptcha_suffix.')</small></label>
-			<input type="text" name="captcha" id="input_captcha" value="" class="span12"/>
+			'.UI_HTML_Tag::create( 'input', NULL, array(
+				'type'			=> 'text',
+				'name'			=> 'captcha',
+				'id'			=> 'input_captcha',
+				'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
+				'maxlength'		=> '20',
+				'required'		=> 'required',
+				'value'			=> ''
+			) ).'
 		</div>
 		<div class="span5 offset1">
 			[captcha length="'.$captchaLength.'" strength="'.$captchaStrength.'"]
@@ -75,24 +90,54 @@ $content	= $textTop.'
 		<form action="'.$formPath.'" method="post">
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_name" class="mandatory required">'.$w->labelName.'</label>
-					<input type="text" name="name" id="input_name" class="span12" maxlength="40" required="required" value="'.htmlentities( $name, ENT_QUOTES, 'UTF-8' ).'"/>
+					<label for="input_fullname" class="mandatory required">'.$w->labelFullName.'</label>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'fullname',
+						'id'			=> 'input_fullname',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
+						'maxlength'		=> '40',
+						'required'		=> 'required',
+						'value'			=> htmlentities( $fullname, ENT_QUOTES, 'UTF-8' ),
+					) ).'
 				</div>
 				<div class="span7">
 					<label for="input_email" class="mandatory required">'.$w->labelEmail.'</label>
-					<input type="text" name="email" id="input_email" class="span12" maxlength="50" required="required" value="'.htmlentities( $email, ENT_QUOTES, 'UTF-8' ).'"/>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'email',
+						'id'			=> 'input_email',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
+						'maxlength'		=> '100',
+						'required'		=> 'required',
+						'value'			=> htmlentities( $email, ENT_QUOTES, 'UTF-8' ),
+					) ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_subject" class="mandatory required">'.$w->labelSubject.'</label>
-					<input type="text" name="subject" id="input_subject" class="span12" maxlength="80" required="required" value="'.htmlentities( $subject, ENT_QUOTES, 'UTF-8' ).'"/>
+					'.UI_HTML_Tag::create( 'input', NULL, array(
+						'type'			=> 'text',
+						'name'			=> 'subject',
+						'id'			=> 'input_subject',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
+						'maxlength'		=> '100',
+						'required'		=> 'required',
+						'value'			=> htmlentities( $subject, ENT_QUOTES, 'UTF-8' ),
+					) ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_message" class="mandatory required">'.$w->labelMessage.'</label>
-					<textarea name="message" id="input_message" class="span12" rows="10" required="required">'.htmlentities( $message, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					'.UI_HTML_Tag::create( 'textarea', htmlentities( $message, ENT_QUOTES, 'UTF-8' ), array(
+						'name'			=> 'message',
+						'id'			=> 'input_message',
+						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
+						'rows'			=> '10',
+						'required'		=> 'required',
+					) ).'
 				</div>
 			</div>
 			'.$newsletter.'
@@ -110,11 +155,11 @@ $content	= $textTop.'
 
 if( $textRight )
 	$content	= '
-<div class="row-fluid">
-	<div class="span9">
+<div class="bs2-row-fluid bs3-row bs4-row">
+	<div class="bs2-span7 bs3-col-md-7 bs4-col-md-7">
 		'.$content.'
 	</div>
-	<div class="span3">
+	<div class="bs2-span4 bs3-col-md-4 bs4-col-md-4 bs2-offset1 bs3-col-md-offset-1 bs4-col-md-offset-1">
 		'.$textRight.'
 	</div>
 </div>';
