@@ -3,7 +3,7 @@
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and restore database dumps.]]></description>
 	<category>Administration</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve index timestamp handling.</log>
@@ -12,6 +12,7 @@
 	<log version="0.3.1">Extract logic from controller.</log>
 	<log version="0.3.2">Split dump view into panels.</log>
 	<log version="0.3.3">Extract hook method from controller to own hook class.</log>
+	<log version="0.3.4">Add relation to module UI:Helper:HTML.</log>
 <!--	<log version="0.3.1">Support dump switch.</log>-->
 <!--	<log version="0.3.2">Add locale files.</log>-->
 <!--	<log version="0.3.2">Extract view panels.</log>-->
@@ -42,7 +43,9 @@
 	<config protected="yes" type="string" name="path" mandatory="yes" default="config/sql/" original="config/sql/">../config/sql/</config>
 <!--	<config protected="yes" type="boolean" name="copy.active">yes</config>-->
 	<config protected="yes" type="string" name="copy.database"></config>
-	<relations/>
+	<relations>
+		<needs type="module">UI_Helper_HTML</needs>
+	</relations>
 	<hook type="event" resource="Page" event="applyModules">Hook_Admin_Database_Backup_Copy::onPageApplyModules</hook>
 	<hook type="event" resource="Env" event="constructEnd">Hook_Admin_Database_Backup_Copy::onPageBuild</hook>
 </module>
