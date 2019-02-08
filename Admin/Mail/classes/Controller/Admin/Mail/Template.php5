@@ -320,6 +320,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			$mail		= new Mail_Test( $env, array( 'mailTemplateId' => $templateId ) );
 			switch( strtolower( $mode ) ){
 				case 'html':
+//					print( $mail->contents['html'] );
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );
 					$helper->setMail( (object) array( 'object' => $mail ) );
 					$html	= $helper->render();
@@ -327,13 +328,21 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 					break;
 				case 'plain':
 				case 'text':
-					print( $mail->content['text'] );
+					print( UI_HTML_Tag::create( 'html', array(
+						UI_HTML_Tag::create( 'body', array(
+							UI_HTML_Tag::create( 'xmp', $mail->contents['text'] ),
+						) ),
+					) ) );
+/*					$helper	= new View_Helper_Mail_View_Text( $this->env );
+					$helper->setMail( (object) array( 'object' => $mail ) );
+					$text	= $helper->render();
+					xmp( $text );*/
 					break;
 				default:
-					remark( 'Text:' );
-					xmp( $mail->content['text'] );
-					remark( 'HTML:' );
-					xmp( $mail->getPage()->build() );
+					if( strlen( trim( $template->html ) ) )
+						return $this->preview( $templateId, 'html' );
+					else
+						return $this->preview( $templateId, 'text' );
 			}
 		}
 		catch( Exception $e ){

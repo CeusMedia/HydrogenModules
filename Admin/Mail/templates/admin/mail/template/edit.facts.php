@@ -130,9 +130,12 @@ $panelTest	= '
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $modalPreviewHtml		= new Modal( 'modal-admin-mail-template-preview-html' );
-$modalPreviewHtml->setHeading( $words['modal-preview']['heading'] );
+$modalPreviewHtml->setHeading( $words['modal-preview']['heading-html'] );
 $modalPreviewHtml->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/html"></iframe>' );
 $modalPreviewHtml->setFade( FALSE );
+//$modalPreviewHtml->useHeader( FALSE );
+$modalPreviewHtml->useFooter( FALSE );
+$modalPreviewHtml->setCloseButtonLabel( $words['modal-preview']['buttonClose'] );
 $buttonPreviewHtml	= Trigger::create(
 	'modal-admin-mail-template-preview-html',
 	$words['edit']['buttonPreview']
@@ -145,9 +148,11 @@ $iframeHtml		= UI_HTML_Tag::create( 'iframe', '', array(
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
 $modalPreviewText		= new Modal( 'modal-admin-mail-template-preview-text' );
-$modalPreviewText->setHeading( $words['modal-preview']['heading'] );
+$modalPreviewText->setHeading( $words['modal-preview']['heading-text'] );
 $modalPreviewText->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/text"></iframe>' );
 $modalPreviewText->setFade( FALSE );
+//$modalPreviewText->useHeader( FALSE );
+$modalPreviewText->useFooter( FALSE );
 $buttonPreviewText	= Trigger::create(
 	'modal-admin-mail-template-preview-text',
 	$words['edit']['buttonPreview']
@@ -160,12 +165,12 @@ $iframeText		= UI_HTML_Tag::create( 'iframe', '', array(
 
 $panelPreview		= '
 <div class="content-panel">
-	<h4>
-		<span>HTML-Vorschau</span>
+	<h3>
+		<span>'.$words['modal-preview']['heading-html'].'</span>
 		<div style="float: right">
 			'.$buttonPreviewHtml.'
 		</div>
-	</h4>
+	</h3>
 	<div class="content-panel-inner">
 		<div class="template-preview half-size">
 			<div class="template-preview-container">
@@ -177,12 +182,12 @@ $panelPreview		= '
 	</div>
 </div>
 <div class="content-panel">
-	<h4>
-		<span>Text-Vorschau</span>
+	<h3>
+		<span>'.$words['modal-preview']['heading-text'].'</span>
 		<div style="float: right">
 			'.$buttonPreviewText.'
 		</div>
-	</h4>
+	</h3>
 	<div class="content-panel-inner">
 		<div class="template-preview half-size">
 			<div class="template-preview-container">
@@ -202,11 +207,11 @@ return '
 				<div class="span6">
 					'.$panelTest.'
 				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span6">
 					'.$panelExport.'
 				</div>
-			</div>
-			<div class="row-fluid">
 				<div class="span6">
 					'.$panelRemove.'
 				</div>

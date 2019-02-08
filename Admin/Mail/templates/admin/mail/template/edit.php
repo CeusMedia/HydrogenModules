@@ -41,7 +41,7 @@ $contentCss	= '
 $contentPreview	= '
 	<div class="row-fluid">
 		<div class="span12">
-			<iframe id="frame-template-preview" src="./admin/mail/template/preview/'.$template->mailTemplateId.'/html"></iframe>
+			<iframe id="frame-template-preview" src="./admin/mail/template/preview/'.$template->mailTemplateId.'"></iframe>
 		</div>
 	</div>';
 
