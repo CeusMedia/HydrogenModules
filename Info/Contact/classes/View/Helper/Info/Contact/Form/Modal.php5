@@ -4,19 +4,23 @@ class View_Helper_Info_Contact_Form_Modal{
 	protected $id;
 	protected $subject;
 	protected $heading;
+	protected $type;
+	protected $types;
+	protected $moduleConfig;
+	protected $moduleWords;
 
 	public function __construct( $env ){
-		$this->env	= $env;
+		$this->env			= $env;
+		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_contact.', TRUE );
+		$this->moduleWords	= $this->env->getLanguage()->getWords( 'info/contact' );
 	}
 
 	public function render(){
 		if( !$this->id )
 			throw new RuntimeException( 'No ID set' );
 
-		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
-		$w			= (object) $words['form'];
-		$optType	= $words['form-types'];
-		$optType	= UI_HTML_Elements::Options( $optType );
+		$w			= (object) $this->moduleWords['modal-form'];
+		$optType	= $this->renderTypeOptions();
 
 		$fieldSubject	= array(
 			UI_HTML_Tag::create( 'label', $w->labelSubject, array( 'for' => 'input_subject', 'class' => 'mandatory required' ) ),
@@ -37,31 +41,13 @@ class View_Helper_Info_Contact_Form_Modal{
 				'class'		=> 'span12 has-optionals',
 			) ),
 		);
-		$fieldBodyQuestion	= array(
-			UI_HTML_Tag::create( 'label', $w->labelBodyQuestion, array( 'for' => 'input_body0', 'class' => 'mandatory required'  ) ),
+		$fieldBody	= array(
+			UI_HTML_Tag::create( 'label', $w->labelBodyQuestion, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-question'  ) ),
+			UI_HTML_Tag::create( 'label', $w->labelBodyRequest, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-request'  ) ),
+			UI_HTML_Tag::create( 'label', $w->labelBodyProblem, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-problem'  ) ),
 			UI_HTML_Tag::create( 'textarea', NULL, array(
-				'name'		=> 'body0',
-				'id'		=> 'input_body0',
-				'class'		=> 'span12',
-				'rows'		=> 4,
-				'required'	=> 'required',
-			) ),
-		);
-		$fieldBodyRequest	= array(
-			UI_HTML_Tag::create( 'label', $w->labelBodyRequest, array( 'for' => 'input_body1', 'class' => 'mandatory required'  ) ),
-			UI_HTML_Tag::create( 'textarea', NULL, array(
-				'name'		=> 'body1',
-				'id'		=> 'input_body1',
-				'class'		=> 'span12',
-				'rows'		=> 4,
-				'required'	=> 'required',
-			) ),
-		);
-		$fieldBodyProblem	= array(
-			UI_HTML_Tag::create( 'label', $w->labelBodyProblem, array( 'for' => 'input_body2', 'class' => 'mandatory required'  ) ),
-			UI_HTML_Tag::create( 'textarea', NULL, array(
-				'name'		=> 'body2',
-				'id'		=> 'input_body2',
+				'name'		=> 'body',
+				'id'		=> 'input_body',
 				'class'		=> 'span12',
 				'rows'		=> 4,
 				'required'	=> 'required',
@@ -135,6 +121,8 @@ class View_Helper_Info_Contact_Form_Modal{
 //				'required'	=> 'required',
 			) ),
 		);
+		if( !$this->moduleConfig->get( 'modal.show.company' ) )
+			$fieldCompany	= '';
 
 		$form	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
@@ -144,14 +132,8 @@ class View_Helper_Info_Contact_Form_Modal{
 				UI_HTML_Tag::create( 'div', $fieldType, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldBodyQuestion, array( 'class' => 'span10 offset1' ) ),
-			), array( 'class' => 'row-fluid optional type type-0' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldBodyRequest, array( 'class' => 'span10 offset1' ) ),
-			), array( 'class' => 'row-fluid optional type type-1' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldBodyProblem, array( 'class' => 'span10 offset1' ) ),
-			), array( 'class' => 'row-fluid optional type type-2' ) ),
+				UI_HTML_Tag::create( 'div', $fieldBody, array( 'class' => 'span10 offset1' ) ),
+			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', $fieldEmail, array( 'class' => 'span6 offset1' ) ),
 				UI_HTML_Tag::create( 'div', $fieldPhone, array( 'class' => 'span4' ) ),
@@ -164,9 +146,7 @@ class View_Helper_Info_Contact_Form_Modal{
 				UI_HTML_Tag::create( 'div', $fieldStreet, array( 'class' => 'span5 offset1' ) ),
 				UI_HTML_Tag::create( 'div', $fieldCity, array( 'class' => 'span3' ) ),
 				UI_HTML_Tag::create( 'div', $fieldPostcode, array( 'class' => 'span2' ) ),
-			), array( 'class' => 'row-fluid optional type type-1' ) ),
-			UI_HTML_Tag::create( 'div', array(
-			), array( 'class' => 'row-fluid' ) ),
+			), array( 'class' => 'row-fluid optional type type-request' ) ),
 		) );
 
 		$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -179,26 +159,70 @@ class View_Helper_Info_Contact_Form_Modal{
 		$modal->setBody( $form );
 		$modal->setFade( !FALSE );
 		$modal->setAttributes( array( 'class' => 'modal-info-contact-form' ) );
-		$modal->setSubmitButtonLabel( $iconSave.'&nbsp;'.$words['form']['buttonSave'] );
+		$modal->setSubmitButtonLabel( $iconSave.'&nbsp;'.$w->buttonSave );
 		$modal->setSubmitButtonClass( 'btn btn-primary not-btn-large' );
-		$modal->setCloseButtonLabel( $iconCancel.'&nbsp;'.$words['form']['buttonCancel'] );
+		$modal->setCloseButtonLabel( $iconCancel.'&nbsp;'.$w->buttonCancel );
 		$modal->setCloseButtonClass( 'btn btn-small' );
 		return $modal->render();
 	}
 
+	//  --  SETTERS  --  //
 	public function setId( $id ){
 		$this->id		= $id;
-	}
-
-	public function setSubject( $subject ){
-		$this->subject	= $subject;
+		return $this;
 	}
 
 	public function setHeading( $heading ){
 		$this->heading		= $heading;
+		return $this;
+	}
+
+	public function setSubject( $subject ){
+		$this->subject	= $subject;
+		return $this;
+	}
+
+	public function setType( $type ){
+		$this->type		= $type;
+		return $this;
+	}
+
+	public function setTypes( $types ){
+		$this->types		= $types;
+		return $this;
 	}
 /*
 	public function setFrom( $from ){
 		$this->from		= $from;
 	}*/
+
+	//  --  PROTECTED  --  //
+	protected function renderTypeOptions(){
+		//  TYPES: Enabled thru config and hook param
+		$typesConfig	= array();
+		foreach( $this->moduleConfig->getAll( 'modal.show.type.' ) as $key => $value )
+			if( $value )
+				$typesConfig[]	= $key;
+		$typesHook		= $this->types ? $this->types : $typesConfig;
+		$typesEnabled	= array_intersect( $typesConfig, $typesHook );
+
+		//  DEFAULT TYPE: Set by config or hook param
+		$defaultType		= NULL;
+		$defaultTypeConfig	= $this->moduleConfig->get( 'modal.default.type' );
+		if( in_array( $defaultTypeConfig, $typesEnabled ) )
+			$defaultType	= $defaultTypeConfig;
+		if( $this->type )
+			if( in_array( $this->type, $typesEnabled ) )
+				$defaultType	= $this->type;
+
+		//  TYPE OPTIONS: Reduce to enabled types
+		$optType	= $this->moduleWords['form-types'];
+		foreach( $optType as $optTypeKey => $optTypeValue )
+			if( !in_array( $optTypeKey, $typesEnabled ) )
+				unset( $optType[$optTypeKey] );
+
+		//  TYPE OPTIONS: Render with default type
+		$optType	= UI_HTML_Elements::Options( $optType, $defaultType );
+		return $optType;
+	}
 }

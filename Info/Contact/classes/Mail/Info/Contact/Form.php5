@@ -4,6 +4,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract{
 	protected function generate( $data = array() ){
 		$config			= $this->env->getConfig()->getAll( 'module.info_contact.', TRUE );
 		$words			= $this->env->getLanguage()->getWords( 'info/contact' );
+
 		$data			= (object) array(
 			'email'		=> htmlentities( strip_tags( @$data['email'] ), ENT_QUOTES, 'UTF-8' ),
 			'phone'		=> htmlentities( strip_tags( @$data['phone'] ), ENT_QUOTES, 'UTF-8' ),
@@ -14,11 +15,26 @@ class Mail_Info_Contact_Form extends Mail_Abstract{
 			'street'	=> strip_tags( @$data['street'] ),
 			'city'		=> strip_tags( @$data['city'] ),
 			'postcode'	=> strip_tags( @$data['postcode'] ),
-			'body'		=> strip_tags( @$data['body'.( (int) @$data['type'] )] ),
+			'type'		=> strip_tags( @$data['type'] ),
+			'body'		=> strip_tags( @$data['body'] ),
 		);
 
-		$mailSubject	= $words['mail']['subject'];
-		$mailSubject	= sprintf( $mailSubject, $data->subject, $data->person, $data->email );
+		$type			= current( $words['form-types'] );
+		if( !empty( $data->type ) ){
+
+		}
+		$type	= $words['form-types'][$data->type];
+
+		$wordsMail		= $words['mail'];
+		if( array_key_exists( 'mail-type-'.$data->type, $words ) )
+			$wordsMail	= array_merge( $wordsMail, $words['mail-type-'.$data->type] );
+
+		$mailSubject	= vsprintf( $wordsMail['subject'], array(
+			$data->subject,
+			$data->person,
+			$data->email,
+		) );
+
 		$this->setSubject( $mailSubject );
 		$this->setSender( $config->get( 'mail.sender' ) );
 

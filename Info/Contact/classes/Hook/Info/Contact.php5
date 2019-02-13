@@ -4,19 +4,25 @@ class Hook_Info_Contact extends CMF_Hydrogen_Hook{
 	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
+
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $data->content );
+		$moduleConfig	= $env->getConfig()->getAll( 'modules.info_contact.', TRUE );
 		$words			= $env->getLanguage()->getWords( 'info/contact' );
+		$allowedTypes	= $moduleConfig->getAll( 'modal.show.type.' );
+
 		$shortCodes		= array(
 			'contact:form'		=> array(
 				'button-class'	=> 'btn',
-				'button-label'	=> $words['form']['trigger'],
-				'heading'		=> $words['form']['heading'],
+				'button-label'	=> $words['modal-form']['trigger'],
+				'heading'		=> $words['modal-form']['heading'],
 				'icon-class'	=> 'fa-envelope',
 				'icon-position'	=> 'left',
+				'types'			=> join( ',', array_keys( $allowedTypes ) ),
+				'type'			=> $moduleConfig->get( 'modal.default.type' ),
 				'subject'		=> '',
 			)
 		);
+		$processor->setContent( $data->content );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -34,6 +40,8 @@ class Hook_Info_Contact extends CMF_Hydrogen_Hook{
 					$helperModal->setId( $modalId );
 					$helperModal->setHeading( $attr['heading'] );
 					$helperModal->setSubject( trim( $attr['subject'] ) );
+					$helperModal->setTypes( strlen( trim( $attr['types'] ) ) ? preg_split( '/\s*,\s*/', trim( $attr['types'] ) ) : array() );
+					$helperModal->setType( strlen( trim( $attr['type'] ) ) ? trim( $attr['type'] ) : NULL );
 		//			$helperModal->setFrom( $env->getRequest()->get( '__path' ) );
 					$helperTrigger->setmodalId( $modalId );
 					$helperTrigger->setClass( $attr['button-class'] );

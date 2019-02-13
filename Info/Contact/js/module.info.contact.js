@@ -34,7 +34,7 @@ ModuleInfoContactForm = {
 						form = jQuery(form);
 						form.find("button,a.btn").removeAttr("disabled", "disabled");
 						form.find(".modal-header button.close").trigger("click");
-						form.find("#input_question,#input_request").html("");
+						form.find("#input_body").html("");
 						form.find("div.alert").fadeOut(ModuleInfoContactForm.durationLayerFadeOut);
 					}, ModuleInfoContactForm.durationLayerShow, form);
 				}
