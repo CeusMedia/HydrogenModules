@@ -110,7 +110,7 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 		}
 		$currentDbName	= $database->getName();
 
-		if( $currentDbName != $dbName )
+		if( $dbName && $currentDbName != $dbName )
 			$database->setName( $dbName );
 
 		$tables	= $database->getTables( $backup->comment['copyPrefix'] );
