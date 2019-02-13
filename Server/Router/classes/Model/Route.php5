@@ -20,22 +20,25 @@ class Model_Route extends CMF_Hydrogen_Model {
 
 	protected $name		= 'routes';
 	protected $columns	= array(
-		"routeId",
-		"status",
-		"regex",
-		"code",
-		"source",
-		"target",
-		"title",
-		"createdAt",
+		'routeId',
+		'status',
+		'methods',
+		'ajax',
+		'regex',
+		'code',
+		'source',
+		'target',
+		'title',
+		'createdAt',
 	);
 	protected $primaryKey	= 'routeId';
 	protected $indices		= array(
-		"status",
-		"regex",
-		"code",
-		"source",
-		"target",
+		'status',
+		'regex',
+		'ajax',
+		'code',
+		'source',
+		'target',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

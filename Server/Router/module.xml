@@ -3,7 +3,7 @@
 	<title>Server: Router</title>
 	<description/>
 	<category>Server</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support XML as data source.</log>
@@ -11,6 +11,7 @@
 	<log version="0.2.3">Now hooked on App:onControl.</log>
 	<log version="0.2.4">Added missing database model class.</log>
 	<log version="0.2.5">Added route status.</log>
+	<log version="0.2.6">Extend routes by access restrictions.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -46,6 +47,11 @@ INSERT INTO `<%?prefix%>routes` (`routeId`, `status`, `regex`, `code`, `source`,
 (1, 0, 0, 301, 'OldAddress', 'NewAddress', 'Permanently moved.', 1424946122),
 (2, 0, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
 (3, 0, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
+]]></sql>
+	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
+ALTER TABLE `<%?prefix%>routes` ADD `methods` VARCHAR( 50 ) NULL AFTER `status`;
+ALTER TABLE `<%?prefix%>routes` ADD `ajax` TINYINT( 1 ) UNSIGNED NULL DEFAULT '0' AFTER `methods`;
+ALTER TABLE `<%?prefix%>routes` ADD INDEX (`ajax`);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
