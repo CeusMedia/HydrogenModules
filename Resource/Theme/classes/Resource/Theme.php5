@@ -5,7 +5,7 @@ class Resource_Theme{
 		foreach( $env->getModules()->getAll() as $module ){
 			if( !preg_match( '/^Theme_/', $module->id ) )
 				continue;
-			if( !$module->config['enabled']->value )
+			if( !$module->config['active']->value )
 				continue;
 			$page	= $env->getPage();
 			foreach( $module->files->styles as $styleFile ){
