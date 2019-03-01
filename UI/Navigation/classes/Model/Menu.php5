@@ -125,11 +125,16 @@ class Model_Menu {
 	}
 
 	protected function readUserPagesFromConfigFile(){
-		$pagesFile	= 'config/pages.json';
-		if( !file_exists( $pagesFile ) )
-			throw new RuntimeException( 'Page configuration file "'.$pagesFile.'" is not existing' );
-
-		$scopes				= FS_File_JSON_Reader::load( $pagesFile );
+		$pagesFile		= $this->env->getPath( 'config' ).'pages.json';
+		if( !file_exists( $pagesFile ) ){
+			$message	= 'Page configuration file "%s" is not existing';
+			throw new RuntimeException( sprintf( $message, $pagesFile ) );
+		}
+		$scopes			= FS_File_JSON_Reader::load( $pagesFile );
+		if( !is_object( $scopes ) ){
+			$message	= 'Pages config file "%s" is outdated (not containing scopes)';
+			throw new RuntimeException( sprintf( $message, $pagesFile ) );
+		}
 		$this->scopes		= array_keys( get_object_vars( $scopes ) );
 		$this->pages		= array();
 		$this->pageMap		= array();
