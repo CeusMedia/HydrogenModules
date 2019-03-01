@@ -7,33 +7,37 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$config		= $env->getConfig();
-		$modules	= $env->getModules();
-		$options	= $config->getAll( 'module.ui_bootstrap_library.missing.', TRUE );
+		$config			= $env->getConfig();
+		$modules		= $env->getModules();
+		$moduleConfig	= $config->getAll( 'module.ui_bootstrap.', TRUE );
+		$optionsMissing	= $moduleConfig->getAll( 'missing.', TRUE );
 		if( !class_exists( '\CeusMedia\Bootstrap\Modal' ) ){
-			if( $options->get( 'library' ) === 'throw' ){
-				$exception	= new RuntimeException( 'Bootstrap library (ceus-media/bootstrap) is not installed - please use composer to install' );
-				$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
-		//		throw $exception;
-			}
-			else if( $options->get( 'library' ) === 'note' ){
-				$env->getMessenger()->noteFailure( join( '<br/>', array(
-					'<strong>Bootstrap Code Library is not found.</strong>',
-					'Please install by: <code><tt>composer require ceus-media/bootstrap</tt></code>',
-				) ) );
+			switch( $optionsMissing->get( 'library' ) ){
+				case 'note':
+					$env->getMessenger()->noteFailure( join( '<br/>', array(
+						'<strong>Bootstrap Code Library is not found.</strong>',
+						'Please install by: <code><tt>composer require ceus-media/bootstrap</tt></code>',
+					) ) );
+					return;
+				case 'throw':
+				default:
+					$exception	= new RuntimeException( 'Bootstrap library (ceus-media/bootstrap) is not installed - please use composer to install' );
+//					$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+					throw $exception;
 			}
 		}
 		if( !$modules->has( 'UI_Font_FontAwesome' ) ){
-			if( $options->get( 'fontawesome' ) === 'throw' ){
-				$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );
-				$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
-		//		throw $exception;
-			}
-			else if( $options->get( 'module' ) === 'note' ){
-				$env->getMessenger()->noteFailure( join( '<br/>', array(
-					'<strong>Module "UI:Font:FontAwesome" is not installed.</strong>',
-					'Please install by: <code><tt>hymn app-install UI_Font_FontAwesome</tt></code>',
-				) ) );
+			switch( $optionsMissing->get( 'fontawesome' ) ){
+				case 'note':
+					$env->getMessenger()->noteFailure( join( '<br/>', array(
+						'<strong>Module "UI:Font:FontAwesome" is not installed.</strong>',
+						'Please install by: <code><tt>hymn app-install UI_Font_FontAwesome</tt></code>',
+					) ) );
+				case 'throw':
+				default:
+					$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );
+					$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+//					throw $exception;
 			}
 		}
 		else{
