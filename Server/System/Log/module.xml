@@ -45,7 +45,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -55,6 +55,7 @@ Please think about using the hook instead.
 	<log version="0.5">Add index and view.</log>
 	<log version="0.5.1">Several UI tweaks.</log>
 	<log version="0.5.2">Add mail component for collecting exceptions facts for HTML and text mail.</log>
+	<log version="0.5.3">Disable module.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -66,6 +67,7 @@ Please think about using the hook instead.
 		<template>system/log/index.php</template>
 		<template>system/log/view.php</template>
 	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch">0</config>
 	<config protected="yes" type="boolean" name="file.active" title="Main switch for log file">1</config>
 	<config protected="yes" type="string" name="file.name" title="Path of log file">logs/exception.log</config>
 	<config protected="yes" type="boolean" name="email.active" title="Main switch for sending mails">1</config>

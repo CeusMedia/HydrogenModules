@@ -24,10 +24,12 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_system_log.', TRUE );
-
 	}
 
 	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$config = $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
+		if( !$config->get( 'active' ) )
+			return;
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )
