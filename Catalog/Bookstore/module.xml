@@ -3,7 +3,7 @@
 	<title>Catalog: Bookstore</title>
 	<description/>
 	<category>Catalog</category>
-	<version>0.7.7</version>
+	<version>0.7.8</version>
 	<log version="0.4.6">Responsive Design for category index.</log>
 	<log version="0.4.7">Support for search engine module.</log>
 	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
@@ -30,6 +30,7 @@
 	<log version="0.7.5">Add helper for related articles slider.</log>
 	<log version="0.7.6">Improve category index by filter.</log>
 	<log version="0.7.7">Add support of weight for shop bridge.</log>
+	<log version="0.7.8">Add categories to sitemap / search index.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

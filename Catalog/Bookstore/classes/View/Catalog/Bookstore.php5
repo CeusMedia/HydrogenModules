@@ -38,12 +38,14 @@ class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 		}
 	}
 
-
 	static public function ___onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$helper			= new View_Helper_Catalog_Bookstore( $env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $env );
 		$modelAuthor	= new Model_Catalog_Bookstore_Author( $env );
-		foreach( $data->documents as $resultDocument  ){
+		$modelCategory	= new Model_Catalog_Bookstore_Category( $env );
+		$words			= $env->getLanguage()->getWords( 'search' );
+		$categories		= (object) $words['result-categories'];
+		foreach( $data->documents as $nrDocument => $resultDocument  ){
 			if( !preg_match( "@^catalog/bookstore/@", $resultDocument->path ) )
 				continue;
 
@@ -53,9 +55,9 @@ class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 					$article	= $modelArticle->get( $articleId );
 					$articleUri	= $helper->getArticleUri( $articleId, !TRUE );
 					$resultDocument->facts	= (object) array(
-						'category'		=> 'Katalog: Artikel:',
 						'title'			=> $article->title,
 						'link'			=> preg_replace( '/^\.\//', '', $articleUri ),
+						'category'		=> $categories->article,
 						'image'			=> $article->cover ? './file/bookstore/article/s/'.$article->cover : '',
 					);
 				}
@@ -69,17 +71,30 @@ class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 						$title	= $author->firstname." ".$title;
 					$authorUri	= $helper->getAuthorUri( $author->authorId, !TRUE );
 					$resultDocument->facts	= (object) array(
-						'category'		=> 'Katalog: Autor:',
 						'title'			=> $title,
 						'link'			=> preg_replace( '/^\.\//', '', $authorUri ),
+						'category'		=> $categories->author,
 						'image'			=> $author->image ? './file/bookstore/author/'.$author->image : '',
+					);
+				}
+			}
+			if( preg_match( "@^catalog/bookstore/category/@", $resultDocument->path ) ){
+				$path		= preg_replace( "@^catalog/bookstore/category/@", "", $resultDocument->path );
+				if( $categoryId = (int) $path ){
+					$category		= $modelCategory->get( $categoryId );
+					$categoryUri	= $helper->getCategoryUri( $categoryId, !TRUE );
+					$resultDocument->facts	= (object) array(
+						'title'			=> $category->label_de,
+						'link'			=> preg_replace( '/^\.\//', '', $categoryUri ),
+						'category'		=> $categories->category,
+						'image'			=> '',
 					);
 				}
 			}
 			if( preg_match( "@^catalog/bookstore/news@", $resultDocument->path ) ){
 				$title		= $resultDocument->title;
 				$resultDocument->facts	= (object) array(
-					'category'		=> 'Katalog:',
+					'category'		=> $categories->news,
 					'title'			=> 'Neuerscheinungen',
 					'link'			=> $resultDocument->path,
 					'image'			=> NULL,
