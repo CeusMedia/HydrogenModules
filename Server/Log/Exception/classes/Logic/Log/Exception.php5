@@ -7,10 +7,16 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 	protected $pathLogs;
 
 	protected function __onInit(){
-		$this->model	= new Model_Log_Exception( $this->env );
+		$this->model		= new Model_Log_Exception( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
 		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
-		$this->logFile	= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+		if( $this->env->getModules()->has( 'Frontend' ) ){
+			$frontend			= Logic_Frontend::getInstance( $this->env );
+			$this->pathLogs		= $frontend->getPath( 'logs' );
+			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
+			$this->moduleConfig	= new ADT_List_Dictionary( $moduleConfig );
+		}
+		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
 	}
 
 	public function check( $id, $strict = TRUE ){
@@ -28,6 +34,7 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 			$content	= (object) array(
 				'exception'		=> $exception,
 		//		'traceAsHtml'	=> UI_HTML_Exception_Trace::render( $exception ),
+				'trace'			=> '',
 				'timestamp'		=> time(),
 			);
 		}
@@ -50,9 +57,10 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 		if( isset( $sessionData['exceptionUrl'] ) )
 		unset( $sessionData['exceptionUrl'] );
 		$content->env				= array(
+			'appName'	=> $this->env->getConfig()->get( 'app.name' ),
+			'class'		=> get_class( $this->env ),
 			'url'		=> $this->env->url,
 			'uri'		=> $this->env->uri,
-			'appName'	=> $this->env->getConfig()->get( 'app.name' ),
 		);
 		$content->request			= $this->env->getRequest();
 		$content->session			= $sessionData;
@@ -119,19 +127,33 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 
 		$data	= array(
 			'status'		=> 0,
+			'message'		=> '',
+			'trace'			=> '',
 			'createdAt'		=> $timestamp,
 			'modifiedAt'	=> time(),
 		);
 
-		if( $object instanceof Exception ){
+		if( isset( $object->exception ) && $object->exception instanceof Exception ){
 			$data	= array_merge( $data, array(
 				'type'			=> get_class( $object->exception ),
 				'message'		=> $object->exception->getMessage(),
 				'code'			=> $object->exception->getCode(),
 				'file'			=> $object->exception->getFile(),
-				'line'			=> $object->exception->getFile(),
+				'line'			=> $object->exception->getLine(),
 				'trace'			=> $object->exception->getTraceAsString(),
 				'previous'		=> serialize( $object->exception->getPrevious() ),
+			) );
+		}
+
+		else if( $object instanceof Exception ){
+			$data	= array_merge( $data, array(
+				'type'			=> get_class( $object ),
+				'message'		=> $object->getMessage(),
+				'code'			=> $object->getCode(),
+				'file'			=> $object->getFile(),
+				'line'			=> $object->getLine(),
+				'trace'			=> $object->getTraceAsString(),
+				'previous'		=> serialize( $object->getPrevious() ),
 			) );
 		}
 		else{
@@ -144,6 +166,10 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 				'trace'			=> $object->trace,
 			) );
 		}
+		if( empty( $data['trace'] ) ){
+			print_m( $object );die;
+		}
+		$data['env']	= '';
 		if( !empty( $object->env ) )
 			$data['env']	= serialize( $object->env );
 		if( !empty( $object->request ) )

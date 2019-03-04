@@ -41,7 +41,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -54,6 +54,7 @@ Please think about using the hook instead.
 	<log version="0.5.2">Extract logic from controller to logic class.</log>
 	<log version="0.5.3">Extract logic from hook to logic class.</log>
 	<log version="0.5.4">Extract logic from job to logic class.</log>
+	<log version="0.5.5">Support frontend environment.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -79,7 +80,7 @@ Please think about using the hook instead.
 		<needs type="module">Resource_Mail</needs>
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
-	<sql on="install" type="mysql" version="0.5"><![CDATA[
+	<sql on="update" type="mysql" version="0.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
   `exceptionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
