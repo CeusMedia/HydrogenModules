@@ -89,7 +89,12 @@ foreach( $forms as $item )
 	$optForm[$item->formId]	= $item->title;
 $optForm		= UI_HTML_Elements::Options( $optForm, $filterFormId );
 
-$optStatus		= array( '' => '- alle -', '0' => 'unbestätigt', '1' => 'gültig' );
+$optStatus		= array(
+	''									=> '- alle -',
+	Model_Form_Fill::STATUS_NEW			=> 'unbestätigt',
+	Model_Form_Fill::STATUS_CONFIRMED	=> 'gültig',
+	Model_Form_Fill::STATUS_HANDLED		=> 'behandelt',
+);
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
 $panelFilter	= UI_HTML_Tag::create( 'div', array(
@@ -104,7 +109,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Formular', array( 'for' => 'input_email' ) ),
+					UI_HTML_Tag::create( 'label', 'Formular', array( 'for' => 'input_formId' ) ),
 					UI_HTML_Tag::create( 'select', $optForm, array( 'name' => 'formId', 'id' => 'input_formId' ) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
