@@ -3,11 +3,12 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
 	<log version="0.3.1">Support manager and customer rules.</log>
+	<log version="0.3.2">Add mail for error handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -15,6 +16,7 @@
 <!--		<class>Logic/Form.php5</class>-->
 		<class>Mail/Form/Abstract.php5</class>
 		<class>Mail/Form/Customer/Confirm.php5</class>
+		<class>Mail/Form/Customer/Error.php5</class>
 		<class>Mail/Form/Customer/Result.php5</class>
 		<class>Mail/Form/Manager/Filled.php5</class>
 		<class>Model/Form.php5</class>
