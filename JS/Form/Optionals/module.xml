@@ -2,7 +2,7 @@
 <module>
 	<title>JS: Form: Optionals</title>
 	<description><![CDATA[Related form input fields.]]></description>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module JS:Optionals.</log>
 	<log version="0.3">Improved and moved to module UI:JS:cmFormOptionals.</log>
@@ -10,6 +10,7 @@
 	<log version="0.4.1">Extend selector to apply change event on all input types.</log>
 	<log version="0.4.2">Handle hidden required inputs.</log>
 	<log version="0.4.3">Handle hidden required inputs earlier.</log>
+	<log version="0.4.4">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -20,8 +21,5 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-//		$config		= $env->getConfig()->getAll( 'module.js_optionals', TRUE );
-		$context->js->addScriptOnReady( 'FormOptionals.init();' );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Form_Optionals::onPageApplyModules</hook>
 </module>
