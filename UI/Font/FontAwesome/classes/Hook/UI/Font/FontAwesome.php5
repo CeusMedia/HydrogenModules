@@ -29,6 +29,16 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 		}
 	}
 
+	/**
+	 *	...
+	 *	@static
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		object						$context	Caller object
+	 *	@param		object						$module		Module config data object
+	 *	@param		array						$payload	Map of payload data
+	 *	@return		void
+	 */
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		$config	= $env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
