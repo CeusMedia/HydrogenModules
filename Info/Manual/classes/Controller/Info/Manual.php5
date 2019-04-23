@@ -71,8 +71,8 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$this->categories[$category->manualCategoryId]	= $category;
 		if( !$this->categories ){
-			$this->modelCategory->add( array( 'title', array(
-				'creatorId'		=> $this->userId,
+			$data	= array(
+				'creatorId'		=> (int) $this->userId,
 				'status'		=> Model_Manual_Category::STATUS_NEW,
 				'format'		=> Model_Manual_Category::FORMAT_TEXT,
 				'version'		=> 1,
@@ -81,7 +81,8 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 				'content'		=> '',
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) ) );
+			);
+			$this->modelCategory->add( $data );
 			$this->restart( NULL, TRUE );
 		}
 		if( count( $this->categories ) === 1 ){
@@ -217,8 +218,23 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 		);
 		$orders		= array( 'rank' => 'ASC' );
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
-		if( !$pages )
-			throw new RuntimeException( 'No page found in category' );
+		if( !$pages ){
+//			throw new RuntimeException( 'No page found in category' );
+			$data	= array(
+				'manualCategoryId'	=> $category->manualCategoryId,
+				'creatorId'			=> $this->userId,
+				'status'			=> Model_Manual_Page::STATUS_NEW,
+				'format'			=> Model_Manual_Page::FORMAT_MARKDOWN,
+				'version'			=> 0,
+				'rank'				=> 0,
+				'title'				=> 'Start',
+				'content'			=> '...',
+				'createdAt'			=> time(),
+				'modifiedAt'		=> time(),
+			);
+			$this->modelPage->add( $data );
+			$this->restartToCategory( $category );
+		}
 		$firstPage	= current( $pages );
 		$this->restartToPage( $firstPage );
 	}
