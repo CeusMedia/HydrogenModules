@@ -197,7 +197,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				) );
+				), FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 				$this->restartToPage( $this->modelPage->get( $pageId ) );
 			}

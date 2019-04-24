@@ -47,19 +47,31 @@ $contentContainer	= UI_HTML_Tag::create( 'div', $content, $attributes );
 return '
 <div class="bs2-row-fluid bs4-row">
 	<div class="bs2-span3 bs4-col-lg-3">
-		<h3>'.$words['list']['heading'].'</h3>
-		'.$helperCategory->render().'
-		'.$helperNav->render().'
-		'.$buttonAdd.'
-		'.$buttonReload.'
+<!--		<div class="content-panel">-->
+			<h3>'.$words['list']['heading'].'</h3>
+<!--			<div class="content-panel-inner">-->
+				'.$helperCategory->render().'
+				'.$helperNav->render().'
+				<hr/>
+				<div class="buttonbar">
+					'.$buttonAdd.'
+					'.$buttonReload.'
+				</div>
+<!--			</div>
+		</div>-->
 	</div>
 	<div class="bs2-span9 bs4-col-lg-9" style="position: relative">
-		<div id="content-index">
-			<div class="heading">Inhalt</div>
-		</div>
-		'.$contentContainer.'
-		<div class="buttonbar">
-			'.$buttonEdit.'
+		<div class="content-panel">
+			<h3><span class="muted">Dokument:</span> '.$page->title.'</h3>
+			<div class="content-panel-inner">
+				<div id="content-index">
+					<div class="heading">Inhalt</div>
+				</div>
+				'.$contentContainer.'
+				<div class="buttonbar">
+					'.$buttonEdit.'
+				</div>
+			</div>
 		</div>
 		<br/>
 	</div>
