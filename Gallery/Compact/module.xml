@@ -70,5 +70,4 @@
 	<link rank="99" access="public" path="gallery/info"/>
 	<link rank="99" access="public" path="gallery/download"/>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Gallery_Compact::onPageApplyModules</hook>
-	]]></hook>
 </module>
