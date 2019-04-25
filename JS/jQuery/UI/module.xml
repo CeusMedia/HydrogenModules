@@ -13,6 +13,7 @@
 	<url>http://jqueryui.com/</url>
 	<license source="http://jquery.org/license">MIT / GPL 2</license>
 	<files>
+		<class>Hook/JS/jQuery/UI.php5</class>
 		<script>jquery-ui-1.9.2.min.js</script>
 		<script>jquery-ui-1.12.1.min.js</script>
 		<style source="common">jquery-ui-1.9.2-base.min.css</style>
