@@ -15,7 +15,7 @@ class Hook_UI_JS_FancyBox extends CMF_Hydrogen_Hook{
 			return;
 
 		$context->js->addModuleFile( 'jquery.fancybox-3.3.5.min.js' );
-		$context->css->addCommonStyle( 'jquery.fancybox-3.3.5.min.css' );
+		$context->css->common->addUrl( 'jquery.fancybox-3.3.5.min.css' );
 
 		if( $config->get( 'auto' ) ){
 			$options	= $config->getAll( 'auto.option.' );
