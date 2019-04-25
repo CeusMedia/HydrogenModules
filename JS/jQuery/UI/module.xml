@@ -2,11 +2,12 @@
 <module>
 	<title>JS: jQuery UI</title>
 	<description><![CDATA[jQuery User Interface]]></description>
-	<version>1.12.1</version>
+	<version>1.12.1-p1</version>
 	<log version="1.9.2">Add jQuery UI v1.9.2.</log>
 	<log version="1.9.2-p1">Realize theme 'smoothness' is style files.</log>
 	<log version="1.9.2-p2">Install styles and images in common theme folder.</log>
 	<log version="1.12.1">Add jQuery UI v1.9.2.</log>
+	<log version="1.12.1-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
 	<author>jQuery UI Team</author>
 	<url>http://jqueryui.com/</url>
@@ -60,12 +61,5 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-		$version	= $module->config['version']->value;
-		$theme		= $module->config['theme']->value;
-		$context->addJavaScript( $pathJs.'jquery-ui-'.$version.'.min.js' );
-		$context->addCommonStyle( 'jquery-ui-'.$version.'-'.$theme.'.min.css' );
-		$context->addBodyClass( 'uses-jQuery-UI' );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_UI::onPageApplyModules</hook>
 </module>
