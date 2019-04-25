@@ -3,12 +3,14 @@
 	<title>JS: jQuery: equalize</title>
 	<description><![CDATA[Equalize height or width of floating HTML elements.]]></description>
 	<version>1.0.2</version>
+	<log version="1.0.2-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
 	<author site="http://timsvensen.com/">Tim Svensen</author>
 	<url>https://github.com/tsvensen</url>
 	<license>MIT</license>
 	<license>GPL 2</license>
 	<files>
+		<class>Hook/JS/jQuery/Equalize.php5</class>
 		<script load="auto">equalize.min.js</script>
 		<script>equalize.js</script>
 	</files>
@@ -16,15 +18,5 @@
 	<config protected="no" type="string" name="auto.selector">.equalize-auto</config>
 	<config protected="no" type="string" name="auto.dimension" values="height,innerHeight,outerHeight,width,innerWidth,outerWidth">height</config>
 	<config protected="no" type="boolean" name="auto.reset">false</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		if( !$module->config['auto']->value )
-			return;
-		if( !( $selector = $module->config['auto.selector']->value ) )
-			return;
-		$params	= json_encode( array(
-			'equalize'	=> $module->config['auto.dimension']->value,
-			'reset'		=> $module->config['auto.reset']->value
-		) );
-		$context->js->addScriptOnReady( '$("'.$selector.'").equalize('.$params.');' );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Equalize::onPageApplyModules</hook>
 </module>
