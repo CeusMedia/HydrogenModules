@@ -69,5 +69,5 @@
 	<config protected="yes" type="string" name="load.addons"/>
 	<config protected="yes" type="string" name="load.extensions"/>
 	<config protected="yes" type="string" name="version" values="5.5.3,7.0.5">7.0.5</config>
-	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Mmenu</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Mmenu::onPageApplyModules</hook>
 </module>
