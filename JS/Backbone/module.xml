@@ -2,12 +2,14 @@
 <module>
 	<title>JS: Backbone</title>
 	<description><![CDATA[Backbone JavaScript Library]]></description>
-	<version>1.1.0</version>
+	<version>1.1.0-p1</version>
+	<log version="1.1.0-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
 	<author site="http://www.documentcloud.org/">DocumentCloud</author>
 	<url>http://backbonejs.org/</url>
 	<license source="https://github.com/jashkenas/backbone/blob/master/LICENSE">MIT</license>
 	<files>
+		<class>Hook/JS/Backbone.php5</class>
 		<script load="auto" top="yes">backbone-1.1.0-min.js</script>
 		<script top="yes">backbone-1.1.0.js</script>
 	</files>
@@ -16,7 +18,5 @@
 		<supports type="module">JS_JSON2</supports>
 		<supports type="module">JS_jQuery</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$context->addBodyClass( 'uses-backbone' );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Backbone::onPageApplyModules</hook>
 </module>
