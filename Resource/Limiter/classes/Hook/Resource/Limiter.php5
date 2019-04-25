@@ -8,13 +8,10 @@ class Hook_Resource_Limiter extends CMF_Hydrogen_Hook{
 	 *	@param		object						$module		Module config data object
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
-	 *	@todo		implement module main switch
 	 */
 	static public function onLimiterRegisterLimits( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
-		$config	= $env->getConfig()->getAll( 'module.resource_limiter.' );
-		if( !$config->get( 'active' ) )
-			return;
-		$context->set( 'Limiter:isOn', TRUE );
+		$config	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
+		$context->set( 'Limiter:isOn', $config->get( 'active' ) );
 	}
 
 	/**
@@ -24,9 +21,11 @@ class Hook_Resource_Limiter extends CMF_Hydrogen_Hook{
 	 *	@param		object						$module		Module config data object
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
-	 *	@todo		implement module main switch
 	 */
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+		$config	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
+		if( !$config->get( 'active' ) )
+			return;
 		$logic		= Logic_Limiter::getInstance( $env );
 		$env->getCaptain()->callHook( 'Limiter', 'registerLimits', $logic, array() );
 	}
