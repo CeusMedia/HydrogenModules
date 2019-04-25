@@ -2,7 +2,7 @@
 <module>
 	<title>JS: jQuery: equalize</title>
 	<description><![CDATA[Equalize height or width of floating HTML elements.]]></description>
-	<version>1.0.2</version>
+	<version>1.0.2-p1</version>
 	<log version="1.0.2-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
 	<author site="http://timsvensen.com/">Tim Svensen</author>

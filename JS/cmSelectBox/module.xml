@@ -22,5 +22,5 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules">Hook_JS_SelectBox</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_SelectBox::onPageApplyModules</hook>
 </module>
