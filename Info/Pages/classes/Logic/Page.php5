@@ -92,6 +92,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 */
 	public function getPageFromPath( $path, $withParents = FALSE ){
 		$parents	= array();
+		$path		= trim( $path, '/' );
 		$page		= $this->getPageFromPathRecursive( $path, 0, $parents );
 
 		if( $withParents ){

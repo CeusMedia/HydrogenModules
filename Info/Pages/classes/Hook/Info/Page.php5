@@ -8,6 +8,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 
 		$request	= $env->getRequest();
 		$path		= $request->get( '__path' );													//  get requested path
+		$path		= trim( $path, '/' );
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		$page		= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
