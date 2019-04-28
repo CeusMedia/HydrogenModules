@@ -18,8 +18,10 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 			$path	= $request->get( '__path' );
 			if(  !in_array( $path, array( '', 'index', 'index/index' ) ) ){
 				$words	= (object) $this->getWords( 'index', 'main' );
-				if( strlen( trim( @$words->msgPageNotFound ) ) )
-					$this->env->getMessenger()->noteNotice( $words->msgPageNotFound );
+				$msg	= 'Page not found: '.$path;
+				if( isset( $words->msgPageNotFound ) )
+					if( strlen( trim( @$words->msgPageNotFound ) ) )
+						$this->env->getMessenger()->noteNotice( $words->msgPageNotFound );
 				$this->env->getResponse()->setStatus( 404 );
 			}
 		}
