@@ -23,7 +23,7 @@ class Logic_Frontend{
 
 	protected function __clone(){}
 
-	protected function __construct( CMF_Hydrogen_Environment $env, $path = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env, $path = NULL ){
 		$this->env		= $env;
 		$this->path		= $path;
 		$moduleConfig	= $env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
@@ -95,9 +95,9 @@ class Logic_Frontend{
 		return $this->config->get( $key );
 	}
 
-	static public function getInstance( $env, $path = NULL ){
+	static public function getInstance( $env ){
 		if( !self::$instance )
-			self::$instance	= new self( $env, $path );
+			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
