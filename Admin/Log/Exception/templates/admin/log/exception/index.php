@@ -3,6 +3,20 @@
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
+$selectInstance	= '';
+if( count( $instances ) > 1 ){
+	$optInstance	= array();
+	foreach( $instances as $instanceKey => $instanceData )
+		$optInstance[$instanceKey]	= $instanceData->title;
+	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
+	$selectInstance	= UI_HTML_Tag::create( 'select', $optInstance, array(
+		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
+		'class'		=> '',
+		'style'		=> 'width: 100%',
+	) );
+
+}
+
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= array();
@@ -38,7 +52,10 @@ $pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/log/exception', $pa
 $pagination	= $pagination->render();
 
 $panelList	= '
-		<div class="content-panel">
+		<div class="content-panel" style="position: relative">
+			<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
+				'.$selectInstance.'
+			</div>
 			<h3>Exceptions</h3>
 			<div class="content-panel-inner">
 				'.$list.'

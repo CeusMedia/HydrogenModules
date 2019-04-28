@@ -25,14 +25,24 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 	protected function __onInit(){
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
 
-
+		$instances	= array( 'this' => (object) array( 'title' => 'Diese Instanz' ) );
 		$path		= $this->env->getConfig()->get( 'path.logs' );
 		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
+
+		$instanceKey	= $this->env->getSession()->get( 'filter_admin_log_exception_instance' );
+		$instanceKey 	= !in_array( $instanceKey, array( 'this', 'remote' ) ) ? 'this' : $instanceKey;
+
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend	= $this->env->getLogic()->get( 'Frontend' );
-			$path		= $frontend->getPath( 'logs' );
-			$fileName	= $frontend->getModuleConfigValue( 'Server_Log_Exception', 'file.name' );
+			$instances['remote']	= (object) array( 'title' => 'entfernte Instanz' );
+			if( $instanceKey === 'remote' ){
+				$frontend	= $this->env->getLogic()->get( 'Frontend' );
+				$path		= $frontend->getPath( 'logs' );
+				$fileName	= $frontend->getModuleConfigValue( 'Server_Log_Exception', 'file.name' );
+			}
 		}
+
+		$this->addData( 'instances', $instances );
+		$this->addData( 'currentInstance', $instanceKey );
 		$this->filePath	= $path.$fileName;
 	}
 
@@ -149,6 +159,11 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 		$exception->id	= $id;
 		$this->addData( 'exception', $exception );
 		$this->addData( 'page', $this->env->getSession()->get( 'filter_admin_log_exception_page' ) );
+	}
+
+	public function setInstance( $instanceKey ){
+		$this->env->getSession()->set( 'filter_admin_log_exception_instance', $instanceKey );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>
