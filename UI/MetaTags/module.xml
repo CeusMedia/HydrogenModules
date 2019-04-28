@@ -3,16 +3,18 @@
 	<title>UI: Meta Tags</title>
 	<description><![CDATA[Support for HTML meta tags, including Dublin Core and Open Graph.]]></description>
 	<category>User Interface</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improved configuration visibility.</log>
 	<log version="0.2.2">Added support for meta tags file.</log>
 	<log version="0.3">Use OpenGraph library from GitHub.</log>
+	<log version="0.3.1">Extract hook to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Hook/UI/MetaTags.php5</class>
 		<class>View/Helper/MetaTags.php5</class>
 	</files>
 	<config protected="yes" type="boolean" name="enable">yes</config>
@@ -27,10 +29,5 @@
 	<config protected="yes" type="string" name="default.expires">0</config>
 	<config protected="yes" type="string" name="default.cache.control" values="public,private,no-cache,no-store">public</config>
 	<config protected="yes" type="string" name="default.cache.pragma" values=",no-cache">no-cache</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$helper	= new View_Helper_MetaTags( $env );
-$helper->apply();
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_MetaTags::onPageApplyModules</hook>
 </module>
-
-
