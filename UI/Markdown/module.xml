@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Markdown</title>
 	<description><![CDATA[Markdown transformation support.]]></description>
-	<version>1.0.7</version>
+	<version>1.1.0</version>
 	<log version="1.0.1">Add support for INS(++) and DEL(--).</log>
 	<log version="1.0.2">Add AJAX support.</log>
 	<log version="1.0.3">Add hook View:onRenderContent.</log>
@@ -10,6 +10,9 @@
 	<log version="1.0.5">Add flag to wrap out in paragraph.</log>
 	<log version="1.0.6">Add public link to AJAX/AJAJ rendering.</log>
 	<log version="1.0.7">Extract hook to own hook class.</log>
+	<log version="1.0.8">Add main switch config pair.</log>
+	<log version="1.0.9">Add version support range config pairs.</log>
+	<log version="1.1.0">Check for installation of markdown library and version.</log>
 	<category>User Interface</category>
 	<author site="http://michelf.ca/home/">Michel Fortin</author>
 	<url>http://michelf.ca/projects/php-markdown/</url>
@@ -21,7 +24,11 @@
 		<class>Markdown.php5</class>
 		<file>licenses/Markdown.md</file>
 	</files>
+	<config protected="no" type="boolean" name="active" title="Main switch of module">yes</config>
+	<config protected="yes" type="string" name="version.max"></config>
+	<config protected="yes" type="string" name="version.min">1.5.0</config>
 	<link access="public" rank="99" path="helper/markdown/ajaxRender"/>
 	<relations/>
 	<hook type="resource" resource="View" event="onRenderContent">Hook_UI_Markdown::onRenderContent</hook>
+	<hook type="resource" resource="Page" event="onApplyModules">Hook_UI_Markdown::onPageApplyModules</hook>
 </module>
