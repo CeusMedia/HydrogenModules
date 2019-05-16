@@ -42,4 +42,42 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook{
 		$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';					//  initialize Auth class with user ID
 		$env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
 	}*/
+
+	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$config		= $env->getConfig()->getAll( 'module.resource_auth.', TRUE );
+		$processor	= new Logic_Shortcode( $env );
+		$shortCodes	= array(
+			'auth:local:panel:login'	=> array(
+				'oauth'		=> TRUE,
+				'remember'	=> TRUE,
+				'register'	=> TRUE,
+			)
+		);
+		$processor->setContent( $data->content );
+		foreach( $shortCodes as $shortCode => $defaultAttributes ){
+			if( !$processor->has( $shortCode ) )
+				continue;
+			$helper		= new View_Helper_Auth_Local_Panel_Login( $env );
+			while( is_array( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
+				$attr['oauth']		= strtolower( $attr['oauth'] ) === 'no' ? FALSE : TRUE;
+				$attr['remember']	= strtolower( $attr['remember'] ) === 'no' ? FALSE : TRUE;
+				$attr['register']	= strtolower( $attr['register'] ) === 'no' ? FALSE : TRUE;
+				try{
+					$helper->setUseOauth2( $attr['oauth'] );
+					$helper->setUseRemember( $attr['remember'] );
+					$helper->setUseRegister( $attr['register'] );
+					$replacement	= (string) $helper->render();
+					$processor->replaceNext(
+						$shortCode,
+						$replacement
+					);
+				}
+				catch( Exception $e ){
+					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					break;
+				}
+			}
+		}
+		$data->content	= $processor->getContent();
+	}
 }
