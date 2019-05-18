@@ -15,5 +15,5 @@
 	<relations/>
 	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="string" name="ID" info="container ID starting with GTM-"></config>
-	<hook type="resource" resource="Page" event="build">Hook_Tracker_Google_TagManager::onPageBuild</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Tracker_Google_TagManager::onPageApplyModules</hook>
 </module>
