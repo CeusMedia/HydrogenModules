@@ -55,25 +55,7 @@ ModuleTrackerMatomo.serverUrl = '.json_encode( $serverUrl ).';
 ModuleTrackerMatomo.options = '.json_encode( $config->getAll( 'option.' ) ).';
 ModuleTrackerMatomo.init();';
 		$context->js->addScriptOnReady( $script );
-	}
 
-	/**
-	 *	Extends response page by tracking pixel for clients having JavaScript disabled.
-	 *	@static
-	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$payload	Map of hook arguments
-	 *	@return		void
-	 */
-	static public function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
-		$config		= $env->getConfig()->getAll( 'module.resource_tracker_matomo.', TRUE );		//  get module configuration as dictionary
-		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )								//  Matomo tracking is disabled or ID is not set
-			return;
-		if( !$config->get( 'server.active' ) || !$config->get( 'server.URL' ) )					//  do not use Matomo service
-			return;
-		$serverUrl	= rtrim( $config->get( 'server.URL' ), '/' ).'/';
 		$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',				//  create noscript HTML tag
 			UI_HTML_Tag::create( 'img', NULL, array(											//  create tracking image
 				'src'	=> $serverUrl.'piwik.php?idsite='.$config->get( 'ID' ).'&amp;rec=1',	//
@@ -81,7 +63,7 @@ ModuleTrackerMatomo.init();';
 				'alt'	=> ''																	//  atleast empty alternative text for XHTML validity
 			) )
 		) );
-		$context->addHead( $noscript );															//  append noscript tag to body
+		$context->addBody( $noscript );															//  append noscript tag to body
 	}
 }
 ?>
