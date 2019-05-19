@@ -192,6 +192,12 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		return (bool) $this->getPageFromPath( $pathOrId );
 	}
 
+	public function hasPages( $visible = TRUE ){
+		$indices	= array();
+		$indices['status']	= $visible ? '>='.Model_Page::STATUS_VISIBLE : '>='.Model_Page::STATUS_HIDDEN;
+		return $this->modelPage->count( $indices );
+	}
+
 	public function isAccessible( $page ){
 		$isAuthenticated	= $this->env->getSession()->get( 'userId' );
 		$public		= $page->access == "public";
