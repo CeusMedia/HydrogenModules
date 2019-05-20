@@ -35,4 +35,8 @@ abbr[title], abbr[data-original-title] {
 	}
 form {
 	margin: 0;
-}
+	}
+
+ul.nav-stacked > li > a {
+	box-sizing: border-box;
+	}
