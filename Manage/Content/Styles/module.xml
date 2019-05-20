@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Content: Styles</title>
+	<description><![CDATA[Simple Editor for CSS style files.]]></description>
+	<category>Management</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">JavaScript magic.</log>
+	<log version="0.2.2">Extract CSS.</log>
+	<log version="0.2.3">Finish AJAX save.</log>
+	<log version="0.2.4">Support Ace editor.</log>
+	<log version="0.3">Import from protected module repository.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Content/Style.php5</class>
+		<class>View/Manage/Content/Style.php5</class>
+		<template>manage/content/style/index.php</template>
+		<template>manage/content/style/index.edit.php</template>
+		<template>manage/content/style/index.filter.php</template>
+		<locale>de/manage/content/style.ini</locale>
+		<locale>de/html/manage/content/style/index.top.html</locale>
+		<locale>de/html/manage/content/style/index.bottom.html</locale>
+		<locale>en/manage/content/style.ini</locale>
+		<locale>en/html/manage/content/style/index.top.html</locale>
+		<locale>en/html/manage/content/style/index.bottom.html</locale>
+		<style source="theme">module.manage.content.style.css</style>
+		<script>module.manage.content.style.js</script>
+	</files>
+	<link xml:lang="de" access="acl" rank="66" path="manage/content">Style-Definitionen</link>
+	<link xml:lang="en" access="acl" rank="66" path="manage/content">Style Definitions</link>
+	<link access="acl" path="manage/content/style/ajaxSaveContent"/>
+	<relations>
+		<needs type="module">JS_CodeMirror</needs>
+		<supports type="module">JS_Ace</supports>
+	</relations>
+</module>
