@@ -28,8 +28,8 @@
 		<style source="theme">module.manage.content.style.css</style>
 		<script>module.manage.content.style.js</script>
 	</files>
-	<link xml:lang="de" access="acl" rank="66" path="manage/content">Style-Definitionen</link>
-	<link xml:lang="en" access="acl" rank="66" path="manage/content">Style Definitions</link>
+	<link xml:lang="de" access="acl" rank="66" path="manage/content/style">Style-Definitionen</link>
+	<link xml:lang="en" access="acl" rank="66" path="manage/content/style">Style Definitions</link>
 	<link access="acl" path="manage/content/style/ajaxSaveContent"/>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>
