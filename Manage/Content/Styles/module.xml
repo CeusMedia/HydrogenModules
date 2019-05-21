@@ -33,6 +33,7 @@
 	<link access="acl" path="manage/content/style/ajaxSaveContent"/>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">Resource_Frontend</needs>
 		<supports type="module">JS_Ace</supports>
 	</relations>
 </module>
