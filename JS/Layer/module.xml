@@ -2,47 +2,35 @@
 <module>
 	<title>JS: Layer</title>
 	<description><![CDATA[Layer for displaying images and contents.]]></description>
-	<version>0.2.2</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Adjusted relative layer size and boundaries.</log>
 	<log version="0.2.2">Replace CDN resource.</log>
+	<log version="0.2.3">Extract hook to own hook class.</log>
+	<log version="0.2.4">Improve module config.</log>
+	<log version="0.2.5">Support module main switch.</log>
 	<category>JavaScript</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Hook/JS/Layer.php5</class>
 		<script load="auto" source="local">UI.Layer.js</script>
 		<style load="auto" source="theme">layer.css</style>
 		<image source="theme">spinner.gif</image>
 	</files>
-	<config name="button.image.download">no</config>
-	<config name="button.image.info">yes</config>
-	<config name="button.image.prev.label"><![CDATA[&laquo;]]></config>
-	<config name="button.image.next.label"><![CDATA[&raquo;]]></config>
-	<config name="button.image.info.label">info</config>
-	<config name="button.image.load.label">download</config>
-	<config name="speed.hide">0</config>
-	<config name="speed.show">0</config>
+	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="yes" type="string" name="button.image.prev.label"><![CDATA[&laquo;]]></config>
+	<config protected="yes" type="string" name="button.image.next.label"><![CDATA[&raquo;]]></config>
+	<config protected="yes" type="boolean" name="button.image.download">no</config>
+	<config protected="yes" type="string" name="button.image.download.label"><![CDATA[download]]></config>
+	<config protected="yes" type="boolean" name="button.image.info">yes</config>
+	<config protected="yes" type="string" name="button.image.info.label"><![CDATA[info]]></config>
+	<config protected="yes" type="integer" name="speed.hide">0</config>
+	<config protected="yes" type="integer" name="speed.show">0</config>
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$config	= $env->getConfig()->getAll( 'module.js_layer.' );
-		$buttonDownload	= $config['button.image.download'] == 'yes' ? 'true' : 'false';
-		$buttonInfo		= $config['button.image.info'] == 'yes' ? 'true' : 'false';
-		$script	= '
-$(document).ready(function(){
-	Layer.init();
-	Layer.buttonImageDownload = '.$buttonDownload.';
-	Layer.buttonImageInfo = '.$buttonInfo.';
-	Layer.speedShow = '.(int) $config['speed.show'].';
-	Layer.speedHide = '.(int) $config['speed.hide'].';
-	Layer.labelButtonPrev = "'.addslashes( $config['button.image.prev.label'] ).'";
-	Layer.labelButtonNext = "'.addslashes( $config['button.image.next.label'] ).'";
-	Layer.labelButtonInfo = "'.addslashes( $config['button.image.info.label'] ).'";
-	Layer.labelButtonLoad = "'.addslashes( $config['button.image.load.label'] ).'";
-});';
-		$context->js->addScript( $script );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Layer::onPageApplyModules</hook>
 </module>

@@ -1,18 +1,23 @@
 <?xml version="1.0"?>
 <module>
 	<title>JS: Log</title>
-	<description><![CDATA[Layer for displaying images and contents.]]></description>
-	<version>0.2.1</version>
+	<description><![CDATA[Log to console in web browser.]]></description>
+	<version>0.2.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Added configuration of log levels and ranges.</log>
 	<log version="0.2.1">Typed configuration.</log>
+	<log version="0.2.2">Extract hook to own hook class.</log>
+	<log version="0.2.3">Use configured log levels.</log>
+	<log version="0.2.4">Apply module main switch.</log>
 	<category>JavaScript</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<script load="auto" source="local">Log.js</script>
+		<class>Hook/JS/Log.php5</class>
+		<script>Log.js</script>
 	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config type="boolean" name="level.error.enabled" title="1 - error (1)">yes</config>
 	<config type="string" name="level.error.range" title="list of allowed IP addresses">*</config>
 	<config type="boolean" name="level.warn.enabled" title="2 - warning (2)">yes</config>
@@ -24,13 +29,5 @@
 	<config type="boolean" name="level.debug.enabled" title="5 - debug (16)">yes</config>
 	<config type="string" name="level.debug.range" title="list of allowed IP addresses">*</config>
 	<relations/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$config	= $env->getConfig()->getAll( 'module.js_log.' );
-		$script	= '
-$(document).ready(function(){
-	level = 1 | 2 | 4 | 8 | 16;
-	Log.logLevel = level;
-});';
-		$context->js->addScript( $script );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Log::onPageApplyModules</hook>
 </module>

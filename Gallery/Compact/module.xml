@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Gallery &raquo;Compact&laquo;]]></title>
 	<description>Simple gallery with auto indexing in nested folders.</description>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added image download.</log>
@@ -15,8 +15,10 @@
 	<log version="0.4">Migration to Bootstrap and FontAwesome.</log>
 	<log version="0.4.1">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.4.2">Replace CDN resource.</log>
+	<log version="0.4.3">Extract hook to own hook class.</log>
 	<files>
 		<class>Controller/Gallery.php5</class>
+		<class>Hook/Gallery/Compact.php5</class>
 		<class>View/Gallery.php5</class>
 		<class>View/Helper/Gallery.php5</class>
 		<template>gallery/index.php</template>
@@ -67,15 +69,5 @@
 	<link rank="99" access="public" path="gallery/index"/>
 	<link rank="99" access="public" path="gallery/info"/>
 	<link rank="99" access="public" path="gallery/download"/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$env->getLanguage()->load( 'gallery' );														//  load gallery language file
-		$words		= $env->getLanguage()->getWords( 'gallery' );									//  get gallery feed words
-		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes
-			'rel'	=> "alternate",																	//  
-			'type'	=> "application/rss+xml",														//  MIME type of RSS
-			'href'	=> $env->getConfig()->get( 'app.base.url' )."gallery/feed",						//  URL to RSS feed
-			'title'	=> $env->getConfig()->get( 'app.name' ).': '.$words['feed']['title']			//  link title
-		) ) );																						//  and add link to page head
-		View_Helper_ContentConverter::register( "View_Helper_Gallery", "formatGalleryLinks" );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Gallery_Compact::onPageApplyModules</hook>
 </module>

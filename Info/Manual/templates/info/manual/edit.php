@@ -39,16 +39,7 @@ if( $moduleConfig->get( 'editor' ) ){
 		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
-return '
-<div class="bs2-row-fluid bs4-row">
-	<div class="bs2-span3 bs4-col-lg-3">
-		<h3>'.$words['list']['heading'].'</h3>
-		'.$helperCategory->render().'
-		'.$helperNav->render().'
-		'.$buttonAdd.'
-		'.$buttonReload.'
-	</div>
-	<div class="bs2-span9 bs4-col-lg-9">
+$panelEdit	= '
 		<div class="content-panel">
 			<h3><span class="muted">'.$words['edit']['heading'].' </span> '.htmlentities( $file, ENT_QUOTES, 'UTF-8' ).'</h3>
 			<div class="content-panel-inner">
@@ -86,14 +77,29 @@ return '
 						<a href="./info/manual/page/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn">'.$iconCancel.' '.$words['edit']['buttonCancel'].'</a>
 						<button type="submit" name="save" class="btn btn-success">'.$iconSave.' '.$words['edit']['buttonSave'].'</button>
 						<a href="./info/manual/page/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn">'.$iconPreview.' '.$words['edit']['buttonPreview'].'</a>
-						<a href="./info/manual/removePage/'.base64_encode( $file ).'" class="btn btn-small btn-danger" onclick="return confirm(\''. addslashes( $words['edit']['buttonRemoveConfirm'] ).'\');">'.$iconRemove.' '.$words['edit']['buttonRemove'].'</a>
+						<a href="./info/manual/removePage/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small btn-danger" onclick="return confirm(\''. addslashes( $words['edit']['buttonRemoveConfirm'] ).'\');">'.$iconRemove.' '.$words['edit']['buttonRemove'].'</a>
 						&nbsp;&nbsp;|&nbsp;&nbsp;
-						<a href="./info/manual/movePageUp/'.base64_encode( $file ).'" class="btn btn-small">'.$iconUp.' '.$words['edit']['buttonMoveUp'].'</a>
-						<a href="./info/manual/movePageDown/'.base64_encode( $file ).'" class="btn btn-small">'.$iconDown.' '.$words['edit']['buttonMoveDown'].'</a>
+						<a href="./info/manual/movePageUp/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small">'.$iconUp.' '.$words['edit']['buttonMoveUp'].'</a>
+						<a href="./info/manual/movePageDown/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small">'.$iconDown.' '.$words['edit']['buttonMoveDown'].'</a>
 					</div>
 				</form>
 			</div>
 		</div>
+	</div>
+</div>';
+
+return '
+<div class="bs2-row-fluid bs4-row">
+	<div class="bs2-span3 bs4-col-lg-3">
+		<h3>'.$words['list']['heading'].'</h3>
+		'.$helperCategory->render().'
+		'.$helperNav->render().'
+		<hr/>
+		'.$buttonAdd.'
+		'.$buttonReload.'
+	</div>
+	<div class="bs2-span9 bs4-col-lg-9">
+		'.$panelEdit.'
 	</div>
 </div>';
 

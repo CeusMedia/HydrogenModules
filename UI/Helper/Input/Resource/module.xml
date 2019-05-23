@@ -20,6 +20,4 @@
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	]]></hook>
 </module>

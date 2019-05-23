@@ -78,7 +78,7 @@ $buttonsSave	= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array
 return '<div class="content-panel">
 	<h3>Neue Route</h3>
 	<div class="content-panel-inner">
-		<form action="./admin/router/add" method="post">
+		<form action="./admin/route/add" method="post">
 			<div class="row-fluid">
 				<div class="span9">
 					<label for="input_title">Titel</label>

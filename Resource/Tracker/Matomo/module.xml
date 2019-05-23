@@ -20,7 +20,7 @@ list>
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -34,6 +34,7 @@ list>
 	<log version="0.4.3">Extract hook methods from controller to own hook class.</log>
 	<log version="0.4.4">Redesign module configuration.</log>
 	<log version="0.5">Migrate from Resource:Tracker:Piwik to Resource:Tracker:Matomo.</log>
+	<log version="0.5.1">Refactor hooks.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -57,5 +58,4 @@ list>
 	<link access="public" path="matomo/index"/>
 	<hook type="resource" resource="Env" event="init">Hook_Tracker_Matomo::onEnvInit</hook>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Tracker_Matomo::onPageApplyModules</hook>
-	<hook type="resource" resource="Page" event="build">Hook_Tracker_Matomo::onPageBuild</hook>
 </module>

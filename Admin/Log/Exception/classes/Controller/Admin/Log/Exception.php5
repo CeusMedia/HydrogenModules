@@ -23,8 +23,27 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 	protected $moduleConfig;
 
 	protected function __onInit(){
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_system_log.', TRUE );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
 
+		$instances	= array( 'this' => (object) array( 'title' => 'Diese Instanz' ) );
+		$path		= $this->env->getConfig()->get( 'path.logs' );
+		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
+
+		$instanceKey	= $this->env->getSession()->get( 'filter_admin_log_exception_instance' );
+		$instanceKey 	= !in_array( $instanceKey, array( 'this', 'remote' ) ) ? 'this' : $instanceKey;
+
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$instances['remote']	= (object) array( 'title' => 'entfernte Instanz' );
+			if( $instanceKey === 'remote' ){
+				$frontend	= $this->env->getLogic()->get( 'Frontend' );
+				$path		= $frontend->getPath( 'logs' );
+				$fileName	= $frontend->getModuleConfigValue( 'Server_Log_Exception', 'file.name' );
+			}
+		}
+
+		$this->addData( 'instances', $instances );
+		$this->addData( 'currentInstance', $instanceKey );
+		$this->filePath	= $path.$fileName;
 	}
 
 	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
@@ -37,11 +56,10 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 	}
 
 	protected function count(){
-		$fileName	= $this->moduleConfig->get( 'file.name' );
-		if( !file_exists( $fileName ) )
+		if( !file_exists( $this->filePath ) )
 			return 0;
 #			throw new RuntimeException( 'Log not existing' );
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FS_File_Reader::load( $this->filePath ) );
 		$lines		= explode( "\n", $content );
 		return count( $lines );
 	}
@@ -66,11 +84,10 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 	 *	@return		array		List if lines with timestamp and encoded exception view
 	 */
 	protected function getLinesFromLog( $limit, $offset = 0, $descending = TRUE ){
-		$fileName	= $this->moduleConfig->get( 'file.name' );
-		if( !file_exists( $fileName ) )
+		if( !file_exists( $this->filePath ) )
 			return array();
 #			throw new RuntimeException( 'Log not existing' );
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FS_File_Reader::load( $this->filePath ) );
 		$lines		= explode( "\n", $content );
 		$total		= count( $lines );
 		if( $descending )
@@ -94,8 +111,8 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 		if( $page > 0 && $page * $limit >= $this->count() )
 			$page--;
 		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 10;
-		$this->env->getSession()->set( 'filter_server_system_page', $page );
-		$this->env->getSession()->set( 'filter_server_system_limit', $limit );
+		$this->env->getSession()->set( 'filter_admin_log_exception_page', $page );
+		$this->env->getSession()->set( 'filter_admin_log_exception_limit', $limit );
 		$lines	= $this->getLinesFromLog( $limit, $page * $limit );
 		$this->addData( 'exceptions', $lines );
 		$this->addData( 'total', $this->count() );
@@ -114,27 +131,25 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 	}
 
 	public function remove( $id ){
-		$fileName	= $this->moduleConfig->get( 'file.name' );
-		if( file_exists( $fileName ) ){
-			$content	= trim( FS_File_Reader::load( $fileName ) );
+		if( file_exists( $this->filePath ) ){
+			$content	= trim( FS_File_Reader::load( $this->filePath ) );
 			$lines		= explode( "\n", $content );
 			if( count( $lines ) > $id ){
 				unset( $lines[$id] );
 				$lines	= join( "\n", $lines )."\n";
-				FS_File_Writer::save( $fileName, $lines );
+				FS_File_Writer::save( $this->filePath, $lines );
 			}
 		}
-		$page	= $this->env->getSession()->get( 'filter_server_system_page' );
+		$page	= $this->env->getSession()->get( 'filter_admin_log_exception_page' );
 		$this->restart( $page ? $page : NULL, TRUE );
 	}
 
 	public function view( $id ){
-		$fileName	= $this->moduleConfig->get( 'file.name' );
-		if( !( $fileName && file_exists( $fileName ) ) ){
+		if( !( $this->filePath && file_exists( $this->filePath ) ) ){
 			$this->env->getMessenger()->noteError( 'No exception log found.' );
 			$this->restart( NULL, TRUE );
 		}
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FS_File_Reader::load( $this->filePath ) );
 		$lines		= explode( "\n", $content );
 		if( count( $lines ) <= $id ){
 			$this->env->getMessenger()->noteError( 'Invalid exception number.' );
@@ -143,7 +158,12 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 		$exception	= $this->parseLine( $lines[$id] );
 		$exception->id	= $id;
 		$this->addData( 'exception', $exception );
-		$this->addData( 'page', $this->env->getSession()->get( 'filter_server_system_page' ) );
+		$this->addData( 'page', $this->env->getSession()->get( 'filter_admin_log_exception_page' ) );
+	}
+
+	public function setInstance( $instanceKey ){
+		$this->env->getSession()->set( 'filter_admin_log_exception_instance', $instanceKey );
+		$this->restart( NULL, TRUE );
 	}
 }
 ?>

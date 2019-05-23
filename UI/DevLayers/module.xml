@@ -2,15 +2,17 @@
 <module>
 	<title>UI: DevLayers</title>
 	<description><![CDATA[Container for development information layers.]]></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve JavaScript and style.</log>
 	<log version="0.2.2">Use general module main switch.</log>
+	<log version="0.2.3">Extract hook to own hook class.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Hook/UI/DevLayers.php5</class>
 		<class>View/Helper/DevLayers.php5</class>
 		<script load="auto">UI.DevLayers.js</script>
 		<style load="auto" source="theme">dev.layers.css</style>
@@ -18,10 +20,5 @@
 	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 	]]></hook>
-	<hook type="resource" resource="App" event="respond"><![CDATA[
-		if( $env->getConfig()->get( 'module.ui_devlayers.active' ) ){
-			$helper		= new View_Helper_DevLayers( $env );
-			$context->addBody( $helper->render() );
-		}
-	]]></hook>
+	<hook type="resource" resource="App" event="respond">Hook_UI_DevLayers::onAppRespond</hook>
 </module>

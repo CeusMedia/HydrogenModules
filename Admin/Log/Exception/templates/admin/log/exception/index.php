@@ -3,23 +3,37 @@
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
+$selectInstance	= '';
+if( count( $instances ) > 1 ){
+	$optInstance	= array();
+	foreach( $instances as $instanceKey => $instanceData )
+		$optInstance[$instanceKey]	= $instanceData->title;
+	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
+	$selectInstance	= UI_HTML_Tag::create( 'select', $optInstance, array(
+		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
+		'class'		=> '',
+		'style'		=> 'width: 100%',
+	) );
+
+}
+
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= array();
 	foreach( $exceptions as $nr => $exception ){
 
-		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './system/log/view/'.$exception->id ) );
+		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->id ) );
 		$date	= date( 'Y.m.d', $exception->timestamp );
 		$time	= date( 'H:i:s', $exception->timestamp );
 
 		$buttons	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'a', $iconView, array(
 				'class'	=> 'btn btn-mini not-btn-info',
-				'href'	=> './system/log/view/'.$exception->id
+				'href'	=> './admin/log/exception/view/'.$exception->id
 			) ),
 			UI_HTML_Tag::create( 'a', $iconRemove, array(
 				'class'	=> 'btn btn-mini btn-danger',
-				'href'	=> './system/log/remove/'.$exception->id
+				'href'	=> './admin/log/exception/remove/'.$exception->id
 			) ),
 		), array( 'class' => 'btn-group' ) );
 
@@ -34,11 +48,14 @@ if( $exceptions ){
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './system/log', $page, ceil( $total / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 $panelList	= '
-		<div class="content-panel">
+		<div class="content-panel" style="position: relative">
+			<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
+				'.$selectInstance.'
+			</div>
 			<h3>Exceptions</h3>
 			<div class="content-panel-inner">
 				'.$list.'

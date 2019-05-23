@@ -28,23 +28,19 @@ list>
 <list
 ]]></description>
 	<category>User Interface</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use general module main switch.</log>
+	<log version="0.2.2">Extract hook to own hook class.</log>
 	<author site="https://plus.google.com/110879635926653430880/about">Christian Robertson</author>
 	<license source="http://www.fontsquirrel.com/license/roboto">Apache License v2</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<files>
+		<class>Hook/UI/Font/Roboto.php5</class>
+	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$config	= $env->getConfig();
-		if( $config->get( 'module.ui_font.active' ) ){
-			if( $config->get( 'module.ui_font_roboto.active' ) ){
-				$url	= $config->get( 'module.ui_font.uri' ).'Roboto/roboto.css';
-				$env->getPage()->css->theme->addUrl( $url );
-			}
-		}
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_Roboto::onPageApplyModules</hook>
 </module>

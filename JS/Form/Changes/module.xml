@@ -3,7 +3,7 @@
 	<title>JS: Form: Changes</title>
 	<description><![CDATA[Indicates changes in form inputs and reminds to save before leaving.]]></description>
 	<category>JavaScript</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Add script extracted from module Work:Missions.</log>
 	<log version="0.1.2">Add style definition extracted from module Work:Missions.</log>
@@ -20,10 +20,12 @@
 	<log version="0.3">Rename from UI:JS:cmFormChange to JS:Form:Changes.</log>
 	<log version="0.3.1">Fix CSS bug.</log>
 	<log version="0.3.2">Modernize.</log>
+	<log version="0.3.3">Extract hook to own hook class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Hook/JS/Form/Changes.php5</class>
 		<script load="auto">UI.Form.Changes.js</script>
 		<style load="auto">UI.Form.Changes.css</style>
 	</files>
@@ -33,7 +35,5 @@
 	<relations>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$env->getPage()->js->addScriptOnReady( 'UI.Form.Changes.init();', 9 );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Form_Changes::onPageApplyModules</hook>
 </module>

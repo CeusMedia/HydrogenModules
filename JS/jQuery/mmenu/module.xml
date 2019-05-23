@@ -3,15 +3,17 @@
 	<title>JS: jQuery: mmenu</title>
 	<description><![CDATA[jQuery plugin for mobile navigation.]]></description>
 	<category>JavaScript</category>
-	<version>7.0.5</version>
+	<version>7.0.5-p1</version>
 	<log version="5.5.3-p1">Moved theme from custom to common.</log>
 	<log version="7.0.5">Support version 7.0.5.</log>
+	<log version="7.0.5-p1">Extract hook to own hook class.</log>
 	<author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
 	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
 	<url>http://mmenu.frebsite.nl/</url>
 	<license version="5" source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
 	<license version="7" source="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
 	<files>
+		<class>Hook/JS/jQuery/Mmenu.php5</class>
 		<script>mmenu/5.5.3/jquery.mmenu.dragclose.min.js</script>
 		<script>mmenu/5.5.3/jquery.mmenu.currentitem.min.js</script>
 		<script>mmenu/5.5.3/jquery.mmenu.sectionindexer.min.js</script>
@@ -67,38 +69,5 @@
 	<config protected="yes" type="string" name="load.addons"/>
 	<config protected="yes" type="string" name="load.extensions"/>
 	<config protected="yes" type="string" name="version" values="5.5.3,7.0.5">7.0.5</config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config		= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
-$version	= $config->get( 'version' );
-$pathJs		= $env->getConfig()->get( 'path.scripts' ).'mmenu/'.$version.'/';
-$files		= (object) array( 'js' => array(), 'css' => array() );
-if( $config->get( 'version' ) === '7.0.5' ){
-	if( $config->get( 'load' ) == "all" ){
-		$files->js[]	= 'jquery.mmenu.all.min.js';
-		$files->css[]	= 'jquery.mmenu.all.min.css';
-	}
-	else{
-		$files->js[]	= 'jquery.mmenu.min.js';
-		$files->css[]	= 'jquery.mmenu.min.css';
-	}
-}
-else{
-	if( $config->get( 'load' ) == "all" ){
-		$files->js[]	= 'jquery.mmenu.min.all.js';
-		$files->css[]	= 'jquery.mmenu.all.css';
-	}
-	else{
-		$files->js[]	= 'jquery.mmenu.min.js';
-		$files->css[]	= 'jquery.mmenu.css';
-	}
-}
-
-// @todo support addons and extensions if core was loaded, only
-// @todo support CDN: https://cdnjs.com/libraries/jQuery.mmenu
-
-foreach( $files->js as $filePath )
-	$context->js->addUrl( $pathJs.$filePath );
-foreach( $files->css as $filePath )
-	$context->addCommonStyle( 'mmenu/'.$version.'/'.$filePath );
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Mmenu::onPageApplyModules</hook>
 </module>

@@ -19,7 +19,7 @@ var Log = {																		//  literal object, use statically
 	logLevel: 1 | 2 | 4 | 8 | 16,
 
 	getTimeInfo: function(){
-	
+
 		var now = new Date().getTime();
 		var code = (now - Log.logStart) + '(+' + (now - Log.logLast) + ')> ';
 		Log.logLast = now;
@@ -32,21 +32,21 @@ var Log = {																		//  literal object, use statically
 	},
 
 	logUsingConsole: function(level,message,data){
-		if(!Log.hasConsole)											//  console is available in browser
+		if(!Log.hasConsole)														//  console is available in browser
 			return false;
-		if(this.logLevel & level){									//
+		if(this.logLevel & level){												//
 			if(typeof(message) === 'object')
-				return console.log(message);						//  note on console as information
+				return console.log(message);									//  note on console as information
 
-			var list = [];											//
-			for(var key in data)									//
-				list.push(' '+key+':'+JSON.stringify(data[key]));	//
-			message += list.join('');								//
-			if(this.logTime)										//  provide time information
-				if(typeof message !== 'object')						//  message is not an object
-					if(typeof message !== 'function')				//  message is not a function
-						message = Log.getTimeInfo()+message;		//  prepend time information
-			return console.log(message);							//  note on console as information
+			var list = [];														//
+			for(var key in data)												//
+				list.push(' '+key+':'+JSON.stringify(data[key]));				//
+			message += list.join('');											//
+			if(this.logTime)													//  provide time information
+				if(typeof message !== 'object')									//  message is not an object
+					if(typeof message !== 'function')							//  message is not a function
+						message = Log.getTimeInfo()+message;					//  prepend time information
+			return console.log(message);										//  note on console as information
 		}
 	},
 
@@ -55,14 +55,14 @@ var Log = {																		//  literal object, use statically
 			this.init();														//  initialize log engine
 
 		data = typeof data === 'object' ? data : {};
-		switch(this.logModule){												//  run code depending on log module
+		switch(this.logModule){													//  run code depending on log module
 			case 'console':														//  module 'console', supported by FF and WK
 				this.logUsingConsole(level,message,data);
 				break;															//  break switch
 			default:															//  else run default
 				break;															//  break switch
 		}
-	}	
+	}
 };
 
 /**

@@ -22,8 +22,8 @@ class View_Helper_Info_Manual_CategorySelector {
 				'status'	=> '>='.Model_Manual_Category::STATUS_NEW,
 			), array( 'rank' => 'ASC' ) );
 		}
-//		if( count( $this->categories ) === 1 )
-//			return '';
+		if( count( $this->categories ) === 1 )
+			return '';
 		$options	 = array();
 		foreach( $this->categories as $category ){
 			$options[$category->manualCategoryId]	= $category->title;

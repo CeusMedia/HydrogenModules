@@ -3,24 +3,20 @@
 	<title>UI: Font: OpenSans</title>
 	<description><![CDATA[Integration of Open Sans typeface.]]></description>
 	<category>User Interface</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separated to Hydrogen module.</log>
 	<log version="0.2.1">Use general module main switch.</log>
+	<log version="0.2.2">Extract hook to own hook class.</log>
 	<company site="http://www.opensans.com/">opensans.com</company>
 	<author site="http://en.wikipedia.org/wiki/Steve_Matteson">Steve Matteson</author>
 	<license source="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License version 2.0</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<files>
+		<class>Hook/UI/Font/OpenSans.php5</class>
+	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$config	= $env->getConfig();
-		if( $config->get( 'module.ui_font.active' ) ){
-			if( $config->get( 'module.ui_font_opensans.active' ) ){
-				$url	= $config->get( 'module.ui_font.uri' ).'OpenSans/opensans.css';
-				$env->getPage()->css->theme->addUrl( $url );
-			}
-		}
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_OpenSans::onPageApplyModules</hook>
 </module>

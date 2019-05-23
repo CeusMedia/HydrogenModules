@@ -3,10 +3,11 @@
 	<title>UI: Font: Hack</title>
 	<description><![CDATA[Integration of Hack typeface.]]></description>
 	<category>User Interface</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separated to Hydrogen module.</log>
 	<log version="0.2.1">Use general module main switch.</log>
+	<log version="0.2.2">Extract hook to own hook class.</log>
 	<company site="http://sourcefoundry.org/hack/">sourcefoundry.org/hack</company>
 	<author site="https://github.com/chrissimpkins">Chris Simpkins</author>
 	<author site="https://github.com/burodepeper">David van Gemeren</author>
@@ -17,20 +18,11 @@
 	<config protected="yes" type="boolean" name="set" values="latin1,extended">latin1</config>
 	<config protected="yes" type="boolean" name="source" values="Library,CDN">Library</config>
 	<config protected="yes" type="boolean" name="URI.CDN">//cdn.jsdelivr.net/font-hack/2.018/css/</config>
+	<files>
+		<class>Hook/UI/Font/Hack.php5</class>
+	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$config	= $env->getConfig();
-		$moduleConfig	= $config->getAll( 'module.ui_font_hack.', TRUE );
-		if( $config->get( 'module.ui_font.active' ) ){
-			if( $moduleConfig->get( 'active' ) ){
-				$file	= $moduleConfig->get( 'set' ) === 'extended' ? 'hack-extended' : 'hack';
-				$path	= $config->get( 'module.ui_font.uri' ).'Hack/';
-				if( $moduleConfig->get( 'source' ) === 'CDN' )
-					$path	= $moduleConfig->get( 'URI.CDN' );
-				$env->getPage()->css->theme->addUrl( $path.$file.'.min.css' );
-			}
-		}
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_Hack::onPageApplyModules</hook>
 </module>

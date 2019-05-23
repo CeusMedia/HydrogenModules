@@ -28,15 +28,15 @@ return '
 	<div class="span12">
 		<div class="content-panel">
 			<h3>Exception</h3>
-			<small class="muted"><a href="./system/log">&laquo;&nbsp;zurück</a></small>
+			<small class="muted"><a href="./admin/log/exception">&laquo;&nbsp;zurück</a></small>
 			<div class="content-panel-inner">
 				'.$list.'
 				<hr/>
 				<h4>Trace</h4>
 				'.$trace.'
 				<div class="buttonbar">
-					<a href="./system/log'.( $page ? '/'.$page : '' ).'" class="btn btn-small"><i class="icon-arrow-left"></i>&nbsp;back</a>
-					<a href="./system/log/remove/'.$exception->id.'" class="btn btn-small btn-danger"><i class="icon-trash icon-white"></i>&nbsp;remove</a>
+					<a href="./admin/log/exception'.( $page ? '/'.$page : '' ).'" class="btn btn-small"><i class="icon-arrow-left"></i>&nbsp;back</a>
+					<a href="./admin/log/exception/remove/'.$exception->id.'" class="btn btn-small btn-danger"><i class="icon-trash icon-white"></i>&nbsp;remove</a>
 				</div>
 			</div>
 		</div>

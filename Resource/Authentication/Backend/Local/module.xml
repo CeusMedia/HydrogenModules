@@ -6,11 +6,22 @@
 **Attention:**
 Basic Authentication will not work, if PHP is integrated into Apache via CGI/FastCGI.
 The reason: Authorisation headers will not be included automatically.
-You need to set this header in your Apache configuration. For example in .htaccess:
+You need to set this header in your Apache configuration. For example in <code>.htaccess</code>:
+
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
+## Login Panel
+You can use the shortcode <code>[auth:local:panel:login]</code> to show the login panel (since version 0.5.5).
+
+Parameters are:
+list>
+- oauth: show OAuth2 providers (**yes**|no)
+- register: allow registration (**yes**|no)
+- remember: allow permanent login (**yes**|no)
+<list
+
 ]]></description>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -45,21 +56,24 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.5.2">Use general module main switch.</log>
 	<log version="0.5.3">Interface improvements.</log>
 	<log version="0.5.4">Finish support for Bootstrap 3 and 4.</log>
+	<log version="0.5.5">Add content shortcode hook for login panel.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth/Local.php5</class>
+		<class>Hook/Auth/Local.php5</class>
+		<class>Logic/Authentication/Backend/Local.php5</class>
 		<class>Mail/Auth/Local/Register.php5</class>
 		<class>Mail/Auth/Local/Password.php5</class>
 		<class>View/Auth/Local.php5</class>
-		<class>Logic/Authentication/Backend/Local.php5</class>
-		<class>Hook/Auth/Local.php5</class>
+		<class>View/Helper/Auth/Local/Panel/Login.php5</class>
 		<template>auth/local/confirm.php</template>
 		<template>auth/local/login.php</template>
 		<template>auth/local/login.form.php</template>
 		<template>auth/local/password.php</template>
 		<template>auth/local/register.php</template>
+		<template>auth/local/panel/login.php</template>
 		<locale>de/auth/local.ini</locale>
 		<locale>de/html/auth/local/confirm/top.html</locale>
 		<locale>de/html/auth/local/confirm/info.html</locale>
@@ -137,4 +151,5 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Local::onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Local::onAuthRegisterLoginTab</hook>
 	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Hook_Auth_Local::onGetRelatedUsers</hook>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Auth_Local::onViewRenderContent</hook>
 </module>

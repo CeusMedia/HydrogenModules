@@ -92,6 +92,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 */
 	public function getPageFromPath( $path, $withParents = FALSE ){
 		$parents	= array();
+		$path		= trim( $path, '/' );
 		$page		= $this->getPageFromPathRecursive( $path, 0, $parents );
 
 		if( $withParents ){
@@ -189,6 +190,12 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		if( preg_match( '/^[0-9]+$/', $pathOrId ) )
 			return (bool) $this->modelPage->get( $pathOrId );
 		return (bool) $this->getPageFromPath( $pathOrId );
+	}
+
+	public function hasPages( $visible = TRUE ){
+		$indices	= array();
+		$indices['status']	= $visible ? '>='.Model_Page::STATUS_VISIBLE : '>='.Model_Page::STATUS_HIDDEN;
+		return $this->modelPage->count( $indices );
 	}
 
 	public function isAccessible( $page ){

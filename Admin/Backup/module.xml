@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Backup</title>
+	<description><![CDATA[Backup and restore.]]></description>
+	<category>Administration</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add database table and model.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Backup.php5</class>
+<!--		<class>Logic/Backup.php5</class>-->
+		<class>Model/Backup.php5</class>
+		<class>View/Admin/Backup.php5</class>
+<!--		<class>Hook/Admin/Backup.php5</class>-->
+		<template>admin/backup/add.php</template>
+		<template>admin/backup/index.php</template>
+		<template>admin/backup/restore.php</template>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module" default="yes" original="yes">yes</config>
+	<config protected="yes" type="string" name="path" mandatory="yes" default="backups/" original="backups/">backups/</config>
+	<relations/>
+<!--	<hook type="event" resource="Page" event="applyModules">Hook_Admin_Database_Backup_Copy::onPageApplyModules</hook>-->
+    <sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>backups`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>backups` (
+  `backupId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(10) UNSIGNED DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `comment` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`pageId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+    <sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>backups`;
+]]></sql>
+</module>

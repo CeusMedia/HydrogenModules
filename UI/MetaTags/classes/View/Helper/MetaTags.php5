@@ -30,14 +30,18 @@ class View_Helper_MetaTags{
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
 			$logic		= new Logic_Page( $this->env );
 			$path		= trim( $request->get( '__path' ) );
-			$object		= $logic->getPageFromPath( strlen( $path ) ? $path : 'index' );
-			if( $object ){
-				if( strlen( trim( $object->title ) ) )
-					$title			= $object->title;
-				if( strlen( trim( $object->description ) ) )
-					$description	= $object->description;
-				if( strlen( trim( $object->keywords ) ) )
-					$keywords		= $object->keywords;
+			try{
+				$object		= $logic->getPageFromPath( strlen( $path ) ? $path : 'index' );
+				if( $object ){
+					if( strlen( trim( $object->title ) ) )
+						$title			= $object->title;
+					if( strlen( trim( $object->description ) ) )
+						$description	= $object->description;
+					if( strlen( trim( $object->keywords ) ) )
+						$keywords		= $object->keywords;
+				}
+			}
+			catch( Exception $e ){
 			}
 		}
 
