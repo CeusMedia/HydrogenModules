@@ -196,19 +196,23 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$data	= $request->getAll();
 			if( !isset( $data['inputs'] ) || !$data['inputs'] )
 				throw new Exception( 'No form data given.' );
-			if( !( $formId 	= $request->get( 'formId' ) ) )
+			if( !( $formId = $request->get( 'formId' ) ) )
 				throw new Exception( 'No form ID given.' );
+			if( !preg_match( '/^[0-9]+$/', $formId ) )
+				throw new Exception( 'Invalid form ID given.' );
+			$form		= $this->modelForm->get( $formId );
+			if( $data['inputs']['surname']['value'] === "Testmann" )
+				throw new Exception( 'Hallo Herr Testmann!' );
 			$email		= '';
 			$captcha	= '';
 			foreach( $data['inputs'] as $nr => $input ){
 				if( $input['name'] === 'email' )
-					$email	= $input['value'];
+					$email	= strip_tags( $input['value'] );
 				if( $input['name'] === 'captcha' ){
 					$captcha	= $input['value'];
 					unset( $data['inputs'][$nr] );
 				}
 			}
-			$form		= $this->modelForm->get( $formId );
 			if( $captcha ){
 				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
 					header( 'Content-Type: application/json' );
@@ -227,16 +231,21 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$status		= Model_Form_Fill::STATUS_CONFIRMED;
 			if( $form->type == Model_Form::TYPE_CONFIRM )
 				$status	= Model_Form_Fill::STATUS_NEW;
+
+			foreach( $data['inputs'] as $index => $input )
+				$input['value']	= strip_tags( $input['value'] );
+
 			$data		= array(
 				'formId'	=> $formId,
 				'status'	=> $status,
-				'email'		=> $email,
-				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
-				'referer'	=> getEnv( 'HTTP_REFERER' ) ? getEnv( 'HTTP_REFERER' ) : '',
-				'agent'		=> getEnv( 'HTTP_USER_AGENT' ),
+				'email'		=> strip_tags( $email ),
+//				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
+				'data'		=> json_encode( $data['inputs'] ),
+				'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
+				'agent'		=> strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
 				'createdAt'	=> time(),
 			);
-			$fillId		= $this->modelFill->add( $data );
+			$fillId		= $this->modelFill->add( $data, FALSE );
 			if( $form->type == Model_Form::TYPE_NORMAL ){
 				$this->sendCustomerResultMail( $fillId );
 				$this->sendManagerResultMails( $fillId );
@@ -251,6 +260,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			);
 		}
 		catch( Exception $e ){
+//			$this->sendManagerErrorMail( @$data );
 			$status	= 'error';
 			$data	= array(
 				'error'		=> $e->getMessage(),
@@ -366,6 +376,29 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$receiver	= (object) array( 'email'	=> $fill->email );
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
+	}
+
+	protected function sendManagerErrorMail($formId, $data){
+		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		if( class_exists( '\CeusMedia\Mail\Participant' ) )
+			$sender		= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
+		else
+			$sender		= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
+		if( $configResource->get( 'sender.name' ) )
+			$sender->setName( $configResource->get( 'sender.name' ) );
+
+		$form		= $this->modelForm->get( $formId );
+		$subject	= 'DtHPS: Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
+		$mail		= new Mail_Form_Manager_Error( $this->env, array(
+			'form'				=> $form,
+			'data'				=> $data,
+			'mailTemplateId'	=> $configResource->get( 'template' ),
+		) );
+		$mail->setSubject( $subject );
+		$mail->setSender( $sender );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$receiver	= (object) array( 'email' => $configResource->get( 'sender.address' ) );
+		$this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
 	protected function sendManagerResultMails( $fillId ){
