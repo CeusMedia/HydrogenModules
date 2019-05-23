@@ -16,8 +16,8 @@
 <!--		<class>Logic/Form.php5</class>-->
 		<class>Mail/Form/Abstract.php5</class>
 		<class>Mail/Form/Customer/Confirm.php5</class>
-		<class>Mail/Form/Customer/Error.php5</class>
 		<class>Mail/Form/Customer/Result.php5</class>
+		<class>Mail/Form/Manager/Error.php5</class>
 		<class>Mail/Form/Manager/Filled.php5</class>
 		<class>Model/Form.php5</class>
 		<class>Model/Form/Block.php5</class>
