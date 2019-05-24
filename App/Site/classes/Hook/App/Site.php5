@@ -180,7 +180,6 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 */
 	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$messenger	= $context->env->getMessenger();									//  shortcut messenger
-		$config		= $module->config;													//  shortcut module configuration pairs
 		if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
 			if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
 				if( !@copy( '.htaccess.dist', '.htaccess' ) )							//  try to install default .htaccess
@@ -188,6 +187,13 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 				if( !@copy( '.htpasswd.dist', '.htpasswd' ) )							//  try to install default .htpasswd
 					throw new RuntimeException( "Cannot create .htpasswd from .htpasswd.dist" );
 				$messenger->noteSuccess( 'Created .htaccess and .htpasswd for authentication.' );
+			}
+		}
+		if( !file_exists( 'robots.txt' ) ){												//  robots file is not existing
+			if( file_exists( 'robots.txt.dist' ) ){										//  but default file is existing
+				if( !@copy( 'robots.txt.dist', 'robots.txt' ) )							//  try to install default robots file
+					throw new RuntimeException( "Cannot create robots.txt from robots.txt.dist" );
+				$messenger->noteSuccess( 'Created empty robots file (robots.txt).' );
 			}
 		}
 	}

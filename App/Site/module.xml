@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.7</version>
+	<version>0.5.8</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -28,6 +28,7 @@
 	<log version="0.5.5">Prepare to use new abstract hook provided by framework.</log>
 	<log version="0.5.6">Add background images and rename logo images.</log>
 	<log version="0.5.7">Use module Server:Log:Exception.</log>
+	<log version="0.5.8">Add robots file as template and autocreate copy.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -60,7 +61,7 @@
 		<image source="common">logo/CeusMedia/Stacked_Blue_Transparent.svg</image>
 		<image source="common">logo/CeusMedia/Stacked_White_Transparent.svg</image>
 		<file>index.php</file>
-		<file>robots.txt</file>
+		<file>robots.txt.dist</file>
 		<file>.htaccess.dist</file>
 		<file>.htpasswd.dist</file>
 		<file>config/.htaccess</file>
