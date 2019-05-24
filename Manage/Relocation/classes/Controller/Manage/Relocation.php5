@@ -93,7 +93,7 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 	}
 
 	public function filter( $reset = NULL ){
-		$filterKeys	= array( 'id', 'status', 'title' );
+		$filterKeys	= array( 'id', 'status', 'title', 'orderColumn', 'orderDirection' );
 		foreach( $filterKeys as $key ){
 			if( $reset )
 				$this->session->remove( $this->filterSessionPrefix.$key );
@@ -105,11 +105,11 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 
 	public function index( $page = 0 ){
 		$conditions		= array();
-		$orders			= array();
-
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
 		$filterStates	= $this->session->get( $this->filterSessionPrefix.'status' );
 		$filterTitle	= $this->session->get( $this->filterSessionPrefix.'title' );
+		$filterOrderCol	= $this->session->get( $this->filterSessionPrefix.'orderColumn' );
+		$filterOrderDir	= $this->session->get( $this->filterSessionPrefix.'orderDirection' );
 		if( $filterId )
 			$conditions['relocationId']	= $filterId;
 		else{
@@ -118,6 +118,14 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 			if( $filterTitle )
 				$conditions['title']	= '%'.$filterTitle.'%';
 		}
+
+		$orders			= array();
+		$allowedColumns	= array( 'relocationId', 'title', 'views', 'usedAt' );
+		if( !in_array( $filterOrderCol, $allowedColumns ) )
+			$filterOrderCol	= 'relocationId';
+		if( !in_array( $filterOrderDir, array( 'asc', 'desc' ) ) )
+			$filterOrderDir	= 'asc';
+		$orders[$filterOrderCol]	= $filterOrderDir;
 
 		$limit	= 10;
 		$limits	= array( $page * $limit, $limit );
@@ -130,6 +138,8 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterId', $filterId );
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterTitle', $filterTitle );
+		$this->addData( 'filterOrderColumn', $filterOrderCol );
+		$this->addData( 'filterOrderDirection', $filterOrderDir );
 	}
 
 	public function setStatus( $relocationId, $status ){

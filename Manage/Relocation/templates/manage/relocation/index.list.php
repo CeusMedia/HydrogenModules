@@ -10,7 +10,8 @@ $iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-ri
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
 if( $relocations ){
-	$rows	= array();
+	$helper		= new View_Helper_TimePhraser( $env );
+	$rows		= array();
 	foreach( $relocations as $relocation ){
 		$class	= "warning";
 		if( $relocation->status > 0 )
@@ -20,6 +21,7 @@ if( $relocations ){
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$link	= UI_HTML_Tag::create( 'a', $relocation->title, array( 'href' => $uri ) );
+		$usedAt		= $helper->convert( $relocation->usedAt, TRUE, $w->prefixTimePhraser, $w->suffixTimePhraser );
 		$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit, array(
 			'href'	=> $uri,
 			'class'	=> 'btn btn-small',
@@ -35,6 +37,7 @@ if( $relocations ){
 			UI_HTML_Tag::create( 'td', $relocation->relocationId ),
 			UI_HTML_Tag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', array( 'class' => 'autocut' ) ),
 			UI_HTML_Tag::create( 'td', $relocation->views ),
+			UI_HTML_Tag::create( 'td', $usedAt ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		), array(
 			'data-status'	=> $relocation->status,
@@ -42,8 +45,8 @@ if( $relocations ){
 			'class'			=> $class
 		) );
 	}
-	$columns	= UI_HTML_Elements::ColumnGroup( "50px", "", "80px", "100px" );
-	$heads	= UI_HTML_Elements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headActions ) );
+	$columns	= UI_HTML_Elements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
+	$heads	= UI_HTML_Elements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions ) );
 	$thead	= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
 	$table	= UI_HTML_Tag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );

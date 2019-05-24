@@ -3,7 +3,7 @@
 	<title>Manage: Relocation</title>
 	<description><![CDATA[Management for short-URL relocation to external internet resources.]]></description>
 	<category>Management</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support localization.</log>
@@ -17,6 +17,7 @@
 	<log version="0.3">First production version.</log>
 	<log version="0.3.1">Add pagination.</log>
 	<log version="0.3.2">Use FontAwesome for button icons.</log>
+	<log version="0.3.3">Extend filter by order and show last use date in list.</log>
 <!--
 	<log version="0.3.x">Check for valid URL.</log>
 	<log version="0.3.x">Record relocation requests.</log>

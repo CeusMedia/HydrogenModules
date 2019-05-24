@@ -17,6 +17,20 @@ $buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, ar
 
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $filterStatus );
 
+$optOrderColumn	= array(
+	'title'			=> 'Titel',
+	'views'			=> 'Klicks',
+	'usedAt' 		=> 'Nutzung',
+	'relocationId'	=> 'ID',
+);
+$optOrderColumn	= UI_HTML_Elements::Options( $optOrderColumn, $filterOrderColumn );
+
+$optOrderDirection	= array(
+	'asc' 	=> 'aufsteigend',
+	'desc'	=> 'absteigend',
+);
+$optOrderDirection	= UI_HTML_Elements::Options( $optOrderDirection, $filterOrderDirection );
+
 return '
 		<div class="content-panel">
 			<h3>'.$w->heading.'</h3>
@@ -38,6 +52,16 @@ return '
 							<select name="status[]" id="input_status" multiple="multiple" class="span12">
 								'.$optStatus.'
 							</select>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span6">
+							<label for="input_orderColumn">'.$w->labelOrderColumn.'</label>
+							<select name="orderColumn" id="input_orderColumn" class="span12">'.$optOrderColumn.'</select>
+						</div>
+						<div class="span6">
+							<label for="input_orderDirection">'.$w->labelOrderDirection.'</label>
+							<select name="orderDirection" id="input_orderDirection" class="span12">'.$optOrderDirection.'</select>
 						</div>
 					</div>
 					<div class="buttonbar">
