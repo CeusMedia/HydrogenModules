@@ -2,18 +2,20 @@
 class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 
 	protected $logic;
+	protected $filterPrefix	= 'filter_admin_mail_queue_';
 
 	public function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Mail::getInstance( $this->env );
-		$this->filterPrefix	= 'filter_admin_mail_queue_';
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
 			CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 		}
+		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
+			$this->session->set( $this->filterPrefix.'status', array());
 	}
 
 	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
