@@ -2,7 +2,7 @@
  * Ceus Media Forms
  * Wordpress plugin for external forms.
  * Author		Christian Würker <christian.wuerker@ceusmedia.de>
- * Version		1.0
+ * Version		1.1
  */
 var Forms = {
 	mode: 'live',
@@ -20,7 +20,7 @@ var Forms = {
 
 	collectFormData: function(form){
 		var data = {};
-		form.find(':input').each(function(){
+		form.find(':input:visible').each(function(){
 			if(this.nodeName === "BUTTON")
 				return;
 			var node = jQuery(this);
@@ -31,16 +31,20 @@ var Forms = {
 				label: null,
 				value: node.val(),
 				valueLabel: null,
+				text: null,
 			};
+			var relatedText = form.find('#input_'+this.name+'-text');
 			var relatedLabel = jQuery("label[for='input_"+item.name+"']");
-			if(relatedLabel.length)
+			if(relatedText.size())
+				item.text = relatedText.get(0).innerText;
+			if(relatedLabel.size())
 				item.label = relatedLabel.get(0).innerText;
 
 			if(this.nodeName === "SELECT"){
 				item.type = "select";
 				var value = node.val();
 				var options = node.children('option');
-				for(i=0; i<options.length; i++){
+				for(i=0; i<options.size(); i++){
 					if(options.eq(i).val() == value){
 						item.valueLabel = options.eq(i).html();
 						break;
@@ -49,11 +53,12 @@ var Forms = {
 			}
 			if(this.nodeName === "INPUT"){
 				var inputType = node.attr('type');
+				item.type = 'text';
 
 				if(inputType === "date"){
 					item.type = "date";
 				}
-				if(inputType === "checkbox"){
+				else if(inputType === "checkbox"){
 					item.type = "checkbox";
 					item.value = node.is(":checked") ? 'ja' : 'nein';
 					item.valueLabel = node.is(":checked") ? 'ja' : 'nein';
@@ -67,19 +72,16 @@ var Forms = {
 						item.id = 'input_'+this.name;
 //						item.value = '['+this.name+']';
 						item.valueLabel	= "";
-						if(relatedLabel.length)
+						if(relatedLabel.size())
 							item.label = relatedLabel.get(0).innerText;
 					}
 					if(node.is(":checked")){
 						item.value = this.value;
 						item.valueLabel	= node.parent().get(0).innerText;
 						var radioSpan = jQuery("span#input_"+this.name+"-"+this.value);
-						if(radioSpan.length)
+						if(radioSpan.size())
 							item.valueLabel	= radioSpan.get(0).innerText;
 					}
-				}
-				else{
-					item.type = 'text';
 				}
 			}
 			data[item.name]	= item;
@@ -89,12 +91,18 @@ var Forms = {
 
 	handleResponse: function(response){
 //		console.log(response);
-		var form = jQuery("#form-"+response.data.formId);
+//		var form = jQuery("#form-"+response.data.formId);
+		var form = jQuery(this.form);
 		if(response.status == "ok"){
 			form.slideUp(500, function(){
 				form.parent().find(".form-message-error").slideUp(150);
 				form.parent().find(".form-message-success").slideDown(500);
 			});
+		}
+		else if(response.status == "captcha"){
+			form.find("#input_captcha").val('');
+			alert( 'Der Sicherheitscode ist nicht richtig.' );
+			form.find(':input').removeProp('disabled');
 		}
 		else if(response.status == "error"){
 			form.parent().find(".form-message-error-title").html(response.data.error);
@@ -103,19 +111,17 @@ var Forms = {
 				form.parent().find(".form-message-error").slideDown(500);
 			});
 /*			form.css({opacity: 1});
-			form.find(':input').prop('disabled', false);
+//			form.find(':input').prop('disabled', false);
 			form.find('button').each(function(){
-				jQuery(this).prop('disabled',false);
+				jQuery(this).removeProp('disabled');
 			});*/
 		}
 	},
 
 	init: function(urlServer, devMode, formId){
-		if(Forms.urlServer)
-			return Forms;
 		if(typeof devMode !== "undefined")
 			Forms.mode = devMode ? 'dev' : 'live';
-		Forms.urlServer = urlServer;
+		Forms.urlServer = urlServer.replace(/\/*$/, '') + '/';
 		Forms.status = 1;
 
 		//  COLLECT URL REQUEST PARAMETERS
@@ -134,7 +140,7 @@ var Forms = {
 	initCollapsableRows: function(formId){
 		jQuery("#"+formId+" .cmforms-row").prepend(jQuery('<span></span>')
 			.attr({class: 'trigger-close'}).html('Zeile verbergen')
-			.on('click', function(elem){jQuery(elem.target).parent().slideUp()}));
+			.bind('click', function(elem){jQuery(elem.target).parent().slideUp()}));
 	},
 
 	prefillData: function(formId){
@@ -155,7 +161,7 @@ var Forms = {
 		try{
 			var form = jQuery(elem);
 			form.css({opacity: 1});
-			form.find('button').each(function(){jQuery(this).prop('disabled', 'disabled')});
+/*			form.find('button').each(function(){jQuery(this).prop('disabled', 'disabled')});*/
 			Forms.validateFormData(form);
 			if(Forms.errors.length){
 				alert('Das Formular wurde nicht korrekt ausgefüllt.' );
@@ -167,8 +173,12 @@ var Forms = {
 				jQuery.ajax({
 					url: Forms.urlServer+'manage/form/fill/receive',
 					method: 'POST',
-					data: {inputs: data},
+					data: {formId: form.data('id'), inputs: data},
 					dataType: 'json',
+					context: {form: form},
+					xhrFields: {
+						withCredentials: true
+					},
 					success: Forms.handleResponse,
 					error: function(a,b){
 						console.log(a);

@@ -66,7 +66,7 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 	protected function renderForm(){
 		$form		= $this->modelForm->get( $this->formId );
 		$button		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button' ) ),
+			UI_HTML_Tag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary' ) ),
 		), array( 'class' => 'cmforms-row' ) );
 		if( substr_count( $form->content, '[block_row_button]' ) )
 			$button	= '';
