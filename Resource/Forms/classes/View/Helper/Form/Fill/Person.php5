@@ -2,23 +2,58 @@
 class View_Helper_Form_Fill_Person{
 
 	protected $fill;
+
 	protected $form;
+
+	protected $fields		= array(
+		'gender',
+		'firstname',
+		'surname',
+		'email',
+		'phone',
+		'street',
+		'city',
+		'postcode',
+		'country'
+	);
+
+	protected $heading		= 'Person';
 
 	public function __construct( $env ){
 		$this->env		= $env;
 	}
 
+	public function addFields( $fields ){
+		if( !is_array( $fields ) )
+			throw new InvalidArgumentException( 'Fields must be an array' );
+		$this->fields	= array_merge( $this->fields, $fields );
+	}
+
+	public function getFields(){
+		return $this->fields;
+	}
+
+	public function getHeading(){
+		return $this->heading;
+	}
+
+	public function removeFields( $fields ){
+		if( !is_array( $fields ) )
+			throw new InvalidArgumentException( 'Fields must be an array' );
+		$this->fields	= array_diff( $this->fields, $fields );
+	}
+
 	public function render(){
 		if( !$this->fill )
 			throw new DomainException( 'No fill given' );
-		if( !$this->form )
-			throw new DomainException( 'No form given' );
+//		if( !$this->form )
+//			throw new DomainException( 'No form given' );
 		$inputs		= json_decode( $this->fill->data, TRUE );
 
 		$checkValues	= array( 'true', 'ja', 'yes' );
 		$listInfo		= array();
 		foreach( $inputs as $name => $input ){
-			if( in_array( trim( $name ), array( 'gender', 'firstname', 'surname', 'email', 'phone', 'street', 'city', 'postcode', 'country' ) ) ){
+			if( in_array( trim( $name ), $this->fields ) ){
 				$value	= $input['value'];
 				if( $input['type'] == 'date' && strlen( $value ) )
 					$value	= date( 'd.m.Y', strtotime( $value ) );
@@ -70,13 +105,21 @@ class View_Helper_Form_Fill_Person{
 		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}
 
+	public function setFields( $fields ){
+		if( !is_array( $fields ) )
+			throw new InvalidArgumentException( 'Fields must be an array' );
+		$this->fields	= $fields;
+	}
 
 	public function setFill( $fill ){
+		if( !is_object( $fill ) )
+			throw new InvalidArgumentException( 'Fill must be an object' );
 		$this->fill		= $fill;
 	}
 
 	public function setForm( $form ){
+		if( !is_object( $form ) )
+			throw new InvalidArgumentException( 'Form must be an object' );
 		$this->form		= $form;
 	}
 }
-

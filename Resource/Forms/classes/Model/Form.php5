@@ -10,7 +10,8 @@ class Model_Form extends CMF_Hydrogen_Model{
 
 	protected $columns		= array(
 		'formId',
-		'mailId',
+		'customerMailId',
+		'managerMailId',
 		'type',
 		'status',
 		'title',
@@ -19,11 +20,11 @@ class Model_Form extends CMF_Hydrogen_Model{
 		'timestamp',
 	);
 	protected $indices		= array(
-		'mailId',
+		'customerMailId',
+		'managerMailId',
 		'status',
 	);
 	protected $primaryKey	= 'formId';
 	protected $name			= 'forms';
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-
