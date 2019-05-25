@@ -2,6 +2,14 @@
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
+$optRoleType	= array(
+	Model_Form_Mail::ROLE_TYPE_NOBODY	=> 'keinen',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER	=> 'Kunden',
+	Model_Form_Mail::ROLE_TYPE_MANAGER	=> 'Manager',
+	Model_Form_Mail::ROLE_TYPE_BOTH		=> 'alle',
+);
+$optRoleType	= UI_HTML_Elements::Options( $optRoleType, Model_Form_Mail::ROLE_TYPE_NOBODY );
+
 $optFormat	= array(
 	0	=> 'nicht definiert',
 	1	=> 'Text',
@@ -26,6 +34,10 @@ return '
 		<div class="span4">
 			<label for="input_subject">Betreff</label>
 			<input type="text" name="subject" id="input_subject" class="span12"/>
+		</div>
+		<div class="span4">
+			<label for="input_roleType">Nutzbar für</label>
+			<select name="roleType" id="input_roleType" class="span12">'.$optRoleType.'</select>
 		</div>
 		<div class="span4">
 			<label for="input_format">Format</label>
@@ -67,4 +79,3 @@ jQuery(document).ready(function(){
 	}
 </style>
 ';
-

@@ -31,8 +31,8 @@ foreach( $forms as $form ){
 //	$linkView	= UI_HTML_Tag::create( 'a', 'anzeigen', array( 'href' => './?action=form_view&id='.$form->formId.'&test', 'class' => 'btn btn-small' ) );
 
 	$mail	= UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => "muted" ) );
-	if( $form->mailId > 0 ){
-		$mail	= $modelMail->get( $form->mailId );
+	if( $form->customerMailId > 0 ){
+		$mail	= $modelMail->get( $form->customerMailId );
 		$mail	= UI_HTML_Tag::create( 'small', /*$iconMail.'&nbsp;'.*/$mail->title );
 	}
 

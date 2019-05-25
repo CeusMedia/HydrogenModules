@@ -184,7 +184,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 	public function receive(){
 		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
-		$origin	= $origin ? $origin : $this->env->baseUrl;
+		$origin	= $origin ? $origin : $this->env->getBaseUrl();
 		$origin	= rtrim( $origin, '/' );
 		header( 'Access-Control-Allow-Origin: '.$origin );
 		header( 'Access-Control-Allow-Credentials: true' );
@@ -201,8 +201,8 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			if( !preg_match( '/^[0-9]+$/', $formId ) )
 				throw new Exception( 'Invalid form ID given.' );
 			$form		= $this->modelForm->get( $formId );
-			if( $data['inputs']['surname']['value'] === "Testmann" )
-				throw new Exception( 'Hallo Herr Testmann!' );
+//			if( $data['inputs']['surname']['value'] === "Testmann" )
+//				throw new Exception( 'Hallo Herr Testmann!' );
 			$email		= '';
 			$captcha	= '';
 			foreach( $data['inputs'] as $nr => $input ){
@@ -344,15 +344,15 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 					$valid = FALSE;
 			}
 			if( $valid ){
-				$form->mailId	= $ruleset->mailId;
+				$form->custeomerMailId	= $ruleset->mailId;
 				break;
 			}
 		}
-		if( !$form->mailId )
+		if( !$form->customerMailId )
 			return NULL;
-		$formMail		= $this->modelMail->get( $form->mailId );
+		$formMail		= $this->modelMail->get( $form->customerMailId );
 		if( !$formMail )
-			throw new DomainException( 'Invalid mail ID ('.$form->mailId.') connected to form ('.$form->formId.')' );
+			throw new DomainException( 'Invalid mail ID ('.$form->customerMailId.') connected to form ('.$form->formId.')' );
 
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );

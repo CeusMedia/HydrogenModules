@@ -23,12 +23,18 @@ $optType	= UI_HTML_Elements::Options( $types, $form->type );
 $optMailCustomer	= array( '' => '- keine -' );
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
-$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->mailId );
+$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->customerMailId );
+
+$optMailManager		= array( '' => '- keine -' );
+foreach( $mailsManager as $item )
+	$optMailManager[$item->mailId]	= $item->title;
+$optMailManager		= UI_HTML_Elements::Options( $optMailManager, $form->managerMailId );
+
 
 return '
 <div class="content-panel">
 	<div class="content-panel-inner">
-		<form action="./manage/form/edit/'.$form->formId.'" method="post">
+		<form action="./manage/form/edit/'.$form->formId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span1">
 					<label for="input_formId">ID</label>
@@ -48,13 +54,19 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span8">
+				<div class="span12">
 					<label for="input_receivers">Empfänger <small class="muted">(mit Komma getrennt)</small></label>
 					<input type="text" name="receivers" id="input_receivers" class="span12" value="'.htmlentities( $form->receivers, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="span4">
-					<label for="input_mailId">Ergebnis-Email an Kunden</label>
-					<select name="mailId" id="input_mailId" class="span12">'.$optMailCustomer.'</select>
+			</div>
+			<div class="row-fluid">
+				<div class="span6">
+					<label for="input_customerMailId">Ergebnis-Email an Kunden (=Absender)</label>
+					<select name="customerMailId" id="input_customerMailId" class="span12">'.$optMailCustomer.'</select>
+				</div>
+				<div class="span6">
+					<label for="input_managerMailId">Ergebnis-Email an Manager (=Empfänger)</label>
+					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">

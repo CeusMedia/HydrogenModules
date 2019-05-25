@@ -15,12 +15,26 @@ if( $withinForms ){
 	$list	= array();
 	foreach( $withinForms as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
-			'href'	=> './?action=form_edit&id='.$item->formId,
+			'href'	=> './manage/form/edit/'.$item->formId,
 		) );
 		$list[]	= UI_HTML_Tag::create( 'li', $link );
 	}
 	$listWithinForms	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
+
+$optRoleType	= array(
+	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT	=> 'Kunde: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_LEADER_ALL		=> 'Leiter',
+	Model_Form_Mail::ROLE_TYPE_LEADER_RESULT	=> 'Leiter: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_LEADER_REACT		=> 'Leiter: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
+);
+$optRoleType	= UI_HTML_Elements::Options( $optRoleType, (int) $mail->roleType );
 
 $optFormat	= array(
 	0	=> 'nicht definiert',
@@ -49,6 +63,10 @@ return '
 				<div class="span4">
 					<label for="input_subject">Betreff</label>
 					<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $mail->subject, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+				<div class="span4">
+					<label for="input_roleType">Nutzbar für</label>
+					<select name="roleType" id="input_roleType" class="span12">'.$optRoleType.'</select>
 				</div>
 				<div class="span4">
 					<label for="input_format">Format</label>

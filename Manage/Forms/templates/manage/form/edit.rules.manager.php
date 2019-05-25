@@ -10,7 +10,7 @@ $optMailManager	= array();
 //	$optMailManager['']	= '- keine -';
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
-$optMailManager	= UI_HTML_Elements::Options( $optMailManager, $form->mailId );
+$optMailManager	= UI_HTML_Elements::Options( $optMailManager, $form->managerMailId );
 
 $listRules	= UI_HTML_Tag::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesManager ){

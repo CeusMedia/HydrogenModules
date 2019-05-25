@@ -87,12 +87,36 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'form', $form );
 
-		$orders		= array( 'identifier' => 'customer_result_%' );
-		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$conditions	= array( 'identifier' => 'customer_result_%' );
+		$conditions	= array( 'roleType' => array(
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL,
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+		) );
+		$orders		= array( 'roleType' => array(
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		) );
+		$mails		= $this->modelMail->getAll( $conditions, $orders );
 		$this->addData( 'mailsCustomer', $mails );
 
-		$orders		= array( 'identifier' => 'manager_%' );
-		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$conditions	= array( 'identifier' => 'manager_%' );
+		$conditions	= array( 'roleType' => array(
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
+		) );
+		$orders		= array( 'roleType' => array(
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		) );
+		$mails		= $this->modelMail->getAll( $conditions, $orders );
 		$this->addData( 'mailsManager', $mails );
 
 		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( array(

@@ -10,7 +10,7 @@ $optMailCustomer	= array();
 //	$optMailCustomer['']	= '- keine -';
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
-$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->mailId );
+$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->customerMailId );
 
 $listRules	= UI_HTML_Tag::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesCustomer ){
