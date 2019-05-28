@@ -14,7 +14,7 @@
 		<class>Controller/System/Maintenance.php5</class>
 <!--		<class>Job/System/Load.php5</class>-->
 		<class>View/System/Maintenance.php5</class>
-		<template>system/maintenance/index.php5</class>
+		<template>system/maintenance/index.php5</template>
 		<locale>de/html/maintenance.html</locale>
 		<locale>en/html/maintenance.html</locale>
 <!--		<file>config/jobs/system.load.xml</file>-->
