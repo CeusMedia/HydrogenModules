@@ -45,7 +45,7 @@ foreach( $forms as $form ){
 	}
 	$receivers	= join( ', ', $receivers );
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ) ),
+		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'td', $linkEdit ),
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $types[$form->type] ) ),
 		UI_HTML_Tag::create( 'td', $statuses[$form->status] ),
@@ -65,7 +65,14 @@ foreach( $forms as $form ){
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '140px', '120px', '180', '260px' );
 //$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '180px', '140px', '240px' );
-$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Empfänger', 'Mail' ) ) );
+$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+	UI_HTML_Tag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
+	UI_HTML_Tag::create( 'th', 'Titel' ),
+	UI_HTML_Tag::create( 'th', 'Typ' ),
+	UI_HTML_Tag::create( 'th', 'Zustand' ),
+	UI_HTML_Tag::create( 'th', 'Empfänger' ),
+	UI_HTML_Tag::create( 'th', 'Mail' ),
+) ) );
 //$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Mail/Empfänger' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );

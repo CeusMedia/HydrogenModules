@@ -9,7 +9,10 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remov
 $iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
-$withinForms		= $modelForm->getAllByIndex( 'mailId', $mail->mailId );
+$withinForms		= array_merge(
+	$modelForm->getAllByIndex( 'customerMailId', $mail->mailId ),
+	$modelForm->getAllByIndex( 'managerMailId', $mail->mailId )
+);
 $listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= array();
