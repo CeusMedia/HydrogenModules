@@ -3,12 +3,18 @@ $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' )
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $optRoleType	= array(
-	Model_Form_Mail::ROLE_TYPE_NOBODY	=> 'keinen',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER	=> 'Kunden',
-	Model_Form_Mail::ROLE_TYPE_MANAGER	=> 'Manager',
-	Model_Form_Mail::ROLE_TYPE_BOTH		=> 'alle',
+	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT	=> 'Kunde: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_LEADER_ALL		=> 'Leiter',
+	Model_Form_Mail::ROLE_TYPE_LEADER_RESULT	=> 'Leiter: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_LEADER_REACT		=> 'Leiter: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
 );
-$optRoleType	= UI_HTML_Elements::Options( $optRoleType, Model_Form_Mail::ROLE_TYPE_NOBODY );
+$optRoleType	= UI_HTML_Elements::Options( $optRoleType, Model_Form_Mail::ROLE_TYPE_NONE );
 
 $optFormat	= array(
 	0	=> 'nicht definiert',
