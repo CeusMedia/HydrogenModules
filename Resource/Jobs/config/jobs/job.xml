@@ -24,6 +24,12 @@
 		<interval></interval>
 		<mode>dev</mode>
 	</job>
+	<job id="Job.Lock.alert">
+		<class>Job</class>
+		<method>alert</method>
+		<interval></interval>
+		<mode>dev</mode>
+	</job>
 	<job id="Job.jsonfy">
 		<class>Job</class>
 		<method>convertJobConfigToJson</method>

@@ -8,6 +8,37 @@ class Job_Job extends Job_Abstract{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
 	}
 
+	/**
+	 *	@todo		finish implementation
+	 */
+	public function alert(){
+		$skip	= array( 'Not.Job.alert' );
+		$locks	= $this->getLocks( $skip );
+		$list	= array();
+		foreach( $locks as $lockFile ){
+			$timestamp	= filemtime( $this->pathLocks.$lockFile.'.lock' );
+			$age		= time() - $timestamp;
+			$datetime	= date( 'Y-m-d_H:i:s', $timestamp );
+			$listKey	= $datetime.'_'.$lockFile;
+			$list[$listKey]	= (object) array(
+				'listKey'		=> $listKey,
+				'timestamp'		=> $timestamp,
+				'datetime'		=> $datetime,
+				'ageSeconds'	=> $age,
+				'filePath'		=> $this->pathLocks.$lockFile.'.lock',
+				'fileName'		=> $lockFile.'.lock',
+				'jobKey'		=> $lockFile,
+			);
+		}
+		krsort( $list );
+		print_m( $list );
+
+		foreach( $list as $item ){
+
+
+		}
+	}
+
 	public function clearLocks(){
 		$skip	= array(
 			'Job.Lock.clear',
