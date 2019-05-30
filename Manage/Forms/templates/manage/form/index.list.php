@@ -44,8 +44,6 @@ $modelMail	= new Model_Form_Mail( $env );
 
 $rows		= array();
 foreach( $forms as $form ){
-//	$linkView	= UI_HTML_Tag::create( 'a', 'anzeigen', array( 'href' => './?action=form_view&id='.$form->formId.'&test', 'class' => 'btn btn-small' ) );
-
 	$customerMail	= UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => "muted" ) );
 	if( $form->customerMailId > 0 ){
 		$mail			= $modelMail->get( $form->customerMailId );
@@ -75,31 +73,16 @@ foreach( $forms as $form ){
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'td', $linkEdit.'<br/>'.$customerMail, array( 'data-class' => 'data-autocut' ) ),
 		UI_HTML_Tag::create( 'td', $listLabelsType[$form->type].'<br/>'.$listLabelsStatus[$form->status] ),
-//		UI_HTML_Tag::create( 'td', $listLabelsStatus[$form->status] ),
 		UI_HTML_Tag::create( 'td', $receivers.'<br/>'.$managerMail, array( 'data-class' => 'autocut' ) ),
-//		UI_HTML_Tag::create( 'td', $customerMail, array( 'class' => 'autocut' ) ),
 	) );
-/*	$type		= UI_HTML_Tag::create( 'small', $types[$form->type] );
-	$receivers	= UI_HTML_Tag::create( 'small', $iconReceiver.'&nbsp;'.$receivers );
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ) ),
-		UI_HTML_Tag::create( 'td', $linkEdit ),
-		UI_HTML_Tag::create( 'td', $type ),
-		UI_HTML_Tag::create( 'td', $statuses[$form->status] ),
-		UI_HTML_Tag::create( 'td', $mail.'<br/>'.$receivers ),
-	) );*/
-
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '160px', '260px' );
-//$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '180px', '140px', '240px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 	UI_HTML_Tag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
 	UI_HTML_Tag::create( 'th', 'Titel / E-Mail an Absender' ),
 	UI_HTML_Tag::create( 'th', 'Typ / Zustand' ),
-//	UI_HTML_Tag::create( 'th', 'Status' ),
 	UI_HTML_Tag::create( 'th', 'Empfänger und -E-Mail' ),
 ) ) );
-//$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Titel', 'Typ', 'Zustand', 'Mail/Empfänger' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 
