@@ -3,6 +3,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 
 	protected $modelForm;
 	protected $modelFill;
+	protected $modelRule;
+	protected $modelMail;
+	protected $filters		= array( 'formId', 'type', 'status', 'customerMailId', 'managerMailId', 'title' );
+
+
 
 	protected function __onInit(){
 		$this->modelForm	= new Model_Form( $this->env );
@@ -86,38 +91,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
 		$this->addData( 'form', $form );
-
-		$conditions	= array( 'identifier' => 'customer_result_%' );
-		$conditions	= array( 'roleType' => array(
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT,
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL,
-			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
-		) );
-		$orders		= array( 'roleType' => array(
-			'roleType'	=> 'ASC',
-			'title'		=> 'ASC',
-		) );
-		$mails		= $this->modelMail->getAll( $conditions, $orders );
-		$this->addData( 'mailsCustomer', $mails );
-
-		$conditions	= array( 'identifier' => 'manager_%' );
-		$conditions	= array( 'roleType' => array(
-			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
-		) );
-		$orders		= array( 'roleType' => array(
-			'roleType'	=> 'ASC',
-			'title'		=> 'ASC',
-		) );
-		$mails		= $this->modelMail->getAll( $conditions, $orders );
-		$this->addData( 'mailsManager', $mails );
+		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
+		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 
 		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( array(
 			'formId'	=> $formId,
@@ -133,9 +108,36 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'hasFills', count( $fills ) > 0 );
 	}
 
+	public function filter( $reset = NULL ){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+		if( $reset ){
+			foreach( $this->filters as $filterKey )
+				$session->remove( 'filter_manage_form_'.$filterKey );
+		}
+		foreach( $this->filters as $filterKey ){
+			if( $request->has( $filterKey ) ){
+				$session->set( 'filter_manage_form_'.$filterKey, $request->get( $filterKey ) );
+			}
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	public function index( $page = 0 ){
+		$session	= $this->env->getSession();
 		$limit		= 15;
 		$conditions	= array();
+		foreach( $this->filters as $filterKey ){
+			$value	= $session->get( 'filter_manage_form_'.$filterKey );
+			$this->addData( 'filter'.ucfirst( $filterKey ), $value );
+			if( strlen( trim( $value ) ) ){
+				if( in_array( $filterKey, array( 'orderColumn', 'orderDirection' ) ) )
+					continue;
+				if( $filterKey === 'title' )
+					$value	= '%'.$value.'%';
+				$conditions[$filterKey]	= $value;
+			}
+		}
 		$orders		= array( 'status' => 'DESC', 'title' => 'ASC' );
 		$limits		= array( $page * $limit, $limit );
 		$total		= $this->modelForm->count( $conditions );
@@ -143,6 +145,9 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'forms', $forms );
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $total / $limit ) );
+		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
+		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
+
 	}
 
 	public function view( $formId ){
@@ -173,5 +178,40 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			exit;
 		}
 		$this->restart( 'edit/'.$formId, TRUE );
+	}
+
+	//  --  PROTECTED METHODS  --  //
+	protected function getAvailableCustomerMails( $conditions = array(), $orders = array() ){
+//		$conditions	= array( 'identifier' => 'customer_result_%' );
+		$conditions	= array_merge( $conditions, array( 'roleType' => array(
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL,
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+		) ) );
+		$orders		= $orders ? $orders : array(
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		);
+		return $this->modelMail->getAll( $conditions, $orders );
+	}
+
+	protected function getAvailableManagerMails( $conditions = array(), $orders = array() ){
+//		$conditions	= array( 'identifier' => 'manager_%' );
+		$conditions	= array_merge( $conditions, array( 'roleType' => array(
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
+		) ) );
+		$orders		= $orders ? $orders : array(
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		);
+		return $this->modelMail->getAll( $conditions, $orders );
 	}
 }
