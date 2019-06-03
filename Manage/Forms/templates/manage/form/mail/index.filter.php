@@ -35,19 +35,19 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_mailId">ID</label>
-					<input type="text" name="mailId" id="input_mailId" value="'.$filterMailId.'"/>
+					<input type="text" name="mailId" id="input_mailId" value="'.htmlentities( $filterMailId, ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title">Titel <small class="muted">(ungefähr)</small></label>
-					<input type="text"  name="title" id="input_title" value="'.$filterTitle.'"/>
+					<input type="text"  name="title" id="input_title" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_identifier">Shortcode <small class="muted">(ungefähr)</small></label>
-					<input type="text" name="identifier" id="input_identifier" value="'.$filterIdentifier.'"/>
+					<input type="text" name="identifier" id="input_identifier" value="'.htmlentities( $filterIdentifier, ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

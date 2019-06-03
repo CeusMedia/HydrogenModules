@@ -67,7 +67,7 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$filters		= $session->getAll( $this->filterPrefix, TRUE );
 
-		$filterMailId		= (int) $filters->get( 'mailId' );
+		$filterMailId		= $filters->get( 'mailId' );
 		$filterTitle		= $filters->get( 'title' );
 		$filterIdentifier	= $filters->get( 'identifier' );
 		$filterFormat		= $filters->get( 'format' );
@@ -75,8 +75,8 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$limit		= 15;
 		$conditions	= array();
 
-		if( $filterMailId )
-		 	$conditions['mailId']		= $filterMailId;
+		if( (int) $filterMailId )
+		 	$conditions['mailId']		= (int) $filterMailId;
 		if( strlen( trim( $filterTitle ) ) )
 		 	$conditions['title']		= '%'.$filterTitle.'%';
 		if( strlen( trim( $filterIdentifier ) ) )
