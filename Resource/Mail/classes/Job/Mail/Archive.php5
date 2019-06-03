@@ -1,9 +1,7 @@
 <?php
-class Job_Mail extends Job_Abstract{
+class Job_Mail_Archive extends Job_Abstract{
 
-	protected $logic;
 	protected $model;
-//	protected $greylistingDelay	= 900;
 	protected $libraries;
 	protected $statusesHandledMails	= array(
 		Model_Mail::STATUS_ABORTED,																//  status: -3
@@ -15,20 +13,49 @@ class Job_Mail extends Job_Abstract{
 	);
 
 	public function __onInit(){
-		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->model		= new Model_Mail( $this->env );
 		$this->libraries	= Logic_Mail::detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 
+	/**
+	 *	Removes old mails from database table.
+	 *	Mails to be removed can be filtered by minimum age and mail class(es).
+	 *	Supports dry mode.
+	 *
+	 *	Parameters:
+	 *		--age=PERIOD
+	 *			- minimum age of mail to delete
+	 *			- DateInterval period without starting P and without any time elements
+	 *			- see: https://www.php.net/manual/en/dateinterval.construct.php
+	 *			- example: 1Y (1 year), 2M (2 months), 3D (3 days)
+	 *			- optional, default: 1Y
+	 *		--class=CLASSNAME[,CLASSNAME]
+	 *			- name of mail class to focus on
+	 *			- without prefix 'Mail_'
+	 *			- can be several, separated by comma
+	 *			- example: Newsletter (for class Mail_Newsletter)
+	 *			- example: Newsletter,Form_Manager_Filled
+	 *			- default: empty, meaning all mail classes
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
 	public function clean(){
-		$age	= $this->parameters->get( '--age', '1Y' ) ;
-		$age	= $age ? $age : '1Y';
+		$age		= $this->parameters->get( '--age', '1Y' );
+		$age		= $age ? strtoupper( $age ) : '1Y';
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+
+		$class		= $this->parameters->get( '--class', NULL );
+		if( $class !== NULL ){
+			$class	= preg_split( '/\s*,\s*/', $class );
+			foreach( $class as $nr => $mailClassName )
+				if( !preg_match( '/\\\/', $mailClassName ) )
+					$class[$nr]	= 'Mail_'.$mailClassName;
+		}
 		$conditions	= array(
 			'status'		=> $this->statusesHandledMails,
-			'mailClass'		=> 'Mail_Newsletter',
+			'mailClass'		=> $class,
 			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
 		);
 		$orders		= array( 'mailId' => 'ASC' );
@@ -36,27 +63,23 @@ class Job_Mail extends Job_Abstract{
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 			$this->out( 'Would remove '.count( $mails ).' old mails.' );
+			return;
 		}
-		else{
-			$count	= 0;
-	//		$fails	= array();
-			foreach( $mails as $mail ){
-				$this->model->remove( $mail->mailId );
-				$this->showProgress( ++$count, count( $mails ) );
-			}
-			if( $mails )
-				$this->out();
-			$this->out( 'Removed '.$count.' old mails.' );
-//			$this->showErrors( 'removeOldMails', $fails );
-		}
-	}
+		$count		= 0;
+		$mailIds	= array();
+		foreach( $mails as $mail )
+			$mailIds[]	= $mail->mailId;
+		$this->model->removeByIndex( 'mailId', $mailIds );
 
-	public function countQueuedMails(){
-		$conditions		= array( 'status' => array( Model_Mail::STATUS_NEW ) );
-		$countNew		= $this->logic->countQueue( $conditions );
-		$conditions		= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
-		$countRetry		= $this->logic->countQueue( $conditions );
-		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
+//		$fails	= array();
+/*		foreach( $mails as $mail ){
+			$this->model->remove( $mail->mailId );
+			$this->showProgress( ++$count, count( $mails ) );
+		}
+		if( $mails )
+			$this->out();*/
+		$this->out( 'Removed '.count( $mails ).' old mails.' );
+//		$this->showErrors( 'removeOldMails', $fails );
 	}
 
 	public function migrate(){
@@ -93,6 +116,8 @@ class Job_Mail extends Job_Abstract{
 				$this->showProgress( ++$count, count( $mails ), 'E' );
 			}
 		}
+		if( $mails )
+			$this->out();
 		$this->showErrors( 'migrate', $fails );
 		$this->_migrateMailTemplates();
 	}
@@ -148,61 +173,6 @@ class Job_Mail extends Job_Abstract{
 		else
 			$this->out( 'No detachable attachments found.' );
 		$this->showErrors( 'removeAttachments', $fails );
-	}
-
-	public function sendQueuedMails(){
-		$sleep		= (float) $this->options->get( 'queue.job.sleep' );
-		$limit		= (integer) $this->options->get( 'queue.job.limit' );
-		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );
-
-		if( !$this->dryMode )
-			$this->logic->abortMailsWithTooManyAttempts();
-
-		$counter	= 0;
-		$listSent	= array();
-		$listFailed	= array();
-		$conditions	= array(
-			'status'		=> array(
-				Model_Mail::STATUS_NEW,
-				Model_Mail::STATUS_RETRY
-			),
-			'attemptedAt'	=> '<'.( time() - $this->options->get( 'retry.delay' ) ),
-		);
-		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
-		$count		= $this->logic->countQueue( $conditions );
-		if( $this->dryMode ){
-			$this->out( 'DRY RUN - no changes will be made.' );
-			$this->out( 'Would send '.$count.' mails.' );
-		}
-		else{
-			if( !$count )
-				return;
-			while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
-				if( $counter > 0 && $sleep > 0 )
-					$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
-				$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
-				if( $mails && $mail = array_pop( $mails ) ){
-					$counter++;
-					try{
-						if( !$this->dryMode )
-							$this->logic->sendQueuedMail( $mail->mailId );
-						$listSent[]	= (int) $mail->mailId;
-					}
-					catch( Exception $e ){
-						$this->logError( $e->getMessage() );
-						$listFailed[]	= (int) $mail->mailId;
-					}
-				}
-			}
-			$this->log( json_encode( array(
-				'timestamp'	=> time(),
-				'datetime'	=> date( "Y-m-d H:i:s" ),
-				'count'		=> $count,
-				'failed'	=> count( $listFailed ),
-				'sent'		=> count( $listSent ),
-				'ids'		=> $listSent,
-			) ) );
-		}
 	}
 
 	//  --  PRIVATE  --  //
@@ -376,4 +346,3 @@ class Job_Mail extends Job_Abstract{
 		return $unserialize ? unserialize( $serial ) : $serial;
 	}
 }
-?>

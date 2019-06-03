@@ -1,0 +1,26 @@
+DROP TABLE IF EXISTS `<%?prefix%>mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
+`mailId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+`senderId` int(10) unsigned NOT NULL DEFAULT '0',
+`receiverId` int(10) unsigned NOT NULL DEFAULT '0',
+`status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+`attempts` smallint(5) unsigned NOT NULL DEFAULT '0',
+`receiverAddress` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+`receiverName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+`subject` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+`object` longblob NOT NULL,
+`enqueuedAt` decimal(12,0) unsigned NOT NULL,
+`attemptedAt` decimal(12,0) unsigned NOT NULL,
+`sentAt` decimal(12,0) unsigned NOT NULL,
+PRIMARY KEY (`mailId`),
+KEY `senderId` (`senderId`),
+KEY `receiverId` (`receiverId`),
+KEY `status` (`status`),
+KEY `attempts` (`attempts`),
+KEY `receiverAddress` (`receiverAddress`),
+KEY `receiverName` (`receiverName`),
+KEY `subject` (`subject`),
+KEY `enqueuedAt` (`enqueuedAt`),
+KEY `attemptedAt` (`attemptedAt`),
+KEY `sentAt` (`sentAt`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
