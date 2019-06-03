@@ -9,13 +9,13 @@ $iconReceiver	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-at'
 
 $iconsType	= array(
 	Model_Form::TYPE_NORMAL		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ),
-	Model_Form::TYPE_CONFIRM	=> UI_HTML_Tag::create( 'i', '', array( 'class' =>'fa fa-fw fa-thumbs-up' ) ),
+	Model_Form::TYPE_CONFIRM	=> UI_HTML_Tag::create( 'i', '', array( 'class' =>'fa fa-fw fa-check' ) ),
 );
 
 $iconsStatus	= array(
 	Model_Form::STATUS_DISABLED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
 	Model_Form::STATUS_NEW			=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) ),
-	Model_Form::STATUS_ACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ),
+	Model_Form::STATUS_ACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
 );
 
 $statuses	= array(
@@ -25,7 +25,7 @@ $statuses	= array(
 );
 $types		= array(
 	0		=> 'direkter Versand',
-	1		=> 'mit Double-Opt-In',
+	1		=> 'Double-Opt-In',
 );
 
 $listLabelsStatus	= array(
@@ -44,7 +44,7 @@ $modelMail	= new Model_Form_Mail( $env );
 
 $rows		= array();
 foreach( $forms as $form ){
-	$customerMail	= UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => "muted" ) );
+	$customerMail	= UI_HTML_Tag::create( 'small', '- keine Empfänger-E-Mail zugewiesen -', array( 'class' => "muted" ) );
 	if( $form->customerMailId > 0 ){
 		$mail			= $modelMail->get( $form->customerMailId );
 		$customerMail	= UI_HTML_Tag::create( 'small', array(
@@ -67,12 +67,12 @@ foreach( $forms as $form ){
 			if( preg_match( '/^\S+@\S+$/', $receiver ) )
 				$receivers[]	= preg_replace( '/^(\S+)@\S+$/', '\\1', $receiver );
 	}
-	$receivers	= join( ', ', $receivers );
+	$receivers	= $receivers ? $iconReceiver.'&nbsp;'.join( ', ', $receivers ) : '-';
 	$receivers	= UI_HTML_Tag::create( 'small', $receivers );
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'td', $linkEdit.'<br/>'.$customerMail, array( 'data-class' => 'data-autocut' ) ),
-		UI_HTML_Tag::create( 'td', $listLabelsType[$form->type].'<br/>'.$listLabelsStatus[$form->status] ),
+		UI_HTML_Tag::create( 'td', $listLabelsStatus[$form->status].'<br/>'.$listLabelsType[$form->type] ),
 		UI_HTML_Tag::create( 'td', $receivers.'<br/>'.$managerMail, array( 'data-class' => 'autocut' ) ),
 	) );
 }
