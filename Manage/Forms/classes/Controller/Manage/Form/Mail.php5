@@ -3,6 +3,13 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 
 	protected $modelForm;
 	protected $modelMail;
+	protected $filterPrefix		= 'filter_manage_form_mail_';
+	protected $filters			= array(
+		'mailId',
+		'title',
+		'identifier',
+		'format',
+	);
 
 	protected function __onInit(){
 		$this->modelForm	= new Model_Form( $this->env );
@@ -40,16 +47,73 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$this->addData( 'mail', $mail );
 	}
 
+	public function filter( $reset = NULL ){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+		if( $reset ){
+			foreach( $this->filters as $filter )
+				$session->remove( $this->filterPrefix.$filter );
+		}
+		foreach( $this->filters as $filter ){
+			if( $request->has( $filter ) ){
+				$value	= $request->get( $filter );
+				$session->set( $this->filterPrefix.$filter, $value );
+			}
+		}
+		$this->restart( NULL, TRUE );
+	}
+
 	public function index( $page = 0 ){
+		$session		= $this->env->getSession();
+		$filters		= $session->getAll( $this->filterPrefix, TRUE );
+
+		$filterMailId		= (int) $filters->get( 'mailId' );
+		$filterTitle		= $filters->get( 'title' );
+		$filterIdentifier	= $filters->get( 'identifier' );
+		$filterFormat		= $filters->get( 'format' );
+
 		$limit		= 15;
 		$conditions	= array();
+
+		if( $filterMailId )
+		 	$conditions['mailId']		= $filterMailId;
+		if( strlen( trim( $filterTitle ) ) )
+		 	$conditions['title']		= '%'.$filterTitle.'%';
+		if( strlen( trim( $filterIdentifier ) ) )
+		 	$conditions['identifier']	= '%'.$filterIdentifier.'%';
+		if( $filterFormat )
+		 	$conditions['format']		= $filterFormat;
+
 		$orders		= array( 'title' => 'ASC' );
 		$limits		= array( $page * $limit, $limit );
-		$total		= $this->modelMail->count( $conditions );
+		$total		= $this->modelMail->count();
+		$count		= $this->modelMail->count( $conditions );
 		$mails		= $this->modelMail->getAll( $conditions, $orders, $limits );
 		$this->addData( 'mails', $mails );
 		$this->addData( 'page', $page );
-		$this->addData( 'pages', ceil( $total / $limit ) );
+		$this->addData( 'pages', ceil( $count / $limit ) );
+
+		$identifiers	= $this->modelMail->getAll(
+			array(),
+			array( 'identifier' => 'ASC' ),
+			array(),
+			array( 'identifier' )
+		);
+		$this->addData( 'identifiers', $identifiers );
+
+		$formats		= $this->modelMail->getAll(
+			array(),
+			array( 'format' => 'ASC' ),
+			array(),
+			array( 'format' )
+		);
+		array_unique( $formats );
+		$this->addData( 'formats', $formats );
+
+		$this->addData( 'filterMailId', $filterMailId );
+		$this->addData( 'filterTitle', $filterTitle );
+		$this->addData( 'filterIdentifier', $filterIdentifier );
+		$this->addData( 'filterFormat', $filterFormat );
 	}
 
 	public function remove( $mailId ){
