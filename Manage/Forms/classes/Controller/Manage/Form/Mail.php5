@@ -6,9 +6,10 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 	protected $filterPrefix		= 'filter_manage_form_mail_';
 	protected $filters			= array(
 		'mailId',
-		'title',
+		'roleType',
 		'identifier',
 		'format',
+		'title',
 	);
 
 	protected function __onInit(){
@@ -65,7 +66,10 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 
 	public function index( $page = 0 ){
 		$session		= $this->env->getSession();
-		$filters		= $session->getAll( $this->filterPrefix, TRUE );
+		$filters		= new ADT_List_Dictionary( array_merge(
+			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
+			$session->getAll( $this->filterPrefix )
+		) );
 
 		$filterMailId		= $filters->get( 'mailId' );
 		$filterTitle		= $filters->get( 'title' );
@@ -75,14 +79,16 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$limit		= 15;
 		$conditions	= array();
 
-		if( (int) $filterMailId )
-		 	$conditions['mailId']		= (int) $filterMailId;
-		if( strlen( trim( $filterTitle ) ) )
-		 	$conditions['title']		= '%'.$filterTitle.'%';
-		if( strlen( trim( $filterIdentifier ) ) )
-		 	$conditions['identifier']	= '%'.$filterIdentifier.'%';
-		if( $filterFormat )
-		 	$conditions['format']		= $filterFormat;
+		if( (int) $filters->get( 'mailId' ) )
+		 	$conditions['mailId']		= (int) $filters->get( 'mailId' );
+		if( strlen( trim( $filters->get( 'title' ) ) ) )
+		 	$conditions['title']		= '%'.$filters->get( 'title' ).'%';
+		if( strlen( trim( $filters->get( 'identifier' ) ) ) )
+		 	$conditions['identifier']	= '%'.$filters->get( 'identifier' ).'%';
+		if( $filters->get( 'format' ) )
+		 	$conditions['format']		= $filters->get( 'format' );
+		if( $filters->get( 'roleType' ) )
+		 	$conditions['roleType']		= $filters->get( 'roleType' );
 
 		$orders		= array( 'title' => 'ASC' );
 		$limits		= array( $page * $limit, $limit );
@@ -92,15 +98,19 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$this->addData( 'mails', $mails );
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $count / $limit ) );
+		$this->addData( 'count', $count );
+		$this->addData( 'total', $total );
 
-		$identifiers	= $this->modelMail->getAll(
+		$this->addData( 'filters', $filters );
+
+/*		$identifiers	= $this->modelMail->getAll(
 			array(),
 			array( 'identifier' => 'ASC' ),
 			array(),
 			array( 'identifier' )
 		);
 		$this->addData( 'identifiers', $identifiers );
-
+*/
 		$formats		= $this->modelMail->getAll(
 			array(),
 			array( 'format' => 'ASC' ),
@@ -109,11 +119,6 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		);
 		array_unique( $formats );
 		$this->addData( 'formats', $formats );
-
-		$this->addData( 'filterMailId', $filterMailId );
-		$this->addData( 'filterTitle', $filterTitle );
-		$this->addData( 'filterIdentifier', $filterIdentifier );
-		$this->addData( 'filterFormat', $filterFormat );
 	}
 
 	public function remove( $mailId ){

@@ -40,6 +40,7 @@ $optManagerMail	= UI_HTML_Elements::Options( $optManagerMail, $filterManagerMail
 
 return '
 <div class="content-panel">
+	<h3>Filter</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/form/filter" method="post">
 			<div class="row-fluid">

@@ -5,11 +5,18 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	protected $modelFill;
 	protected $modelRule;
 	protected $modelMail;
-	protected $filters		= array( 'formId', 'type', 'status', 'customerMailId', 'managerMailId', 'title' );
-
-
+	protected $filters		= array(
+		'formId',
+		'type',
+		'status',
+		'customerMailId',
+		'managerMailId',
+		'title'
+	);
 
 	protected function __onInit(){
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelRule	= new Model_Form_Rule( $this->env );
@@ -17,9 +24,9 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		if( $this->env->getRequest()->has( 'save' ) ){
+		if( $this->request->has( 'save' ) ){
 			$this->checkIsPost();
-			$data	= $this->env->getRequest()->getAll();
+			$data	= $this->request->getAll();
 			$data['timestamp']	= time();
 			$formId	= $this->modelForm->add( $data, FALSE );
 			$this->restart( 'edit/'.$formId, TRUE );
@@ -31,15 +38,14 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function addRule( $formId, $formType ){
-		$request	= $this->env->getRequest();
 		$data		= array();
 		for( $i=0; $i<3; $i++ ){
-			if( $request->get( 'ruleKey_'.$i ) ){
+			if( $this->request->get( 'ruleKey_'.$i ) ){
 				$data[]	= array(
-					'key'			=> $request->get( 'ruleKey_'.$i ),
-					'keyLabel'		=> $request->get( 'ruleKeyLabel_'.$i ),
-					'value'			=> $request->get( 'ruleValue_'.$i ),
-					'valueLabel'	=> $request->get( 'ruleValueLabel_'.$i ),
+					'key'			=> $this->request->get( 'ruleKey_'.$i ),
+					'keyLabel'		=> $this->request->get( 'ruleKeyLabel_'.$i ),
+					'value'			=> $this->request->get( 'ruleValue_'.$i ),
+					'valueLabel'	=> $this->request->get( 'ruleValueLabel_'.$i ),
 				);
 			}
 		}
@@ -47,8 +53,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'formId'		=> $formId,
 			'type'			=> $formType,
 			'rules'			=> json_encode( $data ),
-			'mailAddresses'	=> $request->get( 'mailAddresses' ),
-			'mailId'		=> $request->get( 'mailId' ),
+			'mailAddresses'	=> $this->request->get( 'mailAddresses' ),
+			'mailId'		=> $this->request->get( 'mailId' ),
 		) );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
@@ -62,7 +68,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	protected function checkIsPost( $strict = TRUE ){
-		if( $this->env->getRequest()->isMethod( 'POST' ) )
+		if( $this->request->isMethod( 'POST' ) )
 			return TRUE;
 		if( $strict )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
@@ -70,7 +76,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function confirm(){
-		$fillId		= $this->env->getRequest()->get( 'fillId' );
+		$fillId		= $this->request->get( 'fillId' );
 		$fill		= $this->modelFill->get( $fillId );
 		$this->modelFill->edit( $fillId, array(
 			'status'		=> Model_Fill::STATUS_CONFIRMED,
@@ -80,12 +86,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $formId ){
-		$session	= $this->env->getSession();
-		$this->addData( 'activeTab', $session->get( 'manage_forms_tab' ) );
+		$this->addData( 'activeTab', $this->session->get( 'manage_forms_tab' ) );
 		$form		= $this->checkId( $formId );
-		if( $this->env->getRequest()->has( 'save' ) ){
+		if( $this->request->has( 'save' ) ){
 			$this->checkIsPost();
-			$data	= $this->env->getRequest()->getAll();
+			$data	= $this->request->getAll();
 			$data['timestamp']	= time();
 			$this->modelForm->edit( $formId, $data, FALSE );
 			$this->restart( 'edit/'.$formId, TRUE );
@@ -109,26 +114,23 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function filter( $reset = NULL ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
 		if( $reset ){
 			foreach( $this->filters as $filterKey )
-				$session->remove( 'filter_manage_form_'.$filterKey );
+				$this->session->remove( 'filter_manage_form_'.$filterKey );
 		}
 		foreach( $this->filters as $filterKey ){
-			if( $request->has( $filterKey ) ){
-				$session->set( 'filter_manage_form_'.$filterKey, $request->get( $filterKey ) );
+			if( $this->request->has( $filterKey ) ){
+				$this->session->set( 'filter_manage_form_'.$filterKey, $this->request->get( $filterKey ) );
 			}
 		}
 		$this->restart( NULL, TRUE );
 	}
 
 	public function index( $page = 0 ){
-		$session	= $this->env->getSession();
 		$limit		= 15;
 		$conditions	= array();
 		foreach( $this->filters as $filterKey ){
-			$value	= $session->get( 'filter_manage_form_'.$filterKey );
+			$value	= $this->session->get( 'filter_manage_form_'.$filterKey );
 			$this->addData( 'filter'.ucfirst( $filterKey ), $value );
 			if( strlen( trim( $value ) ) ){
 				if( in_array( $filterKey, array( 'orderColumn', 'orderDirection' ) ) )
@@ -169,10 +171,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	}
 
 	public function setTab( $formId, $tabId ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$session->set( 'manage_forms_tab', $tabId );
-		if( $request->isAjax() ){
+		$this->session->set( 'manage_forms_tab', $tabId );
+		if( $this->request->isAjax() ){
 			header( "Content-Type: application/json" );
 			print( json_encode( array( 'status' => 'data', 'data' => 'ok' ) ) );
 			exit;

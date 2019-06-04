@@ -2,14 +2,8 @@
 
 $panelFilter	= $view->loadTemplateFile( 'manage/form/mail/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/form/mail/index.list.php' );
-$heading		= UI_HTML_Tag::create( 'h2', 'Formular-E-Mails' );
 
-return $heading.'
-<div class="row-fluid">
-	<div class="span3">
-		'.$panelFilter.'
-	</div>
-	<div class="span9">
-		'.$panelList.'
-	</div>
-</div>';
+return UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),
+	UI_HTML_Tag::create( 'div', $panelList, array( 'class' => 'span9' ) ),
+), array( 'class' => 'row-fluid' ) );

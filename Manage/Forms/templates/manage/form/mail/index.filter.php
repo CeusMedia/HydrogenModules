@@ -13,11 +13,11 @@ $buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;leeren', array(
 	'class'	=> 'btn btn-small btn-inverse'
 ) );
 
-$optIdentifier	= array( '' => '- alle -');
+/*$optIdentifier	= array( '' => '- alle -');
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= UI_HTML_Elements::Options( $optIdentifier, $filterIdentifier );
-
+*/
 $formatMap	= array(
 	Model_Form_Mail::FORMAT_HTML	=> 'HTML',
 	Model_Form_Mail::FORMAT_TEXT	=> 'Text',
@@ -26,34 +26,51 @@ $formatMap	= array(
 $optFormat	= array( '' => '- alle -');
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
-$optFormat	= UI_HTML_Elements::Options( $optFormat, $filterFormat );
+$optFormat	= UI_HTML_Elements::Options( $optFormat, $filters->get( 'format' ) );
+
+$roleTypeMap	= array(
+	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT	=> 'Kunde: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_LEADER_ALL		=> 'Leiter',
+	Model_Form_Mail::ROLE_TYPE_LEADER_RESULT	=> 'Leiter: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_LEADER_REACT		=> 'Leiter: Reaktion',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
+	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
+);
+
+$optRoleType	= array( '' => '- egal -');
+foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )
+	$optRoleType[$roleTypeKey]	= $roleTypeLabel;
+$optRoleType	= UI_HTML_Elements::Options( $optRoleType, $filters->get( 'roleType' ) );
 
 return '
 <div class="content-panel">
+	<h3>Filter</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/form/mail/filter" method="post">
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span4">
 					<label for="input_mailId">ID</label>
-					<input type="text" name="mailId" id="input_mailId" value="'.htmlentities( $filterMailId, ENT_QUOTES, 'utf-8' ).'"/>
+					<input type="text" name="mailId" id="input_mailId" class="span12" value="'.htmlentities( $filters->get( 'mailId' ), ENT_QUOTES, 'utf-8' ).'"/>
+				</div>
+				<div class="span8">
+					<label for="input_format">Format</label>
+					<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title">Titel <small class="muted">(ungefähr)</small></label>
-					<input type="text"  name="title" id="input_title" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'utf-8' ).'"/>
+					<input type="text"  name="title" id="input_title" class="span12" value="'.htmlentities( $filters->get( 'title' ), ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_identifier">Shortcode <small class="muted">(ungefähr)</small></label>
-					<input type="text" name="identifier" id="input_identifier" value="'.htmlentities( $filterIdentifier, ENT_QUOTES, 'utf-8' ).'"/>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_format">Format</label>
-					<select name="format" id="input_format">'.$optFormat.'</select>
+					<label for="input_roleType">Nutzbar für </label>
+					<select name="roleType" id="input_roleType" class="span12">'.$optRoleType.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">

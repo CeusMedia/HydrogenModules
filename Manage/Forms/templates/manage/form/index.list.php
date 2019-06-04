@@ -92,16 +92,19 @@ $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
 	'class'	=> 'btn btn-success',
 ) );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form', $page, $pages );
+$pagination	= '';
+if( $pages > 1 ){
+	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
+	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/', $page, $pages );
+	$pagination->patternUrl	= '%s';
+}
+$buttonbar	= UI_HTML_Tag::create( 'div', join( '&nbsp;', array( $linkAdd, $pagination ) ), array( 'class' => 'buttonbar' ) );
 
-return '
-<div class="content-panel">
-	<div class="content-panel-inner">
-		'.$table.'
-		<div class="buttonbar">
-			'.$linkAdd.'
-			'.$pagination.'
-		</div>
-	</div>
-</div>';
 
+return UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', 'Formulare' ),
+	UI_HTML_Tag::create( 'div', array(
+		$table,
+		$buttonbar,
+	), array( 'class' => 'content-panel-inner' ) ),
+), array( 'class' => 'content-panel' ) );
