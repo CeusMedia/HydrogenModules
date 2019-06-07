@@ -129,6 +129,7 @@ list>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">UI_Helper_HTML</needs>
+		<needs type="module">UI_Shortcode</needs>
 		<supports type="module">Resource_Limiter</supports>
 		<supports type="module">Security_CSRF</supports>
 		<supports type="module">UI_Markdown</supports>
