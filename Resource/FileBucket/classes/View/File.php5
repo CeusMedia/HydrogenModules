@@ -1,4 +1,4 @@
-<?php
+ <?php
 class View_File extends CMF_Hydrogen_View{
 
 	public function index(){
@@ -37,7 +37,9 @@ class View_File extends CMF_Hydrogen_View{
 				exit;
 			}
 		}
-
+		if( $this->getData( 'download', FALSE ) ){
+			Net_HTTP_Download::sendFile( $sourceFilePath, $file->fileName, TRUE );
+		}
 		header( 'Content-Type: '.$file->mimeType );
 		header( 'Content-Length: '.$file->fileSize );
 //		header( 'Cache-Control: max-age=2592000, public' );

@@ -328,6 +328,10 @@ abstract class Mail_Abstract{
 	 */
 	abstract protected function generate( $data = array() );
 
+	public function getAttachments(){
+		return $this->mail->getAttachments();
+	}
+
 	public function getPage(){
 		return $this->page;
 	}

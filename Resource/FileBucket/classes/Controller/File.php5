@@ -28,8 +28,16 @@ class Controller_File extends CMF_Hydrogen_Controller{
 		$file		= $this->logic->getByPath( $uriPath );
 		$this->addData( 'uriPath', $uriPath );
 		$this->addData( 'file', $file );
-		if( $file )
-			$this->logic->noteView( $file->fileId );
+		if( $file ){
+			if( $this->env->getRequest()->has( 'download' ) ){
+				$this->addData( 'download', $this->env->getRequest()->has( 'download' ) );
+//				@todo implement: add column to model
+//				$this->logic->noteDownload( $file->fileId );
+			}
+			else{
+				$this->logic->noteView( $file->fileId );
+			}
+		}
 	}
 }
 ?>
