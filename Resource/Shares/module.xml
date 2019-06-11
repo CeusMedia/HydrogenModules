@@ -30,8 +30,6 @@ This module will need the sever router module and a route.
 		<needs type="module">Server_Router</needs>
 	</relations>
 	<link access="public" path="share/index"/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	]]></hook>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shares`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shares` (

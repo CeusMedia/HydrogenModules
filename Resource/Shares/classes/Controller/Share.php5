@@ -49,4 +49,3 @@ class Controller_Share extends CMF_Hydrogen_Controller{
 
 	}
 }
-//http://localhost/anvil/CeusMedia/Accounting/3CAAC23A-9D6E-4233-AB2E-717E5AFBB054
