@@ -30,8 +30,6 @@ Files can be assigned to modules and virtual paths.
 	<config protected="yes" type="string" name="path" title="path to hashed files within contents folder">files/</config>
 	<relations/>
 	<link access="public" path="file/index"/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	]]></hook>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>files` (
