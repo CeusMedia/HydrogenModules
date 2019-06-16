@@ -141,8 +141,6 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$dateStart	= $filters->get( 'dateStart' );
 		$dateEnd	= $filters->get( 'dateEnd' );
 
-		$page		= max( 0, (int) $page );
-		$offset		= $page * $filters->get( 'limit' );
 		$conditions	= array();
 
 		if( $filters->get( 'subject' ) )
@@ -158,6 +156,13 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		else if( $dateEnd )
 			$conditions['enqueuedAt']	= '<='.( strtotime( $dateEnd ) + 24 * 36000 - 1);
 
+		$page		= max( 0, (int) $page );
+		$total		= $this->logic->countQueue( $conditions );
+		$maxPage	= ceil( $total / $filters->get( 'limit' ) ) - 1;
+		if( $page > $maxPage )
+			$page	= $maxPage;
+		$offset		= $page * $filters->get( 'limit' );
+
 		$orders		= array( $filters->get( 'order' ) => $filters->get( 'direction' ) );
 		$limits		= array( $offset, $filters->get( 'limit' ) );
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );
@@ -168,6 +173,13 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->addData( 'total', $total );
 		$this->addData( 'limit', $filters->get( 'limit' ) );
 		$this->addData( 'filters', $filters );
+	}
+
+	public function remove( $mailId ){
+		$this->logic->removeMail( $mailId );
+		if( ( $page = $this->request->get( 'page' ) ) )
+			$this->restart( $page, TRUE );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function resend( $mailId ){
@@ -211,9 +223,12 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$mail			= $this->logic->getMail( $mailId );
 			$mail->parts	= $this->logic->getMailParts( $mail );
 			$this->addData( 'mail', $mail );
+			$this->addData( 'page', $this->request->get( 'page' ) );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
+			if( ( $page = $this->request->get( 'page' ) ) )
+				$this->restart( $page, TRUE );
 			$this->restart( NULL, TRUE );
 		}
 	}

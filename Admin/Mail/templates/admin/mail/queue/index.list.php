@@ -2,6 +2,9 @@
 $w		= (object) $words['index'];
 $wl		= (object) $words['index-list'];
 
+$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+
 $statusClasses	= array(
 	-3	=> 'important',
 	-2	=> 'important',
@@ -33,7 +36,22 @@ if( $mails ){
 		$receiverName	= UI_HTML_Tag::create( 'span', $mail->receiverName, array( 'class' => 'mail-user-name' ) );
 		$receiverMail	= UI_HTML_Tag::create( 'small', $mail->receiverAddress, array( 'class' => 'mail-user-address muted' ) );
 		$senderMail		= UI_HTML_Tag::create( 'small', $mail->senderAddress, array( 'class' => 'mail-user-address muted' ) );
-		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './admin/mail/queue/view/'.$mail->mailId ) );
+		$from			= '?from=admin/mail/queue'.($page ? '/'.$page : '' );
+		$paramPage		= $page ? '?page='.$page : '';
+		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './admin/mail/queue/view/'.$mail->mailId.$paramPage ) );
+
+		$buttons		= array();
+		$buttons[]		= UI_HTML_Tag::create( 'a', $iconView, array(
+			'href'		=> './admin/mail/queue/view/'.$mail->mailId.$paramPage,
+			'class'		=> 'btn btn-info btn-mini',
+			'title'		=> 'anzeigen',
+		) );
+		$buttons[]		= UI_HTML_Tag::create( 'a', $iconRemove, array(
+			'href'		=> './admin/mail/queue/remove/'.$mail->mailId.$paramPage,
+			'class'		=> 'btn btn-danger btn-mini',
+			'title'		=> 'entfernen',
+		) );
+		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
 
 		$statusClass	= 'success';
 		if( in_array( $mail->status, array( 1, 0 ) ) )
@@ -51,6 +69,7 @@ if( $mails ){
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'autocut cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'autocut cell-mail-receiver' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $status.'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-mail-actions' ) );
 
 		$class		= 'list-item-mail';
 		if( count( $filters->get( 'status' ) ) > 1 )
@@ -62,9 +81,10 @@ if( $mails ){
 		'Sender und Betreff',
 		'Empfänger',
 		'Status',
+		'',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( "", "30%", "120px" ) );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '', '30%', '120px', '80px' ) );
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );

@@ -1,7 +1,8 @@
 <?php
 
-$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $buttons		= array();
 $buttons[]	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;zurück', array(
@@ -11,7 +12,7 @@ $buttons[]	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;zurück', array(
 if( in_array( $mail->status, array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY ) ) ){
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
-		'class'	=> 'btn btn-danger btn-small'
+		'class'	=> 'btn btn-inverse btn-small'
 	) );
 }
 if( $mail->status == 2 || $mail->status == -2 ){
@@ -20,6 +21,10 @@ if( $mail->status == 2 || $mail->status == -2 ){
 		'class'	=> 'btn btn-primary btn-small'
 	) );
 }
+$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	'href'	=> './admin/mail/queue/remove/'.$mail->mailId.( $page ? '?page='.$page : '' ),
+	'class'	=> 'btn btn-danger btn-small'
+) );
 $buttons	= join( ' ', $buttons );
 
 $listKeys	= array(
