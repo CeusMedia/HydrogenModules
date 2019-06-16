@@ -448,7 +448,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			$object = unserialize( $mail->serial );
 		}
 		if( !is_object( $object ) ){
-			print( substr( $mail->serial, 0, 50 ) );
+//			print( substr( $mail->serial, 0, 50 ) );
 			throw new RuntimeException( 'Deserialization of mail failed' );
 		}
 		$mail->object	= $object;
