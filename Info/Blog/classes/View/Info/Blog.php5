@@ -57,7 +57,7 @@ class View_Info_Blog extends CMF_Hydrogen_View{
 			$title	= $words['panelTitles']['typeRandom'];
 		}
 		else if( in_array( $modeOrId, array( "latest", "0" ) ) ){
-			$post	= $model->getByIndex( 'status', 1, array(), array( 'postId' => 'DESC' ) );
+			$post	= $model->getByIndex( 'status', 1, array(), array(), array( 'postId' => 'DESC' ) );
 			$title	= $words['panelTitles']['typeLatest'];
 		}
 		else if( $modeOrId ){
