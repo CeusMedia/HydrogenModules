@@ -90,7 +90,7 @@ $buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' hinzufügen', array(
 ) );
 
 $panelList	= HTML::DivClass( 'content-panel',
-	UI_HTML_Tag::create( 'h3', 'IP-Spree-Gründe' ).
+	UI_HTML_Tag::create( 'h3', 'IP-Speer-Gründe' ).
 	HTML::DivClass( 'content-panel-inner',
 		$list.
 		HTML::DivClass( 'buttonbar',
