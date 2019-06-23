@@ -24,13 +24,21 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function cancel( $ipLockId ){
+		if( $this->logic->cancel( $ipLockId ) )
+			$this->messenger->noteSuccess( 'IP lock cancelled.' );
+		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
+			$this->restart( $from );
+		$this->restart( NULL, TRUE );
+	}
+
 	public function edit( $ipLockId ){
-		$lock	= $this->logic->get( $ipLockId );
+		$lock	= $this->logic->get( $ipLockId, FALSE );
 		if( !$lock ){
 			$this->messenger->noteError( 'Invalid lock ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		if( $lock->reason->status < 1 )
+		if( $lock->reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
 			$this->messenger->noteNotice( 'This lock is not active since its reason has been disabled.' );
 		$this->addData( 'lock', $lock );
 	}
@@ -94,14 +102,6 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 			$session->set( $this->filterSessionPrefix.'sort', $request->get( 'sort' ) );
 		if( $request->has( 'order' ) )
 			$session->set( $this->filterSessionPrefix.'order', $request->get( 'order' ) );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function remove( $ipLockId ){
-		if( $this->logic->remove( $ipLockId ) )
-			$this->messenger->noteSuccess( 'IP lock cancelled.' );
-		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
-			$this->restart( $from );
 		$this->restart( NULL, TRUE );
 	}
 

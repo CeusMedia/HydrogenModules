@@ -11,7 +11,9 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 	}
 
 	public function activate( $reasonId ){
-		$this->model->edit( $reasonId, array( 'status' => 1 ) );
+		$this->model->edit( $reasonId, array(
+			'status' => Model_IP_Lock_Reason::STATUS_ENABLED
+		) );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -28,7 +30,9 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 	}
 
 	public function deactivate( $reasonId ){
-		$this->model->edit( $reasonId, array( 'status' => 0 ) );
+		$this->model->edit( $reasonId, array(
+			'status' => Model_IP_Lock_Reason::STATUS_DISABLED
+		) );
 		$this->restart( NULL, TRUE );
 	}
 

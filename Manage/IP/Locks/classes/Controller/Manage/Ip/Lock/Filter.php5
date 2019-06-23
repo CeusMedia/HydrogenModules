@@ -11,7 +11,9 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 	}
 
 	public function activate( $filterId ){
-		$this->model->edit( $filterId, array( 'status' => 1 ) );
+		$this->model->edit( $filterId, array(
+			'status'	=> Model_IP_Lock_Filter::STATUS_ENABLED,
+		) );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -30,7 +32,9 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 	}
 
 	public function deactivate( $filterId ){
-		$this->model->edit( $filterId, array( 'status' => 0 ) );
+		$this->model->edit( $filterId, array(
+			'status'	=> Model_IP_Lock_Filter::STATUS_DISABLED,
+		) );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -72,8 +76,11 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 			$this->messenger->notError( 'Invalid filter ID.' );
 			$this->restart( NULL, FALSE );
 		}
+		$locks		= $this->logic->getAll( array( 'filterId' => $filterId ) );
+		foreach( $locks as $lock )
+			$this->logic->remove( $lock->ipLockId );
 		$this->model->remove( $filterId );
-		$this->messenger->noteSuccess( 'Filter removed.' );
+		$this->messenger->noteSuccess( 'Filter and related locks removed.' );
 		$this->restart( NULL, TRUE );
 	}
 }

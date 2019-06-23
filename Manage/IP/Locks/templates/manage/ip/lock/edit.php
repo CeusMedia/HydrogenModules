@@ -29,7 +29,7 @@ if( $lock->status > 0 ){
 	) );
 }
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
-	'href'		=> './manage/ip/lock/remove/'.$lock->ipLockId,
+	'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId,
 	'class'		=> 'btn btn-small btn-danger',
 ) );
 
@@ -50,4 +50,3 @@ $panelEdit	= '
 
 $tabs   = View_Manage_Ip_Lock::renderTabs( $env );
 return $tabs.HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $panelEdit ) );
-

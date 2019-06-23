@@ -19,7 +19,7 @@ $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
 ) );
 
 $optMethod	= UI_HTML_Elements::Options( array(
-	'' => 'alle',
+	''		=> 'alle',
 	'GET'	=> 'GET',
 	'HEAD'	=> 'HEAD',
 	'POST'	=> 'POST',

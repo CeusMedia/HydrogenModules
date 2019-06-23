@@ -2,24 +2,46 @@
 class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
+		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
 	}
 
 	public function index(){
-		$this->addData( 'filters', $this->modelFilter->getAll() );
-		$this->addData( 'reasons', $this->modelReason->getAll() );
+		$reasons	= $this->modelReason->getAll( array(), array( 'title' => 'ASC' ) );
+		$filters	= $this->modelFilter->getAll( array(), array( 'title' => 'ASC' ) );
+		$this->addData( 'reasons', $reasons );
+		$this->addData( 'filters', $filters );
 	}
 
 	public function export(){
+		if( !$this->request->isPost() )
+			$this->restart( NULL, TRUE );
+		if( $this->request->get( 'reasons' ) === 'all' ){
+			$reasons	= $this->modelReason->getAll();
+			$filters	= $this->modelFilter->getAll();
+		}
+		else{
+			$reasonIds	= $this->request->get( 'reasonIds' );
+			$reasons	= $this->modelReason->getAll( array( 'ipLockReasonId' => $reasonIds ) );
+			if( $this->request->get( 'filters' ) === 'all' ){
+				$filters	= $this->modelFilter->getAllByIndex( 'reasonId', $reasonIds );
+			}
+			else{
+				$filterIds	= $this->request->get( 'filterIds' );
+				$filters	= $this->modelFilter->getAllByIndice( array(
+					'reasonId'			=> $reasonIds,
+					'ipLockFilterId'	=> $filterIds,
+				) );
+			}
+		}
 		$data	= array(
-			'reasons' => $this->modelReason->getAll(),
-			'filters' => $this->modelFilter->getAll(),
+			'reasons' => $reasons,
+			'filters' => $filters,
 		);
 		$json	= json_encode( $data, JSON_PRETTY_PRINT );
 		$fileName	= 'IP_lock_'.date( 'y-m-d' ).'.json';
 		Net_HTTP_Download::sendString( $json, $fileName, TRUE );
-//		$this->restart( NULL, TRUE );
 	}
 
 	public function import(){

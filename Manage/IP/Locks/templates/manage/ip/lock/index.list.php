@@ -53,9 +53,9 @@ if( $locks ){
 		$buttonRemove	= "";
 		if( in_array( $lock->status, array( -2, -10 ) ) ){
 			$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
-				'href'		=> './manage/ip/lock/remove/'.$lock->ipLockId.$urlSuffixFrom,
+				'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-danger',
-				'title'		=> 'remove',
+				'title'		=> 'cancel lock',
 			) );
 		}
 

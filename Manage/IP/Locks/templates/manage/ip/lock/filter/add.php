@@ -35,7 +35,6 @@ $reasonMap	= array();
 foreach( $reasons as $reason )
 	$reasonMap[$reason->ipLockReasonId]	= $reason;
 
-
 $panelAdd	= '
 <div class="content-panel">
 	<h3><a class="muted" href="./manage/ip/lock/filter">IP-Sperr-Filter:</a> Neu</h2>
