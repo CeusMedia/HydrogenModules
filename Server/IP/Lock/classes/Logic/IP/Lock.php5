@@ -20,6 +20,9 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		$conditions	= array( 'status' => Model_IP_Lock_Filter::STATUS_ENABLED );
 		$filters	= $this->modelFilter->getAll( $conditions );
 		foreach( $filters as $filter ){
+			$reason		= $this->modelReason->get( $filter->reasonId );
+			if( !$reason || $reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
+				continue;
 			if( $filter->method && $filter->method != $method )
 				continue;
 			if( !preg_match( $filter->pattern, $uri ) )
@@ -32,6 +35,13 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	public function cancel( $ipLockId ){
+		$lock	= $this->get( $ipLockId );
+		if( $lock->status == Model_IP_Lock_Filter::STATUS_CANCELLED )
+			return FALSE;																			//  indicate: lock already cancelled
+		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_CANCELLED );				//  cancel lock and return TRUE
 	}
 
 	public function count( $conditions ){
@@ -138,9 +148,7 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 
 	public function remove( $ipLockId ){
 		$lock	= $this->get( $ipLockId );
-		if( $lock->status == Model_IP_Lock_Filter::STATUS_CANCELLED )
-			return FALSE;																			//  indicate: lock already cancelled
-		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_CANCELLED );				//  cancel lock and return TRUE
+		return $this->modelLock->remove( $lock->ipLockId );
 	}
 
 	public function requestUnlock( $ipLockId ){
