@@ -3,7 +3,7 @@
 	<title>Server: IP Lock</title>
 	<description><![CDATA[]]></description>
 	<category>Server</category>
-	<version>0.3.1</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Extracted logic to class.</log>
@@ -15,11 +15,13 @@
 	<log version="0.2.7">Extended logic class.</log>
 	<log version="0.3">Add support for IPv6.</log>
 	<log version="0.3.1">Added applied filter to lock.</log>
-<!--	<log version="0.3.2">Added whitelist.</log>-->
+	<log version="0.3.2">Use status constants in models and logic.</log>
+	<log version="0.3.3">Extract hook to own class.</log>
+<!--	<log version="0.3.x">Added whitelist.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/IP/Lock.php5</class>
+		<class>Hook/IP/Lock.php5</class>
 		<class>Logic/IP/Lock.php5</class>
 		<class>Model/IP/Lock.php5</class>
 		<class>Model/IP/Lock/Filter.php5</class>
@@ -29,7 +31,7 @@
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
-	<hook type="resource" resource="Env" event="init">Controller_IP_Lock::___onEnvInit</hook>
+	<hook type="resource" resource="Env" event="init">Hook_IP_Lock::onEnvInit</hook>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>ip_locks` (

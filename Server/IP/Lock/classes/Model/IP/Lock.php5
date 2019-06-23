@@ -8,6 +8,7 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 	const STATUS_REQUEST_UNLOCK	= 2;
 
 	protected $name		= 'ip_locks';
+
 	protected $columns	= array(
 		'ipLockId',
 		'filterId',
@@ -20,13 +21,16 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 		'visitedAt',
 		'unlockedAt',
 	);
+
 	protected $primaryKey	= 'ipLockId';
+
 	protected $indices		= array(
 		'reasonId',
 		'status',
 		'IP',
 		'lockedAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
 ?>

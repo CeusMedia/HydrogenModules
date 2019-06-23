@@ -1,6 +1,11 @@
 <?php
 class Model_IP_Lock_Filter extends CMF_Hydrogen_Model{
+
+	const STATUS_DISABLED	= 0;
+	const STATUS_ENABLED	= 1;
+
 	protected $name		= 'ip_lock_filters';
+
 	protected $columns	= array(
 		'ipLockFilterId',
 		'reasonId',
@@ -14,6 +19,7 @@ class Model_IP_Lock_Filter extends CMF_Hydrogen_Model{
 		'modifiedAt',
 	);
 	protected $primaryKey	= 'ipLockFilterId';
+
 	protected $indices		= array(
 		'reasonId',
 		'status',
@@ -22,6 +28,7 @@ class Model_IP_Lock_Filter extends CMF_Hydrogen_Model{
 		'title',
 		'createdAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
 ?>
