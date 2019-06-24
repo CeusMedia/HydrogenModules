@@ -10,6 +10,13 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 	public function index(){
 		$reasons	= $this->modelReason->getAll( array(), array( 'title' => 'ASC' ) );
 		$filters	= $this->modelFilter->getAll( array(), array( 'title' => 'ASC' ) );
+
+		foreach( $reasons as $reason )
+			$reason->filters	= $this->modelFilter->getAllByIndex(
+				'reasonId',
+				$reason->ipLockReasonId,
+				array( 'title' => 'ASC'
+			) );
 		$this->addData( 'reasons', $reasons );
 		$this->addData( 'filters', $filters );
 	}
@@ -28,8 +35,15 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 				$filters	= $this->modelFilter->getAllByIndex( 'reasonId', $reasonIds );
 			}
 			else{
-				$filterIds	= $this->request->get( 'filterIds' );
-				$filters	= $this->modelFilter->getAllByIndice( array(
+				$reasonFiltersIds	= $this->modelFilter->getAllByIndices(
+					array( 'reasonId' => $reasonIds ),
+					array(),
+					array(),
+					array( 'ipLockFilterId' )
+				);
+				$requestFilterIds	= $this->request->get( 'filterIds' );
+				$filterIds			= array_intersect( $reasonFiltersIds, $requestFilterIds );
+				$filters	= $this->modelFilter->getAllByIndices( array(
 					'reasonId'			=> $reasonIds,
 					'ipLockFilterId'	=> $filterIds,
 				) );
@@ -40,6 +54,7 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 			'filters' => $filters,
 		);
 		$json	= json_encode( $data, JSON_PRETTY_PRINT );
+		xmp( $json );die;
 		$fileName	= 'IP_lock_'.date( 'y-m-d' ).'.json';
 		Net_HTTP_Download::sendString( $json, $fileName, TRUE );
 	}
