@@ -12,9 +12,12 @@ var FormOptionals = {
 		var form = jQuery(elem.form);
 		var name = jQuery(elem).attr("name");
 		var type = jQuery(elem).attr("type");
-		var value = name+"-" + jQuery(elem).val().replace(/[(@\.]/g, '_');
-		if (type === "checkbox")
+		var value = name + "-" + jQuery(elem).val().replace(/[(@\.]/g, '_');
+		if (type === "checkbox"){
+			if (name.match(/\[\]$/))
+				name = name.replace(/\[\]/, '') + "-" + jQuery(elem).attr("value");
 			value = name + "-" + jQuery(elem).prop("checked");
+		}
 
 		var toHide = form.find(".optional." + name).not("." + value);
 		var toShow = form.find(".optional." + value);
