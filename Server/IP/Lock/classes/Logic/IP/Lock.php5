@@ -37,11 +37,11 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function cancel( $ipLockId ){
-		$lock	= $this->get( $ipLockId );
+	public function cancel( $ipLockId, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status == Model_IP_Lock_Filter::STATUS_CANCELLED )
 			return FALSE;																			//  indicate: lock already cancelled
-		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_CANCELLED );				//  cancel lock and return TRUE
+		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_CANCELLED, $strict );		//  cancel lock and return TRUE
 	}
 
 	public function count( $conditions ){
@@ -90,7 +90,7 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 				throw new RangeException( 'Invalid lock IP' );
 			return NULL;
 		}
-		return $this->get( $lock->ipLockId );
+		return $this->get( $lock->ipLockId, $strict );
 	}
 
 	public function getFilters( $conditions = array(), $orders = array(), $limits = array() ){
@@ -107,14 +107,14 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 	}
 
 	public function isLockedIp( $ip ){
-		$lock	= $this->getByIp( $ip );
-		if( $lock && $lock->status >= Model_IP_Lock_Filter::STATUS_LOCKED )							//  lock is set or has release request
-			return TRUE;
-		return FALSE;
+		$lock	= $this->getByIp( $ip, FALSE );
+		if( !$lock )
+			return FALSE;
+		return $lock->status >= Model_IP_Lock_Filter::STATUS_LOCKED;								//  lock is set or has release request
 	}
 
-	public function lock( $ipLockId ){
-		$lock	= $this->get( $ipLockId );
+	public function lock( $ipLockId, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		$states	= array(
 			Model_IP_Lock_Filter::STATUS_UNLOCKED,
 			Model_IP_Lock_Filter::STATUS_REQUEST_LOCK,
@@ -122,7 +122,7 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		);
 		if( !in_array( $lock->status, $states ) )													//  transition is not allowed
 			return FALSE;																			//  indicate: lock exists but is not activatable
-		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_LOCKED );					//  realize lock and return TRUE
+		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_LOCKED, $strict );			//  realize lock and return TRUE
 	}
 
 	public function lockIp( $ip, $reasonId = NULL, $filter = NULL ){
@@ -146,20 +146,21 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $lock->ipLockId;
 	}
 
-	public function remove( $ipLockId ){
-		$lock	= $this->get( $ipLockId );
+	public function remove( $ipLockId, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		return $this->modelLock->remove( $lock->ipLockId );
 	}
 
-	public function requestUnlock( $ipLockId ){
-		$lock	= $this->get( $ipLockId );
+	public function requestUnlock( $ipLockId, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status != Model_IP_Lock_Filter::STATUS_LOCKED )
 			return FALSE;																			//  indicate: lock is not locked
-		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_REQUEST_UNLOCK );			//  note unlock request and return TRUE
+		$targetStatus	= Model_IP_Lock_Filter::STATUS_REQUEST_UNLOCK;
+		return $this->setStatus( $ipLockId, $targetStatis, $strict );								//  note unlock request and return TRUE
 	}
 
-	public function setStatus( $ipLockId, $status ){
-		$lock	= $this->get( $ipLockId );
+	public function setStatus( $ipLockId, $status, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		$data	= array( 'status' => $status );
 		if( $status == Model_IP_Lock_Filter::STATUS_UNLOCKED )
 			$data['unlockedAt']	= time();
@@ -170,11 +171,13 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return (bool) $this->modelLock->edit( $ipLockId, $data );
 	}
 
-	public function unlockIfOverdue( $ipLockIdOrIp ){
+	public function unlockIfOverdue( $ipLockIdOrIp, $strict = TRUE ){
 		if( is_int( $ipLockIdOrIp ) )
-			$lock	= $this->get( $ipLockId );
+			$lock	= $this->get( $ipLockId, $strict );
 		else
-			$lock	= $this->getByIp( $ipLockIdOrIp );
+			$lock	= $this->getByIp( $ipLockIdOrIp, $strict );
+		if( !$lock )
+			return NULL;
 		if( $lock->status < Model_IP_Lock_Filter::STATUS_LOCKED )									//  lock is neither locked nor has release request
 			return NULL;																			//  indicate: lock not locked
 		if( !$lock->unlockAt || $lock->unlockAt > time() )											//  unlock date is in the future
@@ -182,13 +185,13 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return (bool) $this->unlock( $lock->ipLockId );												//  release lock and return TRUE
 	}
 
-	public function unlock( $ipLockId ){
-		$lock	= $this->get( $ipLockId );
+	public function unlock( $ipLockId, $strict = TRUE ){
+		$lock	= $this->get( $ipLockId, $strict );
 		if( !$lock )
 			return NULL;
 		if( $lock->status != Model_IP_Lock_Filter::STATUS_LOCKED )
 			return FALSE;																			//  indicate: lock not locked
-		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_UNLOCKED );				//  unlock lock and return TRUE
+		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_UNLOCKED, $strict );		//  unlock lock and return TRUE
 	}
 }
 ?>

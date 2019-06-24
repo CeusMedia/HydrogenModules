@@ -4,7 +4,7 @@ class Hook_IP_Lock extends CMF_Hydrogen_Hook{
 	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$ip		= getEnv( 'REMOTE_ADDR' );																	//  get IP address of request
 		$logic	= Logic_IP_Lock::getInstance( $env );														//  get instance of IP lock logic
-		$logic->unlockIfOverdue( $ip );																		//  clear lock if existing and outdated
+		$logic->unlockIfOverdue( $ip, FALSE );																//  clear lock if existing and outdated
 		$logic->applyFilters();																				//  apply filters on request of IP
 		if( !$logic->isLockedIp( $ip ) )																	//  no lock is active for IP address
 			return;
