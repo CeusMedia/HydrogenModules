@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>
+		<link rel="stylesheet" href="https://cdn.ceusmedia.de/css/bootstrap.min.css"></link>
+		<script src="https://cdn.ceusmedia.de/js/jquery/1.10.2.min.js"></script>
+		<script src="../js/FormOptionals.js"></script>
+		<script>$(document).ready(function(){FormOptionals.init();});</script>
+		<style>
+ul.unstyled{
+	padding-left: 1.5em;
+	padding-left: 0.3em;
+	}
+.optional{
+	border: 1px solid rgba(127, 127, 127, 0.0);
+	border-style: solid;
+	border-width: 0 0 0 3px;
+	border-color: rgba(127, 127, 127, 0.5);
+	padding-left: 1.2em;
+	}
+
+</style>
+	</head>
+	<body>
+		<div class="container">
+			<form>
+				<div class="row-fluid">
+					<div class="span6">
+<!--				<h2>Example 1</h2>-->
+				<label>Main Selection</label>
+				<select name="test1" class="has-optionals" data-animation="slide">
+					<option value="option1" selected="selected">Option 1: no further inputs</option>
+					<option value="option2">Option 2: show more inputs</option>
+				</select>
+				<ul class="unstyled">
+					<li class="optional test1 test1-option1">Container for Option 1.</li>
+					<li class="optional test1 test1-option2">Container for Option 2 with sub form.
+						<label>Required Text</label>
+						<input type="text" name="requiredText1" required="required"/>
+					</li>
+				</ul>
+
+				<hr/>
+
+				<label>Radio Group</label>
+				<label class="radio">
+					<input type="radio" name="test2" value="option1" class="has-optionals" data-animation="slide" checked="checked"/>
+					Option 1
+				</label>
+				<label class="radio">
+					<input type="radio" name="test2" value="option2" class="has-optionals" data-animation="slide"/>
+					Option 2
+				</label>
+				<ul class="unstyled">
+					<li class="optional test2 test2-option1">Container for Option 1.</li>
+					<li class="optional test2 test2-option2">Container for Option 2 with sub form.
+						<label>Required Text</label>
+						<input type="text" name="requiredText2" required="required"/>
+					</li>
+				</ul>
+
+				<hr/>
+
+				<label>Checkboxes</label>
+				<label class="checkbox">
+					<input type="checkbox" name="test3-option1" value="yes" class="has-optionals" data-animation="slide" checked="checked"/>
+					Option 1
+				</label>
+				<label class="checkbox">
+					<input type="checkbox" name="test3-option2" value="yes" class="has-optionals" data-animation="slide"/>
+					Option 2
+				</label>
+				<ul class="unstyled">
+					<li class="optional test3 test3-option1 test3-option1-true">Container for Option 1.</li>
+					<li class="optional test3 test3-option2 test3-option2-true">Container for Option 2 with sub form.
+						<label>Required Text</label>
+						<input type="text" name="requiredText3" required="required"/>
+					</li>
+				</ul>
+
+				<hr/>
+
+				<label>Checkbox Group</label>
+				<label class="checkbox">
+					<input type="checkbox" name="test4[]" value="option1" class="has-optionals" data-animation="slide" checked="checked"/>
+					Option 1
+				</label>
+				<label class="checkbox">
+					<input type="checkbox" name="test4[]" value="option2" class="has-optionals" data-animation="slide"/>
+					Option 2
+				</label>
+				<ul class="unstyled">
+					<li class="optional test4 test4-option1 test4-option1-true">Container for Option 1.</li>
+					<li class="optional test4 test4-option2 test4-option2-true">Container for Option 2 with sub form.
+						<label>Required Text</label>
+						<input type="text" name="requiredText4" required="required"/>
+					</li>
+				</ul>
+
+				<hr/>
+
+				<label>ISO Country Code <small class="muted">(lowercase)</small></label>
+				<input type="text" name="test5" class="has-optionals" data-animation="fade"/>
+				<ul class="unstyled">
+					<li class="optional test5 test5-de">de: Germany</li>
+					<li class="optional test5 test5-us">us: USA</li>
+					<li class="optional test5 test5-uk">uk: Great Britain</li>
+					<li class="optional test5 test5-fr">fr: France</li>
+					<li class="optional test5 test5-"><div class="alert">Hint: Type de, uk, us or fr!</div></li>
+				</ul>
+				<hr/>
+				<button type="submit" class="btn btn-primary">send</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+	</body>
+</html>

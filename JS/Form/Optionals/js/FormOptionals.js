@@ -1,26 +1,33 @@
-
+/**
+ *	Handles optional contents related to input elements.
+ *
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@copyright	2012-2019 Ceus Media (https://ceusmedia.de)
+ */
 var FormOptionals = {
 	init: function (selector) {
-		if(typeof selector === "undefined")
-			selector = "body";
-		var items = jQuery(selector).find(":input.has-optionals");
-		items.on("change change-update", function () {
-			FormOptionals.showOptionals(this);
-		}).trigger("change-update");
+		if(typeof selector === "undefined")										//  no specific container set
+			selector = "body";													//  assume body as work container
+		var items = jQuery(selector).find(":input.has-optionals");				//  find all input elements having optionals
+		items.on("change change-update", function () {							//  bind event on change of input elements
+			FormOptionals.showOptionals(this);									//  apply handling of optionals
+		}).trigger("change-update");											//  trigger event to apply input values on start
 	},
 	showOptionals: function (elem) {
-		var form = jQuery(elem.form);
-		var name = jQuery(elem).attr("name");
-		var type = jQuery(elem).attr("type");
-		var value = name + "-" + jQuery(elem).val().replace(/[(@\.]/g, '_');
-		if (type === "checkbox"){
-			if (name.match(/\[\]$/))
-				name = name.replace(/\[\]/, '') + "-" + jQuery(elem).attr("value");
-			value = name + "-" + jQuery(elem).prop("checked");
-		}
+		var form = jQuery(elem.form);											//  get input containing form as a parent container
+		var name = jQuery(elem).attr("name");									//  get name of input
+		var type = jQuery(elem).attr("type");									//  get type of input
+		var value = jQuery(elem).val().replace(/[( @\.]/g, '_');				//  get cleansed value
 
-		var toHide = form.find(".optional." + name).not("." + value);
-		var toShow = form.find(".optional." + value);
+		if (type === "checkbox" && name.match(/\[\]$/))							//  if input is checkbox of a checkbox group
+			name = name.replace(/\[\]/, '') + "-" + value;						//  get cleansed name and combine
+		var identifier = name + "-" + value;									//  build identifier by name and cleansed value
+		if (type === "checkbox" )												//  if input is checkbox
+			identifier = name + "-" + jQuery(elem).prop("checked");				//  extend identifier by checkbox state
+
+		var optionals = form.find(".optional." + name);							//  get all optionals for input within form
+		var toHide = optionals.not("." + identifier);							//  collect optionals not having identifier
+		var toShow = optionals.filter("." + identifier);						//  collect optionals having identifier
 
 		if (type === "radio") {													//  element input is of type radio
 			if (!jQuery(elem).prop("checked")) {								//  this radio is NOT checked
@@ -31,8 +38,8 @@ var FormOptionals = {
 			}
 		}
 
-		FormOptionals.disableRequired(toHide);
-		FormOptionals.enableRequired(toShow);
+		FormOptionals.disableRequired(toHide);									//  remove "required" attribute on optionals to hide
+		FormOptionals.enableRequired(toShow);									//  restore "required" attribute on optionals to show
 
 		if (!jQuery(elem).data("status")) {										//  initial run
 			toHide.hide();														//  hide disabled optionals right now
