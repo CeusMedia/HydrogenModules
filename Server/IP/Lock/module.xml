@@ -24,6 +24,7 @@
 	<files>
 		<class>Hook/IP/Lock.php5</class>
 		<class>Logic/IP/Lock.php5</class>
+		<class>Logic/IP/Lock/Transport.php5</class>
 		<class>Model/IP/Lock.php5</class>
 		<class>Model/IP/Lock/Filter.php5</class>
 		<class>Model/IP/Lock/Reason.php5</class>

@@ -151,6 +151,15 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $this->modelLock->remove( $lock->ipLockId );
 	}
 
+	public function removeAll( $locks = TRUE, $filters = FALSE, $reasons = FALSE ){
+		if( $locks )
+			$this->modelLock->truncate();
+		if( $filters )
+			$this->modelFilter->truncate();
+		if( $reasons )
+			$this->modelReason->truncate();
+	}
+
 	public function requestUnlock( $ipLockId, $strict = TRUE ){
 		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status != Model_IP_Lock_Filter::STATUS_LOCKED )

@@ -25,6 +25,7 @@ class Model_IP_Lock_Filter extends CMF_Hydrogen_Model{
 		'status',
 		'lockStatus',
 		'method',
+		'pattern',
 		'title',
 		'createdAt',
 	);
