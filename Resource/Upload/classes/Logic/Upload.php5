@@ -175,6 +175,8 @@ class Logic_Upload{
 	public function getFileName(){
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
+		if( $this->upload->error )
+			throw new Exception( 'Upload failed beforehand' );
 		return $this->upload->name;
 	}
 
