@@ -5,6 +5,11 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
+	//	$this->logicTransport	= Logic_IP_Lock_Transport::getInstance();
+
+		$logicPool				= $this->env->getLogic();
+		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
+		$this->logicTransport	= $logicPool->get( $logicPoolKey );
 	}
 
 	public function index(){
@@ -21,41 +26,27 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 		$this->addData( 'filters', $filters );
 	}
 
+
 	public function export(){
 		if( !$this->request->isPost() )
 			$this->restart( NULL, TRUE );
-		if( $this->request->get( 'reasons' ) === 'all' ){
-			$reasons	= $this->modelReason->getAll();
-			$filters	= $this->modelFilter->getAll();
-		}
-		else{
-			$reasonIds	= $this->request->get( 'reasonIds' );
-			$reasons	= $this->modelReason->getAll( array( 'ipLockReasonId' => $reasonIds ) );
-			if( $this->request->get( 'filters' ) === 'all' ){
-				$filters	= $this->modelFilter->getAllByIndex( 'reasonId', $reasonIds );
-			}
-			else{
-				$reasonFiltersIds	= $this->modelFilter->getAllByIndices(
-					array( 'reasonId' => $reasonIds ),
-					array(),
-					array(),
-					array( 'ipLockFilterId' )
-				);
-				$requestFilterIds	= $this->request->get( 'filterIds' );
-				$filterIds			= array_intersect( $reasonFiltersIds, $requestFilterIds );
-				$filters	= $this->modelFilter->getAllByIndices( array(
-					'reasonId'			=> $reasonIds,
-					'ipLockFilterId'	=> $filterIds,
-				) );
-			}
-		}
-		$data	= array(
-			'reasons' => $reasons,
-			'filters' => $filters,
-		);
-		$json	= json_encode( $data, JSON_PRETTY_PRINT );
-		xmp( $json );die;
-		$fileName	= 'IP_lock_'.date( 'y-m-d' ).'.json';
+
+		$fileName	= $this->request->get( 'filename' );
+		$reasonIds	= $this->request->get( 'reasonIds' );
+		$filterIds	= $this->request->get( 'filterIds' );
+
+		if( $this->request->get( 'reasons' ) === 'all' )
+			$reasonIds	= array();
+		if( $this->request->get( 'filters' ) === 'all' )
+			$filterIds	= array();
+		$json		= $this->logicTransport->export( $reasonIds, $filterIds );
+
+		if( !strlen( trim( $fileName ) ) )
+			$fileName	= 'IP_lock_{DATE}';
+		$fileName	= str_replace( '{DATE}', date( 'Y-M-D' ), $fileName );
+		if( !preg_match( '/\.\S+$/', $fileName ) )
+			$fileName	.= '.json';
+
 		Net_HTTP_Download::sendString( $json, $fileName, TRUE );
 	}
 
@@ -77,10 +68,10 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 				$type	= $request->get( 'type' );
 				switch( $type ){
 					case 'fresh':
-						$this->importFresh( $data );
+						$this->logicTransport->importFresh( $data );
 						break;
 					case 'merge':
-						$this->importWithMerge( $data );
+						$this->logicTransport->importWithMerge( $data );
 						break;
 					default:
 						throw new RangeException( 'Invalid import type: '.$type );
@@ -91,41 +82,5 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 			$this->env->getMessenger()->noteError( $e->getMessage().'.' );
 		}
 		$this->restart( NULL, TRUE );
-	}
-
-	protected function importFresh( $data ){
-		$this->modelReason->truncate();
-		$this->modelFilter->truncate();
-		$modelLock	= new Model_IP_Lock( $this->env );
-		$modelLock->truncate();
-		foreach( $data->reasons as $reason )
-			$this->modelReason->add( (array) $reason, FALSE );
-		foreach( $data->filters as $filter )
-			$this->modelFilter->add( (array) $filter, FALSE );
-	}
-
-	protected function importWithMerge( $data ){
-		$reasons	= array();
-		foreach( $data->reasons as $reason ){
-			$importId			= $reason->ipLockReasonId;
-			$reason->appliedAt	= 0;
-			unset( $reason->ipLockReasonId );
-			$reasons[$importId]	= $reason;
-		}
-		$filters	= array();
-		foreach( $data->filters as $filter ){
-			$importId			= $filter->ipLockFilterId;
-			$filter->appliedAt	= 0;
-			unset( $filter->ipLockFilterId );
-			$filters[$importId]	= $filter;
-		}
-		foreach( $reasons as $reasonImportId => $reason ){
-			$reasonId	= $this->modelReason->add( (array) $reason, FALSE );
-			$reason->ipLockReasonId	= $reasonId;
-		}
-		foreach( $filters as $filterImportId => $filter ){
-			$filter->reasonId	= $reasons[$filter->reasonId]->ipLockReasonId;
-			$this->modelFilter->add( (array) $filter, FALSE );
-		}
 	}
 }
