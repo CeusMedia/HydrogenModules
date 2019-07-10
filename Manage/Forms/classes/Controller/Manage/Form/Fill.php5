@@ -344,7 +344,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 					$valid = FALSE;
 			}
 			if( $valid ){
-				$form->custeomerMailId	= $ruleset->mailId;
+				$form->customerMailId	= $ruleset->mailId;
 				break;
 			}
 		}

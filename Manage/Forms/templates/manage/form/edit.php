@@ -38,13 +38,16 @@ $panelRulesManager	= $this->loadTemplateFile( 'manage/form/edit.rules.manager.ph
 $panelRulesCustomer	= $this->loadTemplateFile( 'manage/form/edit.rules.customer.php', array( 'navButtons' => $navButtons ) );
 $panelFills			= '';
 
+$countRulesManager	= count( $rulesManager ) ? ' <small class="muted">('.count( $rulesManager ).')</small>' : '';
+$countRulesCustomer	= count( $rulesCustomer ) ? ' <small class="muted">('.count( $rulesCustomer ).')</small>' : '';
+
 $tabs	= new \CeusMedia\Bootstrap\Tabs( 'tabs-form' );
 $tabs->add( 'facts', '#', 'Fakten', $panelFacts );
 $tabs->add( 'view', '#', 'Ansicht', $panelView );
 $tabs->add( 'blocks', '#', 'Blöcke', $panelBlocksWithin );
 $tabs->add( 'content', '#', 'Inhalt', $panelContent );
-$tabs->add( 'rulesManager', '#', 'Manager-Mail-Regeln', $panelRulesManager );
-$tabs->add( 'rulesCustomer', '#', 'Kunden-Mail-Regeln', $panelRulesCustomer );
+$tabs->add( 'rulesManager', '#', 'Manager-Mail-Regeln'.$countRulesManager, $panelRulesManager );
+$tabs->add( 'rulesCustomer', '#', 'Kunden-Mail-Regeln'.$countRulesCustomer, $panelRulesCustomer );
 //$tabs->add( 'fills', '#', 'Einträge', $panelFills );
 $tabs->setActive( $activeTab ? $activeTab : 'facts' );
 
