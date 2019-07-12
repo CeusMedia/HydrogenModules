@@ -244,7 +244,7 @@ class Job_Mail_Archive extends Job_Abstract{
 		$usedLibrary	 = Logic_Mail::detectMailLibraryFromMailObject( $object );
 
 		if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
-			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL1 | Logic_Mail::LIBRARY_MAIL1 ) ){	// @todo finish support for v2, see todo below
+			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){	// @todo finish support for v2, see todo below
 				$newInstance	= new \CeusMedia\Mail\Message();
 
 				$newInstance->setSubject( $object->mail->getSubject() );
@@ -253,7 +253,7 @@ class Job_Mail_Archive extends Job_Abstract{
 					$sender	= $object->mail->getSender();
 				$newInstance->setSender( $sender );
 
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL1 ){
+				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
 					$receiver	= new \CeusMedia\Mail\Participant();
  					$receiver->setAddress( $mail->receiverAddress );
 					if( $mail->receiverName )
@@ -263,7 +263,7 @@ class Job_Mail_Archive extends Job_Abstract{
 					foreach( $parts as $part )
 						$newInstance->addPart( $part );
 				}
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL2 ){
+				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
 					$receiver	= new \CeusMedia\Mail\Address();
  					$receiver->set( $mail->receiverAddress );
 					if( $mail->receiverName )

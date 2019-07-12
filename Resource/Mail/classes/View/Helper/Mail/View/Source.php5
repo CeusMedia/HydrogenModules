@@ -31,10 +31,10 @@ class View_Helper_Mail_View_Source{
 		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
 			$code	= $mailObject->mail->getBody();												//  @todo find better way: currently only parts content displayed but no headers
 		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL1 ){									//  mail uses library CeusMedia/Mail version 1
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
 			$code	= CeusMedia\Mail\Renderer::render( $mailObject->mail );						//  @todo find better way: currently only parts content displayed but no headers
 		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL2 ){									//  mail uses library CeusMedia/Mail version 1
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
 			$code	= CeusMedia\Mail\Message\Renderer::render( $mailObject->mail );				//  @todo find better way: currently only parts content displayed but no headers
 		}
 		else{

@@ -33,6 +33,53 @@ class Model_Mail extends CMF_Hydrogen_Model {
 	const COMPRESSION_GZIP		= 3;
 	const COMPRESSION_BZIP		= 4;
 
+	public static $transitions	= array(
+		self::STATUS_ABORTED	=> array(
+			self::STATUS_NEW,
+		),
+		self::STATUS_FAILED	=> array(
+			self::STATUS_ABORTED,
+			self::STATUS_RETRY,
+			self::STATUS_NEW,
+		),
+		self::STATUS_RETRY	=> array(
+			self::STATUS_ABORTED,
+			self::STATUS_FAILED,
+			self::STATUS_NEW,
+		),
+		self::STATUS_NEW		=> array(
+			self::STATUS_ABORTED,
+			self::STATUS_SENDING,
+			self::STATUS_SENT,
+		),
+		self::STATUS_SENDING	=> array(
+			self::STATUS_FAILED,
+			self::STATUS_RETRY,
+			self::STATUS_SENT,
+		),
+		self::STATUS_SENT		=> array(
+			self::STATUS_RECEIVED,
+			self::STATUS_OPENED,
+			self::STATUS_REPLIED,
+			self::STATUS_ARCHIVED,
+		),
+		self::STATUS_RECEIVED	=> array(
+			self::STATUS_OPENED,
+			self::STATUS_REPLIED,
+			self::STATUS_ARCHIVED,
+		),
+		self::STATUS_OPENED	=> array(
+			self::STATUS_REPLIED,
+			self::STATUS_ARCHIVED,
+		),
+		self::STATUS_REPLIED	=> array(
+			self::STATUS_ARCHIVED,
+		),
+		self::STATUS_ARCHIVED	=> array(
+		),
+	);
+
+
 	protected $name		= 'mails';
 	protected $columns	= array(
 		'mailId',
