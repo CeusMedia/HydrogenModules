@@ -52,7 +52,7 @@ else{
 					}
 				}
 			}
-			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL1 ){
+			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
 				foreach( $mail->parts as $key => $part ){
 	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
 					if( $part instanceof \CeusMedia\Mail\Part\HTML )
@@ -73,7 +73,7 @@ else{
 						);
 				}
 			}
-			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL2 ){
+			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
 				foreach( $mail->parts as $key => $part ){
 					if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
 						$html	= TRUE;//$part->getContent();
