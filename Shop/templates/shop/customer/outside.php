@@ -1,6 +1,7 @@
 <?php
 $wLogin		= (object) $words['customer-login'];
 $wRegister	= (object) $words['customer-register'];
+$wGuest		= (object) $words['customer-guest'];
 
 $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
@@ -23,7 +24,7 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 }
 
 return '<div class="row-fluid">
-	<div class="span4 offset1">
+	<div class="span5 offset0">
 		<div class="content-panel">
 			<h3>'.$wLogin->heading.'</h3>
 			<div class="content-panel-inner">
@@ -35,29 +36,27 @@ return '<div class="row-fluid">
 					<label for="input_login_password">'.$wLogin->labelPassword.'</label>
 					<input type="password" name="login_password" id="input_login_password" class="span10"/>
 					<div class="buttonbar">
-						<button type="submit" name="doLogin" class="btn btn-primary"><i class="fa fa-fw fa-sign-in"></i> '.$wLogin->buttonLogin.'</button>
+						<button type="submit" name="doLogin" class="btn btn"><i class="fa fa-fw fa-sign-in"></i> '.$wLogin->buttonLogin.'</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div class="span4 offset1">
+	<div class="span6 offset1">
 		<div class="content-panel">
 			<h3>'.$wRegister->heading.'</h3>
 			<div class="content-panel-inner">
 				<p>'.$wRegister->textTop.'</p>
-						<a href="./auth/register?from=shop/customer" class="btn btn-primary"><i class="fa fa-fw fa-pencil"></i> '.$wRegister->buttonRegister.'</a>
-				</form>
+				<a href="./auth/register?from=shop/customer" class="btn btn-success"><i class="fa fa-fw fa-pencil"></i> '.$wRegister->buttonRegister.'</a>
 			</div>
-			<hr/>
-			<h3>Ohne Benutzerkonto</h3>
+		</div>
+		<div class="content-panel">
+			<h3>'.$wGuest->heading.'</h3>
 			<div class="content-panel-inner">
 				<p>
-					Sie können auch fortfahren, ohne ein Benutzerkonto zu erstellen.
-					Dazu geben Sie bitte die Liefer- und Rechnungsadresse ein.
+					'.$wGuest->textTop.'
 				</p>
-				<a href="shop/customer/guest" class="btn btn-primary"><i class="fa fa-fw fa-arrow-right"></i> weiter ohne Benutzerkonto</a>
-				</form>
+				<a href="shop/customer/guest" class="btn btn"><i class="fa fa-fw fa-arrow-right"></i> '.$wGuest->button.'</a>
 			</div>
 		</div>
 	</div>

@@ -3,6 +3,12 @@ $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
 
+$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$hint		= UI_HTML_Tag::create( 'a', $iconCancel.' zurück zur Auswahl', array(
+	'href'		=> './shop/customer/reset',
+	'class'		=> 'btn btn-small',
+) );
+
 if( !$addressDelivery ){
 	$address				= $user;
 	$address->street		= $user->street;
@@ -14,7 +20,7 @@ if( !$addressDelivery ){
 	$helper->setHeading( $wDelivery->heading );
 	$helper->setType( 4 );
 	$helper->setTextTop( '<div class="alert alert-info">'.$wDelivery->textTop.'<br/></div>' );
-	return $helper->render();
+	return $hint.$helper->render();
 }
 
 if( !$addressBilling ){
@@ -26,7 +32,7 @@ if( !$addressBilling ){
 	$helper->setHeading( $wBilling->heading );
 	$helper->setType( 2 );
 	$helper->setTextTop( '<div class="alert alert-info">'.$wBilling->textTop.'<br/></div>' );
-	return $helper->render();
+	return $hint.$helper->render();
 }
 
 $helperAddress	= new View_Helper_Shop_AddressView( $env );

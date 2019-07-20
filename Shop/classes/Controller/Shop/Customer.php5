@@ -166,7 +166,9 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			$mode	= Model_Shop_CART::CUSTOMER_MODE_ACCOUNT;
 		else if( $mode === 'guest' )
 			$mode	= Model_Shop_CART::CUSTOMER_MODE_GUEST;
-		if( is_int( $mode ) && $mode > 0 ){
+		else if( $mode === 'reset' )
+			$mode	= Model_Shop_CART::CUSTOMER_MODE_UNKNOWN;
+		if( is_int( $mode ) ){
 			$logicShop	= new Logic_Shop( $this->env );
 			$this->modelCart->set( 'customerMode', (int) $mode );
 			$this->restart( NULL, TRUE );
