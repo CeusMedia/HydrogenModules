@@ -3,8 +3,9 @@
 	<title>UI: Bootstrap: Treeview</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<log version="1.2.0">Initial version.</log>
+	<log version="1.2.1">Remove empty hook.</log>
 	<author site="https://github.com/jonmiles">Jonathan Miles</author>
 	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
 	<files>
@@ -16,6 +17,4 @@
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">JS_jQuery</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-]]></hook>
 </module>
