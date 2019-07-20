@@ -25,8 +25,8 @@ var ModuleAdminOAuth2 = {
 			value		= "";
 			if(providerKey){
 				value = ModuleAdminOAuth2.providers[providerKey][modelKey];
-				if(inputKey === "title")
-					value = providerKey;
+//				if(inputKey === "title")
+//					value = providerKey;
 				if(inputKey === "scopes")
 					value = value.join(",");
 				if(inputKey === "options" ){

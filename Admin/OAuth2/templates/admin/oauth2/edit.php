@@ -20,6 +20,7 @@ $buttonActivate		= UI_HTML_Tag::create( 'a', $iconActivate.' aktivieren', array(
 	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_ACTIVE,
 	'class'		=> 'btn btn-small btn-success',
 ) );
+
 $buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate.' deaktivieren', array(
 	'href'		=> './admin/oauth2/setStatus/'.$providerId.'/'.Model_Oauth_Provider::STATUS_INACTIVE,
 	'class'		=> 'btn btn-small btn-inverse',
@@ -30,6 +31,16 @@ $buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' entfernen', array(
 	'class'		=> 'btn btn-danger btn-small',
 	'disabled'	=> 'disabled',
 ) );
+
+if(0 && !$exists){
+	$buttonActivate		= UI_HTML_Tag::create( 'button', $iconActivate.' aktivieren', array(
+		'type'		=> 'button',
+		'class'		=> 'btn btn-small btn-success disabled',
+		'title'		=> 'Kann nicht aktiviert werden. Etwas stimmt noch nicht.',
+		'onclick'	=> 'alert(\'Kann nicht aktiviert werden. Etwas stimmt noch nicht.\');',
+	) );
+}
+
 if( $provider->status != Model_Oauth_Provider::STATUS_ACTIVE )
 	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
 		'href'		=> './admin/oauth2/remove/'.$providerId,
@@ -161,8 +172,9 @@ $form			= UI_HTML_Tag::create( 'form', array(
 
 
 $hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek (Composer-Paket "'.$provider->composerPackage.'") ist installiert.', array( 'class' => 'alert alert-success' ) );
+$hint	= '';
 if( !$exists )
-	$hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket "'.$provider->composerPackage.'" installiert!', array( 'class' => 'alert alert-important' ) );
+	$hint	= UI_HTML_Tag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket <strong><tt>'.$provider->composerPackage.'</tt></strong> installieren!', array( 'class' => 'alert alert-important' ) );
 
 $view->env->getPage()->runScript( 'ModuleAdminOAuth2.init()' );
 

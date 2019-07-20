@@ -18,10 +18,14 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
 		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
 		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
-		$this->providersIndex		= $this->modelProviderDefault->getAll();
+		$this->providersIndex		= array();
 		$this->providersAvailable	= array();
+		foreach( $this->modelProviderDefault->getAll() as $provider ){
+			$provider->exists = class_exists( $provider->class );
+			$this->providersIndex[$provider->class]	= $provider;
+		}
 		foreach( $this->providersIndex as $provider ){
-			if( class_exists( $provider->class ) )
+			if( $provider->exists )
 				$this->providersAvailable[]	= $provider;
 		}
 	}
@@ -70,7 +74,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			}
 		}
 		$this->addData( 'provider', (object) $provider );
-		$this->addData( 'providersIndex', $this->providersIndex );
+		$this->addData( 'providersIndex', array_values( $this->providersIndex ) );
 		$this->addData( 'providersAvailable', $this->providersAvailable );
 		$this->addData( 'providers', $this->modelProvider->getAll() );
 	}
@@ -81,7 +85,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid provider ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		$this->addData( 'exists', class_exists( $provider->className ) );
+//		$this->addData( 'exists', class_exists( $provider->className ) );
+		$this->addData( 'exists', $this->providersIndex[$provider->className]->exists );
 		$this->addData( 'providerId', $providerId );
 		if( $this->request->isPost() && $this->request->has( 'save' ) ){
 			$this->modelProvider->edit( $providerId, $this->request->getAll(), FALSE );
