@@ -81,6 +81,10 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract {
 		);
 	}
 
+	public function getAll( $conditions = array(), $orders = array(), $limits = array()){
+		return $this->logic->getArticles( $conditions, $orders, $limits );
+	}
+
 	/**
 	 *	Returns short description of article.
 	 *	@access		public
