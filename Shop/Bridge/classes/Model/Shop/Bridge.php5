@@ -20,20 +20,22 @@ class Model_Shop_Bridge extends CMF_Hydrogen_Model {
 
 	protected $name		= 'shop_bridges';
 	protected $columns	= array(
-			"bridgeId",
-			"title",
-			"class",
-			"frontendController",
-			"frontendUriPath",
-			"backendController",
-			"backendUriPath",
-			"articleTableName",
-			"articleIdColumn",
-			"createdAt",
-			);
+		'bridgeId',
+		'title',
+		'class',
+		'frontendController',
+		'frontendUriPath',
+		'backendController',
+		'backendUriPath',
+		'articleTableName',
+		'articleIdColumn',
+		'createdAt',
+	);
 	protected $primaryKey	= 'bridgeId';
 	protected $indices		= array(
-		"class",
+		'class',
+		'frontendController',
+		'frontendUriPath',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
