@@ -8,7 +8,7 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remo
 
 $modalStyle		= new View_Helper_Input_Resource( $env );
 $modalStyle->setModalId( 'modal-admin-mail-template-select-style' );
-$modalStyle->setInputId( 'input_template_css' );
+//$modalStyle->setInputId( 'input_template_css' );
 $trigger	= new View_Helper_Input_ResourceTrigger( $env );
 $trigger->setLabel( $iconOpen );
 $trigger->setModalId( 'modal-admin-mail-template-select-style' );
