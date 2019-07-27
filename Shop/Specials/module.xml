@@ -19,4 +19,24 @@
 	</relations>
 	<hook type="resource" resource="Page" event="init">Hook_Shop_Special::__onPageInit</hook>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Shop_Special::__onPageApplyModules</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_specials` (
+  `shopSpecialId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) UNSIGNED DEFAULT '0',
+  `bridgeId` int(11) UNSIGNED NOT NULL,
+  `articleId` int(11) UNSIGNED NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `styleRules` text COLLATE utf8_unicode_ci NOT NULL,
+  `styleFiles` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`shopSpecialId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `bridgeId` (`bridgeId`),
+  KEY `articleId` (`articleId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_specials`;
+]]></sql>
 </module>
