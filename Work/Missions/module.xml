@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.62</version>
+	<version>0.9.63</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -109,6 +109,7 @@ code>
 	<log version="0.9.60">Extract hooks from controller to own hook class.</log>
 	<log version="0.9.61">Migrate logic class to extend new framework logic class.</log>
 	<log version="0.9.62">Improve hook on project removal.</log>
+	<log version="0.9.63">Add content converter from HTML to Markdown.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -125,6 +126,7 @@ code>
 		<class>Model/Mission/Document.php5</class>
 		<class>Model/Mission/Filter.php5</class>
 		<class>Model/Mission/Version.php5</class>
+<!--		<class>Logic/Mission.php5</class>-->
 		<class>Logic/Work/Mission.php5</class>
 		<class>View/Work/Mission.php5</class>
 		<class>View/Work/Mission/Archive.php5</class>

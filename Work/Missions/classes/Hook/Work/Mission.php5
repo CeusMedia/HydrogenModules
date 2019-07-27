@@ -1,5 +1,5 @@
 <?php
-class Hook_Work_Mission /*extends CMF_Hydrogen_Hook*/{
+class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 
 	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Mission_Document( $env );

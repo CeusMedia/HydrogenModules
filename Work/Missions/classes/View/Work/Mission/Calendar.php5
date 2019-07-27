@@ -59,7 +59,7 @@ if(typeof cmContextMenu !== "undefined"){
 WorkMissionsList.loadCurrentListAndDayControls();
 ';
 		$page->js->addScript( $script, 'ready' );
-		$page->js->addScriptOnReady( 'setInterval(WorkMissionsCalendar.checkForUpdate, 10000)', 'ready' );
+		$page->js->addScriptOnReady( 'setInterval(WorkMissionsCalendar.checkForUpdate, 10000)' );
 
 		$this->addData( 'filter', $this->loadTemplateFile( 'work/mission/index.filter.php' ) );
 	}

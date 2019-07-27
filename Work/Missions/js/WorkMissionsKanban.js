@@ -33,10 +33,11 @@ var WorkMissionsKanban = {
 			connectWith: ".sortable",
 			dropOnEmpty: true,
 			receive: function( event, ui ){
+//				console.log(ui);
 				$.ajax({
 					url: "./work/mission/kanban/ajaxSetMissionStatus",
 					data: {
-						missionId: ui.item.context.dataset.id,
+						missionId: ui.item[0].dataset.id,
 						status: event.target.id.replace(/^[a-z-]+/, "")
 					},
 					method: "POST",

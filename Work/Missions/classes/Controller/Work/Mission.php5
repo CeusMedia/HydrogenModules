@@ -306,7 +306,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	public function ajaxRenderIndex(){
 		$mode	= $this->session->get( 'filter.work.mission.mode' );
 		if( $mode && $mode !== 'now' )
-			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
+			$this->restart( 'work/mission/'.$mode.'/ajaxRenderIndex' );
+//			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
 		else{
 			$words		= $this->getWords();
 
@@ -549,17 +550,39 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		die( "Not implemented yet" );
 	}
 
-	public function convertContent( $missionId, $formatIn, $formatOut ){
+	public function convertContent( $missionId, $format ){
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
 		$mission		= $this->model->get( $missionId );
+		
+//print_m( $mission );die;
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
-		if( strtoupper( $formatIn ) === "MARKDOWN" && strtoupper( $formatOut ) === "HTML" ){
+		if( strtoupper( $mission->format ) === 'MARKDOWN' && strtoupper( $format ) === 'HTML' ){
 			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 			$data	= array(
 				'content'		=> $content,
 				'format'		=> 'HTML',
+				'modifiedAt'	=> time(),
+				'modifierId'	=> $this->userId,
+			);
+			$this->model->edit( $missionId, $data, FALSE );
+		}
+		else if( strtoupper( $mission->format ) === 'HTML' && strtoupper( $format ) === 'MARKDOWN' ){
+			if( !class_exists( '\\League\\HTMLToMarkdown\\HtmlConverter' ) ){
+				$this->messenger->noteError( 'Converter package not installed. Use composer to install <code>ceus-media/markdown</code>!' );
+				$this->restart( 'edit/'.$missionId, TRUE );
+			}
+			$converter	= new \League\HTMLToMarkdown\HtmlConverter( array(
+				'header_style'		=> 'atx',
+				'hard_break'		=> TRUE,
+				'bold_style'		=> '**',
+				'italic_style'		=> '*',
+			) );
+			$content	= $converter->convert( $mission->content );
+			$data	= array(
+				'content'		=> $converter->convert( $mission->content ),
+				'format'		=> 'Markdown',
 				'modifiedAt'	=> time(),
 				'modifierId'	=> $this->userId,
 			);

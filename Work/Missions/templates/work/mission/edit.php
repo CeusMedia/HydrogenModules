@@ -78,6 +78,11 @@ if( strtoupper( $format ) === "HTML" ){
 		<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
 		<textarea id="input_content" name="content" rows="14" class="span12 TinyMCE" data-tinymce-mode="minimal" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 	</div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<a href="./work/mission/convertContent/'.$mission->missionId.'/markdown" class="btn btn-inverse btn-small">Konvertieren zu Markdown</a>
+	</div>
 </div>';
 }
 

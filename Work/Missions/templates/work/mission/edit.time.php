@@ -23,7 +23,7 @@ $helperTimer	= new View_Helper_Work_Time_Timer( $env );
 $helperTimer->setModule( 'Work_Missions' );
 $helperTimer->setModuleId( $mission->missionId );
 
-$buttonNew	= UI_HTML_Tag::create( 'button', UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;neue Aktivitität', array(
+$buttonNew	= UI_HTML_Tag::create( 'button', UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;neue Aktivität', array(
 	'type'		=> 'button',
 	'onclick'	=> '$("#myModalWorkTimeAdd").modal("toggle");',
 	'class'		=> 'btn btn-small btn-success',
