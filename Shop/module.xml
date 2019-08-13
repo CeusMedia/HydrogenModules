@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.8.3</version>
+	<version>0.8.4</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -49,6 +49,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.8.1">Enable position management in checkout.</log>
 	<log version="0.8.2">Replace session storage by new cart model.</log>
 	<log version="0.8.3">Reintegrate shipping.</log>
+	<log version="0.8.4">Integrate shop jobs from other app modules.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -276,7 +277,7 @@ CHANGE `billing_address` `billing_address` VARCHAR(200) CHARACTER SET utf8 COLLA
 CHANGE `billing_phone` `billing_phone` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
 CHANGE `billing_email` `billing_email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '';
 ]]></sql>
-	<sql type="mysql" on="update" version="0.6"><![CDATA[
+	<sql type="mysql" on="update" version="0.6.1"><![CDATA[
 ALTER TABLE  `<%?prefix%>shop_orders` ADD  `currency` VARCHAR( 3 ) NOT NULL DEFAULT  'EUR' AFTER  `status` ,
 ADD INDEX (  `currency` ) ;
 ALTER TABLE  `<%?prefix%>shop_order_positions` ADD  `currency` VARCHAR( 3 ) NOT NULL DEFAULT  'EUR' AFTER  `quantity` ,
