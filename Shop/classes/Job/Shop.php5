@@ -230,6 +230,7 @@ class Job_Shop extends Job_Abstract{
 		foreach( $customers as $customer ){
 			$order	= $modelOrders->getByIndex( 'customerId', $customer->customerId );
 			if( $order ){
+				$country	= $countries['DE'];
 				if( array_key_exists( $customer->country, $countries ) )
 					$country	= $countries[$customer->country];
 				$modelAddress->add( array(
@@ -250,6 +251,7 @@ class Job_Shop extends Job_Abstract{
 					'modifiedAt'	=> $order->createdAt,
 				) );
 				if( (int) $customer->alternative > 0 ){
+					$country	= $countries['DE'];
 					if( array_key_exists( $customer->billing_country, $countries ) )
 						$country	= $countries[$customer->billing_country];
 					$modelAddress->add( array(
