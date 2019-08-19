@@ -14,6 +14,7 @@ class Job_Abstract{
 	protected $parameters;
 
 	protected $versionModule;
+	protected $progress;
 
 	/**	@var		Jobber								$manager		Job manager instance */
 	protected $manager;
@@ -96,9 +97,24 @@ class Job_Abstract{
 	}
 
 	protected function showProgress( $count, $total, $sign = '.', $length = 60 ){
-		echo $sign;
-		if( $count % $length === 0 )
-			echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+		if( class_exists( 'CLI_Output_Progress' ) ){
+			if( $count === 0 ){
+				$this->progress	= new CLI_Output_Progress();
+				$this->progress->setTotal( $total );
+				$this->progress->start();
+			}
+			else if( $count === $total ){
+				$this->progress->finish();
+			}
+			else{
+				$this->progress->update( $count );
+			}
+
+		} else {
+			echo $sign;
+			if( $count % $length === 0 )
+				echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+		}
 		return $this;
 	}
 
