@@ -100,13 +100,17 @@ class Job_Abstract{
 		if( class_exists( 'CLI_Output_Progress' ) ){
 			if( $count === 0 ){
 				$this->progress	= new CLI_Output_Progress();
-				$this->progress->setTotal( $total );
-				$this->progress->start();
+				$this->progress->setTotal( $total )->start();
 			}
 			else if( $count === $total ){
 				$this->progress->finish();
 			}
 			else{
+				if( !$this->progress ){
+					$this->progress	= new CLI_Output_Progress();
+					$this->progress->setTotal( $total );
+					$this->progress->start();
+				}
 				$this->progress->update( $count );
 			}
 
