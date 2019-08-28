@@ -37,6 +37,8 @@ class View_File extends CMF_Hydrogen_View{
 				exit;
 			}
 		}
+		while( ob_get_level() > 1 ) ob_end_clean();
+
 		if( $this->getData( 'download', FALSE ) ){
 			Net_HTTP_Download::sendFile( $sourceFilePath, $file->fileName, TRUE );
 		}
