@@ -115,6 +115,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$conditions	= array();
 		$orders		= array( 'rank' => 'ASC' );
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
+		$this->addData( 'providersIndex', array_values( $this->providersIndex ) );
+		$this->addData( 'providersAvailable', $this->providersAvailable );
 		$this->addData( 'providers', $providers );
 	}
 
