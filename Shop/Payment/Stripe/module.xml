@@ -40,13 +40,12 @@
 <!--		<implements type="module">Shop_Payment</implements>-->
 		<needs type="module">Resource_Payment_Stripe</needs>
 	</relations>
-	<link access="inside" path="shop/payment/stripe/index"/>
-	<link access="inside" path="shop/payment/stripe/perBankWire"/>
-	<link access="inside" path="shop/payment/stripe/perCreditCard"/>
-	<link access="inside" path="shop/payment/stripe/perDirectDebit"/>
-	<link access="inside" path="shop/payment/stripe/perSofort"/>
-	<link access="inside" path="shop/payment/stripe/perGiropay"/>
-	<link access="inside" path="shop/payment/stripe/perGiropay"/>
+	<link access="public" path="shop/payment/stripe/index"/>
+	<link access="public" path="shop/payment/stripe/perBankWire"/>
+	<link access="public" path="shop/payment/stripe/perCreditCard"/>
+	<link access="public" path="shop/payment/stripe/perDirectDebit"/>
+	<link access="public" path="shop/payment/stripe/perSofort"/>
+	<link access="public" path="shop/payment/stripe/perGiropay"/>
 	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Stripe::onRegisterShopPaymentBackends</hook>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Stripe::onRenderServicePanels</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
