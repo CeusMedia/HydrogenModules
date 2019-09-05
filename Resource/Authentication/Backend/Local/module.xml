@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+[B<?xml version="1.0"?>
 <module>
 	<title>Resource: Authentication: Backend: Local</title>
 	<description><![CDATA[Module for authentication against local database using the Users module.
@@ -57,7 +57,7 @@ list>
 	<log version="0.5.3">Interface improvements.</log>
 	<log version="0.5.4">Finish support for Bootstrap 3 and 4.</log>
 	<log version="0.5.5">Add content shortcode hook for login panel.</log>
-	<log version="0.6">Refactoring.</log>
+	<log version="0.5.6">Refactoring to support new identified state.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
