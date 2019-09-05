@@ -4,18 +4,33 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	protected $env;
 	protected $backend;
 	protected $backends	= array();
+	protected $session;
+
+	const STATUS_UNKNOWN		= 0;
+	const STATUS_IDENTIFIED		= 1;
+	const STATUS_AUTHENTICATED	= 2;
 
 	protected function __onInit(){
+		$this->session		= $this->env->getSession();
 		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
 		if( !$this->backends )
 			throw new RuntimeException( 'No authentication backend installed' );
-		$backends	= array_keys( $this->getBackends() );
-		$this->setBackend( @array_shift( $backends ) );
+		$backend = $this->session->get( 'auth_backend' );
+		if( !$backend ){
+			$backends	= array_keys( $this->getBackends() );
+			$backend	= current( $backends );
+		}
+		$this->setBackend( $backend );
 		$this->noteUserActivity();
 	}
 
 	public function checkPassword( $userId, $password ){
 		return $this->backend->checkPassword( $userId, $password );
+	}
+
+	public function clearCurrentUser(){
+		$this->backend->clearCurrentUser();
+		return $this;
 	}
 
 	public function getBackends(){
@@ -72,11 +87,17 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	}
 
 	public function hasFullAccess(){
+		if( !$this->isAuthenticated() )
+			return FALSE;
 		return $this->env->getAcl()->hasFullAccess( $this->getCurrentRoleId() );
 	}
 
 	public function isAuthenticated(){
 		return $this->backend->isAuthenticated();
+	}
+
+	public function isIdentified(){
+		return $this->backend->isIdentified();
 	}
 
 	public function isCurrentUserId( $userId ){
@@ -90,6 +111,7 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	 */
 	protected function noteUserActivity(){
 		$this->backend->noteUserActivity();
+		return $this;
 	}
 
 	public function registerBackend( $key, $path, $label ){
@@ -109,6 +131,7 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 		if( !class_exists( $classLogic ) )
 			throw new BadFunctionCallException( 'Authentication logic class for backend "'.$key.'" is not existing' );
 		$backend->classes->logic = $classLogic;
+		return $this;
 	}
 
 	public function setBackend( $key ){
@@ -118,10 +141,16 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 		$factory		= new ReflectionMethod( $backend->classes->logic, 'getInstance' );
 		$this->backend	= $factory->invokeArgs( NULL, array( $this->env ) );
 //		$this->backend	= call_user_func_array( array( $className, 'getInstance' ), array( $this->env ) );
+		return $this;
 	}
 
-/*	public function setCurrentUser( $userId ){
-		$this->env->getSession()->set( 'userId', $userId );
-		$this->env->getSession()->set( 'userId', $userId );
-	}*/
+	public function setAuthenticatedUser( $user ){
+		$this->backend->setAuthenticatedUser( $user );
+		return $this;
+	}
+
+	public function setIdentifiedUser( $user ){
+		$this->backend->setIdentifiedUser( $user );
+		return $this;
+	}
 }
