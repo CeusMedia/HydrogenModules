@@ -15,8 +15,14 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
+ *	@todo			remove password column after old user password support decayed
  */
 class Model_User extends CMF_Hydrogen_Model {
+
+	const STATUS_DISABLED		= -2;
+	const STATUS_BANNED			= -1;
+	const STATUS_UNCONFIRMED	= 0;
+	const STATUS_ACTIVE			= 1;
 
 	protected $name		= 'users';
 	protected $columns	= array(

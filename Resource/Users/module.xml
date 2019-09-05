@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -21,6 +21,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3.2">Soften index type of account ID from unique to index.</log>
 	<log version="0.3.3">Use status constants.</log>
 	<log version="0.3.4">Add hook class.</log>
+	<log version="0.3.5">Set status constants and default status in model.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `roleId` int(11) unsigned NOT NULL,
   `companyId` int(11) unsigned DEFAULT '0',
   `roomId` int(11) unsigned DEFAULT '0',
-  `status` tinyint(1) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
   `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
@@ -109,11 +110,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
-(1, 128, 0, 'Entwickler', '', '1294083736', '0'),
+(1, 128, 0, 'Developer', '', '1294083736', '0'),
 (2, 128, 0, 'Administrator', '', '1294083928', '0'),
 (3, 64, 0, 'Manager', '', '1294083948', '0'),
-(4, 64, 128, 'Benutzer', '', '1294083995', '0'),
-(5, 64, 64, 'Gast', '', '1294084004', '0');
+(4, 64, 128, 'User', '', '1294083995', '0'),
+(5, 0, 64, 'Guest', '', '1294084004', '0');
 
 DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
@@ -256,6 +257,9 @@ ALTER TABLE `<%?prefix%>users`
 ]]></sql>
 	<sql on="update" type="mysql" version="0.3.2"><![CDATA[
 ALTER TABLE `<%?prefix%>users` DROP INDEX `accountId`, ADD INDEX `accountId` (`accountId`) USING BTREE;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3.5"><![CDATA[
+ALTER TABLE `<%?prefix%>users` CHANGE `status` `status` TINYINT(1) NULL DEFAULT '0';
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
