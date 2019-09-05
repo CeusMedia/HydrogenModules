@@ -119,7 +119,18 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 		}
 	}
 
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+	/**
+	 *	Register a payment backend.
+	 *	@access		public
+	 *	@param		string		$backend		...
+	 *	@param		string		$key			...
+	 *	@param		string		$title			...
+	 *	@param		string		$path			...
+	 *	@param		integer		$priority		...
+	 *	@param		string		$icon			...
+	 *	@return		void
+	 */
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -127,6 +138,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'countries'	=> $countries,
 		);
 	}
 }

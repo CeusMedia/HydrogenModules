@@ -4,7 +4,7 @@
 	<description><![CDATA[Integrates Stripe into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.2.5</version>
+	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate credit card payment.</log>
@@ -12,6 +12,7 @@
 	<log version="0.2.3">Add module main switch.</log>
 	<log version="0.2.4">Update to support Shop version 0.8.</log>
 	<log version="0.2.5">Use framework hook and support payment backend mode.</log>
+	<log version="0.3">Refactoring to use shop user instead of shop customer.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,8 +47,8 @@
 	<link access="inside" path="shop/payment/stripe/perSofort"/>
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
 	<link access="inside" path="shop/payment/stripe/perGiropay"/>
-	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Stripe::__onRegisterShopPaymentBackends</hook>
-	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Stripe::__onRenderServicePanels</hook>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Stripe::onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Stripe::onRenderServicePanels</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_stripe`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_stripe` (

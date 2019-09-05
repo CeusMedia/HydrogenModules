@@ -24,6 +24,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	protected $userId;
 	protected $wallet;
 	protected $backends			= array();
+	protected $modelCart;
 
 	public function __onInit(){
 		$this->session			= $this->env->getSession();
@@ -34,35 +35,24 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 		$this->provider			= new Logic_Payment_Stripe( $this->env );
 		$this->logicPayment		= new Logic_Shop_Payment_Stripe( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
+		$this->modelCart		= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 
-		$modelCart			= new Model_Shop_Cart( $this->env );
-		$this->orderId		= $modelCart->get( 'orderId' );
-		if( !$this->orderId ){
-			$this->messenger->noteError( 'Invalid order' );
-			$this->restart( 'shop' );
-		}
-		$this->order		= $this->logicShop->getOrder( $this->orderId );
+		$this->order	= $this->getOrderFromCartInSession();
+		$this->orderId	= $this->order->orderId;
 
-		$this->localUserId	= $this->session->get( 'userId' );
-		if( !$this->localUserId ){
-			$this->messenger->noteError( 'Not authenticated' );
-			$this->restart( 'shop/customer' );
-		}
-		if( $this->order->userId != $this->localUserId ){
-			$this->messenger->noteError( 'Access to order denied for current user' );
-			$this->restart( 'shop/customer' );
-		}
-		$this->userId	= $this->localUserId;
-/*		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
+		$this->localUserId	= $this->session->get( 'auth_user_id' );
+
+		$this->buyerData	= $this->getBuyerDataFromOrder( $this->order, $this->modelCart );
+		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
 		if( !$this->userId ){
 			$account		= $this->provider->createCustomerFromLocalUser( $this->localUserId );
 			$this->userId	= $account->Id;
-		}*/
+		}
 /*		$wallets		= $this->provider->getUserWalletsByCurrency( $this->userId, $this->order->currency );
 		if( !$wallets )
 			$wallets	= array( $this->provider->createUserWallet( $this->userId, $this->order->currency ) );
@@ -71,6 +61,46 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 /*		$captain	= $this->env->getCaptain();
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
 		$this->addData( 'paymentBackends', $this->backends );*/
+	}
+
+	protected function getOrderFromCartInSession(){
+		$orderId		= $this->modelCart->get( 'orderId' );
+		if( !$orderId ){
+			$this->messenger->noteError( 'Invalid order' );
+			$this->restart( 'shop' );
+		}
+		return $this->logicShop->getOrder( $orderId );
+	}
+
+	protected function getBuyerDataFromOrder( $order, $modelCart ){
+		$modelAddress		= new Model_Address( $this->env );
+
+		if( !$this->localUserId ){
+			$this->messenger->noteError( 'Not authenticated' );
+			$this->restart( 'shop/customer' );
+		}
+		if( $order->userId != $this->localUserId ){
+			$this->messenger->noteError( 'Access to order denied for current user' );
+			$this->restart( 'shop/customer' );
+		}
+		$modelUser	= new Model_User( $this->env );
+		$user		= $modelUser->get( $this->localUserId );
+		$address	= $modelAddress->getByIndices( array(
+			'relationId'	=> $this->localUserId,
+			'relationType'	=> 'user',
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
+		if( !$address )
+			throw new RuntimeException( 'Customer has no billing address' );
+		$buyerData	= (object) array(
+			'mode'		=> Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT,
+			'id'		=> $this->localUserId,
+			'firstname'	=> $user->firstname,
+			'surname'	=> $user->surname,
+			'email'		=> $user->email,
+			'country'	=> $address->country,
+		);
+		return $buyerData;
 	}
 
 	protected function handleStripeResponseException( $e ){
@@ -184,8 +214,6 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	public function perGiropay(){
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
-		$modelUser		= new Model_User( $this->env );
-		$user			= $modelUser->get( $this->localUserId );
 		try{
 			$source	= \Stripe\Source::create(array(
 				'type'		=> 'giropay',
@@ -195,8 +223,8 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 					'return_url'	=> $this->env->url.'shop/payment/stripe',
 				),
 				'owner'	=> array(
-					'name'	=> $user->firstname.' '.$user->surname,
-					'email'	=> $user->email,
+					'name'	=> $this->buyerData->firstname.' '.$this->buyerData->surname,
+					'email'	=> $this->buyerData->email,
 				)
 			));
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
@@ -214,8 +242,6 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 	public function perSofort(){
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
-		$modelUser		= new Model_User( $this->env );
-		$user			= $modelUser->get( $this->localUserId );
 		try{
 			$source	= \Stripe\Source::create(array(
 				'type'		=> 'sofort',
@@ -225,11 +251,11 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller{
 					'return_url'	=> $this->env->url.'shop/payment/stripe',
 				),
 				'owner'	=> array(
-					'name'	=> $user->firstname.' '.$user->surname,
-					'email'	=> $user->email,
+					'name'	=> $this->buyerData->firstname.' '.$this->buyerData->surname,
+					'email'	=> $this->buyerData->email,
 				),
 				'sofort'	=> array(
-					'country'	=> 'DE',
+					'country'	=> $this->buyerData->country,
 				)
 			));
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );

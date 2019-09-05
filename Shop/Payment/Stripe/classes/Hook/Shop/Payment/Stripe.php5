@@ -8,10 +8,10 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
 	 *	@param		object						$context	Hook context object
 	 *	@param		object						$module		Module object
-	 *	@param		public						$arguments	Map of hook arguments
+	 *	@param		array						$data		Map of hook payload data
 	 *	@return		void
 	 */
-	static public function __onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
 		$labels		= (object) $words['payment-methods'];
@@ -32,9 +32,10 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook{
 				'Stripe:Sofort',						//  payment method key
 				$labels->sofort,						//  payment method label
 				'stripe/perSofort',						//  shop URL
-	 			$methods->get( 'Sofort' ),				//  priority
-				'klarna-2.png'							//  icon
-//				'fa fa-fw fa-bank'						//  icon
+				$methods->get( 'Sofort' ),				//  priority
+				'klarna-2.png',							//  icon
+//					'fa fa-fw fa-bank'						//  icon
+				array( 'AT', 'BE', 'DE', 'IT', 'NL', 'ES' )
 			);
 		}
 		if( $methods->get( 'Giropay' ) ){
@@ -44,8 +45,9 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook{
 				$labels->giropay,						//  payment method label
 				'stripe/perGiropay',					//  shop URL
 	 			$methods->get( 'Giropay' ),				//  priority
-				'giropay.png'							//  icon
+				'giropay.png',							//  icon
 //				'fa fa-fw fa-bank'						//  icon
+				array( 'DE' )
 			);
 		}
 	}
@@ -60,7 +62,7 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook{
 	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
