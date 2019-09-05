@@ -106,7 +106,11 @@ class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 		throw new Exception( 'No user or customer assigned to order' );
 	}
 
+	/**
+	 *	@deprecated
+	 */
 	public function getGuestCustomer( $customerId ){
+		die( 'getGuestCustomer is deprecated' );
 		$model	= new Model_Shop_Customer( $this->env );
 		$user	= $model->get( $customerId );
 		if( !$user )

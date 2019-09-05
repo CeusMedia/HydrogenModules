@@ -29,7 +29,18 @@ class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
 		$this->addData( 'orders', $orders );
 	}
 
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+	/**
+	 *	Register a payment backend.
+	 *	@access		public
+	 *	@param		string		$backend		...
+	 *	@param		string		$key			...
+	 *	@param		string		$title			...
+	 *	@param		string		$path			...
+	 *	@param		integer		$priority		...
+	 *	@param		string		$icon			...
+	 *	@return		void
+	 */
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -37,6 +48,7 @@ class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'countries'	=> $countries,
 		);
 	}
 
