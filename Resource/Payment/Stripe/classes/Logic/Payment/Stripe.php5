@@ -90,17 +90,10 @@ class Logic_Payment_Stripe extends CMF_Hydrogen_Logic{
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
-		$address		= $modelAddress->get( array(
-			'relationType'	=> 'user',
-			'relationId'	=> $this->localUserId,
-			'type'			=> Model_Address::TYPE_BILLING,
+		$user	= \Stripe\Customer::create( array(
+			'email'			=> $address->email,
+			'description'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')',
 		) );
-
-		$data	= array(
-				'email'			=> $user->email,
-				'description'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')',
-		);
-		$user	= \Stripe\Customer::create( $data );
 		$this->setUserIdForLocalUserId( $user->id, $localUserId );
 		return $user;
 	}
